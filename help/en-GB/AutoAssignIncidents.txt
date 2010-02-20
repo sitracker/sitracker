@@ -1,0 +1,4 @@
+Incidents are automatically assigned to users based on a weighted lottery
+taking into account factors such as number of incidents, appropriate
+skills, status and more. This functionality can be turned off to allow
+incidents to be assigned manually.

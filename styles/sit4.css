@@ -1,0 +1,73 @@
+/* @import url("/styles/webtrack.css"); */
+
+body        { background-color: #f0f0ff; font-family: Tahoma, Helvetica, sans serif; color: #000000;  background-image:url('/styles/images/coolblue.jpg'); }
+p           { font-size: 8pt; color: #000000; }
+table       { font-size: 8pt; color: #000000; }
+td        { font-size: 8pt; color: #000000; }
+a           { font-size: 8pt; color: #444444; font-weight: bold; text-decoration: none; }
+a:hover     { color: #c0c0c0; font-weight: bold; text-decoration: underline; }
+a:active    { color: #c0c0c0; font-weight: bold; text-decoration: underline; }
+a em { font-style: normal; text-decoration: underline; }
+center      { color: #000000; }
+
+.barlink    { font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+.barlink:hover  { font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.barlink:active { color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+
+.error        { font-size: 8pt; color: #FF0000; font-weight: bold; text-align: center; }
+.red            { font-size: 8pt; color: #FF0000; }
+
+.mainshade  {
+    background-color: #f0f0ff;
+    background-image:url('/styles/images/coolblue.jpg')
+    background-repeat: repeat-x;
+    }
+.shade1     { background-color: #bbbbbb; }
+.shade2     { background-color: #cccccc; }
+.urgent     { background-color: #edd3d3; }
+.critical { background-color: #f08080 }
+.expired    { background-color: #DDDDDF; }
+.idle     { background-color: #abd6ab; } /* #90ee90; */
+.review { background-color: #7AC5CD; }
+
+
+#menu li li { background-color: #f0f0ff;}
+.navbarmenu { background-color: #009900; font-size: 8pt; font-weight: bold; color: #FFFFFF; width: 75px; height:20px; }
+
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+.tablelist TD {border-left: 1px solid #AEC1EB; border-top: 1px solid #AEC1EB;}
+table.tablelist {border: 1px solid #AEC1EB;}
+.tablelist TR {border: 1px solid #AEC1EB; border-right: 1px solid #AEC1EB ! important;}
+.tablelist TH {border-left: 1px solid #AEC1EB; border-top: 1px solid #AEC1EB}

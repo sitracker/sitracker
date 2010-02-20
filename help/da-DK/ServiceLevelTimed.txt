@@ -1,0 +1,1 @@
+﻿Når en service level er mærket som 'Tidsindstillet' bliver en aktivitets fane vist i hændelses vinduet, tiden brugt på hver aktivitet bliver optaget.

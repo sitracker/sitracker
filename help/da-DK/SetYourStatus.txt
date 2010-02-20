@@ -1,0 +1,4 @@
+﻿* Ved at sætte din status til 'Accepterer ikke' eller en status der ikke er accepterende, som fx. 'Fraværende syg'
+vil automatisk redelegere hændelser til en afløser som angivet under 'Mine afløsere'
+
+* Ved at sætte status tilbage til 'Accepterer' vil tildele alle hændelser der ikke har haft nogen aktivitet tilbage til digselv.

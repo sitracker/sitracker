@@ -1,0 +1,22 @@
+/* Webtrack Classic */
+
+#masthead { background-image: none; }
+#apptitle { background-image: none; text-align: center; }
+
+body        { background-color: #ffffcc; font-family: 'Times New Roman', Times; color: #000000; }
+p           { font-size: 12pt; color: #000000; }
+table       { clear: both; font-size: 12pt; color: #000000; }
+td        { font-size: 12pt; color: #000000; }
+a           { font-size: 12pt; color: #000080; font-weight: bold; text-decoration: none; }
+a:hover     { color: #000080; font-weight: bold; text-decoration: underline; }
+a:active    { color: #FF0000; font-weight: bold; text-decoration: underline; }
+a em { font-style: normal; text-decoration: underline; }
+center      { color: #000000; }
+
+h1 { color: #000; background-color: #FFFFCC; margin: 0px; padding: 3px 0px 3px 0px; }
+
+th, div.windowtitle { background-color: #CCC; }
+div#footerbar { text-align: center; }
+div#statusbar { background-color: #ccc;}
+div#kbarticle { background-color: #FFFFEA; }
+div.windowbox { margin-left: auto; margin-right: auto; margin-top: 20px;}

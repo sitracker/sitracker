@@ -1,0 +1,1 @@
+Whether the user was created manually or imported from LDAP.

@@ -1,0 +1,15 @@
+### SiT Usage Help Tips, one per line           (this first line is ignored)
+To log a new support incident choose <strong>Add Incident</strong> from the <strong>Support</strong> menu
+Did you know that you can view other peoples incident queues?  Go to <strong>SiT!</strong>-&gt;<strong>Users</strong> and click a link in the <strong>Incidents in Queue</strong> column
+You can keep an eye on all the incidents currently open by going to <strong>Support</strong>-&gt;<strong>Watch Incidents</strong>
+By setting your skills (<strong>SiT!</strong>-&gt;<strong>My Details</strong>-&gt;<strong>My Skills</strong>) incidents that you have skills for will appear in your queue even when they're not logged to you specifically
+To have your incidents temporarily assigned to substitute engineers when you set your status to away set up a backup engineer for each product you support (<strong>SiT!</strong>-&gt;<strong>My Details</strong>-&gt;<strong>My Substitutes</strong>)
+A site can have one or more contracts, each contract specifies the product that is supported, the number of incidents that can be logged and the contacts that are allowed to log incidents
+You can hover over the title of an incident in the incident queue to see a popup showing an extract from the latest update to the incident
+Incidents can be logged with varying priorities these relate to the impact the issue is having on the customer.  From <em>Low</em> which indicates little or no impact to <em>Critical</em> which indicates severe impact
+When you go away from the office, set your status using the drop-down box on the front page, this will automatically assign your incidents to your substitue engineer(s)
+When you mark a Task as Private it is visible only to you, a useful feature for brief reminders
+Did you know that you can assign arbitary tags to incidents, tasks, contacts and other items
+Did you know you that can position this tips box and other dashboard items by dragging the title bar
+Did you know that you can add or remove dashboard items by clicking the dashboard icon at the top/right of this page
+Did you know that you can set up triggers to alert you when things happen, for example when somebody goes away on holiday (See <strong>My Details</strong>-&gt;<strong>My Triggers</strong>)

@@ -1,0 +1,3 @@
+Cosa ha fatto il cliente per provare a risolvere il problema?
+Quali configurazioni ha cambiato?
+Quali patches/service pack sono stati installati?

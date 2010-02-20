@@ -1,0 +1,161 @@
+SiT (Support Incident Tracker) - Support call tracking system
+Copyright (C) 2010 The Support Incident Tracker Project
+Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
+This software may be used and distributed according to the terms
+of the GNU General Public License, incorporated herein by reference.
+--------------------------------------------------------------------
+
+        This readme contains only very basic instructions,
+        for more help please refer to
+        http://sitracker.org/wiki/Documentation
+
+     README
+
+        * About Support Incident Tracker
+        * Security Recommendations
+        * Installing
+        * Upgrading
+        * Configuring
+        * Regular Scheduled Tasks
+        * Inbound email
+        * Creating Plugins
+        * Getting help
+        * Reporting bugs
+        * Contributing to the SiT! project
+
+
+About Support Incident Tracker
+------------------------------
+Support Incident Tracker (SiT!) grew out of an application developed
+by Salford Software called Webtrack which is used internally to
+manage support incidents.
+
+SiT! is a web-based application that manages various aspects of a
+technical support department, the main purpose is to record dealings
+with customers while providing support.
+
+Maintainers:
+    Ivan Lucas <ivanlucas[at]users.sourceforge.net>
+    Tom Gerrard
+
+
+Security Recommendations
+------------------------
+SiT! Versions 3.23 and later no longer require the php.ini setting
+register_globals to be on and all external data is checked before use.
+
+    * We *strongly* recommend that you make sure your php.ini has
+      register_globals set OFF, this has been the default since
+      PHP 4.2.0.
+
+    * Your SiT! includes directory should be outside the web root
+      and your PHP include path should refer to it.
+
+
+Installing
+----------
+
+    Requirements:
+        A web server (Apache recommended)
+        PHP >= 5.0 (Released July 2004)
+        MySQL >= 4.1 (Released October 2004)
+
+    Instructions:
+
+        - Copy the files to a directory on your web server
+
+        - (optionally) Make the main sit/ directory your web root
+
+        - In your browser visit setup.php which will prompt you
+          for a few important settings and take you through the
+          process of creating the database schema
+
+        - setup.php will prompt you to add an admin account,
+          make a note of the password you choose for this account
+
+        - Now visit index.php in your browser and login using
+          'admin' as the username and the password that you
+          chose during setup
+
+        - Within sit go to SiT! -> Control Panel -> Manage Users
+          -> Add User to create more users
+
+
+Configuring
+-----------
+After you've run setup.php and installed SiT! you should make the
+config.inc.php in your main SiT directory read-only.
+
+Most SiT configuration can now be done through the web interface, log in
+with an admin account and visit SiT! -> Control Panel -> Configure
+
+
+Upgrading
+---------
+See the UPGRADE file for instructions
+
+
+Regular Scheduled Tasks
+-----------------------
+SiT! has a script called auto.php that you should run periodically via
+a crontab or other method. (e.g. http://www.webcron.org/)
+
+The auto.php script can be run via HTTP or from the console.
+
+An example crontab might look like this:
+1 * * * * /usr/bin/php -f /var/www/sit/auto.php
+
+The actual schedule is now configured within SiT itself by going
+to SiT! -> Control Panel -> Scheduler.  auto.php no longer accepts
+parameters.
+
+
+Getting Help
+------------
+If you need help installing or using Support Incident Tracker
+please feel welcome to join our mailing list
+sitracker-devel-discuss@lists.sourceforge.net. You can subscribe herein
+https://lists.sourceforge.net/lists/listinfo/sitracker-devel-discuss
+or post a message on our forum at http://sitracker.org/forum
+
+We also have an IRC channel.  #sit on the freenode network, we'd love
+for you to join us, see here http://sitracker.org/wiki/IRC
+for more info.
+
+
+Reporting Bugs
+--------------
+In the (hopefully unlikely) event that you find a bug in SiT! feel free
+to report it via our bug tracker
+at http://sitracker.org/wiki/Bugs
+
+If you're not sure whether the problem you've found is actually a bug,
+please discuss it with us first.
+
+
+Contributing to the SiT! project
+--------------------------------
+Sourceforge Project Page: http://sourceforge.net/projects/sitracker/
+
+The development of Support Incident Tracker as well as discussions as
+to where the program should head for future versions is open and takes
+place over the Internet. If you would like to contribute to the
+project, please do not hesitate to contact the developers. There are
+many ways in which you can help Support Incident Tracker:
+
+    * Reporting bugs or suggesting improvements
+    * Submitting patches to fix bugs or ad features
+    * Writing good documentation or translating it to other languages
+    * Helping others to install and use SiT!
+
+    * And of course...coding with us!
+
+As you see, there are many ways in which you can contribute. All of
+them are very important and everyone is welcome to participate.
+
+The Support Incident Tracker developers can be reached via the mailing
+list, see here for more info http://sitracker.org/wiki/MailingList
+
+We also now have an IRC channel.  #sit on the freenode network, we'd
+love for you to join us, see here http://sitracker.org/wiki/IRC
+for more info.

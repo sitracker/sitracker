@@ -1,0 +1,279 @@
+Upgrading Support Incident Tracker
+----------------------------------
+
+    Note: Unless you are familiar with PHP, it is not
+    recommended to use non-released versions of SiT!
+    (i.e. SVN versions).  These versions are not tested
+    for general use and there might  not be an easy
+    upgrade path for the next release from such
+    intermediate versions.
+
+To upgrade simply copy all the new files over the existing ones being
+careful not to overwrite your config.inc.php or any custom themes you
+might have.
+
+Then run setup.php in your browser and follow the instructions on-screen.
+
+Further instructions and notes about specific upgrades follow, if you
+upgrading and skipping several versions listed below you should read
+everything carefully to make sure you've met all the requirements:
+
+Upgrading to 3.50
+-----------------
+    *  The portal knowledge base is now publicly accessible by default. A link is placed on the SiT! login screen to the knowledgebase where all articles with a distribution of 'Public' will be shown. If you do not want this, you can disable this by changing Configure | Features | Portal | Portal/Public Knowledge base.
+    * The LDAP code has been extended and rewritten, if you are already using LDAP you should be aware that you will have to reconfigure this after upgrading to 3.50.
+
+
+Upgrading to 3.45
+-----------------
+    ** Please read these instructions carefully **
+    ** your upgrade may fail if you do not **
+
+The file layout of SiT! has changed a lot from the last release (namely all
+files from /htdocs/ are now in the directory above), so the recommendations
+are as follows:
+
+    * Backup your /includes/config.inc.php file
+    * Backup your /attachments/ folder
+    * Backup any customised files, plugins, themes and i18n files
+    * Delete all the files from your entire sit install (leaving your
+      database alone)
+    * Unpack the new version
+    * (Optional) If you have set /htdocs/ to be your web root, this needs to
+      be changed to be the directory above now
+    * Update your $CONFIG['application_webpath'] to point to the new location,
+      for example from /sit/htdocs/ to /sit/
+    * Move your attachments directory outside of the web root, or make it
+      secure using .htaccess (or the equivalent for your web server)
+    * Remove any existing php include_path settings for SiT, this is no
+      longer required
+    * Update your cron to point to the new location of auto.php
+    * Edit your config.inc.php file to set $CONFIG['attachment_fspath'] to
+      point to the new location of your attachments directory
+    * Put your config.inc.php back into the root sit directory
+    * Access setup.php in your browser to complete the upgrade
+
+All custom settings that are in your config.inc.php except attachment location
+and database settings will automatically be transferred to database storage,
+this is an automatic process.
+
+In previous versions it was possible for a single user to have multiple
+incident activities running simultaneously, this functionality was never
+intended and has been removed for this release (Mantis 434). From this release
+onwards only one activity per user per incident is allowed to run at once.
+
+Plugins designed for any version prior to 3.45 will not work with 3.45 without
+being modified, see the Creating Plugins page for the latest plugin documentation.
+
+The config variable $CONFIG['support_manager_email'] is now obsolete and has
+been removed, if you have configured this it will be ignored. You must visit
+SiT! | Control Panel | Configure and to Application | Other to set your
+support manager instead, this defaults to the first user in the system,
+usually your SiT Administrator.
+
+A new config variable $CONFIG['default_entitlement'] has been created which
+allows you to specify a number of days holiday entitlement to give to new
+users as they are added. This won't affect any existing users. We've set this
+to 21 days, but you can of course alter it.
+
+The SiT integrated spellcheck feature has been removed, it has been
+unmaintained for a few years and browsers like Firefox do a much better job of
+spellcheck anyway.
+
+
+Upgrading to 3.41
+-----------------
+We fixed an incorrect permission on the control panel->notices page
+this previously required "View your tasks (69)" permission instead of
+the correct "Post System Notices (78)" permission.
+
+
+Upgrading to 3.40
+-----------------
+From this version we no longer allow brackets "(" and ")" in trigger
+rules, if you have any brackets in your existing rules they will be
+stripped out. We don't believe this will cause any problems, if it does
+please create a bug report.
+
+
+Upgrading to 3.36
+-----------------
+No special actions are required, however you should be aware that
+the QBE report now requires Administrate permission (22).
+
+
+Upgrading to 3.35
+-----------------
+As of 3.35 we've changed our minimum requirement for php to 5.0.0
+as php4 has been end-of-life for some time now and won't receive
+any patches at all after 2008-08-08.
+
+This version swaps the load order for config files, if you are
+using /etc/sit.conf these values are now loaded first, and then
+config.inc.php is loaded next.  This may affect your settings
+if you are using both files.  We recommend you use just one
+config file unless your needs are very specific.
+
+This version supports table prefixes, if you use this feature
+any plugins you have installed that are not designed to work
+with 3.35 may break.
+
+The scheduler, auto.php no longer accepts parameters. Scheduled
+actions are now configured from within SiT by going to SiT! ->
+Control Panel -> Scheduler.
+
+The config variable $CONFIG['tipsfile'] has been deprecated and
+is now ignored, tips are now stored in htdocs/help/en-GB/tips.txt
+(and similar paths for other languages).  If you have written your
+own tips, please consider posting them on our forum so that we can
+include them in future releases for the benefit of others.
+
+Sending an email when an incident is logged is no longer made
+optional at the time the incident is added.  Logging an incident
+now fires the 'Incident Created' trigger which in turn sends an
+email based upon the INCIDENT_LOGGED template.
+This action can be removed if you prefer.
+
+From this version new incidents will be automatically assigned
+to engineers based on the workload (queue size) of each engineer,
+the skills required and the online status of the engineers.
+This can be turned off and the old (pre 3.35 behaviour) where a
+list of engineers is presented and the user is given the choice
+of who to assign to by setting the config variable
+$CONFIG['auto_assign_incidents'] to FALSE.
+
+
+Upgrading to 3.32
+-----------------
+New in this version is the ability for users to set their own
+local timezone in their profile.  This will adjust the display
+of dates and times to the users timezone.  Users timezones
+will default to UTC until they explicity set it by editing
+their profile.  You should pass this information on to your
+users that reside in timezones other than system timezone.
+
+Incidents can no longer be closed if they have not been
+assigned.  It was never intended that this be the case.
+
+Upgrading to 3.31
+-----------------
+From now on all SiT users must have unique email addresses, this
+was previously an expectation but it was not enforced so it is
+possible that your database has some duplicates.  This will not
+cause any issues unless one of those users requests to reset a
+forgotten password, in which case only one of the users owning
+the email address will be able to reset.  Additionally if either
+of the users sharing an email address edit their profile, they
+will be told that email addresses must be unique.
+
+New for this version is support for multiple display languages.
+After you upgrade, users will have no specific language defined
+in their profile and will therefore use the default language
+which you can now configure using the new config variable
+$CONFIG['default_i18n'].  You can set this to an rfc4646/
+rfc4647/ISO 639 code which corresponds to an existing file
+in the includes/i18n directory.
+E.g. $CONFIG['default_i18n']='cy-GB';
+Users are also given the opportunity to configure a display
+language at login and also in their profile, this language
+can be different to the default language you have set.
+
+Contracts can now optionally limit the number of supported
+contacts.
+Some fields for contracts are now accessed via an 'Advanced'
+section of the add/edit contract page.
+
+
+Upgrading to 3.30
+-----------------
+The minimum supported MySQL version is now 4.0.18, if you have a
+version older than this you MUST upgrade it before upgrading SiT.
+
+Previous versions of SiT referred to 'Products' and 'Software', in v3.30
+'Software' has been renamed to 'Skills'.  This is because SiT gets
+used for supporting more than just software and the more generic term
+'skill' seemed more appropriate to how it's used with SiT.
+Similarly the term 'Backup Engineer' has been renamed to 'Subsitute
+Engineer' to avoid confusion with engineers specialising in backup
+software.
+
+There is a new system email 'NEARING_SLA' that is sent to the
+configured support manager email and to engineers when an
+incident is getting close to going past it's SLA target.
+You may want to alter the text of this template or change it's
+destinations.
+
+The old search plugin for Firefox 1.x versions has been discontinued
+in favour of a new OpenSearch plugin.compatable with Firefox 2 and IE7
+
+The dashboard in this version is much more usable, after upgrading
+you may want to visit SiT! -> Control Panel -> Manage Dashboard
+Components to install and enable the components that are available
+and that you would like your users to be able to access.
+
+This releases adds four new permissions, 'Delete Products',
+'Install Dashboard Components', 'Run Management Reports' and
+'Manage Holidays' by default only the Administrator and users
+with the Administrator role will have these permissions you may
+want to review individual users permissions to ensure they
+meet your needs.
+
+
+Upgrading to 3.24
+-----------------
+Permissions have been added for the new 'Add Reseller' and
+'Manage Escalation Paths'  features, no users will have these permissions
+after upgrading, you should check each users' permissions (and/or role permissions)
+to ensure they meet your needs.
+
+Administrators can now disable accounts by editing a users profile
+and setting status to disabled.  If you have redundant user accounts
+we recommend you do this now.
+
+Multiple global email signatures are now possible, you may want to
+visit SiT! -> Control Panel -> Email Settings -> Global Signature and
+add more signatures (to be chosen at random).
+
+Email templates can now store information in the incident log, this
+can be set individually for each template, you may want to review
+your templates and adjust this.  See SiT! -> Control Panel ->
+Email Settings -> Edit Template
+
+Users can now be placed in groups, if you want to group your users
+go to SiT! -> Control Panel -> Users -> User Groups
+
+You can now add vendors, you may want to group your products by
+vendor, see Customers -> Maintenance -> Products & Software
+Add Vendor and see also Edit Product.
+For example you may want to group some of your Linux Support products
+under Red Hat and others under Mandriva.
+It's also possible to edit products and edit or delete software records
+you may find it helpful to do some housekeeping.
+
+
+Upgrading to 3.23
+-----------------
+As of v3.23 SiT! no longer requires the php.ini setting register_globals
+to be on.  Therefore we *strongly* recommend that you make sure your
+php.ini has register_globals set OFF, this has been the default since
+PHP 4.2.0 but since SiT! previously required it to be ON you should
+check your php.ini.
+
+Some permissions have changed with the introduction of the new roles
+based permissions system, after upgrading you should check role
+permissions and then assign roles to your users, finally you should
+check each users' permissions to ensure they meet your needs.
+
+You should read the README file regarding setting up scheduled tasks
+
+
+Upgrading from 3.20 to 3.21
+---------------------------
+Email templates can now insert updates into the incident log that are
+hidden from the customer view.
+You should review your email templates and set the update visibility
+of each.
+
+The config variable attachment_path has been renamed to attachment_fspath
+and a new variable attachment_webpath has been created for the web view
+of the same path.

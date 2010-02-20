@@ -1,0 +1,1 @@
+This could be an asset number, serial number, MAC address etc.

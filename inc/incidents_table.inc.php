@@ -1,0 +1,413 @@
+<?php
+// incidents_table.inc.php - Prints out a table of incidents based on the query that was executed in the page that included this file
+//
+// SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
+//
+// This software may be used and distributed according to the terms
+// of the GNU General Public License, incorporated herein by reference.
+//
+
+// Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
+
+// This Page Is Valid XHTML 1.0 Transitional!
+
+// Prevent script from being run directly (ie. it must always be included
+if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
+{
+    exit;
+}
+
+if ($CONFIG['debug']) echo "<!-- Support Incidents Table -->";
+
+echo "<table align='center' style='width:95%;'>";
+echo "<col width='7%'></col>";
+echo "<col width='23%'></col>";
+echo "<col width='17%'></col>";
+echo "<col width='5%'></col>";
+echo "<col width='7%'></col>";
+echo "<col width='15%'></col>";
+echo "<col width='17%'></col>";
+echo "<col width='10%'></col>";
+echo "<col width='8%'></col>";
+echo "<tr>";
+
+$filter = array('queue' => $queue,
+                'user' => $user,
+                'type' => $type);
+echo colheader('id',$strID,$sort, $order, $filter);
+echo colheader('title',$strTitle,$sort, $order, $filter);
+echo colheader('contact',$strContact,$sort, $order, $filter);
+echo colheader('priority',$strPriority,$sort, $order, $filter);
+echo colheader('status',$strStatus,$sort, $order, $filter);
+echo colheader('lastupdated',$strLastUpdated,$sort, $order, $filter);
+echo colheader('nextaction',$strSLATarget,$sort, $order, $filter);
+echo colheader('info', $strInfo, $sort, $order, $filter);
+echo "</tr>";
+// Display the Support Incidents Themselves
+$shade = 0;
+while ($incidents = mysql_fetch_array($result))
+{
+    // calculate time to next action string
+    if ($incidents["timeofnextaction"] == 0)
+    {
+        $timetonextaction_string = "&nbsp;";  // was 'no time set'
+    }
+    else
+    {
+        if (($incidents["timeofnextaction"] - $now) > 0)
+        {
+            $timetonextaction_string = format_seconds($incidents["timeofnextaction"] - $now);
+        }
+        else
+        {
+            $timetonextaction_string = "<strong>{$strNow}</strong>";
+        }
+    }
+    // Make a readable site name
+    $site = site_name($incidents['siteid']);
+    $site = strlen($site) > 30 ? substr($site,0,30)."..." : $site;
+
+    // Make a readble last updated field
+    if ($incidents['lastupdated'] > $now - 300)
+    {
+        $when = sprintf($strAgo, format_seconds($now - $incidents['lastupdated']));
+        if ($when == 0) $when = $strJustNow;
+        $updated = "<em class='updatednow'>{$when}</em>";
+    }
+    elseif ($incidents['lastupdated'] > $now - 1800)
+    {
+        $updated = "<em class='updatedveryrecently'>".sprintf($strAgo, format_seconds($now - $incidents['lastupdated']))."</em>";
+    }
+    elseif ($incidents['lastupdated'] > $now - 3600)
+    {
+        $updated = "<em class='updatedrecently'>".sprintf($strAgo, format_seconds($now - $incidents['lastupdated']))."</em>";
+    }
+    elseif (date('dmy', $incidents['lastupdated']) == date('dmy', $now))
+    {
+        $updated = "{$strToday} @ ".ldate($CONFIG['dateformat_time'], $incidents['lastupdated']);
+    }
+    elseif (date('dmy', $incidents['lastupdated']) == date('dmy', ($now-86400)))
+    {
+        $updated = "{$strYesterday} @ ".ldate($CONFIG['dateformat_time'], $incidents['lastupdated']);
+    }
+    elseif ($incidents['lastupdated'] < $now - 86400 AND
+            $incidents['lastupdated'] > $now - (86400 * 6))
+    {
+        $updated = ldate('l', $incidents['lastupdated'])." @ ".ldate($CONFIG['dateformat_time'], $incidents['lastupdated']);
+    }
+    else
+    {
+        $updated = ldate($CONFIG['dateformat_datetime'], $incidents["lastupdated"]);
+    }
+
+    // Fudge for old ones
+    $tag = $incidents['servicelevel'];
+    if ($tag=='') $tag = servicelevel_id2tag(maintenance_servicelevel($incidents['maintenanceid']));
+
+    $slsql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag}' AND priority='{$incidents['priority']}' ";
+    $slresult = mysql_query($slsql);
+    if (mysql_error()) trigger_error("mysql query error ".mysql_error(), E_USER_WARNING);
+    $servicelevel = mysql_fetch_object($slresult);
+    if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ($slsql)", E_USER_WARNING);
+
+    // Get Last Update
+    list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incidents['id']);
+
+    // Get next target
+    $target = incident_get_next_target($incidents['id']);
+    $working_day_mins = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
+    // Calculate time remaining in SLA
+    switch ($target->type)
+    {
+        case 'initialresponse':
+            $slatarget = $servicelevel->initial_response_mins;
+            break;
+        case 'probdef':
+            $slatarget = $servicelevel->prob_determ_mins;
+            break;
+        case 'actionplan':
+            $slatarget = $servicelevel->action_plan_mins;
+            break;
+        case 'solution':
+            $slatarget = ($servicelevel->resolution_days * $working_day_mins);
+            break;
+        default:
+            $slaremain = 0;
+            $slatarget = 0;
+    }
+
+
+    if ($slatarget > 0) $slaremain = ($slatarget - $target->since);
+    else $slaremain = 0;
+
+    // Get next review time
+    $reviewsince = incident_get_next_review($incidents['id']);  // time since last review in minutes
+    $reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes
+    if ($reviewtarget > 0)
+    {
+        $reviewremain = ($reviewtarget - $reviewsince);
+    }
+    else
+    {
+        $reviewremain=0;
+    }
+
+    // Remove Tags from update Body
+    $update_body = parse_updatebody($update_body);
+    $update_user = user_realname($update_userid,TRUE);
+
+    // ======= Row Colors / Shading =======
+    // Define Row Shading lowest to highest priority so that unimportant colors are overwritten by important ones
+    switch ($queue)
+    {
+        case 1: // Action Needed
+            $class='shade2';
+            $explain='';
+            if ($slaremain >= 1)
+            {
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class='notice';
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class='urgent';
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class='critical';
+                if ($incidents["priority"]==4) $class='critical';  // Force critical incidents to be critical always
+            }
+            elseif ($slaremain < 0) $class='critical';
+            else
+            {
+                $class='shade1';
+                $explain='';  // No&nbsp;Target
+            }
+            // if ($target->time > $now + ($target->targetval * 0.10 )) $class='critical';
+        break;
+
+        case 2: // Waiting
+            $class='idle';
+            $explain='No Action Set';
+        break;
+
+        case 3: // All Open
+            $class='shade2';
+            $explain='No Action Set';
+        break;
+
+        case 4: // All Closed
+            $class='expired';
+            $explain='No Action';
+        break;
+    }
+
+    // Set Next Action text if not already set
+    if ($update_nextaction == '') $update_nextaction = $explain;
+
+    // Create URL for External ID's
+    $externalid = '';
+    $escalationpath = $incidents['escalationpath'];
+    if (!empty($incidents['escalationpath']) AND !empty($incidents['externalid']))
+    {
+        $epathurl = str_replace('%externalid%',$incidents['externalid'],$epath[$escalationpath]['track_url']);
+        $externalid = "<a href=\"{$epathurl}\" title=\"{$epath[$escalationpath]['url_title']}\">{$incidents['externalid']}</a>";
+    }
+    elseif (empty($incidents['externalid']) AND $incidents['escalationpath'] >= 1)
+    {
+        $epathurl = $epath[$escalationpath]['home_url'];
+        $externalid = "<a href=\"{$epathurl}\" title=\"{$epath[$escalationpath]['url_title']}\">{$epath[$escalationpath]['name']}</a>";
+    }
+    elseif (empty($incidents['escalationpath']) AND !empty($incidents['externalid']))
+    {
+        $externalid = format_external_id($incidents['externalid']);
+    }
+
+    echo "<tr class='{$class}'>";
+    echo "<td align='center'>";
+
+    echo "<a href='incident_details.php?id={$incidents['id']}' class='direct'>{$incidents['id']}</a>";
+    if ($externalid != '') echo "<br />{$externalid}";
+    echo "</td>";
+    echo "<td>";
+    if (!empty($incidents['softwareid'])) echo software_name($incidents['softwareid'])."<br />";
+    if (count(open_activities_for_incident($incidents['id'])) > 0)
+    {
+        echo icon('timer', 16, $strOpenActivities).' ';
+    }
+    
+    if (drafts_waiting_on_incident($incidents['id']))
+    {
+    	echo icon('note2', 16, $strDraftsExist).' ';
+    }
+    
+    echo "<a href=\"javascript:incident_details_window('{$incidents['id']}','incident{$incidents['id']}')\" class='info'>";
+    if (trim($incidents['title']) != '')
+    {
+        echo ($incidents['title']);
+    }
+    else
+    {
+        echo $strUntitled;
+    }
+
+    if (!empty($update_body) AND $update_body != '...')
+    {
+        echo "<span>{$update_body}</span>";
+    }
+    else
+    {
+        $update_currentownername = user_realname($update_currentowner,TRUE);
+        $update_headertext = $updatetypes[$update_type]['text'];
+        $update_headertext = str_replace('currentowner', $update_currentownername,$update_headertext);
+        $update_headertext = str_replace('updateuser', $update_user, $update_headertext);
+        echo "<span>{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp)." </span>";
+    }
+    echo "</a></td>";
+
+    echo "<td>";
+    echo "<a href='contact_details.php?id={$incidents['contactid']}' class='info'><span>{$incidents['phone']}<br />";
+    echo "{$incidents['email']}</span>{$incidents['forenames']} {$incidents['surname']}</a><br />";
+    echo htmlspecialchars($site)." </td>";
+
+    echo "<td align='center'>";
+    //FIXME functionise
+    $slsql = "SELECT COUNT(*) AS count FROM `{$dbServiceLevels}`";
+    $slresult = mysql_query($slsql);
+    $count_obj = mysql_fetch_object($slresult);
+    if ($count_obj->count != 4)
+    {
+        // Service Level / Priority
+        if (!empty($incidents['maintenanceid']))
+        {
+            echo $servicelevel->tag."<br />";
+        }
+        elseif (!empty($incidents['servicelevel']))
+        {
+            echo $incidents['servicelevel']."<br />";
+        }
+        else
+        {
+            echo "{$strUnknownServiceLevel}<br />";
+        }
+    }
+    $blinktime = (time() - ($servicelevel->initial_response_mins * 60));
+    if ($incidents['priority'] == 4 AND $incidents['lastupdated'] <= $blinktime)
+    {
+        echo "<strong class='critical'>".priority_name($incidents["priority"])."</strong>";
+    }
+    else
+    {
+        echo priority_name($incidents['priority']);
+    }
+    echo "</td>\n";
+
+    echo "<td align='center'>";
+    if ($incidents['status'] == 5 AND $incidents['towner'] == $sit[2])
+    {
+        echo "<strong>{$strAwaitingYourResponse}</strong>";
+    }
+    else
+    {
+        echo incidentstatus_name($incidents["status"]);
+    }
+
+    if ($incidents['status'] == 2)
+    {
+        echo "<br />".closingstatus_name($incidents['closingstatus']);
+    }
+
+    echo "</td>\n";
+    
+    echo "<td align='center'>";
+    echo "{$updated}";
+    echo " {$strby} {$update_user}";
+
+    if ($incidents['towner'] > 0 AND $incidents['towner'] != $user)
+    {
+        if ($incidents['owner'] != $user OR $user == 'all')
+        {
+        	echo "<br />{$strOwner}: <strong>".user_realname($incidents['owner'],TRUE)."</strong>";
+        }
+        echo "<br />{$strTemp}: <strong>".user_realname($incidents['towner'],TRUE)."</strong>";
+    }
+    elseif ($incidents['owner'] != $user)
+    {
+        echo "<br />{$strOwner}: <strong>".user_realname($incidents['owner'],TRUE)."</strong>";
+    }
+    
+    echo "</td>\n";
+
+    echo "<td align='center' title='{$explain}'>";
+    // Next Action
+    /*
+        if ($target->time > $now) echo target_type_name($target->type);
+        else echo "<strong style='color: red; background-color: white;'>&nbsp;".target_type_name($target->type)."&nbsp;</strong>";
+    */
+    $targettype = target_type_name($target->type);
+    if ($targettype != '')
+    {
+        if ($slaremain > 0)
+        {
+            echo sprintf($strSLAInX, $targettype."<br />", format_workday_minutes($slaremain));
+        }
+        elseif ($slaremain < 0)
+        {
+            echo $targettype."<br />";
+            echo sprintf($strXLate, format_workday_minutes((0 - $slaremain)));
+        }
+        elseif ($slaremain == 0)
+        {
+            echo $targettype."<br />".$strDueNow;
+        }
+    }
+    else
+    {
+        echo $strNone;
+    }
+
+    echo "</td>";
+    
+    // Final column
+    if ($reviewremain>0 && $reviewremain<=2400)
+    {
+        // Only display if review is due in the next five days
+        echo "<td align='center'>";
+        echo sprintf($strReviewIn, format_workday_minutes($reviewremain));
+    }
+    elseif ($reviewremain<=0)
+    {
+        echo "<td align='center' class='review'>";
+        if ($reviewremain > -86400)
+        {
+            echo "".icon('review', 16)." {$strReviewDueNow}";
+        }
+        else
+        {
+            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_workday_minutes($reviewremain*-1));
+        }
+    }
+    else
+    {
+        echo "<td align='center'>";
+        if ($incidents['status'] == 2) echo "{$strAge}: ".format_seconds($incidents["duration_closed"]);
+        else echo sprintf($strXold, format_seconds($incidents["duration"]));
+    }
+    echo "</td>";
+    echo "</tr>\n";
+}
+echo "</table><br /><br />\n\n";
+
+echo "<table class='incidentkey'><tr>";
+echo "<td class='shade1'>{$strOpen}</td>";
+echo "<td class='notice'>{$strSLAApproaching}</td>";
+echo "<td class='urgent'>{$strSLADue}</td>";
+echo "<td class='critical'>{$strSLAMissed}</td>";
+echo "</tr></table>";
+
+if ($rowcount != 1)
+{
+    echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>$rowcount</strong>")."</p>";
+}
+else
+{
+    echo "<p align='center'>".sprintf($strSingleIncident, "<strong>$rowcount</strong>")."</p>";
+}
+
+if ($CONFIG['debug']) echo "<!-- End of Support Incidents Table -->\n";
+?>

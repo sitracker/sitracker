@@ -1,0 +1,1 @@
+﻿Nogle planlægnings opgaver kan tage ekstra parametre, se opgave beskrivelsen for mere information.

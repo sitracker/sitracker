@@ -1,0 +1,48 @@
+/* Webtrack Cool Blue Style: Cool Blue */
+/* by Paul Harrison, paul.harrison@salfordsoftware.co.uk - August 2001 */
+/* Recreated by Ivan Lucas - November 2006 */
+
+body
+{
+    margin: 0px;
+background-color: #FFF; color: #000; font-family: Tahoma, Helvetica, sans serif; font-size: 8pt;
+  background-image: url(../styles/images/coolblue.jpg);
+}
+a           { color: #3366CC; font-weight: bold; text-decoration: none; }
+a:hover     { color: #3366CC; font-weight: bold; text-decoration: underline; }
+a:active    { color: #3366CC; font-weight: bold; text-decoration: underline; }
+
+#apptitle,#statusbar { color: #FFF; background-image: url(../styles/images/bg.gif); }
+#menu { background-color: #1063BE; background-image: url(../styles/images/bg1.gif); }
+#menu ul, #menu ul li ul { background-color: #1063BE; }
+#menu a { color: white; }
+
+div.windowbox
+{
+    border: 1px solid #203894;
+}
+
+div.windowtitle
+{
+    background-image: url(../styles/images/bg.gif);
+    background-color: #203894;
+}
+div.windowtitle a:hover { color: white;}
+
+#menu ul, #menu li ul, #menu li li { background-color: #1063BE;  }
+#menu a.greyed, #menu a.greyed:hover { color: #000; }
+#menu li:hover {
+  color: white;
+  background-color: #E1E1E2;
+  font-weight: bold;
+}
+#menu li:hover>a, #menu a:hover {
+  color: white;
+}
+
+#topsearch #searchfield {
+  background-color: #D0D6E2;
+}
+div#footerbar { text-align: center; }
+#statusbar a { color: white; }
+div.windowtitle, div.windowtitle a { color: white;}

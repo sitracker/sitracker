@@ -1,0 +1,89 @@
+/* Webtrack Flashy Style */
+/* by Tom */
+
+@import url("/styles/webtrack.css");
+
+body		{ background-color: #FFFFFF; color: #000066; font-family: Tahoma, Helvetica, sans serif; }
+p		    { font-size: 8pt; color: #000066; }
+table		{ font-size: 8pt; color: #000066; }
+td		  { font-size: 8pt; color: #000066; }
+a		{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; font-weight: bold; text-decoration: none; }
+a:hover		{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; font-weight: bold; text-decoration: underline; }
+a:active	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; font-weight: bold; text-decoration: underline; }
+center		{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; }
+a em { font-style: normal; text-decoration: underline; }
+
+.smlink		{ font-family: Arial Narrow, Helvetica, sans serif; font-size: 8pt; color: #000066; font-weight: bold; text-decoration: none; }
+.smlink:hover	{ font-family: Arial Narrow, Helvetica, sans serif; font-size: 8pt; color: #000066; font-weight: bold; text-decoration: underline; }
+.smlink:active	{ font-family: Arial Narrow, Helvetica, sans serif; font-size: 8pt; color: #000066; font-weight: bold; text-decoration: underline; }
+
+.pagetitle	{ font-family: Tahoma, Helvetica, sans serif; font-size: 14pt; color: #000066; font-weight: bold; text-align: center; }
+.subtitle	{ font-family: Tahoma, Helvetica, sans serif; font-size: 12pt; color: #000066; font-weight: bold; text-align: center; }
+.large	{ font-family: Tahoma, Helvetica, sans serif; font-size: 14pt; font-weight: bold; color: #000066}
+.narrow		{ font-family: Arial Narrow, Helvetica, sans serif; font-size: 8pt; color: #000066; }
+.error		{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FF0000; font-weight: bold; text-align: center; }
+.red		{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FF0000; }
+.textbox	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; }
+.textarea	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; }
+.dropdown	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; }
+.submit		{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000066; }
+
+/* Main Title at Top of Pages*/
+.titleshade	{ font-size: 16pt; color: #FFFFFF; font-weight: bold; text-align: center; background-color: #000066; }
+
+/* Menu Row at Top of Pages */
+.blackshade	{ background-color: #000000; color: #FFFFFF; text-align: center; }
+.barlink	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+.barlink:hover	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.barlink:active	{ font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.navbarmenu	{ background-color: #000000; font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; font-weight: bold; color: #FFFFFF; height:20px; }
+
+
+/* Shading for tables*/
+.mainshade	{ background-color: #FFFFFF; } /* Background tables */
+.shade1		{ background-color: #CCCCFF; }
+.shade2		{ background-color: #DDDDFF; }
+.urgent 	{ background-color: #BBBBFF; } /* #E8B7DD; */
+.critical { background-color: #AAAAFF; }
+.expired	{ background-color: #DDDDFF; }
+.idle     { background-color: #CCffCC; } /* #90ee90; */
+
+
+/* SpellCheck */
+a.spellLink {
+	color:				Red;
+	text-decoration:	none;
+	border-bottom:		1px dashed Red;
+}
+
+a.spellLink:hover {
+	color:				Red;
+	text-decoration:	none;
+	border-bottom:		1px dashed Red;
+}
+
+.spell-tooltip {
+	position:	absolute;
+	width:		250px;
+	border:		1px Solid WindowFrame;
+	background:	Infobackground;
+	color:		InfoText;
+	font:		StatusBar;
+	font:		Status-Bar;
+	padding:	3px;
+	filter:		progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+	color:		blue !important;
+	background:	none;
+}
+
+.tablelist TD {border-left: 1px solid #000066;border-top: 1px solid #000066;}
+TABLE.tablelist {border: 1px solid #000066;}
+.tablelist TR {border: 1px solid #000066; border-right: 1px solid #000066 ! important;}
+.tablelist TH {border-left: 1px solid #000066; border-top: 1px solid #000066;}
+
+.review { background-color: #7AC5CD; }

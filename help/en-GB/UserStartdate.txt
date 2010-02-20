@@ -1,0 +1,1 @@
+This is the date the user started (or will start) work.  This is used only for holiday entitlement calculation purposes and does not affect the users ability to log in or anything else.

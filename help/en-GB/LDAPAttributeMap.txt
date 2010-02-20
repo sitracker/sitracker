@@ -1,0 +1,10 @@
+Enter attribute mappings one per line, in the format "key=>value"
+
+For example:
+
+realname=>cn
+jobtitle=>title
+email=>mail
+phone=>phone
+forenames=>givenname
+surname=>surname

@@ -1,0 +1,3 @@
+e.g. "In france until Tue 22nd"
+
+Displayed on the 'view users' page for the benefit of your colleagues

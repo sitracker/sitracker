@@ -1,0 +1,2 @@
+﻿Tilbagekaldelse af en notifikation, fjerner den fra alle brugere, uanset om de har læst den eller ej.
+

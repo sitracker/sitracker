@@ -1,0 +1,55 @@
+http://evolt.org/incoming_mail_and_php provides the basis for this document
+
+This document is currently a work in progress as further MTAs are tested they will be added here.
+
+Requirements
+
+* PHP compiled as a CGI binary (http://uk.php.net/install.unix.commandline)
+* A MTA available
+* An email address
+* Shell access to server
+
+Note
+* The processing of inbound email has only been tested on Linux though should work on Windows with a suitable MTA (google for "sendmail windows")
+
+The general method
+
+Their are two ways of forwarding mail into SiT, these depend on the whether you have root access to the server or not.
+
+The first is to create an alias in the alias file, the second is to create a real user and setup a forward to the PHP script. The former is preferable if you have root access to the machine.
+
+
+======================
+====    Exim      ====
+======================
+
+1) Alias file
+
+edit /etc/alias adding the email address you want to receive email to and the full path to the script e.g.
+
+support:|/opt/sitracker/htdocs/inboundemail.php
+
+Ensuring you have a address_pipe: section in your exim configuration section such as:
+
+address_pipe:
+  driver = pipe
+  pipe_as_creator
+
+As of Exim 4.24 and the FIXED_NEVER_USERS, you'll need to change pipe_as_creator to user = ???? where ???? is not root
+
+The default on Debian works fine.
+
+2) Forward file
+
+You need to create a .forward in your home directory. Here you have two options
+
+a) All mail should only go into SiT only
+
+Add the full path to the inbound script in the .forward file e.g.
+|/opt/sitracker/inboundemail.php
+
+b) You want mail to be sent to another email address as well as SiT.
+
+Place the email address and a comma before the script
+
+fred@example.com,|/opt/sitracker/inboundemail.php

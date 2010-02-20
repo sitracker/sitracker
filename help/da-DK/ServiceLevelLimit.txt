@@ -1,0 +1,1 @@
+﻿Dette er antallet som kunden kan overtrække før de ikke længere kan logge nogle hændelser.

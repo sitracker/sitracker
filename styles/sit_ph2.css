@@ -1,0 +1,57 @@
+/* Webtrack Orange'n Grey Style: Orange'n Grey */
+/* by Paul Harrison, paul.harrison@salfordsoftware.co.uk - August 2001 */
+/* Recreated by Ivan Lucas - November 2006 */
+
+#masthead { background-image: none;}
+#apptitle, #statusbar { text-align: center; background-color: #FFA953; background-image: none; color: #773E23;}
+
+body        { background-color: #FFFFFF; color: #000000; font-family: Tahoma, Helvetica, sans serif; }
+p       { font-size: 8pt; color: #000000; }
+table       { font-size: 8pt; color: #000000; }
+td      { font-size: 8pt; color: #000000; }
+a       { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #808080; font-weight: bold; text-decoration: none; }
+a:hover     { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #808080; font-weight: bold; text-decoration: underline; }
+a:active    { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #808080; font-weight: bold; text-decoration: underline; }
+center      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+
+h1 { color: #FFF; background-color: #FFC68C; margin: 0px; }
+h4 {text-align: center;}
+
+/* Shading for tables*/
+.mainshade  { background-color: #FFFFFF; }
+tr.shade1     { background-color: #FFC68C; }
+tr.shade2     { background-color: #FFA953; font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none;  }
+tr.urgent     { background-color: #E8B7DD; }
+tr.critical   { background-color: #f08080; }
+tr.expired    { background-color: #DDDDDF; }
+tr.idle       { background-color: #CCffCC; } /* #90ee90; */
+
+form table.vertical { margin-left: auto; margin-right: auto; }
+form p { text-align:center;}
+
+div.windowbox
+{
+    border: 1px solid #FFA953;
+}
+
+div.windowtitle, #statusbar
+{
+    background-color: #FFA953;
+}
+
+
+input[type=submit], input[type=button], input[type=reset]
+{
+    margin-top: 4px;
+    background: #FFA953;
+    color: white; border: 1px solid #ccc;
+    /*text-transform: uppercase;*/
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+input[type=reset] {margin-left: 4px; margin-right:4px;}
+input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover
+{
+    background: white; border: 1px solid #FFA953; color: #FFA953;
+}

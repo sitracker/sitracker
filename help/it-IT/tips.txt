@@ -1,0 +1,15 @@
+### SiT Suggerimenti per l'uso, uno per linea           (questo satà ignorato)
+Per registrare una nuova segnalazione scegli <strong>Aggiungi Segnalazione</strong> dal menu <strong>Supporto</strong>
+Lo sai che puoi vedere le code di segnalazione delle altre persone? Vai a <strong>SiT!</strong>-&gt;<strong>Utenti</strong> e clicca su un link nella colonna <strong>Segnalazioni In Coda</strong>
+Puoi dare un occhiata a tutte le segnalazioni aperte attualmente andando su <strong>Supporto</strong>-&gt;<strong>Gurada Segnalazioni</strong>
+Impostando le tue competenze (<strong>SiT!</strong>-&gt;<strong>I Miei Dettagli</strong>-&gt;<strong>Le Mie Competenze</strong>) le segnalazioni per le quali hai le competenze appariranno nella tua coda anche quando non sono registrate a te in modo specifico
+Per avere le tue segnalazioni temporaneamente assegnate a un tecnico sostituto quando il tuo status è su assente imposta un tecnico di riserva per ogni prodotto che supporti (<strong>SiT!</strong>-&gt;<strong>I Miei Dettagli</strong>-&gt;<strong>I Miei Sostituti</strong>)
+Un sito può avere uno o più contratti, ognuno specifica il prodotto supportato, il numero di segnalazioni che possono essere registrate e i contatti che possono registrare segnalazioni
+Puoi passare sul titolo di una segnalazione nella coda segnalazioni per vedere un fumetto visualizzare l'estratto dagli ultimi aggiornamenti per la segnalazione
+Le segnalazioni possono essere registrate con varie priorità relative all'impatto che il problema ha sul cliente. Da <em>Basso</em> che indica un impatto piccolo o nullo a <em>Critico</em> che indica un impatto importante
+Quando esci dall'ufficio, imposta il tuo stato usando il menu a tendina nella pagina principale, questo assegnerà automaticamente le segnalazioni a un tuo sostituto/i
+Quando contrassegni un attività come privata essa sarà visibile solo da te, una caratteristica utile per impostare dei promemoria
+Puoi assegnare dei tags alle segnalazioni, attività, contatti e altri elementi
+Puoi riposizionare questo box dei suggerimenti e gli altri trascinandone la barra del titolo
+Puoi aggiungere o rimuovere gli elementi del cruscotto cliccando sull'icona in alto a destra di questa pagina
+Puoi impostare dei trigger per avvisarti che qualcosa accade, per esempio quando qualcuno va in vacanza (Vedi <strong>I Miei Dettagli</strong>-&gt;<strong>I Miei Triggers</strong>)

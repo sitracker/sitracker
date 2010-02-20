@@ -1,0 +1,1 @@
+A scheduler action must be enabled in order for it to run. If an action status is set to 'Disabled' it will never run.

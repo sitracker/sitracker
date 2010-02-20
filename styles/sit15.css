@@ -1,0 +1,87 @@
+/* Webtrack Style: Richard */
+/* by Ivan Lucas, ivan.lucas@salfordsoftware.co.uk - August 2001 */
+
+@import url("/styles/webtrack.css");
+
+body        { background-color: #7190E0; color: #000000; font-family: Tahoma, Helvetica, sans serif; }
+p,table,td    { font-size: small; color: #000000; }
+a       { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: none; }
+a:hover     { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: underline; }
+a:active    { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: underline; }
+center      { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #000000; }
+a em { font-style: normal; text-decoration: underline; }
+
+.smlink     { font-family: Arial Narrow, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: none; }
+.smlink:hover   { font-family: Arial Narrow, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: underline; }
+.smlink:active  { font-family: Arial Narrow, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: underline; }
+
+.pagetitle  { font-family: Tahoma, Helvetica, sans serif; font-size: 14pt; color: #000000; font-weight: bold; text-align: center; }
+.subtitle   { font-family: Tahoma, Helvetica, sans serif; font-size: 12pt; color: #000000; font-weight: bold; text-align: center; }
+.large  { font-family: Tahoma, Helvetica, sans serif; font-size: 14pt; font-weight: bold; }
+.narrow     { font-family: Arial Narrow, Helvetica, sans serif; font-size: small; color: #000000; }
+.error      { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #FF0000; font-weight: bold; text-align: center; }
+.red        { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #FF0000; }
+.textbox    { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #000000; }
+.textarea   { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #000000; }
+.dropdown   { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #000000; }
+.submit     { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #000000; }
+
+/* Main Title at Top of Pages*/
+.titleshade { font-size: 16pt; color: #FFFFFF; font-weight: bold; text-align: center; background-color: #50C028; }
+
+/* Menu Row at Top of Pages */
+#menu li li { background-color: #7190E0;}
+.blackshade { background-color: #000000; color: #FFFFFF; text-align: center; }
+.barlink    { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+.barlink:hover  { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.barlink:active { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.navbarmenu { background-color: #000000; font-family: Tahoma, Helvetica, sans serif; font-size: small; font-weight: bold; color: #FFFFFF; height:20px; }
+
+
+/* Shading for tables*/
+.mainshade  { background-color: #7190E0; }
+.shade1     { background-color: #D6DFF7; }
+.shade2     { background-color: #F1F4FD; }
+.urgent     { background-color: #ffbbaa; } /* #E8B7DD; */
+.critical { background-color: #f08080; }
+.expired    { background-color: #DDDDDF; }
+.idle     { background-color: #CCffCC; } /* #90ee90; */
+.review { background-color: #7AC5CD; }
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+.tablelist TD {border-left: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; }
+TABLE.tablelist {border: 1px solid #FFFFFF; }
+.tablelist TR {border: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF ! important; }
+.tablelist TH {border-left: 1px solid #FFFFFF; border-top: 1px solid #FFFFFF; }
+

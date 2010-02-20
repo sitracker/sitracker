@@ -1,0 +1,3 @@
+﻿Dashboadet giver dig adgange til Dashlets, plugins der viser forskellige typer information.
+
+Du kan trække i Dashletsne for at flytte rundt på dem, eller klikke på ikonet til højre for at tilføje eller fjerne Dashlets.

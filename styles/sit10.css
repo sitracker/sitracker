@@ -1,0 +1,79 @@
+/* Just Light */
+
+h1 { color: #ABABAB; background-color: #F2F2F2; margin: 0px; padding: 3px 0px 3px 0px; }
+body        { background-color: #FFFFFF; color: #ABABAB; }
+p       { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #A0A0A0; }
+table       { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #A0A0A0; }
+td      { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #A0A0A0; }
+a       { font-family: verdana, Helvetica, sans serif; font-size: 8pt; color: #A0A0A0; text-decoration: none; }
+a:hover     { font-family: verdana, Helvetica, sans serif; font-size: 8pt; color: #A0A0A0; text-decoration: underline; }
+a:active    { font-family: verdana, Helvetica, sans serif; font-size: 8pt; color: #A0A0A0; text-decoration: underline; }
+center      { font-family: arial, Helvetica, sans serif; font-size: 9pt; color: #A0A0A0; }
+a em { font-style: normal; text-decoration: underline; }
+
+#menu { background-color: #ABABAB;  }
+#menu ul, #menu ul li ul { background-color: #ABABAB; }
+#menu a { color: #F2F2F2; background-color: #ABABAB; }
+
+div.windowbox
+{
+    border: 1px solid #ABABAB;
+}
+
+div.windowtitle, #statusbar
+{
+    background-color: #ABABAB;
+}
+td { color: #555; }
+.mainshade  { background-color: #FFFFFF; }
+.shade1     { background-color: #F8F7F7; }
+.shade2     { background-color: #F7F7F8; }
+.expired    { background-color: #FFFFFF; }
+.urgent     { background-color: #E7CBB3; }
+.critical, tr.critical   { background-color: #E79992; color: #555;}
+.critical a {color: #555;}
+.idle       { background-color: #F8F8F8; }
+.review { background-color: #7AC5CD; }
+
+
+.navbarmenu { background-color: #F8F8F8; font-family: arial, Helvetica, sans serif; font-size: 8pt; font-weight: bold; color: #A0A0A0; width: 75px; height:20px; }
+
+
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+
+.tablelist TD {border-left: 1px solid #ffffff;border-top: 1px solid #ffffff;}
+table.tablelist {border: 1px solid #ffffff;}
+.tablelist TR {border: 1px solid #ffffff; border-right: 1px solid #ffffff ! important;}
+.tablelist TH {border-left: 1px solid #ffffff; border-top: 1px solid #ffffff;}

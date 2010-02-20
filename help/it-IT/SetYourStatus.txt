@@ -1,0 +1,3 @@
+* Impostando il tuo stato su 'Non accettare' o uno stato simile, per esempio 'Assente per malattia', le tue segnalazioni saranno riassegnate ai sostituti specificati in 'Miei sostituti'
+
+* Impostando nuovamente il tuo stato su 'accettare' ti verranno riassegnate le segnalazioni ancora in attesa a te competenti.

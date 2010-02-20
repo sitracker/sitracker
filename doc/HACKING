@@ -1,0 +1,214 @@
+Loosely inspired by and based on Aaron Seigo's HACKING file from KDE kicker
+
+You may (will) notice that there are many discrepencies between the current
+code base and this document. All new development should follow the coding style
+as described below and one day the codebase will actually be consistent! Also
+feel free to clean up the code around code you work on.
+
+Text File format
+----------------
+Text files should be UTF-8 encoded with UNIX style end-of-lines.
+
+
+Comments
+--------
+Code should be written with enough clarity that comments are not needed
+above each line. However, if the code does something in a particular way
+for a specific reason that may not be obvious to the next person who has to
+work on it do provide a short comment describing what it does and why.
+
+Excessive commenting should be avoided since if there are too many comments
+they tend to get ignored and won't be maintained, causing the comments and
+the actual code to drift apart. Innacurate comments are worse than accurate
+comments!
+
+While using the /* style */ of comments is ok, comments should use // wherever
+possible.
+
+Comments can also provide notes for future work, including:
+
+    // TODO: this is a todo item
+    //       and should explain the todo in detail
+
+    // FIXME: this is documenting a bug. It is preferred that they are fixed.
+    //      but if you don't fix it, at least document it to save the next
+    //      person some time in tracking down the problem.
+
+    // DEPRECATED: this is marking a feature as deprecated, and should
+    //             state a version or date when the feature is targetted
+    //             to be removed completely
+
+
+Use Doxygen (http://www.stack.nl/~dimitri/doxygen/) format to document functions:
+e.g.
+
+/**
+ * A function to create foo's out of bar's
+ *
+ * long description long description long description long description
+ * long description long description long description long description
+ * long description long description long description long description
+ * long description long description long description long description
+ * @author Joe Public
+ * @param int $bar An existing bar
+ * @return int A brand new foo
+ */
+function foobar($bar)
+{
+    ...
+}
+
+
+
+Indenting
+---------
+Tabstop is 4 spaces. No tabs, only spaces.
+
+Try to keep lines under 80 characters in width. When wrapping a single
+logical line of code across multiple lines, new lines should be indented
+at least once and should preferably line up with parentheses, if any, on
+the line above. e.g.:
+
+    someMethod(parameterOne, parameterTwo,
+               parameterThree, parameterFour);
+
+If a boolean expression is spread out over several lines, the boolean
+operator is always the last item on the line, e.g.:
+
+    if ((condition1 || condition2) &&
+        condition3 &&
+        (condition4 || condition5))
+    {
+
+Switch statements should have the case line indented and the case block
+itself further indented, e.g.:
+
+    switch (condition)
+    {
+        case 1:
+            ...
+            break;
+        case 2:
+            ...
+            break;
+        default:
+            ...;
+    }
+
+
+Line Length
+-----------
+Try to keep all code lines 80 characters or less, certainly anything above
+100 characters should cause you to consider splitting onto several lines.
+This is except for long strings of HTML that would be harder to read over
+several lines and for generated code.
+
+
+Spaces
+------
+A single space should appear between keywords and parentheses, eg:
+
+    if (
+    while (
+    for (
+
+No spaces appear between function/method names and parentheses:
+
+    function(
+    someObject->method(
+
+No spaces appear between opening closing parens and the arguments:
+
+    for (int i = 0; i < count; ++i)
+
+Spaces appear between operators, e.g.:
+
+    int i = i + 3;
+    someObject->setValue(someObject->currentValue() + 1)
+
+
+Blank Lines
+-----------
+A single blank line should appear between if statements:
+
+    if (foo)
+    {
+        ...
+    }
+    else
+    {
+        ....
+    }
+
+    if (bar)
+    {
+        ....
+    }
+
+Two blank lines should appear between function definitions:
+
+function foo()
+{
+    ...
+}
+
+
+function bar()
+{
+    ...
+}
+
+
+Braces
+------
+Braces always appear on a line by themself, indented to align with the
+above keyword:
+
+    if (foo)
+    {
+        ...
+    }
+    else
+    {
+        ...
+    }
+
+Unless it uglifies the code, use braces even for one-liner conditionals:
+
+    if (foo)
+    {
+        return 1;
+    }
+
+If you must use a one line conditional, keep it on one line - don't split it
+
+    if (foo) dothis();
+
+Always use braces if the conditional expression wraps across multiple
+physical lines.
+
+Braces around case blocks in switch statements are optional.
+
+
+SQL
+---
+SQL Statements (SELECT, UPDATE, INSERT...) and functions (ABS(), MATCH(), TIME())
+should be written in upper case with columns and expressions in lower case.
+
+Where clarity will be improved by it use backtick (`) to quote identifiers.
+
+SELECT *, ROUND(age) AS approxage FROM `names` WHERE `names`.id > 100;
+
+
+SiT Style Conventions
+=====================
+
+Database Queries
+----------------
+After a database query always check for errors, use trigger_error and throw
+E_USER_WARNING when reading data and E_USER_ERROR when writing data.
+
+When retrieving data from a database mysql_fetch_object should be used over any
+other method.
+
+

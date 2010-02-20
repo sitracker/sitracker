@@ -1,0 +1,3 @@
+Il Cruscotto ti permette di accedere alle Dashlets, plugin che visualizzano informazioni
+
+Puoi usare il drag and drop per organizzare le Dashlets oppure cliccare sull'icona a destra per aggiungerle o rimuoverle.

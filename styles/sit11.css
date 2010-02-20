@@ -1,0 +1,87 @@
+/* Webtrack Style: Ex Pea */
+/* by Ivan Lucas, ivan.lucas@salfordsoftware.co.uk - August 2001 */
+#masthead { background-image: none;}
+#apptitle { text-align: center; background-color: #009900; background-image: none;}
+
+h1 { background-color: #009900; }
+
+body        { background-color: #7190E0; color: #000000; font-family: Tahoma, Helvetica, sans serif; }
+p           { font-size: 8pt; color: #000000; }
+table       { font-size: 8pt; color: #000000; }
+td        { font-size: 8pt; color: #000000; }
+a       { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #3366CC; font-weight: bold; text-decoration: none; }
+a:hover     { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #3366CC; font-weight: bold; text-decoration: underline; }
+a:active    { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #3366CC; font-weight: bold; text-decoration: underline; }
+center      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+a em { font-style: normal; text-decoration: underline; }
+
+
+#menu { background-color: #205DD5; color: black;}
+#menu ul, #menu ul li ul { background-color: #205DD5; }
+#menu li li { background-color: #205DD5;}
+
+#menu a { color: white; }
+#menu a:hover { color: #CDE6F6; }
+
+
+.error      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FF0000; font-weight: bold; text-align: center; }
+.red        { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FF0000; }
+
+/* Menu Row at Top of Pages */
+.barlink    { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+.barlink:hover  { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.barlink:active { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.navbarmenu { background-color: #000000; font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; font-weight: bold; color: #FFFFFF; height:20px; }
+
+
+/* Shading for tables*/
+.mainshade  { background-color: #7190E0; }
+.shade1     { background-color: #D6DFF7; }
+.shade2     { background-color: #F1F4FD; }
+.urgent     { background-color: #ffbbaa; } /* #E8B7DD; */
+.critical { background-color: #f08080; }
+.expired    { background-color: #DDDDDF; }
+.idle     { background-color: #CCffCC; } /* #90ee90; */
+.review { background-color: #7AC5CD; }
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+.tablelist TD {border-left: 1px solid #FFFFFF;border-top: 1px solid #FFFFFF; }
+table.tablelist {border: 1px solid #FFFFFF; }
+.tablelist TR {border: 1px solid #FFFFFF; border-right: 1px solid #FFFFFF ! important; }
+.tablelist TH {border-left: 1px solid #FFFFFF; border-top: 1px solid #FFFFFF; }
+
+div.detailentryhidden { background-color: #7FA1FF; }
+
+div.windowtitle, div.windowtitle a, #statusbar, #statusbar a { color: white; }
+th { background-color: #009900; }

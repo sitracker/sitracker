@@ -1,0 +1,1 @@
+﻿Dette kunne være et inventar nummer, serienummer, MAC adresse osv.

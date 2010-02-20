@@ -1,0 +1,545 @@
+<?php
+// inboundemail.php - Process incoming emails
+//
+// SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
+//
+// This software may be used and distributed according to the terms
+// of the GNU General Public License, incorporated herein by reference.
+//
+// Note: if performance is poor with attachments, we should download attachments
+//       with the function in fetchSitMail.class.php
+// Note2: to be called from auto.php
+
+require_once ('core.php');
+require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
+require (APPLICATION_LIBPATH . 'mime_parser.inc.php');
+require (APPLICATION_LIBPATH . 'rfc822_addresses.inc.php');
+require (APPLICATION_LIBPATH . 'fetchSitMail.class.php');
+
+if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
+{
+    include (APPLICATION_LIBPATH . 'strings.inc.php');
+    require (APPLICATION_LIBPATH . 'functions.inc.php');
+    require_once (APPLICATION_LIBPATH . 'base.inc.php');
+}
+else
+{
+    global $CONFIG, $dbFiles, $dbUpdates, $dbTempIncoming, $dbIncidents, $now;
+    $fsdelim = DIRECTORY_SEPARATOR;
+}
+
+//hack as we have no session
+function populate_syslang2()
+{
+    global $CONFIG;
+    // Populate $SYSLANG with system lang
+    $file = APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php";
+    if (file_exists($file))
+    {
+        $fh = fopen($file, "r");
+
+        $theData = fread($fh, filesize($file));
+        fclose($fh);
+        $lines = explode("\n", $theData);
+        foreach ($lines as $values)
+        {
+            $badchars = array("$", "\"", "\\", "<?php", "?>");
+            $values = trim(str_replace($badchars, '', $values));
+            if (substr($values, 0, 3) == "str")
+            {
+                $vars = explode("=", $values);
+                $vars[0] = trim($vars[0]);
+                $vars[1] = trim(substr_replace($vars[1], "",-2));
+                $vars[1] = substr_replace($vars[1], "",0, 1);
+                $SYSLANG[$vars[0]] = $vars[1];
+            }
+        }
+        return $SYSLANG;
+    }
+    else
+    {
+        trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+    }
+}
+
+$SYSLANG = populate_syslang2();
+
+if ($CONFIG['enable_inbound_mail'] == 'MTA')
+{
+    // read the email from stdin (it should be piped to us by the MTA)
+    $fp = fopen("php://stdin", "r");
+    $rawemail = '';
+    while (!feof($fp))
+    {
+        $rawemail .= fgets($fp); // , 1024
+    }
+    fclose($fp);
+    $emails = 1;
+}
+elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
+{
+    $mailbox = new fetchSitMail($CONFIG['email_username'], $CONFIG['email_password'],
+                                $CONFIG['email_address'], $CONFIG['email_server'],
+                                $CONFIG['email_servertype'], $CONFIG['email_port'],
+                                $CONFIG['email_options']);
+
+
+    if (!$mailbox->connect())
+    {
+        if ($CONFIG['debug'])
+        {
+            echo "Connection error, see debug log for details.\n";
+        }
+        exit(1);
+    }
+
+    $emails = $mailbox->getNumUnreadEmails();
+//     $size = $mailbox->getTotalSize($emails);
+}
+else
+{
+    return FALSE;
+}
+
+if ($emails > 0)
+{
+    if ($CONFIG['debug'])
+    {
+        debug_log("Found {$emails} email(s) to fetch, Archive folder set to: '{$CONFIG['email_archive_folder']}'\n");
+    }
+    for ($i = 0; $i < $emails; $i++)
+    {
+        if ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
+        {
+            $rawemail = $mailbox->getMessageHeader($i + 1);
+            $rawemail .= "\n".$mailbox->messageBody($i + 1);
+
+            if ($mailbox->servertype == 'imap')
+            {
+                if (!empty($CONFIG['email_archive_folder']))
+                {
+                    if ($CONFIG['debug'])
+                    {
+                        debug_log("Archiving email");
+                    }
+                    $mailbox->archiveEmail($i + 1) OR debug_log("Archiving email ".($i + 1)." failed: ".imap_last_error());
+                }
+                else
+                {
+                    $mailbox->deleteEmail($i + 1) OR debug_log("Deleting email ".($i + 1)." failed: ".imap_last_error());
+                }
+            }
+        }
+
+        $mime = new mime_parser_class();
+        $mime->mbox = 0;
+        $mime->decode_headers = 1;
+        $mime->decode_bodies = 1;
+        $mime->ignore_syntax_errors = 1;
+
+        $parameters = array('Data'=>$rawemail);
+
+        $mime->Decode($parameters, $decoded);
+        $mime->Analyze($decoded[0], $results);
+        $to = $cc = $from = $from_name = $from_email = "";
+
+        if ($CONFIG['debug'])
+        {
+            debug_log("Message $i Email Type: '{$results['Type']}', Encoding: '{$results['Encoding']}'");
+            debug_log('DECODED: '.print_r($decoded, true));
+            //debug_log('RESULTS: '.print_r($results, true));
+        }
+
+        // Attempt to recognise contact from the email address
+        $from_email = strtolower($decoded[0]['ExtractedAddresses']['from:'][0]['address']);
+        $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` ";
+        $sql .= "WHERE email = '{$from_email}'";
+        if ($result = mysql_query($sql))
+        {
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $row = mysql_fetch_object($result);
+            $contactid = $row->id;
+        }
+
+        $from_name = $decoded[0]['ExtractedAddresses']['from:'][0]['name'];
+        // Convert the from encoding to UTF-8 if it isn't already
+        if (!empty($decoded[0]['ExtractedAddresses']['from:'][0]['encoding'])
+            AND strcasecmp('UTF-8', $decoded[0]['ExtractedAddresses']['from:'][0]['encoding']) !== 0)
+        {
+            $from_name = mb_convert_encoding($from_name, "UTF-8", strtoupper($decoded[0]['ExtractedAddresses']['from:'][0]['encoding']));
+            if ($CONFIG['debug']) debug_log("Converted 'from header' encoding from {$decoded[0]['ExtractedAddresses']['from:'][0]['encoding']} to UTF-8");
+        }
+
+        if (!empty($from_name))
+        {
+            $from =  $from_name . " <". $from_email . ">";
+        }
+        else
+        {
+            $from = $from_email;
+        }
+
+        $subject = $results['Subject'];
+        if (!empty($results['SubjectEncoding']) AND strcasecmp('UTF-8', $results['SubjectEncoding']) !== 0)
+        {
+            $subject = mb_convert_encoding($subject, "UTF-8", strtoupper($results['SubjectEncoding']));
+            if ($CONFIG['debug']) debug_log("Converted subject encoding from {$results['SubjectEncoding']} to UTF-8");
+        }
+
+        $date = $results['Date'];
+
+        if (is_array($decoded[0]['ExtractedAddresses']['to:']))
+        {
+            foreach ($decoded[0]['ExtractedAddresses']['to:'] as $var)
+            {
+                $num = sizeof($decoded[0]['ExtractedAddresses']['to:']);
+                $cur = 1;
+                if (!empty($var['name']))
+                {
+                    if (!empty($var['encoding']) AND strcasecmp('UTF-8', $var['encoding']) !== 0)
+                    {
+                        $var['name'] = mb_convert_encoding($var['name'], "UTF-8", strtoupper($var['encoding']));
+                    }
+                    $to .= $var['name']. " <".$var['address'].">";
+                    if ($cur != $num) $to .= ", ";
+                }
+                else
+                {
+                    $to .= $var['address'];
+                }
+                $cur++;
+            }
+        }
+
+        if (is_array($decoded[0]['ExtractedAddresses']['cc:']))
+        {
+            foreach ($decoded[0]['ExtractedAddresses']['cc:'] as $var)
+            {
+                $num = sizeof($decoded[0]['ExtractedAddresses']['cc:']);
+                $cur = 1;
+                if (!empty($var['name']))
+                {
+                    if (!empty($var['encoding']) AND strcasecmp('UTF-8', $var['encoding']) !== 0)
+                    {
+                        $var['name'] = mb_convert_encoding($var['name'], "UTF-8", strtoupper($var['encoding']));
+                    }
+                    $cc .= $var['name']. " <".$var['address'].">";
+                    if ($cur != $num) $cc .= ", ";
+                }
+                else
+                {
+                    $cc .= $var['address'];
+                }
+                $cur++;
+            }
+        }
+
+
+        switch ($results['Type'])
+        {
+            case 'html':
+
+                $message = $results['Alternative'][0]['Data'];
+                break;
+
+            case 'text':
+                $message = $results['Data'];
+                break;
+
+            default:
+                break;
+        }
+
+        // Extract Incident ID
+        if (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+        {
+            if (FALSE !== incident_status($m[1]))
+            {
+                $incidentid = $m[1];
+                debug_log("Incident ID found in email: '{$incidentid}'");
+            }
+        }
+
+        $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
+
+        plugin_do('email_arrived', array('incidentid' => $incidentid,
+                                         'contactid' => $contactid,
+                                         'subject' => $subject,
+                                         'decoded' => $decoded));
+
+        $customer_visible = 'No';
+        $part = 1;
+        //process attachments
+        if (!empty($incidentid) AND $incident_open)
+        {
+            $fa_dir = $CONFIG['attachment_fspath'].$incidentid.$fsdelim;
+        }
+        else
+        {
+            $fa_dir = $CONFIG['attachment_fspath']."updates{$fsdelim}";
+        }
+
+        if (!file_exists($fa_dir))
+        {
+            if (!mkdir($fa_dir, 0775, TRUE)) trigger_error("Failed to create incident update attachment directory $fa_dir",E_USER_WARNING);
+        }
+        $attachments = array();
+        if (is_array($results['Attachments']) OR is_array($results['Related']))
+        {
+            if (!is_array($results['Attachments']) AND is_array($results['Related']))
+            {
+                // Treat related content as attachment
+                $results['Attachments'] = $results['Related'];
+            }
+            foreach ($results['Attachments'] as $attachment)
+            {
+                $data = $attachment['Data'];
+                $filename = utf8_encode(mb_decode_mimeheader($attachment['FileName']));
+                $filename = str_replace(' ', '_', $filename);
+
+                if (empty($filename))
+                {
+                    $filename = 'part'.$part;
+                    if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
+                    $part++;
+                }
+                $filesize = strlen($data);
+                $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
+                $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
+                $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
+                mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                $fileid = mysql_insert_id();
+                $attachments[] = array('filename' => $filename, 'fileid' => $fileid);
+                $filename = $fileid."-".$filename;
+
+                if (is_writable($fa_dir))
+                {
+                    if ($CONFIG['debug']) debug_log("Writing attachment to disk: {$fa_dir}{$fileid}");
+                    $fwp = fopen($fa_dir.$fileid, 'a');
+                    fwrite($fwp, $data);
+                    fclose($fwp);
+                }
+                else
+                {
+                    debug_log("Attachment dir '{$fa_dir}' not writable");
+                }
+                $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` (`linktype`, `origcolref`, `linkcolref`, `direction`, `userid`) ";
+                $sql .= "VALUES('5', '{$updateid}', '{$fileid}', 'left', '0') ";
+                mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            }
+        }
+
+        // Convert the message encoding to UTF-8 if it isn't already
+        if (!empty($results['Encoding']) AND strcasecmp('UTF-8', $results['Encoding']) !== 0)
+        {
+            $message = mb_convert_encoding($message, "UTF-8", strtoupper($results['Encoding']));
+            if ($CONFIG['debug']) debug_log("Converted message encoding from {$results['Encoding']} to UTF-8");
+        }
+
+        //** BEGIN UPDATE INCIDENT **//
+        $headertext = '';
+        // Build up header text to append to the incident log
+        if (!empty($from))
+        {
+            $headertext = "From: [b]".htmlspecialchars(mysql_real_escape_string($from), ENT_NOQUOTES)."[/b]\n";
+        }
+
+        if (!empty($to))
+        {
+            $headertext .= "To: [b]".htmlspecialchars(mysql_real_escape_string($to), ENT_NOQUOTES)."[/b]\n";
+        }
+
+        if (!empty($cc))
+        {
+            $headertext .= "CC: [b]".htmlspecialchars(mysql_real_escape_string($cc), ENT_NOQUOTES)."[/b]\n";
+        }
+
+        if (!empty($subject))
+        {
+            $headertext .= "Subject: [b]".htmlspecialchars(mysql_real_escape_string($subject))."[/b]\n";
+        }
+
+        $count_attachments = count($attachments);
+        if ($count_attachments >= 1)
+        {
+            $headertext .= $SYSLANG['strAttachments'].": [b]{$count_attachments}[/b] - ";
+            $c = 1;
+            foreach ($attachments AS $att)
+            {
+                $headertext .= "[[att={$att['fileid']}]]{$att['filename']}[[/att]]";
+                if ($c < $count_attachments) $headertext .= ", ";
+                $c++;
+            }
+            $headertext .= "\n";
+        }
+        //** END UPDATE INCIDENT **//
+
+        //** BEGIN UPDATE **//
+        $bodytext = $headertext . "<hr>" . htmlspecialchars(mysql_real_escape_string($message), ENT_NOQUOTES);
+
+        // Strip excessive line breaks
+        $message = str_replace("\n\n\n\n","\n", $message);
+        $message = str_replace(">\n>\n>\n>\n",">\n", $message);
+
+        if (empty($incidentid))
+        {
+            // Add entry to the incident update log
+            $owner = incident_owner($incidentid);
+            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
+            $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
+            mysql_query($sql);
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $updateid = mysql_insert_id();
+
+            //new call TODO: We need to find a better solution here for letting plugins change the reason
+            if (!$GLOBALS['plugin_reason']) $reason = $SYSLANG['strPossibleNewIncident'];
+            else $reason = $GLOBALS['plugin_reason'];
+            $sql = "INSERT INTO `{$dbTempIncoming}` (updateid, incidentid, `from`, emailfrom, subject, reason, contactid) ";
+            $sql.= "VALUES ('{$updateid}', '0', '".mysql_real_escape_string($from_email)."', ";
+            $sql .= "'".mysql_real_escape_string($from_name)."', ";
+            $sql .= "'".mysql_real_escape_string($subject)."', ";
+            $sql .= "'{$reason}', '{$contactid}' )";
+            mysql_query($sql);
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $holdingemailid = mysql_insert_id();
+
+            trigger('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
+
+        }
+        else
+        {
+            if (!$incident_open) // Do not translate/i18n fixed string
+            {
+                //Dont want to associate with a closed call
+                $oldincidentid = $incidentid;
+                $incidentid = 0;
+            }
+
+            //this prevents duplicate emails
+            $error = 0;
+            $fifteenminsago = $now - 900;
+            $sql = "SELECT bodytext FROM `{$dbUpdates}` ";
+            $sql .= "WHERE incidentid = '{$incidentid}' AND timestamp > '{$fifteenminsago}' ";
+            $sql .= "ORDER BY id DESC LIMIT 1";
+            $result = mysql_query($sql);
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+            if (mysql_num_rows($result) > 0)
+            {
+                list($lastupdate) = mysql_fetch_row($result);
+
+                $newtext = "{$headertext}<hr>{$message}";
+                if (strcmp(trim($lastupdate),trim($newtext)) == 0)
+                {
+                    $error = 1;
+                }
+            }
+
+            $owner = incident_owner($incidentid);
+            if ($error != 1)
+            {
+                // Existing incident, new update:
+                // Add entry to the incident update log
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
+                $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
+                mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                $updateid = mysql_insert_id();
+
+                if ($incident_open) // Do not translate/i18n fixed string
+                {
+                    // Mark the incident as active
+                    $sql = "UPDATE `{$GLOBALS['dbIncidents']}` SET status='1', lastupdated='".time()."', timeofnextaction='0' ";
+                    $sql .= "WHERE id='{$incidentid}'";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                }
+                else
+                {
+                    //create record in tempincoming
+                    if (!$incident_open) // Do not translate/i18n fixed string
+                    {
+                        //incident closed
+                        $reason = sprintf($SYSLANG['strIncidentXIsClosed'], $oldincidentid);
+                        $sql = "INSERT INTO `{$dbTempIncoming}` (updateid, incidentid, `from`, emailfrom, subject, reason, reason_id, incident_id, contactid) ";
+                        $sql .= "VALUES ('{$updateid}', '0', '".mysql_real_escape_string($from_email);
+                        $sql .= "', '".mysql_real_escape_string($from_name);
+                        $sql .= "', '".mysql_real_escape_string($subject)."', '{$reason}', ".REASON_INCIDENT_CLOSED.", '{$oldincidentid}', '$contactid' )";
+                        mysql_query($sql);
+                        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    }
+                    else
+                    {
+                        //new call TODO: We need to find a better solution here for letting plugins change the reason
+                        if (!$GLOBALS['plugin_reason']) $reason = $SYSLANG['strPossibleNewIncident'];
+                        else $reason = $GLOBALS['plugin_reason'];
+                        $sql = "INSERT INTO `{$dbTempIncoming}` (updateid, incidentid, `from`, emailfrom, subject, reason, contactid) ";
+                        $sql .= "VALUES ('{$updateid}', '0', '".mysql_real_escape_string($from_email)."',";
+                        $sql .= "'".mysql_real_escape_string($from_name)."', '".mysql_real_escape_string($subject);
+                        $sql .= "', '{$reason}', '{$contactid}' )";
+                        mysql_query($sql);
+                        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    }
+                    $holdingemailid = mysql_insert_id();
+                }
+                //Fix for http://bugs.sitracker.org/view.php?id=572, we shouldn't really have
+                //incident ID of 0 here, but apparently we do :/
+                if (FALSE !== incident_status($incidentid))
+                {
+                    trigger('TRIGGER_INCIDENT_UPDATED_EXTERNAL', array('incidentid' => $incidentid));
+                }
+            }
+            else
+            {
+                if ($incidentid != 0)
+                {
+                    $bodytext = "[i]Received duplicate email within 15 minutes. Message not stored. Possible mail loop.[/i]";
+                    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
+                    $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1)";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                }
+            }
+        }
+
+        //** END UPDATE **//
+
+        // Create a link between the files and the update
+        // We need to update the links table here as otherwise we have a blank
+        // updateid
+        foreach ($attachments AS $att)
+        {
+            $sql = "UPDATE `{$GLOBALS['dbLinks']}` SET origcolref = '{$updateid}' ";
+            $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
+            $sql .= "AND linktype = 5 ";
+            mysql_query($sql);
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            debug_log("Creating a link between $updateid and file {$att['fileid']}");
+        }
+
+        unset($headertext, $newupdate, $attachments, $attachment, $updateobj,
+            $bodytext, $message, $incidentid);
+    }
+
+    if ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
+    {
+        // Delete the message from the mailbox
+        if ($mailbox->servertype == 'imap')
+        {
+            imap_expunge($mailbox->mailbox) OR debug_log("Expunging failed: ".imap_last_error());
+        }
+        elseif ($mailbox->servertype == 'pop')
+        {
+            imap_delete($mailbox->mailbox, '1:*');
+            imap_expunge($mailbox->mailbox);
+        }
+
+        imap_close($mailbox->mailbox);
+    }
+}
+
+?>

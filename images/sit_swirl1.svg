@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024.0000px"
+   height="768.00000px"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.42"
+   sodipodi:docbase="/home/ivan/dev1/sit/htdocs/images"
+   sodipodi:docname="sit_swirl1.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient2035">
+      <stop
+         style="stop-color:#1f3794;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop2037" />
+      <stop
+         style="stop-color:#2cb6d3;stop-opacity:0.0000000"
+         offset="1"
+         id="stop2039" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3106"
+       x1="262.94220"
+       y1="253.18147"
+       x2="587.64758"
+       y2="464.49304"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3109"
+       gradientUnits="userSpaceOnUse"
+       x1="262.94220"
+       y1="253.18147"
+       x2="587.64758"
+       y2="464.49304" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3112"
+       gradientUnits="userSpaceOnUse"
+       x1="262.94220"
+       y1="253.18147"
+       x2="587.64758"
+       y2="464.49304" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3115"
+       gradientUnits="userSpaceOnUse"
+       x1="262.94220"
+       y1="253.18147"
+       x2="587.64758"
+       y2="464.49304" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3118"
+       gradientUnits="userSpaceOnUse"
+       x1="658.94971"
+       y1="483.68344"
+       x2="202.12497"
+       y2="253.18149" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3122"
+       gradientUnits="userSpaceOnUse"
+       x1="262.94220"
+       y1="253.18147"
+       x2="587.64758"
+       y2="464.49304"
+       gradientTransform="translate(120.0937,-3.082538)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2035"
+       id="linearGradient3132"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(120.0937,-3.082538)"
+       x1="512.96735"
+       y1="344.31967"
+       x2="31.140045"
+       y2="149.13876" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.7534486"
+     inkscape:cx="465.60293"
+     inkscape:cy="407.61884"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1272"
+     inkscape:window-height="946"
+     inkscape:window-x="0"
+     inkscape:window-y="0">
+    <sodipodi:guide
+       orientation="horizontal"
+       position="521.25851"
+       id="guide3124" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="285.15236"
+       id="guide3126" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="777.89563"
+       id="guide3128" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/GPL/2.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/GPL/2.0/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/SourceCode" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:url(#linearGradient3118);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 196.62500,249.16164 C 246.96682,254.33941 290.32351,267.39086 341.47893,293.83046 C 360.96420,306.26104 389.35734,316.09132 437.44143,370.99206 C 465.50426,403.03322 507.67618,438.60738 546.04321,458.51748 C 572.24862,473.07766 608.02146,483.12701 620.68382,483.05509 C 620.80694,482.82913 666.97843,483.27363 667.18966,482.90733 C 645.28557,476.06841 611.09094,463.64524 584.17715,441.78609 C 573.75634,433.32240 533.55214,393.46736 521.96293,379.62334 C 487.92793,338.96642 444.41136,301.89424 395.99037,278.13194 C 340.72374,253.15241 278.98265,249.96854 219.28178,247.70485 C 211.71115,247.77848 204.13702,248.19702 196.62500,249.16164 z "
+       id="path2343"
+       sodipodi:nodetypes="ccscccssccc"
+       inkscape:export-filename="/home/ivan/Documents/sit_swirl_big.png"
+       inkscape:export-xdpi="90.000000"
+       inkscape:export-ydpi="90.000000" />
+    <path
+       style="fill:url(#linearGradient3132);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"
+       d="M 330.56627,246.73694 C 380.90809,251.91471 420.68276,259.17557 461.00238,292.45883 C 530.76936,341.27280 574.57499,420.74748 651.30904,460.56769 C 678.65506,474.55757 721.58118,483.00187 740.12481,482.18143 C 740.38034,482.21826 777.80614,482.66295 777.82551,482.70490 C 777.85838,482.77611 777.88273,246.74883 777.88073,246.74802 C 777.86321,246.74096 330.56631,246.74362 330.56627,246.73694 z "
+       id="path3120"
+       sodipodi:nodetypes="ccccssc"
+       inkscape:export-filename="/home/ivan/Documents/sit_swirl_big.png"
+       inkscape:export-xdpi="90.000000"
+       inkscape:export-ydpi="90.000000" />
+  </g>
+</svg>

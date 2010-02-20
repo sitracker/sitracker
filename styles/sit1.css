@@ -1,0 +1,39 @@
+/* CSS2 Style Sheet for Webtrack */
+/* Webtrack Default Style: Light Blue */
+/* by Ivan Lucas. Original. August 2001, Updated March 2002, Remade November 2006 */
+
+
+body { font-family: verdana; }
+#masthead { background-image: none; background-color: #203894; text-align: center; }
+h1 { font-size: 16pt; font-weight: bold; color: #DDDDFF;
+background-color: #203894; margin: 0px; padding: 3px 0px 3px 0px; }
+
+th, th a, th a:active, th a:link, th a:visited { background-color: #B5D7E8; color: #203894; }
+th a:hover { text-decoration: underline; }
+
+#apptitle { background-image: url('../images/sit_swirl1.png');
+background-position: top-left; background-repeat: no-repeat; height: 50px;}
+
+#menu,#statusbar { background-color: #DDDDFF; color: #203894; }
+#menu ul, #menu ul li ul { background-color: #fff; color: #203894; }
+#menu a { color: #203894; }
+#menu li:hover>a, #menu a:hover
+{
+  color: #203894;
+}
+#menu li:hover, #menu li ul a:hover
+{
+    background-color: #DDDDFF;
+}
+#menu li li { background-color: #B5D7E8;}
+#statusbar a { color: #203894; }
+
+tr.shade1:hover { background-color: #F2F2F2; }
+tr.shade2:hover { background-color: #F2F2F2; }
+tr.critical:hover { background-color: #FFAAAB; }
+tr.urgent:hover { background-color: #FFAAAB; }
+tr.expired:hover { background-color: #F2F2F2; }
+tr.notice:hover { background-color: #F2F2F2; }
+
+div.windowbox { border: 1px solid #B5D7E8; }
+div.windowtitle, div.windowtitle a { background-color: #B5D7E8; color: black; }

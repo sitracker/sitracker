@@ -1,0 +1,3 @@
+﻿Hvad har kunden prøvet for at løse problemet?  
+Hvilke konfigurations ændringer er lavet?
+Hvilke patches/service packs er instalelret?

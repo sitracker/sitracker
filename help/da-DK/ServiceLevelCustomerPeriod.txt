@@ -1,0 +1,1 @@
+﻿Antallet af minutter der tager en kunde 'enhed', dette er den enhed som kunden bliver faktureret fx pr påbegyndt 60 minutter.

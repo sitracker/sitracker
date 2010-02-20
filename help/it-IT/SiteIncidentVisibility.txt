@@ -1,0 +1,8 @@
+<u>Nessuno</u>
+Solo gli amministratori del contratto possono vedere le segnalazioni del sito nella loro coda 'segnalazioni sito'
+
+<u>Contatti Nominativi</u>
+I contatti nominativi per questo contatto possono vedere le segnalazioni del sito autenticati sotto il loro contratto nominativo
+
+<u>Tutti i contatti</u>
+Tutti i contatti per il tuo sito possono vedere tutte le segnalazioni in qulsiasi modo si autentichino

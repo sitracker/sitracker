@@ -1,0 +1,1 @@
+Un azione programmata deve essere abilitata per poter essere eseguita. Se lo stato di un azione è impostato su 'Disabilitato', questa non verrà mai eseguita.

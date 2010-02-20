@@ -1,0 +1,8 @@
+﻿<u>Ingen</u>
+Kun kontrakt admins kan se site hændelser i deres 'Site hændelser' køen
+
+<u>Navngivne kontaktpersoner</u>
+Navngivne kontaktpersoner for denne kontakt er alle i stand til at se site hændelser logget under deres navngivne kontrakt
+
+<u>Alle kontakter</u>
+Alle kontakter fra dit site kan se alle de hændelser, uanset om de er berettiget til at logge nogen

@@ -1,0 +1,69 @@
+/* Toms linux style */
+
+body        { background-color: #83859c; background-image:url('/styles/webtrack9/bluestripe.gif');  color: #FFFFFF; }
+p       { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; }
+table       { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; }
+td      { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; }
+th, th a { color: #606063; }
+a       { font-family: verdana, Helvetica, sans serif; font-size: 8pt; color: #FFFFD0; text-decoration: none; }
+a:hover     { font-family: verdana, Helvetica, sans serif; font-size: 8pt; color: #FFFFD0; text-decoration: underline; }
+a:active    { font-family: verdana, Helvetica, sans serif; font-size: 8pt; color: #FFFFD0; text-decoration: underline; }
+center      { font-family: arial, Helvetica, sans serif; font-size: 9pt; color: #FFFFFF; }
+a em { font-style: normal; text-decoration: underline; }
+
+.barlink    { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+.barlink:hover  { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.barlink:active { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+
+.error      { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FF0000; font-weight: bold; text-align: center; }
+.red        { font-family: arial, Helvetica, sans serif; font-size: 8pt; color: #FF0000; background-color: #293441; }
+.mainshade  { background-color: #83859c; background-image:url('/styles/webtrack9/bluestripe1.gif');}
+.shade1     { background-color: #414052; }
+.shade2     { background-color: #293441; }
+
+.urgent     { background-color: #414052; color: #FFFFFF}
+.critical   { background-color: #83859C; }
+.idle       { background-color: #293441; } /* #90ee90; */
+.expired    { background-color: #000000; }
+.review { background-color: #7AC5CD; }
+
+#menu li li { background-color: #83859c;}
+.navbarmenu { background-color: #000000; font-family: arial, Helvetica, sans serif; font-size: 8pt; font-weight: bold; color: #FFFFFF; width: 145px; height:20px; }
+
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+.tablelist td {border-left: 1px solid #828499;border-top: 1px solid #828499;}
+table.tablelist {border: 1px solid #828499;}
+.tablelist tr {border: 1px solid #828499; border-right: 1px solid #828499 ! important;}
+.tablelist th {border-left: 1px solid #828499; border-top: 1px solid #828499;}

@@ -1,0 +1,1 @@
+﻿Viser om brugeren er oprettet manuelt eller importeret fx via LDAP.

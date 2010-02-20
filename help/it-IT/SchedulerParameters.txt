@@ -1,0 +1,1 @@
+Alcune azioni programmate richiedono parametri addizionali, vedere la descrizione dell'azione per maggiori informazioni, se disponibili.

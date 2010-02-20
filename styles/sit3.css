@@ -1,0 +1,41 @@
+/* Green */
+
+body        { background-color: #F2F4F5; font-family: Tahoma, Helvetica, sans serif; color: #000; }
+p           { font-size: 8pt; color: #000; }
+table       { font-size: 8pt; color: #000; }
+td        { font-size: 8pt; color: #000; }
+a em { font-style: normal; text-decoration: underline; }
+
+h1 { font-size: 16pt; font-weight: bold; color: #FFF; background-color: #A4CCD1; margin: 0px; padding: 3px 0px 3px 0px; }
+
+a:link,a:active,a:visited { color: #464546; }
+a:hover { color: #7F7E7F; }
+
+#menu { color: #7F7E7F; }
+#menu ul, #menu ul li ul { background-color: #F2F4F5; color: #A4CCD1; }
+#menu li li { background-color: #F2F4F5;}
+#menu a { color: #7F7E7F; }
+#menu li:hover>a, #menu a:hover
+{
+  color: #fff;
+}
+#menu li:hover, #menu li ul a:hover
+{
+    background-color: #B5D7E8; color: white;
+}
+
+
+#statusbar { background-color: #A4CCD1; }
+
+div.windowbox
+{
+    border: 1px solid #AAD2D6;
+}
+
+div.windowtitle
+{
+    background-color: #AAD2D6;
+}
+th, tfoot td { background: #CCD2D3; }
+tr.shade1 { background-color: #F5F6F7; }
+tr.shade2 { background-color: #E2E7E7; }

@@ -1,0 +1,1552 @@
+Changes in v3.50 released 15 October 2009
+-----------------------------------------------------------------------
+- 0000560: [permissions] Group permissions in interface (ivan) - resolved.
+- 0000959: [outbound email] Long email subjects are truncated/garbled (ivan) - resolved.
+- 0000967: [theme] Missing icon: inventory.png (ivan) - resolved.
+- 0000972: [scheduler] svn5917 - Times don't match in "my profile" after having changed it the first time (ivan) - resolved.
+- 0000941: [contracts] branch3 - Editing service on contract causes error (ivan) - resolved.
+- 0000848: [outbound email] incident_email.php - some mail clients don't receive body texts (ivan) - resolved.
+- 0000948: [profiles] "User.retrieveDetails() not yet implemented" on user profile page (ivan) - resolved.
+- 0000980: [authentication] Error in SQL, function all_contact_contracts (ivan) - resolved.
+- 0000977: [knowledge base] KB browse shows wrong owner (nicdev) - resolved.
+- 0000971: [inbound email] Make it possible to change the "reason text" in the holding queue from a plugin, (nicdev) - resolved.
+- 0000973: [inbound email] Incident status not correctly considered (nicdev) - resolved.
+- 0000577: [scheduler] Scheduler not running when local time zone is different than server time zone. (ivan) - resolved.
+- 0000943: [contracts] branch3 editing a service - dates are not the same as on contract page (ivan) - resolved.
+- 0000910: [sites & contacts] Cannot find contact by first letter (ivan) - resolved.
+- 0000901: [triggers] Issue closing incident notification to contact (kieran) - resolved.
+- 0000917: [contracts] Service start and end date display bug in contract_details.php page (paulh) - resolved.
+- 0000899: [feedback] Feedback Forms do not work when configured (kieran) - resolved.
+- 0000903: [incidents] Cannot select date when create incident (ivan) - resolved.
+- 0000935: [portal] Skill incorrect when displaying KB articles in Portal (ivan) - resolved.
+- 0000821: [other] statistics.php - closing status results in strSolvedProblem (paulh) - resolved.
+- 0000880: [permissions] Losing Role Permissions (ivan) - resolved.
+- 0000905: [sites & contacts] Incident pool selection broken (ivan) - resolved.
+- 0000896: [portal] Users can't change username in Portal (kieran) - resolved.
+- 0000895: [triggers] Can't assign template to user trigger action (kieran) - resolved.
+- 0000884: [sites & contacts] when update Site Types, the DB abstraction does not include the extention before the tablename (ivan) - resolved.
+- 0000892: [other] doc/updating needs updating for 3.50 (kieran) - resolved.
+- 0000897: [billing] CSV transaction report missing date (paulh) - resolved.
+- 0000934: [incidents] Help Text for newly created incident is incorrect (ivan) - resolved.
+- 0000908: [feedback] Feedback forms look ugly (ivan) - resolved.
+- 0000933: [incidents] When "marking for closure" the second of 2 related incidents the first incident changes back to active due to the update (ivan) - resolved.
+- 0000031: [outbound email] Email encoding breaks sending mail - closed.
+- 0000025: [portal] incident_lastupdate() fails for portal incidents (kieran) - closed.
+- 0000032: [incidents] Auto-reassign ignores not-accepting status (kieran) - closed.
+- 0000034: [other] Use checkboxes for boolean input - closed.
+- 0000127: [SLAs] SLA loops after final resolution (kieran) - closed.
+- 0000101: [contracts] wrong url on 'Add New site Contact' button - closed.
+- 0000141: [incidents] Cant do a full reassign when theres a temp owner (kieran) - closed.
+- 0000148: [triggers] Need a trigger when a site drops below a certain percent of the service (kieran) - closed.
+- 0000228: [i18n] Ability to translate from a language other than en-GB (kieran) - closed.
+- 0000381: [incidents] Action missing on incident closure (kieran) - closed.
+- 0000425: [triggers] Add trigger when opening the close incident page (kieran) - closed.
+- 0000533: [outbound email] When sending mail the mail body gets sent as an attachment (ivan) - closed.
+- 0000542: [permissions] add task appears on menu even when you dont have permission to it (paulh) - closed.
+- 0000549: [triggers] Reassign trigger issue (kieran) - closed.
+- 0000558: [calendar] Switching group jumps to day view (paulh) - closed.
+- 0000572: [triggers] Trigger "TRIGGER_INCIDENT_UPDATED_EXTERNAL" fires when there are mails with incident id=0 (kieran) - closed.
+- 0000580: [triggers] Auto-assign Incident is not working (kieran) - closed.
+- 0000589: [i18n] 3.50 svn5217 - Static language - Triggers page & System incidents - closed.
+- 0000591: [i18n] 3.50 svn5217 - Static language - Browse feedback --> and missing page (paulh) - closed.
+- 0000616: [inbound email] Empty ($CONFIG['spam_email_subject']) causes warnings in holding queue - closed.
+- 0000606: [feedback] broken links (paulh) - closed.
+- 0000635: [config] Option for defining a LDAP port in the config page (paulh) - closed.
+- 0000645: [other] Draft error with long email (paulh) - closed.
+- 0000658: [triggers] Have trigger type in the DB (kieran) - closed.
+- 0000657: [incidents] Incident Updates per page - Zero is none, not unlimited as stated (paulh) - closed.
+- 0000666: [billing] Billing Summary totals are in the wrong columns (paulh) - closed.
+- 0000668: [holidays] Crash on approve all (ivan) - closed.
+- 0000673: [triggers] Trigger "TRIGGER_WAITING_HELD_EMAIL" logic (ivan) - closed.
+- 0000678: [incidents] Bug: customer add incident fails (kieran) - closed.
+- 0000677: [inbound email] Bug: Inbox.php when message locked (paulh) - closed.
+- 0000679: [inbound email] Bug: Cannot unlock message - closed.
+- 0000682: [profiles] Bug: Wrong link in emails. When resetting password (ivan) - closed.
+- 0000692: [incidents] In show all mode changing visibility reverts back to paging (paulh) - closed.
+- 0000693: [incidents] Paging view changing visibility takes you back to first page (paulh) - closed.
+- 0000699: [holidays] Cancelling holidays does not cancel them (ivan) - closed.
+- 0000711: [dashboard] Unable to order dashlets (ivan) - closed.
+- 0000717: [triggers] Bug in auto.php considering the 'Mark for Closure' items in the support system (kieran) - closed.
+- 0000725: [knowledge base] Additional Info concatenated (kieran) - closed.
+- 0000737: [authentication] group checking doesn't work with some directories (paulh) - closed.
+- 0000739: [authentication] lib reference (kieran) - closed.
+- 0000752: [incidents] close solution default text...not right (paulh) - closed.
+- 0000766: [LDAP] Cant change details on SiT created users if LDAP is enabled (paulh) - closed.
+- 0000767: [LDAP] remove $CONFIG['ldap_attr_map'] (paulh) - closed.
+- 0000768: [LDAP] make caching passwords configurable (paulh) - closed.
+- 0000774: [inbound email] Attachments with accented characters like "é" in the filename do not get imported (kieran) - closed.
+- 0000790: [LDAP] Managing LDAP users within SiT is confusing (paulh) - closed.
+- 0000791: [LDAP] User status is reset upon LDAP login (paulh) - closed.
+- 0000860: [i18n] Inc/ folder needs to be run through to be i18n (Tomse) - closed.
+- 0000877: [other] starting the inventory_add.php creates error message that name needs to be filled out (kieran) - closed.
+- 0000076: [authentication] Directory integration - LDAP (paulh) - closed.
+ - 0000735: [authentication] log in error (paulh) - closed.
+ - 0000346: [authentication] LDAP sync should never touch admin user (paulh) - closed.
+- 0000071: [billing] One time service balance editor - closed.
+- 0000354: [dashboard] watch_incidents dashlet uses html_redirect (ivan) - closed.
+- 0000435: [other] remove session_regenerate (ivan) - closed.
+- 0000496: [knowledge base] RSS Feed for KB (ivan) - closed.
+- 0000594: [i18n] Static language - View maintenance (ivan) - closed.
+- 0000595: [i18n] 3.50 svn5217 - Static language - Add contract (Tomse) - closed.
+- 0000599: [i18n] 3.50 svn5217 - Static language - Incidents Daily Summary (ivan) - closed.
+- 0000597: [i18n] 3.50 svn5217 - Static language - Show expired (Tomse) - closed.
+- 0000601: [i18n] 3.50 svn5217 - Static language - Site contracts (ivan) - closed.
+- 0000600: [i18n] 3.50 svn5217 - Static language - Site product matrix (Tomse) - closed.
+- 0000602: [i18n] Static language - Engineer usage (ivan) - closed.
+- 0000610: [i18n] feedback_form_addquestions.php needs i18n (ivan) - closed.
+- 0000609: [i18n] feedback_form_editquestions needs i18n (Tomse) - closed.
+- 0000648: [outbound email] Accented characters in the email subject get stripped away (ivan) - closed.
+- 0000707: [permissions] Problem n edit_user_permissions (kieran) - closed.
+- 0000727: [triggers] Adding a contract notice trigger gives an error about {salespersonemail} (kieran) - closed.
+- 0000770: [LDAP] Update LDAP documentation (Tomse) - closed.
+- 0000746: [i18n] Triggers --> variables page (kieran) - closed.
+- 0000776: [sites & contacts] quick link to google maps (kieran) - closed.
+- 0000792: [LDAP] periodic LDAP sync (paulh) - closed.
+- 0000798: [i18n] cannot find any contact by clicking on its first letter (in russian) (ivan) - closed.
+- 0000804: [reports] Making a report with no dates creates errors - report_incidents_billable.php (paulh) - closed.
+- 0000806: [other] test_form.php needs removing before release (paulh) - closed.
+- 0000808: [knowledge base] Contact browsing knowledgebase - menu disappear (ivan) - closed.
+- 0000814: [incidents] Auto assign of incidents, assigns to people with no skills, and who are not accepting:on holiday (ivan) - closed.
+ - 0000815: [incidents] Possible for auto-assign to assign to a user who is marked "not accepting". (kieran) - closed.
+- 0000820: [incidents] Hovering over icon makes 2 help texts occur (kieran) - closed.
+- 0000823: [i18n] add_new_note in functions.inc.php needs i18n (paulh) - closed.
+- 0000831: [incidents] move_update.php cannot check if incident is open (paulh) - closed.
+- 0000836: [incidents] Send closure email to escalation doesn't work (paulh) - closed.
+- 0000839: [triggers] notice_new_site needs a descriptive text - triggers.php (kieran) - closed.
+- 0000841: [dashboard] true/false might need i18n - manage_dashboard.php (paulh) - closed.
+- 0000843: [sites & contacts] adding a new site type generates an error (ivan) - closed.
+- 0000842: [Skills] i18n user_skills.php strange symbols & and wrong info given (ivan) - closed.
+- 0000849: [setup/config] attachments folder should be writeable - help text wanted (ivan) - closed.
+- 0000844: [sites & contacts] When editing a site type the button says "Add" (kieran) - closed.
+- 0000851: [incidents] Double quote in incident title displayed incorrectly (ivan) - closed.
+- 0000853: [sites & contacts] site drop downs show expired sites (paulh) - closed.
+- 0000856: [config] inbound email account user with a '\' (ivan) - closed.
+- 0000861: [theme] Recent theme changes broke updates log styling (Tomse) - closed.
+- 0000859: [reports] Several pages needs a "?" sign with help text - press CTRL for adding more (Tomse) - closed.
+- 0000866: [i18n] Icons ALT text when hovering needs i18n (kieran) - closed.
+- 0000869: [Skills] edit_user_skills.php does not properly sanitise input (ivan) - closed.
+- 0000870: [Skills] Editing a skill for another users redirects to edit_backup_users.php?user= (self) (ivan) - closed.
+- 0000871: [other] manage_users.php sorting doesn't work (Tomse) - closed.
+- 0000875: [i18n] help_text doesn't use the da-DK/SiteIncidentVisibility.txt in portal/admin.php (ivan) - closed.
+- 0000146: [scheduler] Month and year schedules show next run as 1 second past epoch (ivan) - closed.
+- 0000876: [portal] site contact is able to bind herself to contracts (kieran) - closed.
+- 0000180: [incidents] Strikeout causes double tooltip (ivan) - closed.
+- 0000350: [portal] Open incident via portal gives an eval error (ivan) - closed.
+- 0000375: [search] Searching for a number other than an incident number doesn't work (kieran) - closed.
+- 0000500: [triggers] Possible to create two identical triggers (kieran) - closed.
+- 0000493: [knowledge base] Make portal KB publically accessible (kieran) - closed.
+- 0000566: [triggers] The trigger TRIGGER_INCIDENT_UPDATED_EXTERNAL does not pass the incident id (ivan) - closed.
+- 0000583: [i18n] 3.50 svn5217 - Trigger action static language (kieran) - closed.
+- 0000587: [templates] 3.50 svn5217 - missing description (ivan) - closed.
+- 0000592: [i18n] 3.50 svn5217 - Static language - View sites (Tomse) - closed.
+- 0000596: [i18n] 3.50 svn5217 - Static language - Show renewals (ivan) - closed.
+- 0000607: [other] Forgot Password script uses HTTP_REFERER for URI in emails (ivan) - closed.
+- 0000625: [i18n] svn 5301 - running Incident reports (paulh) - closed.
+- 0000631: [i18n] Bug with russian word in mysql table (ivan) - closed.
+- 0000638: [incidents] Inventory dropdown in wrong place while adding incident (paulh) - closed.
+- 0000647: [inbound email] Attachment can be stored in wrong place (paulh) - closed.
+- 0000654: [templates] Held email template wording is wrong (kieran) - closed.
+- 0000653: [incidents] 'All incidents' missing doesn't show owner and temp owner (paulh) - closed.
+- 0000655: [setup/config] Wrong permissions on attachments directory (previously 605) (ivan) - closed.
+- 0000674: [setup/config] Upgrade from 3.41 to 3.45 does not create config table (ivan) - closed.
+- 0000683: [other] user id as tinyint (ivan) - closed.
+- 0000701: [other] Missing icon sit/16x16/billing.png (ivan) - closed.
+- 0000703: [incidents] Bug in incident detail screen (ivan) - closed.
+- 0000708: [portal] Portal KB page is missing the menu (ivan) - closed.
+- 0000709: [dashboard] Menu does not work in IE7 (ivan) - closed.
+- 0000716: [plugins] upgrade dashboard_incoming (ivan) - closed.
+- 0000728: [portal] Portal entitlement blank (paulh) - closed.
+- 0000729: [setup/config] 3.50Beta2 - Database creation error (ivan) - closed.
+- 0000736: [scheduler] scheduler time check (ivan) - closed.
+- 0000753: [inbound email] email assign to contact (ivan) - closed.
+- 0000743: [notices] Error in noticetemplate upgrade SQL (kieran) - closed.
+- 0000757: [incidents] Attachment paths wrong sometimes (kieran) - closed.
+- 0000761: [incidents] Client cannot add incident from customer portal (Bonkie) - closed.
+- 0000760: [knowledge base] content within chevrons (angle brackets) is lost (ivan) - closed.
+- 0000762: [incidents] Customer cannot use 'Add incident' (Bonkie) - closed.
+- 0000765: [setup/config] SQL errors on fresh install of 3.50beta2 (ivan) - closed.
+- 0000764: [other] Email address validation is broken (ivan) - closed.
+- 0000773: [setup/config] upgrading to svn 3.50 - error (ivan) - closed.
+- 0000775: [inbound email] incoming email script refers to inbox - closed.
+- 0000778: [i18n] not localised - closed.
+- 0000783: [config] 2 slashes in 'application webpath' (ivan) - closed.
+- 0000786: [i18n] localisation bugs (ivan) - closed.
+- 0000793: [sites & contacts] Unable to add contact address (ivan) - closed.
+- 0000799: [contracts] search_expired.php returns only as "Non terminated" and no results (Tomse) - closed.
+- 0000794: [setup/config] Setup doesn't offer create admin user option if config file is writable (ivan) - closed.
+- 0000008: [dashboard] Dashlet reordering broken in IE (ivan) - closed.
+- 0000029: [inbound email] Inbound email strips HTML-like terms (ivan) - closed.
+- 0000206: [plugins] Mechanism to allow plugins to add i18n (ivan) - closed.
+- 0000254: [inbound email] Special international characters in email is shown as ? (ivan) - closed.
+- 0000270: [inbound email] Accented characters truncate inbound email body (ivan) - closed.
+- 0000370: [inbound email] Escaped characters in DB affects other sit functions. (ivan) - closed.
+- 0000395: [other] Variable for last seen (ivan) - closed.
+- 0000406: [inbound email] Inbound email with ' in the email address - email is deleted and not imported to the holding queue (ivan) - closed.
+- 0000484: [sites & contacts] Contacts lookup uses dojo (ivan) - closed.
+- 0000485: [incidents] Incident lookup uses dojo (ivan) - closed.
+- 0000486: [dashboard] Dashboard uses dojo (ivan) - closed.
+- 0000487: [reports] Incidents by skill report uses dojo (paulh) - closed.
+- 0000489: [sites & contacts] Sites lookup uses dojo (ivan) - closed.
+- 0000530: [incidents] Indication on incident that there are drafts awaiting (paulh) - closed.
+- 0000532: [permissions] Configurable roles (paulh) - closed.
+- 0000540: [permissions] Role info (paulh) - closed.
+- 0000541: [permissions] sort edit_user_permissions (paulh) - closed.
+- 0000543: [permissions] Statistics page permission (paulh) - closed.
+- 0000547: [search] From the main menu (dashboard), the link to the advanced search page is incorrect (ivan) - closed.
+- 0000555: [incidents] Error on reopen (paulh) - closed.
+- 0000559: [sites & contacts] Interface to add site types (paulh) - closed.
+- 0000564: [permissions] Have a description on a role (paulh) - closed.
+- 0000567: [reports] Error in the QBE report (paulh) - closed.
+- 0000584: [other] 3.50 svn5217 - report error (request open in new window/tab) (paulh) - closed.
+- 0000617: [scheduler] Editing a disabled scheduled task re-enables it (ivan) - closed.
+- 0000593: [i18n] 3.50 svn5217 - Static language - View contacts - closed.
+- 0000620: [inbound email] Text within < and > is stripped from incoming emails (ivan) - closed.
+- 0000621: [setup/config] 3.45 doesn't install schema if a blank DB exists (ivan) - closed.
+- 0000622: [setup/config] A blank config.inc.php makes install impossible (ivan) - closed.
+- 0000626: [config] chmod 444 on config.inc.php + re-check buttons + goto index page (ivan) - closed.
+- 0000628: [other] autocomplete breaks with non-english characters (ivan) - closed.
+- 0000632: [billing] Billing report should show contract expiry (paulh) - closed.
+- 0000636: [billing] Remaing units shows expired units (paulh) - closed.
+- 0000640: [incidents] Note lost when reopening incident (paulh) - closed.
+- 0000644: [other] Edit inventory details (paulh) - closed.
+- 0000641: [inbound email] Pictures inside the emailbody are not imported as in previous vesions (ivan) - closed.
+- 0000652: [inbound email] New mail from "unrecognised" contact, cannot be linked to an existing case (ivan) - closed.
+- 0000659: [i18n] Incorrect internationalisation saved in DB (ivan) - closed.
+- 0000656: [incidents] Closing incidents doesn't set the SLA of solution (paulh) - closed.
+- 0000662: [profiles] MySQL Query Error Incorrect date value: '' for column 'user_startdate' at row 1 in user_profile_edit.php @ line 454 (ivan) - closed.
+- 0000663: [other] SIT! limited to 127 users (paulh) - closed.
+- 0000664: [sites & contacts] site_details should group on active/inactive (paulh) - closed.
+- 0000697: [profiles] Setting language to 'default' in profile gives an error (ivan) - closed.
+- 0000696: [search] + stripped when paging searchs (ivan) - closed.
+
+
+Changes in v3.45 - Released 27 February 2009
+-----------------------------------------------------------------------
+- 0000471: [setup/config] When changing settings on the "Service levels" page, the incorrect flags are written to the DB - resolved.
+- 0000307: [reports] feedback6.php and feedback7.php should be renamed (ivan) - resolved.
+- 0000495: [i18n] i18n missing for TRIGGER_HIDDEN_ERROR (kieran) - resolved.
+- 0000509: [contracts] missing one bracket - resolved.
+- 0000510: [contracts] link file name is wrong (ivan) - resolved.
+- 0000479: [other] oxygen/16x16/messageflag.png missing (kieran) - resolved.
+- 0000340: [holidays] Holiday requests are broken by various email clients (ivan) - resolved.
+- 0000492: [other] Need to secure attachments dir (ivan) - resolved.
+- 0000491: [other] Can't turn errors off (ivan) - resolved.
+- 0000490: [other] Attachments via updates use old method (kieran) - resolved.
+- 0000480: [other] Rename 'chase' (ivan) - resolved.
+- 0000482: [incidents] Related incident shows this incident's title (ivan) - resolved.
+- 0000317: [outbound email] Unable to set visibility on manually created emails (ivan) - resolved.
+ - 0000320: [outbound email] cant create templates of type incident (ivan) - resolved.
+- 0000507: [reports] report incidents by engineer does not check input (paulh) - resolved.
+- 0000476: [knowledge base] kbarticles.published is 0000-00-00 00:00:00 (ivan) - resolved.
+- 0000416: [other] {userrealname} replaces incorrectly (kieran) - resolved.
+- 0000452: [setup/config] Array type config variables broken (ivan) - resolved.
+- 0000456: [portal] Portal uses unchecked variables (ivan) - resolved.
+- 0000459: [knowledge base] Editing kb articles removes Additional Infos (ivan) - resolved.
+- 0000460: [other] html_redirect problems outside of htdocs (ivan) - resolved.
+- 0000465: [triggers] Too many new lines in trigger emails (ivan) - resolved.
+- 0000473: [holidays] Booking one days holiday tries to book two (ivan) - resolved.
+- 0000437: [reports] SQL error reported on External Engineer Call Distribution report (ivan) - resolved.
+- 0000494: [dashboard] edit dashlet items broken (ivan) - resolved.
+- 0000497: [other] Release notes (ivan) - resolved.
+- 0000134: [scheduler] auto_chase uses deprecated send_template_email() function (ivan) - resolved.
+- 0000257: [inbound email] No contract found matching <name of sender> (ivan) - resolved.
+- 0000523: [outbound email] Outbound email appears as blank when rx'd in some clients (ivan) - resolved.
+- 0000467: [other] Gravatars broken (ivan) - resolved.
+- 0000219: [i18n] Hardcoded text in : Triggers --> Add trigger --> template pull down menu (kieran) - resolved.
+- 0000525: [other] Error on statistics page (ivan) - resolved.
+- 0000511: [incidents] cant delete multiple items from holding queue (paulh) - resolved.
+- 0000521: [outbound email] Outbound email requires php imap extension (ivan) - resolved.
+- 0000526: [incidents] Add incident page doesn't ask for version number / service pack (ivan) - resolved.
+- 0000529: [triggers] Cannot delete another users trigger actions (ivan) - resolved.
+- 0000498: [incidents] Unable to add incident (ivan) - resolved.
+- 0000499: [profiles] Timezone not displaying correctly (ivan) - resolved.
+- 0000280: [setup/config] in reconfigure - option to remove the example data (ivan) - resolved.
+- 0000278: [incidents] Finding contracts when adding incidents does not find "Pan, Peter" (ivan) - resolved.
+- 0000504: [portal] Errors in the portal (ivan) - resolved.
+- 0000505: [reports] Ability to filter marketing report by site type (ivan) - resolved.
+- 0000198: [triggers] Trigger error after approving a billable incident (ivan) - resolved.
+- 0000441: [billing] upgrade transactions to new format (paulh) - resolved.
+- 0000502: [other] html_redirect problems outside of / - resolved.
+- 0000477: [timesheet] unable to decline timesheets (paulh) - resolved.
+- 0000469: [reports] Links from within the Reports pages do not redirect correctly - resolved.
+- 0000214: [incidents] Re-arrange add-incident form to avoid scrolling (ivan) - resolved.
+- 0000417: [other] Journal is not linked on menu (ivan) - resolved.
+- 0000431: [setup/config] Setup gets stuck in a loop (ivan) - resolved.
+- 0000410: [inbound email] Portal created incident popup from the holding que does not allow it to be assigned. (paulh) - resolved.
+- 0000036: [incidents] updates.currentstatus not always set (paulh) - resolved.
+- 0000391: [incidents] current owner not populated (paulh) - resolved.
+- 0000451: [timesheet] Unable to approve timesheets in SVN (paulh) - resolved.
+- 0000448: [reports] Site products matrix report not on menu (ivan) - resolved.
+- 0000196: [setup/config] We should use set_include_path.inc.php instead of modifying php.ini (ivan) - resolved.
+ - 0000390: [timesheet] Cant add entries to timesheet (paulh) - resolved.
+- 0000438: [billing] Billing 'limit' unclear (paulh) - resolved.
+- 0000442: [billing] update_contract_balance called incorrectly (paulh) - resolved.
+- 0000440: [billing] edit_service button always says transfer (paulh) - resolved.
+- 0000429: [billing] Move billing functions to lib/ (paulh) - resolved.
+ - 0000401: [billing] After approving a billable incident you get a SQL error (paulh) - resolved.
+ - 0000428: [billing] Billing functions need documenting (paulh) - resolved.
+ - 0000436: [billing] Update transactions on adjusting a incident (paulh) - resolved.
+- 0000433: [billing] Update shows billing time inseconds (paulh) - resolved.
+- 0000434: [billing] Prevent engineer starting multiple activities (paulh) - resolved.
+- 0000430: [portal] contracts.php viewable without auth (paulh) - resolved.
+- 0000082: [other] Tabbed configuration page (ivan) - resolved.
+- 0000415: [triggers] {contactphone} not replaced (ivan) - resolved.
+- 0000420: [search] Search box doesn't work outside of root (paulh) - resolved.
+- 0000421: [incidents] Autosave emails misisng reply to address (paulh) - resolved.
+- 0000324: [outbound email] Tidy email.inc.php (ivan) - resolved.
+- 0000331: [setup/config] Config page should hide passwords (ivan) - resolved.
+- 0000237: [tasks] Ability to change task ownership (ivan) - resolved.
+- 0000373: [holidays] Booking holidays in the future gives them a day early (ivan) - resolved.
+- 0000314: [reports] Report showing more details of site usage of service (paulh) - resolved.
+- 0000245: [reports] "SYLK: File format is not valid" error message when you open csv in Excel (paulh) - resolved.
+- 0000379: [billing] Example of transfers (paulh) - resolved.
+- 0000407: [billing] Show FoC column in summary report (paulh) - resolved.
+- 0000356: [dashboard] watch_incidents adding a incident (ivan) - resolved.
+- 0000388: [notices] Incident assignment notices dont work if your in a subdir of htdocs (ivan) - resolved.
+- 0000188: [other] Remove spellchecking code (ivan) - resolved.
+- 0000367: [inbound email] Mail connection failures result in blank emails (kieran) - resolved.
+- 0000369: [contracts] contracts page does not show reseller (paulh) - resolved.
+- 0000386: [billing] Transactions.php show more details (paulh) - resolved.
+- 0000378: [billing] Store PO number on service (paulh) - resolved.
+- 0000380: [billing] Title on service (paulh) - resolved.
+- 0000358: [incidents] Remove incidents/action.inc.php (paulh) - resolved.
+- 0000368: [other] Write trigger_errors to disk (ivan) - resolved.
+- 0000363: [calendar] From April 2009 beginning of week starts on a Sunday (ivan) - resolved.
+- 0000339: [incidents] Reopen page broken (kieran) - resolved.
+- 0000138: [incidents] Emoticons (kieran) - resolved.
+- 0000353: [other] Statistics total for vendor blank (paulh) - resolved.
+- 0000348: [incidents] Timeof next action interface problem (paulh) - resolved.
+- 0000351: [holidays] Unable to book holidays as free (paulh) - resolved.
+- 0000347: [incidents] Time to next action controls act strangely (ivan) - resolved.
+- 0000341: [setup/config] Register globals error should be fatal (ivan) - resolved.
+- 0000226: [i18n] Hardcoded language --> You are using a pre-release version (ivan) - resolved.
+- 0000325: [setup/config] Type error in set_include_path.inc.php-dist (paulh) - resolved.
+- 0000301: [reports] site_incidents.php incorrect (paulh) - resolved.
+- 0000275: [inbound email] imap choice of sub-folder (kieran) - resolved.
+- 0000215: [i18n] Language hardcoded - Dashboard -> Statistics of the day (ivan) - resolved.
+- 0000240: [contracts] Changing the product assigned to a contract breaks the contract (ivan) - resolved.
+- 0000299: [incidents] Add incident doesn't move attachments correctly (ivan) - resolved.
+- 0000296: [other] Log 'hidden' errors (ivan) - resolved.
+- 0000300: [incidents] Column 'type' specified twice (ivan) - resolved.
+- 0000269: [inbound email] Mime decoding not up to scratch (kieran) - resolved.
+ - 0000270: [inbound email] Accented characters truncate inbound email body (kieran) - resolved.
+- 0000297: [inbound email] Email connection ignores user (kieran) - resolved.
+- 0000298: [inbound email] Be able to specify incomingmail 'inbox' (kieran) - resolved.
+- 0000068: [outbound email] Support Manager config (ivan) - resolved.
+- 0000292: [other] Rename "View Incidents" and "Watch Incidents" (kieran) - resolved.
+- 0000177: [billing] one click start/stop activity (paulh) - resolved.
+- 0000218: [i18n] Hardcoded text in the triggers page (kieran) - resolved.
+- 0000229: [billing] Ability to edit duration on activities (paulh) - resolved.
+- 0000266: [portal] Make portal creating incidents optional (kieran) - resolved.
+
+
+Changes in v3.41 - Released 17 December 2008
+-----------------------------------------------------------------------
+- 0000339: [incidents] Reopen page broken (kieran) - resolved.
+- 0000322: [other] bbcode [[att = should be optional (ivan) - resolved.
+- 0000262: [profiles] finish bracket shows up in when editing a user & Email shown outside box layout (ivan) - resolved.
+- 0000321: [outbound email] autosave notice icon missing (paulh) - resolved.
+- 0000310: [dashboard] Cannot remove items from Watch Incidents dashlet (ivan) - resolved.
+- 0000283: [incidents] After sending an e-mail to a client from the incident details page, redirect fails (ivan) - resolved.
+- 0000287: [profiles] Password for engineers cannot be changed from their profile (ivan) - resolved.
+- 0000279: [incidents] Creating a new user from the add-incident page returns back to wrong page (ivan) - resolved.
+- 0000223: [i18n] $strCancel missing (paulh) - resolved.
+- 0000261: [incidents] When trying to close an open incident javascript is not found (ivan) - resolved.
+- 0000268: [incidents] Forename is missing on the find contact stage of add incident (kieran) - resolved.
+- 0000247: [billing] Completing activity doesn't update incidents table (paulh) - resolved.
+- 0000256: [inbound email] Assigning a mail to a fictive incident number --> reassign causes an error (paulh) - resolved.
+- 0000263: [inbound email] Inbound email uses the wrong port by default (kieran) - resolved.
+- 0000253: [scheduler] auto.php doesn't call inboundemail.php when.. (ivan) - resolved.
+- 0000259: [portal] Help tooltips are broken in the portal (ivan) - resolved.
+- 0000258: [portal] Portal edit user details doesn't check permissions properly (ivan) - resolved.
+- 0000241: [portal] can't change password in portal (ivan) - resolved.
+- 0000236: [setup] $CONFIG['closure_delay'] missing from defaults (ivan) - resolved.
+- 0000251: [portal] Customer admins can associate contracts of other companies (ivan) - resolved.
+- 0000246: [incidents] Malformed sql query in reopen_incident.php module (paulh) - resolved.
+- 0000225: [i18n] "Day View" is hardcoded (ivan) - resolved.
+- 0000230: [billing] Permission for editing duration of activities (paulh) - resolved.
+- 0000239: [billing] One time service balance editor should hide Transfer when N/A (paulh) - resolved.
+- 0000106: [other] Merge autocomplete.php into ajaxdata.php (paulh) - resolved.
+- 0000242: [sites & contacts] Problems editing contacts (ivan) - resolved.
+- 0000222: [i18n] $strHolidayAfternoonOnly not defined in language file (kieran) - resolved.
+- 0000243: [sites & contacts] browse_sites search box shows "Code not yet finished" (ivan)
+
+
+Changes in v3.40 - Released 21 November 2008
+-----------------------------------------------------------------------
+- 0000238: [contracts] Contracts from other sites do not show in a supported contacts' list (ivan) - resolved.
+- 0000224: [triggers] Scheduler link in 'Schedule Task Failed' trigger incorrect (kieran) - resolved.
+- 0000045: [other] Easier setup/upgrades (ivan) - resolved.
+- 0000209: [setup] Upgrade schema fails 3.35 to 3.40 (ivan) - resolved.
+- 0000217: [i18n] Hardcoded help text - My Profile (ivan) - resolved.
+- 0000191: [inbound email] Incoming message too large notification (kieran) - resolved.
+- 0000202: [i18n] Hardcoded English text string - Viewing site - +Minor cosmetic signs missing (ivan) - resolved.
+- 0000203: [i18n] Hardcoded English text string - Viewing Site --> Incidents 'See here' (ivan) - resolved.
+- 0000200: [portal] Portal entitlement shows other sites' contracts (kieran) - resolved.
+- 0000132: [i18n] Browse pages use ABC navigation (ivan) - resolved.
+- 0000197: [triggers] Replace brackets in trigger rules (kieran) - resolved.
+- 0000187: [billing] Adding a new contract doesn't allow you to mark the service as FOC (paulh) - resolved.
+- 0000190: [inbound email] Deleting incoming mail gives an error (paulh) - resolved.
+- 0000184: [reports] Remove/fix incident_calendar.php (ivan) - resolved.
+- 0000119: [reports] Site Incidents report has no html output (kieran) - resolved.
+- 0000175: [triggers] Trigger for user email/notification when a call is updated (kieran) - resolved.
+- 0000178: [contracts] Contract details page shows 0 available contacts when it should say unlimited (kieran) - resolved.
+- 0000094: [triggers] Idea: TRIGGER_TASK_DUE (kieran) - resolved.
+- 0000186: [other] Add email template is still pre-triggers (kieran) - resolved.
+- 0000185: [triggers] Trigger each time an incident is updated by an engineeer (kieran) - resolved.
+- 0000142: [other] link and image bbcode doesn't work (paulh) - resolved.
+- 0000176: [portal] Sending password reset gives incorrect URL (paulh) - resolved.
+- 0000133: [incidents] Should be able to temp assign other incidents (paulh) - resolved.
+- 0000157: [billing] Duration on activities rounds down when it should round up (paulh) - resolved.
+- 0000154: [contracts] browse_contract.php shows incorrect product (ivan) - resolved.
+- 0000006: [inbound email] Inbound emails w/o incident no store attachments incorrectly (kieran) - resolved.
+- 0000013: [other] Email attachments (kieran) - resolved.
+- 0000135: [other] throw_error() is deprecated yet used lots (ivan) - resolved.
+- 0000143: [incidents] Incidents with activities should be active (paulh) - resolved.
+- 0000174: [incidents] locked incidents can still be created etc by someone else (paulh) - resolved.
+- 0000172: [billing] Optionally show FOC services with a 0 balance and initial in reports (paulh) - resolved.
+- 0000156: [incidents] Opening email should be optional (kieran) - resolved.
+- 0000166: [other] Duplicate sites in contact drop down (paulh) - resolved.
+- 0000165: [other] delete_maintenance_support_contact.php (paulh) - resolved.
+- 0000164: [other] Contacts can be linked against expired contracts (paulh) - resolved.
+- 0000153: [billing] Need to be able to mark services as free of charge (paulh) - resolved.
+- 0000152: [other] Holding queue notes should record who and when they where added (paulh) - resolved.
+- 0000151: [SLA's] SLA text could be better when SLA due (paulh) - resolved.
+- 0000005: [search] Search scores not helpful (kieran) - resolved.
+- 0000089: [scheduler] Schedule should be able to run on particular day of week/month/year (paulh) - resolved.
+- 0000081: [reports] Billing reports (paulh) - resolved.
+- 0000144: [inbound email] js function confirm_delete() in review_incoming_updates.php has unbalanced quotes (ivan) - resolved.
+- 0000140: [billing] CSV report uses $CONFIG['currency_symbol'] (paulh) - resolved.
+- 0000095: [incidents] Reassign 'more' link missing (ivan) - resolved.
+- 0000137: [other] Missing tick icon in skills matrix (ivan) - resolved.
+- 0000136: [other] Missing language icon in SiT theme (ivan) - resolved.
+- 0000131: [sites & contacts] browse_contacts should allow you to jump to edit (paulh) - resolved.
+- 0000120: [reports] Incidents By Skill report has no end date (paulh) - resolved.
+- 0000007: [authentication] Password reset useless (ivan) - resolved.
+
+Changes in v3.36 - Released 21 July 2008
+-----------------------------------------------------------------------
+*  Moved the app title into the middle of the masthead, cosmetic change only
+* Fixed bug which stopped you logging an incident if you only had one contract.
+* Set debug mode to FALSE (off) by default
+* We now don't show unlimited contracts as expired
+* Made add contact form properly forget it's session data
+* Fixed SQL in marketing report
+* Fixed missing upgrade SQL
+* Fixed incorrect i18n string name
+* Fixed hardcoded table names that broke the table prefix feature for some pages
+* Fixed SF#2014907 View users page not showing all users
+* Fixed SF#2013249 Missing 'Closing Status' values in dropdown
+* Fixed SF#2011757 Incident page offset broken
+* 0000118: [reports] SQL errors in year engineer export (paulh) - resolved.
+* 0000099: [contracts] Add incidents at sites with no support contract error (kieran) - resolved.
+* 0000121: [reports] QBE report can reveal sensitive information (ivan) - resolved.
+* 0000112: [contracts] Missing siteid links (kieran) - resolved.
+* 0000086: [triggers] triggersfooter not replaced (kieran) - resolved.
+* 0000100: [contracts] strtotime() error when editing contracts with no expiry (ivan) - resolved.
+* 0000091: [triggers] Missing trigger TRIGGER_REVIEW_DUE (ivan) - resolved.
+* 0000083: [other] URL to bugtracker is wrong (ivan) - resolved.
+* 0000040: [calendar] Set Public Holidays (ivan) - resolved.
+
+
+Changes in v3.35 - Released 5 July 2008
+-----------------------------------------------------------------------
+* This release introduces much speedier searching, and the search feature
+  now searches the whole of SiT in a single operation
+* The built-in portal now has been extended and now contains all the
+  features you would expect, including the ability for contacts to
+  view all the incidents logged for their site, and for admin contacts
+  to be able to manage all their contracts and supported contacts.
+* The dashboard has been improved and now dashlets can be editing
+  in-line and can refreshed, (automatically too) if needed.
+* added two new dashlets, one for monitoring the holding queue,
+  another for seeing who's away today.
+* Updated Theme and Icons
+* In addition the existing ability to restrict the number of supported
+  contacts, you can now specify "All site contacts"
+* The knowledge base editor has been completely re-written
+* SiT now has an easy to use built in scheduler, all you need to do is
+  ensure that auto.php is called periodically, via a cron
+* New in this release is a very powerful triggers system.
+* Consolidated Attachments: Previously, attachments weren't viewable
+  until the incident was logged.
+* Help Tips
+* You can now enable or disable major features, whole sections can be
+  added or removed
+* We now have usable German (de-DE) and French (fr-FR) translations
+  thanks to the hard work of Patrick Liebhardt and Gabriel Riam.
+* SF#1932409 Expiry date is blank on contract details page
+* SF#1954075 Incorrect incident status strings in Update Incident
+* SF#1933091 Missing months with ldate
+* SF#1958571 'Free' holidays are not actually free
+* SF#1958569 Incident SLA notices use a relative link
+* SF#1997088 Cake theme and menus
+* SF#1947138 Scheduler schema missing from new installs
+* SF#1950440 Related incidents notice doesn't update lastupdated
+* SF#1951642 Incident with next action time doesn't show in 'Other' queue
+* SF#1939390 Use checkboxes for boolean input
+* Group members away column of holiday approval page now works properly
+
+
+Changes in v3.32 - Released 26 March 2008
+-----------------------------------------------------------------------
+* Escalated Incidents report is now filterable
+* More strings internationalised
+* Spanish / Colombian (es-CO) Translation
+* Japanese (ja-JP) Translation
+* Italian (it-IT) Translation
+* Updated German (de-DE) Translation
+* Updated French (fr-FR) Translation
+* Ability to list open activities/times tasks for site/user/all
+* Ability to view all open activities
+* Ability to view all holidays not requested
+* Holidays page shows number pending approval
+* Holidays page shows list of holidays waitig approval if your an approver
+* Added auto saving of emails (drafts) including 'meta' data i.e. to, from  etc
+* Setup fixes
+* Save vendor when you add software/skill
+* Improved marketing report
+* Some customer portal improvements
+* Allow filtering on escalate_engineer report
+* Fix attachment/upload problems on different platforms
+* Users can now set their own timezone
+* Dates are now localised
+* Remove dependency on mime_content_type
+* Added new config setting $CONFIG['hide_closed_incidents_older_than']
+* Fix for SF#1886389 "Product Only" not saved
+* Prevent closure when no engineer assigned (resolves 1862194)
+* Fix SF#1863871 Update Attachment URL's broken.
+* Watch incidents dashlet now has dropdown to allow status selection
+* Fix a bug with setting public holidays
+  (public holidays were set as user holidays of the user setting them)
+* Fix set_include_path.inc.php path in reports
+* Plus many more minor changes and fixes
+
+
+Changes in v3.31 - Released 19 December 2007
+-----------------------------------------------------------------------
+* Software now has a vendor (allows more accurate stats)
+* Improved customer portal, customers can now read, open, update and request
+  to close their incidents, view their contracts and view and update their
+  details
+* Enabled i18n to allow translation
+* Added translate page for users to translate strings
+* Added a 'jump to incident' link in the support menu
+* Added external engineer report which shows incidents that have been escalated
+* New notice system, allows global notices as well as for informing users
+  of errors or information such as upgrades
+* The users page now contains an icon dispaying a user's online status
+* Changed the login page to allow for session-based language choice
+* Some support for Languages: English (US), Chinese (Simple), French, Welsh,
+  Lithuanian and German
+* Customer portal now supports creating, viewing and updating incidents
+  and customer details
+* Added a link for reporting bugs to the help menu
+* The incident update and the send email pages now automatically save drafts
+* Skills can now have a vendor set
+* SLA's can now be set to 'timed' which adds an 'Activities' tab to
+  incidents and allows for recording of incident activities.
+* Added a work-around for the magic_quotes_gpc php config option
+* Made tags display in three columns
+* Fix bug in function that found an available subsitute engineer that caused the auto incident
+  switchover to be broken and for incidents to be kept in the holding queue
+* show forgotten password link regardless of whether the portal is active
+  or not.
+* Re-written reassign page automatically suggests the best person to assign to
+  based on skills and availability.
+* Get rid of the default (random) admin password on setup
+* Prompt the user at the end of setup to create an admin account if one does
+  not exist
+* RSS feeds in the RSS dashboard component can now be limited to display X number
+  of items
+* Tidied updates and close incident pages
+* Allow setting of include_path even without ability to modify php.ini
+  see the htdocs/set_include_path.inc.php file for more details
+* Plus many more minor changes and fixes
+
+
+Changes in v3.30 - Released 15 October 2007
+-----------------------------------------------------------------------
+* Users with disabled accounts are now displayed with strikethrough text style
+* Improved search, now supports AND, OR and NOT operators, default is AND
+* Adds forgotten password functionality for portal users
+* Interface to manage dashboard
+* Adds a skills matrix
+* Tidyed up the review incoming updates page
+* New interface for editing vendors
+* Allow setting of holiday entitlement when adding users
+* Added new system email 'NEARING_SLA' that notifies when incidents
+* Yearly engineer report now has a statistics option
+* Tidied browsing of feedback
+* Improved login page
+* Send X-Originating-IP Header on outgoing emails to help prevent/diagnose
+  abuse
+* Fixed bug where user was prevented from adding relationships with a
+  message that a similar relationship already existed
+* The term 'software' has now been renamed to the more generic 'skill'
+  which is more appropriate when supporting hardware and other things
+* The term 'Backup Engineer' has now been renamed 'Substitute Engineer'
+  to avoid confusion
+* Improved holding queue page.  It will now only show queues if there are
+  items to display and some queues have been merged to make the page
+  simpler
+* Improved the skills matrix page
+* Fixed a bug that caused contracts not to be displayed while adding
+  an incident
+* Added a new field to the sites table to store a URL (website) for the
+  site
+* After sending an email you are now redirected back to the incident log
+* Made timecalc run only inside the working day
+* Fixed a bug with SLA calculation
+* Fixed a bug where your own holiday waiting approval was shown even when
+  viewing somebody elses calendar
+* Added the ability to set holiday entitlement and group when adding users
+* New page edit_holidays.php allows admins to set new holiday entitlement
+  and carry-over days - When holiday entitlement is changed, holidays booked
+  prior to a specified date are archived
+* Fixed bug where users mobile phone number wasn't displayed if regular
+  telephone number was blank
+* Fix to OUT_OF_SLA emails, now only sent when actually out of SLA
+* Added NEARING_SLA email, sent when SLA reaches urgent_threshold (90% by default)
+* Changed minimum MySQL requirement to 4.0.18
+* Fixed bug which prevented search working with PHP5
+* Added ability to delete products (and new associated permission)
+* New feature: tags
+* Users can now set their own dashboard preferences
+* Positions of dashboard items are now saved
+* Fixed bug with email addresses containing apostrophe
+* Added <salespersonemail> template variable to emails
+* Files view now respects the users prefered ordering
+* Fixed bug where update could be assigned if call was closed
+* Added an OpenSearch plugin, compatable with Firefox 2 and IE7
+  (This replaces the old firefox 1 search plugin)
+* Added autocompletion to the add incident and browse sites pages
+* Added new RSS agregator dashboard component
+* Fix max upload size bug on files page
+* Fix bug with attachment URL's in incident log
+* Improved the feedback system
+* Improvements to incidents by software report now includes:
+  Monthly break down, SLA breakdown, Ability to view only certain products
+* Fixed bug where holiday calendar cell colours for holidays approved as
+  'free' didn't match the legend
+* Added filters to allow terminated/expired contracts to be hidden from the contracts search
+* Added new closing status - 'Escalated'
+* Tasks can now have an end date as well as a start date
+* New Report to show incidents by vendor
+* Mark very recently updated incidents slightly differently in the incident queues to make
+  it easier to spot recent changes
+* Fixed plurality bug with formatting seconds to minutes
+* Fixed feedback results when the rating is not 1 to 9
+* Fixed missing field 'store in log' which appears in edit email template but was missing from add email template
+* Enable users to delete/cancel unrequested holiday
+* Improved, more detailed statistics page
+* Last updated time is now x minutes ago up to an hour, then absolute time.
+  first bold, italic and red, then italic and red, and finally just italic.
+  Should make it easier to spot which incidents have been updated recently
+* Fix plurality bug with formatting seconds to minutes
+* Fix feedback results when the rating is not 1 to 9
+* Fix missing field 'store in log' which appears in edit email
+  template but was missing from add email template
+* Allow users to delete/cancel unrequested holiday
+* Improvements to product and software editing and display
+* Paging in the incidents log
+* Added ability to jump between next and previous updates in incident log
+* Close a popup and re-opens it if it's already open to help prevent the
+  window being hidden behind other windows.
+* Make default password more obvious to users on new installation
+* Suppress dashboard errors if dashboards aren't properly configured
+* Suppress div by zero errors for incidents by software report when there are no incidents
+* Fix bug where new incidents marked as visible to customer were still hidden
+* New email template <incidentfirstupdate> that will expand to the text of the first
+  update in the incident log that is visible to customers
+* Fix issue that caused only one held email to show in holding queue
+* Fix missing :// from URL in holiday request emails
+* Colour email rows in the holding queue if they are from recognised email
+  addresses, and add support for plugins to do further row shading if needed
+* Fix missing website URL on site details page
+* Show number of days an incident has been due a review rather than just saying 'Now'
+  Still says 'Now' for the first day
+* Allow searching expired contracts beyond 999 days
+* Allow user who adds an incident to force to self if not accepting
+* Allow advanced search to search by service level and display correct service level tag in results
+* Fixed links to attachments within the incident log, even when updates have been moved
+  or held in the holding queue
+* Fixed column name lastupdated which means sorting by that column is now working again
+* Added dashboard component to watch sites, contacts and engineers calls
+* Added ability to make sites and contacts as inactive so they dont show in the default view
+* Added ability to define 'prefered' contracts which show seperatly from 'normal' contracts
+* Added calendar widget for time of next action on the update and email page
+* Fixed bug with searching contacts
+* Fixed mysql error during installation, failed to create example contact record
+* Display skills that are past the end of service lifetime with strikeout text style
+  and the suffix (EOL) = end of life
+* Allow browsing of all sites owned by a particular user (salesperson)
+  Add a link (with icon) on the users page to browse those sites
+* Add link to browse sites 'mine' to view sites owned by self (only displayed when there are some)
+* Fixed browsing by number
+* Allow setting of salesperson while adding site
+* Made user incidents dashboard component show last update again (SF #1780166)
+* RSS Dashboard component supports Atom
+* Enable feed caching (into 'feeds' directory below the attachment directory)
+* Fix Feed character translation
+* Display clearly which sites/contacts are marked inactive
+* Fix error when listing contacts without site for dropdown
+* Completed the forgotten password procedure.  It's now possible to get a reminder of contact passwords and to reset
+  user passwords.
+* Fixed bug where mobile number wasn't shown if the user didn't have a normal phone number
+* Fixed bug where errors would be displayed when no users had skills to show in the skills matrix
+* New iconset based mainly on icons from the Crystal Project by Everaldo
+* Initial commit of code to automatically change users' status depending on their holiday calendar status, not recommended for production use as yet
+* Added reconfigure option to setup script, this allows setting of any config file variable with a GUI interface
+  just access setup.php?action=reconfigure
+* Fix bug where incidents without an SLA (legacy incidents) would cause an error, such incidents now show "No SLA" in the SLA column
+* Fixed the background image in the coolblue theme
+* fix sf bug 1787061
+* Display icons next to tags based on the new $CONFIG['tag_icons'] config variable, by default a set of coloured flags
+  is configured: blackflag, blueflag, greenflag, redflag, whiteflag and yellowflag
+* Display tags on details pages
+* Display site tag icons on incident details page
+* Fixed the SLA met icons and the update text on the incident details page
+* Changed the status bar text shown before login
+* Tweak order on browse contacts page, order by forename as well
+* Made the review period start update by owned by the user adding the incident
+* Made the site notes field appear in a popup in the incident details window when hovering over the site name
+  same for contact notes when hovering over the contact name
+* Fixed some character set issues, especially visible with uk pound sign etc.
+* Fixed bug with the storage of sent emails with text that looked like html tags
+* Added interface to add new feedback forms, including menu links
+* Changed the holding queue, incoming incidents are now handled in a popup window
+* Completed tasks can now be deleted by their owner
+* Fixed issue surrounding browse_feedback when no feedback forms defined (see above)
+* Removed a lot of old unused code
+* Plus many more minor changes and fixes
+
+
+Changes in v3.24 - Released 6 November 2006
+-----------------------------------------------------------------------
+* Fixed service levels for reopened incidents, service level target
+  'opened' is now added making the next action 'initial response'
+* Fixed regression where 'mark for closure' was ignored and the incident
+  was closed immediately
+* Lists number of incidents of each priority a user has on the user listings
+  page.
+* Show more accurately who last updated the call on list incidents pages
+* Added multiple global signatures, one is choosen at random when email is sent.
+* Fixed bug where disabled user accounts would still display as having
+  relevant skills
+* Fixed issue where URLs would not be shortened if they contained a % (percent)
+  or $ (dollar) symbol
+* Fixed issues with URLs that contain colons
+* Incidents page informs you more accuratly who updated the call
+* Specified MySQL Engine type to be MyISAM on all table creations
+* Call opening notes are shown in tool tip after new incidents logged rather
+  than reassign
+* BB Code. Basic set of BB codes supported in incident updates
+* Prevent summary and solution from being uncheck from close incident page
+  since these are mandatory
+* Fixed bug with not sending closing email
+* send_template_email now store emails in the incident log
+* Holiday calendar is now functional
+* New holiday planner shows when all users are in/out
+* Users can now be placed in groups, view users shows just your own
+  group by default
+* Users with 'edit user' permission can set users' holiday entitlement
+* Able to change external escalation details on bulk
+* View users now has links to 'Waiting' queues and holiday calendars
+* New interface for adding vendors
+* Ability to request email notification when a call is reassigned to a user
+* Users without valid email address are now prompted on the main page to
+  edit their profile
+* Ability for administrators to disable users by editing a profile and
+  setting status to 'Disabled Account'.
+* Force username to be unique when adding new users
+* Do incident switchover when changing status via edit profie
+* New report, average incident duration.  Shows the time taken to close
+  incidents over the months.
+* When session expires and user logs in again the user is now redirected
+  the the previously accessed page rather than the main page.
+* Improved accuracy of SLA calculation
+* Added ability to edit/delete software records
+* When an inicdent is closed pending-reassignments are remove as necessary
+* When an incident is closed any related incidents are notified of the closure.
+* Added icons to priority selection dropdown for browsers that support it
+* Improved sorting of some tables, you can now click again on the column header
+  to sort in the opposite direction ascending/descending
+* Holding queue locks now timeout after $CONFIG['record_lock_delay']
+* Ability to delete multiple held emails in one go
+* Ability to add resellers
+* Escalation can now be configured via a database table, though there is no
+  GUI for this yet
+* External escalation partners can be configured via config file
+* Edit incident now lets you select an escalation path (assuming paths are
+  configured in the escalationpaths database table)
+* Ability to add/edit/view tasks
+* Ability to add notes to tasks
+* Note owners can now delete their own notes
+* Basic incoming email handler now included with SiT, as inboundemail.php
+* New report incidents by software shows which software has the most
+  incidents logged
+* Tidied more HTML
+* Fixed next action field, this is now stored and displayed again
+* Interface to configure external escalation partners
+* Made holiday booking easier
+* Added ability to check which users have been granted each permission
+
+Changes in v3.23 - Released 10 April 2006
+-----------------------------------------------------------------------
+* Improved Auto-reassign back to original owner after holiday
+* Improved contact support page
+* Merged list of sites contracts onto the site details page
+* Surname and Email address are now both checked when adding a contact
+  to help prevent dupes
+* Contacts now use their site address unless specifically overridden
+* Improved password generation
+* Fixed bug with contact address (country field)
+* Fixed bug with log produced after editing incidents.
+* Removed ability to change the product an incident is logged to as
+  this didn't make much sense,
+  incidents should be re-logged instead
+* Fixed bug where slashes appeared in incident titles with apostrophe
+* Fixed bug with missing roleid column on new installations
+* SiT! now uses superglobals no longer requires register_globals to be on
+* Much improved input checking throughout
+* Many other minor bugfixes
+* Fixed bug with creating a directory to hold attachments for new
+  incidents
+* Fixed bug with locking/unlocking incoming updates
+* Show product on site/contact incidents page and allow date filtering
+* Show total number of incidents logged for each product on contact/site
+  support page
+* Fixed bug with searching for kb articles by doc id
+* Improved Database Error handling
+* Prevented revealing SQL on failure for security reasons
+* KB references in incident logs are now converted to hyperlinks
+* Improved reporting to show percentage of incidents that were escalated
+* Added SLA time calculation to auto.php scheduling
+* Changed sites.notes column to TEXT from BLOB
+* Removed obsolete and unused database column 'ftnpassword'
+* Fixed missing banner graphic for neoteric theme, added blue swirl
+* Improved the list of incidents that a site/contact has a logged and
+  added new png pie charts showing various data
+* User Permissions can now be set using 'Roles', there are currently
+  three roles available 'Administator', 'Manager' and 'User' and the
+  permissions for each of these can be configured.
+* User Permissions are now read only once at login and stored in the
+  users session for quick retrieval
+* SiT! no longer uses it's own cookies for authentication PHP sessions
+  are used instead.
+* Authentication is now performed only once at login and the authenicated
+  status is passed with the users session
+* The users profile variables are loaded into the session at login (and
+  after changes) this avoids multiple SQL Queries which should improve
+  performance
+* Incident relationships. Related incidents can now be linked together
+* The interface style that new users should use (user default style)
+  can now be configured
+* Attachment filenames are now displayed after uploading a file during
+  an incident update
+* Attachment filenames are now displayed neatly in the incident page
+  tooltips
+* Menu permissions are now checked using the session variable
+* Setup script now prints a message if the PHP version is < 4.1
+* The first user (admin) is now show in bold on the manage users page
+* Fixed missing IM icons
+* Made the install more secure by removing the default password
+  'password' and using a randomly generated password instead.
+
+Changes in v3.22 - Released 27 January 2006
+-------------------------------------------------------------------------------------
+* Slashes are now stripped from incident log display so all updates must now be
+  escaped on insertion
+* Fixed bug where incidents were not reassigned to backup engineers when users set
+  themselves not accepting incidents
+* Improved Help
+* Fixed crash when there are no feedback records
+* New styles for informational, warning and error messages
+* New authentication mecahnism to simplify future code changes
+* Fixed redirect after adding a user
+* Fixed reassignment bug
+* Made holding queue refresh automatically
+* Started adding support for user roles  (not complete, don't use yet)
+* Fixed bug with configuration of working day
+* Added php SLA calculation script timecalc.php
+* Fixed bugs with email templates
+* Fixed bug in database setup
+* Tidied HTML
+* Escape incident log variables and strip slashes on log display (to fix Novell Forge #1438)
+* Fixed bug where incidents were not reassigned to backup engineers when users set themselves not accepting incidents
+* Fixes and improvements to knowledgebase articles and incident log quoting
+
+Changes in v3.21 - Released 14 December 2005
+-------------------------------------------------------------------------------------
+* SiT is now open source under the GPL 2 License
+* Improved the display of outstanding incidents when assigning newly added incidents
+* Fixed stray character on add incident page
+* Fixed help link
+* Much improved setup script, now handles upgrades as well
+* Added link to kb after closing an incident
+* Fixed permissions problem with control panel
+* Fixed review message on incident details page
+* Fix problem with headers on close incident page after an error occurs
+* Fix problem with address 1 field not being saved when adding an site
+* Fixed defaut country when adding a site
+* Fixed site not being saved when adding a contact
+* Fixed minor bugs with editing products and software
+* New pages for adding resellers and vendors
+* More sample data added during installation
+* User email templates can now be deleted
+* System email templates are now referred to by name rather than id names are uppercase with
+  underscores instead of spaces
+* Plugins can now specify a minimum required version
+* Attachment paths are now configurable and attachments more user friendly
+* Fixed a bug with the service level details page
+* Fixed bug that caused a message to appear about forced reassigns when reassigns were not forced
+* Random tips are now shown on front page
+
+Changes in v3.20 - Released 23 November 2005
+-------------------------------------------------------------------------------------
+* Fixed a crash in recent incidents report
+* Improved tooltips for better browser support and ease of use (now uses CSS popups)
+* Seperated updates headers from body
+* Made incident details default to show auto-updates
+* Proserv plugin: Added ability to search by job number (without prefix or task letter) (#98)
+* Code tidying and removal of obsolete code sections and files
+* Various improvements for speed
+* Webtrack can now run with short_open_tag set to off
+* Webtrack now validates XHTML 1.0 Transitional with CSS2 (and some CSS3)
+* Many speed improvements
+* Plugin interface
+* Contacts can now assign another contact to be notified in email templates
+* Add maintenance now shows proper list of service levels
+* Incident pools other than 'unlimited' can also be configured for maintenance contracts
+* You can now add/edit service levels from the control panel, you can't remove them yet though
+* Sites can now be deleted
+* All incidents now have service levels and the service level is stored with the incident
+* You can now select a service level when logging an incident that isn't tied to a contract
+* Incident pools are now working (#106)
+* Added product to 'Recent Incidents' report (#40)
+* Fixed hierarchical menus, should now work in all browsers (#56)
+* Fixed Incident appears twice if you are temp owner (#73)
+* Fixed  Unable to reassign incidents to yourself if you are set as non accepting (#80)
+* Improved handling of long URLs converted to HTML hyperlinks in incident details
+* Javascript that changes the browser status bar text now removed/replaced
+* Fixed bug that allowed contacts to be added without associating them with a site
+* You can now view waiting incidents (and all open) on the watch incidents page (#75)
+* There is a new CC field on an incident record for copying managers in on emails
+* Hierarchical menu structure is now available with all themes, improved navigation
+* You can now set the manager of a contact without using tags and use this in email templates (#104)
+
+Changes in v3.19 - Released 30 September 2005
+-------------------------------------------------------------------------------------
+* Proserv plugin: Changed a few page titles
+* Proserv plugin: CSS Improvements for neater printouts from proserv pages
+* Proserv plugin: Now shows site name and day number in the daily tooltips on the chart
+* Proserv plugin: Fixed bug where new tasks showed 100% complete (#88)
+* Proserv plugin: Added gaps between jobs in chart (#86)
+* Proserv plugin: Display overrun jobs (#87)
+* Proserv plugin: Added Job overview tab (#84)
+
+Changes in v3.18 - Released 28 September 2005
+-------------------------------------------------------------------------------------
+* Proserv plugin: Fixed several chart bugs
+* Proserv plugin: Fixed links to sibling tasks
+* Proserv plugin: Added filter to Management Overview page
+* Proserv plugin: Added percentage complete information
+* Proserv plugin: Added information for admin team on Management Overview page (#83)
+* Proserv plugin: Allow a contact to be added to a job (#78)
+* Proserv plugin: Made filters 'sticky' (#59)
+* Proserv plugin: Fixed bugs with sorting
+* Proserv plugin: Added capability to sort all columns (#60)
+* Proserv plugin: PO's can now only be assigned to Jobs and not tasks (#62)
+* Proserv plugin: Improved formatting of jobs list for IE browser
+* Proserv plugin: Added filter to show/hide tasks on jobs list (#63)
+* Proserv plugin: Chart now highlights current day
+* Proserv plugin: Added a tooltip to jobs list showing extract of job overview
+* Proserv plugin: Automatic notification to salesperson of new jobs that haven't been updated every 3 days
+* Proserv plugin: Automatic notification to project manager of jobs that have reached the next action time
+* Authentication now uses Ichain
+
+Changes in v3.17 - Released 25 August 2005
+-------------------------------------------------------------------------------------
+* Proserv plugin: Salesperson is now saved properly when editing a job
+* Fixed server ID string
+* Proserv plugin: Fixed several bugs causing job fields not to be saved
+* Proserv plugin: Fixed bug Screen rendering / formatting issue after PO number saved
+* Proserv plugin: Fixed emails sent via email templates
+* Proserv plugin: Fixed bug where jobs/tasks were not displayed on 'My Jobs' page
+* Proserv plugin: Tasks can now have two consultants, Primary and now Secondary
+* Proserv plugin: More links provided after adding/editing jobs/tasks to improve workflow
+* Proserv plugin: New status of 'Cancelled'
+* Proserv plugin: Chart now groups jobs/tasks together in a way similar to MS Project
+* Proserv plugin: When viewing a task there are now links to sibling tasks
+* Proserv plugin: New filtering allows viewing jobs by status, consultant, site, salesperson
+    or search
+
+Changes in v3.16 - Released 27 April 2005
+-------------------------------------------------------------------------------------
+* Sites can now be assigned to users (For sales people to manage sites)
+* Interface HTML/CSS improvements for faster page loads and better browser support
+* Webtrack hyperlinks no longer update the browser status bar using javascript
+* Fixed a problem with BCC and CC fields in Template Emails
+* Improved several drop-down boxes for ease of use
+* Backup engineers can now be set from the users profile
+* Improved re-assign page.  Now displays users with relevent skills and can handle
+  backup engineers
+* Changing your status to 'Not Accepting' or marking yourself as 'On Holiday' (etc)
+  now passes your incidents to a backup engineer (via the holding queue).
+* Review Incoming Updates page now displays pending re-assignments (incidents to
+  be re-assigned after an engineer has gone on holiday.
+* Improved facility that marks incident updates as visible or hidden (now doesn't
+  lose the view or your place in the log)
+* Incident updates that are visible to customers through the portal are now marked
+  very clearly in the incident log (green!)
+* Incidents can now be assigned temporarily to another engineer, this will put show
+  the incident in both queues (the original queue and the new assignee's queue)
+  This is intended to be used with the new backup engineers/on holiday features, but
+  you may find it useful when working with a partner to resolve an incident.
+* The _incident number_ link in the incident queues is now a normal hyperlink and not
+  a popup window, the incident title link remains a popup window.  This might make it
+  easier for those people with a browser that supports tabbed browsing (e.g. Firefox,
+  Opera) to manage multiple incidents.
+* New Interface Style (Theme) 'Neoteric' with the new Salford corporate look and a
+  hierarchical menu structure.
+* Changed the menu on email and close incident popup windows to make it harder to be
+  confused and have the same incident open in two windows at once.
+* Fixed bug that meant incident reassigns were not made customer-visible even when
+  checkbox was checked.
+* Fixed bug where incident reviews could not be added if they were marked as hidden,
+  reviews are now forced to be visible instead.
+* New field 'Site' for Marketing report
+* ProServ jobs display can now be sorted
+* ProServ Fixed bug where tasks were not assigned a letter
+* ProServ Fixed several minor bugs with tasks and updates
+* ProServ field job 'owner' will now be referred to as 'Project Manager'
+* ProServ New field 'Salesperson' for Jobs
+* ProServ Jobs now require tasks in order to define scheduled work
+* ProServ Actual Dates can now be stored as well as Anticpated dates
+* ProServ New Gantt-style chart showing anticipated and scheduled jobs
+* Improved email templates, user and system templates now seperate
+* Added a description field for email templates
+* Only user templates are now shown when sending an email making an easier shorter list
+* Email templates can now be used for ProServ too
+* ProServ now sends emails when jobs are created, marked as requiring action, or closed
+* Removed erroneous link to Sales Incidents.  These were depreciated over a year ago.
+
+Changes in v3.15 - Released 16 December 2004
+-------------------------------------------------------------------------------------
+* Contact passwords are now generated by webtrack again
+* Incident Update. Priority field now defaults to enabled except for brand incidents
+  awaiting initial response. This is to work-around browser bugs where javascript
+  onclick/onselect events didn't happen.
+* Flags can now be added/removed from contacts.
+* Fixed another bug where sometimes sending an email didn't mark
+  'awaiting customer action' when requested for SLA purposes.
+  Causing some incidents to go 'Red' prematurely.
+* Fix: Incidents can again be sorted by priority
+* When viewing a site blank lines are now collapsed for a shorter easy to read page
+* Support manager is now notified by email when an incident is due for review
+* Support manager and technical director is now notified when an incident goes
+  out of it's SLA
+* Contacts can now be tagged as 'MGR - Site Manager' which means that they hold a
+  management at that site and wish to be contacted during an incident review
+* The Sales Team are notified when a customer logs more than 7 incidents in 30 days
+* Fixed obscure bug with email template variables
+
+Changes in v3.14 - Released 23 November 2004
+-------------------------------------------------------------------------------------
+* New 'Watch Incidents' (displays all open incidents) page now available from
+  the Reports menu
+* New 'Site Products' report showing all sites of a particular type along with all
+  products that the site has had or currently has under maintenance contract.
+* New incident review feature, will notify when an incident is due for review
+  The update incident page is now able to add an update of type 'Review'
+* Fixed a couple of bugs affecting the accurate display of SLA times
+* The Incident Details window now has AccessKeys, e.g. Press ALT+E to send an email
+  (exact keys are browser dependent)
+* Tasks for ProServ (sub-jobs)
+* Proserv plugin: Coloured status to improve readability
+* Proserv plugin: Several minor bug fixes
+* Now using SubVersion (svn) instead of cvs
+* Contact passwords are no longer generated or controlled by webtrack
+
+Changes in v3.12 - Released 19 October 2004
+-------------------------------------------------------------------------------------
+* Display of time to next SLA
+* Work with .NET component (by ASmith) that calculates time since last SLA
+* Added drop-down box for updates and send email that create special records
+  in the updates table.
+* Show number of hours in addition to days when an age is less than a week
+-- Patches after install:
+* Added ProServ jobs manager
+* Fixed bug with sla still counting when awaiting customer action where last
+  update was an email
+* Fixed bug with status not being set in updates which was affecting sla notification
+* Fixed bug with incidents display
+* SLA Time remaining now shown in working days (8 hour days)
+
+
+Changes in v3.11 - Released 10 March 2004
+-------------------------------------------------------------------------------------
+* Fixed bug in edit site where country could not be edited
+* Fixed send incident email html
+* Added site type
+-- Patches after install:
+* Made product-only contracts show as 'notice' class (yellow)
+* Fixed bug with setting contracts as terminated
+* Fixed version number
+
+Changes in v3.10 - Released 25 Feburary 2004
+-------------------------------------------------------------------------------------
+* Made spelling conditional and only appear when pspell module is available
+* Removed dependencies on FTP and Sockets, which will no longer be used
+
+Changes in v3.09 - Released 13 January 2004
+-------------------------------------------------------------------------------------
+* Fixed bug with tables in update incident page
+* Fixed bug #29  Edit incident shows full product list instead of just supported products
+* Resolved bug #222  Incident closure emails not being sent  (fixed in a previous version)
+* Fixed bug where extra slashes would be added to a KB article after editing (ASmith)
+* Added the ability to remove a KB article content section (must be marked restricted first)
+* Fixed bug #230 Open/Closed incidents filter broken (MDunken)
+* Changed mail handling mechanism to all PHP
+* Added ability to create incidents from incoming emails
+* Improved mail holding queue to handle all messages not just updates to existing incidents
+* Fixed a bug in Add Incidents
+* Fixed bug #229 journal dates are now displayed
+
+Changes in v3.08.1 alpha - Development Release
+-------------------------------------------------------------------------------------
+* Added External Knowledge Base interface for Website
+
+Changes in v3.08 - Released 30 October 2003
+-------------------------------------------------------------------------------------
+* Fixed spelling of "Knowledge Base" in close article (when creating KB Article)
+* KB Now defaults to showing just recent articles as was originally intended
+* Merged and Improved opened and closed incidents reports and added extra info for PRLees
+* Added list of allowed HTML tags for KB articles to help
+* Fixed bug #223 slashes in kb article titles
+* Fixed bugs with slashes in kb article body
+* Fixed bug where applicable software would be lost when editing a kb article
+* Fixed bug that made it possible to try and edit a non-existant kb article
+
+Changes in v3.07.3 - Released 11 September 2003
+-------------------------------------------------------------------------------------
+* Fixed bug with encoding unusual attachment filenames that stopped attachments from being displayed
+* Fixed bug #220  Contact usernames and passwords not displayed
+
+Changes in v3.07.2 - Released 10 September 2003
+-------------------------------------------------------------------------------------
+* Temporary patch to fix a problem displaying attachments
+
+Changes in v3.07.1 - Released 10 September 2003
+-------------------------------------------------------------------------------------
+* Fixed bug  Added mobile phone field to Add Contact
+* Fixed bug  Incidents appearing as duplicates in own incidents queue and others queue
+
+Changes in v3.07 - Released 10 September 2003
+-------------------------------------------------------------------------------------
+* Fixed bug #1  Customer profile reports
+* Added Feature #13  Staff qualifications table
+* Fixed bug #15   Deleting incoming updates causes error removing tempincoming
+* Fixed Bug #18   Month labels on incident graphs
+* Fixed bug #19   Some users can't change password
+* Fixed bug #24   It's possible to add a sales incident with no priority
+* Fixed bug #31   Add Purchase Order Fields
+* Added Feature #36  Ability to move incidents from one contact to another
+* Added Feature #57  Improved Journaling, including admin display and reporting
+* Added Feature #60  Add time and date etc to email template identifiers
+* Fixed bug #64   Days formatting says '1 months'
+* Fixed bug #66   Remove sales_invoicedate field and optimise all tables
+* Added Feature #75   QBE (Query by Example) Reporting Module
+* Fixed bug #76   Staff Holiday Report shows H as W
+* Fixed bug #87   Emails with uuencoded attachments
+* Fixed bug #95   Check holiday approval with group members
+* Added Feature #118   New users added to webtrack have plaintext password
+* Fixed bug #152  CC: Field on outgoing emails is not displayed
+* Fixed bug #160  Changing a contact fails with apostophe
+* Fixed bug #161  Error if mailing lists server is down
+* Fixed bug #163  Auto email-update failure
+* Fixed bug #168  Javascript error after adding incident
+* Fixed bug #171  Clicking on a spellcheck hyperlink returns to previous page
+* Fixed bug #176  Spell check now causing serious java script errors
+* Fixed bug #194   Newly added products dont have vendor ID set
+* Added Feature #205  Support product template variable
+* Fixed bug #209   SLA Not displayed on maintenance details page
+* Fixed bug #210   DSE contract SLA on new incidents
+* Fixed bug #211   Can't view/change the software that an incident is logged under
+* Fixed bug #212   SLA Crash while updating incident
+* Added Feature #215   Display service level in maintenance section
+* Fixed bug #217  Upload file size isn't standard
+* Fixed bug #219  Able to have an incident with no title
+* Added Feature   Disabled accounts are no longer shown in user listboxes
+* Added Feature   Improved Reports Menu
+* Fixed bug   Country field not displayed in add/edit contact
+* More not documented yet
+
+Changes in v3.06 - Released 7 March 2003
+-------------------------------------------------------------------------------------
+* Product Based Support Incidents
+  New support incidents will now be associated with individual maintenance contracts which indicate exactly
+  which product is being supported.
+
+* Service Levels
+  Maintenance contracts can be assigned various service levels which define certain targets that we will agree
+  to meet, webtrack will now keep track of these targets and inform engineers when a target is due or overdue
+  to be met.
+
+* Better searching
+  The search system has been improved to provide faster results and extended to support searching incidents
+  by product.
+
+* Email error handling
+  An extra email header is now set on all outgoing emails to request that any errors that occurr during delivery
+  will be sent back to the original sender (rather than postmaster)
+
+* Integration with BugTrack
+  Incidents with an external ID prefixed with 'BUG' will link to Bugtrack.  Useful for tracking support for our
+  internal projects such as FTN95 and GPAS.  (Bugtrack is located at https://webtrack.salfordsoftware.co.uk/bugs/)
+
+* Various bugfixes
+  A lot of work has gone into making sure this release of webtrack is more stable than the last.  In particular
+  many of the problems you have reported with incoming and outgoing emails have been fixed.
+
+
+Changes in v3.05 - Released 8 August 2002
+-------------------------------------------------------------------------------------
+DONE: Added new svrconfig variable $application_shortname_svr_tag (INLucas 26Apr02)
+DONE: Dummy attachment file (svrconfig variable)
+DONE: Changed incident auto-closure time to six days and 10 hours (TGerrard 2Mar02)
+DONE: Added method of unbooking holidays that are approved (JShazell 7May02)
+DONE: Improved code that adds contacts from the salford online store (AThomas 11July02)
+FIX!: Backslashes are stripped from outgoing emails (no spellcheck) (TGerrard 1Feb02)
+FIX!: Add Incident chokes on site names with apostraphe (LDrakonaki 2May02)
+FIX!: Occasional errors when checking free support availability (INLucas 31July02)
+DONE: Added warning not to create duplicates on add_contact page (INLucas 8Aug02)
+DONE: Added ability to delete contacts and move incidents and maintenance (INLucas 8Aug02)
+DONE: Other undocumented changes
+DONE: add a search button to the menu on review_incoming_updates (LDrakonaki 24July02)
+DONE: Remove sales incidents queue? (INLucas 26Apr02)
+DONE: add_incident Integration with SDSS website. (INLucas 8Aug02)
+DONE: Upgraded raw database editing (phpMyAdmin) (INLucas 8Aug02)
+--
+DONE: Changed URL for Mailing List admin connection to Pingu (INLucas 12Feb03)
+DONE: Fixed mailing list admin for Mozilla/Netscape (INLucas 12Feb03)
+
+Changes in v3.04a - Released 10 July 2002
+-------------------------------------------------------------------------------------
+DONE: Removed mod_gzip compression (TGerrard 9July02)
+DONE: Updated proforma invoice - export to csv for mailmerge (JDoggart 5Jun02)
+--
+FIX!: To help with the stripping plus signs problem, made spellcheck default (PLees 29July02)
+
+Changes in v3.03a - Released 25 April 2002
+-------------------------------------------------------------------------------------
+DONE: Make support incidents queue show sales incidents as well - Making one queue for all users (PRLees 2Apr02)
+DONE: Group/team incidents queue.  e.g. Netware incidents queue (PRLees 17Apr02)
+DONE: The InnerWeb is now incorporated into Webtrack as mostly static content
+DONE: Make visible to customer flag more visible (PRLees 23Apr02)
+DONE: Ability to hide hidden updates from users without appropriate permission (PRLees 24Apr02)
+DONE: Ability to view maintenance contracts grouped by products
+FIX!: Opening contact details from maintenance.php page gives blank page (LDrakonaki 31Jan02)
+DONE: produce a page to check who is a DSE site and make this available on the innerweb (PRLees 5Dec01)
+DONE: innerweb page showing SDSS customers and number of incidents active (past 12 months) and closed etc. (PRLees 17Apr02)
+FIX!: Maintenance.php doesn't show expired contracts in grey (INLucas 19Apr02)
+DONE: Show group membership on edit profile page (INLucas 18Apr02)
+FIX!: Division by zero error when displaying a specific customers incidents and there is only 1 (INLucas 19Mar02)
+DONE: Field to store mobile telephone numbers for contacts (PRLees 21Feb02)
+DONE: 3rd party details in webtrack as contacts and make this information available on the innerweb. (PRLees 17Apr02)
+DONE: Email 3rd party support, ie Novell/Microsoft/CA etc when we close an incident @ our end (PRLees 1Mar02)
+DONE: Speeded up incidents queues (INLucas 25Apr02)
+DONE: Added incidents table indexes: status, priority, timeofnextaction (INLucas 25Apr02)
+DONE: Added updates table indexes: timestamp (INLucas 25Apr02)
+DONE: Added maintenance table indexes: site (INLucas 25Apr02)
+DONE: Changed the text of the forgotten ID email for the store (AThomas 25Apr02)
+FIX!: Help menu option doesn't work in innerweb (TGerrard 25Apr02)
+FIX!: Logout menu option doesn't work in innerweb (TGerrard 25Apr02)
+DONE: Made holiday calender display the name of the person that approved the holiday (INLucas 25Apr02)
+FIX!: Made styles work in subdirectories - e.g. Innerweb and Reports (INLucas 25Apr02)
+--
+FIX!: Fixed hyperlink to contact details on sdss_customers innerweb page (INLucas 26Apr02)
+DONE: Added mod_gzip compression to make access faster for people with modems etc. (TGerrard 26Apr02)
+
+
+
+
+Changes in v3.03 - Released 17 April 2002
+-------------------------------------------------------------------------------------
+FIX!: Resource mime-type small icon fixed (TPGerrard 28Feb02)
+FIX!: Users are able to create incidents without titles (MCampbell 17Dec01)
+DONE: Changed/Added Holiday Table (INLucas 27Mar02)
+DONE: Add new field to users table: holiday_entitlement (INLucas 27Mar02)
+DONE: Added new record to permissions table: 50 - approve holiday (INLucas 28Mar02)
+DONE: edit_profile now displays holiday entitlement (INLucas 3Apr02)
+FIX!: Typo in incident_details (DBracken 3Apr02)
+DONE: Holiday Chart, Edit, Display
+DONE: 'None' link on next action time on update incident page (INLucas 25Feb02)
+FIX!: Edit incident does not remember previous last action time (TGerrard 10Jan02)
+FIX!: DSE Email template has incorrect macro replacement (PRLees 10Jan02)
+FIX!: Country selection box does not handle 'UK' as well as 'United Kingdom' (INLucas 10Dec01)
+FIX!: Edit contact menu option after Adding a new contact fails due to no ID.  (INLucas)
+FIX!: Add Incident will search for firstname or lastname but not both at once (MCampbell)
+FIX!: Search will search for firstname or lastname but not both at once (MCampbell)
+---
+FIX!: Fixed a bug which caused some fields not to appear in site_details (AThomas 18Apr02)
+DONE: Improved mailhandler, external engineers details are now filled in automatically (TPGerrard 22Apr02)
+FIX!: Incidents marked for closure will now actually be auto-closed as promised (TPGerrard 23Apr02)
+FIX!: Fixed a problem with holiday requests where holidays were requested for other users (INLucas 24Apr02)
+FIX!: Made it possible for an Administrator to set holidays for another user (JShazell 24Apr02)
+
+
+Changes in v3.02 - Released 21 February 2002
+-------------------------------------------------------------------------------------
+FIX!: Maximum upload/attachment filesize is now whatever is configured in php.ini
+DONE: Report of all Microsoft activity for given month (TGerrard/TBristow 8Jan02)
+DONE: Check add_maintenance expiry dates after changing month date function (INLucas 14Jan02)
+FIX!: Manually assigning an incoming update without an attachment causes file rename error (INLucas 5Dec01)
+FIX!: confirmation_page() function reverts to default style (TGerrard 13Dec01)
+FIX!: Colors on 'add site' form are wrong
+DONE: Added code to support styles that use frames (TGerrard 16Jan02)
+FIX!: Search incident page now prompts for login when not logged in (TGerrard 16Jan02)
+FIX!: Edit sales incident fails if surname has a single quote char (INLucas 10Dec01)
+DONE: A warning is now given when trying to add an incident without a title (MCampbell 12Feb02)
+FIX!: Emails that begin with text that looks like headers have that text as headers (PRLees 5Dec01)
+FIX!: Removed spurious characters from edit_maintenance page (INLucas 12Feb02)
+DONE: Moved priority field to bottom of add_incident and made default 'Low' (MCampbell 21Feb02)
+---
+FIX!: After browsing for a maintenance contract admin contact opens in same window (JEwbank 21Feb02)
+FIX!: Yellow and Blue style is broken (INLucas 21Feb02)
+FIX!: No cell borders on incident page (CPritchard 21Feb02)
+FIX!: Improved selection algorithm using SLA for 'Action Needed' queue (INLucas 21Feb02)
+DONE: contact_support page showing incidents logged for a particular contact (INLucas 21Feb02)
+DONE: Ability to view all support incidents and stats for individual site or contact (INLucas 21Feb02)
+FIX!: Incident Priority summary page now shows regular contact timing (INLucas 22Feb02)
+FIX!: Edit incident redundent fields removed, use Update instead (TPGerrard 22Feb02)
+BUG!: Incoming auto-updates do not clear next-action time (PRLees 25Feb02)
+BUG!: Moving from inbox doesn't reset next action time (INLucas 25Feb02)
+FIX!: Contact Support page links to incident details were wrong (JBlake 28Feb02)
+FIX!: Admin Reset password fails when password is the same (INLucas 28Feb02)
+FIX!: Search incident for 'gary scobie' fails but searching for 'scobie' succeeds (MCampbell 4Mar02)
+FIX!: Changed wording on move incident page for clarity (MCampbell 7Mar02)
+DONE: Improved incident_search to make search sites possible (MCampbell 8Mar02)
+FIX!: Fixed a bug with generating webtrack ID's from new webstore online contacts (PHarrison 10Apr02)
+
+Changes in v3.01 - Released 8th January 2002
+-------------------------------------------------------------------------------------
+DONE: Message after spellcheck to indicate when there are no spelling errors (INLucas 5Dec01)
+DONE: Plain header tries to get 'Style10.css'
+FIX!: Tidied up assigning a maintenance contract to a support contact
+DONE: Ability to search notes
+DONE: Add link for user to edit his own profile from his entry in the user listing
+FIX!: Fixed spellcheck_email.php, no longer removes all slashes (TGerrard 10Dec01)
+FIX!: Marking incidents for closure via close incident does not wait 7 days (INLucas 5Dec01)
+DONE: Advanced Search now displays date incident was opened (TBristow 11Dec01)
+FIX!: Some incidents marked with a next action time appear in Action queue prematurely (PRLees 12Dec01)
+DONE: Show incoming email headers TO: and CC: (PRLees 7Dec01)
+DONE: FTP connections now use Passive mode (ftp_pasv)
+FIX!: Incoming updates from Microsoft with two ID fields fail (MCampbell 6Dec01)
+FIX!: Spell checking an email with a double-quote truncates the email (TGerrard 11Dec01)
+DONE: Show total number of open incident on incident monitor page (INLucas 10Dec01)
+FIX!: Text within angle brackets is stripped from outgoing emails (ASmith 15Dec01)
+FIX!: Incoming emails can reopen closed incidents (INLucas 11Dec01)
+DONE: Log failed logins to a text file (TGerrard 7Jan02)
+DONE: DB Field for Configurable Header HTML (TGerrard 7Jan02)
+---
+FIX!: Quotable printed decoding based on header (TGerrard 8Jan02)
+FIX!: Outgoing emails that haven't been spellchecked have extra '\' characters (INLucas 9Jan02)
+FIX!: Javascript error on Add Incident page (PRLees 9Jan02)
+FIX!: Made view logfiles features display a text header (TPGerrard 28Jan02)
+DONE: Added ability to view MailhandlerLogfile from admin screen (TPGerrard 28Jan02)
+FIX!: Fixed a problem with Advanced search on product field (HDE 6Feb02)
+
+
+Changed after v3.00 General Release - 5th December 2001
+-------------------------------------------------------------------------------------
+FIX!: Title now displays correctly on close and reopen incident pages
+FIX!: BCC Field in emails doesn't seem to work (PRLees 5Dec01)
+FIX!: Edit Incident quits with error if you edit the time to next action (JBlake 5Dec01)
+FIX!: Updates are marked as having an attachment even when they dont (INLucas 5Dec01)
+FIX!: strip slashes from global signature (INLucas 5Dec01)
+FIX!: Close sales incident hangs with Netscape 6 (SNunn 5Dec01)
+FIX!: Close sales incident page has PONumber field which causes error when filled (SNunn 5Dec01)
+FIX!: Edit incident changes the product erroniously (INLucas 5Dec01)
+FIX!: After closing incident a blank page is displayed [in send_closing_email.php] (INLucas 5Dec01)
+FIX!: Search renewals erronious link to support contacts has been removed
+DONE: Added forenames to search renewals (JEwbank 5Dec01)
+TODO: close an incident - two screens so that we can cut and copy between the two. (PRLees 5Dec01)
+FIX!: Job title can now be updated and is displayed on contact details page (MCampbell 6Dec01)
+DONE: Change sales incident colours (JBlake 5Dec01)
+FIX!: Mailing list admin links don't appear for some lists (PRLees 7Dec01)
+FIX!: Update incident time to next action field javascript selects wrong radio button (TBristow 6Dec01)
+DONE: Need to migrate rest of email templates (DBracken 6Dec01)
+FIX!: Change password in edit_profile.php doesn't work (TGerrard 7Dec01)
+DONE: Administrators with 'edit permissions' permission can now reset users passwords
+FIX!: Incident attachments sometimes have an incorrect url with the ID number twice (MAlderson 6Dec01)
+FIX!: Add incident link from search contact page is broken (TGerrard 7Dec01)
+FIX!: Add contact link does not appear when adding a new incident and no match is found (MCampbell 6Dec01)
+FIX!: Add incident won't find full name, it finds first OR surname but not both (MCampbell 5Dec01)
+
+
+Changed after v3.00 - 7th November 2001
+-------------------------------------------------------------------------------------
+FIX!: Fixed a problem with the incident display where updates with special chars caused incident title corruption (9Nov01)
+DONE: Ability to check the spelling of outgoing emails
+DONE: Set cookie security (Duration)
+DONE: FTP site file management
+DONE: Ability to publish files to FTP site for a specified period
+DONE: Date Macro for email templates
+DONE: Contact integration with Mailing lists
+FIX!: Auto-update incidents can not handle email addresses with single quote character
+FIX!: Closed Incidents Queue showed age of incidents incorrectly.
+DONE: Auto-purge for expired FTP published files
+FIX!: Country and Postcode now show in contact details view
+FIX!: Auto updates now checks that ID field is set, not body field to cater for messages with attachment and no body
+DONE: User accounts can now be hidden by setting the user status to 0
+
+Changed after v3.00 Beta 3 - 19th October 2001
+-------------------------------------------------------------------------------------
+FIX!: when you click on view supported product it says contact Ivan Lucas there is a bug (JEwbank)
+FIX!: where you can click view supported products. I don't think you need that because you can view it from the support contact anyway (JEwbank)
+FIX!: Updates show reassigns as reassigned to webtrack - Rewrite and Run proc that sets Reassigned (INLucas)
+FIX!: Reassigning and saying customer does not show up in the log (don't know whether it actually does)
+DONE: Process incoming emails and insert incident updates where appropriate
+DONE: Global email signature for marketting taglines
+
+-------------------------------------------------------------------------------------
+Changed after v3.00 Beta 2 October 2001
+-------------------------------------------------------------------------------------
+FIX!: Add Close Window link to Incident Monitor screen.
+DONE: Browse customers menu doesn't have browse sites option
+FIX!: View supported contacts from browse contacts gives sql error
+FIX!: "Inform sales of free incident" template does not seem right
+FIX!: Two 'H's on browse screens alpha index (JDoggart)
+DONE: Add site option while adding a contact
+FIX!: Add Contact - name, surname and firstname is unclear
+FIX!: Cannot add contact from Add Incidents screen, link doesn't work
+FIX!: Add Incident - Find Contact finds everybody if search field is left blank
+FIX!: Edit incident sometimes gets next action time wrong.
+DONE: Report for email addresses of all Novell admin contacts (JDoggart)
+DONE: Checkbox for 'License Receieved' (JDoggart)
+FIX!: Collapse All link in incident details opens a new window in certain browsers
+FIX!: Sending attachments that are too large does not cause a warning but does send the email without the attachment.
+FIX!: When adding new contact id gets unrelated maintenance.  (confirmed - serious problem with maintenance contracts db)
+FIX!: Support Contacts link displays no contacts (JDoggart)
+DONE: Check results from import of Current Webtrack data (INLucas)
+FIX!: Expand all does not have incident_details (whilst all updates does)
+DONE: Remove placeholders from menus
+FIX!: Add maintenance and edit maintenance have wrong menu permissions (could be more options with this prob too)
+
+-------------------------------------------------------------------------------------
+Changed after v3.00 Beta 1 September 2001
+-------------------------------------------------------------------------------------
+FIX!: Unable to create new users.
+FIX!: Unable to create incident from search results. Display blank page.
+DONE: Expired maintenance search
+DONE: Add new contact when creating an incident.
+FIX!: Browsing Sites and Contacts and using this interface to create incident displays nothing.
+FIX!: Viewing support incidents from "Manage Users" pages returns error. (Mon, 3 Sep 2001 16:45:41 +0100)
+DONE: Admin can assign incident even if user is 'not accepting'
+DONE: Decrement free incidents from free incident counter
+FIX!: Edit contact link on add incident
+DONE: User ICQ/AIM Addresses
+FIX!: Adding an incident gives an error - "User ID not set: user_novellid()" (Wed,  5 Sep 2001 16:29:35 +0100)
+FIX!: Can't send an email when opening incident
+FIX!: When displaying admin contact sometime displays old type windows and fails to display details. (for example when searching)
+FIX!: View Supported products gives error when clicked from the browse contacts page
+DONE: Email sales & marketing when new 'Free' incident is created
+-------------------------------------------------------------------------------------
+ 31.07.00
+ - Added webtrack_connect_db function
+ - Added authenticate function
+ - Added priority_name function
+ - Added product_drop_down function
+ - Added user_drop_down function
+ - Added incidentstatus_drop_down function
+ - Added incidenttype_drop_down function
+ - Added priority_drop_down function
+ - Added user_realname function
+ - Added user_id function
+
+ 1.8.00
+ - Added incidenttype_name function
+ - Added incidentstatus_name function
+ - Added product_name function
+ - Added emailtype_drop_down function
+ - Added incident_status function
+ - Added emailtype_to function
+ - Added emailtype_cc function
+ - Added emailtype_subject function
+ - Added emailtype_body function
+ - Added emailtype_replace_specials function
+ - Added incident_email function
+
+ 2.8.00
+ - Added user_signature function
+ - Added user_status function
+ - Added accepting_drop_down function
+ - Added user_accepting function
+ - Added user_message function
+ - Added user_jobtitle function
+ - Added user_email function
+ - Added user_phone function
+ - Added user_fax function
+ - Added user_password function
+ - Added userstatus_name
+ - Added incident_owner
+
+ 4.8.00
+ - Added contact_drop_down function
+ - Modified incident_contact function (now returns integer)
+ - Added contact_realname function
+ - Added incidentstatus_drop_down_all function
+
+ 7.8.00
+ - Changed incident_contact function (now returns string)
+ - Added contact_site function
+ - Added incident_externalid function
+ - Added contact_email function
+ - Changed incident_contact function (now returns integer)
+
+ 8.8.00
+ - Celebrated 20th birthday :-)
+ - Added user_refresh function
+ - Added format_seconds function
+
+ 9.8.00
+ - Added incident_productinfo_html function
+ - Added user_update_order function
+ - Added contact_phone function
+ - Added contact_fax function
+ - Added confirmation_page function
+
+ 10.8.00
+ - Added message_subject function
+
+ 11.8.00
+ - Added message_recipient function
+ - Changed name of user_refresh to user_incident_refresh
+ - Added user_message_refresh function
+
+ 14.8.00
+ - Added num_incidents function
+
+ 16.8.00
+ - Added contactproducts_drop_down function
+ - Added contact_productsupport function
+ - Added closingstatus_drop_down function
+ - Added closingstatus_name function
+
+ 17.8.00
+ - Added emailtype_bcc function
+ - Added supported_product_drop_down function
+
+ 18.8.00
+ - Added user_outstandingincidents function
+
+ 21.8.00
+ - Added incident_type function
+ - Added calculate_time_of_next_action function
+
+ 22.8.00
+ - Added contact_productsupport_expiryday function
+ - Added contact_productsupport_expirymonth function
+ - Added contact_productsupport_expiryyear function

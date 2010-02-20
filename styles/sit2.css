@@ -1,0 +1,31 @@
+/* grey */
+#masthead { text-align: center; }
+
+h1 { color: #EFEFEF; background-color: #EFEFEF; margin: 0px; padding: 3px 0px 3px 0px; }
+body        { background-color: #FFFFFF; color: #000000; }
+p       { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+table       { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+td      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+a       { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #881111; font-weight: bold; text-decoration: none; }
+a:hover     { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #881111; font-weight: bold; text-decoration: underline; }
+a:active    { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #881111; font-weight: bold; text-decoration: underline; }
+a em { font-style: normal; text-decoration: underline; }
+center      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+
+
+th, tfoot td { background: #CCD2D3; }
+tr.shade1 { background-color: #F5F6F7; }
+tr.shade2 { background-color: #E2E7E7; }
+
+
+div.windowbox
+{
+    border: 1px solid #555555;
+}
+
+div.windowtitle, #statusbar
+{
+    background-color: #555555;
+    color: #EF9193;
+}
+div.windowtitle a { color: #EF9193; }

@@ -1,0 +1,1 @@
+As much information as possible about the problem, enough for an engineer to begin researching the issue without having to contact the customer first.

@@ -1,0 +1,4 @@
+* Setting your status to 'Not accepting' or a status that is not accepting, e.g. 'Absent Sick'
+will automatically reassign your incidents to your substitutes as specified in 'My substitutes'
+
+* Setting your status back to 'accepting' will reassign all incidents that have not had any activity back to yourself.

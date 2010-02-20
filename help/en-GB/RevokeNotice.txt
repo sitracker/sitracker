@@ -1,0 +1,1 @@
+Revoking a notice removes it from all users, whether they have read it or not

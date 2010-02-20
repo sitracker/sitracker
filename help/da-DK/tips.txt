@@ -1,0 +1,15 @@
+﻿### SiT hjælpe tips, en per linie           (Denne første linie er ignoreret)
+For at logge en ny support hændelse, vælg <strong>Tilføj hændelse</strong> fra <strong>Support</strong> menuen
+Vidste du at du kan se andre folks hændelses køer? Klik på <strong>SiT!</strong>-&gt;<strong>Brugere</strong> og klik på <strong>Hændelser i kø</strong> kolonnen
+Du kan holde øje med alle åbne hændelser ved at gå til <strong>Support</strong>-&gt;<strong>Overvåg hændelser</strong>
+Ved at sætte dine evner (<strong>SiT!</strong>-&gt;<strong>Mine oplysninger</strong>-&gt;<strong>Mine evner</strong>) vil hændelser du har som evner, blive vist i din kø hvis disse ikke specifik er sat til dig
+For at få dine hændelser midlertidigt tildelt til en backup person når du sætter din status til ude, konfigurer en afløser for hver af de produkter du supporterer (<strong>SiT!</strong>-&gt;<strong>Mine oplysninger</strong>-&gt;<strong>Mine afløsere</strong>)
+Et site kan have flere kontrakter, hver kontrakt specificerer et produkt der er supporteret, antallet af hændelser kan logges og kontakt personerne kan logge hændelser
+Du kan svæve over titlen på en hændelse i hændelses køen for at se en popup der viser et udtræk af de seneste opdateringer til hændelsen
+Hændelser kan logges med forskellige prioriteter, disse relaterer til konsekvenserne kunden har.  Fra <em>Lav</em> hvilket indikerer lille eller ingen konsekvenser, til <em>kritisk</em> hvilket indikerer store konsekvenser
+Når du går ud af kontoret, sæt din status i rullegardins menen på forsiden, dette vil automatisk tildele dine hændelser til dine afløser(e)
+Når du markerer en opgave som privat, er den kun synlig for dig, brugbar til mindre påmindelser
+Vidste du, at du kan tildele vilkårlige tags på hændelser, opgaver, kontakter og andre emner
+Vidste du, at du kan placere dette tip felt og andre dashboard emner ved at trække i titellinjen
+Vidste du, at du kan tilføje eller fjerne dashboard emner ved at klikke på dashboard ikonet øverst til højre
+Vidste du at du kan sætte triggers op til at advare dig når ting sker, fx. når nogen går på ferie (Se <strong>Mine oplysninger</strong>-&gt;<strong>Mine triggers</strong>)

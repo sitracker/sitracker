@@ -1,0 +1,1 @@
+Per avviare queste azioni programmate SiT! ha uno script chiamato auto.php che puoi avviare periodicamente via crontab o altri metodi. (esempio http://www.webcron.org/)

@@ -1,0 +1,69 @@
+/* Webtrack Style: yellow and blue */
+/* by Tom Gerrard, tom.gerrard@salfordsoftware.co.uk - September 2001 */
+
+body        { background-color: #000080; color: #FFFF66; font-family: Trebuchet MS, Helvetica, sans serif; }
+p       { font-size: 8pt; color: #FFFFFF; }
+table       { font-size: 8pt; color: #FFFFFF; }
+td      { font-size: 8pt; color: #FFFFFF; }
+a       { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+a:hover     { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+a:active    { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+a em { font-style: normal; text-decoration: underline; }
+center      { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; }
+
+.error      { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FF8080; font-weight: bold; text-align: center; }
+.red        { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FF8080; }
+.barlink    { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
+.barlink:hover  { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.barlink:active { font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
+.navbarmenu { background-color: #000000; font-family: Trebuchet MS, Helvetica, sans serif; font-size: 8pt; font-weight: bold; color: #FFFFFF; height:20px; }
+
+
+/* Shading for tables*/
+.mainshade  { background-color: #000080;  bordercolorlight: #FFAE00; bordercolordark: #000000;}
+.shade2     { background-color: #0000A0; color: #FFFFFF; }
+.shade1         { background-color: #FFAE00; color: #0000A0; }
+.urgent     { background-color: #0000C0; }
+.critical   { background-color: #0000C0; }
+.expired    { background-color: #000080; }
+.idle       { background-color: #000080; }
+.review { background-color: #7AC5CD; }
+
+#menu li li { background-color: #000080;}
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+.tablelist TD {border-top: 1px solid #FFFFFF;}
+table.tablelist {border: 1px solid #FFFFFF;}
+.tablelist TR {border: 1px solid #FFFFFF;}
+.tablelist TH {border-top: 1px solid #FFFFFF;}

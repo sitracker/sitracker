@@ -1,0 +1,2 @@
+<em>Privato</em> rifiuta username e password da tutti tranne il creatore,
+<em>Solo Admin</em> rifiuta username e password da tutti tranne gli amministratori

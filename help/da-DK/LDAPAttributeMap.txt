@@ -1,0 +1,10 @@
+﻿Indtast atribut tildelingerne (mappings), en pr linie, i formatet "nøgle=>værdi"
+
+For eksempel:
+
+realname=>cn
+jobtitle=>title
+email=>mail
+phone=>phone
+forenames=>givenname
+surname=>surname

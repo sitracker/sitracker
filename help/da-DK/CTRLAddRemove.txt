@@ -1,0 +1,3 @@
+﻿Hold CTRL nede mens du klikker for at tilføje flere.
+
+For at fjerne valg kan du holde CTRL nede og klikke på de allerede valgte.

@@ -1,0 +1,1 @@
+﻿For at køre disse planlægninger, SiT! har et script der hedder auto.php du skal køre periodisk via en planlægnings agent som fx crontab, eller på anden vis. (fx. http://www.webcron.org/)

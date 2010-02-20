@@ -1,0 +1,3 @@
+What has the customer done to try and solve the issue?  
+What config changes were made?  
+What patches/service packs were installed?

@@ -1,0 +1,1 @@
+Annullando un avviso lo si rimuove da tutti gli utente, che l'abbiano letto o no

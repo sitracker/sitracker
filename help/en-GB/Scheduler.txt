@@ -1,0 +1,2 @@
+To run these schedule actions SiT! has a script called auto.php that you should run periodically via
+a crontab or other method. (e.g. http://www.webcron.org/)

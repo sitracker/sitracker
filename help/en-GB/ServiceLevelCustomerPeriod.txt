@@ -1,0 +1,1 @@
+The number of minutes which make up one customer 'unit', this is the unit that the customer is charged in e.g. by 60minute blocks

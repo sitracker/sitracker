@@ -1,0 +1,3 @@
+﻿To add more from the selection press down the CTRL key and click on your choices. 
+
+To remove choices added by mistake press down the CTRL key, and click to deselect.

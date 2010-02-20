@@ -1,0 +1,66 @@
+/* Webtrack Style: GUI Colours */
+/* by Ivan Lucas, ivan.lucas@salfordsoftware.co.uk - August 2001 */
+
+body        { background-color: window; color: windowtext; font-family: Tahoma, Helvetica, sans serif; }
+p           { font-size: 8pt; color: #000000; }
+table       { font-size: 8pt; color: #000000; }
+td        { font-size: 8pt; color: #000000; }
+a       { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: threeddarkshadow; font-weight: bold; text-decoration: none; }
+a:hover     { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: threeddarkshadow; font-weight: bold; text-decoration: underline; }
+a:active    { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: threeddarkshadow; font-weight: bold; text-decoration: underline; }
+center      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #000000; }
+a em { font-style: normal; text-decoration: underline; }
+
+h1 { font-size: 16pt; font-weight: bold; color: #FFF; background-color: highlight; color: captiontext margin: 0px; padding: 3px 0px 3px 0px; }
+
+.error      { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FF0000; font-weight: bold; text-align: center; }
+.red        { font-family: Tahoma, Helvetica, sans serif; font-size: 8pt; color: #FF0000; }
+
+#menu li li { background-color: window;}
+
+/* Shading for tables*/
+.mainshade  { background-color: window; }
+.shade1     { background-color: inactiveborder; }
+.shade2     { background-color: inactivecaption; }
+.urgent     { background-color: #ffbbaa; } /* #E8B7DD; */
+.critical { background-color: #f08080; }
+.expired    { background-color: #DDDDDF; color: graytext; }
+.idle     { background-color: #CCffCC; } /* #90ee90; */
+.review { background-color: #7AC5CD; }
+
+/* SpellCheck */
+a.spellLink {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+a.spellLink:hover {
+    color:              Red;
+    text-decoration:    none;
+    border-bottom:      1px dashed Red;
+}
+
+.spell-tooltip {
+    position:   absolute;
+    width:      250px;
+    border:     1px Solid WindowFrame;
+    background: Infobackground;
+    color:      InfoText;
+    font:       StatusBar;
+    font:       Status-Bar;
+    padding:    3px;
+    filter:     progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+    color:      blue !important;
+    background: none;
+}
+
+.tablelist TD {border-left: 1px solid window;border-top: 1px solid window;}
+table.tablelist {border: 1px solid window;}
+.tablelist TR {border: 1px solid window; border-right: 1px solid window ! important;}
+.tablelist TH {border-left: 1px solid window; border-top: 1px solid window;}

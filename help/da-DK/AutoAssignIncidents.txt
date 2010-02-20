@@ -1,0 +1,4 @@
+﻿Hændelser bliver automatisk tildelt hændelser der er baseret på et vægtet
+lotteri når man tager stilling til faktorerne, så som antallet af hændelser,
+de rigtige færdigheder og status mm. Denne funktionalitet kan deaktiveres
+så man får mulighed for at manuelt tildele hændelser.

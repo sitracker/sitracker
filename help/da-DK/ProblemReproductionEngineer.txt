@@ -1,0 +1,2 @@
+﻿Eksisterer problemet på mere end en maskine?
+Hvad skal teknikeren gøre for at fremprovokere fejlen?

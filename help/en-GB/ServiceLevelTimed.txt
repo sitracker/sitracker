@@ -1,0 +1,1 @@
+When service levels are marked 'Timed' an activities tab is shown on the incident window and the time spent working on each activity is recorded.

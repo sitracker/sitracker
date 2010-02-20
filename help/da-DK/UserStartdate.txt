@@ -1,0 +1,1 @@
+﻿Dette er datoen for hvornår en bruger blev ansat. Dette bruges kun til at beregne ferie, og ændrer ikke på om brugeren fx kan logge på eller ej.

@@ -1,0 +1,97 @@
+/* Cake.  A SiT theme for the portal */
+body {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+}
+form { margin: 0px; padding: 0px; }
+h1 { color: white; }
+h2,h3,h4 { color: #3366AC; }
+h2, h3, h4, h5 { text-align: center; }
+h2 img { vertical-align: middle; }
+
+table {
+  font-size: 8pt;
+}
+table th {
+  background-color: #8AB4D5;
+  -moz-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+  color: #1F3794;
+}
+th:hover { background-color: #EBF4FF; color: #000; }
+
+td {
+/*     border-right: 1px solid #537AB7; */
+    border-bottom: 1px solid #537AB7;
+    padding: 6px 3px 6px 12px;
+    color: #537AB7;
+}
+
+table.vertical th, form table th { text-align: right; background-color: #537AB7; color: white; padding: 2px 5px 2px 5px;}
+table.vertical td, form table td { background-color: #EBF4FF; }
+#C7E0FF
+a:link { text-decoration: none; color: #3B5CA7; }
+a:active { text-decoration: underline; color: #1F3794; }
+a:visited { text-decoration: none; color: #3B5CA7; }
+a:hover { text-decoration: underline; color: #1F3794; }
+
+form p { text-align: center; }
+form table.vertical { margin-left: auto; margin-right: auto; }
+
+input[type=submit], input[type=button], input[type=reset] {
+ background: #537AB7;
+ color: white;
+ border: 1px solid #537AB7;
+ text-transform: uppercase;
+ font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;;
+}
+input[type=reset] {margin-left: 2px;}
+input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover {
+  background: #6593DD;
+  border: 1px solid #6593DD;
+}
+
+
+#menu, #noticearea { font-size: 8pt; }
+
+#masthead { text-align: center; }
+
+div.windowtitle, div.windowtitle a { color: white; }
+div.windowtitle img { vertical-align: middle; }
+
+.window table th { background-color: #eee; letter-spacing: normal; }
+.window table td { border: 0px; padding: 2px 2px 2px 4px; }
+
+.window { padding: 2px; }
+/*.window table th { background-color: #ccc; }*/
+#userbar, #footerbar, #statusbar { font-size: 85%; }
+#userbar { float: left; padding-left: 10px; }
+#footerbar { width: 50%; float: right; text-align: right; padding-right: 10px; }
+#statusbar { color: #fff; padding-left: 10px;  }
+#statusbar a { color: white; text-decoration: none; }
+#statusbar img { vertical-align: bottom; padding: 1px 0px 1px 0px;}
+#tail { font-size: 65%; background-color: #EFEFEF; color: #C000C0; border-bottom: 2px solid #999; }
+
+
+#cols td { border: 0px; }
+
+#help {
+  background-color: #C0FFC0;
+  margin: 5px 50px 5px 50px;
+  -moz-border-radius: 7px;
+  -khtml-border-radius: 7px;
+  border-radius: 7px;
+  border: 1px solid #00C000;
+  padding: 5px;
+}
+.helplink { background-color: transparent; }
+
+.datepicker { background-color: #EBF4FF; }
+
+#detailsummary table td { border: 0px; }
+
+#portalright {
+    width: 75%;
+    margin-right: 20px;
+}

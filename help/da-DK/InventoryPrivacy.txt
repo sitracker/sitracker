@@ -1,0 +1,2 @@
+﻿<em>Privat</em> skjuler brugernavn og adgangskode for alle andre end ham der opretter,
+<em>Kun for Admin</em> skjuler brugernavn og adgangskode for alle andre end admin brugere.

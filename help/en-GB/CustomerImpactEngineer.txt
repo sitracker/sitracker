@@ -1,0 +1,3 @@
+How many users are affected by this issue?
+Is this an issue of downtime or a minor niggle?
+Does the issue prevent people from working?

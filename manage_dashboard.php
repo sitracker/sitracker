@@ -1,0 +1,283 @@
+<?php
+// manager_dashboard.php - Page to install a new dashboard component
+//
+// SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
+//
+// This software may be used and distributed according to the terms
+// of the GNU General Public License, incorporated herein by reference.
+//
+// Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
+
+
+$permission = 66; // Install dashboard components
+require ('core.php');
+require (APPLICATION_LIBPATH . 'functions.inc.php');
+
+// This page requires authentication
+require (APPLICATION_LIBPATH . 'auth.inc.php');
+
+$title = $strManageDashboardComponents;
+// A duplicate of that in setup.php - Probably wants moving to functions.inc.php eventually PH 9/12/07
+function setup_exec_sql($sqlquerylist)
+{
+    global $CONFIG;
+    if (!empty($sqlquerylist))
+    {
+        $sqlqueries = explode( ';', $sqlquerylist);
+        // We don't need the last entry it's blank, as we end with a ;
+        array_pop($sqlqueries);
+        foreach ($sqlqueries AS $sql)
+        {
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                $html .= "<p><strong>{$strFailed}:</strong> ".htmlspecialchars($sql)."</p>";
+                // FIXME i18n - Probably needs to be trigger_error() instead / CJ 29Jul09
+                $html .= "<p class='error'>".mysql_error()."<br />A MySQL error occurred, this could be because the MySQL user '{$CONFIG['db_username']}' does not have appropriate permission to modify the database schema.<br />";
+                //echo "The SQL command was:<br /><code>$sql</code><br />";
+                $html .= "An error might also be caused by an attempt to upgrade a version that is not supported by this script.<br />";
+                $html .= "Alternatively, you may have found a bug, if you think this is the case please report it.</p>";
+            }
+            else $html .= "<p><strong>{$strOK}:</strong> ".htmlspecialchars($sql)."</p>";
+        }
+    }
+    return $html;
+}
+
+switch ($_REQUEST['action'])
+{
+    case 'install':
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
+        $sql = "SELECT name FROM `{$dbDashboard}`";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+        echo "<h2>".icon('dashboard', 32)." ";
+        echo $strInstallDashboardComponents."</h2>";
+        echo "<p align='center'>".sprintf($strComponentMustBePlacedInDashboardDir, "<var>dashboard_NAME</var>")."</p>";
+        while ($dashboardnames = mysql_fetch_object($result))
+        {
+            $dashboard[$dashboardnames->name] = $dashboardnames->name;
+        }
+
+        $path = APPLICATION_PLUGINPATH;
+
+        $dir_handle = @opendir($path) or trigger_error("Unable to open dashboard directory $path", E_USER_ERROR);
+
+        while ($file = readdir($dir_handle))
+        {
+            if (beginsWith($file, "dashboard_") && endsWith($file, ".php"))
+            {
+                //echo "file name ".$file."<br />";
+                if (empty($dashboard[substr($file, 10, strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
+                {
+                    //echo "file name ".$file." - ".substr($file, 10, strlen($file)-14)."<br />";
+                    //$html .= "echo "<option value='{$row->id}'>$row->realname</option>\n";";
+                    $html .= "<option value='".substr($file, 10, strlen($file)-14)."'>".substr($file, 10, strlen($file)-14)." ({$file})</option>";
+                }
+            }
+        }
+
+        closedir($dir_handle);
+
+        if (empty($html))
+        {
+            echo "<p align='center'>{$strNoNewDashboardComponentsToInstall}</p>";
+            echo "<p align='center'><a href='manage_dashboard.php'>{$strBackToList}</a></p>";
+        }
+        else
+        {
+            echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>\n";
+            echo "<table align='center' class='vertical'><tr><td>\n";
+            echo "<select name='comp[]' multiple='multiple' size='20'>\n";
+            echo $html;
+            echo "</select>\n";
+            echo "</td></tr></table>\n";
+            echo "<input type='hidden' name='action' value='installdashboard' />";
+            echo "<p align='center'><input type='submit' value='{$strInstall}' /></p>";
+            echo "</form>\n";
+        }
+
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
+        break;
+    case 'installdashboard':
+        $dashboardcomponents = $_REQUEST['comp'];
+        if (is_array($dashboardcomponents))
+        {
+            $count = count($dashboardcomponents);
+
+            $sql = "INSERT INTO `{$dbDashboard}` (`name`, `enabled`) VALUES ";
+            for($i = 0; $i < $count; $i++)
+            {
+                $sql .= "('{$dashboardcomponents[$i]}', 'true'), ";
+            }
+            $result = mysql_query(substr($sql, 0, strlen($sql)-2));
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+
+            if (!$result)
+            {
+                echo "<p class='error'>{$strFailed}</p>";
+            }
+            else
+            {
+                $installed = TRUE;
+                // run the post install components
+                foreach ($dashboardcomponents AS $comp)
+                {
+                    include (APPLICATION_PLUGINPATH . "dashboard_{$comp}.php");
+                    $func = "dashboard_".$comp."_install";
+                    if (function_exists($func)) $installed = $func();
+                    if ($installed !== TRUE)
+                    {
+                        // Dashboard component install failed, roll back
+                        $dsql = "DELETE FROM `{$dbDashboard}` WHERE `name` = '{$comp}'";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    }
+                }
+                html_redirect("manage_dashboard.php", $installed);
+            }
+        }
+        break;
+
+    case 'upgradecomponent':
+        $id = $_REQUEST['id'];
+        $sql = "SELECT * FROM `{$dbDashboard}` WHERE id = {$id}";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+        if (mysql_num_rows($result) > 0)
+        {
+            $obj = mysql_fetch_object($result);
+
+            $version = 1;
+            include (APPLICATION_PLUGINPATH . "dashboard_{$obj->name}.php");
+            $func = "dashboard_{$obj->name}_get_version";
+
+            if (function_exists($func))
+            {
+                $version = $func();
+            }
+
+            if ($version > $dashboardnames->version)
+            {
+                // apply all upgrades since running version
+                $func = "dashboard_{$obj->name}_upgrade";
+
+                if (function_exists($func))
+                {
+                    $schema = $func();
+                    for($i = $obj->version; $i <= $version; $i++)
+                    {
+                        setup_exec_sql($schema[$i]);
+                    }
+
+                    $sql = "UPDATE `{$dbDashboard}` SET version = '{$version}' WHERE id = {$obj->id}";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    html_redirect($_SERVER['PHP_SELF']);
+                }
+                else
+                {
+                    echo "<p class='error'>{$strNoSchemaAvailableToUpgrade}</p>";
+                }
+            }
+            else
+            {
+                echo "<p class='error'>".sprintf($strNoUpgradesForDashboardComponent, $obj->name)."</p>";
+            }
+        }
+        else
+        {
+            echo "<p class='error'>".sprintf($strDashboardComponentDoesntExist, $id)."</p>";
+        }
+
+        break;
+
+    case 'enable':
+        $id = $_REQUEST['id'];
+        $enable = $_REQUEST['enable'];
+        $sql = "UPDATE `{$dbDashboard}` SET enabled = '{$enable}' WHERE id = '{$id}'";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+
+        if (!$result)
+        {
+            echo "<p class='error'>{$strChangeStateFailed}</p>";
+        }
+        else
+        {
+            html_redirect("manage_dashboard.php");
+        }
+        break;
+
+    default:
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
+        $sql = "SELECT * FROM `{$dbDashboard}`";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+        echo "<h2>".icon('dashboard', 32)." ";
+        echo "{$strManageDashboardComponents}</h2>";
+        echo "<table class='vertical' align='center'><tr>";
+        echo colheader('id',$strID);
+        echo colheader('name',$strName);
+        echo colheader('enabled',$strEnabled);
+        echo colheader('version',$strVersion);
+        echo colheader('upgrade',$strUpgrade);
+        echo "</tr>";
+        while ($dashboardnames = mysql_fetch_object($result))
+        {
+            if ($dashboardnames->enabled == "true")
+            {
+                $opposite = "false";
+            }
+            else
+            {
+                $opposite = "true";
+            }
+
+            echo "<tr class='shade2'><td>{$dashboardnames->id}</td>";
+            echo "<td>{$dashboardnames->name}</td>";
+            echo "<td><a href='".$_SERVER['PHP_SELF']."?action=enable&amp;id={$dashboardnames->id}&amp;enable={$opposite}'>";
+            if ($dashboardnames->enabled == 'true') echo $strYes;
+            else echo $strNo;
+            echo "</a></td>";
+
+            echo "<td>{$dashboardnames->version}</td>";
+            echo "<td>";
+
+            $version = 1;
+            include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
+            $func = "dashboard_{$dashboardnames->name}_get_version";
+
+            if (function_exists($func))
+            {
+                $version = $func();
+            }
+
+            if ($version > $dashboardnames->version)
+            {
+                echo "<a href='{$_SERVER['PHP_SELF']}?action=upgradecomponent&amp;id={$dashboardnames->id}'>{$strYes}</a>";
+            }
+            else
+            {
+                echo $strNo;
+            }
+
+            echo "</td></tr>";
+        }
+        echo "</table>";
+
+        echo "<p align='center'><a href='".$_SERVER['PHP_SELF']."?action=install'>{$strInstall}</a></p>";
+
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        break;
+}
+
+?>

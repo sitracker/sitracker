@@ -1,0 +1,33 @@
+
+
+/* SpellCheck */
+a.spellLink {
+	color:				Red;
+	text-decoration:	none;
+	border-bottom:		1px dashed Red;
+}
+
+a.spellLink:hover {
+	color:				Red;
+	text-decoration:	none;
+	border-bottom:		1px dashed Red;
+}
+
+.spell-tooltip {
+	position:	absolute;
+	width:		250px;
+	border:		1px Solid WindowFrame;
+	background:	Infobackground;
+	color:		InfoText;
+	font:		StatusBar;
+	font:		Status-Bar;
+	padding:	3px;
+	filter:		progid:DXImageTransform.Microsoft.Shadow(color="#777777", Direction=135, Strength=3);
+}
+
+
+.spell-tooltip a,
+.spell-tooltip a:hover {
+	color:		blue !important;
+	background:	none;
+}

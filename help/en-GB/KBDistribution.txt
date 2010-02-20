@@ -1,0 +1,5 @@
+Public appears in the portal
+
+Private is info never to be released to the public
+
+Restricted is information that is sensitive but could be mentioned if asked, for example: information about patch that is still in development

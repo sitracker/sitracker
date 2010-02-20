@@ -1,0 +1,1 @@
+Quando un livello di servizio è contrassegnato come 'Temporizzato' una scheda delle attività è visualizzata nella finestra della segnalazione e il tempo speso lavorando su ogni attività sarà registrato.
