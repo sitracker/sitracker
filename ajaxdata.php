@@ -13,7 +13,7 @@
 $permission = 0; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'triggertypes.inc.php');
+require (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 
 // This page requires authentication
@@ -278,12 +278,12 @@ switch ($action)
         $ldap_protocol = cleanvar($_REQUEST['ldap_protocol']);
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
         $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);
-        $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);        
+        $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);
 
         $r = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_user, $ldap_password);
         if ($r == -1) echo "0"; // Failed
         else echo "1"; // Success
-    
+
         break;
 
     case 'triggerpairmatch':
