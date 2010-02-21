@@ -1,5 +1,5 @@
 <?php
-// triggertypes.inc.php - Create the trigger definitions
+// triggers.inc.php - Create the trigger definitions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
@@ -15,6 +15,36 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
+
+$actionarray['ACTION_NONE'] =
+array('name' => $strNone,
+      'description' => $strDoNothing,
+      );
+
+$actionarray['ACTION_NOTICE'] =
+array('name' => $strNotice,
+      'description' => $strCreateANotice
+      );
+
+$actionarray['ACTION_EMAIL'] =
+array('name' => $strEmail,
+      'description' => $strSendAnEmail
+      );
+
+$actionarray['ACTION_CREATE_INCIDENT'] =
+array('name' => $strAddIncident,
+      'description' => $strCreateAnIncident,
+      'requires' => array('updateid'),
+      'permission' => array(),
+      'type' => 'system'
+      );
+
+$actionarray['ACTION_JOURNAL'] =
+array('name' => 'Journal',
+      'description' => $strLogTriggerInJournal
+      );
+
+plugin_do('trigger_actions');
 
 // Define a list of available triggers, trigger() will need to be called in the appropriate
 // place in the code for each of these
