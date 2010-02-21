@@ -7842,7 +7842,7 @@ function plugin_do($context, $optparams = FALSE)
     $rtnvalue = '';
     if (is_array($PLUGINACTIONS[$context]))
     {
-        foreach ($PLUGINACTIONS[$context] AS $action)
+        foreach ($PLUGINACTIONS[$context] AS $pluginaction)
         {
             // Call Variable function (function with variable name)
             if ($optparams)
@@ -7851,7 +7851,7 @@ function plugin_do($context, $optparams = FALSE)
             }
             else
             {
-                $rtn = $action();
+                $rtn = $pluginaction();
             }
 
             // Append return value
