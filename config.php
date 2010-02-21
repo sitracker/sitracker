@@ -26,8 +26,16 @@ $selcat = cleanvar($_REQUEST['cat']);
 $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 
+$userid = cleanvar($_REQUEST['userid']);
 
-require(APPLICATION_LIBPATH . 'configvars.inc.php');
+if (empty($userid))
+{
+    require(APPLICATION_LIBPATH . 'configvars.inc.php');
+}
+else
+{
+    require(APPLICATION_LIBPATH . 'userconfigvars.inc.php');
+}
 
 if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1))
 {
@@ -94,8 +102,16 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 $pagescripts = array('FormProtector.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>".icon('settings', 32, $strConfiguration);
-echo " {$CONFIG['application_shortname']} {$strConfiguration}</h2>";
+if (empty($userid))
+{
+    echo "<h2>".icon('settings', 32, $strConfiguration);
+    echo " {$CONFIG['application_shortname']} {$strConfiguration}</h2>";
+}
+else
+{
+    echo "<h2>".icon('user', 32, $strDisplayPreferences);
+    echo " {$strSettings}</h2>";
+}
 
 // FIXME see draw_tabs()
 echo "<div class='tabcontainer'>";
