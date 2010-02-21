@@ -27,6 +27,7 @@ $TABI18n['application'] = $strApplication;
 $TABI18n['email'] = $strEmail;
 $TABI18n['features'] = $strFeatures;
 $TABI18n['system'] = $strSystem;
+$TABI18n['plugins'] = $strPlugins;
 
 $CFGCAT['paths'] = array('application_webpath',
                          'access_logfile',
@@ -137,7 +138,7 @@ $CFGCAT['kb'] = array('kb_enabled',
 // $CFGCAT['outboundemail'] = array();
 $CFGCAT['journal'] = array('journal_loglevel', 'journal_purge_after');
 
-$CFGCAT['inventory'] = array('inventory_enabled', 'inventory_types');           
+$CFGCAT['inventory'] = array('inventory_enabled', 'inventory_types');
 
 $CFGCAT['other'] = array('debug', 'error_logfile',
                         'support_manager', 'tasks_enabled', 'timesheets_enabled',
@@ -449,7 +450,7 @@ $CFGVAR['ldap_bind_user']['help'] = 'The user for binding to the LDAP host, this
 $CFGVAR['ldap_bind_pass']['title'] = 'LDAP Bind password';
 $CFGVAR['ldap_bind_pass']['help'] = 'The password for binding to the LDAP host';
 $CFGVAR['ldap_bind_pass']['type'] = 'ldappassword';
-$CFGVAR['ldap_bind_pass']['statusfield'] = 'TRUE'; 
+$CFGVAR['ldap_bind_pass']['statusfield'] = 'TRUE';
 
 $CFGVAR['ldap_admin_group']['title'] = 'LDAP group for SIT admins';
 $CFGVAR['ldap_admin_group']['help'] = 'The full DN of the group the users are a member of which assigns the SiT! admin role e.g. <code>cn=sitadmins,ou=sitracker,o=org</code>';
@@ -626,4 +627,5 @@ $CFGVAR['working_days']['title'] = 'Working Days';
 $CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
 $CFGVAR['working_days']['type'] = '1darray';
 
+plugin_do('cfgvar');
 ?>
