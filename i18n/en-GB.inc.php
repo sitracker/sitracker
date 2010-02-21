@@ -284,6 +284,8 @@ $strChangeTemporaryOwner = 'Change temporary owner';
 $strChangeOwner = 'Change owner';
 $strChangingContact = 'Changing the contact or skill will not reassign this incident to another contract';
 $strCharsToKeepWhenTranslating = 'When translating, please do not translate anything that looks like the following: [b] {word} %s. These are placeholders, leave them in the appropriate place in your translated string';
+# Chased to mean followed-up for information
+$strChased = 'Chased';
 $strCheckEnteredData = 'Please Check Entered Data';
 $strCheckLDAPDetails = 'Check LDAP details';
 $strCheckUserGroupMembership = 'check user group membership';
