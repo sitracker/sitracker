@@ -1538,6 +1538,14 @@ CREATE TABLE `{$dbUsers}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
+CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
+  `userid` smallint(6) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`userid`,`config`)
+) TYPE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
+
+
 CREATE TABLE `{$dbUserSoftware}` (
   `userid` smallint(6) NOT NULL default '0',
   `softwareid` int(5) NOT NULL default '0',
