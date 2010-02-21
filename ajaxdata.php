@@ -2,8 +2,7 @@
 // ajaxdata.php - Return data for AJAX calls
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
-// Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
+// Copyright (C) 2000-2007 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
@@ -14,6 +13,8 @@
 $permission = 0; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
+require (APPLICATION_LIBPATH . 'triggertypes.inc.php');
+
 
 // This page requires authentication
 if ($_REQUEST['action'] == 'contexthelp' AND $_REQUEST['auth'] == 'portal')
@@ -284,6 +285,10 @@ switch ($action)
         else echo "1"; // Success
     
         break;
+
+    case 'triggerpairmatch':
+        $triggertype = cleanvar($_REQUEST['triggertype']);
+        echo $pairingarray[$triggertype];
 
     default : break;
 }
