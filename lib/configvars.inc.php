@@ -627,5 +627,10 @@ $CFGVAR['working_days']['title'] = 'Working Days';
 $CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
 $CFGVAR['working_days']['type'] = '1darray';
 
-plugin_do('cfgvar');
+if (function_exists('plugin_do'))
+{
+    // Plugin_do won't always be available in this file, because we use this
+    // file for setup as well, no plugins before sit is installed.
+    plugin_do('cfgvar');
+}
 ?>
