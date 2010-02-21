@@ -2,7 +2,6 @@
 // triggertypes.inc.php - Create the trigger definitions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -186,6 +185,7 @@ array('name' => $strBillableIncidentApproved,
 
 plugin_do('trigger_types');
 
+$pairingarray = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PASSWORD');
 
 /**
     * Template variables (Alphabetical order)
@@ -344,7 +344,7 @@ array('description' => $strCurrentLanguage,
 $ttvararray['{feedbackurl}'] =
 array('description' => $strFeedbackURL,
       'requires' => 'incidentid',
-      'replacement' => 'application_url()."feedback.php?ax=".feedback_hash($CONFIG[\'feedback_form\'], incident_contact($paramarray[\'incidentid\']), $paramarray[\'incidentid\']);'
+      'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_owner($paramarray[\'incidentid\'])).\'&&\'.urlencode($paramarray[\'incidentid\']))))));'
       );
 
 $ttvararray['{globalsignature}'] =

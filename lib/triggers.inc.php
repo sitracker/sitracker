@@ -543,7 +543,7 @@ function email_templates($name, $triggertype='system', $selected = '')
         //$name = strpos()
         //$name = str_replace("_", " ", $name);
         $name = strtolower($name);
-        $html .= "<option value='{$template->name}'>{$template->name}</option>\n";
+        $html .= "<option id='{$template->name}' value='{$template->name}'>{$template->name}</option>\n";
         $html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
 
     }
@@ -567,7 +567,7 @@ function notice_templates($name, $selected = '')
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($template = mysql_fetch_object($query))
     {
-        $html .= "<option value='{$template->name}'>{$template->name}</option>\n";
+        $html .= "<option id='{$template->name}' value='{$template->name}'>{$template->name}</option>\n";
         $html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
     }
     $html .= "</select>\n";
