@@ -16,7 +16,11 @@ include_once (APPLICATION_LIBPATH . 'mime.inc.php');
 include_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 class Trigger extends SitEntity {
-
+	function retrieveDetails(){}
+	function add(){}
+	function edit(){}
+	function getSOAPArray(){}
+	
     /**
      * ID of the trigger type
      *
@@ -24,7 +28,7 @@ class Trigger extends SitEntity {
      * find which users/system actions are assigned to that particuar trigger
      * @var string 
      */
-    private var $trigger_type;
+    private $trigger_type;
     
     /**
      * The array of parameters
@@ -33,8 +37,8 @@ class Trigger extends SitEntity {
      * this array
      * @var array
      */
-    private var $param_array;
-    private var $user_id;
+    private $param_array;
+    private $user_id;
 
     /**
      * Constructs a new Trigger object
@@ -121,7 +125,7 @@ class Trigger extends SitEntity {
                 {
                     $values = explode("=", $assigns);
                     $this->param_array[$values[0]] = $values[1];
-                    $dbg .= "\$this->param_array[{$values[0]}] = {$values[1]}");
+                    $dbg .= "\$this->param_array[{$values[0]}] = {$values[1]}";
                 }
                 debug_log("Trigger parameters:\n.$dbg", TRUE);
             }
@@ -411,7 +415,7 @@ class Trigger extends SitEntity {
                 $noticelinktext = $notice->linktext;
             }
 
-            $notice_text = mysql_escape_string(trigger_replace_specials($notice_text);
+            $notice_text = mysql_escape_string(trigger_replace_specials($notice_text));
             $noticelinktext = cleanvar(trigger_replace_specials($noticelinktext));
             $noticelink = cleanvar(trigger_replace_specials($notice->link));
             $refid = cleanvar(trigger_replace_specials($notice->refid));
