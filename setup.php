@@ -249,8 +249,7 @@ function setup_configure()
                         $html .= ">{$option}</option>\n";
                     }
                     $html .= "</select>";
-                break;
-
+                    break;
                 case 'percent':
                     $html .= "<select name='$setupvar'>";
                     for($i = 0; $i <= 100; $i++)
@@ -260,8 +259,7 @@ function setup_configure()
                         $html .= ">{$i}</option>\n";
                     }
                     $html .= "</select>";
-                break;
-
+                    break;
                 case 'text':
                 default:
                     if (strlen($CONFIG[$setupvar]) < 65)
@@ -273,10 +271,14 @@ function setup_configure()
                         $html .= "<textarea name='$setupvar' cols='60' rows='10'>{$value}</textarea>";
                     }
             }
-            if ($setupvar=='db_password' AND $_REQUEST['action']!='reconfigure' AND $value != '') $html .= "<p class='info'>The current password setting is not shown</p>";
+            if ($setupvar == 'db_password' AND $_REQUEST['action'] != 'reconfigure' AND $value != '')
+            {
+                $html .= "<p class='info'>The current password setting is not shown</p>";
+            }
             $html .= "</div>";
             $html .= "<br />\n";
-            if ($c==1) $c==2; else $c=1;
+            if ($c == 1) $c = 2;
+            else $c = 1;
         }
         $html .= "<input type='hidden' name='action' value='save_config' />";
         $html .= "<br /><input type='submit' name='submit' value='Save Configuration' />";
@@ -299,7 +301,6 @@ function setup_exec_sql($sqlquerylist)
     {
         if (!is_array($sqlquerylist)) $sqlquerylist = array($sqlquerylist);
 
-//         echo "<pre>".print_r($sqlquerylist,true)."</pre>";
 
         // Loop around the queries
         foreach ($sqlquerylist AS $schemaversion => $queryelement)
@@ -332,12 +333,11 @@ function setup_exec_sql($sqlquerylist)
                                 case 1062:
                                     $severity = 'info';
                                     $errstr = "This could be because this part of the database schema is already up to date.";
-                                break;
-
+                                    break;
                                 case 1058:
                                     $severity = 'error';
                                     $errstr = "This looks suspiciously like a bug, if you think this is the case please report it.";
-                                break;
+                                    break;
 
 //                                 case 1054:
 //                                     if (preg_match("/ALTER TABLE/", $sql) >= 1)
@@ -346,7 +346,6 @@ function setup_exec_sql($sqlquerylist)
 //                                         $errstr = "This could be because this part of the database schema is already up to date.";
 //                                     }
 //                                 break;
-
                                 case 1051:
                                 case 1091:
                                     if (preg_match("/DROP/", $sql) >= 1)
@@ -354,10 +353,7 @@ function setup_exec_sql($sqlquerylist)
                                         $severity = 'info';
                                         $errstr = "We expected to find something in order to remove it but it doesn't exist. This could be because this part of the database schema is already up to date..";
                                     }
-                                break;
-
-
-
+                                 break;
                                 case 1044:
                                 case 1045:
                                 case 1142:
@@ -366,7 +362,6 @@ function setup_exec_sql($sqlquerylist)
                                     $severity = 'error';
                                     $errstr = "This could be because the MySQL user '{$CONFIG['db_username']}' does not have appropriate permission to modify the database schema.<br />";
                                     $errstr .= "<strong>Check your MySQL permissions allow the schema to be modified</strong>.";
-
                                 default:
                                     $severity = 'error';
                                     $errstr = "You may have found a bug, if you think this is the case please report it.";
