@@ -95,7 +95,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             $CONFIG[$catvar] = $value;
         }
         if ($CONFIG['debug']) $dbg .= "<pre>".print_r($savevar,true)."</pre>";
-        cfgSave($savevar);
+        cfgSave($savevar, $userid);
     }
 }
 
@@ -163,6 +163,10 @@ if (!empty($selcat))
 echo "</fieldset>";
 echo "<input type='hidden' name='cat' value='{$selcat}' />";
 echo "<input type='hidden' name='tab' value='{$seltab}' />";
+if (!empty($userid))
+{
+    echo "<input type='hidden' name='userid' value='{$userid}' />";
+}
 echo "<input type='hidden' name='action' value='save' />";
 if ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 {

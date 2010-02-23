@@ -8323,20 +8323,30 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
 /**
  * Save configuration
  * @param array $setupvars. An array of setup variables $setupvars['setting'] = 'foo';
+ * @param int $userid. If set saves to the user configuration, otherwise saves
+                        to system configuration.
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
 **/
-function cfgSave($setupvars)
+function cfgSave($setupvars, $userid = NULL)
 {
-    global $dbConfig;
+    global $dbConfig, $dbUserConfig;;
     foreach ($setupvars AS $key => $value)
     {
-        $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
+        if ($userid < 1)
+        {
+            $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
+        }
+        else
+        {
+            $sql = "REPLACE INTO `{$dbUserConfig}` (`userid`, `config`, `value`) VALUES ('{$userid}', '{$key}', '{$value}')";
+        }
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
     }
     return TRUE;
 }
+
 
 
 /**
