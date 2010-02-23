@@ -59,7 +59,6 @@ function saction_CloseIncidents($closure_delay)
         $success = FALSE;
     }
 
-
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE status='".STATUS_CLOSING."' ";
     $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
     $sql .= "AND (timeofnextaction='0' OR timeofnextaction<='{$now}') ";
