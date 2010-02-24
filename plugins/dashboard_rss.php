@@ -54,7 +54,7 @@ function dashboard_rss_display($dashletid)
 {
     global $CONFIG, $dbInterfaceStyles, $dbDashboardRSS, $sit, $lib_path;
 
-    if ($_SESSION['auth'] == TRUE) $styleid = $_SESSION['style'];
+    if ($_SESSION['auth'] == TRUE) $styleid = $_SESSION['userconfig']['theme'];
     else $styleid = $CONFIG['default_interface_style'];
 
     $csssql = "SELECT cssurl, iconset FROM `{$dbInterfaceStyles}` WHERE id='{$styleid}'";

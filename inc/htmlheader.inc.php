@@ -50,7 +50,7 @@ if (!empty($rssfeedurl))
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 if ($_SESSION['auth'] == TRUE)
 {
-    $styleid = $_SESSION['style'];
+    $styleid = $_SESSION['userconfig']['theme'];
 }
 else
 {

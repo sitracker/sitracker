@@ -40,7 +40,9 @@ $CATI18N['displayprefs'] = $strTheme;
 //      unit - A unit string to print after the input
 //      options - A pipe seperated list of optios for a 'select' type
 
-$CFGVAR['theme']['title'] = 'Theme';
+$CFGVAR['theme']['title'] = $strInterfaceStyle;
+$CFGVAR['theme']['type'] = 'interfacestyleselect';
+
 $CFGVAR['iconset']['title'] = 'Icon set';
 $CFGVAR['incident_refresh']['title'] = 'Incident Refresh';
 

@@ -26,8 +26,8 @@ echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles
 
 if ($_SESSION['auth'] == TRUE)
 {
-    $style = interface_style($_SESSION['style']);
-    $styleid = $_SESSION['style'];
+    $style = interface_style($_SESSION['userconfig']['theme'];);
+    $styleid = $_SESSION['userconfig']['theme'];
     echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$style['cssurl']}' />\n";
 }
 else

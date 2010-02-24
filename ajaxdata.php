@@ -31,19 +31,21 @@ else
 $action = cleanvar($_REQUEST['action']);
 $selected = cleanvar($_REQUEST['selected']);
 
-if ($_SESSION['auth'] == TRUE)
-{
-    $styleid = $_SESSION['style'];
-}
-else
-{
-    $styleid = $CONFIG['default_interface_style'];
-}
-$iconsql = "SELECT iconset FROM `{$GLOBALS['dbInterfaceStyles']}` WHERE id='{$styleid}'";
-$iconresult = mysql_query($iconsql);
-if (mysql_error())trigger_error(mysql_error(),E_USER_WARNING);
-
-list($iconset) = mysql_fetch_row($iconresult);
+// Style references commented out by INL 24Feb10, Can't work out why we'd
+// need style here, is this is a mistake? or just obscure code?
+// if ($_SESSION['auth'] == TRUE)
+// {
+//     $styleid = $_SESSION['style'];
+// }
+// else
+// {
+//     $styleid = $CONFIG['default_interface_style'];
+// }
+// $iconsql = "SELECT iconset FROM `{$GLOBALS['dbInterfaceStyles']}` WHERE id='{$styleid}'";
+// $iconresult = mysql_query($iconsql);
+// if (mysql_error())trigger_error(mysql_error(),E_USER_WARNING);
+//
+// list($iconset) = mysql_fetch_row($iconresult);
 
 switch ($action)
 {
