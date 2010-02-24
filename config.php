@@ -27,6 +27,7 @@ $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 
 $userid = cleanvar($_REQUEST['userid']);
+// Check the users permission
 
 if (empty($userid))
 {
@@ -92,7 +93,14 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                 eval("\$val = $value;");
                 $value = $val;
             }
-            $CONFIG[$catvar] = $value;
+            if (empty($userid))
+            {
+                $CONFIG[$catvar] = $value;
+            }
+            else
+            {
+                $_SESSION['userconfig'][$catvar] = $value;
+            }
         }
         if ($CONFIG['debug']) $dbg .= "<pre>".print_r($savevar,true)."</pre>";
         cfgSave($savevar, $userid);

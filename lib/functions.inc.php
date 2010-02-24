@@ -8140,10 +8140,11 @@ function is_assoc_callback($a, $b)
  * HTML for a config variable input box
  * @author Ivan Lucas
  * @param string $setupvar The setup variable key name
+ * @param int $userid UserID or 0 for system config
  * @param bool $showvarnames Whether to display the config variable name
  * @returns string HTML
 **/
-function cfgVarInput($setupvar, $showvarnames = FALSE)
+function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
 {
     global $CONFIG, $CFGVAR;
 
@@ -8162,7 +8163,14 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
     $value = '';
     if (!$cfg_file_exists OR ($cfg_file_exists AND $cfg_file_writable))
     {
-        $value = $CONFIG[$setupvar];
+        if ($userid > 0)
+        {
+            $value = $_SESSION['userconfig'][$setupvar];
+        }
+        else
+        {
+            $value = $CONFIG[$setupvar];
+        }
         if (is_bool($value))
         {
             if ($value==TRUE) $value='TRUE';
