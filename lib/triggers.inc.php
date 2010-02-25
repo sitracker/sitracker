@@ -560,7 +560,7 @@ array('description' => $strSendOpeningEmailDesc,
      );
 
 $ttvararray['{sendfeedback}'] = 
-array('description' => $strSendFeedbackDesc,
+array('description' => $strEmailSendFeedbackDesc,
       'replacement' => '$paramarray[\'sendfeedback\']',
       'show' => FALSE);
 
