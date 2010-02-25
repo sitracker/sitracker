@@ -5898,7 +5898,7 @@ function schedule_actions_due()
         }
     }
 
-    debug_log('actions'.print_r($actions,true));
+    debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
 
     return $actions;
 }
