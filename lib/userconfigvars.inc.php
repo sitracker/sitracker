@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-$CFGTAB['application'] = array('displayprefs');
+$CFGTAB['application'] = array('displayprefs', 'localeprefs');
 $TABI18n['application'] = $strApplication;
 
 $CFGCAT['displayprefs'] = array('theme','iconset',
@@ -27,9 +27,12 @@ $CFGCAT['displayprefs'] = array('theme','iconset',
                                'show_emoticons'
                                );
 
+$CFGCAT['localeprefs'] = array('language','utc_offset');
+
+
 // i18n keys for categories
 $CATI18N['displayprefs'] = $strTheme;
-
+$CATI18N['localeprefs'] = $strLocale;
 
 // Descriptions of all the config variables
 // each config var may have these elements:
@@ -40,11 +43,30 @@ $CATI18N['displayprefs'] = $strTheme;
 //      unit - A unit string to print after the input
 //      options - A pipe seperated list of optios for a 'select' type
 
+
+$CFGVAR['iconset']['title'] = 'Icon set';
+
+$CFGVAR['language']['title'] = $strLanguage;
+$CFGVAR['language']['type'] = 'languageselect';
+
+$CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
+$CFGVAR['incident_log_order']['type'] = 'select';
+$CFGVAR['incident_log_order']['options'] = 'asc|desc';
+
+$CFGVAR['incident_refresh']['title'] = $strIncidentRefresh;
+$CFGVAR['incident_refresh']['type'] = 'number';
+$CFGVAR['incident_refresh']['unit'] = $strSeconds;
+
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
 
-$CFGVAR['iconset']['title'] = 'Icon set';
-$CFGVAR['incident_refresh']['title'] = 'Incident Refresh';
+$CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
+$CFGVAR['show_emoticons']['type'] = 'select';
+
+$CFGVAR['updates_per_page']['title'] = $strIncidentUpdatesPerPage;
+$CFGVAR['updates_per_page']['type'] = 'number';
+
+
 
 
 if (function_exists('plugin_do'))
