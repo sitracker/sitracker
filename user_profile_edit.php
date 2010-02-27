@@ -39,7 +39,7 @@ if (empty($mode))
     $title = $strEditProfile;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    /* 
+    /*
     $sql = "SELECT u.*, r.rolename FROM `{$dbUsers}` AS u, `{$dbRoles}` AS r  ";
     $sql .= "WHERE u.id='{$edituserid}' AND u.roleid = r.id LIMIT 1";
     $result = mysql_query($sql);
@@ -48,7 +48,7 @@ if (empty($mode))
     if (mysql_num_rows($result) < 1) trigger_error("$sql No such user ".strip_tags($edituserid),E_USER_WARNING);
     $user = mysql_fetch_object($result);
     */
-    
+
     $user = new User($edituserid);
 
     echo "<h2>".icon('user', 32)." ";
@@ -255,10 +255,6 @@ if (empty($mode))
     }
     echo array_drop_down($availtz, 'utcoffset', $user->var_utc_offset, '', TRUE)."</td></tr>\n";
 
-    echo "<tr><th>{$strInterfaceStyle}</th><td>".interfacestyle_drop_down('style', $user->var_style)."</td></tr>\n";
-    echo "<tr><th>{$strIncidentRefresh}</th>";
-    echo "<td><input maxlength='10' name='incidentrefresh' size='3' type='text' value=\"{$user->var_incident_refresh}\" /> {$strSeconds}</td></tr>\n";
-
     echo "<tr><th>{$strIncidentLogOrder}</th><td>";
     echo "<select name='updateorder'>";
     echo "<option ";
@@ -318,13 +314,13 @@ elseif ($mode == 'save')
     // External variables
     $user = new User();
     $user->id = cleanvar($_POST['userid']);
-    
+
     $edituserid = cleanvar($_POST['userid']); // remove when tested
-    
+
     $user->message = cleanvar($_POST['message']);
     $user->realname = cleanvar($_POST['realname']);
     $user->qualifications = cleanvar($_POST['qualifications']);
-    
+
     $user->email = cleanvar($_POST['email']);
     $user->jobtitle = cleanvar($_POST['jobtitle']);
     $user->phone = cleanvar($_POST['phone']);
@@ -374,7 +370,7 @@ elseif ($mode == 'save')
 
     // Update user profile
     $errors = 0;
-    
+
     // check for change of password
     if ($password != '' && $newpassword1 != '' && $newpassword2 != '')
     {
@@ -433,7 +429,7 @@ elseif ($mode == 'save')
         	$error_string .= $result;
         }
     }
-    
+
     if ($errors > 0)
     {
         html_redirect($redirecturl, FALSE, $error_string);

@@ -7945,7 +7945,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
         $html = header("Content-type: text/csv\r\n");
         $html .= header("Content-disposition-type: attachment\r\n");
         $html .= header("Content-disposition: filename={$filename}");
-        
+
         foreach ($data as $line)
         {
             if (!beginsWith($line, "\""))
@@ -8153,6 +8153,18 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
     {
         $available_languages = available_languages();
     }
+    elseif ($CFGVAR[$setupvar]['type'] == 'userlanguageselect')
+    {
+        if (!empty($CONFIG['available_i18n']))
+        {
+            $available_languages = i18n_code_to_name($CONFIG['available_i18n']);
+        }
+        else
+        {
+            $available_languages = available_languages();
+        }
+        $available_languages = array_merge(array(''=>$GLOBALS['strDefault']),$available_languages);
+    }
     elseif ($CFGVAR[$setupvar]['type'] == 'timezoneselect')
     {
         global $availabletimezones;
@@ -8224,6 +8236,7 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             $html .= interfacestyle_drop_down($setupvar, $value);
         break;
 
+        case 'userlanguageselect':
         case 'languageselect':
             if (empty($value)) $value = $_SESSION['lang'];
             $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);

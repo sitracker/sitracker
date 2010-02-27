@@ -47,7 +47,7 @@ $CATI18N['localeprefs'] = $strLocale;
 $CFGVAR['iconset']['title'] = 'Icon set';
 
 $CFGVAR['language']['title'] = $strLanguage;
-$CFGVAR['language']['type'] = 'languageselect';
+$CFGVAR['language']['type'] = 'userlanguageselect';
 
 $CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
 $CFGVAR['incident_log_order']['type'] = 'select';
