@@ -1034,6 +1034,7 @@ $strMyHolidays = 'My Holidays';
 $strMyIncidents = 'My Incidents';
 $strMyNotifications = 'My Notifications';
 $strMyProfile = 'My Profile';
+$strMySettings = 'My Settings';
 $strMySkills = 'My Skills';
 $strMySubstitutes = 'My Substitutes';
 $strMyTriggers = 'My Triggers';

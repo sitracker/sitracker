@@ -13,8 +13,14 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
-
-$permission = 22; // Administrate
+if (empty($_REQUEST['userid']))
+{
+    $permission = 22; // Administrate
+}
+else
+{
+    $permision = 4; // Edit your profile
+}
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -25,8 +31,15 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $selcat = cleanvar($_REQUEST['cat']);
 $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
-
 $userid = cleanvar($_REQUEST['userid']);
+
+$edituserpermission = user_permission($sit[2],23); // edit user
+
+if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
+{
+    $edituserid = mysql_real_escape_string($sit[2]);
+}
+
 // Check the users permission
 
 if (empty($userid))

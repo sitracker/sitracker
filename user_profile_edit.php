@@ -225,35 +225,6 @@ if (empty($mode))
     echo "<td><input maxlength=\"50\" name=\"msn\" size=\"30\" type=\"text\" value=\"".strip_tags($user->msn)."\" /></td></tr>";
 
     echo "<tr><th colspan='2'>{$strDisplayPreferences}</th></tr>\n";
-    echo "<tr><th>{$strLanguage}</th><td>";
-    if (!empty($CONFIG['available_i18n']))
-    {
-        $available_languages = i18n_code_to_name($CONFIG['available_i18n']);
-    }
-    else
-    {
-        $available_languages = available_languages();
-    }
-    $available_languages = array_merge(array(''=>$strDefault),$available_languages);
-    if (!empty($user->var_i18n))
-    {
-        $selectedlang = $user->var_i18n;
-    }
-    else
-    {
-        $selectedlang = $_SESSION['lang'];
-    }
-    echo array_drop_down($available_languages, 'vari18n',$selectedlang, '', TRUE);
-    echo "</td></tr>\n";
-
-    if ($user->var_utc_offset == '') $user->var_utc_offset = 0;
-    echo "<tr><th>{$strUTCOffset}</th><td>";
-    foreach ($availabletimezones AS $offset=>$tz)
-    {
-        $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
-        $availtz[$offset] = $tz;
-    }
-    echo array_drop_down($availtz, 'utcoffset', $user->var_utc_offset, '', TRUE)."</td></tr>\n";
 
     echo "<tr><th>{$strIncidentLogOrder}</th><td>";
     echo "<select name='updateorder'>";
