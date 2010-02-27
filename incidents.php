@@ -21,6 +21,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
+require (APPLICATION_LIBPATH . 'incident.inc.php');
+
 // External variables
 $type = cleanvar($_REQUEST['type']);
 $user = cleanvar($_REQUEST['user']);
@@ -87,18 +89,19 @@ switch ($type)
     case 'support':
         // Create SQL for chosen queue
         // If you alter this SQL also update the function user_activeincidents($id)
-        if ($user=='current') $user=$sit[2];
+        if ($user == 'current') $user = $sit[2];
         // If the user is passed as a username lookup the userid
-        if (!is_number($user) AND $user!='current' AND $user!='all')
+        if (!is_number($user) AND $user != 'current' AND $user != 'all')
         {
-            $usql = "SELECT id FROM `{$dbUsers}` WHERE username='$user' LIMIT 1";
+            $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
             $uresult = mysql_query($usql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
-            else $user=$sit[2]; // force to current user if username not found
+            else $user = $sit[2]; // force to current user if username not found
         }
         $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id ";
-        if ($user != 'all') $sql .= "AND (owner='$user' OR towner='$user') ";
+        $sql .= "AND owner > 0 ";  // We always need to have an owner which is not sit
+        if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";       
         if (!empty($softwareid)) $sql .= "AND softwareid='$softwareid' ";
 
         if (!empty($maintexclude)) $sql .= "AND i.maintenanceid != '{$maintexclude}' ";
@@ -125,18 +128,15 @@ switch ($type)
                 $sql .= "(IF ((status >= 5 AND status <=8), ({$now} - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
                 $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
                 $sql .= ") AND timeofnextaction < $now ) ";
-            break;
-
+                break;
             case 2: // Waiting
                 echo "<span class='waitingqueue'>{$strWaiting}</span>";
                 $sql .= "AND ((status >= 4 AND status <= 8) OR (timeofnextaction > 0 AND timeofnextaction > {$now})) ";
-            break;
-
+                break;
             case 3: // All Open
                 echo "<span class='openqueue'>{$strAllOpen}</span>";
                 $sql .= "AND status!='2' ";
-            break;
-
+                break;
             case 4: // All Closed
                 echo "<span class='closedqueue'>{$strAllClosed}</span>";
                 $sql .= "AND status='2' ";
@@ -145,11 +145,10 @@ switch ($type)
                     $old = $now - ($CONFIG['hide_closed_incidents_older_than'] * 86400);
                     $sql .= "AND closed >= {$old} ";
                 }
-            break;
-
+                break;
             default:
                 trigger_error("Invalid queue ($queue) on query string",E_USER_NOTICE);
-            break;
+                break;
         }        // Create SQL for Sorting
 
         echo "</h2>\n";
@@ -159,18 +158,36 @@ switch ($type)
             else $sortorder = "DESC";
             switch ($sort)
             {
-                case 'id': $sql .= " ORDER BY id $sortorder"; break;
-                case 'title': $sql .= " ORDER BY title $sortorder"; break;
-                case 'contact': $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder"; break;
-                case 'priority': $sql .=  " ORDER BY priority $sortorder, lastupdated ASC"; break;
-                case 'status': $sql .= " ORDER BY status $sortorder"; break;
-                case 'lastupdated': $sql .= " ORDER BY lastupdated $sortorder"; break;
-                case 'duration': $sql .= " ORDER BY duration $sortorder"; break;
-                case 'nextaction': $sql .= " ORDER BY timetonextaction $sortorder"; break;
-                default:   $sql .= " ORDER BY priority DESC, lastupdated ASC"; break;
+                case 'id': 
+                    $sql .= " ORDER BY id $sortorder";
+                    break;
+                case 'title':
+                    $sql .= " ORDER BY title $sortorder";
+                    break;
+                case 'contact':
+                    $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder";
+                    break;
+                case 'priority':
+                    $sql .=  " ORDER BY priority $sortorder, lastupdated ASC";
+                    break;
+                case 'status':
+                    $sql .= " ORDER BY status $sortorder";
+                    break;
+                case 'lastupdated':
+                    $sql .= " ORDER BY lastupdated $sortorder";
+                    break;
+                case 'duration':
+                    $sql .= " ORDER BY duration $sortorder";
+                    break;
+                case 'nextaction':
+                    $sql .= " ORDER BY timetonextaction $sortorder";
+                    break;
+                default:
+                    $sql .= " ORDER BY priority DESC, lastupdated ASC";
+                    break;
             }
-
         }
+
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $rowcount = mysql_num_rows($result);
@@ -248,7 +265,7 @@ switch ($type)
 
         if ($softcount >= 1)
         {
-            // list expertise queus
+            // list expertise queues
             while ($software = mysql_fetch_object($softresult))
             {
                 $expertise[] = $software->softwareid;
@@ -264,12 +281,8 @@ switch ($type)
 
             // Create SQL for chosen queue
             $sql = $selectsql . "WHERE contact=c.id AND i.priority=pr.id ";
-            $sql .= "AND owner!='$user' AND towner!='$user' ";
+            $sql .= "AND owner!='{$user}' AND towner!='{$user}' AND owner > 0 ";
             $sql .= "AND $incsql ";
-
-            // echo "queue sql = $incsql ;";
-
-            //   $sql .= "AND
 
             switch ($queue)
             {
@@ -282,19 +295,16 @@ switch ($type)
                     $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
                     $sql .= ") AND timeofnextaction < $now ) ";
                     // outstanding
-                break;
-
+                    break;
                 case 2: // Waiting
                     echo "<h2>{$strOtherIncidents}: <span class='waitingqueue'>{$strWaiting}</span></h2>\n";
                     $sql .= "AND ((status >= 4 AND status <= 8) OR (timeofnextaction > 0 AND timeofnextaction > $now)) ";
-                break;
-
+                    break;
                 case 3: // All Open
                     echo "<h2>{$strOtherIncidents}: <span class='openqueue'>{$strAllOpen}</span></h2>\n";
                     echo "</h2><hr /><br />";
                     $sql .= "AND status!='2' ";
-                break;
-
+                  break;
                 case 4: // All Closed
                     echo "<h2>{$strOtherIncidents}: <span class='closedqueue'>{$strAllClosed}</span></h2>\n";
                     echo "</h2><hr /><br />";
@@ -304,25 +314,42 @@ switch ($type)
                         $old = $now - ($CONFIG['hide_closed_incidents_older_than'] * 86400);
                         $sql .= "AND closed >= {$old} ";
                     }
-                break;
-
+                    break;
                 default:
                     trigger_error("Invalid queue ($queue) on query string",E_USER_NOTICE);
-                break;
+                    break;
             }
 
             // Create SQL for Sorting
             switch ($sort)
             {
-                case 'id': $sql .= " ORDER BY id $sortorder"; break;
-                case 'title': $sql .= " ORDER BY title $sortorder"; break;
-                case 'contact': $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder"; break;
-                case 'priority': $sql .=  " ORDER BY priority $sortorder, lastupdated ASC"; break;
-                case 'status': $sql .= " ORDER BY status $sortorder"; break;
-                case 'lastupdated': $sql .= " ORDER BY lastupdated $sortorder"; break;
-                case 'duration': $sql .= " ORDER BY duration $sortorder"; break;
-                case 'nextaction': $sql .= " ORDER BY timetonextaction $sortorder"; break;
-                default:   $sql .= " ORDER BY priority DESC, lastupdated ASC"; break;
+                case 'id':
+                    $sql .= " ORDER BY id $sortorder";
+                    break;
+                case 'title':
+                    $sql .= " ORDER BY title $sortorder";
+                    break;
+                case 'contact':
+                    $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder";
+                    break;
+                case 'priority':
+                    $sql .=  " ORDER BY priority $sortorder, lastupdated ASC";
+                    break;
+                case 'status':
+                    $sql .= " ORDER BY status $sortorder";
+                    break;
+                case 'lastupdated':
+                    $sql .= " ORDER BY lastupdated $sortorder";
+                    break;
+                case 'duration':
+                    $sql .= " ORDER BY duration $sortorder";
+                    break;
+                case 'nextaction':
+                    $sql .= " ORDER BY timetonextaction $sortorder";
+                    break;
+                default:
+                    $sql .= " ORDER BY priority DESC, lastupdated ASC";
+                    break;
             }
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
