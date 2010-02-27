@@ -63,7 +63,7 @@ class fetchSitMail
     function connect()
     {
         $this->mailbox = imap_open($this->server, $this->username,
-                                   $this->password, 'CL_EXPUNGE');
+                                   $this->password, CL_EXPUNGE);
         if ($this->mailbox)
         {
             return TRUE;
