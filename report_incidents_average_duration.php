@@ -58,7 +58,7 @@ list($firstdate) = mysql_fetch_row($result);
 
 $current_time = $firstdate;
 
-$data = "Period,# Incidents,Total Duration,Time,Users,# Updates,# Updates per incident<br />";
+$data = "Period,# Incidents,Total Duration,Time,Users,# Updates,# Updates per incident";
 while ($current_time < time())
 {
     $current_month = date('m', $current_time);
