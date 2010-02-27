@@ -7908,10 +7908,10 @@ function is_day_bank_holiday($day, $month, $year)
 */
 function create_report($data, $output = 'table', $filename = 'report.csv')
 {
+    $data = explode("\n", $data);
     if ($output == 'table')
     {
         $html = "\n<table align='center'><tr>\n";
-        $data = explode("\n", $data);
         $headers = explode(',', $data[0]);
         $rows = sizeof($headers);
         foreach ($headers as $header)
@@ -7945,8 +7945,8 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
         $html = header("Content-type: text/csv\r\n");
         $html .= header("Content-disposition-type: attachment\r\n");
         $html .= header("Content-disposition: filename={$filename}");
-
-        foreach($data as $line)
+        
+        foreach ($data as $line)
         {
             if (!beginsWith($line, "\""))
             {
