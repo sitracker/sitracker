@@ -31,6 +31,7 @@ require(APPLICATION_LIBPATH . 'configvars.inc.php');
 
 if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1))
 {
+    plugin_do('config_save');
     if (!empty($selcat))
     {
         $savevar = array();
@@ -142,8 +143,9 @@ if (!empty($selcat))
     {
         echo cfgVarInput($catvar, $CONFIG['debug']);
     }
-
 }
+plugin_do('config_form');
+
 echo "</fieldset>";
 echo "<input type='hidden' name='cat' value='{$selcat}' />";
 echo "<input type='hidden' name='tab' value='{$seltab}' />";
