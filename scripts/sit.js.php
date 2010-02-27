@@ -87,10 +87,16 @@ function checkLDAPDetails(statusfield)
 
     var server = $('ldap_host').value;
     var port = $('ldap_port').value;
+    var type = $('ldap_type').options[$('ldap_type').selectedIndex].value;
     var protocol = $('ldap_protocol').options[$('ldap_protocol').selectedIndex].value;
     var security = $('ldap_security').options[$('ldap_security').selectedIndex].value;
     var user = $('ldap_bind_user').value;
     var password = $('cfgldap_bind_pass').value;
+    var userBase = $('ldap_user_base').value;
+    var adminGrp = $('ldap_admin_group').value;
+    var managerGrp = $('ldap_manager_group').value;
+    var userGrp = $('ldap_user_group').value;
+    var customerGrp = $('ldap_customer_group').value;
 
     // Auto save
     var xmlhttp=false;
@@ -119,12 +125,13 @@ function checkLDAPDetails(statusfield)
     }
 
     var url =  \"ajaxdata.php\";
-    var params = \"action=checkldap&ldap_host=\"+server+\"&ldap_port=\"+port+\"&ldap_protocol=\"+protocol+\"&ldap_security=\"+security+\"&ldap_bind_user=\"+escape(user)+\"&ldap_bind_pass=\"+escape(password);
+    var params = \"action=checkldap&ldap_host=\"+server+\"&ldap_type=\"+type+\"&ldap_port=\"+port+\"&ldap_protocol=\"+protocol+\"&ldap_security=\"+security+" .
+            "\"&ldap_bind_user=\"+escape(user)+\"&ldap_bind_pass=\"+escape(password)+\"&ldap_user_base=\"+userBase+\"&ldap_admin_group=\"+adminGrp+\"&ldap_manager_group=\"+managerGrp+" .
+            "\"&ldap_user_group=\"+userGrp+\"&ldap_customer_group=\"+customerGrp;
     xmlhttp.open(\"POST\", url, true)
     xmlhttp.setRequestHeader(\"Content-type\", \"application/x-www-form-urlencoded\");
     xmlhttp.setRequestHeader(\"Content-length\", params.length);
     xmlhttp.setRequestHeader(\"Connection\", \"close\");
-
 
     xmlhttp.onreadystatechange=function()
     {
@@ -132,7 +139,31 @@ function checkLDAPDetails(statusfield)
         {
             if (xmlhttp.responseText != '')
             {
-                if (xmlhttp.responseText == 1)
+                if (xmlhttp.responseText == ".LDAP_PASSWORD_INCORRECT.")
+                {
+                    $(statusfield).innerHTML = \"<strong>Password incorrect</strong>\";
+                }
+                else if (xmlhttp.responseText == ".LDAP_BASE_INCORRECT.")
+                {
+                    $(statusfield).innerHTML = \"<strong>Base DN Incorrect</strong>\";
+                }
+                else if (xmlhttp.responseText == ".LDAP_ADMIN_GROUP_INCORRECT.")
+                {
+                    $(statusfield).innerHTML = \"<strong>Admin Group Incorrect</strong>\";
+                }
+                else if (xmlhttp.responseText == ".LDAP_MANAGER_GROUP_INCORRECT.")
+                {
+                    $(statusfield).innerHTML = \"<strong>Manager Group Incorrect</strong>\";
+                }
+                else if (xmlhttp.responseText == ".LDAP_USER_GROUP_INCORRECT.")
+                {
+                    $(statusfield).innerHTML = \"<strong>User Group Incorrect</strong>\";
+                }
+                else if (xmlhttp.responseText == ".LDAP_CUSTOMER_GROUP_INCORRECT.")
+                {
+                    $(statusfield).innerHTML = \"<strong>Customer Group Incorrect</strong>\";
+                }
+                else if (xmlhttp.responseText == ".LDAP_CORRECT.")
                 {
                     $(statusfield).innerHTML = \"<strong>{$strLDAPTestSucessful}</strong>\";
                 }
