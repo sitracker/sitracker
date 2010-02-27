@@ -85,7 +85,7 @@ echo "<link rel='SHORTCUT ICON' href='{$CONFIG['application_webpath']}images/sit
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 if ($_SESSION['portalauth'] == TRUE)
 {
-    $styleid = $_SESSION['style'];
+    $styleid = $_SESSION['userconfig']['style'];
 }
 else
 {

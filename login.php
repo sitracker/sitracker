@@ -72,8 +72,6 @@ elseif (authenticate($username, $_REQUEST['password']))
     $_SESSION['username'] = $user->username;
     $_SESSION['realname'] = $user->realname;
     $_SESSION['email'] = $user->email;
-    $_SESSION['style'] = $user->var_style;
-    $_SESSION['incident_refresh'] = $user->var_incident_refresh;
     $_SESSION['update_order'] = $user->var_update_order;
     $_SESSION['num_update_view'] = $user->var_num_updates_view;
     $_SESSION['groupid'] = is_null($user->groupid) ? 0 : $user->groupid;
@@ -177,7 +175,7 @@ elseif ($CONFIG['portal'] == TRUE)
     {
         debug_log("PORTAL AUTH SUCESSFUL");
         $_SESSION['portalauth'] = TRUE;
-        
+
         $sql = "SELECT * FROM `{$dbContacts}` WHERE username = '{$username}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -192,7 +190,7 @@ elseif ($CONFIG['portal'] == TRUE)
         // Valid user
         $_SESSION['contactid'] = $contact->id;
         $_SESSION['siteid'] = $contact->siteid;
-        $_SESSION['style'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['style'] = $CONFIG['portal_interface_style'];
         $_SESSION['contracts'] = array();
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;

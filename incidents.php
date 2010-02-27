@@ -37,7 +37,7 @@ if (empty($user)) $user = 'current';
 if (empty($sort)) $sort = 'priority';
 if (empty($queue)) $queue = 1;
 
-$refresh = $_SESSION['incident_refresh'];
+$refresh = $_SESSION['userconfig']['incident_refresh'];
 
 if ($user == 'current' OR $user == $_SESSION['userid'])
 {
