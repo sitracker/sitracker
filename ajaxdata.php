@@ -2,7 +2,8 @@
 // ajaxdata.php - Return data for AJAX calls
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2000-2007 Salford Software Ltd. and Contributors
+// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
@@ -69,8 +70,7 @@ switch ($action)
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             echo mysql_insert_id();
         }
-    break;
-
+        break;
     case 'servicelevel_timed':
         $sltag = servicelevel_id2tag(cleanvar($_REQUEST['servicelevel']));
         if (servicelevel_timed($sltag))
@@ -81,8 +81,7 @@ switch ($action)
         {
             echo "FALSE";
         }
-    break;
-
+        break;
     case 'contexthelp':
         $context = cleanvar($_REQUEST['context']);
         $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}". DIRECTORY_SEPARATOR . "{$context}.txt";
@@ -96,8 +95,7 @@ switch ($action)
             echo nl2br($helptext);
         }
         else echo "Error: Missing helpfile '{$_SESSION['lang']}/{$context}.txt'";
-    break;
-
+        break;
     case 'dismiss_notice':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
         $noticeid = cleanvar($_REQUEST['noticeid']);
@@ -116,8 +114,7 @@ switch ($action)
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
-    break;
-
+        break;
     case 'dashboard_display':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
         $dashboard = cleanvar($_REQUEST['dashboard']);
@@ -126,8 +123,7 @@ switch ($action)
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_display";
         echo $dashfn($dashletid);
-    break;
-
+        break;
     case 'dashboard_save':
     case 'dashboard_edit':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -138,8 +134,7 @@ switch ($action)
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_edit";
         echo $dashfn($dashletid);
-    break;
-
+        break;
     case 'autocomplete_sitecontact':
         $s = cleanvar($_REQUEST['s']);
         // JSON encoded
@@ -167,7 +162,6 @@ switch ($action)
         }
         echo "[".substr($str,0,-1)."]";
         break;
-
     case 'tags':
         $sql = "SELECT DISTINCT t.name FROM `{$dbSetTags}` AS st, `{$dbTags}` AS t WHERE st.tagid = t.tagid GROUP BY t.name";
         $result = mysql_query($sql);
@@ -181,7 +175,6 @@ switch ($action)
         }
         echo "[".substr($str,0,-1)."]";
         break;
-
     case 'contact' :
         $s = cleanvar($_REQUEST['s']);
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
@@ -197,7 +190,6 @@ switch ($action)
         }
         echo "[".substr($str,0,-1)."]";
         break;
-
     case 'sites':
         $s = cleanvar($_REQUEST['s']);
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
@@ -213,7 +205,6 @@ switch ($action)
         }
         echo "[".substr($str,0,-1)."]";
         break;
-
     case 'slas':
         $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
         $result = mysql_query($sql);
@@ -243,7 +234,6 @@ switch ($action)
             echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
         }
         break;
-
     case 'skills':
         $sql = "SELECT id, name FROM `{$dbSoftware}` ORDER BY name ASC";
         $result = mysql_query($sql);
@@ -258,7 +248,6 @@ switch ($action)
             echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
         }
         break;
-
     case 'storedashboard':
         $id = $_REQUEST['id'];
         $val = $_REQUEST['val'];
@@ -271,26 +260,60 @@ switch ($action)
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
         break;
-
     case 'checkldap':
         $ldap_host = cleanvar($_REQUEST['ldap_host']);
         $ldap_port = cleanvar($_REQUEST['ldap_port']);
+        $ldap_type = cleanvar($_REQUEST['ldap_type']);
         $ldap_protocol = cleanvar($_REQUEST['ldap_protocol']);
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
         $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);
         $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);
+        $ldap_user_base = cleanvar($_REQUEST['ldap_user_base']);      
+        $ldap_admin_group = cleanvar($_REQUEST['ldap_admin_group']);
+        $ldap_manager_group = cleanvar($_REQUEST['ldap_manager_group']);
+        $ldap_user_group = cleanvar($_REQUEST['ldap_user_group']);
+        $ldap_customer_group = cleanvar($_REQUEST['ldap_customer_group']);  
 
         $r = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_user, $ldap_password);
-        if ($r == -1) echo "0"; // Failed
-        else echo "1"; // Success
-
+        if ($r == -1) echo LDAP_PASSWORD_INCORRECT; // Failed
+        else
+        {
+            // Check user base
+            if (!ldapCheckObjectExists($ldap_user_base, "*")) echo LDAP_BASE_INCORRECT;
+            else
+            {
+            	// Check Admin group
+                if (!ldapCheckGroupExists($ldap_admin_group, $ldap_type)) echo LDAP_ADMIN_GROUP_INCORRECT;
+                else
+                {
+                    // Check manager group
+                    if (!ldapCheckGroupExists($ldap_manager_group, $ldap_type)) echo LDAP_MANAGER_GROUP_INCORRECT;
+                    else
+                    {
+                        // Check user group
+                        if (!ldapCheckGroupExists($ldap_user_group, $ldap_type)) echo LDAP_USER_GROUP_INCORRECT;
+                        else
+                        {
+                            // Check customer group
+                            if (!ldapCheckGroupExists($ldap_customer_group, $ldap_type)) echo LDAP_CUSTOMER_GROUP_INCORRECT;
+                            else
+                            {                    
+                                // ALL OK
+                                echo LDAP_CORRECT;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
         break;
-
     case 'triggerpairmatch':
         $triggertype = cleanvar($_REQUEST['triggertype']);
         echo $pairingarray[$triggertype];
 
-    default : break;
+    default : 
+        break;
 }
 
 
