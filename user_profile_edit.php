@@ -14,7 +14,7 @@
 
 $permission = 4; // Edit your profile
 require ('core.php');
-require (APPLICATION_LIBPATH . 'functions.inc.php');
+require (APPLICATION_LIBPATH . 'functions.inc.php')
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 

@@ -17,21 +17,26 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-$CFGTAB['application'] = array('displayprefs', 'localeprefs');
+$CFGTAB['application'] = array('themeprefs', 'displayprefs', 'localeprefs');
 $TABI18n['application'] = $strApplication;
 
-$CFGCAT['displayprefs'] = array('theme','iconset',
-                               'incident_refresh',
+$CFGCAT['themeprefs'] = array('theme','iconset',
+                               'show_emoticons'
+                               );
+
+
+$CFGCAT['displayprefs'] = array('incident_refresh',
                                'incident_log_order',
                                'updates_per_page',
-                               'show_emoticons'
+                               'show_table_legends'
                                );
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
 
 
 // i18n keys for categories
-$CATI18N['displayprefs'] = $strTheme;
+$CATI18N['themeprefs'] = $strTheme;
+$CATI18N['displayprefs'] = $strDisplay;
 $CATI18N['localeprefs'] = $strLocale;
 
 // Descriptions of all the config variables
@@ -62,6 +67,9 @@ $CFGVAR['theme']['type'] = 'interfacestyleselect';
 
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
 $CFGVAR['show_emoticons']['type'] = 'select';
+
+$CFGVAR['show_table_legends']['title'] = $strShowTableLegends;
+$CFGVAR['show_table_legends']['type'] = 'select';
 
 $CFGVAR['updates_per_page']['title'] = $strIncidentUpdatesPerPage;
 $CFGVAR['updates_per_page']['type'] = 'number';

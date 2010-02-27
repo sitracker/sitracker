@@ -421,14 +421,16 @@ switch ($_REQUEST['mode'])
             echo "</table>\n";
 
             // Legend
-            echo "<br />";
-            echo "<table class='incidentkey'><tr>";
-            echo "<td class='shade1'>{$strOK}</td>";
-            echo "<td class='notice'>{$strDueNow}</td>";
-            echo "<td class='expired'>{$strDisabled}</td>";
-            echo "<td class='critical'>{$strFailed}</td>";
-            echo "</tr></table>";
-
+            if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+            {
+                echo "<br />";
+                echo "<table class='incidentkey'><tr>";
+                echo "<td class='shade1'>{$strOK}</td>";
+                echo "<td class='notice'>{$strDueNow}</td>";
+                echo "<td class='expired'>{$strDisabled}</td>";
+                echo "<td class='critical'>{$strFailed}</td>";
+                echo "</tr></table>";
+            }
             // Debug time issues
             // Temporary debugging output, doesn't need i18n
             if ($CONFIG['debug'])

@@ -230,12 +230,12 @@ while ($incidents = mysql_fetch_array($result))
     {
         echo icon('timer', 16, $strOpenActivities).' ';
     }
-    
+
     if (drafts_waiting_on_incident($incidents['id']))
     {
     	echo icon('note2', 16, $strDraftsExist).' ';
     }
-    
+
     echo "<a href=\"javascript:incident_details_window('{$incidents['id']}','incident{$incidents['id']}')\" class='info'>";
     if (trim($incidents['title']) != '')
     {
@@ -313,7 +313,7 @@ while ($incidents = mysql_fetch_array($result))
     }
 
     echo "</td>\n";
-    
+
     echo "<td align='center'>";
     echo "{$updated}";
     echo " {$strby} {$update_user}";
@@ -330,7 +330,7 @@ while ($incidents = mysql_fetch_array($result))
     {
         echo "<br />{$strOwner}: <strong>".user_realname($incidents['owner'],TRUE)."</strong>";
     }
-    
+
     echo "</td>\n";
 
     echo "<td align='center' title='{$explain}'>";
@@ -362,7 +362,7 @@ while ($incidents = mysql_fetch_array($result))
     }
 
     echo "</td>";
-    
+
     // Final column
     if ($reviewremain>0 && $reviewremain<=2400)
     {
@@ -393,12 +393,15 @@ while ($incidents = mysql_fetch_array($result))
 }
 echo "</table><br /><br />\n\n";
 
-echo "<table class='incidentkey'><tr>";
-echo "<td class='shade1'>{$strOpen}</td>";
-echo "<td class='notice'>{$strSLAApproaching}</td>";
-echo "<td class='urgent'>{$strSLADue}</td>";
-echo "<td class='critical'>{$strSLAMissed}</td>";
-echo "</tr></table>";
+if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+{
+    echo "<table class='incidentkey'><tr>";
+    echo "<td class='shade1'>{$strOpen}</td>";
+    echo "<td class='notice'>{$strSLAApproaching}</td>";
+    echo "<td class='urgent'>{$strSLADue}</td>";
+    echo "<td class='critical'>{$strSLAMissed}</td>";
+    echo "</tr></table>";
+}
 
 if ($rowcount != 1)
 {

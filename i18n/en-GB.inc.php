@@ -1546,6 +1546,7 @@ $strShowRenewals = 'Show Renewals';
 $strShowSitesThatHaveLoggedNoIncidents = 'Show sites that have logged no incidents';
 $strShowSitesWhichHaveLoggedLessThanCalls = 'Show sites which have logged less than X calls';
 $strShowSiteTotals = 'Show Site Totals';
+$strShowTableLegends = 'Show table legends';
 $strShowTotals = 'Show Totals';
 $strSicknessOnlyBookedNowOrPast = 'Sickness, can only be booked for today or days that have passed';
 $strSimpleHTMLallowed = 'Simple HTML allowed';
