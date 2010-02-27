@@ -100,6 +100,11 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             else
             {
                 $_SESSION['userconfig'][$catvar] = $value;
+                // Change the language in use if it's been changed in the user config
+                if (!empty($_SESSION['userconfig']['language']))
+                {
+                    $_SESSION['lang'] = $_SESSION['userconfig']['language'];
+                }
             }
         }
         if ($CONFIG['debug']) $dbg .= "<pre>".print_r($savevar,true)."</pre>";
