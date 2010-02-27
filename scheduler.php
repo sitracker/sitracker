@@ -436,7 +436,7 @@ switch ($_REQUEST['mode'])
                 echo "<h2>Debug Time Issues</h2>";
                 echo "<div style='width: 60%; border: 1px dashed red; margin: auto; padding: 5px;'>";
                 echo "<p>Timezone: {$CONFIG['timezone']}<br />";
-                echo "User UTC offset: {$_SESSION['utcoffset']}<br />";
+                echo "User UTC offset: {$_SESSION['userconfig']['utc_offset']}<br />";
                 echo "Date: ".date('r')."<br />";
                 echo "Date now: ".date('r', $GLOBALS['now'])."<br />";
                 echo "LDate: ".ldate('r', NULL, FALSE)."<br />";

@@ -75,7 +75,6 @@ elseif (authenticate($username, $_REQUEST['password']))
     $_SESSION['update_order'] = $user->var_update_order;
     $_SESSION['num_update_view'] = $user->var_num_updates_view;
     $_SESSION['groupid'] = is_null($user->groupid) ? 0 : $user->groupid;
-    $_SESSION['utcoffset'] = is_null($user->var_utc_offset) ? 0 : $user->var_utc_offset;
     $_SESSION['portalauth'] = FALSE;
     $_SESSION['user_source'] = $user->user_source;
     if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
@@ -97,6 +96,11 @@ elseif (authenticate($username, $_REQUEST['password']))
             }
             $_SESSION['userconfig'][$conf->config] = $conf->value;
         }
+    }
+    // Make sure utc_offset cannot be blank
+    if ($_SESSION['userconfig']['utc_offset'] == '')
+    {
+        $_SESSION['userconfig']['utc_offset'] == 0;
     }
 
     // Delete any old session user notices

@@ -66,7 +66,8 @@ $CFGVAR['show_emoticons']['type'] = 'select';
 $CFGVAR['updates_per_page']['title'] = $strIncidentUpdatesPerPage;
 $CFGVAR['updates_per_page']['type'] = 'number';
 
-
+$CFGVAR['utc_offset']['title'] = $strUTCOffset;
+$CFGVAR['utc_offset']['type'] = 'timezoneselect';
 
 
 if (function_exists('plugin_do'))

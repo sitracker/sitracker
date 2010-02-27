@@ -5681,7 +5681,7 @@ function utc_time($time = '')
 function ldate($format, $date = '', $utc = FALSE)
 {
     if ($date == '') $date = $GLOBALS['now'];
-    if ($_SESSION['utcoffset'] != '')
+    if ($_SESSION['userconfig']['utc_offset'] != '')
     {
         if ($utc === FALSE)
         {
@@ -5689,7 +5689,7 @@ function ldate($format, $date = '', $utc = FALSE)
             $date = utc_time($date);
         }
         // Adjust the display time to the users local timezone
-        $useroffsetsec = $_SESSION['utcoffset'] * 60;
+        $useroffsetsec = $_SESSION['userconfig']['utc_offset'] * 60;
         $date += $useroffsetsec;
     }
     $datestring = date($format, $date);
@@ -8153,6 +8153,10 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
     {
         $available_languages = available_languages();
     }
+    elseif ($CFGVAR[$setupvar]['type'] == 'timezoneselect')
+    {
+        global $availabletimezones;
+    }
 
     $html .= "<div class='configvar'>";
     if ($CFGVAR[$setupvar]['title']!='') $title = $CFGVAR[$setupvar]['title'];
@@ -8257,6 +8261,16 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
 
         case 'siteselect':
             $html .= site_drop_down($setupvar, $value, FALSE);
+        break;
+
+        case 'timezoneselect':
+            if ($value == '') $value = 0;
+            foreach ($availabletimezones AS $offset=>$tz)
+            {
+                $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
+                $availtz[$offset] = $tz;
+            }
+            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
         break;
 
         case 'userstatusselect':

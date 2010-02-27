@@ -129,7 +129,7 @@ foreach ($CFGTAB AS $tab => $cat)
     if (empty($seltab)) $seltab = 'application';
     echo "<li";
     if ($seltab == $tab) echo " class='active'";
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$tab}'>{$TABI18n[$tab]}</a></li>";
+    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$tab}&amp;userid={$userid}'>{$TABI18n[$tab]}</a></li>";
 }
 echo "</ul>";
 echo "</div>";
@@ -144,7 +144,7 @@ foreach ($CFGTAB[$seltab] AS $cat)
     if ($selcat == $cat) echo " class='active'";
     $catname = $CATI18N[$cat];
     if (empty($catname)) $catname = $cat;
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}'>{$catname}</a></li>";
+    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}&amp;userid={$userid}'>{$catname}</a></li>";
 }
 echo "</ul>";
 echo "</div>";
