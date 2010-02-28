@@ -49,11 +49,13 @@ $CATI18N['localeprefs'] = $strLocale;
 //      options - A pipe seperated list of optios for a 'select' type
 
 
+// TODO
 $CFGVAR['iconset']['title'] = 'Icon set';
 
 $CFGVAR['language']['title'] = $strLanguage;
 $CFGVAR['language']['type'] = 'userlanguageselect';
 
+// TODO
 $CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
 $CFGVAR['incident_log_order']['type'] = 'select';
 $CFGVAR['incident_log_order']['options'] = 'asc|desc';
@@ -65,12 +67,26 @@ $CFGVAR['incident_refresh']['unit'] = $strSeconds;
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
 
+// TODO
+$CFGVAR['show_confirmation_caution']['title'] = 'Show confirmation messages';
+$CFGVAR['show_confirmation_caution']['type'] = 'select';
+
+// TODO
+$CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages on delete';
+$CFGVAR['show_confirmation_delete']['type'] = 'select';
+
+
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
 $CFGVAR['show_emoticons']['type'] = 'select';
 
 $CFGVAR['show_table_legends']['title'] = $strShowTableLegends;
 $CFGVAR['show_table_legends']['type'] = 'select';
 
+// TODO
+$CFGVAR['show_inactive_data']['title'] = 'Show Inactive Data';
+$CFGVAR['show_inactive_data']['type'] = 'select';
+
+// TODO
 $CFGVAR['updates_per_page']['title'] = $strIncidentUpdatesPerPage;
 $CFGVAR['updates_per_page']['type'] = 'number';
 
