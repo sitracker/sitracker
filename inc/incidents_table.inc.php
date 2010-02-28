@@ -391,11 +391,11 @@ while ($incidents = mysql_fetch_array($result))
     echo "</td>";
     echo "</tr>\n";
 }
-echo "</table><br /><br />\n\n";
+echo "</table><br />\n";
 
 if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
 {
-    echo "<table class='incidentkey'><tr>";
+    echo "<br />\n<table class='incidentkey'><tr>";
     echo "<td class='shade1'>{$strOpen}</td>";
     echo "<td class='notice'>{$strSLAApproaching}</td>";
     echo "<td class='urgent'>{$strSLADue}</td>";
