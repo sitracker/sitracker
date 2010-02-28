@@ -7,6 +7,12 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
+// FIXME Added by ivan because triggers.class.php was never included and that file
+// Included other vital files such as incident.inc.php - INL 29Feb08
+// Caution: This include here might not be the right place. Kieran can you
+// check.
+include('triggers.class.php');
+// /INL
 
 $actionarray['ACTION_NONE'] =
 array('name' => $strNone,
@@ -559,7 +565,7 @@ array('description' => $strSendOpeningEmailDesc,
       'show' => FALSE
      );
 
-$ttvararray['{sendfeedback}'] = 
+$ttvararray['{sendfeedback}'] =
 array('description' => $strEmailSendFeedbackDesc,
       'replacement' => '$paramarray[\'sendfeedback\']',
       'show' => FALSE);
