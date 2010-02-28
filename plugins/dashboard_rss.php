@@ -61,7 +61,7 @@ function dashboard_rss_display($dashletid)
     $cssresult = mysql_query($csssql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     else list($cssurl, $iconset) = mysql_fetch_row($cssresult);
-
+    if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
     /*
     Originally from dashboard/dashboard.inc.php
     */

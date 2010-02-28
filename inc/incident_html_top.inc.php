@@ -44,8 +44,10 @@ $csssql = "SELECT cssurl, iconset FROM `{$dbInterfaceStyles}` WHERE id='{$stylei
 $cssresult = mysql_query($csssql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 else list($cssurl, $iconset) = mysql_fetch_row($cssresult);
-
+// Overwride default icon set with users choice, if there is one
 if (empty($iconset)) $iconset = 'sit';
+if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
+
 unset($styleid);
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";

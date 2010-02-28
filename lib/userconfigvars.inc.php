@@ -49,8 +49,10 @@ $CATI18N['localeprefs'] = $strLocale;
 //      options - A pipe seperated list of optios for a 'select' type
 
 
-// TODO
 $CFGVAR['iconset']['title'] = 'Icon set';
+$CFGVAR['iconset']['type'] = 'select';
+$CFGVAR['iconset']['options'] = 'sit|oxygen';
+// TODO our included 'kdeclassic' icon theme doesn't appear to be in the 'sit' filename format
 
 $CFGVAR['language']['title'] = $strLanguage;
 $CFGVAR['language']['type'] = 'userlanguageselect';

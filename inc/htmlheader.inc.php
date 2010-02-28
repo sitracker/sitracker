@@ -63,6 +63,8 @@ if (mysql_error())trigger_error(mysql_error(),E_USER_WARNING);
 
 list($cssurl, $iconset) = mysql_fetch_row($cssresult);
 if (empty($iconset)) $iconset = 'sit';
+// Overwride default icon set with users choice, if there is one
+if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
 unset($styleid);
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$cssurl}' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
