@@ -340,7 +340,7 @@ elseif ($action == 'findcontact')
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if (!empty($search_string)) $match = "'$search_string'";
         if (!empty($contactid)) $match = "{$strContact} {$strID} {$contactid}";
-        echo "<h2>".sprintf($strSorryUnableToFindAnyContactsMatchingX, $match)."</h2>\n";
+        echo "<h2>".sprintf($strSorryNoRecordsMatchingX, $match)."</h2>\n";
         echo "<p align='center'><a href=\"incident_add.php?updateid=$updateid&amp;win={$win}\">{$strSearchAgain}</a></p>";
         // Select the contact from the list of contacts as well
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
