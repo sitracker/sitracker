@@ -106,8 +106,8 @@ if ($result AND mysql_num_rows($result) > 0)
 {
     while ($conf = mysql_fetch_object($result))
     {
-        if ($conf->value==='TRUE') $conf->value = TRUE;
-        if ($conf->value==='FALSE') $conf->value = FALSE;
+        if ($conf->value === 'TRUE') $conf->value = TRUE;
+        if ($conf->value === 'FALSE') $conf->value = FALSE;
         if (substr($conf->value, 0, 6)=='array(')
         {
                 eval("\$val = {$conf->value};");

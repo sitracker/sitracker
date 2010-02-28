@@ -17,7 +17,7 @@ class Site extends SitEntity {
     {
         if ($id > 0)
         {
-        $this->id = $id;
+            $this->id = $id;
             $this->retrieveDetails();
         }
     }

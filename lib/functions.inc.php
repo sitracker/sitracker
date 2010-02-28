@@ -5215,12 +5215,12 @@ function show_create_links($table, $ref)
 function draw_chart_image($type, $width, $height, $data, $legends, $title='', $unit='')
 {
     global $CONFIG;
+    
     // Graph settings
     if (empty($width)) $width = 500;
     if (empty($height)) $height = 150;
-    $fontfile = dirname( __FILE__ ).DIRECTORY_SEPARATOR."FreeSans.ttf"; // FIXME font file!
 
-    if (!empty($fontfile) AND file_exists($fontfile)) $use_ttf = TRUE;
+    if (!empty($CONFIG['font_file']) AND file_exists($CONFIG['font_file'])) $use_ttf = TRUE;
     else $use_ttf = FALSE;
 
     $countdata = count($data);
@@ -5300,7 +5300,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
                 $cy += 10;
                 if ($use_ttf)
                 {
-                    imagettftext($img, 10, 0, 2, 10, $black, $fontfile, $title);
+                    imagettftext($img, 10, 0, 2, 10, $black, $CONFIG['font_file'], $title);
                 }
                 else
                 {
@@ -5368,7 +5368,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
                 if ($use_ttf)
                 {
-                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $fontfile, substr(urldecode($legends[$i]),0,27)." ({$data[$i]})");
+                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], substr(urldecode($legends[$i]),0,27)." ({$data[$i]})");
                 }
                 else
                 {

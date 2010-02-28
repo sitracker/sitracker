@@ -65,7 +65,7 @@ $CFGCAT['sla'] = array('default_service_level',
                        'working_days');
 
 
-$CFGCAT['theming'] = array('default_interface_style', 'default_css_url', 'default_gravatar','tag_icons');
+$CFGCAT['theming'] = array('default_interface_style', 'default_css_url', 'default_gravatar','font_file','tag_icons');
 
 $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv', 'ftp_path');
 
@@ -382,6 +382,9 @@ $CFGVAR['ftp_path']['title'] = 'FTP Path';
 $CFGVAR['ftp_path']['help'] = 'The path to the directory where we store files on the ftp server (e.g. /pub/support/) the trailing slash is important';
 
 $CFGVAR['ftp_username']['title'] = 'FTP username';
+
+$CFGVAR['font_file']['title'] = 'Font File location';
+$CFGVAR['font_file']['help'] = 'Location of the font file to use on graphs, leaving blank will default to the internal GD font';
 
 $CFGVAR['hide_closed_incidents_older_than']['help'] = "Incidents closed more than this number of days ago aren't show in the incident queue, -1 means disabled";
 $CFGVAR['hide_closed_incidents_older_than']['title'] = 'Hide closed incidents older than';

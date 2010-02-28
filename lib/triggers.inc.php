@@ -11,7 +11,7 @@
 // Included other vital files such as incident.inc.php - INL 29Feb08
 // Caution: This include here might not be the right place. Kieran can you
 // check.
-include('triggers.class.php');
+include ('trigger.class.php');
 // /INL
 
 $actionarray['ACTION_NONE'] =
