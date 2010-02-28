@@ -28,7 +28,8 @@ $CFGCAT['themeprefs'] = array('theme','iconset',
 $CFGCAT['displayprefs'] = array('incident_refresh',
                                'incident_log_order',
                                'updates_per_page',
-                               'show_table_legends'
+                               'show_table_legends',
+                               'incident_popup_onewindow'
                                );
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
@@ -49,7 +50,7 @@ $CATI18N['localeprefs'] = $strLocale;
 //      options - A pipe seperated list of optios for a 'select' type
 
 
-$CFGVAR['iconset']['title'] = 'Icon set';
+$CFGVAR['iconset']['title'] = 'Icon set'; // FIXME i18n
 $CFGVAR['iconset']['type'] = 'select';
 $CFGVAR['iconset']['options'] = 'sit|oxygen';
 // TODO our included 'kdeclassic' icon theme doesn't appear to be in the 'sit' filename format
@@ -57,7 +58,6 @@ $CFGVAR['iconset']['options'] = 'sit|oxygen';
 $CFGVAR['language']['title'] = $strLanguage;
 $CFGVAR['language']['type'] = 'userlanguageselect';
 
-// TODO
 $CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
 $CFGVAR['incident_log_order']['help'] = "Choose 'asc' for Ascending (oldest first), or 'desc' for Descending (newest first)";
 $CFGVAR['incident_log_order']['type'] = 'select';
@@ -66,6 +66,9 @@ $CFGVAR['incident_log_order']['options'] = 'asc|desc';
 $CFGVAR['incident_refresh']['title'] = $strIncidentRefresh;
 $CFGVAR['incident_refresh']['type'] = 'number';
 $CFGVAR['incident_refresh']['unit'] = $strSeconds;
+
+$CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details'; // FIXME i18n
+$CFGVAR['incident_popup_onewindow']['type'] = 'select';
 
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
@@ -78,7 +81,6 @@ $CFGVAR['show_confirmation_caution']['type'] = 'select';
 $CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages on delete';
 $CFGVAR['show_confirmation_delete']['type'] = 'select';
 
-
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
 $CFGVAR['show_emoticons']['type'] = 'select';
 
@@ -89,7 +91,6 @@ $CFGVAR['show_table_legends']['type'] = 'select';
 $CFGVAR['show_inactive_data']['title'] = 'Show Inactive Data';
 $CFGVAR['show_inactive_data']['type'] = 'select';
 
-// TODO
 $CFGVAR['updates_per_page']['title'] = $strIncidentUpdatesPerPage;
 $CFGVAR['updates_per_page']['type'] = 'number';
 

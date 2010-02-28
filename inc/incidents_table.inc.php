@@ -233,10 +233,18 @@ while ($incidents = mysql_fetch_array($result))
 
     if (drafts_waiting_on_incident($incidents['id']))
     {
-    	echo icon('note2', 16, $strDraftsExist).' ';
+        echo icon('note2', 16, $strDraftsExist).' ';
     }
 
-    echo "<a href=\"javascript:incident_details_window('{$incidents['id']}','incident{$incidents['id']}')\" class='info'>";
+    if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
+    {
+        $windowname = "incident{$incidents['id']}";
+    }
+    else
+    {
+        $windowname = "sit_popup";
+    }
+    echo "<a href=\"javascript:incident_details_window('{$incidents['id']}','{$windowname}')\" class='info'>";
     if (trim($incidents['title']) != '')
     {
         echo ($incidents['title']);
