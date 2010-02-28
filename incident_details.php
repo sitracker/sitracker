@@ -24,7 +24,7 @@ $id = $incidentid;
 
 if ($_REQUEST['win'] == 'incomingview')
 {
-    $title = 'Incoming';
+    $title = $strIncoming;
     $incidentid = '';
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
     include (APPLICATION_INCPATH . 'incident_incoming.inc.php');
@@ -389,15 +389,16 @@ function log_nav_bar()
     global $count_updates;
     global $records;
 
-    if ($offset > $_SESSION['num_update_view'])
+    $updates_per_page = intval($_SESSION['userconfig']['updates_per_page']);
+    if ($offset > $updates_per_page)
     {
-        $previous = $offset - $_SESSION['num_update_view'];
+        $previous = $offset - $updates_per_page;
     }
     else
     {
         $previous = 0;
     }
-    $next = $offset + $_SESSION['num_update_view'];
+    $next = $offset + $updates_per_page;
 
     $nav .= "<table width='98%' align='center'><tr>";
     $nav .= "<td align='left' style='width: 33%;'>";
@@ -409,7 +410,7 @@ function log_nav_bar()
     }
     $nav .= "</td>";
     $nav .= "<td align='center' style='width: 34%;'>";
-    if ($count_updates > $_SESSION['num_update_view'])
+    if ($count_updates > $updates_per_page)
     {
         if ($records != 'all')
         {
@@ -417,7 +418,7 @@ function log_nav_bar()
             $nav .= "javascript=enabled&amp;offset=0&amp;records=all'>";
             $nav .= "{$GLOBALS['strShowAll']}</a>";
         }
-        else if ($_SESSION['num_update_view'] != 0)
+        else if ($updates_per_page != 0)
         {
             $nav .= "<a href='{$_SERVER['PHP_SELF']}?id={$incidentid}&amp;";
             $nav .= "javascript=enabled&amp;offset=0'>{$GLOBALS['strShowPaged']}</a>";
@@ -425,7 +426,7 @@ function log_nav_bar()
     }
     $nav .= "</td>";
     $nav .= "<td align='right' style='width: 33%;'>";
-    if ($offset < ($count_updates - $_SESSION['num_update_view']) AND
+    if ($offset < ($count_updates - $updates_per_page) AND
         $records != 'all')
     {
         $nav .= "<a href='{$_SERVER['PHP_SELF']}?id={$incidentid}&amp;";
@@ -440,9 +441,9 @@ function log_nav_bar()
 
 $records = strtolower(cleanvar($_REQUEST['records']));
 
-if (intval($_SESSION['num_update_view']) == 0)
+if (intval($_SESSION['userconfig']['updates_per_page']) == 0)
 {
-	$records = 'all';
+    $records = 'all';
 }
 
 if ($incidentid=='' OR $incidentid < 1)
@@ -455,7 +456,7 @@ $sql .= "ORDER BY timestamp {$_SESSION['update_order']}, id {$_SESSION['update_o
 
 if (empty($records))
 {
-    $numupdates = intval($_SESSION['num_update_view']);
+    $numupdates = intval($_SESSION['userconfig']['updates_per_page']);
     if ($numupdates != 0)
     {
         $sql .= "LIMIT {$offset},{$numupdates}";
@@ -612,15 +613,15 @@ while ($update = mysql_fetch_object($result))
         echo "<div class='detailheadhidden'>";
     }
 
-    if ($offset > $_SESSION['num_update_view'])
+    if ($offset > $updates_per_page)
     {
-        $previous = $offset - $_SESSION['num_update_view'];
+        $previous = $offset - intval($_SESSION['userconfig']['updates_per_page']);
     }
     else
     {
         $previous = 0;
     }
-    $next = $offset + $_SESSION['num_update_view'];
+    $next = $offset + intval($_SESSION['userconfig']['updates_per_page']);
 
     echo "<div class='detaildate'>";
     if ($count == 0)
@@ -810,7 +811,7 @@ while ($update = mysql_fetch_object($result))
     $count++;
 }
 
-if ($_SESSION['num_update_view'] > 0)
+if (intval($_SESSION['userconfig']['updates_per_page']) > 0)
 {
     echo log_nav_bar();
 }
