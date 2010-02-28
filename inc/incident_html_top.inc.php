@@ -5,6 +5,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
+// Added by Ivan 28Feb10, not sure if this is the correct place tbh
+// Added due to changes in triggers.  FIXME
+include('lib/incident.inc.php');
+
 session_name($CONFIG['session_name']);
 session_start();
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
