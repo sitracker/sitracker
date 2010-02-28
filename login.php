@@ -58,7 +58,7 @@ elseif (authenticate($username, $_REQUEST['password']))
     $password = md5($_REQUEST['password']);
 
     // Retrieve users profile
-    $sql = "SELECT * FROM `{$dbUsers}` WHERE username='{$username}' LIMIT 1";
+    $sql = "SELECT id, username, realname, email, groupid, user_source FROM `{$dbUsers}` WHERE username='{$username}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
@@ -72,13 +72,10 @@ elseif (authenticate($username, $_REQUEST['password']))
     $_SESSION['username'] = $user->username;
     $_SESSION['realname'] = $user->realname;
     $_SESSION['email'] = $user->email;
-    $_SESSION['update_order'] = $user->var_update_order;
-    $_SESSION['num_update_view'] = $user->var_num_updates_view;
     $_SESSION['groupid'] = is_null($user->groupid) ? 0 : $user->groupid;
     $_SESSION['portalauth'] = FALSE;
     $_SESSION['user_source'] = $user->user_source;
     if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
-
 
     // Read user config from database
     $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$user->id}";

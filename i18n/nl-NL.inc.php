@@ -1013,7 +1013,6 @@ $strNoOpenIncidents = 'Geen open incidenten';
 $strNoOrphandedContacts = 'Geen weescontracten';
 $strNotificationEmail = 'Aankondiging email';
 $strNotifications = 'Aankondigingen';
-$strNotificationsMovedToTriggersPage = 'Aankondigingen zijn verplaatst naar de Triggers pagina';
 $strNotifyContact = 'Stel contact op de hoogte';
 $strNotifyContactEmail = 'De aankondigings contact email van een contact (als ingesteld)';
 $strNotifyContactOnClose = 'Of de gebruiker gevraagd heeft om een sluitings email (Waar of niet waar)';

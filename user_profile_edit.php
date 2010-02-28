@@ -14,7 +14,7 @@
 
 $permission = 4; // Edit your profile
 require ('core.php');
-require (APPLICATION_LIBPATH . 'functions.inc.php')
+require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -224,40 +224,6 @@ if (empty($mode))
     echo "<tr><th>MSN ".icon('msn', 16, 'MSN')."</th>";
     echo "<td><input maxlength=\"50\" name=\"msn\" size=\"30\" type=\"text\" value=\"".strip_tags($user->msn)."\" /></td></tr>";
 
-    echo "<tr><th colspan='2'>{$strDisplayPreferences}</th></tr>\n";
-
-    echo "<tr><th>{$strIncidentLogOrder}</th><td>";
-    echo "<select name='updateorder'>";
-    echo "<option ";
-    if ($user->var_update_order == "desc")
-    {
-        echo "selected='selected'";
-    }
-
-    echo " value='desc'>{$strNewestAtTop}</option>\n";
-    echo "<option ";
-    if ($user->var_update_order == "asc")
-    {
-        echo "selected='selected'";
-    }
-
-    echo " value='asc'>{$strNewestAtBottom}</option>\n";
-    echo "</select>";
-    echo "</td></tr>\n";
-
-    echo "<tr><th>{$strIncidentUpdatesPerPage}</th>";
-    echo "<td><input maxlength='5' name='updatesperpage' size='3' type='text' ";
-    echo "value=\"".$user->var_num_updates_view."\" /> ({$str0MeansUnlimited})</td></tr>\n";
-
-    echo "<tr><th>{$strShowEmoticons}</th>";
-    echo "<td><input type='checkbox' name='emoticons' id='emoticons' value='true' ";
-    if ($user->var_emoticons == 'true') echo "checked='checked' ";
-    echo "/></td></tr>\n";
-
-    echo "<tr><th colspan='2'>{$strNotifications}</th></tr>\n";
-    echo "<tr><th></th><td>";
-    echo "{$strNotificationsMovedToTriggersPage} - <a href='triggers.php'>{$strTriggers}</a></td></tr>\n";
-
     plugin_do('edit_profile_form');
 
     // Do not allow password change if using LDAP
@@ -300,16 +266,9 @@ elseif ($mode == 'save')
     $user->icq = cleanvar($_POST['icq']);
     $user->msn = cleanvar($_POST['msn']);
     $user->fax = cleanvar($_POST['fax']);
-    $user->incident_refresh = cleanvar($_POST['incidentrefresh']);
-    $user->update_order = cleanvar($_POST['updateorder']);
-    $user->num_updates_view = cleanvar($_POST['updatesperpage']);
     $user->signature = cleanvar($_POST['signature']);
     $user->status = cleanvar($_POST['status']);
 
-    $user->style = cleanvar($_POST['style']);
-    $user->i18n = cleanvar($_POST['vari18n']);
-    $user->utc_offset = cleanvar($_POST['utcoffset']);
-    $user->emoticons = cleanvar($_POST['emoticons']);
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
     $user->roleid = cleanvar($_POST['roleid']);

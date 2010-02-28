@@ -1114,7 +1114,6 @@ $strNoOpenIncidents = 'No Open Incidents';
 $strNoOrphandedContacts = 'No orphanded contacts';
 $strNotificationEmail = 'Notification Email';
 $strNotifications = 'Notifications';
-$strNotificationsMovedToTriggersPage = 'Notifications have been moved to the Triggers page';
 $strNotifyContact = 'Notify Contact';
 $strNotifyContactEmail = 'The notify contact email of a contact (if set)';
 $strNotifyContactOnClose = 'Whether the user requested to send a closing email (true or false)';
