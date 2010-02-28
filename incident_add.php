@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-
+require (APPLICATION_LIBPATH . 'incident.inc.php');
 $title = $strAddIncident;
 
 function to_row($contactrow)
@@ -875,7 +875,8 @@ elseif ($action == 'assign')
             $html .= "</p>\n";
 
             $suggested_user = suggest_reassign_userid($incidentid);
-            trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
+            $trigger = new Trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
+	    $trigger->fire();
 
             if ($CONFIG['auto_assign_incidents'])
             {
