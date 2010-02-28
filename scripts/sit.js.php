@@ -141,27 +141,27 @@ function checkLDAPDetails(statusfield)
             {
                 if (xmlhttp.responseText == ".LDAP_PASSWORD_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>Password incorrect</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strPasswordIncorrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_BASE_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>Base DN Incorrect</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strLDAPUserBaseDNIncorrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_ADMIN_GROUP_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>Admin Group Incorrect</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strLDAPAdminGroupIncrrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_MANAGER_GROUP_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>Manager Group Incorrect</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strLDAPManagerGroupIncorrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_USER_GROUP_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>User Group Incorrect</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strLDAPUserGroupIncorrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_CUSTOMER_GROUP_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>Customer Group Incorrect</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strLDAPCustomerGroupIncorrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_CORRECT.")
                 {
