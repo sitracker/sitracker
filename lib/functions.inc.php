@@ -7989,6 +7989,8 @@ function alpha_index($baseurl = '#')
 
 /**
     * Converts emoticon text to HTML
+    * Will only show emoticons if the user has chosen in their settings
+    * that they would like to see them, otherwise shows original text
     * @author Kieran Hogg
     * @param string $text. Text with smileys in it
     * @returns string HTML
@@ -7996,34 +7998,44 @@ function alpha_index($baseurl = '#')
 function emoticons($text)
 {
     global $CONFIG;
-    $smiley_url = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}images/emoticons/";
-    $smiley_regex = array(0 => "/\:[-]?\)/s",
-                        1 => "/\:[-]?\(/s",
-                        2 => "/\;[-]?\)/s",
-                        3 => "/\:[-]?[pP]/s",
-                        4 => "/\:[-]?@/s",
-                        5 => "/\:[-]?[Oo]/s",
-                        6 => "/\:[-]?\\$/s",
-                        7 => "/\\([Yy]\)/s",
-                        8 => "/\\([Nn]\)/s",
-                        9 => "/\\([Bb]\)/s",
-                        10 => "/\:[-]?[dD]/s"
-                        );
 
-    $smiley_replace = array(0 => "<img src='{$smiley_url}smile.png' alt='$1' title='$1' />",
-                            1 => "<img src='{$smiley_url}sad.png' alt='$1' title='$1' />",
-                            2 => "<img src='{$smiley_url}wink.png' alt='$1' title='$1' />",
-                            3 => "<img src='{$smiley_url}tongue.png' alt='$1' title='$1' />",
-                            4 => "<img src='{$smiley_url}angry.png' alt='$1' title='$1' />",
-                            5 => "<img src='{$smiley_url}omg.png' alt='$1' title='$1' />",
-                            6 => "<img src='{$smiley_url}embarassed.png' alt='$1' title='$1' />",
-                            7 => "<img src='{$smiley_url}thumbs_up.png' alt='$1' title='$1' />",
-                            8 => "<img src='{$smiley_url}thumbs_down.png' alt='$1' title='$1' />",
-                            9 => "<img src='{$smiley_url}beer.png' alt='$1' title='$1' />",
-                            10 => "<img src='{$smiley_url}teeth.png' alt='$1' title='$1' />"
+    $html = '';
+    if ($_SESSION['userconfig']['show_emoticons'] == 'TRUE')
+    {
+        $smiley_url = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}images/emoticons/";
+        $smiley_regex = array(0 => "/\:[-]?\)/s",
+                            1 => "/\:[-]?\(/s",
+                            2 => "/\;[-]?\)/s",
+                            3 => "/\:[-]?[pP]/s",
+                            4 => "/\:[-]?@/s",
+                            5 => "/\:[-]?[Oo]/s",
+                            6 => "/\:[-]?\\$/s",
+                            7 => "/\\([Yy]\)/s",
+                            8 => "/\\([Nn]\)/s",
+                            9 => "/\\([Bb]\)/s",
+                            10 => "/\:[-]?[dD]/s"
                             );
 
-    $html = preg_replace($smiley_regex, $smiley_replace, $text);
+        $smiley_replace = array(0 => "<img src='{$smiley_url}smile.png' alt='$1' title='$1' />",
+                                1 => "<img src='{$smiley_url}sad.png' alt='$1' title='$1' />",
+                                2 => "<img src='{$smiley_url}wink.png' alt='$1' title='$1' />",
+                                3 => "<img src='{$smiley_url}tongue.png' alt='$1' title='$1' />",
+                                4 => "<img src='{$smiley_url}angry.png' alt='$1' title='$1' />",
+                                5 => "<img src='{$smiley_url}omg.png' alt='$1' title='$1' />",
+                                6 => "<img src='{$smiley_url}embarassed.png' alt='$1' title='$1' />",
+                                7 => "<img src='{$smiley_url}thumbs_up.png' alt='$1' title='$1' />",
+                                8 => "<img src='{$smiley_url}thumbs_down.png' alt='$1' title='$1' />",
+                                9 => "<img src='{$smiley_url}beer.png' alt='$1' title='$1' />",
+                                10 => "<img src='{$smiley_url}teeth.png' alt='$1' title='$1' />"
+                                );
+
+        $html = preg_replace($smiley_regex, $smiley_replace, $text);
+    }
+    else
+    {
+        $html = $text;
+    }
+
     return $html;
 }
 
