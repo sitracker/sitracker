@@ -69,6 +69,6 @@ if (user_permission($userid, $permission) == FALSE)
     header("Location: {$CONFIG['application_webpath']}noaccess.php?id=$refused");
     exit;
 }
-require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
+require_once (APPLICATION_LIBPATH . 'trigger.class.php');
 
 ?>
