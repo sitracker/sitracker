@@ -57,6 +57,7 @@ $CFGVAR['language']['type'] = 'userlanguageselect';
 
 // TODO
 $CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
+$CFGVAR['incident_log_order']['help'] = "Choose 'asc' for Ascending (oldest first), or 'desc' for Descending (newest first)";
 $CFGVAR['incident_log_order']['type'] = 'select';
 $CFGVAR['incident_log_order']['options'] = 'asc|desc';
 

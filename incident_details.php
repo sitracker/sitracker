@@ -452,7 +452,7 @@ if ($incidentid=='' OR $incidentid < 1)
 }
 
 $sql  = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$incidentid}' ";
-$sql .= "ORDER BY timestamp {$_SESSION['update_order']}, id {$_SESSION['update_order']} ";
+$sql .= "ORDER BY timestamp {$_SESSION['userconfig']['incident_log_order']}, id {$_SESSION['userconfig']['incident_log_order']} ";
 
 if (empty($records))
 {
