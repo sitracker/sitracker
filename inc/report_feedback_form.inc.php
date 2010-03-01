@@ -30,15 +30,15 @@ echo date_picker('feedback.enddate');
 echo "</td></tr>\n";
 
 echo "<tr><th>{$strDatesAre}:</th><td>";
-echo "<input type='radio' name='dates' value='closedin' checked='checked' />{$strClosed} ";
-echo "<input type='radio' name='dates' value='feedbackin' />{$strFeedback} ";
+echo "<label><input type='radio' name='dates' value='closedin' checked='checked' />{$strClosed}</label> ";
+echo "<label><input type='radio' name='dates' value='feedbackin' />{$strFeedback}</label> ";
 echo "</td></tr>";
 
-echo "<tr><th>Type:</th><td>";
-echo "<input type='radio' name='type' value='byengineer' checked='checked' />{$strUser} ";
-echo "<input type='radio' name='type' value='bycustomer' />{$strContact} ";
-echo "<input type='radio' name='type' value='bysite' />{$strSite} ";
-echo "<input type='radio' name='type' value='byproduct' />{$strProduct} ";
+echo "<tr><th>{$strType}:</th><td>";
+echo "<label><input type='radio' name='type' value='byengineer' checked='checked' />{$strUser}</label> ";
+echo "<label><input type='radio' name='type' value='bycustomer' />{$strContact}</label> ";
+echo "<label><input type='radio' name='type' value='bysite' />{$strSite}</label> ";
+echo "<label><input type='radio' name='type' value='byproduct' />{$strProduct}</label> ";
 echo "</td></tr>";
 
 echo "</table>";

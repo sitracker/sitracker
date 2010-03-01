@@ -1022,7 +1022,6 @@ $strNoOpenIncidents = 'Aucun Ticket Ouvert';
 $strNoOrphandedContacts = 'Aucun Contact orphelin';
 $strNotificationEmail = 'E-mail de Notification';
 $strNotifications = 'Notifications';
-$strNotificationsMovedToTriggersPage = 'Les Notifications ont été déplacées sur la page des Déclencheurs';
 $strNotifyContact = 'Notifier le Contact';
 $strNotifyContactEmail = 'L\'email de notification d\'un contact (si paramétré)';
 $strNotifyContactOnClose = 'Si l\'utilisateur a demandé d\'envoyer un message de clôture (vrai ou faux)';

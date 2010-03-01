@@ -484,19 +484,6 @@ function user_holiday_resetdate($userid)
 
 
 /**
- * Returns the users preference for showing emoticons
- * @author Paul Heaney
- * @param int $userid User ID
- * @return string true or false
- * @retval 'true' means the user wants emoticons shown
- * @retval 'false' means the user doesn't want emoticons
- */
-function user_emoticon_preference($userid)
-{
-    return db_read_column('var_emoticons', $GLOBALS['dbUsers'], $userid);
-}
-
-/**
     * Returns the HTML for a drop down list of  users, with the given name and with the given id selected.
     * @author Ivan Lucas
     * @param string $name. Name attribute

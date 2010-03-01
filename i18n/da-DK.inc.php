@@ -1019,7 +1019,6 @@ $strNoOpenIncidents = 'Ingen åbne hændelser';
 $strNoOrphandedContacts = 'Ingen herreløse kontakter';
 $strNotificationEmail = 'Notifikations email';
 $strNotifications = 'Notifikationer';
-$strNotificationsMovedToTriggersPage = 'Notifikationer er flyttet til Triggers siden';
 $strNotifyContact = 'Meddel kontakt';
 $strNotifyContactEmail = 'Notificerings kontakt emailen af en kontakt (hvis sat)';
 $strNotifyContactOnClose = 'Om brugeren har forespurgt om at sende en lukkende email (sand eller falsk)';

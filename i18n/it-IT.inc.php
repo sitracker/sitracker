@@ -892,7 +892,6 @@ $strNoMatchingProduct = 'Nessun Prodotto Corrispondente';
 $strNoOpenIncidents = 'Nessuna attività aperta';
 $strNoOrphandedContacts = 'Nessun contatto orfano';
 $strNotifications = 'Notifiche';
-$strNotificationsMovedToTriggersPage = 'Notifiche spostate alla pagina Triggers';
 $strNotifyContact = 'Notifica Contatto';
 $strNotifyContactEmail = 'L\'email di notifica del contatto (se impostato)';
 $strNotifyContactOnClose = 'Se l\'utente è invitato a inviare una email di chiusura (vero o falso)';
