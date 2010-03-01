@@ -75,9 +75,9 @@ the line above. e.g.:
 If a boolean expression is spread out over several lines, the boolean
 operator is always the last item on the line, e.g.:
 
-    if ((condition1 || condition2) &&
-        condition3 &&
-        (condition4 || condition5))
+    if ((condition1 OR condition2) AND
+        condition3 AND
+        (condition4 OR condition5))
     {
 
 Switch statements should have the case line indented and the case block
