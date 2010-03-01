@@ -5,6 +5,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
+// Added by Ivan 28Feb10, not sure if this is the correct place tbh
+// Added due to changes in triggers.  FIXME
+include('lib/incident.inc.php');
+
 session_name($CONFIG['session_name']);
 session_start();
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -26,8 +30,8 @@ echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles
 
 if ($_SESSION['auth'] == TRUE)
 {
-    $style = interface_style($_SESSION['style']);
-    $styleid = $_SESSION['style'];
+    $style = interface_style($_SESSION['userconfig']['theme']);
+    $styleid = $_SESSION['userconfig']['theme'];
     echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$style['cssurl']}' />\n";
 }
 else
@@ -40,8 +44,10 @@ $csssql = "SELECT cssurl, iconset FROM `{$dbInterfaceStyles}` WHERE id='{$stylei
 $cssresult = mysql_query($csssql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 else list($cssurl, $iconset) = mysql_fetch_row($cssresult);
-
+// Overwride default icon set with users choice, if there is one
 if (empty($iconset)) $iconset = 'sit';
+if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
+
 unset($styleid);
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";

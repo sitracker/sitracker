@@ -86,7 +86,6 @@ $dbUserConfig = "{$CONFIG['db_tableprefix']}userconfig";
 $dbUserGroups = "{$CONFIG['db_tableprefix']}usergroups";
 $dbUserPermissions = "{$CONFIG['db_tableprefix']}userpermissions";
 $dbUsers = "{$CONFIG['db_tableprefix']}users";
-$dbUserConfig = "{$CONFIG['db_tableprefix']}userconfig";
 $dbUserSoftware = "{$CONFIG['db_tableprefix']}usersoftware";
 $dbUserStatus = "{$CONFIG['db_tableprefix']}userstatus";
 $dbVendors = "{$CONFIG['db_tableprefix']}vendors";

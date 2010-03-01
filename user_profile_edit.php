@@ -39,7 +39,7 @@ if (empty($mode))
     $title = $strEditProfile;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    /* 
+    /*
     $sql = "SELECT u.*, r.rolename FROM `{$dbUsers}` AS u, `{$dbRoles}` AS r  ";
     $sql .= "WHERE u.id='{$edituserid}' AND u.roleid = r.id LIMIT 1";
     $result = mysql_query($sql);
@@ -48,7 +48,7 @@ if (empty($mode))
     if (mysql_num_rows($result) < 1) trigger_error("$sql No such user ".strip_tags($edituserid),E_USER_WARNING);
     $user = mysql_fetch_object($result);
     */
-    
+
     $user = new User($edituserid);
 
     echo "<h2>".icon('user', 32)." ";
@@ -224,73 +224,6 @@ if (empty($mode))
     echo "<tr><th>MSN ".icon('msn', 16, 'MSN')."</th>";
     echo "<td><input maxlength=\"50\" name=\"msn\" size=\"30\" type=\"text\" value=\"".strip_tags($user->msn)."\" /></td></tr>";
 
-    echo "<tr><th colspan='2'>{$strDisplayPreferences}</th></tr>\n";
-    echo "<tr><th>{$strLanguage}</th><td>";
-    if (!empty($CONFIG['available_i18n']))
-    {
-        $available_languages = i18n_code_to_name($CONFIG['available_i18n']);
-    }
-    else
-    {
-        $available_languages = available_languages();
-    }
-    $available_languages = array_merge(array(''=>$strDefault),$available_languages);
-    if (!empty($user->var_i18n))
-    {
-        $selectedlang = $user->var_i18n;
-    }
-    else
-    {
-        $selectedlang = $_SESSION['lang'];
-    }
-    echo array_drop_down($available_languages, 'vari18n',$selectedlang, '', TRUE);
-    echo "</td></tr>\n";
-
-    if ($user->var_utc_offset == '') $user->var_utc_offset = 0;
-    echo "<tr><th>{$strUTCOffset}</th><td>";
-    foreach ($availabletimezones AS $offset=>$tz)
-    {
-        $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
-        $availtz[$offset] = $tz;
-    }
-    echo array_drop_down($availtz, 'utcoffset', $user->var_utc_offset, '', TRUE)."</td></tr>\n";
-
-    echo "<tr><th>{$strInterfaceStyle}</th><td>".interfacestyle_drop_down('style', $user->var_style)."</td></tr>\n";
-    echo "<tr><th>{$strIncidentRefresh}</th>";
-    echo "<td><input maxlength='10' name='incidentrefresh' size='3' type='text' value=\"{$user->var_incident_refresh}\" /> {$strSeconds}</td></tr>\n";
-
-    echo "<tr><th>{$strIncidentLogOrder}</th><td>";
-    echo "<select name='updateorder'>";
-    echo "<option ";
-    if ($user->var_update_order == "desc")
-    {
-        echo "selected='selected'";
-    }
-
-    echo " value='desc'>{$strNewestAtTop}</option>\n";
-    echo "<option ";
-    if ($user->var_update_order == "asc")
-    {
-        echo "selected='selected'";
-    }
-
-    echo " value='asc'>{$strNewestAtBottom}</option>\n";
-    echo "</select>";
-    echo "</td></tr>\n";
-
-    echo "<tr><th>{$strIncidentUpdatesPerPage}</th>";
-    echo "<td><input maxlength='5' name='updatesperpage' size='3' type='text' ";
-    echo "value=\"".$user->var_num_updates_view."\" /> ({$str0MeansUnlimited})</td></tr>\n";
-
-    echo "<tr><th>{$strShowEmoticons}</th>";
-    echo "<td><input type='checkbox' name='emoticons' id='emoticons' value='true' ";
-    if ($user->var_emoticons == 'true') echo "checked='checked' ";
-    echo "/></td></tr>\n";
-
-    echo "<tr><th colspan='2'>{$strNotifications}</th></tr>\n";
-    echo "<tr><th></th><td>";
-    echo "{$strNotificationsMovedToTriggersPage} - <a href='triggers.php'>{$strTriggers}</a></td></tr>\n";
-
     plugin_do('edit_profile_form');
 
     // Do not allow password change if using LDAP
@@ -318,13 +251,13 @@ elseif ($mode == 'save')
     // External variables
     $user = new User();
     $user->id = cleanvar($_POST['userid']);
-    
+
     $edituserid = cleanvar($_POST['userid']); // remove when tested
-    
+
     $user->message = cleanvar($_POST['message']);
     $user->realname = cleanvar($_POST['realname']);
     $user->qualifications = cleanvar($_POST['qualifications']);
-    
+
     $user->email = cleanvar($_POST['email']);
     $user->jobtitle = cleanvar($_POST['jobtitle']);
     $user->phone = cleanvar($_POST['phone']);
@@ -333,16 +266,9 @@ elseif ($mode == 'save')
     $user->icq = cleanvar($_POST['icq']);
     $user->msn = cleanvar($_POST['msn']);
     $user->fax = cleanvar($_POST['fax']);
-    $user->incident_refresh = cleanvar($_POST['incidentrefresh']);
-    $user->update_order = cleanvar($_POST['updateorder']);
-    $user->num_updates_view = cleanvar($_POST['updatesperpage']);
     $user->signature = cleanvar($_POST['signature']);
     $user->status = cleanvar($_POST['status']);
 
-    $user->style = cleanvar($_POST['style']);
-    $user->i18n = cleanvar($_POST['vari18n']);
-    $user->utc_offset = cleanvar($_POST['utcoffset']);
-    $user->emoticons = cleanvar($_POST['emoticons']);
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
     $user->roleid = cleanvar($_POST['roleid']);
@@ -374,7 +300,7 @@ elseif ($mode == 'save')
 
     // Update user profile
     $errors = 0;
-    
+
     // check for change of password
     if ($password != '' && $newpassword1 != '' && $newpassword2 != '')
     {
@@ -433,7 +359,7 @@ elseif ($mode == 'save')
         	$error_string .= $result;
         }
     }
-    
+
     if ($errors > 0)
     {
         html_redirect($redirecturl, FALSE, $error_string);

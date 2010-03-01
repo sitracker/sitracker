@@ -25,6 +25,8 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
+require (APPLICATION_LIBPATH.'incident.inc.php');
+
 $id = cleanvar($_REQUEST['id']);
 $mode = cleanvar($_REQUEST['mode']);
 $title = $strAverageIncidentDuration;
@@ -56,7 +58,7 @@ list($firstdate) = mysql_fetch_row($result);
 
 $current_time = $firstdate;
 
-$data = "Period,# Incidents,Total Duration,Time,Users,# Updates,# Updates per incident<br />";
+$data = "Period,# Incidents,Total Duration,Time,Users,# Updates,# Updates per incident";
 while ($current_time < time())
 {
     $current_month = date('m', $current_time);

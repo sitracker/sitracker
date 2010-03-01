@@ -58,6 +58,7 @@ $hmenu[10] = $hmenu[10] +
 if (!is_array($hmenu[1020])) $hmenu[1020] = array();
 $hmenu[1020] = $hmenu[1020] +
                 array (10=> array ( 'perm'=> 4, 'name'=> $strMyProfile, 'url'=>"{$CONFIG['application_webpath']}user_profile_edit.php"),
+                       15=> array ( 'perm'=> 4, 'name'=> $strMySettings, 'url'=>"{$CONFIG['application_webpath']}config.php?userid=current"),
                        20=> array ( 'perm'=> 58, 'name'=> $strMySkills, 'url'=>"{$CONFIG['application_webpath']}edit_user_skills.php"),
                        30=> array ( 'perm'=> 58, 'name'=> $strMySubstitutes, 'url'=>"{$CONFIG['application_webpath']}edit_backup_users.php"),
                        40=> array ( 'perm'=> 27, 'name'=> $strMyHolidays, 'url'=>"{$CONFIG['application_webpath']}holidays.php", 'enablevar' => 'holidays_enabled'),

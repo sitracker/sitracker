@@ -29,11 +29,12 @@ define ('LDAP_USERTYPE_CUSTOMER',4);
 
 // LDAP Checking
 define ('LDAP_PASSWORD_INCORRECT', 0);
-define ('LDAP_ADMIN_GROUP_INCORRECT', 1);
-define ('LDAP_MANAGER_GROUP_INCORRECT', 2);
-define ('LDAP_USER_GROUP_INCORRECT', 3);
-define ('LDAP_CUSTOMER_GROUP_INCORRECT', 4);
-define ('LDAP_CORRECT', 5);
+define ('LDAP_BASE_INCORRECT', 1);
+define ('LDAP_ADMIN_GROUP_INCORRECT', 2);
+define ('LDAP_MANAGER_GROUP_INCORRECT', 3);
+define ('LDAP_USER_GROUP_INCORRECT', 4);
+define ('LDAP_CUSTOMER_GROUP_INCORRECT', 5);
+define ('LDAP_CORRECT', 6);
 
 // LDAP ATTRIBUTES
 define ('LDAP_EDIR_SURNAME', 'sn');
@@ -668,6 +669,47 @@ function ldapImportCustomerFromEmail($email)
 
 
 /**
+ * Checks if a object exists in LDAP 
+ * @auther Paul Heaney
+ * @param string $dn the DN of the object to check it exists
+ * @param string $objectType The type of object we are looking for
+ * @return bool TRUE for exists, FALSE otherwise
+ */
+function ldapCheckObjectExists($dn, $objectType)
+{
+    $toReturn = false;
+
+    $filter = "(ObjectClass={$objectType})";
+    
+    $ldap_conn = ldapOpen(); // Need to get an admin thread
+
+    debug_log("Filter: {$filter}", TRUE);
+    debug_log("Object: {$dn}", TRUE);
+
+    // Need to surpress this error otherwise we get an warning cascaded back to the user rather than ours 
+    $sr = @ldap_read($ldap_conn, $dn, $filter);
+    if ($sr)
+    {
+        if (ldap_count_entries($ldap_conn, $sr) != 1)
+        {
+            // Multiple or zero
+            $toReturn = false;
+        }
+        else
+        {
+            // just one
+            $toReturn  = true;
+        } 
+    }
+    else
+    {
+        $toReturn = false;
+    }
+    return $toReturn;
+}
+
+
+/**
  * Checks if a group exists in LDAP 
  * @auther Paul Heaney
  * @param string $dn the DN of the group to check it exists
@@ -676,34 +718,13 @@ function ldapImportCustomerFromEmail($email)
  */
 function ldapCheckGroupExists($dn, $mapping)
 {
-	global $CONFIG, $ldap_vars;
     $toReturn = false;
 
-    $ldap_conn = ldapOpen(); // Need to get an admin thread
-
     $mapping = strtoupper($mapping);
-    // $CONFIG[strtolower("ldap_{$var}")] = constant("LDAP_{$CONFIG['ldap_type']}_{$var}");
 
     $o = constant("LDAP_{$mapping}_GRPOBJECTTYPE");
 
-    $filter = "(ObjectClass={$o})";
-
-    debug_log("Filter: {$filter}", TRUE);
-    debug_log("Object: {$dn}", TRUE);
-    $sr = ldap_search($ldap_conn, $dn, $filter);
-
-    if (ldap_count_entries($ldap_conn, $sr) != 1)
-    {
-        // Multiple or zero
-        $toReturn = false;
-    }
-    else
-    {
-        // just one
-        $toReturn  = true;
-    }
-
-    return $toReturn;
+    return ldapCheckObjectExists($dn, $o);
 }
 
 ?>

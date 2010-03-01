@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-
+require (APPLICATION_LIBPATH . 'incident.inc.php');
 $title = $strAddIncident;
 
 function to_row($contactrow)
@@ -340,7 +340,7 @@ elseif ($action == 'findcontact')
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if (!empty($search_string)) $match = "'$search_string'";
         if (!empty($contactid)) $match = "{$strContact} {$strID} {$contactid}";
-        echo "<h2>".sprintf($strSorryUnableToFindAnyContactsMatchingX, $match)."</h2>\n";
+        echo "<h2>".sprintf($strSorryNoRecordsMatchingX, $match)."</h2>\n";
         echo "<p align='center'><a href=\"incident_add.php?updateid=$updateid&amp;win={$win}\">{$strSearchAgain}</a></p>";
         // Select the contact from the list of contacts as well
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
@@ -875,7 +875,8 @@ elseif ($action == 'assign')
             $html .= "</p>\n";
 
             $suggested_user = suggest_reassign_userid($incidentid);
-            trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
+            $trigger = new Trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
+	    $trigger->fire();
 
             if ($CONFIG['auto_assign_incidents'])
             {

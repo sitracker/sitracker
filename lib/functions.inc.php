@@ -5681,7 +5681,7 @@ function utc_time($time = '')
 function ldate($format, $date = '', $utc = FALSE)
 {
     if ($date == '') $date = $GLOBALS['now'];
-    if ($_SESSION['utcoffset'] != '')
+    if ($_SESSION['userconfig']['utc_offset'] != '')
     {
         if ($utc === FALSE)
         {
@@ -5689,7 +5689,7 @@ function ldate($format, $date = '', $utc = FALSE)
             $date = utc_time($date);
         }
         // Adjust the display time to the users local timezone
-        $useroffsetsec = $_SESSION['utcoffset'] * 60;
+        $useroffsetsec = $_SESSION['userconfig']['utc_offset'] * 60;
         $date += $useroffsetsec;
     }
     $datestring = date($format, $date);
@@ -5898,7 +5898,7 @@ function schedule_actions_due()
         }
     }
 
-    debug_log('actions'.print_r($actions,true));
+    debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
 
     return $actions;
 }
@@ -7908,10 +7908,10 @@ function is_day_bank_holiday($day, $month, $year)
 */
 function create_report($data, $output = 'table', $filename = 'report.csv')
 {
+    $data = explode("\n", $data);
     if ($output == 'table')
     {
         $html = "\n<table align='center'><tr>\n";
-        $data = explode("\n", $data);
         $headers = explode(',', $data[0]);
         $rows = sizeof($headers);
         foreach ($headers as $header)
@@ -7946,7 +7946,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
         $html .= header("Content-disposition-type: attachment\r\n");
         $html .= header("Content-disposition: filename={$filename}");
 
-        foreach($data as $line)
+        foreach ($data as $line)
         {
             if (!beginsWith($line, "\""))
             {
@@ -7989,6 +7989,8 @@ function alpha_index($baseurl = '#')
 
 /**
     * Converts emoticon text to HTML
+    * Will only show emoticons if the user has chosen in their settings
+    * that they would like to see them, otherwise shows original text
     * @author Kieran Hogg
     * @param string $text. Text with smileys in it
     * @returns string HTML
@@ -7996,34 +7998,44 @@ function alpha_index($baseurl = '#')
 function emoticons($text)
 {
     global $CONFIG;
-    $smiley_url = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}images/emoticons/";
-    $smiley_regex = array(0 => "/\:[-]?\)/s",
-                        1 => "/\:[-]?\(/s",
-                        2 => "/\;[-]?\)/s",
-                        3 => "/\:[-]?[pP]/s",
-                        4 => "/\:[-]?@/s",
-                        5 => "/\:[-]?[Oo]/s",
-                        6 => "/\:[-]?\\$/s",
-                        7 => "/\\([Yy]\)/s",
-                        8 => "/\\([Nn]\)/s",
-                        9 => "/\\([Bb]\)/s",
-                        10 => "/\:[-]?[dD]/s"
-                        );
 
-    $smiley_replace = array(0 => "<img src='{$smiley_url}smile.png' alt='$1' title='$1' />",
-                            1 => "<img src='{$smiley_url}sad.png' alt='$1' title='$1' />",
-                            2 => "<img src='{$smiley_url}wink.png' alt='$1' title='$1' />",
-                            3 => "<img src='{$smiley_url}tongue.png' alt='$1' title='$1' />",
-                            4 => "<img src='{$smiley_url}angry.png' alt='$1' title='$1' />",
-                            5 => "<img src='{$smiley_url}omg.png' alt='$1' title='$1' />",
-                            6 => "<img src='{$smiley_url}embarassed.png' alt='$1' title='$1' />",
-                            7 => "<img src='{$smiley_url}thumbs_up.png' alt='$1' title='$1' />",
-                            8 => "<img src='{$smiley_url}thumbs_down.png' alt='$1' title='$1' />",
-                            9 => "<img src='{$smiley_url}beer.png' alt='$1' title='$1' />",
-                            10 => "<img src='{$smiley_url}teeth.png' alt='$1' title='$1' />"
+    $html = '';
+    if ($_SESSION['userconfig']['show_emoticons'] == 'TRUE')
+    {
+        $smiley_url = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}images/emoticons/";
+        $smiley_regex = array(0 => "/\:[-]?\)/s",
+                            1 => "/\:[-]?\(/s",
+                            2 => "/\;[-]?\)/s",
+                            3 => "/\:[-]?[pP]/s",
+                            4 => "/\:[-]?@/s",
+                            5 => "/\:[-]?[Oo]/s",
+                            6 => "/\:[-]?\\$/s",
+                            7 => "/\\([Yy]\)/s",
+                            8 => "/\\([Nn]\)/s",
+                            9 => "/\\([Bb]\)/s",
+                            10 => "/\:[-]?[dD]/s"
                             );
 
-    $html = preg_replace($smiley_regex, $smiley_replace, $text);
+        $smiley_replace = array(0 => "<img src='{$smiley_url}smile.png' alt='$1' title='$1' />",
+                                1 => "<img src='{$smiley_url}sad.png' alt='$1' title='$1' />",
+                                2 => "<img src='{$smiley_url}wink.png' alt='$1' title='$1' />",
+                                3 => "<img src='{$smiley_url}tongue.png' alt='$1' title='$1' />",
+                                4 => "<img src='{$smiley_url}angry.png' alt='$1' title='$1' />",
+                                5 => "<img src='{$smiley_url}omg.png' alt='$1' title='$1' />",
+                                6 => "<img src='{$smiley_url}embarassed.png' alt='$1' title='$1' />",
+                                7 => "<img src='{$smiley_url}thumbs_up.png' alt='$1' title='$1' />",
+                                8 => "<img src='{$smiley_url}thumbs_down.png' alt='$1' title='$1' />",
+                                9 => "<img src='{$smiley_url}beer.png' alt='$1' title='$1' />",
+                                10 => "<img src='{$smiley_url}teeth.png' alt='$1' title='$1' />"
+                                );
+
+        $html = preg_replace($smiley_regex, $smiley_replace, $text);
+    }
+    else
+    {
+        $html = $text;
+    }
+
     return $html;
 }
 
@@ -8140,10 +8152,11 @@ function is_assoc_callback($a, $b)
  * HTML for a config variable input box
  * @author Ivan Lucas
  * @param string $setupvar The setup variable key name
+ * @param int $userid UserID or 0 for system config
  * @param bool $showvarnames Whether to display the config variable name
  * @returns string HTML
 **/
-function cfgVarInput($setupvar, $showvarnames = FALSE)
+function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
 {
     global $CONFIG, $CFGVAR;
 
@@ -8151,6 +8164,22 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
         OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
     {
         $available_languages = available_languages();
+    }
+    elseif ($CFGVAR[$setupvar]['type'] == 'userlanguageselect')
+    {
+        if (!empty($CONFIG['available_i18n']))
+        {
+            $available_languages = i18n_code_to_name($CONFIG['available_i18n']);
+        }
+        else
+        {
+            $available_languages = available_languages();
+        }
+        $available_languages = array_merge(array(''=>$GLOBALS['strDefault']),$available_languages);
+    }
+    elseif ($CFGVAR[$setupvar]['type'] == 'timezoneselect')
+    {
+        global $availabletimezones;
     }
 
     $html .= "<div class='configvar'>";
@@ -8162,7 +8191,14 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
     $value = '';
     if (!$cfg_file_exists OR ($cfg_file_exists AND $cfg_file_writable))
     {
-        $value = $CONFIG[$setupvar];
+        if ($userid > 0)
+        {
+            $value = $_SESSION['userconfig'][$setupvar];
+        }
+        else
+        {
+            $value = $CONFIG[$setupvar];
+        }
         if (is_bool($value))
         {
             if ($value==TRUE) $value='TRUE';
@@ -8212,6 +8248,7 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
             $html .= interfacestyle_drop_down($setupvar, $value);
         break;
 
+        case 'userlanguageselect':
         case 'languageselect':
             if (empty($value)) $value = $_SESSION['lang'];
             $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);
@@ -8249,6 +8286,16 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
 
         case 'siteselect':
             $html .= site_drop_down($setupvar, $value, FALSE);
+        break;
+
+        case 'timezoneselect':
+            if ($value == '') $value = 0;
+            foreach ($availabletimezones AS $offset=>$tz)
+            {
+                $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
+                $availtz[$offset] = $tz;
+            }
+            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
         break;
 
         case 'userstatusselect':
@@ -8323,20 +8370,30 @@ function cfgVarInput($setupvar, $showvarnames = FALSE)
 /**
  * Save configuration
  * @param array $setupvars. An array of setup variables $setupvars['setting'] = 'foo';
+ * @param int $userid. If set saves to the user configuration, otherwise saves
+                        to system configuration.
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
 **/
-function cfgSave($setupvars)
+function cfgSave($setupvars, $userid = NULL)
 {
-    global $dbConfig;
+    global $dbConfig, $dbUserConfig;;
     foreach ($setupvars AS $key => $value)
     {
-        $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
+        if ($userid < 1)
+        {
+            $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
+        }
+        else
+        {
+            $sql = "REPLACE INTO `{$dbUserConfig}` (`userid`, `config`, `value`) VALUES ('{$userid}', '{$key}', '{$value}')";
+        }
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
     }
     return TRUE;
 }
+
 
 
 /**

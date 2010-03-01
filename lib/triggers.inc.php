@@ -7,6 +7,11 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
+// FIXME Added by ivan because triggers.class.php was never included and that file
+// Included other vital files such as incident.inc.php - INL 29Feb08
+// Caution: This include here might not be the right place. Kieran can you
+// check.
+//include('trigger.class.php');
 
 $actionarray['ACTION_NONE'] =
 array('name' => $strNone,
@@ -122,7 +127,7 @@ array('name' => $strCurrentLanguageDiffers,
       'description' => $strTriggerLanguageDiffersDesc,
       'required' => array('currentlang', 'profilelang'),
       'params' => array(),
-     );
+    );
 
 $trigger_types['TRIGGER_NEW_CONTACT'] =
 array('name' => $strNewContact,
@@ -463,7 +468,7 @@ $ttvararray['{kbprefix}'] =
 array('description' => $CONFIG['kb_id_prefix'],
       'requires' => array(),
       'replacement' => '$CONFIG[\'kb_id_prefix\'];'
-     );
+    );
 
 $ttvararray['{kbtitle}'] =
 array('description' => $strKnowledgeBase,
@@ -551,16 +556,16 @@ array('description' => $strSalespersonAssignedToContactsSiteEmail,
 $ttvararray['{schedulertask}'] =
 array('description' => $strScheduledTask,
       'replacement' => '$paramarray[\'schedulertask\'];'
-     );
+    );
 
 $ttvararray['{sendemail}'] =
 array('description' => $strSendOpeningEmailDesc,
       'replacement' => '$paramarray[\'sendemail\'];',
       'show' => FALSE
-     );
+    );
 
-$ttvararray['{sendfeedback}'] = 
-array('description' => $strSendFeedbackDesc,
+$ttvararray['{sendfeedback}'] =
+array('description' => $strEmailSendFeedbackDesc,
       'replacement' => '$paramarray[\'sendfeedback\']',
       'show' => FALSE);
 
@@ -569,13 +574,13 @@ array('description' => $strServiceBalanceInfo,
       'requires' => 'contractid',
       'replacement' => 'get_service_percentage($paramarray[\'contractid\']);',
       'show' => FALSE
-     );
+    );
 
 $ttvararray['{serviceremainingstring}'] =
 array('description' => $strServiceBalanceString,
       'requires' => 'contractid',
       'replacement' => '(get_service_percentage($paramarray[\'contractid\']) * 100)."%";',
-     );
+    );
 
 $ttvararray['{signature}'] =
 array('description' => $strCurrentUsersSignature,
@@ -653,7 +658,7 @@ $ttvararray['{taskid}'] =
 array('description' => 'ID of the task',
       'replacement' => '$paramarray[\'taskid\']',
       'show' => FALSE
-     );
+    );
 
 $ttvararray['{todaysdate}'] =
 array('description' => $strCurrentDate,
@@ -671,7 +676,7 @@ $ttvararray['{triggersfooter}'] =
 array('description' => $strTriggersFooter,
       'replacement' => '$SYSLANG[\'strTriggerFooter\'];',
       'requires' => ''
-     );
+    );
 
 $ttvararray['{triggeruseremail}'] =
 array('description' => $strTriggerUserEmail,
@@ -776,6 +781,80 @@ function notice_templates($name, $selected = '')
 }
 
 /**
+    * Actually do the replacement, used so we can define variables more than once
+    * @author Kieran Hogg
+    * @param array &$ttvar the array of the variable to replace
+    * @param string &$identifier the {variable} name
+    * @param array &$required  optional array of required vars to pass, used if
+    * we're not dealing with a trigger
+    * @return mixed array if replacement found, NULL if not
+*/
+function replace_vars($trigger_type, &$ttvar, &$identifier, $required = '')
+{
+    global $trigger_types, $ttvararray, $CONFIG;
+
+    $usetvar = FALSE;
+
+    //if we don't have any requires, we can already use this var
+    if (empty($ttvar['requires']))
+    {
+	$usetvar = TRUE;
+    }
+    else
+    {
+	//otherwise we need to check all the requires
+	if (!is_array($ttvar['requires']))
+	{
+	    $ttvar['requires'] = array($ttvar['requires']);
+	}
+	//compare the trigger 'provides' with the var 'requires'
+	foreach ($ttvar['requires'] as $needle)
+	{
+	    if (is_array($required))
+	    {
+		if (in_array($needle, $required))
+		{
+		    $usetvar = TRUE;
+		}
+	    }
+	    else
+	    {
+		if (in_array($needle, $trigger_types[$trigger_type]['required']))
+		{
+		    $usetvar = TRUE;
+		}
+	    }
+	}
+    }
+
+    //if we're able to use this variable
+    if ($usetvar)
+    {
+	//debug_log("Using $identifier");
+	$trigger_regex = "/{$identifier}/s";
+	if (!empty($ttvar['replacement']))
+	{
+	    $eresult = @eval("\$res = {$ttvar[replacement]};return TRUE;");
+	    if (!$eresult)
+	    {
+		trigger_error("Error in variable replacement for 
+			      <strong>{$identifier}</strong>, check that 
+			      this variable is available for the template 
+			      that uses it.", E_USER_WARNING);
+
+		debug_log("Replacement: {$ttvar[replacement]}", TRUE);
+	    }
+	}
+
+	$trigger_replace = $res;
+	unset($res);
+	return array('trigger_replace' => $trigger_replace,
+		      'trigger_regex' => $trigger_regex);
+    }
+}
+
+
+/**
     * Replaces template variables with their values
     * @author Ivan Lucas
     * @param string $string. The string containing the variables
@@ -795,26 +874,26 @@ function replace_specials($string, $paramarray)
     $multiple = FALSE;
     foreach ($ttvar AS $key => $value)
     {
-        //this checks if it's a multiply-defined variable
-        if (is_numeric($key))
-        {
-        $trigger_replaces = replace_vars($ttvar[$key], $triggerid, $identifier, $paramarray, $required);
-        if (!empty($trigger_replaces))
-        {
-            $trigger_regex[] = $trigger_replaces['trigger_regex'];
-            $trigger_replace[] = $trigger_replaces['trigger_replace'];
-        }
-        $multiple = TRUE;
-        }
+	//this checks if it's a multiply-defined variable
+	if (is_numeric($key))
+	{
+	$trigger_replaces = replace_vars($ttvar[$key], $triggerid, $identifier, $paramarray, $required);
+	if (!empty($trigger_replaces))
+	{
+	    $trigger_regex[] = $trigger_replaces['trigger_regex'];
+	    $trigger_replace[] = $trigger_replaces['trigger_replace'];
+	}
+	$multiple = TRUE;
+	}
     }
     if ($multiple == FALSE)
     {
-        $trigger_replaces = replace_vars($ttvar, $triggerid, $identifier, $paramarray, $required);
-        if (!empty($trigger_replaces))
-        {
-        $trigger_regex[] = $trigger_replaces['trigger_regex'];
-        $trigger_replace[] = $trigger_replaces['trigger_replace'];
-        }
+	$trigger_replaces = replace_vars($ttvar, $triggerid, $identifier, $paramarray, $required);
+	if (!empty($trigger_replaces))
+	{
+	$trigger_regex[] = $trigger_replaces['trigger_regex'];
+	$trigger_replace[] = $trigger_replaces['trigger_replace'];
+	}
     }
     }
     return  preg_replace($trigger_regex, $trigger_replace, $string);

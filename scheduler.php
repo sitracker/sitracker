@@ -421,14 +421,16 @@ switch ($_REQUEST['mode'])
             echo "</table>\n";
 
             // Legend
-            echo "<br />";
-            echo "<table class='incidentkey'><tr>";
-            echo "<td class='shade1'>{$strOK}</td>";
-            echo "<td class='notice'>{$strDueNow}</td>";
-            echo "<td class='expired'>{$strDisabled}</td>";
-            echo "<td class='critical'>{$strFailed}</td>";
-            echo "</tr></table>";
-
+            if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+            {
+                echo "<br />";
+                echo "<table class='incidentkey'><tr>";
+                echo "<td class='shade1'>{$strOK}</td>";
+                echo "<td class='notice'>{$strDueNow}</td>";
+                echo "<td class='expired'>{$strDisabled}</td>";
+                echo "<td class='critical'>{$strFailed}</td>";
+                echo "</tr></table>";
+            }
             // Debug time issues
             // Temporary debugging output, doesn't need i18n
             if ($CONFIG['debug'])
@@ -436,7 +438,7 @@ switch ($_REQUEST['mode'])
                 echo "<h2>Debug Time Issues</h2>";
                 echo "<div style='width: 60%; border: 1px dashed red; margin: auto; padding: 5px;'>";
                 echo "<p>Timezone: {$CONFIG['timezone']}<br />";
-                echo "User UTC offset: {$_SESSION['utcoffset']}<br />";
+                echo "User UTC offset: {$_SESSION['userconfig']['utc_offset']}<br />";
                 echo "Date: ".date('r')."<br />";
                 echo "Date now: ".date('r', $GLOBALS['now'])."<br />";
                 echo "LDate: ".ldate('r', NULL, FALSE)."<br />";

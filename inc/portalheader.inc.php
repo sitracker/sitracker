@@ -85,7 +85,7 @@ echo "<link rel='SHORTCUT ICON' href='{$CONFIG['application_webpath']}images/sit
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 if ($_SESSION['portalauth'] == TRUE)
 {
-    $styleid = $_SESSION['style'];
+    $styleid = $_SESSION['userconfig']['style'];
 }
 else
 {
@@ -98,6 +98,8 @@ if (mysql_error())trigger_error(mysql_error(),E_USER_WARNING);
 
 list($cssurl, $iconset) = mysql_fetch_row($cssresult);
 if (empty($iconset)) $iconset = 'sit';
+// Overwride default icon set with users choice, if there is one
+if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
 unset($styleid);
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$cssurl}' />\n";
 

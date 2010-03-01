@@ -10,17 +10,17 @@
 
 // This lib is currently included at the end of auth.inc.php
 
-include_once (APPLICATION_LIBPATH . 'incident.inc.php');
+//include_once (APPLICATION_LIBPATH . 'incident.inc.php');
 include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 include_once (APPLICATION_LIBPATH . 'mime.inc.php');
 include_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 class Trigger extends SitEntity {
-	function retrieveDetails(){}
-	function add(){}
-	function edit(){}
-	function getSOAPArray(){}
-	
+    function retrieveDetails(){}
+    function add(){}
+    function edit(){}
+    function getSOAPArray(){}
+      
     /**
      * ID of the trigger type
      *
@@ -60,11 +60,11 @@ class Trigger extends SitEntity {
     */
     function fire()
     {
-        global $sit, $CONFIG, $dbg, $dbTriggers, $triggerarray;
+        global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
         global $dbTriggers;
 
         // Check that this is a defined trigger
-        if (!array_key_exists($this->trigger_type, $triggerarray))
+        if (!array_key_exists($this->trigger_type, $trigger_types))
         {
             trigger_error("Trigger '{$this->trigger_type}' not defined", E_USER_WARNING);
             return;
@@ -98,7 +98,7 @@ class Trigger extends SitEntity {
                 // commented out 09/09/09 as I'm 99% this code is bollocks
                 //if (!trigger_checks($triggerobj->checks))
                 //{
-                    $checks = trigger_replace_specials($triggerobj->checks);
+                    $checks = $this->trigger_replace_specials($triggerobj->checks, $this->paramarray);
                     $eresult = @eval("\$value = $checks;return TRUE;");
                     if (!$eresult)
                     {
@@ -156,18 +156,18 @@ class Trigger extends SitEntity {
         {
             case "ACTION_EMAIL":
                 debug_log("send_trigger_email($template) called", TRUE);
-                $rtnvalue = send_trigger_email($template);
+                $rtnvalue = $this->send_trigger_email($sit[2], $template);
                 break;
 
             case "ACTION_NOTICE":
                 debug_log("create_trigger_notice($template) called", TRUE);
-                $rtnvalue = create_trigger_notice($template);
+                $rtnvalue = $this->create_trigger_notice($template);
                 break;
 
             case "ACTION_CREATE_INCIDENT":
                 debug_log("creating incident with holdingemailid: 
                     {$this->param_array['holdingemailid']}", TRUE);
-                $rtnvalue = create_incident_from_incoming(
+                $rtnvalue = $this->create_incident_from_incoming(
                     $this->param_array['holdingemailid']);
                 break;
 
@@ -209,7 +209,7 @@ class Trigger extends SitEntity {
     {
         global $CONFIG, $application_version, $application_version_string, $dbg;
         global $dbIncidents;
-        global $triggerarray, $ttvararray;
+        global $trigger_types, $ttvararray;
 
         debug_log("notice string before: $string_array", TRUE);
 
@@ -222,7 +222,7 @@ class Trigger extends SitEntity {
                 //this checks if it's a multiply-defined variable
                 if (is_numeric($key))
                 {
-                    $trigger_replaces = replace_vars($ttvar[$key], $identifier);
+                    $trigger_replaces = replace_vars($this->trigger_type, $ttvar[$key], $identifier);
                     if (!empty($trigger_replaces))
                     {
                         $trigger_regex[] = $trigger_replaces['trigger_regex'];
@@ -233,7 +233,7 @@ class Trigger extends SitEntity {
             }
             if ($multiple == FALSE)
             {
-                $trigger_replaces = replace_vars($ttvar, $identifier);
+                $trigger_replaces = replace_vars($this->trigger_type, $ttvar, $identifier);
                 if (!empty($trigger_replaces))
                 {
                     $trigger_regex[] = $trigger_replaces['trigger_regex'];
@@ -241,82 +241,10 @@ class Trigger extends SitEntity {
                 }
             }
         }
-        return  preg_replace($trigger_regex, $trigger_replace, $string_array);
+	print_r($trigger_replace);
+        return preg_replace($trigger_regex, $trigger_replace, $string_array);
     }
 
-
-    /**
-        * Actually do the replacement, used so we can define variables more than once
-        * @author Kieran Hogg
-        * @param array &$ttvar the array of the variable to replace
-        * @param string &$identifier the {variable} name
-        * @param array &$required  optional array of required vars to pass, used if
-        * we're not dealing with a trigger
-        * @return mixed array if replacement found, NULL if not
-    */
-    private function replace_vars(&$ttvar, &$identifier, $required = '')
-    {
-        global $triggerarray, $ttvararray, $CONFIG;
-
-        $usetvar = FALSE;
-
-        //if we don't have any requires, we can already use this var
-        if (empty($ttvar['requires']))
-        {
-            $usetvar = TRUE;
-        }
-        else
-        {
-            //otherwise we need to check all the requires
-            if (!is_array($ttvar['requires']))
-            {
-                $ttvar['requires'] = array($ttvar['requires']);
-            }
-            //compare the trigger 'provides' with the var 'requires'
-            foreach ($ttvar['requires'] as $needle)
-            {
-                if ($required != '')
-                {
-                    if (in_array($needle, $required))
-                    {
-                        $usetvar = TRUE;
-                    }
-                }
-                else
-                {
-                    if (in_array($needle, $triggerarray[$this->trigger_type]['required']))
-                    {
-                        $usetvar = TRUE;
-                    }
-                }
-            }
-        }
-
-        //if we're able to use this variable
-        if ($usetvar)
-        {
-            //debug_log("Using $identifier");
-            $trigger_regex = "/{$identifier}/s";
-            if (!empty($ttvar['replacement']))
-            {
-                $eresult = @eval("\$res = {$ttvar[replacement]};return TRUE;");
-                if (!$eresult)
-                {
-                    trigger_error("Error in variable replacement for 
-                                  <strong>{$identifier}</strong>, check that 
-                                  this variable is available for the template 
-                                  that uses it.", E_USER_WARNING);
-
-                    debug_log("Replacement: {$ttvar[replacement]}", TRUE);
-                }
-            }
-
-            $trigger_replace = $res;
-            unset($res);
-            return array('trigger_replace' => $trigger_replace,
-                         'trigger_regex' => $trigger_regex);
-        }
-    }
 
 
     /**
@@ -333,7 +261,7 @@ class Trigger extends SitEntity {
         {
             $dbg .= "TRIGGER: send_trigger_email({$user_id},{$trigger_type}, {$this->param_array})\n";
         }
-        // $triggerarray[$this->trigger_type]['type'])
+        // $trigger_types[$this->trigger_type]['type'])
 
         //if we have an incidentid, get it to pass to trigger_replace_specials()
         if (!empty($this->param_array['incidentid']))
@@ -352,14 +280,14 @@ class Trigger extends SitEntity {
         //add this in manually, this is who we're sending the email to
         $this->param_array['triggeruserid'] = $user_id;
 
-        $from = trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
-        $toemail = trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
-        $replytoemail = trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
-        $ccemail = trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
-        $bccemail = trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
-        $subject = cleanvar(trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
-        $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
-
+        $from = $this->trigger_replace_specials($template->fromfield);
+        $toemail = $this->trigger_replace_specials($template->tofield);
+        $replytoemail = $this->trigger_replace_specials($template->replytofield);
+        $ccemail = $this->trigger_replace_specials($template->ccfield);
+        $bccemail = $this->trigger_replace_specials($template->bccfield);
+        $subject = cleanvar($this->trigger_replace_specials($template->subjectfield));
+        $body .= $this->trigger_replace_specials($template->body);
+	print_r($template->subjectfield);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);

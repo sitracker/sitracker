@@ -45,16 +45,6 @@ function saction_CloseIncidents($closure_delay)
 
     if ($closure_delay < 1) $closure_delay = 554400; // Default  six days and 10 hours
 
-    $sql = "SELECT * FROM `{$dbIncidents}` WHERE status='".STATUS_CLOSING."' ";
-    $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
-    $sql .= "AND (timeofnextaction='0' OR timeofnextaction<='{$now}') ";
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        $success = FALSE;
-    }
-
     // Code added back in to fix mark as closure incidents
     // http://bugs.sitracker.org/view.php?id=717
     $sql = "UPDATE `{$dbIncidents}` SET lastupdated='{$now}', ";
@@ -62,7 +52,16 @@ function saction_CloseIncidents($closure_delay)
     $sql .= "timeofnextaction='0' WHERE status='".STATUS_CLOSING."' ";
     $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
     $sql .= "AND (timeofnextaction='0' OR timeofnextaction <= '{$now}')";
-   
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(),E_USER_WARNING);
+        $success = FALSE;
+    }
+
+    $sql = "SELECT * FROM `{$dbIncidents}` WHERE status='".STATUS_CLOSING."' ";
+    $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
+    $sql .= "AND (timeofnextaction='0' OR timeofnextaction<='{$now}') ";
     $result = mysql_query($sql);
     if (mysql_error())
     {
@@ -1008,19 +1007,16 @@ if ($actions !== FALSE)
     foreach ($actions AS $action => $params)
     {
         $fn = "saction_{$action}";
-        if ($verbose)
-            echo "<strong>{$fn}()</strong> ";
         // Possibly initiate a trigger here named TRIGGER_SCHED_{$action} ?
         if (function_exists($fn))
         {
             $success = $fn($params);
             schedule_action_done($action, $success);
         }
-        else schedule_action_done($action, FALSE);
-        if ($success && $verbose)
-            echo "TRUE<br />";
-        elseif ($verbose)
-            echo "FALSE<br />";
+        else
+        {
+            schedule_action_done($action, FALSE);
+        }
     }
 }
 plugin_do('automata');
