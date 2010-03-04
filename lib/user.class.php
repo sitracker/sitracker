@@ -71,6 +71,8 @@ class User extends Person{
 
         if (mysql_num_rows($result) == 1)
         {
+            // FIXME the user config part of this needs updating for the new
+            // user config table, see Mantis 863
             $obj = mysql_fetch_object($result);
             $this->username = $obj->username;
             $this->realname = $obj->realname;
@@ -110,8 +112,8 @@ class User extends Person{
         	$this->id = 0;
         }
     }
-    
-    
+
+
     /**
      * Adds a user to SiT! this performs a number of checks to ensure uniqueness and mandertory details are present
      *
@@ -200,7 +202,7 @@ class User extends Person{
             if (mysql_num_rows($result) == 1)
             {
                 // Exists
-                $oldUser = mysql_fetch_object($result); 
+                $oldUser = mysql_fetch_object($result);
                 $s = array();
                 $s[] = "lastseen = NOW()";
 
@@ -224,7 +226,7 @@ class User extends Person{
                         $errors++;
                         $error_string .= "<h5 class='error'>{$GLOBALS['strEmailMustBeUnique']}</h5>\n";
                     }
-                    $s[] = "email = '{$this->email}'";	
+                    $s[] = "email = '{$this->email}'";
                 }
                 if (!empty($this->phone)) $s[] = "phone = '{$this->phone}'";
                 if (!empty($this->mobile)) $s[] = "mobile = '{$this->mobile}'";
@@ -322,8 +324,8 @@ class User extends Person{
 
         return $toReturn;
     }
-    
-    
+
+
     function getSOAPArray()
     {
         trigger_error("User.getSOAPArray() not yet implemented");

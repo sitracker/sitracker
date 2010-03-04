@@ -893,7 +893,6 @@ $strNoMatchingProduct = 'strNoMatchingProduct';
 $strNoOpenIncidents = 'strNoOpenIncidents';
 $strNoOrphandedContacts = 'strNoOrphandedContacts';
 $strNotifications = 'strNotifications';
-$strNotificationsMovedToTriggersPage = 'strNotificationsMovedToTriggersPage';
 $strNotifyContact = 'strNotifyContact';
 $strNotifyContactEmail = 'strNotifyContactEmail';
 $strNotifyContactOnClose = 'strNotifyContactOnClose';

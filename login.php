@@ -58,7 +58,7 @@ elseif (authenticate($username, $_REQUEST['password']))
     $password = md5($_REQUEST['password']);
 
     // Retrieve users profile
-    $sql = "SELECT * FROM `{$dbUsers}` WHERE username='{$username}' LIMIT 1";
+    $sql = "SELECT id, username, realname, email, groupid, user_source FROM `{$dbUsers}` WHERE username='{$username}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
@@ -72,16 +72,10 @@ elseif (authenticate($username, $_REQUEST['password']))
     $_SESSION['username'] = $user->username;
     $_SESSION['realname'] = $user->realname;
     $_SESSION['email'] = $user->email;
-    $_SESSION['style'] = $user->var_style;
-    $_SESSION['incident_refresh'] = $user->var_incident_refresh;
-    $_SESSION['update_order'] = $user->var_update_order;
-    $_SESSION['num_update_view'] = $user->var_num_updates_view;
     $_SESSION['groupid'] = is_null($user->groupid) ? 0 : $user->groupid;
-    $_SESSION['utcoffset'] = is_null($user->var_utc_offset) ? 0 : $user->var_utc_offset;
     $_SESSION['portalauth'] = FALSE;
     $_SESSION['user_source'] = $user->user_source;
     if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
-
 
     // Read user config from database
     $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$user->id}";
@@ -100,6 +94,11 @@ elseif (authenticate($username, $_REQUEST['password']))
             $_SESSION['userconfig'][$conf->config] = $conf->value;
         }
     }
+    // Make sure utc_offset cannot be blank
+    if ($_SESSION['userconfig']['utc_offset'] == '')
+    {
+        $_SESSION['userconfig']['utc_offset'] == 0;
+    }
 
     // Delete any old session user notices
     $sql = "DELETE FROM `{$dbNotices}` WHERE durability='session' AND userid={$_SESSION['userid']}";
@@ -107,14 +106,15 @@ elseif (authenticate($username, $_REQUEST['password']))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     //check if the session lang is different the their profiles
-    if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $user->var_i18n)
+    if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $SESSION['userconfig']['language'])
     {
-        $t = trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $user->var_i18n, 'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
+        $t = trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
+                    'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
     }
 
-    if ($user->var_i18n != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
+    if ($SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
     {
-        $_SESSION['lang'] = is_null($user->var_i18n) ? '' : $user->var_i18n;
+        $_SESSION['lang'] = is_null($SESSION['userconfig']['language']) ? '' : $SESSION['userconfig']['language'];
     }
 
     // Make an array full of users permissions
@@ -177,7 +177,7 @@ elseif ($CONFIG['portal'] == TRUE)
     {
         debug_log("PORTAL AUTH SUCESSFUL");
         $_SESSION['portalauth'] = TRUE;
-        
+
         $sql = "SELECT * FROM `{$dbContacts}` WHERE username = '{$username}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -192,7 +192,7 @@ elseif ($CONFIG['portal'] == TRUE)
         // Valid user
         $_SESSION['contactid'] = $contact->id;
         $_SESSION['siteid'] = $contact->siteid;
-        $_SESSION['style'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['style'] = $CONFIG['portal_interface_style'];
         $_SESSION['contracts'] = array();
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;

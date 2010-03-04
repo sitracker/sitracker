@@ -24,7 +24,7 @@ $server->register('login',
  * @author Paul Heaney
  * @param string $username - The users username
  * @param string $password - The users Password
- * @param string $applicationname (Optional)  an optional name for the application 
+ * @param string $applicationname (Optional)  an optional name for the application
  * @return Array - array of session ID and error
  */
 function login($username, $password, $applicationname='noname')
@@ -39,11 +39,11 @@ function login($username, $password, $applicationname='noname')
         session_name($CONFIG['session_name']);
         session_start();
         $sessionid = session_id();
-        
+
         // FIXME TODO all this was copied from login.php this probably wants making into a function
-        
+
         $_SESSION['auth'] = TRUE;
-        
+
         // Retrieve users profile
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username='{$username}' AND password=MD5('{$password}') LIMIT 1";
 
@@ -61,6 +61,7 @@ function login($username, $password, $applicationname='noname')
         $_SESSION['username'] = $user->username;
         $_SESSION['realname'] = $user->realname;
         $_SESSION['email'] = $user->email;
+        // FIXME 4.0 these user preferences need upgrading for new user config Mantis 863
         $_SESSION['style'] = $user->var_style;
         $_SESSION['incident_refresh'] = $user->var_incident_refresh;
         $_SESSION['update_order'] = $user->var_update_order;
@@ -71,8 +72,8 @@ function login($username, $password, $applicationname='noname')
         $_SESSION['soapmode'] = TRUE;
         $_SESSION['applicationame'] = $applicationname;
         if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
-    
-    
+
+
         // Read user config from database
         $sql = "SELECT * FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$user->id}";
         $result = @mysql_query($sql);
@@ -90,13 +91,13 @@ function login($username, $password, $applicationname='noname')
                 $_SESSION['userconfig'][$conf->config] = $conf->value;
             }
         }
-        
-        
+
+
         if ($user->var_i18n != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
         {
             $_SESSION['lang'] = is_null($user->var_i18n) ? '' : $user->var_i18n;
         }
-    
+
         // Make an array full of users permissions
         // The zero permission is added to all users, zero means everybody can access
         $userpermissions[] = 0;
@@ -116,7 +117,7 @@ function login($username, $password, $applicationname='noname')
                 $userpermissions[] = $perm->permissionid;
             }
         }
-    
+
         // Next lookup the individual users permissions
         $sql = "SELECT * FROM `{$GLOBALS['dbUserPermissions']}` WHERE userid = '{$_SESSION['userid']}' AND granted='true' ";
         $result = mysql_query($sql);
@@ -125,7 +126,7 @@ function login($username, $password, $applicationname='noname')
             $_SESSION['auth'] = FALSE;
             trigger_error(mysql_error(),E_USER_ERROR);
         }
-    
+
         if (mysql_num_rows($result) >= 1)
         {
             while ($perm = mysql_fetch_object($result))
@@ -133,8 +134,8 @@ function login($username, $password, $applicationname='noname')
                 $userpermissions[] = $perm->permissionid;
             }
         }
-    
-    
+
+
         $_SESSION['permissions'] = array_unique($userpermissions);
     }
     else
@@ -154,7 +155,7 @@ $server->register('logout',
 
 /**
  * Logs a user out of SiT
- * 
+ *
  * @author Paul Heaney
  * @param string $sessionid - The session ID to log out of
  * @return Array - Status
@@ -170,10 +171,10 @@ function logout($sessionid)
         $_SESSION['auth'] = FALSE;
         $_SESSION['portalauth'] = FALSE;
         $_SESSION = array();
-        
+
         session_unset();
         session_destroy();
-        
+
         if (isset($_COOKIE[session_name()]))
         {
            setcookie(session_name(), '', time()-42000, '/');
@@ -183,14 +184,14 @@ function logout($sessionid)
     {
     	$status->set_error('session_not_valid');
     }
-    
+
     return array('status' => $status->getSOAPArray());
 }
 
 
 /**
  * Function to ensure a session is still valid
- * 
+ *
  * @author Paul Heaney
  * @param string $sessionid - The session ID to check
  * @return bool TRUE or FALSE depending on whether its valid
@@ -202,7 +203,7 @@ function validate_session($sessionid)
     {
     	session_id($sessionid);
         session_start();
-        
+
         if (!empty($_SESSION['auth']))
         {
         	$isvalid = TRUE;

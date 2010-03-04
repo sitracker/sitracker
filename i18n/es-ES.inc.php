@@ -671,7 +671,6 @@ $strNoMatchingProduct = 'No hay producto que coincida';
 $strNoOpenIncidents = 'No hay incidentes abiertos';
 $strNoOrphandedContacts = 'No hay contactos huérfanos';
 $strNotifications = 'Notificaciones';
-$strNotificationsMovedToTriggersPage = 'Las notificaciones se han movido a la página de triggers';
 $strNotifyContact = 'Notificar contacto';
 $strNotSettingArea = '<strong>NOTE</strong>: Si no define uno puede reducir el procesamiento de su incidente';
 $strNoPermission = 'No tiene permiso para ver esta página';
