@@ -8288,7 +8288,16 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
                 $availtz[$offset] = $tz;
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
-        break;
+            break;
+        case 'timezoneselect':
+            if ($value == '') $value = 0;
+            foreach ($availabletimezones AS $offset=>$tz)
+            {
+                $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
+                $availtz[$offset] = $tz;
+            }
+            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
+            break;
         case 'userstatusselect':
             $html .= userstatus_drop_down($setupvar, $value);
             break;
