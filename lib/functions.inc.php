@@ -5215,12 +5215,12 @@ function show_create_links($table, $ref)
 function draw_chart_image($type, $width, $height, $data, $legends, $title='', $unit='')
 {
     global $CONFIG;
+    
     // Graph settings
     if (empty($width)) $width = 500;
     if (empty($height)) $height = 150;
-    $fontfile = dirname( __FILE__ ).DIRECTORY_SEPARATOR."FreeSans.ttf"; // FIXME font file!
 
-    if (!empty($fontfile) AND file_exists($fontfile)) $use_ttf = TRUE;
+    if (!empty($CONFIG['font_file']) AND file_exists($CONFIG['font_file'])) $use_ttf = TRUE;
     else $use_ttf = FALSE;
 
     $countdata = count($data);
@@ -5300,7 +5300,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
                 $cy += 10;
                 if ($use_ttf)
                 {
-                    imagettftext($img, 10, 0, 2, 10, $black, $fontfile, $title);
+                    imagettftext($img, 10, 0, 2, 10, $black, $CONFIG['font_file'], $title);
                 }
                 else
                 {
@@ -5368,7 +5368,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
                 if ($use_ttf)
                 {
-                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $fontfile, substr(urldecode($legends[$i]),0,27)." ({$data[$i]})");
+                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], substr(urldecode($legends[$i]),0,27)." ({$data[$i]})");
                 }
                 else
                 {
@@ -8231,8 +8231,7 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
                 $html .= ">{$option}</option>\n";
             }
             $html .= "</select>";
-        break;
-
+            break;
         case 'percent':
             $html .= "<select name='{$setupvar}' id='{$setupvar}'>";
             for($i = 0; $i <= 100; $i++)
@@ -8242,18 +8241,15 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
                 $html .= ">{$i}</option>\n";
             }
             $html .= "</select>%";
-        break;
-
+            break;
         case 'interfacestyleselect':
             $html .= interfacestyle_drop_down($setupvar, $value);
-        break;
-
+            break;
         case 'userlanguageselect':
         case 'languageselect':
             if (empty($value)) $value = $_SESSION['lang'];
             $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);
-        break;
-
+            break;
         case 'languagemultiselect':
             if (empty($value))
             {
@@ -8274,20 +8270,16 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             $attributes = "onchange=\"toggle_multiselect('{$setupvar}[]')\"";
             $html .= "<label>".html_checkbox($setupvar.'checkbox', $checked, "");
             $html .= $GLOBALS['strAll']."</label>";
-        break;
-
+            break;
         case 'slaselect':
             $html .= serviceleveltag_drop_down($setupvar, $value, TRUE);
-        break;
-
+            break;
         case 'userselect':
             $html .= user_drop_down($setupvar, $value, FALSE, FALSE, '', TRUE);
-        break;
-
+            break;
         case 'siteselect':
             $html .= site_drop_down($setupvar, $value, FALSE);
-        break;
-
+            break;
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8296,43 +8288,46 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
                 $availtz[$offset] = $tz;
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
-        break;
-
+            break;
+        case 'timezoneselect':
+            if ($value == '') $value = 0;
+            foreach ($availabletimezones AS $offset=>$tz)
+            {
+                $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
+                $availtz[$offset] = $tz;
+            }
+            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
+            break;
         case 'userstatusselect':
             $html .= userstatus_drop_down($setupvar, $value);
-        break;
-
+            break;
         case 'roleselect':
             $html .= role_drop_down($setupvar, $value);
-        break;
-
+            break;
         case 'number':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='7' value=\"{$value}\" />";
-        break;
-
+            break;
         case '1darray':
             $replace = array('array(', ')', "'");
             $value = str_replace($replace, '',  $value);
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='60' value=\"{$value}\" />";
-        break;
-
+           break;
         case '2darray':
             $replace = array('array(', ')', "'", '\r','\n');
             $value = str_replace($replace, '',  $value);
             $value = str_replace(',', "\n", $value);
             $html .= "<textarea name='{$setupvar}' id='{$setupvar}' cols='60' rows='10'>{$value}</textarea>";
-        break;
-
+            break;
         case 'password':
-          $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
-        break;
-
+            $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
+            break;
         case 'ldappassword':
-          $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
-          $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
-        break;
-
-
+            $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
+            $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
+            break;
+        case 'textreadonly':
+            $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
+            break;
         case 'text':
         default:
             if (strlen($CONFIG[$setupvar]) < 65)

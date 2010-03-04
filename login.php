@@ -40,7 +40,7 @@ $page = strip_tags(str_replace('..','',str_replace('//','',str_replace(':','',ur
 
 if (empty($_REQUEST['username']) AND empty($_REQUEST['password']) AND $language != $_SESSION['lang'])
 {
-    if ($language!='default')
+    if ($language != 'default')
     {
         $_SESSION['lang'] = $language;
     }
@@ -84,9 +84,9 @@ elseif (authenticate($username, $_REQUEST['password']))
     {
         while ($conf = mysql_fetch_object($result))
         {
-            if ($conf->value==='TRUE') $conf->value = TRUE;
-            if ($conf->value==='FALSE') $conf->value = FALSE;
-            if (substr($conf->value, 0, 6)=='array(')
+            if ($conf->value === 'TRUE') $conf->value = TRUE;
+            if ($conf->value === 'FALSE') $conf->value = FALSE;
+            if (substr($conf->value, 0, 6) == 'array(')
             {
                     eval("\$val = {$conf->value};");
                     $conf->value = $val;
@@ -197,7 +197,7 @@ elseif ($CONFIG['portal'] == TRUE)
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;
 
-        if ($language!='default')
+        if ($language != 'default')
         {
             $_SESSION['lang'] = $language;
         }
@@ -258,6 +258,7 @@ elseif ($CONFIG['portal'] == TRUE)
         {
             $_SESSION['entitlement'][] = serialize($contract);
         }
+        
         header("Location: portal/");
         exit;
     }
