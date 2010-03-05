@@ -90,6 +90,7 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
     else
     {
         $incident = mysql_insert_id();
+        increment_incidents_used($contract);
         return $incident;
     }
 }
@@ -694,6 +695,42 @@ function incident_service_level($incidentid)
     list($servicelevel) = mysql_fetch_array($result);
 
     return $servicelevel;
+}
+
+
+/**
+ * Load the incident entitlement for the portal
+ * Moved from portal/ad.php
+ * @param $contactid  - The contact to load the entitlement for
+ * @param $siteid - The site the contact belongs to 
+ */
+function load_entitlements($contactid, $siteid)
+{
+    global $dbSupportContacts, $dbMaintenance, $dbProducts;
+    
+    //get entitlement
+    $sql = "SELECT m.*, p.name, ";
+    $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
+    $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
+    $sql .= "WHERE m.product=p.id ";
+    $sql .= "AND sc.contactid='{$contactid}' AND sc.maintenanceid=m.id ";
+    $sql .= "AND (expirydate > (UNIX_TIMESTAMP(NOW()) - 15778463) OR expirydate = -1) ";
+    $sql .= "AND m.site = {$siteid} ";
+    $sql .= "UNION SELECT m.*, p.name, ";
+    $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
+    $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
+    $sql .= "WHERE m.product=p.id ";
+    $sql .= "AND m.allcontactssupported = 'yes' ";
+    $sql .= "AND (expirydate > (UNIX_TIMESTAMP(NOW()) - 15778463) OR expirydate = -1) ";
+    $sql .= "AND m.site = {$siteid} ";
+    $sql .= "ORDER BY expirydate DESC ";
+
+    $contractresult = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    while ($contract = mysql_fetch_object($contractresult))
+    {
+        $_SESSION['entitlement'][] = serialize($contract);
+    }
 }
 
 ?>
