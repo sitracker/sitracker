@@ -68,7 +68,7 @@ $CFGVAR['incident_refresh']['type'] = 'number';
 $CFGVAR['incident_refresh']['unit'] = $strSeconds;
 
 $CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details'; // FIXME i18n
-$CFGVAR['incident_popup_onewindow']['type'] = 'select';
+$CFGVAR['incident_popup_onewindow']['type'] = 'checkbox';
 
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
@@ -82,10 +82,10 @@ $CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages on de
 $CFGVAR['show_confirmation_delete']['type'] = 'select';
 
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
-$CFGVAR['show_emoticons']['type'] = 'select';
+$CFGVAR['show_emoticons']['type'] = 'checkbox';
 
 $CFGVAR['show_table_legends']['title'] = $strShowTableLegends;
-$CFGVAR['show_table_legends']['type'] = 'select';
+$CFGVAR['show_table_legends']['type'] = 'checkbox';
 
 // TODO
 $CFGVAR['show_inactive_data']['title'] = 'Show Inactive Data';
