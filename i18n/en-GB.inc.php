@@ -923,7 +923,7 @@ $strLastWeek = 'Last week';
 $strLastYear = 'Last year';
 # LDAP - Lightweight Directory Access Protocol
 $strLDAP = 'LDAP';
-$strLDAPAdminGroupIncrrect = 'Admin Group Incorrect';
+$strLDAPAdminGroupIncorrect = 'Admin Group Incorrect';
 $strLDAPCustomerGroupIncorrect = 'Customer Group Incorrect';
 $strLDAPManagerGroupIncorrect = 'Manager Group Incorrect';
 $strLDAPTestSucessful = 'LDAP Connection Sucessful';
