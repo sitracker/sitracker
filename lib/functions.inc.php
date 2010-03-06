@@ -2532,7 +2532,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
  */
 function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
-    global $dbSites;
+    global $dbSites, $strEllipsis;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
     if (!$showinactive)  $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
@@ -2559,7 +2559,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 
         if (strlen($text) >= 55)
         {
-            $text = substr(trim($text), 0, 55)."&hellip;";
+            $text = substr(trim($text), 0, 55).$strEllipsis;
         }
         else
         {

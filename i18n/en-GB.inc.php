@@ -519,6 +519,8 @@ $strEditTemplate = 'Edit Template';
 $strEditUserSkills = 'Edit User Skills';
 $strEditVendor = 'Edit Vendor';
 $strEditWatchedIncidents = 'Edit Watched Incidents';
+# Punctuation mark 'Ellipsis' to indcate an unfinished phrase or sentence. (dot dot dot "..." in English)
+$strEllipsis = '&hellip;';
 $strEmail = 'Email';
 $strEmailAddress = 'Email Address';
 # Do you want to send an email with login details to the contact?
