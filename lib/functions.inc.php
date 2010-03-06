@@ -8234,8 +8234,17 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             break;
 
         case 'checkbox':
+            // Checkbox values are stored 'TRUE' / 'FALSE'
+            if ($value == 'TRUE')
+            {
+                $state = TRUE;
+            }
+            else
+            {
+                $state = FALSE;
+            }
             $html .= "<label>";
-            $html .= html_checkbox($setupvar, $value, 'TRUE');
+            $html .= html_checkbox($setupvar, $state, 'TRUE');
             $html .= " {$title}</label>";
             break;
 
