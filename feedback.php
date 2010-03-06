@@ -141,7 +141,7 @@ function feedback_html_options($name, $required, $options, $answer='')
 * @param string $required. 'true' or 'false' is the field mandatory?
 * @param string $options. delimited list of options
 */
-function html_multioptions($name, $required, $options)
+function feedback_html_multioptions($name, $required, $options)
 {
     $option_list = explode('{@}', $options);
     $option_count = count($option_list);
