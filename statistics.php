@@ -286,9 +286,8 @@ function give_overview()
             $sqlGroups .= "`{$GLOBALS['dbIncidentStatus']}` AS istatus, ";
             $sqlGroups .= "`{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbGroups']}` AS g ";
             $sqlGroups .= "WHERE i.status = istatus.id AND closed = 0 AND i.owner = u.id ";
-            $sqlGroups .= "AND u.groupid = {$groups->groupid} ";
-            $sqlGroups .= "GROUP BY i.status";
-
+            $sqlGroups .= "AND u.groupid = g.id AND u.groupid = {$groups->groupid} ";
+            $sqlGroups .= "GROUP BY i.status ";
             $resultGroups = mysql_query($sqlGroups);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -299,13 +298,11 @@ function give_overview()
                 while ($rowGroup = mysql_fetch_object($resultGroups))
                 {
                     echo "<tr><th>{$GLOBALS[$rowGroup->name]}</th><td class='shade2' align='left'>";
-                    //FIXME - HACK, no idea why this is needed
-                    $amount = round($rowGroup->count / 8);
-                    echo "{$amount}</td></tr>";
+                    echo "{$rowGroup->count}</td></tr>";
 
                     //if (strpos(strtolower($rowGroup['name']), "clos") === false)
                     //{
-                        $openCallsGroup += $amount;
+                        $openCallsGroup += $rowGroup->count;
                     //}
                 }
                 echo "<tr><th>{$GLOBALS['strTotalOpen']}</th>";
