@@ -29,7 +29,9 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
                                'incident_log_order',
                                'updates_per_page',
                                'show_table_legends',
-                               'incident_popup_onewindow'
+                               'incident_popup_onewindow',
+                               'show_confirmation_caution',
+                               'show_confirmation_delete'
                                );
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
@@ -68,24 +70,24 @@ $CFGVAR['incident_refresh']['type'] = 'number';
 $CFGVAR['incident_refresh']['unit'] = $strSeconds;
 
 $CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details'; // FIXME i18n
-$CFGVAR['incident_popup_onewindow']['type'] = 'select';
+$CFGVAR['incident_popup_onewindow']['type'] = 'checkbox';
 
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
 
 // TODO
-$CFGVAR['show_confirmation_caution']['title'] = 'Show confirmation messages';
-$CFGVAR['show_confirmation_caution']['type'] = 'select';
+$CFGVAR['show_confirmation_caution']['title'] = 'Show general confirmation ("Are you sure?") messages';
+$CFGVAR['show_confirmation_caution']['type'] = 'checkbox';
 
 // TODO
-$CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages on delete';
-$CFGVAR['show_confirmation_delete']['type'] = 'select';
+$CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages ("Are you sure?") on delete';
+$CFGVAR['show_confirmation_delete']['type'] = 'checkbox';
 
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
-$CFGVAR['show_emoticons']['type'] = 'select';
+$CFGVAR['show_emoticons']['type'] = 'checkbox';
 
 $CFGVAR['show_table_legends']['title'] = $strShowTableLegends;
-$CFGVAR['show_table_legends']['type'] = 'select';
+$CFGVAR['show_table_legends']['type'] = 'checkbox';
 
 // TODO
 $CFGVAR['show_inactive_data']['title'] = 'Show Inactive Data';

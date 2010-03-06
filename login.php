@@ -235,30 +235,7 @@ elseif ($CONFIG['portal'] == TRUE)
 
         $_SESSION['contracts'] = array_merge((array)$admincontracts, (array)$contactcontracts, (array)$allcontracts);
 
-        //get entitlement
-        $sql = "SELECT m.*, p.name, ";
-        $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
-        $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-        $sql .= "WHERE m.product=p.id ";
-        $sql .= "AND sc.contactid='{$_SESSION['contactid']}' AND sc.maintenanceid=m.id ";
-        $sql .= "AND (expirydate > (UNIX_TIMESTAMP(NOW()) - 15778463) OR expirydate = -1) ";
-        $sql .= "AND m.site = {$_SESSION['siteid']} ";
-        $sql .= "UNION SELECT m.*, p.name, ";
-        $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
-        $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-        $sql .= "WHERE m.product=p.id ";
-        $sql .= "AND m.allcontactssupported = 'yes' ";
-        $sql .= "AND (expirydate > (UNIX_TIMESTAMP(NOW()) - 15778463) OR expirydate = -1) ";
-        $sql .= "AND m.site = {$_SESSION['siteid']} ";
-        $sql .= "ORDER BY expirydate DESC ";
-
-        $contractresult = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        while ($contract = mysql_fetch_object($contractresult))
-        {
-            $_SESSION['entitlement'][] = serialize($contract);
-        }
-        
+        load_entitlements($_SESSION['contactid'], $_SESSION['siteid']);
         header("Location: portal/");
         exit;
     }

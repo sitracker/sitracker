@@ -17,11 +17,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-// 'soap' commented out by ivan 3 june 2009
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
-$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'holidays', 'feedback', 'inventory');
-$CFGTAB['system'] = array('paths', 'locale', 'journal');
+$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'holidays', 'feedback', 'inventory', 'otherfeatures');
+$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap');
 $TABI18n['plugins'] = $strPlugins;
 
 $TABI18n['application'] = $strApplication;
@@ -141,12 +140,15 @@ $CFGCAT['journal'] = array('journal_loglevel', 'journal_purge_after');
 $CFGCAT['inventory'] = array('inventory_enabled', 'inventory_types');
 
 $CFGCAT['other'] = array('debug', 'error_logfile',
-                        'support_manager', 'tasks_enabled', 'timesheets_enabled',
+                        'support_manager',
                           'bugtracker_url',
                           'changelogfile','creditsfile',
                           'licensefile',
                           'session_name',
                           'upload_max_filesize','default_roleid','trusted_server');
+
+$CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled', 'timesheets_enabled');
+
 
 
 
@@ -169,10 +171,11 @@ $CATI18N['paths'] = $strPaths;
 $CATI18N['locale'] = $strLocale;
 $CATI18N['journal'] = $strJournal;
 $CATI18N['inventory'] = $strInventory;
+$CATI18N['otherfeatures'] = $strOther;
 
 // Text to introduce a configuration category, may contain HTML
 $CATINTRO['sla'] = "This section allows you to configure how service levels are used, configure the <abbr title='Service Level Agreements'>SLA</abbr>'s themselves on the <a href='service_levels.php'>Service Levels</a> page.";
-
+$CATINTRO['outboundemail'] = "SiT! uses the PHP mail() function to send outbound emails, you can configure this via your php.ini file, see your php documentation for more details.";
 
 
 // Descriptions of all the config variables
@@ -210,9 +213,8 @@ $CFGVAR['attachment_webpath']['title'] = "Attachment Web Path";
 $CFGVAR['attachment_webpath']['help'] = 'The path to the attachments directory from the browsers perspective with a trailing slash. e.g. /sit/';
 
 $CFGVAR['auto_assign_incidents']['help'] = "incidents are automatically assigned based on a lottery weighted towards who are less busy, assumes everyone set to accepting is an engineer and willing to take incidents";
-$CFGVAR['auto_assign_incidents']['options'] = 'TRUE|FALSE';
 $CFGVAR['auto_assign_incidents']['title'] = "Auto-assign incidents";
-$CFGVAR['auto_assign_incidents']['type'] = 'select';
+$CFGVAR['auto_assign_incidents']['type'] = 'checkbox';
 
 $CFGVAR['available_i18n']['title'] = "Languages Available";
 $CFGVAR['available_i18n']['help'] = "The languages available for users to select at login or in their profile.";
@@ -221,10 +223,8 @@ $CFGVAR['available_i18n']['type'] = 'languagemultiselect';
 $CFGVAR['bugtracker_url']['title'] = 'Bug tracker URL';
 $CFGVAR['bugtracker_url']['help'] = "The <abbr title='Uniform Resource Locator'>URL</abbr> of a web page to report bugs with SiT!  We recommend you don't alter this setting unless you really need to.";
 
-$CFGVAR['calendar_enabled']['help'] = "TRUE for enabled, FALSE for disabled";
-$CFGVAR['calendar_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['calendar_enabled']['title'] = "Calendar Enabled/Disabled";
-$CFGVAR['calendar_enabled']['type'] = 'select';
+$CFGVAR['calendar_enabled']['title'] = "Enable Calendar";
+$CFGVAR['calendar_enabled']['type'] = 'checkbox';
 
 $CFGVAR['changelogfile']['title'] = 'Path to the Changelog file';
 $CFGVAR['changelogfile']['help'] = 'The filesystem path and filename of the SiT! Changelog file, this can be specified relative to the SiT directory.';
@@ -268,10 +268,9 @@ $CFGVAR['db_tableprefix']['title'] = 'MySQL Database Table Prefix';
 
 $CFGVAR['db_username']['title'] = 'MySQL Database Username';
 
-$CFGVAR['debug']['help'] = 'Set to TRUE to output extra debug information, some as HTML comments and some in the page footer, FALSE to disable';
-$CFGVAR['debug']['options'] = 'TRUE|FALSE';
+$CFGVAR['debug']['help'] = 'Output extra debug information, some as HTML comments and some in the page footer';
 $CFGVAR['debug']['title'] = 'Debug Mode';
-$CFGVAR['debug']['type'] = 'select';
+$CFGVAR['debug']['type'] = 'checkbox';
 
 $CFGVAR['default_css_url']['title'] = 'Default CSS file';
 $CFGVAR['default_css_url']['help'] = "A <abbr title='Uniform Resource Locator'>URL</abbr> pointing to the <abbr title='Cascading Style Sheet'>CSS</abbr> file to use when no other is configured. You should not normally need to change this.";
@@ -300,10 +299,11 @@ $CFGVAR['default_service_level']['title'] = 'Default Service Level';
 $CFGVAR['default_service_level']['help'] = 'The service level to use in case the contact does not specify';
 $CFGVAR['default_service_level']['type'] = 'slaselect';
 
-$CFGVAR['demo']['help'] = 'Set to TRUE to run in demo mode, some features are disabled or replaced with mock-ups';
-$CFGVAR['demo']['options'] = 'TRUE|FALSE';
+// Demo mode isn't in the GUI because it wouldn't make sense, if you enable it
+// you can no longer use the GUI to configure
 $CFGVAR['demo']['title'] = 'Demo Mode';
-$CFGVAR['demo']['type'] = 'select';
+$CFGVAR['demo']['help'] = 'When enabled some features are disabled or replaced with mock-ups, configuration can';
+$CFGVAR['demo']['type'] = 'checkbox';
 
 $CFGVAR['email_address']['title'] = "Incoming email account address";
 
@@ -348,10 +348,8 @@ $CFGVAR['end_working_day']['unit'] = $strSeconds;
 $CFGVAR['error_logfile']['title'] = "Path to an error log file";
 $CFGVAR['error_logfile']['help'] = "The filesystem path and filename of a file that already exist and is writable to log error messages into. Enable Debug Mode to see more verbose messages in this file.";
 
-$CFGVAR['feedback_enabled']['title'] = "Feedback Enabled";
-$CFGVAR['feedback_enabled']['help'] = "Set to TRUE to enable Feedback, or FALSE to disable it";
-$CFGVAR['feedback_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['feedback_enabled']['type'] = 'select';
+$CFGVAR['feedback_enabled']['title'] = "Enable Feedback";
+$CFGVAR['feedback_enabled']['type'] = 'checkbox';
 
 $CFGVAR['feedback_form']['title'] = 'Feedback Form';
 $CFGVAR['feedback_form']['help'] = 'The id number of the feedback form to use.  Leave blank disable sending feedback forms';
@@ -374,9 +372,8 @@ $CFGVAR['ftp_password']['title'] = 'FTP password';
 $CFGVAR['ftp_password']['type'] = 'password';
 
 $CFGVAR['ftp_pasv']['title'] = 'FTP passive mode';
-$CFGVAR['ftp_pasv']['options'] = 'TRUE|FALSE';
-$CFGVAR['ftp_pasv']['help'] = 'Set to TRUE to enable FTP Passive (PASV) mode or FALSE to disable';
-$CFGVAR['ftp_pasv']['type'] = 'select';
+$CFGVAR['ftp_pasv']['help'] = 'Enable FTP Passive (PASV) mode if your connection uses NAT';
+$CFGVAR['ftp_pasv']['type'] = 'checkbox';
 
 $CFGVAR['ftp_path']['title'] = 'FTP Path';
 $CFGVAR['ftp_path']['help'] = 'The path to the directory where we store files on the ftp server (e.g. /pub/support/) the trailing slash is important';
@@ -391,11 +388,8 @@ $CFGVAR['hide_closed_incidents_older_than']['title'] = 'Hide closed incidents ol
 $CFGVAR['hide_closed_incidents_older_than']['type'] = 'number';
 $CFGVAR['hide_closed_incidents_older_than']['unit'] = $strDays;
 
-$CFGVAR['holidays_enabled']['title'] = "Holidays Enabled";
-$CFGVAR['holidays_enabled']['help'] = "Set to TRUE to enable Holidays or set to FALSE to disable";
-$CFGVAR['holidays_enabled']['options'] = 'TRUE|FALSE';
-
-$CFGVAR['holidays_enabled']['type'] = 'select';
+$CFGVAR['holidays_enabled']['title'] = "Enable Holidays";
+$CFGVAR['holidays_enabled']['type'] = 'checkbox';
 
 $CFGVAR['home_country']['title'] = "The default country in capitals. e.g. 'UNITED KINGDOM'";
 
@@ -403,9 +397,8 @@ $CFGVAR['incident_pools']['title'] = 'Incident Pool options';
 $CFGVAR['incident_pools']['help'] = 'Comma seperated list specifying the numbers of incidents to assign to contracts';
 // Note: incident_pools is not a 1darray, it's actually a comma separated list
 
-$CFGVAR['inventory_enabled']['title'] = 'Inventory Enabled';
-$CFGVAR['inventory_enabled']['help'] = 'Set to TRUE to enable Inventory, set to FALSE to disable';
-$CFGVAR['inventory_enabled']['type'] = 'select';
+$CFGVAR['inventory_enabled']['title'] = 'Enable Inventory';
+$CFGVAR['inventory_enabled']['type'] = 'checkbox';
 
 $CFGVAR['inventory_types']['title'] = 'Inventory Types';
 $CFGVAR['inventory_types']['help'] = 'The types of Inventory items allowed';
@@ -424,28 +417,23 @@ $CFGVAR['journal_purge_after']['unit'] = $strSeconds;
 $CFGVAR['kb_disclaimer_html']['title'] = 'Knowledgebase disclaimer';
 $CFGVAR['kb_disclaimer_html']['help']  = 'A disclaimer message to be displayed at the bottom of every knowledge base article. Simple HTML is allowed';
 
-$CFGVAR['kb_enabled']['title'] = "Knowledge base Enabled";
-$CFGVAR['kb_enabled']['help'] = "Set to TRUE to enable the Knowledge Base or FALSE to disable it";
-$CFGVAR['kb_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['kb_enabled']['type'] = 'select';
+$CFGVAR['kb_enabled']['title'] = "Enable Knowledge base";
+$CFGVAR['kb_enabled']['type'] = 'checkbox';
 
 $CFGVAR['kb_id_prefix']['help'] = 'inserted before the ID to give it uniqueness';
 $CFGVAR['kb_id_prefix']['title'] = 'Knowledgebase ID prefix';
 
 $CFGVAR['ldap_autocreate_customer']['title'] = 'Auto create customer';
 $CFGVAR['ldap_autocreate_customer']['help'] = 'This attempts to create the customer record automatically using LDAP when creating an incident from an email in the holding queue.';
-$CFGVAR['ldap_autocreate_customer']['options'] = 'TRUE|FALSE';
-$CFGVAR['ldap_autocreate_customer']['type'] = 'select';
+$CFGVAR['ldap_autocreate_customer']['type'] = 'checkbox';
 
 $CFGVAR['ldap_cache_passwords']['title'] = 'Allow SiT! to cache users passwords';
 $CFGVAR['ldap_cache_passwords']['help'] = 'This allows SiT! to cache an MD5 of users passwords which can be used for authentication if the LDAP server is down - see . $CONFIG[\'ldap_allow_cached_password\']';
-$CFGVAR['ldap_cache_passwords']['options'] = 'TRUE|FALSE';
-$CFGVAR['ldap_cache_passwords']['type'] = 'select';
+$CFGVAR['ldap_cache_passwords']['type'] = 'checkbox';
 
 $CFGVAR['ldap_allow_cached_password']['title'] = 'Allow use of cached passwords';
 $CFGVAR['ldap_allow_cached_password']['help'] = 'This allows use of cached passwords in SiT for authentication if communication with the LDAP server fails.';
-$CFGVAR['ldap_allow_cached_password']['options'] = 'TRUE|FALSE';
-$CFGVAR['ldap_allow_cached_password']['type'] = 'select';
+$CFGVAR['ldap_allow_cached_password']['type'] = 'checkbox';
 
 $CFGVAR['ldap_bind_user']['title'] = 'LDAP Bind user';
 $CFGVAR['ldap_bind_user']['help'] = 'The user for binding to the LDAP host, this should be the full DN of the user e.g. <code>cn=sitadmin,ou=sitracker,o=org</code>';
@@ -520,10 +508,9 @@ $CFGVAR['plugins']['title'] = "Load Plugins";
 $CFGVAR['plugins']['help'] = "Comma separated list of plugins to load. e.g. 'magic_plugin,lookup_plugin'";
 $CFGVAR['plugins']['type'] = '1darray';
 
-$CFGVAR['portal_creates_incidents']['help'] = "TRUE if customers can create incidents from the portal, FALSE if they can just create emails that arrive in the holding queue";
-$CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly?";
-$CFGVAR['portal_creates_incidents']['type'] = 'select';
-$CFGVAR['portal_creates_incidents']['options'] = 'TRUE|FALSE';
+$CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
+$CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
+$CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
 
 $CFGVAR['portal_interface_style']['title'] = "Portal interface style";
 $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
@@ -533,18 +520,16 @@ $CFGVAR['portal_kb_enabled']['options'] = 'Public|Private|Disabled';
 $CFGVAR['portal_kb_enabled']['title'] = "Portal/Public Knowledge base";
 $CFGVAR['portal_kb_enabled']['type'] = 'select';
 
-$CFGVAR['portal_site_incidents']['help'] = "Users in the portal can view site incidents based on the contract options";
-$CFGVAR['portal_site_incidents']['options'] = 'TRUE|FALSE';
 $CFGVAR['portal_site_incidents']['title'] = "Show site incidents in portal";
-$CFGVAR['portal_site_incidents']['type'] = 'select';
+$CFGVAR['portal_site_incidents']['help'] = "Users in the portal can view site incidents based on the contract options";
+$CFGVAR['portal_site_incidents']['type'] = 'checkbox';
 
 $CFGVAR['portal']['title'] = 'Enable user portal';
-$CFGVAR['portal']['options'] = 'TRUE|FALSE';
-$CFGVAR['portal']['type'] = 'select';
+$CFGVAR['portal']['help'] = 'The user portal allows contacts to log into SiT! and create incidents';
+$CFGVAR['portal']['type'] = 'checkbox';
 
-$CFGVAR['portal_usernames_can_be_changed']['options'] = 'TRUE|FALSE';
-$CFGVAR['portal_usernames_can_be_changed']['title'] = "Allow portal users to change usernames";
-$CFGVAR['portal_usernames_can_be_changed']['type'] = 'select';
+$CFGVAR['portal_usernames_can_be_changed']['title'] = "Allow portal users (contacts) to change usernames";
+$CFGVAR['portal_usernames_can_be_changed']['type'] = 'checkbox';
 
 $CFGVAR['preferred_maintenance']['title'] = "Preferred SLA for new incidents";
 $CFGVAR['preferred_maintenance']['help'] = "A comma separated list of SLA's to indicate order of preference when logging incidents against them e.g. 'standard,high'";
@@ -563,15 +548,13 @@ $CFGVAR['regular_contact_days']['unit'] = $strDays;
 $CFGVAR['session_name']['title'] = 'Session Name';
 $CFGVAR['session_name']['help'] = 'The session name for use in cookies and URLs, Must contain alphanumeric characters only';
 
-$CFGVAR['soap_enabled']['title'] = 'Soap enabled';
-$CFGVAR['soap_enabled']['help'] = 'Enable SOAP for SiT! users';
-$CFGVAR['soap_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['soap_enabled']['type'] = 'select';
+$CFGVAR['soap_enabled']['title'] = 'Enable SOAP';
+$CFGVAR['soap_enabled']['help'] = 'Enable SOAP (Simple Object Access Protocol) for SiT! users (<em>Experimental feature</em>)';
+$CFGVAR['soap_enabled']['type'] = 'checkbox';
 
-$CFGVAR['soap_portal_enabled']['title'] = 'Soap portal enabled';
-$CFGVAR['soap_portal_enabled']['help'] = 'Enable SOAP for portal users';
-$CFGVAR['soap_portal_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['soap_portal_enabled']['type'] = 'select';
+$CFGVAR['soap_portal_enabled']['title'] = 'Enable SOAP portal';
+$CFGVAR['soap_portal_enabled']['help'] = 'Enable SOAP (Simple Object Access Protocol) for portal users';
+$CFGVAR['soap_portal_enabled']['type'] = 'checkbox';
 
 $CFGVAR['spam_email_subject']['title'] = 'Spam Subject';
 $CFGVAR['spam_email_subject']['help'] = 'String to look for in email message subject to determine a message is spam';
@@ -592,34 +575,29 @@ $CFGVAR['tag_icons']['title'] = "Tag Icons";
 $CFGVAR['tag_icons']['help'] = "You can specify icons to display next to certain tags, enter tag/icon associations one per line, format: tag=>icon";
 $CFGVAR['tag_icons']['type'] = '2darray';
 
-$CFGVAR['tasks_enabled']['title'] = "Tasks Enabled";
-$CFGVAR['tasks_enabled']['help'] = "Set to TRUE to enable the tasks feature, or FALSE to disable";
-$CFGVAR['tasks_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['tasks_enabled']['type'] = 'select';
+$CFGVAR['tasks_enabled']['title'] = "Enable Tasks";
+$CFGVAR['tasks_enabled']['type'] = 'checkbox';
 
-$CFGVAR['timesheets_enabled']['title'] = "Timesheets Enabled";
-$CFGVAR['timesheets_enabled']['help'] = "<em>Experimental Feature</em>. Set to TRUE to enable, or FALSE to disable";
-$CFGVAR['timesheets_enabled']['options'] = 'TRUE|FALSE';
-$CFGVAR['timesheets_enabled']['type'] = 'select';
+$CFGVAR['timesheets_enabled']['title'] = "Enable Timesheets";
+$CFGVAR['timesheets_enabled']['help'] = "<em>Experimental Feature</em>";
+$CFGVAR['timesheets_enabled']['type'] = 'checkbox';
 
 $CFGVAR['timezone']['title'] = 'System Time Zone';
 $CFGVAR['timezone']['help'] = "Set this to match the timezone that your server running SiT! is configured to use";
 $CFGVAR['timezone']['type'] = 'select';
 $CFGVAR['timezone']['options'] = file_get_contents('lib/timezones.txt');
 
-$CFGVAR['trusted_server']['help'] = 'If you set this to TRUE, passwords will no longer be used or required, this assumes that you are using an external mechanism for authentication';
-$CFGVAR['trusted_server']['options'] = 'TRUE|FALSE';
+$CFGVAR['trusted_server']['help'] = 'When enabled passwords will no longer be used or required, this assumes that you are using an external mechanism for authentication';
 $CFGVAR['trusted_server']['title'] = 'Enable trusted server mode';
-$CFGVAR['trusted_server']['type'] = 'select';
+$CFGVAR['trusted_server']['type'] = 'checkbox';
 
 $CFGVAR['upload_max_filesize']['title'] = "The maximum file upload size (in bytes)";
 $CFGVAR['upload_max_filesize']['type'] = 'number';
 $CFGVAR['upload_max_filesize']['unit'] = $strBytes;
 
 $CFGVAR['use_ldap']['title'] = 'Enable LDAP authentication';
-$CFGVAR['use_ldap']['help'] = "Set to TRUE for LDAP authentication, or FALSE for standard database authentication";
-$CFGVAR['use_ldap']['options'] = 'TRUE|FALSE';
-$CFGVAR['use_ldap']['type'] = 'select';
+$CFGVAR['use_ldap']['help'] = "Enable this if you would like to authenticate logins against an LDAP directory";
+$CFGVAR['use_ldap']['type'] = 'checkbox';
 
 $CFGVAR['urgent_threshold']['title'] = 'Urgent Threshold';
 $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this percentage complete.';
