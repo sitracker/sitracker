@@ -251,7 +251,7 @@ if (!empty($incident->product))
     }
 }
 
-echo sprintf($strOpenForX, $opened_for)." ";
+echo sprintf($strOpenForX, $opened_for)." - ";
 echo incidentstatus_name($incident->status);
 if ($incident->status == 2) echo " (" . closingstatus_name($incident->closingstatus) . ")";
 echo "<br />\n";
@@ -765,18 +765,18 @@ while ($update = mysql_fetch_object($result))
 
         if ($updatebodylen > 5)
         {
-        	/*
-        	 * @modifier: Rick Bonkestoter
-        	 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-        	 */
+            /*
+             * @modifier: Rick Bonkestoter
+             * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
+             */
             echo str_replace('\r\n', "<br />", nl2br($updatebody));
         }
         else
         {
-        	/*
-        	 * @modifier: Rick Bonkestoter
-        	 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-        	 */
+            /*
+             * @modifier: Rick Bonkestoter
+             * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
+             */
             echo str_replace('\r\n', "<br />", nl2br($updatebody));
         }
 
