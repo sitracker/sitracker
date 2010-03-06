@@ -60,11 +60,13 @@ function wt_winpopup(url, mini)
 /**
   * Yes/No dialog
   * @param msg string - A message to display
+  * @param del - Set to true when the action involves deleting data
   * @returns bool TRUE or false, depending on which button was pressed, yes = true, false = no
 **/
-function confirm_action(msg)
+function confirm_action(msg, del)
 {
-    if (show_confirmation_caution != 'TRUE') return true;
+    if (del == true && show_confirmation_delete != 'TRUE') return true;
+    if (del != true && show_confirmation_caution != 'TRUE') return true;
     if (msg == '') msg = 'Are you sure?';
     return window.confirm(msg);
 }

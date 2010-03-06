@@ -4912,7 +4912,7 @@ function show_notes($linkid, $refid, $delete = TRUE)
             {
                 $html .= "<a href='note_delete.php?id={$note->id}&amp;rpath=";
                 $html .= "{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' ";
-                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}');\">";
+                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">";
                 $html .= icon('delete', 16)."</a>";
             }
             $html .= "</div>\n"; // /detaildate

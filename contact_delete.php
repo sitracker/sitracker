@@ -76,7 +76,7 @@ if (empty($process))
 
         if ($totalincidents > 0 || $totalcontracts > 0)
         {
-            echo "<form action='{$_SERVER['PHP_SELF']}' onsubmit=\"return confirm_action('{$strAreYouSureDelete}')\" method='post'>\n";
+            echo "<form action='{$_SERVER['PHP_SELF']}' onsubmit=\"return confirm_action('{$strAreYouSureDelete}', true)\" method='post'>\n";
             echo "<p align='center'>{$strBeforeDeleteContact}</p>";
             $sql  = "SELECT id, forenames, surname, siteid FROM `{$dbContacts}` ORDER BY surname ASC";
             $result = mysql_query($sql);
@@ -110,7 +110,7 @@ if (empty($process))
         {
             // plain delete
             echo "<br />";
-            echo "<form action='{$_SERVER['PHP_SELF']}' onsubmit=\"return confirm_action('{$strAreYouSureDelete}')\" method='post'>\n";
+            echo "<form action='{$_SERVER['PHP_SELF']}' onsubmit=\"return confirm_action('{$strAreYouSureDelete}', true)\" method='post'>\n";
             echo "<input type='hidden' name='newcontact' value='' />";  // empty
             echo "<input type='hidden' name='id' value='$id' />";
             echo "<input type='hidden' name='process' value='true' />";

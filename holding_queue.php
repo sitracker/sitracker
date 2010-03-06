@@ -359,7 +359,7 @@ if (is_array($queuerows))
     if ($realemails > 0)
     {
         echo "<tr><td>";
-        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}');\">{$strDelete}</a>";
+        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         echo "</td></tr>";
     }
     echo "</table>\n";

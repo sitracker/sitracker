@@ -48,6 +48,7 @@ var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncide
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
 
 var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
+var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
 
 /* Please don't add functions here, these functions below need moving to webtrack.js
    this file is to make i18n keys available in javascript
