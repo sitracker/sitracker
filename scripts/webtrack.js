@@ -64,6 +64,7 @@ function wt_winpopup(url, mini)
 **/
 function confirm_action(msg)
 {
+    if (show_confirmation_caution != 'TRUE') return true;
     if (msg == '') msg = 'Are you sure?';
     return window.confirm(msg);
 }
