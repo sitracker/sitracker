@@ -8400,9 +8400,13 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
 **/
-function cfgSave($setupvars, $userid = NULL)
+function cfgSave($setupvars, $userid = 0)
 {
-    global $dbConfig, $dbUserConfig;;
+    global $dbConfig, $dbUserConfig;
+    if ($userid == 'current')
+    {
+        $userid = $_SESSION['userid'];
+    }
     foreach ($setupvars AS $key => $value)
     {
         if ($userid < 1)
