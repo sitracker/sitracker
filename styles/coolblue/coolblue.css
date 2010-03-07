@@ -6,14 +6,14 @@ body
 {
     margin: 0px;
 background-color: #FFF; color: #000; font-family: Tahoma, Helvetica, sans serif; font-size: 8pt;
-  background-image: url(../styles/images/coolblue.jpg);
+  background-image: url(../styles/coolblue/coolblue.jpg);
 }
 a           { color: #3366CC; font-weight: bold; text-decoration: none; }
 a:hover     { color: #3366CC; font-weight: bold; text-decoration: underline; }
 a:active    { color: #3366CC; font-weight: bold; text-decoration: underline; }
 
-#apptitle,#statusbar { color: #FFF; background-image: url(../styles/images/bg.gif); }
-#menu { background-color: #1063BE; background-image: url(../styles/images/bg1.gif); }
+#apptitle,#statusbar { color: #FFF; background-image: url(../styles/coolblue/bg.gif); }
+#menu { background-color: #1063BE; background-image: url(../styles/coolblue/bg1.gif); }
 #menu ul, #menu ul li ul { background-color: #1063BE; }
 #menu a { color: white; }
 

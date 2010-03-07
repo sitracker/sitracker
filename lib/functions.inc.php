@@ -1381,32 +1381,29 @@ function group_selector($selected, $urlargs='')
  * Return HTML for a box to select interface style/theme
  * @author Ivan Lucas
  * @param string $name. Name attribute
- * @param int $id. Interface style ID
+ * @param string $id. Chosen interface style
  * @returns string.  HTML
  */
-function interfacestyle_drop_down($name, $id)
+function interfacestyle_drop_down($name, $setting)
 {
     global $dbInterfaceStyles;
-    // extract statuses
-    $sql  = "SELECT id, name FROM `{$dbInterfaceStyles}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    $html = "<select name=\"{$name}\">";
-    if ($id == 0)
-    {
-        $html .= "<option selected='selected' value='0'></option>\n";
-    }
 
-    while ($styles = mysql_fetch_object($result))
+    $handle = opendir('.'.DIRECTORY_SEPARATOR.'styles');
+    while ($file = readdir($handle))
     {
-        $html .= "<option ";
-        if ($styles->id == $id)
+        if ($file == '.' || $file == '..')
         {
-            $html .= "selected='selected'";
+            continue;
         }
-
-        $html .= " value=\"{$styles->id}\">{$styles->name}</option>\n";
+        if (is_dir('.'.DIRECTORY_SEPARATOR.'styles'.DIRECTORY_SEPARATOR.$file))
+        {
+            $themes[$file] = ucfirst(str_replace('_', ' ', $file));
+        }
     }
-    $html .= "</select>\n";
+    asort($themes);
+
+    $html = array_drop_down($themes, $name, $setting, '', TRUE);
+
     return $html;
 }
 

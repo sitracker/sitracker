@@ -206,6 +206,39 @@ function i18n_filename_to_code(&$elem, $key)
 
 
 /**
+  * Array filter callback to list only valid css files
+  * @author Ivan Lucas
+  * @param string $var. Filename to check
+  * @retval bool TRUE : valid
+  * @retval bool FALSE : invalid
+*/
+function filter_css_filenames($var)
+{
+    $validity = FALSE;
+
+//    if (substr($var, -4) === '.css') $validity = TRUE;
+    //else $validity = FALSE;
+//     echo "$var <br />";
+    if (is_dir($var)) $validity = TRUE;
+    else $validty = FALSE;
+
+    return $validity;
+}
+
+
+/**
+  * Array walk callback convert an css filename to a theme name
+  * @author Ivan Lucas
+  * @param string $filename. Filename of theme file (opt. with path)
+  * @returns nothing
+*/
+function css_filename_to_themename(&$elem, $key)
+{
+    $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -4);
+}
+
+
+/**
   * Convert an i18n code to a localised language name
   * @author Ivan Lucas
   * @param mixed $code. string i18n code (e.g. 'en-GB'), or array of strings
