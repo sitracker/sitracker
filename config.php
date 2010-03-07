@@ -63,6 +63,13 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             // Type conversions
             switch ($CFGVAR[$catvar]['type'])
             {
+                case 'checkbox':
+                    if ($value == '')
+                    {
+                        $value = 'FALSE';
+                    }
+                    break;
+
                 case '1darray':
                     $parts = explode(',', $value);
                     foreach ($parts AS $k => $v)
@@ -70,7 +77,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $parts[$k] = "'{$v}'";
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
-                break;
+                    break;
 
                 case '2darray':
                     $value = str_replace('\n', ',', $value);
@@ -84,7 +91,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
-                break;
+                    break;
 
                 case 'languagemultiselect':
                     if ($_REQUEST['available_i18ncheckbox'] != '')
@@ -99,7 +106,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         }
                         $value = 'array(' . implode(',', $parts) . ')';
                     }
-                break;
+                    break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
             if (substr($value, 0, 6)=='array(')

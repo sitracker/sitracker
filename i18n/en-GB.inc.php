@@ -519,6 +519,8 @@ $strEditTemplate = 'Edit Template';
 $strEditUserSkills = 'Edit User Skills';
 $strEditVendor = 'Edit Vendor';
 $strEditWatchedIncidents = 'Edit Watched Incidents';
+# Punctuation mark 'Ellipsis' to indcate an unfinished phrase or sentence. (dot dot dot "..." in English)
+$strEllipsis = '&hellip;';
 $strEmail = 'Email';
 $strEmailAddress = 'Email Address';
 # Do you want to send an email with login details to the contact?
@@ -923,7 +925,7 @@ $strLastWeek = 'Last week';
 $strLastYear = 'Last year';
 # LDAP - Lightweight Directory Access Protocol
 $strLDAP = 'LDAP';
-$strLDAPAdminGroupIncrrect = 'Admin Group Incorrect';
+$strLDAPAdminGroupIncorrect = 'Admin Group Incorrect';
 $strLDAPCustomerGroupIncorrect = 'Customer Group Incorrect';
 $strLDAPManagerGroupIncorrect = 'Manager Group Incorrect';
 $strLDAPTestSucessful = 'LDAP Connection Sucessful';

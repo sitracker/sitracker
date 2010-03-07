@@ -26,7 +26,11 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = $_POST['lang'];
+$language = substr(strip_tags($_POST['lang']), 0, 5);
+if (substr($language, 2, 1) != '-' OR strpos('.', $language) !== FALSE)
+{
+    $language = 'xx-xx'; // default lang
+}
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'triggers.inc.php');
@@ -40,7 +44,7 @@ $page = strip_tags(str_replace('..','',str_replace('//','',str_replace(':','',ur
 
 if (empty($_REQUEST['username']) AND empty($_REQUEST['password']) AND $language != $_SESSION['lang'])
 {
-    if ($language != 'default')
+    if ($language != 'xx-xx')
     {
         $_SESSION['lang'] = $language;
     }
@@ -172,6 +176,10 @@ elseif (authenticate($username, $_REQUEST['password']))
 elseif ($CONFIG['portal'] == TRUE)
 {
     // Invalid user and portal enabled
+    if ($language != 'xx-xx')
+    {
+        $_SESSION['lang'] = $language;
+    }
 
     if (authenticateContact($username, $password))
     {
@@ -196,15 +204,6 @@ elseif ($CONFIG['portal'] == TRUE)
         $_SESSION['contracts'] = array();
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;
-
-        if ($language != 'default')
-        {
-            $_SESSION['lang'] = $language;
-        }
-        else
-        {
-            $_SESSION['lang'] = '';
-        }
 
         //get admin contracts
         if (admin_contact_contracts($_SESSION['contactid'], $_SESSION['siteid']) != NULL)

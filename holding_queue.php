@@ -23,17 +23,17 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 
 /**
-    * @author Tom Gerrard
+  * @author Tom Gerrard
 */
 function generate_row($update)
 {
-    global $CONFIG, $sit;
+    global $CONFIG, $sit, $strEllipsis;
     if (empty($update['fromaddr']) AND !empty($update['from'])) $update['fromaddr'] = $update['from'];
     $update['fromaddr'] = strtolower($update['fromaddr']);
 
     if (strlen($update['bodytext']) > 1003)
     {
-        $updatebodytext = substr($update['bodytext'],0,1000).'&hellip;';
+        $updatebodytext = substr($update['bodytext'],0,1000).$strEllipsis;
     }
     else
     {
@@ -359,7 +359,7 @@ if (is_array($queuerows))
     if ($realemails > 0)
     {
         echo "<tr><td>";
-        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}');\">{$strDelete}</a>";
+        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         echo "</td></tr>";
     }
     echo "</table>\n";

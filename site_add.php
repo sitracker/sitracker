@@ -79,7 +79,6 @@ if ($action == "showform" OR $action == '')
 
     echo "<tr><th>{$strEmail}</th><td>";
     echo "<input class='required' maxlength='255' name='email' size='30'";
-    echo "<input maxlength='255' name='email' size='30'";
     echo "value='{$_SESSION['formdata']['add_site']['email']}' />";
     echo "</td></tr>\n";
 

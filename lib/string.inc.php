@@ -101,7 +101,7 @@ function string_find_all($haystack, $needle, $limit=0)
 */
 function truncate_string($text, $maxlength=255, $html = TRUE)
 {
-
+    global $strEllipsis;
     if (strlen($text) > $maxlength)
     {
         // Leave space for ellipses
@@ -118,7 +118,7 @@ function truncate_string($text, $maxlength=255, $html = TRUE)
 
         if ($html == TRUE)
         {
-            $text .= '&hellip;';
+            $text .= $strEllipsis;
         }
         else
         {

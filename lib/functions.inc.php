@@ -2532,7 +2532,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
  */
 function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
-    global $dbSites;
+    global $dbSites, $strEllipsis;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
     if (!$showinactive)  $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
@@ -2559,7 +2559,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 
         if (strlen($text) >= 55)
         {
-            $text = substr(trim($text), 0, 55)."&hellip;";
+            $text = substr(trim($text), 0, 55).$strEllipsis;
         }
         else
         {
@@ -4912,7 +4912,7 @@ function show_notes($linkid, $refid, $delete = TRUE)
             {
                 $html .= "<a href='note_delete.php?id={$note->id}&amp;rpath=";
                 $html .= "{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' ";
-                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}');\">";
+                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">";
                 $html .= icon('delete', 16)."</a>";
             }
             $html .= "</div>\n"; // /detaildate
@@ -8234,8 +8234,17 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             break;
 
         case 'checkbox':
+            // Checkbox values are stored 'TRUE' / 'FALSE'
+            if ($value == 'TRUE')
+            {
+                $state = TRUE;
+            }
+            else
+            {
+                $state = FALSE;
+            }
             $html .= "<label>";
-            $html .= html_checkbox($setupvar, $value, 'TRUE');
+            $html .= html_checkbox($setupvar, $state, 'TRUE');
             $html .= " {$title}</label>";
             break;
 
