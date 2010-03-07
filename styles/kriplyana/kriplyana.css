@@ -3,11 +3,13 @@
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #mainframe { background: transparent;}
 h1 { color: #fff; }
+h2 { color: #555; }
 tr.shade1 { background: #FFF;  }
 tr.shade1 td, tr.shade2 td { border-bottom: 1px solid #C3C3C3; }
 tr.shade2 { background: #EAF4F9;  }
+tr.critical { background: #FFC4E0;}
 
-th { background: #EEEEEE; }
+th { border: 1px solid #EEEEEE; background: white; color: #555; letter-spacing: 0.05em;}
 
 
 table.vertical { border:0px;}
