@@ -1,0 +1,20 @@
+/* */
+body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
+#mainframe { background: transparent;}
+h1 { color: #fff; }
+tr.shade1 { background: #FFF;  }
+tr.shade1 td, tr.shade2 td { border-bottom: 1px solid #C3C3C3; }
+tr.shade2 { background: #EAF4F9;  }
+
+th { background: #EEEEEE; }
+
+
+table.vertical { border:0px;}
+table.vertical tbody th { background: white; text-align: left; }
+table.vertical tbody td { background: white;}
+
+input { border: 1px solid #ccc; }
+
+input.required, select.required{
+  background-color: #FFEDED;
+}
