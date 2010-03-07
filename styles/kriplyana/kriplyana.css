@@ -1,4 +1,5 @@
-/* */
+/* Kriplyana (Inuit word): snow that looks blue in the early morning  */
+
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #mainframe { background: transparent;}
 h1 { color: #fff; }
@@ -13,9 +14,53 @@ table.vertical { border:0px;}
 table.vertical tbody th { background: white; text-align: left; }
 table.vertical tbody td { background: white;}
 
-input { border: 1px solid #ccc; -moz-border-radius: 3px;
+input, textarea, select { border: 1px solid #ccc; -moz-border-radius: 3px;
   -khtml-border-radius: 3px;  border-radius: 3px;}
+
+div.windowbox
+{
+    background: #FBFCFD;
+    border: 1px solid #ccc;
+    padding:0px;
+    overflow: hidden;
+}
+div.windowtitle
+{
+    margin: 0px;
+  background: transparent;
+  color: black;
+  border-bottom: 1px solid #C3C3C3;
+  width: 100%;
+}
+.windowtitle a { color: black; font-weight: normal;}
+div.window
+{
+    width: 98%;
+}
+
+
+div#statusbar
+{
+    background: #EAF4F9; color: #999;
+}
+
+div#tail
+{
+    border-top: 5px solid #BCBBBB;
+    background: #D9D8D8;
+    margin: 0px 20px;
+}
+div#tail strong { color: #A12607; }
 
 input.required, select.required{
   background-color: #FFEDED;
+}
+span.required { color: #A12607; }
+
+span.helplink { color: #EAF4F9; }
+span.helplink a { color: #109810;}
+.helplink a span { background: #109810; }
+.helplink a:hover {
+    font-size: 99%; /* this is just for IE */
+    text-decoration: none; color: #109810;
 }
