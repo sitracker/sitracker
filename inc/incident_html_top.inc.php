@@ -30,25 +30,17 @@ echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles
 
 if ($_SESSION['auth'] == TRUE)
 {
-    $style = interface_style($_SESSION['userconfig']['theme']);
-    $styleid = $_SESSION['userconfig']['theme'];
-    echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$style['cssurl']}' />\n";
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
 }
 else
 {
-    $styleid= $CONFIG['default_interface_style'];
-    echo "<link rel='stylesheet' href='styles/webtrack1.css' />\n";
+    $theme = $CONFIG['default_interface_style'];
+    $iconset = $CONFIG['default_iconset'];
 }
-
-$csssql = "SELECT cssurl, iconset FROM `{$dbInterfaceStyles}` WHERE id='{$styleid}'";
-$cssresult = mysql_query($csssql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-else list($cssurl, $iconset) = mysql_fetch_row($cssresult);
-// Overwride default icon set with users choice, if there is one
 if (empty($iconset)) $iconset = 'sit';
-if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
+echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 
-unset($styleid);
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";

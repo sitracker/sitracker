@@ -1381,67 +1381,28 @@ function group_selector($selected, $urlargs='')
  * Return HTML for a box to select interface style/theme
  * @author Ivan Lucas
  * @param string $name. Name attribute
- * @param int $id. Interface style ID
+ * @param string $id. Chosen interface style
  * @returns string.  HTML
  */
-function interfacestyle_drop_down($name, $id)
+function interfacestyle_drop_down($name, $setting)
 {
-    global $dbInterfaceStyles;
-    // extract statuses
-    $sql  = "SELECT id, name FROM `{$dbInterfaceStyles}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    $html = "<select name=\"{$name}\">";
-    if ($id == 0)
+    $handle = opendir('.'.DIRECTORY_SEPARATOR.'styles');
+    while ($file = readdir($handle))
     {
-        $html .= "<option selected='selected' value='0'></option>\n";
-    }
-
-    while ($styles = mysql_fetch_object($result))
-    {
-        $html .= "<option ";
-        if ($styles->id == $id)
+        if ($file == '.' || $file == '..')
         {
-            $html .= "selected='selected'";
+            continue;
         }
-
-        $html .= " value=\"{$styles->id}\">{$styles->name}</option>\n";
+        if (is_dir('.'.DIRECTORY_SEPARATOR.'styles'.DIRECTORY_SEPARATOR.$file))
+        {
+            $themes[$file] = ucfirst(str_replace('_', ' ', $file));
+        }
     }
-    $html .= "</select>\n";
+    asort($themes);
+
+    $html = array_drop_down($themes, $name, $setting, '', TRUE);
+
     return $html;
-}
-
-
-/**
- * Retrieve cssurl and headerhtml for given interface style
- * @author Ivan Lucas
- * @param int $id. Interface style ID
- * @returns asoc array.
- */
-function interface_style($id)
-{
-    global $CONFIG, $dbInterfaceStyles;
-
-    $sql  = "SELECT cssurl, headerhtml FROM `{$dbInterfaceStyles}` WHERE id='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 0)
-    {
-        mysql_free_result($result);
-        $style = (array($CONFIG['default_css_url'],''));  // default style
-    }
-    else
-    {
-        $style = mysql_fetch_assoc($result);
-        mysql_free_result($result);
-    }
-
-    if (empty($style))
-    {
-        $style = (array($CONFIG['default_css_url'],''));  // default style
-    }
-
-    return ($style);
 }
 
 
@@ -2532,7 +2493,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
  */
 function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
-    global $dbSites;
+    global $dbSites, $strEllipsis;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
     if (!$showinactive)  $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
@@ -2559,7 +2520,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 
         if (strlen($text) >= 55)
         {
-            $text = substr(trim($text), 0, 55)."&hellip;";
+            $text = substr(trim($text), 0, 55).$strEllipsis;
         }
         else
         {
@@ -6996,7 +6957,7 @@ function show_edit_site($site, $mode='internal')
             {
                 array_unshift($incident_pools,$siterow['freesupport']);
             }
-            $html .= "<td>".array_drop_down($incident_pools,'incident_poolid',$siterow['freesupport'])."</td></tr>";
+            $html .= "<td>".array_drop_down($incident_pools,'incident_pool',$siterow['freesupport'])."</td></tr>";
             $html .= "<tr><th>{$GLOBALS['strActive']}:</th><td><input type='checkbox' name='active' ";
             if ($siterow['active'] == 'true')
             {
@@ -8156,9 +8117,11 @@ function is_assoc_callback($a, $b)
  * @param bool $showvarnames Whether to display the config variable name
  * @returns string HTML
 **/
-function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
+function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 {
     global $CONFIG, $CFGVAR;
+
+    if ($userid == 'current') $userid = $_SESSION['userid'];
 
     if ($CFGVAR[$setupvar]['type'] == 'languageselect'
         OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
@@ -8183,7 +8146,7 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
     }
 
     $html .= "<div class='configvar'>";
-    if ($CFGVAR[$setupvar]['title']!='') $title = $CFGVAR[$setupvar]['title'];
+    if ($CFGVAR[$setupvar]['title'] != '') $title = $CFGVAR[$setupvar]['title'];
     else $title = $setupvar;
     $html .= "<h4>{$title}</h4>";
     if ($CFGVAR[$setupvar]['help']!='') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
@@ -8201,8 +8164,8 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
         }
         if (is_bool($value))
         {
-            if ($value==TRUE) $value='TRUE';
-            else $value='FALSE';
+            if ($value == TRUE) $value = 'TRUE';
+            else $value = 'FALSE';
         }
         elseif (is_array($value))
         {
@@ -8403,9 +8366,13 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
 **/
-function cfgSave($setupvars, $userid = NULL)
+function cfgSave($setupvars, $userid = 0)
 {
-    global $dbConfig, $dbUserConfig;;
+    global $dbConfig, $dbUserConfig;
+    if ($userid == 'current')
+    {
+        $userid = $_SESSION['userid'];
+    }
     foreach ($setupvars AS $key => $value)
     {
         if ($userid < 1)
