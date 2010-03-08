@@ -6993,7 +6993,7 @@ function show_edit_site($site, $mode='internal')
             {
                 array_unshift($incident_pools,$siterow['freesupport']);
             }
-            $html .= "<td>".array_drop_down($incident_pools,'incident_poolid',$siterow['freesupport'])."</td></tr>";
+            $html .= "<td>".array_drop_down($incident_pools,'incident_pool',$siterow['freesupport'])."</td></tr>";
             $html .= "<tr><th>{$GLOBALS['strActive']}:</th><td><input type='checkbox' name='active' ";
             if ($siterow['active'] == 'true')
             {
