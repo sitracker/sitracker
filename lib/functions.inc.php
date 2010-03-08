@@ -8117,9 +8117,11 @@ function is_assoc_callback($a, $b)
  * @param bool $showvarnames Whether to display the config variable name
  * @returns string HTML
 **/
-function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
+function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 {
     global $CONFIG, $CFGVAR;
+
+    if ($userid == 'current') $userid = $_SESSION['userid'];
 
     if ($CFGVAR[$setupvar]['type'] == 'languageselect'
         OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
@@ -8144,7 +8146,7 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
     }
 
     $html .= "<div class='configvar'>";
-    if ($CFGVAR[$setupvar]['title']!='') $title = $CFGVAR[$setupvar]['title'];
+    if ($CFGVAR[$setupvar]['title'] != '') $title = $CFGVAR[$setupvar]['title'];
     else $title = $setupvar;
     $html .= "<h4>{$title}</h4>";
     if ($CFGVAR[$setupvar]['help']!='') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
@@ -8162,8 +8164,8 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
         }
         if (is_bool($value))
         {
-            if ($value==TRUE) $value='TRUE';
-            else $value='FALSE';
+            if ($value == TRUE) $value = 'TRUE';
+            else $value = 'FALSE';
         }
         elseif (is_array($value))
         {
