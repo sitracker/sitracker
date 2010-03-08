@@ -1,6 +1,9 @@
 /* Kriplyana (Inuit word): snow that looks blue in the early morning  */
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
+#masthead { background-color: #4B5C94; background-image: none;}
+h1 { background-image: none; font-weight: lighter; }
+#apptitle {background-image: none; }
 #mainframe { background: transparent;}
 h1 { color: #fff; }
 h2 { color: #555; }
