@@ -1386,8 +1386,6 @@ function group_selector($selected, $urlargs='')
  */
 function interfacestyle_drop_down($name, $setting)
 {
-    global $dbInterfaceStyles;
-
     $handle = opendir('.'.DIRECTORY_SEPARATOR.'styles');
     while ($file = readdir($handle))
     {
@@ -1405,40 +1403,6 @@ function interfacestyle_drop_down($name, $setting)
     $html = array_drop_down($themes, $name, $setting, '', TRUE);
 
     return $html;
-}
-
-
-/**
- * Retrieve cssurl and headerhtml for given interface style
- * @author Ivan Lucas
- * @param int $id. Interface style ID
- * @returns asoc array.
- */
-function interface_style($id)
-{
-    global $CONFIG, $dbInterfaceStyles;
-
-    $sql  = "SELECT cssurl, headerhtml FROM `{$dbInterfaceStyles}` WHERE id='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 0)
-    {
-        mysql_free_result($result);
-        $style = (array($CONFIG['default_css_url'],''));  // default style
-    }
-    else
-    {
-        $style = mysql_fetch_assoc($result);
-        mysql_free_result($result);
-    }
-
-    if (empty($style))
-    {
-        $style = (array($CONFIG['default_css_url'],''));  // default style
-    }
-
-    return ($style);
 }
 
 
