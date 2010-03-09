@@ -52,16 +52,9 @@ function dashboard_rss_install()
 
 function dashboard_rss_display($dashletid)
 {
-    global $CONFIG, $dbInterfaceStyles, $dbDashboardRSS, $sit, $lib_path;
+    global $CONFIG, $dbDashboardRSS, $sit, $lib_path;
 
-    if ($_SESSION['auth'] == TRUE) $styleid = $_SESSION['userconfig']['theme'];
-    else $styleid = $CONFIG['default_interface_style'];
-
-    $csssql = "SELECT cssurl, iconset FROM `{$dbInterfaceStyles}` WHERE id='{$styleid}'";
-    $cssresult = mysql_query($csssql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    else list($cssurl, $iconset) = mysql_fetch_row($cssresult);
-    if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
+    $iconset = $_SESSION['userconfig']['iconset'];
     /*
     Originally from dashboard/dashboard.inc.php
     */
