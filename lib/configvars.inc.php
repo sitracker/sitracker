@@ -147,7 +147,7 @@ $CFGCAT['other'] = array('debug', 'error_logfile',
                           'session_name',
                           'upload_max_filesize','default_roleid','trusted_server');
 
-$CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled', 'timesheets_enabled');
+$CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
 
 
 
@@ -577,10 +577,6 @@ $CFGVAR['tag_icons']['type'] = '2darray';
 
 $CFGVAR['tasks_enabled']['title'] = "Enable Tasks";
 $CFGVAR['tasks_enabled']['type'] = 'checkbox';
-
-$CFGVAR['timesheets_enabled']['title'] = "Enable Timesheets";
-$CFGVAR['timesheets_enabled']['help'] = "<em>Experimental Feature</em>";
-$CFGVAR['timesheets_enabled']['type'] = 'checkbox';
 
 $CFGVAR['timezone']['title'] = 'System Time Zone';
 $CFGVAR['timezone']['help'] = "Set this to match the timezone that your server running SiT! is configured to use";
