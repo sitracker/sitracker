@@ -53,8 +53,8 @@ elseif ($action == "edit")
 elseif ($action == "update")
 {
     // External Variables
-    $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
-    $incident_quantity = $incident_pools[$_POST['incident_poolid']];
+    // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
+    $incident_quantity = intval(cleanvar($_POST['incident_pool']));
     $name = cleanvar($_POST['name']);
     $department = cleanvar($_POST['department']);
     $address1 = cleanvar($_POST['address1']);

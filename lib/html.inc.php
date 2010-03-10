@@ -422,6 +422,8 @@ function user_alert($message, $severity, $helpcontext = '')
 function icon($filename, $size='', $alt='', $title='', $id='')
 {
     global $iconset, $CONFIG;
+
+    if (empty($iconset)) $iconset = $_SESSION['userconfig']['iconset'];
     $sizes = array(12, 16, 32);
 
     if (!in_array($size, $sizes) OR empty($size))
