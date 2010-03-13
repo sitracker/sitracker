@@ -7151,11 +7151,11 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<tr><th>{$GLOBALS['strEmailDetails']}</th>";
     // Check the box to send portal details, only if portal is enabled
-    $html .= "<td><input type='checkbox' name='emaildetails'";
+    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails'";
     if ($CONFIG['portal'] == TRUE) $html .= " checked='checked'";
     else $html .= " disabled='disabled'";
-    $html .= ">";
-    $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</td></tr>";
+    $html .= " />";
+    $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
     $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strAddContact']}\" /></p>";
