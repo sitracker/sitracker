@@ -176,7 +176,7 @@ $CATI18N['otherfeatures'] = $strOther;
 // Text to introduce a configuration category, may contain HTML
 $CATINTRO['sla'] = "This section allows you to configure how service levels are used, configure the <abbr title='Service Level Agreements'>SLA</abbr>'s themselves on the <a href='service_levels.php'>Service Levels</a> page.";
 $CATINTRO['outboundemail'] = "SiT! uses the PHP mail() function to send outbound emails, you can configure this via your php.ini file, see your php documentation for more details.";
-
+$CATINTRO['inboundemail'] = "Before enabling inbound email with POP/IMAP you must also configure the Scheduler to run, see the <a href='http://sitracker.org/wiki/Scheduler'>documentation</a> for more details.";
 
 // Descriptions of all the config variables
 // each config var may have these elements:
