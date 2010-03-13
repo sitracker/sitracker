@@ -221,7 +221,7 @@ switch ($action)
             {
                 $updatehtml .= "[b]";
                 $updatehtml .= readable_date(mysql2date($notesarray[$i]->timestamp), 'system');
-                $updatehtml .= "[/b]\n".mysql_escape_string($notesarray[$i]->bodytext)."\n\n";
+                $updatehtml .= "[/b]\n".mysql_real_escape_string($notesarray[$i]->bodytext)."\n\n";
             }
 
             $updatehtml .= sprintf($SYSLANG['strActivityCompleted'], $enddate, $duration);
