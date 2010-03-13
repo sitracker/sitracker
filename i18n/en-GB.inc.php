@@ -572,6 +572,7 @@ $strEndDate = 'End Date';
 $strEndOfLife = 'End of Life';
 $strEngineer = 'Engineer';
 $strEngineers = 'Engineers';
+$strEngineerMonthlyActivityTotals = 'Engineer Monthly Activity Totals';
 $strEngineersStatisticsForXMonths = 'Engineer Statistics for past %s months';
 $strEngineerUtilisation = 'Engineer Utilisation';
 $strEnglish = 'English';
