@@ -2541,6 +2541,12 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 }
 
 
+/**
+ * Fetches the name of the given site
+ * @author Ivan Lucas
+ * @param int $id. the site ID
+ * @returns string Site Name, or 'unknown' (in local lang) if not found
+*/
 function site_name($id)
 {
     $sitename = db_read_column('name', $GLOBALS['dbSites'], $id);
@@ -2548,6 +2554,20 @@ function site_name($id)
     {
         $sitename = $GLOBALS['strUnknown'];
     }
+
+    return ($sitename);
+}
+
+
+/**
+ * Fetches the telephone number of the given site
+ * @author Ivan Lucas
+ * @param int $id. the site ID
+ * @returns string Site telephone number
+*/
+function site_telephone($id)
+{
+    $sitename = db_read_column('telephone', $GLOBALS['dbSites'], $id);
 
     return ($sitename);
 }
