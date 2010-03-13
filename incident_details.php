@@ -110,7 +110,7 @@ $site .= "<br />\n";
 echo sprintf($strContactofSite, $contact, $site)." ";
 echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
 if ($incident->ccemail != '') echo "CC: <a href=\"mailto:{$incident->ccemail}\">{$incident->ccemail}</a><br />\n";
-if ($incident->phone!='' OR $incident->phone!='')
+if ($incident->phone != '' OR $incident->mobile != '')
 {
     if ($incident->phone != '')
     {
@@ -123,6 +123,16 @@ if ($incident->phone!='' OR $incident->phone!='')
         plugin_do('incident_details_mobile');
     }
     echo "<br />\n";
+}
+else
+{
+    $sitetelephone = site_telephone($incident->siteid);
+    if (!empty($sitetelephone))
+    {
+        echo "{$strTel} ({$strSite}): {$sitetelephone} ";
+        plugin_do('incident_details_phone');
+        echo "<br />\n";
+    }
 }
 if ($incident->externalid != '' OR $incident->escalationpath > 0)
 {
@@ -253,11 +263,11 @@ if (!empty($incident->product))
 
 echo sprintf($strOpenForX, $opened_for)." - ";
 echo incidentstatus_name($incident->status);
-if ($incident->status == 2) echo " (" . closingstatus_name($incident->closingstatus) . ")";
+if ($incident->status == STATUS_CLOSED) echo " (" . closingstatus_name($incident->closingstatus) . ")";
 echo "<br />\n";
 
 // Show sla target/review target if incident is still open
-if ($incident->status != 2 AND $incident->status!=7)
+if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
 {
     if ($targettype != '')
     {

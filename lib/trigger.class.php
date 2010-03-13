@@ -20,16 +20,16 @@ class Trigger extends SitEntity {
     function add(){}
     function edit(){}
     function getSOAPArray(){}
-      
+
     /**
      * ID of the trigger type
      *
      * This is the type of trigger, e.g. TRIGGER_ADD_INCIDENT and is used to
      * find which users/system actions are assigned to that particuar trigger
-     * @var string 
+     * @var string
      */
     private $trigger_type;
-    
+
     /**
      * The array of parameters
      *
@@ -47,7 +47,7 @@ class Trigger extends SitEntity {
     {
         $this->trigger_type = cleanvar($trigger_type);
         $this->paramarray = cleanvar($param_array);
-        debug_log("Trigger {$trigger_type} created. Options:\n" . 
+        debug_log("Trigger {$trigger_type} created. Options:\n" .
             print_r($param_array, TRUE));
     }
 
@@ -86,7 +86,7 @@ class Trigger extends SitEntity {
         $result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error("MySQL Query Error " . 
+            trigger_error("MySQL Query Error " .
                           mysql_error(), E_USER_WARNING);
         }
 
@@ -102,12 +102,12 @@ class Trigger extends SitEntity {
                     $eresult = @eval("\$value = $checks;return TRUE;");
                     if (!$eresult)
                     {
-                        trigger_error("Error in trigger rule for 
-                                      {$this->trigger_type}, check your 
-                                      <a href='triggers.php'>trigger rules</a>", 
+                        trigger_error("Error in trigger rule for
+                                      {$this->trigger_type}, check your
+                                      <a href='triggers.php'>trigger rules</a>",
                                       E_USER_WARNING);
                     }
-                    
+
                     // if we fail, we jump to the next trigger
                     if ($value === FALSE)
                     {
@@ -130,8 +130,8 @@ class Trigger extends SitEntity {
                 debug_log("Trigger parameters:\n.$dbg", TRUE);
             }
 
-            debug_log("trigger_action({$triggerobj->userid}, 
-                      {$this->trigger_type}, {$triggerobj->action}, 
+            debug_log("trigger_action({$triggerobj->userid},
+                      {$this->trigger_type}, {$triggerobj->action},
                       {$this->param_array}) called", TRUE);
 
             $return = $this->trigger_action($triggerobj->action,
@@ -165,7 +165,7 @@ class Trigger extends SitEntity {
                 break;
 
             case "ACTION_CREATE_INCIDENT":
-                debug_log("creating incident with holdingemailid: 
+                debug_log("creating incident with holdingemailid:
                     {$this->param_array['holdingemailid']}", TRUE);
                 $rtnvalue = $this->create_incident_from_incoming(
                     $this->param_array['holdingemailid']);
@@ -184,8 +184,8 @@ class Trigger extends SitEntity {
                     $jtext = '';
                 }
 
-                $rtnvalue = journal(CFG_LOGGING_NORMAL, $this->trigger_type, 
-                                    "Trigger Fired ({$jtext})", 
+                $rtnvalue = journal(CFG_LOGGING_NORMAL, $this->trigger_type,
+                                    "Trigger Fired ({$jtext})",
                                     CFG_JOURNAL_TRIGGERS, $this->user_id);
                 break;
 
@@ -343,7 +343,7 @@ class Trigger extends SitEntity {
                 $noticelinktext = $notice->linktext;
             }
 
-            $notice_text = mysql_escape_string(trigger_replace_specials($notice_text));
+            $notice_text = mysql_real_escape_string(trigger_replace_specials($notice_text));
             $noticelinktext = cleanvar(trigger_replace_specials($noticelinktext));
             $noticelink = cleanvar(trigger_replace_specials($notice->link));
             $refid = cleanvar(trigger_replace_specials($notice->refid));
@@ -385,7 +385,7 @@ class Trigger extends SitEntity {
 //     {
 //         global $dbSites, $dbIncidents, $dbContacts;
 //         $passed = FALSE;
-// 
+//
 //         $checks = explode(",", $check_strings);
 //         foreach ($checks as $check)
 //         {
@@ -410,7 +410,7 @@ class Trigger extends SitEntity {
 //                         }
 //                     }
 //                 break;
-// 
+//
 //                 case 'contactid':
 //                     $sql = "SELECT c.id AS contactid ";
 //                     $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
@@ -428,7 +428,7 @@ class Trigger extends SitEntity {
 //                         }
 //                     }
 //                 break;
-// 
+//
 //                 case 'userid':
 //                     $sql = "SELECT i.owner AS userid ";
 //                     $sql .= "FROM `{$dbIncidents}` AS i ";
@@ -445,7 +445,7 @@ class Trigger extends SitEntity {
 //                         }
 //                     }
 //                 break;
-// 
+//
 //                 case 'sla':
 //                     $sql = "SELECT i.servicelevel AS sla ";
 //                     $sql .= "FROM `{$dbIncidents}` AS i ";
@@ -462,7 +462,7 @@ class Trigger extends SitEntity {
 //                         }
 //                     }
 //                 break;
-// 
+//
 //                 default:
 //                     //blank
 //                 break;
