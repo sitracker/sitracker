@@ -230,11 +230,12 @@ function dashboard_rss_edit($dashletid)
             if (mysql_affected_rows() < 1) html_redirect("edit_rss_feeds.php", FALSE, "Changed enabled state failed");
             if (mysql_affected_rows() < 1)
             {
-                html_redirect("edit_rss_feeds.php", FALSE, "Changed enabled state failed");
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
             }
             else
             {
-                html_redirect("edit_rss_feeds.php");
+                echo "<p>{$GLOBALS['strSuccess']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
             }
             break;
         case 'delete':
