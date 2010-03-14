@@ -151,7 +151,7 @@ function dashboard_rss_edit($dashletid)
             echo "<tr><td><label>{$GLOBALS['strDisplay']}: <input type='text' name='items' size='3' value='0' /></label> ({$GLOBALS['str0MeansUnlimited']})</td></tr>";
             echo "</table>";
             // <input name='submit' type='submit' value='{$GLOBALS['strAdd']}' />
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'save', array('editaction'=>'do_add'), false, 'dashrssaddform')."</p>";
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction'=>'do_add'), false, 'dashrssaddform')."</p>";
             echo "</form>";
             break;
         case 'do_add':
