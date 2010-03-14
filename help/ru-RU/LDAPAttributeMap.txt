@@ -1,4 +1,4 @@
-﻿Пример:
+Пример:
 
 realname=>cn
 jobtitle=>title
