@@ -699,6 +699,8 @@ $strFrequency = 'Frequency';
 # Short for 'Friday'
 $strFri = 'Fri';
 $strFriday = 'Friday';
+# Two character (Maximum) abbreviation for 'Thursday'
+$strFridayAbbr = 'Fr';
 # e.g. from x to y
 $strFrom = 'From';
 $strFromXResults = 'from %s results';
@@ -1022,6 +1024,8 @@ $strMob = 'Mob';
 # Short for 'Monday'
 $strMon = 'Mon';
 $strMonday = 'Monday';
+# Two character (Maximum) abbreviation for 'Monday'
+$strMondayAbbr = 'Mo';
 $strMonth = 'Month';
 $strMonthly = 'Monthly';
 $strMonthlyActivityTotals = 'Monthly Activity Totals';
@@ -1454,6 +1458,8 @@ $strSalespersonAssignedToContactsSiteEmail = 'The email address of the salespers
 # short for 'Saturday'
 $strSat = 'Sat';
 $strSaturday = 'Saturday';
+# Two character (Maximum) abbreviation for 'Saturday'
+$strSaturdayAbbr = 'Sa';
 $strSave = 'Save';
 $strSaveAsCSV = 'Save as CSV';
 $strSaveDashbaordLayout = 'Save Dashboard Layout';
@@ -1643,6 +1649,8 @@ $strSummaryOfProblemAndResolution = 'You should provide a summary of the problem
 # Short for 'Sunday'
 $strSun = 'Sun';
 $strSunday = 'Sunday';
+# Two character (Maximum) abbreviation for 'Sunday'
+$strSundayAbbr = 'Su';
 $strSupport = 'Support';
 $strSupportEmailAddress = 'Support Email Address';
 $strSupportEmailDesc = 'Free text support email';
@@ -1717,6 +1725,8 @@ $strThisYear = 'This year';
 # Short for 'Thursday'
 $strThu = 'Thu';
 $strThursday = 'Thursday';
+# Two character (Maximum) abbreviation for 'Thursday'
+$strThursdayAbbr = 'Th';
 $strTime = 'Time';
 $strTimed = 'Timed';
 $strTimeToNextAction = 'Time To Next Action';
@@ -1778,6 +1788,8 @@ $strTriggerUserEmail = 'Email address to send an user trigger email to (if not t
 # Short for 'Tuesday'
 $strTue = 'Tue';
 $strTuesday = 'Tuesday';
+# Two character (Maximum) abbreviation for 'Tuesday'
+$strTuesdayAbbr = 'Tu';
 $strType = 'Type';
 
 $strURLTitle = 'URL Title';
@@ -1888,6 +1900,8 @@ $strWebupdateBy = 'Web update by %s';
 # Short for 'Wednesday'
 $strWed = 'Wed';
 $strWednesday = 'Wednesday';
+# Two character (Maximum) abbreviation for 'Wednesday'
+$strWednesdayAbbr = 'We';
 $strWeek = 'Week';
 $strWelcome = 'Welcome';
 $strWeekView = 'Week View';
