@@ -106,7 +106,7 @@ else
     $sql = "UPDATE `{$dbUsers}` SET dashboard = '$dashboardstr' WHERE id = '".$_SESSION['userid']."'";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    html_redirect("main.php");
+    html_redirect("manage_user_dashboard.php");
 }
 
 ?>
