@@ -436,6 +436,11 @@ function dashboard_watch_incidents_upgrade()
 
     return $upgrade_schema;
 }
+function dashboard_watch_incidents_get_version()
+{
+    global $dashboard_watch_incidents_version;
+    return $dashboard_watch_incidents_version;
+}
 
 
 ?>
