@@ -169,10 +169,14 @@ function dashboard_rss_edit($dashletid)
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-            if (!$result) html_redirect("edit_rss_feeds.php", FALSE);
+            if (!$result)
+            {
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
+            }
             else
             {
-                html_redirect("edit_rss_feeds.php");
+                echo "<p>{$GLOBALS['strAddedSuccessfully']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
             }
             break;
         case 'edit':
@@ -213,8 +217,15 @@ function dashboard_rss_edit($dashletid)
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-            if (!$result) html_redirect("edit_rss_feeds.php", FALSE);
-            else html_redirect("edit_rss_feeds.php");
+            if (!$result)
+            {
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
+            }
+            else
+            {
+                echo "<p>{$GLOBALS['strSuccess']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
+            }
             break;
         case 'enable':
             $url = urldecode(cleanvar($_REQUEST['url']));
@@ -240,8 +251,15 @@ function dashboard_rss_edit($dashletid)
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-            if (!$result) html_redirect("edit_rss_feeds.php", FALSE);
-            else html_redirect("edit_rss_feeds.php");
+            if (!$result)
+            {
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
+            }
+            else
+            {
+                echo "<p>{$GLOBALS['strSuccess']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
+            }
             break;
         default:
             echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strEditRSSAtomFeed']}</h2>";
