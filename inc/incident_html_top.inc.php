@@ -159,8 +159,8 @@ else
 $targettype = target_type_name($target->type);
 
 // Get next review time
-$reviewsince = incident_get_next_review($incidentid);  // time since last review in minutes
-$reviewtarget = ($servicelevel->review_days * $working_day_mins);          // how often reviews should happen in minutes
+$reviewsince = incident_time_since_review($incidentid);  // time since last review in minutes
+$reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes (1440 minutes in a day)
 if ($reviewtarget > 0)
 {
     $reviewremain = ($reviewtarget - $reviewsince);
@@ -172,7 +172,7 @@ else
 
 // Color the title bar according to the SLA and priority
 $class = '';
-if ($slaremain <> 0 AND $incident->status != STATUS_CLOSED)
+if ($slaremain != 0 AND $incident->status != STATUS_CLOSED)
 {
     if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
     if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';

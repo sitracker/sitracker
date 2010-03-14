@@ -3661,17 +3661,27 @@ function target_type_name($targettype)
 }
 
 
-function incident_get_next_review($incidentid)
+/**
+ * Returns the number of minutes since the last incident review for a specified
+ * incident
+ * @author Ivan Lucas
+ * @param int $incidentid - Incident ID
+ * @return int Time since the last review in minutes
+ * @note was called incident_get_next_review() (very bad name) until 3.60 14Mar10
+*/
+function incident_time_since_review($incidentid)
 {
     global $now;
-    $sql = "SELECT timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND type='reviewmet' ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT timestamp FROM `{$GLOBALS['dbUpdates']}` ";
+    $sql .= "WHERE incidentid='{$incidentid}' AND type='reviewmet' ";
+    $sql .= "ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
         $upd = mysql_fetch_object($result);
-        $timesincereview = floor(($now - ($upd->timestamp)) / 60);
+        $timesincereview = floor(($now - $upd->timestamp) / 60);
     }
     return $timesincereview;
 }

@@ -143,15 +143,15 @@ while ($incidents = mysql_fetch_array($result))
     else $slaremain = 0;
 
     // Get next review time
-    $reviewsince = incident_get_next_review($incidents['id']);  // time since last review in minutes
-    $reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes
+    $reviewsince = incident_time_since_review($incidents['id']);  // time since last review in minutes
+    $reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes (1440 minutes in a day)
     if ($reviewtarget > 0)
     {
         $reviewremain = ($reviewtarget - $reviewsince);
     }
     else
     {
-        $reviewremain=0;
+        $reviewremain = 0;
     }
 
     // Remove Tags from update Body
@@ -372,13 +372,14 @@ while ($incidents = mysql_fetch_array($result))
     echo "</td>";
 
     // Final column
-    if ($reviewremain>0 && $reviewremain<=2400)
+    if ($reviewremain > 0 AND $reviewremain <= 7200)
     {
-        // Only display if review is due in the next five days
+        // Only display if review is due in the next five days (7200 is the number of minutes in 5 days)
         echo "<td align='center'>";
-        echo sprintf($strReviewIn, format_workday_minutes($reviewremain));
+        // Reviews don't use working days
+        echo sprintf($strReviewIn, format_seconds($reviewremain * 60));
     }
-    elseif ($reviewremain<=0)
+    elseif ($reviewremain <= 0)
     {
         echo "<td align='center' class='review'>";
         if ($reviewremain > -86400)

@@ -150,7 +150,9 @@ function makeDaysGrid(startDay,day,intDaysInMonth,newCal,eltName)
     //daysGrid += '</strong>';
 
     daysGrid += '<a href="javascript:incYear(1,\'' + eltName + '\')"> &raquo;</a><br />';
-    daysGrid += '&nbsp;Su Mo Tu We Th Fr Sa&nbsp;<br>&nbsp;';
+    daysGrid += '&nbsp;' + strSundayAbbr + ' ' + strMondayAbbr + ' ' +
+                strTuesdayAbbr + ' ' + strWednesdayAbbr + ' ' + strThursdayAbbr +
+                ' ' + strFridayAbbr + ' ' + strSaturdayAbbr + '&nbsp;<br />&nbsp;';
     var dayOfMonthOfFirstSunday = (7 - startDay + 1);
     for (var intWeek = 0; intWeek < 6; intWeek++)
     {

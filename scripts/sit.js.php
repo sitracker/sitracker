@@ -39,6 +39,14 @@ var strOctAbbr = '{$strOctAbbr}';
 var strNovAbbr = '{$strNovAbbr}';
 var strDecAbbr = '{$strDecAbbr}';
 
+var strMondayAbbr = '{$strMondayAbbr}';
+var strTuesdayAbbr = '{$strTuesdayAbbr}';
+var strWednesdayAbbr = '{$strWednesdayAbbr}';
+var strThursdayAbbr = '{$strThursdayAbbr}';
+var strFridayAbbr = '{$strFridayAbbr}';
+var strSaturdayAbbr = '{$strSaturdayAbbr}';
+var strSundayAbbr = '{$strSundayAbbr}';
+
 var strAreYouSureUpdateLastBilled = \"{$strAreYouSureUpdateLastBilled}\";
 var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
 var strKnowledgeBaseArticle = \"{$strKnowledgeBaseArticle}\";

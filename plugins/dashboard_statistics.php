@@ -69,4 +69,11 @@ function dashboard_statistics_display()
     echo "{$kbpublished} {$GLOBALS['strPublishedToday']}</a><br />";
 }
 
+function dashboard_statistics_get_version()
+{
+    global $dashboard_statistics_version;
+    return $dashboard_statistics_version;
+}
+
+
 ?>
