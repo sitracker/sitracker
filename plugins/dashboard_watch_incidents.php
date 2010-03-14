@@ -264,7 +264,7 @@ function dashboard_watch_incidents_edit($dashletid)
         case 'add':
             $type = $_REQUEST['type'];
             echo "<h2>{$GLOBALS['strWatchAddSet']}</h2>";
-            echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?action=do_add&type={$type}' method='post' onsubmit='return false'>";
+            echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?editaction=do_add&type={$type}' method='post' onsubmit='return false'>";
             echo "<table class='vertical'>";
             echo "<tr><td>";
 
