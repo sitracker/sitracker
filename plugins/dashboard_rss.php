@@ -10,7 +10,7 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$dashboard_rss_version = 3;
+$dashboard_rss_version = 4;
 
 
 function dashboard_rss($dashletid)
@@ -42,7 +42,7 @@ function dashboard_rss_install()
     }
     else $res = TRUE;
 
-    $datasql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_rss` (`owner`, `url`, `items`, `enabled`) VALUES (1, 'http://sourceforge.net/export/rss2_projfiles.php?group_id=160319', 3, 'true');";
+    $datasql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_rss` (`owner`, `url`, `items`, `enabled`) VALUES (1, 'http://sourceforge.net/export/rss2_projnews.php?group_id=160319', 3, 'true');";
     $result = mysql_query($datasql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -332,6 +332,15 @@ function dashboard_rss_upgrade()
         ALTER TABLE `{$CONFIG['db_tableprefix']}dashboard_rss` CHANGE `owner` `owner` SMALLINT( 6 ) NOT NULL;";
 
     return $upgrade_schema;
+
+
+    $upgrade_schema[4] = "
+        -- TMS 14Mar10
+        UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url='http://sourceforge.net/export/rss2_projnews.php?group_id=160319' WHERE url='http://sourceforge.net/export/rss2_projfiles.php?group_id=160319';
+
+    return $upgrade_schema;
+
+
 }
 
 function dashboard_rss_get_version()
