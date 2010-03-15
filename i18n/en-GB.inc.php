@@ -1608,6 +1608,7 @@ $strSomeOfTheseIdentifiers = 'Some of these identifiers might not be available o
 $strSorryNoPermissionToAreas = 'Sorry, you do not have permission to the following areas';
 $strSorryNoRecordsMatchingX = 'Sorry, unable to find any records matching %s';
 $strSorryNoSearchResults = 'Sorry, your search wielded no results';
+$strSorryProductCantBeDeleted = 'Sorry, the product can\'t be deleted, check if there are skills or contracts linked to it.';
 $strSort = 'Sort';
 $strSortAscending = 'Sort Ascending';
 $strSortDescending = 'Sort Decending';
