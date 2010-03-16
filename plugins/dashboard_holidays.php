@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$dashboard_incoming_version = 1;
+$dashboard_holidays_version = 1;
 
 function dashboard_holidays($dashletid)
 {
@@ -38,5 +38,13 @@ function dashboard_holidays($dashletid)
     else echo "<p align='center'>{$GLOBALS['strNobody']}</p>\n";
     echo "</div></div></div>";
 }
+
+function dashboard_holidays_get_version()
+{
+global $dashboard_holidays_version;
+return $dashboard_holidays_version;
+}
+	
+	
 
 ?>

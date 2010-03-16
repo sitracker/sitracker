@@ -56,7 +56,7 @@ if (!empty($productid))
     else
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<p class='error'>{$strSorryProductCantBeDeteled}</p>";
+        echo "<p class='error'>{$strSorryProductCantBeDeleted}</p>";
         echo "<p align='center'><a href='products.php#{$productid}'>{$strReturnToProductList}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
