@@ -336,7 +336,7 @@ function dashboard_rss_upgrade()
 
     $upgrade_schema[4] = "
         -- TMS 14Mar10
-        UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url='http://sourceforge.net/export/rss2_projnews.php?group_id=160319' WHERE url='http://sourceforge.net/export/rss2_projfiles.php?group_id=160319'";
+        UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url='http://sourceforge.net/export/rss2_projnews.php?group_id=160319' WHERE url='http://sourceforge.net/export/rss2_projfiles.php?group_id=160319';
 
     return $upgrade_schema;
 
