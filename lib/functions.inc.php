@@ -8372,7 +8372,17 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         $html .= "<p class='info'>The current password setting is not shown</p>";
     }
 
-    if ($showvarnames) $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
+    if ($showvarnames)
+    {
+        if ($userid < 1)
+        {
+            $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
+        }
+        else
+        {
+            $html .= "<br />(<var>userconfig: '$setupvar'</var>)";
+        }
+    }
 
     if ($CFGVAR[$setupvar]['statusfield'] == 'TRUE')
     {
