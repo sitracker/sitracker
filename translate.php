@@ -50,101 +50,135 @@ if (!$_REQUEST['mode'])
     }
     echo "</select>";
     echo "<br /><br />";
+    echo "<label><input type='radio' name='showtranslated' value='showtranslated' checked='checked' /> {$strShowAll}</label> ";
+    echo "<label><input type='radio' name='showtranslated' value='' /> {$strHide} {$strCompleted}</label>";
+    echo "<br /><br />";
     echo "<input type='submit' value='$strTranslate' />";
     echo "</form></div>\n";
+    $_SESSION['translation_fromvalues'] = '';
+    $_SESSION['translation_foreignvalues'] = '';
 }
 elseif ($_REQUEST['mode'] == "show")
 {
     $from = cleanvar($_REQUEST['from']);
-    //open english file
-    $fromfile = APPLICATION_I18NPATH . "{$from}.inc.php";
-    $fh = fopen($fromfile, 'r');
-    $theData = fread($fh, filesize($fromfile));
-    fclose($fh);
-    $lines = explode("\n", $theData);
-    $langstrings[$from];
-    $fromvalues = array();
-
-    foreach ($lines as $values)
+    if (!empty($_REQUEST['showtranslated']))
     {
-        $badchars = array("$", "\"", "\\", "<?php", "?>");
-        $values = trim(str_replace($badchars, '', $values));
-
-        //get variable and value
-        $vars = explode("=", $values);
-
-        //remove spaces
-        $vars[0] = trim($vars[0]);
-        $vars[1] = trim($vars[1]);
-
-        if (substr($vars[0], 0, 3) == "str")
-        {
-            //remove leading and trailing quotation marks
-            $vars[1] = substr_replace($vars[1], "",-2);
-            $vars[1] = substr_replace($vars[1], "",0, 1);
-            $fromvalues[$vars[0]] = $vars[1];
-        }
-        elseif (substr($vars[0], 0, 2) == "# ")
-        {
-            $comments[$lastkey] = substr($vars[0], 2, 1024);
-        }
-        else
-        {
-            if (substr($values, 0, 4) == "lang")
-                $languagestring=$values;
-            if (substr($values, 0, 8) == "i18nchar")
-                $i18ncharset=$values;
-        }
-        $lastkey = $vars[0];
+        $showtranslated = TRUE;
     }
-    $origcount = count($fromvalues);
-    unset($lines);
-
-    //open foreign file
-    $myFile = APPLICATION_I18NPATH . "{$tolang}.inc.php";
-    if (file_exists($myFile))
+    else
     {
-        $foreignvalues = array();
+        $showtranslated = FALSE;
+    }
 
-        $fh = fopen($myFile, 'r');
-        $theData = fread($fh, filesize($myFile));
+    if (empty($_SESSION['translation_fromvalues']))
+    {
+        //open source language file
+        $fromfile = APPLICATION_I18NPATH . "{$from}.inc.php";
+        $fh = fopen($fromfile, 'r');
+        $theData = fread($fh, filesize($fromfile));
         fclose($fh);
         $lines = explode("\n", $theData);
-        //print_r($lines);
-        foreach ($lines AS $introcomment)
-        {
-            if (substr($introcomment, 0, 2) == "//")
-            {
-                $meta[] = substr($introcomment, 3);
-            }
-            if (trim($introcomment) == '') break;
-        }
-
+        unset($theData);
+        $langstrings[$from];
+        $lastkey = '';
+        $fromvalues = array();
 
         foreach ($lines as $values)
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
             $values = trim(str_replace($badchars, '', $values));
-            if (substr($values, 0, 3) == "str")
+
+            //get variable and value
+            $vars = explode("=", $values);
+
+            //remove spaces
+            $vars[0] = trim($vars[0]);
+            $vars[1] = trim($vars[1]);
+
+            if (substr($vars[0], 0, 3) == "str")
             {
-                $vars = explode("=", $values);
-                $vars[0] = trim($vars[0]);
-                $vars[1] = trim(substr_replace($vars[1], "",-2));
+                //remove leading and trailing quotation marks
+                $vars[1] = substr_replace($vars[1], "",-2);
                 $vars[1] = substr_replace($vars[1], "",0, 1);
-                $foreignvalues[$vars[0]] = $vars[1];
+                $fromvalues[$vars[0]] = $vars[1];
             }
-            elseif (substr($values, 0, 12) == "i18nAlphabet")
+            elseif (substr($vars[0], 0, 2) == "# ")
             {
-                $values = explode('=',$values);
-                $delims = array("'", ';');
-                $i18nalphabet=str_replace($delims,'',$values[1]);;
+                $comments[$lastkey] = substr($vars[0], 2, 1024);
+            }
+            else
+            {
+                if (substr($values, 0, 4) == "lang")
+                    $languagestring=$values;
+                if (substr($values, 0, 8) == "i18nchar")
+                    $i18ncharset=$values;
+            }
+            $lastkey = $vars[0];
+        }
+        $origcount = count($fromvalues);
+        unset($lines);
+        $_SESSION['translation_fromvalues'] = $fromvalues;
+    }
+    else
+    {
+        $fromvalues = $_SESSION['translation_fromvalues'];
+    }
+
+
+    if (empty($_SESSION['translation_foreignvalues']))
+    {
+        //open foreign (destination) file
+        $myFile = APPLICATION_I18NPATH . "{$tolang}.inc.php";
+        if (file_exists($myFile))
+        {
+            $foreignvalues = array();
+
+            $fh = fopen($myFile, 'r');
+            $theData = fread($fh, filesize($myFile));
+            fclose($fh);
+            $lines = explode("\n", $theData);
+            unset($theData);
+            //print_r($lines);
+            foreach ($lines AS $introcomment)
+            {
+                if (substr($introcomment, 0, 2) == "//")
+                {
+                    $meta[] = substr($introcomment, 3);
+                }
+                if (trim($introcomment) == '') break;
             }
 
+
+            foreach ($lines as $values)
+            {
+                $badchars = array("$", "\"", "\\", "<?php", "?>");
+                $values = trim(str_replace($badchars, '', $values));
+                if (substr($values, 0, 3) == "str")
+                {
+                    $vars = explode("=", $values);
+                    $vars[0] = trim($vars[0]);
+                    $vars[1] = trim(substr_replace($vars[1], "",-2));
+                    $vars[1] = substr_replace($vars[1], "",0, 1);
+                    $foreignvalues[$vars[0]] = $vars[1];
+                }
+                elseif (substr($values, 0, 12) == "i18nAlphabet")
+                {
+                    $values = explode('=',$values);
+                    $delims = array("'", ';');
+                    $i18nalphabet = str_replace($delims,'',$values[1]);;
+                }
+
+            }
+            $_SESSION['translation_foreignvalues'] = $foreignvalues;
+        }
+        else
+        {
+            $meta[] = "SiT! Language File - {$languages[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
         }
     }
     else
     {
-        $meta[] = "SiT! Language File - {$languages[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
+        $foreignvalues = $_SESSION['translation_foreignvalues'];
     }
 
     echo "<h2>{$strWordList}</h2>";
@@ -169,17 +203,30 @@ elseif ($_REQUEST['mode'] == "show")
     $shade = 'shade1';
     foreach (array_keys($fromvalues) as $key)
     {
-        if ($_REQUEST['lang'] == 'zz') $foreignvalues[$key] = $key;
-        echo "<tr class='$shade'><td><label for=\"{$key}\"><code>{$key}</code></label></td>";
-        echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
-        echo "<td><input id=\"{$key}\" ";
-        if (empty($foreignvalues[$key])) echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \"";
-        echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" />";
-        if (empty($foreignvalues[$key])) echo "<span style='color:red;'>*</span>";
-        echo "</td></tr>\n";
-        if ($shade=='shade1') $shade='shade2';
-        else $shade='shade1';
-        if (!empty($comments[$key])) echo "<tr><td colspan='3' class='{$shade}'><strong>{$strNotes}:</strong> {$comments[$key]}</td></tr>\n";
+        if ($showtranslated === TRUE OR ($showtranslated === FALSE AND empty($foreignvalues[$key]) === TRUE))
+        {
+            if ($_REQUEST['lang'] == 'zz') $foreignvalues[$key] = $key;
+            echo "<tr class='$shade'><td><label for=\"{$key}\"><code>{$key}</code></label></td>";
+            echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
+
+            echo "<td><input id=\"{$key}\" ";
+            if (empty($foreignvalues[$key]))
+            {
+                echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \"";
+            }
+            echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" />";
+            if (empty($foreignvalues[$key]))
+            {
+                echo "<span style='color:red;'>*</span>";
+            }
+            echo "</td></tr>\n";
+            if ($shade=='shade1') $shade='shade2';
+            else $shade='shade1';
+            if (!empty($comments[$key]))
+            {
+                echo "<tr><td colspan='3' class='{$shade}'><strong>{$strNotes}:</strong> {$comments[$key]}</td></tr>\n";
+            }
+        }
     }
     echo "</table>";
     echo "<input type='hidden' name='origcount' value='{$origcount}' />";
@@ -228,14 +275,20 @@ elseif ($_REQUEST['mode'] == "save")
 
     $i18nfile .= "// list of strings (Alphabetical by key)\n";
 
-    $lastchar='';
-    $translatedcount=0;
-    foreach (array_keys($_POST) as $key)
+    $lastchar = '';
+    $translatedcount = 0;
+    foreach (array_keys($_SESSION['translation_fromvalues']) as $key)
     {
         if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
         {
             if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
             $i18nfile .= "\${$key} = '".addslashes($_POST[$key])."';\n";
+            $lastchar = substr($key, 3, 1);
+            $translatedcount++;
+        }
+        elseif (!empty($_SESSION['translation_foreignvalues'][$key]))
+        {
+            $i18nfile .= "\${$key} = '".addslashes($_SESSION['translation_foreignvalues'][$key])."';\n";
             $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
