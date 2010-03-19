@@ -53,10 +53,14 @@ if (isset($_POST['submit']))
     $sql = "UPDATE `{$dbInventory}` ";
     $sql .= "SET address='{$post['address']}', ";
     if (isset($post['username']))
+    {
         $sql .= "username='{$post['username']}', ";
+    }
 
     if (isset($post['password']))
+    {
         $sql .= "password='{$post['password']}', ";
+    }
 
     $sql .= "type='{$post['type']}', ";
     $sql .= "notes='{$post['notes']}', modified=NOW(), ";
@@ -76,7 +80,7 @@ if (isset($_POST['submit']))
     }
 
     $sql .= " WHERE id='{$id}'";
-
+    
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     else html_redirect("inventory_site.php?id={$siteid}");
@@ -109,7 +113,7 @@ else
     echo site_drop_down('site', $row->siteid, TRUE);
     echo " <span class='required'>{$strRequired}</td>";
     echo "<tr><th>{$strOwner}</th><td>";
-    echo contact_site_drop_down('owner', '');
+    echo contact_site_drop_down('owner', $row->contactid);
     echo "</td></tr>";
 
     echo "<tr><th>{$strID} ".help_link('InventoryID')."</th>";
