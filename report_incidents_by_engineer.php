@@ -310,7 +310,7 @@ elseif ($_REQUEST['statistics'] == 'on')
     if ($output == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>".sprintf($strEngineersStatisticsForXMonths, 12)."</h2>";
+        echo "<h2>".sprintf($strEngineersStatisticsForXMonths, round(($enddate - $startdate) / (60*60*24*30.5)))."</h2>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
@@ -429,6 +429,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $count++;
     }
 
+    $html .= "<h2>{$title}</h2>";
     $html .= "<p align='center'>".sprintf($strIncidentEscalatedReportDesc, $numrows, $numrows_esc)."</p>";
     $html .= "<table width='99%' align='center'>";
     $html .= "<tr><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strIncident}</th>";

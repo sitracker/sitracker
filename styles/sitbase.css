@@ -355,6 +355,7 @@ div.windowtitle
   background: #205D94;
   color: white;
   padding: 1px;
+  cursor: move;
 }
 .windowtitle img { vertical-align: middle; border: 0px; }
 .windowtitle div { padding-right: 3px; }
@@ -660,7 +661,7 @@ div.detailhead, div.detailinfo, div.detailheadhidden, div.detailinfohidden
     margin-top: 10px;
     -moz-border-radius: 6px;
     top: 10px;
-    margin-left: 7%; 
+    margin-left: 7%;
 }
 div.detailhead, div.detailheadhidden
 {
