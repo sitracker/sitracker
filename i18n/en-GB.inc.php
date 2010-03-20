@@ -1078,6 +1078,7 @@ $strNext = 'Next';
 $strNextAction = 'Next Action';
 $strNextSLATarget = 'The next SLA target';
 $strNextUpdate = 'Next Update';
+# No being the opposite of Yes
 $strNo = 'No';
 $strNobody = 'Nobody';
 $strNoAnswerGiven = 'No Answer Given';
