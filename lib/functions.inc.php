@@ -8529,6 +8529,62 @@ function feedback_hash($formid, $contactid, $incidentid)
 }
 
 
+function qtype_listbox($type)
+{
+    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
+
+    $html .= "<select name='type'>\n";
+    $html .= "<option value='rating'";
+    if ($type == 'rating') $html .= " selected='selected'";
+    $html .= ">{$strRating}</option>";
+
+    $html .= "<option value='options'";
+    if ($type=='options') $html .= " selected='selected'";
+    $html .= ">{$strOptions}</option>";
+
+    $html .= "<option value='multioptions'";
+    if ($type == 'multioptions') $html .= " selected='selected'";
+    $html .= ">{$strMultipleOptions}</option>";
+
+    $html .= "<option value='text'";
+    if ($type == 'text') $html .= " selected='selected'";
+    $html .= ">{$strText}</option>";
+
+    $html .= "</select>\n";
+
+    return $html;
+}
+
+
+
+function feedback_qtype_listbox($type)
+{
+    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
+
+    $html .= "<select name='type'>\n";
+    $html .= "<option value='rating'";
+    if ($type == 'rating') $html .= " selected='selected'";
+    $html .= ">{$strRating}</option>";
+
+    $html .= "<option value='options'";
+    if ($type == 'options') $html .= " selected='selected'";
+    $html .= ">{$strOptions}</option>";
+
+    $html .= "<option value='multioptions'";
+    if ($type == 'multioptions') $html .= " selected='selected'";
+    $html .= ">{$strMultipleOptions}</option>";
+
+    $html .= "<option value='text'";
+    if ($type == 'text') $html .= " selected='selected'";
+    $html .= ">{$strText}</option>";
+
+    $html .= "</select>\n";
+
+    return $html;
+}
+
+
+
 // ** Place no more function defs below this **
 
 
