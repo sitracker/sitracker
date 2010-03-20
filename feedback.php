@@ -186,7 +186,7 @@ function feedback_html_text($name, $required, $options, $answer='')
     }
     else
     {
-        $html .= "<textarea name ='{$name}' rows='{$rows}' cols='{$cols}' />{$answer}</textarea>\n";
+        $html .= "<textarea name ='{$name}' rows='{$rows}' cols='{$cols}' >{$answer}</textarea>\n";
     }
 
     return $html;
