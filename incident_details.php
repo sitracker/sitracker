@@ -155,7 +155,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) > 0)
 {
     $inventory = mysql_fetch_object($result);
-    echo "<a href='inventory.php?view={$inventory->id}'>";
+    echo "<a href='inventory_view.php?id={$inventory->id}'>";
     echo "$inventory->name";
     if (!empty($inventory->identifier))
     {
