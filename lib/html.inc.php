@@ -468,6 +468,9 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $icon .= " id=\"{$id}\"";
     }
+    
+    $icon .= " width='{$size}' height='{$size}' ";
+    
     $icon .= " />";
 
     return $icon;
