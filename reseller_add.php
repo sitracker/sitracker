@@ -75,7 +75,8 @@ switch ($action)
         clear_form_errors('formerrors');
         echo "<h2>{$strAddReseller}</h2>";
         echo "<p align='center'>".sprintf($strMandatoryMarked, "<sup class='red'>*</sup>")."</p>";
-        echo "<form action='{$_SERVER['PHP_SELF']}?action=add' method='post' onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
+        echo "<form action='{$_SERVER['PHP_SELF']}?action=add' method='post' ";
+        echo "onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
         echo "<table align='center' class='vertical'>";
         echo "<tr><th>{$strName}: <sup class='red'>*</sup></th><td><input type='text' name='reseller_name' /></td></tr>";
         echo "</table>";

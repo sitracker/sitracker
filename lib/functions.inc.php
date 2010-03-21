@@ -1381,67 +1381,28 @@ function group_selector($selected, $urlargs='')
  * Return HTML for a box to select interface style/theme
  * @author Ivan Lucas
  * @param string $name. Name attribute
- * @param int $id. Interface style ID
+ * @param string $id. Chosen interface style
  * @returns string.  HTML
  */
-function interfacestyle_drop_down($name, $id)
+function interfacestyle_drop_down($name, $setting)
 {
-    global $dbInterfaceStyles;
-    // extract statuses
-    $sql  = "SELECT id, name FROM `{$dbInterfaceStyles}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    $html = "<select name=\"{$name}\">";
-    if ($id == 0)
+    $handle = opendir('.'.DIRECTORY_SEPARATOR.'styles');
+    while ($file = readdir($handle))
     {
-        $html .= "<option selected='selected' value='0'></option>\n";
-    }
-
-    while ($styles = mysql_fetch_object($result))
-    {
-        $html .= "<option ";
-        if ($styles->id == $id)
+        if ($file == '.' || $file == '..')
         {
-            $html .= "selected='selected'";
+            continue;
         }
-
-        $html .= " value=\"{$styles->id}\">{$styles->name}</option>\n";
+        if (is_dir('.'.DIRECTORY_SEPARATOR.'styles'.DIRECTORY_SEPARATOR.$file))
+        {
+            $themes[$file] = ucfirst(str_replace('_', ' ', $file));
+        }
     }
-    $html .= "</select>\n";
+    asort($themes);
+
+    $html = array_drop_down($themes, $name, $setting, '', TRUE);
+
     return $html;
-}
-
-
-/**
- * Retrieve cssurl and headerhtml for given interface style
- * @author Ivan Lucas
- * @param int $id. Interface style ID
- * @returns asoc array.
- */
-function interface_style($id)
-{
-    global $CONFIG, $dbInterfaceStyles;
-
-    $sql  = "SELECT cssurl, headerhtml FROM `{$dbInterfaceStyles}` WHERE id='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 0)
-    {
-        mysql_free_result($result);
-        $style = (array($CONFIG['default_css_url'],''));  // default style
-    }
-    else
-    {
-        $style = mysql_fetch_assoc($result);
-        mysql_free_result($result);
-    }
-
-    if (empty($style))
-    {
-        $style = (array($CONFIG['default_css_url'],''));  // default style
-    }
-
-    return ($style);
 }
 
 
@@ -2532,7 +2493,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
  */
 function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
-    global $dbSites;
+    global $dbSites, $strEllipsis;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
     if (!$showinactive)  $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
@@ -2559,7 +2520,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 
         if (strlen($text) >= 55)
         {
-            $text = substr(trim($text), 0, 55)."&hellip;";
+            $text = substr(trim($text), 0, 55).$strEllipsis;
         }
         else
         {
@@ -2580,6 +2541,12 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 }
 
 
+/**
+ * Fetches the name of the given site
+ * @author Ivan Lucas
+ * @param int $id. the site ID
+ * @returns string Site Name, or 'unknown' (in local lang) if not found
+*/
 function site_name($id)
 {
     $sitename = db_read_column('name', $GLOBALS['dbSites'], $id);
@@ -2587,6 +2554,20 @@ function site_name($id)
     {
         $sitename = $GLOBALS['strUnknown'];
     }
+
+    return ($sitename);
+}
+
+
+/**
+ * Fetches the telephone number of the given site
+ * @author Ivan Lucas
+ * @param int $id. the site ID
+ * @returns string Site telephone number
+*/
+function site_telephone($id)
+{
+    $sitename = db_read_column('telephone', $GLOBALS['dbSites'], $id);
 
     return ($sitename);
 }
@@ -3680,17 +3661,27 @@ function target_type_name($targettype)
 }
 
 
-function incident_get_next_review($incidentid)
+/**
+ * Returns the number of minutes since the last incident review for a specified
+ * incident
+ * @author Ivan Lucas
+ * @param int $incidentid - Incident ID
+ * @return int Time since the last review in minutes
+ * @note was called incident_get_next_review() (very bad name) until 3.60 14Mar10
+*/
+function incident_time_since_review($incidentid)
 {
     global $now;
-    $sql = "SELECT timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND type='reviewmet' ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT timestamp FROM `{$GLOBALS['dbUpdates']}` ";
+    $sql .= "WHERE incidentid='{$incidentid}' AND type='reviewmet' ";
+    $sql .= "ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
         $upd = mysql_fetch_object($result);
-        $timesincereview = floor(($now - ($upd->timestamp)) / 60);
+        $timesincereview = floor(($now - $upd->timestamp) / 60);
     }
     return $timesincereview;
 }
@@ -4912,7 +4903,7 @@ function show_notes($linkid, $refid, $delete = TRUE)
             {
                 $html .= "<a href='note_delete.php?id={$note->id}&amp;rpath=";
                 $html .= "{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' ";
-                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}');\">";
+                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">";
                 $html .= icon('delete', 16)."</a>";
             }
             $html .= "</div>\n"; // /detaildate
@@ -5215,7 +5206,7 @@ function show_create_links($table, $ref)
 function draw_chart_image($type, $width, $height, $data, $legends, $title='', $unit='')
 {
     global $CONFIG;
-    
+
     // Graph settings
     if (empty($width)) $width = 500;
     if (empty($height)) $height = 150;
@@ -6688,14 +6679,14 @@ function show_next_action($formid)
 
     $html .= "<label>";
     $html .= "<input checked='checked' type='radio' name='timetonextaction' ";
-    $html .= "id='ttna_none' onchange=\"update_ttna();\" ";
+    $html .= "id='ttna_none' onchange=\"update_ttna();\" onclick=\"this.blur();\" ";
 //     $html .= "onclick=\"$('timetonextaction_days').value = ''; window.document.updateform.";
 //     $html .= "timetonextaction_hours.value = ''; window.document.updateform."; timetonextaction_minutes.value = '';\"
     $html .= " value='None' />{$GLOBALS['strNo']}";
     $html .= "</label><br />";
 
     $html .= "<label><input type='radio' name='timetonextaction' ";
-    $html .= "id='ttna_time' value='time' onchange=\"update_ttna();\" />";
+    $html .= "id='ttna_time' value='time' onchange=\"update_ttna();\" onclick=\"this.blur();\" />";
     $html .= "{$GLOBALS['strForXDaysHoursMinutes']}</label><br />\n";
     $html .= "<span id='ttnacountdown'";
     if (empty($na_days) AND
@@ -6720,7 +6711,7 @@ function show_next_action($formid)
     $html .= "<br />\n</span>";
 
     $html .= "<label><input type='radio' name='timetonextaction' id='ttna_date' ";
-    $html .= "value='date' onchange=\"update_ttna();\" />";
+    $html .= "value='date' onchange=\"update_ttna();\" onclick=\"this.blur();\" />";
     $html .= "{$GLOBALS['strUntilSpecificDateAndTime']}</label><br />\n";
     $html .= "<div id='ttnadate' style='display: none;'>";
     $html .= "<input name='date' id='timetonextaction_date' size='10' value='{$date}' ";
@@ -6996,7 +6987,7 @@ function show_edit_site($site, $mode='internal')
             {
                 array_unshift($incident_pools,$siterow['freesupport']);
             }
-            $html .= "<td>".array_drop_down($incident_pools,'incident_poolid',$siterow['freesupport'])."</td></tr>";
+            $html .= "<td>".array_drop_down($incident_pools,'incident_pool',$siterow['freesupport'])."</td></tr>";
             $html .= "<tr><th>{$GLOBALS['strActive']}:</th><td><input type='checkbox' name='active' ";
             if ($siterow['active'] == 'true')
             {
@@ -7170,11 +7161,11 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<tr><th>{$GLOBALS['strEmailDetails']}</th>";
     // Check the box to send portal details, only if portal is enabled
-    $html .= "<td><input type='checkbox' name='emaildetails'";
+    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails'";
     if ($CONFIG['portal'] == TRUE) $html .= " checked='checked'";
     else $html .= " disabled='disabled'";
-    $html .= ">";
-    $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</td></tr>";
+    $html .= " />";
+    $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
     $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strAddContact']}\" /></p>";
@@ -8156,9 +8147,11 @@ function is_assoc_callback($a, $b)
  * @param bool $showvarnames Whether to display the config variable name
  * @returns string HTML
 **/
-function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
+function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 {
     global $CONFIG, $CFGVAR;
+
+    if ($userid == 'current') $userid = $_SESSION['userid'];
 
     if ($CFGVAR[$setupvar]['type'] == 'languageselect'
         OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
@@ -8183,7 +8176,7 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
     }
 
     $html .= "<div class='configvar'>";
-    if ($CFGVAR[$setupvar]['title']!='') $title = $CFGVAR[$setupvar]['title'];
+    if ($CFGVAR[$setupvar]['title'] != '') $title = $CFGVAR[$setupvar]['title'];
     else $title = $setupvar;
     $html .= "<h4>{$title}</h4>";
     if ($CFGVAR[$setupvar]['help']!='') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
@@ -8201,8 +8194,8 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
         }
         if (is_bool($value))
         {
-            if ($value==TRUE) $value='TRUE';
-            else $value='FALSE';
+            if ($value == TRUE) $value = 'TRUE';
+            else $value = 'FALSE';
         }
         elseif (is_array($value))
         {
@@ -8232,6 +8225,22 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             }
             $html .= "</select>";
             break;
+
+        case 'checkbox':
+            // Checkbox values are stored 'TRUE' / 'FALSE'
+            if ($value == 'TRUE')
+            {
+                $state = TRUE;
+            }
+            else
+            {
+                $state = FALSE;
+            }
+            $html .= "<label>";
+            $html .= html_checkbox($setupvar, $state, 'TRUE');
+            $html .= " {$title}</label>";
+            break;
+
         case 'percent':
             $html .= "<select name='{$setupvar}' id='{$setupvar}'>";
             for($i = 0; $i <= 100; $i++)
@@ -8242,14 +8251,17 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             }
             $html .= "</select>%";
             break;
+
         case 'interfacestyleselect':
             $html .= interfacestyle_drop_down($setupvar, $value);
             break;
+
         case 'userlanguageselect':
         case 'languageselect':
             if (empty($value)) $value = $_SESSION['lang'];
             $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);
             break;
+
         case 'languagemultiselect':
             if (empty($value))
             {
@@ -8271,15 +8283,19 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             $html .= "<label>".html_checkbox($setupvar.'checkbox', $checked, "");
             $html .= $GLOBALS['strAll']."</label>";
             break;
+
         case 'slaselect':
             $html .= serviceleveltag_drop_down($setupvar, $value, TRUE);
             break;
+
         case 'userselect':
             $html .= user_drop_down($setupvar, $value, FALSE, FALSE, '', TRUE);
             break;
+
         case 'siteselect':
             $html .= site_drop_down($setupvar, $value, FALSE);
             break;
+
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8289,6 +8305,7 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
             break;
+
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8298,36 +8315,45 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
             break;
+
         case 'userstatusselect':
             $html .= userstatus_drop_down($setupvar, $value);
             break;
+
         case 'roleselect':
             $html .= role_drop_down($setupvar, $value);
             break;
+
         case 'number':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='7' value=\"{$value}\" />";
             break;
+
         case '1darray':
             $replace = array('array(', ')', "'");
             $value = str_replace($replace, '',  $value);
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='60' value=\"{$value}\" />";
            break;
+
         case '2darray':
             $replace = array('array(', ')', "'", '\r','\n');
             $value = str_replace($replace, '',  $value);
             $value = str_replace(',', "\n", $value);
             $html .= "<textarea name='{$setupvar}' id='{$setupvar}' cols='60' rows='10'>{$value}</textarea>";
             break;
+
         case 'password':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             break;
+
         case 'ldappassword':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
             break;
+
         case 'textreadonly':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
             break;
+
         case 'text':
         default:
             if (strlen($CONFIG[$setupvar]) < 65)
@@ -8346,7 +8372,17 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
         $html .= "<p class='info'>The current password setting is not shown</p>";
     }
 
-    if ($showvarnames) $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
+    if ($showvarnames)
+    {
+        if ($userid < 1)
+        {
+            $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
+        }
+        else
+        {
+            $html .= "<br />(<var>userconfig: '$setupvar'</var>)";
+        }
+    }
 
     if ($CFGVAR[$setupvar]['statusfield'] == 'TRUE')
     {
@@ -8370,9 +8406,13 @@ function cfgVarInput($setupvar, $userid =0, $showvarnames = FALSE)
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
 **/
-function cfgSave($setupvars, $userid = NULL)
+function cfgSave($setupvars, $userid = 0)
 {
-    global $dbConfig, $dbUserConfig;;
+    global $dbConfig, $dbUserConfig;
+    if ($userid == 'current')
+    {
+        $userid = $_SESSION['userid'];
+    }
     foreach ($setupvars AS $key => $value)
     {
         if ($userid < 1)
@@ -8487,6 +8527,62 @@ function feedback_hash($formid, $contactid, $incidentid)
     $hashcode = urlencode($hashcode1);
     return $hashcode;
 }
+
+
+function qtype_listbox($type)
+{
+    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
+
+    $html .= "<select name='type'>\n";
+    $html .= "<option value='rating'";
+    if ($type == 'rating') $html .= " selected='selected'";
+    $html .= ">{$strRating}</option>";
+
+    $html .= "<option value='options'";
+    if ($type=='options') $html .= " selected='selected'";
+    $html .= ">{$strOptions}</option>";
+
+    $html .= "<option value='multioptions'";
+    if ($type == 'multioptions') $html .= " selected='selected'";
+    $html .= ">{$strMultipleOptions}</option>";
+
+    $html .= "<option value='text'";
+    if ($type == 'text') $html .= " selected='selected'";
+    $html .= ">{$strText}</option>";
+
+    $html .= "</select>\n";
+
+    return $html;
+}
+
+
+
+function feedback_qtype_listbox($type)
+{
+    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
+
+    $html .= "<select name='type'>\n";
+    $html .= "<option value='rating'";
+    if ($type == 'rating') $html .= " selected='selected'";
+    $html .= ">{$strRating}</option>";
+
+    $html .= "<option value='options'";
+    if ($type == 'options') $html .= " selected='selected'";
+    $html .= ">{$strOptions}</option>";
+
+    $html .= "<option value='multioptions'";
+    if ($type == 'multioptions') $html .= " selected='selected'";
+    $html .= ">{$strMultipleOptions}</option>";
+
+    $html .= "<option value='text'";
+    if ($type == 'text') $html .= " selected='selected'";
+    $html .= ">{$strText}</option>";
+
+    $html .= "</select>\n";
+
+    return $html;
+}
+
 
 
 // ** Place no more function defs below this **

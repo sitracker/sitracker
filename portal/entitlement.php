@@ -33,6 +33,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
     echo colheader('actions', $strOperation);
     echo "</tr>";
     $shade = 'shade1';
+    
     foreach ($_SESSION['entitlement'] AS $contract)
     {
         $contract = unserialize($contract);
@@ -69,13 +70,17 @@ if (sizeof($_SESSION['entitlement']) >= 1)
         }
         echo "</td>";
         echo "<td>";
-        if ($contract->expirydate > $now OR $contract->expirydate == -1)
+        if ($contract->expirydate < $now AND $contract->expirydate != -1)
         {
-            echo "<a href='add.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strAddIncident}</a>";
+            echo $strExpired;
+        }
+        elseif ($contract->incident_quantity >= 1 AND $contract->incidents_used >= $contract->incident_quantity)
+        {
+            echo $strZeroRemaining;
         }
         else
         {
-            echo $strExpired;
+            echo "<a href='add.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strAddIncident}</a>";
         }
         echo "</td></tr>\n";
         if ($shade == 'shade1') $shade = 'shade2';

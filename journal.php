@@ -146,7 +146,7 @@ if ($journal_count >= 1)
     if ($page > 1) echo "<a href='{$_SERVER['PHP_SELF']}?page={$prev}'>&lt; {$strPrevious}</a>&nbsp;";
     if ($minpage > 3)
     {
-        echo "<a href='{$_SERVER['PHP_SELF']}?page=1'>1</a> &hellip; ";
+        echo "<a href='{$_SERVER['PHP_SELF']}?page=1'>1</a> {$strEllipsis} ";
     }
 
     for ($i=$minpage;$i<$maxpage;$i++)
@@ -157,7 +157,7 @@ if ($journal_count >= 1)
 
     if ($maxpage < ($pages -3))
     {
-        echo " &hellip; <a href='{$_SERVER['PHP_SELF']}?page=$pages'>$pages</a>";
+        echo " {$strEllipsis} <a href='{$_SERVER['PHP_SELF']}?page=$pages'>$pages</a>";
     }
 
     if ($page < $pages)

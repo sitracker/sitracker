@@ -123,7 +123,7 @@ $site .= "<br />\n";
 echo sprintf($strContactofSite, $contact, $site)." ";
 echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
 if ($incident->ccemail != '') echo "CC: <a href=\"mailto:{$incident->ccemail}\">{$incident->ccemail}</a><br />\n";
-if ($incident->phone!='' OR $incident->phone!='')
+if ($incident->phone != '' OR $incident->mobile != '')
 {
     if ($incident->phone != '')
     {
@@ -136,6 +136,16 @@ if ($incident->phone!='' OR $incident->phone!='')
         plugin_do('incident_details_mobile');
     }
     echo "<br />\n";
+}
+else
+{
+    $sitetelephone = site_telephone($incident->siteid);
+    if (!empty($sitetelephone))
+    {
+        echo "{$strTel} ({$strSite}): {$sitetelephone} ";
+        plugin_do('incident_details_phone');
+        echo "<br />\n";
+    }
 }
 if ($incident->externalid != '' OR $incident->escalationpath > 0)
 {
@@ -158,7 +168,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) > 0)
 {
     $inventory = mysql_fetch_object($result);
-    echo "<a href='inventory.php?view={$inventory->id}'>";
+    echo "<a href='inventory_view.php?id={$inventory->id}'>";
     echo "$inventory->name";
     if (!empty($inventory->identifier))
     {
@@ -266,11 +276,11 @@ if (!empty($incident->product))
 
 echo sprintf($strOpenForX, $opened_for)." - ";
 echo incidentstatus_name($incident->status);
-if ($incident->status == 2) echo " (" . closingstatus_name($incident->closingstatus) . ")";
+if ($incident->status == STATUS_CLOSED) echo " (" . closingstatus_name($incident->closingstatus) . ")";
 echo "<br />\n";
 
 // Show sla target/review target if incident is still open
-if ($incident->status != 2 AND $incident->status!=7)
+if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
 {
     if ($targettype != '')
     {
@@ -288,11 +298,11 @@ if ($incident->status != 2 AND $incident->status!=7)
         }
     }
 
-    if ($reviewremain > 0 && $reviewremain <= 2400)
+    if ($reviewremain > 0 AND $reviewremain <= 7200)
     {
-        // Only display if review is due in the next five days
-        if ($slaremain<>0) echo "<br />"; // only need a line sometimes
-        printf($strReviewIn,format_workday_minutes($reviewremain));
+        // Only display if review is due in the next five days (7200 is the number of minutes in 5 days)
+        if ($slaremain != 0) echo "<br />"; // only need a line sometimes
+        echo sprintf($strReviewIn, format_seconds($reviewremain * 60));
     }
     elseif ($reviewremain <= 0)
     {

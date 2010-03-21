@@ -58,7 +58,12 @@ function to_row($contactrow)
         $str .= "contactid=".$contactrow['contactid']."&amp;maintid=".$contactrow['maintid'];
         $str .= "&amp;producttext=".urlencode($contactrow['productname'])."&amp;productid=";
         $str .= $contactrow['productid']."&amp;updateid=$updateid&amp;siteid=".$contactrow['siteid'];
-        $str .= "&amp;win={$win}\" onclick=\"return confirm_support();\">{$GLOBALS['strAddIncident']}</a> ";
+        $str .= "&amp;win={$win}\"";
+        if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
+        {
+            $str .= " onclick=\"return confirm_support();\"";
+        }
+        $str .= ">{$GLOBALS['strAddIncident']}</a> ";
         if ($contactrow['incident_quantity'] == 0)
         {
             $str .=  "({$GLOBALS['strUnlimited']})";
@@ -304,7 +309,12 @@ elseif ($action == 'findcontact')
                     $html .=  "<td><a href=\"{$_SERVER['PHP_SELF']}?action=";
                     $html .= "incidentform&amp;type=free&amp;contactid=";
                     $html .= $contactrow['contactid']."&amp;updateid=$updateid";
-                    $html .= "&amp;win={$win}\" onclick=\"return confirm_free();\">";
+                    $html .= "&amp;win={$win}\"";
+                    if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
+                    {
+                        $html .= " onclick=\"return confirm_free();\"";
+                    }
+                    $html .= ">";
                     $html .=  "{$strAddSiteSupportIncident}</a> (";
                     $html .= sprintf($strRemaining,$site_incident_pool).")</td>";
                     $customermatches++;

@@ -136,7 +136,7 @@ $CONFIG['incident_pools'] = '1,2,3,4,5,10,20,25,50,100,150,200,250,500,1000';
 // Incident feedback form (the id number of the feedback form to use or empty to disable sending feedback forms out)
 $CONFIG['feedback_form'] = '';
 
-// If you set 'trusted_server' to TRUE, passwords will no longer be used or required, this assumes that you are using
+// If you set 'trusted_server' to TRUE, passwords can no longer be changed from the users profile
 // another mechanism for authentication
 $CONFIG['trusted_server'] = FALSE;
 
@@ -233,7 +233,6 @@ $CONFIG['tasks_enabled'] = TRUE;
 $CONFIG['calendar_enabled'] = TRUE;
 $CONFIG['holidays_enabled'] = TRUE;
 $CONFIG['feedback_enabled'] = TRUE;
-$CONFIG['timesheets_enabled'] = FALSE;
 
 $CONFIG['portal_site_incidents'] = TRUE; //users in the portal can view site incidents based on the contract options
 $CONFIG['portal_usernames_can_be_changed'] = TRUE; //portal usernames can be changed by the users

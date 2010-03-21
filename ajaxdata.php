@@ -315,6 +315,7 @@ switch ($action)
         echo $pairingarray[$triggertype];
 
     default : 
+        plugin_do('ajaxdata_add_action', array('action' => $action));
         break;
 }
 

@@ -262,12 +262,12 @@ if ($emails > 0)
             }
         }
 
-        $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
-
         plugin_do('email_arrived', array('incidentid' => $incidentid,
                                          'contactid' => $contactid,
                                          'subject' => $subject,
                                          'decoded' => $decoded));
+
+        $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
 
         $customer_visible = 'No';
         $part = 1;

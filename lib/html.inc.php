@@ -132,6 +132,7 @@ function html_redirect($url, $success = TRUE, $message='')
 */
 function html_checkbox($name, $state, $value ='', $attributes = '')
 {
+
     if ($state === TRUE) $state = 'TRUE';
     if ($state === FALSE) $state = 'FALSE';
     if ($state === 1 OR $state === 'Yes' OR $state === 'yes' OR
@@ -145,6 +146,7 @@ function html_checkbox($name, $state, $value ='', $attributes = '')
         if ($value == '') $value = $state;
         $html = "<input type='checkbox' name='{$name}' id='{$name}' value='{$value}' {$attributes} />" ;
     }
+//     $html .= "(state:$state)";
     return $html;
 }
 
@@ -420,6 +422,8 @@ function user_alert($message, $severity, $helpcontext = '')
 function icon($filename, $size='', $alt='', $title='', $id='')
 {
     global $iconset, $CONFIG;
+
+    if (empty($iconset)) $iconset = $_SESSION['userconfig']['iconset'];
     $sizes = array(12, 16, 32);
 
     if (!in_array($size, $sizes) OR empty($size))
@@ -464,6 +468,9 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $icon .= " id=\"{$id}\"";
     }
+    
+    $icon .= " width=\"{$size}\" height=\"{$size}\" ";
+    
     $icon .= " />";
 
     return $icon;

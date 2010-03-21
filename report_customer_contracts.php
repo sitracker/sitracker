@@ -46,7 +46,7 @@ while ($site = mysql_fetch_object($result))
 {
     $msql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, r.name AS reseller, ";
     $msql .= "licence_quantity, l.name AS licence_type, expirydate, admincontact, c.forenames AS admincontactsforenames, ";
-    $msql .= "c.surname AS admincontactssurname, m.notes AS maintnotes ";
+    $msql .= "c.surname AS admincontactssurname, m.notes AS maintnotes, m.allcontactssupported ";
     $msql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r ";
     $msql .= "WHERE m.product=p.id ";
     $msql .= "AND m.reseller=r.id AND licence_type=l.id AND admincontact=c.id ";
@@ -62,7 +62,7 @@ while ($site = mysql_fetch_object($result))
         if ($_REQUEST['mode'] == 'csv')
         {
             echo "{$site->sitename}\n";
-            echo "{$strProduct},{$strLicense},{$strExpiryDate},{$strEngineer} 1, {$strEngineer} 2, {$strEngineer} 3, {$strEngineer} 4\n";
+            echo "{$strProduct},{$strLicense},{$strExpiryDate},{$strAllContacts},{$strEngineer} 1, {$strEngineer} 2, {$strEngineer} 3, {$strEngineer} 4\n";
             while ($maint = mysql_fetch_object($mresult))
             {
                 if ($maint->expirydate > $now AND $maint->term != 'yes')
@@ -70,6 +70,10 @@ while ($site = mysql_fetch_object($result))
                     echo "{$maint->product},";
                     echo "{$maint->licence_quantity} {$maint->licence_type},";
                     echo ldate($CONFIG['dateformat_date'], $maint->expirydate).",";
+                    
+                    if ($maint->allcontactssupported == 'yes') echo "$strYes,";
+                    else echo "{$sstrNo},"; 
+                    
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
@@ -92,6 +96,7 @@ while ($site = mysql_fetch_object($result))
             echo "<tr><th style='text-align: left;'>{$strProduct}</th>";
             echo "<th style='text-align: left;'>{$strLicense}</th>";
             echo "<th style='text-align: left;'>{$strExpiryDate}</th>";
+            echo "<th style='text-align: left;'>{$strAllContacts}</th>";
             echo "<th style='text-align: left;'>{$strEngineer} 1</th>";
             echo "<th style='text-align: left;'>{$strEngineer} 2</th>";
             echo "<th style='text-align: left;'>{$strEngineer} 3</th>";
@@ -105,6 +110,11 @@ while ($site = mysql_fetch_object($result))
                     echo "<td>{$maint->licence_quantity} {$maint->licence_type}</td>";
                     echo "<td>".ldate($CONFIG['dateformat_date'], $maint->expirydate)."</td>";
 
+                    echo "<td>";
+                    if ($maint->allcontactssupported == 'yes') echo "$strYes,";
+                    else echo "{$sstrNo},";
+                    echo "</td>";
+                    
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
@@ -124,6 +134,7 @@ while ($site = mysql_fetch_object($result))
         }
     }
 }
+
 if ($_REQUEST['mode'] != 'csv')
 {
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?siteid={$siteid}&amp;mode=csv'>{$strSaveAsCSV}</a></p>";

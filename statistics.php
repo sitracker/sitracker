@@ -198,9 +198,9 @@ function stats_period_row($desc, $start, $end)
     if ($activity < 0) $activity = 0;
 
     $html = "<tr class='{$shade}'><td>{$desc}</td>";
-    $html .= "<td><a href='{$_SERVER['PHP_SELF']}?mode=breakdown&query=0&amp;start={$start}&amp;end={$end}'>{$count['opened']}</a></td>";
-    $html .= "<td><a href='{$_SERVER['PHP_SELF']}?mode=breakdown&query=2&amp;start={$start}&amp;end={$end}'>{$count['updated']}</a></td>";
-    $html .= "<td><a href='{$_SERVER['PHP_SELF']}?mode=breakdown&query=1&amp;start={$start}&amp;end={$end}'>{$count['closed']}</a></td>";
+    $html .= "<td><a href='{$_SERVER['PHP_SELF']}?mode=breakdown&amp;query=0&amp;start={$start}&amp;end={$end}'>{$count['opened']}</a></td>";
+    $html .= "<td><a href='{$_SERVER['PHP_SELF']}?mode=breakdown&amp;query=2&amp;start={$start}&amp;end={$end}'>{$count['updated']}</a></td>";
+    $html .= "<td><a href='{$_SERVER['PHP_SELF']}?mode=breakdown&amp;query=1&amp;start={$start}&amp;end={$end}'>{$count['closed']}</a></td>";
     $html .= "<td>{$count['handled']}</td>";
     $html .= "<td>{$count['updates']}</td>";
     $html .= "<td>{$updatesperincident}</td>";
@@ -236,13 +236,13 @@ function give_overview()
     echo "<th>{$GLOBALS['strEmailTransmittedAbbrev']}</th><th>{$GLOBALS['strHigherPriority']}</th>";
     echo "<th>{$GLOBALS['strActivity']}</th></tr>\n";
 
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=0'>{$GLOBALS['strToday']}</a>", mktime(0,0,0,date('m'),date('d'),date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=1'>{$GLOBALS['strYesterday']}</a>", mktime(0,0,0,date('m'),date('d')-1,date('Y')),mktime(23,59,59,date('m'),date('d')-1,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=2'>".ldate('l',mktime(0,0,0,date('m'),date('d')-2,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-2,date('Y')),mktime(23,59,59,date('m'),date('d')-2,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=3'>".ldate('l',mktime(0,0,0,date('m'),date('d')-3,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-3,date('Y')),mktime(23,59,59,date('m'),date('d')-3,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=4'>".ldate('l',mktime(0,0,0,date('m'),date('d')-4,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-4,date('Y')),mktime(23,59,59,date('m'),date('d')-4,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=5'>".ldate('l',mktime(0,0,0,date('m'),date('d')-5,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-5,date('Y')),mktime(23,59,59,date('m'),date('d')-5,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&offset=6'>".ldate('l',mktime(0,0,0,date('m'),date('d')-6,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-6,date('Y')),mktime(23,59,59,date('m'),date('d')-6,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=0'>{$GLOBALS['strToday']}</a>", mktime(0,0,0,date('m'),date('d'),date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=1'>{$GLOBALS['strYesterday']}</a>", mktime(0,0,0,date('m'),date('d')-1,date('Y')),mktime(23,59,59,date('m'),date('d')-1,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=2'>".ldate('l',mktime(0,0,0,date('m'),date('d')-2,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-2,date('Y')),mktime(23,59,59,date('m'),date('d')-2,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=3'>".ldate('l',mktime(0,0,0,date('m'),date('d')-3,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-3,date('Y')),mktime(23,59,59,date('m'),date('d')-3,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=4'>".ldate('l',mktime(0,0,0,date('m'),date('d')-4,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-4,date('Y')),mktime(23,59,59,date('m'),date('d')-4,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=5'>".ldate('l',mktime(0,0,0,date('m'),date('d')-5,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-5,date('Y')),mktime(23,59,59,date('m'),date('d')-5,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=6'>".ldate('l',mktime(0,0,0,date('m'),date('d')-6,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-6,date('Y')),mktime(23,59,59,date('m'),date('d')-6,date('Y')));
     echo "<tr><td colspan='*'></td></tr>";
     echo stats_period_row($GLOBALS['strThisWeek'], mktime(0,0,0,date('m'),date('d')-6,date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
     echo stats_period_row($GLOBALS['strLastWeek'], mktime(0,0,0,date('m'),date('d')-13,date('Y')),mktime(23,59,59,date('m'),date('d')-7,date('Y')));
@@ -277,43 +277,42 @@ function give_overview()
 
     if (mysql_num_rows($result) > 1)
     {
-        echo "<h2>{$GLOBALS['strByGroup']}</h2><table class='vertical' align='center'>";
+        echo "<h2>{$GLOBALS['strByGroup']}</h2>";
+        echo "<table class='vertical' align='center'>";
         while ($groups = mysql_fetch_object($result))
         {
             $sqlGroups = "SELECT COUNT(i.id) AS count, istatus.name ";
-            $sqlGroups .= "FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbIncidentStatus']}` AS istatus, `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbGroups']}` AS g ";
+            $sqlGroups .= "FROM `{$GLOBALS['dbIncidents']}` AS i, ";
+            $sqlGroups .= "`{$GLOBALS['dbIncidentStatus']}` AS istatus, ";
+            $sqlGroups .= "`{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbGroups']}` AS g ";
             $sqlGroups .= "WHERE i.status = istatus.id AND closed = 0 AND i.owner = u.id ";
-            $sqlGroups .= "AND u.groupid = {$groups->groupid} ";
-            $sqlGroups .= "GROUP BY i.status";
-
+            $sqlGroups .= "AND u.groupid = g.id AND u.groupid = {$groups->groupid} ";
+            $sqlGroups .= "GROUP BY i.status ";
             $resultGroups = mysql_query($sqlGroups);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
             if (mysql_num_rows($resultGroups) > 0)
             {
                 $openCallsGroup = 0;
-                echo "<td style='vertical-align:top' align='center'><strong>{$groups->name}</strong>";
-                echo "<table class='vertical' align='center'>";
+                echo "<tr><td style='vertical-align:top' align='center' colspan='2'><strong>{$groups->name}</strong></td></tr>";
                 while ($rowGroup = mysql_fetch_object($resultGroups))
                 {
                     echo "<tr><th>{$GLOBALS[$rowGroup->name]}</th><td class='shade2' align='left'>";
-                    //FIXME - HACK, no idea why this is needed
-                    $amount = round($rowGroup->count / 8);
-                    echo "{$amount}</td></tr>";
+                    echo "{$rowGroup->count}</td></tr>";
 
                     //if (strpos(strtolower($rowGroup['name']), "clos") === false)
                     //{
-                        $openCallsGroup += $amount;
+                        $openCallsGroup += $rowGroup->count;
                     //}
                 }
                 echo "<tr><th>{$GLOBALS['strTotalOpen']}</th>";
-                echo "<td class='shade2' align='left'><strong>{$openCallsGroup}</strong></td></tr></table></td>";
+                echo "<td class='shade2' align='left'><strong>{$openCallsGroup}</strong></td></tr>";
             }
         }
         echo "</table>";
     }
     plugin_do('statistics_table_overview');
-    echo "</table>";
+
     mysql_free_result($result);
 
     //count incidents by Vendor
@@ -331,7 +330,8 @@ function give_overview()
 
     if (mysql_num_rows($result) > 1)
     {
-        echo "<h2>{$GLOBALS['strByVendor']}</h2><table class='vertical' align='center'>";
+        echo "<h2>{$GLOBALS['strByVendor']}</h2>";
+        echo "<table class='vertical' align='center'>";
         while ($vendors = mysql_fetch_array($result))
         {
             // This should use the software and relate to the product and then to the vendor
@@ -353,8 +353,7 @@ function give_overview()
             if (mysql_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
-                echo "<td style='vertical-align:top' align='center'><strong>{$vendors['name']}</strong>";
-                echo "<table class='vertical' align='center'>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors['name']}</strong></td></tr>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {
                     echo "<tr><th>{$GLOBALS[$rowVendor->name]}</th><td class='shade2' align='left'>";
@@ -366,7 +365,7 @@ function give_overview()
                     }
                 }
                 echo "<tr><th>{$GLOBALS['strTotalOpen']}</th>";
-                echo "<td class='shade2' align='left'><strong>{$openCallsVendor}</strong></td></tr></table></td>";
+                echo "<td class='shade2' align='left'><strong>{$openCallsVendor}</strong></td></tr>\n";
             }
         }
         echo "</table>";

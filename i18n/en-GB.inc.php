@@ -142,7 +142,6 @@ $strApplication = 'Application';
 $strApprovalStatusUnknown = 'Approval Status Unknown';
 $strApprove = 'Approve';
 $strApproveAll = 'Approve All';
-$strApproveTimesheets = 'Approve Timesheets';
 $strApproved = 'Approved';
 $strApproveFree = 'Approve Free';
 $strApprovedFree = 'Approved Free';
@@ -519,6 +518,8 @@ $strEditTemplate = 'Edit Template';
 $strEditUserSkills = 'Edit User Skills';
 $strEditVendor = 'Edit Vendor';
 $strEditWatchedIncidents = 'Edit Watched Incidents';
+# Punctuation mark 'Ellipsis' to indcate an unfinished phrase or sentence. (dot dot dot "..." in English)
+$strEllipsis = '&hellip;';
 $strEmail = 'Email';
 $strEmailAddress = 'Email Address';
 # Do you want to send an email with login details to the contact?
@@ -571,7 +572,8 @@ $strEndDate = 'End Date';
 $strEndOfLife = 'End of Life';
 $strEngineer = 'Engineer';
 $strEngineers = 'Engineers';
-$strEngineersStatisticsForXMonths = 'Engineer Statistics for past %s months';
+$strEngineerMonthlyActivityTotals = 'Engineer Monthly Activity Totals';
+$strEngineersStatisticsForXMonths = 'Engineer Statistics for %s months';
 $strEngineerUtilisation = 'Engineer Utilisation';
 $strEnglish = 'English';
 $strEnterCredentials = 'Enter your credentials to login to %s';
@@ -697,6 +699,8 @@ $strFrequency = 'Frequency';
 # Short for 'Friday'
 $strFri = 'Fri';
 $strFriday = 'Friday';
+# Two character (Maximum) abbreviation for 'Thursday'
+$strFridayAbbr = 'Fr';
 # e.g. from x to y
 $strFrom = 'From';
 $strFromXResults = 'from %s results';
@@ -1020,6 +1024,8 @@ $strMob = 'Mob';
 # Short for 'Monday'
 $strMon = 'Mon';
 $strMonday = 'Monday';
+# Two character (Maximum) abbreviation for 'Monday'
+$strMondayAbbr = 'Mo';
 $strMonth = 'Month';
 $strMonthly = 'Monthly';
 $strMonthlyActivityTotals = 'Monthly Activity Totals';
@@ -1453,6 +1459,8 @@ $strSalespersonAssignedToContactsSiteEmail = 'The email address of the salespers
 # short for 'Saturday'
 $strSat = 'Sat';
 $strSaturday = 'Saturday';
+# Two character (Maximum) abbreviation for 'Saturday'
+$strSaturdayAbbr = 'Sa';
 $strSave = 'Save';
 $strSaveAsCSV = 'Save as CSV';
 $strSaveDashbaordLayout = 'Save Dashboard Layout';
@@ -1643,6 +1651,8 @@ $strSummaryOfProblemAndResolution = 'You should provide a summary of the problem
 # Short for 'Sunday'
 $strSun = 'Sun';
 $strSunday = 'Sunday';
+# Two character (Maximum) abbreviation for 'Sunday'
+$strSundayAbbr = 'Su';
 $strSupport = 'Support';
 $strSupportEmailAddress = 'Support Email Address';
 $strSupportEmailDesc = 'Free text support email';
@@ -1717,10 +1727,10 @@ $strThisYear = 'This year';
 # Short for 'Thursday'
 $strThu = 'Thu';
 $strThursday = 'Thursday';
+# Two character (Maximum) abbreviation for 'Thursday'
+$strThursdayAbbr = 'Th';
 $strTime = 'Time';
 $strTimed = 'Timed';
-$strTimesheet = 'Timesheet';
-$strTimesheets = 'Timesheets';
 $strTimeToNextAction = 'Time To Next Action';
 $strTitle = 'Title';
 $strTo = 'To';
@@ -1780,6 +1790,8 @@ $strTriggerUserEmail = 'Email address to send an user trigger email to (if not t
 # Short for 'Tuesday'
 $strTue = 'Tue';
 $strTuesday = 'Tuesday';
+# Two character (Maximum) abbreviation for 'Tuesday'
+$strTuesdayAbbr = 'Tu';
 $strType = 'Type';
 
 $strURLTitle = 'URL Title';
@@ -1890,6 +1902,8 @@ $strWebupdateBy = 'Web update by %s';
 # Short for 'Wednesday'
 $strWed = 'Wed';
 $strWednesday = 'Wednesday';
+# Two character (Maximum) abbreviation for 'Wednesday'
+$strWednesdayAbbr = 'We';
 $strWeek = 'Week';
 $strWelcome = 'Welcome';
 $strWeekView = 'Week View';

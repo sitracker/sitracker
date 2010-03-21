@@ -50,23 +50,16 @@ if (!empty($rssfeedurl))
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 if ($_SESSION['auth'] == TRUE)
 {
-    $styleid = $_SESSION['userconfig']['theme'];
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
 }
 else
 {
-    $styleid = $CONFIG['default_interface_style'];
+    $theme = $CONFIG['default_interface_style'];
+    $iconset = $CONFIG['default_iconset'];
 }
-
-$csssql = "SELECT cssurl, iconset FROM `{$GLOBALS['dbInterfaceStyles']}` WHERE id='{$styleid}'";
-$cssresult = mysql_query($csssql);
-if (mysql_error())trigger_error(mysql_error(),E_USER_WARNING);
-
-list($cssurl, $iconset) = mysql_fetch_row($cssresult);
 if (empty($iconset)) $iconset = 'sit';
-// Overwride default icon set with users choice, if there is one
-if (!empty($_SESSION['userconfig']['iconset'])) $iconset = $_SESSION['userconfig']['iconset'];
-unset($styleid);
-echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$cssurl}' />\n";
+echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
 if (is_array($pagecss))
 {

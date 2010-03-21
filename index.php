@@ -71,7 +71,7 @@ if ($_SESSION['auth'] != TRUE)
     }
     else
     {
-        $available_languages = array_merge(array('default'=>$strDefault),$available_languages);
+        $available_languages = array_merge(array('xx-xx'=>$strDefault),$available_languages);
         echo "<div style='margin-left: auto; margin-right: auto; width: 380px;";
         echo " text-align: center; margin-top: 3em;'>";
         echo "<form id='langselectform' action='login.php' method='post'>";

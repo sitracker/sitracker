@@ -101,7 +101,7 @@ function string_find_all($haystack, $needle, $limit=0)
 */
 function truncate_string($text, $maxlength=255, $html = TRUE)
 {
-
+    global $strEllipsis;
     if (strlen($text) > $maxlength)
     {
         // Leave space for ellipses
@@ -118,7 +118,7 @@ function truncate_string($text, $maxlength=255, $html = TRUE)
 
         if ($html == TRUE)
         {
-            $text .= '&hellip;';
+            $text .= $strEllipsis;
         }
         else
         {
@@ -202,6 +202,39 @@ function filter_i18n_filenames($var)
 function i18n_filename_to_code(&$elem, $key)
 {
     $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -8);
+}
+
+
+/**
+  * Array filter callback to list only valid css files
+  * @author Ivan Lucas
+  * @param string $var. Filename to check
+  * @retval bool TRUE : valid
+  * @retval bool FALSE : invalid
+*/
+function filter_css_filenames($var)
+{
+    $validity = FALSE;
+
+//    if (substr($var, -4) === '.css') $validity = TRUE;
+    //else $validity = FALSE;
+//     echo "$var <br />";
+    if (is_dir($var)) $validity = TRUE;
+    else $validty = FALSE;
+
+    return $validity;
+}
+
+
+/**
+  * Array walk callback convert an css filename to a theme name
+  * @author Ivan Lucas
+  * @param string $filename. Filename of theme file (opt. with path)
+  * @returns nothing
+*/
+function css_filename_to_themename(&$elem, $key)
+{
+    $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -4);
 }
 
 

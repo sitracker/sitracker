@@ -77,7 +77,7 @@ elseif ($mode == 'runreport')
         if ($calcote == 'yes')
         {
             // Engineer OTE each rounded to the nearest hour
-            $mod = 3600 - ($obj->duration % 3600);
+            $mod = 60 - ($obj->duration % 60);
             $value = $obj->duration + $mod;
         }
         else
@@ -130,13 +130,13 @@ elseif ($mode == 'runreport')
     
                     if (!empty($user['valuepos']))
                     {
-                        $minspos = ceil($user['valuepos'] / 60);
+                        $minspos = ceil($user['valuepos']);
                         $totalpos += $minspos;
                     }
     
                     if (!empty($user['valueneg']))
                     {
-                        $minsneg = ceil($user['valueneg'] / 60);
+                        $minsneg = ceil($user['valueneg']);
                         $totalneg += $minsneg;
                     }
     

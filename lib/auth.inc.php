@@ -51,7 +51,7 @@ else
     }
     elseif (empty($_SESSION['lang']))
     {
-    	$_SESSION['lang'] = $CONFIG['default_i18n'];
+        $_SESSION['lang'] = $CONFIG['default_i18n'];
     }
     include (APPLICATION_LIBPATH . 'strings.inc.php');
 }

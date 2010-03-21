@@ -42,17 +42,20 @@ echo "<h2>{$strRecentIncidents} (".sprintf($strSinceX, ldate($CONFIG['dateformat
 
 $sql  = "SELECT *,s.id AS siteid FROM `{$dbSites}` AS s, `{$dbMaintenance}` AS m, `{$dbSupportContacts}` AS sc, `{$dbIncidents}` AS i ";
 $sql .= "WHERE s.id = m.site ";
-$sql .= "AND m.id = sc.maintenanceid ";
-$sql .= "AND sc.contactid = i.contact ";
-$sql .= "AND i.opened > '$monthago' ";
+$sql .= "AND ((m.id = sc.maintenanceid ";
+$sql .= "AND sc.contactid = i.contact) ";
+$sql .= "OR (m.allcontactssupported = 'yes' AND i.contact in (SELECT id FROM contacts WHERE siteid = s.id))) ";
+$sql .= "AND i.opened > '{$monthago}' ";
 $sql .= "ORDER BY s.id, i.id";
+
+echo $sql."<br />";
 
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error: ".mysql_error(), E_USER_WARNING);
 
 if (mysql_num_rows($result) > 0)
 {
-    $prvincid=0;
+    $prvincid = 0;
     while ($row = mysql_fetch_object($result))
     {
         if ($prvincid!=$row->id)
@@ -60,12 +63,12 @@ if (mysql_num_rows($result) > 0)
             echo "<strong>[{$row->siteid}] {$row->name}</strong> {$strIncident}: <a href=\"javascript:incident_details_window_l('{$row->id}', 'incident{$row->id}')\">{$row->id}</a>  ";
             echo "{$strDate}: ".ldate('d M Y', $row->opened)." ";
             echo "{$strProduct}: ".product_name($row->product);
-            $site=$row->siteid;
+            $site = $row->siteid;
             $$site++;
-            $sites[]=$row->siteid;
+            $sites[] = $row->siteid;
             echo "<br />\n";
         }
-        $prvincid=$row->id;
+        $prvincid = $row->id;
         // print_r($row);
     }
 }

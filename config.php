@@ -2,7 +2,8 @@
 // config.php - Interface for configuring SiT
 //
 //     NOTE: This is not the configuration file, see config.inc.php
-//           or config.inc.php-dist
+//           or config.inc.php-dist - except for database settings
+//           everything is can be configured from the GUI now anyway
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project
@@ -63,6 +64,13 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             // Type conversions
             switch ($CFGVAR[$catvar]['type'])
             {
+                case 'checkbox':
+                    if ($value == '')
+                    {
+                        $value = 'FALSE';
+                    }
+                    break;
+
                 case '1darray':
                     $parts = explode(',', $value);
                     foreach ($parts AS $k => $v)
@@ -70,7 +78,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $parts[$k] = "'{$v}'";
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
-                break;
+                    break;
 
                 case '2darray':
                     $value = str_replace('\n', ',', $value);
@@ -84,7 +92,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
-                break;
+                    break;
 
                 case 'languagemultiselect':
                     if ($_REQUEST['available_i18ncheckbox'] != '')
@@ -99,7 +107,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         }
                         $value = 'array(' . implode(',', $parts) . ')';
                     }
-                break;
+                    break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
             if (substr($value, 0, 6)=='array(')
@@ -183,7 +191,7 @@ if (!empty($selcat))
 {
     foreach ($CFGCAT[$selcat] AS $catvar)
     {
-        echo cfgVarInput($catvar, $CONFIG['debug']);
+        echo cfgVarInput($catvar, $userid, $CONFIG['debug']);
     }
 }
 plugin_do('config_form');
