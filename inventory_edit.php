@@ -78,6 +78,10 @@ if (isset($_POST['submit']))
     {
         $sql .= ", active='{$post['active']}' ";
     }
+    else
+    {
+        $sql .= ", active='0' ";
+    }
 
     $sql .= " WHERE id='{$id}'";
     
