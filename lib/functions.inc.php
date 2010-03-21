@@ -6679,14 +6679,14 @@ function show_next_action($formid)
 
     $html .= "<label>";
     $html .= "<input checked='checked' type='radio' name='timetonextaction' ";
-    $html .= "id='ttna_none' onchange=\"update_ttna();\" ";
+    $html .= "id='ttna_none' onchange=\"update_ttna();\" onclick=\"this.blur();\" ";
 //     $html .= "onclick=\"$('timetonextaction_days').value = ''; window.document.updateform.";
 //     $html .= "timetonextaction_hours.value = ''; window.document.updateform."; timetonextaction_minutes.value = '';\"
     $html .= " value='None' />{$GLOBALS['strNo']}";
     $html .= "</label><br />";
 
     $html .= "<label><input type='radio' name='timetonextaction' ";
-    $html .= "id='ttna_time' value='time' onchange=\"update_ttna();\" />";
+    $html .= "id='ttna_time' value='time' onchange=\"update_ttna();\" onclick=\"this.blur();\" />";
     $html .= "{$GLOBALS['strForXDaysHoursMinutes']}</label><br />\n";
     $html .= "<span id='ttnacountdown'";
     if (empty($na_days) AND
@@ -6711,7 +6711,7 @@ function show_next_action($formid)
     $html .= "<br />\n</span>";
 
     $html .= "<label><input type='radio' name='timetonextaction' id='ttna_date' ";
-    $html .= "value='date' onchange=\"update_ttna();\" />";
+    $html .= "value='date' onchange=\"update_ttna();\" onclick=\"this.blur();\" />";
     $html .= "{$GLOBALS['strUntilSpecificDateAndTime']}</label><br />\n";
     $html .= "<div id='ttnadate' style='display: none;'>";
     $html .= "<input name='date' id='timetonextaction_date' size='10' value='{$date}' ";
