@@ -249,7 +249,7 @@ switch ($mode)
                 $sql = "SELECT COUNT(id) FROM `{$dbFeedbackRespondents}` WHERE formid='{$formid}' AND completed='no'";
                 $result = mysql_query($sql);
                 list($waiting) = mysql_fetch_row($result);
-                if ($waiting > 0) echo "<p align='center'>".sprintf($strFeedbackFormsWaiting, "<a href='{$_SERVER['PHP_SELF']}?completed=no'>{$waiting}")."</p>";
+                if ($waiting > 0) echo "<p align='center'>".sprintf($strFeedbackFormsWaiting, "<a href='{$_SERVER['PHP_SELF']}?completed=no'>{$waiting}</a>")."</p>";
             }
         }
 }
