@@ -20,4 +20,11 @@ function dashboard_tags($dashletid)
     echo dashlet('tags', $dashletid, icon('tag', 16), $GLOBALS['strTags'], '', $content);
 }
 
+function dashboard_tags_get_version()
+{
+    global $dashboard_tags_version;
+    return $dashboard_tags_version;
+}
+
+
 ?>

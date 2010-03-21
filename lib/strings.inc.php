@@ -58,6 +58,7 @@ $hmenu[10] = $hmenu[10] +
 if (!is_array($hmenu[1020])) $hmenu[1020] = array();
 $hmenu[1020] = $hmenu[1020] +
                 array (10=> array ( 'perm'=> 4, 'name'=> $strMyProfile, 'url'=>"{$CONFIG['application_webpath']}user_profile_edit.php"),
+                       15=> array ( 'perm'=> 4, 'name'=> $strMySettings, 'url'=>"{$CONFIG['application_webpath']}config.php?userid=current"),
                        20=> array ( 'perm'=> 58, 'name'=> $strMySkills, 'url'=>"{$CONFIG['application_webpath']}edit_user_skills.php"),
                        30=> array ( 'perm'=> 58, 'name'=> $strMySubstitutes, 'url'=>"{$CONFIG['application_webpath']}edit_backup_users.php"),
                        40=> array ( 'perm'=> 27, 'name'=> $strMyHolidays, 'url'=>"{$CONFIG['application_webpath']}holidays.php", 'enablevar' => 'holidays_enabled'),
@@ -203,7 +204,7 @@ $hmenu[60] = $hmenu[60] +
                    65=> array ( 'perm'=> 37,  'name'=> "{$strCountContractsByProduct}", 'url'=>"{$CONFIG['application_webpath']}report_contracts_by_product.php"),
                    70=> array ( 'perm'=> 37, 'name'=> "{$strSiteContracts}", 'url'=>"{$CONFIG['application_webpath']}report_customer_contracts.php"),
                    80=> array ( 'perm'=> 37, 'name'=> "{$strCustomerFeedback}", 'url'=>"{$CONFIG['application_webpath']}report_feedback.php", 'enablevar' => 'feedback_enabled'),
-                   180=> array ( 'perm'=> 37, 'name'=> "{$strEngineerUtilisation}",'url'=>"{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php",
+                   180=> array ( 'perm'=> 37, 'name'=> "{$strEngineerMonthlyActivityTotals}",'url'=>"{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php",
 ));
 // Reports: Incidents submenu
 if (!is_array($hmenu[6050])) $hmenu[6050] = array();

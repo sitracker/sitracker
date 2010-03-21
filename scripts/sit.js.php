@@ -39,6 +39,14 @@ var strOctAbbr = '{$strOctAbbr}';
 var strNovAbbr = '{$strNovAbbr}';
 var strDecAbbr = '{$strDecAbbr}';
 
+var strMondayAbbr = '{$strMondayAbbr}';
+var strTuesdayAbbr = '{$strTuesdayAbbr}';
+var strWednesdayAbbr = '{$strWednesdayAbbr}';
+var strThursdayAbbr = '{$strThursdayAbbr}';
+var strFridayAbbr = '{$strFridayAbbr}';
+var strSaturdayAbbr = '{$strSaturdayAbbr}';
+var strSundayAbbr = '{$strSundayAbbr}';
+
 var strAreYouSureUpdateLastBilled = \"{$strAreYouSureUpdateLastBilled}\";
 var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
 var strKnowledgeBaseArticle = \"{$strKnowledgeBaseArticle}\";
@@ -46,6 +54,9 @@ var strSelectKBSections = \"{$strSelectKBSections}\";
 var strFinalUpdate = \"{$strFinalUpdate}\";
 var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
+
+var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
+var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
 
 /* Please don't add functions here, these functions below need moving to webtrack.js
    this file is to make i18n keys available in javascript

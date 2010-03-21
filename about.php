@@ -84,9 +84,6 @@ Completely free for commercial and non-commercial use.</p>
 <p align='center'>whatever:hover (csshover.htc) 1.41 by <a href='http://www.xs4all.nl/~peterned/'>Peter Nederlof</a><br />
 &copy; 2005 - Peter Nederlof.  Licensed under the LGPLv2.</p>
 
-<p align='center'>Dojo 0.4.3 by <a href='http://dojotoolkit.org/'>The Dojo Foundation</a><br />
-Copyright &copy; 2004-2006 The Dojo Foundation. Licensed under the BSD license.</p>
-
 <p align='center'><a href='https://sourceforge.net/projects/nusoap/'>NuSOAP</a> 0.7.3 by <a href='http://www.nusphere.com/'>NuSphere Corporation</a><br />
 Copyright &copy; 2002 NuSphere Corporation. Licensed under the LGPL v2.</p>
 

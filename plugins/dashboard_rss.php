@@ -10,7 +10,7 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$dashboard_rss_version = 3;
+$dashboard_rss_version = 4;
 
 
 function dashboard_rss($dashletid)
@@ -42,7 +42,7 @@ function dashboard_rss_install()
     }
     else $res = TRUE;
 
-    $datasql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_rss` (`owner`, `url`, `items`, `enabled`) VALUES (1, 'http://sourceforge.net/export/rss2_projfiles.php?group_id=160319', 3, 'true');";
+    $datasql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_rss` (`owner`, `url`, `items`, `enabled`) VALUES (1, 'http://sourceforge.net/export/rss2_projnews.php?group_id=160319', 3, 'true');";
     $result = mysql_query($datasql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -52,16 +52,9 @@ function dashboard_rss_install()
 
 function dashboard_rss_display($dashletid)
 {
-    global $CONFIG, $dbInterfaceStyles, $dbDashboardRSS, $sit, $lib_path;
+    global $CONFIG, $dbDashboardRSS, $sit, $lib_path;
 
-    if ($_SESSION['auth'] == TRUE) $styleid = $_SESSION['style'];
-    else $styleid = $CONFIG['default_interface_style'];
-
-    $csssql = "SELECT cssurl, iconset FROM `{$dbInterfaceStyles}` WHERE id='{$styleid}'";
-    $cssresult = mysql_query($csssql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    else list($cssurl, $iconset) = mysql_fetch_row($cssresult);
-
+    $iconset = $_SESSION['userconfig']['iconset'];
     /*
     Originally from dashboard/dashboard.inc.php
     */
@@ -158,7 +151,7 @@ function dashboard_rss_edit($dashletid)
             echo "<tr><td><label>{$GLOBALS['strDisplay']}: <input type='text' name='items' size='3' value='0' /></label> ({$GLOBALS['str0MeansUnlimited']})</td></tr>";
             echo "</table>";
             // <input name='submit' type='submit' value='{$GLOBALS['strAdd']}' />
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'save', array('editaction'=>'do_add'), false, 'dashrssaddform')."</p>";
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction'=>'do_add'), false, 'dashrssaddform')."</p>";
             echo "</form>";
             break;
         case 'do_add':
@@ -169,10 +162,14 @@ function dashboard_rss_edit($dashletid)
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-            if (!$result) html_redirect("edit_rss_feeds.php", FALSE);
+            if (!$result)
+            {
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
+            }
             else
             {
-                html_redirect("edit_rss_feeds.php");
+                echo "<p>{$GLOBALS['strAddedSuccessfully']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
             }
             break;
         case 'edit':
@@ -213,8 +210,15 @@ function dashboard_rss_edit($dashletid)
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-            if (!$result) html_redirect("edit_rss_feeds.php", FALSE);
-            else html_redirect("edit_rss_feeds.php");
+            if (!$result)
+            {
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
+            }
+            else
+            {
+                echo "<p>{$GLOBALS['strSuccess']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
+            }
             break;
         case 'enable':
             $url = urldecode(cleanvar($_REQUEST['url']));
@@ -226,11 +230,12 @@ function dashboard_rss_edit($dashletid)
             if (mysql_affected_rows() < 1) html_redirect("edit_rss_feeds.php", FALSE, "Changed enabled state failed");
             if (mysql_affected_rows() < 1)
             {
-                html_redirect("edit_rss_feeds.php", FALSE, "Changed enabled state failed");
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
             }
             else
             {
-                html_redirect("edit_rss_feeds.php");
+                echo "<p>{$GLOBALS['strSuccess']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
             }
             break;
         case 'delete':
@@ -240,8 +245,15 @@ function dashboard_rss_edit($dashletid)
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-            if (!$result) html_redirect("edit_rss_feeds.php", FALSE);
-            else html_redirect("edit_rss_feeds.php");
+            if (!$result)
+            {
+                echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
+            }
+            else
+            {
+                echo "<p>{$GLOBALS['strSuccess']}</p>";
+                echo dashlet_link('rss', $dashletid, $GLOBALS['strBackToList'], '', '', TRUE);
+            }
             break;
         default:
             echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strEditRSSAtomFeed']}</h2>";
@@ -310,6 +322,7 @@ function dashboard_rss_edit($dashletid)
 
 function dashboard_rss_upgrade()
 {
+    global $CONFIG;
     $upgrade_schema[2] = "
         -- INL 22Nov07
         ALTER TABLE `{$CONFIG['db_tableprefix']}dashboard_rss` ADD `items` INT( 5 ) NULL AFTER `url`;
@@ -319,7 +332,14 @@ function dashboard_rss_upgrade()
         -- INL 22May09
         ALTER TABLE `{$CONFIG['db_tableprefix']}dashboard_rss` CHANGE `owner` `owner` SMALLINT( 6 ) NOT NULL;";
 
+
+    $upgrade_schema[4] = "
+        -- CJ 14Mar10
+        UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url='http://sourceforge.net/export/rss2_projnews.php?group_id=160319' WHERE url='http://sourceforge.net/export/rss2_projfiles.php?group_id=160319'";
+
     return $upgrade_schema;
+
+
 }
 
 function dashboard_rss_get_version()

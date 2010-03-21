@@ -126,7 +126,7 @@ if (isset($_REQUEST['fileselection']))
     echo "<div class='detailentry'>\n";
     foreach ($fileselection AS $filesel)
     {
-        echo "$filesel &hellip; ";
+        echo "$filesel {$strEllipsis} ";
         echo "listed";
         echo "<br />";
     }

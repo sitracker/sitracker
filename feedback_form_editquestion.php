@@ -17,31 +17,6 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-function qtype_listbox($type)
-{
-    global $CONFIG;
-
-    $html .= "<select name='type'>\n";
-    $html .= "<option value='rating'";
-    if ($type=='rating') $html .= " selected";
-    $html .= ">{$strRating}</option>";
-
-    $html .= "<option value='options'";
-    if ($type=='options') $html .= " selected";
-    $html .= ">{$strOptions}</option>";
-
-    $html .= "<option value='multioptions'";
-    if ($type=='multioptions') $html .= " selected";
-    $html .= ">{$strMultipleOptions}</option>";
-
-    $html .= "<option value='text'";
-    if ($type=='text') $html .= " selected";
-    $html .= ">{$strText}</option>";
-
-    $html .= "</select>\n";
-
-    return $html;
-}
 $title = $strEditFeedbackQuestion;
 
 $qid = cleanvar($_REQUEST['qid']);
@@ -74,8 +49,7 @@ switch ($action)
         if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
         header("Location: feedback_form_edit.php?formid={$fid}");
         exit;
-    break;
-
+        break;
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -113,7 +87,7 @@ switch ($action)
 
             echo "<th>{$strType}:</th>";
             echo "<td>";
-            echo qtype_listbox($question->type);
+            echo feedback_qtype_listbox($question->type);
             echo "</td></tr>\n<tr>";
 
             echo "<th>$strOptionsOnePerLine:<br /></th>";
@@ -136,6 +110,6 @@ switch ($action)
             echo "<p><a href='feedback_form_edit.php?id={$fid}'>{$strReturnToPreviousPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-    break;
+        break;
 }
 ?>

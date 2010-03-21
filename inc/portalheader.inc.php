@@ -85,21 +85,16 @@ echo "<link rel='SHORTCUT ICON' href='{$CONFIG['application_webpath']}images/sit
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 if ($_SESSION['portalauth'] == TRUE)
 {
-    $styleid = $_SESSION['style'];
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
 }
 else
 {
-    $styleid = $CONFIG['default_interface_style'];
+    $theme = $CONFIG['default_interface_style'];
+    $iconset = $CONFIG['default_iconset'];
 }
-
-$csssql = "SELECT cssurl, iconset FROM `{$GLOBALS['dbInterfaceStyles']}` WHERE id='{$styleid}'";
-$cssresult = mysql_query($csssql);
-if (mysql_error())trigger_error(mysql_error(),E_USER_WARNING);
-
-list($cssurl, $iconset) = mysql_fetch_row($cssresult);
 if (empty($iconset)) $iconset = 'sit';
-unset($styleid);
-echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$cssurl}' />\n";
+echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
@@ -150,7 +145,7 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     echo "<li><a href='index.php'>{$strIncidents}</a></li>";
     if (sizeof($_SESSION['entitlement']) == 1 OR !$CONFIG['portal_creates_incidents'])
     {
-		// This is needed so the code will unserialize
+        // This is needed so the code will unserialize
         $contractid = unserialize($_SESSION['entitlement'][0])->id;
         echo "<li><a href='add.php";
         if ($CONFIG['portal_creates_incidents'])
@@ -175,8 +170,8 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         echo "<li><a href='admin.php'>{$strAdmin}</a></li>";
     }
+    plugin_do('portal_header_menu');
     echo "<li><a href='../logout.php'>{$strLogout}</a></li>";
-
     echo "</ul>";
 
     echo "<div id='portaluser'><a href='contactdetails.php'>";

@@ -24,7 +24,7 @@ $id = $incidentid;
 
 if ($_REQUEST['win'] == 'incomingview')
 {
-    $title = 'Incoming';
+    $title = $strIncoming;
     $incidentid = '';
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
     include (APPLICATION_INCPATH . 'incident_incoming.inc.php');
@@ -110,7 +110,7 @@ $site .= "<br />\n";
 echo sprintf($strContactofSite, $contact, $site)." ";
 echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
 if ($incident->ccemail != '') echo "CC: <a href=\"mailto:{$incident->ccemail}\">{$incident->ccemail}</a><br />\n";
-if ($incident->phone!='' OR $incident->phone!='')
+if ($incident->phone != '' OR $incident->mobile != '')
 {
     if ($incident->phone != '')
     {
@@ -123,6 +123,16 @@ if ($incident->phone!='' OR $incident->phone!='')
         plugin_do('incident_details_mobile');
     }
     echo "<br />\n";
+}
+else
+{
+    $sitetelephone = site_telephone($incident->siteid);
+    if (!empty($sitetelephone))
+    {
+        echo "{$strTel} ({$strSite}): {$sitetelephone} ";
+        plugin_do('incident_details_phone');
+        echo "<br />\n";
+    }
 }
 if ($incident->externalid != '' OR $incident->escalationpath > 0)
 {
@@ -145,7 +155,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) > 0)
 {
     $inventory = mysql_fetch_object($result);
-    echo "<a href='inventory.php?view={$inventory->id}'>";
+    echo "<a href='inventory_view.php?id={$inventory->id}'>";
     echo "$inventory->name";
     if (!empty($inventory->identifier))
     {
@@ -251,13 +261,13 @@ if (!empty($incident->product))
     }
 }
 
-echo sprintf($strOpenForX, $opened_for)." ";
+echo sprintf($strOpenForX, $opened_for)." - ";
 echo incidentstatus_name($incident->status);
-if ($incident->status == 2) echo " (" . closingstatus_name($incident->closingstatus) . ")";
+if ($incident->status == STATUS_CLOSED) echo " (" . closingstatus_name($incident->closingstatus) . ")";
 echo "<br />\n";
 
 // Show sla target/review target if incident is still open
-if ($incident->status != 2 AND $incident->status!=7)
+if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
 {
     if ($targettype != '')
     {
@@ -275,11 +285,11 @@ if ($incident->status != 2 AND $incident->status!=7)
         }
     }
 
-    if ($reviewremain > 0 && $reviewremain <= 2400)
+    if ($reviewremain > 0 AND $reviewremain <= 7200)
     {
-        // Only display if review is due in the next five days
-        if ($slaremain<>0) echo "<br />"; // only need a line sometimes
-        printf($strReviewIn,format_workday_minutes($reviewremain));
+        // Only display if review is due in the next five days (7200 is the number of minutes in 5 days)
+        if ($slaremain != 0) echo "<br />"; // only need a line sometimes
+        echo sprintf($strReviewIn, format_seconds($reviewremain * 60));
     }
     elseif ($reviewremain <= 0)
     {
@@ -389,15 +399,16 @@ function log_nav_bar()
     global $count_updates;
     global $records;
 
-    if ($offset > $_SESSION['num_update_view'])
+    $updates_per_page = intval($_SESSION['userconfig']['updates_per_page']);
+    if ($offset > $updates_per_page)
     {
-        $previous = $offset - $_SESSION['num_update_view'];
+        $previous = $offset - $updates_per_page;
     }
     else
     {
         $previous = 0;
     }
-    $next = $offset + $_SESSION['num_update_view'];
+    $next = $offset + $updates_per_page;
 
     $nav .= "<table width='98%' align='center'><tr>";
     $nav .= "<td align='left' style='width: 33%;'>";
@@ -409,7 +420,7 @@ function log_nav_bar()
     }
     $nav .= "</td>";
     $nav .= "<td align='center' style='width: 34%;'>";
-    if ($count_updates > $_SESSION['num_update_view'])
+    if ($count_updates > $updates_per_page)
     {
         if ($records != 'all')
         {
@@ -417,7 +428,7 @@ function log_nav_bar()
             $nav .= "javascript=enabled&amp;offset=0&amp;records=all'>";
             $nav .= "{$GLOBALS['strShowAll']}</a>";
         }
-        else if ($_SESSION['num_update_view'] != 0)
+        else if ($updates_per_page != 0)
         {
             $nav .= "<a href='{$_SERVER['PHP_SELF']}?id={$incidentid}&amp;";
             $nav .= "javascript=enabled&amp;offset=0'>{$GLOBALS['strShowPaged']}</a>";
@@ -425,7 +436,7 @@ function log_nav_bar()
     }
     $nav .= "</td>";
     $nav .= "<td align='right' style='width: 33%;'>";
-    if ($offset < ($count_updates - $_SESSION['num_update_view']) AND
+    if ($offset < ($count_updates - $updates_per_page) AND
         $records != 'all')
     {
         $nav .= "<a href='{$_SERVER['PHP_SELF']}?id={$incidentid}&amp;";
@@ -440,9 +451,9 @@ function log_nav_bar()
 
 $records = strtolower(cleanvar($_REQUEST['records']));
 
-if (intval($_SESSION['num_update_view']) == 0)
+if (intval($_SESSION['userconfig']['updates_per_page']) == 0)
 {
-	$records = 'all';
+    $records = 'all';
 }
 
 if ($incidentid=='' OR $incidentid < 1)
@@ -451,11 +462,11 @@ if ($incidentid=='' OR $incidentid < 1)
 }
 
 $sql  = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$incidentid}' ";
-$sql .= "ORDER BY timestamp {$_SESSION['update_order']}, id {$_SESSION['update_order']} ";
+$sql .= "ORDER BY timestamp {$_SESSION['userconfig']['incident_log_order']}, id {$_SESSION['userconfig']['incident_log_order']} ";
 
 if (empty($records))
 {
-    $numupdates = intval($_SESSION['num_update_view']);
+    $numupdates = intval($_SESSION['userconfig']['updates_per_page']);
     if ($numupdates != 0)
     {
         $sql .= "LIMIT {$offset},{$numupdates}";
@@ -612,15 +623,15 @@ while ($update = mysql_fetch_object($result))
         echo "<div class='detailheadhidden'>";
     }
 
-    if ($offset > $_SESSION['num_update_view'])
+    if ($offset > $updates_per_page)
     {
-        $previous = $offset - $_SESSION['num_update_view'];
+        $previous = $offset - intval($_SESSION['userconfig']['updates_per_page']);
     }
     else
     {
         $previous = 0;
     }
-    $next = $offset + $_SESSION['num_update_view'];
+    $next = $offset + intval($_SESSION['userconfig']['updates_per_page']);
 
     echo "<div class='detaildate'>";
     if ($count == 0)
@@ -764,18 +775,18 @@ while ($update = mysql_fetch_object($result))
 
         if ($updatebodylen > 5)
         {
-        	/*
-        	 * @modifier: Rick Bonkestoter
-        	 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-        	 */
+            /*
+             * @modifier: Rick Bonkestoter
+             * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
+             */
             echo str_replace('\r\n', "<br />", nl2br($updatebody));
         }
         else
         {
-        	/*
-        	 * @modifier: Rick Bonkestoter
-        	 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-        	 */
+            /*
+             * @modifier: Rick Bonkestoter
+             * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
+             */
             echo str_replace('\r\n', "<br />", nl2br($updatebody));
         }
 
@@ -810,7 +821,7 @@ while ($update = mysql_fetch_object($result))
     $count++;
 }
 
-if ($_SESSION['num_update_view'] > 0)
+if (intval($_SESSION['userconfig']['updates_per_page']) > 0)
 {
     echo log_nav_bar();
 }

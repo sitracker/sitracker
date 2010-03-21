@@ -44,4 +44,18 @@ function dashboard_random_tip_display($dashletid)
     echo $content;
 }
 
+function dashboard_random_tip_upgrade()
+{
+ $upgrade_schema[2] ="";
+ return $upgrade_schema;
+}
+
+
+function dashboard_random_tip_get_version()
+{
+    global $dashboard_random_tip_version;
+    return $dashboard_random_tip_version;
+}
+
+
 ?>

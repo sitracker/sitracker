@@ -9,6 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
+// Shows Incidents CLOSED between the dates
 
 $permission = 37; // Run Reports
 
@@ -126,6 +127,8 @@ else
     if (empty($startdate)) $startdate = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d"), date("Y")-1)); // 1 year ago
     if (empty($enddate)) $enddate = date('Y-m-d');
 
+    $enddate = $enddate." 23:59:59";
+    
     function does_site_have_certain_sla_contract($siteid, $slas)
     {
         $toReturn = false;
@@ -155,8 +158,9 @@ else
     }
 
     $sql = "SELECT DISTINCT s.id, s.name AS name, r.name AS resel, m.reseller, u.realname ";
-    $sql .= "FROM `{$dbSites}` AS s, `{$dbMaintenance}` AS m, `{$dbResellers}` AS r, `{$dbUsers}` AS u ";
-    $sql .= "WHERE s.id = m.site AND r.id = m.reseller AND m.term <> 'yes' AND s.owner = u.id ";
+    $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbResellers}` AS r, `{$dbSites}` AS s ";
+    $sql .= "LEFT JOIN `{$dbUsers}` AS u ON s.owner = u.id ";
+    $sql .= "WHERE s.id = m.site AND r.id = m.reseller AND m.term <> 'yes' ";
     if ($onlyshowactivesites == 'on')
     {
         $sql .= "AND m.expirydate > '{$now}' ";
@@ -198,7 +202,7 @@ else
             if ((!empty($slas) AND !does_site_have_certain_sla_contract($site->id, $slas)) OR empty($slas))
             {
                 $sql = "SELECT count(i.id) AS incidentz, s.name AS site FROM `{$dbContacts}` AS c, `{$dbSites}` AS s, `{$dbIncidents}` AS i, `{$dbMaintenance}` AS m ";
-                $sql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened >".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id ";
+                $sql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened > ".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id "; 
                 $sql .= "AND m.id = i.maintenanceid AND m.reseller = '{$site->reseller}' ";
                 $sql.= "GROUP BY site";
                 // echo $sql;

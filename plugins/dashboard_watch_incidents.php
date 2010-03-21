@@ -264,7 +264,7 @@ function dashboard_watch_incidents_edit($dashletid)
         case 'add':
             $type = $_REQUEST['type'];
             echo "<h2>{$GLOBALS['strWatchAddSet']}</h2>";
-            echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?action=do_add&type={$type}' method='post' onsubmit='return false'>";
+            echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?editaction=do_add&type={$type}' method='post' onsubmit='return false'>";
             echo "<table class='vertical'>";
             echo "<tr><td>";
 
@@ -291,7 +291,7 @@ function dashboard_watch_incidents_edit($dashletid)
             echo "</td><tr>";
             echo "</table>";
             echo "<p align='center'>";
-            echo dashlet_link('watch_incidents', $dashletid, $GLOBALS['strAdd'], 'save', array('editaction' => 'do_add', 'type'=>$type), false, 'dwiaddform');
+            echo dashlet_link('watch_incidents', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction' => 'do_add', 'type'=>$type), false, 'dwiaddform');
             echo "</p>";
             break;
 
@@ -435,6 +435,11 @@ function dashboard_watch_incidents_upgrade()
     ";
 
     return $upgrade_schema;
+}
+function dashboard_watch_incidents_get_version()
+{
+    global $dashboard_watch_incidents_version;
+    return $dashboard_watch_incidents_version;
 }
 
 

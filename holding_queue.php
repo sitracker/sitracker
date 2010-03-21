@@ -23,17 +23,17 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 
 /**
-    * @author Tom Gerrard
+  * @author Tom Gerrard
 */
 function generate_row($update)
 {
-    global $CONFIG, $sit;
+    global $CONFIG, $sit, $strEllipsis;
     if (empty($update['fromaddr']) AND !empty($update['from'])) $update['fromaddr'] = $update['from'];
     $update['fromaddr'] = strtolower($update['fromaddr']);
 
     if (strlen($update['bodytext']) > 1003)
     {
-        $updatebodytext = substr($update['bodytext'],0,1000).'&hellip;';
+        $updatebodytext = substr($update['bodytext'],0,1000).$strEllipsis;
     }
     else
     {
@@ -125,12 +125,12 @@ function generate_row($update)
             $html_row .= ",'incomingview');\" id='update{$update['id']}' class='info'";
             $html_row .= " title='View and lock this held e-mail'>{$GLOBALS['strView']}</a> | ";
         }
-        
+
         if ($update['reason_id'] == 2)
         {
             $html_row .= "<a href='incident_reopen.php?id={$update['incident_id']}&updateid={$update['updateid']}'>{$GLOBALS['strReopen']}</a> | ";
         }
-        
+
         $html_row.= "<a href='delete_update.php?updateid=".$update['id']."&amp;tempid=".$update['tempid']."&amp;timestamp=".$update['timestamp']."' title='{$strRemoveThisPermanently}' onclick=\"return confirm_action('{$GLOBALS['strAreYouSureDelete']}');\"> {$GLOBALS['strDelete']}</a>";
     }
     $html_row .= "</td></tr>\n";
@@ -164,7 +164,7 @@ function deldir($location)
 }
 
 $title = $strReviewHeldUpdates;
-$refresh = $_SESSION['incident_refresh'];
+$refresh = $_SESSION['userconfig']['incident_refresh'];
 $selected = $_POST['selected'];
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -279,8 +279,8 @@ $spamcount = 0;
 if ($countresults > 0)
 {
     if ($countresults) mysql_data_seek($result, 0);
-	
-	if (!empty($CONFIG['spam_email_subject'])) 
+
+	if (!empty($CONFIG['spam_email_subject']))
 	{
     	while ($updates = mysql_fetch_array($result))
     	{
@@ -359,7 +359,7 @@ if (is_array($queuerows))
     if ($realemails > 0)
     {
         echo "<tr><td>";
-        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}');\">{$strDelete}</a>";
+        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         echo "</td></tr>";
     }
     echo "</table>\n";

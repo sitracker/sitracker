@@ -26,7 +26,11 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = $_POST['lang'];
+$language = substr(strip_tags($_POST['lang']), 0, 5);
+if (substr($language, 2, 1) != '-' OR strpos('.', $language) !== FALSE)
+{
+    $language = 'xx-xx'; // default lang
+}
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'triggers.inc.php');
@@ -40,7 +44,7 @@ $page = strip_tags(str_replace('..','',str_replace('//','',str_replace(':','',ur
 
 if (empty($_REQUEST['username']) AND empty($_REQUEST['password']) AND $language != $_SESSION['lang'])
 {
-    if ($language!='default')
+    if ($language != 'xx-xx')
     {
         $_SESSION['lang'] = $language;
     }
@@ -58,7 +62,7 @@ elseif (authenticate($username, $_REQUEST['password']))
     $password = md5($_REQUEST['password']);
 
     // Retrieve users profile
-    $sql = "SELECT * FROM `{$dbUsers}` WHERE username='{$username}' LIMIT 1";
+    $sql = "SELECT id, username, realname, email, groupid, user_source FROM `{$dbUsers}` WHERE username='{$username}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
@@ -72,16 +76,10 @@ elseif (authenticate($username, $_REQUEST['password']))
     $_SESSION['username'] = $user->username;
     $_SESSION['realname'] = $user->realname;
     $_SESSION['email'] = $user->email;
-    $_SESSION['style'] = $user->var_style;
-    $_SESSION['incident_refresh'] = $user->var_incident_refresh;
-    $_SESSION['update_order'] = $user->var_update_order;
-    $_SESSION['num_update_view'] = $user->var_num_updates_view;
     $_SESSION['groupid'] = is_null($user->groupid) ? 0 : $user->groupid;
-    $_SESSION['utcoffset'] = is_null($user->var_utc_offset) ? 0 : $user->var_utc_offset;
     $_SESSION['portalauth'] = FALSE;
     $_SESSION['user_source'] = $user->user_source;
     if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
-
 
     // Read user config from database
     $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$user->id}";
@@ -90,15 +88,20 @@ elseif (authenticate($username, $_REQUEST['password']))
     {
         while ($conf = mysql_fetch_object($result))
         {
-            if ($conf->value==='TRUE') $conf->value = TRUE;
-            if ($conf->value==='FALSE') $conf->value = FALSE;
-            if (substr($conf->value, 0, 6)=='array(')
+            if ($conf->value === 'TRUE') $conf->value = TRUE;
+            if ($conf->value === 'FALSE') $conf->value = FALSE;
+            if (substr($conf->value, 0, 6) == 'array(')
             {
                     eval("\$val = {$conf->value};");
                     $conf->value = $val;
             }
             $_SESSION['userconfig'][$conf->config] = $conf->value;
         }
+    }
+    // Make sure utc_offset cannot be blank
+    if ($_SESSION['userconfig']['utc_offset'] == '')
+    {
+        $_SESSION['userconfig']['utc_offset'] == 0;
     }
 
     // Delete any old session user notices
@@ -107,14 +110,15 @@ elseif (authenticate($username, $_REQUEST['password']))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     //check if the session lang is different the their profiles
-    if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $user->var_i18n)
+    if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $SESSION['userconfig']['language'])
     {
-        $t = trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $user->var_i18n, 'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
+        $t = trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
+                    'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
     }
 
-    if ($user->var_i18n != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
+    if ($SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
     {
-        $_SESSION['lang'] = is_null($user->var_i18n) ? '' : $user->var_i18n;
+        $_SESSION['lang'] = is_null($SESSION['userconfig']['language']) ? '' : $SESSION['userconfig']['language'];
     }
 
     // Make an array full of users permissions
@@ -172,12 +176,16 @@ elseif (authenticate($username, $_REQUEST['password']))
 elseif ($CONFIG['portal'] == TRUE)
 {
     // Invalid user and portal enabled
+    if ($language != 'xx-xx')
+    {
+        $_SESSION['lang'] = $language;
+    }
 
     if (authenticateContact($username, $password))
     {
         debug_log("PORTAL AUTH SUCESSFUL");
         $_SESSION['portalauth'] = TRUE;
-        
+
         $sql = "SELECT * FROM `{$dbContacts}` WHERE username = '{$username}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -192,19 +200,10 @@ elseif ($CONFIG['portal'] == TRUE)
         // Valid user
         $_SESSION['contactid'] = $contact->id;
         $_SESSION['siteid'] = $contact->siteid;
-        $_SESSION['style'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['style'] = $CONFIG['portal_interface_style'];
         $_SESSION['contracts'] = array();
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;
-
-        if ($language!='default')
-        {
-            $_SESSION['lang'] = $language;
-        }
-        else
-        {
-            $_SESSION['lang'] = '';
-        }
 
         //get admin contracts
         if (admin_contact_contracts($_SESSION['contactid'], $_SESSION['siteid']) != NULL)
@@ -235,29 +234,7 @@ elseif ($CONFIG['portal'] == TRUE)
 
         $_SESSION['contracts'] = array_merge((array)$admincontracts, (array)$contactcontracts, (array)$allcontracts);
 
-        //get entitlement
-        $sql = "SELECT m.*, p.name, ";
-        $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
-        $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-        $sql .= "WHERE m.product=p.id ";
-        $sql .= "AND sc.contactid='{$_SESSION['contactid']}' AND sc.maintenanceid=m.id ";
-        $sql .= "AND (expirydate > (UNIX_TIMESTAMP(NOW()) - 15778463) OR expirydate = -1) ";
-        $sql .= "AND m.site = {$_SESSION['siteid']} ";
-        $sql .= "UNION SELECT m.*, p.name, ";
-        $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
-        $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-        $sql .= "WHERE m.product=p.id ";
-        $sql .= "AND m.allcontactssupported = 'yes' ";
-        $sql .= "AND (expirydate > (UNIX_TIMESTAMP(NOW()) - 15778463) OR expirydate = -1) ";
-        $sql .= "AND m.site = {$_SESSION['siteid']} ";
-        $sql .= "ORDER BY expirydate DESC ";
-
-        $contractresult = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        while ($contract = mysql_fetch_object($contractresult))
-        {
-            $_SESSION['entitlement'][] = serialize($contract);
-        }
+        load_entitlements($_SESSION['contactid'], $_SESSION['siteid']);
         header("Location: portal/");
         exit;
     }

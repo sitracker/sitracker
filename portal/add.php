@@ -172,6 +172,10 @@ else //submit
                                     $contractid, $productid, $software);
             $_SESSION['incidentid'] = $incidentid;
 
+            // Need to reload the entitlements data into the session 
+            unset($_SESSION['entitlement']);
+            load_entitlements($_SESSION['contactid'], $_SESSION['siteid']);
+            
             // Save productinfo if there is some
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
             $result = mysql_query($sql);

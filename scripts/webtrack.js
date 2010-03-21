@@ -29,11 +29,11 @@ function incident_details_window(incidentid, win, rtn)
     // URL = "incident.php?popup=yes&id=" + incidentid;
     // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
     URL = "incident_details.php?id=" + incidentid + "&win=" + win;
-    if (popwin)
+    if (win == 'sit_popup' && popwin)
     {
         popwin.close();
     }
-    popwin = window.open(URL, "sit_popup", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
+    popwin = window.open(URL, win, "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
     if (rtn == true) return popwin;
 }
 
@@ -60,10 +60,13 @@ function wt_winpopup(url, mini)
 /**
   * Yes/No dialog
   * @param msg string - A message to display
+  * @param del - Set to true when the action involves deleting data
   * @returns bool TRUE or false, depending on which button was pressed, yes = true, false = no
 **/
-function confirm_action(msg)
+function confirm_action(msg, del)
 {
+    if (del == true && show_confirmation_delete != 'TRUE') return true;
+    if (del != true && show_confirmation_caution != 'TRUE') return true;
     if (msg == '') msg = 'Are you sure?';
     return window.confirm(msg);
 }

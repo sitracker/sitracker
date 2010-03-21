@@ -2,7 +2,8 @@
 // config.php - Interface for configuring SiT
 //
 //     NOTE: This is not the configuration file, see config.inc.php
-//           or config.inc.php-dist
+//           or config.inc.php-dist - except for database settings
+//           everything is can be configured from the GUI now anyway
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project
@@ -13,8 +14,14 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
-
-$permission = 22; // Administrate
+if (empty($_REQUEST['userid']))
+{
+    $permission = 22; // Administrate
+}
+else
+{
+    $permision = 4; // Edit your profile
+}
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -25,9 +32,25 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $selcat = cleanvar($_REQUEST['cat']);
 $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
+$userid = cleanvar($_REQUEST['userid']);
 
+$edituserpermission = user_permission($sit[2],23); // edit user
 
-require(APPLICATION_LIBPATH . 'configvars.inc.php');
+if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
+{
+    $edituserid = mysql_real_escape_string($sit[2]);
+}
+
+// Check the users permission
+
+if (empty($userid))
+{
+    require(APPLICATION_LIBPATH . 'configvars.inc.php');
+}
+else
+{
+    require(APPLICATION_LIBPATH . 'userconfigvars.inc.php');
+}
 
 if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1))
 {
@@ -41,6 +64,13 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             // Type conversions
             switch ($CFGVAR[$catvar]['type'])
             {
+                case 'checkbox':
+                    if ($value == '')
+                    {
+                        $value = 'FALSE';
+                    }
+                    break;
+
                 case '1darray':
                     $parts = explode(',', $value);
                     foreach ($parts AS $k => $v)
@@ -48,7 +78,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $parts[$k] = "'{$v}'";
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
-                break;
+                    break;
 
                 case '2darray':
                     $value = str_replace('\n', ',', $value);
@@ -62,7 +92,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
-                break;
+                    break;
 
                 case 'languagemultiselect':
                     if ($_REQUEST['available_i18ncheckbox'] != '')
@@ -77,7 +107,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         }
                         $value = 'array(' . implode(',', $parts) . ')';
                     }
-                break;
+                    break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
             if (substr($value, 0, 6)=='array(')
@@ -85,18 +115,38 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                 eval("\$val = $value;");
                 $value = $val;
             }
-            $CONFIG[$catvar] = $value;
+            if (empty($userid))
+            {
+                $CONFIG[$catvar] = $value;
+            }
+            else
+            {
+                $_SESSION['userconfig'][$catvar] = $value;
+                // Change the language in use if it's been changed in the user config
+                if (!empty($_SESSION['userconfig']['language']))
+                {
+                    $_SESSION['lang'] = $_SESSION['userconfig']['language'];
+                }
+            }
         }
         if ($CONFIG['debug']) $dbg .= "<pre>".print_r($savevar,true)."</pre>";
-        cfgSave($savevar);
+        cfgSave($savevar, $userid);
     }
 }
 
 $pagescripts = array('FormProtector.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>".icon('settings', 32, $strConfiguration);
-echo " {$CONFIG['application_shortname']} {$strConfiguration}</h2>";
+if (empty($userid))
+{
+    echo "<h2>".icon('settings', 32, $strConfiguration);
+    echo " {$CONFIG['application_shortname']} {$strConfiguration}</h2>";
+}
+else
+{
+    echo "<h2>".icon('user', 32, $strDisplayPreferences);
+    echo " {$strSettings}</h2>";
+}
 
 // FIXME see draw_tabs()
 echo "<div class='tabcontainer'>";
@@ -106,7 +156,7 @@ foreach ($CFGTAB AS $tab => $cat)
     if (empty($seltab)) $seltab = 'application';
     echo "<li";
     if ($seltab == $tab) echo " class='active'";
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$tab}'>{$TABI18n[$tab]}</a></li>";
+    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$tab}&amp;userid={$userid}'>{$TABI18n[$tab]}</a></li>";
 }
 echo "</ul>";
 echo "</div>";
@@ -121,7 +171,7 @@ foreach ($CFGTAB[$seltab] AS $cat)
     if ($selcat == $cat) echo " class='active'";
     $catname = $CATI18N[$cat];
     if (empty($catname)) $catname = $cat;
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}'>{$catname}</a></li>";
+    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}&amp;userid={$userid}'>{$catname}</a></li>";
 }
 echo "</ul>";
 echo "</div>";
@@ -141,7 +191,7 @@ if (!empty($selcat))
 {
     foreach ($CFGCAT[$selcat] AS $catvar)
     {
-        echo cfgVarInput($catvar, $CONFIG['debug']);
+        echo cfgVarInput($catvar, $userid, $CONFIG['debug']);
     }
 }
 plugin_do('config_form');
@@ -149,6 +199,10 @@ plugin_do('config_form');
 echo "</fieldset>";
 echo "<input type='hidden' name='cat' value='{$selcat}' />";
 echo "<input type='hidden' name='tab' value='{$seltab}' />";
+if (!empty($userid))
+{
+    echo "<input type='hidden' name='userid' value='{$userid}' />";
+}
 echo "<input type='hidden' name='action' value='save' />";
 if ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 {

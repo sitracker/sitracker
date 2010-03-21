@@ -525,34 +525,6 @@ INSERT INTO `{$dbIncidentStatus}` VALUES (9, 'strUnsupported', 'strUnsupported')
 INSERT INTO `{$dbIncidentStatus}` VALUES (10, 'strActiveUnassigned', 'strActive');
 
 
-CREATE TABLE `{$dbInterfaceStyles}` (
-  `id` int(5) NOT NULL,
-  `name` varchar(50) NOT NULL default '',
-  `cssurl` varchar(255) NOT NULL default '',
-  `iconset` varchar(255) NOT NULL default 'sit',
-  `headerhtml` text NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARACTER SET = utf8;
-
-
-INSERT INTO `{$dbInterfaceStyles}` (`id`, `name`, `cssurl`, `iconset`, `headerhtml`) VALUES (1, 'Light Blue', 'sit1.css', 'sit', ''),
-(2, 'Grey', 'sit2.css', 'sit', ''),
-(3, 'Green', 'sit3.css', 'sit', ''),
-(4, 'Silver Blue', 'sit4.css', 'sit', ''),
-(5, 'Classic', 'sit5.css', 'sit', ''),
-(6, 'Orange', 'sit_ph2.css', 'sit', ''),
-(7, 'Yellow and Blue', 'sit7.css', 'sit', ''),
-(8, 'Neoteric', 'sit8.css', 'oxygen', ''),
-(9, 'Toms Linux Style', 'sit9.css', 'sit', ''),
-(10, 'Cool Blue', 'sit_ph.css', 'sit', ''),
-(11, 'Just Light', 'sit10.css', 'sit', ''),
-(12, 'Ex Pea', 'sit11.css', 'sit', ''),
-(13, 'GUI Colours', 'sit12.css', 'sit', ''),
-(14, 'Flashy', 'sit14/sit14.css', 'sit', ''),
-(15, 'Richard', 'sit15.css', 'sit', ''),
-(16, 'Cake', 'sit_cake.css', 'sit', '');
-
-
 CREATE TABLE `{$dbInventory}` (
   `id` int(11) NOT NULL auto_increment,
   `identifier` varchar(255) default NULL,
@@ -1542,7 +1514,8 @@ CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
   `userid` smallint(6) NOT NULL default '0',
   `config` varchar(255) NOT NULL,
   `value` text,
-  PRIMARY KEY  (`userid`,`config`)
+  PRIMARY KEY  (`userid`,`config`),
+  KEY `userid` (`userid`)
 ) TYPE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
 
 

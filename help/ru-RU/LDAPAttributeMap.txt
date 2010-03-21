@@ -1,0 +1,8 @@
+Пример:
+
+realname=>cn
+jobtitle=>title
+email=>mail
+phone=>phone
+forenames=>givenname
+surname=>surname

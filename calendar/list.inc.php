@@ -58,7 +58,7 @@ if (mysql_num_rows($result))
             echo "&amp;day=".substr($dates['date'], 8, 2)."&amp;user={$dates['userid']}";
             echo "&amp;type={$dates['type']}&amp;length=0&amp;return=list' ";
             echo "onclick=\"return window.confirm('{$dates['realname']}: ".ldate('l jS F Y', mysql2date($dates['date']));
-            echo ": {$strAreYouSureDelete}');\">{$strDelete}</a>";
+            echo ": {$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         }
         echo "</td></tr>\n";
         if ($shade=='shade1') $shade='shade2';
