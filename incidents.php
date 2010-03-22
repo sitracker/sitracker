@@ -154,7 +154,7 @@ switch ($type)
         echo "</h2>\n";
         if (!empty($sort))
         {
-            if ($order == 'a' OR $order == 'ASC' OR $order == '') $sortorder = "ASC";
+            if ($order == 'a' OR $order == 'ASC') $sortorder = "ASC";
             else $sortorder = "DESC";
             switch ($sort)
             {
