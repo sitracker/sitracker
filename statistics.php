@@ -278,7 +278,7 @@ function give_overview()
     if (mysql_num_rows($result) > 1)
     {
         echo "<h2>{$GLOBALS['strByGroup']}</h2>";
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical' align='center'><tr>";
         while ($groups = mysql_fetch_object($result))
         {
             $sqlGroups = "SELECT COUNT(i.id) AS count, istatus.name ";
@@ -294,7 +294,8 @@ function give_overview()
             if (mysql_num_rows($resultGroups) > 0)
             {
                 $openCallsGroup = 0;
-                echo "<tr><td style='vertical-align:top' align='center' colspan='2'><strong>{$groups->name}</strong></td></tr>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$groups->name}</strong>";
+                echo "<table class='vertical' align='center'>";
                 while ($rowGroup = mysql_fetch_object($resultGroups))
                 {
                     echo "<tr><th>{$GLOBALS[$rowGroup->name]}</th><td class='shade2' align='left'>";
@@ -306,10 +307,10 @@ function give_overview()
                     //}
                 }
                 echo "<tr><th>{$GLOBALS['strTotalOpen']}</th>";
-                echo "<td class='shade2' align='left'><strong>{$openCallsGroup}</strong></td></tr>";
+                echo "<td class='shade2' align='left'><strong>{$openCallsGroup}</strong></td></tr></table></td>";
             }
         }
-        echo "</table>";
+        echo "</tr></table>";
     }
     plugin_do('statistics_table_overview');
 
@@ -331,7 +332,7 @@ function give_overview()
     if (mysql_num_rows($result) > 1)
     {
         echo "<h2>{$GLOBALS['strByVendor']}</h2>";
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical' align='center'><tr>";
         while ($vendors = mysql_fetch_array($result))
         {
             // This should use the software and relate to the product and then to the vendor
@@ -353,7 +354,8 @@ function give_overview()
             if (mysql_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
-                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors['name']}</strong></td></tr>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors['name']}</strong>";
+                echo "<table class='vertical' align='center'>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {
                     echo "<tr><th>{$GLOBALS[$rowVendor->name]}</th><td class='shade2' align='left'>";
@@ -365,10 +367,10 @@ function give_overview()
                     }
                 }
                 echo "<tr><th>{$GLOBALS['strTotalOpen']}</th>";
-                echo "<td class='shade2' align='left'><strong>{$openCallsVendor}</strong></td></tr>\n";
+                echo "<td class='shade2' align='left'><strong>{$openCallsVendor}</strong></td></tr></table></td>\n";
             }
         }
-        echo "</table>";
+        echo "</tr></table>";
     }
 
 
