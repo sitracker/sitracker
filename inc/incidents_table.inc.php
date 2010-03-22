@@ -233,7 +233,7 @@ while ($incidents = mysql_fetch_array($result))
 
     if (drafts_waiting_on_incident($incidents['id']))
     {
-        echo icon('note2', 16, $strDraftsExist).' ';
+        echo icon('draft', 16, $strDraftsExist).' ';
     }
 
     if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
