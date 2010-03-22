@@ -7838,7 +7838,7 @@ function plugin_do($context, $optparams = FALSE)
             // Call Variable function (function with variable name)
             if ($optparams)
             {
-                $rtn = $action($optparams);
+                $rtn = $pluginaction($optparams);
             }
             else
             {
