@@ -192,6 +192,7 @@ elseif ($_REQUEST['mode'] == "show")
     {
         foreach ($meta AS $metaline)
         {
+            $metaline = htmlspecialchars($metaline);
             echo "<input type='text' name='meta[]' value=\"{$metaline}\" size='80' style='width: 100%;' /><br />";
         }
     }
@@ -212,7 +213,7 @@ elseif ($_REQUEST['mode'] == "show")
             echo "<td><input id=\"{$key}\" ";
             if (empty($foreignvalues[$key]))
             {
-                echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \"";
+                echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \" ";
             }
             echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" />";
             if (empty($foreignvalues[$key]))

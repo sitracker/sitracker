@@ -21,33 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-function qtype_listbox($type)
-{
-    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
-
-    $html .= "<select name='type'>\n";
-    $html .= "<option value='rating'";
-    if ($type=='rating') $html .= " selected";
-    $html .= ">{$strRating}</option>";
-
-    $html .= "<option value='options'";
-    if ($type=='options') $html .= " selected";
-    $html .= ">{$strOptions}</option>";
-
-    $html .= "<option value='multioptions'";
-    if ($type=='multioptions') $html .= " selected";
-    $html .= ">{$strMultipleOptions}</option>";
-
-    $html .= "<option value='text'";
-    if ($type=='text') $html .= " selected";
-    $html .= ">{$strText}</option>";
-
-    $html .= "</select>\n";
-
-    return $html;
-}
-
-if ($_SESSION['tcs']!=$tcs) { header("Location: login.php"); exit; }
+if ($_SESSION['tcs'] != $tcs) { header("Location: login.php"); exit; }
 
 // External variables
 $qid = cleanvar($_REQUEST['id']);
@@ -76,10 +50,10 @@ switch ($_REQUEST['action'])
         $sql .= "'{$options}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
-        $newqid=$qid+1;
+        $newqid = $qid + 1;
         header("Location: feedback_form_addquestion.php?fid={$formid}&qid={$newqid}");
         exit;
-    break;
+        break;
 
     default:
         $title = "{$strAddFeedbackQuestion}";
@@ -114,7 +88,7 @@ switch ($_REQUEST['action'])
 
         echo "<th>{$strType}:</th>";
         echo "<td>";
-        echo qtype_listbox($question->type);
+        echo feedback_qtype_listbox($question->type);
         echo "</td></tr>\n<tr>";
 
         echo "<th>$strOptionsOnePerLine:</th>";
@@ -124,7 +98,7 @@ switch ($_REQUEST['action'])
 
         echo "<th>{$strRequired}:</th>";
         echo "<td><label>";
-        if ($question->required=='true') echo "<input type='checkbox' name='required' value='true' checked='checked' />";
+        if ($question->required == 'true') echo "<input type='checkbox' name='required' value='true' checked='checked' />";
         else echo "<input type='checkbox' name='required' value='true' />";
         echo " {$strRequired}</label>";
         echo "</td></tr>\n<tr>";
