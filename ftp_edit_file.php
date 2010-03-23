@@ -34,7 +34,7 @@ switch ($mode)
     case 'form':
         // display file details
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $sql = "SELECT * FROM `{$dbFiles}` WHERE id='{$id}'";
+        $sql = "SELECT * FROM `{$dbFiles}` WHERE id='{$id}' AND category = 'ftp'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $obj = mysql_fetch_object($result);
