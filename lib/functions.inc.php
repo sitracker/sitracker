@@ -4173,34 +4173,34 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
  */
 function readable_date($date, $lang = 'user')
 {
-    global $SYSLANG;
+    global $SYSLANG, $CONFIG;
     //
     // e.g. Yesterday @ 5:28pm
     if (ldate('dmy', $date) == ldate('dmy', time()))
     {
         if ($lang == 'user')
         {
-            $datestring = "{$GLOBALS['strToday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$GLOBALS['strToday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
         else
         {
-            $datestring = "{$SYSLANG['strToday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$SYSLANG['strToday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
     }
     elseif (ldate('dmy', $date) == ldate('dmy', (time()-86400)))
     {
         if ($lang == 'user')
         {
-            $datestring = "{$GLOBALS['strYesterday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$GLOBALS['strYesterday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
         else
         {
-            $datestring = "{$SYSLANG['strYesterday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$SYSLANG['strYesterday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
     }
     else
     {
-        $datestring = ldate("l jS M y @ g:ia", $date);
+        $datestring = ldate($CONFIG['dateformat_longdate'] . ' @ ' . $CONFIG['dateformat_time'], $date);
     }
     return $datestring;
 }
@@ -5648,18 +5648,29 @@ function clear_form_data($formname)
 */
 function utc_time($time = '')
 {
-    if ($time == '') $time = $GLOBALS['now'];
+    global $now;
+    if ($time == '')
+    {
+        $time = $now;
+    }
     $tz = strftime('%z', $time);
     $tzmins = (substr($tz, -4, 2) * 60) + substr($tz, -2, 2);
     $tzsecs = $tzmins * 60; // convert to seconds
-    if (substr($tz, 0, 1) == '+') $time -= $tzsecs;
-    else $time += $tzsecs;
+    if (substr($tz, 0, 1) == '+')
+    {
+        $time -= $tzsecs;
+    }
+    else
+    {
+        $time += $tzsecs;
+    }
     return $time;
 }
 
 
 /**
-    * Returns a localised and translated date
+    * Returns a localised and translated date.
+    * DST Aware
     * @author Ivan Lucas
     * @param string $format. date() format
     * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
@@ -5671,6 +5682,7 @@ function utc_time($time = '')
 */
 function ldate($format, $date = '', $utc = FALSE)
 {
+    global $now, $CONFIG;
     if ($date == '') $date = $GLOBALS['now'];
     if ($_SESSION['userconfig']['utc_offset'] != '')
     {
@@ -5683,6 +5695,13 @@ function ldate($format, $date = '', $utc = FALSE)
         $useroffsetsec = $_SESSION['userconfig']['utc_offset'] * 60;
         $date += $useroffsetsec;
     }
+
+    // Adjust the display time according to DST
+    if ($utc === FALSE AND date('I', $date) > 0)
+    {
+        $date += $CONFIG['dst_adjust'] * 60; // Add an hour of DST
+    }
+
     $datestring = date($format, $date);
 
     // Internationalise date endings (e.g. st)
