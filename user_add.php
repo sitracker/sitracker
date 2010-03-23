@@ -177,7 +177,7 @@ else
     }
     else $startdate = '';
 
-    $_SESSION['formdata']['add_user'] = $_REQUEST;
+    $_SESSION['formdata']['add_user'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
     // Add user
     $errors = 0;
     // check for blank real name

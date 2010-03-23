@@ -7230,7 +7230,7 @@ function process_add_contact($mode = 'internal')
     $department = cleanvar($_REQUEST['department']);
     $notes = cleanvar($_REQUEST['notes']);
     $returnpage = cleanvar($_REQUEST['return']);
-    $_SESSION['formdata']['add_contact'] = $_REQUEST;
+    $_SESSION['formdata']['add_contact'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     // check for blank name
@@ -7627,9 +7627,9 @@ function contact_username($userid)
 
 
 /**
-* Populates $_SESSION['syslang], system language strings
-*
-* @author Kieran Hogg
+ * Populates $_SESSION['syslang], system language strings
+ *
+ * @author Kieran Hogg
 */
 function populate_syslang()
 {

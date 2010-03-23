@@ -126,7 +126,7 @@ else //submit
     $servicelevel = servicelevel_id2tag(maintenance_servicelevel($contractid));
     $productid = cleanvar($_REQUEST['productid']);
 
-    $_SESSION['formdata']['portaladdincident'] = $_POST;
+    $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     if (empty($incidenttitle))
@@ -172,10 +172,10 @@ else //submit
                                     $contractid, $productid, $software);
             $_SESSION['incidentid'] = $incidentid;
 
-            // Need to reload the entitlements data into the session 
+            // Need to reload the entitlements data into the session
             unset($_SESSION['entitlement']);
             load_entitlements($_SESSION['contactid'], $_SESSION['siteid']);
-            
+
             // Save productinfo if there is some
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
             $result = mysql_query($sql);
