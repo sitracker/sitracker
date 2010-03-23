@@ -7630,19 +7630,38 @@ function contact_username($userid)
  * Populates $_SESSION['syslang], system language strings
  *
  * @author Kieran Hogg
+ * @note See also populate_syslang2() which is a copy of this function
 */
 function populate_syslang()
 {
     global $CONFIG;
-    // Populate $SYSLANG with system lang
-    $file = APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php";
-    if (file_exists($file))
-    {
-        $fh = fopen($file, "r");
 
-        $theData = fread($fh, filesize($file));
+    // Populate $SYSLANG with first the native lang and then the system lang
+    // This is so that we have a complete language file
+    $nativefile = APPLICATION_I18NPATH . "en-GB.inc.php";
+    $file = APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php";
+
+    if (file_exists($nativefile))
+    {
+        $fh = fopen($nativefile, "r");
+
+        $theData = fread($fh, filesize($nativefile));
         fclose($fh);
-        $lines = explode("\n", $theData);
+        $nativelines = explode("\n", $theData);
+
+        if (file_exists($file))
+        {
+            $fh = fopen($file, "r");
+            $theData = fread($fh, filesize($file));
+            fclose($fh);
+            $lines = $nativelines += explode("\n", $theData);
+        }
+        else
+        {
+            trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+            $lines = $nativelines;
+        }
+
         foreach ($lines as $values)
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
@@ -7660,7 +7679,7 @@ function populate_syslang()
     }
     else
     {
-        trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+        trigger_error("Native language file 'en-GB' can't be found", E_USER_ERROR);
     }
 }
 
