@@ -231,7 +231,7 @@ while ($incidents = mysql_fetch_array($result))
         echo icon('timer', 16, $strOpenActivities).' ';
     }
 
-    if (drafts_waiting_on_incident($incidents['id']))
+    if (drafts_waiting_on_incident($incidents['id'], 'all', $sit[2]))
     {
         echo icon('note2', 16, $strDraftsExist).' ';
     }
