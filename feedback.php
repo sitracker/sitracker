@@ -241,7 +241,7 @@ switch ($_REQUEST['action'])
         // Get respondentid
         //print_r($_REQUEST);
         $sql = "SELECT id AS respondentid FROM `{$dbFeedbackRespondents}` ";
-        $sql .= "WHERE contactid='$contactid' AND formid='$formid' AND incidentid='$incidentid'";
+        $sql .= "WHERE contactid='$contactid' AND formid='$formid' AND incidentid='$incidentid' AND completed = 'no'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($result) < 1)
@@ -381,11 +381,8 @@ body { font:10pt Arial, Helvetica, sans-serif; }
         $fielddata = unserialize(base64_decode($errorfields[0])); // unserialize(
 
         // Have a look to see if this person has a form waiting to be filled
-        $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' ";
-        if ($_REQUEST['rr'])
-        {
-            $rsql .= "AND completed='yes' ";
-        }
+        $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` ";
+        $rsql .= "WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' AND completed = 'no'";
 
         $rresult = mysql_query($rsql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
