@@ -58,7 +58,7 @@ else
 
 if ($onlineonly === 'true' OR $filtergroup === 'allonline' )
 {
-    $sql .= "AND lastseen > $startofsession ";
+    $sql .= "AND lastseen > '".date('Y-m-d H:i:s', $startofsession). "' ";
 }
 
 // Sorting
