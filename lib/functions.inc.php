@@ -6679,14 +6679,14 @@ function show_next_action($formid)
 
     $html .= "<label>";
     $html .= "<input checked='checked' type='radio' name='timetonextaction' ";
-    $html .= "id='ttna_none' onchange=\"update_ttna();\" ";
+    $html .= "id='ttna_none' onchange=\"update_ttna();\" onclick=\"this.blur();\" ";
 //     $html .= "onclick=\"$('timetonextaction_days').value = ''; window.document.updateform.";
 //     $html .= "timetonextaction_hours.value = ''; window.document.updateform."; timetonextaction_minutes.value = '';\"
     $html .= " value='None' />{$GLOBALS['strNo']}";
     $html .= "</label><br />";
 
     $html .= "<label><input type='radio' name='timetonextaction' ";
-    $html .= "id='ttna_time' value='time' onchange=\"update_ttna();\" />";
+    $html .= "id='ttna_time' value='time' onchange=\"update_ttna();\" onclick=\"this.blur();\" />";
     $html .= "{$GLOBALS['strForXDaysHoursMinutes']}</label><br />\n";
     $html .= "<span id='ttnacountdown'";
     if (empty($na_days) AND
@@ -6711,7 +6711,7 @@ function show_next_action($formid)
     $html .= "<br />\n</span>";
 
     $html .= "<label><input type='radio' name='timetonextaction' id='ttna_date' ";
-    $html .= "value='date' onchange=\"update_ttna();\" />";
+    $html .= "value='date' onchange=\"update_ttna();\" onclick=\"this.blur();\" />";
     $html .= "{$GLOBALS['strUntilSpecificDateAndTime']}</label><br />\n";
     $html .= "<div id='ttnadate' style='display: none;'>";
     $html .= "<input name='date' id='timetonextaction_date' size='10' value='{$date}' ";
@@ -7838,7 +7838,7 @@ function plugin_do($context, $optparams = FALSE)
             // Call Variable function (function with variable name)
             if ($optparams)
             {
-                $rtn = $action($optparams);
+                $rtn = $pluginaction($optparams);
             }
             else
             {
@@ -8372,7 +8372,17 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         $html .= "<p class='info'>The current password setting is not shown</p>";
     }
 
-    if ($showvarnames) $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
+    if ($showvarnames)
+    {
+        if ($userid < 1)
+        {
+            $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
+        }
+        else
+        {
+            $html .= "<br />(<var>userconfig: '$setupvar'</var>)";
+        }
+    }
 
     if ($CFGVAR[$setupvar]['statusfield'] == 'TRUE')
     {
@@ -8517,6 +8527,62 @@ function feedback_hash($formid, $contactid, $incidentid)
     $hashcode = urlencode($hashcode1);
     return $hashcode;
 }
+
+
+function qtype_listbox($type)
+{
+    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
+
+    $html .= "<select name='type'>\n";
+    $html .= "<option value='rating'";
+    if ($type == 'rating') $html .= " selected='selected'";
+    $html .= ">{$strRating}</option>";
+
+    $html .= "<option value='options'";
+    if ($type=='options') $html .= " selected='selected'";
+    $html .= ">{$strOptions}</option>";
+
+    $html .= "<option value='multioptions'";
+    if ($type == 'multioptions') $html .= " selected='selected'";
+    $html .= ">{$strMultipleOptions}</option>";
+
+    $html .= "<option value='text'";
+    if ($type == 'text') $html .= " selected='selected'";
+    $html .= ">{$strText}</option>";
+
+    $html .= "</select>\n";
+
+    return $html;
+}
+
+
+
+function feedback_qtype_listbox($type)
+{
+    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
+
+    $html .= "<select name='type'>\n";
+    $html .= "<option value='rating'";
+    if ($type == 'rating') $html .= " selected='selected'";
+    $html .= ">{$strRating}</option>";
+
+    $html .= "<option value='options'";
+    if ($type == 'options') $html .= " selected='selected'";
+    $html .= ">{$strOptions}</option>";
+
+    $html .= "<option value='multioptions'";
+    if ($type == 'multioptions') $html .= " selected='selected'";
+    $html .= ">{$strMultipleOptions}</option>";
+
+    $html .= "<option value='text'";
+    if ($type == 'text') $html .= " selected='selected'";
+    $html .= ">{$strText}</option>";
+
+    $html .= "</select>\n";
+
+    return $html;
+}
+
 
 
 // ** Place no more function defs below this **

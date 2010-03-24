@@ -76,7 +76,7 @@ if (is_numeric($_GET['id']))
     {
         echo "<table align='center'>";
         echo "<tr><th>{$strInventoryItems}</th><th>{$strPrivacy}</th>";
-        echo "<th>{$strOwner}</th><th>{$strActions}</th></tr>";
+        echo "<th>{$strCreatedBy}</th><th>{$strOwner}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($row = mysql_fetch_object($result))
         {
@@ -97,6 +97,8 @@ if (is_numeric($_GET['id']))
                 echo icon('review', 16, $strAdmin);
             }
             echo "</td><td>".user_realname($row->createdby)."</td><td>";
+            echo contact_realname($row->contactid)."</td><td>";
+            
             if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
                  $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
             {

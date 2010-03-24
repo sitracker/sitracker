@@ -322,6 +322,7 @@ function dashboard_rss_edit($dashletid)
 
 function dashboard_rss_upgrade()
 {
+    global $CONFIG;
     $upgrade_schema[2] = "
         -- INL 22Nov07
         ALTER TABLE `{$CONFIG['db_tableprefix']}dashboard_rss` ADD `items` INT( 5 ) NULL AFTER `url`;
@@ -331,12 +332,10 @@ function dashboard_rss_upgrade()
         -- INL 22May09
         ALTER TABLE `{$CONFIG['db_tableprefix']}dashboard_rss` CHANGE `owner` `owner` SMALLINT( 6 ) NOT NULL;";
 
-    return $upgrade_schema;
-
 
     $upgrade_schema[4] = "
-        -- TMS 14Mar10
-        UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url='http://sourceforge.net/export/rss2_projnews.php?group_id=160319' WHERE url='http://sourceforge.net/export/rss2_projfiles.php?group_id=160319';
+        -- CJ 14Mar10
+        UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url='http://sourceforge.net/export/rss2_projnews.php?group_id=160319' WHERE url='http://sourceforge.net/export/rss2_projfiles.php?group_id=160319'";
 
     return $upgrade_schema;
 

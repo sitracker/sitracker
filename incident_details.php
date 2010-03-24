@@ -91,6 +91,19 @@ else
     $title = $strDetails;
 }
 
+// Check for asked incident ID
+$sql = "SELECT id FROM {$dbIncidents} ";
+$sql .= "WHERE id = {$id} ";
+$result = mysql_query($sql);
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+if (mysql_num_rows($result) == 0) {
+
+    // Incident doesn't exist
+    // FIXME better error message - CJ 21/3-10
+    html_redirect("main.php", FALSE, $strNotApplicableAbbrev);
+
+} else {
+
 include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
 echo "<div id='detailsummary'>";
@@ -155,7 +168,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) > 0)
 {
     $inventory = mysql_fetch_object($result);
-    echo "<a href='inventory.php?view={$inventory->id}'>";
+    echo "<a href='inventory_view.php?id={$inventory->id}'>";
     echo "$inventory->name";
     if (!empty($inventory->identifier))
     {
@@ -831,4 +844,5 @@ if (!$_GET['win'])
 }
 
 include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
+}
 ?>
