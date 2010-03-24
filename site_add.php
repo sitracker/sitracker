@@ -142,7 +142,7 @@ elseif ($action == "add")
     $typeid = cleanvar($_POST['typeid']);
     $owner = cleanvar($_POST['owner']);
 
-    $_SESSION['formdata']['add_site'] = $_REQUEST;
+    $_SESSION['formdata']['add_site'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

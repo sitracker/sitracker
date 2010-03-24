@@ -333,15 +333,16 @@ switch ($_REQUEST['action'])
 <head>
 <meta http-equiv="refresh" content="0;URL=feedback.php?ax=<?php echo "{$hashcode}&error={$errortext}&mode={$mode}"; ?>" />
 <title><?php echo $strPleaseWaitRedirect ?></title>
-<style>
+<style type="text/css">
 body { font:10pt Arial, Helvetica, sans-serif; }
 </style>
-</head>
 <body>
 <p><?php echo $strPleaseWaitRedirect ?></p>
 <p><?php echo $strIfYourBrowserNotReload; ?><a href='feedback.php?ax=<?php echo "{$hashcode}&error={$errortext}&mode={$mode}"; ?>'><?php echo $strFollowThisLink;?></a>.</p>
 </body>
 </head>
+</html>
+
 <?php
 //             header("Location: feedback.php?ax={$hashcode}&error={$errortext}");
             exit;

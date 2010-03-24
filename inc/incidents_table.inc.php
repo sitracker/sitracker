@@ -233,7 +233,7 @@ while ($incidents = mysql_fetch_array($result))
 
     if (drafts_waiting_on_incident($incidents['id'], 'all', $sit[2]))
     {
-        echo icon('note2', 16, $strDraftsExist).' ';
+        echo icon('draft', 16, $strDraftsExist).' ';
     }
 
     if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
@@ -359,7 +359,7 @@ while ($incidents = mysql_fetch_array($result))
             echo $targettype."<br />";
             echo sprintf($strXLate, format_workday_minutes((0 - $slaremain)));
         }
-        elseif ($slaremain == 0)
+        else
         {
             echo $targettype."<br />".$strDueNow;
         }
@@ -384,11 +384,11 @@ while ($incidents = mysql_fetch_array($result))
         echo "<td align='center' class='review'>";
         if ($reviewremain > -86400)
         {
-            echo "".icon('review', 16)." {$strReviewDueNow}";
+            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds($reviewremain * 60));
         }
         else
         {
-            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_workday_minutes($reviewremain*-1));
+            echo "".icon('review', 16)." {$strReviewDueNow}";
         }
     }
     else

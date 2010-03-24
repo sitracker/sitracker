@@ -96,8 +96,8 @@ if (mysql_num_rows($mresult) >= 1)
       $counter[$i] = 0;
     }
 
-    $surveys=0;
-    if ($CONFIG['debug']) echo "<h4>$msql</h4>";
+    $surveys = 0;
+    debug_log("Feedback report sql: ".$msql, TRUE);
 
 
     $firstrun=0;
