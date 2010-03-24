@@ -125,7 +125,7 @@ $now = time();
 $today = $now + (16 * 3600);
 $lastweek = $now - (7 * 86400); // the previous seven days
 $todayrecent = $now -(16 * 3600);  // past 16 hours
-$startofsession = $now - (ini_get("session.gc_maxlifetime") * 60);
+$startofsession = $now - ini_get("session.gc_maxlifetime");
 
 $CONFIG['upload_max_filesize'] = return_bytes($CONFIG['upload_max_filesize']);
 

@@ -78,6 +78,7 @@ if (isset($refresh) && $refresh != 0)
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
+echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
 // To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
 if (is_array($pagescripts))
 {
