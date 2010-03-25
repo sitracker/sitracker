@@ -35,7 +35,6 @@ $title = $strIncidentsByEngineer;
 $startdate = cleanvar($_POST['startdate']);
 $enddate = cleanvar($_POST['enddate']);
 $type = cleanvar($_POST['type']);
-$exc = cleanvar($_POST['exc']);
 $inc = cleanvar($_POST['inc']);
 $output = cleanvar($_POST['output']);
 
@@ -95,12 +94,7 @@ elseif ($_REQUEST['statistics'] == 'on')
     if (!empty($enddate)) $enddate = strtotime($enddate);
     else $enddate = mktime(23,59,59,31,12,date('Y'));
 
-    if (is_array($inc) && is_array($exc))
-    {
-        $incarray = array_values(array_diff($inc, $exc));  // don't include anything excluded
-    }
-
-    $includecount = count($incarray);
+    $includecount = count($inc);
     if ($includecount >= 1)
     {
         // $html .= "<strong>Include:</strong><br />";
@@ -108,8 +102,8 @@ elseif ($_REQUEST['statistics'] == 'on')
         $incsql_esc .= "(";
         for ($i = 0; $i < $includecount; $i++)
         {
-            $incsql .= "u.id={$incarray[$i]}";
-            $incsql_esc .= "i.owner={$incarray[$i]}";
+            $incsql .= "u.id={$inc[$i]}";
+            $incsql_esc .= "i.owner={$inc[$i]}";
             if ($i < ($includecount-1)) $incsql .= " OR ";
             if ($i < ($includecount-1)) $incsql_esc .= " OR ";
         }
@@ -262,28 +256,32 @@ elseif ($_REQUEST['statistics'] == 'on')
             $html .= "<td {$class}>{$escalated}</td>";
             if (empty($engineer['closed'])) $closed = 0;
             else $closed = $engineer['closed'];
+            
+            if ($open === 0) $openForDiv = 1;
+            else $openForDiv = $open;
+            
             $html .= "<td {$class}>{$closed}</td>";
-            $html .= "<td {$class}>".round($engineer['opened']/12,2)."</td>"; //The average over a 12mnth period
-            $html .= "<td {$class}>".round($engineer['escalated']/12,2)."</td>"; //The average over a 12mnth period
-            $html .= "<td {$class}>".round($engineer['closed']/12,2)."</td>"; //The average over a 12mnth period
-            $html .= "<td {$class}>".round(($engineer['escalated']/$engineer['opened'])*100,2)."%</td>";
+            $html .= "<td {$class}>".round($open / 12, 2)."</td>"; //The average over a 12mnth period
+            $html .= "<td {$class}>".round($escalated / 12, 2)."</td>"; //The average over a 12mnth period
+            $html .= "<td {$class}>".round($closed / 12, 2)."</td>"; //The average over a 12mnth period
+            $html .= "<td {$class}>".round(($escalated / $openForDiv) * 100, 2)."%</td>";
             $html .= "</tr>";
 
             $csv .= "\"".$engineer['realname']."\",\"";
             $csv .= "{$opened}\",\"";
             $csv .= "{$escalated}\",\"";
             $csv .= "{$closed}\",\"";
-            $csv .= round($engineer['opened']/12,2)."\",\""; //The average over a 12mnth period
-            $csv .= round($engineer['escalated']/12,2)."\",\""; //The average over a 12mnth period
-            $csv .= round($engineer['closed']/12,2)."\",\""; //The average over a 12mnth period
-            $csv .= round(($engineer['escalated']/$engineer['opened'])*100,2)."%\"\n";
+            $csv .= round($open / 12, 2)."\",\""; //The average over a 12mnth period
+            $csv .= round($open / 12, 2)."\",\""; //The average over a 12mnth period
+            $csv .= round($closed / 12, 2)."\",\""; //The average over a 12mnth period
+            $csv .= round(($escalated / $openForDiv) * 100, 2)."%\"\n";
 
 
             if ($class == "class='shade1'") $class = "class='shade2'";
             else $class = "class='shade1'";
         }
         $html .= "<tr>";
-        $html .= "<td {$class} align='right'><super>{$strTOTALS}:</super></td>";
+        $html .= "<td {$class} align='right'><strong>{$strTOTALS}:</string></td>";
         $html .= "<td {$class}>$totalOpened</td>";
         $html .= "<td {$class}>$totalEscalated</td>";
         $html .= "<td {$class}>$totalClosed</td>";
@@ -330,12 +328,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if (!empty($enddate)) $enddate = strtotime($enddate);
     else $enddate = mktime(23,59,59,31,12,date('Y'));
 
-    if (is_array($inc) && is_array($exc))
-    {
-        $incarray = array_values(array_diff($inc, $exc));  // don't include anything excluded
-    }
-
-    $includecount = count($incarray);
+    $includecount = count($inc);
     if ($includecount >= 1)
     {
         // $html .= "<strong>Include:</strong><br />";
@@ -349,8 +342,8 @@ elseif ($_REQUEST['mode'] == 'report')
             for ($i = 0; $i < $includecount; $i++)
             {
                 // $html .= "{$_POST['inc'][$i]} <br />";
-                $incsql .= "u.id={$incarray[$i]}";
-                $incsql_esc .= "i.owner={$incarray[$i]}";
+                $incsql .= "u.id={$inc[$i]}";
+                $incsql_esc .= "i.owner={$inc[$i]}";
                 if ($i < ($includecount-1)) $incsql .= " OR ";
                 if ($i < ($includecount-1)) $incsql_esc .= " OR ";
             }
