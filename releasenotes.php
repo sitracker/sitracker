@@ -28,6 +28,35 @@ echo "<h2>Release Notes</h2>";
 echo "<div id='help'>";
 echo "<h4>This is a summary of the full release notes showing only the most important changes, for more detailed notes and the latest information on this release please <a href='http://sitracker.org/wiki/ReleaseNotes'>see the SiT website</a>:</h4>";
 
+echo "<h3><a name='3.60'>v3.60 LTS</a></h3>";
+echo "<div>";
+echo "<p>This is a Long Term Support edition, which means that we will be providing Technical Support and bug fixes for this ";
+echo "release (as v3.61, v3.62... etc.) until around the time that v4.1 is released. Security fixes will be made available ";
+echo "for longer than that - at least until v4.2 is released! We've decided to do this so that we can concentrate our main development ";
+echo "efforts on exciting new features for 4.x without ignoring existing users who are currently using the 3.x versions of SiT! ";
+echo "and to provide a stable upgrade path.</p>";
+echo "<ul>";
+echo "<li>Many minor and not-so-minor enhancements and bug fixes </li>";
+echo "<li>Updated Slovenian sl-SL translation by Alen Grižonič </li>";
+echo "<li>Updated Danish (da-DK) translation by Carsten Jensen </li>";
+echo "<li>Updated Russian (ru-RU) translation by sancho78rus</li>";
+echo "<li>Support for daylight savings time (DST)</li>";
+echo "<li>More plugin contexts</li>";
+echo "</ul>";
+echo "</div>";
+
+echo "<h3><a name='3.51'>v3.51</a></h3>";
+echo "<div>";
+echo "<ul>";
+echo "<li>An important security fix (<a href='http://bugs.sitracker.org/view.php?id=1047'>Bug 1047</a>) for those people using the LDAP feature</li>";
+echo "<li>Many minor and not-so-minor enhancements and bug fixes </li>";
+echo "<li>Updates to the French (fr-FR) translation by Guillaume Clement, 100% of SiT! strings are now translated to French </li>";
+echo "<li>Updates to the Dutch (nl-NL) translation by Arko Kroonen, 100% of SiT! strings are now translated to Dutch </li>";
+echo "<li>Updated Danish (da-DK) translation by Carsten Jensen </li>";
+echo "</ul>";
+echo "</div>";
+
+
 echo "<h3><a name='3.50'>v3.50</a></h3>";
 echo "<div>";
 echo "<ul>";
