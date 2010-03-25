@@ -298,16 +298,13 @@ if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
         }
     }
 
-    if ($reviewremain > 0 AND $reviewremain <= 7200)
+    if ($reviewremain > -86400)
     {
-        // Only display if review is due in the next five days (7200 is the number of minutes in 5 days)
-        if ($slaremain != 0) echo "<br />"; // only need a line sometimes
-        echo sprintf($strReviewIn, format_seconds($reviewremain * 60));
+        echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
     }
-    elseif ($reviewremain <= 0)
+    else
     {
-        if ($slaremain <> 0) echo "<br />"; // only need a line sometimes
-        echo $strReviewDueNow;
+        echo "<br />".icon('review', 16)." {$strReviewDueNow}";
     }
 
     if ($servicelevel->timed == 'yes')
