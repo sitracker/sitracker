@@ -44,6 +44,7 @@ echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$them
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
+echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
 // javascript popup date library
 echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
 
@@ -159,8 +160,8 @@ else
 $targettype = target_type_name($target->type);
 
 // Get next review time
-$reviewsince = incident_get_next_review($incidentid);  // time since last review in minutes
-$reviewtarget = ($servicelevel->review_days * $working_day_mins);          // how often reviews should happen in minutes
+$reviewsince = incident_time_since_review($incidentid);  // time since last review in minutes
+$reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes (1440 minutes in a day)
 if ($reviewtarget > 0)
 {
     $reviewremain = ($reviewtarget - $reviewsince);
@@ -172,7 +173,7 @@ else
 
 // Color the title bar according to the SLA and priority
 $class = '';
-if ($slaremain <> 0 AND $incident->status!=2)
+if ($slaremain != 0 AND $incident->status != STATUS_CLOSED)
 {
     if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
     if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
@@ -214,12 +215,12 @@ if ($menu != 'hide')
                 echo "<a class='barlink' href=\"javascript:window.opener.location='delete_update.php?updateid={$inupdate->updateid}&amp;tempid={$inupdate->id}&amp;timestamp={$inupdate->timestamp}'; window.close(); \">{$strDelete}</a>";
             }
         }
-        elseif (incident_status($id) != 2)
+        elseif (incident_status($id) != STATUS_CLOSED)
         {
             echo "<a href= \"javascript:wt_winpopup('incident_reassign.php?id={$id}&amp;reason=Initial%20assignment%20to%20engineer&amp;popup=yes','mini');\" title='Assign this incident'>{$strAssign}</a>";
         }
     }
-    elseif (incident_status($id) != 2)
+    elseif (incident_status($id) != STATUS_CLOSED)
     {
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_update.php?id={$id}&amp;popup={$popup}' accesskey='U'>{$strUpdate}</a> | ";
         echo "<a class='barlink' href='javascript:close_window({$id});' accesskey='C'>{$strClose}</a> | ";

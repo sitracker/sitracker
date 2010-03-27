@@ -46,7 +46,7 @@ else
 {
     // External variables
     $name = cleanvar($_REQUEST['name']);
-    $_SESSION['formdata'] = $_REQUEST;
+    $_SESSION['formdata'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
     // Add new
     $errors = 0;
 

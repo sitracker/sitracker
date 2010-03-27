@@ -96,7 +96,7 @@ else
     $title = cleanvar($_REQUEST['title']);
     $emaildomain = cleanvar($_REQUEST['emaildomain']);
 
-    $_SESSION['formdata']['add_escalation_path'] = $_REQUEST;
+    $_SESSION['formdata']['add_escalation_path'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     if (empty($name))

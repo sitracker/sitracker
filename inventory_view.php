@@ -52,7 +52,7 @@ if (is_numeric($_GET['id']))
             html_redirect('inventory.php', FALSE);
             exit;
         }
-            
+
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
 
         echo "<div id='container' style='width: 40%'>";
@@ -102,7 +102,7 @@ if (is_numeric($_GET['id']))
         echo "</p>";
         if (!empty($row->notes))
         {
-            echo "<p><strong>{$strNotes}: </strong> {$row->notes}</p>";
+            echo "<p><strong>{$strNotes}: </strong> ".bbcode($row->notes)."</p>";
         }
         echo "<strong>{$strCreatedBy}:</strong> ".user_realname($row->createdby);
         echo " {$row->created}, <strong>{$strLastModifiedBy}:</strong> ";

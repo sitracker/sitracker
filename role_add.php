@@ -56,7 +56,7 @@ else
     $description = cleanvar($_REQUEST['description']);
     $copyfrom = cleanvar($_REQUEST['copyfrom']);
 
-    $_SESSION['formdata']['role_add'] = $_REQUEST;
+    $_SESSION['formdata']['role_add'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     if (empty($rolename))
     {

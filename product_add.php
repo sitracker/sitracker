@@ -76,7 +76,7 @@ else
     $vendor = cleanvar($_REQUEST['vendor']);
     $description = cleanvar($_REQUEST['description']);
 
-    $_SESSION['formdata']['add_product'] = $_REQUEST;
+    $_SESSION['formdata']['add_product'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
     // Add New
     $errors = 0;
 

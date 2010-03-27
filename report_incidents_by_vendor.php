@@ -51,6 +51,14 @@ else
     $startdate = strtotime($_REQUEST['startdate']);
     $enddate = strtotime($_REQUEST['enddate']);
 
+    if (empty($startdate))
+    {
+        if (empty($enddate)) $startdate = strtotime(date('Y-m-d', mktime(0, 0, 0, date("m"), date("d"), date("Y")-1))); // 1 year ago
+        else $startdate = strtotime ("-1 Year", $enddate); // 1 year before the start date
+    }
+
+    if (empty($enddate)) $enddate = $now;
+
     $sql = "SELECT COUNT(i.id) AS volume, p.vendorid, p.name ";
     $sql .= "FROM `{$dbIncidents}` AS i, `{$dbProducts}` AS p, `{$dbVendors}` AS v WHERE i.product = p.id AND i.opened >= '{$startdate}' AND i.opened <= '{$enddate}' ";
     $sql .= "AND p.vendorid = v.id GROUP BY p.vendorid";

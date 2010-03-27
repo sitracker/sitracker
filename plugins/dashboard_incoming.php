@@ -80,4 +80,18 @@ function dashboard_incoming_display($dashletid)
     }
 }
 
+function dashboard_incoming_upgrade()
+{    
+    $upgrade_schema[2] ="";
+    return $upgrade_schema;
+}
+
+
+function dashboard_incoming_get_version()
+{
+    global $dashboard_incoming_version;
+    return $dashboard_incoming_version;
+}
+	
+
 ?>

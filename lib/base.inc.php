@@ -125,18 +125,10 @@ $now = time();
 $today = $now + (16 * 3600);
 $lastweek = $now - (7 * 86400); // the previous seven days
 $todayrecent = $now -(16 * 3600);  // past 16 hours
-$startofsession = $now - (ini_get("session.gc_maxlifetime") * 60);
+$startofsession = $now - ini_get("session.gc_maxlifetime");
 
 $CONFIG['upload_max_filesize'] = return_bytes($CONFIG['upload_max_filesize']);
 
-//**** Begin internal functions ****//
-// Append SVN data for svn versions
-if ($application_revision == 'svn')
-{
-    // Add the svn revision number
-    preg_match('/([0-9]+)/','$LastChangedRevision: 5995 $',$revision);
-    $application_revision .= $revision[0];
-}
 
 // Set a string to be the full version number and revision of the application
 $application_version_string = trim("v{$application_version} {$application_revision}");

@@ -79,5 +79,10 @@ function dashboard_tasks($dashletid)
 
     echo dashlet('tasks', $dashletid, icon('task', 16), sprintf($GLOBALS['strXsTasks'], user_realname($user,TRUE)), 'tasks.php', $content);
 }
+function dashboard_tasks_get_version()
+{
+    global $dashboard_tasks_version;
+    return $dashboard_tasks_version;
+}
 
 ?>

@@ -18,7 +18,7 @@ $title = "$strInventory - $strEdit";
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if(!$CONFIG['inventory_enabled']) 
+if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
@@ -53,10 +53,14 @@ if (isset($_POST['submit']))
     $sql = "UPDATE `{$dbInventory}` ";
     $sql .= "SET address='{$post['address']}', ";
     if (isset($post['username']))
+    {
         $sql .= "username='{$post['username']}', ";
+    }
 
     if (isset($post['password']))
+    {
         $sql .= "password='{$post['password']}', ";
+    }
 
     $sql .= "type='{$post['type']}', ";
     $sql .= "notes='{$post['notes']}', modified=NOW(), ";
@@ -73,6 +77,10 @@ if (isset($_POST['submit']))
     if (isset($post['active']))
     {
         $sql .= ", active='{$post['active']}' ";
+    }
+    else
+    {
+        $sql .= ", active='0' ";
     }
 
     $sql .= " WHERE id='{$id}'";
@@ -95,9 +103,9 @@ else
         exit;
     }
     echo "<h2>".icon('edit', 32)." {$strEdit}</h2>";
-    
+
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
-    
+
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' value='{$row->name}' />";
@@ -109,7 +117,7 @@ else
     echo site_drop_down('site', $row->siteid, TRUE);
     echo " <span class='required'>{$strRequired}</td>";
     echo "<tr><th>{$strOwner}</th><td>";
-    echo contact_site_drop_down('owner', '');
+    echo contact_site_drop_down('owner', $row->contactid);
     echo "</td></tr>";
 
     echo "<tr><th>{$strID} ".help_link('InventoryID')."</th>";
@@ -128,7 +136,9 @@ else
     }
 
     echo "<tr><th>{$strNotes}</th>";
-    echo "<td><textarea name='notes'>$row->notes</textarea></td></tr>";
+    echo "<td>";
+    echo bbcode_toolbar('inventorynotes');
+    echo "<textarea id='inventorynotes' rows='15' name='notes'>$row->notes</textarea></td></tr>";
 
     if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
@@ -170,14 +180,14 @@ else
         echo "checked = 'checked' ";
     }
     echo "/>";
-    
+
     echo "</table>";
     echo "<p align='center'>";
-    echo "<input name='submit' type='submit' value='{$strUpdate}' /></p>";    
+    echo "<input name='submit' type='submit' value='{$strUpdate}' /></p>";
     echo "</form>";
     echo "<p align='center'>";
 
     echo "<a href='inventory_site.php?id={$row->siteid}'>{$strBackToList}</a>";
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

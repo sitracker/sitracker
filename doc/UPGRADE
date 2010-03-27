@@ -18,10 +18,45 @@ Further instructions and notes about specific upgrades follow, if you
 upgrading and skipping several versions listed below you should read
 everything carefully to make sure you've met all the requirements:
 
+Upgrading to 4.00
+-----------------
+The experimental Timesheet feature has been removed.  We hope to make a
+similar feature available as a plugin in future.
+
+Theme support has been simplified, if you added your own theme you may need
+to move your theme files around to have them recognised,
+see http://bugs.sitracker.org/view.php?id=419 for more details.
+
+Upgrading to 3.60
+-----------------
+3.60 only shows incidents in the queues which are assigned to an engineer
+(owner > 0) in previous versions it was possible in certain scenarios to see
+unassigned incidents in the queue this is no longer possible, incidents must
+first be assigned via the holding queue.
+
+In the last few releases the calculation for 'Review Due' has been badly
+wrong, this release fixes that so you may notice that some incidents become
+due for review after upgrading.
+
+Upgrading to 3.51
+-----------------
+No special actions are required.
+
+
 Upgrading to 3.50
 -----------------
-    *  The portal knowledge base is now publicly accessible by default. A link is placed on the SiT! login screen to the knowledgebase where all articles with a distribution of 'Public' will be shown. If you do not want this, you can disable this by changing Configure | Features | Portal | Portal/Public Knowledge base.
-    * The LDAP code has been extended and rewritten, if you are already using LDAP you should be aware that you will have to reconfigure this after upgrading to 3.50.
+The portal knowledge base is now publicly accessible by default. A link is
+placed on the SiT! login screen to the knowledgebase where all articles with a
+distribution of 'Public' will be shown.  If you do not want this, you can
+disable this by changing SiT! | Configure | Features | Portal |
+Portal/Public Knowledge base.
+
+The LDAP code has been extended and rewritten since v3.45, if you are already
+using LDAP you should be aware that you will have to Reconfigure this after
+upgrading to 3.50.
+
+This release has some big changes to timezone support, you may need to adjust
+your timezone settings after upgrading to ensure the correct time is displayed.
 
 
 Upgrading to 3.45

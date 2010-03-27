@@ -133,8 +133,11 @@ switch ($mode)
             echo $html;
             echo "\n\n\n<!-- $surveys -->\n\n\n";
         }
-        else echo "<p class='error'>{$strNoResponseFound}</p>";
-
+        else
+        {
+            echo "<p class='error'>{$strNoResponseFound}</p>";
+        }
+        plugin_do('feedback_browse_viewresponse');
         echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
     break;
 
@@ -231,6 +234,7 @@ switch ($mode)
                     else $shade='shade1';
                 }
                 echo "</table>\n";
+                plugin_do('feedback_browse');
             }
             else
             {
@@ -249,7 +253,7 @@ switch ($mode)
                 $sql = "SELECT COUNT(id) FROM `{$dbFeedbackRespondents}` WHERE formid='{$formid}' AND completed='no'";
                 $result = mysql_query($sql);
                 list($waiting) = mysql_fetch_row($result);
-                if ($waiting > 0) echo "<p align='center'>".sprintf($strFeedbackFormsWaiting, "<a href='{$_SERVER['PHP_SELF']}?completed=no'>{$waiting}")."</p>";
+                if ($waiting > 0) echo "<p align='center'>".sprintf($strFeedbackFormsWaiting, "<a href='{$_SERVER['PHP_SELF']}?completed=no'>{$waiting}</a>")."</p>";
             }
         }
 }

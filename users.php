@@ -58,7 +58,7 @@ else
 
 if ($onlineonly === 'true' OR $filtergroup === 'allonline' )
 {
-    $sql .= "AND lastseen > $startofsession ";
+    $sql .= "AND lastseen > '".date('Y-m-d H:i:s', $startofsession). "' ";
 }
 
 // Sorting
@@ -73,7 +73,7 @@ if (!empty($sort))
     elseif ($sort == "accepting") $sql .= " ORDER BY accepting ";
     else $sql .= " ORDER BY realname ";
 
-    if ($order=='a' OR $order=='ASC' OR $order='') $sql .= "ASC";
+    if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
     else $sql .= "DESC";
 }
 else $sql .= "ORDER BY realname ASC ";

@@ -18,7 +18,7 @@ $title = "$strInventory - $strAdd";
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if(!$CONFIG['inventory_enabled']) 
+if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
@@ -59,14 +59,14 @@ else
         echo "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strSite)."</p>";
     }
     echo "<h2>".icon('add', 32)." {$strAdd}</h2>";
-    
+
     $url = "{$_SERVER['PHP_SELF']}?action=new";
     if (!empty($_GET['site']))
     {
         $siteid = intval($_GET['site']);
         $url = $url."&site={$siteid}";
     }
-    
+
     echo "<form action='{$url}' method='post'>";
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strName}</th>";
@@ -102,7 +102,9 @@ else
 
 
     echo "<tr><th>{$strNotes}</th>";
-    echo "<td><textarea name='notes'>$row->notes</textarea></td></tr>";
+    echo "<td>";
+    echo bbcode_toolbar('inventorynotes');
+    echo "<textarea id='inventorynotes' rows='15' name='notes'>{$row->notes}</textarea></td></tr>";
 
     echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
     echo "<td><input type='radio' name='privacy' value='private' ";

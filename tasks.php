@@ -24,159 +24,6 @@ if (!$CONFIG['tasks_enabled'])
     header("Location: main.php");
 }
 
-?>
-<script type='text/javascript'>
-//<![CDATA[
-/**
-  * @author Paul Heaney
-**/
-function Activity()
-{
-    var id;
-    var start;
-}
-
-var dataArray = new Array();
-var count = 0;
-var closedDuration = 0;
-
-/**
-  * @author Paul Heaney
-**/
-function addActivity(act)
-{
-    dataArray[count] = act;
-    count++;
-}
-
-/**
-  * @author Paul Heaney
-**/
-function setClosedDuration(closed)
-{
-    closedDuration = closed;
-}
-
-/**
-  * @author Paul Heaney
-**/
-function formatSeconds(secondsOpen)
-{
-    var str = '';
-    if (secondsOpen >= 86400)
-    {   //days
-        var days = Math.floor(secondsOpen/86400);
-        if (days < 10)
-        {
-            str += "0"+days;
-        }
-        else
-        {
-            str += days;
-        }
-        secondsOpen-=(days*86400);
-    }
-    else
-    {
-        str += "00";
-    }
-
-    str += ":";
-
-    if (secondsOpen >= 3600)
-    {   //hours
-        var hours = Math.floor(secondsOpen/3600);
-        if (hours < 10)
-        {
-            str += "0"+hours;
-        }
-        else
-        {
-            str += hours;
-        }
-        secondsOpen-=(hours*3600);
-    }
-    else
-    {
-        str += "00";
-    }
-
-    str += ":";
-
-    if (secondsOpen > 60)
-    {   //minutes
-        var minutes = Math.floor(secondsOpen/60);
-        if (minutes < 10)
-        {
-            str += "0"+minutes;
-        }
-        else
-        {
-            str += minutes;
-        }
-        secondsOpen-=(minutes*60);
-    }
-    else
-    {
-        str +="00";
-    }
-
-    str += ":";
-
-    if (secondsOpen > 0)
-    {  // seconds
-        if (secondsOpen < 10)
-        {
-            str += "0"+secondsOpen;
-        }
-        else
-        {
-            str += secondsOpen;
-        }
-    }
-    else
-    {
-        str += "00";
-    }
-
-    return str;
-}
-
-/**
-  * @author Paul Heaney
-**/
-function countUp()
-{
-    var now = new Date();
-
-    var sinceEpoch = Math.round(new Date().getTime()/1000.0);
-
-    var closed = closedDuration;
-
-    var i = 0;
-    for(i=0; i < dataArray.length; i++)
-    {
-        var secondsOpen = sinceEpoch-dataArray[i].start;
-
-        closed += secondsOpen;
-
-        var str = formatSeconds(secondsOpen);
-
-        $("duration"+dataArray[i].id).innerHTML = "<em>"+str+"</em>";
-    }
-
-    if ($('totalduration') != null)
-    {
-        $('totalduration').innerHTML = formatSeconds(closed);
-     }
-}
-
-setInterval("countUp()", 1000); //every 1 seconds
-
-//]]>
-</script>
-<?php
-
 $id = cleanvar($_REQUEST['incident']);
 if (!empty($id))
 {
@@ -210,27 +57,8 @@ function submitform()
     document.tasks.submit();
 }
 
-/**
-  * @author Paul Heaney
-**/
-function checkAll(checkStatus)
-{
-    var frm = document.held_emails.elements;
-    for(i = 0; i < frm.length; i++)
-    {
-        if (frm[i].type == 'checkbox')
-        {
-            if (checkStatus)
-            {
-                frm[i].checked = true;
-            }
-            else
-            {
-                frm[i].checked = false;
-            }
-        }
-    }
-}
+setInterval("countUp()", 1000); //every 1 seconds
+
 //]]>
 </script>
 <?php
@@ -796,21 +624,21 @@ if (mysql_num_rows($result) >=1 )
 
         if (!empty($billing))
         {
-            echo "<p><table align='center'>";
-            echo "<tr><td></td><th>{$GLOBALS['strMinutes']}</th></th></tr>";
-            echo "<tr><th>{$GLOBALS['strBillingEngineerPeriod']}</th>";
-            echo "<td>".($billing[-1]['engineerperiod']/60)."</td></tr>";
-            echo "<tr><th>{$GLOBALS['strBillingCustomerPeriod']}</th>";
-            echo "<td>".($billing[-1]['customerperiod']/60)."</td></tr>";
-            echo "</table></p>";
+            echo "<table align='center'>\n";
+            echo "<tr><td></td><th>{$GLOBALS['strMinutes']}</th></tr>\n";
+            echo "<tr><th>{$GLOBALS['strBillingEngineerPeriod']}</th>\n";
+            echo "<td>".($billing[-1]['engineerperiod']/60)."</td></tr>\n";
+            echo "<tr><th>{$GLOBALS['strBillingCustomerPeriod']}</th>\n";
+            echo "<td>".($billing[-1]['customerperiod']/60)."</td></tr>\n";
+            echo "</table>\n";
 
             echo "<br />";
 
-            echo "<table align='center'>";
+            echo "<table align='center'>\n";
 
-            echo "<tr><th>{$GLOBALS['strOwner']}</th><th>{$GLOBALS['strTotalMinutes']}</th>";
-            echo "<th>{$GLOBALS['strBillingEngineerPeriod']}</th>";
-            echo "<th>{$GLOBALS['strBillingCustomerPeriod']}</th></tr>";
+            echo "<tr><th>{$GLOBALS['strOwner']}</th><th>{$GLOBALS['strTotalMinutes']}</th>\n";
+            echo "<th>{$GLOBALS['strBillingEngineerPeriod']}</th>\n";
+            echo "<th>{$GLOBALS['strBillingCustomerPeriod']}</th></tr>\n";
             $shade = "shade1";
 
             foreach ($billing AS $engineer)
@@ -830,9 +658,9 @@ if (mysql_num_rows($result) >=1 )
                 if ($shade == "shade1") $shade = "shade2";
                 else $shade = "shade2";
             }
-            echo "<tr><td>{$GLOBALS['strTOTALS']}</td><td>".round($totals['totalduration'])."</td>";
-            echo "<td>{$totals['totalengineerperiods']}</td><td>{$totals['totalcustomerperiods']}</td></tr>";
-            echo "</table></p>";
+            echo "<tr><td>{$GLOBALS['strTOTALS']}</td><td>".round($totals['totalduration'])."</td>\n";
+            echo "<td>{$totals['totalengineerperiods']}</td><td>{$totals['totalcustomerperiods']}</td></tr>\n";
+            echo "</table>\n";
         }
         else
         {

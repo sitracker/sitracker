@@ -58,7 +58,7 @@ echo "<th><a href='{$_SERVER['PHP_SELF']}?orderby=published'>{$strPublished}</a>
 echo "</tr>";
 
 $sql = "SELECT id, filename, size, userid, shortdescription, path, downloads, filedate, fileversion, ";
-$sql .="expiry, published FROM `{$dbFiles}` ";
+$sql .="expiry, published FROM `{$dbFiles}` WHERE category = 'ftp' ";
 
 switch ($orderby)
 {

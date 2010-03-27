@@ -31,7 +31,8 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
                                'show_table_legends',
                                'incident_popup_onewindow',
                                'show_confirmation_caution',
-                               'show_confirmation_delete'
+                               'show_confirmation_delete',
+                               'show_inactive_data'
                                );
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
@@ -89,9 +90,10 @@ $CFGVAR['show_emoticons']['type'] = 'checkbox';
 $CFGVAR['show_table_legends']['title'] = $strShowTableLegends;
 $CFGVAR['show_table_legends']['type'] = 'checkbox';
 
-// TODO
 $CFGVAR['show_inactive_data']['title'] = 'Show Inactive Data';
-$CFGVAR['show_inactive_data']['type'] = 'select';
+$CFGVAR['show_inactive_data']['type'] = 'checkbox';
+
+// TODO
 
 $CFGVAR['updates_per_page']['title'] = $strIncidentUpdatesPerPage;
 $CFGVAR['updates_per_page']['type'] = 'number';

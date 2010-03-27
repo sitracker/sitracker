@@ -2018,12 +2018,12 @@ function service_dropdown_contract($contractid, $name, $selected=0)
     {
     	$html = "<select name='{$name}' id={$name}>\n";
         $html .= "<option value='0' ";
-        if ($selected == 0) $html .= " selected ";
+        if ($selected == 0) $html .= " selected='selected' ";
         $html .= "></option>";
         while ($obj = mysql_fetch_object($result))
         {
         	$html .= "<option value='{$obj->serviceid}' ";
-            if ($selected == $obj->serviceid) $html .= " selected ";
+            if ($selected == $obj->serviceid) $html .= " selected='selected' ";
             $html .= ">{$CONFIG['currency_symbol']}".get_service_balance($obj->serviceid, TRUE, TRUE);
             $html .= " ({$obj->startdate} - {$obj->enddate})</option>";
         }
@@ -2057,12 +2057,12 @@ function service_dropdown_site($siteid, $name, $selected=0)
     {
         $html = "<select name='{$name}' id={$name}>\n";
         $html .= "<option value='0' ";
-        if ($selected == 0) $html .= " selected ";
+        if ($selected == 0) $html .= " selected='selected' ";
         $html .= "></option>";
         while ($obj = mysql_fetch_object($result))
         {
             $html .= "<option value='{$obj->serviceid}' ";
-            if ($selected == $obj->serviceid) $html .= " selected ";
+            if ($selected == $obj->serviceid) $html .= " selected='selected' ";
             $html .= ">{$CONFIG['currency_symbol']}".get_service_balance($obj->serviceid, TRUE, TRUE);
             $html .= " ({$obj->startdate} - {$obj->enddate})</option>";
         }

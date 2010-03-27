@@ -189,8 +189,8 @@ else
         {
             // store file details in database
             // important: path must be blank for public files (all go in same dir)
-            $sql = "INSERT INTO `{$dbFiles}` (filename, size, userid, shortdescription, longdescription, path, filedate, expiry, fileversion) ";
-            $sql .= "VALUES ('$file_name', '$filesize', '".$sit[2]."', '$shortdescription', '$longdescription', '{$CONFIG['ftp_path']}', '$now', '$expirydate' ,'$fileversion')";
+            $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, shortdescription, longdescription, path, filedate, expiry, fileversion) ";
+            $sql .= "VALUES ('ftp', '$file_name', '$filesize', '".$sit[2]."', '$shortdescription', '$longdescription', '{$CONFIG['ftp_path']}', '$now', '$expirydate' ,'$fileversion')";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

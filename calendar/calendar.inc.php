@@ -820,8 +820,8 @@ function book_appointment($name, $description, $user, $start, $end)
 {
     global $dbTasks;
     $sql = "INSERT INTO `{$dbTasks}` (name,description,owner,startdate,enddate,distribution,completion)
-            values('" . mysql_escape_string($name) . "','" .
-            mysql_escape_string($description) . "','" .
+            values('" . mysql_real_escape_string($name) . "','" .
+            mysql_real_escape_string($description) . "','" .
             $user . "','" .
             date("Y-m-d H:i:s",$start) . "','" .
             date("Y-m-d H:i:s",$end) . "',

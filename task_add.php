@@ -87,7 +87,7 @@ else
             $duetime = cleanvar($_POST['duetime']);
             $endtime = cleanvar($_POST['endtime']);
 
-            $_SESSION['formdata']['add_task'] = $_POST;
+            $_SESSION['formdata']['add_task'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
             // Validate input
             $errors = 0;

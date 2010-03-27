@@ -130,5 +130,10 @@ function dashboard_user_incidents_display($dashletid)
     }
 
 }
+function dashboard_user_incidents_get_version()
+{
+    global $dashboard_user_incidents_version;
+    return $dashboard_user_incidents_version;
+}
 
 ?>

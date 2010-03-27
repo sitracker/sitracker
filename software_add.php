@@ -97,7 +97,7 @@ else
         $lifetime_end = '';
     }
 
-    $_SESSION['formdata']['add_software'] = $_REQUEST;
+    $_SESSION['formdata']['add_software'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     // Add new
     $errors = 0;

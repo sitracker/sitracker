@@ -27,7 +27,7 @@ if(!$CONFIG['inventory_enabled'])
 if (is_numeric($_GET['id']))
 {
     //View site inventory
-    $siteid = $_GET['id'];
+    $siteid = cleanvar($_GET['id']);
 
     if (!empty($_REQUEST['filter']))
     {
@@ -47,7 +47,11 @@ if (is_numeric($_GET['id']))
     $sql .= "AND siteid=s.id ";
     if (!empty($filter))
     {
-        $sql .= "AND type='{$filter}' ";
+//         $sql .= "AND type='{$filter}' ";
+    }
+    if ($_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+    {
+        $sql .= "AND i.active = 1 ";
     }
     $sql .= "ORDER BY i.active DESC, ";
     $sql .= "i.modified DESC";
@@ -76,7 +80,7 @@ if (is_numeric($_GET['id']))
     {
         echo "<table align='center'>";
         echo "<tr><th>{$strInventoryItems}</th><th>{$strPrivacy}</th>";
-        echo "<th>{$strOwner}</th><th>{$strActions}</th></tr>";
+        echo "<th>{$strCreatedBy}</th><th>{$strOwner}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($row = mysql_fetch_object($result))
         {
@@ -97,6 +101,8 @@ if (is_numeric($_GET['id']))
                 echo icon('review', 16, $strAdmin);
             }
             echo "</td><td>".user_realname($row->createdby)."</td><td>";
+            echo contact_realname($row->contactid)."</td><td>";
+
             if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
                  $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
             {
@@ -104,7 +110,7 @@ if (is_numeric($_GET['id']))
                 echo "{$strEdit}</td></tr>";
             }
             else
-            {    
+            {
                 echo "<a href='inventory_view.php?id={$row->id}'>{$strView}</a> &nbsp; ";
                 echo "<a href='inventory_edit.php?id={$row->id}'>{$strEdit}</td></tr>";
             }
