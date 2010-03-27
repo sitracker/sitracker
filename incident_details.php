@@ -91,6 +91,19 @@ else
     $title = $strDetails;
 }
 
+// Check for asked incident ID
+$sql = "SELECT id FROM {$dbIncidents} ";
+$sql .= "WHERE id = {$id} ";
+$result = mysql_query($sql);
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+if (mysql_num_rows($result) == 0) {
+
+    // Incident doesn't exist
+    // FIXME better error message - CJ 21/3-10
+    html_redirect("main.php", FALSE, $strNotApplicableAbbrev);
+
+} else {
+
 include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
 echo "<div id='detailsummary'>";
@@ -285,16 +298,13 @@ if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
         }
     }
 
-    if ($reviewremain > 0 AND $reviewremain <= 7200)
+    if ($reviewremain > -86400)
     {
-        // Only display if review is due in the next five days (7200 is the number of minutes in 5 days)
-        if ($slaremain != 0) echo "<br />"; // only need a line sometimes
-        echo sprintf($strReviewIn, format_seconds($reviewremain * 60));
+        echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
     }
-    elseif ($reviewremain <= 0)
+    else
     {
-        if ($slaremain <> 0) echo "<br />"; // only need a line sometimes
-        echo $strReviewDueNow;
+        echo "<br />".icon('review', 16)." {$strReviewDueNow}";
     }
 
     if ($servicelevel->timed == 'yes')
@@ -831,4 +841,5 @@ if (!$_GET['win'])
 }
 
 include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
+}
 ?>

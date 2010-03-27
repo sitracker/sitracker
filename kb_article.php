@@ -39,7 +39,7 @@ if (isset($_POST['submit']))
     $distribution = cleanvar($_POST['distribution']);
     $sql = array();
 
-    $_SESSION['formdata']['kb_add_article'] = $_POST;
+    $_SESSION['formdata']['kb_add_article'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     if ($kbtitle == '')

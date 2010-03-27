@@ -67,11 +67,11 @@ if ($_FILES['attachment']['name'] != '')
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         $updateid = mysql_insert_id();
 
-        $incident_attachment_fspath = $CONFIG['attachment_fspath']. $fsdelim .
-            $incidentid . $fsdelim;
+        $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid
+                                    . $fsdelim;
 
         // make incident attachment dir if it doesn't exist
-        $newfilename = $incident_attachment_fspath . $fsdelim . $fileid .
+        $newfilename = $incident_attachment_fspath . $fileid .
             "-".$_FILES['attachment']['name'];
         $umask = umask(0000);
         $mk = TRUE;

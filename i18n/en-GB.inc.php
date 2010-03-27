@@ -699,7 +699,7 @@ $strFrequency = 'Frequency';
 # Short for 'Friday'
 $strFri = 'Fri';
 $strFriday = 'Friday';
-# Two character (Maximum) abbreviation for 'Thursday'
+# Two character (Maximum) abbreviation for 'Friday'
 $strFridayAbbr = 'Fr';
 # e.g. from x to y
 $strFrom = 'From';
@@ -1084,6 +1084,7 @@ $strNext = 'Next';
 $strNextAction = 'Next Action';
 $strNextSLATarget = 'The next SLA target';
 $strNextUpdate = 'Next Update';
+# No being the opposite of Yes
 $strNo = 'No';
 $strNobody = 'Nobody';
 $strNoAnswerGiven = 'No Answer Given';

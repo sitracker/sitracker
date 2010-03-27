@@ -29,7 +29,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 $id = cleanvar($_REQUEST['id']);
 $title = $strFTPFileDetails;
 
-$sql = "SELECT * FROM `{$dbFiles}` WHERE id='$id'";
+$sql = "SELECT * FROM `{$dbFiles}` WHERE id='$id' AND category='ftp' ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 $frow = mysql_fetch_array($result);

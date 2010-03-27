@@ -241,7 +241,7 @@ switch ($_REQUEST['action'])
         // Get respondentid
         //print_r($_REQUEST);
         $sql = "SELECT id AS respondentid FROM `{$dbFeedbackRespondents}` ";
-        $sql .= "WHERE contactid='$contactid' AND formid='$formid' AND incidentid='$incidentid'";
+        $sql .= "WHERE contactid='$contactid' AND formid='$formid' AND incidentid='$incidentid' AND completed = 'no'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($result) < 1)
@@ -333,15 +333,16 @@ switch ($_REQUEST['action'])
 <head>
 <meta http-equiv="refresh" content="0;URL=feedback.php?ax=<?php echo "{$hashcode}&error={$errortext}&mode={$mode}"; ?>" />
 <title><?php echo $strPleaseWaitRedirect ?></title>
-<style>
+<style type="text/css">
 body { font:10pt Arial, Helvetica, sans-serif; }
 </style>
-</head>
 <body>
 <p><?php echo $strPleaseWaitRedirect ?></p>
 <p><?php echo $strIfYourBrowserNotReload; ?><a href='feedback.php?ax=<?php echo "{$hashcode}&error={$errortext}&mode={$mode}"; ?>'><?php echo $strFollowThisLink;?></a>.</p>
 </body>
 </head>
+</html>
+
 <?php
 //             header("Location: feedback.php?ax={$hashcode}&error={$errortext}");
             exit;
@@ -365,18 +366,12 @@ body { font:10pt Arial, Helvetica, sans-serif; }
         //if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         //if (mysql_affected_rows() < 1) echo "<p>No rows affected: ($sql)</p>";
 
-        // Output thanks page
-        echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n";
-        echo "<html>\n";
-        echo "<head>\n";
-        echo "<title>{$strThankYou}</title>\n";
-        echo "</head>\n";
-        echo "<body>\n";
-        echo "<div id='pagecontent'><h2>{$strThankYou}</h2>";
-        echo "<p>{$strThankYouCompleteForm}</p>";
+        $title = $strThankYou;
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        echo "<h3><div id='pagecontent'><span class=\"success\">{$strThankYou}<span></h4>";
+        echo "<h4>{$strThankYouCompleteForm}</h4>";
         //echo "<!-- \n {$sqltext} \n\n\n {$debugtext} -->";
-        echo "</div>\n</body>\n";
-        echo "</html>\n";
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
 
     default:
@@ -386,11 +381,8 @@ body { font:10pt Arial, Helvetica, sans-serif; }
         $fielddata = unserialize(base64_decode($errorfields[0])); // unserialize(
 
         // Have a look to see if this person has a form waiting to be filled
-        $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' ";
-        if ($_REQUEST['rr'])
-        {
-            $rsql .= "AND completed='yes' ";
-        }
+        $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` ";
+        $rsql .= "WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' AND completed = 'no'";
 
         $rresult = mysql_query($rsql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -400,8 +392,8 @@ body { font:10pt Arial, Helvetica, sans-serif; }
 
         if ($waitingforms < 1)
         {
-            echo "<h2>{$strError}</h2>";
-            echo "<p>{$strNoFeedBackFormToCompleteHere}</p>";
+            echo "<h3><span class=\"failure\">{$strError}</span></h3>";
+            echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
             echo "\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n";
         }
         else

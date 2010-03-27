@@ -382,7 +382,7 @@ CREATE TABLE `{$dbFeedbackResults}` (
 
 CREATE TABLE `{$dbFiles}` (
   `id` int(11) NOT NULL auto_increment,
-  `category` enum('public','private','protected') NOT NULL default 'public',
+  `category` enum('public','private','protected','ftp') NOT NULL default 'public',
   `filename` varchar(255) NULL default '',
   `size` bigint(11) NOT NULL default '0',
   `userid` int(11) NOT NULL default '0',

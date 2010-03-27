@@ -2358,7 +2358,14 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
             if ($displayerrors)
             {
                 echo "<p class='{$class}'><strong>{$errortype[$errno]} [{$errno}]</strong><br />";
-                echo "{$errstr} in {$errfile} @ line {$errline}";
+                if ($errno != E_USER_NOTICE)
+                {
+                    echo "{$errstr} in {$errfile} @ line {$errline}";
+                }
+                else
+                {
+                    echo "{$errstr}";
+                }
                 if ($CONFIG['debug']) echo "<br /><strong>Backtrace</strong>:";
             }
 
@@ -4173,34 +4180,34 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
  */
 function readable_date($date, $lang = 'user')
 {
-    global $SYSLANG;
+    global $SYSLANG, $CONFIG;
     //
     // e.g. Yesterday @ 5:28pm
     if (ldate('dmy', $date) == ldate('dmy', time()))
     {
         if ($lang == 'user')
         {
-            $datestring = "{$GLOBALS['strToday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$GLOBALS['strToday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
         else
         {
-            $datestring = "{$SYSLANG['strToday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$SYSLANG['strToday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
     }
     elseif (ldate('dmy', $date) == ldate('dmy', (time()-86400)))
     {
         if ($lang == 'user')
         {
-            $datestring = "{$GLOBALS['strYesterday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$GLOBALS['strYesterday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
         else
         {
-            $datestring = "{$SYSLANG['strYesterday']} @ ".ldate('g:ia', $date);
+            $datestring = "{$SYSLANG['strYesterday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
     }
     else
     {
-        $datestring = ldate("l jS M y @ g:ia", $date);
+        $datestring = ldate($CONFIG['dateformat_longdate'] . ' @ ' . $CONFIG['dateformat_time'], $date);
     }
     return $datestring;
 }
@@ -5648,18 +5655,29 @@ function clear_form_data($formname)
 */
 function utc_time($time = '')
 {
-    if ($time == '') $time = $GLOBALS['now'];
+    global $now;
+    if ($time == '')
+    {
+        $time = $now;
+    }
     $tz = strftime('%z', $time);
     $tzmins = (substr($tz, -4, 2) * 60) + substr($tz, -2, 2);
     $tzsecs = $tzmins * 60; // convert to seconds
-    if (substr($tz, 0, 1) == '+') $time -= $tzsecs;
-    else $time += $tzsecs;
+    if (substr($tz, 0, 1) == '+')
+    {
+        $time -= $tzsecs;
+    }
+    else
+    {
+        $time += $tzsecs;
+    }
     return $time;
 }
 
 
 /**
-    * Returns a localised and translated date
+    * Returns a localised and translated date.
+    * DST Aware
     * @author Ivan Lucas
     * @param string $format. date() format
     * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
@@ -5671,6 +5689,7 @@ function utc_time($time = '')
 */
 function ldate($format, $date = '', $utc = FALSE)
 {
+    global $now, $CONFIG;
     if ($date == '') $date = $GLOBALS['now'];
     if ($_SESSION['userconfig']['utc_offset'] != '')
     {
@@ -5683,6 +5702,13 @@ function ldate($format, $date = '', $utc = FALSE)
         $useroffsetsec = $_SESSION['userconfig']['utc_offset'] * 60;
         $date += $useroffsetsec;
     }
+
+    // Adjust the display time according to DST
+    if ($utc === FALSE AND date('I', $date) > 0)
+    {
+        $date += $CONFIG['dst_adjust'] * 60; // Add an hour of DST
+    }
+
     $datestring = date($format, $date);
 
     // Internationalise date endings (e.g. st)
@@ -7211,7 +7237,7 @@ function process_add_contact($mode = 'internal')
     $department = cleanvar($_REQUEST['department']);
     $notes = cleanvar($_REQUEST['notes']);
     $returnpage = cleanvar($_REQUEST['return']);
-    $_SESSION['formdata']['add_contact'] = $_REQUEST;
+    $_SESSION['formdata']['add_contact'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     // check for blank name
@@ -7608,22 +7634,41 @@ function contact_username($userid)
 
 
 /**
-* Populates $_SESSION['syslang], system language strings
-*
-* @author Kieran Hogg
+ * Populates $_SESSION['syslang], system language strings
+ *
+ * @author Kieran Hogg
+ * @note See also populate_syslang2() which is a copy of this function
 */
 function populate_syslang()
 {
     global $CONFIG;
-    // Populate $SYSLANG with system lang
-    $file = APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php";
-    if (file_exists($file))
-    {
-        $fh = fopen($file, "r");
 
-        $theData = fread($fh, filesize($file));
+    // Populate $SYSLANG with first the native lang and then the system lang
+    // This is so that we have a complete language file
+    $nativefile = APPLICATION_I18NPATH . "en-GB.inc.php";
+    $file = APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php";
+
+    if (file_exists($nativefile))
+    {
+        $fh = fopen($nativefile, "r");
+
+        $theData = fread($fh, filesize($nativefile));
         fclose($fh);
-        $lines = explode("\n", $theData);
+        $nativelines = explode("\n", $theData);
+
+        if (file_exists($file))
+        {
+            $fh = fopen($file, "r");
+            $theData = fread($fh, filesize($file));
+            fclose($fh);
+            $lines = $nativelines += explode("\n", $theData);
+        }
+        else
+        {
+            trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+            $lines = $nativelines;
+        }
+
         foreach ($lines as $values)
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
@@ -7641,7 +7686,7 @@ function populate_syslang()
     }
     else
     {
-        trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+        trigger_error("Native language file 'en-GB' can't be found", E_USER_ERROR);
     }
 }
 
@@ -7838,7 +7883,7 @@ function plugin_do($context, $optparams = FALSE)
             // Call Variable function (function with variable name)
             if ($optparams)
             {
-                $rtn = $action($optparams);
+                $rtn = $pluginaction($optparams);
             }
             else
             {
@@ -8595,7 +8640,7 @@ if (!extension_loaded('mysql')) trigger_error('SiT requires the php/mysql module
 if (!extension_loaded('imap') AND $CONFIG['enable_inbound_mail'] == 'POP/IMAP')
 {
     trigger_error('SiT requires the php IMAP module to recieve incoming mail.'
-                .' If you really don\'t need this, you can set $CONFIG[\'enable_inbound_mail\'] to false');
+                .' If you really don\'t need this, you can set $CONFIG[\'enable_inbound_mail\'] to false', E_USER_NOTICE);
 }
 if (version_compare(PHP_VERSION, "5.0.0", "<")) trigger_error('INFO: You are running an older PHP version, some features may not work properly.', E_USER_NOTICE);
 if (@ini_get('register_globals') == 1 OR strtolower(@ini_get('register_globals')) == 'on')

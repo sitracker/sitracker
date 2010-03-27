@@ -25,7 +25,10 @@ $search_string = cleanvar($_REQUEST['search_string']);
 $owner = cleanvar($_REQUEST['owner']);
 $submit_value = cleanvar($_REQUEST['submit']);
 $displayinactive = cleanvar($_REQUEST['displayinactive']);
-if (empty($displayinactive)) $displayinactive = "false";
+if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+{
+    $displayinactive = "false";
+}
 
 if ($submit_value == "go")
 {
@@ -95,19 +98,22 @@ echo "<input type='text' id='search_string' style='width: 300px;' name='search_s
 echo autocomplete('search_string', 'sites');
 echo "<input name='submit' type='submit' value='{$strGo}' /></p>";
 echo "</form>\n";
-if ($displayinactive=="true")
+if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 {
-    echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=false";
-    if (!empty($search_string)) echo "&amp;search_string={$search_string}&amp;owner={$owner}";
-    echo "'>{$strShowActiveOnly}</a>";
-    $inactivestring="displayinactive=true";
-}
-else
-{
-    echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=true";
-    if (!empty($search_string)) echo "&amp;search_string={$search_string}&amp;owner={$owner}";
-    echo "'>{$strShowAll}</a>";
-    $inactivestring="displayinactive=false";
+    if ($displayinactive=="true")
+    {
+        echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=false";
+        if (!empty($search_string)) echo "&amp;search_string={$search_string}&amp;owner={$owner}";
+        echo "'>{$strShowActiveOnly}</a>";
+        $inactivestring="displayinactive=true";
+    }
+    else
+    {
+        echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=true";
+        if (!empty($search_string)) echo "&amp;search_string={$search_string}&amp;owner={$owner}";
+        echo "'>{$strShowAll}</a>";
+        $inactivestring="displayinactive=false";
+    }
 }
 echo "</td></tr>";
 echo "<tr><td valign='middle'>";

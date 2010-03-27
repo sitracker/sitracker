@@ -18,7 +18,7 @@ $title = "$strInventory - $strEdit";
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if(!$CONFIG['inventory_enabled']) 
+if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
@@ -84,7 +84,7 @@ if (isset($_POST['submit']))
     }
 
     $sql .= " WHERE id='{$id}'";
-    
+
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     else html_redirect("inventory_site.php?id={$siteid}");
@@ -103,9 +103,9 @@ else
         exit;
     }
     echo "<h2>".icon('edit', 32)." {$strEdit}</h2>";
-    
+
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
-    
+
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' value='{$row->name}' />";
@@ -136,7 +136,9 @@ else
     }
 
     echo "<tr><th>{$strNotes}</th>";
-    echo "<td><textarea name='notes'>$row->notes</textarea></td></tr>";
+    echo "<td>";
+    echo bbcode_toolbar('inventorynotes');
+    echo "<textarea id='inventorynotes' rows='15' name='notes'>$row->notes</textarea></td></tr>";
 
     if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
@@ -178,14 +180,14 @@ else
         echo "checked = 'checked' ";
     }
     echo "/>";
-    
+
     echo "</table>";
     echo "<p align='center'>";
-    echo "<input name='submit' type='submit' value='{$strUpdate}' /></p>";    
+    echo "<input name='submit' type='submit' value='{$strUpdate}' /></p>";
     echo "</form>";
     echo "<p align='center'>";
 
     echo "<a href='inventory_site.php?id={$row->siteid}'>{$strBackToList}</a>";
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
