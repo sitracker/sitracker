@@ -133,8 +133,11 @@ switch ($mode)
             echo $html;
             echo "\n\n\n<!-- $surveys -->\n\n\n";
         }
-        else echo "<p class='error'>{$strNoResponseFound}</p>";
-
+        else
+        {
+            echo "<p class='error'>{$strNoResponseFound}</p>";
+        }
+        plugin_do('feedback_browse_viewresponse');
         echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
     break;
 
@@ -231,6 +234,7 @@ switch ($mode)
                     else $shade='shade1';
                 }
                 echo "</table>\n";
+                plugin_do('feedback_browse');
             }
             else
             {

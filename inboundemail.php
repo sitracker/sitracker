@@ -35,7 +35,7 @@ else
  * Populates $_SESSION['syslang], system language strings
  *
  * @author Kieran Hogg
- * @note See also populate_syslang() which is the origincal version of this function
+ * @note See also populate_syslang() which is the original version of this function
 */
 function populate_syslang2()
 {
@@ -85,7 +85,10 @@ function populate_syslang2()
     {
         trigger_error("Native language file 'en-GB' can't be found", E_USER_ERROR);
     }
+    return $SYSLANG;
 }
+
+$SYSLANG = populate_syslang2();
 
 if ($CONFIG['enable_inbound_mail'] == 'MTA')
 {
