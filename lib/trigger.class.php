@@ -98,7 +98,8 @@ class Trigger extends SitEntity {
                 // commented out 09/09/09 as I'm 99% this code is bollocks
                 //if (!trigger_checks($triggerobj->checks))
                 //{
-                    $checks = $this->trigger_replace_specials($triggerobj->checks, $this->paramarray);
+                    $checks = $this->trigger_replace_specials($triggerobj->checks);
+		    //print_r("'".$triggerobj->checks."'" . "<br />" . $checks);
                     $eresult = @eval("\$value = $checks;return TRUE;");
                     if (!$eresult)
                     {
@@ -212,7 +213,6 @@ class Trigger extends SitEntity {
         global $trigger_types, $ttvararray;
 
         debug_log("notice string before: $string_array", TRUE);
-
         //this loops through each variable and creates an array of useable varaibles' regexs
         foreach ($ttvararray AS $identifier => $ttvar)
         {
@@ -241,8 +241,8 @@ class Trigger extends SitEntity {
                 }
             }
         }
-	print_r($trigger_replace);
-        return preg_replace($trigger_regex, $trigger_replace, $string_array);
+	$string = preg_replace($trigger_regex, $trigger_replace, $string_array);
+        return $string;
     }
 
 
@@ -287,7 +287,6 @@ class Trigger extends SitEntity {
         $bccemail = $this->trigger_replace_specials($template->bccfield);
         $subject = cleanvar($this->trigger_replace_specials($template->subjectfield));
         $body .= $this->trigger_replace_specials($template->body);
-	print_r($template->subjectfield);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);
@@ -343,10 +342,10 @@ class Trigger extends SitEntity {
                 $noticelinktext = $notice->linktext;
             }
 
-            $notice_text = mysql_escape_string(trigger_replace_specials($notice_text));
-            $noticelinktext = cleanvar(trigger_replace_specials($noticelinktext));
-            $noticelink = cleanvar(trigger_replace_specials($notice->link));
-            $refid = cleanvar(trigger_replace_specials($notice->refid));
+            $notice_text = mysql_escape_string($this->trigger_replace_specials($notice_text));
+            $noticelinktext = cleanvar($this->trigger_replace_specials($noticelinktext));
+            $noticelink = cleanvar($this->trigger_replace_specials($notice->link));
+            $refid = cleanvar($this->trigger_replace_specials($notice->refid));
             $durability = $notice->durability;
             debug_log("notice: $notice_text", TRUE);;
 

@@ -628,14 +628,14 @@ elseif ($action == 'assign')
         $send_email = cleanvar($_REQUEST['send_email']);
         $inventory = cleanvar($_REQUEST['inventory']);
 
-    if ($send_email == 'on')
-    {
-        $send_email = 1;
-    }
-    else
-    {
-        $send_email = 0;
-    }
+	if ($send_email == 'on')
+	{
+	    $send_email = '1';
+	}
+	else
+	{
+	    $send_email = '0';
+	}
 
         // check form input
         $errors = 0;
@@ -1017,7 +1017,8 @@ elseif ($action == 'reassign')
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    trigger('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $uid, 'incidentid' => $incidentid));
+    $t = new trigger('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $uid, 'incidentid' => $incidentid));
+    $t->fire();
 
     // add update
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
