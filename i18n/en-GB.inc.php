@@ -699,7 +699,7 @@ $strFrequency = 'Frequency';
 # Short for 'Friday'
 $strFri = 'Fri';
 $strFriday = 'Friday';
-# Two character (Maximum) abbreviation for 'Thursday'
+# Two character (Maximum) abbreviation for 'Friday'
 $strFridayAbbr = 'Fr';
 # e.g. from x to y
 $strFrom = 'From';
