@@ -37,9 +37,12 @@ echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "{$strBrowseContractsBySite}:"; // <!--<input type="text" name="search_string" />-->
 echo "<input type='text' id='search_string' style='width: 300px;' name='search_string' />";
 echo autocomplete('search_string', 'contract');
-echo "<label><input type='checkbox' name='activeonly' value='yes' ";
-if ($activeonly=='yes') echo "checked='checked' ";
-echo "/> {$strShowActiveOnly}</label>";
+if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
+{
+    echo "<label><input type='checkbox' name='activeonly' value='yes' ";
+    if ($activeonly=='yes') echo "checked='checked' ";
+    echo "/> {$strShowActiveOnly}</label>";
+}
 echo "<br />{$strByProduct}: ";
 echo product_drop_down('productid', $productid);
 
@@ -81,7 +84,7 @@ $sql .= "WHERE m.site = s.id AND m.admincontact = c.id AND m.product = p.id ";
 $sql .= "AND ((reseller = r.id AND reseller IS NOT NULL) OR reseller IS NULL) ";
 $sql .= "AND (licence_type IS NULL OR (licence_type = l.id AND licence_type IS NOT NULL)) ";
 
-if ($activeonly=='yes')
+if ($activeonly=='yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
     $sql .= "AND term!='yes' AND (expirydate > $now OR expirydate = '-1') ";
 }

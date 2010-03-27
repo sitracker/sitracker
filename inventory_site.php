@@ -49,6 +49,10 @@ if (is_numeric($_GET['id']))
     {
 //         $sql .= "AND type='{$filter}' ";
     }
+    if ($_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+    {
+        $sql .= "AND i.active = 1 ";
+    }
     $sql .= "ORDER BY i.active DESC, ";
     $sql .= "i.modified DESC";
     //$sql .= "GROUP BY type DESC ";

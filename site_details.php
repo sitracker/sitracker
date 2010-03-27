@@ -81,18 +81,18 @@ while ($siterow = mysql_fetch_array($siteresult))
     echo "<tr><th>{$strIncidents}:</th>";
     echo "<td>".site_count_incidents($id)." <a href=\"contact_support.php?id=".$siterow['id']."&amp;mode=site\">{$strSeeHere}</a></td></tr>";
     echo "<tr><th>{$strBillableIncidents}:</th><td><a href='transactions.php?site={$siterow['id']}'>{$strSeeHere}</a></td></tr>";
-    
+
     $balance = $awaiting = $reserved = 0;
 
     $billable_contract = get_site_billable_contract_id($id);
-    
+
     if ($billable_contract != -1)
     {
         $balance = contract_balance($billable_contract, TRUE, TRUE, TRUE);
         $awaiting = contract_transaction_total($billable_contract, BILLING_AWAITINGAPPROVAL);
         $reserved = contract_transaction_total($billable_contract, BILLING_RESERVED);
     }
-    
+
     echo "<tr><th>{$strServiceBalance}</th><td>";
     echo "{$GLOBALS['strBalance']}: {$CONFIG['currency_symbol']}".number_format($balance, 2);
     if ($awaiting > 0) echo "<br />{$GLOBALS['strAwaitingApproval']}: {$CONFIG['currency_symbol']}".number_format($awaiting, 2);
@@ -136,7 +136,12 @@ echo "<h3>{$strContacts}</h3>";
 
 // List Contacts
 
-$sql = "SELECT * FROM `{$dbContacts}` WHERE siteid='{$id}' ORDER BY active, surname, forenames";
+$sql = "SELECT * FROM `{$dbContacts}` WHERE siteid='{$id}' ";
+if ($_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+{
+    $sql .= "AND active = 'true' ";
+}
+$sql .= "ORDER BY active, surname, forenames";
 $contactresult = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -188,7 +193,7 @@ if ($countcontacts > 0)
             echo "</td>";
         }
         else echo "<td><strong>{$strWithheld}</strong></td>";
-        
+
         echo "<td>";
         if ($contactrow['dataprotection_email'] == 'Yes')
         {
@@ -234,6 +239,10 @@ if (user_permission($sit[2],19)) // View contracts
     $sql .= "LEFT JOIN `{$dbResellers}` AS r ON r.id = m.reseller ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND admincontact = c.id AND m.site = '{$id}' ";
+    if ($activeonly=='yes' OR$_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+    {
+        $sql .= "AND m.term != 'yes' ";
+    }
     $sql .= "ORDER BY expirydate DESC";
 
     // connect to database and execute query
