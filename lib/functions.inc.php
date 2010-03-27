@@ -2358,7 +2358,14 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
             if ($displayerrors)
             {
                 echo "<p class='{$class}'><strong>{$errortype[$errno]} [{$errno}]</strong><br />";
-                echo "{$errstr} in {$errfile} @ line {$errline}";
+                if ($errno != E_USER_NOTICE)
+                {
+                    echo "{$errstr} in {$errfile} @ line {$errline}";
+                }
+                else
+                {
+                    echo "{$errstr}";
+                }
                 if ($CONFIG['debug']) echo "<br /><strong>Backtrace</strong>:";
             }
 
@@ -8633,7 +8640,7 @@ if (!extension_loaded('mysql')) trigger_error('SiT requires the php/mysql module
 if (!extension_loaded('imap') AND $CONFIG['enable_inbound_mail'] == 'POP/IMAP')
 {
     trigger_error('SiT requires the php IMAP module to recieve incoming mail.'
-                .' If you really don\'t need this, you can set $CONFIG[\'enable_inbound_mail\'] to false');
+                .' If you really don\'t need this, you can set $CONFIG[\'enable_inbound_mail\'] to false', E_USER_NOTICE);
 }
 if (version_compare(PHP_VERSION, "5.0.0", "<")) trigger_error('INFO: You are running an older PHP version, some features may not work properly.', E_USER_NOTICE);
 if (@ini_get('register_globals') == 1 OR strtolower(@ini_get('register_globals')) == 'on')
