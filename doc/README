@@ -6,7 +6,7 @@ of the GNU General Public License, incorporated herein by reference.
 --------------------------------------------------------------------
 
         This readme contains only very basic instructions,
-        for more help please refer to
+        for more detailed help please refer to
         http://sitracker.org/wiki/Documentation
 
      README
@@ -34,22 +34,18 @@ SiT! is a web-based application that manages various aspects of a
 technical support department, the main purpose is to record dealings
 with customers while providing support.
 
-Maintainers:
-    Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-    Tom Gerrard
+Maintainer:
+    Ivan Lucas <ivan[at]sitracker.org>
+
+Website:
+    http://sitracker.org/
 
 
 Security Recommendations
 ------------------------
-SiT! Versions 3.23 and later no longer require the php.ini setting
-register_globals to be on and all external data is checked before use.
-
     * We *strongly* recommend that you make sure your php.ini has
       register_globals set OFF, this has been the default since
       PHP 4.2.0.
-
-    * Your SiT! includes directory should be outside the web root
-      and your PHP include path should refer to it.
 
 
 Installing
@@ -57,7 +53,7 @@ Installing
 
     Requirements:
         A web server (Apache recommended)
-        PHP >= 5.0 (Released July 2004)
+        PHP >= 5.1 (Released November 2005)
         MySQL >= 4.1 (Released October 2004)
 
     Instructions:
@@ -103,7 +99,7 @@ a crontab or other method. (e.g. http://www.webcron.org/)
 The auto.php script can be run via HTTP or from the console.
 
 An example crontab might look like this:
-1 * * * * /usr/bin/php -f /var/www/sit/auto.php
+* * * * * /usr/bin/php -f /var/www/sit/auto.php
 
 The actual schedule is now configured within SiT itself by going
 to SiT! -> Control Panel -> Scheduler.  auto.php no longer accepts
@@ -146,6 +142,7 @@ many ways in which you can help Support Incident Tracker:
     * Reporting bugs or suggesting improvements
     * Submitting patches to fix bugs or ad features
     * Writing good documentation or translating it to other languages
+    * Making a donation (See our website)
     * Helping others to install and use SiT!
 
     * And of course...coding with us!
@@ -159,3 +156,5 @@ list, see here for more info http://sitracker.org/wiki/MailingList
 We also now have an IRC channel.  #sit on the freenode network, we'd
 love for you to join us, see here http://sitracker.org/wiki/IRC
 for more info.
+
+See the page http://sitracker.org/wiki/Community for more information.
