@@ -105,7 +105,7 @@ if ($journal_count >= 1)
     echo "<tr>";
     $filter = array('page' => $page);
     echo colheader('userid',$strUser,$sort, $order, $filter);
-    echo colheader('timestamp',"{$strTime}/{$strDate}",$sort, $order, $filter);
+    echo colheader('timestamp',"{$strTime}/{$strDate}", $sort, $order, $filter);
     echo colheader('event',$strEvent);
     echo colheader('action',$strOperation);
     echo colheader('type',$strType);
@@ -151,9 +151,13 @@ if ($journal_count >= 1)
 
     if ($page > 3 AND $pages > 10) $minpage = $page - 3;
     else $minpage = ($page - 2);
+    
     if ($minpage < 1) $minpage = 1;
+    
     $maxpage = $minpage + $numpagelinks;
+    
     if ($maxpage > $pages + 1) $maxpage = $pages + 1;
+    
     if ($minpage >= ($maxpage - $numpagelinks)) $minpage = $maxpage - $numpagelinks;
 
     $prev = $page - 1;
@@ -165,7 +169,7 @@ if ($journal_count >= 1)
         echo "<a href='{$_SERVER['PHP_SELF']}?page=1'>1</a> {$strEllipsis} ";
     }
 
-    for ($i=$minpage;$i<$maxpage;$i++)
+    for ($i = $minpage; $i < $maxpage; $i++)
     {
         if ($i <> $page) echo "<a href='{$_SERVER['PHP_SELF']}?page={$i}'>$i</a> ";
         else echo "<strong>{$i}</strong> ";

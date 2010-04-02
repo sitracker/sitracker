@@ -23,18 +23,22 @@ function dashboard_tasks($dashletid)
 
         if (!empty($sort))
         {
-            if ($sort=='id') $sql .= "ORDER BY id ";
-            elseif ($sort=='name') $sql .= "ORDER BY name ";
-            elseif ($sort=='priority') $sql .= "ORDER BY priority ";
-            elseif ($sort=='completion') $sql .= "ORDER BY completion ";
-            elseif ($sort=='startdate') $sql .= "ORDER BY startdate ";
-            elseif ($sort=='duedate') $sql .= "ORDER BY duedate ";
-            elseif ($sort=='distribution') $sql .= "ORDER BY distribution ";
+            if ($sort == 'id') $sql .= "ORDER BY id ";
+            elseif ($sort == 'name') $sql .= "ORDER BY name ";
+            elseif ($sort == 'priority') $sql .= "ORDER BY priority ";
+            elseif ($sort == 'completion') $sql .= "ORDER BY completion ";
+            elseif ($sort == 'startdate') $sql .= "ORDER BY startdate ";
+            elseif ($sort == 'duedate') $sql .= "ORDER BY duedate ";
+            elseif ($sort == 'distribution') $sql .= "ORDER BY distribution ";
             else $sql = "ORDER BY id ";
-            if ($order=='a' OR $order=='ASC' OR $order='') $sql .= "ASC";
+
+            if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
             else $sql .= "DESC";
         }
-        else $sql .= "ORDER BY IF(duedate,duedate,99999999) ASC, duedate ASC, startdate DESC, priority DESC, completion ASC";
+        else
+        {
+            $sql .= "ORDER BY IF(duedate,duedate,99999999) ASC, duedate ASC, startdate DESC, priority DESC, completion ASC";
+        }
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -48,7 +52,7 @@ function dashboard_tasks($dashletid)
             $content .= colheader('priority', $GLOBALS['strPriority']);
             $content .= colheader('completion', $GLOBALS['strCompletion']);
             $content .= "</tr>\n";
-            $shade='shade1';
+            $shade = 'shade1';
             while ($task = mysql_fetch_object($result))
             {
                 $duedate = mysql2date($task->duedate);
@@ -62,8 +66,8 @@ function dashboard_tasks($dashletid)
                 $content .= "<td>".priority_icon($task->priority).priority_name($task->priority)."</td>";
                 $content .= "<td>".percent_bar($task->completion)."</td>";
                 $content .= "</tr>\n";
-                if ($shade=='shade1') $shade='shade2';
-                else $shade='shade1';
+                if ($shade == 'shade1') $shade = 'shade2';
+                else $shade = 'shade1';
             }
             $content .= "</table>\n";
         }
@@ -79,6 +83,8 @@ function dashboard_tasks($dashletid)
 
     echo dashlet('tasks', $dashletid, icon('task', 16), sprintf($GLOBALS['strXsTasks'], user_realname($user,TRUE)), 'tasks.php', $content);
 }
+
+
 function dashboard_tasks_get_version()
 {
     global $dashboard_tasks_version;
