@@ -142,7 +142,7 @@ function saction_TimeCalc()
     // FIXME this should only run INSIDE the working day
     // FIXME ? this will not update the database fully if two SLAs have been met since last run - does it matter ?
 
-    if ($CONFIG['debug']) //debug_log("Calculating SLA times");
+    if ($CONFIG['debug']); //debug_log("Calculating SLA times");
 
     $sql = "SELECT id, title, maintenanceid, priority, slaemail, slanotice, servicelevel, status, owner ";
     $sql .= "FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED." AND status != ".STATUS_CLOSING;
