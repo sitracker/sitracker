@@ -104,7 +104,7 @@ if (is_numeric($_GET['id']))
         {
             echo "<p><strong>{$strNotes}: </strong> ".bbcode($row->notes)."</p>";
         }
-        echo "<strong>{$strCreatedBy}:</strong> ".user_realname($row->createdby);
+        echo "<p><strong>{$strCreatedBy}:</strong> ".user_realname($row->createdby);
         echo " {$row->created}, <strong>{$strLastModifiedBy}:</strong> ";
         echo user_realname($row->modifiedby)." {$row->modified}</p>";
         echo "</div>";
