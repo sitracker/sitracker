@@ -156,18 +156,17 @@ $hmenu[203010] = $hmenu[203010] +
                        70=> array ('perm'=> 56, 'name'=> $strEditVendor, 'url'=>"{$CONFIG['application_webpath']}vendor_edit.php")
 );
 
-// FIXME Have temporarily disabled the inbox feature by removing it from the menu for v3.50 release
 // //need to call directly as we don't have functions yet
-// $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
-// $result = mysql_query($sql);
-// list($inbox_count) = mysql_fetch_row($result);
-// if ($inbox_count > 0)
-// {
-//     $inbox_count = " <strong>(".$inbox_count.")</strong>";
-// }
-// else $inbox_count = '';
+$sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
+$result = mysql_query($sql);
+list($inbox_count) = mysql_fetch_row($result);
+if ($inbox_count > 0)
+{
+    $inbox_count = " <strong>(".$inbox_count.")</strong>";
+}
+else $inbox_count = '';
 
-// 40=> array ( 'perm'=> 42, 'name'=> $strInbox.$inbox_count, 'url'=>"{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
+
 
 // Support menu
 if (!is_array($hmenu[30])) $hmenu[30] = array();
@@ -175,6 +174,7 @@ $hmenu[30] = $hmenu[30] +
             array (10=> array ( 'perm'=> 5, 'name'=> $strAddIncident, 'url'=>"{$CONFIG['application_webpath']}incident_add.php"),
                    20=> array ( 'perm'=> 0, 'name'=> $strMyIncidents, 'url'=>"{$CONFIG['application_webpath']}incidents.php"),
                    30=> array ( 'perm'=> 0, 'name'=> $strAllIncidents, 'url'=>"{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
+                   40=> array ( 'perm'=> 42, 'name'=> $strInbox.$inbox_count, 'url'=>"{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
                    50=> array ( 'perm'=> 42, 'name'=> $strHoldingQueue, 'url'=>"{$CONFIG['application_webpath']}holding_queue.php")
 );
 
