@@ -19,7 +19,7 @@ $title = $strInventory;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 
-if(!$CONFIG['inventory_enabled']) 
+if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
@@ -36,7 +36,7 @@ $result = mysql_query($sql);
 if (mysql_num_rows($result) > 0)
 {
     echo "<table class='vertical' align='center'>";
-    echo "<th>{$strSite}</th><th>{$strCount}</th>";
+    echo "<tr><th>{$strSite}</th><th>{$strCount}</th></tr>";
     while ($row = mysql_fetch_object($result))
     {
         echo "<tr><td>".icon('site', 16);
