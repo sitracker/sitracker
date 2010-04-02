@@ -1470,6 +1470,7 @@ $strSavePublish = 'Save and Publish';
 $strScheduledTask = 'Name of the scheduler task';
 $strScheduler = 'Scheduler';
 $strSchedulerActionFailed = 'Scheduler Action Failed';
+$strSchedulerNotRunning = 'The Scheduler does not appear to be running. You might want to checkout http://sitracker.org/wiki/Scheduler';
 # Database structure version
 $strSchemaVersion = 'Schema Version';
 $strScore = 'Score';
