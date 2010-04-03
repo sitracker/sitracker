@@ -121,7 +121,7 @@ if (empty($displayid))
 
     if (!empty($sort))
     {
-        if ($order=='a' OR $order=='ASC' OR $order='') $sortorder = "ASC";
+        if ($order == 'a' OR $order == 'ASC' OR $order == '') $sortorder = "ASC";
         else $sortorder = "DESC";
         switch ($sort)
         {
@@ -170,7 +170,7 @@ if (empty($displayid))
             echo "</td>";
             // Subject
             echo "<td>";
-            if (($incoming->locked != $sit[2]) && ($incoming->locked > 0))
+            if (($incoming->locked != $sit[2]) AND ($incoming->locked > 0))
             {
                 echo sprintf($strLockedByX, user_realname($update->locked,TRUE));
             }

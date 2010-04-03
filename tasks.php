@@ -287,7 +287,7 @@ else
         elseif ($sort == 'distribution') $sql .= "ORDER BY distribution ";
         else $sql .= "ORDER BY id ";
 
-        if ($order=='a' OR $order=='ASC' OR $order='') $sql .= "ASC";
+        if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
         else $sql .= "DESC";
     }
     else

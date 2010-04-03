@@ -370,9 +370,13 @@ function display_update_page($draftid=-1)
     {
         echo "<select name='updatetype' id='updatetype' class='dropdown' disabled='disabled''>\n";
         if ($metadata[0] == 'probdef')
+        {
             echo "<option selected='selected' value='probdef'>Problem Definition</option>\n";
+        }
         else if ($metadata[0] == 'actionplan')
+        {
             echo "<option selected='selected' value='actionplan'>Action Plan</option>\n";
+        }
     }
     else
     {

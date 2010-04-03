@@ -2527,7 +2527,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 
         if (strlen($text) >= 55)
         {
-            $text = substr(trim($text), 0, 55).$strEllipsis;
+            $text = mb_substr(trim($text), 0, 55, 'UTF-8').$strEllipsis;
         }
         else
         {
@@ -5366,11 +5366,11 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
                 if ($use_ttf)
                 {
-                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], substr(urldecode($legends[$i]),0,27)." ({$data[$i]})");
+                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8')." ({$data[$i]})");
                 }
                 else
                 {
-                    imagestring($img,2, 270, ($legendY - 1), substr(urldecode($legends[$i]), 0,27)." ({$data[$i]})", $black);
+                    imagestring($img,2, 270, ($legendY - 1), mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8')." ({$data[$i]})", $black);
                 }
                 // imagearc($img,$cx,$cy,$sx,$sy,$angle_sum[$i1] ,$angle_sum[$i], $blue);
                 $legendY += 15;
@@ -5387,46 +5387,46 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
             }
 
             imagerectangle($img, $width-1, $height-1, 0, 0, $black);
-            for ($i=1; $i<$countdata; $i++)
+            for ($i = 1; $i < $countdata; $i++)
             {
-                imageline($img, $i*$colwidth, 0, $i*$colwidth, $width, $grey);
-                imageline($img, 2, $i*$rowheight, $width-2, $i*$rowheight, $grey);
+                imageline($img, $i * $colwidth, 0, $i * $colwidth, $width, $grey);
+                imageline($img, 2, $i * $rowheight, $width - 2, $i * $rowheight, $grey);
             }
 
-            for ($i=0; $i<$countdata; $i++)
+            for ($i = 0; $i < $countdata; $i++)
             {
-                $dataheight=($height-($data[$i] / $maxdata) * $height);
+                $dataheight = ($height-($data[$i] / $maxdata) * $height);
                 $legendheight = $dataheight > ($height - 15) ? $height - 15 : $dataheight;
-                $nextdataheight=($height-($data[$i+1] / $maxdata) * $height);
-                imageline($img, $i*$colwidth, $dataheight, ($i+1)*$colwidth, $nextdataheight, $red);
-                imagestring($img, 3, $i*$colwidth, $legendheight, substr($legends[$i],0,6), $darkblue);
+                $nextdataheight = ($height - ($data[$i + 1] / $maxdata) * $height);
+                imageline($img, $i * $colwidth, $dataheight, ($i + 1) * $colwidth, $nextdataheight, $red);
+                imagestring($img, 3, $i*$colwidth, $legendheight, mb_substr($legends[$i], 0, 6, 'UTF-8'), $darkblue);
             }
             imagestring($img,3, 10, 10, $title, $red);
         break;
 
         case 'bar':
             $maxdata = 0;
-            $colwidth=round($width/$countdata);
-            $rowheight=round($height/10);
+            $colwidth = round($width / $countdata);
+            $rowheight = round($height / 10);
             foreach ($data AS $dataval)
             {
                 if ($dataval > $maxdata) $maxdata = $dataval;
             }
 
             imagerectangle($img, $width-1, $height-1, 0, 0, $black);
-            for ($i=1; $i<$countdata; $i++)
+            for ($i = 1; $i < $countdata; $i++)
             {
-                imageline($img, $i*$colwidth, 0, $i*$colwidth, $width, $grey);
-                imageline($img, 2, $i*$rowheight, $width-2, $i*$rowheight, $grey);
+                imageline($img, $i * $colwidth, 0, $i * $colwidth, $width, $grey);
+                imageline($img, 2, $i*$rowheight, $width - 2, $i * $rowheight, $grey);
             }
 
-            for ($i=0; $i<$countdata; $i++)
+            for ($i = 0; $i < $countdata; $i++)
             {
-                $dataheight=($height-($data[$i] / $maxdata) * $height);
+                $dataheight = ($height - ($data[$i] / $maxdata) * $height);
                 $legendheight = $dataheight > ($height - 15) ? $height - 15 : $dataheight;
-                imagefilledrectangle($img, $i*$colwidth, $dataheight, ($i+1)*$colwidth, $height, $darkblue);
-                imagefilledrectangle($img, ($i*$colwidth)+1, $dataheight+1, (($i+1)*$colwidth)-3, ($height-2), $midblue);
-                imagestring($img, 3, ($i*$colwidth)+4, $legendheight, substr($legends[$i],0,5), $darkblue);
+                imagefilledrectangle($img, $i * $colwidth, $dataheight, ($i + 1) * $colwidth, $height, $darkblue);
+                imagefilledrectangle($img, ($i * $colwidth)+1, $dataheight + 1, (($i + 1) * $colwidth)-3, ($height-2), $midblue);
+                imagestring($img, 3, ($i*$colwidth)+4, $legendheight, mb_substr($legends[$i], 0, 5,'UTF-8'), $darkblue);
             }
             imagestring($img,3, 10, 10, $title, $red);
         break;
@@ -7305,7 +7305,7 @@ function process_add_contact($mode = 'internal')
 
         // generate username and password
 
-        $username = strtolower(substr($surname, 0, strcspn($surname, " ")));
+        $username = strtolower(mb_substr($surname, 0, strcspn($surname, " ", 'UTF-8')));
         $prepassword = generate_password();
 
         $password = md5($prepassword);

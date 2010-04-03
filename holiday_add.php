@@ -106,7 +106,7 @@ else
     }
 }
 
-if ($return=='list')
+if ($return == 'list')
 {
     header("Location: calendar.php?display=list&type=$type&user=$user");
     exit;

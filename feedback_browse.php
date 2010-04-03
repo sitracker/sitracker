@@ -139,8 +139,7 @@ switch ($mode)
         }
         plugin_do('feedback_browse_viewresponse');
         echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
-    break;
-
+        break;
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";
         $result = mysql_query($sql);
@@ -155,23 +154,32 @@ switch ($mode)
         }
         else
         {
-            if (empty($formid) AND !empty($CONFIG['feedback_form'])) $formid=$CONFIG['feedback_form'];
-            else $formid=1;
+            if (empty($formid) AND !empty($CONFIG['feedback_form'])) $formid = $CONFIG['feedback_form'];
+            else $formid = 1;
 
             $sql  = "SELECT *, fr.id AS respid FROM `{$dbFeedbackRespondents}` AS fr, `{$dbFeedbackForms}` AS ff ";
             $sql .= "WHERE fr.formid = ff.id ";
-            if ($completed=='no') $sql .= "AND completed='no' ";
+            if ($completed == 'no') $sql .= "AND completed='no' ";
             else $sql .= "AND completed='yes' ";
             if (!empty($formid)) $sql .= "AND formid='$formid'";
 
-            if ($order=='a' OR $order=='ASC' OR $order='') $sortorder = "ASC";
+            if ($order == 'a' OR $order == 'ASC' OR $order == '') $sortorder = "ASC";
             else $sortorder = "DESC";
+
             switch ($sort)
             {
-                case 'created': $sql .= " ORDER BY created $sortorder"; break;
-                case 'contactid': $sql .= " ORDER BY contactid $sortorder"; break;
-                case 'incidentid': $sql .= " ORDER BY incidentid $sortorder"; break;
-                default:   $sql .= " ORDER BY created DESC"; break;
+                case 'created':
+                    $sql .= " ORDER BY created $sortorder";
+                    break;
+                case 'contactid':
+                    $sql .= " ORDER BY contactid $sortorder";
+                    break;
+                case 'incidentid':
+                    $sql .= " ORDER BY incidentid $sortorder";
+                    break;
+                default:
+                    $sql .= " ORDER BY created DESC";
+                    break;
             }
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -184,7 +192,10 @@ switch ($mode)
                 else echo "<h3>{$strResponsesToFeedbackForm}: $formid</h3>";
                 echo "<p align='center'><a href='feedback_form_edit.php?formid={$formid}'>{$strEdit}</a></p>";
             }
-            else echo "<h3>{$strResponsesToAllFeedbackForms}</h3>";
+            else
+            {
+                echo "<h3>{$strResponsesToAllFeedbackForms}</h3>";
+            }
 
             if ($countrows >= 1)
             {
@@ -195,11 +206,11 @@ switch ($mode)
                 echo colheader('incidentid',$strIncident,$sort, $order, $filter);
                 echo "<th>{$strOperation}</th>";
                 echo "</tr>\n";
-                $shade='shade1';
+                $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))
                 {
-                    $respondentarr=explode('-',$resp->respondent);
-                    $responserefarr=explode('-',$resp->responseref);
+                    $respondentarr = explode('-',$resp->respondent);
+                    $responserefarr = explode('-',$resp->responseref);
 
                     $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid);
                     echo "<tr class='$shade'>";
@@ -240,13 +251,15 @@ switch ($mode)
             {
                 echo "<p class='error' align='center'>{$strNoResponseFound}</p>";
             }
-            if ($completed=='no')
+            if ($completed == 'no')
             {
                 $sql = "SELECT COUNT(id) FROM `{$dbFeedbackRespondents}` WHERE formid='{$formid}' AND completed='yes'";
                 $result = mysql_query($sql);
                 list($completedforms) = mysql_fetch_row($result);
                 if ($completedforms > 0)
+                {
                     echo "<p align='center'>".sprintf($strFeedbackFormsReturned, "<a href='{$_SERVER['PHP_SELF']}'>{$completedforms}</a>")."</p>";
+                }
             }
             else
             {

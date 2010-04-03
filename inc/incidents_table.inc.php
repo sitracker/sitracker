@@ -67,7 +67,17 @@ while ($incidents = mysql_fetch_array($result))
     }
     // Make a readable site name
     $site = site_name($incidents['siteid']);
-    $site = strlen($site) > 30 ? substr($site,0,30)."..." : $site;
+
+    // Used to store the ellipsis if shortened, we do htmlspecialchars on $site and don't want this to be converted
+    // If you do &hellips; becomes &amp;hellips; 
+    $postsitetext = '';
+    
+    if (strlen($site) > 0)
+    {
+        $site = mb_substr($site, 0, 30, 'UTF-8');
+        $postsitetext .= $strEllipsis;
+    }
+
 
     // Make a readble last updated field
     if ($incidents['lastupdated'] > $now - 300)
@@ -163,38 +173,38 @@ while ($incidents = mysql_fetch_array($result))
     switch ($queue)
     {
         case 1: // Action Needed
-            $class='shade2';
-            $explain='';
+            $class = 'shade2';
+            $explain = '';
             if ($slaremain >= 1)
             {
-                if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class='notice';
-                if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class='urgent';
-                if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class='critical';
-                if ($incidents["priority"]==4) $class='critical';  // Force critical incidents to be critical always
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
+                if ($incidents["priority"] == 4) $class = 'critical';  // Force critical incidents to be critical always
             }
-            elseif ($slaremain < 0) $class='critical';
+            elseif ($slaremain < 0)
+            {
+                $class = 'critical';
+            }
             else
             {
-                $class='shade1';
-                $explain='';  // No&nbsp;Target
+                $class = 'shade1';
+                $explain = '';  // No&nbsp;Target
             }
             // if ($target->time > $now + ($target->targetval * 0.10 )) $class='critical';
-        break;
-
+            break;
         case 2: // Waiting
-            $class='idle';
-            $explain='No Action Set';
-        break;
-
+            $class = 'idle';
+            $explain = 'No Action Set';
+            break;
         case 3: // All Open
-            $class='shade2';
-            $explain='No Action Set';
-        break;
-
+            $class = 'shade2';
+            $explain = 'No Action Set';
+            break;
         case 4: // All Closed
-            $class='expired';
-            $explain='No Action';
-        break;
+            $class = 'expired';
+            $explain = 'No Action';
+            break;
     }
 
     // Set Next Action text if not already set
@@ -271,7 +281,7 @@ while ($incidents = mysql_fetch_array($result))
     echo "<td>";
     echo "<a href='contact_details.php?id={$incidents['contactid']}' class='info'><span>{$incidents['phone']}<br />";
     echo "{$incidents['email']}</span>{$incidents['forenames']} {$incidents['surname']}</a><br />";
-    echo htmlspecialchars($site)." </td>";
+    echo htmlspecialchars($site)."{$postsitetext} </td>";
 
     echo "<td align='center'>";
     //FIXME functionise
@@ -414,11 +424,11 @@ if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
 
 if ($rowcount != 1)
 {
-    echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>$rowcount</strong>")."</p>";
+    echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>{$rowcount}</strong>")."</p>";
 }
 else
 {
-    echo "<p align='center'>".sprintf($strSingleIncident, "<strong>$rowcount</strong>")."</p>";
+    echo "<p align='center'>".sprintf($strSingleIncident, "<strong>{$rowcount}</strong>")."</p>";
 }
 
 if ($CONFIG['debug']) echo "<!-- End of Support Incidents Table -->\n";
