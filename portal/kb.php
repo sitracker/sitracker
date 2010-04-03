@@ -92,13 +92,13 @@ $countsql = $sql;
 $sql .= "GROUP BY k.docid ";
 if (!empty($sort))
 {
-    if ($sort=='title') $sql .= "ORDER BY k.title ";
-    elseif ($sort=='date') $sql .= " ORDER BY k.published ";
-    elseif ($sort=='author') $sql .= " ORDER BY k.author ";
-    elseif ($sort=='keywords') $sql .= " ORDER BY k.keywords ";
+    if ($sort == 'title') $sql .= "ORDER BY k.title ";
+    elseif ($sort == 'date') $sql .= " ORDER BY k.published ";
+    elseif ($sort == 'author') $sql .= " ORDER BY k.author ";
+    elseif ($sort == 'keywords') $sql .= " ORDER BY k.keywords ";
     else $sql .= " ORDER BY k.docid ";
 
-    if ($order=='a' OR $order=='ASC' OR $order='') $sql .= "ASC";
+    if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
     else $sql .= "DESC";
 }
 else
@@ -115,6 +115,7 @@ if ($result = mysql_query($sql))
     {
         $end = $numtotal;
     }
+
     if ($numtotal > 0)
     {
         echo "<p align='center'>".sprintf($strShowingXtoXofX, $start+1, $end, $numtotal)."</p>";
@@ -164,10 +165,8 @@ if ($result = mysql_query($sql))
             echo "<td>".user_realname($row->author)."</td>";
             echo "<td>{$row->keywords}</td></tr>";
 
-            if ($shade == 'shade1')
-                $shade = 'shade2';
-            else
-                $shade = 'shade1';
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
         echo "</table>";
     }

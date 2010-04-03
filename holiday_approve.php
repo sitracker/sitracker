@@ -33,13 +33,13 @@ switch (strtolower($approve))
 {
     case 'true':
         $sql = "UPDATE `{$dbHolidays}` SET approved='".HOL_APPROVAL_GRANTED."' ";
-    break;
+        break;
     case 'false':
         $sql = "UPDATE `{$dbHolidays}` SET approved='".HOL_APPROVAL_DENIED."' ";
-    break;
+       break;
     case 'free':
         $sql = "UPDATE `{$dbHolidays}` SET approved='".HOL_APPROVAL_GRANTED."', type='".HOL_FREE."' ";
-    break;
+        break;
 }
 
 $sql .= "WHERE approvedby='$sit[2]' AND approved=".HOL_APPROVAL_NONE." ";
@@ -62,9 +62,11 @@ if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 if ($user != 'all')
 {
     $bodytext = "Message from {$CONFIG['application_shortname']}: ".user_realname($sit[2])." has ";
-    if ($approve == 'FALSE') $bodytext.="rejected";
-    else $bodytext.="approved";
+    if ($approve == 'FALSE') $bodytext .= "rejected";
+    else $bodytext .= "approved";
+   
     $bodytext.=" your request for ";
+
     if ($startdate == 'all') $bodytext .= "all days requested\n\n";
     else
     {

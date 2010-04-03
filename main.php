@@ -21,6 +21,40 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
+
+
+// Check if scheduler is running (bug 108)
+// FIXME ericthefish - Needs to run only when privileged user logs in
+    $failure = 0;
+
+    $sql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
+    $result = mysql_query($sql);
+    if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+
+    while ($schedule = mysql_fetch_object($result))
+    {
+        $sqlinterval = ("$schedule->interval");
+        $sqllastran = mysql2date("$schedule->lastran");
+        $dateresult = $sqlinterval + $sqllastran + 60;
+        if ($dateresult < date(U))
+        {
+            $failure ++;
+        }
+    }
+    $num = mysql_num_rows($result);
+    $num = $num / 2;
+    if ($failure > $num)
+    {
+        echo user_alert(sprintf("{$strSchedulerNotRunning}"), E_USER_ERROR);
+    }
+
+// end of bug 108
+
+
+
+
+
+
 // --------------------------------------------------------------------------------------------
 // Dashboard widgets
 
