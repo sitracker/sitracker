@@ -628,14 +628,14 @@ elseif ($action == 'assign')
         $send_email = cleanvar($_REQUEST['send_email']);
         $inventory = cleanvar($_REQUEST['inventory']);
 
-    if ($send_email == 'on')
-    {
-        $send_email = 1;
-    }
-    else
-    {
-        $send_email = 0;
-    }
+        if ($send_email == 'on')
+        {
+            $send_email = 1;
+        }
+        else
+        {
+            $send_email = 0;
+        }
 
         // check form input
         $errors = 0;
@@ -678,20 +678,22 @@ elseif ($action == 'assign')
             // Calculate the time to next action
             switch ($timetonextaction_none)
             {
-                case 'none': $timeofnextaction = 0;  break;
+                case 'none':
+                    $timeofnextaction = 0; 
+                    break;
                 case 'time':
                     $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);
-                break;
-
+                    break;
                 case 'date':
                     // $now + ($days * 86400) + ($hours * 3600) + ($minutes * 60);
-                    $unixdate=mktime(9,0,0,$month,$day,$year);
+                    $unixdate = mktime(9, 0, 0, $month, $day, $year);
                     $now = time();
                     $timeofnextaction = $unixdate;
                     if ($timeofnextaction < 0) $timeofnextaction = 0;
-                break;
-
-                default: $timeofnextaction = 0; break;
+                    break;
+                default:
+                    $timeofnextaction = 0;
+                    break;
             }
 
             // Set the service level the contract
@@ -795,6 +797,7 @@ elseif ($action == 'assign')
                         @mkdir($new_path, 0770);
                         umask($umask);
                     }
+
                     while ($row = mysql_fetch_object($result))
                     {
                         $filename = $row->linkcolref . "-" . $row->filename;
@@ -890,7 +893,7 @@ elseif ($action == 'assign')
 
             $suggested_user = suggest_reassign_userid($incidentid);
             $trigger = new Trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
-	    $trigger->fire();
+            $trigger->fire();
 
             if ($CONFIG['auto_assign_incidents'])
             {
