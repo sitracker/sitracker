@@ -29,24 +29,27 @@ if (empty($tagid))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('tag', 32)." ";
     echo "{$strTags}</h2>";
-    echo show_tag_cloud($orderby,TRUE);
+    echo show_tag_cloud($orderby, TRUE);
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
-    $sql = "SELECT name FROM `{$dbTags}` WHERE tagid = '$tagid' LIMIT 1";
+    $sql = "SELECT name FROM `{$dbTags}` WHERE tagid = '{$tagid}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($tagname)=mysql_fetch_row($result);
+    list($tagname) = mysql_fetch_row($result);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>".icon('tag', 32)." <a href='view_tags.php'>{$strTag}</a>: $tagname";
-    if (array_key_exists($tagname, $CONFIG['tag_icons'])) echo "&nbsp;<img src='images/icons/{$iconset}/32x32/{$CONFIG['tag_icons'][$tagname]}.png' alt='' />";
+    echo "<h2>".icon('tag', 32)." <a href='view_tags.php'>{$strTag}</a>: {$tagname}";
+    if (array_key_exists($tagname, $CONFIG['tag_icons']))
+    {
+        echo "&nbsp;<img src='images/icons/{$iconset}/32x32/{$CONFIG['tag_icons'][$tagname]}.png' alt='' />";
+    }
     echo "</h2>";
 
 
     //show only this tag
-    $sql = "SELECT * FROM `{$dbSetTags}` WHERE tagid = '$tagid'";
+    $sql = "SELECT * FROM `{$dbSetTags}` WHERE tagid = '{$tagid}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -72,8 +75,7 @@ else
                         echo "<th>".icon('contact', 16)." {$strContact}</th><td><a href='contact_details.php?id={$obj->id}'>";
                         echo "{$objcon->forenames} {$objcon->surname}</a></td>";
                     }
-                break;
-
+                    break;
                 case TAG_INCIDENT: //incident
                     $sql = "SELECT title FROM `{$dbIncidents}` WHERE id = '$obj->id'";
                     $resultinc = mysql_query($sql);
@@ -84,8 +86,7 @@ else
                         echo "<th>".icon('support', 16)." {$strIncident}</th><td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\">";
                         echo "{$obj->id}: {$objinc->title}</a></td>";
                     }
-                break;
-
+                    break;
                 case TAG_SITE: //site
                     $sql = "SELECT name FROM `{$dbSites}` WHERE id = '{$obj->id}'";
                     $resultsite = mysql_query($sql);
@@ -96,8 +97,7 @@ else
                         echo "<th>".icon('site', 16)." {$strSite}</th><td><a href='site_details.php?id={$obj->id}&amp;action=show'>";
                         echo "{$objsite->name}</a></td>";
                     }
-                break;
-
+                    break;
                 case TAG_TASK: // task
                     $sql = "SELECT name FROM `{$dbTasks}` WHERE id = '{$obj->id}'";
                     $resulttask = mysql_query($sql);
@@ -108,8 +108,7 @@ else
                         echo "<th>".icon('task', 16)." {$strTask}</th><td><a href='view_task.php?id={$obj->id}'>";
                         echo "{$objtask->name}</a></td>";
                     }
-                break;
-
+                    break;
                 case TAG_SKILL:
                     $sql = "SELECT name FROM `{$dbSoftware}` WHERE id = '{$obj->id}'";
                     $resultskill = mysql_query($sql);
@@ -120,8 +119,7 @@ else
                         echo "<th>".icon('skill', 16)." {$strSkill}</th><td>";
                         echo "{$objtask->name}</td>";
                     }
-                break;
-
+                    break;
                 case TAG_PRODUCT:
                     $sql = "SELECT name FROM `{$dbProducts}` WHERE id = '{$obj->id}'";
                     $resultprod = mysql_query($sql);
@@ -132,8 +130,7 @@ else
                         echo "<th>".icon('product', 16)." {$strProduct}</th>";
                         echo "<td><a href='products.php?productid={$obj->id}'>{$objtask->name}</a></td>";
                     }
-                break;
-
+                    break;
                 default:
                     echo "<th>{$strOther}</th><td>{$obj->id}/{$obj->type}</td>";
             }

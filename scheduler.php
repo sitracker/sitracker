@@ -150,10 +150,8 @@ switch ($_REQUEST['mode'])
         {
             html_redirect($_SERVER['PHP_SELF'], FALSE);
         }
-    break;
-
+        break;
     case 'save':
-
         if (!empty($_REQUEST['startdate']))
         {
             $start = strtotime($_REQUEST['startdate'].' '.$_REQUEST['starttime']);
@@ -223,8 +221,7 @@ switch ($_REQUEST['mode'])
         {
             html_redirect($_SERVER['PHP_SELF'], TRUE);
         }
-    break;
-
+        break;
     case 'list':
     default:
         $refresh = 60;
@@ -447,7 +444,6 @@ switch ($_REQUEST['mode'])
                 echo "LDate now (from utc): ".ldate('r', $utcnow, TRUE)."<br />";
                 echo "UTC: ".date('D, d M Y  H:i:s', $utcnow).' +0000';
                 echo "</p></div>";
-
             }
 
 

@@ -31,7 +31,7 @@ if (empty($mode))
 
     $sql = "SELECT * FROM `{$dbSiteTypes}` ORDER BY typename";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         echo "<table class='vertical' align='center'>";
