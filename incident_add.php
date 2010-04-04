@@ -361,7 +361,7 @@ elseif ($action == 'findcontact')
         }
         else $sql .= "AND c.id = '$contactid' ";
         $sql .= "ORDER by c.surname, c.forenames ";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result)>0)
@@ -548,16 +548,16 @@ elseif ($action=='incidentform')
     else
     {
         $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id=$updateid";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $updaterow=mysql_fetch_array($result);
+        $updaterow = mysql_fetch_array($result);
         $mailed_body_text = $updaterow['bodytext'];
 
         $sql="SELECT subject FROM `{$dbTempIncoming}` WHERE updateid=$updateid";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $updaterow=mysql_fetch_array($result);
-        $mailed_subject=$updaterow['subject'];
+        $updaterow = mysql_fetch_array($result);
+        $mailed_subject = $updaterow['subject'];
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
@@ -655,7 +655,7 @@ elseif ($action == 'assign')
         // check for blank priority
         if ($priority == 0)
         {
-            $priority=1;
+            $priority = 1;
         }
 
         // check for blank type
