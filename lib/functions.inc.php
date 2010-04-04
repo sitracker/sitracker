@@ -6902,6 +6902,7 @@ function kb_article($id, $mode='internal')
             {
                 $html .= "<strong>{$GLOBALS['strAuthor']}:</strong> ";
             }
+
             foreach ($author AS $authorid)
             {
                 $html .= user_realname($authorid,TRUE);
@@ -7009,6 +7010,7 @@ function show_edit_site($site, $mode='internal')
             $html .= user_drop_down('owner', $siterow['owner'], $accepting = FALSE, '', '', TRUE);
             $html .= "</td></tr>\n";
         }
+
         if ($mode == 'internal')
         {
             $html .= "<tr><th>{$GLOBALS['strIncidentPool']}:</th>";
@@ -7268,7 +7270,7 @@ function process_add_contact($mode = 'internal')
         $errors++;
         $_SESSION['formerrors']['add_contact']['email'] = $GLOBALS['strMustEnterEmail'];
     }
-    if ($siteid==0 OR $siteid=='')
+    if ($siteid == 0 OR $siteid == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_contact']['siteid'] = $GLOBALS['strMustSelectSite'];
@@ -7745,18 +7747,18 @@ function user_contracts_table($userid, $mode = 'internal')
             $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
             $html .= "</tr>\n";
 
-            $supportcount=1;
-            $shade='shade2';
+            $supportcount = 1;
+            $shade = 'shade2';
             while ($supportedrow = mysql_fetch_array($result))
             {
                 if ($supportedrow['term'] == 'yes')
                 {
-                    $shade='expired';
+                    $shade = 'expired';
                 }
 
                 if ($supportedrow['expirydate'] < $now AND $supportedrow['expirydate'] != -1)
                 {
-                    $shade='expired';
+                    $shade = 'expired';
                 }
 
                 $html .= "<tr><td class='$shade'>";
@@ -7884,7 +7886,11 @@ function plugin_register($context, $action)
 function plugin_do($context, $optparams = FALSE)
 {
     global $PLUGINACTIONS;
-    foreach ($GLOBALS as $key => $val) { global $$key; }
+    foreach ($GLOBALS as $key => $val)
+    {
+        global $$key;
+    }
+
     $rtnvalue = '';
     if (is_array($PLUGINACTIONS[$context]))
     {
@@ -8280,7 +8286,6 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= "</select>";
             break;
-
         case 'checkbox':
             // Checkbox values are stored 'TRUE' / 'FALSE'
             if ($value == 'TRUE')
@@ -8295,7 +8300,6 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             $html .= html_checkbox($setupvar, $state, 'TRUE');
             $html .= " {$title}</label>";
             break;
-
         case 'percent':
             $html .= "<select name='{$setupvar}' id='{$setupvar}'>";
             for($i = 0; $i <= 100; $i++)
@@ -8306,17 +8310,14 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= "</select>%";
             break;
-
         case 'interfacestyleselect':
             $html .= interfacestyle_drop_down($setupvar, $value);
             break;
-
         case 'userlanguageselect':
         case 'languageselect':
             if (empty($value)) $value = $_SESSION['lang'];
             $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);
             break;
-
         case 'languagemultiselect':
             if (empty($value))
             {
@@ -8338,19 +8339,15 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             $html .= "<label>".html_checkbox($setupvar.'checkbox', $checked, "");
             $html .= $GLOBALS['strAll']."</label>";
             break;
-
         case 'slaselect':
             $html .= serviceleveltag_drop_down($setupvar, $value, TRUE);
             break;
-
         case 'userselect':
             $html .= user_drop_down($setupvar, $value, FALSE, FALSE, '', TRUE);
             break;
-
         case 'siteselect':
             $html .= site_drop_down($setupvar, $value, FALSE);
             break;
-
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8360,7 +8357,6 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
             break;
-
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8370,45 +8366,36 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
             break;
-
         case 'userstatusselect':
             $html .= userstatus_drop_down($setupvar, $value);
             break;
-
         case 'roleselect':
             $html .= role_drop_down($setupvar, $value);
             break;
-
         case 'number':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='7' value=\"{$value}\" />";
             break;
-
         case '1darray':
             $replace = array('array(', ')', "'");
             $value = str_replace($replace, '',  $value);
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='60' value=\"{$value}\" />";
            break;
-
         case '2darray':
             $replace = array('array(', ')', "'", '\r','\n');
             $value = str_replace($replace, '',  $value);
             $value = str_replace(',', "\n", $value);
             $html .= "<textarea name='{$setupvar}' id='{$setupvar}' cols='60' rows='10'>{$value}</textarea>";
             break;
-
         case 'password':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             break;
-
         case 'ldappassword':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
             break;
-
         case 'textreadonly':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
             break;
-
         case 'text':
         default:
             if (strlen($CONFIG[$setupvar]) < 65)
