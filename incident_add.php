@@ -847,7 +847,7 @@ elseif ($action == 'assign')
             $level = mysql_fetch_object($result);
 
             $targetval = $level->initial_response_mins * 60;
-            $initialresponse=$now + $targetval;
+            $initialresponse = $now + $targetval;
 
             // Insert the first SLA update, this indicates the start of an incident
             // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
@@ -965,7 +965,11 @@ elseif ($action == 'assign')
                 {
                     echo "<strong>{$userrow['realname']}</strong>";
                 }
-                else echo $userrow['realname'];
+                else
+                {
+                    echo $userrow['realname'];
+                }
+
                 echo "</td>";
                 echo "<td>".$userrow['phone']."</td>";
                 echo "<td>".user_online_icon($userrow['id'])." ".userstatus_name($userrow['status'])."</td>";
@@ -976,7 +980,7 @@ elseif ($action == 'assign')
                 $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
 
                 if ($countincidents >= 1) $countactive = user_activeincidents($userrow['id']);
-                else $countactive=0;
+                else $countactive = 0;
 
                 $countdiff = $countincidents-$countactive;
 

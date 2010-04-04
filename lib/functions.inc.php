@@ -5608,10 +5608,10 @@ function exact_seconds($seconds)
 
 
 /**
-    * Shows errors from a form, if any
-    * @author Kieran Hogg
-    * @returns string. HTML of the form errors stored in the users session
-*/
+ * Shows errors from a form, if any
+ * @author Kieran Hogg
+ * @returns string. HTML of the form errors stored in the users session
+ */
 function show_form_errors($formname)
 {
     if ($_SESSION['formerrors'][$formname])
@@ -5626,10 +5626,10 @@ function show_form_errors($formname)
 
 
 /**
-    * Cleans form errors
-    * @author Kieran Hogg
-    * @returns nothing
-*/
+ * Cleans form errors
+ * @author Kieran Hogg
+ * @returns nothing
+ */
 function clear_form_errors($formname)
 {
     unset($_SESSION['formerrors'][$formname]);
@@ -5637,10 +5637,10 @@ function clear_form_errors($formname)
 
 
 /**
-    * Cleans form data
-    * @author Kieran Hogg
-    * @returns nothing
-*/
+ * Cleans form data
+ * @author Kieran Hogg
+ * @returns nothing
+ */
 function clear_form_data($formname)
 {
     unset($_SESSION['formdata'][$formname]);
@@ -5652,7 +5652,7 @@ function clear_form_data($formname)
  * @author Ivan Lucas
  * @param int UNIX timestamp.  Uses 'now' if ommitted
  * @returns int UNIX timestamp (in UTC)
-*/
+ */
 function utc_time($time = '')
 {
     global $now;
@@ -5676,17 +5676,17 @@ function utc_time($time = '')
 
 
 /**
-    * Returns a localised and translated date.
-    * DST Aware
-    * @author Ivan Lucas
-    * @param string $format. date() format
-    * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
-    * @param bool $utc bool. Is the timestamp being passed as UTC or system time
-                        TRUE = passed as UTC
-                        FALSE = passed as system time
-    * @returns string. An internationised date/time string
-    * @todo  th/st and am/pm maybe?
-*/
+ * Returns a localised and translated date.
+ * DST Aware
+ * @author Ivan Lucas
+ * @param string $format. date() format
+ * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
+ * @param bool $utc bool. Is the timestamp being passed as UTC or system time
+                     TRUE = passed as UTC
+                     FALSE = passed as system time
+ * @returns string. An internationised date/time string
+ * @todo  th/st and am/pm maybe?
+ */
 function ldate($format, $date = '', $utc = FALSE)
 {
     global $now, $CONFIG;
@@ -6675,13 +6675,13 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 
 
 /**
-* Output html for the 'time to next action' box
-* Used in add incident and update incident
+ * Output html for the 'time to next action' box
+ * Used in add incident and update incident
  * @param string $formid. HTML ID of the form containing the controls
-* @return $html string html to output
-* @author Kieran Hogg
-* @TODO populate $id
-*/
+ * @return $html string html to output
+ * @author Kieran Hogg
+ * @TODO populate $id
+ */
 function show_next_action($formid)
 {
     global $now, $strAM, $strPM;
@@ -6764,13 +6764,13 @@ function show_next_action($formid)
 
 
 /**
-* Output the html for a KB article
-*
-* @param int $id ID of the KB article
-* @param string $mode whether this is internal or external facing, defaults to internal
-* @returns string $html kb article html
-* @author Kieran Hogg
-*/
+ * Output the html for a KB article
+ *
+ * @param int $id ID of the KB article
+ * @param string $mode whether this is internal or external facing, defaults to internal
+ * @returns string $html kb article html
+ * @author Kieran Hogg
+ */
 function kb_article($id, $mode='internal')
 {
     global $CONFIG, $iconset;
@@ -6837,8 +6837,7 @@ function kb_article($id, $mode='internal')
                 }
                 $html .= "<div class='kbprivate'><h3>{$kbcontent->header} (private)</h3>";
                 $restrictedcontent++;
-            break;
-
+                break;
             case 'restricted':
                 if ($mode != 'internal')
                 {
@@ -6848,8 +6847,7 @@ function kb_article($id, $mode='internal')
                 }
                 $html .= "<div class='kbrestricted'><h3>{$kbcontent->header}</h3>";
                 $restrictedcontent++;
-            break;
-
+                break;
             default:
                 $html .= "<div><h3>{$kbcontent->header}</h3>";
         }
@@ -6862,7 +6860,6 @@ function kb_article($id, $mode='internal')
         $html .= bbcode($kbcontent->content);
         $author[]=$kbcontent->ownerid;
         $html .= "</div>\n";
-
     }
 
     if ($restrictedcontent > 0)
@@ -6887,9 +6884,9 @@ function kb_article($id, $mode='internal')
     {
         if (is_array($author))
         {
-            $author=array_unique($author);
-            $countauthors=count($author);
-            $count=1;
+            $author = array_unique($author);
+            $countauthors = count($author);
+            $count = 1;
             if ($countauthors > 1)
             {
                 $html .= "<strong>{$GLOBALS['strAuthors']}</strong>:<br />";
@@ -6937,13 +6934,13 @@ function kb_article($id, $mode='internal')
 }
 
 /**
-* Output the html for the edit site form
-*
-* @param int $site ID of the site
-* @param string $mode whether this is internal or external facing, defaults to internal
-* @return string $html edit site form html
-* @author Kieran Hogg
-*/
+ * Output the html for the edit site form
+ *
+ * @param int $site ID of the site
+ * @param string $mode whether this is internal or external facing, defaults to internal
+ * @return string $html edit site form html
+ * @author Kieran Hogg
+ */
 function show_edit_site($site, $mode='internal')
 {
     global $CONFIG;
@@ -7035,13 +7032,13 @@ function show_edit_site($site, $mode='internal')
 
 
 /**
-* Output the html for an add contact form
-*
-* @param int $siteid - the site you want to add the contact to
-* @param string $mode - whether this is internal or external facing, defaults to internal
-* @return string $html add contact form html
-* @author Kieran Hogg
-*/
+ * Output the html for an add contact form
+ *
+ * @param int $siteid - the site you want to add the contact to
+ * @param string $mode - whether this is internal or external facing, defaults to internal
+ * @return string $html add contact form html
+ * @author Kieran Hogg
+ */
 function show_add_contact($siteid = 0, $mode = 'internal')
 {
     global $CONFIG;
@@ -7205,10 +7202,10 @@ function show_add_contact($siteid = 0, $mode = 'internal')
 
 
 /**
-* Procceses a new contact
-*
-* @author Kieran Hogg
-*/
+ * Procceses a new contact
+ *
+ * @author Kieran Hogg
+ */
 function process_add_contact($mode = 'internal')
 {
     global $now, $CONFIG, $dbContacts, $sit;
@@ -7228,8 +7225,14 @@ function process_add_contact($mode = 'internal')
     $address2 = cleanvar($_REQUEST['address2']);
     $city = cleanvar($_REQUEST['city']);
     $county = cleanvar($_REQUEST['county']);
-    if (!empty($address1)) $country = cleanvar($_REQUEST['country']);
-    else $country='';
+    if (!empty($address1))
+    {
+        $country = cleanvar($_REQUEST['country']);
+    }
+    else
+    {
+        $country = '';
+    }
     $postcode = cleanvar($_REQUEST['postcode']);
     $phone = cleanvar($_REQUEST['phone']);
     $mobile = cleanvar($_REQUEST['mobile']);
@@ -7387,12 +7390,12 @@ function process_add_contact($mode = 'internal')
 
 
 /**
-* Outputs the name of a KB article, used for triggers
-*
-* @param int $kbid ID of the KB article
-* @return string $name kb article name
-* @author Kieran Hogg
-*/
+ * Outputs the name of a KB article, used for triggers
+ *
+ * @param int $kbid ID of the KB article
+ * @return string $name kb article name
+ * @author Kieran Hogg
+ */
 function kb_name($kbid)
 {
     $kbid = intval($kbid);
@@ -7408,11 +7411,11 @@ function kb_name($kbid)
 
 
 /**
-* Outputs the full base url of the install, e.g. http://www.example.com/
-*
-* @return string base url of the install
-* @author Kieran Hogg
-*/
+ * Outputs the full base url of the install, e.g. http://www.example.com/
+ *
+ * @return string base url of the install
+ * @author Kieran Hogg
+ */
 function application_url()
 {
     global $CONFIG;
@@ -7440,12 +7443,12 @@ function application_url()
 
 
 /**
-* Outputs the product name of a contract
-*
-* @param int $maintid ID of the contract
-* @return string the name of the product
-* @author Kieran Hogg
-*/
+ * Outputs the product name of a contract
+ *
+ * @param int $maintid ID of the contract
+ * @return string the name of the product
+ * @author Kieran Hogg
+ */
 function contract_product($maintid)
 {
     $maintid = intval($maintid);
@@ -7465,12 +7468,12 @@ function contract_product($maintid)
 
 
 /**
-* Outputs the contract's site name
-*
-* @param int $maintid ID of the contract
-* @return string name of the site
-* @author Kieran Hogg
-*/
+ * Outputs the contract's site name
+ *
+ * @param int $maintid ID of the contract
+ * @return string name of the site
+ * @author Kieran Hogg
+ */
 function contract_site($maintid)
 {
     $maintid = intval($maintid);
@@ -7491,12 +7494,12 @@ function contract_site($maintid)
 
 
 /**
-* Sets up default triggers for new users or upgraded users
-*
-* @param int $userid ID of the user
-* @return bool TRUE on success, FALSE if not
-* @author Kieran Hogg
-*/
+ * Sets up default triggers for new users or upgraded users
+ *
+ * @param int $userid ID of the user
+ * @return bool TRUE on success, FALSE if not
+ * @author Kieran Hogg
+ */
 function setup_user_triggers($userid)
 {
     $return = TRUE;
@@ -7537,12 +7540,12 @@ function setup_user_triggers($userid)
 
 
 /**
-* Returns the SLA ID of a contract
-*
-* @param int $maintid ID of the contract
-* @return int ID of the SLA
-* @author Kieran Hogg
-*/
+ * Returns the SLA ID of a contract
+ *
+ * @param int $maintid ID of the contract
+ * @return int ID of the SLA
+ * @author Kieran Hogg
+ */
 function contract_slaid($maintid)
 {
     $maintid = intval($maintid);

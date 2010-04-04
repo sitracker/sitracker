@@ -347,19 +347,19 @@ function display_update_page($draftid=-1)
             echo "<option value='probdef' {$targetProbdef} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/probdef.png); background-repeat: no-repeat;'>{$GLOBALS['strProblemDefinition']}</option>\n";
             echo "<option value='actionplan' {$targetActionplan} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/actionplan.png); background-repeat: no-repeat;'>{$GLOBALS['strActionPlan']}</option>\n";
             echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
-        break;
+            break;
         case 'probdef':
             echo "<option value='probdef' {$targetProbdef} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/probdef.png); background-repeat: no-repeat;'>{$GLOBALS['strProblemDefinition']}</option>\n";
             echo "<option value='actionplan' {$targetActionplan} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/actionplan.png); background-repeat: no-repeat;'>{$GLOBALS['strActionPlan']}</option>\n";
             echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
-        break;
+            break;
         case 'actionplan':
             echo "<option value='actionplan' {$targetActionplan} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/actionplan.png); background-repeat: no-repeat;'>{$GLOBALS['strActionPlan']}</option>\n";
             echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
-        break;
-            case 'solution':
+            break;
+        case 'solution':
             echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
-        break;
+            break;
     }
     echo "</select>\n";
     echo "</td></tr>\n";
@@ -420,7 +420,10 @@ function display_update_page($draftid=-1)
     {
         $disable_priority = TRUE;
     }
-    else $disable_priority = FALSE;
+    else
+    {
+        $disable_priority = FALSE;
+    }
     echo "<tr><th align='right'>{$GLOBALS['strNewPriority']}</th>";
     echo "<td class='shade1'>";
 
@@ -598,7 +601,7 @@ else
         case 'date':
             // kh: parse date from calendar picker, format: 200-12-31
             $date = explode("-", $date);
-            $timeofnextaction = mktime(8 + $timeoffset,0,0,$date[1],$date[2],$date[0]);
+            $timeofnextaction = mktime(8 + $timeoffset, 0, 0, $date[1], $date[2], $date[0]);
             $now = time();
             if ($timeofnextaction < 0) $timeofnextaction = 0;
             break;
