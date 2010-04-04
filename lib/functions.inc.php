@@ -6199,12 +6199,24 @@ function get_file_upload_error_message($errorcode, $name)
     $str .=  "<p class='error'>";
     switch ($errorcode)
     {
-        case UPLOAD_ERR_INI_SIZE:  $str .= "The file exceded the maximum size set in PHP"; break;
-        case UPLOAD_ERR_FORM_SIZE:  $str .=  "The uploaded file was too large"; break;
-        case UPLOAD_ERR_PARTIAL: $str .=  "The file was only partially uploaded"; break;
-        case UPLOAD_ERR_NO_FILE: $str .=  "No file was uploaded"; break;
-        case UPLOAD_ERR_NO_TMP_DIR: $str .=  "Temporary folder is missing"; break;
-        default: $str .=  "An unknown file upload error occurred"; break;
+        case UPLOAD_ERR_INI_SIZE:
+            $str .= "The file exceded the maximum size set in PHP";
+            break;
+        case UPLOAD_ERR_FORM_SIZE:
+            $str .=  "The uploaded file was too large";
+            break;
+        case UPLOAD_ERR_PARTIAL:
+            $str .=  "The file was only partially uploaded";
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            $str .=  "No file was uploaded";
+            break;
+        case UPLOAD_ERR_NO_TMP_DIR:
+            $str .=  "Temporary folder is missing";
+            break;
+        default:
+            $str .=  "An unknown file upload error occurred";
+            break;
     }
     $str .=  "</p>";
     $str .=  "</div>";
