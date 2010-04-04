@@ -61,14 +61,14 @@ if (count($slahistory) >= 1)
     foreach ($slahistory AS $history)
     {
         if (empty($history['targetsla'])) break; // Skip any empty SLA history
-        if ($history['targetmet'] == FALSE) $class='critical';
+        if ($history['targetmet'] == FALSE) $class = 'critical';
         else $class='shade2';
         echo "<tr class='$class'>";
         echo "<td>";
         echo icon($slatypes[$history['targetsla']]['icon'], 16)." ";
         echo target_type_name($history['targetsla'])."</td>";
         echo "<td>";
-        if (!empty($history['userid'])) echo user_realname($history['userid'],TRUE);
+        if (!empty($history['userid'])) echo user_realname($history['userid'], TRUE);
         echo "</td>";
         echo "<td>".format_workday_minutes($history['targettime'])."</td>";
         echo "<td>";
@@ -136,7 +136,7 @@ if (mysql_num_rows($result) > 0)
         $data = implode('|',$data);
         $title = urlencode($strStatusSummary);
         echo "<div style='text-align:center;'>";
-        echo "<img src='chart.php?type=pie&data=$data&legends=$legends&title=$title&unit=seconds' />";
+        echo "<img src='chart.php?type=pie&data={$data}&legends={$legends}&title={$title}&unit=seconds' />";
         echo "</div>";
     }
     else

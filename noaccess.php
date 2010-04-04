@@ -52,7 +52,7 @@ echo "<ul>";
 foreach ($refused AS $id)
 {
     echo "<li>{$id}: ".permission_name($id)."</li>\n";
-    journal(CFG_LOGGING_MIN, 'Access Failure', "Access to ".permission_name($id)." ($id) was denied", CFG_JOURNAL_OTHER, $id);
+    journal(CFG_LOGGING_MIN, 'Access Failure', "Access to ".permission_name($id)." ({$id}) was denied", CFG_JOURNAL_OTHER, $id);
 }
 echo "</ul>";
 echo "<p align='center'>{$strIfYouShouldHaveAccess}</p>";

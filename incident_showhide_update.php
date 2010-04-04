@@ -30,14 +30,12 @@ switch ($mode)
 {
   case 'show':
     //echo "Showing update: $updateid for incident $incidentid";
-    $vsql = "UPDATE `{$dbUpdates}` SET customervisibility='show' WHERE id='$updateid' LIMIT 1";
-  break;
-
+    $vsql = "UPDATE `{$dbUpdates}` SET customervisibility='show' WHERE id='{$updateid}' LIMIT 1";
+    break;
   case 'hide':
     //echo "Hiding update: $updateid for incident $incidentid";
-    $vsql = "UPDATE `{$dbUpdates}` SET customervisibility='hide' WHERE id='$updateid' LIMIT 1";
-  break;
-
+    $vsql = "UPDATE `{$dbUpdates}` SET customervisibility='hide' WHERE id='{$updateid}' LIMIT 1";
+    break;
   default:
     trigger_error("Error showing/hiding update {$updateid}: invalid mode", E_USER_WARNING);
 }
@@ -45,6 +43,6 @@ switch ($mode)
 $temp_result = mysql_query($vsql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-header("Location: incident_details.php?id=$incidentid&expand={$expand}&view={$view}&offset={$offset}&records={$records}#$updateid");
+header("Location: incident_details.php?id={$incidentid}&expand={$expand}&view={$view}&offset={$offset}&records={$records}#$updateid");
 exit;
 ?>
