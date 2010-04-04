@@ -2,6 +2,7 @@
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #masthead { background-color: #4B5C94; background-image: none;}
+#masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
 h1 { background-image: none; font-weight: lighter; }
 #apptitle {background-image: none; }
 #mainframe { background: transparent;}
