@@ -125,9 +125,15 @@ if (empty($displayid))
         else $sortorder = "DESC";
         switch ($sort)
         {
-            case 'from': $sql .= " ORDER BY `from` $sortorder"; break;
-            case 'subject': $sql .= " ORDER BY `subject` $sortorder"; break;
-            default:   $sql .= " ORDER BY `id` DESC"; break;
+            case 'from':
+                $sql .= " ORDER BY `from` {$sortorder}";
+                break;
+            case 'subject':
+                $sql .= " ORDER BY `subject` {$sortorder}";
+                break;
+            default:
+                $sql .= " ORDER BY `id` DESC";
+                break;
         }
 
     }
