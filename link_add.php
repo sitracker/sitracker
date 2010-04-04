@@ -44,8 +44,7 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
         html_redirect($redirect);
-    break;
-
+        break;
     case '':
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -83,10 +82,10 @@ switch ($action)
                 echo "</p>";
                 echo "<p><input name='submit' type='submit' value='{$strAdd}' /></p>";
                 echo "<input type='hidden' name='action' value='addlink' />";
-                echo "<input type='hidden' name='origtab' value='$origtab' />";
-                echo "<input type='hidden' name='origref' value='$origref' />";
-                echo "<input type='hidden' name='linktype' value='$linktypeid' />";
-                echo "<input type='hidden' name='dir' value='$direction' />";
+                echo "<input type='hidden' name='origtab' value='{$origtab}' />";
+                echo "<input type='hidden' name='origref' value='{$origref}' />";
+                echo "<input type='hidden' name='linktype' value='{$linktypeid}' />";
+                echo "<input type='hidden' name='dir' value='{$direction}' />";
                 echo "<input type='hidden' name='redirect' value='{$_SERVER['HTTP_REFERER']}' />";
                 echo "</form>";
             }

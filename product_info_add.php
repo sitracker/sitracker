@@ -45,7 +45,6 @@ if (empty($_REQUEST['submit']))
 }
 else
 {
-
     // FIXME these errors need tidying INL 9Jun08
 
     // Add product information
@@ -75,7 +74,7 @@ else
         if (!$result) echo "<p class='error'>".sprintf($strAddXfailed, $strProductInformation)."\n";
         else
         {
-            journal(CFG_LOGGING_NORMAL, 'Product Info Added', "Info was added to Product $product", CFG_JOURNAL_PRODUCTS, $product);
+            journal(CFG_LOGGING_NORMAL, 'Product Info Added', "Info was added to Product {$product}", CFG_JOURNAL_PRODUCTS, $product);
             html_redirect("products.php?productid={$product}");
             exit;
         }

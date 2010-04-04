@@ -44,20 +44,20 @@ if (empty($action) OR $action == "showform")
             echo "<h3>".icon('skill',16)." ";
             echo "{$strSkill}: $name</h3>";
         }
-        echo "<input name=\"softwareid\" type=\"hidden\" value=\"$softwareid\" />\n";
+        echo "<input name='softwareid' type='hidden' value='{$softwareid}' />\n";
         echo "<p align='center'>{$strProduct}: ".icon('product', 16)." ";
         echo product_drop_down("productid", 0);
         echo "</p>";
     }
     else
     {
-        $sql = "SELECT name FROM `{$dbProducts}` WHERE id='$productid' ";
+        $sql = "SELECT name FROM `{$dbProducts}` WHERE id='{$productid}' ";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         list($product) = mysql_fetch_row($result);
         echo "<h3>{$strProduct}: $product</h3>";
-        echo "<input name=\"productid\" type=\"hidden\" value=\"$productid\" />\n";
+        echo "<input name='productid' type='hidden' value='{$productid}' />\n";
     }
     if (empty($softwareid))
     {
@@ -67,7 +67,7 @@ if (empty($action) OR $action == "showform")
     }
     echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' />";
     echo "<input type='checkbox' name='return' value='true' ";
-    if ($return=='true') echo "checked='checked' ";
+    if ($return == 'true') echo "checked='checked' ";
     echo "/> {$strReturnAfterSaving}</p>\n";
     echo "</form>";
 
@@ -94,18 +94,18 @@ elseif ($action == "add")
     if ($errors == 0)
     {
         // First have a look if we already have this link
-        $sql = "SELECT productid FROM `{$dbSoftwareProducts}` WHERE productid='$productid' AND softwareid='$softwareid'";
+        $sql = "SELECT productid FROM `{$dbSoftwareProducts}` WHERE productid='{$productid}' AND softwareid='{$softwareid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            html_redirect("product_software_add.php?productid={$productid}&return=$return", FALSE, $strAvoidDupes);
+            html_redirect("product_software_add.php?productid={$productid}&return={$return}", FALSE, $strAvoidDupes);
             // TODO $strAvoidDupes isn't the perfect string to use here, replace with something better when
             // we have a message about duplicates.
             exit;
         }
 
-        $sql  = "INSERT INTO `{$dbSoftwareProducts}` (productid, softwareid) VALUES ($productid, $softwareid)";
+        $sql  = "INSERT INTO `{$dbSoftwareProducts}` (productid, softwareid) VALUES ({$productid}, {$softwareid})";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

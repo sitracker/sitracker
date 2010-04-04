@@ -182,7 +182,7 @@ else
             }
             else
             {
-                $csvfieldheaders="{$strContract},{$strSite},{$strProduct},{$strReseller},{$strLicense},{$strExpiryDate},{$strAdminContact},{$strTelephone},{$strEmail},{$strNotes}\n";
+                $csvfieldheaders = "{$strContract},{$strSite},{$strProduct},{$strReseller},{$strLicense},{$strExpiryDate},{$strAdminContact},{$strTelephone},{$strEmail},{$strNotes}\n";
                 while ($row = mysql_fetch_object($result))
                 {
                     $csv .= "{$row->maintid},{$row->site},{$row->product},{$row->reseller},{$row->license_quantity} {$row->licence_type},";

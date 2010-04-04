@@ -397,7 +397,7 @@ else
 
 echo "<p align='center'><a href='vendor_add.php'>{$strAddVendor}</a> | <a href='product_add.php'>{$strAddProduct}</a> | <a href='software_add.php'>{$strAddSkill}</a>";
 
-if ($display=='skills' OR $display=='software')
+if ($display == 'skills' OR $display == 'software')
 {
     echo " | <a href='products.php'>{$strListProducts}</a>";
 }

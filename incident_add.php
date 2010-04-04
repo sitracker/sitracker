@@ -361,7 +361,7 @@ elseif ($action == 'findcontact')
         }
         else $sql .= "AND c.id = '$contactid' ";
         $sql .= "ORDER by c.surname, c.forenames ";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result)>0)
@@ -548,16 +548,16 @@ elseif ($action=='incidentform')
     else
     {
         $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id=$updateid";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $updaterow=mysql_fetch_array($result);
+        $updaterow = mysql_fetch_array($result);
         $mailed_body_text = $updaterow['bodytext'];
 
         $sql="SELECT subject FROM `{$dbTempIncoming}` WHERE updateid=$updateid";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $updaterow=mysql_fetch_array($result);
-        $mailed_subject=$updaterow['subject'];
+        $updaterow = mysql_fetch_array($result);
+        $mailed_subject = $updaterow['subject'];
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
@@ -628,14 +628,14 @@ elseif ($action == 'assign')
         $send_email = cleanvar($_REQUEST['send_email']);
         $inventory = cleanvar($_REQUEST['inventory']);
 
-	if ($send_email == 'on')
-	{
-	    $send_email = '1';
-	}
-	else
-	{
-	    $send_email = '0';
-	}
+        if ($send_email == 'on')
+        {
+            $send_email = 1;
+        }
+        else
+        {
+            $send_email = 0;
+        }
 
         // check form input
         $errors = 0;
@@ -655,7 +655,7 @@ elseif ($action == 'assign')
         // check for blank priority
         if ($priority == 0)
         {
-            $priority=1;
+            $priority = 1;
         }
 
         // check for blank type
@@ -678,20 +678,23 @@ elseif ($action == 'assign')
             // Calculate the time to next action
             switch ($timetonextaction_none)
             {
-                case 'none': $timeofnextaction = 0;  break;
+                case 'none':
+                    $timeofnextaction = 0; 
+                    break;
                 case 'time':
                     $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);
                 break;
 
                 case 'date':
                     // $now + ($days * 86400) + ($hours * 3600) + ($minutes * 60);
-                    $unixdate=mktime(9,0,0,$month,$day,$year);
+                    $unixdate = mktime(9, 0, 0, $month, $day, $year);
                     $now = time();
                     $timeofnextaction = $unixdate;
                     if ($timeofnextaction < 0) $timeofnextaction = 0;
-                break;
-
-                default: $timeofnextaction = 0; break;
+                    break;
+                default:
+                    $timeofnextaction = 0;
+                    break;
             }
 
             // Set the service level the contract
@@ -795,6 +798,7 @@ elseif ($action == 'assign')
                         @mkdir($new_path, 0770);
                         umask($umask);
                     }
+
                     while ($row = mysql_fetch_object($result))
                     {
                         $filename = $row->linkcolref . "-" . $row->filename;
@@ -844,7 +848,7 @@ elseif ($action == 'assign')
             $level = mysql_fetch_object($result);
 
             $targetval = $level->initial_response_mins * 60;
-            $initialresponse=$now + $targetval;
+            $initialresponse = $now + $targetval;
 
             // Insert the first SLA update, this indicates the start of an incident
             // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
@@ -890,7 +894,7 @@ elseif ($action == 'assign')
 
             $suggested_user = suggest_reassign_userid($incidentid);
             $trigger = new Trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
-	    $trigger->fire();
+            $trigger->fire();
 
             if ($CONFIG['auto_assign_incidents'])
             {
@@ -962,7 +966,11 @@ elseif ($action == 'assign')
                 {
                     echo "<strong>{$userrow['realname']}</strong>";
                 }
-                else echo $userrow['realname'];
+                else
+                {
+                    echo $userrow['realname'];
+                }
+
                 echo "</td>";
                 echo "<td>".$userrow['phone']."</td>";
                 echo "<td>".user_online_icon($userrow['id'])." ".userstatus_name($userrow['status'])."</td>";
@@ -973,7 +981,7 @@ elseif ($action == 'assign')
                 $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
 
                 if ($countincidents >= 1) $countactive = user_activeincidents($userrow['id']);
-                else $countactive=0;
+                else $countactive = 0;
 
                 $countdiff = $countincidents-$countactive;
 

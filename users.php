@@ -29,9 +29,18 @@ $groupid = cleanvar($_REQUEST['gid']);
 $onlineonly = cleanvar($_REQUEST['onlineonly']);
 
 // By default show users in home group
-if ($groupid == 'all' OR ($groupid == '' AND $_SESSION['groupid'] == 0)) $filtergroup = 'all';
-elseif ($groupid == '') $filtergroup = $_SESSION['groupid'];
-else $filtergroup = $groupid;
+if ($groupid == 'all' OR ($groupid == '' AND $_SESSION['groupid'] == 0))
+{
+    $filtergroup = 'all';
+}
+elseif ($groupid == '')
+{
+    $filtergroup = $_SESSION['groupid'];
+}
+else
+{
+    $filtergroup = $groupid;
+}
 
 $title = $strUsers;
 

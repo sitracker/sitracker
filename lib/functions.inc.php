@@ -103,14 +103,14 @@ if (get_magic_quotes_gpc())
 
 
 /**
-    * Authenticate a user with a username/password pair
-    * @author Ivan Lucas
-    * @param string $username. A username
-    * @param string $password. A password (non-md5)
-    * @return an integer to indicate whether the user authenticated against the database
-    * @retval int 0 the credentials were wrong or the user was not found.
-    * @retval int 1 to indicate user is authenticated and allowed to continue.
-*/
+ * Authenticate a user with a username/password pair
+ * @author Ivan Lucas
+ * @param string $username. A username
+ * @param string $password. A password (non-md5)
+ * @return an integer to indicate whether the user authenticated against the database
+ * @retval int 0 the credentials were wrong or the user was not found.
+ * @retval int 1 to indicate user is authenticated and allowed to continue.
+ */
 function authenticateSQL($username, $password)
 {
     global $dbUsers;
@@ -144,14 +144,14 @@ function authenticateSQL($username, $password)
 
 
 /**
-    * Authenticate a user
-    * @author Lea Anthony
-    * @param string $username. Username
-    * @param string $password. Password
-    * @return an integer to indicate whether the user authenticated against any authentication backends
-    * @retval bool false the credentials were wrong or the user was not found.
-    * @retval bool true to indicate user is authenticated and allowed to continue.
-*/
+ * Authenticate a user
+ * @author Lea Anthony
+ * @param string $username. Username
+ * @param string $password. Password
+ * @return an integer to indicate whether the user authenticated against any authentication backends
+ * @retval bool false the credentials were wrong or the user was not found.
+ * @retval bool true to indicate user is authenticated and allowed to continue.
+ */
 function authenticate($username, $password)
 {
     global $CONFIG;
@@ -322,12 +322,12 @@ function authenticateContact($username, $password)
 }
 
 /**
-    * See if a customer exists in the database
-    * @author Lea Anthony
-    * @param string $username. Username of customer
-    * @retval bool TRUE exists in db
-    * @retval bool FALSE does not exist in db
-*/
+ * See if a customer exists in the database
+ * @author Lea Anthony
+ * @param string $username. Username of customer
+ * @retval bool TRUE exists in db
+ * @retval bool FALSE does not exist in db
+ */
 function customerExistsInDB($username)
 {
     global $dbContacts;
@@ -346,15 +346,15 @@ function customerExistsInDB($username)
 
 
 /**
-    * Returns a specified column from a specified table in the database given an ID primary key
-    * @author Ivan Lucas
-    * @param string $column a database column
-    * @param string $table a database table
-    * @param int $id the primary key / id column
-    * @return A column from the database
-    * @note it's not always efficient to read a single column at a time, but when you only need
-    *  one column, this is handy
-*/
+ * Returns a specified column from a specified table in the database given an ID primary key
+ * @author Ivan Lucas
+ * @param string $column a database column
+ * @param string $table a database table
+ * @param int $id the primary key / id column
+ * @return A column from the database
+ * @note it's not always efficient to read a single column at a time, but when you only need
+ *  one column, this is handy
+ */
 function db_read_column($column, $table, $id)
 {
     $sql = "SELECT `$column` FROM `{$table}` WHERE id ='$id' LIMIT 1";
@@ -373,8 +373,8 @@ function db_read_column($column, $table, $id)
 
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function permission_name($permissionid)
 {
     global $dbPermissions;
@@ -385,12 +385,12 @@ function permission_name($permissionid)
 
 
 /**
-    * Get the name associated with software ID / skill ID
-    * @author Ivan Lucas
-    * @param int $softwareid
-    * @returns string. Skill/Software Name
-    * @note Software was renamed skills for v3.30
-*/
+ * Get the name associated with software ID / skill ID
+ * @author Ivan Lucas
+ * @param int $softwareid
+ * @return string. Skill/Software Name
+ * @note Software was renamed skills for v3.30
+ */
 function software_name($softwareid)
 {
     global $now, $dbSoftware, $strEOL, $strEndOfLife;
@@ -420,11 +420,11 @@ function software_name($softwareid)
 
 
 /**
-    * Find a contacts real name
-    * @author Ivan Lucas
-    * @param int $id. Contact ID
-    * @returns string. Full name or 'Unknown'
-*/
+ * Find a contacts real name
+ * @author Ivan Lucas
+ * @param int $id. Contact ID
+ * @return string. Full name or 'Unknown'
+ */
 function contact_realname($id)
 {
     global $dbContacts;
@@ -448,12 +448,12 @@ function contact_realname($id)
 
 
 /**
-    * Return a contacts site name
-    * @author Ivan Lucas
-    * @param int $id. Contact ID
-    * @returns string. Full site name or 'Unknown'
-    * @note this returns the site _NAME_ not the siteid for the site id use contact_siteid()
-*/
+ * Return a contacts site name
+ * @author Ivan Lucas
+ * @param int $id. Contact ID
+ * @return string. Full site name or 'Unknown'
+ * @note this returns the site _NAME_ not the siteid for the site id use contact_siteid()
+ */
 function contact_site($id)
 {
     global $dbContacts, $dbSites;
@@ -478,11 +478,11 @@ function contact_site($id)
 
 
 /**
-    * Return a contacts site ID
-    * @author Ivan Lucas
-    * @param int $id. Contact ID
-    * @returns int. Site ID
-*/
+ * Return a contacts site ID
+ * @author Ivan Lucas
+ * @param int $id. Contact ID
+ * @return int. Site ID
+ */
 function contact_siteid($id)
 {
     return db_read_column('siteid', $GLOBALS['dbContacts'], $id);
@@ -490,11 +490,11 @@ function contact_siteid($id)
 
 
 /**
-    * Return a contacts email address
-    * @author Ivan Lucas
-    * @param int $id. Contact ID
-    * @returns string. Email address
-*/
+ * Return a contacts email address
+ * @author Ivan Lucas
+ * @param int $id. Contact ID
+ * @return string. Email address
+ */
 function contact_email($id)
 {
     return db_read_column('email', $GLOBALS['dbContacts'], $id);
@@ -502,11 +502,11 @@ function contact_email($id)
 
 
 /**
-    * Return a contacts phone number
-    * @author Ivan Lucas
-    * @param integer $id. Contact ID
-    * @returns string. Phone number
-*/
+ * Return a contacts phone number
+ * @author Ivan Lucas
+ * @param integer $id. Contact ID
+ * @return string. Phone number
+ */
 function contact_phone($id)
 {
     return db_read_column('phone', $GLOBALS['dbContacts'], $id);
@@ -514,11 +514,11 @@ function contact_phone($id)
 
 
 /**
-    * Return a contacts fax number
-    * @author Ivan Lucas
-    * @param int $id. Contact ID
-    * @returns string. Fax number
-*/
+ * Return a contacts fax number
+ * @author Ivan Lucas
+ * @param int $id. Contact ID
+ * @return string. Fax number
+ */
 function contact_fax($id)
 {
     return db_read_column('fax', $GLOBALS['dbContacts'], $id);
@@ -526,11 +526,11 @@ function contact_fax($id)
 
 
 /**
-    * Return the number of incidents ever logged against a contact
-    * @author Ivan Lucas
-    * @param int $id. Contact ID
-    * @returns int.
-*/
+ * Return the number of incidents ever logged against a contact
+ * @author Ivan Lucas
+ * @param int $id. Contact ID
+ * @return int.
+ */
 function contact_count_incidents($id)
 {
     global $dbIncidents;
@@ -547,11 +547,11 @@ function contact_count_incidents($id)
 
 
 /**
-    * Return the number of incidents ever logged against a site
-    * @author Kieran
-    * @param int $id. Site ID
-    * @returns int.
-*/
+ * Return the number of incidents ever logged against a site
+ * @author Kieran
+ * @param int $id. Site ID
+ * @return int.
+ */
 function site_count_incidents($id)
 {
     global $dbIncidents, $dbContacts;
@@ -571,11 +571,11 @@ function site_count_incidents($id)
 
 
 /**
-    * Return the number of inventory items for a site
-    * @author Kieran
-    * @param int $id. Site ID
-    * @returns int.
-*/
+ * Return the number of inventory items for a site
+ * @author Kieran
+ * @param int $id. Site ID
+ * @return int.
+ */
 function site_count_inventory_items($id)
 {
     global $dbInventory;
@@ -592,11 +592,11 @@ function site_count_inventory_items($id)
 
 
 /**
-    * Return the number of inventory items for a contact
-    * @author Kieran
-    * @param int $id. Contact ID
-    * @returns int.
-*/
+ * Return the number of inventory items for a contact
+ * @author Kieran
+ * @param int $id. Contact ID
+ * @return int.
+ */
 function contact_count_inventory_items($id)
 {
     global $dbInventory;
@@ -614,11 +614,11 @@ function contact_count_inventory_items($id)
 
 
 /**
-    * The number representing the total number of currently OPEN incidents submitted by a given contact.
-    * @author Ivan Lucas
-    * @param int $id. The Contact ID to check
-    * @returns integer. The number of currently OPEN incidents for the given contact
-*/
+ * The number representing the total number of currently OPEN incidents submitted by a given contact.
+ * @author Ivan Lucas
+ * @param int $id. The Contact ID to check
+ * @return integer. The number of currently OPEN incidents for the given contact
+ */
 function contact_count_open_incidents($id)
 {
     global $dbIncidents;
@@ -634,11 +634,11 @@ function contact_count_open_incidents($id)
 
 
 /**
-    * Creates a vcard electronic business card for the given contact
-    * @author Ivan Lucas
-    * @param int $id Contact ID
-    * @returns string vcard
-*/
+ * Creates a vcard electronic business card for the given contact
+ * @author Ivan Lucas
+ * @param int $id Contact ID
+ * @return string vcard
+ */
 function contact_vcard($id)
 {
     global $dbContacts, $dbSites;
@@ -693,10 +693,10 @@ function contact_vcard($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns integer. UserID of the user that currently owns the incident
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. UserID of the user that currently owns the incident
+ */
 function incident_owner($id)
 {
     return db_read_column('owner', $GLOBALS['dbIncidents'], $id);
@@ -704,10 +704,10 @@ function incident_owner($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns integer. UserID of the user that currently temporarily owns the incident
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. UserID of the user that currently temporarily owns the incident
+ */
 function incident_towner($id)
 {
     return db_read_column('towner', $GLOBALS['dbIncidents'], $id);
@@ -715,10 +715,10 @@ function incident_towner($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns integer. ContactID of the contact this incident is logged against
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. ContactID of the contact this incident is logged against
+ */
 function incident_contact($id)
 {
     return db_read_column('contact', $GLOBALS['dbIncidents'], $id);
@@ -726,10 +726,10 @@ function incident_contact($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns integer. Contract ID of the maintenance contract this incident is logged against
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. Contract ID of the maintenance contract this incident is logged against
+ */
 function incident_maintid($id)
 {
     $maintid = db_read_column('maintenanceid', $GLOBALS['dbIncidents'], $id);
@@ -745,10 +745,10 @@ function incident_maintid($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns string. Title of the incident
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Title of the incident
+ */
 function incident_title($id)
 {
     return db_read_column('title', $GLOBALS['dbIncidents'], $id);
@@ -756,10 +756,10 @@ function incident_title($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns id. Current incident status ID
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return id. Current incident status ID
+ */
 function incident_status($id)
 {
     return db_read_column('status', $GLOBALS['dbIncidents'], $id);
@@ -767,10 +767,10 @@ function incident_status($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns id. Current incident Priority ID
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return id. Current incident Priority ID
+ */
 function incident_priority($id)
 {
     return db_read_column('priority', $GLOBALS['dbIncidents'], $id);
@@ -778,10 +778,10 @@ function incident_priority($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns id. Current incident external ID
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return id. Current incident external ID
+ */
 function incident_externalid($id)
 {
     return db_read_column('externalid', $GLOBALS['dbIncidents'], $id);
@@ -789,10 +789,10 @@ function incident_externalid($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns string. Current incident external engineer
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Current incident external engineer
+ */
 function incident_externalengineer($id)
 {
     return db_read_column('externalengineer', $GLOBALS['dbIncidents'], $id);
@@ -800,10 +800,10 @@ function incident_externalengineer($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns string. Current incident external email address
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Current incident external email address
+ */
 function incident_externalemail($id)
 {
     return db_read_column('externalemail', $GLOBALS['dbIncidents'], $id);
@@ -811,10 +811,10 @@ function incident_externalemail($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns string. Current incident CC email address
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Current incident CC email address
+ */
 function incident_ccemail($id)
 {
     return db_read_column('ccemail', $GLOBALS['dbIncidents'], $id);
@@ -822,10 +822,10 @@ function incident_ccemail($id)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $id Incident ID
-    * @returns int. UNIX Timestamp of the time of the next action for this incident
-*/
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return int. UNIX Timestamp of the time of the next action for this incident
+ */
 function incident_timeofnextaction($id)
 {
     return db_read_column('timeofnextaction', $GLOBALS['dbIncidents'], $id);
@@ -833,12 +833,12 @@ function incident_timeofnextaction($id)
 
 
 /**
-    * Returns a string of HTML nicely formatted for the incident details page containing any additional
-    * product info for the given incident.
-    * @author Ivan Lucas
-    * @param int $incidentid The incident ID
-    * @returns string HTML
-*/
+ * Returns a string of HTML nicely formatted for the incident details page containing any additional
+ * product info for the given incident.
+ * @author Ivan Lucas
+ * @param int $incidentid The incident ID
+ * @return string HTML
+ */
 function incident_productinfo_html($incidentid)
 {
     global $dbProductInfo, $dbIncidentProductInfo, $strNoProductInfo;
@@ -951,7 +951,7 @@ function contact_drop_down($name, $id, $showsite = FALSE, $required = FALSE)
  * @param mixed $exclude int|array (optional) Do not show this contactID in the list, accepts an integer or array of integers
  * @param bool $showsite (optional) Suffix the name with the site name
  * @param bool $allownone (optional) Allow 'none' to be selected (blank value)
- * @returns string.  HTML select
+ * @return string.  HTML select
  */
 function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=TRUE, $allownone=FALSE)
 {
@@ -1014,7 +1014,7 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
  * @param string $name. name/id to use for the select element
  * @param int $id. Product ID
  * @param bool $required.
- * @returns string. HTML select
+ * @return string. HTML select
  * @note With the given name and with the given id selected.
  */
 function product_drop_down($name, $id, $required = FALSE)
@@ -1058,7 +1058,7 @@ function product_drop_down($name, $id, $required = FALSE)
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
  * @param int $id. Software ID
- * @returns HTML select
+ * @return HTML select
  */
 function skill_drop_down($name, $id)
 {
@@ -1105,7 +1105,7 @@ function skill_drop_down($name, $id)
  * Generates a HTML dropdown of software products
  * @author Kieran Hogg
  * @param string $name. name/id to use for the select element
- * @returns HTML select
+ * @return HTML select
  */
 function softwareproduct_drop_down($name, $id, $productid, $visibility='internal')
 {
@@ -1156,7 +1156,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
  * @param int $id. Vendor ID to preselect
- * @returns HTML select
+ * @return HTML select
  */
 function vendor_drop_down($name, $id)
 {
@@ -1191,7 +1191,7 @@ function vendor_drop_down($name, $id)
  * @param string $name. name/id to use for the select element
  * @param int $id. Site Type ID to preselect
  * @todo TODO i18n needed site types
- * @returns HTML select
+ * @return HTML select
  */
 function sitetype_drop_down($name, $id)
 {
@@ -1271,7 +1271,7 @@ function supported_product_drop_down($name, $contactid, $productid)
  * @author Ivan Lucas
  * @param string $name. name to use for the select element
  * @param int $id. Role ID to preselect
- * @returns HTML select
+ * @return HTML select
  */
 function role_drop_down($name, $id)
 {
@@ -1307,7 +1307,7 @@ function role_drop_down($name, $id)
  * @author Ivan Lucas
  * @param string $name. name attribute to use for the select element
  * @param int $selected.  Group ID to preselect
- * @returns HTML select
+ * @return HTML select
  */
 function group_drop_down($name, $selected)
 {
@@ -1335,7 +1335,7 @@ function group_drop_down($name, $selected)
  * A HTML Form and Select listbox for user groups, with javascript to reload page
  * @param int $selected. Group ID to preselect
  * @param string $urlargs. (Optional) text to pass after the '?' in the url (parameters)
- * @returns int Number of groups found
+ * @return int Number of groups found
  * @note outputs a HTML form directly
  */
 function group_selector($selected, $urlargs='')
@@ -1382,7 +1382,7 @@ function group_selector($selected, $urlargs='')
  * @author Ivan Lucas
  * @param string $name. Name attribute
  * @param string $id. Chosen interface style
- * @returns string.  HTML
+ * @return string.  HTML
  */
 function interfacestyle_drop_down($name, $setting)
 {
@@ -1413,7 +1413,7 @@ function interfacestyle_drop_down($name, $setting)
  * @param string $name. Text to use for the HTML select name and id attributes
  * @param int $id. Status ID to preselect
  * @param bool $disabled. Disable the select box when TRUE
- * @returns string. HTML.
+ * @return string. HTML.
  */
 function incidentstatus_drop_down($name, $id, $disabled = FALSE)
 {
@@ -1456,7 +1456,7 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
  * @param string $name. Name attribute
  * @param int $id. ID of Closing Status to pre-select. None selected if 0 or blank.
  * @todo Requires database i18n
- * @returns string. HTML
+ * @return string. HTML
  */
 function closingstatus_drop_down($name, $id, $required = FALSE)
 {
@@ -1506,7 +1506,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
  * @param string $name. Name attribute
  * @param int $id. ID of User Status to pre-select. None selected if 0 or blank.
  * @param bool $userdisable. (optional). When TRUE an additional option is given to allow disabling of accounts
- * @returns string. HTML
+ * @return string. HTML
  */
 function userstatus_drop_down($name, $id, $userdisable = FALSE)
 {
@@ -1547,7 +1547,7 @@ function userstatus_drop_down($name, $id, $userdisable = FALSE)
  * @author Ivan Lucas
  * @param string $name. Name attribute
  * @param int $id. ID of User Status to pre-select. None selected if 0 or blank.
- * @returns string. HTML
+ * @return string. HTML
  */
 function userstatus_bardrop_down($name, $id)
 {
@@ -1593,7 +1593,7 @@ function userstatus_bardrop_down($name, $id)
  * @param string $name. Name attribute
  * @param int $id. ID of Template to pre-select. None selected if 0 or blank.
  * @param string $type. Type to display.
- * @returns string. HTML
+ * @return string. HTML
  */
 function emailtemplate_drop_down($name, $id, $type)
 {
@@ -1638,7 +1638,7 @@ function emailtemplate_drop_down($name, $id, $type)
  * @param int $id. ID of priority to pre-select. None selected if 0 or blank.
  * @param int $max. The maximum priority ID to list.
  * @param bool $disable. Disable the control when TRUE.
- * @returns string. HTML
+ * @return string. HTML
  */
 function priority_drop_down($name, $id, $max=4, $disable = FALSE)
 {
@@ -1697,7 +1697,7 @@ function priority_drop_down($name, $id, $max=4, $disable = FALSE)
  * @author Ivan Lucas
  * @param string $name. Name attribute
  * @param int $userid. The user ID to check
- * @returns string. HTML
+ * @return string. HTML
  */
 function accepting_drop_down($name, $userid)
 {
@@ -1723,7 +1723,7 @@ return $html;
  * Return HTML for a select box for escalation path
  * @param string $name. Name attribute
  * @param int $userid. The escalation path ID to pre-select
- * @returns string. HTML
+ * @return string. HTML
  */
 function escalation_path_drop_down($name, $id)
 {
@@ -1757,8 +1757,8 @@ function escalation_path_drop_down($name, $id)
   * @param int $id. Priority ID, higher the number higher the priority
   * @param bool $syslang. (optional) Uses system language when set to TRUE otherwise
   *                       uses user language (default)
-  * @returns string.
-*/
+  * @return string.
+ */
 function priority_name($id, $syslang = FALSE)
 {
     switch ($id)
@@ -1809,11 +1809,11 @@ function priority_icon($id)
 
 
 /**
-    * Returns an array of fields from the most recent update record for a given incident id
-    * @author Ivan Lucas
-    * @param int $id An incident ID
-    * @returns array
-*/
+ * Returns an array of fields from the most recent update record for a given incident id
+ * @author Ivan Lucas
+ * @param int $id An incident ID
+ * @return array
+ */
 function incident_lastupdate($id)
 {
     // Find the most recent update
@@ -1870,7 +1870,7 @@ function incident_firstupdate($id)
  * @author Ivan Lucas
  * @param int $id. incident status ID
  * @param string $type. 'internal' or 'external', where external means customer/client facing
- * @returns string Internationalised incident status.
+ * @return string Internationalised incident status.
  *                 Or empty string if the ID is not recognised.
  * @note The incident status database table must contain i18n keys.
  */
@@ -1928,7 +1928,7 @@ function closingstatus_name($id)
  * @param int $id The value to select by default (not implemented yet)
  * @param int $contactid Filter the list to show incidents from a single
  contact
- * @returns string HTML
+ * @return string HTML
  */
 function incident_drop_down($name, $id, $contactid = 0)
 {
@@ -1986,7 +1986,7 @@ function product_name($id)
  * @author Ivan Lucas
  * @param int $seconds number of seconds
  * @param bool $showseconds bool If TRUE and $seconds is less than 60 the function returns 1 minute.
- * @returns string Readable date/time
+ * @return string Readable date/time
  */
 function format_seconds($seconds, $showseconds = FALSE)
 {
@@ -2107,7 +2107,7 @@ function format_seconds($seconds, $showseconds = FALSE)
 /**
  * Return a string containing the time remaining as working days/hours/minutes (eg. 9am - 5pm)
  * @author Ivan Lucas
- * @returns string. Length of working time, in readable days, hours and minutes
+ * @return string. Length of working time, in readable days, hours and minutes
  * @note The working day is calculated using the $CONFIG['end_working_day'] and
  * $CONFIG['start_working_day'] config variables
  */
@@ -2171,7 +2171,7 @@ function format_workday_minutes($minutes)
  * Make a readable and friendly date, i.e. say Today, or Yesterday if it is
  * @author Ivan Lucas
  * @param int $date a UNIX timestamp
- * @returns string. Date in a readable friendly format
+ * @return string. Date in a readable friendly format
  * @note See also readable_date() dupe?
  */
 function format_date_friendly($date)
@@ -2216,7 +2216,7 @@ function calculate_time_of_next_action($days, $hours, $minutes)
  * Retrieves the service level ID of a given maintenance contract
  * @author Ivan Lucas
  * @param int $maintid. Contract ID
- * @returns. int Service Level ID
+ * @return. int Service Level ID
  * @deprecated
  * @note Service level ID's are DEPRECATED service level tags should be used in favour of service level ID's
  */
@@ -2303,7 +2303,7 @@ function increment_incidents_used($maintid)
  * @note This function is not internationalised in order that bugs can
  *       be reported to developers and still be sure that they will be
  *       understood
- **/
+ */
 function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
     global $CONFIG, $sit, $siterrors;
@@ -2449,8 +2449,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
  * @param string $logentry. A line, or lines to write to the log file
  * (with newlines \n)
  * @param bool $debugmodeonly. Only write an entry if debug mode is TRUE
- * @retval bool TRUE log entry written
- * @retval bool FALSE log entry not written
+ * @return bool TRUE log entry written, FALSE log entry not written
  */
 function debug_log($logentry, $debugmodeonly = FALSE)
 {
@@ -2552,8 +2551,8 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
  * Fetches the name of the given site
  * @author Ivan Lucas
  * @param int $id. the site ID
- * @returns string Site Name, or 'unknown' (in local lang) if not found
-*/
+ * @return string Site Name, or 'unknown' (in local lang) if not found
+ */
 function site_name($id)
 {
     $sitename = db_read_column('name', $GLOBALS['dbSites'], $id);
@@ -2570,8 +2569,8 @@ function site_name($id)
  * Fetches the telephone number of the given site
  * @author Ivan Lucas
  * @param int $id. the site ID
- * @returns string Site telephone number
-*/
+ * @return string Site telephone number
+ */
 function site_telephone($id)
 {
     $sitename = db_read_column('telephone', $GLOBALS['dbSites'], $id);
@@ -2722,8 +2721,8 @@ function licence_type_drop_down($name, $id)
 
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function countdayincidents($day, $month, $year)
 {
     // Counts the number of incidents opened on a specified day
@@ -2784,8 +2783,7 @@ function countdaycurrentincidents($day, $month, $year)
  * @param int $journaltype One of the defined journal types
  * @param int $refid An ID to relate to data, the table this ID is for
  depends on the journal type used
- * @retval TRUE success, entry logged
- * @retval FALSE failure. entry not logged
+ * @return TRUE success, entry logged, FALSE failure. entry not logged
  * @note Produces an audit log
  */
 function journal($loglevel, $event, $bodytext, $journaltype, $refid)
@@ -2834,7 +2832,7 @@ function journal($loglevel, $event, $bodytext, $journaltype, $refid)
  * @param string $replyto. (optional) Address to send reply to
  * @param string $cc. (optional) Carbon copy address
  * @param string $bcc. (optional) Blind carbon copy address
- * @returns The return value from PHP mail() function or TRUE when in Demo mode
+ * @return The return value from PHP mail() function or TRUE when in Demo mode
  * @note Returns TRUE but does not actually send mail when SiT is in Demo mode
  */
 function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
@@ -3018,98 +3016,98 @@ function getattachmenticon($filename)
 
     $type_image = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/file_image.png";
 
-    $filetype[]="gif";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="jpg";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="bmp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="png";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="pcx";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="xls";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/spreadsheet.png";
-    $filetype[]="csv";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/spreadsheet.png";
-    $filetype[]="zip";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
-    $filetype[]="arj";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/zip.png";
-    $filetype[]="rar";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/rar.png";
-    $filetype[]="cab";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
-    $filetype[]="lzh";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
-    $filetype[]="txt";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/txt.png";
-    $filetype[]="f90";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
-    $filetype[]="f77";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
-    $filetype[]="inf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
-    $filetype[]="ins";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
-    $filetype[]="adm";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
-    $filetype[]="f95";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
-    $filetype[]="cpp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_cpp.png";
-    $filetype[]="for";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
-    $filetype[]=".pl";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_pl.png";
-    $filetype[]=".py";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_py.png";
-    $filetype[]="rtm";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/misc_doc.png";
-    $filetype[]="doc";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
-    $filetype[]="rtf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
-    $filetype[]="wri";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
-    $filetype[]="wri";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
-    $filetype[]="pdf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/pdf.png";
-    $filetype[]="htm";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
-    $filetype[]="tml";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
-    $filetype[]="wav";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/sound.png";
-    $filetype[]="mp3";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/sound.png";
-    $filetype[]="voc";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/sound.png";
-    $filetype[]="exe";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="com";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="nlm";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="evt";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
-    $filetype[]="log";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
-    $filetype[]="386";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="dll";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="asc";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/txt.png";
-    $filetype[]="asp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
-    $filetype[]="avi";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/video.png";
-    $filetype[]="bkf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tar.png";
-    $filetype[]="chm";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/man.png";
-    $filetype[]="hlp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/man.png";
-    $filetype[]="dif";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/txt.png";
-    $filetype[]="hta";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
-    $filetype[]="reg";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/resource.png";
-    $filetype[]="dmp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/core.png";
-    $filetype[]="ini";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
-    $filetype[]="jpe";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="mht";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
-    $filetype[]="msi";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="aot";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="pgp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="dbg";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="axt";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png"; // zen text
-    $filetype[]="rdp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="sig";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/document.png";
-    $filetype[]="tif";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
-    $filetype[]="ttf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/font_ttf.png";
-    $filetype[]="for";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/font_bitmap.png";
-    $filetype[]="vbs";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
-    $filetype[]="vbe";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
-    $filetype[]="bat";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
-    $filetype[]="wsf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
-    $filetype[]="cmd";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
-    $filetype[]="scr";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="xml";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/xml.png";
-    $filetype[]="zap";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]=".ps";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/postscript.png";
-    $filetype[]=".rm";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/real_doc.png";
-    $filetype[]="ram";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/real_doc.png";
-    $filetype[]="vcf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/vcard.png";
-    $filetype[]="wmf";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/vectorgfx.png";
-    $filetype[]="cer";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/document.png";
-    $filetype[]="tmp";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/unknown.png";
-    $filetype[]="cap";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]="tr1";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
-    $filetype[]=".gz";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
-    $filetype[]="tar";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tar.png";
-    $filetype[]="nfo";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/info.png";
-    $filetype[]="pal";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/colorscm.png";
-    $filetype[]="iso";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/cdimage.png";
-    $filetype[]="jar";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/java_src.png";
-    $filetype[]="eml";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/message.png";
-    $filetype[]=".sh";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
-    $filetype[]="bz2";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
-    $filetype[]="out";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
-    $filetype[]="cfg";    $imgurl[]="{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
+    $filetype[] = "gif";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "jpg";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "bmp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "png";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "pcx";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "xls";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/spreadsheet.png";
+    $filetype[] = "csv";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/spreadsheet.png";
+    $filetype[] = "zip";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
+    $filetype[] = "arj";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/zip.png";
+    $filetype[] = "rar";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/rar.png";
+    $filetype[] = "cab";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
+    $filetype[] = "lzh";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
+    $filetype[] = "txt";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/txt.png";
+    $filetype[] = "f90";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
+    $filetype[] = "f77";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
+    $filetype[] = "inf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
+    $filetype[] = "ins";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
+    $filetype[] = "adm";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
+    $filetype[] = "f95";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
+    $filetype[] = "cpp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_cpp.png";
+    $filetype[] = "for";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_f.png";
+    $filetype[] = ".pl";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_pl.png";
+    $filetype[] = ".py";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source_py.png";
+    $filetype[] = "rtm";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/misc_doc.png";
+    $filetype[] = "doc";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
+    $filetype[] = "rtf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
+    $filetype[] = "wri";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
+    $filetype[] = "wri";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/wordprocessing.png";
+    $filetype[] = "pdf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/pdf.png";
+    $filetype[] = "htm";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
+    $filetype[] = "tml";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
+    $filetype[] = "wav";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/sound.png";
+    $filetype[] = "mp3";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/sound.png";
+    $filetype[] = "voc";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/sound.png";
+    $filetype[] = "exe";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "com";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "nlm";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "evt";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
+    $filetype[] = "log";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
+    $filetype[] = "386";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "dll";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "asc";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/txt.png";
+    $filetype[] = "asp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
+    $filetype[] = "avi";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/video.png";
+    $filetype[] = "bkf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tar.png";
+    $filetype[] = "chm";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/man.png";
+    $filetype[] = "hlp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/man.png";
+    $filetype[] = "dif";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/txt.png";
+    $filetype[] = "hta";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
+    $filetype[] = "reg";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/resource.png";
+    $filetype[] = "dmp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/core.png";
+    $filetype[] = "ini";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png";
+    $filetype[] = "jpe";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "mht";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/html.png";
+    $filetype[] = "msi";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "aot";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "pgp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "dbg";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "axt";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/source.png"; // zen text
+    $filetype[] = "rdp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "sig";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/document.png";
+    $filetype[] = "tif";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/image.png";
+    $filetype[] = "ttf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/font_ttf.png";
+    $filetype[] = "for";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/font_bitmap.png";
+    $filetype[] = "vbs";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
+    $filetype[] = "vbe";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
+    $filetype[] = "bat";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
+    $filetype[] = "wsf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
+    $filetype[] = "cmd";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
+    $filetype[] = "scr";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "xml";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/xml.png";
+    $filetype[] = "zap";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = ".ps";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/postscript.png";
+    $filetype[] = ".rm";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/real_doc.png";
+    $filetype[] = "ram";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/real_doc.png";
+    $filetype[] = "vcf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/vcard.png";
+    $filetype[] = "wmf";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/vectorgfx.png";
+    $filetype[] = "cer";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/document.png";
+    $filetype[] = "tmp";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/unknown.png";
+    $filetype[] = "cap";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = "tr1";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/binary.png";
+    $filetype[] = ".gz";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
+    $filetype[] = "tar";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tar.png";
+    $filetype[] = "nfo";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/info.png";
+    $filetype[] = "pal";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/colorscm.png";
+    $filetype[] = "iso";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/cdimage.png";
+    $filetype[] = "jar";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/java_src.png";
+    $filetype[] = "eml";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/message.png";
+    $filetype[] = ".sh";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/shellscript.png";
+    $filetype[] = "bz2";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/tgz.png";
+    $filetype[] = "out";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
+    $filetype[] = "cfg";    $imgurl[] = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/log.png";
 
     $cnt = count($filetype);
     if ( $cnt > 0 )
@@ -3675,7 +3673,7 @@ function target_type_name($targettype)
  * @param int $incidentid - Incident ID
  * @return int Time since the last review in minutes
  * @note was called incident_get_next_review() (very bad name) until 3.60 14Mar10
-*/
+ */
 function incident_time_since_review($incidentid)
 {
     global $now;
@@ -3700,7 +3698,7 @@ function incident_time_since_review($incidentid)
  * @param string $mysqldate - A date column from mysql
  * @param bool $utc - TRUE = Timestamp given is UTC
  *                    FALSE = Timestamp as system time
- * @returns integer. a UNIX Timestamp
+ * @return integer. a UNIX Timestamp
  */
 function mysql2date($mysqldate, $utc = FALSE)
 {
@@ -3739,11 +3737,11 @@ function mysql2date($mysqldate, $utc = FALSE)
 
 
 /**
-    * Converts a MySQL timestamp to a UNIX Timestamp
-    * @author Ivan Lucas
-    * @param string $mysqldate  A timestamp column from mysql
-    * @returns integer. a UNIX Timestamp
-*/
+ * Converts a MySQL timestamp to a UNIX Timestamp
+ * @author Ivan Lucas
+ * @param string $mysqldate  A timestamp column from mysql
+ * @return integer. a UNIX Timestamp
+ */
 function mysqlts2date($mysqldate)
 {
     // for the zero/blank case, return 0
@@ -3783,12 +3781,12 @@ function iso_8601_date($timestamp)
 }
 
 /**
-    * Decide whether the time is during a public holiday
-    * @author Paul Heaney
-    * @param int $time  Timestamp to identify
-    * @param array $publicholidays array of Holiday. Public holiday to compare against
-    * @returns integer. If > 0 number of seconds left in the public holiday
-*/
+ * Decide whether the time is during a public holiday
+ * @author Paul Heaney
+ * @param int $time  Timestamp to identify
+ * @param array $publicholidays array of Holiday. Public holiday to compare against
+ * @return integer. If > 0 number of seconds left in the public holiday
+ */
 function is_public_holiday($time, $publicholidays)
 {
     if (!empty($publicholidays))
@@ -3810,7 +3808,7 @@ function is_public_holiday($time, $publicholidays)
  * @author Tom Gerrard, Ivan Lucas, Paul Heaney
  * @param int $t1. The start timestamp (earliest date/time)
  * @param int $t2. The ending timetamp (latest date/time)
- * @returns integer. the number of working minutes (minutes in the working day)
+ * @return integer. the number of working minutes (minutes in the working day)
  */
 function calculate_working_time($t1, $t2, $publicholidays)
 {
@@ -4035,7 +4033,7 @@ function calculate_working_time($t1, $t2, $publicholidays)
     }
 
     return $timeworked;
-*/
+ */
 }
 
 
@@ -4176,7 +4174,7 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
  * Takes a UNIX Timestamp and returns a string with a pretty readable date
  * @param int $date
  * @param string $lang. takes either 'user' or 'system' as to which language to use
- * @returns string
+ * @return string
  */
 function readable_date($date, $lang = 'user')
 {
@@ -4216,7 +4214,7 @@ function readable_date($date, $lang = 'user')
 /**
  * Return the email address of the notify contact of the given contact
  * @author Ivan Lucas
- * @returns string. email address.
+ * @return string. email address.
  */
 function contact_notify_email($contactid)
 {
@@ -4289,7 +4287,7 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
     {
         $html = "<select name='{$name}'>\n";
         $html .= "<option value='0'";
-        if ($user->userid==0) $html .= " selected='selected'";
+        if ($user->userid == 0) $html .= " selected='selected'";
         $html .= ">{$GLOBALS['strNone']}</option>\n";
         while ($user = mysql_fetch_object($result))
         {
@@ -4405,7 +4403,7 @@ function incident_backup_switchover($userid, $accepting)
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
                 // add update
-                $username=user_realname($userid);
+                $username = user_realname($userid);
                 //$userstatus = userstatus_name(user_status($userid));
                 $userstatus = $user['statusname'];
                 //$usermessage=user_message($userid);
@@ -4532,7 +4530,7 @@ function incident_backup_switchover($userid, $accepting)
  * @author Ivan Lucas
  * @param int $externalid. An external ID to format
  * @param int $escalationpath. Escalation path ID
- * @returns HTML
+ * @return HTML
  */
 function format_external_id($externalid, $escalationpath='')
 {
@@ -4554,6 +4552,7 @@ function format_external_id($externalid, $escalationpath='')
                 $epath['home_url'] = $escalationpath->home_url;
                 $epath['url_title'] = $escalationpath->url_title;
             }
+
             if (!empty($externalid))
             {
                 $epathurl = str_replace('%externalid%', $externalid, $epath['track_url']);
@@ -4596,7 +4595,7 @@ function return_bytes($val)
 // FIXME use this instead of hardcoding tabs
 function draw_tabs($tabsarray, $selected='')
 {
-    if ($selected=='') $selected=key($tabsarray);
+    if ($selected == '') $selected = key($tabsarray);
     $html .= "<div class='tabcontainer'>";
     $html .= "<ul class='tabnav'>";
     foreach ($tabsarray AS $tab => $url)
@@ -4718,7 +4717,7 @@ function external_escalation($escalated, $incid)
  * Converts BBcode to HTML
  * @author Paul Heaney
  * @param string $text. Text with BBCode
- * @returns string HTML
+ * @return string HTML
  */
 function bbcode($text)
 {
@@ -4791,7 +4790,7 @@ function strip_bbcode_tooltip($text)
  * Produces a HTML toolbar for use with a textarea or input box for entering bbcode
  * @author Ivan Lucas
  * @param string $elementid. HTML element ID of the textarea or input
- * @returns string HTML
+ * @return string HTML
  */
 function bbcode_toolbar($elementid)
 {
@@ -4941,7 +4940,7 @@ function show_notes($linkid, $refid, $delete = TRUE)
  *       dashboard_*_display() and dashboard_*_edit(), (where * is the name of the dashlet)
  *       if these are found the dashlet will use ajax and call these functions for it's
  *       main display (and refreshing) and to edit settings.
- * @returns string HTML
+ * @return string HTML
  */
 function dashlet($dashboard, $dashletid, $icon, $title='', $link='', $content='')
 {
@@ -4997,8 +4996,8 @@ function dashlet($dashboard, $dashletid, $icon, $title='', $link='', $content=''
  * @param array $params. Associative array of parameters to pass on the URL of the link
  * @param bool $refresh. The link will be automatically refreshed when TRUE
  * @param string $formid. The form element ID to be submitted when using 'save' action
- * @returns string HTML
-*/
+ * @return string HTML
+ */
 function dashlet_link($dashboard, $dashletid, $text='', $action='', $params='', $refresh = FALSE, $formid='')
 {
     if ($action == 'edit') $action = 'dashboard_edit';
@@ -5050,7 +5049,7 @@ function dashlet_link($dashboard, $dashletid, $text='', $action='', $params='', 
  * @param string $context
  * @param string $row
  * @param string $dashboardid
-*/
+ */
 function dashboard_do($context, $row=0, $dashboardid=0)
 {
     global $DASHBOARDCOMP;
@@ -5079,9 +5078,9 @@ function show_dashboard_component($row, $dashboardid)
 
 
 /**
-    * Recursive function to list links as a tree
-    * @author Ivan Lucas
-*/
+ * Recursive function to list links as a tree
+ * @author Ivan Lucas
+ */
 function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction='lr')
 {
     global $dbLinkTypes, $dbLinks;
@@ -5168,7 +5167,7 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
 /**
   * Interface for creating record 'links' (relationships)
   * @author Ivan Lucas
-*/
+ */
 function show_create_links($table, $ref)
 {
     global $dbLinkTypes;
@@ -5203,13 +5202,13 @@ function show_create_links($table, $ref)
 
 
 /**
-    * Create a PNG chart
-    * @author Ivan Lucas
-    * @param string $type. The type of chart to draw. (e.g. 'pie').
-    * @return resource a PNG image resource
-    * @note Currently only has proper support for pie charts (type='pie')
-    * @todo TODO Support for bar and line graphs
-*/
+ * Create a PNG chart
+ * @author Ivan Lucas
+ * @param string $type. The type of chart to draw. (e.g. 'pie').
+ * @return resource a PNG image resource
+ * @note Currently only has proper support for pie charts (type='pie')
+ * @todo TODO Support for bar and line graphs
+ */
 function draw_chart_image($type, $width, $height, $data, $legends, $title='', $unit='')
 {
     global $CONFIG;
@@ -5375,8 +5374,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
                 // imagearc($img,$cx,$cy,$sx,$sy,$angle_sum[$i1] ,$angle_sum[$i], $blue);
                 $legendY += 15;
             }
-        break;
-
+            break;
         case 'line':
             $maxdata = 0;
             $colwidth=round($width/$countdata);
@@ -5402,8 +5400,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
                 imagestring($img, 3, $i*$colwidth, $legendheight, mb_substr($legends[$i], 0, 6, 'UTF-8'), $darkblue);
             }
             imagestring($img,3, 10, 10, $title, $red);
-        break;
-
+            break;
         case 'bar':
             $maxdata = 0;
             $colwidth = round($width / $countdata);
@@ -5429,9 +5426,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
                 imagestring($img, 3, ($i*$colwidth)+4, $legendheight, mb_substr($legends[$i], 0, 5,'UTF-8'), $darkblue);
             }
             imagestring($img,3, 10, 10, $title, $red);
-        break;
-
-
+           break;
         default:
             imagerectangle($img, $width-1, $height-1, 1, 1, $red);
             imagestring($img,3, 10, 10, "Invalid chart type", $red);
@@ -5443,8 +5438,8 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
 
 /**
-    * @author Paul Heaney
-*/
+ * @author Paul Heaney
+ */
 function display_drafts($type, $result)
 {
     global $iconset;
@@ -5540,11 +5535,11 @@ function implode_assoc($glue1, $glue2, $array)
 
 
 /**
-    * @author Kieran Hogg
-    * @param string $name. name of the html entity
-    * @param string $time. the time to set it to, format 12:34
-    * @returns string. HTML
-*/
+ * @author Kieran Hogg
+ * @param string $name. name of the html entity
+ * @param string $time. the time to set it to, format 12:34
+ * @return string. HTML
+ */
 function time_dropdown($name, $time='')
 {
     if ($time)
@@ -5584,10 +5579,10 @@ function time_dropdown($name, $time='')
 
 
 /**
-    * @author Kieran Hogg
-    * @param int $seconds. Number of seconds
-    * @returns string. Readable time in seconds
-*/
+ * @author Kieran Hogg
+ * @param int $seconds. Number of seconds
+ * @return string. Readable time in seconds
+ */
 function exact_seconds($seconds)
 {
     $days = floor($seconds / (24 * 60 * 60));
@@ -5608,10 +5603,10 @@ function exact_seconds($seconds)
 
 
 /**
-    * Shows errors from a form, if any
-    * @author Kieran Hogg
-    * @returns string. HTML of the form errors stored in the users session
-*/
+ * Shows errors from a form, if any
+ * @author Kieran Hogg
+ * @return string. HTML of the form errors stored in the users session
+ */
 function show_form_errors($formname)
 {
     if ($_SESSION['formerrors'][$formname])
@@ -5626,10 +5621,10 @@ function show_form_errors($formname)
 
 
 /**
-    * Cleans form errors
-    * @author Kieran Hogg
-    * @returns nothing
-*/
+ * Cleans form errors
+ * @author Kieran Hogg
+ * @return nothing
+ */
 function clear_form_errors($formname)
 {
     unset($_SESSION['formerrors'][$formname]);
@@ -5637,10 +5632,10 @@ function clear_form_errors($formname)
 
 
 /**
-    * Cleans form data
-    * @author Kieran Hogg
-    * @returns nothing
-*/
+ * Cleans form data
+ * @author Kieran Hogg
+ * @return nothing
+ */
 function clear_form_data($formname)
 {
     unset($_SESSION['formdata'][$formname]);
@@ -5651,8 +5646,8 @@ function clear_form_data($formname)
  * Adjust a timezoned date/time to UTC
  * @author Ivan Lucas
  * @param int UNIX timestamp.  Uses 'now' if ommitted
- * @returns int UNIX timestamp (in UTC)
-*/
+ * @return int UNIX timestamp (in UTC)
+ */
 function utc_time($time = '')
 {
     global $now;
@@ -5676,17 +5671,17 @@ function utc_time($time = '')
 
 
 /**
-    * Returns a localised and translated date.
-    * DST Aware
-    * @author Ivan Lucas
-    * @param string $format. date() format
-    * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
-    * @param bool $utc bool. Is the timestamp being passed as UTC or system time
-                        TRUE = passed as UTC
-                        FALSE = passed as system time
-    * @returns string. An internationised date/time string
-    * @todo  th/st and am/pm maybe?
-*/
+ * Returns a localised and translated date.
+ * DST Aware
+ * @author Ivan Lucas
+ * @param string $format. date() format
+ * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
+ * @param bool $utc bool. Is the timestamp being passed as UTC or system time
+                     TRUE = passed as UTC
+                     FALSE = passed as system time
+ * @return string. An internationised date/time string
+ * @todo  th/st and am/pm maybe?
+ */
 function ldate($format, $date = '', $utc = FALSE)
 {
     global $now, $CONFIG;
@@ -5774,11 +5769,11 @@ function ldate($format, $date = '', $utc = FALSE)
 
 
 /**
-    * Returns an array of open activities/timed tasks for an incident
-    * @author Paul Heaney
-    * @param int $incidentid. Incident ID you want
-    * @returns array - with the task id
-*/
+ * Returns an array of open activities/timed tasks for an incident
+ * @author Paul Heaney
+ * @param int $incidentid. Incident ID you want
+ * @return array - with the task id
+ */
 function open_activities_for_incident($incientid)
 {
     global $dbLinks, $dbLinkTypes, $dbTasks;
@@ -5825,11 +5820,11 @@ function open_activities_for_incident($incientid)
 
 
 /**
-    * Returns the number of open activities/timed tasks for a site
-    * @author Paul Heaney
-    * @param int $siteid. Site ID you want
-    * @returns int. Number of open activities for the site (0 if non)
-*/
+ * Returns the number of open activities/timed tasks for a site
+ * @author Paul Heaney
+ * @param int $siteid. Site ID you want
+ * @return int. Number of open activities for the site (0 if non)
+ */
 function open_activities_for_site($siteid)
 {
     global $dbIncidents, $dbContacts;
@@ -5858,7 +5853,7 @@ function open_activities_for_site($siteid)
 /**
  * Finds out which scheduled tasks should be run right now
  * @author Ivan Lucas, Paul Heaney
- * @returns array
+ * @return array
  */
 function schedule_actions_due()
 {
@@ -5922,11 +5917,11 @@ function schedule_actions_due()
 
 
 /**
-* Marks a schedule action as started
-* @author Paul Heaney
-* @param string $action. Name of scheduled action
-* @return boolean Success of update
-*/
+ * Marks a schedule action as started
+ * @author Paul Heaney
+ * @param string $action. Name of scheduled action
+ * @return boolean Success of update
+ */
 function schedule_action_started($action)
 {
     global $now;
@@ -5947,10 +5942,10 @@ function schedule_action_started($action)
 
 
 /**
-    * Mark a schedule action as done
-    * @author Ivan Lucas
-    * @param string $doneaction. Name of scheduled action
-    * @param bool $success. Was the run successful, TRUE = Yes, FALSE = No
+ * Mark a schedule action as done
+ * @author Ivan Lucas
+ * @param string $doneaction. Name of scheduled action
+ * @param bool $success. Was the run successful, TRUE = Yes, FALSE = No
  */
 function schedule_action_done($doneaction, $success = TRUE)
 {
@@ -5979,11 +5974,11 @@ function schedule_action_done($doneaction, $success = TRUE)
 
 
 /**
-* Return an array of contacts allowed to use this contract
-* @author Kieran Hogg
-* @param int $maintid - ID of the contract
-* @returns array of supported contacts, NULL if none
-**/
+ * Return an array of contacts allowed to use this contract
+ * @author Kieran Hogg
+ * @param int $maintid - ID of the contract
+ * @return array of supported contacts, NULL if none
+ */
 function supported_contacts($maintid)
 {
     global $dbSupportContacts, $dbContacts;
@@ -6006,12 +6001,12 @@ function supported_contacts($maintid)
 
 
 /**
-* Return an array of contracts which the contact is an admin contact for
-* @author Kieran Hogg
-* @param int $maintid - ID of the contract
-* @param int $siteid - The ID of the site
-* @returns array of contract ID's for which the given contactid is an admin contact, NULL if none
-**/
+ * Return an array of contracts which the contact is an admin contact for
+ * @author Kieran Hogg
+ * @param int $maintid - ID of the contract
+ * @param int $siteid - The ID of the site
+ * @return array of contract ID's for which the given contactid is an admin contact, NULL if none
+ */
 function admin_contact_contracts($contactid, $siteid)
 {
     $sql = "SELECT DISTINCT m.id ";
@@ -6034,11 +6029,11 @@ function admin_contact_contracts($contactid, $siteid)
 
 
 /**
-* Return an array of contracts which the contact is an named contact for
-* @author Kieran Hogg
-* @param int $maintid - ID of the contract
-* @returns array of supported contracts, NULL if none
-**/
+ * Return an array of contracts which the contact is an named contact for
+ * @author Kieran Hogg
+ * @param int $maintid - ID of the contract
+ * @return array of supported contracts, NULL if none
+ */
 function contact_contracts($contactid, $siteid, $checkvisible = TRUE)
 {
     $sql = "SELECT DISTINCT m.id AS id
@@ -6065,11 +6060,11 @@ function contact_contracts($contactid, $siteid, $checkvisible = TRUE)
 
 
 /**
-* Return an array of contracts which non-contract contacts can see incidents
-* @author Kieran Hogg
-* @param int $maintid - ID of the contract
-* @returns array of supported contracts, NULL if none
-**/
+ * Return an array of contracts which non-contract contacts can see incidents
+ * @author Kieran Hogg
+ * @param int $maintid - ID of the contract
+ * @return array of supported contracts, NULL if none
+ */
 function all_contact_contracts($contactid, $siteid)
 {
     $sql = "SELECT DISTINCT m.id AS id
@@ -6089,11 +6084,11 @@ function all_contact_contracts($contactid, $siteid)
 
 
 /**
-* Checks is a given username is unique
-* @author Kieran Hogg
-* @param string $username - username
-* @returns bool TRUE if valid, FALSE if not
-**/
+ * Checks is a given username is unique
+ * @author Kieran Hogg
+ * @param string $username - username
+ * @return bool TRUE if valid, FALSE if not
+ */
 function valid_username($username)
 {
     $username = cleanvar($username);
@@ -6115,9 +6110,9 @@ function valid_username($username)
 
 
 /**
-* Update the current session id with a newly generated one
-* @author Ivan Lucas
-* @note Wrap the php function for different versions of php
+ * Update the current session id with a newly generated one
+ * @author Ivan Lucas
+ * @note Wrap the php function for different versions of php
  */
 function session_regenerate()
 {
@@ -6130,9 +6125,9 @@ function session_regenerate()
 
 
 /**
-* Finds the software associated with a contract
-* @author Ivan Lucas
-* @note Wrap the php function for different versions of php
+ * Finds the software associated with a contract
+ * @author Ivan Lucas
+ * @note Wrap the php function for different versions of php
  */
 function contract_software()
 {
@@ -6168,12 +6163,12 @@ function contract_software()
 
 
 /**
-* HTML for an ajax help link
-* @author Ivan Lucas
-* @param string $context. The base filename of the popup help file in
+ * HTML for an ajax help link
+ * @author Ivan Lucas
+ * @param string $context. The base filename of the popup help file in
                           help/en-GB/ (without the .txt extension)
-* @returns string HTML
-**/
+ * @return string HTML
+ */
 function help_link($context)
 {
     global $strHelpChar;
@@ -6189,12 +6184,12 @@ function help_link($context)
 
 
 /**
-* Function to return an user error message when a file fails to upload
-* @author Paul Heaney
-* @param errorcode The error code from $_FILES['file']['error']
-* @param name The file name which was uploaded from $_FILES['file']['name']
-* @return String containing the error message (in HTML)
-*/
+ * Function to return an user error message when a file fails to upload
+ * @author Paul Heaney
+ * @param errorcode The error code from $_FILES['file']['error']
+ * @param name The file name which was uploaded from $_FILES['file']['name']
+ * @return String containing the error message (in HTML)
+ */
 function get_file_upload_error_message($errorcode, $name)
 {
     $str = "<div class='detailinfo'>\n";
@@ -6204,12 +6199,24 @@ function get_file_upload_error_message($errorcode, $name)
     $str .=  "<p class='error'>";
     switch ($errorcode)
     {
-        case UPLOAD_ERR_INI_SIZE:  $str .= "The file exceded the maximum size set in PHP"; break;
-        case UPLOAD_ERR_FORM_SIZE:  $str .=  "The uploaded file was too large"; break;
-        case UPLOAD_ERR_PARTIAL: $str .=  "The file was only partially uploaded"; break;
-        case UPLOAD_ERR_NO_FILE: $str .=  "No file was uploaded"; break;
-        case UPLOAD_ERR_NO_TMP_DIR: $str .=  "Temporary folder is missing"; break;
-        default: $str .=  "An unknown file upload error occurred"; break;
+        case UPLOAD_ERR_INI_SIZE:
+            $str .= "The file exceded the maximum size set in PHP";
+            break;
+        case UPLOAD_ERR_FORM_SIZE:
+            $str .=  "The uploaded file was too large";
+            break;
+        case UPLOAD_ERR_PARTIAL:
+            $str .=  "The file was only partially uploaded";
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            $str .=  "No file was uploaded";
+            break;
+        case UPLOAD_ERR_NO_TMP_DIR:
+            $str .=  "Temporary folder is missing";
+            break;
+        default:
+            $str .=  "An unknown file upload error occurred";
+            break;
     }
     $str .=  "</p>";
     $str .=  "</div>";
@@ -6219,12 +6226,12 @@ function get_file_upload_error_message($errorcode, $name)
 
 
 /**
-* Function to produce a user readable file size i.e 2048 bytes 1KB etc
-* @author Paul Heaney
-* @param filesize - filesize in bytes
-* @return String filesize in readable format
-*
-*/
+ * Function to produce a user readable file size i.e 2048 bytes 1KB etc
+ * @author Paul Heaney
+ * @param filesize - filesize in bytes
+ * @return String filesize in readable format
+ *
+ */
 function readable_file_size($filesize)
 {
     global $strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes;
@@ -6242,12 +6249,12 @@ function readable_file_size($filesize)
 
 
 /**
-* Return the html of contract detatils
-* @author Kieran Hogg
-* @param int $maintid - ID of the contract
-* @param string $mode. 'internal' or 'external'
+ * Return the html of contract detatils
+ * @author Kieran Hogg
+ * @param int $maintid - ID of the contract
+ * @param string $mode. 'internal' or 'external'
  * @return array of supported contracts, NULL if none
-* @todo FIXME not quite generic enough for a function ?
+ * @todo FIXME not quite generic enough for a function ?
  */
 function contract_details($id, $mode='internal')
 {
@@ -6523,12 +6530,12 @@ function contract_details($id, $mode='internal')
 
 
 /**
-* Uploads a file
-* @author Kieran Hogg
-* @param mixed $file file to upload
-* @param int $incidentd
-* @returns string path of file
-* @todo FIXME this function doesn't seem to make use of $updateid and is never called, is it still used?'
+ * Uploads a file
+ * @author Kieran Hogg
+ * @param mixed $file file to upload
+ * @param int $incidentd
+ * @return string path of file
+ * @todo FIXME this function doesn't seem to make use of $updateid and is never called, is it still used?'
  */
 function upload_file($file, $incidentid, $updateid, $type='public')
 {
@@ -6593,15 +6600,15 @@ function upload_file($file, $incidentid, $updateid, $type='public')
 
 
 /**
-* Function to return a HTML table row with two columns.
-* Giving radio boxes for groups and if the level is 'management' then you are able to view the users (de)selcting
-* @param string $title - text to go in the first column
-* @param string $level either management or engineer, management is able to (de)select users
-* @param int $groupid  Defalt group to select
-* @param string $type - Type of buttons to use either radio or checkbox
-* @return table row of format <tr><th /><td /></tr>
-* @author Paul Heaney
-*/
+ * Function to return a HTML table row with two columns.
+ * Giving radio boxes for groups and if the level is 'management' then you are able to view the users (de)selcting
+ * @param string $title - text to go in the first column
+ * @param string $level either management or engineer, management is able to (de)select users
+ * @param int $groupid  Defalt group to select
+ * @param string $type - Type of buttons to use either radio or checkbox
+ * @return table row of format <tr><th /><td /></tr>
+ * @author Paul Heaney
+ */
 function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 {
     global $dbUsers, $dbGroups;
@@ -6675,13 +6682,13 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 
 
 /**
-* Output html for the 'time to next action' box
-* Used in add incident and update incident
+ * Output html for the 'time to next action' box
+ * Used in add incident and update incident
  * @param string $formid. HTML ID of the form containing the controls
-* @return $html string html to output
-* @author Kieran Hogg
-* @TODO populate $id
-*/
+ * @return $html string html to output
+ * @author Kieran Hogg
+ * @TODO populate $id
+ */
 function show_next_action($formid)
 {
     global $now, $strAM, $strPM;
@@ -6764,13 +6771,13 @@ function show_next_action($formid)
 
 
 /**
-* Output the html for a KB article
-*
-* @param int $id ID of the KB article
-* @param string $mode whether this is internal or external facing, defaults to internal
-* @returns string $html kb article html
-* @author Kieran Hogg
-*/
+ * Output the html for a KB article
+ *
+ * @param int $id ID of the KB article
+ * @param string $mode whether this is internal or external facing, defaults to internal
+ * @return string $html kb article html
+ * @author Kieran Hogg
+ */
 function kb_article($id, $mode='internal')
 {
     global $CONFIG, $iconset;
@@ -6837,8 +6844,7 @@ function kb_article($id, $mode='internal')
                 }
                 $html .= "<div class='kbprivate'><h3>{$kbcontent->header} (private)</h3>";
                 $restrictedcontent++;
-            break;
-
+                break;
             case 'restricted':
                 if ($mode != 'internal')
                 {
@@ -6848,8 +6854,7 @@ function kb_article($id, $mode='internal')
                 }
                 $html .= "<div class='kbrestricted'><h3>{$kbcontent->header}</h3>";
                 $restrictedcontent++;
-            break;
-
+                break;
             default:
                 $html .= "<div><h3>{$kbcontent->header}</h3>";
         }
@@ -6862,7 +6867,6 @@ function kb_article($id, $mode='internal')
         $html .= bbcode($kbcontent->content);
         $author[]=$kbcontent->ownerid;
         $html .= "</div>\n";
-
     }
 
     if ($restrictedcontent > 0)
@@ -6887,9 +6891,9 @@ function kb_article($id, $mode='internal')
     {
         if (is_array($author))
         {
-            $author=array_unique($author);
-            $countauthors=count($author);
-            $count=1;
+            $author = array_unique($author);
+            $countauthors = count($author);
+            $count = 1;
             if ($countauthors > 1)
             {
                 $html .= "<strong>{$GLOBALS['strAuthors']}</strong>:<br />";
@@ -6898,6 +6902,7 @@ function kb_article($id, $mode='internal')
             {
                 $html .= "<strong>{$GLOBALS['strAuthor']}:</strong> ";
             }
+
             foreach ($author AS $authorid)
             {
                 $html .= user_realname($authorid,TRUE);
@@ -6937,13 +6942,13 @@ function kb_article($id, $mode='internal')
 }
 
 /**
-* Output the html for the edit site form
-*
-* @param int $site ID of the site
-* @param string $mode whether this is internal or external facing, defaults to internal
-* @return string $html edit site form html
-* @author Kieran Hogg
-*/
+ * Output the html for the edit site form
+ *
+ * @param int $site ID of the site
+ * @param string $mode whether this is internal or external facing, defaults to internal
+ * @return string $html edit site form html
+ * @author Kieran Hogg
+ */
 function show_edit_site($site, $mode='internal')
 {
     global $CONFIG;
@@ -7005,6 +7010,7 @@ function show_edit_site($site, $mode='internal')
             $html .= user_drop_down('owner', $siterow['owner'], $accepting = FALSE, '', '', TRUE);
             $html .= "</td></tr>\n";
         }
+
         if ($mode == 'internal')
         {
             $html .= "<tr><th>{$GLOBALS['strIncidentPool']}:</th>";
@@ -7035,13 +7041,13 @@ function show_edit_site($site, $mode='internal')
 
 
 /**
-* Output the html for an add contact form
-*
-* @param int $siteid - the site you want to add the contact to
-* @param string $mode - whether this is internal or external facing, defaults to internal
-* @return string $html add contact form html
-* @author Kieran Hogg
-*/
+ * Output the html for an add contact form
+ *
+ * @param int $siteid - the site you want to add the contact to
+ * @param string $mode - whether this is internal or external facing, defaults to internal
+ * @return string $html add contact form html
+ * @author Kieran Hogg
+ */
 function show_add_contact($siteid = 0, $mode = 'internal')
 {
     global $CONFIG;
@@ -7205,10 +7211,10 @@ function show_add_contact($siteid = 0, $mode = 'internal')
 
 
 /**
-* Procceses a new contact
-*
-* @author Kieran Hogg
-*/
+ * Procceses a new contact
+ *
+ * @author Kieran Hogg
+ */
 function process_add_contact($mode = 'internal')
 {
     global $now, $CONFIG, $dbContacts, $sit;
@@ -7228,8 +7234,14 @@ function process_add_contact($mode = 'internal')
     $address2 = cleanvar($_REQUEST['address2']);
     $city = cleanvar($_REQUEST['city']);
     $county = cleanvar($_REQUEST['county']);
-    if (!empty($address1)) $country = cleanvar($_REQUEST['country']);
-    else $country='';
+    if (!empty($address1))
+    {
+        $country = cleanvar($_REQUEST['country']);
+    }
+    else
+    {
+        $country = '';
+    }
     $postcode = cleanvar($_REQUEST['postcode']);
     $phone = cleanvar($_REQUEST['phone']);
     $mobile = cleanvar($_REQUEST['mobile']);
@@ -7258,7 +7270,7 @@ function process_add_contact($mode = 'internal')
         $errors++;
         $_SESSION['formerrors']['add_contact']['email'] = $GLOBALS['strMustEnterEmail'];
     }
-    if ($siteid==0 OR $siteid=='')
+    if ($siteid == 0 OR $siteid == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_contact']['siteid'] = $GLOBALS['strMustSelectSite'];
@@ -7387,12 +7399,12 @@ function process_add_contact($mode = 'internal')
 
 
 /**
-* Outputs the name of a KB article, used for triggers
-*
-* @param int $kbid ID of the KB article
-* @return string $name kb article name
-* @author Kieran Hogg
-*/
+ * Outputs the name of a KB article, used for triggers
+ *
+ * @param int $kbid ID of the KB article
+ * @return string $name kb article name
+ * @author Kieran Hogg
+ */
 function kb_name($kbid)
 {
     $kbid = intval($kbid);
@@ -7408,11 +7420,11 @@ function kb_name($kbid)
 
 
 /**
-* Outputs the full base url of the install, e.g. http://www.example.com/
-*
-* @return string base url of the install
-* @author Kieran Hogg
-*/
+ * Outputs the full base url of the install, e.g. http://www.example.com/
+ *
+ * @return string base url of the install
+ * @author Kieran Hogg
+ */
 function application_url()
 {
     global $CONFIG;
@@ -7440,12 +7452,12 @@ function application_url()
 
 
 /**
-* Outputs the product name of a contract
-*
-* @param int $maintid ID of the contract
-* @return string the name of the product
-* @author Kieran Hogg
-*/
+ * Outputs the product name of a contract
+ *
+ * @param int $maintid ID of the contract
+ * @return string the name of the product
+ * @author Kieran Hogg
+ */
 function contract_product($maintid)
 {
     $maintid = intval($maintid);
@@ -7465,12 +7477,12 @@ function contract_product($maintid)
 
 
 /**
-* Outputs the contract's site name
-*
-* @param int $maintid ID of the contract
-* @return string name of the site
-* @author Kieran Hogg
-*/
+ * Outputs the contract's site name
+ *
+ * @param int $maintid ID of the contract
+ * @return string name of the site
+ * @author Kieran Hogg
+ */
 function contract_site($maintid)
 {
     $maintid = intval($maintid);
@@ -7491,12 +7503,12 @@ function contract_site($maintid)
 
 
 /**
-* Sets up default triggers for new users or upgraded users
-*
-* @param int $userid ID of the user
-* @return bool TRUE on success, FALSE if not
-* @author Kieran Hogg
-*/
+ * Sets up default triggers for new users or upgraded users
+ *
+ * @param int $userid ID of the user
+ * @return bool TRUE on success, FALSE if not
+ * @author Kieran Hogg
+ */
 function setup_user_triggers($userid)
 {
     $return = TRUE;
@@ -7537,12 +7549,12 @@ function setup_user_triggers($userid)
 
 
 /**
-* Returns the SLA ID of a contract
-*
-* @param int $maintid ID of the contract
-* @return int ID of the SLA
-* @author Kieran Hogg
-*/
+ * Returns the SLA ID of a contract
+ *
+ * @param int $maintid ID of the contract
+ * @return int ID of the SLA
+ * @author Kieran Hogg
+ */
 function contract_slaid($maintid)
 {
     $maintid = intval($maintid);
@@ -7552,12 +7564,12 @@ function contract_slaid($maintid)
 
 
 /**
-* Returns the salesperson ID of a site
-*
-* @param int $siteid ID of the site
-* @return int ID of the salesperson
-* @author Kieran Hogg
-*/
+ * Returns the salesperson ID of a site
+ *
+ * @param int $siteid ID of the site
+ * @return int ID of the salesperson
+ * @author Kieran Hogg
+ */
 function site_salespersonid($siteid)
 {
     $siteid = intval($siteid);
@@ -7567,12 +7579,12 @@ function site_salespersonid($siteid)
 
 
 /**
-* Returns the salesperson's name of a site
-*
-* @param int $siteid ID of the site
-* @return string name of the salesperson
-* @author Kieran Hogg
-*/
+ * Returns the salesperson's name of a site
+ *
+ * @param int $siteid ID of the site
+ * @return string name of the salesperson
+ * @author Kieran Hogg
+ */
 function site_salesperson($siteid)
 {
     $siteid = intval($siteid);
@@ -7582,9 +7594,9 @@ function site_salesperson($siteid)
 
 
 /**
-* Function to return currently running SiT! version
-* @return String - Currently running application version
-*/
+ * Function to return currently running SiT! version
+ * @return String - Currently running application version
+ */
 function application_version_string()
 {
     global $application_version_string;
@@ -7593,10 +7605,10 @@ function application_version_string()
 
 
 /**
-* Returns the currently running schema version
-* @author Paul Heaney
-* @return String - currently running schema version
-*/
+ * Returns the currently running schema version
+ * @author Paul Heaney
+ * @return String - currently running schema version
+ */
 function database_schema_version()
 {
     $return = '';
@@ -7620,12 +7632,12 @@ function database_schema_version()
 
 
 /**
-* Returns the contacts's portal username
-*
-* @param int $userid ID of the contact
-* @return string username
-* @author Kieran Hogg
-*/
+ * Returns the contacts's portal username
+ *
+ * @param int $userid ID of the contact
+ * @return string username
+ * @author Kieran Hogg
+ */
 function contact_username($userid)
 {
     $userid = intval($userid);
@@ -7638,7 +7650,7 @@ function contact_username($userid)
  *
  * @author Kieran Hogg
  * @note See also populate_syslang2() which is a copy of this function
-*/
+ */
 function populate_syslang()
 {
     global $CONFIG;
@@ -7692,12 +7704,12 @@ function populate_syslang()
 
 
 /**
-* Outputs a contact's contract associate, if the viewing user is allowed
-* @author Kieran Hogg
-* @param int $userid ID of the contact
-* @retval string output html
-* @todo TODO should this be renamed, it has nothing to do with users
-*/
+ * Outputs a contact's contract associate, if the viewing user is allowed
+ * @author Kieran Hogg
+ * @param int $userid ID of the contact
+ * @retval string output html
+ * @todo TODO should this be renamed, it has nothing to do with users
+ */
 function user_contracts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
@@ -7735,18 +7747,18 @@ function user_contracts_table($userid, $mode = 'internal')
             $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
             $html .= "</tr>\n";
 
-            $supportcount=1;
-            $shade='shade2';
+            $supportcount = 1;
+            $shade = 'shade2';
             while ($supportedrow = mysql_fetch_array($result))
             {
                 if ($supportedrow['term'] == 'yes')
                 {
-                    $shade='expired';
+                    $shade = 'expired';
                 }
 
                 if ($supportedrow['expirydate'] < $now AND $supportedrow['expirydate'] != -1)
                 {
-                    $shade='expired';
+                    $shade = 'expired';
                 }
 
                 $html .= "<tr><td class='$shade'>";
@@ -7846,13 +7858,13 @@ if (is_array($CONFIG['plugins']))
 
 
 /**
-  * Register a plugin context handler function
-  * @author Ivan Lucas
-  * @param string $context - A valid plugin context
-  * @param string $action - Your plugin context handler function name
-  * @note see http://sitracker.org/wiki/CreatingPlugins for help and a list
-  *  of contexts
-*/
+ * Register a plugin context handler function
+ * @author Ivan Lucas
+ * @param string $context - A valid plugin context
+ * @param string $action - Your plugin context handler function name
+ * @note see http://sitracker.org/wiki/CreatingPlugins for help and a list
+ *  of contexts
+ */
 function plugin_register($context, $action)
 {
     global $PLUGINACTIONS;
@@ -7861,20 +7873,24 @@ function plugin_register($context, $action)
 
 
 /**
-    * Call a plugin function that handles a given context
-    * @author Ivan Lucas
-    * @param string $context - Plugin context,
-    * @param string $optparms - Optional parameters
-    * @retval mixed - Whatever the plugin function returns
-    * @note This function calls a plugin function or multiple plugin
-    *  functions, if they exist.
-    *  see http://sitracker.org/wiki/CreatingPlugins for help and a list
-    *  of contexts
-*/
+ * Call a plugin function that handles a given context
+ * @author Ivan Lucas
+ * @param string $context - Plugin context,
+ * @param string $optparms - Optional parameters
+ * @retval mixed - Whatever the plugin function returns
+ * @note This function calls a plugin function or multiple plugin
+ *  functions, if they exist.
+ *  see http://sitracker.org/wiki/CreatingPlugins for help and a list
+ *  of contexts
+ */
 function plugin_do($context, $optparams = FALSE)
 {
     global $PLUGINACTIONS;
-    foreach ($GLOBALS as $key => $val) { global $$key; }
+    foreach ($GLOBALS as $key => $val)
+    {
+        global $$key;
+    }
+
     $rtnvalue = '';
     if (is_array($PLUGINACTIONS[$context]))
     {
@@ -7910,11 +7926,11 @@ function plugin_do($context, $optparams = FALSE)
 
 
 /**
-* Function passed a day, month and year to identify if this day is defined as a public holiday
-* @author Paul Heaney
-* FIXME this is horribily inefficient, we should load a table ONCE with all the public holidays
+ * Function passed a day, month and year to identify if this day is defined as a public holiday
+ * @author Paul Heaney
+ * FIXME this is horribily inefficient, we should load a table ONCE with all the public holidays
         and then just check that with this function
-*/
+ */
 function is_day_bank_holiday($day, $month, $year)
 {
     global $dbHolidays;
@@ -7935,13 +7951,13 @@ function is_day_bank_holiday($day, $month, $year)
 
 
 /**
-* Outputs a table or csv file based on csv-based array
-* @author Kieran Hogg
-* @param array $data Array of data, see @note for format
-* @param string $ouput Whether to show a table or create a csv file
-* @return string $html The html to produce the output
-* @note format: $array[] = 'Colheader1,Colheader2'; $array[] = 'data1,data2';
-*/
+ * Outputs a table or csv file based on csv-based array
+ * @author Kieran Hogg
+ * @param array $data Array of data, see @note for format
+ * @param string $ouput Whether to show a table or create a csv file
+ * @return string $html The html to produce the output
+ * @note format: $array[] = 'Colheader1,Colheader2'; $array[] = 'data1,data2';
+ */
 function create_report($data, $output = 'table', $filename = 'report.csv')
 {
     $data = explode("\n", $data);
@@ -7998,11 +8014,11 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
 
 /**
-* HTML for an alphabetical index of links
-* @author Ivan Lucas
-* @param string $baseurl start of a URL, the letter will be appended to this
-* @returns HTML
-*/
+ * HTML for an alphabetical index of links
+ * @author Ivan Lucas
+ * @param string $baseurl start of a URL, the letter will be appended to this
+ * @return HTML
+ */
 function alpha_index($baseurl = '#')
 {
     global $i18nAlphabet;
@@ -8024,13 +8040,13 @@ function alpha_index($baseurl = '#')
 
 
 /**
-    * Converts emoticon text to HTML
-    * Will only show emoticons if the user has chosen in their settings
-    * that they would like to see them, otherwise shows original text
-    * @author Kieran Hogg
-    * @param string $text. Text with smileys in it
-    * @returns string HTML
-*/
+ * Converts emoticon text to HTML
+ * Will only show emoticons if the user has chosen in their settings
+ * that they would like to see them, otherwise shows original text
+ * @author Kieran Hogg
+ * @param string $text. Text with smileys in it
+ * @return string HTML
+ */
 function emoticons($text)
 {
     global $CONFIG;
@@ -8176,7 +8192,7 @@ function is_assoc($array)
  * @param various $b
  * @note Callback function, Called by is_assoc()
          From http://uk.php.net/manual/en/function.is-array.php#77744
-**/
+ */
 function is_assoc_callback($a, $b)
 {
     return $a === $b ? $a + 1 : 0;
@@ -8190,8 +8206,8 @@ function is_assoc_callback($a, $b)
  * @param string $setupvar The setup variable key name
  * @param int $userid UserID or 0 for system config
  * @param bool $showvarnames Whether to display the config variable name
- * @returns string HTML
-**/
+ * @return string HTML
+ */
 function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 {
     global $CONFIG, $CFGVAR;
@@ -8270,7 +8286,6 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= "</select>";
             break;
-
         case 'checkbox':
             // Checkbox values are stored 'TRUE' / 'FALSE'
             if ($value == 'TRUE')
@@ -8285,7 +8300,6 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             $html .= html_checkbox($setupvar, $state, 'TRUE');
             $html .= " {$title}</label>";
             break;
-
         case 'percent':
             $html .= "<select name='{$setupvar}' id='{$setupvar}'>";
             for($i = 0; $i <= 100; $i++)
@@ -8296,17 +8310,14 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= "</select>%";
             break;
-
         case 'interfacestyleselect':
             $html .= interfacestyle_drop_down($setupvar, $value);
             break;
-
         case 'userlanguageselect':
         case 'languageselect':
             if (empty($value)) $value = $_SESSION['lang'];
             $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);
             break;
-
         case 'languagemultiselect':
             if (empty($value))
             {
@@ -8328,19 +8339,15 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             $html .= "<label>".html_checkbox($setupvar.'checkbox', $checked, "");
             $html .= $GLOBALS['strAll']."</label>";
             break;
-
         case 'slaselect':
             $html .= serviceleveltag_drop_down($setupvar, $value, TRUE);
             break;
-
         case 'userselect':
             $html .= user_drop_down($setupvar, $value, FALSE, FALSE, '', TRUE);
             break;
-
         case 'siteselect':
             $html .= site_drop_down($setupvar, $value, FALSE);
             break;
-
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8350,7 +8357,6 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
             break;
-
         case 'timezoneselect':
             if ($value == '') $value = 0;
             foreach ($availabletimezones AS $offset=>$tz)
@@ -8360,45 +8366,36 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             }
             $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
             break;
-
         case 'userstatusselect':
             $html .= userstatus_drop_down($setupvar, $value);
             break;
-
         case 'roleselect':
             $html .= role_drop_down($setupvar, $value);
             break;
-
         case 'number':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='7' value=\"{$value}\" />";
             break;
-
         case '1darray':
             $replace = array('array(', ')', "'");
             $value = str_replace($replace, '',  $value);
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='60' value=\"{$value}\" />";
            break;
-
         case '2darray':
             $replace = array('array(', ')', "'", '\r','\n');
             $value = str_replace($replace, '',  $value);
             $value = str_replace(',', "\n", $value);
             $html .= "<textarea name='{$setupvar}' id='{$setupvar}' cols='60' rows='10'>{$value}</textarea>";
             break;
-
         case 'password':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             break;
-
         case 'ldappassword':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
             break;
-
         case 'textreadonly':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
             break;
-
         case 'text':
         default:
             if (strlen($CONFIG[$setupvar]) < 65)
@@ -8450,7 +8447,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
                         to system configuration.
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
-**/
+ */
 function cfgSave($setupvars, $userid = 0)
 {
     global $dbConfig, $dbUserConfig;
@@ -8479,7 +8476,7 @@ function cfgSave($setupvars, $userid = 0)
 /**
  * HTML for a hyperlink to hide/reveal a password field
  * @author Ivan Lucas
-**/
+ */
 function password_reveal_link($id)
 {
     $html = "<a href=\"javascript:password_reveal('$id')\" id=\"link{$id}\">{$GLOBALS['strReveal']}</a>";
@@ -8527,7 +8524,7 @@ function num_unread_emails()
  * @param $id int ID of the KB article
  * @param $mode string 'public' for portal users, 'private' for internal users
  * @return bool Whether we are allowed to see it or not
-*/
+ */
 function is_kb_article($id, $mode)
 {
     $rtn = FALSE;
@@ -8561,7 +8558,7 @@ function is_kb_article($id, $mode)
  * @param $contactid int ID of the contact to send it to
  * @param $incidentid int ID of the incident the feedback is about
  * @return string the hash
-*/
+ */
 function feedback_hash($formid, $contactid, $incidentid)
 {
     $hashtext = urlencode($formid)."&&".urlencode($contactid)."&&".urlencode($incidentid);

@@ -184,7 +184,6 @@ if ($countskills > 0 AND $countusers > 0)
             else $shade = 'shade1';
         }
         mysql_data_seek($usersresult, 0);
-        //echo $row->realname." ";
         $previous = $row->name;
     }
     echo "<tr><th align='right'>{$strTotal}</th>";

@@ -47,10 +47,10 @@ if (!empty($productid))
 
     if ($errors == 0)
     {
-        $sql = "DELETE FROM `{$dbProducts}` WHERE id = $productid LIMIT 1";
+        $sql = "DELETE FROM `{$dbProducts}` WHERE id = {$productid} LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-        journal(CFG_LOGGING_NORMAL, 'Product Removed', "Product $productid was removed", CFG_JOURNAL_PRODUCTS, $productid);
+        journal(CFG_LOGGING_NORMAL, 'Product Removed', "Product {$productid} was removed", CFG_JOURNAL_PRODUCTS, $productid);
         html_redirect("products.php");
     }
     else

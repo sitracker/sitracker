@@ -67,12 +67,9 @@ while ($users = mysql_fetch_array($result))
     $nobackup = 0;
     if ($countskills >= 1)
     {
-        $c=1;
+        $c = 1;
         while ($software = mysql_fetch_object($sresult))
         {
-//             echo "<pre>".print_r($software,true)."</pre>";
-             //echo "<em>{$software->name}</em>";
-            //echo "<span class='info' title='{$strSubstitute}: ".user_realname($software->backupid,TRUE)."'>{$software->name}</span>";
             echo "{$software->name}";
             if ($software->backupid > 0) echo " <em style='color: #555;'>(".user_realname($software->backupid,TRUE).")</em>";
             if ($software->backupid == 0) $nobackup++;
@@ -80,13 +77,22 @@ while ($users = mysql_fetch_array($result))
             else
             {
                 echo "<br /><br />&bull; $countskills ".$strSkills;
-                if (($nobackup+1) >= $countskills) echo ", <strong>{$strNoSubstitutes}</strong>.";
-                elseif ($nobackup > 0) echo ", <strong>".sprintf($strNeedsSubstitueEngineers, $nobackup)."</strong>.";
+                if (($nobackup+1) >= $countskills)
+                {
+                    echo ", <strong>{$strNoSubstitutes}</strong>.";
+                }
+                elseif ($nobackup > 0)
+                {
+                    echo ", <strong>".sprintf($strNeedsSubstitueEngineers, $nobackup)."</strong>.";
+                }
             }
             $c++;
         }
     }
-    else echo "&nbsp;";
+    else
+    {
+        echo "&nbsp;";
+    }
 
     if ($users['id']==$sit[2]) echo " <a href='edit_user_skills.php'>{$strMySkills}</a>";
 

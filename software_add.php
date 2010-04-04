@@ -102,7 +102,6 @@ else
     // Add new
     $errors = 0;
 
-    // check for blank name
     if ($name == '')
     {
         $errors++;

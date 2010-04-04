@@ -55,7 +55,7 @@ switch ($action)
         echo "<h2>{$strEditVendor} {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";
         echo "<table align='center'>";
-        echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='$vendorname'/></td></tr>";
+        echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}'/></td></tr>";
         echo "</table>";
         echo "<input type='hidden' name='action' value='save' />";
         echo "<input type='hidden' name='vendorid' value='{$vendorid}' />";

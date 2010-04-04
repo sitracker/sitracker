@@ -29,7 +29,6 @@ define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARAT
 // Load config defaults
 include (APPLICATION_LIBPATH.'defaults.inc.php');
 // Server Configuration
-@include ('/etc/webtrack.conf');  // Legacy, for compatibility
 @include ('/etc/sit.conf');
 // Load config file with customisations
 @include (APPLICATION_FSPATH . "config.inc.php");
