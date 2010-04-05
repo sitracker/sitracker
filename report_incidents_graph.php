@@ -35,7 +35,7 @@ $currentmonth = date('n');
 $daysinyear = date('z',mktime(0,0,0,12,31,$year));
 flush();
 
-echo "<table summary='{$strIncidentsLoggedOpenClosed}' align='center' style='border: 1px solid #000;' width='250'>";
+echo "<table summary='{$strIncidentsLoggedOpenClosed}' align='center'>";
 if (empty($startyear))
 {
     $startyear = $currentyear;
