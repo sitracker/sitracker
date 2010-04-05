@@ -114,14 +114,14 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
   background-image: url('../images/top2.png');
   background-position: top-left; background-repeat: x-repeat;
 }
-#apptitle {
+#mastheadcontent {
   background-image: url('../images/sit_swirl2.png');
   background-position: top-left; background-repeat: no-repeat;
-  height: 50px; background-color: transparent;}
-#apptitle span {
+  height: 50px; background-color: transparent;
   top: 10px;
   position: relative;
 }
+#apptitle { background: transparent; }
 
 #aboutsit
 {
