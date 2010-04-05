@@ -72,8 +72,7 @@ if ($_SESSION['auth'] != TRUE)
     else
     {
         $available_languages = array_merge(array('xx-xx'=>$strDefault),$available_languages);
-        echo "<div style='margin-left: auto; margin-right: auto; width: 380px;";
-        echo " text-align: center; margin-top: 3em;'>";
+        echo "<div id='languageselection'>";
         echo "<form id='langselectform' action='login.php' method='post'>";
         echo icon('language', 16, $strLanguage)." <label for='lang'>";
         echo "{$strLanguage}</label>:  ";
@@ -85,7 +84,7 @@ if ($_SESSION['auth'] != TRUE)
         echo "</form>";
         echo "</div>";
     }
-    echo "<div class='windowbox' style='width: 220px;'>\n";
+    echo "<div id='login' class='windowbox'>\n";
     echo "<div class='windowtitle'>{$CONFIG['application_shortname']} - ";
     echo "{$strLogin}</div>\n";
     echo "<div class='window'>\n";
