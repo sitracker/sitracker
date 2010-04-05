@@ -23,9 +23,9 @@ if ($CONFIG['debug']) echo "<!-- Support Incidents Table -->";
 
 echo "<table align='center' style='width:95%;'>";
 echo "<col width='7%'></col>";
-echo "<col width='23%'></col>";
+echo "<col width='22%'></col>";
 echo "<col width='17%'></col>";
-echo "<col width='5%'></col>";
+echo "<col width='6%'></col>";
 echo "<col width='7%'></col>";
 echo "<col width='15%'></col>";
 echo "<col width='17%'></col>";
