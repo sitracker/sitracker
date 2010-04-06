@@ -3,8 +3,10 @@
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #masthead { background-color: #4B5C94; background-image: none;}
 #masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
+#mastheadcontent { background-image: none; }
 h1 { background-image: none; font-weight: lighter; }
 #apptitle {background-image: none; }
+
 #mainframe { background: transparent;}
 h1 { color: #fff; }
 h2 { color: #555; }
@@ -76,4 +78,6 @@ span.helplink a { color: #109810;}
     font-size: 99%; /* this is just for IE */
     text-decoration: none; color: #109810;
 }
+
+.droptarget { border: 1px dashed #FFC0FF;}
 
