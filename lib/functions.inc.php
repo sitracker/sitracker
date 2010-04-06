@@ -6844,7 +6844,8 @@ function kb_article($id, $mode='internal')
                 }
                 $html .= "<div class='kbprivate'><h3>{$kbcontent->header} (private)</h3>";
                 $restrictedcontent++;
-                break;
+            break;
+
             case 'restricted':
                 if ($mode != 'internal')
                 {
@@ -6854,7 +6855,8 @@ function kb_article($id, $mode='internal')
                 }
                 $html .= "<div class='kbrestricted'><h3>{$kbcontent->header}</h3>";
                 $restrictedcontent++;
-                break;
+            break;
+
             default:
                 $html .= "<div><h3>{$kbcontent->header}</h3>";
         }
@@ -7317,7 +7319,7 @@ function process_add_contact($mode = 'internal')
 
         // generate username and password
 
-        $username = strtolower(mb_substr($surname, 0, strcspn($surname, " ", 'UTF-8')));
+        $username = strtolower(mb_substr($surname, 0, strcspn($surname, " "), 'UTF-8'));
         $prepassword = generate_password();
 
         $password = md5($prepassword);
