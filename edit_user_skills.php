@@ -45,7 +45,8 @@ if (empty($submit))
     echo "<h2>".icon('skill', 32)." ";
     echo sprintf($strSkillsFor, user_realname($user,TRUE))."</h2>";
     echo "<p align='center'>{$strSelectYourSkills}</p>";
-    echo "<form name='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit=\"populateHidden(document.softwareform.elements['expertise[]'],document.softwareform.choices)\">";
+    echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
+    echo "onsubmit=\"populateHidden(document.softwareform.elements['expertise[]'], document.softwareform.choices); populateHidden(document.softwareform.elements['noskills[]'], document.softwareform.ns)\">";
     echo "<table align='center'>";
     echo "<tr><th>{$strNOSkills}</th><th>&nbsp;</th><th>{$strHAVESkills}</th></tr>";
     echo "<tr><td align='center' width='300' class='shade1'>";
@@ -98,7 +99,8 @@ if (empty($submit))
     echo "</td></tr>\n";
 
     echo "</table>";
-    echo "<input type='hidden' name='choices' />";
+    echo "<input type='hidden' name='choices' id='choices' />";
+    echo "<input type='hidden' name='ns' id='ns' />";
 
     echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
@@ -111,8 +113,11 @@ else
     $selections = urldecode($_POST['choices']);
     parse_str($selections);
 
-    $expertise = $_POST['expertise'];
-    $noskills = $_POST['noskills'];
+    $ns = urldecode($_POST['ns']);
+    parse_str($ns);
+    
+    // NOTE: it is NOT necessary to get expertise OR noskills from the $_POST as this is passed encoded in and handled above
+    // See Mantis 1239 for more details, PH 2010-04-06
 
     // FIXME: whatabout cases where the user is a backup for one of the products
     // he removes? or if the backup user leaves the company?
@@ -123,19 +128,22 @@ else
         foreach ($expertise AS $value)
         {
             $value = cleanvar($value);
-            $checksql = "SELECT userid FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND softwareid='{$value}' LIMIT 1";
-            $checkresult = mysql_query($checksql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($checkresult)< 1)
+            if (!empty($value))
             {
-                if ($value > 0)
+                $checksql = "SELECT userid FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND softwareid='{$value}' LIMIT 1";
+                $checkresult = mysql_query($checksql);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                if (mysql_num_rows($checkresult)< 1)
                 {
-                    $sql = "INSERT DELAYED INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    if ($value > 0)
+                    {
+                        $sql = "INSERT DELAYED INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
+                        mysql_query($sql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    }
                 }
+                $softlist[] = $value;
             }
-            $softlist[] = $value;
         }
     }
 
