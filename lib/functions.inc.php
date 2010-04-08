@@ -7364,9 +7364,13 @@ function process_add_contact($mode = 'internal')
             {
                 if ($CONFIG['portal'] AND $_POST['emaildetails'] == 'on')
                 {
-                    trigger('TRIGGER_NEW_CONTACT', array('contactid' => $newid, 'prepassword' => $prepassword, 'userid' => $sit[2]));
+                    $emaildetails = 1;
                 }
-
+                else
+                {
+                    $emaildetails = 0;
+                }
+                
                 if ($returnpage == 'addincident')
                 {
                     html_redirect("incident_add.php?action=findcontact&contactid={$newid}");

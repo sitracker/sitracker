@@ -368,6 +368,11 @@ array('description' => $strCurrentLanguage,
       'requires' => 'currentlang'
       );
 
+$ttvararray['{emaildetails}'] =
+array('show' => FALSE,
+      'replacement' => '$paramarray[\'emaildetails\'];',
+      );     
+
 $ttvararray['{feedbackurl}'] =
 array('description' => $strFeedbackURL,
       'requires' => 'incidentid',
