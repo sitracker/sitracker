@@ -298,15 +298,17 @@ if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
         }
     }
 
-    if ($reviewremain > -86400)
+    if ($reviewremain <= 0)
     {
-        echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
+        if ($reviewremain > -86400)
+        {
+            echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
+        }
+        else
+        {
+            echo "<br />".icon('review', 16)." {$strReviewDueNow}";
+        }
     }
-    else
-    {
-        echo "<br />".icon('review', 16)." {$strReviewDueNow}";
-    }
-
     if ($servicelevel->timed == 'yes')
     {
         echo "<br />";

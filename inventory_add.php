@@ -36,12 +36,12 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 
     $sql = "INSERT INTO `{$dbInventory}`(address, username, password, type,";
     $sql .= " notes, created, createdby, modified, modifiedby, active,";
-    $sql .= " name, siteid, privacy, identifier) VALUES('{$post['address']}', ";
+    $sql .= " name, siteid, privacy, identifier, contactid) VALUES('{$post['address']}', ";
     $sql .= "'{$post['username']}', '{$post['password']}', ";
     $sql .= "'{$post['type']}', ";
     $sql .= "'{$post['notes']}', NOW(), '{$sit[2]}', NOW(), ";
     $sql .= "'{$sit[2]}', '1', '{$post['name']}', '{$post['site']}', ";
-    $sql .= "'{$post['privacy']}', '{$post['identifier']}')";
+    $sql .= "'{$post['privacy']}', '{$post['identifier']}', '{$post['owner']}')";
 
     mysql_query($sql);
     $id = mysql_insert_id();
@@ -64,7 +64,7 @@ else
     if (!empty($_GET['site']))
     {
         $siteid = intval($_GET['site']);
-        $url = $url."&site={$siteid}";
+        $url = $url."&amp;site={$siteid}";
     }
 
     echo "<form action='{$url}' method='post'>";
@@ -86,8 +86,8 @@ else
     }
     else
     {
-        echo "<input type='hidden' id='site' name='site' value='{$siteid}' />";
         echo "<tr><th>{$strOwner}</th><td>";
+        echo "<input type='hidden' id='site' name='site' value='{$siteid}' />";
         echo contact_site_drop_down('owner', $row->contactid, $siteid, NULL, FALSE);
         echo "</td></tr>";
     }
@@ -104,7 +104,7 @@ else
     echo "<tr><th>{$strNotes}</th>";
     echo "<td>";
     echo bbcode_toolbar('inventorynotes');
-    echo "<textarea id='inventorynotes' rows='15' name='notes'>{$row->notes}</textarea></td></tr>";
+    echo "<textarea id='inventorynotes' rows='15' cols='60' name='notes'>{$row->notes}</textarea></td></tr>";
 
     echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
     echo "<td><input type='radio' name='privacy' value='private' ";
@@ -147,6 +147,7 @@ else
     {
         echo "<a href='inventory_site.php?id={$siteid}'>{$strBackToList}</a>";
     }
+    echo "</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 

@@ -114,14 +114,14 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
   background-image: url('../images/top2.png');
   background-position: top-left; background-repeat: x-repeat;
 }
-#apptitle {
+#mastheadcontent {
   background-image: url('../images/sit_swirl2.png');
   background-position: top-left; background-repeat: no-repeat;
-  height: 50px; background-color: transparent;}
-#apptitle span {
+  height: 50px; background-color: transparent;
   top: 10px;
   position: relative;
 }
+#apptitle { background: transparent; }
 
 #aboutsit
 {
@@ -983,6 +983,16 @@ span.sig { color: red; }
 }
 #navmenu a { color: white; }
 #navmenu a em { color: #ddd; }
+
+/* odds and sods */
+#login { width: 220px; }
+#login .windowtitle {cursor: default; }
+#inboxtable, #userslisttable { width: 95%; }
+#feedbackformtable { margin-left: auto; margin-right: auto; width: 70%; }
+#tasksform, #skillsmatrixform { text-align: center; }
+#languageselection { margin-left: auto; margin-right: auto; width: 380px; text-align: center; margin-top: 3em; }
+#incidentsgraphtable { border: 1px solid #000; width: 250px; }
+#producttags {width: 50%; margin: auto;}
 
 @media print
 {

@@ -212,7 +212,7 @@ else
     }
 
     // show drop down select for task view options
-    echo "<form action='{$_SERVER['PHP_SELF']}' style='text-align: center;'>";
+    echo "<form id='tasksform' action='{$_SERVER['PHP_SELF']}'>";
     echo "{$strView}: <select class='dropdown' name='queue' ";
     echo "onchange='window.location.href=this.options[this.selectedIndex].value'>\n";
     echo "<option ";
