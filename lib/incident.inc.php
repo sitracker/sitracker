@@ -775,7 +775,8 @@ function readable_last_updates($incidentid, $num)
     $sql  = "SELECT * FROM `{$dbUpdates}` ";
     $sql .= " WHERE incidentid='{$incidentid}' ";
     $sql .= "AND bodytext != '' ";
-    $sql .= "ORDER BY timestamp DESC LIMIT {$num}";
+    $sql .= "ORDER BY timestamp DESC ";
+    if ($num != -1 ) $sql .= "LIMIT {$num}";
     $query = mysql_query($sql);
     $text = "";
     while ($result = mysql_fetch_object($query))
