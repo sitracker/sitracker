@@ -1,4 +1,4 @@
-<?php
+    <?php
 // triggers.class.php - A representation of a trigger
 //
 // SiT (Support Incident Tracker) - Support call tracking system
@@ -46,7 +46,7 @@ class Trigger extends SitEntity {
     function Trigger($trigger_type, $param_array = '')
     {
         $this->trigger_type = cleanvar($trigger_type);
-        $this->paramarray = cleanvar($param_array);
+        $this->param_array = cleanvar($param_array);
         debug_log("Trigger {$trigger_type} created. Options:\n" . 
             print_r($param_array, TRUE));
     }
@@ -62,7 +62,6 @@ class Trigger extends SitEntity {
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
         global $dbTriggers;
-
         // Check that this is a defined trigger
         if (!array_key_exists($this->trigger_type, $trigger_types))
         {
@@ -71,7 +70,8 @@ class Trigger extends SitEntity {
         }
         plugin_do($this->trigger_type);
 
-        if (isset($param_array['user']))
+        // 10/04/10 is this used? KH
+        if (isset($this->param_array['user']))
         {
             $user_id = $this->param_array[$key];
         }
@@ -98,9 +98,10 @@ class Trigger extends SitEntity {
                 // commented out 09/09/09 as I'm 99% this code is bollocks
                 //if (!trigger_checks($triggerobj->checks))
                 //{
-                    $checks = $this->trigger_replace_specials($triggerobj->checks);
-		    //print_r("'".$triggerobj->checks."'" . "<br />" . $checks);
-                    $eresult = @eval("\$value = $checks;return TRUE;");
+
+                    $checks = trigger_replace_specials($this->trigger_type, $triggerobj->checks, $this->param_array);
+                    $eresult = eval("\$value = $checks;return TRUE;");
+
                     if (!$eresult)
                     {
                         trigger_error("Error in trigger rule for 
@@ -114,7 +115,7 @@ class Trigger extends SitEntity {
                     {
                         continue;
                     }
-                //}
+                //}                                
             }
 
             // if we have any stored parameters from the trigger, append to
@@ -200,50 +201,7 @@ class Trigger extends SitEntity {
     }
 
 
-    /**
-        * Replaces template variables with their values
-        * @author Kieran Hogg, Ivan Lucas
-        * @param $string_array string The string containing the variables
-        * @return string The string with variables replaced
-    */
-    private function trigger_replace_specials($string_array)
-    {
-        global $CONFIG, $application_version, $application_version_string, $dbg;
-        global $dbIncidents;
-        global $trigger_types, $ttvararray;
 
-        debug_log("notice string before: $string_array", TRUE);
-        //this loops through each variable and creates an array of useable varaibles' regexs
-        foreach ($ttvararray AS $identifier => $ttvar)
-        {
-            $multiple = FALSE;
-            foreach ($ttvar AS $key => $value)
-            {
-                //this checks if it's a multiply-defined variable
-                if (is_numeric($key))
-                {
-                    $trigger_replaces = replace_vars($this->trigger_type, $ttvar[$key], $identifier);
-                    if (!empty($trigger_replaces))
-                    {
-                        $trigger_regex[] = $trigger_replaces['trigger_regex'];
-                        $trigger_replace[] = $trigger_replaces['trigger_replace'];
-                    }
-                    $multiple = TRUE;
-                }
-            }
-            if ($multiple == FALSE)
-            {
-                $trigger_replaces = replace_vars($this->trigger_type, $ttvar, $identifier);
-                if (!empty($trigger_replaces))
-                {
-                    $trigger_regex[] = $trigger_replaces['trigger_regex'];
-                    $trigger_replace[] = $trigger_replaces['trigger_replace'];
-                }
-            }
-        }
-	$string = preg_replace($trigger_regex, $trigger_replace, $string_array);
-        return $string;
-    }
 
 
 
@@ -263,7 +221,7 @@ class Trigger extends SitEntity {
         }
         // $trigger_types[$this->trigger_type]['type'])
 
-        //if we have an incidentid, get it to pass to trigger_replace_specials()
+        //if we have an incidentid, get it to pass to trigger_replace_specials($this->trigger_type, )
         if (!empty($this->param_array['incidentid']))
         {
             $incidentid = $this->param_array['incidentid'];
@@ -280,13 +238,13 @@ class Trigger extends SitEntity {
         //add this in manually, this is who we're sending the email to
         $this->param_array['triggeruserid'] = $user_id;
 
-        $from = $this->trigger_replace_specials($template->fromfield);
-        $toemail = $this->trigger_replace_specials($template->tofield);
-        $replytoemail = $this->trigger_replace_specials($template->replytofield);
-        $ccemail = $this->trigger_replace_specials($template->ccfield);
-        $bccemail = $this->trigger_replace_specials($template->bccfield);
-        $subject = cleanvar($this->trigger_replace_specials($template->subjectfield));
-        $body .= $this->trigger_replace_specials($template->body);
+        $from = $this->trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
+        $toemail = $this->trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
+        $replytoemail = $this->trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
+        $ccemail = $this->trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
+        $bccemail = $this->trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
+        $subject = cleanvar($this->trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
+        $body .= $this->trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);
@@ -342,10 +300,10 @@ class Trigger extends SitEntity {
                 $noticelinktext = $notice->linktext;
             }
 
-            $notice_text = mysql_real_escape_string($this->trigger_replace_specials($notice_text));
-            $noticelinktext = cleanvar($this->trigger_replace_specials($noticelinktext));
-            $noticelink = cleanvar($this->trigger_replace_specials($notice->link));
-            $refid = cleanvar($this->trigger_replace_specials($notice->refid));
+            $notice_text = mysql_real_escape_string(trigger_replace_specials($this->trigger_type, $notice_text, $this->param_array));
+            $noticelinktext = cleanvar(trigger_replace_specials($this->trigger_type, $noticelinktext, $this->param_array));
+            $noticelink = cleanvar(trigger_replace_specials($this->trigger_type, $notice->link, $this->param_array));
+            $refid = cleanvar(trigger_replace_specials($this->trigger_type, $notice->refid, $this->param_array));
             $durability = $notice->durability;
             debug_log("notice: $notice_text", TRUE);;
 
@@ -356,7 +314,7 @@ class Trigger extends SitEntity {
 
             $sql = "INSERT INTO `{$dbNotices}` (userid, type, text, linktext,";
             $sql .= " link, durability, referenceid, timestamp) ";
-            $sql .= "VALUES ({$user_id}, '{$notice->type}', '{$notice_text}',";
+            $sql .= "VALUES ('{$user_id}', '{$notice->type}', '{$notice_text}',";
             $sql .= " '{$noticelinktext}', '{$noticelink}', '{$durability}', ";
             $sql .= "'{$refid}', NOW())";
             mysql_query($sql);

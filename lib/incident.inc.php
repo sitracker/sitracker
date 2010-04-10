@@ -760,4 +760,17 @@ function load_entitlements($contactid, $siteid)
     }
 }
 
+
+/**
+ * Get a readable last update body, written for the triggers variable
+ * Moved from portal/ad.php
+ * @param $contactid  - The contact to load the entitlement for
+ */
+function readable_last_update($incidentid)
+{
+    list($userid, $type, $currentowner, $currentstatus, $body, $timestamp,
+        $nextaction, $id) = incident_lastupdate($incidentid);
+    return $body;
+}
+
 ?>
