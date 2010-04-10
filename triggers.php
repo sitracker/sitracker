@@ -137,25 +137,36 @@ for ($i = 1; $i < 30; $i++)
     echo $t2->debug();
 }
 //END TESTING CODE
-echo "<div id='newtrigger'><p>When... ";
-echo "<select id='triggertype'>";
-foreach($trigger_types as $name => $trigger)
+if (!empty($_POST['triggertype']))
 {
-    echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>";
+    print_r($_POST);
 }
-echo "</select>";
-
-echo "<select id='new_action' onchange='switch_template()'>";
-foreach($actionarray as $name => $action)
+else
 {
-    echo "<option id='{$name}' value='{$name}'>{$action['description']}</option>";
-}
-echo "</select>";
+    echo "<div id='newtrigger'>";
+    echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
+    echo "<p>When... ";
+    echo "<select id='triggertype' name='triggertype'>";
+    foreach($trigger_types as $name => $trigger)
+    {
+        echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
+    }
+    echo "</select>";
 
-echo "<span id='emailtemplatesbox' style='display:none'>";
-echo email_templates('emailtemplate')."</span>";
-echo "<span id='noticetemplatesbox' style='display:none'>";
-echo notice_templates('noticetemplate')."</span>";
+    echo "<select id='new_action' name='new_action' onchange='switch_template()'>";
+    foreach($actionarray as $name => $action)
+    {
+        echo "<option id='{$name}' value='{$name}'>{$action['description']}</option>\n";
+    }
+    echo "</select>";
+
+    echo "<span id='emailtemplatesbox' style='display:none'>";
+    echo email_templates('emailtemplate')."</span>";
+    echo "<span id='noticetemplatesbox' style='display:none'>";
+    echo notice_templates('noticetemplate')."</span>";
+    echo " <input type='submit' name='submit' value='{$strAdd}' /></form>";
+}
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 
 ?>

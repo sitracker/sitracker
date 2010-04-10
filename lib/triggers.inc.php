@@ -212,6 +212,7 @@ array('name' => $strBillableIncidentApproved,
 
 plugin_do('trigger_types');
 
+// The pairing allows us to define which templates go with which triggers
 $pairingarray = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PASSWORD');
 
 /**
@@ -752,6 +753,7 @@ function email_templates($name, $triggertype='system', $selected = '')
 {
     global $dbEmailTemplates, $dbTriggers;;
     $html .= "<select id='{$name}' name='{$name}'>";
+    $html .= "<option></option>";
     $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
     $sql .= "WHERE type='{$triggertype}' ORDER BY name";
     $result = mysql_query($sql);
@@ -780,6 +782,7 @@ function notice_templates($name, $selected = '')
 {
     global $dbNoticeTemplates;
     $html .= "<select id='{$name}' name='{$name}'>";
+    $html .= "<option></option>";
     $sql = "SELECT id, name, description FROM `{$dbNoticeTemplates}` ORDER BY name ASC";
     $query = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
