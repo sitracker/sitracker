@@ -696,7 +696,7 @@ array('description' => 'The ID of the update',
       );
 
 $ttvararray['{updatetext}'] =
-array('description' => 'The text of the last {numupdates} updates to an incident',
+array('description' => 'By default, the text of the last update to an incident, the numupdates parameter can be set to an integer or -1 for all updates',
       'replacement' => 'readable_last_updates($param_array[\'incidentid\'], $param_array[\'numupdates\']);',
       'requires' => 'incidentid',
       );
