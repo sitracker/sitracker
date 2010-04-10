@@ -121,11 +121,11 @@ class Trigger extends SitEntity {
             // if we have any stored parameters from the trigger, append to
             // the dynamic ones
             if (!empty($triggerobj->parameters))
-            {
+            {   
                 $resultparams = explode(",", $triggerobj->parameters);
                 foreach ($resultparams as $assigns)
                 {
-                    $values = explode("=", $assigns);
+                    $values = explode(" = ", $assigns);
                     $this->param_array[$values[0]] = $values[1];
                     $dbg .= "\$this->param_array[{$values[0]}] = {$values[1]}";
                 }

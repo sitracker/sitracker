@@ -763,13 +763,28 @@ function load_entitlements($contactid, $siteid)
 
 /**
  * Get a readable last update body, written for the triggers variable
- * @param $incidentid  - The incident ID to get the update for
+ * @param $incidentid  int The incident ID to get the update for
+ * @param $num int amount of updates to include
  */
-function readable_last_update($incidentid)
+function readable_last_updates($incidentid, $num)
 {
-    list($userid, $type, $currentowner, $currentstatus, $body, $timestamp,
-        $nextaction, $id) = incident_lastupdate($incidentid);
-    return $body;
+    global $dbUpdates;
+
+    $num = intval($num);
+    ($num == 0) ? $num = 1 : $num;
+    $sql  = "SELECT * FROM `{$dbUpdates}` ";
+    $sql .= " WHERE incidentid='{$incidentid}' ";
+    $sql .= "AND bodytext != '' ";
+    $sql .= "ORDER BY timestamp DESC LIMIT {$num}";
+    $query = mysql_query($sql);
+    $text = "";
+    while ($result = mysql_fetch_object($query))
+    {
+        $num--;
+        $text .= strip_tags($result->bodytext);
+        if ($num > 0 ) $text .= "\n--------------------------\n";
+    }
+    return $text;
 }
 
 ?>
