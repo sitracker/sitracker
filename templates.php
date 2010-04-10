@@ -110,11 +110,10 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
             echo "<td></td>";
         }
         echo "</tr>\n";
-        if ($shade=='shade1') $shade='shade2';
-        else $shade='shade1';
+        if ($shade == 'shade1') $shade = 'shade2';
+        else $shade = 'shade1';
     }
     echo "</table>";
-//     echo "<pre>".print_r($template,true)."</pre>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "edit")
@@ -176,7 +175,6 @@ elseif ($action == "edit")
             $title = "{$strEdit}: $strEmailTemplate";
             $templateaction = 'ACTION_EMAIL';
             break;
-
         case 'notice':
         default:
             if (!is_numeric($id)) $sql = "SELECT * FROM `{$dbNoticeTemplates}` WHERE name='$id' LIMIT 1";
@@ -268,7 +266,6 @@ elseif ($action == "edit")
                 echo "<tr><th>{$strSubject}</th>";
                 echo "<td><input id='subject' maxlength='255' name='subjectfield' size='60' value=\"{$template->subjectfield}\" onfocus=\"recordFocusElement(this);\" /></td></tr>\n";
                 break;
-
             case 'notice':
                 echo "<tr><th>{$strLinkText}</th>";
                 echo "<td><input id='linktext' maxlength='50' name='linktext' size='50' ";
@@ -341,7 +338,10 @@ elseif ($action == "edit")
         echo "<input name='submit' type='submit' value=\"{$strSave}\" />";
         echo "</p>\n";
         // FIXME when to allow deletion?
-        if ($template->type=='user') echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
+        if ($template->type == 'user')
+        {
+            echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
+        }
         echo "</form>";
         echo "</div>";
 
@@ -464,25 +464,22 @@ elseif ($action == "update")
     switch ($template)
     {
         case 'email':
-            $sql  = "UPDATE `{$dbEmailTemplates}` SET name='$name', description='$description', tofield='$tofield', fromfield='$fromfield', ";
-            $sql .= "replytofield='$replytofield', ccfield='$ccfield', bccfield='$bccfield', subjectfield='$subjectfield', ";
-            $sql .= "body='$bodytext', customervisibility='$cust_vis', storeinlog='$storeinlog' ";
+            $sql  = "UPDATE `{$dbEmailTemplates}` SET name='{$name}', description='{$description}', tofield='{$tofield}', fromfield='{$fromfield}', ";
+            $sql .= "replytofield='{$replytofield}', ccfield='{$ccfield}', bccfield='{$bccfield}', subjectfield='{$subjectfield}', ";
+            $sql .= "body='{$bodytext}', customervisibility='{$cust_vis}', storeinlog='{$storeinlog}' ";
             $sql .= "WHERE id='$id' LIMIT 1";
-        break;
-
+            break;
         case 'notice':
-            $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='$name', description='$description', type='', ";
+            $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='{$name}', description='{$description}', type='', ";
             $sql .= "linktext='{$linktext}', link='{$link}', durability='{$durability}', ";
-            $sql .= "text='$bodytext' ";
-            $sql .= "WHERE id='$id' LIMIT 1";
-        break;
-
+            $sql .= "text='{$bodytext}' ";
+            $sql .= "WHERE id='{$id}' LIMIT 1";
+            break;
         default:
             trigger_error('Error: Invalid template type', E_USER_WARNING);
             html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 
-//     echo $sql;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     if ($result)

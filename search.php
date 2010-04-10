@@ -723,7 +723,7 @@ echo "<br />";
 $search_domain = cleanvar($_REQUEST['domain']);
 if (empty($search_domain) OR strtolower($search_domain) == 'all')
 {
-$domain = 'incidents';
+    $domain = 'incidents';
 }
 
 $sort = cleanvar($_REQUEST['sort']);

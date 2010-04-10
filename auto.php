@@ -596,7 +596,7 @@ function saction_CheckWaitingEmail()
     list($count, $minswaiting) = mysql_fetch_row($result);
     if ($count > 0)
     {
-        trigger("TRIGGER_WAITING_HELD_EMAIL", array('minswaiting' => $minswaiting));
+        trigger("TRIGGER_WAITING_HELD_EMAIL", array('holdingmins' => $minswaiting));
     }
 
     return $success;

@@ -35,7 +35,7 @@ $currentmonth = date('n');
 $daysinyear = date('z',mktime(0,0,0,12,31,$year));
 flush();
 
-echo "<table summary='{$strIncidentsLoggedOpenClosed}' align='center' style='border: 1px solid #000;' width='250'>";
+echo "<table summary='{$strIncidentsLoggedOpenClosed}' align='center'>";
 if (empty($startyear))
 {
     $startyear = $currentyear;
@@ -76,8 +76,8 @@ for ($year = $startyear; $year < $lastyear; $year++)
     for ($month = $startmonth; $month <= $lastmonth; $month++)
     {
         // loop through months
-        $monthname = date('F',mktime(0,0,0,$month,1,$year));
-        $daysinmonth = date('t',mktime(0,0,0,$month,1,$year));
+        $monthname = date('F',mktime(0, 0, 0, $month, 1, $year));
+        $daysinmonth = date('t',mktime(0, 0, 0, $month, 1, $year));
         $colspan = ($daysinmonth*2)+1;  // have to calculate number of cols since ie doesn't seem to do colspan=0
         echo "<tr><td align=\"center\" colspan=\"$colspan\"><h2><a href='{$_SERVER['PHP_SELF']}?startyear=$year&startmonth=$month'>$monthname $year</a></h2></td></tr>\n";
         echo "<tr align=\"center\">";
@@ -114,7 +114,7 @@ for ($year = $startyear; $year < $lastyear; $year++)
             echo "<td valign=\"bottom\" >";
             if ($countdayclosedincidents > 0)
             {
-                echo "<div style='cursor: help; height: {$closedheight}px;  width: 5px; background-color: $closedcolour;' title='{$countdayclosedincidents}'>&nbsp;</div>";
+                echo "<div style='cursor: help; height: {$closedheight}px;  width: 5px; background-color: {$closedcolour};' title='{$countdayclosedincidents}'>&nbsp;</div>";
             }
             echo "</td>";
         }
@@ -122,7 +122,7 @@ for ($year = $startyear; $year < $lastyear; $year++)
         echo "<tr><td>&nbsp;</td>";
         for ($day = 1; $day <= $daysinmonth; $day++)
         {
-            echo "<td colspan='2' align='center'>$day</td>";
+            echo "<td colspan='2' align='center'>{$day}</td>";
         }
         echo "</tr>\n";
         $grandtotal += $monthtotal;
@@ -132,30 +132,30 @@ for ($year = $startyear; $year < $lastyear; $year++)
 
         if ($diff < 0)
         {
-            $diff = "<span style='color: $closedcolour;'>$diff</span>";
+            $diff = "<span style='color: {$closedcolour};'>{$diff}</span>";
         }
         else
         {
-            $diff="<span style='color: $openedcolour;'>$diff</span>";
+            $diff = "<span style='color:{$openedcolour};'>{$diff}</span>";
         }
 
         echo "<tr><td align=\"center\" colspan=\"$colspan\" style='border-bottom: 2px solid #000;'>";
         echo "<p>{$strTotal}: <strong style='color: $openedcolour;'>$monthtotal</strong> {$strOpened}. ";
-        echo "<strong style='color: $closedcolour;'>$monthtotalclosed</strong> {$strClosed}. {$strDifference}: <strong>$diff</strong><br />";
+        echo "<strong style='color: $closedcolour;'>$monthtotalclosed</strong> {$strClosed}. {$strDifference}: <strong>{$diff}</strong><br />";
 
         $diff = ($grandtotal-$grandtotalclosed);
 
         if ($diff < 0)
         {
-            $diff = "<span style='color: $closedcolour;'>$diff</span>";
+            $diff = "<span style='color: {$closedcolour};'>{$diff}</span>";
         }
         else
         {
-            $diff="<span style='color: $openedcolour;'>$diff</span>";
+            $diff = "<span style='color: {$openedcolour};'>{$diff}</span>";
         }
 
         echo "{$strGrandTotal}: <strong style='color: $openedcolour;'>$grandtotal</strong> {$strOpened}. ";
-        echo "<strong style='color: $closedcolour;'>$grandtotalclosed</strong> {$strClosed}. {$strDifference} <strong>$diff</strong></p></td></tr>\n";
+        echo "<strong style='color: $closedcolour;'>$grandtotalclosed</strong> {$strClosed}. {$strDifference} <strong>{$diff}</strong></p></td></tr>\n";
     }
     if ($startmonth > 1)
     {

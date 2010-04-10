@@ -225,9 +225,8 @@ if (empty($mode))
     echo "<td><input maxlength=\"50\" name=\"msn\" size=\"30\" type=\"text\" value=\"".strip_tags($user->msn)."\" /></td></tr>";
 
     plugin_do('edit_profile_form');
-
     // Do not allow password change if using LDAP
-    if ($_SESSION['user_source'] != 'sit')
+    if ($_SESSION['user_source'] == 'sit')
     {
         if ($CONFIG['trusted_server'] == FALSE AND $edituserid == $sit[2])
         {

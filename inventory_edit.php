@@ -115,7 +115,7 @@ else
 
     echo "<tr><th>{$strSite}</th><td>";
     echo site_drop_down('site', $row->siteid, TRUE);
-    echo " <span class='required'>{$strRequired}</td>";
+    echo " <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strOwner}</th><td>";
     echo contact_site_drop_down('owner', $row->contactid);
     echo "</td></tr>";
@@ -138,7 +138,7 @@ else
     echo "<tr><th>{$strNotes}</th>";
     echo "<td>";
     echo bbcode_toolbar('inventorynotes');
-    echo "<textarea id='inventorynotes' rows='15' name='notes'>$row->notes</textarea></td></tr>";
+    echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>$row->notes</textarea></td></tr>";
 
     if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
@@ -181,6 +181,7 @@ else
     }
     echo "/>";
 
+    echo "</td></tr>";
     echo "</table>";
     echo "<p align='center'>";
     echo "<input name='submit' type='submit' value='{$strUpdate}' /></p>";
@@ -189,5 +190,7 @@ else
 
     echo "<a href='inventory_site.php?id={$row->siteid}'>{$strBackToList}</a>";
 
+    echo "</p>";
+    
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

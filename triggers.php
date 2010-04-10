@@ -11,6 +11,7 @@
 $permission = 71;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
+require (APPLICATION_LIBPATH . 'trigger.class.php');   
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -127,7 +128,7 @@ function switch_template()
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='newtrigger'><p>When... ";
 echo "<select id='triggertype'>";
-foreach($triggerarray as $name => $trigger)
+foreach($trigger_types as $name => $trigger)
 {
     echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>";
 }

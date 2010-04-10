@@ -14,7 +14,7 @@
 
 
 
-$permission=0; // not required
+$permission = 0; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

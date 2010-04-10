@@ -87,7 +87,7 @@ if (empty($displayid))
     if (!empty($_REQUEST['action']))
     {
         // FIXME BUGBUG remove for release. temporary message
-        echo "<p>Action: {$_REQUEST['action']}</p>"; 
+        echo "<p>Action: {$_REQUEST['action']}</p>";
         if (is_array($_REQUEST['selected']))
         {
             foreach ($_REQUEST['selected'] AS $item => $selected)
@@ -125,9 +125,15 @@ if (empty($displayid))
         else $sortorder = "DESC";
         switch ($sort)
         {
-            case 'from': $sql .= " ORDER BY `from` $sortorder"; break;
-            case 'subject': $sql .= " ORDER BY `subject` $sortorder"; break;
-            default:   $sql .= " ORDER BY `id` DESC"; break;
+            case 'from':
+                $sql .= " ORDER BY `from` {$sortorder}";
+                break;
+            case 'subject':
+                $sql .= " ORDER BY `subject` {$sortorder}";
+                break;
+            default:
+                $sql .= " ORDER BY `id` DESC";
+                break;
         }
 
     }
@@ -139,7 +145,7 @@ if (empty($displayid))
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox'  method='post'>";
         $shade = 'shade1';
-        echo "<table align='center' style='width: 95%'>";
+        echo "<table align='center' id='inboxtable'>";
         echo "<tr>";
         echo colheader('select', '', FALSE, '', '', '', '1%');
         echo colheader('from', $strFrom, $sort, $order, $filter, '', '25%');

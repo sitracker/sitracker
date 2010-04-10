@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 //  Author: Ivan Lucas
-//  Notes: These variables are overwridden by config.inc.php and/or webtrack.conf or sit.conf
+//  Notes: These variables are overwridden by config.inc.php and/or sit.conf
 
 ###########################################################
 ####                                                   ####

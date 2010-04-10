@@ -62,7 +62,7 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
                          $productversion = '', $productservicepacks = '',
                          $opened = '', $lastupdated = '')
 {
-    global $now, $dbIncidents;
+    global $now, $dbIncidents, $dbUpdates, $sit;
 
     if (empty($opened))
     {
@@ -89,10 +89,34 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
     }
     else
     {
-        $incident = mysql_insert_id();
+        $incidentid = mysql_insert_id();
         increment_incidents_used($contract);
-        return $incident;
+
     }
+
+    //add the updates and SLA etc
+    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
+    $sql .= "currentstatus, customervisibility, nextaction) ";
+    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
+    $sql .= "'1', '{$customervisibility}', '{$nextaction}')";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+    // Insert the first SLA update, this indicates the start of an incident
+    // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
+    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
+    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'slamet', '{$now}', '{$sit[2]}', '1', 'show', 'opened','{$_SESSION['syslang']['strIncidentIsOpen']}.')";
+    mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+    // Insert the first Review update, this indicates the review period of an incident has started
+    // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
+    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
+    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', 'opened','')";
+    mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+    return $incidentid;
 }
 
 

@@ -29,16 +29,15 @@ switch ($action)
     case 'savemembers':
         $sql = "SELECT * FROM `{$dbUsers}` ORDER BY realname";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($user = mysql_fetch_object($result))
         {
             $usql = "UPDATE `{$dbUsers}` SET groupid = '".cleanvar($_POST["group{$user->id}"])."' WHERE id='{$user->id}'";
             mysql_query($usql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
         html_redirect("usergroups.php");
-    break;
-
+        break;
     case 'addgroup':
         $group = cleanvar($_REQUEST['group']);
         if (empty($group))
@@ -50,22 +49,20 @@ switch ($action)
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         html_redirect("usergroups.php");
-    break;
-
+        break;
     case 'deletegroup':
         $groupid = cleanvar($_REQUEST['groupid']);
         // Remove group membership for all users currently assigned to this group
         $sql = "UPDATE `{$dbUsers}` SET groupid = '' WHERE groupid = '{$groupid}'";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         // Remove the group
         $sql = "DELETE FROM `{$dbGroups}` WHERE id='{$groupid}' LIMIT 1";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         html_redirect("usergroups.php");
-    break;
-
+        break;
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -73,10 +70,10 @@ switch ($action)
 
         $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
         $gresult = mysql_query($gsql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($group = mysql_fetch_object($gresult))
         {
-            $grouparr[$group->id]=$group->name;
+            $grouparr[$group->id] = $group->name;
         }
 
         $numgroups = count($grouparr);

@@ -66,7 +66,10 @@ if (mysql_numrows($result) > 0)
     }
     elseif ($display == 'csv')
     {
-        $str .= "\"{$strSiteName}\",\"{$strProduct}\",\"{$strExpiryDate}\", \"{$strCustomerReference}\", \"{$strStartDate}\",\"{$strEndDate}\",\"{$strFreeOfCharge}\",\"{$strCreditAmount}\",\"{$strBalance}\",\"{$strAwaitingApproval}\",\"{$strReserved}\",\"{$strAvailableBalance}\",\"{$strUnitRate}\",\"{$strUnitsRemaingSingleTime}\"\n";
+        // NOTE: do not seperate each of these entries with spaces some apps can't decode properly (OpenOffice) and you get " in the entries
+        $str .= "\"{$strSiteName}\",\"{$strProduct}\",\"{$strExpiryDate}\",\"{$strCustomerReference}\",\"{$strStartDate}\",";
+        $str .= "\"{$strEndDate}\",\"{$strFreeOfCharge}\",\"{$strCreditAmount}\",\"{$strBalance}\",\"{$strAwaitingApproval}\",";
+        $str .= "\"{$strReserved}\",\"{$strAvailableBalance}\",\"{$strUnitRate}\",\"{$strUnitsRemaingSingleTime}\"\n";
     }
 
     $lastsite = '';
@@ -96,7 +99,7 @@ if (mysql_numrows($result) > 0)
         $totalreserved += $reserved;
 
         $actual = ($obj->balance - $awaitingapproval) - $reserved;
-        $totalactual +=$actual;
+        $totalactual += $actual;
 
         if ($obj->unitrate != 0) $unitsat1times = round(($actual /$obj->unitrate), 2);
         else $unitsat1times = 0;
@@ -165,11 +168,12 @@ if (mysql_numrows($result) > 0)
                 }
             }
 
+            $str .= "\"".ldate('Y-m-d', $obj->maintexpiry)."\",";
             $str .= "\"{$obj->cust_ref}\",\"{$obj->startdate}\",\"{$obj->enddate}\",";
             if ($obj->foc == 'yes') $str .= "\"{$strYes}\",";
             else $str .= "\"{$strNo}\",";
             $str .= "\"{$csv_currency}{$obj->creditamount}\",\"{$csv_currency}{$obj->balance}\",";
-            $str .= "\"{$awaitingapproval}\", \"{$reserved}\", \"{$actual}\", ";
+            $str .= "\"{$awaitingapproval}\",\"{$reserved}\",\"{$actual}\",";
             $str .= "\"{$csv_currency}{$obj->unitrate}\",";
             $str .= "\"{$unitsat1times}\"\n";
         }

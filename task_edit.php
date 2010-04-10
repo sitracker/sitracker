@@ -105,51 +105,90 @@ switch ($action)
         else
         {
             replace_tags(4, $id, $tags);
-            if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
+            if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
             else $startdate = '';
-            if ($duedate > 0) $duedate = date('Y-m-d',$duedate);
+            if ($duedate > 0) $duedate = date('Y-m-d', $duedate);
             else $duedate='';
-            if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
+            if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
             else $enddate='';
             if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s');
             $sql = "UPDATE `{$dbTasks}` ";
-            $sql .= "SET name='$name', description='$description', priority='$priority', ";
-            $sql .= "duedate='$duedate', startdate='$startdate', ";
-            $sql .= "completion='$completion', enddate='$enddate', value='$value', ";
-            $sql .= "owner=$owner, distribution='$distribution' ";
-            $sql .= "WHERE id='$id' LIMIT 1";
+            $sql .= "SET name='{$name}', description='{$description}', priority='{$priority}', ";
+            $sql .= "duedate='{$duedate}', startdate='{$startdate}', ";
+            $sql .= "completion='{$completion}', enddate='{$enddate}', value='{$value}', ";
+            $sql .= "owner={$owner}, distribution='{$distribution}' ";
+            $sql .= "WHERE id='{$id}' LIMIT 1";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
             // if (mysql_affected_rows() < 1) trigger_error("Task update failed",E_USER_ERROR);
 
             // Add a note to say what changed (if required)
             $bodytext='';
-            if ($name != $old_name) $bodytext .= "{$SYSLANG['strName']}: {$old_name} -&gt; [b]{$name}[/b]\n";
-            if ($description != $old_description) $bodytext .= "{$SYSLANG['strDescription']}: {$old_description} -&gt; [b]{$description}[/b]\n";
-            if ($priority != $old_priority) $bodytext .= "{$SYSLANG['strPriority']}: ".priority_name($old_priority)." -&gt; [b]".priority_name($priority)."[/b]\n";
+            if ($name != $old_name)
+            {
+                $bodytext .= "{$SYSLANG['strName']}: {$old_name} -&gt; [b]{$name}[/b]\n";
+            }
+
+            if ($description != $old_description)
+            {
+                $bodytext .= "{$SYSLANG['strDescription']}: {$old_description} -&gt; [b]{$description}[/b]\n";
+            }
+
+            if ($priority != $old_priority)
+            {
+                $bodytext .= "{$SYSLANG['strPriority']}: ".priority_name($old_priority)." -&gt; [b]".priority_name($priority)."[/b]\n";
+            }
+
             $old_startdate = substr($old_startdate,0,10);
-            if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00')) $bodytext .= "{$SYSLANG['strStartDate']}: {$old_startdate} -&gt; [b]{$startdate}[/b]\n";
+            if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00'))
+            {
+                $bodytext .= "{$SYSLANG['strStartDate']}: {$old_startdate} -&gt; [b]{$startdate}[/b]\n";
+            }
+
             $old_duedate = substr($old_duedate,0,10);
-            if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00')) $bodytext .= "{$SYSLANG['strDueDate']}: {$old_duedate} -&gt; [b]{$duedate}[/b]\n";
-            if ($completion != $old_completion) $bodytext .= "{$SYSLANG['strCompletion']}: {$old_completion}% -&gt; [b]{$completion}%[/b]\n";
-            if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00:00')) $bodytext .= "{$SYSLANG['strDueDate']}: {$old_enddate} -&gt; [b]{$enddate}[/b]\n";
-            if ($value != $old_value) $bodytext .= "{$SYSLANG['strValue']}: {$old_value} -&gt; [b]{$value}[/b]\n";
-            if ($owner != $old_owner) $bodytext .= "{$SYSLANG['strUser']}: ".user_realname($old_owner)." -&gt; [b]".user_realname($owner)."[/b]\n";
-            if ($distribution != $old_distribution) $bodytext .= "{$SYSLANG['strPrivacy']}: {$old_distribution} -&gt; [b]{$distribution}[/b]\n";
+            if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00'))
+            {
+                $bodytext .= "{$SYSLANG['strDueDate']}: {$old_duedate} -&gt; [b]{$duedate}[/b]\n";
+            }
+
+            if ($completion != $old_completion)
+            {
+                $bodytext .= "{$SYSLANG['strCompletion']}: {$old_completion}% -&gt; [b]{$completion}%[/b]\n";
+            }
+
+            if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00:00'))
+            {
+                $bodytext .= "{$SYSLANG['strDueDate']}: {$old_enddate} -&gt; [b]{$enddate}[/b]\n";
+            }
+
+            if ($value != $old_value)
+            {
+                $bodytext .= "{$SYSLANG['strValue']}: {$old_value} -&gt; [b]{$value}[/b]\n";
+            }
+
+            if ($owner != $old_owner)
+            {
+                $bodytext .= "{$SYSLANG['strUser']}: ".user_realname($old_owner)." -&gt; [b]".user_realname($owner)."[/b]\n";
+            }
+
+            if ($distribution != $old_distribution)
+            {
+                $bodytext .= "{$SYSLANG['strPrivacy']}: {$old_distribution} -&gt; [b]{$distribution}[/b]\n";
+            }
+
             if (!empty($bodytext))
             {
-                $bodytext = sprintf($strEditedBy, $_SESSION['realname']).":\n\n".$bodytext;
+                $bodytext = sprintf($strEditedBy, $_SESSION['realname']).":\n\n{$bodytext}";
                 // Link 10 = Tasks
                 $sql = "INSERT INTO `{$dbNotes}` ";
                 $sql .= "(userid, bodytext, link, refid) ";
                 $sql .= "VALUES ('0', '{$bodytext}', '10', '{$id}')";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             }
             html_redirect("view_task.php?id={$id}", TRUE);
         }
-    break;
-
+        break;
     case 'markcomplete':
         //this task is for an incident, enter an update from all the notes
         if ($incident)
@@ -157,7 +196,7 @@ switch ($action)
             //get current incident status
             $sql = "SELECT status FROM `{$dbIncidents}` WHERE id='{$incident}'";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $status = mysql_fetch_object($result);
             $status = $status->status;
 
@@ -171,7 +210,7 @@ switch ($action)
             $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
 
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($result) >= 1)
             {
                 $task = mysql_fetch_object($result);
@@ -190,7 +229,7 @@ switch ($action)
             $numnotes = 0;
             $sql = "SELECT * FROM `{$dbNotes}` WHERE link='10' AND refid='{$id}'";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($result) >= 1)
             {
                 while ($notes = mysql_fetch_object($result))
@@ -244,10 +283,10 @@ switch ($action)
 
             $sql = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', status = 1 WHERE id = {$incident}";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_affected_rows() != 1)
             {
-                trigger_error("No rows affected while updating incident",E_USER_ERROR);
+                trigger_error("No rows affected while updating incident", E_USER_ERROR);
             }
 
             mark_task_completed($id, TRUE);
@@ -260,8 +299,7 @@ switch ($action)
         // FIXME redundant i18n strings
         if ($incident) html_redirect("tasks.php?incident={$incident}", TRUE, $strActivityMarkedCompleteSuccessfully);
         else html_redirect("tasks.php", TRUE);
-    break;
-
+        break;
     case 'delete':
         $sql = "DELETE FROM `{$dbTasks}` ";
         $sql .= "WHERE id='$id' LIMIT 1";
@@ -274,8 +312,7 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
         html_redirect("tasks.php", TRUE);
-    break;
-
+        break;
     case '':
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -297,7 +334,7 @@ switch ($action)
                 echo "<td><input type='text' name='name' size='35' maxlength='255' value=\"{$task->name}\" /></td></tr>";
                 echo "<tr><th>{$strDescription}</th>";
                 echo "<td><textarea name='description' rows='4' cols='30'>{$task->description}</textarea></td></tr>";
-                if ($task->distribution=='public')
+                if ($task->distribution == 'public')
                 {
                     echo "<tr><th>{$strTags}:</th>";
                     echo "<td><textarea rows='2' cols='30' name='tags'>".list_tags($id, 4, false)."</textarea></td></tr>";
@@ -336,10 +373,10 @@ switch ($action)
                 echo "<tr><th>{$strPrivacy}</th>";
                 echo "<td>";
                 echo "<input type='radio' name='distribution' ";
-                if ($task->distribution=='public') echo "checked='checked' ";
+                if ($task->distribution == 'public') echo "checked='checked' ";
                 echo "value='public' /> {$strPublic}<br />";
                 echo "<input type='radio' name='distribution' ";
-                if ($task->distribution=='private') echo "checked='checked' ";
+                if ($task->distribution == 'private') echo "checked='checked' ";
                 echo "value='private' /> {$strPrivate} ".icon('private', 16, $strPrivate)."</td></tr>";
                 echo "</table>";
                 echo "<p><input name='submit' type='submit' value='{$strSave}' /></p>";
@@ -359,7 +396,10 @@ switch ($action)
                 echo "</form>";
             }
         }
-        else echo "<p class='error'>{$strNoMatchingTaskFound}</p>";
+        else
+        {
+            echo "<p class='error'>{$strNoMatchingTaskFound}</p>";
+        }
 
         echo "<p align='center'><a href='tasks.php'>{$strTaskList}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
