@@ -126,6 +126,17 @@ function switch_template()
 
 <?php
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
+// BEGIN TESTING CODE
+//$t = new TriggerEvent('TRIGGER_SIT_UPGRADED', array());
+
+$t = new Trigger('test', 1, 'test', 'ACTION_NONE', '', '');
+echo $t->debug();
+for ($i = 1; $i < 30; $i++)
+{
+    $t2 = Trigger::byID($i);
+    echo $t2->debug();
+}
+//END TESTING CODE
 echo "<div id='newtrigger'><p>When... ";
 echo "<select id='triggertype'>";
 foreach($trigger_types as $name => $trigger)

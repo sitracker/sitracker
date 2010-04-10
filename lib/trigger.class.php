@@ -44,10 +44,10 @@ class TriggerEvent {
 
         while ($trigger = mysql_fetch_object($result))
         {
-            $trigger = new Trigger($trigger_type, $param_array, 
+            $trigger = new Trigger($trigger_type, 
                                    $trigger->userid, $trigger->template, 
                                    $trigger->action, $trigger->checks, 
-                                   $trigger->parameters);
+                                   $trigger->parameters, $param_array);
             $rtn = $trigger->fire();
         }
 
@@ -63,7 +63,7 @@ class Trigger extends SitEntity {
     function add()
     {
         global $dbTriggers;
-        $exists = check_exists($this->trigger_type, $this->param_array, 
+        $exists = check_exists($this->trigger_type,
                                $this->userid, $this->template, $this->action, 
                                $this->checks, $this->parameters);
 
@@ -121,7 +121,7 @@ class Trigger extends SitEntity {
      * ID of the trigger's entry in the database
      * @var int
      */
-    private $trigger_id;
+    public $id;
 
     /**
      * Name of the trigger type
@@ -180,8 +180,8 @@ class Trigger extends SitEntity {
     /**
      * Constructs a new Trigger object
      */
-    function Trigger($trigger_type, $param_array, $user_id, $template, 
-                     $action, $checks, $parameters, $trigger_id = -1)
+    function __construct($trigger_type, $user_id, $template, $action, $checks = '', 
+                     $parameters = '', $param_array = array(), $id = -1)
     {
         $this->trigger_type = cleanvar($trigger_type);
         $this->param_array = cleanvar($param_array);
@@ -190,9 +190,35 @@ class Trigger extends SitEntity {
         $this->action = cleanvar($action);
         $this->checks = cleanvar($checks);
         $this->parameters = cleanvar($parameters);
-        $this->trigger_id = cleanvar($trigger_id);
+        $this->id = cleanvar($id);
         debug_log("Trigger {$trigger_type} created. Options:\n" . 
             print_r($param_array, TRUE));
+    }
+
+    /**
+     * Used for creating a new Trigger when you already know its ID
+     */
+    public static function byID($id)
+    {
+        global $dbTriggers;
+
+        $id = intval($id);
+        //find relevant triggers
+        $sql = "SELECT * FROM `{$dbTriggers}` ";
+        $sql .= "WHERE id='{$id}'";
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error("MySQL Query Error " . 
+                          mysql_error(), E_USER_WARNING);
+            return FALSE;
+        }
+
+        $trigger = mysql_fetch_object($result);        
+        $t = new Trigger($trigger->triggerid, $trigger->userid, 
+                         $trigger->template, $trigger->action, $trigger->checks,
+                         $trigger->parameters, '', $id);
+        return $t;
     }
 
     /**
@@ -498,6 +524,15 @@ class Trigger extends SitEntity {
         }
 
         return $rtn;
+    }
+
+    public function debug()
+    {
+        $text = 'Variables: Trigger($trigger_type, $user_id, $template, $action, 
+                         $checks, $parameters, $param_array, $id)<br />';
+        $text .= "Values: Trigger({$this->trigger_type}, {$this->user_id}, {$this->template}, {$this->action}, 
+                          {$this->checks}, {$this->parameters}, {$this->param_array}, {$this->id})<br />";
+        return $text;
     }
 }
 ?>
