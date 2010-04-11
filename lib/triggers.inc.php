@@ -1001,11 +1001,11 @@ function trigger_types()
 function trigger_to_array($trigger)
 {
     $array['trigger_type'] = $trigger->getTrigger_type();
-    $array['param_array'] = $trigger->getParam_array(); 
-    $array['user_id'] =$trigger->getUser_id(); 
-    $array['template'] =$trigger->getTemplate(); 
-    $array['action'] =$trigger->getAction(); 
-    $array['checks'] =$trigger->getChecks(); 
+    $array['param_array'] = $trigger->getParam_array();
+    $array['user_id'] =$trigger->getUser_id();
+    $array['template'] =$trigger->getTemplate();
+    $array['action'] =$trigger->getAction();
+    $array['checks'] =$trigger->getChecks();
     $array['parameters'] =$trigger->getParameters();
 
     return $array;
@@ -1063,6 +1063,7 @@ function trigger_to_html($trigger)
     return $html;
 }
 
+
 function template_description($name, $type)
 {
     global $dbEmailTemplates, $dbNoticeTemplates;
@@ -1085,6 +1086,10 @@ function template_description($name, $type)
     return $icon." ".$desc;
 }
 
+
+/**
+ * @deprecated DEPRECATED trigger() function, use the TriggerEvent class instead
+*/
 function trigger($trigger_id, $param_array)
 {
     trigger_error("trigger() is deprecated, please use the TriggerEvent class instead");

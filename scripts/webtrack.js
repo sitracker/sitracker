@@ -715,9 +715,9 @@ function dismissNotice(noticeid, userid)
         method:'get',
             onSuccess: function(transport)
             {
-                $(div).hide();
+                $(div).fade();
                 $(div).removeClassName('noticebar');
-                if ($$('.noticebar').length < 2) $('dismissall').hide();
+                if ($$('.noticebar').length < 2) $('dismissall').fade();
             },
             onFailure: function(){ alert('Notice Error\nSorry, we could not dismiss the notice.') }
     });
