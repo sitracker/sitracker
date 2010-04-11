@@ -2839,7 +2839,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 {
     global $CONFIG, $application_version_string;
 
-    $crlf = "\r\n";
+    $crlf = "\n";
 
     if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
@@ -2869,8 +2869,16 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     }
     else
     {
-        $rtnvalue = mail($to, $subject, $body, $extra_headers);
+        // $rtnvalue = mail($to, $subject, $body, $extra_headers);
+
+        $mime = new MIME_mail($from, $to, html_entity_decode($subject), '', $extra_headers, $mailerror);
+        $mime -> attach($body, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+
+        // actually send the email
+        $rtnvalue = $mime -> send_mail();
+        if (!empty($mailerror)) debug_log("Outoing email error: {$mailerror}");
     }
+
     return $rtnvalue;
 }
 
@@ -7258,7 +7266,7 @@ function process_add_contact($mode = 'internal')
     if ($surname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['surname'] = $GLOBALS['strMustEnterSurname'];
+        $_SESSION['formerrors']['add_contact']['surname'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSurname']);
     }
     // check for blank site
     if ($siteid == '')
@@ -7370,7 +7378,7 @@ function process_add_contact($mode = 'internal')
                 {
                     $emaildetails = 0;
                 }
-                
+
                 if ($returnpage == 'addincident')
                 {
                     html_redirect("incident_add.php?action=findcontact&contactid={$newid}");

@@ -303,7 +303,7 @@ tr.notice { background-color: #FFFFB0; }
 tr.shade1:hover, tr.shade2:hover { background-color: #F2F2F2; }
 tr.critical { background-color: #FF4433; }
 tr.critical:hover { background-color: #FFAAAB; }
-strong.critical { text-decoration: underline; padding: 4px; -moz-border-radius:7px;}
+strong.critical { text-decoration: underline; padding: 1px 7px; -moz-border-radius:7px; }
 tr.critical strong.critical { color: #FFF; }
 tr.urgent:hover { background-color: #FFAAAB; }
 tr.expired:hover { background-color: #F2F2F2; }

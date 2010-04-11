@@ -20,7 +20,7 @@ session_name($CONFIG['session_name']);
 session_start();
 require (APPLICATION_LIBPATH . 'strings.inc.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'triggers.inc.php');
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 $title = $strForgottenDetails;
 
 // External variables
@@ -95,7 +95,9 @@ switch ($_REQUEST['action'])
                 $row = mysql_fetch_object($contactresult);
                 $hash = md5($row->username.'.'.$row->password);
                 $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&contactid={$row->id}&hash={$hash}";
-                trigger('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
+                $t = new trigger('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
+                $t->fire();
+                //trigger('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
                 echo "<h3>{$strInformationSent}</h3>";
                 echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
                 if (empty($email) AND !empty($contactid))

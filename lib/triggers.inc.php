@@ -372,7 +372,7 @@ array('description' => $strCurrentLanguage,
 $ttvararray['{emaildetails}'] =
 array('show' => FALSE,
       'replacement' => '$param_array[\'emaildetails\'];',
-      );     
+      );
 
 $ttvararray['{feedbackurl}'] =
 array('description' => $strFeedbackURL,
@@ -852,9 +852,9 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
             $eresult = eval("\$res = {$ttvar[replacement]};return TRUE;");
             if (!$eresult)
             {
-                trigger_error("Error in variable replacement for 
-                        <strong>{$identifier}</strong>, check that 
-                        this variable is available for the template 
+                trigger_error("Error in variable replacement for
+                        <strong>{$identifier}</strong>, check that
+                        this variable is available for the template
                         that uses it.", E_USER_WARNING);
 
                 debug_log("replacement: {$ttvar[replacement]}", TRUE);
@@ -955,7 +955,7 @@ function replace_specials($string, $param_array)
                 }
             }
         }
-	    $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
+        $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
         return $string;
     }
 

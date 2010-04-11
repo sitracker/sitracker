@@ -2,6 +2,7 @@
 // triggers.class.php - A representation of a trigger
 //
 // SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -11,9 +12,9 @@
 // This lib is currently included at the end of auth.inc.php
 
 //include_once (APPLICATION_LIBPATH . 'incident.inc.php');
-include_once (APPLICATION_LIBPATH . 'billing.inc.php');
-include_once (APPLICATION_LIBPATH . 'mime.inc.php');
-include_once (APPLICATION_LIBPATH . 'triggers.inc.php');
+require_once (APPLICATION_LIBPATH . 'billing.inc.php');
+require_once (APPLICATION_LIBPATH . 'mime.inc.php');
+require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 /**
  * Receives the Trigger Event and finds the appropriate trigger to fire
@@ -147,10 +148,10 @@ class Trigger extends SitEntity {
      *
      * This is the type of trigger, e.g. TRIGGER_ADD_INCIDENT and is used to
      * find which users/system actions are assigned to that particuar trigger
-     * @var string 
+     * @var string
      */
     private $trigger_type;
-    
+
     /**
      * The array of parameters
      *
@@ -210,7 +211,7 @@ class Trigger extends SitEntity {
         $this->checks = cleanvar($checks);
         $this->parameters = cleanvar($parameters);
         $this->id = cleanvar($id);
-        debug_log("Trigger {$trigger_type} created. Options:\n" . 
+        debug_log("Trigger {$trigger_type} created. Options:\n" .
             print_r($param_array, TRUE));
     }
 
@@ -228,7 +229,7 @@ class Trigger extends SitEntity {
         $result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error("MySQL Query Error " . 
+            trigger_error("MySQL Query Error " .
                           mysql_error(), E_USER_WARNING);
             return FALSE;
         }
@@ -320,7 +321,7 @@ class Trigger extends SitEntity {
                 break;
 
             case "ACTION_CREATE_INCIDENT":
-                debug_log("creating incident with holdingemailid: 
+                debug_log("creating incident with holdingemailid:
                     {$this->param_array['holdingemailid']}", TRUE);
                 $rtnvalue = $this->create_incident_from_incoming(
                     $this->param_array['holdingemailid']);
@@ -339,8 +340,8 @@ class Trigger extends SitEntity {
                     $jtext = '';
                 }
 
-                $rtnvalue = journal(CFG_LOGGING_NORMAL, $this->trigger_type, 
-                                    "Trigger Fired ({$jtext})", 
+                $rtnvalue = journal(CFG_LOGGING_NORMAL, $this->trigger_type,
+                                    "Trigger Fired ({$jtext})",
                                     CFG_JOURNAL_TRIGGERS, $this->user_id);
                 break;
 
@@ -391,13 +392,14 @@ class Trigger extends SitEntity {
         //add this in manually, this is who we're sending the email to
         $this->param_array['triggeruserid'] = $this->user_id;
 
-        $from = $this->trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
-        $toemail = $this->trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
-        $replytoemail = $this->trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
-        $ccemail = $this->trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
-        $bccemail = $this->trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
-        $subject = cleanvar($this->trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
-        $body .= $this->trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
+        // INL removed $this-> from the $this->trigger_replace_specials() below, since it's not in this class (yet?) - 2010-4-11
+        $from = trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
+        $toemail = trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
+        $replytoemail = trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
+        $ccemail = trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
+        $bccemail = trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
+        $subject = cleanvar(trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
+        $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);
