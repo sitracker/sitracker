@@ -1909,6 +1909,7 @@ $strWeek = 'Week';
 $strWelcome = 'Welcome';
 $strWeekView = 'Week View';
 $strWhatsNew = 'What\'s New?';
+$strWhen = 'When';
 $strWhosAwayToday = 'Who\'s Away Today?';
 $strWordList = 'Word List';
 $strWorkaround = 'Workaround';

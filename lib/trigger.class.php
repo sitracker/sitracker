@@ -16,14 +16,135 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require_once (APPLICATION_LIBPATH . 'mime.inc.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 
+/**
+ * Receives the Trigger Event and finds the appropriate trigger to fire
+ */
+class TriggerEvent {
+    function TriggerEvent($trigger_type, $param_array = '')
+    {
+        global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types, $dbTriggers;
+        
+        $trigger_type = cleanvar($trigger_type);
+        // Check that this is a defined trigger
+        if (!array_key_exists($trigger_type, $trigger_types))
+        {
+            trigger_error("Trigger '{$this->trigger_type}' not defined", E_USER_WARNING);
+            return;
+        }
+
+        //find relevant triggers
+        $sql = "SELECT * FROM `{$dbTriggers}` ";
+        $sql .= "WHERE triggerid='{$trigger_type}'";
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error("MySQL Query Error " . 
+                          mysql_error(), E_USER_WARNING);
+            return FALSE;
+        }
+
+        while ($trigger = mysql_fetch_object($result))
+        {
+            $trigger = new Trigger($trigger_type, 
+                                   $trigger->userid, $trigger->template, 
+                                   $trigger->action, $trigger->checks, 
+                                   $trigger->parameters, $param_array);
+            $rtn = $trigger->fire();
+        }
+
+        // we always return TRUE as all triggers might not match
+        return TRUE;
+    }
+}
+
+
 class Trigger extends SitEntity {
     function retrieveDetails(){}
-    function add(){}
-    function edit(){}
+    
+    function add()
+    {
+        global $dbTriggers;
+        $exists = check_exists($this->trigger_type,
+                               $this->userid, $this->template, $this->action, 
+                               $this->checks, $this->parameters);
+
+        if (!$exists)
+        {
+            $sql = "INSERT INTO `{$dbTriggers}` (triggerid, userid, action, ";
+            $sql .= "template, parameters, checks) ";
+            $sql .= "VALUES ('{$this->trigger_type}', '{$this->user_id}', ";
+            $sql .= "'{$this->action}', '{$this->template}', ";
+            $sql .= "'{$this->parameters}', '{$this->checks}')";
+            mysql_query($sql);
+            if (mysql_error()) 
+            {
+                $this->error_text .= trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                return FALSE;
+            }
+            else return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+        
+    }
+    function edit()
+    {
+        global $dbTriggers;
+        if ($this->trigger_id !== -1)
+        {
+            $sql = "UPDATE `{$dbTriggers}` ";
+            $sql .= "SET triggerid = '$this->trigger_type', ";
+            $sql .= "userid = '{$this->user_id}', ";
+            $sql .= "action = '{$this->action}', ";
+            $sql .= "template = '{$this->template}' ";
+            $sql .= "parameters = '{$this->parameters}' ";
+            $sql .= "checks = '{$this->checks}' ";
+            $sql .= "WHERE id = {$this->trigger_id}";
+            mysql_query($sql);
+            if (mysql_error()) 
+            {
+                $this->error_text .= trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                return FALSE;
+            }
+            else return TRUE;
+        }
+        else
+        {
+            $this->error_text .= "Error: Not a valid trigger ID provided\n";
+            return FALSE;
+        }
+    }
     function getSOAPArray(){}
+    
+    // Begin getters and setters
+    public function getTrigger_type() { return $this->trigger_type; } 
+    public function getParam_array() { return $this->param_array; } 
+    public function getUser_id() { return $this->user_id; } 
+    public function getTemplate() { return $this->template; } 
+    public function getAction() { return $this->action; } 
+    public function getChecks() { return $this->checks; } 
+    public function getParameters() { return $this->parameters; } 
+    public function getError_text() { return $this->error_text; } 
+    public function setTrigger_type($x) { $this->trigger_type = $x; } 
+    public function setParam_array($x) { $this->param_array = $x; } 
+    public function setUser_id($x) { $this->user_id = $x; } 
+    public function setTemplate($x) { $this->template = $x; } 
+    public function setAction($x) { $this->action = $x; } 
+    public function setChecks($x) { $this->checks = $x; } 
+    public function setParameters($x) { $this->parameters = $x; } 
+    public function setError_text($x) { $this->error_text = $x; } 
+    // End getters and setters
 
     /**
-     * ID of the trigger type
+     * ID of the trigger's entry in the database
+     * @var int
+     */
+    public $id;
+
+    /**
+     * Name of the trigger type
      *
      * This is the type of trigger, e.g. TRIGGER_ADD_INCIDENT and is used to
      * find which users/system actions are assigned to that particuar trigger
@@ -39,17 +160,85 @@ class Trigger extends SitEntity {
      * @var array
      */
     private $param_array;
+
+    /**
+     * The user the trigger applies to, ID of 0 means this is a system action
+     * @var integer
+     */
     private $user_id;
+
+    /**
+     * The template the trigger uses
+     * @var string
+     */
+    private $template;
+
+    /**
+     * The action the trigger uses, this is arbitrary as actions can be 
+     * provided by plugins etc
+     * @var string
+     */
+    private $action;
+
+    /**
+     * The checks to validate before firing the trigger, e.g. {userid} == 1
+     * @var string
+     */
+    private $checks;
+
+    /**
+     * Extra parameters to add onto the provided variables, e.g. numupdates = 2
+     * @var string
+     */
+    private $parameters;
+    
+    /**
+     * If the trigger fails, put the errors here
+     */
+    private $error_text;
 
     /**
      * Constructs a new Trigger object
      */
-    function Trigger($trigger_type, $param_array = '')
+    function __construct($trigger_type, $user_id, $template, $action, $checks = '', 
+                     $parameters = '', $param_array = array(), $id = -1)
     {
         $this->trigger_type = cleanvar($trigger_type);
         $this->param_array = cleanvar($param_array);
+        $this->user_id = cleanvar($user_id);
+        $this->template = cleanvar($template);
+        $this->action = cleanvar($action);
+        $this->checks = cleanvar($checks);
+        $this->parameters = cleanvar($parameters);
+        $this->id = cleanvar($id);
         debug_log("Trigger {$trigger_type} created. Options:\n" .
             print_r($param_array, TRUE));
+    }
+
+    /**
+     * Used for creating a new Trigger when you already know its ID
+     */
+    public static function byID($id)
+    {
+        global $dbTriggers;
+
+        $id = intval($id);
+        //find relevant triggers
+        $sql = "SELECT * FROM `{$dbTriggers}` ";
+        $sql .= "WHERE id='{$id}'";
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error("MySQL Query Error " .
+                          mysql_error(), E_USER_WARNING);
+            return FALSE;
+        }
+
+        $trigger = mysql_fetch_object($result);        
+        $t = new Trigger($trigger->triggerid, $trigger->userid, 
+                         $trigger->template, $trigger->action, $trigger->checks,
+                         $trigger->parameters, '', $id);
+        return $t;
     }
 
     /**
@@ -63,83 +252,48 @@ class Trigger extends SitEntity {
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
         global $dbTriggers;
-        // Check that this is a defined trigger
-        if (!array_key_exists($this->trigger_type, $trigger_types))
-        {
-            trigger_error("Trigger '{$this->trigger_type}' not defined", E_USER_WARNING);
-            return;
-        }
-        plugin_do($this->trigger_type);
 
-        // 10/04/10 is this used? KH
-        if (isset($this->param_array['user']))
+        //see if we have any checks first
+        if (!empty($this->checks))
         {
-            $user_id = $this->param_array[$key];
-        }
+            $checks = trigger_replace_specials($this->trigger_type, $this->checks, $this->param_array);
+            $eresult = eval("\$value = $checks;return TRUE;");
 
-        //find relevant triggers
-        $sql = "SELECT * FROM `{$dbTriggers}` ";
-        $sql .= "WHERE triggerid='{$this->trigger_type}'";
-        if ($user_id != '')
-        {
-            $sql .= " AND userid={$user_id}";
-        }
-        $result = mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error("MySQL Query Error " .
-                          mysql_error(), E_USER_WARNING);
-        }
-
-        while ($triggerobj = mysql_fetch_object($result))
-        {
-            //see if we have any checks first
-            if (!empty($triggerobj->checks))
+            if (!$eresult)
             {
-                // commented out 09/09/09 as I'm 99% this code is bollocks
-                //if (!trigger_checks($triggerobj->checks))
-                //{
-
-                    $checks = trigger_replace_specials($this->trigger_type, $triggerobj->checks, $this->param_array);
-                    $eresult = eval("\$value = $checks;return TRUE;");
-
-                    if (!$eresult)
-                    {
-                        trigger_error("Error in trigger rule for
-                                      {$this->trigger_type}, check your
-                                      <a href='triggers.php'>trigger rules</a>",
-                                      E_USER_WARNING);
-                    }
-
-                    // if we fail, we jump to the next trigger
-                    if ($value === FALSE)
-                    {
-                        continue;
-                    }
-                //}
+                trigger_error("Error in trigger rule for 
+                                {$this->trigger_type}, check your 
+                                <a href='triggers.php'>trigger rules</a>", 
+                                E_USER_WARNING);
             }
-
-            // if we have any stored parameters from the trigger, append to
-            // the dynamic ones
-            if (!empty($triggerobj->parameters))
+            
+            // if we fail, we jump to the next trigger
+            if ($value === FALSE)
             {
-                $resultparams = explode(",", $triggerobj->parameters);
-                foreach ($resultparams as $assigns)
-                {
-                    $values = explode(" = ", $assigns);
-                    $this->param_array[$values[0]] = $values[1];
-                    $dbg .= "\$this->param_array[{$values[0]}] = {$values[1]}";
-                }
-                debug_log("Trigger parameters:\n.$dbg", TRUE);
-            }
-
-            debug_log("trigger_action({$triggerobj->userid},
-                      {$this->trigger_type}, {$triggerobj->action},
-                      {$this->param_array}) called", TRUE);
-
-            $return = $this->trigger_action($triggerobj->action,
-                                            $triggerobj->template);
+                return;
+            }                           
         }
+
+        // if we have any stored parameters from the trigger, append to
+        // the dynamic ones
+        if (!empty($this->parameters))
+        {   
+            $resultparams = explode(",", $this->parameters);
+            foreach ($resultparams as $assigns)
+            {
+                $values = explode(" = ", $assigns);
+                $this->param_array[$values[0]] = $values[1];
+                $dbg .= "\$this->param_array[{$values[0]}] = {$values[1]}";
+            }
+            debug_log("Trigger parameters:\n.$dbg", TRUE);
+        }
+
+        debug_log("trigger_action({$this->trigger_type}, {$this->action}, 
+                    {$this->param_array}) called", TRUE);
+
+        $return = $this->trigger_action($this->action,
+                                        $this->template);
+        
         return $return;
     }
 
@@ -154,7 +308,6 @@ class Trigger extends SitEntity {
     private function trigger_action($action, $template)
     {
         global $CONFIG, $dbg, $dbTriggers;
-
         switch ($action)
         {
             case "ACTION_EMAIL":
@@ -237,7 +390,7 @@ class Trigger extends SitEntity {
         }
 
         //add this in manually, this is who we're sending the email to
-        $this->param_array['triggeruserid'] = $user_id;
+        $this->param_array['triggeruserid'] = $this->user_id;
 
         // INL removed $this-> from the $this->trigger_replace_specials() below, since it's not in this class (yet?) - 2010-4-11
         $from = trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
@@ -307,16 +460,17 @@ class Trigger extends SitEntity {
             $noticelink = cleanvar(trigger_replace_specials($this->trigger_type, $notice->link, $this->param_array));
             $refid = cleanvar(trigger_replace_specials($this->trigger_type, $notice->refid, $this->param_array));
             $durability = $notice->durability;
-            debug_log("notice: $notice_text", TRUE);;
-
+            debug_log("notice: $notice_text", TRUE);
+            
+            /** Not sure this makes sense KH 10/04/10
             if ($user_id == 0 AND $this->param_array['userid'] > 0)
             {
                 $user_id = $this->param_array['userid'];
-            }
+            } */
 
             $sql = "INSERT INTO `{$dbNotices}` (userid, type, text, linktext,";
             $sql .= " link, durability, referenceid, timestamp) ";
-            $sql .= "VALUES ('{$user_id}', '{$notice->type}', '{$notice_text}',";
+            $sql .= "VALUES ('{$this->user_id}', '{$notice->type}', '{$notice_text}',";
             $sql .= " '{$noticelinktext}', '{$noticelink}', '{$durability}', ";
             $sql .= "'{$refid}', NOW())";
             mysql_query($sql);
@@ -332,110 +486,11 @@ class Trigger extends SitEntity {
         return $return;
     }
 
-
     /**
-        * Checks array of parameters against list of parameters
-        * @author Kieran Hogg
-        * @param $check_strings string. The list of required parameters
-        * @param $this->param_array array. The array to compare the strings to
-        * @returns TRUE if the string parameter is in the array, FALSE if not
-    */
-//     private function trigger_checks($check_strings)
-//     {
-//         global $dbSites, $dbIncidents, $dbContacts;
-//         $passed = FALSE;
-//
-//         $checks = explode(",", $check_strings);
-//         foreach ($checks as $check)
-//         {
-//             $values = explode("=", $check);
-//             switch ($values[0])
-//             {
-//                 case 'siteid':
-//                     $sql = "SELECT s.id AS siteid ";
-//                     $sql .= "FROM `{$dbSites}` AS s, `{$dbIncidents}` AS i, `{$dbContacts}` ";
-//                     $sql .= "WHERE i.id={$this->param_array[incidentid]} ";
-//                     $sql .= "AND i.contact=c.id ";
-//                     $sql .= "AND s.id=c.siteid";
-//                     $query = mysql_query($sql);
-//                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-//                     if ($query)
-//                     {
-//                         $result = mysql_fetch_object($query);
-//                         $siteid = $result->siteid;
-//                         if ($siteid == $values[1])
-//                         {
-//                             $passed = TRUE;
-//                         }
-//                     }
-//                 break;
-//
-//                 case 'contactid':
-//                     $sql = "SELECT c.id AS contactid ";
-//                     $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
-//                     $sql .= "WHERE i.id={$this->param_array[incidentid]} ";
-//                     $sql .= "AND i.contact=c.id ";
-//                     $query = mysql_query($sql);
-//                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-//                     if ($query)
-//                     {
-//                         $result = mysql_fetch_object($query);
-//                         $contactid = $result->contactid;
-//                         if ($contactid == $values[1])
-//                         {
-//                             $passed = TRUE;
-//                         }
-//                     }
-//                 break;
-//
-//                 case 'userid':
-//                     $sql = "SELECT i.owner AS userid ";
-//                     $sql .= "FROM `{$dbIncidents}` AS i ";
-//                     $sql .= "WHERE i.id='{$this->param_array[incidentid]}' ";
-//                     $query = mysql_query($sql);
-//                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-//                     if ($query)
-//                     {
-//                         $result = mysql_fetch_object($query);
-//                         $user_id = $result->userid;
-//                         if ($user_id == $values[1])
-//                         {
-//                             $passed = TRUE;
-//                         }
-//                     }
-//                 break;
-//
-//                 case 'sla':
-//                     $sql = "SELECT i.servicelevel AS sla ";
-//                     $sql .= "FROM `{$dbIncidents}` AS i ";
-//                     $sql .= "WHERE i.id={$this->param_array[incidentid]} ";
-//                     $query = mysql_query($sql);
-//                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-//                     if ($query)
-//                     {
-//                         $result = mysql_fetch_object($query);
-//                         $sla = $result->sla;
-//                         if ($sla == $values[1])
-//                         {
-//                             $passed = TRUE;
-//                         }
-//                     }
-//                 break;
-//
-//                 default:
-//                     //blank
-//                 break;
-//             }
-//         }
-//         return $passed;
-//     }
-
-
-    /**
-        * Revokes any triggers of that type/reference
-        * @author Kieran Hogg
-        * @param $reference_id integer Reference of the notice
-    */
+     * Revokes any triggers of that type/reference
+     * @author Kieran Hogg
+     * @param $reference_id integer Reference of the notice
+     */
     //TODO should this be limited to one delete, is there ever more than one?
     private function revoke($reference_id = 0)
     {
@@ -473,7 +528,7 @@ class Trigger extends SitEntity {
     * @param $rules string The trigger rules
     * @param $parameters string The trigger parameters
     */
-    private function check_trigger_exists($action, $templateid, $rules, $parameters)
+    private function check_exists($action, $templateid, $rules, $parameters)
     {
         global $dbTriggers;
         $rtn = FALSE;
@@ -490,6 +545,15 @@ class Trigger extends SitEntity {
         }
 
         return $rtn;
+    }
+
+    public function debug()
+    {
+        $text = 'Variables: Trigger($trigger_type, $user_id, $template, $action, 
+                         $checks, $parameters, $param_array, $id)<br />';
+        $text .= "Values: Trigger({$this->trigger_type}, {$this->user_id}, {$this->template}, {$this->action}, 
+                          {$this->checks}, {$this->parameters}, {$this->param_array}, {$this->id})<br />";
+        return $text;
     }
 }
 ?>

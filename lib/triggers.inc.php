@@ -212,6 +212,7 @@ array('name' => $strBillableIncidentApproved,
 
 plugin_do('trigger_types');
 
+// The pairing allows us to define which templates go with which triggers
 $pairingarray = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PASSWORD');
 
 /**
@@ -696,7 +697,7 @@ array('description' => 'The ID of the update',
       );
 
 $ttvararray['{updatetext}'] =
-array('description' => 'The text of the last {numupdates} updates to an incident',
+array('description' => 'By default, the text of the last update to an incident, the numupdates parameter can be set to an integer or -1 for all updates',
       'replacement' => 'readable_last_updates($param_array[\'incidentid\'], $param_array[\'numupdates\']);',
       'requires' => 'incidentid',
       );
@@ -752,6 +753,7 @@ function email_templates($name, $triggertype='system', $selected = '')
 {
     global $dbEmailTemplates, $dbTriggers;;
     $html .= "<select id='{$name}' name='{$name}'>";
+    $html .= "<option></option>";
     $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
     $sql .= "WHERE type='{$triggertype}' ORDER BY name";
     $result = mysql_query($sql);
@@ -780,6 +782,7 @@ function notice_templates($name, $selected = '')
 {
     global $dbNoticeTemplates;
     $html .= "<select id='{$name}' name='{$name}'>";
+    $html .= "<option></option>";
     $sql = "SELECT id, name, description FROM `{$dbNoticeTemplates}` ORDER BY name ASC";
     $query = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -986,6 +989,100 @@ function replace_specials($string, $param_array)
 function trigger_types()
 {
     return $trigger_types;
+}
+
+
+/**
+ * Return as associative array with a trigger's properties
+ * @author Kieran Hogg
+ * @param $trigger Trigger a Trigger object
+ * @return array
+ */
+function trigger_to_array($trigger)
+{
+    $array['trigger_type'] = $trigger->getTrigger_type();
+    $array['param_array'] = $trigger->getParam_array(); 
+    $array['user_id'] =$trigger->getUser_id(); 
+    $array['template'] =$trigger->getTemplate(); 
+    $array['action'] =$trigger->getAction(); 
+    $array['checks'] =$trigger->getChecks(); 
+    $array['parameters'] =$trigger->getParameters();
+
+    return $array;
+}
+
+function triggers_to_html($user_id, $trigger_id = '')
+{
+    global $dbTriggers, $sit;
+
+    $user_id = cleanvar($user_id);
+    if ($user_id == '') $user_id = $sit[2];
+    $trigger_id = cleanvar($trigger_id);
+
+    $sql = "SELECT id FROM `{$dbTriggers}` ";
+    $sql .= "WHERE userid = '{$user_id}'";
+    if ($trigger_id != '') $sql .= " AND triggerid = '{$trigger_id}'";
+    echo $sql;
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $html = "<table class='vertical'>";
+    $html .= "<tr><th>Action</th><th>Action</th></tr>";
+    while (list($id) = mysql_fetch_row($result))
+    {
+        $t = Trigger::byID($id);
+        $html .= trigger_to_html($t);
+    }
+    $html .= "</table>";
+    return $html;
+}
+
+function trigger_to_html($trigger)
+{
+    global $trigger_types, $actionarray;
+    $t_array = trigger_to_array($trigger);
+    $html .= "<tr><td>".icon('trigger', 16). " ";
+    $html .= "{$GLOBALS['strWhen']}{$GLOBALS['strEllipsis']}";
+    $html .= $trigger_types[$t_array['trigger_type']]['description'];
+    $html .= ", ".$actionarray[$t_array['action']]['description'];
+    $html .= ": ". template_description($t_array['template'], $t_array['action']);
+    $html .= " <small>(<a href='templates.php?id={$t_array['template']}'>";
+    $html .= "{$t_array['template']}</a>)</small><br />";
+
+    if ($t_array['checks'] != '')
+    {
+        $html .= icon('auto', 16)." ";
+        $html .= "<strong>Checks</strong>: {$t_array['checks']} ".help_link('trigger_checks')." ";
+    }
+    if ($t_array['parameters'] != '')
+    {
+        $html .= icon('auto', 16)." ";
+        $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
+    }
+    $html .=  "</td><td><a href='trigger_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
+    $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></td></tr>";
+    return $html;
+}
+
+function template_description($name, $type)
+{
+    global $dbEmailTemplates, $dbNoticeTemplates;
+    $name = cleanvar($name);
+    if ($type == 'ACTION_NOTICE')
+    {
+        $tbl = $dbNoticeTemplates;
+        $icon = icon('info', 16);
+    }
+    else
+    {
+        $tbl = $dbEmailTemplates;
+        $icon = icon('email', 16);
+    }
+    $sql = "SELECT description FROM `{$tbl}` WHERE name = '{$name}'";
+    $result = mysql_query($sql);
+    list($desc) = mysql_fetch_row($result);
+    (substr_compare($desc, "str", 1, 3)) ? $desc = $GLOBALS[$desc] : $desc;
+    if ($desc == '') $desc = FALSE;
+    return $icon." ".$desc;
 }
 
 ?>
