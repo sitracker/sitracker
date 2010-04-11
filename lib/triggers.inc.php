@@ -1085,4 +1085,9 @@ function template_description($name, $type)
     return $icon." ".$desc;
 }
 
+function trigger($trigger_id, $param_array)
+{
+    trigger_error("trigger() is deprecated, please use the TriggerEvent class instead");
+    new TriggerEvent($trigger_id, $param_array);
+}
 ?>
