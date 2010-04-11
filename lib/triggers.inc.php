@@ -13,10 +13,10 @@
 // check.
 //include('trigger.class.php');
 
-$actionarray['ACTION_NONE'] =
-array('name' => $strNone,
-      'description' => $strDoNothing,
-      );
+//$actionarray['ACTION_NONE'] =
+//array('name' => $strNone,
+//      'description' => $strDoNothing,
+//      );
 
 $actionarray['ACTION_NOTICE'] =
 array('name' => $strNotice,
@@ -38,7 +38,8 @@ array('name' => $strAddIncident,
 
 $actionarray['ACTION_JOURNAL'] =
 array('name' => 'Journal',
-      'description' => $strLogTriggerInJournal
+      'description' => $strLogTriggerInJournal,
+      'type' => 'system'
       );
 
 plugin_do('trigger_actions');
@@ -63,7 +64,8 @@ $trigger_types['TRIGGER_HOLIDAY_REQUESTED'] =
 array('name' => $strHolidayRequested,
       'description' => $strTriggerHolidayRequestedDesc,
       'required' => array('userid', 'approvaluseremail', 'listofholidays'),
-      'permission' => 'user_permission($_SESSION[\'userid\'], 50);'
+      'permission' => 'user_permission($_SESSION[\'userid\'], 50);',
+      'type' => 'system'
       );
 
 $trigger_types['TRIGGER_INCIDENT_ASSIGNED'] =
@@ -126,7 +128,7 @@ $trigger_types['TRIGGER_LANGUAGE_DIFFERS'] =
 array('name' => $strCurrentLanguageDiffers,
       'description' => $strTriggerLanguageDiffersDesc,
       'required' => array('currentlang', 'profilelang'),
-      'params' => array(),
+      'params' => array()
     );
 
 $trigger_types['TRIGGER_NEW_CONTACT'] =
@@ -165,7 +167,9 @@ array('name' => $strNewUser,
 $trigger_types['TRIGGER_SCHEDULER_TASK_FAILED'] =
 array('name' => $strSchedulerActionFailed,
       'description' => $strTriggerSchedulerTaskFailedDesc,
-      'required' => array('schedulertask'));
+      'required' => array('schedulertask'),
+      'perm' => 22
+      );
 
 $trigger_types['TRIGGER_SIT_UPGRADED'] =
 array('name' => $strSitUpgraded,
@@ -213,7 +217,51 @@ array('name' => $strBillableIncidentApproved,
 plugin_do('trigger_types');
 
 // The pairing allows us to define which templates go with which triggers
-$pairingarray = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PASSWORD');
+$email_pair = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PASSWORD',
+                    'TRIGGER_HOLIDAY_REQUESTED' => 'EMAIL_HOLIDAYS_REQUESTED',
+                    'TRIGGER_INCIDENT_ASSIGNED' => 'EMAIL_INCIDENT_REASSIGNED_USER_NOTIFY',
+                    'TRIGGER_INCIDENT_CLOSED' => 'EMAIL_INCIDENT_CLOSED_USER',
+                    'TRIGGER_INCIDENT_CREATED' => 'EMAIL_INCIDENT_CREATED_USER',
+                    'TRIGGER_INCIDENT_NEARING_SLA' => 'EMAIL_INCIDENT_NEARING_SLA',
+                    'TRIGGER_INCIDENT_REVIEW_DUE' => 'EMAIL_INCIDENT_REVIEW_DUE',
+                    'TRIGGER_INCIDENT_UPDATED_EXTERNAL' => 'EMAIL_INCIDENT_UPDATED_CUSTOMER',
+                    'TRIGGER_INCIDENT_UPDATED_INTERNAL' => 'blank',
+                    'TRIGGER_KB_CREATED' => 'EMAIL_KB_ARTICLE_CREATED',
+                    'TRIGGER_LANGUAGE_DIFFERS' => 'blank',
+                    'TRIGGER_NEW_CONTACT' => 'EMAIL_CONTACT_CREATED',
+                    'TRIGGER_NEW_CONTRACT' => 'EMAIL_CONTRACT_ADDED',
+                    'TRIGGER_NEW_HELD_EMAIL' => 'EMAIL_HELD_EMAIL_RECEIVED',
+                    'TRIGGER_NEW_SITE' => 'EMAIL_SITE_CREATED',
+                    'TRIGGER_NEW_USER' => 'EMAIL_USER_CREATED',
+                    'TRIGGER_SCHEDULER_TASK_FAILED' => 'blank',
+                    'TRIGGER_SIT_UPGRADED' => 'EMAIL_SIT_UPGRADED',
+                    'TRIGGER_TASK_DUE' => 'blank',
+                    'TRIGGER_USER_CHANGED_STATUS' => 'blank',
+                    'TRIGGER_USER_RESET_PASSWORD' => 'EMAIL_USER_RESET_PASSWORD',
+                    'TRIGGER_WAITING_HELD_EMAIL' => 'EMAIL_HELD_EMAIL_MINS',
+                    'TRIGGER_SERVICE_LIMIT' => 'EMAIL_SERVICE_LEVEL');
+
+$notice_pair = array('TRIGGER_INCIDENT_ASSIGNED' => 'NOTICE_INCIDENT_ASSIGNED',
+                    'TRIGGER_INCIDENT_CLOSED' => 'NOTICE_INCIDENT_CLOSED',
+                    'TRIGGER_INCIDENT_CREATED' => 'NOTICE_KB_CREATED',
+                    'TRIGGER_INCIDENT_NEARING_SLA' => 'NOTICE_INCIDENT_NEARING_SLA',
+                    'TRIGGER_INCIDENT_REVIEW_DUE' => 'NOTICE_INCIDENT_REVIEW_DUE',
+                    'TRIGGER_INCIDENT_UPDATED_EXTERNAL' => 'blank',
+                    'TRIGGER_INCIDENT_UPDATED_INTERNAL' => 'blank',
+                    'TRIGGER_KB_CREATED' => 'NOTICE_KB_CREATED',
+                    'TRIGGER_LANGUAGE_DIFFERS' => 'NOTICE_LANGUAGE_DIFFERS',
+                    'TRIGGER_NEW_CONTACT' => 'NOTICE_NEW_CONTACT',
+                    'TRIGGER_NEW_CONTRACT' => 'NOTICE_NEW_CONTRACT',
+                    'TRIGGER_NEW_HELD_EMAIL' => 'NOTICE_NEW_HELD_EMAIL',
+                    'TRIGGER_NEW_SITE' => 'NOTICE_NEW_SITE',
+                    'TRIGGER_NEW_USER' => 'NOTICE_NEW_USER',
+                    'TRIGGER_SCHEDULER_TASK_FAILED' => 'NOTICE_SCHEDULER_TASK_FAILED',
+                    'TRIGGER_SIT_UPGRADED' => 'NOTICE_SIT_UPGRADED',
+                    'TRIGGER_TASK_DUE' => 'NOTICE_TASK_DUE',
+                    'TRIGGER_USER_CHANGED_STATUS' => 'NOTICE_USER_CHANGED_STATUS',
+                    'TRIGGER_WAITING_HELD_EMAIL' => 'NOTICE_MINS_HELD_EMAIL',
+                    'TRIGGER_SERVICE_LIMIT' => 'blank');
+
 
 /**
  * Template variables (Alphabetical order)
@@ -1013,53 +1061,106 @@ function trigger_to_array($trigger)
 
 function triggers_to_html($user_id, $trigger_id = '')
 {
-    global $dbTriggers, $sit;
+    global $dbTriggers, $sit, $trigger_types;
 
     $user_id = cleanvar($user_id);
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
-    $sql = "SELECT id FROM `{$dbTriggers}` ";
-    $sql .= "WHERE userid = '{$user_id}'";
-    if ($trigger_id != '') $sql .= " AND triggerid = '{$trigger_id}'";
-    echo $sql;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+
     $html = "<table class='vertical'>";
-    $html .= "<tr><th>Action</th><th>Action</th></tr>";
-    while (list($id) = mysql_fetch_row($result))
+    $html .= "<tr><th>Trigger</th><th>Actions</th></tr>";
+    $i = 1;
+    foreach ($trigger_types AS $trigger => $description)
     {
-        $t = Trigger::byID($id);
-        $html .= trigger_to_html($t);
+        $trigger_html = trigger_to_html($trigger, $user_id);
+        if ($trigger_html != FALSE)
+        {
+            $shade = ($i % 2) + 1;
+            $html .= "<tr class='shade{$shade}'><td>".icon('trigger', 16);
+            $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
+            $html .= $trigger_html;
+            $html .= "</div></td></tr>";         
+        }
     }
     $html .= "</table>";
     return $html;
 }
 
-function trigger_to_html($trigger)
+function trigger_to_html($trigger, $user_id)
+{
+    global $dbTriggers;
+    $sql = "SELECT id FROM `{$dbTriggers}` ";
+    $sql .= "WHERE userid = '{$user_id}' ";
+    $sql .= "AND triggerid = '{$trigger}'";
+    $result = mysql_query($sql);
+    if (mysql_num_rows($result) == 0) return FALSE;
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    while ($row = mysql_fetch_object($result))
+    {
+        $t = Trigger::byID($row->id);
+        $html .= trigger_action_to_html($t);
+    }
+    return $html;
+}
+
+function trigger_action_to_html($trigger)
 {
     global $trigger_types, $actionarray;
     $t_array = trigger_to_array($trigger);
-    $html .= "<tr><td>".icon('trigger', 16). " ";
-    $html .= "{$GLOBALS['strWhen']}{$GLOBALS['strEllipsis']}";
-    $html .= $trigger_types[$t_array['trigger_type']]['description'];
-    $html .= ", ".$actionarray[$t_array['action']]['description'];
-    $html .= ": ". template_description($t_array['template'], $t_array['action']);
-    $html .= " <small>(<a href='templates.php?id={$t_array['template']}'>";
-    $html .= "{$t_array['template']}</a>)</small><br />";
+    switch ($t_array['action'])
+    {
+        case 'ACTION_JOURNAL':
+            $action = icon('configure', 16)." ";
+            $action .= $GLOBALS['strLogTriggerInJournal'];
+            break;
 
-    if ($t_array['checks'] != '')
-    {
-        $html .= icon('auto', 16)." ";
-        $html .= "<strong>Checks</strong>: {$t_array['checks']} ".help_link('trigger_checks')." ";
+        case 'ACTION_NOTICE':
+            $action = icon('info', 16)." ";
+            $action .= $GLOBALS['strCreateANotice'];
+            break;
+
+        case 'ACTION_EMAIL':
+            $action = icon('email', 16). " ";
+            $action .= $GLOBALS['strSendAnEmail'];
+            break;
+            
+        default:
+            $action = $GLOBALS['strUnknown'];
+            plugin_do('trigger_action_html');
+        break;
     }
-    if ($t_array['parameters'] != '')
+
+    $html .= $action;
+    
+    if (!empty($t_array['template']))
     {
-        $html .= icon('auto', 16)." ";
-        $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
+        $html .= " <a href='templates.php?id={$t_array['template']}'>";
+        $html .= "{$t_array['template']}</a> ";
+        $desc = template_description($t_array['template'], $t_array['action']);
+        if ($desc != '')
+        {
+            $html .= "<small>({$desc})</small><br />";
+        }
     }
-    $html .=  "</td><td><a href='trigger_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
-    $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></td></tr>";
+    
+    if ($t_array['checks'] != '' OR $t_array['parameters'] != '')
+    {
+        $html .= "<a href='javascript:void(0)' onclick=\"javascript:$('checksandparams{$trigger->id}').show()\">".icon('auto', 16) ." {$GLOBALS['strMore']}</a> ";
+        $html .= "<div id='checksandparams{$trigger->id}' style='display:none'>";
+        if ($t_array['checks'] != '')
+        {
+            $html .= "<strong>Checks</strong>: {$t_array['checks']} ".help_link('trigger_checks')." ";
+        }
+        if ($t_array['parameters'] != '')
+        {
+            $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
+        }
+        $html .= "</div>";
+    }
+    
+    $html .=  "<div class='triggeractions'><a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
+    $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
 }
 
@@ -1071,19 +1172,17 @@ function template_description($name, $type)
     if ($type == 'ACTION_NOTICE')
     {
         $tbl = $dbNoticeTemplates;
-        $icon = icon('info', 16);
     }
-    else
+    elseif ($type == 'ACTION_EMAIL')
     {
         $tbl = $dbEmailTemplates;
-        $icon = icon('email', 16);
     }
     $sql = "SELECT description FROM `{$tbl}` WHERE name = '{$name}'";
     $result = mysql_query($sql);
     list($desc) = mysql_fetch_row($result);
     (substr_compare($desc, "str", 1, 3)) ? $desc = $GLOBALS[$desc] : $desc;
     if ($desc == '') $desc = FALSE;
-    return $icon." ".$desc;
+    return $desc;
 }
 
 

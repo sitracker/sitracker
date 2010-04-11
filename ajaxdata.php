@@ -312,7 +312,17 @@ switch ($action)
         break;
     case 'triggerpairmatch':
         $triggertype = cleanvar($_REQUEST['triggertype']);
-        echo $pairingarray[$triggertype];
+        $action = cleanvar($_REQUEST['triggeraction']);
+        debug_log("Returning a template for {$triggertype} and {$action}", TRUE);
+        if ($action == 'ACTION_EMAIL')
+        {
+            echo $email_pair[$triggertype];
+        }
+        elseif ($action == 'ACTION_NOTICE')
+        {
+            echo $notice_pair[$triggertype];
+        }
+        break;
 
     default : 
         plugin_do('ajaxdata_add_action', array('action' => $action));
