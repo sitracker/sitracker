@@ -168,6 +168,7 @@ $trigger_types['TRIGGER_SCHEDULER_TASK_FAILED'] =
 array('name' => $strSchedulerActionFailed,
       'description' => $strTriggerSchedulerTaskFailedDesc,
       'required' => array('schedulertask'),
+      'params' => array('schedulertask'),
       'perm' => 22
       );
 
@@ -389,6 +390,7 @@ $ttvararray['{contractid}'][] =
 array('description' => $strContractID,
       'requires' => 'contractid',
       'replacement' => '$param_array[\'contractid\'];',
+      'checkreplace' => 'maintenance_drop_down',
       'show' => FALSE
       );
 
@@ -396,6 +398,7 @@ $ttvararray['{contractid}'][] =
 array('description' => $strContractID,
       'requires' => 'contractid',
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',
+      'checkreplace' => 'maintenance_drop_down',
       'show' => FALSE
       );
 
@@ -479,7 +482,8 @@ array('description' => $strExternalID,
 $ttvararray['{incidentid}'] =
 array('description' => $strIncidentID,
       'requires' => 'incidentid',
-      'replacement' => '$param_array[\'incidentid\'];'
+      'replacement' => '$param_array[\'incidentid\'];',
+      'checkreplace' => 'incident_drop_down'
       );
 
 $ttvararray['{incidentowner}'] =
@@ -497,7 +501,8 @@ array('description' => $strIncidentOwnersEmail,
 $ttvararray['{incidentpriority}'] =
 array('description' => $strIncidentPriority,
       'requires' => 'incidentid',
-      'replacement' => 'priority_name(incident_priority($param_array[incidentid]));'
+      'replacement' => 'priority_name(incident_priority($param_array[incidentid]));',
+      'checkreplace' => 'priority_drop_down'
       );
 
 $ttvararray['{incidentsoftware}'] =
@@ -566,6 +571,7 @@ $ttvararray['{ownerid}'] =
 array('description' => $strIncidentOwnerID,
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',
       'requires' => 'incidentid',
+      'checkreplace' => 'user_drop_down',
       'show' => FALSE
       );
 
@@ -645,6 +651,7 @@ $ttvararray['{siteid}'] =
 array('description' => $strSiteName,
       'requires' => 'siteid',
       'replacement' => '$param_array[\'siteid\'];',
+      'checkreplace' => 'site_drop_down',
       'show' => FALSE
       );
 
@@ -723,6 +730,7 @@ $ttvararray['{townerid}'] =
 array('description' => 'Incident temp owner ID',
       'replacement' => 'incident_towner($param_array[\'incidentid\']);',
       'requires' => 'incidentid',
+      'checkreplace' => 'user_drop_down',
       'show' => FALSE
       );
 
@@ -766,6 +774,7 @@ array('description' => $strCurrentUserEmailAddress,
 $ttvararray['{userid}'][] =
 array('description' => 'UserID the trigger passes',
       'replacement' => '$param_array[\'userid\'];',
+      'checkreplace' => 'user_drop_down',
       'show' => FALSE
       );
 
@@ -784,7 +793,8 @@ array('description' => $strFullNameCurrentUser,
 $ttvararray['{userstatus}'] =
 array('description' => $strUserStatus,
       'replacement' => 'user_status_name($param_array[\'userid\']);',
-      'requires' => 'userid'
+      'requires' => 'userid',
+      'checkreplace' => 'userstatus_drop_down'
       );
 
 plugin_do('trigger_variables');
