@@ -27,6 +27,10 @@ Theme support has been simplified, if you added your own theme you may need
 to move your theme files around to have them recognised,
 see http://bugs.sitracker.org/view.php?id=419 for more details.
 
+The Default CSS file setting has been removed, any previous setting of
+$CONFIG['default_css_url'] will be ignored.  See Themes documentation
+for help with customising how SiT! looks.
+
 Upgrading to 3.60
 -----------------
 3.60 only shows incidents in the queues which are assigned to an engineer
