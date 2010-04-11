@@ -90,15 +90,15 @@ function string_find_all($haystack, $needle, $limit=0)
 
 
 /**
-    * Trims a string so that it is not longer than the length given and
-    * add ellipses (...) to the end
-    * @author Ivan Lucas
-    * @param string $text. Some plain text to shorten
-    * @param int $maxlength. Length of the resulting string (in characters)
-    * @param bool $html. Set to TRUE to include HTML in the output (for ellipsis)
-    *                    Set to FALSE for plain text only
-    * @returns string. A shortned string (optionally with html)
-*/
+ * Trims a string so that it is not longer than the length given and
+ * add ellipses (...) to the end
+ * @author Ivan Lucas
+ * @param string $text. Some plain text to shorten
+ * @param int $maxlength. Length of the resulting string (in characters)
+ * @param bool $html. Set to TRUE to include HTML in the output (for ellipsis)
+ *                    Set to FALSE for plain text only
+ * @return string. A shortned string (optionally with html)
+ */
 function truncate_string($text, $maxlength=255, $html = TRUE)
 {
     global $strEllipsis;
@@ -133,7 +133,7 @@ function truncate_string($text, $maxlength=255, $html = TRUE)
   * UTF8 substr() replacement
   * @author Anon / Public Domain
   * @note see http://www.php.net/manual/en/function.substr.php#57899
-*/
+ */
 function utf8_substr($str, $from, $len)
 {
     # utf8 substr
@@ -148,7 +148,7 @@ function utf8_substr($str, $from, $len)
   * UTF8 strlen() replacement
   * @author anpaza at mail dot ru / Public Domain
   * @note see http://www.php.net/manual/en/function.strlen.php#59258
-*/
+ */
 function utf8_strlen($str)
 {
     $i = 0;
@@ -182,7 +182,7 @@ function utf8_strlen($str)
   * @param string $var. Filename to check
   * @retval bool TRUE : valid
   * @retval bool FALSE : invalid
-*/
+ */
 function filter_i18n_filenames($var)
 {
     $validity = FALSE;
@@ -197,8 +197,8 @@ function filter_i18n_filenames($var)
   * Array walk callback convert an i18n filename to a language code
   * @author Ivan Lucas
   * @param string $filename. Filename of i18n file (opt. with path)
-  * @returns nothing
-*/
+  * @return nothing
+ */
 function i18n_filename_to_code(&$elem, $key)
 {
     $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -8);
@@ -211,7 +211,7 @@ function i18n_filename_to_code(&$elem, $key)
   * @param string $var. Filename to check
   * @retval bool TRUE : valid
   * @retval bool FALSE : invalid
-*/
+ */
 function filter_css_filenames($var)
 {
     $validity = FALSE;
@@ -230,8 +230,8 @@ function filter_css_filenames($var)
   * Array walk callback convert an css filename to a theme name
   * @author Ivan Lucas
   * @param string $filename. Filename of theme file (opt. with path)
-  * @returns nothing
-*/
+  * @return nothing
+ */
 function css_filename_to_themename(&$elem, $key)
 {
     $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -4);
@@ -242,12 +242,12 @@ function css_filename_to_themename(&$elem, $key)
   * Convert an i18n code to a localised language name
   * @author Ivan Lucas
   * @param mixed $code. string i18n code (e.g. 'en-GB'), or array of strings
-  * @returns mixed.
+  * @return mixed.
   * @note if working on an array returns a string Language name,
           or code if language not recognised
   * @note if working on an array, returns an associative array with code
   *       as the key and lang name as the value
-*/
+ */
 function i18n_code_to_name($code)
 {
     global $i18n_codes;
@@ -272,7 +272,7 @@ function i18n_code_to_name($code)
   * and strip out irrelevant update headers
   * @author Ivan Lucas
   * @todo FIXME unfinished
-*/
+ */
 function quote_message($message)
 {
     $lines = explode("\n", $message);
@@ -295,7 +295,7 @@ function quote_message($message)
   * @param string $subject. Non-encoded subject
   * @param string $charset. Character set that's in use
   * @return string. Encoded subject
-*/
+ */
 function encode_email_subject($subject, $charset)
 {
     $encoded_subject = '';

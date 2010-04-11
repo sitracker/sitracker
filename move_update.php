@@ -9,15 +9,13 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-
 $permission = 8; // Update Incidents
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'incident.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
+
 // External variables
 $incidentid = cleanvar($_REQUEST['incidentid']);
 $updateid = cleanvar($_REQUEST['updateid']);
@@ -146,7 +144,7 @@ else
     {
         $moved_attachments = TRUE;
         // update the incident record, change the incident status to active
-        $sql = "UPDATE `{$dbIncidents}` SET status='1', lastupdated='$now', timeofnextaction='0' WHERE id='$incidentid'";
+        $sql = "UPDATE `{$dbIncidents}` SET status='1', lastupdated='{$now}', timeofnextaction='0' WHERE id='{$incidentid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -187,7 +185,7 @@ else
         if ($moved_attachments)
         {
             // retrieve the update body so that we can insert time headers
-            $sql = "SELECT incidentid, bodytext, timestamp FROM `{$dbUpdates}` WHERE id='$updateid'";
+            $sql = "SELECT incidentid, bodytext, timestamp FROM `{$dbUpdates}` WHERE id='{$updateid}'";
             $uresult = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             list($oldincidentid, $bodytext, $timestamp)=mysql_fetch_row($uresult);
@@ -210,19 +208,19 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             //remove from tempincoming to prevent build up
-            $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='$updateid'";
+            $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update $update moved to incident $incidentid", CFG_JOURNAL_INCIDENTS, $incidentid);
 
-            html_redirect("incident_details.php?id=$incidentid");
+            html_redirect("incident_details.php?id={$incidentid}");
         }
     }
     else
     {
         // no open incident with this number.  Return to form.
-        header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid=$updateid&error=1&win=incomingview");
+        header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid={$updateid}&error=1&win=incomingview");
         exit;
     }
 }

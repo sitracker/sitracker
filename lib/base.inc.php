@@ -16,7 +16,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 /**
   * Begin constant definitions
-**/
+ **/
 // Journal Logging
 define ('CFG_LOGGING_OFF',0); // 0 = No logging
 define ('CFG_LOGGING_MIN',1); // 1 = Minimal Logging
@@ -107,7 +107,7 @@ define ("REASON_INCIDENT_CLOSED", 2);
 
 /**
   * Begin global variable definitions
-**/
+ **/
 // Version number of the application, (numbers only)
 $application_version = '3.99';
 
@@ -137,7 +137,7 @@ $ldap_conn = "";
 
 /**
   * End global variable definitions
-**/
+ **/
 
 // Clean PHP_SELF server variable to avoid potential XSS security issue
 $_SERVER['PHP_SELF'] = substr($_SERVER['PHP_SELF'], 0,
@@ -168,7 +168,7 @@ ini_set('default_charset', $i18ncharset);
   * Strip slashes from an array
   * @param $data an array
   * @return An array with slashes stripped
-*/
+ */
 function stripslashes_array($data)
 {
     if (is_array($data))
@@ -195,8 +195,8 @@ function stripslashes_array($data)
   * @param bool $mysqlescape whether to mysql_escape()
   * @param array $disallowedchars array of chars to remove
   * @param array $replacechars array of chars to replace as $orig => $replace
-  * @returns variable
-*/
+  * @return variable
+ */
 function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
                 $mysqlescape = TRUE, $disallowedchars = array(),
                 $replacechars = array())
@@ -256,7 +256,7 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
   * @author Ivan Lucas
   * @param bool $test - (optional) Include test language (zz) in results
   * @retval array Language codes
-**/
+ **/
 function available_languages($test = FALSE)
 {
     $i18nfiles = list_dir('.'.DIRECTORY_SEPARATOR.'i18n');

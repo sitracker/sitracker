@@ -16,8 +16,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function get_tag_id($tag)
 {
     global $dbTags;
@@ -41,8 +41,8 @@ function get_tag_id($tag)
 
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function add_tag($id, $type, $tag)
 {
     global $dbSetTags;
@@ -56,7 +56,7 @@ function add_tag($id, $type, $tag)
     6 - skill
     7 - kb article
     8 - report
-    */
+ */
     if ($tag!='')
     {
         $tagid = get_tag_id($tag);
@@ -69,8 +69,8 @@ function add_tag($id, $type, $tag)
 
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function remove_tag($id, $type, $tag)
 {
     global $dbSetTags, $dbTags;
@@ -97,9 +97,9 @@ function remove_tag($id, $type, $tag)
 
 
 /**
-    * Remove existing tags and replace with a new set
-    * @author Ivan Lucas
-*/
+ * Remove existing tags and replace with a new set
+ * @author Ivan Lucas
+ */
 function replace_tags($type, $id, $tagstring)
 {
     global $dbSetTags;
@@ -119,9 +119,9 @@ function replace_tags($type, $id, $tagstring)
 }
 
 /**
-    * Purge a single tag (if needed)
-    * @author Ivan Lucas
-*/
+ * Purge a single tag (if needed)
+ * @author Ivan Lucas
+ */
 function purge_tag($tagid)
 {
     // Check tag usage count and remove disused tag completely
@@ -138,9 +138,9 @@ function purge_tag($tagid)
 
 
 /**
-    * Purge all tags (if needed)
-    * @author Ivan Lucas
-*/
+ * Purge all tags (if needed)
+ * @author Ivan Lucas
+ */
 function purge_tags()
 {
     global $dbTags;
@@ -158,12 +158,12 @@ function purge_tags()
 
 
 /**
-    * Produce a list of tags
-    * @author Ivan Lucas
-    * @param int $recordid. The record ID to find tags for
-    * @param int $type. The tag record type.
-    * @param boolean $html. Return HTML when TRUE
-*/
+ * Produce a list of tags
+ * @author Ivan Lucas
+ * @param int $recordid. The record ID to find tags for
+ * @param int $type. The tag record type.
+ * @param boolean $html. Return HTML when TRUE
+ */
 function list_tags($recordid, $type, $html = TRUE)
 {
     global $CONFIG, $dbSetTags, $dbTags, $iconset;
@@ -206,10 +206,10 @@ function list_tags($recordid, $type, $html = TRUE)
 
 
 /**
-    * Return HTML to display a list of tag icons
-    * @author Ivan Lucas
-    * @returns string. HTML
-*/
+ * Return HTML to display a list of tag icons
+ * @author Ivan Lucas
+ * @return string. HTML
+ */
 function list_tag_icons($recordid, $type)
 {
     global $CONFIG, $dbSetTags, $dbTags, $iconset;
@@ -241,10 +241,10 @@ function list_tag_icons($recordid, $type)
 }
 
 /**
-    * Generate a tag cloud
-    * @author Ivan Lucas, Tom Gerrard
-    * @returns string. HTML
-*/
+ * Generate a tag cloud
+ * @author Ivan Lucas, Tom Gerrard
+ * @return string. HTML
+ */
 function show_tag_cloud($orderby="name", $showcount = FALSE)
 {
     global $CONFIG, $dbTags, $dbSetTags, $iconset;

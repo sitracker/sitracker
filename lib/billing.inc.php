@@ -23,7 +23,7 @@ define ("BILLING_RESERVED", 10);
   * @author Paul Heaney
   * @param int $contactid
   * @return either NO_BILLABLE_CONTRACT, CONTACT_HAS_BILLABLE_CONTRACT or SITE_HAS_BILLABLE_CONTRACT the latter is if the site has a billable contract by the contact isn't a named contact
-*/
+ */
 function does_contact_have_billable_contract($contactid)
 {
     global $now;
@@ -65,11 +65,11 @@ function does_contact_have_billable_contract($contactid)
 
 
 /**
-* Gets the billable contract ID for a contact, if multiple exist then the first one is choosen
-* @author Paul Heaney
-* @param int $contactid - The contact ID you want to find the contract for
-* @return int the ID of the contract, -1 if not found
-*/
+ * Gets the billable contract ID for a contact, if multiple exist then the first one is choosen
+ * @author Paul Heaney
+ * @param int $contactid - The contact ID you want to find the contract for
+ * @return int the ID of the contract, -1 if not found
+ */
 function get_billable_contract_id($contactid)
 {
     global $now;
@@ -124,11 +124,11 @@ function get_site_billable_contract_id($siteid)
 
 
 /**
-* Returns the percentage remaining for ALL services on a contract
-* @author Kieran Hogg
-* @param int $mainid - contract ID
-* @return mixed - percentage between 0 and 1 if services, FALSE if not
-*/
+ * Returns the percentage remaining for ALL services on a contract
+ * @author Kieran Hogg
+ * @param int $mainid - contract ID
+ * @return mixed - percentage between 0 and 1 if services, FALSE if not
+ */
 function get_service_percentage($maintid)
 {
     global $dbService;
@@ -158,13 +158,13 @@ function get_service_percentage($maintid)
 
 
 /**
-* Does a contract have a service level which is timed / billed
-* @author Ivan Lucas
-* @param int $contractid
-* @return Whether the contract should be billed
-* @retval bool TRUE:    Yes timed. should be billed
-* @retval bool FALSE:   No, not timed. Should not be billed
-*/
+ * Does a contract have a service level which is timed / billed
+ * @author Ivan Lucas
+ * @param int $contractid
+ * @return Whether the contract should be billed
+ * @retval bool TRUE:    Yes timed. should be billed
+ * @retval bool FALSE:   No, not timed. Should not be billed
+ */
 function is_contract_timed($contractid)
 {
     global $dbMaintenance, $dbServiceLevels;
@@ -225,7 +225,7 @@ function update_last_billed_time($serviceid, $date)
  * @author Paul Heaney
  * @param string $dayofweek 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' or 'holiday'
  * @return float - The applicable multiplier for the time of day and billing matrix being used
-*/
+ */
 function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 1)
 {
     $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrix']} WHERE hour = {$hour} AND id = {$billingmatrix}";
@@ -250,9 +250,9 @@ function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 1)
 
 
 /**
-* Function to get an array of all billing multipliers for a billing matrix
-* @author Paul Heaney
-*/
+ * Function to get an array of all billing multipliers for a billing matrix
+ * @author Paul Heaney
+ */
 function get_all_available_multipliers($matrixid=1)
 {
     $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
@@ -280,12 +280,12 @@ function get_all_available_multipliers($matrixid=1)
 
 
 /**
-* Function to find the most applicable unit rate for a particular contract
-* @author Paul Heaney
-* @param $contractid - The contract id
-* @param $date UNIX timestamp. The function will look for service that is current as of this timestamp
-* @return int the unit rate, -1 if non found
-*/
+ * Function to find the most applicable unit rate for a particular contract
+ * @author Paul Heaney
+ * @param $contractid - The contract id
+ * @param $date UNIX timestamp. The function will look for service that is current as of this timestamp
+ * @return int the unit rate, -1 if non found
+ */
 function get_unit_rate($contractid, $date='')
 {
     $serviceid = get_serviceid($contractid, $date);
@@ -385,11 +385,11 @@ function get_service_incidentrate($serviceid)
 
 
 /**
-* @author Paul Heaney
-* @param $contractid  The Contract ID
-* @param $date  UNIX timestamp. The function will look for service that is current as of this timestamp
-* @return mixed.     Service ID, or -1 if not found, or FALSE on error
-*/
+ * @author Paul Heaney
+ * @param $contractid  The Contract ID
+ * @param $date  UNIX timestamp. The function will look for service that is current as of this timestamp
+ * @return mixed.     Service ID, or -1 if not found, or FALSE on error
+ */
 function get_serviceid($contractid, $date = '')
 {
     global $now, $CONFIG;
@@ -426,17 +426,17 @@ function get_serviceid($contractid, $date = '')
 
 
 /**
-    * Get the current contract balance
-    * @author Ivan Lucas
-    * @param int $contractid. Contract ID of the contract to credit
-    * @param bool $includenonapproved. Include incidents which have not been approved
-    * @param bool $showonlycurrentlyvalue - Show only contracts which have valid NOW() - i.e. startdate less than NOW() and endate greate than NOW()
-    * @param bool $includereserved - Deduct the reseved amount from the returned balance
-    * @return int The total balance remaining on the contract
-    * @note The balance is a sum of all the current service that have remaining balance
-    * @todo FIXME add a param that makes this optionally show the incident pool balance
+ * Get the current contract balance
+ * @author Ivan Lucas
+ * @param int $contractid. Contract ID of the contract to credit
+ * @param bool $includenonapproved. Include incidents which have not been approved
+ * @param bool $showonlycurrentlyvalue - Show only contracts which have valid NOW() - i.e. startdate less than NOW() and endate greate than NOW()
+ * @param bool $includereserved - Deduct the reseved amount from the returned balance
+ * @return int The total balance remaining on the contract
+ * @note The balance is a sum of all the current service that have remaining balance
+ * @todo FIXME add a param that makes this optionally show the incident pool balance
     in the case of non-timed type contracts
-*/
+ */
 function get_contract_balance($contractid, $includenonapproved = FALSE, $showonlycurrentlyvalid = TRUE, $includereserved = TRUE)
 {
     global $dbService, $now;
@@ -788,10 +788,10 @@ function close_billable_incident($incidentid)
 }
 
 /**
-* Function to approve an incident, this adds a transaction and confirms the 'bill' is correct.
-* @author Paul Heaney
-* @param incidentid ID of the incident to approve
-*/
+ * Function to approve an incident, this adds a transaction and confirms the 'bill' is correct.
+ * @author Paul Heaney
+ * @param incidentid ID of the incident to approve
+ */
 function approve_incident_transaction($transactionid)
 {
     global $dbLinks, $sit, $CONFIG, $strUnits;
@@ -855,20 +855,20 @@ function approve_incident_transaction($transactionid)
 
 
 /**
-    * Update contract balance by an amount and log a transaction to record the change
-    * @author Ivan Lucas
-    * @param int $contractid. Contract ID of the contract to credit
-    * @param string $description. A useful description of the transaction
-    * @param float $amount. The amount to credit or debit to the contract balance
+ * Update contract balance by an amount and log a transaction to record the change
+ * @author Ivan Lucas
+ * @param int $contractid. Contract ID of the contract to credit
+ * @param string $description. A useful description of the transaction
+ * @param float $amount. The amount to credit or debit to the contract balance
                     positive for credit and negative for debit
-    * @param int $serviceid.    optional serviceid to use. This is calculated if ommitted.
-    * @param int $transaction - the transaction you are approving
-    * @param int $totalunits - The number of units that are being approved - before the multiplier
-    * @param int $totalbillableunits - The number of units charged to the customer (after the multiplier)
-    * @param int $totalrefunds - Total number of units refunded to the customer
-    * @return boolean - status of the balance update
-    * @note The actual service to credit will be calculated automatically if not specified
-*/
+ * @param int $serviceid.    optional serviceid to use. This is calculated if ommitted.
+ * @param int $transaction - the transaction you are approving
+ * @param int $totalunits - The number of units that are being approved - before the multiplier
+ * @param int $totalbillableunits - The number of units charged to the customer (after the multiplier)
+ * @param int $totalrefunds - Total number of units refunded to the customer
+ * @return boolean - status of the balance update
+ * @note The actual service to credit will be calculated automatically if not specified
+ */
 function update_contract_balance($contractid, $description, $amount, $serviceid='', $transactionid='', $totalunits=0, $totalbillableunits=0, $totalrefunds=0)
 {
     global $now, $dbService, $dbTransactions;
@@ -1048,10 +1048,10 @@ function get_service_balance($serviceid, $includeawaitingapproval = TRUE, $inclu
 
 
 /**
-* Function to identify if incident has been approved for billing
-* @author Paul Heaney
-* @return TRUE for approved, FALSE otherwise
-*/
+ * Function to identify if incident has been approved for billing
+ * @author Paul Heaney
+ * @return TRUE for approved, FALSE otherwise
+ */
 function is_billable_incident_approved($incidentid)
 {
     $sql = "SELECT DISTINCT origcolref, linkcolref ";
@@ -1097,12 +1097,12 @@ function get_incident_transactionid($incidentid)
 
 
 /**
-    * HTML table showing a summary of current contract service periods
-    * @author Ivan Lucas
-    * @param int $contractid. Contract ID of the contract to show service for
-    * @param bool $billing. Show billing info when TRUE, hide it when FALSE
-    * @returns string. HTML table
-*/
+ * HTML table showing a summary of current contract service periods
+ * @author Ivan Lucas
+ * @param int $contractid. Contract ID of the contract to show service for
+ * @param bool $billing. Show billing info when TRUE, hide it when FALSE
+ * @return string. HTML table
+ */
 function contract_service_table($contractid, $billing)
 {
     global $CONFIG, $dbService;
@@ -1237,7 +1237,7 @@ function contract_service_table($contractid, $billing)
  * for the duration of the incident specfified.
  * @author Paul Heaney
  * @param int $incidentid - Incident number of the incident to create the array from
- * @returns array
+ * @return array
  * @note The $billing array lists the owner of each activity with start time and
  * @note duration.  Used for calculating billing totals.
  */
@@ -1245,7 +1245,7 @@ function get_incident_billing_details($incidentid)
 {
     /*
     $array[owner][] = array(owner, starttime, duration)
-    */
+ */
     $sql = "SELECT * FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} AND duration IS NOT NULL";
     $result = mysql_query($sql);
     if (mysql_error())
@@ -1352,7 +1352,7 @@ function group_billing_periods(&$count, $countType, $activity, $period)
 /**
  * @author Paul Heaney
  * @note  based on periods
-*/
+ */
 function make_incident_billing_array($incidentid, $totals=TRUE)
 {
 
@@ -1498,13 +1498,13 @@ function make_incident_billing_array($incidentid, $totals=TRUE)
 
 
 /**
-* Returns the amount of billable units used for a site with the option of filtering by date
-* @author Paul Heaney
-* @param int $siteid The siteid to report on
-* @param int $startdate unixtimestamp on the start date to filter by
-* @param int $enddate unixtimestamp on the end date to filter by
-* @return int Number of units used by site
-**/
+ * Returns the amount of billable units used for a site with the option of filtering by date
+ * @author Paul Heaney
+ * @param int $siteid The siteid to report on
+ * @param int $startdate unixtimestamp on the start date to filter by
+ * @param int $enddate unixtimestamp on the end date to filter by
+ * @return int Number of units used by site
+ **/
 function billable_units_site($siteid, $startdate=0, $enddate=0)
 {
     $sql = "SELECT i.id FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbContacts']}` AS c ";
@@ -1542,12 +1542,12 @@ function billable_units_site($siteid, $startdate=0, $enddate=0)
 
 
 /**
-* Function to make an array with the number of units at each billable multiplier, broken down by engineer
-* @author Paul Heaney
-* @param int $incidentid The inicident to create the billing breakdown for
-* @return array. Array of the billing for this incident broken down by enegineer
-*
-*/
+ * Function to make an array with the number of units at each billable multiplier, broken down by engineer
+ * @author Paul Heaney
+ * @param int $incidentid The inicident to create the billing breakdown for
+ * @return array. Array of the billing for this incident broken down by enegineer
+ *
+ */
 function get_incident_billable_breakdown_array($incidentid)
 {
     $billable = make_incident_billing_array($incidentid, FALSE);
@@ -1605,11 +1605,11 @@ function get_incident_billable_breakdown_array($incidentid)
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $contractid. Contract ID of the contract to show a balance for
-    * @return int. Number of available units according to the service balances and unit rates
-    * @todo Check this is correct
-**/
+ * @author Ivan Lucas
+ * @param int $contractid. Contract ID of the contract to show a balance for
+ * @return int. Number of available units according to the service balances and unit rates
+ * @todo Check this is correct
+ **/
 function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
 {
     global $now, $dbService;
@@ -1655,11 +1655,11 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
 
 
 /**
-    * @author Ivan Lucas
-    * @param int $contractid. Contract ID of the contract to show a balance for
-    * @return int. Number of available units according to the service balances and unit rates
-    * @todo Check this is correct
-**/
+ * @author Ivan Lucas
+ * @param int $contractid. Contract ID of the contract to show a balance for
+ * @return int. Number of available units according to the service balances and unit rates
+ * @todo Check this is correct
+ **/
 function contract_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
 {
     global $now, $dbService;
@@ -1703,19 +1703,19 @@ function contract_balance($contractid, $includenonapproved = FALSE, $includerese
 
 
 /**
-* Function to display/generate the transactions table
-* @author Paul Heaney
-* @param int $serviceid - The service ID to show transactons for
-* @param Date $startdate - Date in format yyyy-mm-dd when you want to start the report from
-* @param Date $enddate - Date in  format yyyy-mm-dd when you want to end the report, empty means today
-* @param int[] $sites - Array of sites to report on
-* @param String $display either csv or html
-* @param boolean $sitebreakdown - Breakdown per site
-* @param boolean $showfoc - Show free of charge as well (defaults to true);
-* @param boolean $includeawaitingapproval - Include transactions awaiting approval
-* @param boolean $includereserved - Include reserved transactions
-* @return String -either HTML or CSV
-*/
+ * Function to display/generate the transactions table
+ * @author Paul Heaney
+ * @param int $serviceid - The service ID to show transactons for
+ * @param Date $startdate - Date in format yyyy-mm-dd when you want to start the report from
+ * @param Date $enddate - Date in  format yyyy-mm-dd when you want to end the report, empty means today
+ * @param int[] $sites - Array of sites to report on
+ * @param String $display either csv or html
+ * @param boolean $sitebreakdown - Breakdown per site
+ * @param boolean $showfoc - Show free of charge as well (defaults to true);
+ * @param boolean $includeawaitingapproval - Include transactions awaiting approval
+ * @param boolean $includereserved - Include reserved transactions
+ * @return String -either HTML or CSV
+ */
 function transactions_report($serviceid, $startdate, $enddate, $sites, $display, $sitebreakdown=TRUE, $showfoc=TRUE, $focaszero=FALSE, $includeawaitingapproval = TRUE, $includereserved = TRUE)
 {
     global $CONFIG;

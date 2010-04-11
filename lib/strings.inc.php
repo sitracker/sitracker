@@ -29,7 +29,7 @@ $hmenu[1031] = array (10=> array ( 'perm'=> 0, 'name'=> "Option1", 'url'=>""),
                       20=> array ( 'perm'=> 0, 'name'=> "Option2", 'url'=>""),
                       30=> array ( 'perm'=> 0, 'name'=> "Option3", 'url'=>"")
 );
-*/
+ */
 
 //
 // Main Menu
