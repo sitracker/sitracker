@@ -86,9 +86,10 @@ class MIME_mail
         }
         if ($from)
         {
-            $headers = preg_replace("!(from:\ ?.+?[\r\n]?\b)!i", '', $headers);
+            //$headers = preg_replace("!(from:\ ?.+?[\r\n]?\b)!i", '', $headers);
+            $headers = preg_replace("!(from:\b?.+?[\n]?\b)!i", '', $headers);
         }
-        $this->headers = chop($headers);
+                $this->headers = chop($headers);
         $this->mimeparts[] = '' ;   //Bump up location 0;
         $this->errstr = '';
         return;
@@ -204,7 +205,6 @@ class MIME_mail
         if (is_array($this->mimeparts) && ($nparts > 1))
         {
             // Case 1: Attachment list is there.  Therefore MIME Message header must have multipart/mixed
-            debug_log("case1, $nparts");
             $c_ver = "MIME-Version: 1.0".CRLF;
             $c_type = 'Content-Type: multipart/mixed;'.CRLF."\tboundary=\"$boundary\"".CRLF;
             //INL   $c_enc = "Content-Transfer-Encoding: ".BIT7.CRLF;
@@ -228,12 +228,10 @@ class MIME_mail
             }
             $msg .= '--'.$boundary.'--'.CRLF;
             $msg = $c_ver.$c_type.$c_enc.$c_desc.$warning.$msg;
-            debug_log("Message: $msg");
         }
         else
         {
             // Case 2: No attachments list
-            debug_log('case2');
             if (!empty($this->body)) $msg .= $this->body.CRLF.CRLF;
         }
 
