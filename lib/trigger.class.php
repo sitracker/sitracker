@@ -242,12 +242,12 @@ class Trigger extends SitEntity {
     }
 
     /**
-    * "Fires" the current trigger object, this means it has occurred
-    * @author Kieran Hogg
-    * @param $trigger_type string The name of the trigger to fire
-    * @param $param_array array Extra parameters to pass the trigger
-    * @return bool TRUE if the trigger created successfully, FALSE if not
-    */
+ * "Fires" the current trigger object, this means it has occurred
+ * @author Kieran Hogg
+ * @param $trigger_type string The name of the trigger to fire
+ * @param $param_array array Extra parameters to pass the trigger
+ * @return bool TRUE if the trigger created successfully, FALSE if not
+ */
     function fire()
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
@@ -304,7 +304,7 @@ class Trigger extends SitEntity {
         * @param $action string The type of action to perform
         * @param $template
         * @return boolean. TRUE if the user has the permission, otherwise FALSE
-    */
+ */
     private function trigger_action($action, $template)
     {
         global $CONFIG, $dbg, $dbTriggers;
@@ -365,7 +365,7 @@ class Trigger extends SitEntity {
         * @param $user_id integer. The user to send the email to
         * @param $template string. The name of the email template to use
         * trigger
-    */
+ */
     private function send_trigger_email($user_id, $template)
     {
         global $CONFIG, $dbg, $dbEmailTemplates;
@@ -425,7 +425,7 @@ class Trigger extends SitEntity {
         * Creates a trigger notice
         * @author Kieran Hogg
         * @param $template string. The name of the email template to use
-    */
+ */
     private function create_trigger_notice($template)
     {
         global $CONFIG, $dbg, $dbNotices, $dbNoticeTemplates;
@@ -521,13 +521,13 @@ class Trigger extends SitEntity {
 
 
     /**
-    * Checks is a specified trigger already exists
-    * @author Kieran Hogg
-    * @param $action enum 'ACTION_NONE', 'ACTION_JOURNAL', 'ACTION_EMAIL', 'ACTION_NOTICE', 'ACTION_CREATE_INCIDENT'
-    * @param $templateid int ID of the template
-    * @param $rules string The trigger rules
-    * @param $parameters string The trigger parameters
-    */
+ * Checks is a specified trigger already exists
+ * @author Kieran Hogg
+ * @param $action enum 'ACTION_NONE', 'ACTION_JOURNAL', 'ACTION_EMAIL', 'ACTION_NOTICE', 'ACTION_CREATE_INCIDENT'
+ * @param $templateid int ID of the template
+ * @param $rules string The trigger rules
+ * @param $parameters string The trigger parameters
+ */
     private function check_exists($action, $templateid, $rules, $parameters)
     {
         global $dbTriggers;

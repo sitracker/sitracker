@@ -30,7 +30,7 @@ class Holiday {
  * Highest level within SiT! all entities within SiT! should extend from this class
  * this provides a common interface exposing values and functiosn which are common across all entities
  * @author Paul Heaney
-*/
+ */
 abstract class SitEntity {
     var $id;
 

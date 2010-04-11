@@ -97,10 +97,10 @@ class FeedItem
 
 
     /**
-    * Generates the XML for this particular item
-    * @author Paul Heaney
-    * @return string The  XML for this item
-    */
+ * Generates the XML for this particular item
+ * @author Paul Heaney
+ * @return string The  XML for this item
+ */
     function generateItem()
     {
         if ($this->pubdate == 0) $this->pubdate = $now;

@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-require (APPLICATION_LIBPATH . 'incident.inc.php');
+
 $title = $strAddIncident;
 
 function to_row($contactrow)

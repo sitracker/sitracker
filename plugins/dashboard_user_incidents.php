@@ -13,7 +13,7 @@ $dashboard_user_incidents_version = 1;
 
 function dashboard_user_incidents($dashletid)
 {
-    $title = sprintf($GLOBALS['strUserIncidents'], user_realname($_SESSION['userid'],TRUE));
+    $title = sprintf($GLOBALS['strUserIncidents'], user_realname($_SESSION['userid'], TRUE));
     //"({$GLOBALS['strActionNeeded']})";
 
     echo dashlet('user_incidents', $dashletid, icon('support', 16), $title, 'incidents.php?user=current&amp;queue=1&amp;type=support', $content);
@@ -32,7 +32,6 @@ function dashboard_user_incidents_display($dashletid)
     global $dbIncidents, $dbContacts, $dbPriority;
     $user = "current";
 
-
     // Create SQL for chosen queue
     // If you alter this SQL also update the function user_activeincidents($id)
     if ($user == 'current') $user = $sit[2];
@@ -43,7 +42,7 @@ function dashboard_user_incidents_display($dashletid)
         $uresult = mysql_query($usql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
-        else $user=$sit[2]; // force to current user if username not found
+        else $user = $sit[2]; // force to current user if username not found
     }
     $sql =  "WHERE i.contact = c.id AND i.priority = p.id ";
     if ($user!='all') $sql .= "AND (owner='$user' OR towner='$user') ";
@@ -56,25 +55,43 @@ function dashboard_user_incidents_display($dashletid)
     $sql .= "AND ((timeofnextaction > 0 AND timeofnextaction < $now) OR ";
     $sql .= "(IF ((status >= 5 AND status <=8), ($now - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
     $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
-    $sql .= ") AND timeofnextaction < $now ) ";
+    $sql .= ") AND timeofnextaction < {$now} ) ";
 
     $selectsql = "SELECT i.id, externalid, title, owner, towner, priority, status, siteid, forenames, surname, email, i.maintenanceid, ";
     $selectsql .= "servicelevel, softwareid, lastupdated, timeofnextaction, ";
-    $selectsql .= "(timeofnextaction - $now) AS timetonextaction, opened, ($now - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
+    $selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
     $selectsql .= "($now - lastupdated) AS timesincelastupdate ";
     $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS p ";
     // Create SQL for Sorting
     switch ($sort)
     {
-        case 'id': $sql .= " ORDER BY id $sortorder"; break;
-        case 'title': $sql .= " ORDER BY title $sortorder"; break;
-        case 'contact': $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder"; break;
-        case 'priority': $sql .=  " ORDER BY priority $sortorder, lastupdated ASC"; break;
-        case 'status': $sql .= " ORDER BY status $sortorder"; break;
-        case 'lastupdated': $sql .= " ORDER BY lastupdated $sortorder"; break;
-        case 'duration': $sql .= " ORDER BY duration $sortorder"; break;
-        case 'nextaction': $sql .= " ORDER BY timetonextaction $sortorder"; break;
-        default:   $sql .= " ORDER BY priority DESC, lastupdated ASC"; break;
+        case 'id':
+            $sql .= " ORDER BY id {$sortorder}";
+            break;
+        case 'title':
+            $sql .= " ORDER BY title {$sortorder}";
+            break;
+        case 'contact':
+            $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
+            break;
+        case 'priority':
+            $sql .=  " ORDER BY priority {$sortorder}, lastupdated ASC";
+            break;
+        case 'status':
+            $sql .= " ORDER BY status {$sortorder}";
+            break;
+        case 'lastupdated':
+            $sql .= " ORDER BY lastupdated {$sortorder}";
+            break;
+        case 'duration':
+            $sql .= " ORDER BY duration {$sortorder}";
+            break;
+        case 'nextaction':
+            $sql .= " ORDER BY timetonextaction {$sortorder}";
+            break;
+        default:
+            $sql .= " ORDER BY priority DESC, lastupdated ASC";
+            break;
     }
     $sql = $selectsql.$sql;
     $result = mysql_query($sql);
@@ -91,7 +108,7 @@ function dashboard_user_incidents_display($dashletid)
     }
 
     // build querystring for hyperlinks
-    $querystring = "?user=$user&amp;queue=$queue&amp;type=$type&amp;";
+    $querystring = "?user={$user}&amp;queue={$queue}&amp;type={$type}&amp;";
 
     if ($user == 'all')
     {

@@ -21,8 +21,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-require (APPLICATION_LIBPATH . 'incident.inc.php');
-
 // External variables
 $type = cleanvar($_REQUEST['type']);
 $user = cleanvar($_REQUEST['user']);

@@ -16,7 +16,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  *  Constants used inside the MIME sending class. This file is included
  *  by the class module and these constants an be freely
  *  used in scripts using MIME_mail class
-*/
+ */
 define ('BASE64', 'base64');
 define ('BIT7', '7bit');
 define ('QP', 'quoted-printable');
@@ -41,7 +41,7 @@ define ('BODY', CRLF.'BODY'.CRLF);
  * @note Allows creation of e-mail messages via the MIME Standard.
  * @note The class supports multiple attachments and presenting
  * @note an e-mail in HTML.
-*/
+ */
 class MIME_mail
 {
     //public:
@@ -97,11 +97,11 @@ class MIME_mail
 
 
     /**
-    * Attach a 'file' to e-mail message
-    * Pass a file name to attach.
-    * This function returns a success/failure code/key of current
-    * attachment in array (+1). Read attach() below.
-    */
+ * Attach a 'file' to e-mail message
+ * Pass a file name to attach.
+ * This function returns a success/failure code/key of current
+ * attachment in array (+1). Read attach() below.
+ */
     function fattach($path, $description = '', $contenttype = OCTET, $encoding = BASE64, $disp = '')
     {
         $this->errstr = '';
@@ -128,18 +128,18 @@ class MIME_mail
 
 
     /**
-    * Attach data provided by user (rather than a file)
-    * Useful when you want to MIME encode user input
-    * like HTML.
-    * @param string $data
-    * @param string $description
-    * @param string $contenttype
-    * @param string $encoding
-    * @param string $disp Content Disposition
-    * @note This function returns key at which the requested
-    * data is attached. IT IS CURRENT KEY VALUE + 1!!
-    * Construct the body with MIME parts
-    */
+ * Attach data provided by user (rather than a file)
+ * Useful when you want to MIME encode user input
+ * like HTML.
+ * @param string $data
+ * @param string $description
+ * @param string $contenttype
+ * @param string $encoding
+ * @param string $disp Content Disposition
+ * @note This function returns key at which the requested
+ * data is attached. IT IS CURRENT KEY VALUE + 1!!
+ * Construct the body with MIME parts
+ */
     function attach($data, $description = '', $contenttype = OCTET, $encoding = BASE64, $disp = '')
     {
         $this->errstr = '';
@@ -190,11 +190,11 @@ class MIME_mail
 
 
     /**
-    * private:
-    * Construct mail message header from info already given.
-    * This is a very important function.  It shows how exactly
-    * the MIME message is constructed.
-    */
+ * private:
+ * Construct mail message header from info already given.
+ * This is a very important function.  It shows how exactly
+ * the MIME message is constructed.
+ */
     function build_message()
     {
         $this->errstr = '';
@@ -239,9 +239,9 @@ class MIME_mail
     }
 
     /**
-    * public:
-    * Now Generate the entire Mail Message, header and body et al.
-    */
+ * public:
+ * Now Generate the entire Mail Message, header and body et al.
+ */
     function gen_email($force=false)
     {
         $this->errstr = '';
@@ -256,9 +256,9 @@ class MIME_mail
     }
 
     /**
-    * public:
-    * Printable form
-    */
+ * public:
+ * Printable form
+ */
     function print_mail($force=false)
     {
         $this->errstr = '';
@@ -270,9 +270,9 @@ class MIME_mail
 
 
     /**
-    * public:
-    * Send mail via local mailer
-    */
+ * public:
+ * Send mail via local mailer
+ */
     function send_mail($force=false)
     {
         $this->errstr = '';

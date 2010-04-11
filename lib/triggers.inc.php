@@ -216,13 +216,13 @@ plugin_do('trigger_types');
 $pairingarray = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PASSWORD');
 
 /**
-    * Template variables (Alphabetical order)
-    * description - Friendly label
-    * replacement - Quoted PHP code to be run to perform the template var replacement
-    * requires -Optional field. single string or array. Specifies the 'required' params from the trigger that is needed for this replacement
-    * action - Optional field, when set the var will only be available for that action
-    * type - Optional field, defines where a variable can be used, system, incident or user
-*/
+ * Template variables (Alphabetical order)
+ * description - Friendly label
+ * replacement - Quoted PHP code to be run to perform the template var replacement
+ * requires -Optional field. single string or array. Specifies the 'required' params from the trigger that is needed for this replacement
+ * action - Optional field, when set the var will only be available for that action
+ * type - Optional field, defines where a variable can be used, system, incident or user
+ */
 $ttvararray['{applicationname}'] =
 array('description' => $CONFIG['application_name'],
       'replacement' => '$CONFIG[\'application_name\'];'
@@ -742,13 +742,13 @@ array('description' => $strUserStatus,
 plugin_do('trigger_variables');
 
 /**
-    * Displays a <select> with the list of email templates
-    * @author Kieran Hogg, Ivan Lucas
-    * @param $triggertype string. The type of trigger (incident, system...)
-    * @param $name string. The name for the select
-    * @param $selected string. The name of the selected item
-    * @returns string. HTML snippet
-*/
+ * Displays a <select> with the list of email templates
+ * @author Kieran Hogg, Ivan Lucas
+ * @param $triggertype string. The type of trigger (incident, system...)
+ * @param $name string. The name for the select
+ * @param $selected string. The name of the selected item
+ * @return string. HTML snippet
+ */
 function email_templates($name, $triggertype='system', $selected = '')
 {
     global $dbEmailTemplates, $dbTriggers;;
@@ -773,11 +773,11 @@ function email_templates($name, $triggertype='system', $selected = '')
 
 
 /**
-    * Displays a <select> with the list of notice templates
-    * @author Kieran Hogg
-    * @param $name string. The name for the select
-    * @param $selected string. The name of the selected item
-*/
+ * Displays a <select> with the list of notice templates
+ * @author Kieran Hogg
+ * @param $name string. The name for the select
+ * @param $selected string. The name of the selected item
+ */
 function notice_templates($name, $selected = '')
 {
     global $dbNoticeTemplates;
@@ -796,14 +796,14 @@ function notice_templates($name, $selected = '')
 }
 
 /**
-    * Actually do the replacement, used so we can define variables more than once
-    * @author Kieran Hogg
-    * @param array &$ttvar the array of the variable to replace
-    * @param string &$identifier the {variable} name
-    * @param array &$required  optional array of required vars to pass, used if
-    * we're not dealing with a trigger
-    * @return mixed array if replacement found, NULL if not
-*/
+ * Actually do the replacement, used so we can define variables more than once
+ * @author Kieran Hogg
+ * @param array &$ttvar the array of the variable to replace
+ * @param string &$identifier the {variable} name
+ * @param array &$required  optional array of required vars to pass, used if
+ * we're not dealing with a trigger
+ * @return mixed array if replacement found, NULL if not
+ */
 function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $required = '')
 {
     global $trigger_types, $ttvararray, $CONFIG;
@@ -870,12 +870,12 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
 
 
 /**
-    * Replaces template variables with their values
-    * @author Ivan Lucas
-    * @param string $string. The string containing the variables
-    * @param string $param_array An array containing values to be substituted
-    * @return string The string with variables replaced
-*/
+ * Replaces template variables with their values
+ * @author Ivan Lucas
+ * @param string $string. The string containing the variables
+ * @param string $param_array An array containing values to be substituted
+ * @return string The string with variables replaced
+ */
 function replace_specials($string, $param_array)
 {
     global $CONFIG, $dbg, $dbIncidents, $ttvararray;
@@ -919,7 +919,7 @@ function replace_specials($string, $param_array)
         * @author Kieran Hogg, Ivan Lucas
         * @param $string_array string The string containing the variables
         * @return string The string with variables replaced
-    */
+ */
     function trigger_replace_specials($trigger_type, $string_array, $param_array)
     {
         global $CONFIG, $application_version, $application_version_string, $dbg;
@@ -961,11 +961,11 @@ function replace_specials($string, $param_array)
 
 
 /**
-    * Formats a human readable description of a trigger
-    * @author Ivan Lucas
-    * @param $triggervar array. An individual trigger array
-    * @returns HTML
-*/
+ * Formats a human readable description of a trigger
+ * @author Ivan Lucas
+ * @param $triggervar array. An individual trigger array
+ * @return HTML
+ */
 // function trigger_description($triggervar)
 // {
 //     global $CONFIG, $iconset;
