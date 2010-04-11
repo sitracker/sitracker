@@ -12,9 +12,9 @@
 // This lib is currently included at the end of auth.inc.php
 
 //include_once (APPLICATION_LIBPATH . 'incident.inc.php');
-include_once (APPLICATION_LIBPATH . 'billing.inc.php');
-include_once (APPLICATION_LIBPATH . 'mime.inc.php');
-include_once (APPLICATION_LIBPATH . 'triggers.inc.php');
+require_once (APPLICATION_LIBPATH . 'billing.inc.php');
+require_once (APPLICATION_LIBPATH . 'mime.inc.php');
+require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 class Trigger extends SitEntity {
     function retrieveDetails(){}
@@ -239,13 +239,14 @@ class Trigger extends SitEntity {
         //add this in manually, this is who we're sending the email to
         $this->param_array['triggeruserid'] = $user_id;
 
-        $from = $this->trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
-        $toemail = $this->trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
-        $replytoemail = $this->trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
-        $ccemail = $this->trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
-        $bccemail = $this->trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
-        $subject = cleanvar($this->trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
-        $body .= $this->trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
+        // INL removed $this-> from the $this->trigger_replace_specials() below, since it's not in this class (yet?) - 2010-4-11
+        $from = trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
+        $toemail = trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
+        $replytoemail = trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
+        $ccemail = trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
+        $bccemail = trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
+        $subject = cleanvar(trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
+        $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);
