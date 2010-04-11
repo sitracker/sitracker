@@ -117,6 +117,25 @@ class Trigger extends SitEntity {
     }
     function getSOAPArray(){}
     
+    // Begin getters and setters
+    public function getTrigger_type() { return $this->trigger_type; } 
+    public function getParam_array() { return $this->param_array; } 
+    public function getUser_id() { return $this->user_id; } 
+    public function getTemplate() { return $this->template; } 
+    public function getAction() { return $this->action; } 
+    public function getChecks() { return $this->checks; } 
+    public function getParameters() { return $this->parameters; } 
+    public function getError_text() { return $this->error_text; } 
+    public function setTrigger_type($x) { $this->trigger_type = $x; } 
+    public function setParam_array($x) { $this->param_array = $x; } 
+    public function setUser_id($x) { $this->user_id = $x; } 
+    public function setTemplate($x) { $this->template = $x; } 
+    public function setAction($x) { $this->action = $x; } 
+    public function setChecks($x) { $this->checks = $x; } 
+    public function setParameters($x) { $this->parameters = $x; } 
+    public function setError_text($x) { $this->error_text = $x; } 
+    // End getters and setters
+
     /**
      * ID of the trigger's entry in the database
      * @var int
