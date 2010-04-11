@@ -181,7 +181,8 @@ function gravatar($email, $size = 32, $hyperlink = TRUE)
     $grav_url .= "&amp;rating=G";
 
     if ($hyperlink) $html = "<a href='http://site.gravatar.com/'>";
-    $html .= "<img src='{$grav_url}' width='{$size}' height='{$size}' alt='' />";
+    $html .= "<img src='{$grav_url}' width='{$size}' height='{$size}' alt='' ";
+    $html .= "class='gravatar' />";
     if ($hyperlink) $html .= "</a>";
 
     return $html;
@@ -468,9 +469,9 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $icon .= " id=\"{$id}\"";
     }
-    
+
     $icon .= " width=\"{$size}\" height=\"{$size}\" ";
-    
+
     $icon .= " />";
 
     return $icon;

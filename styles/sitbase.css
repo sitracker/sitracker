@@ -596,6 +596,7 @@ div.iheader { color: #666; margin-bottom:5px;}
 
 /* tooltip */
 a.info img { border: 0px; text-decoration:none;}
+a.info img.gravatar { margin-right: 0.7em; vertical-align: top; }
 a.info span { display: none; z-index: 15; }
 a.info:hover { text-decoration: none; }
 a.info:hover span
