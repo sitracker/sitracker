@@ -542,7 +542,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
 
             $mime = new MIME_mail($fromfield, $tofield, html_entity_decode($subjectfield), '', $extra_headers, $mailerror);
             // INL 5 Aug 09, quoted-printable seems to split lines in unexpected places, base64 seems to work ok
-            $mime -> attach($bodytext, 'bodytext', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+            $mime -> attach($bodytext, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
 
             // check for attachment
             //        if ($_FILES['attachment']['name']!='' || strlen($filename) > 3)
@@ -686,13 +686,13 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
                 $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                 $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                 $updatebody = mysql_real_escape_string($updatebody);
-                
+
 																$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
                 $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $updateid = mysql_insert_id();
-																
+
 																$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
                 $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
                 mysql_query($sql);
