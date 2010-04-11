@@ -107,11 +107,11 @@ $CONFIG['ftp_pasv'] = TRUE;
 // The path to the directory where we store files, (e.g. /pub/support/) the trailing slash is important
 $CONFIG['ftp_path'] = '/';
 
-// The CSS file to use when no other is configured
-$CONFIG['default_css_url'] = 'styles/sit8.css';
+// The icon set that new users should use
+$CONFIG['default_iconset'] = 'sit';
 
 // The interface style that new users should use (user default style)
-$CONFIG['default_interface_style'] = 8;
+$CONFIG['default_interface_style'] = 'kriplyana';
 
 // Knowledgebase ID prefix, inserted before the ID to give it uniqueness
 $CONFIG['kb_id_prefix'] = 'KB';
