@@ -236,15 +236,25 @@ else
     {
         $password = md5($password);
         $sql = "INSERT INTO `{$dbUsers}` (username, password, realname, roleid,
-                groupid, title, email, phone, mobile, fax, status, var_style,
+                groupid, title, email, phone, mobile, fax, status,
                 holiday_entitlement, user_startdate, lastseen) ";
         $sql .= "VALUES ('$username', '$password', '$realname', '$roleid',
                 '$groupid', '$jobtitle', '$email', '$phone', '$mobile', '$fax',
-                1, '{$CONFIG['default_interface_style']}',
-                '$holiday_entitlement', '$startdate', NOW())";
+                1, '$holiday_entitlement', '$startdate', NOW())";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $newuserid = mysql_insert_id();
+
+        // Default user settings
+        $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+        $sql .= "VALUES ('{$newuserid}', 'theme', '{$CONFIG['default_interface_style']}') ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+
+        $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+        $sql .= "VALUES ('{$newuserid}', 'iconset', '{$CONFIG['default_iconset']}') ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         // Create permissions (set to none)
         $sql = "SELECT * FROM `{$dbPermissions}`";
