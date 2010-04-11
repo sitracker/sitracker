@@ -44,6 +44,7 @@ div.windowtitle
   width: 100%;
 }
 .windowtitle a { color: white; font-weight: normal;}
+div.windowtitle img { vertical-align: -30%; }
 div.window
 {
     width: 98%;
@@ -65,14 +66,15 @@ div#tail
     margin: 0px 20px;
 }
 div#tail strong { color: #A12607; }
-
+a.info span { display: none; z-index: 100; overflow: hidden; }
 a.info:hover span
 {
   background: #4470A1;
   color: #EAEFFF;
   border: 1px solid #4570A1;
   padding: 2px 4px;
-  width: 35em;
+  width: auto;
+  max-width: 35em;
   -moz-border-radius: 4px;
   -khtml-border-radius: 4px;
   border-radius: 4px;
@@ -99,6 +101,7 @@ span.helplink a { color: #109810;}
 .droptarget { border: 1px dashed #FFC0FF;}
 
 div#statusbar { background-color: #4B5C94; }
+div#statusbar img { vertical-align: text-bottom; }
 div#statusbar strong { color:#fff;}
 #statusbar a { text-decoration: none; color: #FFF; }
 #statusbar a:hover { text-decoration: underline; }
