@@ -572,7 +572,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($result) < 1) trigger_error("Email template '{$meailtype}' not found",E_USER_WARNING);
             $emailtype = mysql_fetch_object($result);
-												$storeinlog = $emailtype->storeinlog;
+            $storeinlog = $emailtype->storeinlog;
             $templatename = $emailtype->name;
             $templatedescription = $emailtype->description;
 
