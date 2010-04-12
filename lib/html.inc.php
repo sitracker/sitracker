@@ -505,7 +505,7 @@ function date_picker($formelement)
   * @return string HTML javascript block
   * @note The page that calls this function MUST include the required
   * javascript libraries. e.g.
-  *   $pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+  *   $pagescripts = array('AutoComplete.js');
  */
 function autocomplete($formelement, $action = 'autocomplete_sitecontact')
 {

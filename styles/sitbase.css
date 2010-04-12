@@ -765,16 +765,21 @@ div.taglist
     width: 80%;
 }
 
+#menutoggle { float: left; }
 #menupanel
 {
+    top: -5px;
+    position: relative;
     display: none;
     width: 18%;
     border: 1px solid #ccc;
-    float: right;
+    border-top: none;
+    float: left;
     min-height: 300px;
     margin-bottom: 2em;
     padding: 2px;
-    z-index: 15;
+    z-index: 150;
+    clear: none;
 }
 
 .incidentkey
@@ -994,6 +999,8 @@ span.sig { color: red; }
 #languageselection { margin-left: auto; margin-right: auto; width: 380px; text-align: center; margin-top: 3em; }
 #incidentsgraphtable { border: 1px solid #000; width: 250px; }
 #producttags {width: 50%; margin: auto;}
+
+table#cols { height: 350px; }
 
 @media print
 {

@@ -76,6 +76,7 @@ if (isset($refresh) && $refresh != 0)
 }
 
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
+echo "<script src='{$CONFIG['application_webpath']}scripts/scriptaculous/scriptaculous.js?load=effects,dragdrop' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
@@ -380,11 +381,15 @@ if ($sit[0] != '')
 }
 $headerdisplayed = TRUE; // Set a variable so we can check to see if the header was included
 
-// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
-//echo "<div id='menupanel'>";
-//echo "<h3>Menu</h3>";
-//echo "</div>";
-
+// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008 & 11April2010
+// echo "<div id='menupanel'>";
+// echo "<h3>Menu</h3>";
+// echo "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>";
+// echo "</div>";
+//
+// // FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
+// echo "<p id='menutoggle'><a href='javascript:void(0);' onclick='toggleMenuPanel();' title='{$strMenu}'>";
+// echo "".icon('auto', 16)."</a></p>";
 
 
 echo "<div id='mainframe'>";

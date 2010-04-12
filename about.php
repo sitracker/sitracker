@@ -93,8 +93,8 @@ Copyright &copy; Kellan Elliott-McCrea. Licensed under the GPL v2.</p>
 <p align='center'>Prototype JavaScript framework 1.6.0.3 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
 Copyright &copy; 2005-2008 Sam Stephenson. Licensed under an MIT style license.</p>
 
-<p align='center'>script.aculo.us by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
-Copyright &copy; 2005-2007 Thomas Fuchs. Licensed under an MIT style license.</p>
+<p align='center'>script.aculo.us 1.8.3 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
+Copyright &copy; 2005-2009 Thomas Fuchs. Licensed under an MIT style license.</p>
 
 <p align='center'>Icons from the Crystal Project by <a href='http://www.everaldo.com/'>Everaldo Coelho</a><br />
 Copyright &copy;  2006-2007 Everaldo Coelho. Licensed under the LGPLv2</p>

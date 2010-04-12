@@ -59,7 +59,7 @@ if ($submit_value == 'go')
             header("Location: {$url}");
         }
 }
-$pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+$pagescripts = array('AutoComplete.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 if ($search_string=='') $search_string='a';
