@@ -681,30 +681,6 @@ function global_signature()
     return $signature;
 }
 
-// TODO FIXME CHECK is check_email still used?
-function check_email($email, $check_dns = FALSE)
-{
-    if ((preg_match('/(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/', $email)) ||
-    (preg_match('/^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/',$email)))
-    {
-        if ($check_dns)
-        {
-            $host = explode('@', $email);
-            // Check for MX record
-            if ( checkdnsrr($host[1], 'MX') ) return TRUE;
-            // Check for A record
-            if ( checkdnsrr($host[1], 'A') ) return TRUE;
-            // Check for CNAME record
-            if ( checkdnsrr($host[1], 'CNAME') ) return TRUE;
-        }
-        else
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
 
 /**
  * Wrapper function to call dashboard_*_do() within a dashlet plugin
