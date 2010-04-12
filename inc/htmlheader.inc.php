@@ -116,6 +116,12 @@ if ($sit[0] != '')
     }
     echo "</a>";
     echo " | ";
+    echo userstatus_name(user_status($sit[2]));
+    if (user_accepting($sit[2]) != 'Yes')
+    {
+        echo " | {$strNotAcceptingIncidents}";
+    }
+    echo " | ";
     echo "<a href='logout.php'>{$strLogout}</a></div>";
 }
 

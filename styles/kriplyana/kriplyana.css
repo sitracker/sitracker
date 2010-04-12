@@ -6,7 +6,7 @@ body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #masthead a:hover {color: white; }
 #masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
 #mastheadcontent { background-image: none; }
-h1 { background-image: none; font-weight: lighter; padding-top: 11px; }
+h1 { background-image: none; font-weight: lighter; padding-top: 11px; text-align: left; margin-left: 4em; }
 #apptitle {background-image: none; }
 
 #topsearch #searchfield {
