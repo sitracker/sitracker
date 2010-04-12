@@ -113,7 +113,9 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 #masthead {
   background-image: url('../images/top2.png');
   background-position: top-left; background-repeat: x-repeat;
+  color: #aaa;
 }
+#masthead a { color: white; font-weight: normal;}
 #mastheadcontent {
   background-image: url('../images/sit_swirl2.png');
   background-position: top-left; background-repeat: no-repeat;
@@ -122,6 +124,8 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
   position: relative;
 }
 #apptitle { background: transparent; }
+
+#personaloptions { float: right; margin-right: 10px; margin-top: 5px; }
 
 #aboutsit
 {

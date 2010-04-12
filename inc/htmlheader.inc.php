@@ -102,6 +102,22 @@ echo "<body>\n";
 
 echo "<div id='masthead'>";
 echo "<div id='mastheadcontent'>";
+if ($sit[0] != '')
+{
+    echo "<div id='personaloptions'>";
+    echo "<a href='user_profile_edit.php'>";
+    if (!empty($_SESSION['realname']))
+    {
+        echo $_SESSION['realname'];
+    }
+    else
+    {
+        echo $_SESSION['username'];
+    }
+    echo "</a>";
+    echo " | ";
+    echo "<a href='logout.php'>{$strLogout}</a></div>";
+}
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
 echo "</div></div>\n";
 
