@@ -1451,6 +1451,8 @@ $strRolePermissionsXY = 'Role Permission: %s - %s';
 $strRSSAtomURL = 'RSS/Atom Feed URL';
 $strRules = 'Rules';
 $strRulesNotDefinable = 'Rules are not definable for this trigger action';
+# SiT running on Apache at 12:52
+$strRunningOn = 'running on %s at %s';
 $strRunReport = 'Run Report';
 
 $strSalesperson = 'Salesperson';
