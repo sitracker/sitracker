@@ -27,6 +27,7 @@ $CFGCAT['themeprefs'] = array('theme','iconset',
 
 $CFGCAT['displayprefs'] = array('incident_refresh',
                                'incident_log_order',
+                               'show_next_action',
                                'updates_per_page',
                                'show_table_legends',
                                'incident_popup_onewindow',
@@ -65,6 +66,10 @@ $CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
 $CFGVAR['incident_log_order']['help'] = "Choose 'asc' for Ascending (oldest first), or 'desc' for Descending (newest first)";
 $CFGVAR['incident_log_order']['type'] = 'select';
 $CFGVAR['incident_log_order']['options'] = 'asc|desc';
+
+$CFGVAR['show_next_action']['title'] = 'Show next action';
+$CFGVAR['show_next_action']['help'] = 'Show an incident\'s next action in the incident table';
+$CFGVAR['show_next_action']['type'] = 'checkbox';
 
 $CFGVAR['incident_refresh']['title'] = $strIncidentRefresh;
 $CFGVAR['incident_refresh']['type'] = 'number';

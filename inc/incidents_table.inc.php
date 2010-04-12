@@ -379,6 +379,15 @@ while ($incidents = mysql_fetch_array($result))
         echo $strNone;
     }
 
+    if($_SESSION['userconfig']['show_next_action'] == TRUE)
+    {
+        $update = incident_lastupdate($incidents['id']);
+
+        if ($update[6] != '')
+        {
+            echo "<br />{$strNextAction}: " . $update[6];
+        }
+    }
     echo "</td>";
 
     // Final column
