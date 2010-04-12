@@ -8,7 +8,7 @@ body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #mastheadcontent { background-image: none; }
 h1 { background-image: none; font-weight: lighter; padding-top: 11px; text-align: left; margin-left: 4em; }
 #apptitle {background-image: none; }
-
+#topsearch { top: -18px; }
 #topsearch #searchfield {
   border:1px solid #4471A1;
   color: #4471A1;
