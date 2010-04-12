@@ -131,6 +131,13 @@ array('name' => $strCurrentLanguageDiffers,
       'params' => array()
     );
 
+$trigger_types['TRIGGER_PORTAL_INCIDENT_CREATED'] =
+array('name' => $strPortalIncidentCreated,
+      'description' => $strTriggerPortalIncidentCreated,
+      'required' => array('incidentid'),
+      'params' => array('incidentid', 'contactid', 'siteid', 'priority', 'contractid', 'slaid', 'sitesalespersonid')
+    );
+
 $trigger_types['TRIGGER_NEW_CONTACT'] =
 array('name' => $strNewContact,
       'description' => $strTriggerNewContactDesc,

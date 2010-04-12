@@ -235,7 +235,7 @@ else //submit
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-            trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => 1));
+            $t = new TriggerEvent('TRIGGER_PORTAL_INCIDENT_CREATED', array('incidentid' => $incidentid));
 
             if ($CONFIG['auto_assign_incidents'])
             {
