@@ -120,7 +120,7 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
   background-image: url('../images/sit_swirl2.png');
   background-position: top-left; background-repeat: no-repeat;
   height: 50px; background-color: transparent;
-  top: 10px;
+  position: relative; top: 0px;
   position: relative;
 }
 #apptitle { background: transparent; }
@@ -465,14 +465,14 @@ p.trigger
 }
 
 
-#topsearch { text-align: right; }
+#topsearch { text-align: right; clear: both; top: -18px; position: relative;}
 #topsearch form {margin: 1px 7px 0px 0px; }
 #topsearch #searchfield {
   background-color: white;
-  border:1px solid #CCCCCC;
+  border:1px solid #aaa;
   padding:3px 3px 3px 20px;
   background:transparent url('../images/searchbg.png') no-repeat scroll 4px center;
-  color: #888;
+  color: #aaa;
 }
 
 #incidentqueues form { text-align: center; }
