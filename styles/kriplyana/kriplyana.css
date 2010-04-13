@@ -21,6 +21,11 @@ h1 { background-image: none; font-weight: lighter; padding-top: 11px; text-align
   color: #EAF4F9;
 }
 
+#topsearch #searchfield {
+  border:1px solid #8F9DC5;
+  color: #EAF4F9;
+}
+
 #mainframe { background: transparent;}
 h1 { color: #fff; }
 h2 { color: #555; }

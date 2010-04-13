@@ -534,18 +534,18 @@ function process_add_contact($mode = 'internal')
     if ($siteid == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['siteid'] = $GLOBALS['strMustSelectCustomerSite'];
+        $_SESSION['formerrors']['add_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
     }
     // check for blank email
     if ($email == '' OR $email=='none' OR $email=='n/a')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['email'] = $GLOBALS['strMustEnterEmail'];
+        $_SESSION['formerrors']['add_contact']['email'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strEmail']);
     }
     if ($siteid == 0 OR $siteid == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['siteid'] = $GLOBALS['strMustSelectSite'];
+        $_SESSION['formerrors']['add_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
     }
     // Check this is not a duplicate
     $sql = "SELECT id FROM `{$dbContacts}` WHERE email='$email' AND LCASE(surname)=LCASE('$surname') LIMIT 1";
