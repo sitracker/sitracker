@@ -11,17 +11,12 @@ h1 { background-image: none; font-weight: lighter; padding-top: 11px; text-align
 #topsearch { top: -18px; }
 #topsearch #searchfield {
   border:1px solid #4471A1;
-  color: #4471A1;
+  color: #8F9DC5;
   background:transparent url('../kriplyana/searchbgdark.png') no-repeat scroll 4px center;
 }
 #topsearch #searchfield:hover
 {
   background:transparent url('../kriplyana/searchbg.png') no-repeat scroll 4px center;
-  border:1px solid #8F9DC5;
-  color: #EAF4F9;
-}
-
-#topsearch #searchfield {
   border:1px solid #8F9DC5;
   color: #EAF4F9;
 }

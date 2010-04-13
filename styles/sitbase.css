@@ -465,7 +465,7 @@ p.trigger
 }
 
 
-#topsearch { text-align: right; }
+#topsearch { text-align: right; clear: both; top: -11px; position: relative; }
 #topsearch form {margin: 1px 7px 0px 0px; }
 #topsearch #searchfield {
   background-color: white;
