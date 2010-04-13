@@ -32,7 +32,7 @@ function incident($incident)
     global $dbIncidents;
 
     $incident = intval($incident);
-    $sql = "SELECT * FROM `{$dbIncidents}` WHERE id = '$incident'";
+    $sql = "SELECT * FROM `{$dbIncidents}` WHERE id = '{$incident}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     $row = mysql_fetch_object($result);
@@ -238,16 +238,16 @@ function update($update)
 
 
 /**
-    * Suggest the userid of a suitable person to handle the given incident
-    * @author Ivan Lucas
-    * @param int $incidentid. An incident ID to suggest a new owner for
-    * @param int $exceptuserid. This user ID will not be suggested (e.g. the existing owner)
-    * @returns A user ID of the suggested new owner
-    * @retval bool FALSE failure.
-    * @retval int The user ID of the suggested new owner
-    * @note Users are chosen randomly in a weighted lottery depending on their
-    * avilability and queue status
-*/
+ * Suggest the userid of a suitable person to handle the given incident
+ * @author Ivan Lucas
+ * @param int $incidentid. An incident ID to suggest a new owner for
+ * @param int $exceptuserid. This user ID will not be suggested (e.g. the existing owner)
+ * @return A user ID of the suggested new owner
+ * @retval bool FALSE failure.
+ * @retval int The user ID of the suggested new owner
+ * @note Users are chosen randomly in a weighted lottery depending on their
+ * avilability and queue status
+ */
 function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 {
     global $now, $dbUsers, $dbIncidents, $dbUserSoftware, $startofsession;
@@ -486,19 +486,18 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
 
 
 /**
-    Send a template email without using a trigger
-    @author Ivan Lucas
-    @param int $templateid: The ID number of the template to use
-    @param array $paramarray. An associative array of template parameters
-                 This should at the very least be
-                 array('incidentid' => $id, 'triggeruserid' => $sit[2])
-    @param string $attach. Path and filename of file to attach
-    @param string $attachtype. Type of file to attach (Default 'OCTET')
-    @param string $attachdesc. Description of the attachment, (Default, same as filename)
-    @retval bool TRUE: The email was sent successfully
-    @retval bool FALSE: There was an error sending the mail
-    @note This is v2 of this function, it has different paramters than v1
-**/
+ Send a template email without using a trigger
+ @author Ivan Lucas
+ @param int $templateid: The ID number of the template to use
+ @param array $paramarray. An associative array of template parameters
+             This should at the very least be
+             array('incidentid' => $id, 'triggeruserid' => $sit[2])
+ @param string $attach. Path and filename of file to attach
+ @param string $attachtype. Type of file to attach (Default 'OCTET')
+ @param string $attachdesc. Description of the attachment, (Default, same as filename)
+ @return bool TRUE: The email was sent successfully, FALSE: There was an error sending the mail
+ @note This is v2 of this function, it has different paramters than v1
+ */
 function send_email_template($templateid, $paramarray, $attach='', $attachtype='', $attachdesc='')
 {
     global $CONFIG, $application_version_string, $sit;
@@ -620,8 +619,8 @@ function incident_id_from_subject($subject, $from)
 }
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function count_incident_stats($incidentid)
 {
     global $dbUpdates;
@@ -634,10 +633,10 @@ function count_incident_stats($incidentid)
 
 
 /**
-    * Returns number of closed incidents that were opened within the period giving
-    * the average duration in minutes and the average worked time in minutes
-    * @author Ivan Lucas
-*/
+ * Returns number of closed incidents that were opened within the period giving
+ * the average duration in minutes and the average worked time in minutes
+ * @author Ivan Lucas
+ */
 function average_incident_duration($start,$end,$states)
 {
     global $dbIncidents;
@@ -760,4 +759,869 @@ function load_entitlements($contactid, $siteid)
     }
 }
 
+
+/**
+ * Get a readable last update body, written for the triggers variable
+ * @param $incidentid  int The incident ID to get the update for
+ * @param $num int amount of updates to include
+ */
+function readable_last_updates($incidentid, $num)
+{
+    global $dbUpdates;
+
+    $num = intval($num);
+    ($num == 0) ? $num = 1 : $num;
+    $sql  = "SELECT * FROM `{$dbUpdates}` ";
+    $sql .= " WHERE incidentid='{$incidentid}' ";
+    $sql .= "AND bodytext != '' ";
+    $sql .= "ORDER BY timestamp DESC ";
+    if ($num != -1 ) $sql .= "LIMIT {$num}";
+    $query = mysql_query($sql);
+    $text = "";
+    while ($result = mysql_fetch_object($query))
+    {
+        $num--;
+        $text .= strip_tags($result->bodytext);
+        if ($num > 0 ) $text .= "\n--------------------------\n";
+    }
+    return $text;
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. UserID of the user that currently owns the incident
+ */
+function incident_owner($id)
+{
+    return db_read_column('owner', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. UserID of the user that currently temporarily owns the incident
+ */
+function incident_towner($id)
+{
+    return db_read_column('towner', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. ContactID of the contact this incident is logged against
+ */
+function incident_contact($id)
+{
+    return db_read_column('contact', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return integer. Contract ID of the maintenance contract this incident is logged against
+ */
+function incident_maintid($id)
+{
+    $maintid = db_read_column('maintenanceid', $GLOBALS['dbIncidents'], $id);
+    if ($maintid == '')
+    {
+        trigger_error("!Error: No matching record while reading in incident_maintid() Incident ID: {$id}", E_USER_WARNING);
+    }
+    else
+    {
+        return ($maintid);
+    }
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Title of the incident
+ */
+function incident_title($id)
+{
+    return db_read_column('title', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return id. Current incident status ID
+ */
+function incident_status($id)
+{
+    return db_read_column('status', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return id. Current incident Priority ID
+ */
+function incident_priority($id)
+{
+    return db_read_column('priority', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return id. Current incident external ID
+ */
+function incident_externalid($id)
+{
+    return db_read_column('externalid', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Current incident external engineer
+ */
+function incident_externalengineer($id)
+{
+    return db_read_column('externalengineer', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Current incident external email address
+ */
+function incident_externalemail($id)
+{
+    return db_read_column('externalemail', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return string. Current incident CC email address
+ */
+function incident_ccemail($id)
+{
+    return db_read_column('ccemail', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+ * @author Ivan Lucas
+ * @param int $id Incident ID
+ * @return int. UNIX Timestamp of the time of the next action for this incident
+ */
+function incident_timeofnextaction($id)
+{
+    return db_read_column('timeofnextaction', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
+  * Returns a string representing the name of
+  * the given priority. Returns an empty string if the
+  * priority does not exist.
+  * @author Ivan Lucas
+  * @param int $id. Priority ID, higher the number higher the priority
+  * @param bool $syslang. (optional) Uses system language when set to TRUE otherwise
+  *                       uses user language (default)
+  * @return string.
+ */
+function priority_name($id, $syslang = FALSE)
+{
+    switch ($id)
+    {
+        case 1:
+            if (!$syslang) $value = $GLOBALS['strLow'];
+            else $value = $_SESSION['syslang']['strLow'];
+            break;
+        case 2:
+            if (!$syslang) $value = $GLOBALS['strMedium'];
+            else $value = $_SESSION['syslang']['strMedium'];
+            break;
+        case 3:
+            if (!$syslang) $value = $GLOBALS['strHigh'];
+            else $value = $_SESSION['syslang']['strHigh'];
+            break;
+        case 4:
+            if (!$syslang) $value = $GLOBALS['strCritical'];
+            else $value = $_SESSION['syslang']['strCritical'];
+            break;
+        case '':
+            if (!$sylang) $value = $GLOBALS['strNotSet'];
+            else $value = $_SESSION['syslang']['strNotSet'];
+            break;
+        default:
+            if (!$syslang) $value = $GLOBALS['strUnknown'];
+            else $value = $_SESSION['syslang']['strUnknown'];
+            break;
+    }
+    return $value;
+}
+
+
+/**
+ * Returns an array of fields from the most recent update record for a given incident id
+ * @author Ivan Lucas
+ * @param int $id An incident ID
+ * @return array
+ */
+function incident_lastupdate($id)
+{
+    // Find the most recent update
+    $sql = "SELECT userid, type, sla, currentowner, currentstatus, LEFT(bodytext,500) AS body, timestamp, nextaction, id ";
+    $sql .= "FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND bodytext != '' ORDER BY timestamp DESC, id DESC LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+    if (mysql_num_rows($result) == 0)
+    {
+        trigger_error("Zero records while retrieving incident last update for incident {$id}",E_USER_WARNING);
+    }
+    else
+    {
+        $update = mysql_fetch_array($result);
+
+        mysql_free_result($result);
+        // Remove Tags from update Body
+        $update['body'] = trim($update['body']);
+        $update['body'] = $update['body'];
+        return array($update['userid'], $update['type'] ,$update['currentowner'], $update['currentstatus'], $update['body'], $update['timestamp'], $update['nextaction'], $update['id']);
+    }
+}
+
+/**
+ * Returns a string containing the body of the first update (that is visible to customer)
+ * in a format suitable for including in an email
+ * @author Ivan Lucas
+ * @param int $id An incident ID
+ */
+function incident_firstupdate($id)
+{
+    $sql = "SELECT bodytext FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND customervisibility='show' ";
+    $sql .= "ORDER BY timestamp ASC, id ASC LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+    if (mysql_num_rows($result) >= 1)
+    {
+        list($bodytext) = mysql_fetch_row($result);
+        $bodytext = strip_tags($bodytext);
+    }
+    else
+    {
+        $bodytext = '';
+    }
+
+    return $bodytext;
+}
+
+
+/**
+ * Converts an incident status ID to an internationalised status string
+ * @author Ivan Lucas
+ * @param int $id. incident status ID
+ * @param string $type. 'internal' or 'external', where external means customer/client facing
+ * @return string Internationalised incident status.
+ *                 Or empty string if the ID is not recognised.
+ * @note The incident status database table must contain i18n keys.
+ */
+function incidentstatus_name($id, $type='internal')
+{
+    global $dbIncidentStatus;
+
+    if ($type == 'external')
+    {
+        $type = 'ext_name';
+    }
+    else
+    {
+        $type = 'name';
+    }
+
+    $sql = "SELECT {$type} FROM `{$dbIncidentStatus}` WHERE id='{$id}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+    if (mysql_num_rows($result) == 0)
+    {
+        $name = '';
+    }
+    else
+    {
+        $incidentstatus = mysql_fetch_assoc($result);
+        $name =  $GLOBALS[$incidentstatus[$type]];
+    }
+    return $name;
+}
+
+
+function closingstatus_name($id)
+{
+    global $dbClosingStatus;
+    if ($id != '')
+    {
+        $closingstatus = db_read_column('name', $GLOBALS['dbClosingStatus'], $id);
+    }
+    else
+    {
+        $closingstatus = 'strUnknown';
+    }
+
+    return ($GLOBALS[$closingstatus]);
+}
+
+
+// Returns the number of remaining incidents given an incident pool id
+// Returns 'Unlimited' if theres no match on ID
+function incidents_remaining($id)
+{
+    $remaining = db_read_column('incidentsremaining', $GLOBALS['dbIncidentPools'], $id);
+    if (empty($remaining))
+    {
+        $remaining = '&infin;';
+    }
+
+    return $remaining;
+}
+
+
+function decrement_free_incidents($siteid)
+{
+    global $dbSites;
+    $sql = "UPDATE `{$dbSites}` SET freesupport = (freesupport - 1) WHERE id='{$siteid}'";
+    mysql_query($sql);
+    if (mysql_affected_rows() < 1)
+    {
+        trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
+    }
+
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    else return TRUE;
+}
+
+
+function increment_incidents_used($maintid)
+{
+    global $dbMaintenance;
+    $sql = "UPDATE `{$dbMaintenance}` SET incidents_used = (incidents_used + 1) WHERE id='{$maintid}'";
+    mysql_query($sql);
+    if (mysql_affected_rows() < 1) trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    else return TRUE;
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function countdayincidents($day, $month, $year)
+{
+    // Counts the number of incidents opened on a specified day
+    global $dbIncidents;
+    $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
+    $unixenddate = mktime(23, 59, 59, $month, $day, $year);
+    $sql = "SELECT count(id) FROM `{$dbIncidents}` ";
+    $sql .= "WHERE opened BETWEEN '{$unixstartdate}' AND '{$unixenddate}' ";
+    $result = mysql_query($sql);
+    list($count) = mysql_fetch_row($result);
+    mysql_free_result($result);
+    return $count;
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function countdayclosedincidents($day, $month, $year)
+{
+    // Counts the number of incidents closed on a specified day
+    global $dbIncidents;
+    $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
+    $unixenddate = mktime(23, 59, 59, $month, $day, $year);
+    $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` ";
+    $sql .= "WHERE closed BETWEEN '{$unixstartdate}' AND '{$unixenddate}' ";
+    $result = mysql_query($sql);
+    list($count) = mysql_fetch_row($result);
+    mysql_free_result($result);
+    return $count;
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function countdaycurrentincidents($day, $month, $year)
+{
+    global $dbIncidents;
+    // Counts the number of incidents currently open on a specified day
+    $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
+    $unixenddate = mktime(23, 59, 59, $month, $day, $year);
+    $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` ";
+    $sql .= "WHERE opened <= '{$unixenddate}' AND closed >= '{$unixstartdate}' ";
+    $result = mysql_query($sql);
+    list($count) = mysql_fetch_row($result);
+    mysql_free_result($result);
+    return $count;
+}
+
+
+function count_incoming_updates()
+{
+    $sql = "SELECT id FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid=0";
+    $result = mysql_query($sql);
+    $count = mysql_num_rows($result);
+    mysql_free_result($result);
+    return $count;
+}
+
+
+function incident_get_next_target($incidentid)
+{
+    global $now;
+    // Find the most recent SLA target that was met
+    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND type='slamet' ORDER BY id DESC LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+    $target = '';
+    if (mysql_num_rows($result) > 0)
+    {
+        $upd = mysql_fetch_object($result);
+        switch ($upd->sla)
+        {
+            case 'opened':
+                $target->type = 'initialresponse';
+                break;
+            case 'initialresponse':
+                $target->type = 'probdef';
+                break;
+            case 'probdef':
+                $target->type = 'actionplan';
+                break;
+            case 'actionplan':
+                $target->type = 'solution';
+                break;
+            case 'solution':
+                $target->type = '';
+                break;
+            case 'closed':
+                $target->type = 'opened';
+                break;
+        }
+
+        $target->since = calculate_incident_working_time($incidentid, $upd->timestamp, $now);
+    }
+    else
+    {
+        $target->type = 'regularcontact';
+        $target->since = 0;
+    }
+    return $target;
+}
+
+
+function target_type_name($targettype)
+{
+    switch ($targettype)
+    {
+        case 'opened':
+            $name = $GLOBALS['strOpened'];
+            break;
+        case 'initialresponse':
+            $name = $GLOBALS['strInitialResponse'];
+            break;
+        case 'probdef':
+            $name = $GLOBALS['strProblemDefinition'];
+            break;
+        case 'actionplan':
+            $name = $GLOBALS['strActionPlan'];
+            break;
+        case 'solution':
+            $name = $GLOBALS['strResolutionReprioritisation'];
+            break;
+        case 'closed':
+            $name = '';
+            break;
+        case 'regularcontact':
+            $name = '';
+            break; // Contact Customer
+        default:
+            $name = '';
+            break;
+    }
+    return $name;
+}
+
+
+/**
+ * Returns the number of minutes since the last incident review for a specified
+ * incident
+ * @author Ivan Lucas
+ * @param int $incidentid - Incident ID
+ * @return int Time since the last review in minutes
+ * @note was called incident_get_next_review() (very bad name) until 3.60 14Mar10
+ */
+function incident_time_since_review($incidentid)
+{
+    global $now;
+    $sql = "SELECT timestamp FROM `{$GLOBALS['dbUpdates']}` ";
+    $sql .= "WHERE incidentid='{$incidentid}' AND type='reviewmet' ";
+    $sql .= "ORDER BY id DESC LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+    if (mysql_num_rows($result) > 0)
+    {
+        $upd = mysql_fetch_object($result);
+        $timesincereview = floor(($now - $upd->timestamp) / 60);
+    }
+    return $timesincereview;
+}
+
+
+/**
+ * Switches incidents temporary owners to the backup/substitute engineer depending on the setting of 'accepting'
+ * @author Ivan Lucas
+ * @param int $userid. The userid of the user who's status has changed.
+ * @param string $accepting. 'yes' or 'no' to indicate whether the user is accepting
+ * @note if the $accepting parameter is 'no' then the function will attempt to temporarily assign
+ * all the open incidents that the user owns to the users defined substitute engineers
+ * If Substitute engineers cannot be found or they themselves are not accepting, the given users incidents
+ * are placed in the holding queue
+ */
+function incident_backup_switchover($userid, $accepting)
+{
+    global $now, $dbIncidents, $dbUpdates, $dbTempAssigns, $dbUsers, $dbUserStatus;
+
+    $usersql = "SELECT u.*, us.name AS statusname ";
+    $usersql .= "FROM `{$dbUsers}` AS u, `{$dbUserStatus}` AS us ";
+    $usersql .= "WHERE u.id = '{$userid}' AND u.status = us.id";
+    $userresult = mysql_query($usersql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $user = mysql_fetch_row($userresult);
+
+    if (strtolower($accepting) == 'no')
+    {
+        // Look through the incidents that this user OWNS (and are not closed)
+        $sql = "SELECT * FROM `{$dbIncidents}` WHERE (owner='{$userid}' OR towner='{$userid}') AND status!=2";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        while ($incident = mysql_fetch_object($result))
+        {
+            // Try and find a backup/substitute engineer
+            $backupid = software_backup_userid($userid, $incident->softwareid);
+
+            if (empty($backupid) OR user_accepting($backupid) == 'No')
+            {
+                // no backup engineer found so add to the holding queue
+                // Look to see if this assignment is in the queue already
+                $fsql = "SELECT * FROM `{$dbTempAssigns}` WHERE incidentid='{$incident->id}' AND originalowner='{$userid}'";
+                $fresult = mysql_query($fsql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_num_rows($fresult) < 1)
+                {
+                    // it's not in the queue, and the user isn't accepting so add it
+                    //$userstatus=user_status($userid);
+                    $userstatus = $user['status'];
+                    $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '$userstatus')";
+                    mysql_query($usql);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                }
+            }
+            else
+            {
+                // do an automatic temporary reassign
+                // update incident
+                $rusql = "UPDATE `{$dbIncidents}` SET ";
+                $rusql .= "towner='{$backupid}', lastupdated='$now' WHERE id='{$incident->id}' LIMIT 1";
+                mysql_query($rusql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+
+                // add update
+                $username = user_realname($userid);
+                //$userstatus = userstatus_name(user_status($userid));
+                $userstatus = $user['statusname'];
+                //$usermessage=user_message($userid);
+                $usermessage = $user['message'];
+                $bodytext = "Previous Incident Owner ({$username}) {$userstatus}  {$usermessage}";
+                $assigntype = 'tempassigning';
+                $risql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentowner, currentstatus) ";
+                $risql .= "VALUES ('{$incident->id}', '0', '{$bodytext}', '{$assigntype}', '{$now}', ";
+                $risql .= "'{$backupid}', ";
+                $risql .= "'{$incident->status}')";
+                mysql_query($risql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+
+                // Look to see if this assignment is in the queue already
+                $fsql = "SELECT * FROM `{$dbTempAssigns}` WHERE incidentid='{$incident->id}' AND originalowner='{$userid}'";
+                $fresult = mysql_query($fsql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_num_rows($fresult) < 1)
+                {
+                    //$userstatus=user_status($userid);
+                    $userstatus = $user['status'];
+                    $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus,assigned) VALUES ('{$incident->id}', '{$userid}', '$userstatus','yes')";
+                    mysql_query($usql);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                }
+                else
+                {
+                    // mark the temp assigns table so it's not showing in the holding queue
+                    $tasql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE originalowner='$userid' AND incidentid='{$incident->id}' LIMIT 1";
+                    mysql_query($tasql);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                }
+            }
+        }
+    }
+    elseif ($accepting=='')
+    {
+        // Do nothing when accepting status doesn't exist
+    }
+    else
+    {
+        // The user is now ACCEPTING, so first have a look to see if there are any reassignments in the queue
+        $sql = "SELECT * FROM `{$dbTempAssigns}` WHERE originalowner='{$userid}' ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        while ($assign = mysql_fetch_object($result))
+        {
+            if ($assign->assigned == 'yes')
+            {
+                // Incident has actually been reassigned, so have a look if we can grab it back.
+                $lsql = "SELECT id,status FROM `{$dbIncidents}` ";
+                $lsql .= "WHERE id='{$assign->incidentid}' AND owner='{$assign->originalowner}' AND towner!=''";
+                $lresult = mysql_query($lsql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                while ($incident = mysql_fetch_object($lresult))
+                {
+                    // Find our tempassign
+                    $usql = "SELECT id,currentowner FROM `{$dbUpdates}` ";
+                    $usql .= "WHERE incidentid='{$incident->id}' AND userid='0' AND type='tempassigning' ";
+                    $usql .= "ORDER BY id DESC LIMIT 1";
+                    $uresult = mysql_query($usql);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                    list($prevassignid,$tempowner) = mysql_fetch_row($uresult);
+
+                    // Look to see if the temporary owner has updated the incident since we temp assigned it
+                    // If he has, we leave it in his queue
+                    $usql = "SELECT id FROM `{$dbUpdates}` ";
+                    $usql .= "WHERE incidentid='{$incident->id}' AND id > '{$prevassignid}' AND userid='{$tempowner}' LIMIT 1 ";
+                    $uresult = mysql_query($usql);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                    if (mysql_num_rows($uresult) < 1)
+                    {
+                        // Incident appears not to have been updated by the temporary owner so automatically reassign back to orignal owner
+                        // update incident
+                        $rusql = "UPDATE `{$dbIncidents}` SET ";
+                        $rusql .= "towner='', lastupdated='{$now}' WHERE id='{$incident->id}' LIMIT 1";
+                        mysql_query($rusql);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+
+                        // add update
+                        $username = user_realname($userid);
+                        //$userstatus = userstatus_name(user_status($userid));
+                        $userstatus = $user['statusname'];
+                        //$usermessage=user_message($userid);
+                        $usermessage = $user['message'];
+                        $bodytext = "Reassigning to original owner {$username} ({$userstatus})";
+                        $assigntype = 'reassigning';
+                        $risql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentowner, currentstatus) ";
+                        $risql .= "VALUES ('{$incident->id}', '0', '{$bodytext}', '{$assigntype}', '{$now}', ";
+                        $risql .= "'{$backupid}', ";
+                        $risql .= "'{$incident->status}')";
+                        mysql_query($risql);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+
+                        // remove from assign queue now, all done
+                        $rsql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$assign->incidentid}' AND originalowner='{$assign->originalowner}'";
+                        mysql_query($rsql);
+                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    }
+                }
+            }
+            else
+            {
+                // now have a look to see if the reassign was completed
+                $ssql = "SELECT id FROM `{$dbIncidents}` WHERE id='{$assign->incidentid}' LIMIT 1";
+                $sresult = mysql_query($ssql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_num_rows($sresult) >= 1)
+                {
+                    // reassign wasn't completed, or it was already assigned back, simply remove from assign queue
+                    $rsql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$assign->incidentid}' AND originalowner='{$assign->originalowner}'";
+                    mysql_query($rsql);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                }
+            }
+        }
+    }
+    return;
+}
+
+
+/**
+ * Inserts a new incident update
+ * @param int $incidentid ID of the incident to add the update to
+ * @param string $text The text of the update
+ * @param enum $type (Optional) Update type (Default: 'default'), types:
+ * 'default', 'editing', 'opening', 'email', 'reassigning', 'closing',
+ * 'reopening', 'auto', 'phonecallout', 'phonecallin', 'research', 'webupdate',
+ * 'emailout', 'emailin', 'externalinfo', 'probdef', 'solution', 'actionplan',
+ * 'slamet', 'reviewmet', 'tempassigning', 'auto_chase_email',
+ * 'auto_chase_phone', 'auto_chase_manager', 'auto_chased_phone',
+ * 'auto_chased_manager', 'auto_chase_managers_manager',
+ * 'customerclosurerequest', 'fromtask'
+ * @param string $sla The SLA the update meets
+ * @param int $userid (Optional) ID of the user doing the updating (Default: 0)
+ * @param int $currentowner (Optional) ID of the current incident owner
+ * @param int $currentstatus (Optional) Current incident status (Default: 1 = active)
+ * @param enum $visibility (Optional) Whether to 'show' or 'hide' in the portal (Default: 'show')
+ * @author Kieran Hogg
+ */
+function new_update($incidentid, $text, $type = 'default', $sla = '', $userid = 0, $currentowner = '',
+                    $currentstatus = 1, $visibility = 'show')
+{
+    global $now;
+    $text = cleanvar($text);
+    $sql  = "INSERT INTO `{$GLOBALS['dbUpdates']}` (incidentid, userid, ";
+    $sql .= "type, bodytext, timestamp, currentowner, currentstatus, ";
+    $sql .= "customervisibility, sla) VALUES ('{$incidentid}', '{$userid}', ";
+    $sql .= "'{$type}', '{$text}', '{$now}', '{$currentowner}', ";
+    $sql .= "'{$currentstatus}', '{$visibility}', '{$sla}')";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        return FALSE;
+    }
+    else
+    {
+        return mysql_insert_id();
+    }
+}
+
+
+/**
+ * Create a new holding queue item
+ * @param int $updateid ID of the associated update entry
+ * @param string $from Name of the from field
+ * @param string $subject Subject of the item
+ * @param string $emailfrom Email address the item is from
+ * @param int $contactid (Optional) Contact ID of the sender
+ * @param int $incidentid (Optional) Associated incident ID
+ * @param int $locked (Optional) 1 if the item is locked, 0 if not
+ * @param time $lockeduntil (Optional) MySQL timestamp of lock expiration
+ * @param string $reason (Optional) Reason the item is in the holding queue
+ * @param id $reason_user (Optional) The user ID who set the reason
+ * @param time $reason_time (Optional) MySQL timestamp of when the reason was set
+ * @author Kieran Hogg
+ */
+function create_temp_incoming($updateid, $from, $subject, $emailfrom,
+                              $contactid = '', $incidentid = 0, $locked = '',
+                              $lockeduntil = '', $reason = '',
+                              $reason_user = '', $reason_time = '')
+{
+    global $dbTempIncoming;
+    $sql = "INSERT INTO `{$dbTempIncoming}`(updateid, `from`, subject, ";
+    $sql .= "emailfrom, contactid, incidentid, locked, lockeduntil, ";
+    $sql .= "reason, reason_user, reason_time) VALUES('{$updateid}', ";
+    $sql .= "'{$from}', '{$subject}', '{$emailfrom}', '{$contactid}', ";
+    $sql .= "'{$incidentid}', '{$locked}', '{$lockeduntil}', '{$reason}', ";
+    $sql .= "'{$reason_user}', '{$reason_time}')";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        return FALSE;
+    }
+    else
+    {
+        return mysql_insert_id();
+    }
+}
+
+
+function holding_email_update_id($holding_email)
+{
+    $holding_email = intval($holding_email);
+    return db_read_column('updateid', $GLOBALS['dbTempIncoming'], $holding_email);
+}
+
+
+function delete_holding_queue_update($updateid)
+{
+    $sql = "DELETE FROM {$GLOBALS['dbTempIncoming']} WHERE updateid = '{$updateid}'";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+        return FALSE;
+    }
+    else
+    {
+        return TRUE;
+    }
+}
+
+
+function num_unread_emails()
+{
+    global $dbTempIncoming;
+    $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+    list($count) = mysql_fetch_row($result);
+    return $count;
+}
+
+
+/**
+ * Return the number of incidents ever logged against a site
+ * @author Kieran
+ * @param int $id. Site ID
+ * @return int.
+ */
+function site_count_incidents($id)
+{
+    global $dbIncidents, $dbContacts;
+    $id = intval($id);
+    $count = 0;
+
+    $sql = "SELECT COUNT(i.id) FROM `{$dbIncidents}` AS i, `{$dbContacts}` as c ";
+    $sql .= "WHERE i.contact = c.id ";
+    $sql .= "AND c.siteid='$id'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    else list($count) = mysql_fetch_row($result);
+    mysql_free_result($result);
+
+    return $count;
+}
+
+
+function external_escalation($escalated, $incid)
+{
+    foreach ($escalated as $i => $id)
+    {
+        if ($id == $incid)
+        {
+            return "yes";
+        }
+    }
+
+    return "no";
+}
 ?>

@@ -137,7 +137,7 @@ define ('LDAP_CUSTOM_CITY', 'l');
 define ('LDAP_CUSTOM_COUNTY', 'st'); // NOT PRESENT all in one attribute
 define ('LDAP_CUSTOM_POSTCODE', 'postalCode'); // NOT PRESENT all in one attribute
 define ('LDAP_CUSTOM_COURTESYTITLE', 'personalTitle');
-*/
+ */
 
 $CONFIG['ldap_type'] = strtoupper($CONFIG['ldap_type']);
 
@@ -161,10 +161,10 @@ if ($CONFIG['use_ldap'])
 
 
 /**
-    * Opens a connection to the LDAP host
-    * @author Lea Anthony
-    * @return the handle of the opened connection
-*/
+ * Opens a connection to the LDAP host
+ * @author Lea Anthony
+ * @return the handle of the opened connection
+ */
 function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $password='')
 {
     debug_log("ldapOpen", TRUE);
@@ -241,7 +241,7 @@ function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $pas
 /**
  * @author Paul Heaney
  * @todo TODO document this function
-*/
+ */
 function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, &$ldap_conn, $user_attributes)
 {
     global $CONFIG;
@@ -456,7 +456,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
 /**
  * @author Paul Heaney
  * @todo TODO document this function
-*/
+ */
 function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
 {
     global $CONFIG, $ldap_vars;
@@ -505,18 +505,18 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
 
 
 /**
-    * Authenticate a user
-    * If successful and the user is new, the user is created in the database
-    * If successful and the user is returning, the user record is resynced
-    * @author Lea Anthony and Paul Heaney
-    * @param string $username. Username
-    * @param string $password. Password
-    * @param int $id. The userid or contactid, > 0 if you wish to update, else creates new
-    * @param bool $user. True for user, false for customer
-    * @return mixed, true if sucessful, false if unsucessful or -1 if connection to LDAP server failed
-    * @retval 0 the credentials were wrong or the user was not found.
-    * @retval 1 to indicate user is authenticated and allowed to continue.
-*/
+ * Authenticate a user
+ * If successful and the user is new, the user is created in the database
+ * If successful and the user is returning, the user record is resynced
+ * @author Lea Anthony and Paul Heaney
+ * @param string $username. Username
+ * @param string $password. Password
+ * @param int $id. The userid or contactid, > 0 if you wish to update, else creates new
+ * @param bool $user. True for user, false for customer
+ * @return mixed, true if sucessful, false if unsucessful or -1 if connection to LDAP server failed
+ * @retval 0 the credentials were wrong or the user was not found.
+ * @retval 1 to indicate user is authenticated and allowed to continue.
+ */
 function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOnly=FALSE, $searchOnEmail=FALSE)
 {
     debug_log("authenticateLDAP {$username}", TRUE);
@@ -563,10 +563,10 @@ function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOn
 }
 
 /**
-    * Gets the details of a contact from the database from their email
-    * @author Lea Anthony
-    * @param string $email. Email
-*/
+ * Gets the details of a contact from the database from their email
+ * @author Lea Anthony
+ * @param string $email. Email
+ */
 function getContactDetailsFromDBByEmail($email)
 {
     global $dbContacts;
@@ -581,12 +581,12 @@ function getContactDetailsFromDBByEmail($email)
 }
 
 /**
-    * Checks that the email address given is a contact that has not yet
-    * been imported into the DB, then imports them.
-    * @author Lea Anthony
-    * @param string $email. Email
-    * @return An array of the user data (if found)
-*/
+ * Checks that the email address given is a contact that has not yet
+ * been imported into the DB, then imports them.
+ * @author Lea Anthony
+ * @param string $email. Email
+ * @return An array of the user data (if found)
+ */
 function ldapImportCustomerFromEmail($email)
 {
     global $CONFIG;
@@ -607,7 +607,7 @@ function ldapImportCustomerFromEmail($email)
 
 
     ldapCreateContact($details);
-    */
+ */
     
     /*
      * Check if contact exists

@@ -715,9 +715,9 @@ function dismissNotice(noticeid, userid)
         method:'get',
             onSuccess: function(transport)
             {
-                $(div).hide();
+                $(div).fade();
                 $(div).removeClassName('noticebar');
-                if ($$('.noticebar').length < 2) $('dismissall').hide();
+                if ($$('.noticebar').length < 2) $('dismissall').fade();
             },
             onFailure: function(){ alert('Notice Error\nSorry, we could not dismiss the notice.') }
     });
@@ -731,17 +731,22 @@ function dismissNotice(noticeid, userid)
 */
 function toggleMenuPanel()
 {
-    if ($('menupanel').style.display == 'block')
+    alert('hello');
+$('menupanel').toggle();
+/*    if ($('menupanel').style.display == 'block')
     {
-        $('mainframe').style.width = mainframe;
-        $('menupanel').style.display = 'none';
+//         $('mainframe').style.width = mainframe;
+        $('menupanel').fade();
+//         $('menupanel').style.display = 'none';
     }
     else
     {
-        mainframe = $('mainframe').style.width;
-        $('mainframe').style.width = '80%';
-        $('menupanel').style.display = 'block';
-    }
+//         mainframe = $('mainframe').style.width;
+//         $('mainframe').style.width = '80%';
+//         $('menupanel').style.display = 'block';
+        $('menupanel').appear();
+        $('menupanel').style.zindex = 99;
+    }*/
 }
 
 function resizeTextarea(t)

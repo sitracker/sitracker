@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-require (APPLICATION_LIBPATH . 'incident.inc.php');
+
 $title = $strAddIncident;
 
 function to_row($contactrow)
@@ -110,7 +110,7 @@ if (!empty($incomingid) AND empty($updateid)) $updateid = db_read_column('update
 
 if (empty($action) OR $action == 'showform')
 {
-    $pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+    $pagescripts = array('AutoComplete.js');
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('add', 32)." {$strAddIncident} - {$strFindContact}</h2>";
     if (empty($siteid))
@@ -679,7 +679,7 @@ elseif ($action == 'assign')
             switch ($timetonextaction_none)
             {
                 case 'none':
-                    $timeofnextaction = 0; 
+                    $timeofnextaction = 0;
                     break;
                 case 'time':
                     $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);

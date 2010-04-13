@@ -64,7 +64,7 @@ $CFGCAT['sla'] = array('default_service_level',
                        'working_days');
 
 
-$CFGCAT['theming'] = array('default_interface_style', 'default_css_url', 'default_gravatar','font_file','tag_icons');
+$CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar','font_file','tag_icons');
 
 $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv', 'ftp_path');
 
@@ -272,9 +272,6 @@ $CFGVAR['debug']['help'] = 'Output extra debug information, some as HTML comment
 $CFGVAR['debug']['title'] = 'Debug Mode';
 $CFGVAR['debug']['type'] = 'checkbox';
 
-$CFGVAR['default_css_url']['title'] = 'Default CSS file';
-$CFGVAR['default_css_url']['help'] = "A <abbr title='Uniform Resource Locator'>URL</abbr> pointing to the <abbr title='Cascading Style Sheet'>CSS</abbr> file to use when no other is configured. You should not normally need to change this.";
-
 $CFGVAR['default_entitlement']['title'] = 'Default Holiday Entitlement';
 $CFGVAR['default_entitlement']['help'] = 'The default holiday entitlement for new users and new holiday periods (in days)';
 $CFGVAR['default_entitlement']['type'] = 'number';
@@ -286,6 +283,11 @@ $CFGVAR['default_gravatar']['title'] = "Default Gravatar";
 $CFGVAR['default_i18n']['help'] = "The system language, or the language that will be used when no other language is selected by the user, see <a href='http://sitracker.org/wiki/Translation'>http://sitracker.org/wiki/Translation</a> for an up to date list of supported languages.";
 $CFGVAR['default_i18n']['title'] = "Default Language";
 $CFGVAR['default_i18n']['type'] = 'languageselect';
+
+$CFGVAR['default_iconset']['title'] = 'Default Icon set';
+$CFGVAR['default_iconset']['help'] = 'The icon set that be given to new user accounts';
+$CFGVAR['default_iconset']['type'] = 'select';
+$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear';
 
 $CFGVAR['default_interface_style']['title'] = 'Default Theme';
 $CFGVAR['default_interface_style']['help'] = 'The theme/interface style that be given to new user accounts';

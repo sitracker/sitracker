@@ -76,6 +76,7 @@ if (isset($refresh) && $refresh != 0)
 }
 
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
+echo "<script src='{$CONFIG['application_webpath']}scripts/scriptaculous/scriptaculous.js?load=effects,dragdrop' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
@@ -101,7 +102,36 @@ echo "<body>\n";
 
 echo "<div id='masthead'>";
 echo "<div id='mastheadcontent'>";
+if ($sit[0] != '')
+{
+    echo "<div id='personaloptions'>";
+    echo "<a href='user_profile_edit.php'>";
+    if (!empty($_SESSION['realname']))
+    {
+        echo $_SESSION['realname'];
+    }
+    else
+    {
+        echo $_SESSION['username'];
+    }
+    echo "</a>";
+    echo " | ";
+    echo "<a href='logout.php'>{$strLogout}</a></div>";
+}
+
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
+if ($sit[0] != '')
+{
+    echo "<div id='topsearch'>";
+    echo "<form name='jumptoincident' action='{$CONFIG['application_webpath']}search.php' method='get'>";
+    echo "<input type='text' name='q' id='searchfield' size='30' value='{$strIncidentNumOrSearchTerm}'
+    onblur=\"if ($('searchfield').value == '') { if (!isIE) { $('searchfield').style.color='#888;'; } $('searchfield').value='{$strIncidentNumOrSearchTerm}';}\"
+    onfocus=\"if ($('searchfield').value == '{$strIncidentNumOrSearchTerm}') { if (!isIE) { $('searchfield').style.color='#000;'; } $('searchfield').value=''; }\"
+    onclick='clearjumpto()'/> ";
+    // echo "<input type='image' src='{$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/find.png' alt='{$strGo}' onclick='jumpto()' />";
+    echo "</form>";
+    echo "</div>";
+}
 echo "</div></div>\n";
 
 // Show menu if logged in
@@ -237,15 +267,6 @@ if ($sit[0] != '')
     }
     echo "</ul>\n\n";
 
-    echo "<div id='topsearch'>";
-    echo "<form name='jumptoincident' action='{$CONFIG['application_webpath']}search.php' method='get'>";
-    echo "<input type='text' name='q' id='searchfield' size='30' value='{$strIncidentNumOrSearchTerm}'
-    onblur=\"if ($('searchfield').value == '') { if (!isIE) { $('searchfield').style.color='#888;'; } $('searchfield').value='{$strIncidentNumOrSearchTerm}';}\"
-    onfocus=\"if ($('searchfield').value == '{$strIncidentNumOrSearchTerm}') { if (!isIE) { $('searchfield').style.color='#000;'; } $('searchfield').value=''; }\"
-    onclick='clearjumpto()'/> ";
-    // echo "<input type='image' src='{$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/find.png' alt='{$strGo}' onclick='jumpto()' />";
-    echo "</form>";
-    echo "</div>";
     echo "</div>\n";
 }
 
@@ -380,11 +401,15 @@ if ($sit[0] != '')
 }
 $headerdisplayed = TRUE; // Set a variable so we can check to see if the header was included
 
-// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
-//echo "<div id='menupanel'>";
-//echo "<h3>Menu</h3>";
-//echo "</div>";
-
+// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008 & 11April2010
+// echo "<div id='menupanel'>";
+// echo "<h3>Menu</h3>";
+// echo "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>";
+// echo "</div>";
+//
+// // FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
+// echo "<p id='menutoggle'><a href='javascript:void(0);' onclick='toggleMenuPanel();' title='{$strMenu}'>";
+// echo "".icon('auto', 16)."</a></p>";
 
 
 echo "<div id='mainframe'>";

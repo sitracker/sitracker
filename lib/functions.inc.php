@@ -31,8 +31,11 @@ include (APPLICATION_LIBPATH . 'user.class.php');
 include (APPLICATION_LIBPATH . 'contact.class.php');
 include (APPLICATION_LIBPATH . 'incident.class.php');
 
+include_once (APPLICATION_LIBPATH . 'file.inc.php');
 include (APPLICATION_LIBPATH . 'ldap.inc.php');
 include (APPLICATION_LIBPATH . 'base.inc.php');
+include_once (APPLICATION_LIBPATH . 'array.inc.php');
+include_once (APPLICATION_LIBPATH . 'datetime.inc.php');
 include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 include_once (APPLICATION_LIBPATH . 'user.inc.php');
 include_once (APPLICATION_LIBPATH . 'sla.inc.php');
@@ -42,22 +45,14 @@ include_once (APPLICATION_LIBPATH . 'string.inc.php');
 include_once (APPLICATION_LIBPATH . 'html.inc.php');
 include_once (APPLICATION_LIBPATH . 'tasks.inc.php');
 include_once (APPLICATION_LIBPATH . 'export.inc.php');
-
-// function stripslashes_array($data)
-// {
-//     if (is_array($data))
-//     {
-//         foreach ($data as $key => $value)
-//         {
-//             $data[$key] = stripslashes_array($value);
-//         }
-//         return $data;
-//     }
-//     else
-//     {
-//         return stripslashes($data);
-//     }
-// }
+include_once (APPLICATION_LIBPATH . 'contact.inc.php');
+include_once (APPLICATION_LIBPATH . 'contract.inc.php');
+include_once (APPLICATION_LIBPATH . 'journal.inc.php');
+include_once (APPLICATION_LIBPATH . 'kb.inc.php');
+include_once (APPLICATION_LIBPATH . 'feedback.inc.php');
+include_once (APPLICATION_LIBPATH . 'site.inc.php');
+include_once (APPLICATION_LIBPATH . 'configfuncs.inc.php');
+include_once (APPLICATION_LIBPATH . 'incident.inc.php');
 
 if (version_compare(PHP_VERSION, "5.1.0", ">="))
 {
@@ -72,11 +67,11 @@ set_magic_quotes_runtime(FALSE);
 if (get_magic_quotes_gpc())
 {
 
-//     All these global variables are slash-encoded by default,
-//     because    magic_quotes_gpc is set by default!
-//     (And magic_quotes_gpc affects more than just $_GET, $_POST, and $_COOKIE)
-//     We don't strip slashes from $_FILES as of 3.32 as this should be safe without
-//     doing and it will break windows file paths if we do
+    //     All these global variables are slash-encoded by default,
+    //     because    magic_quotes_gpc is set by default!
+    //     (And magic_quotes_gpc affects more than just $_GET, $_POST, and $_COOKIE)
+    //     We don't strip slashes from $_FILES as of 3.32 as this should be safe without
+    //     doing and it will break windows file paths if we do
     $_SERVER = stripslashes_array($_SERVER);
     $_GET = stripslashes_array($_GET);
     $_POST = stripslashes_array($_POST);
@@ -95,10 +90,10 @@ if (get_magic_quotes_gpc())
         $_SESSION = stripslashes_array($_SESSION, '');
         $HTTP_SESSION_VARS = stripslashes_array($HTTP_SESSION_VARS, '');
     }
-//     The $GLOBALS array is also slash-encoded, but when all the above are
-//     changed, $GLOBALS is updated to reflect those changes.  (Therefore
-//     $GLOBALS should never be modified directly).  $GLOBALS also contains
-//     infinite recursion, so it's dangerous...
+    //     The $GLOBALS array is also slash-encoded, but when all the above are
+    //     changed, $GLOBALS is updated to reflect those changes.  (Therefore
+    //     $GLOBALS should never be modified directly).  $GLOBALS also contains
+    //     infinite recursion, so it's dangerous...
 }
 
 
@@ -321,29 +316,6 @@ function authenticateContact($username, $password)
     return $toReturn;
 }
 
-/**
- * See if a customer exists in the database
- * @author Lea Anthony
- * @param string $username. Username of customer
- * @retval bool TRUE exists in db
- * @retval bool FALSE does not exist in db
- */
-function customerExistsInDB($username)
-{
-    global $dbContacts;
-    $exists = 0;
-    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='$username'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    while( $res = mysql_fetch_array($result) )
-    {
-        $exists = 1;
-    }
-
-    return $exists;
-}
-
 
 /**
  * Returns a specified column from a specified table in the database given an ID primary key
@@ -357,7 +329,7 @@ function customerExistsInDB($username)
  */
 function db_read_column($column, $table, $id)
 {
-    $sql = "SELECT `$column` FROM `{$table}` WHERE id ='$id' LIMIT 1";
+    $sql = "SELECT `{$column}` FROM `{$table}` WHERE id ='$id' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
@@ -419,480 +391,439 @@ function software_name($softwareid)
 }
 
 
-/**
- * Find a contacts real name
- * @author Ivan Lucas
- * @param int $id. Contact ID
- * @return string. Full name or 'Unknown'
- */
-function contact_realname($id)
+/* Returns a string representing the name of   */
+/* the given product. Returns an empty string if the product  */
+/* does not exist.                                            */
+function product_name($id)
 {
-    global $dbContacts;
-    $sql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    return db_read_column('name', $GLOBALS['dbProducts'], $id);
+}
 
-    if (mysql_num_rows($result) == 0)
+
+/**
+ * Handle a PHP triggered error
+ * @author Ivan Lucas
+ * @note Not called directly but triggered by PHP's own error handling
+ *       and the trigger_error function.
+ * @note Parameters as per http://www.php.net/set_error_handler
+ * @note This function is not internationalised in order that bugs can
+ *       be reported to developers and still be sure that they will be
+ *       understood
+ */
+function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
+{
+    global $CONFIG, $sit, $siterrors;
+
+    // if error has been supressed with an @
+    if (error_reporting() == 0)
     {
-        mysql_free_result($result);
-        return ($GLOBALS['strUnknown']);
-    }
-    else
-    {
-        $contact = mysql_fetch_object($result);
-        $realname = "{$contact->forenames} {$contact->surname}";
-        mysql_free_result($result);
-        return $realname;
-    }
-}
-
-
-/**
- * Return a contacts site name
- * @author Ivan Lucas
- * @param int $id. Contact ID
- * @return string. Full site name or 'Unknown'
- * @note this returns the site _NAME_ not the siteid for the site id use contact_siteid()
- */
-function contact_site($id)
-{
-    global $dbContacts, $dbSites;
-    //
-    $sql = "SELECT s.name FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id AND c.id = '$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 0)
-    {
-        mysql_free_result($result);
-        return $GLOBALS['strUnknown'];
-    }
-    else
-    {
-        list($contactsite) = mysql_fetch_row($result);
-        mysql_free_result($result);
-        $contactsite = $contactsite;
-        return $contactsite;
-    }
-}
-
-
-/**
- * Return a contacts site ID
- * @author Ivan Lucas
- * @param int $id. Contact ID
- * @return int. Site ID
- */
-function contact_siteid($id)
-{
-    return db_read_column('siteid', $GLOBALS['dbContacts'], $id);
-}
-
-
-/**
- * Return a contacts email address
- * @author Ivan Lucas
- * @param int $id. Contact ID
- * @return string. Email address
- */
-function contact_email($id)
-{
-    return db_read_column('email', $GLOBALS['dbContacts'], $id);
-}
-
-
-/**
- * Return a contacts phone number
- * @author Ivan Lucas
- * @param integer $id. Contact ID
- * @return string. Phone number
- */
-function contact_phone($id)
-{
-    return db_read_column('phone', $GLOBALS['dbContacts'], $id);
-}
-
-
-/**
- * Return a contacts fax number
- * @author Ivan Lucas
- * @param int $id. Contact ID
- * @return string. Fax number
- */
-function contact_fax($id)
-{
-    return db_read_column('fax', $GLOBALS['dbContacts'], $id);
-}
-
-
-/**
- * Return the number of incidents ever logged against a contact
- * @author Ivan Lucas
- * @param int $id. Contact ID
- * @return int.
- */
-function contact_count_incidents($id)
-{
-    global $dbIncidents;
-    $count = 0;
-
-    $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE contact='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
-
-    return $count;
-}
-
-
-/**
- * Return the number of incidents ever logged against a site
- * @author Kieran
- * @param int $id. Site ID
- * @return int.
- */
-function site_count_incidents($id)
-{
-    global $dbIncidents, $dbContacts;
-    $id = intval($id);
-    $count = 0;
-
-    $sql = "SELECT COUNT(i.id) FROM `{$dbIncidents}` AS i, `{$dbContacts}` as c ";
-    $sql .= "WHERE i.contact = c.id ";
-    $sql .= "AND c.siteid='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
-
-    return $count;
-}
-
-
-/**
- * Return the number of inventory items for a site
- * @author Kieran
- * @param int $id. Site ID
- * @return int.
- */
-function site_count_inventory_items($id)
-{
-    global $dbInventory;
-    $count = 0;
-
-    $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE siteid='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
-
-    return $count;
-}
-
-
-/**
- * Return the number of inventory items for a contact
- * @author Kieran
- * @param int $id. Contact ID
- * @return int.
- */
-function contact_count_inventory_items($id)
-{
-    global $dbInventory;
-    $count = 0;
-
-    $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE contactid='$id'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
-
-    return $count;
-}
-
-
-
-/**
- * The number representing the total number of currently OPEN incidents submitted by a given contact.
- * @author Ivan Lucas
- * @param int $id. The Contact ID to check
- * @return integer. The number of currently OPEN incidents for the given contact
- */
-function contact_count_open_incidents($id)
-{
-    global $dbIncidents;
-    $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE contact=$id AND status<>2";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
-
-    return $count;
-}
-
-
-/**
- * Creates a vcard electronic business card for the given contact
- * @author Ivan Lucas
- * @param int $id Contact ID
- * @return string vcard
- */
-function contact_vcard($id)
-{
-    global $dbContacts, $dbSites;
-    $sql = "SELECT *, s.name AS sitename, s.address1 AS siteaddress1, s.address2 AS siteaddress2, ";
-    $sql .= "s.city AS sitecity, s.county AS sitecounty, s.country AS sitecountry, s.postcode AS sitepostcode ";
-    $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
-    $sql .= "WHERE c.siteid = s.id AND c.id = '$id' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $contact = mysql_fetch_object($result);
-    $vcard = "BEGIN:VCARD\r\n";
-    $vcard .= "N:{$contact->surname};{$contact->forenames};{$contact->courtesytitle}\r\n";
-    $vcard .= "FN:{$contact->forenames} {$contact->surname}\r\n";
-    if (!empty($contact->jobtitle)) $vcard .= "TITLE:{$contact->jobtitle}\r\n";
-    if (!empty($contact->sitename)) $vcard .= "ORG:{$contact->sitename}\r\n";
-    if ($contact->dataprotection_phone != 'Yes') $vcard .= "TEL;TYPE=WORK:{$contact->phone}\r\n";
-    if ($contact->dataprotection_phone != 'Yes' && !empty($contact->fax))
-    {
-        $vcard .= "TEL;TYPE=WORK;TYPE=FAX:{$contact->fax}\r\n";
+        return;
     }
 
-    if ($contact->dataprotection_phone != 'Yes' && !empty($contact->mobile))
-    {
-        $vcard .= "TEL;TYPE=WORK;TYPE=CELL:{$contact->mobile}\r\n";
-    }
+    $errortype = array(
+    E_ERROR           => 'Fatal Error',
+    E_WARNING         => 'Warning',
+    E_PARSE           => 'Parse Error',
+    E_NOTICE          => 'Notice',
+    E_CORE_ERROR      => 'Core Error',
+    E_CORE_WARNING    => 'Core Warning',
+    E_COMPILE_ERROR   => 'Compile Error',
+    E_COMPILE_WARNING => 'Compile Warning',
+    E_USER_ERROR      => 'Application Error',
+    E_USER_WARNING    => 'Application Warning',
+    E_USER_NOTICE     => 'Application Notice');
 
-    if ($contact->dataprotection_email != 'Yes' && !empty($contact->email))
-    {
-        $vcard .= "EMAIL;TYPE=INTERNET:{$contact->email}\r\n";
-    }
+    if (defined('E_STRICT')) $errortype[E_STRICT] = 'Strict Runtime notice';
 
-    if ($contact->dataprotection_address != 'Yes')
+    $trace_errors = array(E_ERROR, E_USER_ERROR);
+
+    $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE;
+    $system_errors = E_ERROR | E_WARNING | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
+    $warnings = E_WARNING | E_USER_WARNING | E_CORE_WARNING | E_COMPILE_WARNING;
+    $notices = E_NOTICE | E_USER_NOTICE;
+
+    if (($errno & $user_errors) OR ($errno & $system_errors))
     {
-        if ($contact->address1 != '')
+        if (empty($CONFIG['error_logfile']) === FALSE AND is_writable($CONFIG['error_logfile']) === TRUE)
         {
-            $vcard .= "ADR;WORK:{$contact->address1};{$contact->address2};{$contact->city};{$contact->county};{$contact->postcode};{$contact->country}\r\n";
+            $displayerrors = FALSE;
         }
         else
         {
-            $vcard .= "ADR;WORK:{$contact->siteaddress1};{$contact->siteaddress2};{$contact->sitecity};{$contact->sitecounty};{$contact->sitepostcode};{$contact->sitecountry}\r\n";
+            $displayerrors = TRUE;
+        }
+
+        if ($errno & $notices) $class = 'info';
+        elseif ($errno & $warnings) $class = 'warning';
+        else $class = 'error';
+
+        $backtrace = debug_backtrace();
+        if (php_sapi_name() != 'cli')
+        {
+            $tracelog = '';
+            if ($displayerrors)
+            {
+                echo "<p class='{$class}'><strong>{$errortype[$errno]} [{$errno}]</strong><br />";
+                if ($errno != E_USER_NOTICE)
+                {
+                    echo "{$errstr} in {$errfile} @ line {$errline}";
+                }
+                else
+                {
+                    echo "{$errstr}";
+                }
+                if ($CONFIG['debug']) echo "<br /><strong>Backtrace</strong>:";
+            }
+
+            foreach ($backtrace AS $trace)
+            {
+                if (!empty($trace['file']))
+                {
+                    if ($CONFIG['debug'] AND $displayerrors)
+                    {
+                        echo "<br />{$trace['file']} @ line {$trace['line']}";
+                    }
+
+                    $tracelog .= "{$trace['file']} @ line {$trace['line']}";
+                    if (!empty($trace['function']))
+                    {
+                        $tracelog .= " {$trace['function']}()";
+                        if ($displayerrors) echo " {$trace['function']}() ";
+//                         foreach ($trace['args'] AS $arg)
+//                         {
+//                             echo "$arg &bull; ";
+//                         }
+                    }
+                    $tracelog .= "\n";
+                }
+            }
+            if ($errno != E_NOTICE)
+            {
+                $logentry = " {$errortype[$errno]} [{$errno}] {$errstr} (in line {$errline} of file {$errfile})\n";
+            }
+
+            if ($errno == E_ERROR
+                || $errno == E_USER_ERROR
+                || $errno == E_CORE_ERROR
+                || $errno == E_CORE_WARNING
+                || $errno == E_COMPILE_ERROR
+                || $errno == E_COMPILE_WARNING)
+            {
+                $logentry .= "Context: [CONTEXT-BEGIN]\n".print_r($errcontext, TRUE)."\n[CONTEXT-END]\n----------\n\n";
+                $siterrors++;
+            }
+
+            debug_log($logentry);
+            if ($displayerrors)
+            {
+                echo "</p>";
+                // Tips, to help diagnose errors
+                if (strpos($errstr, 'Unknown column') !== FALSE OR
+                    preg_match("/Table '(.*)' doesn't exist/", $errstr))
+                {
+                    echo "<p class='tip'>The SiT schema may need updating to fix this problem.";
+                    if (user_permission($sit[2], 22)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
+                    echo "</p>";
+                }
+
+                if (strpos($errstr, 'headers already sent') !== FALSE)
+                {
+                    echo "<p class='tip'>This warning may be caused by a problem that occurred before the ";
+                    echo "page was displayed, or sometimes by a syntax error or ";
+                    echo "extra whitespace in your config file.</p>";
+                }
+
+                if (strpos($errstr, 'You have an error in your SQL syntax') !== FALSE OR
+                    strpos($errstr, 'Query Error Incorrect table name') !== FALSE)
+                {
+                    echo "<p class='tip'>You may have found a bug in SiT, please <a href=\"{$CONFIG['bugtracker_url']}\">report it</a>.</p>";
+                }
+            }
+        }
+        else
+        {
+            debug_log("ERROR: {$errortype[$errno]} {$errstr} in {$errfile} at line {$errline}\n");
+            if (!empty($tracelog)) debug_log("ERROR: Backtrace:\n{$tracelog}\n");
         }
     }
-    if (!empty($contact->notes))
+}
+
+
+/**
+ * Write an entry to the configured error logfile
+ * @author Ivan Lucas
+ * @param string $logentry. A line, or lines to write to the log file
+ * (with newlines \n)
+ * @param bool $debugmodeonly. Only write an entry if debug mode is TRUE
+ * @return bool TRUE log entry written, FALSE log entry not written
+ */
+function debug_log($logentry, $debugmodeonly = FALSE)
+{
+    global $CONFIG;
+
+    if ($debugmodeonly == FALSE
+        OR ($debugmodeonly == TRUE AND $CONFIG['debug_mode'] == TRUE))
     {
-        $vcard .= "NOTE:{$contact->notes}\r\n";
+        $logentry = $_SERVER["SCRIPT_NAME"] . ' ' .$logentry;
+
+        if (substr($logentry, -1) != "\n") $logentry .= "\n";
+        if (!empty($CONFIG['error_logfile']))
+        {
+            if (is_writable($CONFIG['error_logfile']))
+            {
+                $fp = fopen($CONFIG['error_logfile'], 'a+');
+                if ($fp)
+                {
+                    fwrite($fp, date('c').' '.strip_tags($logentry));
+                    fclose($fp);
+                }
+                else
+                {
+                    echo "<p class='error'>Could not log message to error_logfile</p>";
+                    return FALSE;
+                }
+                return TRUE;
+            }
+        }
+        else
+        {
+            return FALSE;
+        }
     }
-
-    $vcard .= "REV:".iso_8601_date($contact->timestamp_modified)."\r\n";
-    $vcard .= "END:VCARD\r\n";
-    return $vcard;
+    else return TRUE;
 }
 
 
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return integer. UserID of the user that currently owns the incident
- */
-function incident_owner($id)
-{
-    return db_read_column('owner', $GLOBALS['dbIncidents'], $id);
-}
-
 
 /**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return integer. UserID of the user that currently temporarily owns the incident
+ * Send an email from SiT
+ * @param string $to. Destination email address
+ * @param string $from. Source email address
+ * @param string $subject. Email subject line
+ * @param string $body. Email body text
+ * @param string $replyto. (optional) Address to send reply to
+ * @param string $cc. (optional) Carbon copy address
+ * @param string $bcc. (optional) Blind carbon copy address
+ * @return The return value from PHP mail() function or TRUE when in Demo mode
+ * @note Returns TRUE but does not actually send mail when SiT is in Demo mode
  */
-function incident_towner($id)
+function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 {
-    return db_read_column('towner', $GLOBALS['dbIncidents'], $id);
-}
+    global $CONFIG, $application_version_string;
 
+    $crlf = "\n";
 
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return integer. ContactID of the contact this incident is logged against
- */
-function incident_contact($id)
-{
-    return db_read_column('contact', $GLOBALS['dbIncidents'], $id);
-}
+    if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
-
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return integer. Contract ID of the maintenance contract this incident is logged against
- */
-function incident_maintid($id)
-{
-    $maintid = db_read_column('maintenanceid', $GLOBALS['dbIncidents'], $id);
-    if ($maintid == '')
+    $extra_headers  = "From: {$from}" . $crlf;
+    if (!empty($replyto)) $extra_headers .= "Reply-To: {$replyto}" . $crlf;
+    if (!empty($email_cc))
     {
-        trigger_error("!Error: No matching record while reading in incident_maintid() Incident ID: {$id}", E_USER_WARNING);
+        $extra_headers .= "CC: {$cc}" . $crlf;
+    }
+    if (!empty($email_bcc))
+    {
+        $extra_headers .= "BCC: {$bcc}" . $crlf;
+    }
+    if (!empty($CONFIG['support_email']))
+    {
+        $extra_headers .= "Errors-To: {$CONFIG['support_email']}" . $crlf;
+    }
+    $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
+    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
+    $extra_headers .= "MIME-Version: 1.0" . $crlf;
+    $extra_headers .= "Content-type: text/plain; charset={$GLOBALS['i18ncharset']}" . $crlf;
+//     $extra_headers .= "\r\n";
+
+    if ($CONFIG['demo'])
+    {
+        $rtnvalue = TRUE;
     }
     else
     {
-        return ($maintid);
+        // $rtnvalue = mail($to, $subject, $body, $extra_headers);
+
+        $mime = new MIME_mail($from, $to, html_entity_decode($subject), '', $extra_headers, $mailerror);
+        $mime -> attach($body, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+
+        // actually send the email
+        $rtnvalue = $mime -> send_mail();
+        if (!empty($mailerror)) debug_log("Outoing email error: {$mailerror}");
+    }
+
+    return $rtnvalue;
+}
+
+
+if (!function_exists('is_number'))
+{
+    function is_number($string)
+    {
+        $number = TRUE;
+        for ($i=0; $i < strlen($string); $i++)
+        {
+            if (!(ord(substr($string, $i, 1)) <= 57 && ord(substr($string, $i, 1)) >= 48))
+            {
+                $number = FALSE;
+            }
+        }
+        return $number;
     }
 }
 
 
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return string. Title of the incident
- */
-function incident_title($id)
+function global_signature()
 {
-    return db_read_column('title', $GLOBALS['dbIncidents'], $id);
+    $sql = "SELECT signature FROM `{$GLOBALS['dbEmailSig']}` ORDER BY RAND() LIMIT 1";
+    $result = mysql_query($sql);
+    list($signature) = mysql_fetch_row($result);
+    mysql_free_result($result);
+    return $signature;
 }
 
 
 /**
+ * Wrapper function to call dashboard_*_do() within a dashlet plugin
+ * See dashlet() for more information
  * @author Ivan Lucas
- * @param int $id Incident ID
- * @return id. Current incident status ID
+ * @param string $context
+ * @param string $row
+ * @param string $dashboardid
  */
-function incident_status($id)
+function dashboard_do($context, $row=0, $dashboardid=0)
 {
-    return db_read_column('status', $GLOBALS['dbIncidents'], $id);
+    global $DASHBOARDCOMP;
+    $dashletid = "{$row}-{$dashboardid}";
+    $action = $DASHBOARDCOMP[$context];
+    if ($action != NULL || $action != '')
+    {
+        if (function_exists($action)) $action($dashletid);
+    }
 }
 
 
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return id. Current incident Priority ID
- */
-function incident_priority($id)
+function show_dashboard_component($row, $dashboardid)
 {
-    return db_read_column('priority', $GLOBALS['dbIncidents'], $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return id. Current incident external ID
- */
-function incident_externalid($id)
-{
-    return db_read_column('externalid', $GLOBALS['dbIncidents'], $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return string. Current incident external engineer
- */
-function incident_externalengineer($id)
-{
-    return db_read_column('externalengineer', $GLOBALS['dbIncidents'], $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return string. Current incident external email address
- */
-function incident_externalemail($id)
-{
-    return db_read_column('externalemail', $GLOBALS['dbIncidents'], $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return string. Current incident CC email address
- */
-function incident_ccemail($id)
-{
-    return db_read_column('ccemail', $GLOBALS['dbIncidents'], $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @param int $id Incident ID
- * @return int. UNIX Timestamp of the time of the next action for this incident
- */
-function incident_timeofnextaction($id)
-{
-    return db_read_column('timeofnextaction', $GLOBALS['dbIncidents'], $id);
-}
-
-
-/**
- * Returns a string of HTML nicely formatted for the incident details page containing any additional
- * product info for the given incident.
- * @author Ivan Lucas
- * @param int $incidentid The incident ID
- * @return string HTML
- */
-function incident_productinfo_html($incidentid)
-{
-    global $dbProductInfo, $dbIncidentProductInfo, $strNoProductInfo;
-
-    // TODO extract appropriate product info rather than *
-    $sql  = "SELECT *, TRIM(incidentproductinfo.information) AS info FROM `{$dbProductInfo}` AS p, {$dbIncidentProductInfo}` ipi ";
-    $sql .= "WHERE incidentid = $incidentid AND productinfoid = p.id AND TRIM(p.information) !='' ";
+    global $dbDashboard;
+    $sql = "SELECT name FROM `{$dbDashboard}` WHERE enabled = 'true' AND id = '$dashboardid'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 0)
+    if (mysql_num_rows($result) == 1)
     {
-        return ('<tr><td>{$strNoProductInfo}</td><td>{$strNoProductInfo}</td></tr>');
-    }
-    else
-    {
-        // generate HTML
-        while ($productinfo = mysql_fetch_object($result))
-        {
-            if (!empty($productinfo->info))
-            {
-                $html = "<tr><th>{$productinfo->moreinformation}:</th><td>";
-                $html .= urlencode($productinfo->info);
-                $html .= "</td></tr>\n";
-            }
-        }
-        echo $html;
+        $obj = mysql_fetch_object($result);
+        dashboard_do("dashboard_".$obj->name, 'db_'.$row, $dashboardid);
     }
 }
 
 
 /**
- * prints the HTML for a drop down list of contacts, with the given name
- * and with the given id  selected.
+ * Create a PNG chart
  * @author Ivan Lucas
+ * @param string $type. The type of chart to draw. (e.g. 'pie').
+ * @return resource a PNG image resource
+ * @note Currently only has proper support for pie charts (type='pie')
+ * @todo TODO Support for bar and line graphs
  */
-function contact_drop_down($name, $id, $showsite = FALSE, $required = FALSE)
+function draw_chart_image($type, $width, $height, $data, $legends, $title='', $unit='')
 {
-    global $dbContacts, $dbSites;
-    if ($showsite)
-    {
-        $sql  = "SELECT c.id AS contactid, s.id AS siteid, surname, forenames, ";
-        $sql .= "s.name AS sitename, s.department AS department ";
-        $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id AND c.active = 'true' ";
-        $sql .= "AND s.active = 'true' ";
-        $sql .= "ORDER BY s.name, s.department, surname ASC, forenames ASC";
-    }
-    else
-    {
-        $sql  = "SELECT c.id AS contactid, surname, forenames FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
-        $sql .= "WHERE c.siteid = s.id AND s.active = 'true' AND c.active = 'true' ";
-        $sql .= "ORDER BY forenames ASC, surname ASC";
-    }
+    global $CONFIG;
 
+    // Graph settings
+    if (empty($width)) $width = 500;
+    if (empty($height)) $height = 150;
+
+    if (!empty($CONFIG['font_file']) AND file_exists($CONFIG['font_file'])) $use_ttf = TRUE;
+    else $use_ttf = FALSE;
+
+    $countdata = count($data);
+    $sumdata = array_sum($data);
+
+    if ($countdata > 8) $height += (($countdata - 8) * 14);
+
+    $img = imagecreatetruecolor($width, $height);
+
+    $white = imagecolorallocate($img, 255, 255, 255);
+    $blue = imagecolorallocate($img, 240, 240, 255);
+    $midblue = imagecolorallocate($img, 204, 204, 255);
+    $darkblue = imagecolorallocate($img, 32, 56, 148);
+    $black = imagecolorallocate($img, 0, 0, 0);
+    $grey = imagecolorallocate($img, 224, 224, 224);
+    $red = imagecolorallocate($img, 255, 0, 0);
+
+    imagefill($img, 0, 0, $white);
+
+    $rgb[] = "190,190,255";
+    $rgb[] = "205,255,255";
+    $rgb[] = "255,255,156";
+    $rgb[] = "156,255,156";
+    $rgb[] = "255,205,195";
+    $rgb[] = "255,140,255";
+    $rgb[] = "100,100,155";
+    $rgb[] = "98,153,90";
+    $rgb[] = "205,210,230";
+    $rgb[] = "192,100,100";
+    $rgb[] = "204,204,0";
+    $rgb[] = "255,102,102";
+    $rgb[] = "0,204,204";
+    $rgb[] = "0,255,0";
+    $rgb[] = "255,168,88";
+    $rgb[] = "128,0,128";
+    $rgb[] = "0,153,153";
+    $rgb[] = "255,230,204";
+    $rgb[] = "128,170,213";
+    $rgb[] = "75,75,75";
+    // repeats...
+    $rgb[] = "190,190,255";
+    $rgb[] = "156,255,156";
+    $rgb[] = "255,255,156";
+    $rgb[] = "205,255,255";
+    $rgb[] = "255,205,195";
+    $rgb[] = "255,140,255";
+    $rgb[] = "100,100,155";
+    $rgb[] = "98,153,90";
+    $rgb[] = "205,210,230";
+    $rgb[] = "192,100,100";
+    $rgb[] = "204,204,0";
+    $rgb[] = "255,102,102";
+    $rgb[] = "0,204,204";
+    $rgb[] = "0,255,0";
+    $rgb[] = "255,168,88";
+    $rgb[] = "128,0,128";
+    $rgb[] = "0,153,153";
+    $rgb[] = "255,230,204";
+    $rgb[] = "128,170,213";
+    $rgb[] = "75,75,75";
+
+    switch ($type)
+    {
+        case 'pie':
+            // Set Pie Postition. CenterX,CenterY
+            $cx = '120';
+            $cy ='60';
+
+            // Set Size-dimensions. SizeX,SizeY,SizeZ
+            $sx = '200';
+            $sy='100';
+            $sz ='15';
+
+            // Title
+            if (!empty($title))
+            {
+                $cy += 10;
+                if ($use_ttf)
+                {
+                    imagettftext($img, 10, 0, 2, 10, $black, $CONFIG['font_file'], $title);
+                }
+                else
+                {
+                    imagestring($img, 2, 2, ($legendY-1), "{$title}", $black);
+                }
+            }
+
+            $angle_sum[-1] = 0;
+
+<<<<<<< HEAD:lib/functions.inc.php
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -7538,6 +7469,360 @@ function setup_user_triggers($userid)
         {
             mysql_query($sql);
             if (mysql_error())
+=======
+            //convert to angles.
+            for ($i = 0; $i < $countdata; $i++)
+>>>>>>> sit:lib/functions.inc.php
+            {
+                if ($sumdata > 0)
+                {
+                    $angle[$i] = (($data[$i] / $sumdata) * 360);
+                }
+                else
+                {
+                    $angle[$i] = 0;
+                }
+                $angle_sum[$i] = array_sum($angle);
+            }
+
+            $background = imagecolorallocate($img, 255, 255, 255);
+            //Random colors.
+
+            for ($i = 0; $i <= $countdata; $i++)
+            {
+                $rgbcolors = explode(',',$rgb[$i]);
+                $colors[$i] = imagecolorallocate($img, $rgbcolors[0], $rgbcolors[1], $rgbcolors[2]);
+                $colord[$i] = imagecolorallocate($img, ($rgbcolors[0]/1.5), ($rgbcolors[1]/1.5), ($rgbcolors[2]/1.5));
+            }
+
+            //3D effect.
+            $legendY = 80 - ($countdata * 10);
+
+            if ($legendY < 10) $legendY = 10;
+
+            for ($z = 1; $z <= $sz; $z++)
+            {
+                for ($i = 0; $i < $countdata; $i++)
+                {
+                        imagefilledarc($img, $cx, ($cy + $sz) - $z, $sx, $sy, $angle_sum[$i-1], $angle_sum[$i], $colord[$i], IMG_ARC_PIE);
+                }
+
+            }
+
+            imagerectangle($img, 250, $legendY - 5, 470, $legendY + ($countdata * 15), $black);
+
+            //Top of the pie.
+            for ($i = 0; $i < $countdata; $i++)
+            {
+                // If its the same angle don't try and draw anything otherwise you end up with the whole pie being this colour
+                if ($angle_sum[$i - 1] != $angle_sum[$i])
+                {
+                    imagefilledarc($img, $cx, $cy, $sx, $sy, $angle_sum[$i-1], $angle_sum[$i], $colors[$i], IMG_ARC_PIE);
+                }
+
+                imagefilledrectangle($img, 255, ($legendY + 1), 264, ($legendY + 9), $colors[$i]);
+                // Legend
+                if ($unit == 'seconds')
+                {
+                    $data[$i] = format_seconds($data[$i]);
+                }
+
+                if ($use_ttf)
+                {
+                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8')." ({$data[$i]})");
+                }
+                else
+                {
+                    imagestring($img,2, 270, ($legendY - 1), mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8')." ({$data[$i]})", $black);
+                }
+                // imagearc($img,$cx,$cy,$sx,$sy,$angle_sum[$i1] ,$angle_sum[$i], $blue);
+                $legendY += 15;
+            }
+            break;
+        case 'line':
+            $maxdata = 0;
+            $colwidth=round($width/$countdata);
+            $rowheight=round($height/10);
+            foreach ($data AS $dataval)
+            {
+                if ($dataval > $maxdata) $maxdata = $dataval;
+            }
+
+            imagerectangle($img, $width-1, $height-1, 0, 0, $black);
+            for ($i = 1; $i < $countdata; $i++)
+            {
+                imageline($img, $i * $colwidth, 0, $i * $colwidth, $width, $grey);
+                imageline($img, 2, $i * $rowheight, $width - 2, $i * $rowheight, $grey);
+            }
+
+            for ($i = 0; $i < $countdata; $i++)
+            {
+                $dataheight = ($height-($data[$i] / $maxdata) * $height);
+                $legendheight = $dataheight > ($height - 15) ? $height - 15 : $dataheight;
+                $nextdataheight = ($height - ($data[$i + 1] / $maxdata) * $height);
+                imageline($img, $i * $colwidth, $dataheight, ($i + 1) * $colwidth, $nextdataheight, $red);
+                imagestring($img, 3, $i*$colwidth, $legendheight, mb_substr($legends[$i], 0, 6, 'UTF-8'), $darkblue);
+            }
+            imagestring($img,3, 10, 10, $title, $red);
+            break;
+        case 'bar':
+            $maxdata = 0;
+            $colwidth = round($width / $countdata);
+            $rowheight = round($height / 10);
+            foreach ($data AS $dataval)
+            {
+                if ($dataval > $maxdata) $maxdata = $dataval;
+            }
+
+            imagerectangle($img, $width-1, $height-1, 0, 0, $black);
+            for ($i = 1; $i < $countdata; $i++)
+            {
+                imageline($img, $i * $colwidth, 0, $i * $colwidth, $width, $grey);
+                imageline($img, 2, $i*$rowheight, $width - 2, $i * $rowheight, $grey);
+            }
+
+            for ($i = 0; $i < $countdata; $i++)
+            {
+                $dataheight = ($height - ($data[$i] / $maxdata) * $height);
+                $legendheight = $dataheight > ($height - 15) ? $height - 15 : $dataheight;
+                imagefilledrectangle($img, $i * $colwidth, $dataheight, ($i + 1) * $colwidth, $height, $darkblue);
+                imagefilledrectangle($img, ($i * $colwidth)+1, $dataheight + 1, (($i + 1) * $colwidth)-3, ($height-2), $midblue);
+                imagestring($img, 3, ($i*$colwidth)+4, $legendheight, mb_substr($legends[$i], 0, 5,'UTF-8'), $darkblue);
+            }
+            imagestring($img,3, 10, 10, $title, $red);
+           break;
+        default:
+            imagerectangle($img, $width-1, $height-1, 1, 1, $red);
+            imagestring($img,3, 10, 10, "Invalid chart type", $red);
+    }
+
+    // Return a PNG image
+    return $img;
+}
+
+
+/**
+ * Cleans form errors
+ * @author Kieran Hogg
+ * @return nothing
+ */
+function clear_form_errors($formname)
+{
+    unset($_SESSION['formerrors'][$formname]);
+}
+
+
+/**
+ * Cleans form data
+ * @author Kieran Hogg
+ * @return nothing
+ */
+function clear_form_data($formname)
+{
+    unset($_SESSION['formdata'][$formname]);
+}
+
+
+/**
+ * Finds out which scheduled tasks should be run right now
+ * @author Ivan Lucas, Paul Heaney
+ * @return array
+ */
+function schedule_actions_due()
+{
+    global $now;
+    global $dbScheduler;
+
+    $actions = FALSE;
+    $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'interval' ";
+    $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval` <= $now, UNIX_TIMESTAMP(NOW())) ";
+    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        while ($action = mysql_fetch_object($result))
+        {
+            $actions[$action->action] = $actions->params;
+        }
+    }
+
+    // Month
+    $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'date' ";
+    $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND ((date_type = 'month' AND (DAYOFMONTH(CURDATE()) > date_offset OR (DAYOFMONTH(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
+    $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
+    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        while ($action = mysql_fetch_object($result))
+        {
+            $actions[$action->action] = $actions->params;
+        }
+    }
+
+    // Year TODO CHECK
+    $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' ";
+    $sql .= "AND type = 'date' AND UNIX_TIMESTAMP(start) <= $now ";
+    $sql .= "AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND ((date_type = 'year' AND (DAYOFYEAR(CURDATE()) > date_offset ";
+    $sql .= "OR (DAYOFYEAR(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
+    $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
+    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        while ($action = mysql_fetch_object($result))
+        {
+            $actions[$action->action] = $actions->params;
+        }
+    }
+
+    debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
+
+    return $actions;
+}
+
+
+/**
+ * Marks a schedule action as started
+ * @author Paul Heaney
+ * @param string $action. Name of scheduled action
+ * @return boolean Success of update
+ */
+function schedule_action_started($action)
+{
+    global $now;
+
+    $nowdate = date('Y-m-d H:i:s', $now);
+
+    $sql = "UPDATE `{$GLOBALS['dbScheduler']}` SET laststarted = '$nowdate' ";
+    $sql .= "WHERE action = '{$action}'";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(),E_USER_ERROR);
+        return FALSE;
+    }
+    if (mysql_affected_rows() > 0) return TRUE;
+    else return FALSE;
+}
+
+
+/**
+ * Mark a schedule action as done
+ * @author Ivan Lucas
+ * @param string $doneaction. Name of scheduled action
+ * @param bool $success. Was the run successful, TRUE = Yes, FALSE = No
+ */
+function schedule_action_done($doneaction, $success = TRUE)
+{
+    global $now;
+    global $dbScheduler;
+
+    if ($success != TRUE)
+    {
+        trigger('TRIGGER_SCHEDULER_TASK_FAILED', array('schedulertask' => $doneaction));
+    }
+
+    $nowdate = date('Y-m-d H:i:s', $now);
+    $sql = "UPDATE `{$dbScheduler}` SET lastran = '$nowdate' ";
+    if ($success == FALSE) $sql .= ", success=0, status='disabled' ";
+    else $sql .= ", success=1 ";
+    $sql .= "WHERE action = '{$doneaction}'";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(),E_USER_ERROR);
+        return FALSE;
+    }
+    if (mysql_affected_rows() > 0) return TRUE;
+    else return FALSE;
+}
+
+
+/**
+ * Update the current session id with a newly generated one
+ * @author Ivan Lucas
+ * @note Wrap the php function for different versions of php
+ */
+function session_regenerate()
+{
+    if (function_exists('session_regenerate_id'))
+    {
+        if (!version_compare(phpversion(),"5.1.0",">=")) session_regenerate_id(FALSE);
+        else session_regenerate_id();
+    }
+}
+
+
+/**
+ * Outputs the full base url of the install, e.g. http://www.example.com/
+ *
+ * @return string base url of the install
+ * @author Kieran Hogg
+ */
+function application_url()
+{
+    global $CONFIG;
+    if (empty($CONFIG['application_uriprefix']))
+    {
+        $url = parse_url($_SERVER['HTTP_REFERER']);
+        if ($_SERVER['HTTPS'] == 'off' OR empty($_SERVER['HTTPS']))
+        {
+            $baseurl = "http://";
+        }
+        else
+        {
+            $baseurl = "https://";
+        }
+        $baseurl .= "{$_SERVER['HTTP_HOST']}";
+    }
+    else
+    {
+        $baseurl = "{$CONFIG['application_uriprefix']}";
+    }
+    $baseurl .= "{$CONFIG['application_webpath']}";
+
+    return $baseurl;
+}
+
+
+/**
+ * Sets up default triggers for new users or upgraded users
+ *
+ * @param int $userid ID of the user
+ * @return bool TRUE on success, FALSE if not
+ * @author Kieran Hogg
+ */
+function setup_user_triggers($userid)
+{
+    $return = TRUE;
+    $userid = intval($userid);
+    if ($userid != 0)
+    {
+        $sqls[] = "INSERT INTO `{$GLOBALS['dbTriggers']}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`)
+                VALUES('TRIGGER_INCIDENT_ASSIGNED', {$userid}, 'ACTION_NOTICE', 'NOTICE_INCIDENT_ASSIGNED', '', '{userid} == {$userid}');";
+        $sqls[] = "INSERT INTO `{$GLOBALS['dbTriggers']}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`)
+                VALUES('TRIGGER_SIT_UPGRADED', {$userid}, 'ACTION_NOTICE', 'NOTICE_SIT_UPGRADED', '', '');";
+        $sqls[] = "INSERT INTO `{$GLOBALS['dbTriggers']}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`)
+                VALUES('TRIGGER_INCIDENT_CLOSED', {$userid}, 'ACTION_NOTICE', 'NOTICE_INCIDENT_CLOSED', '', '{userid} == {$userid}');";
+        $sqls[] = "INSERT INTO `{$GLOBALS['dbTriggers']}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`)
+                VALUES('TRIGGER_INCIDENT_NEARING_SLA', {$userid}, 'ACTION_NOTICE', 'NOTICE_INCIDENT_NEARING_SLA', '',
+                '{ownerid} == {$userid} OR {townerid} == {$userid}');";
+        $sqls[] = "INSERT INTO `{$GLOBALS['dbTriggers']}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`)
+                VALUES('TRIGGER_LANGUAGE_DIFFERS', {$userid}, 'ACTION_NOTICE', 'NOTICE_LANGUAGE_DIFFERS', '', '');";
+
+
+        foreach ($sqls AS $sql)
+        {
+            mysql_query($sql);
+            if (mysql_error())
             {
                 trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $return = FALSE;
@@ -7551,51 +7836,6 @@ function setup_user_triggers($userid)
     }
 
     return $return;
-}
-
-
-/**
- * Returns the SLA ID of a contract
- *
- * @param int $maintid ID of the contract
- * @return int ID of the SLA
- * @author Kieran Hogg
- */
-function contract_slaid($maintid)
-{
-    $maintid = intval($maintid);
-    $slaid = db_read_column('servicelevelid', $GLOBALS['dbMaintenance'], $maintid);
-    return $slaid;
-}
-
-
-/**
- * Returns the salesperson ID of a site
- *
- * @param int $siteid ID of the site
- * @return int ID of the salesperson
- * @author Kieran Hogg
- */
-function site_salespersonid($siteid)
-{
-    $siteid = intval($siteid);
-    $salespersonid = db_read_column('owner', $GLOBALS['dbSites'], $siteid);
-    return $salespersonid;
-}
-
-
-/**
- * Returns the salesperson's name of a site
- *
- * @param int $siteid ID of the site
- * @return string name of the salesperson
- * @author Kieran Hogg
- */
-function site_salesperson($siteid)
-{
-    $siteid = intval($siteid);
-    $salespersonid = db_read_column('owner', $GLOBALS['dbSites'], $siteid);
-    return user_realname($salespersonid);
 }
 
 
@@ -7632,22 +7872,6 @@ function database_schema_version()
     }
 
     return $return;
-}
-
-
-
-
-/**
- * Returns the contacts's portal username
- *
- * @param int $userid ID of the contact
- * @return string username
- * @author Kieran Hogg
- */
-function contact_username($userid)
-{
-    $userid = intval($userid);
-    return db_read_column('username', $GLOBALS['dbContacts'], $userid);
 }
 
 
@@ -7710,114 +7934,67 @@ function populate_syslang()
 
 
 /**
- * Outputs a contact's contract associate, if the viewing user is allowed
+ * Outputs a table or csv file based on csv-based array
  * @author Kieran Hogg
- * @param int $userid ID of the contact
- * @retval string output html
- * @todo TODO should this be renamed, it has nothing to do with users
+ * @param array $data Array of data, see @note for format
+ * @param string $ouput Whether to show a table or create a csv file
+ * @return string $html The html to produce the output
+ * @note format: $array[] = 'Colheader1,Colheader2'; $array[] = 'data1,data2';
  */
-function user_contracts_table($userid, $mode = 'internal')
+function create_report($data, $output = 'table', $filename = 'report.csv')
 {
-    global $now, $CONFIG, $sit;
-    if ((!empty($sit[2]) AND user_permission($sit[2], 30)
-        OR ($_SESSION['usertype'] == 'admin'))) // view supported products
+    $data = explode("\n", $data);
+    if ($output == 'table')
     {
-        $html .= "<h4>".icon('contract', 16)." {$GLOBALS['strContracts']}:</h4>";
-        // Contracts we're explicit supported contact for
-        $sql  = "SELECT sc.maintenanceid AS maintenanceid, m.product, p.name AS productname, ";
-        $sql .= "m.expirydate, m.term ";
-        $sql .= "FROM `{$GLOBALS['dbContacts']}` AS c, ";
-        $sql .= "`{$GLOBALS['dbSupportContacts']}` AS sc, ";
-        $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, ";
-        $sql .= "`{$GLOBALS['dbProducts']}` AS p ";
-        $sql .= "WHERE c.id = '{$userid}' ";
-        $sql .= "AND (sc.maintenanceid=m.id AND sc.contactid='$userid') ";
-        $sql .= "AND m.product=p.id  ";
-        // Contracts we're an 'all supported' on
-        $sql .= "UNION ";
-        $sql .= "SELECT m.id AS maintenanceid, m.product, p.name AS productname, ";
-        $sql .= "m.expirydate, m.term ";
-        $sql .= "FROM `{$GLOBALS['dbContacts']}` AS c, ";
-        $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, ";
-        $sql .= "`{$GLOBALS['dbProducts']}` AS p ";
-        $sql .= "WHERE c.id = '{$userid}' AND c.siteid = m.site ";
-        $sql .= "AND m.allcontactssupported = 'yes' ";
-        $sql .= "AND m.product=p.id  ";
-
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result)>0)
+        $html = "\n<table align='center'><tr>\n";
+        $headers = explode(',', $data[0]);
+        $rows = sizeof($headers);
+        foreach ($headers as $header)
         {
-            $html .= "<table align='center' class='vertical'>";
-            $html .= "<tr>";
-            $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
-            $html .= "</tr>\n";
+            $html .= colheader($header, $header);
+        }
+        $html .= "</tr>";
 
-            $supportcount = 1;
-            $shade = 'shade2';
-            while ($supportedrow = mysql_fetch_array($result))
-            {
-                if ($supportedrow['term'] == 'yes')
-                {
-                    $shade = 'expired';
-                }
-
-                if ($supportedrow['expirydate'] < $now AND $supportedrow['expirydate'] != -1)
-                {
-                    $shade = 'expired';
-                }
-
-                $html .= "<tr><td class='$shade'>";
-                $html .= ''.icon('contract', 16)." ";
-                if ($mode == 'internal')
-                {
-                    $html .= "<a href='contract_details.php?id=";
-                }
-                else
-                {
-                    $html .= "<a href='contracts.php?id=";
-                }
-                $html .= "{$supportedrow['maintenanceid']}'>";
-                $html .= "{$GLOBALS['strContract']}: ";
-                $html .= "{$supportedrow['maintenanceid']}</a></td>";
-                $html .= "<td class='$shade'>{$supportedrow['productname']}</td>";
-                $html .= "<td class='$shade'>";
-                if ($supportedrow['expirydate'] == -1)
-                {
-                    $html .= $GLOBALS['strUnlimited'];
-                }
-                else
-                {
-                    $html .= ldate($CONFIG['dateformat_date'], $supportedrow['expirydate']);
-                }
-                if ($supportedrow['term'] == 'yes')
-                {
-                    $html .= " {$GLOBALS['strTerminated']}";
-                }
-
-                $html .= "</td>";
-                $html .= "</tr>\n";
-                $supportcount++;
-                $shade = 'shade2';
-            }
-            $html .= "</table>\n";
+        if (sizeof($data) == 1)
+        {
+            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
         }
         else
         {
-            $html .= "<p align='center'>{$GLOBALS['strNone']}</p>\n";
+            // use 1 -> sizeof as we've already done one row
+            for ($i = 1; $i < sizeof($data); $i++)
+            {
+                $html .= "<tr>";
+                $values = explode(',', $data[$i]);
+                foreach ($values as $value)
+                {
+                    $html .= "<td>$value</td>";
+                }
+                $html .= "</tr>";
+            }
         }
+        $html .= "</table>";
+    }
+    else
+    {
+        $html = header("Content-type: text/csv\r\n");
+        $html .= header("Content-disposition-type: attachment\r\n");
+        $html .= header("Content-disposition: filename={$filename}");
 
-        if ($mode == 'internal')
+        foreach ($data as $line)
         {
-            $html .= "<p align='center'>";
-            $html .= "<a href='contract_add_contact.php?contactid={$userid}&amp;context=contact'>";
-            $html .= "{$GLOBALS['strAssociateContactWithContract']}</a></p>\n";
-        }
+            if (!beginsWith($line, "\""))
+            {
+                    $line = "\"".str_replace(",", "\",\"",$line)."\"\r\n";
+            }
 
+            $html .= $line;
+        }
     }
 
     return $html;
 }
+
 
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
@@ -7919,7 +8096,8 @@ function plugin_do($context, $optparams = FALSE)
             }
             elseif (is_array($rtn) AND !is_array($rtnvalue))
             {
-                $rtnvalue=array(); array_push($rtnvalue, $rtn);
+                $rtnvalue = array();
+                array_push($rtnvalue, $rtn);
             }
             else
             {
@@ -7929,708 +8107,6 @@ function plugin_do($context, $optparams = FALSE)
     }
     return $rtnvalue;
 }
-
-
-/**
- * Function passed a day, month and year to identify if this day is defined as a public holiday
- * @author Paul Heaney
- * FIXME this is horribily inefficient, we should load a table ONCE with all the public holidays
-        and then just check that with this function
- */
-function is_day_bank_holiday($day, $month, $year)
-{
-    global $dbHolidays;
-
-    $date = "{$year}-{$month}-{$day}";
-    $sql = "SELECT * FROM `{$dbHolidays}` WHERE type = 10 AND date = '{$date}'";
-
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_ERROR);
-        return FALSE;
-    }
-
-    if (mysql_num_rows($result) > 0) return TRUE;
-    else return FALSE;
-}
-
-
-/**
- * Outputs a table or csv file based on csv-based array
- * @author Kieran Hogg
- * @param array $data Array of data, see @note for format
- * @param string $ouput Whether to show a table or create a csv file
- * @return string $html The html to produce the output
- * @note format: $array[] = 'Colheader1,Colheader2'; $array[] = 'data1,data2';
- */
-function create_report($data, $output = 'table', $filename = 'report.csv')
-{
-    $data = explode("\n", $data);
-    if ($output == 'table')
-    {
-        $html = "\n<table align='center'><tr>\n";
-        $headers = explode(',', $data[0]);
-        $rows = sizeof($headers);
-        foreach ($headers as $header)
-        {
-            $html .= colheader($header, $header);
-        }
-        $html .= "</tr>";
-
-        if (sizeof($data) == 1)
-        {
-            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
-        }
-        else
-        {
-            // use 1 -> sizeof as we've already done one row
-            for ($i = 1; $i < sizeof($data); $i++)
-            {
-                $html .= "<tr>";
-                $values = explode(',', $data[$i]);
-                foreach ($values as $value)
-                {
-                    $html .= "<td>$value</td>";
-                }
-                $html .= "</tr>";
-            }
-        }
-        $html .= "</table>";
-    }
-    else
-    {
-        $html = header("Content-type: text/csv\r\n");
-        $html .= header("Content-disposition-type: attachment\r\n");
-        $html .= header("Content-disposition: filename={$filename}");
-
-        foreach ($data as $line)
-        {
-            if (!beginsWith($line, "\""))
-            {
-                    $line = "\"".str_replace(",", "\",\"",$line)."\"\r\n";
-            }
-
-            $html .= $line;
-        }
-    }
-
-    return $html;
-}
-
-
-/**
- * HTML for an alphabetical index of links
- * @author Ivan Lucas
- * @param string $baseurl start of a URL, the letter will be appended to this
- * @return HTML
- */
-function alpha_index($baseurl = '#')
-{
-    global $i18nAlphabet;
-
-    $html = '';
-    if (!empty($i18nAlphabet))
-    {
-        $len = utf8_strlen($i18nAlphabet);
-        for ($i = 0; $i < $len; $i++)
-        {
-            $html .= "<a href=\"{$baseurl}";
-            $html .= urlencode(utf8_substr($i18nAlphabet, $i, 1))."\">";
-            $html .= utf8_substr($i18nAlphabet, $i, 1)."</a> | \n";
-
-        }
-    }
-    return $html;
-}
-
-
-/**
- * Converts emoticon text to HTML
- * Will only show emoticons if the user has chosen in their settings
- * that they would like to see them, otherwise shows original text
- * @author Kieran Hogg
- * @param string $text. Text with smileys in it
- * @return string HTML
- */
-function emoticons($text)
-{
-    global $CONFIG;
-
-    $html = '';
-    if ($_SESSION['userconfig']['show_emoticons'] == 'TRUE')
-    {
-        $smiley_url = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}images/emoticons/";
-        $smiley_regex = array(0 => "/\:[-]?\)/s",
-                            1 => "/\:[-]?\(/s",
-                            2 => "/\;[-]?\)/s",
-                            3 => "/\:[-]?[pP]/s",
-                            4 => "/\:[-]?@/s",
-                            5 => "/\:[-]?[Oo]/s",
-                            6 => "/\:[-]?\\$/s",
-                            7 => "/\\([Yy]\)/s",
-                            8 => "/\\([Nn]\)/s",
-                            9 => "/\\([Bb]\)/s",
-                            10 => "/\:[-]?[dD]/s"
-                            );
-
-        $smiley_replace = array(0 => "<img src='{$smiley_url}smile.png' alt='$1' title='$1' />",
-                                1 => "<img src='{$smiley_url}sad.png' alt='$1' title='$1' />",
-                                2 => "<img src='{$smiley_url}wink.png' alt='$1' title='$1' />",
-                                3 => "<img src='{$smiley_url}tongue.png' alt='$1' title='$1' />",
-                                4 => "<img src='{$smiley_url}angry.png' alt='$1' title='$1' />",
-                                5 => "<img src='{$smiley_url}omg.png' alt='$1' title='$1' />",
-                                6 => "<img src='{$smiley_url}embarassed.png' alt='$1' title='$1' />",
-                                7 => "<img src='{$smiley_url}thumbs_up.png' alt='$1' title='$1' />",
-                                8 => "<img src='{$smiley_url}thumbs_down.png' alt='$1' title='$1' />",
-                                9 => "<img src='{$smiley_url}beer.png' alt='$1' title='$1' />",
-                                10 => "<img src='{$smiley_url}teeth.png' alt='$1' title='$1' />"
-                                );
-
-        $html = preg_replace($smiley_regex, $smiley_replace, $text);
-    }
-    else
-    {
-        $html = $text;
-    }
-
-    return $html;
-}
-
-
-/**
- * Inserts a new incident update
- * @param int $incidentid ID of the incident to add the update to
- * @param string $text The text of the update
- * @param enum $type (Optional) Update type (Default: 'default'), types:
- * 'default', 'editing', 'opening', 'email', 'reassigning', 'closing',
- * 'reopening', 'auto', 'phonecallout', 'phonecallin', 'research', 'webupdate',
- * 'emailout', 'emailin', 'externalinfo', 'probdef', 'solution', 'actionplan',
- * 'slamet', 'reviewmet', 'tempassigning', 'auto_chase_email',
- * 'auto_chase_phone', 'auto_chase_manager', 'auto_chased_phone',
- * 'auto_chased_manager', 'auto_chase_managers_manager',
- * 'customerclosurerequest', 'fromtask'
- * @param string $sla The SLA the update meets
- * @param int $userid (Optional) ID of the user doing the updating (Default: 0)
- * @param int $currentowner (Optional) ID of the current incident owner
- * @param int $currentstatus (Optional) Current incident status (Default: 1 = active)
- * @param enum $visibility (Optional) Whether to 'show' or 'hide' in the portal (Default: 'show')
- * @author Kieran Hogg
- */
-function new_update($incidentid, $text, $type = 'default', $sla = '', $userid = 0, $currentowner = '',
-                    $currentstatus = 1, $visibility = 'show')
-{
-    global $now;
-    $text = cleanvar($text);
-    $sql  = "INSERT INTO `{$GLOBALS['dbUpdates']}` (incidentid, userid, ";
-    $sql .= "type, bodytext, timestamp, currentowner, currentstatus, ";
-    $sql .= "customervisibility, sla) VALUES ('{$incidentid}', '{$userid}', ";
-    $sql .= "'{$type}', '{$text}', '{$now}', '{$currentowner}', ";
-    $sql .= "'{$currentstatus}', '{$visibility}', '{$sla}')";
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        return FALSE;
-    }
-    else
-    {
-        return mysql_insert_id();
-    }
-}
-
-
-/**
- * Create a new holding queue item
- * @param int $updateid ID of the associated update entry
- * @param string $from Name of the from field
- * @param string $subject Subject of the item
- * @param string $emailfrom Email address the item is from
- * @param int $contactid (Optional) Contact ID of the sender
- * @param int $incidentid (Optional) Associated incident ID
- * @param int $locked (Optional) 1 if the item is locked, 0 if not
- * @param time $lockeduntil (Optional) MySQL timestamp of lock expiration
- * @param string $reason (Optional) Reason the item is in the holding queue
- * @param id $reason_user (Optional) The user ID who set the reason
- * @param time $reason_time (Optional) MySQL timestamp of when the reason was set
- * @author Kieran Hogg
- */
-function create_temp_incoming($updateid, $from, $subject, $emailfrom,
-                              $contactid = '', $incidentid = 0, $locked = '',
-                              $lockeduntil = '', $reason = '',
-                              $reason_user = '', $reason_time = '')
-{
-    global $dbTempIncoming;
-    $sql = "INSERT INTO `{$dbTempIncoming}`(updateid, `from`, subject, ";
-    $sql .= "emailfrom, contactid, incidentid, locked, lockeduntil, ";
-    $sql .= "reason, reason_user, reason_time) VALUES('{$updateid}', ";
-    $sql .= "'{$from}', '{$subject}', '{$emailfrom}', '{$contactid}', ";
-    $sql .= "'{$incidentid}', '{$locked}', '{$lockeduntil}', '{$reason}', ";
-    $sql .= "'{$reason_user}', '{$reason_time}')";
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        return FALSE;
-    }
-    else
-    {
-        return mysql_insert_id();
-    }
-}
-
-
-
-/**
- * Detect whether an array is associative
- * @param array $array
- * @note From http://uk.php.net/manual/en/function.is-array.php#77744
- */
-function is_assoc($array)
-{
-    return is_array($array) && count($array) !== array_reduce(array_keys($array), 'is_assoc_callback', 0);
-}
-
-
-/**
- * Detect whether an array is associative
- * @param various $a
- * @param various $b
- * @note Callback function, Called by is_assoc()
-         From http://uk.php.net/manual/en/function.is-array.php#77744
- */
-function is_assoc_callback($a, $b)
-{
-    return $a === $b ? $a + 1 : 0;
-}
-
-
-
-/**
- * HTML for a config variable input box
- * @author Ivan Lucas
- * @param string $setupvar The setup variable key name
- * @param int $userid UserID or 0 for system config
- * @param bool $showvarnames Whether to display the config variable name
- * @return string HTML
- */
-function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
-{
-    global $CONFIG, $CFGVAR;
-
-    if ($userid == 'current') $userid = $_SESSION['userid'];
-
-    if ($CFGVAR[$setupvar]['type'] == 'languageselect'
-        OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
-    {
-        $available_languages = available_languages();
-    }
-    elseif ($CFGVAR[$setupvar]['type'] == 'userlanguageselect')
-    {
-        if (!empty($CONFIG['available_i18n']))
-        {
-            $available_languages = i18n_code_to_name($CONFIG['available_i18n']);
-        }
-        else
-        {
-            $available_languages = available_languages();
-        }
-        $available_languages = array_merge(array(''=>$GLOBALS['strDefault']),$available_languages);
-    }
-    elseif ($CFGVAR[$setupvar]['type'] == 'timezoneselect')
-    {
-        global $availabletimezones;
-    }
-
-    $html .= "<div class='configvar'>";
-    if ($CFGVAR[$setupvar]['title'] != '') $title = $CFGVAR[$setupvar]['title'];
-    else $title = $setupvar;
-    $html .= "<h4>{$title}</h4>";
-    if ($CFGVAR[$setupvar]['help']!='') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
-
-    $value = '';
-    if (!$cfg_file_exists OR ($cfg_file_exists AND $cfg_file_writable))
-    {
-        if ($userid > 0)
-        {
-            $value = $_SESSION['userconfig'][$setupvar];
-        }
-        else
-        {
-            $value = $CONFIG[$setupvar];
-        }
-        if (is_bool($value))
-        {
-            if ($value == TRUE) $value = 'TRUE';
-            else $value = 'FALSE';
-        }
-        elseif (is_array($value))
-        {
-            if (is_assoc($value))
-            {
-                $value = "array(".implode_assoc('=>',',',$value).")";
-            }
-            else
-            {
-                $value="array(".implode(',',$value).")";
-            }
-        }
-        if ($setupvar=='db_password' AND $_REQUEST['action']!='reconfigure') $value='';
-    }
-    $value = stripslashes($value);
-    switch ($CFGVAR[$setupvar]['type'])
-    {
-        case 'select':
-            $html .= "<select name='{$setupvar}' id='{$setupvar}'>";
-            if (empty($CFGVAR[$setupvar]['options'])) $CFGVAR[$setupvar]['options'] = "TRUE|FALSE";
-            $options = explode('|', $CFGVAR[$setupvar]['options']);
-            foreach ($options AS $option)
-            {
-                $html .= "<option value=\"{$option}\"";
-                if ($option == $value) $html .= " selected='selected'";
-                $html .= ">{$option}</option>\n";
-            }
-            $html .= "</select>";
-            break;
-        case 'checkbox':
-            // Checkbox values are stored 'TRUE' / 'FALSE'
-            if ($value == 'TRUE')
-            {
-                $state = TRUE;
-            }
-            else
-            {
-                $state = FALSE;
-            }
-            $html .= "<label>";
-            $html .= html_checkbox($setupvar, $state, 'TRUE');
-            $html .= " {$title}</label>";
-            break;
-        case 'percent':
-            $html .= "<select name='{$setupvar}' id='{$setupvar}'>";
-            for($i = 0; $i <= 100; $i++)
-            {
-                $html .= "<option value=\"{$i}\"";
-                if ($i == $value) $html .= " selected='selected'";
-                $html .= ">{$i}</option>\n";
-            }
-            $html .= "</select>%";
-            break;
-        case 'interfacestyleselect':
-            $html .= interfacestyle_drop_down($setupvar, $value);
-            break;
-        case 'userlanguageselect':
-        case 'languageselect':
-            if (empty($value)) $value = $_SESSION['lang'];
-            $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE);
-            break;
-        case 'languagemultiselect':
-            if (empty($value))
-            {
-                foreach ($available_languages AS $code => $lang)
-                {
-                    $value[] = $code;
-                }
-                $checked = TRUE;
-            }
-            else
-            {
-                $checked = FALSE;
-                $replace = array('array(', ')', "'");
-                $value = str_replace($replace, '',  $value);
-                $value = explode(',', $value);
-            }
-            $html .= array_drop_down($available_languages, $setupvar, $value, '', TRUE, TRUE);
-            $attributes = "onchange=\"toggle_multiselect('{$setupvar}[]')\"";
-            $html .= "<label>".html_checkbox($setupvar.'checkbox', $checked, "");
-            $html .= $GLOBALS['strAll']."</label>";
-            break;
-        case 'slaselect':
-            $html .= serviceleveltag_drop_down($setupvar, $value, TRUE);
-            break;
-        case 'userselect':
-            $html .= user_drop_down($setupvar, $value, FALSE, FALSE, '', TRUE);
-            break;
-        case 'siteselect':
-            $html .= site_drop_down($setupvar, $value, FALSE);
-            break;
-        case 'timezoneselect':
-            if ($value == '') $value = 0;
-            foreach ($availabletimezones AS $offset=>$tz)
-            {
-                $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
-                $availtz[$offset] = $tz;
-            }
-            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
-            break;
-        case 'timezoneselect':
-            if ($value == '') $value = 0;
-            foreach ($availabletimezones AS $offset=>$tz)
-            {
-                $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
-                $availtz[$offset] = $tz;
-            }
-            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
-            break;
-        case 'userstatusselect':
-            $html .= userstatus_drop_down($setupvar, $value);
-            break;
-        case 'roleselect':
-            $html .= role_drop_down($setupvar, $value);
-            break;
-        case 'number':
-            $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='7' value=\"{$value}\" />";
-            break;
-        case '1darray':
-            $replace = array('array(', ')', "'");
-            $value = str_replace($replace, '',  $value);
-            $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}' size='60' value=\"{$value}\" />";
-           break;
-        case '2darray':
-            $replace = array('array(', ')', "'", '\r','\n');
-            $value = str_replace($replace, '',  $value);
-            $value = str_replace(',', "\n", $value);
-            $html .= "<textarea name='{$setupvar}' id='{$setupvar}' cols='60' rows='10'>{$value}</textarea>";
-            break;
-        case 'password':
-            $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
-            break;
-        case 'ldappassword':
-            $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
-            $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
-            break;
-        case 'textreadonly':
-            $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
-            break;
-        case 'text':
-        default:
-            if (strlen($CONFIG[$setupvar]) < 65)
-            {
-                $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" />";
-            }
-            else
-            {
-                $html .= "<textarea name='{$setupvar}' id='{$setupvar}' cols='60' rows='10'>{$value}</textarea>";
-            }
-    }
-    if (!empty($CFGVAR[$setupvar]['unit'])) $html .= " {$CFGVAR[$setupvar]['unit']}";
-    if (!empty($CFGVAR[$setupvar]['helplink'])) $html .= ' '.help_link($CFGVAR[$setupvar]['helplink']);
-    if ($setupvar == 'db_password' AND $_REQUEST['action'] != 'reconfigure' AND $value != '')
-    {
-        $html .= "<p class='info'>The current password setting is not shown</p>";
-    }
-
-    if ($showvarnames)
-    {
-        if ($userid < 1)
-        {
-            $html .= "<br />(<var>\$CONFIG['$setupvar']</var>)";
-        }
-        else
-        {
-            $html .= "<br />(<var>userconfig: '$setupvar'</var>)";
-        }
-    }
-
-    if ($CFGVAR[$setupvar]['statusfield'] == 'TRUE')
-    {
-        $html .= "<div id='status{$setupvar}'></div>";
-    }
-
-    $html .= "</div>";
-    $html .= "<br />\n";
-    if ($c == 1) $c == 2;
-    else $c = 1;
-
-    return $html;
-}
-
-
-/**
- * Save configuration
- * @param array $setupvars. An array of setup variables $setupvars['setting'] = 'foo';
- * @param int $userid. If set saves to the user configuration, otherwise saves
-                        to system configuration.
- * @todo  TODO, need to make setup.php use this  INL 5Dec08
- * @author Ivan Lucas
- */
-function cfgSave($setupvars, $userid = 0)
-{
-    global $dbConfig, $dbUserConfig;
-    if ($userid == 'current')
-    {
-        $userid = $_SESSION['userid'];
-    }
-    foreach ($setupvars AS $key => $value)
-    {
-        if ($userid < 1)
-        {
-            $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
-        }
-        else
-        {
-            $sql = "REPLACE INTO `{$dbUserConfig}` (`userid`, `config`, `value`) VALUES ('{$userid}', '{$key}', '{$value}')";
-        }
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
-    }
-    return TRUE;
-}
-
-
-
-/**
- * HTML for a hyperlink to hide/reveal a password field
- * @author Ivan Lucas
- */
-function password_reveal_link($id)
-{
-    $html = "<a href=\"javascript:password_reveal('$id')\" id=\"link{$id}\">{$GLOBALS['strReveal']}</a>";
-    return $html;
-}
-
-
-function holding_email_update_id($holding_email)
-{
-    $holding_email = intval($holding_email);
-    return db_read_column('updateid', $GLOBALS['dbTempIncoming'], $holding_email);
-}
-
-
-function delete_holding_queue_update($updateid)
-{
-    $sql = "DELETE FROM {$GLOBALS['dbTempIncoming']} WHERE updateid = '{$updateid}'";
-    mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }
-}
-
-
-function num_unread_emails()
-{
-    global $dbTempIncoming;
-    $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
-    list($count) = mysql_fetch_row($result);
-    return $count;
-}
-
-
-/**
- * Checks whether an KB article exists and/or the user is allowed to view is
- * @author Kieran Hogg
- * @param $id int ID of the KB article
- * @param $mode string 'public' for portal users, 'private' for internal users
- * @return bool Whether we are allowed to see it or not
- */
-function is_kb_article($id, $mode)
-{
-    $rtn = FALSE;
-    global $dbKBArticles;
-    $id = cleanvar($id);
-    if ($id > 0)
-    {
-        $sql = "SELECT distribution FROM `{$dbKBArticles}` ";
-        $sql .= "WHERE docid = '{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
-        list($visibility) = mysql_fetch_row($result);
-        if ($visibility == 'public' && $mode == 'public')
-        {
-            $rtn = TRUE;
-        }
-        else if (($visibility == 'private' OR $visibility == 'restricted') AND
-                 $mode == 'private')
-        {
-            $rtn = TRUE;
-        }
-    }
-    return $rtn;
-}
-
-
-/**
- * Generates a feedback form hash
- * @author Kieran Hogg
- * @param $formid int ID of the form to use
- * @param $contactid int ID of the contact to send it to
- * @param $incidentid int ID of the incident the feedback is about
- * @return string the hash
- */
-function feedback_hash($formid, $contactid, $incidentid)
-{
-    $hashtext = urlencode($formid)."&&".urlencode($contactid)."&&".urlencode($incidentid);
-    $hashcode4 = str_rot13($hashtext);
-    $hashcode3 = gzcompress($hashcode4);
-    $hashcode2 = base64_encode($hashcode3);
-    $hashcode1 = trim($hashcode2);
-    $hashcode = urlencode($hashcode1);
-    return $hashcode;
-}
-
-
-function qtype_listbox($type)
-{
-    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
-
-    $html .= "<select name='type'>\n";
-    $html .= "<option value='rating'";
-    if ($type == 'rating') $html .= " selected='selected'";
-    $html .= ">{$strRating}</option>";
-
-    $html .= "<option value='options'";
-    if ($type=='options') $html .= " selected='selected'";
-    $html .= ">{$strOptions}</option>";
-
-    $html .= "<option value='multioptions'";
-    if ($type == 'multioptions') $html .= " selected='selected'";
-    $html .= ">{$strMultipleOptions}</option>";
-
-    $html .= "<option value='text'";
-    if ($type == 'text') $html .= " selected='selected'";
-    $html .= ">{$strText}</option>";
-
-    $html .= "</select>\n";
-
-    return $html;
-}
-
-
-
-function feedback_qtype_listbox($type)
-{
-    global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
-
-    $html .= "<select name='type'>\n";
-    $html .= "<option value='rating'";
-    if ($type == 'rating') $html .= " selected='selected'";
-    $html .= ">{$strRating}</option>";
-
-    $html .= "<option value='options'";
-    if ($type == 'options') $html .= " selected='selected'";
-    $html .= ">{$strOptions}</option>";
-
-    $html .= "<option value='multioptions'";
-    if ($type == 'multioptions') $html .= " selected='selected'";
-    $html .= ">{$strMultipleOptions}</option>";
-
-    $html .= "<option value='text'";
-    if ($type == 'text') $html .= " selected='selected'";
-    $html .= ">{$strText}</option>";
-
-    $html .= "</select>\n";
-
-    return $html;
-}
-
 
 
 // ** Place no more function defs below this **

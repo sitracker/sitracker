@@ -43,7 +43,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     </documentation>
 
 {/metadocument}
-*/
+ */
 
 class rfc822_addresses_class
 {
@@ -77,7 +77,7 @@ class rfc822_addresses_class
         </documentation>
     </variable>
 {/metadocument}
-*/
+ */
     var $error = '';
 
 /*
@@ -94,7 +94,7 @@ class rfc822_addresses_class
         </documentation>
     </variable>
 {/metadocument}
-*/
+ */
     var $error_position = -1;
 
 /*
@@ -116,7 +116,7 @@ class rfc822_addresses_class
         </documentation>
     </variable>
 {/metadocument}
-*/
+ */
     var $ignore_syntax_errors=1;
 
 /*
@@ -137,7 +137,7 @@ class rfc822_addresses_class
         </documentation>
     </variable>
 {/metadocument}
-*/
+ */
     var $warnings=array();
 
     /* Private functions */
@@ -841,7 +841,7 @@ class rfc822_addresses_class
         </argument>
         <do>
 {/metadocument}
-*/
+ */
     Function ParseAddressList($value, &$addresses)
     {
         $this->warnings = array();
@@ -872,7 +872,7 @@ class rfc822_addresses_class
         </do>
     </function>
 {/metadocument}
-*/
+ */
 
 };
 
@@ -882,6 +882,6 @@ class rfc822_addresses_class
 </class>
 {/metadocument}
 
-*/
+ */
 
 ?>

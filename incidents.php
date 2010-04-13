@@ -21,8 +21,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-require (APPLICATION_LIBPATH . 'incident.inc.php');
-
 // External variables
 $type = cleanvar($_REQUEST['type']);
 $user = cleanvar($_REQUEST['user']);
@@ -101,7 +99,7 @@ switch ($type)
         }
         $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id ";
         $sql .= "AND owner > 0 ";  // We always need to have an owner which is not sit
-        if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";       
+        if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";
         if (!empty($softwareid)) $sql .= "AND softwareid='$softwareid' ";
 
         if (!empty($maintexclude)) $sql .= "AND i.maintenanceid != '{$maintexclude}' ";
@@ -158,7 +156,7 @@ switch ($type)
             else $sortorder = "DESC";
             switch ($sort)
             {
-                case 'id': 
+                case 'id':
                     $sql .= " ORDER BY id {$sortorder}";
                     break;
                 case 'title':

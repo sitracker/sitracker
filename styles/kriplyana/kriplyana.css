@@ -1,11 +1,18 @@
 /* Kriplyana (Inuit word): snow that looks blue in the early morning  */
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
-#masthead { background-color: #4B5C94; background-image: none;}
+#masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; }
+#masthead a { color: #EAF4F9;}
+#masthead a:hover {color: white; }
 #masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
 #mastheadcontent { background-image: none; }
-h1 { background-image: none; font-weight: lighter; }
+h1 { background-image: none; font-weight: lighter; padding-top: 11px; }
 #apptitle {background-image: none; }
+
+#topsearch #searchfield {
+  border:1px solid #8F9DC5;
+  color: #EAF4F9;
+}
 
 #mainframe { background: transparent;}
 h1 { color: #fff; }
@@ -44,6 +51,7 @@ div.windowtitle
   width: 100%;
 }
 .windowtitle a { color: white; font-weight: normal;}
+div.windowtitle img { vertical-align: -30%; }
 div.window
 {
     width: 98%;
@@ -65,6 +73,24 @@ div#tail
     margin: 0px 20px;
 }
 div#tail strong { color: #A12607; }
+a.info span { display: none; z-index: 100; overflow: hidden; }
+a.info:hover span
+{
+  background: #4470A1;
+  color: #EAEFFF;
+  border: 1px solid #4570A1;
+  padding: 2px 4px;
+  width: auto;
+  max-width: 35em;
+  -moz-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
+  filter:alpha(opacity=85);
+  opacity: 0.85;
+  -moz-opacity:0.85;
+}
+
+a.info:hover span strong { color: #FFF;}
 
 input.required, select.required{
   background-color: #FFEDED;
@@ -81,3 +107,9 @@ span.helplink a { color: #109810;}
 
 .droptarget { border: 1px dashed #FFC0FF;}
 
+div#statusbar { background-color: #4B5C94; }
+div#statusbar img { vertical-align: text-bottom; }
+div#statusbar strong { color:#fff;}
+#statusbar a { text-decoration: none; color: #FFF; }
+#statusbar a:hover { text-decoration: underline; }
+#statusbar a:active { text-decoration: underline; }

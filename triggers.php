@@ -126,25 +126,46 @@ function switch_template()
 
 <?php
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
-echo "<div id='newtrigger'><p>When... ";
-echo "<select id='triggertype'>";
-foreach($trigger_types as $name => $trigger)
-{
-    echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>";
-}
-echo "</select>";
+// BEGIN TESTING CODE
+//$t = new TriggerEvent('TRIGGER_SIT_UPGRADED', array());
 
-echo "<select id='new_action' onchange='switch_template()'>";
-foreach($actionarray as $name => $action)
-{
-    echo "<option id='{$name}' value='{$name}'>{$action['description']}</option>";
-}
-echo "</select>";
+$t = new Trigger('TRIGGER_INCIDENT_CLOSED', 1, 'EMAIL_INCIDENT_CLOSURE', 'ACTION_EMAIL', '', '');
+echo $t->debug();
+// $t2 = Trigger::byID(5);
+// $t2->debug();
+echo triggers_to_html();
 
-echo "<span id='emailtemplatesbox' style='display:none'>";
-echo email_templates('emailtemplate')."</span>";
-echo "<span id='noticetemplatesbox' style='display:none'>";
-echo notice_templates('noticetemplate')."</span>";
+//END TESTING CODE
+// if (!empty($_POST['triggertype']))
+// {
+//     print_r($_POST);
+// }
+// else
+// {
+//     echo "<div id='newtrigger'>";
+//     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
+//     echo "<p>When... ";
+//     echo "<select id='triggertype' name='triggertype'>";
+//     foreach($trigger_types as $name => $trigger)
+//     {
+//         echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
+//     }
+//     echo "</select>";
+// 
+//     echo "<select id='new_action' name='new_action' onchange='switch_template()'>";
+//     foreach($actionarray as $name => $action)
+//     {
+//         echo "<option id='{$name}' value='{$name}'>{$action['description']}</option>\n";
+//     }
+//     echo "</select>";
+// 
+//     echo "<span id='emailtemplatesbox' style='display:none'>";
+//     echo email_templates('emailtemplate')."</span>";
+//     echo "<span id='noticetemplatesbox' style='display:none'>";
+//     echo notice_templates('noticetemplate')."</span>";
+//     echo " <input type='submit' name='submit' value='{$strAdd}' /></form>";
+// }
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 
 ?>
