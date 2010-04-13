@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $title = $strBrowseContracts;
-$pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+$pagescripts = array('AutoComplete.js');
 
 // External variables
 $productid = cleanvar($_REQUEST['productid']);

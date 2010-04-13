@@ -181,7 +181,8 @@ function gravatar($email, $size = 32, $hyperlink = TRUE)
     $grav_url .= "&amp;rating=G";
 
     if ($hyperlink) $html = "<a href='http://site.gravatar.com/'>";
-    $html .= "<img src='{$grav_url}' width='{$size}' height='{$size}' alt='' />";
+    $html .= "<img src='{$grav_url}' width='{$size}' height='{$size}' alt='' ";
+    $html .= "class='gravatar' />";
     if ($hyperlink) $html .= "</a>";
 
     return $html;
@@ -468,9 +469,9 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $icon .= " id=\"{$id}\"";
     }
-    
+
     $icon .= " width=\"{$size}\" height=\"{$size}\" ";
-    
+
     $icon .= " />";
 
     return $icon;
@@ -504,7 +505,7 @@ function date_picker($formelement)
   * @return string HTML javascript block
   * @note The page that calls this function MUST include the required
   * javascript libraries. e.g.
-  *   $pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+  *   $pagescripts = array('AutoComplete.js');
  */
 function autocomplete($formelement, $action = 'autocomplete_sitecontact')
 {
