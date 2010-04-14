@@ -29,7 +29,7 @@ if ($action == 'new')
     echo "<tr><th><h3>{$strNotice}</h3></th>";
     echo "<td>";
     echo bbcode_toolbar('noticetext');
-    echo "<textarea id='noticetext' cols='60' rows='4' name='text'></textarea><br />";
+    echo "<input type='text' id='noticetext' size='60' maxlength='255' name='text' /><br />";
     echo "</td></tr>";
     echo "<tr><th><label for='durability'>{$strDurability}:</label></th>";
     echo "<td><select name='durability'><option value='sticky'>{$strSticky}</option><option value='session'>{$strSession}</option></select></td></tr>";
