@@ -9,14 +9,14 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 // Note: if performance is poor with attachments, we should download attachments
-//       with the function in fetchSitMail.class.php
+//       with the function in mail.class.php
 // Note2: to be called from auto.php
 
 require_once ('core.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 require (APPLICATION_LIBPATH . 'mime_parser.inc.php');
 require (APPLICATION_LIBPATH . 'rfc822_addresses.inc.php');
-require (APPLICATION_LIBPATH . 'fetchSitMail.class.php');
+require (APPLICATION_LIBPATH . 'mailbox.class.php');
 
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
@@ -104,10 +104,10 @@ if ($CONFIG['enable_inbound_mail'] == 'MTA')
 }
 elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
 {
-    $mailbox = new fetchSitMail($CONFIG['email_username'], $CONFIG['email_password'],
-                                $CONFIG['email_address'], $CONFIG['email_server'],
-                                $CONFIG['email_servertype'], $CONFIG['email_port'],
-                                $CONFIG['email_options']);
+    $mailbox = new Mailbox($CONFIG['email_username'], $CONFIG['email_password'],
+                           $CONFIG['email_address'], $CONFIG['email_server'],
+                           $CONFIG['email_servertype'], $CONFIG['email_port'],
+                           $CONFIG['email_options']);
 
 
     if (!$mailbox->connect())
