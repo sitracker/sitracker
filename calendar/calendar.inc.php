@@ -266,8 +266,10 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
         $html .= "<div class='appointment' onclick=\"appointment('app{$user}{$year}{$month}{$day}{$time}');\">";
         $html .= "<div id='app{$user}{$year}{$month}{$day}{$time}' class='appointmentdata'>";
         $html .= "<h2><a href=\"javascript:void(0);\">[X]</a> {$year}-{$month}-{$day} {$time}</h2>";
-        if ($mode=='book')
+        if ($mode == 'book')
+        {
             $html .= "<a href='holiday_add.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length={$time}'>{$GLOBALS['strBookHoliday']}</a><br />";
+        }
 //         else $html .= "<a href=''>Cancel Holiday</a><br />";
 //          TODO: Add the ability to cancel holiday from the holiday planner
         $html .= "</div>";
@@ -294,7 +296,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     if ($mode == 'month')
     {
         $day = 1;
-        $daysinmonth = date('t',mktime(0,0,0, $month, $day, $year));
+        $daysinmonth = date('t',mktime(0, 0, 0, $month, $day, $year));
         $lastday = $daysinmonth;
         $daywidth = 1;
     }
@@ -312,13 +314,13 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     }
     else
     {
-        $daysinmonth = date('t',mktime(0,0,0,$month,$day,$year));
+        $daysinmonth = date('t',mktime(0, 0, 0, $month, $day, $year));
         $lastday = $daysinmonth;
         $daywidth = 1;
     }
 
-    $startdate = mktime(0,0,0,$month,$day,$year);
-    $enddate  = mktime(23,59,59,$month,$lastday,$year);
+    $startdate = mktime(0, 0, 0, $month, $day, $year);
+    $enddate  = mktime(23, 59, 59, $month, $lastday, $year);
 
     // Get list of user groups
     $gsql = "SELECT * FROM `{$GLOBALS['dbGroups']}` ORDER BY name";
@@ -356,7 +358,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     $numusers = mysql_num_rows($uresult);
-    $prevgroupid = '000';
+    $prevgroupid = '-1';
     if ($numusers > 0)
     {
         $hdays = array();
@@ -388,30 +390,37 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
 
             if ($prevgroupid != $user->groupid)
             {
-                if ($user->groupid=='') $user->groupid=0;
+                if ($user->groupid == '') $user->groupid = 0;
                 $html .= "<tr>";
                 $html .= "<td align='left' colspan='2' class='shade2'>{$GLOBALS['strGroup']}: <strong>{$grouparr[$user->groupid]}</strong></td>";
                 for($cday = $day; $cday <= $lastday; $cday++)
                 {
-                    $shade='shade1';
-                    if (date('D',mktime(0,0,0,$month,$cday,$year))=='Sat')
+                    $shade = 'shade1';
+                    if (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat')
                     {
                         $shade = 'expired';
-                        $html .= "<td class='$shade' style='text-align: center; font-size: 80%; border-left: 1px solid black;'><strong title='Week Number' >wk<br />".substr(date('W',mktime(0,0,0,$month,$cday,$year))+1,0, 1)."".substr(date('W',mktime(0,0,0,$month,$cday,$year))+1,1, 1)."</strong></td>";
+                        $html .= "<td class='$shade' style='text-align: center; font-size: 80%; border-left: 1px solid black;'>";
+                        $html .= "<strong title='Week Number' >wk<br />";
+                        $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1, 0, 1, 'UTF-8');
+                        $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1,1, 1, 'UTF-8')."</strong></td>";
                     }
-                    elseif (date('D',mktime(0,0,0,$month,$cday,$year)) == 'Sun')
+                    elseif (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun')
                     {
                         $html .= '';  // nothing
                     }
                     else
                     {
                         $html .= "<td align='center' class=\"$shade\"";
-                        if (mktime(0,0,0,$month,$cday,$year)==mktime(0,0,0,date('m'),date('d'),date('Y'))) $html .= " style='background: #FFFF00;' title='Today'";
+                        if (mktime(0, 0, 0, $month, $cday, $year) == mktime(0, 0, 0, date('m'), date('d'), date('Y')))
+                        {
+                            $html .= " style='background: #FFFF00;' title='Today'";
+                        }
+
                         $html .= ">";
-                        $html .= substr(ldate('l',gmmktime(0,0,0,$month,$cday,$year)),0,$daywidth)."<br />";
+                        $html .= mb_substr(ldate('l', gmmktime(0, 0, 0, $month, $cday, $year)), 0, $daywidth, 'UTF-8')."<br />";
                         if ($mode == 'day')
                         {
-                            $html .= ldate('dS F Y',gmmktime(0,0,0,$month,$cday,$year));
+                            $html .= ldate('dS F Y', gmmktime(0, 0, 0, $month, $cday, $year));
                         }
                         else
                         {
@@ -431,17 +440,18 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
             for($cday = $day; $cday <= $lastday; $cday++)
             {
                 $shade = 'shade1';
-                if ((date('D',mktime(0,0,0,$month,$cday,$year))=='Sat' OR date('D',mktime(0,0,0,$month,$cday,$year))=='Sun'))
+                if ((date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat' 
+                        OR date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun'))
                 {
                     // Add  day on for a weekend
                     if ($weekend == FALSE) $displaydays += 1;
                     $weekend = TRUE;
                 }
-                if (date('D',mktime(0,0,0,$month,$cday,$year))=='Sat')
+                if (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat')
                 {
                     $html .= "<td class='expired'>&nbsp;</td>";
                 }
-                elseif (date('D',mktime(0,0,0,$month,$cday,$year))=='Sun')
+                elseif (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun')
                 {
                     // Do nothing on sundays
                 }
@@ -451,13 +461,13 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                     if ($hdays[$cday] == 'am' OR $hdays[$cday] == 'day')
                     {
                         if ($happroved[$cday] == HOL_APPROVAL_NONE
-                            OR $happroved[$cday]==HOL_APPROVAL_NONE_ARCHIVED)
+                            OR $happroved[$cday] == HOL_APPROVAL_NONE_ARCHIVED)
                         {
                             $html .= "<td class='review'>";  // Waiting approval
                         }
                         elseif ($htypes[$cday] <= 4
                                 AND ($happroved[$cday] == HOL_APPROVAL_GRANTED
-                                OR $happroved[$cday]==HOL_APPROVAL_GRANTED_ARCHIVED))
+                                OR $happroved[$cday] == HOL_APPROVAL_GRANTED_ARCHIVED))
                         {
                             $html .= "<td class='idle'>"; // Approved
                         }
@@ -483,7 +493,8 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                             $html .= appointment_popup('cancel', $year, $month, $cday, 'am', $group, $user->id);
                         }
 
-                        $html .= "<span title='{$holidaytype[$htypes[$cday]]}'>".substr($holidaytype[$htypes[$cday]],0,$daywidth)."</span>";
+                        $html .= "<span title='{$holidaytype[$htypes[$cday]]}'>";
+                        $html .= mb_substr($holidaytype[$htypes[$cday]], 0, $daywidth, 'UTF-8')."</span>";
                         // This plugin function takes an optional param with an associative array containing the day
                         $pluginparams = array('plugin_calendar' => $plugin_calendar,
                                               'year'=> $year,
@@ -527,17 +538,17 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
             for ($cday = $day; $cday <= $lastday; $cday++)
             {
                 $shade='shade1';
-                if ((date('D',mktime(0,0,0,$month,$cday,$year)) == 'Sat' OR date('D',mktime(0,0,0,$month,$cday,$year))=='Sun'))
+                if ((date('D',mktime(0, 0, 0, $month, $cday, $year)) == 'Sat' OR date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun'))
                 {
                     // Add  day on for a weekend
                     if ($weekend == FALSE) $displaydays += 1;
                     $weekend = TRUE;
                 }
-                if (date('D',mktime(0,0,0,$month,$cday,$year)) == 'Sat')
+                if (date('D',mktime(0, 0, 0, $month, $cday, $year)) == 'Sat')
                 {
                     $html .= "<td class='expired'>&nbsp;</td>";
                 }
-                elseif (date('D',mktime(0,0,0,$month,$cday,$year)) == 'Sun')
+                elseif (date('D',mktime(0, 0, 0, $month, $cday, $year)) == 'Sun')
                 {
                     // Do nothing on sundays
                 }
@@ -547,13 +558,13 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                     if ($hdays[$cday] == 'pm' OR $hdays[$cday] == 'day')
                     {
                         if ($happroved[$cday] == HOL_APPROVAL_NONE
-                            OR $happroved[$cday]==HOL_APPROVAL_NONE_ARCHIVED)
+                            OR $happroved[$cday] == HOL_APPROVAL_NONE_ARCHIVED)
                         {
                             $html .= "<td class='review'>";  // Waiting approval
                         }
                         elseif ($htypes[$cday] <= 4
                                 AND ($happroved[$cday] == HOL_APPROVAL_GRANTED
-                                OR $happroved[$cday]==HOL_APPROVAL_GRANTED_ARCHIVED))
+                                OR $happroved[$cday] == HOL_APPROVAL_GRANTED_ARCHIVED))
                         {
                             $html .= "<td class='idle'>"; // Approved
                         }
@@ -565,7 +576,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                         }
                         elseif ($htypes[$cday] == HOL_FREE
                                 AND ($happroved[$cday] == HOL_APPROVAL_GRANTED
-                                OR $happroved[$cday]== HOL_APPROVAL_GRANTED_ARCHIVED))
+                                OR $happroved[$cday] == HOL_APPROVAL_GRANTED_ARCHIVED))
                         {
                             $html .= "<td class='notice'>"; // Approved Free
                         }
@@ -579,7 +590,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                             $html .= appointment_popup('cancel', $year, $month, $cday, 'pm', $group, $user->id);
                         }
 
-                        $html .= "<span title='{$holidaytype[$htypes[$cday]]}'>".substr($holidaytype[$htypes[$cday]],0,$daywidth)."</span>";
+                        $html .= "<span title='{$holidaytype[$htypes[$cday]]}'>".mb_substr($holidaytype[$htypes[$cday]], 0, $daywidth, 'UTF-8')."</span>";
                         // This plugin function takes an optional param with an associative array containing the day
                         $pluginparams = array('plugin_calendar' => $plugin_calendar,
                                               'year'=> $year,
@@ -592,11 +603,17 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                     }
                     else
                     {
-                        if ($pubholdays[$cday] == 'pm' OR $pubholdays[$cday] == 'day') $html .= "<td class='expired'>PH</td>";
+                        if ($pubholdays[$cday] == 'pm' OR $pubholdays[$cday] == 'day')
+                        {
+                            $html .= "<td class='expired'>PH</td>";
+                        }
                         else
                         {
                             $html .= "<td class='shade2'>";
-                            if ($user->id == $sit[2]) $html .= appointment_popup('book', $year, $month, $cday, 'pm', $group, $user->id);
+                            if ($user->id == $sit[2])
+                            {
+                                $html .= appointment_popup('book', $year, $month, $cday, 'pm', $group, $user->id);
+                            }
                             $html .= '&nbsp;';
                             // This plugin function takes an optional param with an associative array containing the day
                             $pluginparams = array('plugin_calendar' => $plugin_calendar,
@@ -667,13 +684,13 @@ function month_select($month, $year, $params = '')
         }
 
         $html .= "<a href='{$SERVER['PHP_SELF']}?display=month&amp;month=$cmonth&amp;year=$cyear$params'>";
-        $html .= ldate('M y',gmmktime(0,0,0,$cmonth,1,$cyear))."</a>";
-        if (gmmktime(0,0,0,$cmonth,1,$cyear) == gmmktime(0,0,0,$month,1,$year))
+        $html .= ldate('M y',gmmktime(0, 0, 0, $cmonth, 1, $cyear))."</a>";
+        if (gmmktime(0, 0, 0, $cmonth, 1, $cyear) == gmmktime(0, 0, 0, $month, 1, $year))
         {
             $html .= "</span>";
         }
 
-        if (gmmktime(0,0,0,$cmonth,1,$cyear) == gmmktime(0,0,0,date('m'),1,date('Y')))
+        if (gmmktime(0, 0, 0, $cmonth, 1, $cyear) == gmmktime(0, 0, 0, date('m'), 1, date('Y')))
         {
             $html .= "</span>";
         }
@@ -695,6 +712,7 @@ function month_select($month, $year, $params = '')
     return $html;
 }
 
+
 function appointment_type_dropdown($type, $display)
 {
     global $holidaytype;
@@ -711,6 +729,7 @@ function appointment_type_dropdown($type, $display)
     $html .= "</select></form>";
     return $html;
 }
+
 
 function get_users_appointments($user, $start, $end)
 {
