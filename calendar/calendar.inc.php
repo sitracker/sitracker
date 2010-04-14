@@ -358,7 +358,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     $numusers = mysql_num_rows($uresult);
-    $prevgroupid = '000';
+    $prevgroupid = '-1';
     if ($numusers > 0)
     {
         $hdays = array();
@@ -390,13 +390,13 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
 
             if ($prevgroupid != $user->groupid)
             {
-                if ($user->groupid=='') $user->groupid=0;
+                if ($user->groupid == '') $user->groupid = 0;
                 $html .= "<tr>";
                 $html .= "<td align='left' colspan='2' class='shade2'>{$GLOBALS['strGroup']}: <strong>{$grouparr[$user->groupid]}</strong></td>";
                 for($cday = $day; $cday <= $lastday; $cday++)
                 {
-                    $shade='shade1';
-                    if (date('D',mktime(0,0,0,$month,$cday,$year))=='Sat')
+                    $shade = 'shade1';
+                    if (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat')
                     {
                         $shade = 'expired';
                         $html .= "<td class='$shade' style='text-align: center; font-size: 80%; border-left: 1px solid black;'>";
@@ -404,14 +404,14 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                         $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1, 0, 1, 'UTF-8');
                         $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1,1, 1, 'UTF-8')."</strong></td>";
                     }
-                    elseif (date('D',mktime(0,0,0,$month,$cday,$year)) == 'Sun')
+                    elseif (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun')
                     {
                         $html .= '';  // nothing
                     }
                     else
                     {
                         $html .= "<td align='center' class=\"$shade\"";
-                        if (mktime(0,0,0,$month,$cday,$year) == mktime(0,0,0,date('m'),date('d'),date('Y')))
+                        if (mktime(0, 0, 0, $month, $cday, $year) == mktime(0, 0, 0, date('m'), date('d'), date('Y')))
                         {
                             $html .= " style='background: #FFFF00;' title='Today'";
                         }
