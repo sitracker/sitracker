@@ -16,7 +16,7 @@ require_once ('core.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 require (APPLICATION_LIBPATH . 'mime_parser.inc.php');
 require (APPLICATION_LIBPATH . 'rfc822_addresses.inc.php');
-require (APPLICATION_LIBPATH . 'mail.class.php');
+require (APPLICATION_LIBPATH . 'mailbox.class.php');
 
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
