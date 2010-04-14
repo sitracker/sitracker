@@ -25,9 +25,6 @@ $productid = cleanvar($_REQUEST['productid']);
 $display = cleanvar($_REQUEST['display']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
-// echo "<p id='pageoptions'><a href='javascript:toggleMenuPanel();' title='{$strMenu}'>";
-// echo "".icon('auto', 16)."</a></p>";
 
 if (empty($productid) AND $display!='skills')
 {

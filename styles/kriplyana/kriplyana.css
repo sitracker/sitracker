@@ -1,11 +1,25 @@
 /* Kriplyana (Inuit word): snow that looks blue in the early morning  */
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
-#masthead { background-color: #4B5C94; background-image: none;}
+#masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; }
+#masthead a { color: #EAF4F9;}
+#masthead a:hover {color: white; }
 #masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
 #mastheadcontent { background-image: none; }
-h1 { background-image: none; font-weight: lighter; }
+h1 { background-image: none; font-weight: lighter; padding-top: 11px; text-align: left; margin-left: 4em; }
 #apptitle {background-image: none; }
+#topsearch { top: -18px; }
+#topsearch #searchfield {
+  border:1px solid #4471A1;
+  color: #8F9DC5;
+  background:transparent url('../kriplyana/searchbgdark.png') no-repeat scroll 4px center;
+}
+#topsearch #searchfield:hover
+{
+  background:transparent url('../kriplyana/searchbg.png') no-repeat scroll 4px center;
+  border:1px solid #8F9DC5;
+  color: #EAF4F9;
+}
 
 #mainframe { background: transparent;}
 h1 { color: #fff; }

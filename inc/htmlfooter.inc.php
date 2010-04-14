@@ -16,10 +16,11 @@ if ($_SESSION['auth'] == TRUE) echo " {$application_version_string}";
 echo "</strong>";
 if ($_SESSION['auth'] == TRUE)
 {
-    echo " running ";
-    if ($CONFIG['demo']) echo "in DEMO mode ";
-    echo "on ".strip_tags($_SERVER["SERVER_SOFTWARE"]);
-    echo " at ".ldate('H:i',$now, FALSE);
+    if ($CONFIG['demo']) echo " (DEMO)";
+    echo ' ';
+    $serversoftware = strip_tags($_SERVER["SERVER_SOFTWARE"]);
+    printf($strRunningOn, $serversoftware, ldate('H:i',$now, FALSE));
+
 }
 echo "</div>\n";
 if ($_SESSION['auth'] == TRUE

@@ -126,7 +126,6 @@ else
 {
     //show form
     $title = $strEditKBArticle;
-    $pagescripts = array('scriptaculous/scriptaculous.js','scriptaculous/effects.js');
     require (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     if ($mode == 'edit')

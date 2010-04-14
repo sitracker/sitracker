@@ -1,3 +1,45 @@
+*V1.8.3* (October 8, 2009)
+
+* Update to Prototype 1.6.1
+
+* Effect.toggle to return effect (to be able to do Effect.toggle(element, 'appear', {sync: true});)  [RStankov]
+
+* Use element.identify() for fetching element.id in Sortable.create  [RStankov]
+
+* Fix deprecated usage of Position.cumulativeOffset. [#182 state:resolved]  [James Wheare]
+
+* Make loader work for application/xhtml+xml served documents.  Closes #95.  [Pavel Sedek]
+
+* Check for Windows Media plugin and RealPlayer plugin in Firefox on Windows to allow sound playback.  Closes #36, #86.  [Alexander Gavazov et al.]
+
+* Remove dead code in effects.js.  Closes #125.  [Confusioner]
+
+*V1.8.2* (November 18, 2008)
+
+* Update to Prototype 1.6.0.3
+
+* Make sure InPlaceEditor converts HTML entities to text.  [Sean Kirby]
+
+* Fix that Builder.node did not return extended elements on IE.  Closes #71 and #77. 
+
+* Fix a bug in Sortable.destroy to make sure it's called on the referenced Sortable only, which allows for the correct intialization of nested Sortables. Closes Trac #8615.  [Leon Chevalier]
+
+* Change Effect.Base#render not to use eval(), so certain JavaScript runtime environments (like Adobe AIR) that do not support eval() work.  [King Maxemilian, John-David Dalton]
+
+* Fixed a calculation error in Effect.Transitions.pulse that could lead to flickering, add easing and change it to be a normal 0 to 1 transition that can be used with any effects; Effect.Pulsate now uses its own implementation.  [Thomas Fuchs]
+
+* Fixed Effect.ScrollTo. Changeset 8686 had a typo, document.viewport.getScrollOffsets[0] is always undefined. Removed the max check as it is not a cross-browser way to get scroll height and breaks the effect. Depending on scrollTo to do the right thing.  Closes #11306.  [Nick Stakenburg]
+
+* Update version check so all Prototype versions can be required, not just x.x.x.  Closes #10966.  [Nick Stakenburg]
+
+* Using $$ in the loader instead of getElementsByTagName to prevent limitations.  Closes #9032.  [Nick Stakenburg]
+
+* Fix some missing semicolons.  [jdalton]
+
+* Fix an issue with Effect.ScrollTo that caused Firefox to scroll to the wrong offset in some situations. Closes #10245.  [nik.wakelin]
+
+* Fixes an issue with IE ghosting on non-absolute elements. Closes #10423.  [Tanrikut, tdd]
+
 *V1.8.1* (January 3, 2008)
 
 * Fix Element#getStyles in IE. Closes #10563. [Tobie Langel]

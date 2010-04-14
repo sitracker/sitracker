@@ -394,7 +394,7 @@ if ($emails > 0)
             $c = 1;
             foreach ($attachments AS $att)
             {
-                $headertext .= "[[att={$att['fileid']}]]{$att['filename']}[[/att]]";
+                $headertext .= "[[att={$att['fileid']}]]".htmlspecialchars(mysql_real_escape_string($att['filename']))."[[/att]]";
                 if ($c < $count_attachments) $headertext .= ", ";
                 $c++;
             }
@@ -534,17 +534,21 @@ if ($emails > 0)
 
         // Create a link between the files and the update
         // We need to update the links table here as otherwise we have a blank
-        // updateid
-        foreach ($attachments AS $att)
+        // updateid.
+        // We check first that we have an updateid so that we don't fail here
+        // if something else failed above.
+        if ($updateid > 0)
         {
-            $sql = "UPDATE `{$GLOBALS['dbLinks']}` SET origcolref = '{$updateid}' ";
-            $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
-            $sql .= "AND linktype = 5 ";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            debug_log("Creating a link between $updateid and file {$att['fileid']}");
+            foreach ($attachments AS $att)
+            {
+                $sql = "UPDATE `{$GLOBALS['dbLinks']}` SET origcolref = '{$updateid}' ";
+                $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
+                $sql .= "AND linktype = 5 ";
+                mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                debug_log("Creating a link between $updateid and file {$att['fileid']}");
+            }
         }
-
         unset($headertext, $newupdate, $attachments, $attachment, $updateobj,
             $bodytext, $message, $incidentid);
     }

@@ -18,7 +18,8 @@ function dashboard_holidays($dashletid)
     echo "<div class='windowbox' style='width: 95%;' id='$dashletid'>";
     echo "<div class='windowtitle'>".icon('holiday', 16)." {$GLOBALS['strWhosAwayToday']}</div>";
     echo "<div class='window'>";
-    $sql  = "SELECT * FROM `{$dbUsers}` WHERE status!=0 AND status!=1 ";  // status=0 means left company
+    $sql  = "SELECT * FROM `{$dbUsers}` WHERE status != ".USERSTATUS_ACCOUNT_DISABLED;
+    $sql . " AND status != ".USERSTATUS_IN_OFFICE;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >=1)
@@ -32,19 +33,19 @@ function dashboard_holidays($dashletid)
             if (!empty($users['message'])) $title.= "\n(".$users['message'].")";
 
             echo "<strong>{$users['realname']}</strong>, $title";
-            echo "<br />";
+            echo "<br />\n";
         }
     }
     else echo "<p align='center'>{$GLOBALS['strNobody']}</p>\n";
-    echo "</div></div></div>";
+    echo "</div></div></div>\n\n";
 }
 
 function dashboard_holidays_get_version()
 {
-global $dashboard_holidays_version;
-return $dashboard_holidays_version;
+    global $dashboard_holidays_version;
+    return $dashboard_holidays_version;
 }
-	
-	
+
+
 
 ?>

@@ -16,7 +16,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+$pagescripts = array('AutoComplete.js');
 
 $title = $strBrowseSites;
 
