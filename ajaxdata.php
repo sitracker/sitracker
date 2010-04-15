@@ -328,20 +328,33 @@ switch ($action)
     $triggertype = cleanvar($_REQUEST['triggertype']);
     if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
     if (is_array($trigger_types[$triggertype]['params']))
-    {   
+    {
+        echo '<p align="left">Notify when: ';
+		echo "<select><option>all conditions are met</option>";
+		echo "<option>any conditions are met</option></select></p>";
+		echo "<table>";  
         foreach ($trigger_types[$triggertype]['params'] as $param)
         {
-            if (is_numeric($ttvararray['{'.$param.'}'])) $ttvararray['{'.$param.'}'] = $ttvararray[0]['{'.$param.'}'];
+        	// if we return a number here, the variable is multiply-defined;
+        	// as the replacements are the same, we use the first one
+            if (is_array($ttvararray['{'.$param.'}']) AND
+                is_numeric(key($ttvararray['{'.$param.'}']))) 
+            {
+            	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
+            	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
+            }
             if (isset($ttvararray['{'.$param.'}']['checkreplace'])) 
             {
-                echo 'Only notify when ';
-                echo $ttvararray['{'.$param.'}']['description']. ' is ';
-                echo $ttvararray['{'.$param.'}']['checkreplace']()."<br />";
+                echo '<tr>';
+                echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
+                echo '<td>'.check_match_drop_down($param, $param). '</td>';
+                echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']($param.'value', $param.'value')."</td></tr>";
             }
         }
+        echo '</table>';
     }
 //     if ($html == " ") $html = "No variables available for this action.";
-//     echo $html;
+    echo " ";
     break;
 
     default : 

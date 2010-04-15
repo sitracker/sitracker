@@ -835,7 +835,7 @@ $strIncidentsRequiringReminderByPhone = 'Incidents requiring a reminder by phone
 $strIncidentsVerbOnDate = 'Incidents %s on %s';
 # e.g. Incidents opened between 2007-12-03 and 2007-12-04
 $strIncidentsVerbBetweenDates = 'Incidents %s between %s and %s';
-$strIncidentOwnerID = 'Incident owner\'s ID';
+$strIncidentOwner = 'Incident owner';
 $strIncidentOwnersFullName = 'Full name of the person who owns the incident';
 $strIncidentOwnersEmail = 'Email address of the incident owner';
 $strIncidentsUsed = 'Incidents Used';
@@ -902,6 +902,7 @@ $strJustNow = 'Just Now';
 
 # Abbreviation for Knowledge base
 $strKBabbr = 'KB';
+$strKBArticle = 'KB article';
 $strKBytes = 'KBytes';
 $strKBID = 'ID of the knowledge base article';
 $strKeepCurrentLanguage = 'Keep current language';
