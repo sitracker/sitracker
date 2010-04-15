@@ -80,6 +80,7 @@ $strAddNew = 'Add New';
 $strAddNewSiteContact = 'Add New Site Contact';
 $strAddNewSupportedContact = 'Add new supported contact';
 $strAddNote = 'Add Note';
+$strAddNotification = 'Add Notification';
 $strAddProduct = 'Add Product';
 $strAddProductInformation = 'Add Product Information';
 $strAddProductQuestion = 'Add Product Questions';

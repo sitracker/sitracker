@@ -324,6 +324,26 @@ switch ($action)
         }
         break;
 
+    case 'checkhtml':
+    $triggertype = cleanvar($_REQUEST['triggertype']);
+    if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
+    if (is_array($trigger_types[$triggertype]['params']))
+    {   
+        foreach ($trigger_types[$triggertype]['params'] as $param)
+        {
+            if (is_numeric($ttvararray['{'.$param.'}'])) $ttvararray['{'.$param.'}'] = $ttvararray[0]['{'.$param.'}'];
+            if (isset($ttvararray['{'.$param.'}']['checkreplace'])) 
+            {
+                echo 'Only notify when ';
+                echo $ttvararray['{'.$param.'}']['description']. ' is ';
+                echo $ttvararray['{'.$param.'}']['checkreplace']()."<br />";
+            }
+        }
+    }
+//     if ($html == " ") $html = "No variables available for this action.";
+//     echo $html;
+    break;
+
     default : 
         plugin_do('ajaxdata_add_action', array('action' => $action));
         break;

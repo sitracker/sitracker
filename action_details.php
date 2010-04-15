@@ -11,7 +11,7 @@
 $permission = 71;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'trigger.class.php');   
+require (APPLICATION_LIBPATH . 'trigger.class.php'); 
 //This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -36,8 +36,58 @@ function resetRules()
     $('rules').value = '';
 }
 
+function get_checks()
+{
+      var xmlhttp=false;
+
+      if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+      {
+          try
+          {
+              xmlhttp = new XMLHttpRequest();
+          }
+          catch (e)
+          {
+              xmlhttp=false;
+          }
+      }
+      if (!xmlhttp && window.createRequest)
+      {
+          try
+          {
+              xmlhttp = window.createRequest();
+          }
+          catch (e)
+          {
+              xmlhttp=false;
+          }
+      }
+      var triggertype = $('triggertype').value;
+      var url =  "ajaxdata.php";
+      var params = "action=checkhtml&triggertype="+triggertype;;
+      xmlhttp.open("POST", url, true)
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlhttp.setRequestHeader("Content-length", params.length);
+      xmlhttp.setRequestHeader("Connection", "close");
+      xmlhttp.send(params);
+
+      xmlhttp.onreadystatechange=function()
+      {
+          if (xmlhttp.readyState==4)
+          {
+              if (xmlhttp.responseText != '')
+              {
+                  //alert(xmlhttp.responseText);
+                  $("checkshtml").update(xmlhttp.responseText);
+                  alert(xmlhttp.responseText);
+              }
+          }
+      }
+}
+
 function switch_template()
 {
+    get_checks();
     //FIXME functionise the js here
     if ($('new_action').value == 'ACTION_NOTICE')
     {
@@ -242,7 +292,24 @@ else
     echo "<span id='noticetemplatesbox' style='display:none'>";
     echo "<h3>Step three</h3> ";
     echo notice_templates('noticetemplate')."</span></p>";
+    echo '<h3>Step four</h3>';
+    echo "<p>This action has variables associated with it, you can add a rule to only fire in certain circumstances.</p>";
+    echo "<p>E.g. The action for 'When an incident is assigned' has two variables, {userid} and {userstatus}.</p><p>
+    If you leave the check blank, you will receive a notification every time an incident is assigned. If you set {userid} to your own, you will only get a notification when you are assigned an incident. If you set {userstatus} to 'Out of Office', you will receive a notification every time an incident is assigned to a user who is out of the office. You can use more than one variable in a check.</p>";
+    echo "<input onblur='get_checks()' />";
+    echo "<div id='checkshtml'></div>";
     echo "<br /><p><input type='submit' name='submit' value='{$strAdd}' /></p></form>";
+
+//     foreach ($ttvararray as $trigger => $data)
+//     {
+//         if (is_numeric($trigger)) $data = $data[0];
+//         if (isset($data['checkreplace'])) 
+//         {
+//             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
+//         }
+//     }
+
+
 }
 
 ?>
