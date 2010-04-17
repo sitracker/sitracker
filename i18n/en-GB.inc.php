@@ -568,6 +568,7 @@ $strEmailHolidaysRequestedDesc = 'Notifies a user that they need to approve holi
 $strEmailServiceLevelDesc = 'Notifies the site\'s salesperson when the value drops below a certain limit';
 $strEmailIncidentUpdatedCustomerDesc = 'Sent to a customer when an engineer updated an incident';
 $strEmailSupportEmailDesc = 'Used by default when you send an email from an incident';
+$strEnableCondition = 'Enable condition';
 $strEnabled = 'Enabled';
 $strEndDate = 'End Date';
 $strEndOfLife = 'End of Life';

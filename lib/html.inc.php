@@ -693,7 +693,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
  * @param bool $userdisable. (optional). When TRUE an additional option is given to allow disabling of accounts
  * @return string. HTML
  */
-function userstatus_drop_down($name, $id, $userdisable = FALSE)
+function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
 {
     global $dbUserStatus;
     // extract statuses

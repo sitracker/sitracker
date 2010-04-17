@@ -13,9 +13,27 @@ require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php'); 
 //This page requires authentication
+$permission = 72;
+$trigger_mode = 'user';
+if (isset($_GET['user']))
+{
+    //FIXME perms
+    if ($_GET['user'] == 'admin')
+    {
+        $user_id = 0;
+        $trigger_mode = 'system';
+    }
+    else
+    {
+        $user_id = intval($_GET['user']);
+    }
+}
+else
+{
+    $user_id = $sit[2];
+}
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$adminuser = user_permission($sit[2],22); //Admin user
 $title = 'New Triggers Interface';
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 ($_GET['user'] == 'admin') ? $user = 0 : $user = $sit[2];
@@ -229,29 +247,39 @@ else
 {
     $mode = 'new';
 }
-$trigger_mode = 'user';
-if (isset($_GET['user']))
-{
-    //FIXME perms
-    if ($_GET['user'] == 'admin')
-    {
-        $user_id = 0;
-        $trigger_mode = 'system';
-    }
-    else
-    {
-        $user_id = intval($_GET['user']);
-    }
-}
-else
-{
-    $user_id = $sit[2];
-}
-
 
 if (!empty($_POST['triggertype']))
 {
-    print_r($_POST);
+    $param_count = sizeof($_POST['param']);
+    for ($i = 0; $i < $param_count; $i++)
+    {
+    	if ($_POST['enabled'][$i] == 'on')
+    	{
+    		$checks[$i] = "{".$_POST['param'][$i]."}";
+    		if ($_POST['join'][$i] == 'is') $checks[$i] .= "==";
+    		elseif ($_POST['join'][$i] == 'is not') $checks[$i] .= "==";
+    		elseif ($_POST['join'][$i] == 'contains') $check[$i] .= "!=";
+    		$checks[$i] .= $_POST['value'][$i];
+    	}
+    }
+    
+    $check_count = sizeof($checks);
+        for ($i = 0; $i < $check_count; $i++)
+        {
+            $final_check .= $checks[0];
+            if ($i != $check_count - 1)
+            {
+                if ($_POST['conditions'] == 'all')
+                {
+                    $final_check .= " AND ";
+                }
+                else
+                {
+                    $final_check .= " OR ";
+                }
+            }
+        }   
+    echo $final_check;
 }
 else
 {
@@ -259,12 +287,13 @@ else
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     echo "<h3>Action</h3>";
+    echo $trigger_mode;
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach($trigger_types as $name => $trigger)
     {
         if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
-            ($trigger['type'] == 'user' OR !isset($trigger['type'])))
+            (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
         {
             echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
         }

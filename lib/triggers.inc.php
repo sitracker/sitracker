@@ -1089,7 +1089,6 @@ function triggers_to_html($user_id, $trigger_id = '')
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
-
     $html = "<table class='vertical'>";
     $html .= "<tr><th>Trigger</th><th>Actions</th></tr>";
     $i = 1;
@@ -1120,7 +1119,7 @@ function trigger_to_html($trigger, $user_id)
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($row = mysql_fetch_object($result))
     {
-        $t = Trigger::byID($row->id);
+        $t = Trigger::fromID($row->id);
         $html .= trigger_action_to_html($t);
     }
     return $html;
@@ -1212,9 +1211,9 @@ function template_description($name, $type)
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
  */
-function check_match_drop_down($id = '', $name = '')
+function check_match_drop_down($id = '')
 {
-	$html = "<select id='{$id}' name='{$name}'>";
+	$html = "<select id='{$id}' name='{$id}'>";
     $html .= "<option>is</option>";
     $html .= "<option>is not</option>";
     $html .= "<option>contains</option>";
