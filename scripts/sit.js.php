@@ -187,7 +187,6 @@ function checkLDAPDetails(statusfield)
     }
     xmlhttp.send(params);
 }
-
 ";
 
 

@@ -283,13 +283,13 @@ function save_layout(){
 
 
 echo "<div id='footerbar'>";
-echo "<form action='{$_SERVER['PHP_SELF']}'>";
-echo "{$strSetYourStatus}: ";
-if (isset($sit[2]))
-{
-   echo userstatus_bardrop_down("status", user_status($sit[2])).help_link("SetYourStatus");
-}
-echo "</form>\n";
+//echo "<form action='{$_SERVER['PHP_SELF']}'>";
+//echo "{$strSetYourStatus}: ";
+//if (isset($sit[2]))
+//{
+//   echo userstatus_bardrop_down("status", user_status($sit[2])).help_link("SetYourStatus");
+//}
+//echo "</form>\n";
 echo "</div>\n";
 if ($CONFIG['debug']) $dbg .= "\nLang: {$_SESSION['lang']}\n";
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
