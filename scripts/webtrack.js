@@ -940,9 +940,9 @@ function set_user_status()
                 {
                     if (response != 'FALSE')
                     {
-                        $('userstatus').show();
                         $('userstatus_summaryline').innerHTML = response;
                         $('status_drop_down').hide();
+                        $('userstatus').appear();
                     }
                 }
             },
