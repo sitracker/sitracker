@@ -63,14 +63,14 @@ if ($action == "showform" OR $action=='')
     echo "<input type='radio' value='all' name='contacts' />";
     echo "{$strAllSiteContactsSupported}";
     echo "</td></tr>\n";
-    echo "<tr><th>{$strProduct} <sup class='red'>*</sup></th><td>";
+    echo "<tr><th>{$strProduct}</th><td>";
     if ($_SESSION['formdata']['add_contract']['product'] != '')
     {
-        echo product_drop_down("product", $_SESSION['formdata']['add_contract']['product'])."</td></tr>\n";
+        echo product_drop_down("product", $_SESSION['formdata']['add_contract']['product'], TRUE)." {$strRequired} </td></tr>\n";
     }
     else
     {
-        echo product_drop_down("product", 0)."</td></tr>\n";
+        echo product_drop_down("product", 0, TRUE)." {$strRequired}</td></tr>\n";
     }
 
     echo "<tr><th>{$strServiceLevel}</th><td>";
