@@ -16,7 +16,7 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require_once (APPLICATION_LIBPATH . 'mime.inc.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 
-/**
+ /**
  * Receives the Trigger Event and finds the appropriate trigger to fire
  */
 class TriggerEvent {
