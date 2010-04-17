@@ -1223,15 +1223,21 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
  * @param int $id. Vendor ID to preselect
+ * @param bool $required whether the field is required
  * @return HTML select
  */
-function vendor_drop_down($name, $id)
+function vendor_drop_down($name, $id, $required = FALSE)
 {
     global $dbVendors;
     $sql = "SELECT id, name FROM `{$dbVendors}` ORDER BY name ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $html = "<select name='$name'>";
+    $html = "<select name='$name'";
+    if ($required)
+    {
+        $html .= " class='required' ";
+    }
+    $html .= ">";
     if ($id == 0)
     {
         $html .= "<option selected='selected' value='0'></option>\n";
