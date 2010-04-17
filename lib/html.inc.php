@@ -1441,7 +1441,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
  * @param bool $return. Whether to return to HTML or echo
  * @param bool $showonlyactive. True show only active (with a future expiry date), false shows all
  */
-function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return = FALSE, $showonlyactive = FALSE, $adminid = '')
+function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return = FALSE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
 {
     global $GLOBALS, $now;
     // TODO make maintenance_drop_down a hierarchical selection box sites/contracts
@@ -1459,6 +1459,11 @@ function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return
     if ($adminid != '')
     {
       $sql .= "AND admincontact = '{$adminid}' ";
+    }
+	
+    if ($sla !== FALSE)
+    {
+        $sql .= "AND servicelevelid = '{$sla}' ";
     }
 
     $sql .= "ORDER BY s.name ASC";
@@ -1480,7 +1485,14 @@ function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return
             {
                 $html .= "selected='selected' ";
             }
-            $html .= "value='{$maintenance->id}'>{$maintenance->sitename} | {$maintenance->productname}</option>";
+            if (!empty($siteid))
+            {
+                $html .= "value='{$maintenance->id}'>{$maintenance->productname}</option>";
+            }
+            else
+            {
+                $html .= "value='{$maintenance->id}'>{$maintenance->sitename} | {$maintenance->productname}</option>";
+            }
             $html .= "\n";
             $results++;
         }

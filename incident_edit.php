@@ -54,6 +54,8 @@ if (empty($submit))
         else echo "{$strIncidentNoContract}. ";
         echo "{$strToChangeContract}.";
         echo "</td></tr>\n";
+        echo "<tr><th>{$strContract}</th></td><td>";
+        echo maintenance_drop_down('contract', $incident['maintenanceid'], contact_siteid($incident['contact']), '', TRUE, TRUE, '', incident_slaid($incident['id']))."</td></tr>\n";
         echo "<tr><th>{$strContact}</th><td>";
         echo contact_drop_down("contact", $incident["contact"], TRUE)."</td></tr>\n";
         flush();

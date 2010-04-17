@@ -217,4 +217,22 @@ function all_contact_contracts($contactid, $siteid)
 }
 
 
+/**
+ * Returns the SLA ID of an incident
+ *
+ * @param int $incidentid ID of the incident
+ * @return int ID of the SLA
+ * @author Kieran Hogg
+ */
+function incident_slaid($incidentid)
+{
+    global $dbIncidents, $dbServiceLevels;
+    $incidentid = intval($incidentid);
+    $slatag = db_read_column('servicelevel', $dbIncidents, $incidentid);
+    $sql = "SELECT id FROM `{$dbServiceLevels}` WHERE tag = '{$slatag}' LIMIT 1";
+    $result = mysql_query($sql);
+    list($id) = mysql_fetch_array($result);
+    return $id;
+}
+
 ?>
