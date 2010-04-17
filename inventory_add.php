@@ -71,7 +71,7 @@ else
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' value='{$row->name}' />";
-    echo "<span class='required'>{$strRequired}</span></td></tr>";
+    echo " <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strType}</th>";
     echo "<td>".array_drop_down($CONFIG['inventory_types'], 'type', $row->type, '', TRUE)."</td></tr>";
 

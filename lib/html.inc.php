@@ -1223,15 +1223,21 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
  * @param int $id. Vendor ID to preselect
+ * @param bool $required whether the field is required
  * @return HTML select
  */
-function vendor_drop_down($name, $id)
+function vendor_drop_down($name, $id, $required = FALSE)
 {
     global $dbVendors;
     $sql = "SELECT id, name FROM `{$dbVendors}` ORDER BY name ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $html = "<select name='$name'>";
+    $html = "<select name='$name'";
+    if ($required)
+    {
+        $html .= " class='required' ";
+    }
+    $html .= ">";
     if ($id == 0)
     {
         $html .= "<option selected='selected' value='0'></option>\n";
@@ -3477,7 +3483,7 @@ function show_edit_site($site, $mode='internal')
         $html .= "<table align='center' class='vertical'>";
         $html .= "<tr><th>{$GLOBALS['strName']}:</th>";
         $html .= "<td><input class='required' maxlength='50' name='name' size='40' value='{$siterow['name']}' />";
-        $html .= "<span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
+        $html .= " <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
         if ($mode == 'internal')
         {
             $html .= "<tr><th>{$GLOBALS['strTags']}:</th><td><textarea rows='2' cols='60' name='tags'>";
@@ -3501,8 +3507,8 @@ function show_edit_site($site, $mode='internal')
         $html .= "<tr><th>{$GLOBALS['strFax']}:</th><td>";
         $html .= "<input maxlength='255' name='fax' size='40' value='{$siterow['fax']}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strEmail']}:</th><td>";
-        $html .= "<input class='required' maxlength='255' name='email' size='40' value='{$siterow['email']}' />";
-        $html .= "<span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
+        $html .= "<input maxlength='255' name='email' size='40' value='{$siterow['email']}' />";
+        $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strWebsite']}:</th><td>";
         $html .= "<input maxlength='255' name='websiteurl' size='40' value='{$siterow['websiteurl']}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strSiteType']}:</th><td>\n";
@@ -3637,7 +3643,7 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     {
         $html .= "value='{$_SESSION['formdata']['add_contact']['email']}'";
     }
-    $html .= "/><span class='required'>{$GLOBALS['strRequired']}</span> ";
+    $html .= "/> <span class='required'>{$GLOBALS['strRequired']}</span> ";
 
     $html .= "<label>";
     $html .= html_checkbox('dataprotection_email', 'No');

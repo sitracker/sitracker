@@ -912,3 +912,17 @@ function togglecontactaddress()
     $('country').disabled = setting;
     $('postcode').disabled = setting;
 }
+
+function status_drop_down(mode)
+{
+    if (mode == true)
+    {
+        $('userstatus').hide();
+        $('status_drop_down').show();
+    }
+    else
+    {
+        $('userstatus').show();
+        $('status_drop_down').hide();
+    }
+}

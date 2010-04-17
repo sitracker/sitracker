@@ -31,10 +31,9 @@ if (empty($submit))
     echo show_form_errors('add_vendor');
     clear_form_errors('add_vendor');
     echo "<h2>{$strAddVendor}</h2>";
-    echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table align='center' class='vertical'>";
-    echo "<tr><th>{$strVendorName}<sup class='red'>*</sup></th><td><input maxlength='50' name='name' size='30' /></td></tr>\n";
+    echo "<tr><th>{$strVendorName}</th><td><input maxlength='50' name='name' size='30' class='required'> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "</table>";
     echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
