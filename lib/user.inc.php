@@ -971,10 +971,10 @@ function set_user_status($newstatus)
     $sql .= " WHERE id='{$_SESSION['userid']}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-debug_log("setting status: $sql");
+    debug_log("setting status: $sql");
     incident_backup_switchover($_SESSION['userid'], $accepting);
 
-    trigger("TRIGGER_USER_CHANGED_STATUS", array('userid' => $_SESSION['userid']));
+    $t = new TriggerEvent("TRIGGER_USER_CHANGED_STATUS", array('userid' => $_SESSION['userid']));
 
     return userstatus_summaryline($newstatus, $accepting);
 }
