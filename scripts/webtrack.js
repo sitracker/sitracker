@@ -913,8 +913,16 @@ function togglecontactaddress()
     $('postcode').disabled = setting;
 }
 
-function status_drop_down()
+function status_drop_down(mode)
 {
-    $('userstatus').hide();
-    $('status_drop_down').show();
+    if (mode == true)
+    {
+        $('userstatus').hide();
+        $('status_drop_down').show();
+    }
+    else
+    {
+        $('userstatus').show();
+        $('status_drop_down').hide();
+    }
 }
