@@ -119,7 +119,7 @@ if ($sit[0] != '')
     echo icon('configure', 12, $strSetYourStatus)."</a></span>";
     echo "<span id='status_drop_down' style='display:none;'";
     echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
-    echo " <a href='javascript:void(0)' onclick='status_drop_down(false)'> ".icon('delete', 12, $strClose)."</a></span> | ";
+    echo "</span> | ";
     echo "<a href='logout.php'>{$strLogout}</a></div>";
 }
 
