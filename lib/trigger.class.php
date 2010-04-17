@@ -218,7 +218,7 @@ class Trigger extends SitEntity {
     /**
      * Used for creating a new Trigger when you already know its ID
      */
-    public static function byID($id)
+    public static function fromID($id)
     {
         global $dbTriggers;
 
