@@ -3483,7 +3483,7 @@ function show_edit_site($site, $mode='internal')
         $html .= "<table align='center' class='vertical'>";
         $html .= "<tr><th>{$GLOBALS['strName']}:</th>";
         $html .= "<td><input class='required' maxlength='50' name='name' size='40' value='{$siterow['name']}' />";
-        $html .= "<span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
+        $html .= " <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
         if ($mode == 'internal')
         {
             $html .= "<tr><th>{$GLOBALS['strTags']}:</th><td><textarea rows='2' cols='60' name='tags'>";
@@ -3507,8 +3507,8 @@ function show_edit_site($site, $mode='internal')
         $html .= "<tr><th>{$GLOBALS['strFax']}:</th><td>";
         $html .= "<input maxlength='255' name='fax' size='40' value='{$siterow['fax']}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strEmail']}:</th><td>";
-        $html .= "<input class='required' maxlength='255' name='email' size='40' value='{$siterow['email']}' />";
-        $html .= "<span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
+        $html .= "<input maxlength='255' name='email' size='40' value='{$siterow['email']}' />";
+        $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strWebsite']}:</th><td>";
         $html .= "<input maxlength='255' name='websiteurl' size='40' value='{$siterow['websiteurl']}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strSiteType']}:</th><td>\n";
