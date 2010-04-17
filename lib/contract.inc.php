@@ -33,7 +33,7 @@ function guess_contract_id($contactid)
     $sql = "SELECT * FROM `{$dbSupportContacts}` ";
     $sql .= "WHERE contactid = '{$contactid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     $num_contracts = mysql_num_rows($result);
 

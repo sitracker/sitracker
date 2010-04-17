@@ -37,8 +37,6 @@ function leading_zero($length,$number)
 }
 
 
-
-
 function beginsWith( $str, $sub )
 {
    return ( substr( $str, 0, strlen( $sub ) ) === $sub );
@@ -130,9 +128,9 @@ function truncate_string($text, $maxlength=255, $html = TRUE)
 
 
 /**
-  * UTF8 substr() replacement
-  * @author Anon / Public Domain
-  * @note see http://www.php.net/manual/en/function.substr.php#57899
+ * UTF8 substr() replacement
+ * @author Anon / Public Domain
+ * @note see http://www.php.net/manual/en/function.substr.php#57899
  */
 function utf8_substr($str, $from, $len)
 {
@@ -145,9 +143,9 @@ function utf8_substr($str, $from, $len)
 
 
 /**
-  * UTF8 strlen() replacement
-  * @author anpaza at mail dot ru / Public Domain
-  * @note see http://www.php.net/manual/en/function.strlen.php#59258
+ * UTF8 strlen() replacement
+ * @author anpaza at mail dot ru / Public Domain
+ * @note see http://www.php.net/manual/en/function.strlen.php#59258
  */
 function utf8_strlen($str)
 {
@@ -177,11 +175,11 @@ function utf8_strlen($str)
 
 
 /**
-  * Array filter callback to list only valid language files
-  * @author Ivan Lucas
-  * @param string $var. Filename to check
-  * @retval bool TRUE : valid
-  * @retval bool FALSE : invalid
+ * Array filter callback to list only valid language files
+ * @author Ivan Lucas
+ * @param string $var. Filename to check
+ * @retval bool TRUE : valid
+ * @retval bool FALSE : invalid
  */
 function filter_i18n_filenames($var)
 {
@@ -194,10 +192,10 @@ function filter_i18n_filenames($var)
 
 
 /**
-  * Array walk callback convert an i18n filename to a language code
-  * @author Ivan Lucas
-  * @param string $filename. Filename of i18n file (opt. with path)
-  * @return nothing
+ * Array walk callback convert an i18n filename to a language code
+ * @author Ivan Lucas
+ * @param string $filename. Filename of i18n file (opt. with path)
+ * @return nothing
  */
 function i18n_filename_to_code(&$elem, $key)
 {
@@ -206,11 +204,11 @@ function i18n_filename_to_code(&$elem, $key)
 
 
 /**
-  * Array filter callback to list only valid css files
-  * @author Ivan Lucas
-  * @param string $var. Filename to check
-  * @retval bool TRUE : valid
-  * @retval bool FALSE : invalid
+ * Array filter callback to list only valid css files
+ * @author Ivan Lucas
+ * @param string $var. Filename to check
+ * @retval bool TRUE : valid
+ * @retval bool FALSE : invalid
  */
 function filter_css_filenames($var)
 {
@@ -227,10 +225,10 @@ function filter_css_filenames($var)
 
 
 /**
-  * Array walk callback convert an css filename to a theme name
-  * @author Ivan Lucas
-  * @param string $filename. Filename of theme file (opt. with path)
-  * @return nothing
+ * Array walk callback convert an css filename to a theme name
+ * @author Ivan Lucas
+ * @param string $filename. Filename of theme file (opt. with path)
+ * @return nothing
  */
 function css_filename_to_themename(&$elem, $key)
 {
@@ -239,14 +237,14 @@ function css_filename_to_themename(&$elem, $key)
 
 
 /**
-  * Convert an i18n code to a localised language name
-  * @author Ivan Lucas
-  * @param mixed $code. string i18n code (e.g. 'en-GB'), or array of strings
-  * @return mixed.
-  * @note if working on an array returns a string Language name,
+ * Convert an i18n code to a localised language name
+ * @author Ivan Lucas
+ * @param mixed $code. string i18n code (e.g. 'en-GB'), or array of strings
+ * @return mixed.
+ * @note if working on an array returns a string Language name,
           or code if language not recognised
-  * @note if working on an array, returns an associative array with code
-  *       as the key and lang name as the value
+ * @note if working on an array, returns an associative array with code
+ *       as the key and lang name as the value
  */
 function i18n_code_to_name($code)
 {
@@ -268,10 +266,10 @@ function i18n_code_to_name($code)
 }
 
 /**
-  * Make a string quoted, that is prefix lines with >
-  * and strip out irrelevant update headers
-  * @author Ivan Lucas
-  * @todo FIXME unfinished
+ * Make a string quoted, that is prefix lines with >
+ * and strip out irrelevant update headers
+ * @author Ivan Lucas
+ * @todo FIXME unfinished
  */
 function quote_message($message)
 {
@@ -290,11 +288,11 @@ function quote_message($message)
 }
 
 /**
-  * Encode email subject as per RFC 2047
-  * @author Ivan Lucas
-  * @param string $subject. Non-encoded subject
-  * @param string $charset. Character set that's in use
-  * @return string. Encoded subject
+ * Encode email subject as per RFC 2047
+ * @author Ivan Lucas
+ * @param string $subject. Non-encoded subject
+ * @param string $charset. Character set that's in use
+ * @return string. Encoded subject
  */
 function encode_email_subject($subject, $charset)
 {
@@ -306,8 +304,8 @@ function encode_email_subject($subject, $charset)
         $spacer = $end . "\r\n\t" . $start;
         $len = floor((75 - strlen($start) - strlen($end))/2) * 2;
         $encoded_subject = base64_encode($subject);
-// Don't split chunks doesn't seem to be necessary and in fact causes garbling of subjects - See Mantis bug 959
-//         $encoded_subject = chunk_split($encoded_subject, $len, $spacer);
+        // Don't split chunks doesn't seem to be necessary and in fact causes garbling of subjects - See Mantis bug 959
+        //         $encoded_subject = chunk_split($encoded_subject, $len, $spacer);
         $spacer = preg_quote($spacer);
         $encoded_subject = preg_replace("/" . $spacer . "$/", "", $encoded_subject);
         $encoded_subject = $start . $encoded_subject . $end;

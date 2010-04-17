@@ -19,10 +19,10 @@ define ("BILLING_AWAITINGAPPROVAL", 5);
 define ("BILLING_RESERVED", 10);
 
 /**
-  * Returns if the contact has a timed contract or if the site does in the case of the contact not.
-  * @author Paul Heaney
-  * @param int $contactid
-  * @return either NO_BILLABLE_CONTRACT, CONTACT_HAS_BILLABLE_CONTRACT or SITE_HAS_BILLABLE_CONTRACT the latter is if the site has a billable contract by the contact isn't a named contact
+ * Returns if the contact has a timed contract or if the site does in the case of the contact not.
+ * @author Paul Heaney
+ * @param int $contactid
+ * @return either NO_BILLABLE_CONTRACT, CONTACT_HAS_BILLABLE_CONTRACT or SITE_HAS_BILLABLE_CONTRACT the latter is if the site has a billable contract by the contact isn't a named contact
  */
 function does_contact_have_billable_contract($contactid)
 {

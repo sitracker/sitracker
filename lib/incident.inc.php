@@ -39,6 +39,7 @@ function incident($incident)
     return $row;
 }
 
+
 /**
  * Creates a new incident
  * @param string $title The title of the incident
@@ -271,24 +272,24 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
         {
             $sql = "SELECT us.userid, u.status, u.lastseen FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u ";
             $sql .= "WHERE u.id = us.userid AND u.status > 0 AND u.accepting='Yes' ";
-            if ($exceptuserid > 0) $sql .= "AND u.id != '$exceptuserid' ";
+            if ($exceptuserid > 0) $sql .= "AND u.id != '{$exceptuserid}' ";
             $sql .= "AND softwareid = {$incident->softwareid}";
         }
         else
         {
             $sql = "SELECT id AS userid, status, lastseen FROM `{$dbUsers}` AS u WHERE status > 0 AND u.accepting='Yes' ";
-            if ($exceptuserid > 0) $sql .= "AND id != '$exceptuserid' ";
+            if ($exceptuserid > 0) $sql .= "AND id != '{$exceptuserid}' ";
         }
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         // Fallback to all users if we have no results from above
         if (mysql_num_rows($result) < 1)
         {
             $sql = "SELECT id AS userid, status, lastseen FROM `{$dbUsers}` AS u WHERE status > 0 AND u.accepting='Yes' ";
-            if ($exceptuserid > 0) $sql .= "AND id != '$exceptuserid' ";
+            if ($exceptuserid > 0) $sql .= "AND id != '{$exceptuserid}' ";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
 
         while ($user = mysql_fetch_object($result))
@@ -317,7 +318,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
             // Have a look at the users incident queue (owned)
             $qsql = "SELECT id, priority, lastupdated, status, softwareid FROM `{$dbIncidents}` WHERE owner={$user->userid}";
             $qresult = mysql_query($qsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $queue_size = mysql_num_rows($qresult);
             if ($queue_size > 0)
             {
@@ -365,7 +366,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
         }
 
         // Do the lottery - "Release the balls"
-        $numtickets = count($ticket)-1;
+        $numtickets = count($ticket) - 1;
         $rand = mt_rand(0, $numtickets);
         $userid = $ticket[$rand];
     }
@@ -643,8 +644,8 @@ function average_incident_duration($start,$end,$states)
     $sql = "SELECT opened, closed, (closed - opened) AS duration_closed, i.id AS incidentid ";
     $sql .= "FROM `{$dbIncidents}` AS i ";
     $sql .= "WHERE status='2' ";
-    if ($start > 0) $sql .= "AND opened >= $start ";
-    if ($end > 0) $sql .= "AND opened <= $end ";
+    if ($start > 0) $sql .= "AND opened >= {$start} ";
+    if ($end > 0) $sql .= "AND opened <= {$end} ";
 
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -694,7 +695,7 @@ function sla_target_content($incidentid, $target)
     $sql .= "AND sla = '{$target}' ";
     $sql .= "ORDER BY timestamp DESC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($bodytext) = mysql_fetch_array($result);
     $bodytext = str_replace("<hr>", "", $bodytext);
     $rtn .= $bodytext;
@@ -717,7 +718,7 @@ function incident_service_level($incidentid)
     $sql = "SELECT servicelevel FROM `{$dbIncidents}` WHERE id = {$incidentid}";
     $result = mysql_query($sql);
 
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($servicelevel) = mysql_fetch_array($result);
 
     return $servicelevel;
@@ -929,14 +930,14 @@ function incident_timeofnextaction($id)
 
 
 /**
-  * Returns a string representing the name of
-  * the given priority. Returns an empty string if the
-  * priority does not exist.
-  * @author Ivan Lucas
-  * @param int $id. Priority ID, higher the number higher the priority
-  * @param bool $syslang. (optional) Uses system language when set to TRUE otherwise
-  *                       uses user language (default)
-  * @return string.
+ * Returns a string representing the name of
+ * the given priority. Returns an empty string if the
+ * priority does not exist.
+ * @author Ivan Lucas
+ * @param int $id. Priority ID, higher the number higher the priority
+ * @param bool $syslang. (optional) Uses system language when set to TRUE otherwise
+ *                       uses user language (default)
+ * @return string.
  */
 function priority_name($id, $syslang = FALSE)
 {

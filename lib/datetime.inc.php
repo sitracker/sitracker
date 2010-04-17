@@ -561,7 +561,7 @@ function ldate($format, $date = '', $utc = FALSE)
     // Internationalise am/pm
     if (strpos($format, 'a') !== FALSE)
     {
-        $months = array('am','pm');
+        $months = array('am', 'pm');
         $i18nmonths = array($GLOBALS['strAM'], $GLOBALS['strPM']);
         $datestring = str_replace($months, $i18nmonths, $datestring);
     }

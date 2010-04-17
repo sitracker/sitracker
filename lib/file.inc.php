@@ -24,7 +24,9 @@ if (!function_exists('list_dir'))
         $delim = (strstr($dirname,"/")) ? "/" : "\\";
 
         if ($dirname[strlen($dirname)-1] != $delim)
-        $dirname .= $delim;
+        {
+            $dirname .= $delim;
+        }
 
         $handle = opendir($dirname);
         if ($handle == FALSE)
@@ -93,9 +95,9 @@ function rec_copy($from_path, $to_path)
 
                 if (is_file($file))
                 {
-                    if (!(substr(rtrim($file),strlen(rtrim($file))-8,4) == 'mail'
-                        || substr(rtrim($file),strlen(rtrim($file))-10,5) == 'part1'
-                        || substr(rtrim($file),strlen(rtrim($file))-8,4) == '.vcf'))
+                    if (!(substr(rtrim($file),strlen(rtrim($file))-8, 4) == 'mail'
+                        || substr(rtrim($file),strlen(rtrim($file))-10, 5) == 'part1'
+                        || substr(rtrim($file),strlen(rtrim($file))-8, 4) == '.vcf'))
                     {
                         copy($from_path.$file, $to_path.$file);
                     }
@@ -148,7 +150,6 @@ function file_permissions_info($perms)
  * @author Paul Heaney
  * @param filesize - filesize in bytes
  * @return String filesize in readable format
- *
  */
 function readable_file_size($filesize)
 {
@@ -156,7 +157,7 @@ function readable_file_size($filesize)
     $j = 0;
 
     $ext = array($strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes);
-    while ($filesize >= pow(1024,$j))
+    while ($filesize >= pow(1024, $j))
     {
         ++$j;
     }
