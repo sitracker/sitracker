@@ -117,7 +117,7 @@ if ($sit[0] != '')
     echo userstatus_summaryline();
     echo " <a href='javascript:void(0)' onclick='toggle_status_drop_down()'>";
     echo icon('configure', 12, $strSetYourStatus)."</a></span>";
-    echo "<span id='status_drop_down' style='display:none;'";
+    echo "<span id='status_drop_down' style='display:none;'>";
     echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
     echo "</span> | ";
     echo "<a href='logout.php'>{$strLogout}</a></div>";
