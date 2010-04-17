@@ -137,7 +137,7 @@ function checkLDAPDetails(statusfield)
 
     var url =  \"ajaxdata.php\";
     var params = \"action=checkldap&ldap_host=\"+server+\"&ldap_type=\"+type+\"&ldap_port=\"+port+\"&ldap_protocol=\"+protocol+\"&ldap_security=\"+security+" .
-            "\"&ldap_bind_user=\"+escape(user)+\"&ldap_bind_pass=\"+escape(password)+\"&ldap_user_base=\"+userBase+\"&ldap_admin_group=\"+adminGrp+\"&ldap_manager_group=\"+managerGrp+" .
+            "\"&ldap_bind_user=\"+encodeURIComponent(user)+\"&ldap_bind_pass=\"+encodeURIComponent(password)+\"&ldap_user_base=\"+userBase+\"&ldap_admin_group=\"+adminGrp+\"&ldap_manager_group=\"+managerGrp+" .
             "\"&ldap_user_group=\"+userGrp+\"&ldap_customer_group=\"+customerGrp;
     xmlhttp.open(\"POST\", url, true)
     xmlhttp.setRequestHeader(\"Content-type\", \"application/x-www-form-urlencoded\");
