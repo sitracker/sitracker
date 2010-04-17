@@ -201,7 +201,7 @@ function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $pas
     {
         // Set protocol version
         ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $protocol);
-        ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS,0);
+        ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0);
     
         if ( $security == 'TLS' )
         {
@@ -225,7 +225,7 @@ function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $pas
             if ( ! $r )
             {
                 // Could not bind!
-                trigger_error("Could not bind to LDAP server with credentials '$user'", E_USER_WARNING);
+                trigger_error("Could not bind to LDAP server with credentials '{$user}'", E_USER_WARNING);
             }
             else
             {
@@ -382,11 +382,14 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             // TODO FIXME this doesn't take into account custom roles'
             switch ($usertype)
             {
-                case LDAP_USERTYPE_ADMIN: $user->roleid =  1;
+                case LDAP_USERTYPE_ADMIN:
+                    $user->roleid =  1;
                     break;
-                case LDAP_USERTYPE_MANAGER: $user->roleid = 2;
+                case LDAP_USERTYPE_MANAGER:
+                    $user->roleid = 2;
                     break;
-                default: $user->roleid = 3;
+                default:
+                    $user->roleid = 3;
             }
 
             if ($id == 0)
@@ -440,7 +443,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
                 $status = $contact->edit();
             }
             
-            if ($status)  $toReturn = true;
+            if ($status) $toReturn = true;
             else $toReturn = false;
         }
         else
