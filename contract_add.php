@@ -66,11 +66,11 @@ if ($action == "showform" OR $action=='')
     echo "<tr><th>{$strProduct}</th><td>";
     if ($_SESSION['formdata']['add_contract']['product'] != '')
     {
-        echo product_drop_down("product", $_SESSION['formdata']['add_contract']['product'], TRUE)." {$strRequired} </td></tr>\n";
+        echo product_drop_down("product", $_SESSION['formdata']['add_contract']['product'], TRUE)." <span class='required'>{$strRequired}</span> </td></tr>\n";
     }
     else
     {
-        echo product_drop_down("product", 0, TRUE)." {$strRequired}</td></tr>\n";
+        echo product_drop_down("product", 0, TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
     }
 
     echo "<tr><th>{$strServiceLevel}</th><td>";
