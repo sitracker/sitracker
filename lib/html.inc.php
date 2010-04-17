@@ -3643,7 +3643,7 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     {
         $html .= "value='{$_SESSION['formdata']['add_contact']['email']}'";
     }
-    $html .= "/><span class='required'>{$GLOBALS['strRequired']}</span> ";
+    $html .= "/> <span class='required'>{$GLOBALS['strRequired']}</span> ";
 
     $html .= "<label>";
     $html .= html_checkbox('dataprotection_email', 'No');
