@@ -893,8 +893,7 @@ elseif ($action == 'assign')
             $html .= "</p>\n";
 
             $suggested_user = suggest_reassign_userid($incidentid);
-            $trigger = new Trigger('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
-            $trigger->fire();
+            $trigger = new TriggerEvent('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
 
             if ($CONFIG['auto_assign_incidents'])
             {
@@ -1029,8 +1028,7 @@ elseif ($action == 'reassign')
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    $t = new trigger('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $uid, 'incidentid' => $incidentid));
-    $t->fire();
+    $t = new TriggerEvent('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $uid, 'incidentid' => $incidentid));
 
     // add update
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
