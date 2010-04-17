@@ -72,7 +72,7 @@ $trigger_types['TRIGGER_INCIDENT_ASSIGNED'] =
 array('name' => $strIncidentAssigned,
       'description' => $strTriggerNewIncidentAssignedDesc,
       'required' => array('incidentid', 'userid'),
-      'params' => array('userid', 'userstatus'),
+      'params' => array('ownerid', 'userstatus'),
       );
 
 $trigger_types['TRIGGER_INCIDENT_CLOSED'] =
@@ -351,9 +351,16 @@ array('description' => $strContactsForename,
       );
 
 $ttvararray['{contactid}'][] =
-array('description' => $strContactID,
+array('description' => $strContact,
       'requires' => 'contactid',
       'replacement' => '$param_array[\'contactid\'];',
+      'show' => FALSE
+      );
+      
+$ttvararray['{contactid}'][] =
+array('description' => $strContact,
+      'requires' => 'incidentid',
+      'replacement' => 'incident_contact($param_array[\'incidentid\']);',
       'show' => FALSE
       );
 
@@ -394,7 +401,7 @@ array('description' => $strContactsUsername,
       );
 
 $ttvararray['{contractid}'][] =
-array('description' => $strContractID,
+array('description' => $strContract,
       'requires' => 'contractid',
       'replacement' => '$param_array[\'contractid\'];',
       'checkreplace' => 'maintenance_drop_down',
@@ -402,7 +409,7 @@ array('description' => $strContractID,
       );
 
 $ttvararray['{contractid}'][] =
-array('description' => $strContractID,
+array('description' => $strContract,
       'requires' => 'contractid',
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',
       'checkreplace' => 'maintenance_drop_down',
@@ -487,7 +494,7 @@ array('description' => $strExternalID,
       );
 
 $ttvararray['{incidentid}'] =
-array('description' => $strIncidentID,
+array('description' => $strIncident,
       'requires' => 'incidentid',
       'replacement' => '$param_array[\'incidentid\'];',
       'checkreplace' => 'incident_drop_down'
@@ -525,7 +532,7 @@ array('description' => $strIncidentTitle,
       );
 
 $ttvararray['{kbid}'] =
-array('description' => $strKBID,
+array('description' => $strKBArticle,
       'requires' => 'kbid',
       'replacement' => '$param_array[\'kbid\'];'
       );
@@ -575,7 +582,7 @@ array('description' => $strNotifyExternalEngineerOnClose,
       );
 
 $ttvararray['{ownerid}'] =
-array('description' => $strIncidentOwnerID,
+array('description' => $strIncidentOwner,
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',
       'requires' => 'incidentid',
       'checkreplace' => 'user_drop_down',
@@ -655,7 +662,7 @@ array('description' => $strCurrentUsersSignature,
       );
 
 $ttvararray['{siteid}'] =
-array('description' => $strSiteName,
+array('description' => $strSite,
       'requires' => 'siteid',
       'replacement' => '$param_array[\'siteid\'];',
       'checkreplace' => 'site_drop_down',
@@ -687,7 +694,7 @@ array('description' => $strSiteName,
       );
 
 $ttvararray['{sitesalespersonid}'] =
-array('description' => 'The ID of the site\'s salesperson',
+array('description' => $strSalesperson,
       'replacement' => 'site_salespersonid($param_array[\'siteid\']);',
       'requires' => 'siteid',
       'show' => FALSE
@@ -700,7 +707,7 @@ array('description' => $strSalespersonSite,
       );
 
 $ttvararray['{slaid}'] =
-array('description' => 'ID of the SLA',
+array('description' => $strSLA,
       'replacement' => 'contract_slaid($param_array[\'contractid\']);',
       'requires' => 'contractid',
       'show' => FALSE
@@ -723,7 +730,7 @@ array('description' => $strSupportManagersEmailAddress,
       );
 
 $ttvararray['{taskid}'] =
-array('description' => 'ID of the task',
+array('description' => $strTask,
       'replacement' => '$param_array[\'taskid\']',
       'show' => FALSE
     );
@@ -734,7 +741,7 @@ array('description' => $strCurrentDate,
       );
 
 $ttvararray['{townerid}'] =
-array('description' => 'Incident temp owner ID',
+array('description' => $strTemporaryOwner,
       'replacement' => 'incident_towner($param_array[\'incidentid\']);',
       'requires' => 'incidentid',
       'checkreplace' => 'user_drop_down',
@@ -779,15 +786,14 @@ array('description' => $strCurrentUserEmailAddress,
       );
 
 $ttvararray['{userid}'][] =
-array('description' => 'UserID the trigger passes',
+array('description' => 'The user',
       'replacement' => '$param_array[\'userid\'];',
       'checkreplace' => 'user_drop_down',
       'show' => FALSE
       );
 
 $ttvararray['{userid}'][] =
-array('description' => 'Owner of a task',
-      'replacement' => 'task_owner($param_array[\'taskid\']);',
+array('replacement' => 'task_owner($param_array[\'taskid\']);',
       'requires' => 'taskid',
       'show' => FALSE
       );
@@ -828,8 +834,8 @@ function email_templates($name, $triggertype='system', $selected = '')
     //$name = strpos()
     //$name = str_replace("_", " ", $name);
     $name = strtolower($name);
-    $html .= "<option id='{$template->name}' value='{$template->name}'>{$template->name}</option>\n";
-    $html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
+    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
+    //$html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
 
     }
     $html .= "</select>\n";
@@ -853,8 +859,7 @@ function notice_templates($name, $selected = '')
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($template = mysql_fetch_object($query))
     {
-    $html .= "<option id='{$template->name}' value='{$template->name}'>{$template->name}</option>\n";
-    $html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
+	    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
     }
     $html .= "</select>\n";
     return $html;
@@ -1200,6 +1205,23 @@ function template_description($name, $type)
     (substr_compare($desc, "str", 1, 3)) ? $desc = $GLOBALS[$desc] : $desc;
     if ($desc == '') $desc = FALSE;
     return $desc;
+}
+
+/**
+ * Provides a drop down list of matching functions
+ * @param $id string the ID to give the <select>
+ * @param $name string the name to give the <select>
+ */
+function check_match_drop_down($id = '', $name = '')
+{
+	$html = "<select id='{$id}' name='{$name}'>";
+    $html .= "<option>is</option>";
+    $html .= "<option>is not</option>";
+    $html .= "<option>contains</option>";
+    $html .= "<option>does not contain</option>";
+    $html .= "</select>";
+        
+	return $html;
 }
 
 

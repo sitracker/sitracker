@@ -38,6 +38,7 @@ function resetRules()
 
 function get_checks()
 {
+	$('checksbox').show();
       var xmlhttp=false;
 
       if (!xmlhttp && typeof XMLHttpRequest!='undefined')
@@ -79,7 +80,6 @@ function get_checks()
               {
                   //alert(xmlhttp.responseText);
                   $("checkshtml").update(xmlhttp.responseText);
-                  alert(xmlhttp.responseText);
               }
           }
       }
@@ -258,8 +258,8 @@ else
     echo "<h2>New action</h2>";
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
-    echo "<h3>Step one</h3>";
-    echo "<p>Choose which action you would like to be notified about</p>";
+    echo "<h3>Action</h3>";
+    echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach($trigger_types as $name => $trigger)
     {
@@ -271,8 +271,8 @@ else
     }
     echo "</select>";
 
-    echo "<h3>Step two</h3>";
-    echo "<p>Choose which method of notification</p>";
+    echo "<h3>Notification Method</h3>";
+    echo "<p style='text-align:left'>Choose which method of notification</p>";
     echo "<select id='new_action' name='new_action' onchange='switch_template()' onkeyup='switch_template()'>";
     echo "<option/>";
     foreach($actionarray as $name => $action)
@@ -286,19 +286,20 @@ else
     echo "</select>";
 
     echo "<span id='emailtemplatesbox' style='display:none'>";
-    echo "<h3>Step three</h3> ";
-    echo "<p>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You shoud only change this if you would like to use a template you have created yourself</p>";
+    echo "<h3>Email template</h3> ";
+    echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You shoud only change this if you would like to use a template you have created yourself</p>";
     echo email_templates('emailtemplate', $trigger_mode)."</span></p>";
     echo "<span id='noticetemplatesbox' style='display:none'>";
-    echo "<h3>Step three</h3> ";
+    echo "<h3>Notice template</h3> ";
+    echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You should only change this if you would like to use a template you have created yourself</p>";
     echo notice_templates('noticetemplate')."</span></p>";
-    echo '<h3>Step four</h3>';
-    echo "<p>This action has variables associated with it, you can add a rule to only fire in certain circumstances.</p>";
-    echo "<p>E.g. The action for 'When an incident is assigned' has two variables, {userid} and {userstatus}.</p><p>
-    If you leave the check blank, you will receive a notification every time an incident is assigned. If you set {userid} to your own, you will only get a notification when you are assigned an incident. If you set {userstatus} to 'Out of Office', you will receive a notification every time an incident is assigned to a user who is out of the office. You can use more than one variable in a check.</p>";
-    echo "<input onblur='get_checks()' />";
-    echo "<div id='checkshtml'></div>";
-    echo "<br /><p><input type='submit' name='submit' value='{$strAdd}' /></p></form>";
+    echo '<div id="checksbox" style="display:none">';
+    echo '<h3>Conditions</h3>';
+    echo "<p style='text-align:left'>Some actions have option conditions under which you can choose to be notified.</p>";
+    echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
+    echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;
+    echo "<div id='checkshtml'></div></div>";
+    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strAdd}' /></p></form>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {

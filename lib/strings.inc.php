@@ -63,7 +63,7 @@ $hmenu[1020] = $hmenu[1020] +
                        30=> array ( 'perm'=> 58, 'name'=> $strMySubstitutes, 'url'=>"{$CONFIG['application_webpath']}edit_backup_users.php"),
                        40=> array ( 'perm'=> 27, 'name'=> $strMyHolidays, 'url'=>"{$CONFIG['application_webpath']}holidays.php", 'enablevar' => 'holidays_enabled'),
                        50=> array ( 'perm'=> 4, 'name'=> $strMyDashboard, 'url'=>"{$CONFIG['application_webpath']}manage_user_dashboard.php"),
-                       60=> array ( 'perm'=> 0, 'name'=> $strMyNotifications, 'url'=>"{$CONFIG['application_webpath']}triggers.php")
+                       60=> array ( 'perm'=> 0, 'name'=> $strMyNotifications, 'url'=>"{$CONFIG['application_webpath']}notifications.php")
 );
 // Control Panel submenu
 // TODO v3.40 set a permission for triggers
