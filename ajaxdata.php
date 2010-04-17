@@ -270,11 +270,11 @@ switch ($action)
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
         $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);
         $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);
-        $ldap_user_base = cleanvar($_REQUEST['ldap_user_base']);      
+        $ldap_user_base = cleanvar($_REQUEST['ldap_user_base']);
         $ldap_admin_group = cleanvar($_REQUEST['ldap_admin_group']);
         $ldap_manager_group = cleanvar($_REQUEST['ldap_manager_group']);
         $ldap_user_group = cleanvar($_REQUEST['ldap_user_group']);
-        $ldap_customer_group = cleanvar($_REQUEST['ldap_customer_group']);  
+        $ldap_customer_group = cleanvar($_REQUEST['ldap_customer_group']);
 
         $r = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_user, $ldap_password);
         if ($r == -1) echo LDAP_PASSWORD_INCORRECT; // Failed
@@ -299,7 +299,7 @@ switch ($action)
                             // Check customer group
                             if (!ldapCheckGroupExists($ldap_customer_group, $ldap_type)) echo LDAP_CUSTOMER_GROUP_INCORRECT;
                             else
-                            {                    
+                            {
                                 // ALL OK
                                 echo LDAP_CORRECT;
                             }
@@ -308,7 +308,7 @@ switch ($action)
                 }
             }
         }
-    
+
         break;
     case 'triggerpairmatch':
         $triggertype = cleanvar($_REQUEST['triggertype']);
@@ -329,21 +329,22 @@ switch ($action)
     if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
     if (is_array($trigger_types[$triggertype]['params']))
     {
+        // FIXME i18n
         echo '<p align="left">Notify when: ';
-		echo "<select><option>all conditions are met</option>";
-		echo "<option>any conditions are met</option></select></p>";
-		echo "<table>";  
+        echo "<select><option>all conditions are met</option>";
+        echo "<option>any conditions are met</option></select></p>";
+        echo "<table>";
         foreach ($trigger_types[$triggertype]['params'] as $param)
         {
-        	// if we return a number here, the variable is multiply-defined;
-        	// as the replacements are the same, we use the first one
+            // if we return a number here, the variable is multiply-defined;
+            // as the replacements are the same, we use the first one
             if (is_array($ttvararray['{'.$param.'}']) AND
-                is_numeric(key($ttvararray['{'.$param.'}']))) 
+                is_numeric(key($ttvararray['{'.$param.'}'])))
             {
             	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
             	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
             }
-            if (isset($ttvararray['{'.$param.'}']['checkreplace'])) 
+            if (isset($ttvararray['{'.$param.'}']['checkreplace']))
             {
                 echo '<tr>';
                 echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
@@ -357,7 +358,20 @@ switch ($action)
     echo " ";
     break;
 
-    default : 
+    case 'set_user_status':
+        $userstatus = cleanvar($_REQUEST['userstatus']);
+        $result = set_user_status($userstatus);
+        if ($result === FALSE)
+        {
+            echo 'FALSE';
+        }
+        else
+        {
+            echo $result;
+        }
+        break;
+
+    default :
         plugin_do('ajaxdata_add_action', array('action' => $action));
         break;
 }

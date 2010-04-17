@@ -913,8 +913,40 @@ function togglecontactaddress()
     $('postcode').disabled = setting;
 }
 
-function status_drop_down()
+function toggle_status_drop_down()
 {
-    $('userstatus').hide();
-    $('status_drop_down').show();
+    if ($('status_drop_down').style.display == 'none')
+    {
+        $('userstatus').hide();
+        $('status_drop_down').show();
+    }
+    else
+    {
+        $('userstatus').show();
+        $('status_drop_down').hide();
+    }
+}
+
+function set_user_status()
+{
+    var userstatus = $('userstatus_dropdown').value;
+     new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
+    {
+        method:'get',
+            onSuccess: function(transport)
+            {
+                var response = transport.responseText || "no response text";
+                if (transport.responseText)
+                {
+                    if (response != 'FALSE')
+                    {
+                        $('userstatus').show();
+                        $('userstatus_summaryline').innerHTML = response;
+                        $('status_drop_down').hide();
+                    }
+                }
+            },
+            onFailure: function(){ alert('Something went wrong...') }
+    });
+
 }

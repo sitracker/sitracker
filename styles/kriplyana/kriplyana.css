@@ -120,3 +120,5 @@ div#statusbar strong { color:#fff;}
 #statusbar a { text-decoration: none; color: #FFF; }
 #statusbar a:hover { text-decoration: underline; }
 #statusbar a:active { text-decoration: underline; }
+#userstatus_dropdown { background: transparent; color: #fff; border:1px solid #8F9DC5;}
+#userstatus_dropdown option { color: #000;}

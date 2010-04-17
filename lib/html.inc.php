@@ -745,9 +745,11 @@ function userstatus_bardrop_down($name, $id)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-    $html = "<select name='$name' title='{$GLOBALS['strSetYourStatus']}' onchange=\"if ";
-    $html .= "(this.options[this.selectedIndex].value != 'null') { ";
-    $html .= "window.open(this.options[this.selectedIndex].value,'_top') }\">";
+    $html = "<select id='userstatus_dropdown' name='$name' title='{$GLOBALS['strSetYourStatus']}' ";
+    $html .= "onchange=\"set_user_status();\" onblur=\"toggle_status_drop_down();\">";
+//onchange=\"if ";
+//$html .= "(this.options[this.selectedIndex].value != 'null') { ";
+//$html .= "window.open(this.options[this.selectedIndex].value,'_top') }\
     $html .= "\n";
     while ($statuses = mysql_fetch_object($result))
     {
@@ -759,16 +761,13 @@ function userstatus_bardrop_down($name, $id)
                 $html .= "selected='selected' ";
             }
 
-            $html .= "value='set_user_status.php?mode=setstatus&amp;";
-            $html .= "userstatus={$statuses->id}'>";
+            $html .= "value='{$statuses->id}'>";
             $html .= "{$GLOBALS[$statuses->name]}</option>\n";
         }
     }
-    $html .= "<option value='set_user_status.php?mode=setaccepting";
-    $html .= "&amp;accepting=Yes' class='enable seperator'>";
+    $html .= "<option value='Yes' class='enable seperator'>";
     $html .= "{$GLOBALS['strAccepting']}</option>\n";
-    $html .= "<option value='set_user_status.php?mode=setaccepting&amp;";
-    $html .= "accepting=No' class='disable'>{$GLOBALS['strNotAccepting']}";
+    $html .= "<option value='No' class='disable'>{$GLOBALS['strNotAccepting']}";
     $html .= "</option></select>\n";
 
     return $html;
