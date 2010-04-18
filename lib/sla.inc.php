@@ -251,7 +251,7 @@ function servicelevel_timed($sltag)
 
     $sql = "SELECT COUNT(tag) FROM `{$dbServiceLevels}` WHERE tag = '{$sltag}' AND timed = 'yes'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     list($count) = mysql_fetch_row($result);
     if ($count > 0) $timed = TRUE;
@@ -277,7 +277,7 @@ function servicelevel_maxpriority($slatag)
 
     $sql = "SELECT MAX(priority) FROM `{$dbServiceLevels}` WHERE tag = '{$slatag}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($priority) = mysql_fetch_row($result);
     return $priority;
 }
@@ -306,7 +306,7 @@ function servicelevel_tag2id($sltag)
 {
     $sql = "SELECT id FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$sltag}' AND priority=1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($id) = mysql_fetch_row($result);
 
     return $id;
@@ -341,7 +341,7 @@ function maintenance_servicelevel($maintid)
     global $CONFIG, $dbMaintenance;
     $sql = "SELECT servicelevelid FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) < 1)
     {
@@ -622,7 +622,7 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
 
     $sql = "SELECT id, currentstatus, timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' ORDER BY id ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $time = 0;
     $timeptr = 0;
@@ -677,7 +677,7 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
     mysql_free_result($result);
 
     // Calculate remainder
-    if (is_active_status($laststatus, $states) && ($t2 >= $update['timestamp']))
+    if (is_active_status($laststatus, $states) AND ($t2 >= $update['timestamp']))
     {
         $time += calculate_working_time($timeptr, $t2, $publicholidays);
     }

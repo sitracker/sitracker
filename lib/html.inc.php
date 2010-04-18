@@ -16,22 +16,22 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 /**
-  * Generate HTML for a redirect/confirmation page
-  * @author Ivan Lucas
-  * @param string $url. URL to redirect to
-  * @param bool $success. (optional) TRUE = Success, FALSE = Failure
-  * @param string $message. (optional) HTML message to display on the page
-  *               before redirection.
-  *               This parameter is optional and only required if the default
-  *               success/failure will not suffice
-  * @return string HTML page with redirect
-  * @note Replaces confirmation_page() from versions prior to 3.35
-  *       If a header HTML has already been displayed a continue link is printed
-  *       a meta redirect will also be inserted, which is invalid HTML but appears
-  *       to work in most browswers.
-  *
-  * @note The recommended way to use this function is to call it without headers/footers
-  *       already displayed.
+ * Generate HTML for a redirect/confirmation page
+ * @author Ivan Lucas
+ * @param string $url. URL to redirect to
+ * @param bool $success. (optional) TRUE = Success, FALSE = Failure
+ * @param string $message. (optional) HTML message to display on the page
+ *               before redirection.
+ *               This parameter is optional and only required if the default
+ *               success/failure will not suffice
+ * @return string HTML page with redirect
+ * @note Replaces confirmation_page() from versions prior to 3.35
+ *       If a header HTML has already been displayed a continue link is printed
+ *       a meta redirect will also be inserted, which is invalid HTML but appears
+ *       to work in most browswers.
+ *
+ * @note The recommended way to use this function is to call it without headers/footers
+ *       already displayed.
  */
 function html_redirect($url, $success = TRUE, $message='')
 {
@@ -121,14 +121,14 @@ function html_redirect($url, $success = TRUE, $message='')
 
 
 /**
-  * Returns a HTML string for a checkbox
-  * @author Ivan Lucas
-  * @param string $name The HTML name attribute
-  * @param mixed $state
-  * @param string $value. (optional) Value, state is used if blank
-  * @param string $attributes. (optional) Extra attributes for input tag
-  * @note the 'state' value should be a 1, yes, true or 0, no, false
-  * @return string HTML
+ * Returns a HTML string for a checkbox
+ * @author Ivan Lucas
+ * @param string $name The HTML name attribute
+ * @param mixed $state
+ * @param string $value. (optional) Value, state is used if blank
+ * @param string $attributes. (optional) Extra attributes for input tag
+ * @note the 'state' value should be a 1, yes, true or 0, no, false
+ * @return string HTML
  */
 function html_checkbox($name, $state, $value ='', $attributes = '')
 {
@@ -152,13 +152,13 @@ function html_checkbox($name, $state, $value ='', $attributes = '')
 
 
 /**
-  * Returns HTML for a gravatar (Globally recognised avatar)
-  * @author Ivan Lucas
-  * @param string $email - Email address
-  * @param int $size - Size in pixels (Default 32)
-  * @param bool $hyperlink - Make a link back to gravatar.com, default TRUE
-  * @return string - HTML img tag
-  * @note See http://en.gravatar.com/site/implement/ for implementation guide
+ * Returns HTML for a gravatar (Globally recognised avatar)
+ * @author Ivan Lucas
+ * @param string $email - Email address
+ * @param int $size - Size in pixels (Default 32)
+ * @param bool $hyperlink - Make a link back to gravatar.com, default TRUE
+ * @return string - HTML img tag
+ * @note See http://en.gravatar.com/site/implement/ for implementation guide
  */
 function gravatar($email, $size = 32, $hyperlink = TRUE)
 {
@@ -190,10 +190,10 @@ function gravatar($email, $size = 32, $hyperlink = TRUE)
 
 
 /**
-  * Produces HTML for a percentage indicator
-  * @author Ivan Lucas
-  * @param int $percent. Number between 0 and 100
-  * @return string HTML
+ * Produces HTML for a percentage indicator
+ * @author Ivan Lucas
+ * @param int $percent. Number between 0 and 100
+ * @return string HTML
  */
 function percent_bar($percent)
 {
@@ -208,18 +208,18 @@ function percent_bar($percent)
 }
 
 /**
-  * Return HTML for a table column header (th and /th) with links for sorting
-  * Filter parameter can be an assocative array containing fieldnames and values
-  * to pass on the url for data filtering purposes
-  * @author Ivan Lucas
-  * @param string $colname. Column name
-  * @param string $coltitle. Column title (to display in the table header)
-  * @param bool $sort Whether to sort the column
-  * @param string $order ASC or DESC
-  * @param array $filter assoc. array of variables to pass on the link url
-  * @param string $defaultorder The order to display by default (a = ASC, d = DESC)
-  * @param string $width cell width
-  * @return string HTML
+ * Return HTML for a table column header (th and /th) with links for sorting
+ * Filter parameter can be an assocative array containing fieldnames and values
+ * to pass on the url for data filtering purposes
+ * @author Ivan Lucas
+ * @param string $colname. Column name
+ * @param string $coltitle. Column title (to display in the table header)
+ * @param bool $sort Whether to sort the column
+ * @param string $order ASC or DESC
+ * @param array $filter assoc. array of variables to pass on the link url
+ * @param string $defaultorder The order to display by default (a = ASC, d = DESC)
+ * @param string $width cell width
+ * @return string HTML
  */
 function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $defaultorder='a', $width='')
 {
@@ -271,20 +271,20 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
 
 
 /**
-  * Takes an array and makes an HTML selection box
-  * @author Ivan Lucas
-  * @param array $array - The array of options to display in the drop-down
-  * @param string $name - The HTML name attribute (also used for id)
-  * @param mixed $setting - The value to pre-select
-  * @param string $attributes - Extra attributes for the select tag
-  * @param mixed $usekey - (optional) Set the option value to be the array key instead
-  *                        of the array value.
-  *                        When TRUE the array key will be used as the option value
-  *                        When FALSE the array value will be usedoption value
-  *                        When NULL the function detects which is most appropriate
-  * @param bool $multi - When TRUE a multiple selection box is returned and $setting
-  *                      can be an array of values to pre-select
-  * @retval string HTML select element
+ * Takes an array and makes an HTML selection box
+ * @author Ivan Lucas
+ * @param array $array - The array of options to display in the drop-down
+ * @param string $name - The HTML name attribute (also used for id)
+ * @param mixed $setting - The value to pre-select
+ * @param string $attributes - Extra attributes for the select tag
+ * @param mixed $usekey - (optional) Set the option value to be the array key instead
+ *                        of the array value.
+ *                        When TRUE the array key will be used as the option value
+ *                        When FALSE the array value will be usedoption value
+ *                        When NULL the function detects which is most appropriate
+ * @param bool $multi - When TRUE a multiple selection box is returned and $setting
+ *                      can be an array of values to pre-select
+ * @retval string HTML select element
  */
 function array_drop_down($array, $name, $setting='', $attributes='', $usekey = NULL, $multi = FALSE)
 {
@@ -360,26 +360,26 @@ function array_drop_down($array, $name, $setting='', $attributes='', $usekey = N
 
 
 /**
-  * Prints a user alert message, these are errors caused by users
-  * that can be corrected by users, as opposed to system errors that should
-  * use trigger_error() instead
-  * @author Ivan Lucas
-  * @param string $message The message to display
-  * @param int severity. Same as php error constants so
-  *                      E_USER_ERROR / 256
-  *                      E_USER_WARNING / 512
-  *                      E_USER_NOTICE / 1024
-  * @param string $helpcontext (optional) - will display a help link. [?]
-  *              to the given help context
-  * @return string HTML
-  * @note user_alert message should be displayed in the users local language
-  * and should offer a 'next step' or help, where appropriate
-  *
-  *  E_USER_NOTICE would indicate pure information, nothing is wrong
-  *  E_USER_WARNING would indicate that something is wrong, but nothing needs correcting
-  *  E_USER_ERROR would indicate that something is wrong and needs to be corrected
-  *               (not a system problem though!)
-  *
+ * Prints a user alert message, these are errors caused by users
+ * that can be corrected by users, as opposed to system errors that should
+ * use trigger_error() instead
+ * @author Ivan Lucas
+ * @param string $message The message to display
+ * @param int severity. Same as php error constants so
+ *                      E_USER_ERROR / 256
+ *                      E_USER_WARNING / 512
+ *                      E_USER_NOTICE / 1024
+ * @param string $helpcontext (optional) - will display a help link. [?]
+ *              to the given help context
+ * @return string HTML
+ * @note user_alert message should be displayed in the users local language
+ * and should offer a 'next step' or help, where appropriate
+ *
+ *  E_USER_NOTICE would indicate pure information, nothing is wrong
+ *  E_USER_WARNING would indicate that something is wrong, but nothing needs correcting
+ *  E_USER_ERROR would indicate that something is wrong and needs to be corrected
+ *               (not a system problem though!)
+ *
  */
 function user_alert($message, $severity, $helpcontext = '')
 {
@@ -410,15 +410,15 @@ function user_alert($message, $severity, $helpcontext = '')
 
 
 /**
-  * Output the html for an icon
-  *
-  * @param string $filename filename of the string, minus extension, we assume .png
-  * @param int $size size of the icon, from: 12, 16, 32
-  * @param string $alt alt text of the icon (optional)
-  * @param string $title (optional)
-  * @param string $id ID attribute (optional)
-  * @return string $html icon html
-  * @author Kieran Hogg, Ivan Lucas
+ * Output the html for an icon
+ *
+ * @param string $filename filename of the string, minus extension, we assume .png
+ * @param int $size size of the icon, from: 12, 16, 32
+ * @param string $alt alt text of the icon (optional)
+ * @param string $title (optional)
+ * @param string $id ID attribute (optional)
+ * @return string $html icon html
+ * @author Kieran Hogg, Ivan Lucas
  */
 function icon($filename, $size='', $alt='', $title='', $id='')
 {
@@ -479,10 +479,10 @@ function icon($filename, $size='', $alt='', $title='', $id='')
 
 
 /**
-  * Uses calendar.js to make a popup date picker
-  * @author Ivan Lucas
-  * @param string $formelement. form element id, eg. myform.dateinputbox
-  * @return string HTML
+ * Uses calendar.js to make a popup date picker
+ * @author Ivan Lucas
+ * @param string $formelement. form element id, eg. myform.dateinputbox
+ * @return string HTML
  */
 function date_picker($formelement)
 {
@@ -497,15 +497,15 @@ function date_picker($formelement)
 
 
 /**
-  * Uses scriptaculous and AutoComplete.js to make a form text input
-  * box autocomplete
-  * @author Ivan Lucas
-  * @param string $formelement. form element id, eg. textinput
-  * @param string $action. ajaxdata.php action to return JSON data
-  * @return string HTML javascript block
-  * @note The page that calls this function MUST include the required
-  * javascript libraries. e.g.
-  *   $pagescripts = array('AutoComplete.js');
+ * Uses scriptaculous and AutoComplete.js to make a form text input
+ * box autocomplete
+ * @author Ivan Lucas
+ * @param string $formelement. form element id, eg. textinput
+ * @param string $action. ajaxdata.php action to return JSON data
+ * @return string HTML javascript block
+ * @note The page that calls this function MUST include the required
+ * javascript libraries. e.g.
+ *   $pagescripts = array('AutoComplete.js');
  */
 function autocomplete($formelement, $action = 'autocomplete_sitecontact')
 {
@@ -522,15 +522,15 @@ function autocomplete($formelement, $action = 'autocomplete_sitecontact')
 
 
 /**
-  * Uses prototype.js and FormProtector.js to prevent navigating away from
-  * an unsubmitted form
-  * @author Ivan Lucas
-  * @param string $formelement. form element id
-  * @param string $message. (optional) Message to display in the warning popup
-  * @return string HTML javascript block
-  * @note The page that calls this function MUST include the required
-  * javascript libraries. e.g.
-  *   $pagescripts = array('FormProtector.js);
+ * Uses prototype.js and FormProtector.js to prevent navigating away from
+ * an unsubmitted form
+ * @author Ivan Lucas
+ * @param string $formelement. form element id
+ * @param string $message. (optional) Message to display in the warning popup
+ * @return string HTML javascript block
+ * @note The page that calls this function MUST include the required
+ * javascript libraries. e.g.
+ *   $pagescripts = array('FormProtector.js);
  */
 function protectform($formelement, $message = '')
 {
@@ -3237,8 +3237,8 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
 
 
 /**
-  * Interface for creating record 'links' (relationships)
-  * @author Ivan Lucas
+ * Interface for creating record 'links' (relationships)
+ * @author Ivan Lucas
  */
 function show_create_links($table, $ref)
 {

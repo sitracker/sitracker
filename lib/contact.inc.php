@@ -29,7 +29,7 @@ function customerExistsInDB($username)
 {
     global $dbContacts;
     $exists = 0;
-    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='$username'";
+    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='{$username}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -50,7 +50,7 @@ function customerExistsInDB($username)
 function contact_realname($id)
 {
     global $dbContacts;
-    $sql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='$id'";
+    $sql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='{$id}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -367,18 +367,20 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
         {
             foreach ($exclude AS $contactid)
             {
-                $sql .= "AND c.id != $contactid ";
+                $sql .= "AND c.id != {$contactid} ";
             }
         }
         else
         {
-            $sql .= "AND c.id != $exclude ";
+            $sql .= "AND c.id != {$exclude} ";
         }
     }
     $sql .= "ORDER BY surname ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    
     $html = "<select name='$name'>";
+    
     if (mysql_num_rows($result) > 0)
     {
         if ($allownone) $html .= "<option value='' selected='selected'>{$GLOBALS['strNone']}</option>";
@@ -598,10 +600,10 @@ function process_add_contact($mode = 'internal')
         $sql .= "siteid, address1, address2, city, county, country, postcode, email, phone, mobile, fax, ";
         $sql .= "department, notes, dataprotection_email, dataprotection_phone, dataprotection_address, ";
         $sql .= "timestamp_added, timestamp_modified) ";
-        $sql .= "VALUES ('$username', '$password', '$courtesytitle', '$forenames', '$surname', '$jobtitle', ";
-        $sql .= "'$siteid', '$address1', '$address2', '$city', '$county', '$country', '$postcode', '$email', ";
-        $sql .= "'$phone', '$mobile', '$fax', '$department', '$notes', '$dataprotection_email', ";
-        $sql .= "'$dataprotection_phone', '$dataprotection_address', '$now', '$now')";
+        $sql .= "VALUES ('{$username}', '{$password}', '{$courtesytitle}', '{$forenames}', '{$surname}', '{$jobtitle}', ";
+        $sql .= "'{$siteid}', '{$address1}', '{$address2}', '{$city}', '{$county}', '{$country}', '{$postcode}', '{$email}', ";
+        $sql .= "'{$phone}', '{$mobile}', '{$fax}', '{$department}', '{$notes}', '{$dataprotection_email}', ";
+        $sql .= "'{$dataprotection_phone}', '{$dataprotection_address}', '{$now}', '{$now}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -627,7 +629,7 @@ function process_add_contact($mode = 'internal')
         {
             clear_form_data('add_contact');
             clear_form_errors('add_contact');
-            $sql = "SELECT username, password FROM `{$dbContacts}` WHERE id=$newid";
+            $sql = "SELECT username, password FROM `{$dbContacts}` WHERE id={$newid}";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             else

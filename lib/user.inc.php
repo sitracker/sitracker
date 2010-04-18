@@ -56,9 +56,9 @@ function user_id($username, $password)
 {
     global $dbUsers;
     $sql  = "SELECT id FROM `{$dbUsers}` ";
-    $sql .= "WHERE username='$username' AND password='$password'";
+    $sql .= "WHERE username='$username' AND password='{$password}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
         $userid= 0;
@@ -108,9 +108,9 @@ function user_realname($id, $allowhtml = FALSE)
         }
         else
         {
-            $sql = "SELECT realname, status FROM `{$dbUsers}` WHERE id='$id' LIMIT 1";
+            $sql = "SELECT realname, status FROM `{$dbUsers}` WHERE id='{$id}' LIMIT 1";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($realname, $status) = mysql_fetch_row($result);
             if ($allowhtml == FALSE OR $status > 0)
             {
@@ -138,7 +138,7 @@ function user_realname($id, $allowhtml = FALSE)
 
             $sql = "SELECT name, email_domain FROM `{$dbEscalationPaths}`";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             while ($escpath = mysql_fetch_object($result))
             {
                 if (!empty($escpath->email_domain))
@@ -316,7 +316,7 @@ function user_incidents($id)
     $sql .= "GROUP BY priority";
 
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $arr = array('1' => '0', '2' => '0', '3' => '0', '4' => '0');
 
@@ -362,7 +362,7 @@ function user_holiday($userid, $type= 0, $year, $month, $day, $length = FALSE)
         $sql .= "AND length='$length' ";
     }
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -423,7 +423,7 @@ function user_count_holidays($userid, $type, $date=0,
         $sql .= "AND (approved = ".HOL_APPROVAL_NONE." OR approved = ".HOL_APPROVAL_GRANTED.") ";
     }
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $full_days = mysql_num_rows($result);
 
     $sql = "SELECT id FROM `{$dbHolidays}` ";
@@ -453,7 +453,7 @@ function user_count_holidays($userid, $type, $date=0,
     debug_log($sql); // ###INL###
 
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $half_days = mysql_num_rows($result);
 
     $days_holiday = $full_days + ($half_days / 2);
@@ -504,7 +504,7 @@ function user_drop_down($name, $id = 0, $accepting = TRUE, $exclude = FALSE, $at
     global $dbUsers;
     $sql  = "SELECT id, realname, accepting FROM `{$dbUsers}` WHERE status > 0 ORDER BY realname ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html .= "<select name='{$name}' id='{$name}' ";
     if (!empty($attribs))
@@ -576,7 +576,7 @@ function user_group_id($userid)
     // get groupid
     $sql = "SELECT groupid FROM `{$dbUsers}` WHERE id='{$userid}' ";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($groupid) = mysql_fetch_row($result);
     return $groupid;
 }
@@ -593,7 +593,7 @@ function user_online_icon($user)
     global $iconset, $now, $dbUsers, $strOffline, $strOnline, $startofsession;
     $sql = "SELECT lastseen FROM `{$dbUsers}` WHERE id={$user}";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $users = mysql_fetch_object($result);
     if (mysql2date($users->lastseen) > $startofsession)
     {
@@ -617,7 +617,7 @@ function user_online($user)
     global $iconset, $now, $dbUsers, $startofsession;
     $sql = "SELECT lastseen FROM `{$dbUsers}` WHERE id={$user}";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $users = mysql_fetch_object($result);
     if (mysql2date($users->lastseen) > $startofsession)
     {
@@ -816,7 +816,7 @@ function check_group_holiday($userid, $date, $length='day')
             }
 
             $hresult = mysql_query($hsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($hresult) >= 1)
             {
                 $namelist .= user_realname($member->userid)." ($length)";
@@ -885,7 +885,7 @@ function software_backup_userid($userid, $softwareid)
     // Find out who is the substitute for this user/skill
     $sql = "SELECT backupid FROM `{$dbUserSoftware}` WHERE userid = '{$userid}' AND softwareid = '{$softwareid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($backupid) = mysql_fetch_row($result);
     $backup1 = $backupid;
 
@@ -895,7 +895,7 @@ function software_backup_userid($userid, $softwareid)
         $sql = "SELECT backupid FROM `{$dbUserSoftware}` WHERE userid='{$backupid}' AND userid!='{$userid}' ";
         $sql .= "AND softwareid='{$softwareid}' AND backupid!='{$backup1}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($backupid) = mysql_fetch_row($result);
         $backup2 = $backupid;
     }
@@ -906,7 +906,7 @@ function software_backup_userid($userid, $softwareid)
         $sql = "SELECT backupid FROM `{$dbUserSoftware}` WHERE userid='{$backupid}' AND userid!='{$userid}' ";
         $sql .= "AND softwareid='{$softwareid}' AND backupid!='{$backup1}' AND backupid!='{$backup2}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($backupid) = mysql_fetch_row($result);
     }
     return ($backupid);

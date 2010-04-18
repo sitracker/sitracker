@@ -52,9 +52,9 @@ function is_kb_article($id, $mode)
         $sql = "SELECT distribution FROM `{$dbKBArticles}` ";
         $sql .= "WHERE docid = '{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(). "  $sql", E_USER_WARNING);
         list($visibility) = mysql_fetch_row($result);
-        if ($visibility == 'public' && $mode == 'public')
+        if ($visibility == 'public' AND $mode == 'public')
         {
             $rtn = TRUE;
         }

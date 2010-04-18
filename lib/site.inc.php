@@ -25,9 +25,9 @@ function site_count_inventory_items($id)
     global $dbInventory;
     $count = 0;
 
-    $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE siteid='$id'";
+    $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE siteid='{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
     mysql_free_result($result);
 
