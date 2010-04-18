@@ -693,7 +693,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
  * @param bool $userdisable. (optional). When TRUE an additional option is given to allow disabling of accounts
  * @return string. HTML
  */
-function userstatus_drop_down($name, $id, $userdisable = FALSE)
+function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
 {
     global $dbUserStatus;
     // extract statuses
@@ -746,7 +746,7 @@ function userstatus_bardrop_down($name, $id)
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     $html = "<select id='userstatus_dropdown' name='$name' title='{$GLOBALS['strSetYourStatus']}' ";
-    $html .= "onchange=\"set_user_status();\" onblur=\"toggle_status_drop_down();\">";
+    $html .= "onchange=\"set_user_status();\" onblur=\"hide_status_drop_down();\">";
 //onchange=\"if ";
 //$html .= "(this.options[this.selectedIndex].value != 'null') { ";
 //$html .= "window.open(this.options[this.selectedIndex].value,'_top') }\
@@ -1460,7 +1460,7 @@ function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return
     {
       $sql .= "AND admincontact = '{$adminid}' ";
     }
-	
+
     if ($sla !== FALSE)
     {
         $sql .= "AND servicelevelid = '{$sla}' ";

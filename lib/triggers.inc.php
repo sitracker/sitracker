@@ -1089,7 +1089,6 @@ function triggers_to_html($user_id, $trigger_id = '')
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
-
     $html = "<table class='vertical'>";
     $html .= "<tr><th>Trigger</th><th>Actions</th></tr>";
     $i = 1;
@@ -1120,7 +1119,7 @@ function trigger_to_html($trigger, $user_id)
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($row = mysql_fetch_object($result))
     {
-        $t = Trigger::byID($row->id);
+        $t = Trigger::fromID($row->id);
         $html .= trigger_action_to_html($t);
     }
     return $html;
@@ -1212,9 +1211,9 @@ function template_description($name, $type)
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
  */
-function check_match_drop_down($id = '', $name = '')
+function check_match_drop_down($id = '')
 {
-	$html = "<select id='{$id}' name='{$name}'>";
+	$html = "<select id='{$id}' name='{$id}'>";
     $html .= "<option>is</option>";
     $html .= "<option>is not</option>";
     $html .= "<option>contains</option>";
@@ -1224,6 +1223,49 @@ function check_match_drop_down($id = '', $name = '')
 	return $html;
 }
 
+/**
+ * Creates a trigger check string from an array of HTML elements
+ * @param array $param the parameter names
+ * @param array $value the values of the parameters
+ * @param array $join the 'is', 'is not' selection
+ * @param array $enabled the status of the checkbox
+ * @param array $conditions whether to use 'all' or 'any' of the conditions
+ */
+function create_check_string($param, $value, $join, $enabled, $conditions)
+{
+	//FIXME check for bad code here
+	//FIXME add extra join
+	$param_count = sizeof($param);
+	for ($i = 0; $i < $param_count; $i++)
+	{
+		if ($enabled[$i] == 'on')
+		{
+			$checks[$i] = "{".$param[$i]."}";
+			if ($join[$i] == 'is') $checks[$i] .= "==";
+			elseif ($join[$i] == 'is not') $checks[$i] .= "==";
+			elseif ($join[$i] == 'contains') $check[$i] .= "!=";
+			$checks[$i] .= $value[$i];
+		}
+	}
+
+	$check_count = sizeof($checks);
+	for ($i = 0; $i < $check_count; $i++)
+	{
+		$final_check .= $checks[0];
+		if ($i != $check_count - 1)
+		{
+			if ($conditions == 'all')
+			{
+				$final_check .= " AND ";
+			}
+			else
+			{
+				$final_check .= " OR ";
+			}
+		}
+	}
+	return $final_check;
+}
 
 /**
  * @deprecated DEPRECATED trigger() function, use the TriggerEvent class instead

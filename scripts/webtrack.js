@@ -913,18 +913,17 @@ function togglecontactaddress()
     $('postcode').disabled = setting;
 }
 
-function toggle_status_drop_down()
+function show_status_drop_down()
 {
-    if ($('status_drop_down').style.display == 'none')
-    {
-        $('userstatus').hide();
-        $('status_drop_down').show();
-    }
-    else
-    {
-        $('userstatus').show();
-        $('status_drop_down').hide();
-    }
+    $('userstatus').hide();
+    $('status_drop_down').show();
+    $('userstatus_dropdown').focus();
+}
+
+function hide_status_drop_down()
+{
+    $('userstatus').appear();
+    $('status_drop_down').hide();
 }
 
 function set_user_status()
@@ -941,8 +940,8 @@ function set_user_status()
                     if (response != 'FALSE')
                     {
                         $('userstatus_summaryline').innerHTML = response;
-                        $('status_drop_down').hide();
-                        $('userstatus').appear();
+//                         hide_status_drop_down();
+                        $('userstatus_dropdown').blur();
                     }
                 }
             },

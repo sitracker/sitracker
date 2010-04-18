@@ -64,9 +64,10 @@ class Trigger extends SitEntity {
     function add()
     {
         global $dbTriggers;
-        $exists = check_exists($this->trigger_type,
-                               $this->userid, $this->template, $this->action, 
-                               $this->checks, $this->parameters);
+        $exists = $this->check_exists($this->trigger_type,
+                                      $this->userid, $this->template, 
+                                      $this->action, $this->checks, 
+                                      $this->parameters);
 
         if (!$exists)
         {

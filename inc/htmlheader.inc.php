@@ -115,7 +115,7 @@ if ($sit[0] != '')
     echo "</a>";
     echo " | <span id='userstatus'>";
     echo userstatus_summaryline();
-    echo " <a href='javascript:void(0)' onclick='toggle_status_drop_down()'>";
+    echo " <a href='javascript:void(0)' onclick='show_status_drop_down()' onblur=\"$('status_drop_down').blur();\">";
     echo icon('configure', 12, $strSetYourStatus)."</a></span>";
     echo "<span id='status_drop_down' style='display:none;'>";
     echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
@@ -326,7 +326,7 @@ if ($sit[0] != '')
             echo user_alert(sprintf("{$strSchedulerNotRunning}"), E_USER_ERROR);
         }
     }
-    
+
     // Check users email address
     if (empty($_SESSION['email']))
     {
