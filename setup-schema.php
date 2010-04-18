@@ -1340,7 +1340,7 @@ CREATE TABLE IF NOT EXISTS `{$dbTriggers}` (
   `id` int(11) NOT NULL auto_increment,
   `triggerid` varchar(50) NOT NULL,
   `userid` smallint(6) NOT NULL,
-  `action` enum('ACTION_NONE','ACTION_EMAIL','ACTION_NOTICE','ACTION_JOURNAL', 'ACTION_CREATE_INCIDENT') NOT NULL default 'ACTION_NONE',
+  `action` varchar(255) default NULL,
   `template` varchar(255) default NULL,
   `parameters` varchar(255) default NULL,
   `checks` varchar(255) default NULL,

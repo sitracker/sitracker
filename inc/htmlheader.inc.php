@@ -114,16 +114,12 @@ if ($sit[0] != '')
     }
     echo "</a>";
     echo " | <span id='userstatus'>";
-    echo userstatus_name(user_status($sit[2]));
-    if (user_accepting($sit[2]) != 'Yes')
-    {
-        echo " | {$strNotAcceptingIncidents}";
-    }
-    echo " <a href='javascript:void(0)' onclick='status_drop_down(true)'>";
+    echo userstatus_summaryline();
+    echo " <a href='javascript:void(0)' onclick='toggle_status_drop_down()'>";
     echo icon('configure', 12, $strSetYourStatus)."</a></span>";
-    echo "<span id='status_drop_down' style='display:none;'";
-    echo userstatus_bardrop_down("status", user_status($sit[2])).help_link("SetYourStatus");
-    echo " <a href='javascript:void(0)' onclick='status_drop_down(false)'> ".icon('delete', 12, $strClose)."</a></span> | ";
+    echo "<span id='status_drop_down' style='display:none;'>";
+    echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
+    echo "</span> | ";
     echo "<a href='logout.php'>{$strLogout}</a></div>";
 }
 
@@ -337,6 +333,33 @@ if ($sit[0] != '')
         echo user_alert("{$strInvalidEmailAddress} - <a href='user_profile_edit.php'>{$strEditEmail}</a>", E_USER_ERROR);
     }
 
+    // Check if scheduler is running (bug 108)
+    if (user_permission($sit[2], 22))
+    {
+        $failure = 0;
+
+        $sql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
+        $result = mysql_query($sql);
+        if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+
+        while ($schedule = mysql_fetch_object($result))
+        {
+            $sqlinterval = ("$schedule->interval");
+            $sqllastran = mysql2date("$schedule->lastran");
+            $dateresult = $sqlinterval + $sqllastran + 60;
+            if ($dateresult < date(U))
+            {
+                $failure ++;
+            }
+        }
+        $num = mysql_num_rows($result);
+        $num = $num / 2;
+        if ($failure > $num)
+        {
+            echo user_alert(sprintf("{$strSchedulerNotRunning}"), E_USER_ERROR);
+        }
+    }
+    // end of bug 108
     //display (trigger) notices
     $noticesql = "SELECT * FROM `{$GLOBALS['dbNotices']}` ";
     // Don't show more than 20 notices, saftey cap

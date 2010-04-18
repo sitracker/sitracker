@@ -449,9 +449,9 @@ function user_count_holidays($userid, $type, $date=0,
     {
         $sql .= "AND `date` < {$date}";
     }
-    
+
     debug_log($sql); // ###INL###
-    
+
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $half_days = mysql_num_rows($result);
@@ -912,6 +912,99 @@ function software_backup_userid($userid, $softwareid)
     return ($backupid);
 }
 
+/**
+ *
+ * @author Ivan Lucas
+ * @param string $newstatus - Either a user status ID or 'Yes' or 'No'
+ * @returns FALSE on failure, or HTML to display status
+ * @note Toggles accepting status only when passed 'yes' or 'no'
+*/
+function set_user_status($newstatus)
+{
+    global $dbUsers;
+    switch ($newstatus)
+    {
+        case USERSTATUS_IN_OFFICE:
+            $accepting = 'Yes';
+            break;
+        case USERSTATUS_NOT_IN_OFFICE:
+            $accepting = 'No';
+            break;
+        case USERSTATUS_IN_MEETING:
+            // don't change
+            $accepting = '';
+            break;
+        case USERSTATUS_AT_LUNCH:
+            $accepting = '';
+            break;
+        case USERSTATUS_ON_HOLIDAY:
+            $accepting = 'No';
+            break;
+        case USERSTATUS_WORKING_FROM_HOME:
+            $accepting = 'Yes';
+            break;
+        case USERSTATUS_ON_TRAINING_COURSE:
+            $accepting = 'No';
+            break;
+        case USERSTATUS_ABSENT_SICK:
+            $accepting = 'No';
+            break;
+        case USERSTATUS_WORKING_AWAY:
+            // don't change
+            $accepting = '';
+            break;
+        case 'Yes':
+        case 'yes':
+            $accepting = 'Yes';
+            $newstatus = '';
+            break;
+        case 'No':
+        case 'no':
+            $accepting = 'No';
+            $newstatus = '';
+            break;
+    }
+    $sql  = "UPDATE `{$dbUsers}` SET ";
+    if (!empty($newstatus)) $sql .= "status='$newstatus'";
+    if (!empty($newstatus) AND !empty($accepting)) $sql .= ', ';
+    if (!empty($accepting)) $sql .= "accepting='$accepting'";
+    $sql .= " WHERE id='{$_SESSION['userid']}' LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    debug_log("setting status: $sql");
+    incident_backup_switchover($_SESSION['userid'], $accepting);
 
+    $t = new TriggerEvent("TRIGGER_USER_CHANGED_STATUS", array('userid' => $_SESSION['userid']));
+
+    return userstatus_summaryline($newstatus, $accepting);
+}
+
+/**
+ * Return the current users status and accepting incidents statuses
+ * for use in the header bar
+ * @author Ivan Lucas
+ * @param int $userstatus - User status ID
+ * @param string $accepting - Accepting incidents 'Yes' or 'No'
+ * @return string HTML
+*/
+function userstatus_summaryline($userstatus = '', $accepting = '')
+{
+    if ($userstatus == '')
+    {
+        $userstatus = user_status($_SESSION['userid']);
+    }
+    if ($accepting == '')
+    {
+        $accepting = user_accepting($_SESSION['userid']);
+    }
+    $html = "<span id='userstatus_summaryline'>";
+    $html .= userstatus_name($userstatus);
+    if ($accepting != 'Yes')
+    {
+        $html .= " | {$GLOBALS['strNotAcceptingIncidents']}";
+    }
+    $html .= "</span>";
+    return $html;
+}
 
 ?>

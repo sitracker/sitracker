@@ -21,7 +21,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-
 // --------------------------------------------------------------------------------------------
 // Dashboard widgets
 
