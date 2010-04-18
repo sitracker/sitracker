@@ -305,11 +305,11 @@ if ($sit[0] != '')
         // Check if scheduler is running (bug 108)
         $failure = 0;
     
-        $sql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
-        $result = mysql_query($sql);
+        $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
+        $schedulerresult = mysql_query($schedulersql);
         if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
     
-        while ($schedule = mysql_fetch_object($result))
+        while ($schedule = mysql_fetch_object($schedulerresult))
         {
             $sqlinterval = ("$schedule->interval");
             $sqllastran = mysql2date("$schedule->lastran");
@@ -319,7 +319,7 @@ if ($sit[0] != '')
                 $failure ++;
             }
         }
-        $num = mysql_num_rows($result);
+        $num = mysql_num_rows($schedulerresult);
         $num = $num / 2;
         if ($failure > $num)
         {
