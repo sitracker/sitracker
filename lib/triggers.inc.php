@@ -1223,6 +1223,49 @@ function check_match_drop_down($id = '')
 	return $html;
 }
 
+/**
+ * Creates a trigger check string from an array of HTML elements
+ * @param array $param the parameter names
+ * @param array $value the values of the parameters
+ * @param array $join the 'is', 'is not' selection
+ * @param array $enabled the status of the checkbox
+ * @param array $conditions whether to use 'all' or 'any' of the conditions
+ */
+function create_check_string($param, $value, $join, $enabled, $conditions)
+{
+	//FIXME check for bad code here
+	//FIXME add extra join
+	$param_count = sizeof($param);
+	for ($i = 0; $i < $param_count; $i++)
+	{
+		if ($enabled[$i] == 'on')
+		{
+			$checks[$i] = "{".$param[$i]."}";
+			if ($join[$i] == 'is') $checks[$i] .= "==";
+			elseif ($join[$i] == 'is not') $checks[$i] .= "==";
+			elseif ($join[$i] == 'contains') $check[$i] .= "!=";
+			$checks[$i] .= $value[$i];
+		}
+	}
+
+	$check_count = sizeof($checks);
+	for ($i = 0; $i < $check_count; $i++)
+	{
+		$final_check .= $checks[0];
+		if ($i != $check_count - 1)
+		{
+			if ($conditions == 'all')
+			{
+				$final_check .= " AND ";
+			}
+			else
+			{
+				$final_check .= " OR ";
+			}
+		}
+	}
+	return $final_check;
+}
 
 /**
  * @deprecated DEPRECATED trigger() function, use the TriggerEvent class instead

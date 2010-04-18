@@ -14,6 +14,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php'); 
 //This page requires authentication
 $permission = 72;
+require (APPLICATION_LIBPATH . 'auth.inc.php');
 $trigger_mode = 'user';
 if (isset($_GET['user']))
 {
@@ -32,11 +33,8 @@ else
 {
     $user_id = $sit[2];
 }
-require (APPLICATION_LIBPATH . 'auth.inc.php');
-
 $title = 'New Triggers Interface';
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-($_GET['user'] == 'admin') ? $user = 0 : $user = $sit[2];
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -250,36 +248,26 @@ else
 
 if (!empty($_POST['triggertype']))
 {
-    $param_count = sizeof($_POST['param']);
-    for ($i = 0; $i < $param_count; $i++)
-    {
-    	if ($_POST['enabled'][$i] == 'on')
-    	{
-    		$checks[$i] = "{".$_POST['param'][$i]."}";
-    		if ($_POST['join'][$i] == 'is') $checks[$i] .= "==";
-    		elseif ($_POST['join'][$i] == 'is not') $checks[$i] .= "==";
-    		elseif ($_POST['join'][$i] == 'contains') $check[$i] .= "!=";
-    		$checks[$i] .= $_POST['value'][$i];
-    	}
-    }
-    
-    $check_count = sizeof($checks);
-        for ($i = 0; $i < $check_count; $i++)
-        {
-            $final_check .= $checks[0];
-            if ($i != $check_count - 1)
-            {
-                if ($_POST['conditions'] == 'all')
-                {
-                    $final_check .= " AND ";
-                }
-                else
-                {
-                    $final_check .= " OR ";
-                }
-            }
-        }   
-    echo $final_check;
+	$_POST = cleanvar($_POST);
+	$checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], 
+	                             $_POST['enabled'], $_POST['conditions']);
+	
+    if ($_POST['new_action'] == 'ACTION_NOTICE')
+	{
+        $template = $_POST['noticetemplate'];
+	}
+	elseif ($_POST['new_action'] == 'ACTION_EMAIL')
+	{
+	    $template = $_POST['emailtemplate'];
+	}
+
+	$t = new Trigger($_POST['triggertype'], $user_id, $template, 
+                     $_POST['new_action'], $checks, $parameters);
+                     
+    $success = $t->add();
+    if ($trigger_mode == 'system') $return = 'system_actions.php';
+    else $return = 'notifications.php';
+    html_redirect($return, $success, $t->getError_text());                     
 }
 else
 {
