@@ -509,7 +509,7 @@ elseif ($action=='incidentform')
 
         // Insert pre-defined per-product questions from the database, these should be required fields
         // These 'productinfo' questions don't have a GUI as of 27Oct05
-        $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='$productid'";
+        $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $numquestions = mysql_num_rows($result);
@@ -547,13 +547,13 @@ elseif ($action=='incidentform')
     }
     else
     {
-        $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id=$updateid";
+        $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id={$updateid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $updaterow = mysql_fetch_array($result);
         $mailed_body_text = $updaterow['bodytext'];
 
-        $sql="SELECT subject FROM `{$dbTempIncoming}` WHERE updateid=$updateid";
+        $sql="SELECT subject FROM `{$dbTempIncoming}` WHERE updateid={$updateid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $updaterow = mysql_fetch_array($result);
@@ -561,7 +561,7 @@ elseif ($action=='incidentform')
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
-        echo "name='incidenttitle' size='50' type='text' value=\"".htmlspecialchars($mailed_subject,ENT_QUOTES)."\" />";
+        echo "name='incidenttitle' size='50' type='text' value=\"".htmlspecialchars($mailed_subject, ENT_QUOTES)."\" />";
         echo " <span class='required'>{$strRequired}</span></td>\n";
         echo "<td>";
         if ($type == 'free')
@@ -582,7 +582,6 @@ elseif ($action=='incidentform')
         echo "<tr><td class='shade1' colspan='2'>&nbsp;</td></tr>\n";
     }
     echo "<tr><td><strong>{$strNextAction}</strong><br />";
-//     echo "<input type='text' name='nextaction' maxlength='50' size='30' value='Initial Response' /><br /><br />";
     echo show_next_action('supportdetails');
     echo "</td>";
     echo "<td colspan='2'>";
@@ -602,7 +601,7 @@ elseif ($action=='incidentform')
 elseif ($action == 'assign')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    if ($type == "support" || $type == "free")
+    if ($type == "support" OR $type == "free")
     {
         $html .= "<h2>{$strAddIncident} - {$strAssign}</h2>";
 
@@ -628,6 +627,14 @@ elseif ($action == 'assign')
         $send_email = cleanvar($_REQUEST['send_email']);
         $inventory = cleanvar($_REQUEST['inventory']);
 
+        $timetonextaction = cleanvar($_POST['timetonextaction']);
+        $date = cleanvar($_POST['date']);
+        $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
+        $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);  
+        $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
+        $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
+        $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
+        
         if ($send_email == 'on')
         {
             $send_email = 1;
@@ -643,7 +650,7 @@ elseif ($action == 'assign')
         if ($contactid == 0)
         {
             $errors = 1;
-            $error_string .= "{$strYouMustSelectAcontact}";
+            $error_string .= $strYouMustSelectAcontact;
         }
 
         // check for blank title
@@ -662,13 +669,13 @@ elseif ($action == 'assign')
         if ($type == '')
         {
             $errors = 1;
-            $error_string .= "{$strIncidentTypeWasBlank}";
+            $error_string .= $strIncidentTypeWasBlank;
         }
 
         if ($type == 'free' AND $servicelevel == '' )
         {
             $errors++;
-            $error_string .= "{$strYouMustSelectAserviceLevel}";
+            $error_string .= $strYouMustSelectAserviceLevel;
         }
 
         if ($errors == 0)
@@ -676,27 +683,32 @@ elseif ($action == 'assign')
             // add incident (assigned to current user)
 
             // Calculate the time to next action
-            switch ($timetonextaction_none)
+            switch ($timetonextaction)
             {
                 case 'none':
                     $timeofnextaction = 0;
                     break;
                 case 'time':
                     $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);
-                break;
-
+                    break;
                 case 'date':
-                    // $now + ($days * 86400) + ($hours * 3600) + ($minutes * 60);
-                    $unixdate = mktime(9, 0, 0, $month, $day, $year);
-                    $now = time();
-                    $timeofnextaction = $unixdate;
-                    if ($timeofnextaction < 0) $timeofnextaction = 0;
+                    $date = explode("-", $date);
+                    $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
+                    if ($timeofnextaction < 0) $timeofnextaction = 0;                   
                     break;
                 default:
                     $timeofnextaction = 0;
                     break;
             }
 
+            if ($timeofnextaction > 0)
+            {
+                $timetext = "Next Action Time: ";
+                $timetext .= date("D jS M Y @ g:i A", $timeofnextaction);
+                $timetext .= "</b>\n\n";
+                $bodytext = $timetext.$bodytext;
+            }
+            
             // Set the service level the contract
             if ($servicelevel == '')
             {
@@ -714,7 +726,7 @@ elseif ($action == 'assign')
                 // Attempt to update contact
                 $sql = "SELECT username, contact_source FROM `{$GLOBALS['dbContacts']}` WHERE id = {$contactid}";
                 $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $obj = mysql_fetch_object($result);
                 if ($obj->contact_source == 'ldap')
                 {
@@ -724,9 +736,9 @@ elseif ($action == 'assign')
             }
 
             // Check the service level priorities, look for the highest possible and reduce the chosen priority if needed
-            $sql = "SELECT priority FROM `{$dbServiceLevels}` WHERE tag='$servicelevel' ORDER BY priority DESC LIMIT 1";
+            $sql = "SELECT priority FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' ORDER BY priority DESC LIMIT 1";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($highestpriority) = mysql_fetch_row($result);
             if ($priority > $highestpriority)
             {
@@ -736,8 +748,8 @@ elseif ($action == 'assign')
 
             $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, servicelevel, status, type, maintenanceid, ";
             $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction) ";
-            $sql .= "VALUES ('$incidenttitle', '".$sit[2]."', '$contactid', '$priority', '$servicelevel', '1', 'Support', '$maintid', ";
-            $sql .= "'$productid', '$software', '$productversion', '$productservicepacks', '$now', '$now', '$timeofnextaction')";
+            $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1}', 'Support}', '{$maintid}', ";
+            $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -941,13 +953,13 @@ elseif ($action == 'assign')
                 // display reassign link only if person is accepting or if the current user has 'reassign when not accepting' permission
                 if ($userrow['accepting'] == 'Yes')
                 {
-                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid=".$userrow['id']."&amp;incidentid=$incidentid&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
+                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userrow['id']}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strAssignTo}</a></td>";
                 }
                 elseif (user_permission($sit[2],40) OR $userrow['id'] == $sit[2])
                 {
-                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid=".$userrow['id']."&amp;incidentid=$incidentid&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
+                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userrow['id']}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strForceTo}</a></td>";
                 }

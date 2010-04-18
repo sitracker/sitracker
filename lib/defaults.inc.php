@@ -345,4 +345,6 @@ $CONFIG['inventory_enabled'] = TRUE;
 
 $CONFIG['currency_symbol'] = '&curren;';
 
+$CONFIG['display_minute_interval'] = 15;
+
 ?>

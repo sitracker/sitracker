@@ -315,19 +315,26 @@ function display_update_page($draftid=-1)
 
         switch ($metadata[1])
         {
-            case 'research': $typeResearch = " selected='selected' ";
+            case 'research':
+                $typeResearch = " selected='selected' ";
                 break;
-            case 'emailin': $typeEmailin = " selected='selected' ";
+            case 'emailin':
+                $typeEmailin = " selected='selected' ";
                 break;
-            case 'emailout': $typeEmailout = " selected='selected' ";
+            case 'emailout':
+                $typeEmailout = " selected='selected' ";
                 break;
-            case 'phonecallin': $typePhonecallin = " selected='selected' ";
+            case 'phonecallin':
+                $typePhonecallin = " selected='selected' ";
                 break;
-            case 'phonecallout': $typePhonecallout = " selected='selected' ";
+            case 'phonecallout':
+                $typePhonecallout = " selected='selected' ";
                 break;
-            case 'externalinfo': $typeExternalinfo = " selected='selected' ";
+            case 'externalinfo':
+                $typeExternalinfo = " selected='selected' ";
                 break;
-            case 'reviewmet': $typeReviewmet = " selected='selected' ";
+            case 'reviewmet':
+                $typeReviewmet = " selected='selected' ";
                 break;
         }
     }
@@ -562,7 +569,8 @@ else
     $cust_vis = cleanvar($_POST['cust_vis']);
     $timetonextaction = cleanvar($_POST['timetonextaction']);
     $date = cleanvar($_POST['date']);
-    $timeoffset = cleanvar($_POST['timeoffset']);
+    $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
+    $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);  
     $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
     $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
     $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
@@ -582,6 +590,7 @@ else
     }
 
     if (empty($newpriority)) $newpriority  = incident_priority($id);
+    $timeofnextaction = 0;
     // update incident
     switch ($timetonextaction)
     {
@@ -601,8 +610,7 @@ else
         case 'date':
             // kh: parse date from calendar picker, format: 200-12-31
             $date = explode("-", $date);
-            $timeofnextaction = mktime(8 + $timeoffset, 0, 0, $date[1], $date[2], $date[0]);
-            $now = time();
+            $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
             if ($timeofnextaction < 0) $timeofnextaction = 0;
             break;
         default:
@@ -619,11 +627,13 @@ else
     {
         $bodytext = "Status: ".mysql_real_escape_string(incidentstatus_name($oldstatus))." -&gt; <b>" . mysql_real_escape_string(incidentstatus_name($newstatus)) . "</b>\n\n" . $bodytext;
     }
+
     if ($newpriority != incident_priority($id))
     {
         $bodytext = "New Priority: <b>" . mysql_real_escape_string(priority_name($newpriority)) . "</b>\n\n" . $bodytext;
     }
-    if ($timeofnextaction > ($oldtimeofnextaction+60))
+
+    if ($timeofnextaction > ($oldtimeofnextaction + 60))
     {
         $timetext = "Next Action Time: ";
         if (($oldtimeofnextaction - $now) < 1) $timetext .= "None";
