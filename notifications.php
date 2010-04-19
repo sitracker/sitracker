@@ -24,17 +24,7 @@ echo "<p>Below is a list of your notifications.</p>";
 echo "<a href='action_details.php'>";
 echo icon('add', 16). " {$strAddNotification}</a>";
 echo "</div><br />";
-// BEGIN TESTING CODE
-//$t = new TriggerEvent('TRIGGER_SIT_UPGRADED', array());
-
-//$t = new Trigger('TRIGGER_INCIDENT_CLOSED', 1, 'EMAIL_INCIDENT_CLOSURE', 'ACTION_EMAIL', '', '');
-//echo $t->debug();
-// $t2 = Trigger::byID(5);
-// $t2->debug();
 echo triggers_to_html($sit[2]);
-
-//END TESTING CODE
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-
 
 ?>
