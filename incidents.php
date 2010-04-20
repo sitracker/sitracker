@@ -21,8 +21,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-require (APPLICATION_LIBPATH . 'incident.inc.php');
-
 // External variables
 $type = cleanvar($_REQUEST['type']);
 $user = cleanvar($_REQUEST['user']);
@@ -101,7 +99,7 @@ switch ($type)
         }
         $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id ";
         $sql .= "AND owner > 0 ";  // We always need to have an owner which is not sit
-        if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";       
+        if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";
         if (!empty($softwareid)) $sql .= "AND softwareid='$softwareid' ";
 
         if (!empty($maintexclude)) $sql .= "AND i.maintenanceid != '{$maintexclude}' ";
@@ -158,29 +156,29 @@ switch ($type)
             else $sortorder = "DESC";
             switch ($sort)
             {
-                case 'id': 
-                    $sql .= " ORDER BY id $sortorder";
+                case 'id':
+                    $sql .= " ORDER BY id {$sortorder}";
                     break;
                 case 'title':
-                    $sql .= " ORDER BY title $sortorder";
+                    $sql .= " ORDER BY title {$sortorder}";
                     break;
                 case 'contact':
-                    $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder";
+                    $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
                     break;
                 case 'priority':
-                    $sql .=  " ORDER BY priority $sortorder, lastupdated ASC";
+                    $sql .=  " ORDER BY priority {$sortorder}, lastupdated ASC";
                     break;
                 case 'status':
-                    $sql .= " ORDER BY status $sortorder";
+                    $sql .= " ORDER BY status {$sortorder}";
                     break;
                 case 'lastupdated':
-                    $sql .= " ORDER BY lastupdated $sortorder";
+                    $sql .= " ORDER BY lastupdated {$sortorder}";
                     break;
                 case 'duration':
-                    $sql .= " ORDER BY duration $sortorder";
+                    $sql .= " ORDER BY duration {$sortorder}";
                     break;
                 case 'nextaction':
-                    $sql .= " ORDER BY timetonextaction $sortorder";
+                    $sql .= " ORDER BY timetonextaction {$sortorder}";
                     break;
                 default:
                     $sql .= " ORDER BY priority DESC, lastupdated ASC";
@@ -203,7 +201,7 @@ switch ($type)
         }
 
         // build querystring for hyperlinks
-        $querystring = "?user=$user&amp;queue=$queue&amp;type=$type&amp;";
+        $querystring = "?user={$user}&amp;queue={$queue}&amp;type={$type}&amp;";
 
         // show drop down of incident status
         echo "<form action='{$_SERVER['PHP_SELF']}'>";
@@ -239,7 +237,7 @@ switch ($type)
         }
 
         if (!empty($softwareid)) echo "<p align='center'>".sprintf($strFilterActiveOnlyShowingIncidentsForX, software_name($softwareid))."</p>";
-        if ($user=='all') echo "<p align='center'>".sprintf($strThereAreXIncidentsInThisList, $rowcount)."</p>";
+        if ($user == 'all') echo "<p align='center'>".sprintf($strThereAreXIncidentsInThisList, $rowcount)."</p>";
         else echo "<br />";
 
         // Print message if no incidents were listed
@@ -257,7 +255,7 @@ switch ($type)
         // EXPERTISE QUEUE
         // ***
         if ($user == 'current') $user = $sit[2];
-        $softsql = "SELECT * FROM `{$dbUserSoftware}` WHERE userid='$user' ";
+        $softsql = "SELECT * FROM `{$dbUserSoftware}` WHERE userid='{$user}' ";
         $softresult = mysql_query($softsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -290,15 +288,15 @@ switch ($type)
                     echo "<h2>{$strOtherIncidents}: <span class='actionqueue'>{$strActionNeeded}</span>".help_link("OtherIncidents")."</h2>\n";
                     $sql .= "AND (status!='2') ";  // not closed
                     // the "1=2" obviously false else expression is to prevent records from showing unless the IF condition is true
-                    $sql .= "AND ((timeofnextaction > 0 AND timeofnextaction < $now) OR ";
-                    $sql .= "(IF ((status >= 5 AND status <=8), ($now - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
+                    $sql .= "AND ((timeofnextaction > 0 AND timeofnextaction < {$now}) OR ";
+                    $sql .= "(IF ((status >= 5 AND status <=8), ({$now} - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
                     $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
                     $sql .= ") AND timeofnextaction < $now ) ";
                     // outstanding
                     break;
                 case 2: // Waiting
                     echo "<h2>{$strOtherIncidents}: <span class='waitingqueue'>{$strWaiting}</span></h2>\n";
-                    $sql .= "AND ((status >= 4 AND status <= 8) OR (timeofnextaction > 0 AND timeofnextaction > $now)) ";
+                    $sql .= "AND ((status >= 4 AND status <= 8) OR (timeofnextaction > 0 AND timeofnextaction > {$now})) ";
                     break;
                 case 3: // All Open
                     echo "<h2>{$strOtherIncidents}: <span class='openqueue'>{$strAllOpen}</span></h2>\n";
@@ -324,28 +322,28 @@ switch ($type)
             switch ($sort)
             {
                 case 'id':
-                    $sql .= " ORDER BY id $sortorder";
+                    $sql .= " ORDER BY id {$sortorder}";
                     break;
                 case 'title':
-                    $sql .= " ORDER BY title $sortorder";
+                    $sql .= " ORDER BY title {$sortorder}";
                     break;
                 case 'contact':
-                    $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder";
+                    $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
                     break;
                 case 'priority':
-                    $sql .=  " ORDER BY priority $sortorder, lastupdated ASC";
+                    $sql .=  " ORDER BY priority {$sortorder}, lastupdated ASC";
                     break;
                 case 'status':
-                    $sql .= " ORDER BY status $sortorder";
+                    $sql .= " ORDER BY status {$sortorder}";
                     break;
                 case 'lastupdated':
-                    $sql .= " ORDER BY lastupdated $sortorder";
+                    $sql .= " ORDER BY lastupdated {$sortorder}";
                     break;
                 case 'duration':
-                    $sql .= " ORDER BY duration $sortorder";
+                    $sql .= " ORDER BY duration {$sortorder}";
                     break;
                 case 'nextaction':
-                    $sql .= " ORDER BY timetonextaction $sortorder";
+                    $sql .= " ORDER BY timetonextaction {$sortorder}";
                     break;
                 default:
                     $sql .= " ORDER BY priority DESC, lastupdated ASC";
@@ -362,7 +360,10 @@ switch ($type)
                 // Incidents Table
                 include (APPLICATION_INCPATH . 'incidents_table.inc.php');
             }
-            else echo "<p class='info'>{$strNoIncidents}</p>";
+            else
+            {
+                echo "<p class='info'>{$strNoIncidents}</p>";
+            }
 
             // end of expertise queue
             // ***

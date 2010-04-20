@@ -112,7 +112,7 @@ if (is_numeric($_GET['id']))
             else
             {
                 echo "<a href='inventory_view.php?id={$row->id}'>{$strView}</a> &nbsp; ";
-                echo "<a href='inventory_edit.php?id={$row->id}'>{$strEdit}</td></tr>";
+                echo "<a href='inventory_edit.php?id={$row->id}'>{$strEdit}</a></td></tr>";
             }
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';

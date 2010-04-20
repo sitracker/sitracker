@@ -32,10 +32,9 @@ if (empty($submit))
     $_SESSION['formerrors']['add_software'] = NULL;
     echo "<h2>".icon('skill', 32)." ";
     echo "{$strNewSkill}</h2>";
-    echo "<h5>".sprintf($strMandatoryMarked, "<sup class='red'>*</sup></h5>");
     echo "<form name='addsoftware' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='vertical'>";
-    echo "<tr><th>{$strVendor}:</th><td>";
+    echo "<tr><th>{$strVendor}</th><td>";
     if ($_SESSION['formdata']['add_software']['vendor'] != '')
     {
         echo vendor_drop_down('vendor',$_SESSION['formdata']['add_software']['vendor'])."</td></tr>\n";
@@ -44,16 +43,16 @@ if (empty($submit))
     {
         echo vendor_drop_down('vendor',$software->vendorid)."</td></tr>\n";
     }
-    echo "<tr><th>{$strSkill}: <sup class='red'>*</sup></th><td><input maxlength='50' name='name' size='30' /></td></tr>\n";
-    echo "<tr><th>{$strLifetime}:</th><td>";
-    echo "<input type='text' name='lifetime_start' id='lifetime_start' size='10' ";
+    echo "<tr><th>{$strSkill}</th><td><input maxlength='50' name='name' size='30' class='required' /> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<tr><th>{$strLifetime}</th><td>";
+    echo "{$strFrom} <input type='text' name='lifetime_start' id='lifetime_start' size='10' ";
     if ($_SESSION['formdata']['add_software']['lifetime_start'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_software']['lifetime_start']}'";
     }
     echo " /> ";
     echo date_picker('addsoftware.lifetime_start');
-    echo " {$strTo}: ";
+    echo " {$strTo} ";
     echo "<input type='text' name='lifetime_end' id='lifetime_end' size='10'";
     if ($_SESSION['formdata']['add_software']['lifetime_end'] != '')
     {
@@ -62,7 +61,7 @@ if (empty($submit))
     echo "/> ";
     echo date_picker('addsoftware.lifetime_end');
     echo "</td></tr>\n";
-    echo "<tr><th>{$strTags}:</th>";
+    echo "<tr><th>{$strTags}</th>";
     echo "<td><textarea rows='2' cols='30' name='tags'></textarea></td></tr>\n";
     echo "</table>";
     echo "<p align='center'><input name='submit' type='submit' value='{$strAddSkill}' /></p>";
@@ -102,7 +101,6 @@ else
     // Add new
     $errors = 0;
 
-    // check for blank name
     if ($name == '')
     {
         $errors++;

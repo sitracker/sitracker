@@ -14,7 +14,7 @@
 
 
 
-$permission=0; // not required
+$permission = 0; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -34,7 +34,6 @@ while ($dashboard = mysql_fetch_object($result))
 }
 
 // Valid user
-$pagescripts = array('scriptaculous/scriptaculous.js?load=effects,dragdrop');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '".$_SESSION['userid']."'";
@@ -81,7 +80,7 @@ $cols2 = substr($cols2, 0, -1);
 echo "<p id='pageoptions'>".help_link("Dashboard")." <a href='manage_user_dashboard.php' title='{$strManageYourDashboard}'>";
 echo icon('dashboardadd', 16)."</a> ";
 echo "<a href=\"javascript:save_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";
-echo "<table border=\"0\" width=\"99%\" id='cols'><tr>"; //id='dashboardlayout'
+echo "\n<table border=\"0\" width=\"99%\" id='cols'><tr>\n"; //id='dashboardlayout'
 echo "<td width=\"33%\" valign='top' id='col0'>";
 
 $arr = explode(",",$cols0);
@@ -90,7 +89,7 @@ foreach ($arr AS $a)
     show_dashboard_component(0, $a);
 }
 
-echo "</td><td width=\"33%\" valign='top' id='col1'>";
+echo "</td>\n<td width=\"33%\" valign='top' id='col1'>";
 
 $arr = explode(",",$cols1);
 foreach ($arr AS $a)
@@ -98,7 +97,7 @@ foreach ($arr AS $a)
     show_dashboard_component(1, $a);
 }
 
-echo "</td><td width=\"33%\" valign=\"top\" id='col2'>";
+echo "</td>\n<td width=\"33%\" valign=\"top\" id='col2'>";
 
 $arr = explode(",",$cols2);
 foreach ($arr AS $a)
@@ -111,19 +110,19 @@ echo "</td></tr></table>\n";
 //  Users Login Details
 echo "<div id='userbar'>";
 
-if (user_accepting($sit[2])!='Yes')
-{
-    $userstatus = "<span class='error'>{$strNotAcceptingIncidents}</span>";
-}
-else
-{
-    $userstatus = "<strong>{$strAcceptingIncidents}</strong>";
-}
-
-echo sprintf($strLoggedInAsXAndCurrentlyXAndX,
-            "<strong>{$sit[0]}</strong>",
-            "<strong>".userstatus_name(user_status($sit[2]))."</strong>",
-            $userstatus);
+// if (user_accepting($sit[2])!='Yes')
+// {
+//     $userstatus = "<span class='error'>{$strNotAcceptingIncidents}</span>";
+// }
+// else
+// {
+//     $userstatus = "<strong>{$strAcceptingIncidents}</strong>";
+// }
+//
+// echo sprintf($strLoggedInAsXAndCurrentlyXAndX,
+//             "<strong>{$sit[0]}</strong>",
+//             "<strong>".userstatus_name(user_status($sit[2]))."</strong>",
+//             $userstatus);
 
 if ($sit[3] == 'public')
 {
@@ -250,13 +249,13 @@ function save_layout(){
 
 
 echo "<div id='footerbar'>";
-echo "<form action='{$_SERVER['PHP_SELF']}'>";
-echo "{$strSetYourStatus}: ";
-if (isset($sit[2]))
-{
-   echo userstatus_bardrop_down("status", user_status($sit[2])).help_link("SetYourStatus");
-}
-echo "</form>\n";
+//echo "<form action='{$_SERVER['PHP_SELF']}'>";
+//echo "{$strSetYourStatus}: ";
+//if (isset($sit[2]))
+//{
+//   echo userstatus_bardrop_down("status", user_status($sit[2])).help_link("SetYourStatus");
+//}
+//echo "</form>\n";
 echo "</div>\n";
 if ($CONFIG['debug']) $dbg .= "\nLang: {$_SESSION['lang']}\n";
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

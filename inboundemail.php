@@ -9,14 +9,14 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 // Note: if performance is poor with attachments, we should download attachments
-//       with the function in fetchSitMail.class.php
+//       with the function in mail.class.php
 // Note2: to be called from auto.php
 
 require_once ('core.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 require (APPLICATION_LIBPATH . 'mime_parser.inc.php');
 require (APPLICATION_LIBPATH . 'rfc822_addresses.inc.php');
-require (APPLICATION_LIBPATH . 'fetchSitMail.class.php');
+require (APPLICATION_LIBPATH . 'mailbox.class.php');
 
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
@@ -104,10 +104,10 @@ if ($CONFIG['enable_inbound_mail'] == 'MTA')
 }
 elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
 {
-    $mailbox = new fetchSitMail($CONFIG['email_username'], $CONFIG['email_password'],
-                                $CONFIG['email_address'], $CONFIG['email_server'],
-                                $CONFIG['email_servertype'], $CONFIG['email_port'],
-                                $CONFIG['email_options']);
+    $mailbox = new Mailbox($CONFIG['email_username'], $CONFIG['email_password'],
+                           $CONFIG['email_address'], $CONFIG['email_server'],
+                           $CONFIG['email_servertype'], $CONFIG['email_port'],
+                           $CONFIG['email_options']);
 
 
     if (!$mailbox->connect())
@@ -394,7 +394,7 @@ if ($emails > 0)
             $c = 1;
             foreach ($attachments AS $att)
             {
-                $headertext .= "[[att={$att['fileid']}]]{$att['filename']}[[/att]]";
+                $headertext .= "[[att={$att['fileid']}]]".htmlspecialchars(mysql_real_escape_string($att['filename']))."[[/att]]";
                 if ($c < $count_attachments) $headertext .= ", ";
                 $c++;
             }
@@ -534,17 +534,21 @@ if ($emails > 0)
 
         // Create a link between the files and the update
         // We need to update the links table here as otherwise we have a blank
-        // updateid
-        foreach ($attachments AS $att)
+        // updateid.
+        // We check first that we have an updateid so that we don't fail here
+        // if something else failed above.
+        if ($updateid > 0)
         {
-            $sql = "UPDATE `{$GLOBALS['dbLinks']}` SET origcolref = '{$updateid}' ";
-            $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
-            $sql .= "AND linktype = 5 ";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            debug_log("Creating a link between $updateid and file {$att['fileid']}");
+            foreach ($attachments AS $att)
+            {
+                $sql = "UPDATE `{$GLOBALS['dbLinks']}` SET origcolref = '{$updateid}' ";
+                $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
+                $sql .= "AND linktype = 5 ";
+                mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                debug_log("Creating a link between $updateid and file {$att['fileid']}");
+            }
         }
-
         unset($headertext, $newupdate, $attachments, $attachment, $updateobj,
             $bodytext, $message, $incidentid);
     }

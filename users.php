@@ -29,9 +29,18 @@ $groupid = cleanvar($_REQUEST['gid']);
 $onlineonly = cleanvar($_REQUEST['onlineonly']);
 
 // By default show users in home group
-if ($groupid == 'all' OR ($groupid == '' AND $_SESSION['groupid'] == 0)) $filtergroup = 'all';
-elseif ($groupid == '') $filtergroup = $_SESSION['groupid'];
-else $filtergroup = $groupid;
+if ($groupid == 'all' OR ($groupid == '' AND $_SESSION['groupid'] == 0))
+{
+    $filtergroup = 'all';
+}
+elseif ($groupid == '')
+{
+    $filtergroup = $_SESSION['groupid'];
+}
+else
+{
+    $filtergroup = $groupid;
+}
 
 $title = $strUsers;
 
@@ -80,7 +89,7 @@ else $sql .= "ORDER BY realname ASC ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-echo "<table align='center' style='width: 95%;'>";
+echo "<table id='userslisttable' align='center'>";
 echo "<tr>";
 $filter = array('gid' => $filtergroup);
 echo colheader('realname', $strName, $sort, $order, $filter);

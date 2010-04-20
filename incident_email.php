@@ -110,8 +110,7 @@ switch ($step)
                 echo "{$iconset}/16x16/solution.png); background-repeat: ";
                 echo "no-repeat;'>";
                 echo "{$strResolutionReprioritisation}</option>\n";
-            break;
-
+                break;
             case 'probdef':
                 echo "<option value='probdef' style='text-indent: 15px; height:";
                 echo " 17px; background-image: ";
@@ -131,8 +130,7 @@ switch ($step)
                 echo "{$iconset}/16x16/solution.png); background-repeat: ";
                 echo "no-repeat;'>";
                 echo "{$strResolutionReprioritisation}</option>\n";
-            break;
-
+                break;
             case 'actionplan':
                 echo "<option value='actionplan' style='text-indent: 15px; ";
                 echo "height: 17px; background-image: ";
@@ -146,8 +144,7 @@ switch ($step)
                 echo "{$iconset}/16x16/solution.png); background-repeat: ";
                 echo "no-repeat;'>";
                 echo "{$strResolutionReprioritisation}</option>\n";
-            break;
-
+                break;
             case 'solution':
                 echo "<option value='solution' style='text-indent: 15px; ";
                 echo "height: 17px; background-image: ";
@@ -155,7 +152,7 @@ switch ($step)
                 echo "{$iconset}/16x16/solution.png); background-repeat: ";
                 echo "no-repeat;'>";
                 echo "{$strResolutionReprioritisation}</option>\n";
-            break;
+                break;
         }
         echo "</select>\n</td></tr>";
 
@@ -195,8 +192,6 @@ switch ($step)
         echo "<tr><th>{$strTimeToNextAction}:</th>";
         echo "<td>";
         echo show_next_action('updateform');
-        echo "</td>";
-        echo "<br />";
         echo "</td></tr>";
         plugin_do('incident_email_form1');
         echo "</table>";
@@ -206,8 +201,7 @@ switch ($step)
         echo "<input name='submit1' type='submit' value='{$strContinue}' /></p>";
         echo "</form>\n";
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
-    break;
-
+        break;
     case 2:
         // show form 2
         if ($draftid != -1)
@@ -276,7 +270,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             meta = meta+$('chase_manager').value+"|"+$('fromfield').value+"|"+$('replytofield').value+"|";
             meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
             meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|"
-            meta = meta+$('date').value+"|"+$('timeoffset').value;
+            meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
 
             if (toPass != '')
             {
@@ -347,7 +341,9 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             $chase_customer = cleanvar($_REQUEST['chase_customer']);
             $chase_manager = cleanvar($_REQUEST['chase_manager']);
             $date = cleanvar($_REQUEST['date']);
-            $timeoffset = cleanvar($_REQUEST['timeoffset']);
+            $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
+            $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
+            $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
         }
         else
         {
@@ -364,7 +360,9 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             $chase_customer = $metadata[10];
             $chase_manager = $metadata[11];
             $date = $metadata[12];
-            $timeoffset = $metadata[13];
+            $time_picker_hour = $metadata[13];
+            $time_picker_minute = $metadata[14];
+            $timetonextaction = $metadata[15];
         }
 
 
@@ -429,6 +427,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         echo "</table>";
         echo "<p align='center'>";
         echo "<input name='newincidentstatus' id='newincidentstatus' type='hidden' value='{$newincidentstatus}' />";
+        echo "<input name='timetonextaction' id='timetonextaction' type='hidden' value='{$timetonextaction}' />";       
         echo "<input name='timetonextaction_none' id='timetonextaction_none' type='hidden' value='{$timetonextaction_none}' />";
         echo "<input name='timetonextaction_days' id='timetonextaction_days' type='hidden' value='{$timetonextaction_days}' />";
         echo "<input name='timetonextaction_hours' id='timetonextaction_hours' type='hidden' value='{$timetonextaction_hours}' />";
@@ -436,7 +435,8 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         echo "<input name='chase_customer' id='chase_customer' type='hidden' value='{$chase_customer}' />";
         echo "<input name='chase_manager' id='chase_manager' type='hidden' value='{$chase_manager}' />";
         echo "<input name='date' id='date' type='hidden' value='{$date}' />";
-        echo "<input name='timeoffset' id='timeoffset' type='hidden' value='{$timeoffset}' />";
+        echo "<input name='time_picker_hour' id='time_picker_hour' type='hidden' value='{$time_picker_hour}' />";
+        echo "<input name='time_picker_minute' id='time_picker_minute' type='hidden' value='{$time_picker_minute}' />";
         echo "<input name='target' id='target' type='hidden' value='{$target}' />";
         echo "<input type='hidden' id='step' name='step' value='3' />";
         echo "<input type='hidden' id='emailtype' name='emailtype' value='{$emailtype}' />";
@@ -445,12 +445,9 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         echo "</p>\n</form>\n";
 
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
-    break;
-
+        break;
     case 3:
         // show form 3 or send email and update incident
-
-        // External variables
         $bodytext = $_REQUEST['bodytext'];
         $tofield = cleanvar($_REQUEST['tofield']);
         $fromfield = cleanvar($_REQUEST['fromfield']);
@@ -460,12 +457,14 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         $subjectfield = cleanvar($_REQUEST['subjectfield'], FALSE, TRUE, FALSE);
         $emailtype = cleanvar($_REQUEST['emailtype']);
         $newincidentstatus = cleanvar($_REQUEST['newincidentstatus']);
+        $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
         $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
         $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);
         $timetonextaction_hours = cleanvar($_REQUEST['timetonextaction_hours']);
         $timetonextaction_minutes = cleanvar($_REQUEST['timetonextaction_minutes']);
         $date = cleanvar($_REQUEST['date']);
-        $timeoffset = cleanvar($_REQUEST['timeoffset']);
+        $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
+        $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
         $year = cleanvar($_REQUEST['year']);
         $target = cleanvar($_REQUEST['target']);
         $chase_customer = cleanvar($_REQUEST['chase_customer']);
@@ -542,7 +541,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
 
             $mime = new MIME_mail($fromfield, $tofield, html_entity_decode($subjectfield), '', $extra_headers, $mailerror);
             // INL 5 Aug 09, quoted-printable seems to split lines in unexpected places, base64 seems to work ok
-            $mime -> attach($bodytext, 'bodytext', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+            $mime -> attach($bodytext, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
 
             // check for attachment
             //        if ($_FILES['attachment']['name']!='' || strlen($filename) > 3)
@@ -572,7 +571,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($result) < 1) trigger_error("Email template '{$meailtype}' not found",E_USER_WARNING);
             $emailtype = mysql_fetch_object($result);
-												$storeinlog = $emailtype->storeinlog;
+            $storeinlog = $emailtype->storeinlog;
             $templatename = $emailtype->name;
             $templatedescription = $emailtype->description;
 
@@ -587,41 +586,41 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             if ($mailok == TRUE)
             {
                 // update incident status if necessary
-                switch ($timetonextaction_none)
+                switch ($timetonextaction)
                 {
                     case 'none':
                         $timeofnextaction = 0;
-                    break;
+                        break;
 
                     case 'time':
                         $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);
-                    break;
+                        break;
 
                     case 'date':
-                        // kh: parse date from calendar picker, format: 200-12-31
-                        $date=explode("-", $date);
-                        $timeofnextaction=mktime(8 + $timeoffset,0,0,$date[1],$date[2],$date[0]);
+                        // kh: parse date from calendar picker, format: 2009-12-31
+                        $date = explode("-", $date);
+                        $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
                         $now = time();
                         if ($timeofnextaction < 0) $timeofnextaction = 0;
-                    break;
-
+                        break;
                     default:
                         $timeofnextaction = 0;
-                    break;
+                        break;
                 }
 
                 $oldtimeofnextaction = incident_timeofnextaction($id);
 
                 if ($newincidentstatus != incident_status($id))
                 {
-                    $sql = "UPDATE `{$dbIncidents}` SET status='$newincidentstatus', lastupdated='$now', timeofnextaction='$timeofnextaction' WHERE id='$id'";
+                    $sql = "UPDATE `{$dbIncidents}` SET status='{$newincidentstatus}', ";
+                    $sql .= "lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateheader = "New Status: <b>" . incidentstatus_name($newincidentstatus) . "</b>\n\n";
                 }
                 else
                 {
-                    mysql_query("UPDATE `{$dbIncidents}` SET lastupdated='$now', timeofnextaction='$timeofnextaction' WHERE id='$id'");
+                    mysql_query("UPDATE `{$dbIncidents}` SET lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'");
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 }
 
@@ -653,31 +652,32 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
 
                 if ($storeinlog == 'Yes')
                 {
-																// add update
-                $bodytext = htmlentities($bodytext, ENT_COMPAT, 'UTF-8');
-                $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
-                $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
-                $updateheader .= "{$SYSLANG['strReplyTo']}: [b]{$replytofield}[/b]\n";
-                if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "CC: [b]{$ccfield}[/b]\n";
-                if ($bccfield != '') $updateheader .= "BCC: [b]{$bccfield}[/b]\n";
-                if ($filename != '') $updateheader .= "{$SYSLANG['strAttachment']}: [b][[att={$fileid}]]".$name."[[/att]][/b]\n";
-                $updateheader .= "{$SYSLANG['strSubject']}: [b]{$subjectfield}[/b]\n";
-
-                if (!empty($updateheader)) $updateheader .= "<hr>";
-                $updatebody = $timetext . $updateheader . $bodytext;
-                $updatebody = mysql_real_escape_string($updatebody);
-
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
-                $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                $updateid = mysql_insert_id();
-
-																$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
-                $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-																}
+					// add update
+                    $bodytext = htmlentities($bodytext, ENT_COMPAT, 'UTF-8');
+                    $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
+                    $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
+                    $updateheader .= "{$SYSLANG['strReplyTo']}: [b]{$replytofield}[/b]\n";
+                    if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "CC: [b]{$ccfield}[/b]\n";
+                    if ($bccfield != '') $updateheader .= "BCC: [b]{$bccfield}[/b]\n";
+                    if ($filename != '') $updateheader .= "{$SYSLANG['strAttachment']}: [b][[att={$fileid}]]".$name."[[/att]][/b]\n";
+                    $updateheader .= "{$SYSLANG['strSubject']}: [b]{$subjectfield}[/b]\n";
+    
+                    if (!empty($updateheader)) $updateheader .= "<hr>";
+                    $updatebody = $timetext . $updateheader . $bodytext;
+                    $updatebody = mysql_real_escape_string($updatebody);
+    
+                    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
+                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $updateid = mysql_insert_id();
+    
+    																$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+                    $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                }
+			     
                 if ($storeinlog == 'No')
                 {
                 //Create a small note in the log to say the mail was sent but not logged (short )
@@ -686,13 +686,13 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
                 $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                 $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                 $updatebody = mysql_real_escape_string($updatebody);
-                
+
 																$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
                 $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $updateid = mysql_insert_id();
-																
+
 																$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
                 $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
                 mysql_query($sql);
@@ -707,37 +707,35 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
                     case 'none':
                         // do nothing
                         $sql = '';
-                    break;
-
+                        break;
                     case 'initialresponse':
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
                         $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'initialresponse','{$SYSLANG['strInitialResponseHasBeenMade']}')";
-                    break;
-
+                        break;
                     case 'probdef':
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
                         $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']}')";
-                    break;
-
+                        break;
                     case 'actionplan':
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
                         $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']}')";
-                    break;
-
+                        break;
                     case 'solution':
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
                         $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']}')";
-                    break;
+                        break;
                 }
+
                 if (!empty($sql))
                 {
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 }
+
                 if ($target != 'none')
                 {
                     // Reset the slaemail sent column, so that email reminders can be sent if the new sla target goes out
-                    $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='$id' LIMIT 1";
+                    $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='{$id}' LIMIT 1";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 }
@@ -806,11 +804,10 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             // there were errors
             html_redirect("incident_email.php?id={$id}&step=2&draftid={$draftid}", FALSE, $error_string);
         }
-    break;
-
+        break;
     default:
         trigger_error("{$SYSLANG['strInvalidParameter']}: $step", E_USER_ERROR);
-    break;
+        break;
 } // end switch step
 
 ?>

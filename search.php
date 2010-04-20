@@ -59,7 +59,7 @@ function search_highlight($x,$var)
     $x = strip_tags($x);
     $x = str_replace("\n", '', $x);
     // Trim the string to a reasonable length
-    $pos1 = stripos($x,$var);
+    $pos1 = stripos($x, $var);
     if ($pos1 === FALSE) $pos1 = 0;
     if ($pos1 > 30) $pos1 -= 25;
     $pos2 = strlen($var) + 70;
@@ -107,18 +107,26 @@ if (!isNaN(id))
             $result = mysql_query($sql);
             if (mysql_num_rows($result) > 0)
             {
-            ?>
-                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
-                if (!empty($_SERVER['HTTP_REFERER']))
-                {
-                    echo $_SERVER['HTTP_REFERER'];
+            	if ($_SESSION['userconfig']['incident_popup_onewindow'])
+            	{?>
+            		window.location = 'incident_details.php?id=' + id;
+            	<?php
+            	}
+            	else 
+            	{
+	            ?>
+	                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
+	                if (!empty($_SERVER['HTTP_REFERER']))
+	                {
+	                    echo $_SERVER['HTTP_REFERER'];
+	                }
+	                else
+	                {
+	                    echo $_CONFIG['application_webpath'];
+	                }
+	                ?>';
+	            <?php
                 }
-                else
-                {
-                    echo $_CONFIG['application_webpath'];
-                }
-                ?>';
-            <?php
             }
     }?>
 
@@ -159,7 +167,7 @@ if (!empty($q))
             $incidentsql .= " ORDER BY score ";
         }
 
-        if ($order=='a' OR $order=='ASC' OR $order='')
+        if ($order == 'a' OR $order == 'ASC' OR $order == '')
         {
             $incidentsql .= "ASC";
         }
@@ -220,6 +228,7 @@ if (!empty($q))
         {
             echo "{$strPrevious}";
         }
+
         echo " | ";
         if ($end < $results)
         {
@@ -231,6 +240,7 @@ if (!empty($q))
         {
             echo "{$strNext}";
         }
+
         echo "</p>";
         echo "<table align='center' width='80%'>";
         $filter['domain'] = 'incident';
@@ -251,10 +261,8 @@ if (!empty($q))
                     <td>".search_highlight($row->bodytext, $search)."</td>
                     <td>".ldate($CONFIG['dateformat_datetime'], $row->timestamp)."</td></tr>";
 
-            if ($shade == 'shade1')
-                $shade = 'shade2';
-            else
-                $shade = 'shade1';
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
         plugin_do('search_incidents');
         echo "</table>";
@@ -273,7 +281,7 @@ if (!empty($q))
         elseif ($sort=='date') $sitesql .= " ORDER BY k.keywords ";
         else $sitesql .= " ORDER BY u.score ";
 
-        if ($order=='a' OR $order=='ASC' OR $order='') $sitesql .= "ASC";
+        if ($order == 'a' OR $order == 'ASC' OR $order == '') $sitesql .= "ASC";
         else $sitesql .= "DESC";
     }
     else
@@ -325,6 +333,7 @@ if (!empty($q))
         {
             echo "{$strPrevious}";
         }
+
         echo " | ";
         if ($end < $results)
         {
@@ -427,6 +436,7 @@ if (!empty($q))
         {
             echo "{$strPrevious}";
         }
+
         echo " | ";
         if ($end < $results)
         {
@@ -721,7 +731,7 @@ echo "<br />";
 $search_domain = cleanvar($_REQUEST['domain']);
 if (empty($search_domain) OR strtolower($search_domain) == 'all')
 {
-$domain = 'incidents';
+    $domain = 'incidents';
 }
 
 $sort = cleanvar($_REQUEST['sort']);

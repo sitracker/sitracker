@@ -221,7 +221,8 @@ elseif ($_REQUEST['mode'] == 'report')
             else $hide = TRUE;
         }
         else $hide = FALSE;
-        if ($row->contactemail!=$lastemail AND $hide == FALSE)
+
+        if ($row->contactemail != $lastemail AND $hide == FALSE)
         {
             $html .= "<tr class='shade2'><td>{$row->forenames}</td>";
             $html .= "<td>{$row->surname}</td>";

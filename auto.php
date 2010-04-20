@@ -100,7 +100,7 @@ function saction_CloseIncidents($closure_delay)
         }
         else
         {
-        	$success = FALSE;
+            $success = FALSE;
         }
     }
     return $success;
@@ -122,7 +122,7 @@ function saction_PurgeJournal()
         trigger_error(mysql_error(),E_USER_WARNING);
         $success = FALSE;
     }
-    if ($CONFIG['debug']) //debug_log("Purged ".mysql_affected_rows()." journal entries");
+    if ($CONFIG['debug']); //debug_log("Purged ".mysql_affected_rows()." journal entries");
 
     return $success;
 }
@@ -142,7 +142,7 @@ function saction_TimeCalc()
     // FIXME this should only run INSIDE the working day
     // FIXME ? this will not update the database fully if two SLAs have been met since last run - does it matter ?
 
-    if ($CONFIG['debug']) //debug_log("Calculating SLA times");
+    if ($CONFIG['debug']); //debug_log("Calculating SLA times");
 
     $sql = "SELECT id, title, maintenanceid, priority, slaemail, slanotice, servicelevel, status, owner ";
     $sql .= "FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED." AND status != ".STATUS_CLOSING;
@@ -596,7 +596,7 @@ function saction_CheckWaitingEmail()
     list($count, $minswaiting) = mysql_fetch_row($result);
     if ($count > 0)
     {
-        trigger("TRIGGER_WAITING_HELD_EMAIL", array('minswaiting' => $minswaiting));
+        trigger("TRIGGER_WAITING_HELD_EMAIL", array('holdingmins' => $minswaiting));
     }
 
     return $success;
@@ -653,7 +653,7 @@ function saction_PurgeExpiredFTPItems()
 */
 function saction_MailPreviousMonthsTransactions()
 {
-	global $CONFIG;
+    global $CONFIG;
     /*
      Get todays date
      Subtract one from the month and find last month
@@ -679,7 +679,7 @@ function saction_MailPreviousMonthsTransactions()
     $startdate = "{$currentyear}-{$lastmonth}-01";
     // Find last date of previous month, 5 day an arbitary choice
     $lastday = date('t', strtotime('{$currentyear}-{$lastmonth}-05'));
-    $enddate = 	"{$currentyear}-{$lastmonth}-{$lastday}";
+    $enddate =  "{$currentyear}-{$lastmonth}-{$lastday}";
 
     $csv = transactions_report('', $startdate, $enddate, '', 'csv', TRUE);
 

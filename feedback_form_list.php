@@ -30,7 +30,7 @@ if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
 if (mysql_num_rows($result) > 0)
 {
-    echo "<div style='margin-left: auto; margin-right: auto; width: 70%;'>";
+    echo "<div id='feedbackformtable'>";
     while ($obj = mysql_fetch_object($result))
     {
         echo "<dl>\n";

@@ -32,24 +32,23 @@ if (empty($submit))
     clear_form_errors('add_product');
     echo "<h2>".icon('product', 32)." ";
     echo "{$strNewProduct}</h2>";
-    echo "<h5>".sprintf($strMandatoryMarked, "<sup class='red'>*</sup>")."</h5>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table align='center'>";
-    echo "<tr><th>{$strVendor}<sup class='red'>*</sup></th><td>";
+    echo "<tr><th>{$strVendor}</th><td>";
     if ($_SESSION['formdata']['add_product']['vendor'] != '')
     {
-        echo vendor_drop_down('vendor', $_SESSION['formdata']['add_product']['vendor'])."</td></tr>\n";
+        echo vendor_drop_down('vendor', $_SESSION['formdata']['add_product']['vendor'], TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
     }
     else
     {
-        echo vendor_drop_down('vendor', 0)."</td></tr>\n";
+        echo vendor_drop_down('vendor', 0, TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
     }
-    echo "<tr><th>{$strProduct}<sup class='red'>*</sup></th><td><input maxlength='50' name='name' size='40' ";
+    echo "<tr><th>{$strProduct}</th><td><input maxlength='50' name='name' size='40' class='required' ";
     if ($_SESSION['formdata']['add_product']['name'] != '')
     {
         echo "value=".$_SESSION['formdata']['add_product']['name'];
     }
-    echo " /></td></tr>\n";
+    echo " /> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strDescription}</th>";
     echo "<td>";

@@ -74,31 +74,70 @@ if (isset($refresh) && $refresh != 0)
 {
    echo "<meta http-equiv='refresh' content='{$refresh}' />\n";
 }
-
-echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
-echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
-echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
-echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
-// To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
-if (is_array($pagescripts))
+if ($_SESSION['auth'] == TRUE)
 {
-    foreach ($pagescripts AS $pscript)
+    echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
+    echo "<script src='{$CONFIG['application_webpath']}scripts/scriptaculous/scriptaculous.js?load=effects,dragdrop' type='text/javascript'></script>\n";
+    echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
+    echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
+    echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
+    // To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
+    if (is_array($pagescripts))
     {
-        echo "<script src='{$CONFIG['application_webpath']}scripts/{$pscript}' type='text/javascript'></script>\n";
+        foreach ($pagescripts AS $pscript)
+        {
+            echo "<script src='{$CONFIG['application_webpath']}scripts/{$pscript}' type='text/javascript'></script>\n";
+        }
+        unset($pagescripts, $pscript);
     }
-    unset($pagescripts, $pscript);
-}
-// javascript popup date library
-echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
-
-if ($sit[0] != '')
-{
+    // javascript popup date library
+    echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
     echo "<link rel='search' type='application/opensearchdescription+xml' title='{$CONFIG['application_shortname']} Search' href='{$CONFIG['application_webpath']}opensearch.php' />\n";
 }
 
 echo "</head>\n";
 echo "<body>\n";
-echo "<div id='masthead'><h1 id='apptitle'><span>{$CONFIG['application_name']}</span></h1></div>\n";
+
+echo "<div id='masthead'>";
+echo "<div id='mastheadcontent'>";
+if ($sit[0] != '')
+{
+    echo "<div id='personaloptions'>";
+    echo "<a href='user_profile_edit.php'>";
+    if (!empty($_SESSION['realname']))
+    {
+        echo $_SESSION['realname'];
+    }
+    else
+    {
+        echo $_SESSION['username'];
+    }
+    echo "</a>";
+    echo " | <span id='userstatus'>";
+    echo userstatus_summaryline();
+    echo " <a href='javascript:void(0)' onclick='show_status_drop_down()' onblur=\"$('status_drop_down').blur();\">";
+    echo icon('configure', 12, $strSetYourStatus)."</a></span>";
+    echo "<span id='status_drop_down' style='display:none;'>";
+    echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
+    echo "</span> | ";
+    echo "<a href='logout.php'>{$strLogout}</a></div>";
+}
+
+echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
+if ($sit[0] != '')
+{
+    echo "<div id='topsearch'>";
+    echo "<form name='jumptoincident' action='{$CONFIG['application_webpath']}search.php' method='get'>";
+    echo "<input type='text' name='q' id='searchfield' size='30' value='{$strIncidentNumOrSearchTerm}'
+    onblur=\"if ($('searchfield').value == '') { if (!isIE) { $('searchfield').style.color='#888;'; } $('searchfield').value='{$strIncidentNumOrSearchTerm}';}\"
+    onfocus=\"if ($('searchfield').value == '{$strIncidentNumOrSearchTerm}') { if (!isIE) { $('searchfield').style.color='#000;'; } $('searchfield').value=''; }\"
+    onclick='clearjumpto()'/> ";
+    // echo "<input type='image' src='{$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/find.png' alt='{$strGo}' onclick='jumpto()' />";
+    echo "</form>";
+    echo "</div>";
+}
+echo "</div></div>\n";
+
 // Show menu if logged in
 if ($sit[0] != '')
 {
@@ -232,15 +271,6 @@ if ($sit[0] != '')
     }
     echo "</ul>\n\n";
 
-    echo "<div id='topsearch'>";
-    echo "<form name='jumptoincident' action='{$CONFIG['application_webpath']}search.php' method='get'>";
-    echo "<input type='text' name='q' id='searchfield' size='30' value='{$strIncidentNumOrSearchTerm}'
-    onblur=\"if ($('searchfield').value == '') { if (!isIE) { $('searchfield').style.color='#888;'; } $('searchfield').value='{$strIncidentNumOrSearchTerm}';}\"
-    onfocus=\"if ($('searchfield').value == '{$strIncidentNumOrSearchTerm}') { if (!isIE) { $('searchfield').style.color='#000;'; } $('searchfield').value=''; }\"
-    onclick='clearjumpto()'/> ";
-    // echo "<input type='image' src='{$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/find.png' alt='{$strGo}' onclick='jumpto()' />";
-    echo "</form>";
-    echo "</div>";
     echo "</div>\n";
 }
 
@@ -254,7 +284,6 @@ if (!isset($refresh) AND $_SESSION['auth'] === TRUE)
 
 if ($sit[0] != '')
 {
-
     // Check this is current
     $sql = "SELECT version FROM `{$dbSystem}` WHERE id = 0";
     $versionresult = mysql_query($sql);
@@ -269,6 +298,33 @@ if ($sit[0] != '')
             echo "<p class='tip'>Visit <a href='setup.php'>Setup</a> to update the schema";
         }
         echo "</p>";
+    }
+
+    if (user_permission($sit[2], 22))
+    {
+        // Check if scheduler is running (bug 108)
+        $failure = 0;
+    
+        $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
+        $schedulerresult = mysql_query($schedulersql);
+        if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+    
+        while ($schedule = mysql_fetch_object($schedulerresult))
+        {
+            $sqlinterval = ("$schedule->interval");
+            $sqllastran = mysql2date("$schedule->lastran");
+            $dateresult = $sqlinterval + $sqllastran + 60;
+            if ($dateresult < date(U))
+            {
+                $failure ++;
+            }
+        }
+        $num = mysql_num_rows($schedulerresult);
+        $num = $num / 2;
+        if ($failure > $num)
+        {
+            echo user_alert(sprintf("{$strSchedulerNotRunning}"), E_USER_ERROR);
+        }
     }
 
     // Check users email address
@@ -375,11 +431,15 @@ if ($sit[0] != '')
 }
 $headerdisplayed = TRUE; // Set a variable so we can check to see if the header was included
 
-// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
-//echo "<div id='menupanel'>";
-//echo "<h3>Menu</h3>";
-//echo "</div>";
-
+// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008 & 11April2010
+// echo "<div id='menupanel'>";
+// echo "<h3>Menu</h3>";
+// echo "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>";
+// echo "</div>";
+//
+// // FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
+// echo "<p id='menutoggle'><a href='javascript:void(0);' onclick='toggleMenuPanel();' title='{$strMenu}'>";
+// echo "".icon('auto', 16)."</a></p>";
 
 
 echo "<div id='mainframe'>";

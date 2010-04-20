@@ -25,8 +25,6 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-require (APPLICATION_LIBPATH.'incident.inc.php');
-
 $id = cleanvar($_REQUEST['id']);
 $mode = cleanvar($_REQUEST['mode']);
 $title = $strAverageIncidentDuration;

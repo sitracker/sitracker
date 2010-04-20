@@ -1,4 +1,6 @@
 <?php
+// mailbox.class.php - Incoming POP/IMAP mailbox class
+//
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
@@ -13,7 +15,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 
-class fetchSitMail
+class Mailbox
 {
     var $username;
     var $password;
@@ -22,7 +24,7 @@ class fetchSitMail
     var $mailbox;
     var $servertype;
     //Append
-    function fetchSitMail($username, $password, $email, $server =
+    function Mailbox($username, $password, $email, $server =
                           'localhost', $servertype = 'pop', $port = '',
                           $options = '')
     {

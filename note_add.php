@@ -34,7 +34,7 @@ switch ($action)
 
         // Input validation
         // Validate input
-        $error=array();
+        $error = array();
         if (empty($link)) $error[] = sprintf($strFieldMustNotBeBlank, $strLink);
         if (empty($refid)) $error[] = sprintf($strFieldMustNotBeBlank, $strRefid);
         if (empty($bodytext)) $error[] = sprintf($strFieldMustNotBeBlank, $strNote);
@@ -64,8 +64,7 @@ switch ($action)
 
             html_redirect($rpath);
         }
-    break;
-
+        break;
     case '':
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');

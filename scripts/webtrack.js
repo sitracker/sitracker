@@ -715,9 +715,9 @@ function dismissNotice(noticeid, userid)
         method:'get',
             onSuccess: function(transport)
             {
-                $(div).hide();
+                $(div).fade();
                 $(div).removeClassName('noticebar');
-                if ($$('.noticebar').length < 2) $('dismissall').hide();
+                if ($$('.noticebar').length < 2) $('dismissall').fade();
             },
             onFailure: function(){ alert('Notice Error\nSorry, we could not dismiss the notice.') }
     });
@@ -731,17 +731,22 @@ function dismissNotice(noticeid, userid)
 */
 function toggleMenuPanel()
 {
-    if ($('menupanel').style.display == 'block')
+    alert('hello');
+$('menupanel').toggle();
+/*    if ($('menupanel').style.display == 'block')
     {
-        $('mainframe').style.width = mainframe;
-        $('menupanel').style.display = 'none';
+//         $('mainframe').style.width = mainframe;
+        $('menupanel').fade();
+//         $('menupanel').style.display = 'none';
     }
     else
     {
-        mainframe = $('mainframe').style.width;
-        $('mainframe').style.width = '80%';
-        $('menupanel').style.display = 'block';
-    }
+//         mainframe = $('mainframe').style.width;
+//         $('mainframe').style.width = '80%';
+//         $('menupanel').style.display = 'block';
+        $('menupanel').appear();
+        $('menupanel').style.zindex = 99;
+    }*/
 }
 
 function resizeTextarea(t)
@@ -906,4 +911,41 @@ function togglecontactaddress()
     $('county').disabled = setting;
     $('country').disabled = setting;
     $('postcode').disabled = setting;
+}
+
+function show_status_drop_down()
+{
+    $('userstatus').hide();
+    $('status_drop_down').show();
+    $('userstatus_dropdown').focus();
+}
+
+function hide_status_drop_down()
+{
+    $('userstatus').appear();
+    $('status_drop_down').hide();
+}
+
+function set_user_status()
+{
+    var userstatus = $('userstatus_dropdown').value;
+     new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
+    {
+        method:'get',
+            onSuccess: function(transport)
+            {
+                var response = transport.responseText || "no response text";
+                if (transport.responseText)
+                {
+                    if (response != 'FALSE')
+                    {
+                        $('userstatus_summaryline').innerHTML = response;
+//                         hide_status_drop_down();
+                        $('userstatus_dropdown').blur();
+                    }
+                }
+            },
+            onFailure: function(){ alert('Something went wrong...') }
+    });
+
 }

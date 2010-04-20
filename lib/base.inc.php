@@ -15,8 +15,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 /**
-  * Begin constant definitions
-**/
+ * Begin constant definitions
+ **/
 // Journal Logging
 define ('CFG_LOGGING_OFF',0); // 0 = No logging
 define ('CFG_LOGGING_MIN',1); // 1 = Minimal Logging
@@ -106,8 +106,8 @@ define ("REASON_POSSIBLE_NEW_INCIDENT", 1);
 define ("REASON_INCIDENT_CLOSED", 2);
 
 /**
-  * Begin global variable definitions
-**/
+ * Begin global variable definitions
+ **/
 // Version number of the application, (numbers only)
 $application_version = '3.99';
 
@@ -136,8 +136,8 @@ $application_version_string = trim("v{$application_version} {$application_revisi
 $ldap_conn = "";
 
 /**
-  * End global variable definitions
-**/
+ * End global variable definitions
+ **/
 
 // Clean PHP_SELF server variable to avoid potential XSS security issue
 $_SERVER['PHP_SELF'] = substr($_SERVER['PHP_SELF'], 0,
@@ -165,10 +165,10 @@ ini_set('default_charset', $i18ncharset);
 //**** Begin functions ****//
 
 /**
-  * Strip slashes from an array
-  * @param $data an array
-  * @return An array with slashes stripped
-*/
+ * Strip slashes from an array
+ * @param $data an array
+ * @return An array with slashes stripped
+ */
 function stripslashes_array($data)
 {
     if (is_array($data))
@@ -187,16 +187,16 @@ function stripslashes_array($data)
 
 
 /**
-  * Make an external variable safe for database and HTML display
-  * @author Ivan Lucas, Kieran Hogg
-  * @param mixed $var variable to replace
-  * @param bool $striphtml whether to strip html
-  * @param bool $transentities whether to translate all aplicable chars (true) or just special chars (false) into html entites
-  * @param bool $mysqlescape whether to mysql_escape()
-  * @param array $disallowedchars array of chars to remove
-  * @param array $replacechars array of chars to replace as $orig => $replace
-  * @returns variable
-*/
+ * Make an external variable safe for database and HTML display
+ * @author Ivan Lucas, Kieran Hogg
+ * @param mixed $var variable to replace
+ * @param bool $striphtml whether to strip html
+ * @param bool $transentities whether to translate all aplicable chars (true) or just special chars (false) into html entites
+ * @param bool $mysqlescape whether to mysql_escape()
+ * @param array $disallowedchars array of chars to remove
+ * @param array $replacechars array of chars to replace as $orig => $replace
+ * @return variable
+ */
 function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
                 $mysqlescape = TRUE, $disallowedchars = array(),
                 $replacechars = array())
@@ -251,12 +251,12 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
 
 
 /**
-  * Return an array of available languages codes by looking at the files
-  * in the i18n directory
-  * @author Ivan Lucas
-  * @param bool $test - (optional) Include test language (zz) in results
-  * @retval array Language codes
-**/
+ * Return an array of available languages codes by looking at the files
+ * in the i18n directory
+ * @author Ivan Lucas
+ * @param bool $test - (optional) Include test language (zz) in results
+ * @retval array Language codes
+ **/
 function available_languages($test = FALSE)
 {
     $i18nfiles = list_dir('.'.DIRECTORY_SEPARATOR.'i18n');

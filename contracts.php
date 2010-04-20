@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $title = $strBrowseContracts;
-$pagescripts = array('scriptaculous/scriptaculous.js','AutoComplete.js');
+$pagescripts = array('AutoComplete.js');
 
 // External variables
 $productid = cleanvar($_REQUEST['productid']);
@@ -116,14 +116,14 @@ $sql .= " GROUP BY m.id ";
 
 if (!empty($sort))
 {
-    if ($sort=='expiry') $sql .= "ORDER BY expirydate ";
-    elseif ($sort=='id') $sql .= "ORDER BY m.id ";
-    elseif ($sort=='product') $sql .= " ORDER BY p.name ";
-    elseif ($sort=='site') $sql .= " ORDER BY s.name ";
-    elseif ($sort=='reseller') $sql .= " ORDER BY r.name ";
+    if ($sort == 'expiry') $sql .= "ORDER BY expirydate ";
+    elseif ($sort == 'id') $sql .= "ORDER BY m.id ";
+    elseif ($sort == 'product') $sql .= " ORDER BY p.name ";
+    elseif ($sort == 'site') $sql .= " ORDER BY s.name ";
+    elseif ($sort == 'reseller') $sql .= " ORDER BY r.name ";
     else $sql .= " ORDER BY s.name ";
 
-    if ($order=='a' OR $order=='ASC' OR $order='') $sql .= "ASC";
+    if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
     else $sql .= "DESC";
 }
 $dbg .= "<p>$sql</p>";

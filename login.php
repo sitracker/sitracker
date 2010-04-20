@@ -33,7 +33,7 @@ if (substr($language, 2, 1) != '-' OR strpos('.', $language) !== FALSE)
 }
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'triggers.inc.php');
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 
 populate_syslang();
 // External vars
@@ -112,8 +112,9 @@ elseif (authenticate($username, $_REQUEST['password']))
     //check if the session lang is different the their profiles
     if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $SESSION['userconfig']['language'])
     {
-        $t = trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
+        $t = new trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
                     'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
+        $t->fire();
     }
 
     if ($SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')

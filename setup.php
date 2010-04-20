@@ -35,13 +35,6 @@ if (file_exists(APPLICATION_FSPATH . "config.inc.php")
     }
 // Server Configuration
 
-// for legacy systems
-if (file_exists('/etc/webtrack.conf')
-    AND !include ('/etc/webtrack.conf'))
-    {
-        die('Could not read config file webtrack.conf');
-    }
-
 if (file_exists('/etc/sit.conf')
     AND !include ('/etc/sit.conf'))
     {
@@ -80,7 +73,7 @@ $systemhash = md5(date('Y-m-d') . $_SERVER['REMOTE_ADDR']
 */
 function filterconfigfiles($var)
 {
-    $poss_config_files = array('config.inc.php', 'sit.conf', 'webtrack.conf');
+    $poss_config_files = array('config.inc.php', 'sit.conf');
     $recognised = FALSE;
     foreach ($poss_config_files AS $poss)
     {
@@ -201,8 +194,8 @@ function setup_configure()
                 $value = $CONFIG[$setupvar];
                 if (is_bool($value))
                 {
-                    if ($value==TRUE) $value='TRUE';
-                    else $value='FALSE';
+                    if ($value == TRUE) $value = 'TRUE';
+                    else $value = 'FALSE';
                 }
                 elseif (is_array($value))
                 {
@@ -215,7 +208,7 @@ function setup_configure()
                         $value="array(".implode(',',$value).")";
                     }
                 }
-                if ($setupvar=='db_password' AND $_REQUEST['action']!='reconfigure') $value='';
+                if ($setupvar == 'db_password' AND $_REQUEST['action'] != 'reconfigure') $value = '';
             }
 
             if (!$cfg_file_exists OR $_REQUEST['configfile'] == 'new')
@@ -353,7 +346,7 @@ function setup_exec_sql($sqlquerylist)
                                         $severity = 'info';
                                         $errstr = "We expected to find something in order to remove it but it doesn't exist. This could be because this part of the database schema is already up to date..";
                                     }
-                                 break;
+                                    break;
                                 case 1044:
                                 case 1045:
                                 case 1142:
@@ -621,6 +614,11 @@ if (version_compare(PHP_VERSION, "5.0.0", "<"))
     echo "<p class='error'>You are running an older PHP version (< PHP 5), SiT v3.35 and later require PHP 5.0.0 or newer, some features may not work properly.</p>";
 }
 
+if (file_exists('/etc/webtrack.conf'))
+{
+    echo "<p class='warning'>Warning: You have a legacy config file at /etc/webtrack.conf, as of SiT! 4.0 this file is no longer read, please use /etc/sit.conf instead</p>";
+}
+
 echo "\n\n<!-- A:".strip_tags($_REQUEST['action'])." -->\n\n";
 
 switch ($_REQUEST['action'])
@@ -641,9 +639,9 @@ switch ($_REQUEST['action'])
         // Keep the posted setup
         foreach ($SETUP AS $setupvar)
         {
-            if ($_POST[$setupvar]==='TRUE') $_POST[$setupvar] = TRUE;
-            if ($_POST[$setupvar]==='FALSE') $_POST[$setupvar] = FALSE;
-            $CONFIG[$setupvar]=$_POST[$setupvar];
+            if ($_POST[$setupvar] === 'TRUE') $_POST[$setupvar] = TRUE;
+            if ($_POST[$setupvar] === 'FALSE') $_POST[$setupvar] = FALSE;
+            $CONFIG[$setupvar] = $_POST[$setupvar];
         }
 
         // Set up a hard to find attachment path
@@ -752,14 +750,12 @@ switch ($_REQUEST['action'])
             }
         }
         echo setup_button('checkdbstate', 'Next');
-    break;
-
+        break;
     case 'reconfigure':
         echo "<h2>Reconfigure</h2>";
         echo "<p>Amend your existing SiT! configuration.  Please take care or you may break your SiT! installation.</p>";
         echo setup_configure();
-    break;
-
+        break;
     case 'checkdbstate':
         // Connect to Database server
         $db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
@@ -831,15 +827,12 @@ switch ($_REQUEST['action'])
                 echo setup_button('checkatttdir', 'Next');
             }
         }
-    break;
-
-
+        break;
     case 'createdb':
         if ($_REQUEST['sampledata'] == 'yes' ) $_SESSION['sampledata'] = TRUE;
         else $_SESSION['sampledata'] = FALSE;
         setup_createdb();
-    break;
-
+        break;
     case 'checkatttdiragain':
         $again = TRUE;
     case 'checkatttdir':
@@ -889,9 +882,7 @@ switch ($_REQUEST['action'])
                 echo "</form>\n";
             }
         }
-    break;
-
-
+        break;
     case 'createattdir':
         // Note this creates a directory with 777 permissions!
         $dir = @mkdir($CONFIG['attachment_fspath'], '0777');
@@ -911,8 +902,7 @@ switch ($_REQUEST['action'])
             }
             echo setup_button('checkatttdiragain', 'Next');
         }
-    break;
-
+        break;
     default:
         require (APPLICATION_LIBPATH . 'tablenames.inc.php');
         // Connect to Database server

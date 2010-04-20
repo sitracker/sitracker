@@ -37,14 +37,14 @@ switch ($action)
 {
     case 'add':
         // First check that the incident we're trying to relate to actually exists
-        $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE id = $relatedid";
+        $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE id = {$relatedid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         list($countincidents) = mysql_fetch_row($result);
         if ($countincidents > 0)
         {
             // Next check there isn't already a relationship to that incident
-            $sql = "SELECT id FROM `{$dbRelatedIncidents}` WHERE (incidentid='$relatedid' AND relatedid='$id') OR (relatedid='$relatedid' AND incidentid='$id')";
+            $sql = "SELECT id FROM `{$dbRelatedIncidents}` WHERE (incidentid='{$relatedid}' AND relatedid='{$id}') OR (relatedid='{$relatedid}' AND incidentid='{$id}')";
             $result = mysql_query($sql);
             if (mysql_num_rows($result) < 1 AND $relatedid!=$id)
             {
@@ -60,7 +60,7 @@ switch ($action)
                         $status = incident_status($id);
                         // Insert an entry into the update log for this incident
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '$now', '{$owner}', '{$status}', 'hide', '','Added relationship with Incident {$relatedid}')"; //FIXME use $SYSLANG
+                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '','Added relationship with Incident {$relatedid}')"; //FIXME use $SYSLANG
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -70,7 +70,7 @@ switch ($action)
                         $sql .= "VALUES ('{$relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '','Added relationship with Incident {$id}')"; //FIXME use $SYSLANG
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    break;
+                        break;
                 }
                 // TODO v3.2x Child/Parent incident relationships
             }
@@ -84,8 +84,7 @@ switch ($action)
         {
             echo "<br /><p class='error' align='center'>".sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid))."</p>";
         }
-    break;
-
+        break;
     case 'delete':
         // Retrieve details of the relationship
         $sql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE id='{$rid}'";
@@ -112,8 +111,7 @@ switch ($action)
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
         echo "<br /><p class='info' align='center'>{$strRelationshipRemoved}</p>";
-    break;
-
+        break;
     default:
         // do nothing
 }
@@ -135,14 +133,14 @@ if (mysql_num_rows($rresult) >= 1)
         if ($related->relatedid==$id)
         {
             $incidenttitle = incident_title($related->incidentid);
-            if ($related->relation=='child') $relationship='Child';
+            if ($related->relation == 'child') $relationship = 'Child';
             else $relationship = 'Sibling';
             echo "<td><a href='incident_details.php?id={$related->incidentid}'>{$related->incidentid}</a></td>";
         }
         else
         {
             $incidenttitle = incident_title($related->relatedid);
-            if ($related->relation=='child') $relationship='Parent';
+            if ($related->relation == 'child') $relationship = 'Parent';
             else $relationship = 'Sibling';
             echo "<td><a href='incident_details.php?id={$related->relatedid}'>{$related->relatedid}</a></td>";
         }

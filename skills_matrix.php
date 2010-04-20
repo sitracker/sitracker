@@ -47,7 +47,7 @@ while ($group = mysql_fetch_object($gresult))
 $numgroups = count($grouparr);
 if ($numgroups >= 1)
 {
-    echo "<form action='{$_SERVER['PHP_SELF']}' style='text-align: center;' method='get'>";
+    echo "<form id='skillsmatrixform' action='{$_SERVER['PHP_SELF']}' method='get'>";
     echo "{$strGroup}: <select name='choosegroup' onchange='window.location.href=this.options[this.selectedIndex].value'>";
     echo "<option value='{$_SERVER['PHP_SELF']}?gid=all";
     if (empty($legacy)) echo "'";
@@ -184,7 +184,6 @@ if ($countskills > 0 AND $countusers > 0)
             else $shade = 'shade1';
         }
         mysql_data_seek($usersresult, 0);
-        //echo $row->realname." ";
         $previous = $row->name;
     }
     echo "<tr><th align='right'>{$strTotal}</th>";

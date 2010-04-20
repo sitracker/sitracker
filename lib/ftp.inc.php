@@ -16,9 +16,9 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 /**
-* Function to return a logged in ftp connection
-* @author Ivan Lucas
-*/
+ * Function to return a logged in ftp connection
+ * @author Ivan Lucas
+ */
 function create_ftp_connection()
 {
     global $CONFIG;

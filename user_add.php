@@ -43,33 +43,32 @@ if (empty($submit))
 
     echo "<h2>".icon('user', 32)." ";
     echo "{$strNewUser}</h2>";
-    echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
     echo "<form id='adduser' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table align='center' class='vertical'>\n";
-    echo "<tr><th>{$strRealName} <sup class='red'>*</sup></th>";
-    echo "<td><input maxlength='50' name='realname' size='30'";
+    echo "<tr><th>{$strRealName}</th>";
+    echo "<td><input maxlength='50' name='realname' size='30' class='required' ";
     if ($_SESSION['formdata']['add_user']['realname'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['realname']}'";
     }
-    echo "/></td></tr>\n";
+    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
-    echo "<tr><th>{$strUsername} <sup class='red'>*</sup></th>";
-    echo "<td><input maxlength='50' name='username' size='30'";
+    echo "<tr><th>{$strUsername}</th>";
+    echo "<td><input maxlength='50' name='username' size='30' class='required' ";
     if ($_SESSION['formdata']['add_user']['username'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['username']}'";
     }
-    echo "/></td></tr>\n";
+    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
-    echo "<tr id='password'><th>{$strPassword} <sup class='red'>*</sup></th>";
-    echo "<td><input maxlength='50' name='password' size='30' type='password' ";
+    echo "<tr id='password'><th>{$strPassword}</th>";
+    echo "<td><input maxlength='50' name='password' size='30' type='password' class='required' ";
     if ($_SESSION['formdata']['add_user']['password'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['password']}'";
     }
-    echo "/></td></tr>\n";
+    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strGroup}</th>";
     if ($_SESSION['formdata']['add_user']['groupid'] != '')
@@ -93,35 +92,35 @@ if (empty($submit))
     }
     echo "</tr>";
 
-    echo "<tr><th>{$strJobTitle} <sup class='red'>*</sup></th><td><input maxlength='50' name='jobtitle' size='30'";
+    echo "<tr><th>{$strJobTitle}</th><td><input maxlength='50' name='jobtitle' size='30' class='required' ";
     if ($_SESSION['formdata']['add_user']['jobtitle'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['jobtitle']}'";
     }
-    echo "/></td></tr>\n";
+    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
-    echo "<tr id='email'><th>{$strEmail} <sup class='red'>*</sup></th><td><input maxlength='50' name='email' size='30'";
+    echo "<tr id='email'><th>{$strEmail}</th><td><input maxlength='50' name='email' size='30'  class='required' ";
     if ($_SESSION['formdata']['add_user']['email'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['email']}'";
     }
-    echo "/></td></tr>\n";
+    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
-    echo "<tr><th>{$strTelephone}</th><td><input maxlength='50' name='phone' size='30'";
+    echo "<tr><th>{$strTelephone}</th><td><input maxlength='50' name='phone' size='30' ";
     if ($_SESSION['formdata']['add_user']['phone'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['phone']}'";
     }
     echo "/></td></tr>\n";
 
-    echo "<tr><th>{$strMobile}</th><td><input maxlength='50' name='mobile' size='30'";
+    echo "<tr><th>{$strMobile}</th><td><input maxlength='50' name='mobile' size='30' ";
     if ($_SESSION['formdata']['add_user']['mobile'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['mobile']}'";
     }
     echo "/></td></tr>\n";
 
-    echo "<tr><th>{$strFax}</th><td><input maxlength='50' name='fax' size='30'";
+    echo "<tr><th>{$strFax}</th><td><input maxlength='50' name='fax' size='30' ";
     if ($_SESSION['formdata']['add_user']['fax'] != '')
     {
         echo "value='{$_SESSION['formdata']['add_user']['fax']}'";
@@ -142,7 +141,7 @@ if (empty($submit))
         echo " /> {$strDays}</td></tr>\n";
 
         echo "<tr><th>{$strStartDate} ".help_link('UserStartdate')."</th>";
-        echo "<td><input type='text' name='startdate' id='startdate' size='10'";
+        echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
         if ($_SESSION['formdata']['add_user']['startdate'] != '')
         echo "value='{$_SESSION['formdata']['add_user']['startdate']}'";
         echo "/> ";
@@ -236,15 +235,25 @@ else
     {
         $password = md5($password);
         $sql = "INSERT INTO `{$dbUsers}` (username, password, realname, roleid,
-                groupid, title, email, phone, mobile, fax, status, var_style,
+                groupid, title, email, phone, mobile, fax, status,
                 holiday_entitlement, user_startdate, lastseen) ";
         $sql .= "VALUES ('$username', '$password', '$realname', '$roleid',
                 '$groupid', '$jobtitle', '$email', '$phone', '$mobile', '$fax',
-                1, '{$CONFIG['default_interface_style']}',
-                '$holiday_entitlement', '$startdate', NOW())";
+                1, '$holiday_entitlement', '$startdate', NOW())";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $newuserid = mysql_insert_id();
+
+        // Default user settings
+        $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+        $sql .= "VALUES ('{$newuserid}', 'theme', '{$CONFIG['default_interface_style']}') ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+
+        $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+        $sql .= "VALUES ('{$newuserid}', 'iconset', '{$CONFIG['default_iconset']}') ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         // Create permissions (set to none)
         $sql = "SELECT * FROM `{$dbPermissions}`";

@@ -56,16 +56,28 @@ if (!empty($type)) $sql .= "WHERE journaltype='{$type}' ";
 // Create SQL for Sorting
 if (!empty($sort))
 {
-    if ($order=='a' OR $order=='ASC' OR $order='') $sortorder = "ASC";
+    if ($order == 'a' OR $order == 'ASC' OR $order == '') $sortorder = "ASC";
     else $sortorder = "DESC";
     switch ($sort)
     {
-        case 'userid': $sql .= " ORDER BY userid $sortorder"; break;
-        case 'timestamp': $sql .= " ORDER BY timestamp $sortorder"; break;
-        case 'refid': $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder"; break;
-        default:   $sql .= " ORDER BY timestamp DESC"; break;
+        case 'userid':
+            $sql .= " ORDER BY userid $sortorder";
+            break;
+        case 'timestamp':
+            $sql .= " ORDER BY timestamp $sortorder";
+            break;
+        case 'refid':
+            $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder";
+            break;
+        default:
+            $sql .= " ORDER BY timestamp DESC";
+            break;
     }
-} else $sql .= " ORDER BY timestamp DESC";
+}
+else
+{
+    $sql .= " ORDER BY timestamp DESC";
+}
 $sql .= " LIMIT $offset, $perpage ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -93,7 +105,7 @@ if ($journal_count >= 1)
     echo "<tr>";
     $filter = array('page' => $page);
     echo colheader('userid',$strUser,$sort, $order, $filter);
-    echo colheader('timestamp',"{$strTime}/{$strDate}",$sort, $order, $filter);
+    echo colheader('timestamp',"{$strTime}/{$strDate}", $sort, $order, $filter);
     echo colheader('event',$strEvent);
     echo colheader('action',$strOperation);
     echo colheader('type',$strType);
@@ -111,8 +123,12 @@ if ($journal_count >= 1)
         echo "<td>";
         switch ($journal->journaltype)
         {
-            case 2: echo "<a href='incident_details.php?id={$journal->refid}' target='_blank'>{$journal->bodytext}</a>"; break;
-            case 5: echo "<a href='contact_details.php?id={$journal->refid}' target='_blank'>{$journal->bodytext}</a>"; break;
+            case 2:
+                echo "<a href='incident_details.php?id={$journal->refid}' target='_blank'>{$journal->bodytext}</a>";
+                break;
+            case 5:
+                echo "<a href='contact_details.php?id={$journal->refid}' target='_blank'>{$journal->bodytext}</a>";
+                break;
             default:
                 echo "{$journal->bodytext}";
                 if (!empty($journal->refid)) echo "(Ref: {$journal->refid})";
@@ -133,11 +149,15 @@ if ($journal_count >= 1)
 
     echo "<p align='center'>";
 
-    if ($page > 3 && $pages > 10) $minpage = $page - 3;
+    if ($page > 3 AND $pages > 10) $minpage = $page - 3;
     else $minpage = ($page - 2);
+    
     if ($minpage < 1) $minpage = 1;
+    
     $maxpage = $minpage + $numpagelinks;
+    
     if ($maxpage > $pages + 1) $maxpage = $pages + 1;
+    
     if ($minpage >= ($maxpage - $numpagelinks)) $minpage = $maxpage - $numpagelinks;
 
     $prev = $page - 1;
@@ -149,7 +169,7 @@ if ($journal_count >= 1)
         echo "<a href='{$_SERVER['PHP_SELF']}?page=1'>1</a> {$strEllipsis} ";
     }
 
-    for ($i=$minpage;$i<$maxpage;$i++)
+    for ($i = $minpage; $i < $maxpage; $i++)
     {
         if ($i <> $page) echo "<a href='{$_SERVER['PHP_SELF']}?page={$i}'>$i</a> ";
         else echo "<strong>{$i}</strong> ";

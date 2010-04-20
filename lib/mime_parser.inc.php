@@ -63,7 +63,7 @@ define('MIME_ADDRESS_FIRST',            2);
 	</documentation>
 
 {/metadocument}
-*/
+ */
 
 class mime_parser_class
 {
@@ -91,7 +91,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $error='';
 
 /*
@@ -108,7 +108,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $error_position = -1;
 
 /*
@@ -130,7 +130,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $mbox = 0;
 
 /*
@@ -147,7 +147,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $decode_headers = 1;
 
 /*
@@ -164,7 +164,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $decode_bodies = 1;
 
 /*
@@ -191,7 +191,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $extract_addresses = 1;
 
 /*
@@ -219,7 +219,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $address_headers = array(
 		'from:' => 1,
 		'to:' => 1,
@@ -243,7 +243,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $message_buffer_length = 8000;
 
 /*
@@ -265,7 +265,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $ignore_syntax_errors=1;
 
 /*
@@ -286,7 +286,7 @@ class mime_parser_class
 		</documentation>
 	</variable>
 {/metadocument}
-*/
+ */
 	var $warnings=array();
 
 	/* Private variables */
@@ -1693,7 +1693,7 @@ class mime_parser_class
 		</argument>
 		<do>
 {/metadocument}
-*/
+ */
 	Function Decode($parameters, &$decoded)
 	{
 		if(IsSet($parameters['File']))
@@ -1763,7 +1763,7 @@ class mime_parser_class
 		</do>
 	</function>
 {/metadocument}
-*/
+ */
 
 	Function CopyAddresses($message, &$results, $header)
 	{
@@ -1963,7 +1963,7 @@ class mime_parser_class
 		</argument>
 		<do>
 {/metadocument}
-*/
+ */
 	Function Analyze($message, &$results)
 	{
 		$results = array();
@@ -2252,7 +2252,7 @@ class mime_parser_class
 		</do>
 	</function>
 {/metadocument}
-*/
+ */
 
 };
 
@@ -2262,6 +2262,6 @@ class mime_parser_class
 </class>
 {/metadocument}
 
-*/
+ */
 
 ?>

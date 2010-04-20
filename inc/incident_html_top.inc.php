@@ -5,10 +5,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-// Added by Ivan 28Feb10, not sure if this is the correct place tbh
-// Added due to changes in triggers.  FIXME
-include('lib/incident.inc.php');
-
 session_name($CONFIG['session_name']);
 session_start();
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -45,6 +41,15 @@ echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.j
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
+// To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
+if (is_array($pagescripts))
+{
+    foreach ($pagescripts AS $pscript)
+    {
+        echo "<script src='{$CONFIG['application_webpath']}scripts/{$pscript}' type='text/javascript'></script>\n";
+    }
+    unset($pagescripts, $pscript);
+}
 // javascript popup date library
 echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
 
@@ -81,7 +86,7 @@ if (!empty($site->notes))
 }
 else
 {
-    $site_notes='';
+    $site_notes = '';
 }
 
 unset($site);
@@ -137,15 +142,20 @@ $working_day_mins = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) 
 switch ($target->type)
 {
     case 'initialresponse':
-        $slatarget = $servicelevel->initial_response_mins; break;
+        $slatarget = $servicelevel->initial_response_mins;
+        break;
     case 'probdef':
-        $slatarget = $servicelevel->prob_determ_mins; break;
+        $slatarget = $servicelevel->prob_determ_mins;
+        break;
     case 'actionplan':
-        $slatarget = $servicelevel->action_plan_mins; break;
+        $slatarget = $servicelevel->action_plan_mins;
+        break;
     case 'solution':
-        $slatarget = ($servicelevel->resolution_days * $working_day_mins); break;
+        $slatarget = ($servicelevel->resolution_days * $working_day_mins);
+        break;
     default:
-        $slaremain=0; $slatarget=0;
+        $slaremain = 0;
+        $slatarget = 0;
 }
 
 if ($slatarget > 0)

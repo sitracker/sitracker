@@ -25,9 +25,6 @@ $productid = cleanvar($_REQUEST['productid']);
 $display = cleanvar($_REQUEST['display']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
-// echo "<p id='pageoptions'><a href='javascript:toggleMenuPanel();' title='{$strMenu}'>";
-// echo "".icon('auto', 16)."</a></p>";
 
 if (empty($productid) AND $display!='skills')
 {
@@ -248,8 +245,8 @@ else
             echo "| <a href='product_delete.php?id={$product->id}'>{$strDelete}</a></p>";
             $tags = list_tags($product->id, TAG_PRODUCT, TRUE);
 
-            if (!empty($tags)) echo "<div style='width: 50%; margin: auto;'>{$tags}</div><br />\n";
-            echo "<table summary='List of skills linked to product' align='center'>";
+            if (!empty($tags)) echo "<div id='producttags'>{$tags}</div><br />\n";
+            echo "<table align='center'>";
 
             if (!empty($product->description)) echo "<tr class='shade1'><td colspan='0'>".nl2br($product->description)."</td></tr>";
 
@@ -397,7 +394,7 @@ else
 
 echo "<p align='center'><a href='vendor_add.php'>{$strAddVendor}</a> | <a href='product_add.php'>{$strAddProduct}</a> | <a href='software_add.php'>{$strAddSkill}</a>";
 
-if ($display=='skills' OR $display=='software')
+if ($display == 'skills' OR $display == 'software')
 {
     echo " | <a href='products.php'>{$strListProducts}</a>";
 }

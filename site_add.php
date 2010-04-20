@@ -78,7 +78,7 @@ if ($action == "showform" OR $action == '')
     echo "value='{$_SESSION['formdata']['add_site']['telephone']}' /></td></tr>\n";
 
     echo "<tr><th>{$strEmail}</th><td>";
-    echo "<input class='required' maxlength='255' name='email' size='30'";
+    echo "<input maxlength='255' name='email' size='30'";
     echo "value='{$_SESSION['formdata']['add_site']['email']}' />";
     echo "</td></tr>\n";
 
@@ -157,11 +157,6 @@ elseif ($action == "add")
     {
         $errors++;
         $_SESSION['formerrors']['add_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
-    }
-    if ($email == '')
-    {
-        $errors++;
-        $_SESSION['formerrors']['add_site']['email'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
     }
 
     // add site if no errors

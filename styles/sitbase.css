@@ -113,15 +113,19 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 #masthead {
   background-image: url('../images/top2.png');
   background-position: top-left; background-repeat: x-repeat;
+  color: #aaa;
 }
-#apptitle {
+#masthead a { color: white; font-weight: normal;}
+#mastheadcontent {
   background-image: url('../images/sit_swirl2.png');
   background-position: top-left; background-repeat: no-repeat;
-  height: 50px; background-color: transparent;}
-#apptitle span {
-  top: 10px;
+  height: 50px; background-color: transparent;
+  position: relative; top: 0px;
   position: relative;
 }
+#apptitle { background: transparent; }
+
+#personaloptions { float: right; margin-right: 10px; margin-top: 5px; }
 
 #aboutsit
 {
@@ -303,7 +307,7 @@ tr.notice { background-color: #FFFFB0; }
 tr.shade1:hover, tr.shade2:hover { background-color: #F2F2F2; }
 tr.critical { background-color: #FF4433; }
 tr.critical:hover { background-color: #FFAAAB; }
-strong.critical { text-decoration: underline; }
+strong.critical { text-decoration: underline; padding: 1px 7px; -moz-border-radius:7px; }
 tr.critical strong.critical { color: #FFF; }
 tr.urgent:hover { background-color: #FFAAAB; }
 tr.expired:hover { background-color: #F2F2F2; }
@@ -461,14 +465,14 @@ p.trigger
 }
 
 
-#topsearch { text-align: right; }
+#topsearch { text-align: right; clear: both; top: -11px; position: relative; }
 #topsearch form {margin: 1px 7px 0px 0px; }
 #topsearch #searchfield {
   background-color: white;
-  border:1px solid #CCCCCC;
+  border:1px solid #aaa;
   padding:3px 3px 3px 20px;
   background:transparent url('../images/searchbg.png') no-repeat scroll 4px center;
-  color: #888;
+  color: #aaa;
 }
 
 #incidentqueues form { text-align: center; }
@@ -596,6 +600,7 @@ div.iheader { color: #666; margin-bottom:5px;}
 
 /* tooltip */
 a.info img { border: 0px; text-decoration:none;}
+a.info img.gravatar { margin-right: 0.7em; vertical-align: top; }
 a.info span { display: none; z-index: 15; }
 a.info:hover { text-decoration: none; }
 a.info:hover span
@@ -764,16 +769,21 @@ div.taglist
     width: 80%;
 }
 
+#menutoggle { float: left; }
 #menupanel
 {
+    top: -5px;
+    position: relative;
     display: none;
     width: 18%;
     border: 1px solid #ccc;
-    float: right;
+    border-top: none;
+    float: left;
     min-height: 300px;
     margin-bottom: 2em;
     padding: 2px;
-    z-index: 15;
+    z-index: 150;
+    clear: none;
 }
 
 .incidentkey
@@ -983,6 +993,21 @@ span.sig { color: red; }
 }
 #navmenu a { color: white; }
 #navmenu a em { color: #ddd; }
+
+/* odds and sods */
+#login { width: 220px; }
+#login .windowtitle {cursor: default; }
+#inboxtable, #userslisttable { width: 95%; }
+#feedbackformtable { margin-left: auto; margin-right: auto; width: 70%; }
+#tasksform, #skillsmatrixform { text-align: center; }
+#languageselection { margin-left: auto; margin-right: auto; width: 380px; text-align: center; margin-top: 3em; }
+#incidentsgraphtable { border: 1px solid #000; width: 250px; }
+#producttags {width: 50%; margin: auto;}
+.triggeractions {
+    float: right;
+}
+
+table#cols { height: 350px; }
 
 @media print
 {

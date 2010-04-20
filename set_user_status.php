@@ -33,48 +33,40 @@ switch ($mode)
 
         // NOTE: do not translate thise 'Yes' 'No' strings below
 
-switch ($userstatus)
+        switch ($userstatus)
         {
             case 1: // in office
-                $accepting='Yes';
-            break;
-
+                $accepting = 'Yes';
+                break;
             case 2: // Not in office
-                $accepting='No';
-            break;
-
+                $accepting = 'No';
+                break;
             case 3: // In Meeting
                 // don't change
-                $accepting='';
-            break;
-
+                $accepting = '';
+                break;
             case 4: // At Lunch
-                $accepting='';
-            break;
-
+                $accepting = '';
+                break;
             case 5: // On Holiday
-                $accepting='No';
-            break;
-
+                $accepting = 'No';
+                break;
             case 6: // Working from home
-                $accepting='Yes';
-            break;
-
+                $accepting = 'Yes';
+               break;
             case 7: // On training course
-                $accepting='No';
-            break;
-
+                $accepting = 'No';
+                break;
             case 8: // Absent Sick
-                $accepting='No';
-            break;
-
+                $accepting = 'No';
+                break;
             case 9: // Working Away
                 // don't change
-                $accepting='';
-            break;
+                $accepting = '';
+                break;
         }
-        if (!empty($accepting)) $sql.=", accepting='$accepting'";
-        $sql .= " WHERE id='$sit[2]' LIMIT 1";
+        if (!empty($accepting)) $sql .= ", accepting='$accepting'";
+        $sql .= " WHERE id='{$sit[2]}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
@@ -83,33 +75,28 @@ switch ($userstatus)
         trigger("TRIGGER_USER_CHANGED_STATUS", array('userid' => $sit[2]));
 
         header('Location: index.php');
-    break;
-
+        break;
     case 'setaccepting':
         $sql  = "UPDATE `{$dbUsers}` SET accepting='$accepting' ";
         $sql .= "WHERE id='$sit[2]' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         header('Location: index.php');
-    break;
-
-
+        break;
     case 'return': // dummy entry, just returns user back
         header('Location: index.php');
-    break;
-
+        break;
     case 'editprofile':
-    header('Location: user_profile_edit.php');
-    break;
-
+        header('Location: user_profile_edit.php');
+        break;
     case 'deleteassign':
         // this may not be the very best place for this functionality but it's all i could find - inl 19jan05
         // hide a record from tempassign as requested by clicking 'ignore' in the holding queue
-        $sql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE incidentid='{$incidentid}' AND originalowner='{$originalowner}' LIMIT 1";
+        $sql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' ";
+        $sql .= "WHERE incidentid='{$incidentid}' AND originalowner='{$originalowner}' LIMIT 1";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         header("Location: holding_queue.php");
-        exit;
-    break;
+        break;
 }
 ?>

@@ -9,15 +9,13 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-
 $permission = 8; // Update Incidents
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'incident.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
+
 // External variables
 $incidentid = cleanvar($_REQUEST['incidentid']);
 $updateid = cleanvar($_REQUEST['updateid']);
@@ -73,72 +71,59 @@ if ($incidentid == '')
             case 'opening':
                 echo "Opened by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
                 if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
-            break;
-
+                break;
             case 'reassigning':
                 echo "Reassigned by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
                 if ($updates['currentowner'] != 0)  // only say who it was assigned to if the currentowner field is filled in
                 {
                     echo " To <strong>".user_realname($updates['currentowner'],TRUE)."</strong>";
                 }
-            break;
-
+                break;
             case 'email':
                 echo "Email Sent by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
                 if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
-            break;
-
+                break;
             case 'closing':
                 echo "Closed by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
                 if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
-            break;
-
+                break;
             case 'reopening':
                 echo "Reopened by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
                 if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
-            break;
-
+                break;
             case 'phonecallout':
                 echo "Call made by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'phonecallin':
                 echo "Call taken by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'research':
                 echo "Researched by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'webupdate':
                 echo "Web Update by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'emailout':
                 echo "Email sent by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'emailin':
                 echo "Email received by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'externalinfo':
                 echo "External info added by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'probdef':
                 echo "Problem Definition by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             case 'solution':
                 echo "Final Solution by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-            break;
-
+                break;
             default:
                 echo "Updated by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
                 if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
-            break;
+                break;
         }
+
         if ($updates['nextaction']!='') echo " Next Action: <strong>".$updates['nextaction'].'</strong>';
 
         echo " - {$update_timestamp_string}</th></tr>";
@@ -159,7 +144,7 @@ else
     {
         $moved_attachments = TRUE;
         // update the incident record, change the incident status to active
-        $sql = "UPDATE `{$dbIncidents}` SET status='1', lastupdated='$now', timeofnextaction='0' WHERE id='$incidentid'";
+        $sql = "UPDATE `{$dbIncidents}` SET status='1', lastupdated='{$now}', timeofnextaction='0' WHERE id='{$incidentid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -177,7 +162,7 @@ else
         {
             if (!file_exists($old_path))
             {
-                $umask=umask(0000);
+                $umask = umask(0000);
                 @mkdir($CONFIG['attachment_fspath'] ."$incidentid", 0770);
                 umask($umask);
             }
@@ -200,8 +185,8 @@ else
         if ($moved_attachments)
         {
             // retrieve the update body so that we can insert time headers
-            $sql = "SELECT incidentid, bodytext, timestamp FROM `{$dbUpdates}` WHERE id='$updateid'";
-            $uresult=mysql_query($sql);
+            $sql = "SELECT incidentid, bodytext, timestamp FROM `{$dbUpdates}` WHERE id='{$updateid}'";
+            $uresult = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             list($oldincidentid, $bodytext, $timestamp)=mysql_fetch_row($uresult);
 
@@ -223,19 +208,19 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             //remove from tempincoming to prevent build up
-            $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='$updateid'";
+            $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update $update moved to incident $incidentid", CFG_JOURNAL_INCIDENTS, $incidentid);
 
-            html_redirect("incident_details.php?id=$incidentid");
+            html_redirect("incident_details.php?id={$incidentid}");
         }
     }
     else
     {
         // no open incident with this number.  Return to form.
-        header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid=$updateid&error=1&win=incomingview");
+        header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid={$updateid}&error=1&win=incomingview");
         exit;
     }
 }

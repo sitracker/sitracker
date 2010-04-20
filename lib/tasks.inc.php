@@ -15,10 +15,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 /**
-* Postpones a task's due date 24 hours
-* @author Kieran Hogg
-* @param int $taskid The ID of the task to postpone
-*/
+ * Postpones a task's due date 24 hours
+ * @author Kieran Hogg
+ * @param int $taskid The ID of the task to postpone
+ */
 function postpone_task($taskid)
 {
     global $dbTasks;
@@ -62,6 +62,87 @@ function mark_task_completed($taskid, $incident)
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 }
 
+
+/**
+ * Returns an array of open activities/timed tasks for an incident
+ * @author Paul Heaney
+ * @param int $incidentid. Incident ID you want
+ * @return array - with the task id
+ */
+function open_activities_for_incident($incientid)
+{
+    global $dbLinks, $dbLinkTypes, $dbTasks;
+    // Running Activities
+
+    $sql = "SELECT DISTINCT origcolref, linkcolref ";
+    $sql .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt ";
+    $sql .= "WHERE l.linktype=4 ";
+    $sql .= "AND linkcolref={$incientid} ";
+    $sql .= "AND direction='left'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+    if (mysql_num_rows($result) > 0)
+    {
+        //get list of tasks
+        $sql = "SELECT * FROM `{$dbTasks}` WHERE enddate IS NULL ";
+        while ($tasks = mysql_fetch_object($result))
+        {
+            if (empty($orSQL)) $orSQL = "(";
+            else $orSQL .= " OR ";
+            $orSQL .= "id={$tasks->origcolref} ";
+        }
+
+        if (!empty($orSQL))
+        {
+            $sql .= "AND {$orSQL})";
+        }
+        $result = mysql_query($sql);
+
+        // $num = mysql_num_rows($result);
+        while ($obj = mysql_fetch_object($result))
+        {
+            $num[] = $obj->id;
+        }
+    }
+    else
+    {
+        $num = null;
+    }
+
+    return $num;
+}
+
+
+/**
+ * Returns the number of open activities/timed tasks for a site
+ * @author Paul Heaney
+ * @param int $siteid. Site ID you want
+ * @return int. Number of open activities for the site (0 if non)
+ */
+function open_activities_for_site($siteid)
+{
+    global $dbIncidents, $dbContacts;
+
+    $openactivites = 0;
+
+    if (!empty($siteid) AND $siteid != 0)
+    {
+        $sql = "SELECT i.id FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
+        $sql .= "WHERE i.contact = c.id AND ";
+        $sql .= "c.siteid = {$siteid} AND ";
+        $sql .= "(i.status != 2 AND i.status != 7)";
+
+        $result = mysql_query($sql);
+
+        while ($obj = mysql_fetch_object($result))
+        {
+            $openactivites += count(open_activities_for_incident($obj->id));
+        }
+    }
+
+    return $openactivites;
+}
 
 
 

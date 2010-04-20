@@ -36,7 +36,7 @@ function display_holiday_table($result)
 
     echo "<table align='center'>";
     echo "<tr>";
-    if ($user == 'all' && $approver == TRUE)
+    if ($user == 'all' AND $approver == TRUE)
     {
         echo "<th>{$GLOBALS['strName']}</th>";
     }
@@ -45,16 +45,12 @@ function display_holiday_table($result)
     {
         echo "<th>{$GLOBALS['strOperation']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
     }
-//    else
-//    {
-//        echo "<th>{$GLOBALS['strStatus']}</th>";
-//    }
 
     echo "</tr>";
     while ($holiday = mysql_fetch_object($result))
     {
         echo "<tr class='shade2'>";
-        if ($user=='all' && $approver==TRUE)
+        if ($user == 'all' AND $approver == TRUE)
         {
             echo "<td><a href='{$_SERVER['PHP_SELF']}?user={$holiday->userid}&amp;mode=approval'>";
             echo user_realname($holiday->userid,TRUE);
@@ -62,9 +58,9 @@ function display_holiday_table($result)
         }
         echo "<td>".ldate($CONFIG['dateformat_longdate'], mysql2date($holiday->date, TRUE))."</td>";
         echo "<td>";
-        if ($holiday->length=='am') echo $GLOBALS['strMorning'];
-        if ($holiday->length=='pm') echo $GLOBALS['strAfternoon'];
-        if ($holiday->length=='day') echo $GLOBALS['strFullDay'];
+        if ($holiday->length == 'am') echo $GLOBALS['strMorning'];
+        if ($holiday->length == 'pm') echo $GLOBALS['strAfternoon'];
+        if ($holiday->length == 'day') echo $GLOBALS['strFullDay'];
         echo "</td>";
         echo "<td>".holiday_type($holiday->type)."</td>";
         if ($approver == TRUE)

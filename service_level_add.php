@@ -255,7 +255,7 @@ elseif ($action == "edit")
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows",E_USER_WARNING);
 
-        for ($i = 1; $i <=4; $i++)
+        for ($i = 1; $i <= 4; $i++)
         {
             $sql = "INSERT INTO `{$dbBillingPeriods}` (servicelevelid, priority, tag, customerperiod, engineerperiod, `limit`) ";
             $sql .= "VALUES ('{$newslid}', '{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";

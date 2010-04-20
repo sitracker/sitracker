@@ -1,10 +1,16 @@
 <?php
+// SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
+//
+// This software may be used and distributed according to the terms
+// of the GNU General Public License, incorporated herein by reference.
 
 # SiT! forms
 
 /**
-* SiT! Form class
-*/
+ * SiT! Form class
+ */
 class Form
 {
     var $formheading;
@@ -26,7 +32,7 @@ class Form
         $this->tableName = $tableName;
         $this->type = $type;
         $this->formheading = $formheading;
-        
+
         $this->returnURLSuccess = $_SERVER['PHP_SELF'];
         $this->returnURLFailure = $_SERVER['PHP_SELF'];
     }
@@ -43,7 +49,7 @@ class Form
     	$this->returnURLSuccess = $returnURL;
     }
 
-    
+
     public function setReturnURLFailure($returnURL)
     {
         $this->returnURLFailure = $returnURL;
@@ -54,14 +60,14 @@ class Form
     {
     	$this->debug = $debug;
     }
-    
-    
+
+
     public function setKey($keyField, $keyValue)
     {
     	$this->keyField = $keyField;
         $this->keyValue = $keyValue;
     }
-    
+
 
     private function generateHTML()
     {
@@ -89,8 +95,9 @@ class Form
         {
             $toReturn = array_merge ($toReturn, $r->getDB());
         }
-        
-    //    print_r($toReturn);
+
+        // print_r($toReturn);
+
         switch ($this->type)
         {
             case 'insert':
@@ -116,7 +123,7 @@ class Form
                 }
 
                 break;
-                
+
             case 'update':
                 $sql = "UPDATE `{$this->tableName}` ";
                 if (count($toReturn) > 0)
@@ -134,7 +141,7 @@ class Form
 
                 break;
         }
-        
+
         if ($this->debug) echo $sql;
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
@@ -261,7 +268,7 @@ class HiddenRow extends Component
         }
 
         return $toReturn;
-    }	
+    }
 }
 
 
@@ -385,7 +392,7 @@ class HiddenEntry extends Component
         else
         {
             $db = new db($this->name, $this->dbFieldName);
-    
+
             return array($db);
         }
     }
