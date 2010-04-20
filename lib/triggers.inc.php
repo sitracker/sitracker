@@ -1089,7 +1089,7 @@ function triggers_to_html($user_id, $trigger_id = '')
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
-    $html = "<table class='vertical'>";
+    $html = "<table class='vertical' id='trigger_list'>";
     $html .= "<tr><th>Trigger</th><th>Actions</th></tr>";
     $i = 1;
     foreach ($trigger_types AS $trigger => $description)
@@ -1171,7 +1171,8 @@ function trigger_action_to_html($trigger)
         $html .= "<div id='checksandparams{$trigger->id}' style='display:none'>";
         if ($t_array['checks'] != '')
         {
-            $html .= "<strong>Checks</strong>: {$t_array['checks']} ".help_link('trigger_checks')." ";
+            $html .= "<strong>Checks</strong>: ";
+            $html .= checks_to_html($t_array['checks'])." ".help_link('trigger_checks')." ";
         }
         if ($t_array['parameters'] != '')
         {
@@ -1267,9 +1268,52 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
 	return $final_check;
 }
 
+function checks_to_html($checks)
+{
+    if ($checks != '')
+    {
+        if (strpos($checks, 'AND'))
+        {
+            $checks = explode(' AND ', $checks);
+        }
+        elseif (strpos($checks, 'OR'))
+        {
+            $checks = explode(' OR ', $checks);
+        }
+        else
+        {
+            $checks[0] = $checks;
+        }
+        $html = "";
+        foreach ($checks as $check)
+        {
+            if (strpos($check, '=='))
+            {
+                $check = explode('==', $check);
+                $check[0] = trim($check[0]);
+                $check[1] = trim($check[1]);
+            }
+            elseif (strpos($check, '!='))
+            {
+                $check = explode('!=', $check);
+                $check[0] = trim($check[0]);
+                $check[1] = trim($check[1]);
+            }
+            else
+            {
+                trigger_error('not yet supported');
+            }
+            print_r($check);
+            echo $ttvararray[$check[0]]['checkreplace'];
+            $html .= $ttvararray[$check[0]]['checkreplace']();
+        }
+        echo $html;
+    }
+}
+
 /**
  * @deprecated DEPRECATED trigger() function, use the TriggerEvent class instead
-*/
+ */
 function trigger($trigger_id, $param_array)
 {
     trigger_error("trigger() is deprecated, please use the TriggerEvent class instead");

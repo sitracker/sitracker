@@ -1013,3 +1013,7 @@ table#cols { height: 350px; }
 {
     #menu, #statusbar, h1#apptitle, #menulist, .contextmenu {visibility:hidden; display:none;}
 }
+
+#trigger_list {
+margin: 0 auto;
+}
