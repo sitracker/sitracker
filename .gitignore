@@ -1,0 +1,11 @@
+# Excllude local config file
+config.inc.php
+
+# Ignore temp files 
+*.*~
+
+# Eclipse settings
+.project
+.buildpath
+.settings
+
