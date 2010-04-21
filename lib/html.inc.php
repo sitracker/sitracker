@@ -2307,8 +2307,11 @@ function contract_details($id, $mode='internal')
     if ($mode == 'internal')
     {
         $html .= "<p align='center'>";
-        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a> | ";
-        $html .= "<a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
+        if ($maint->term != 'yes')
+        {
+            $html .= " | <a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+        }
     }
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
 
