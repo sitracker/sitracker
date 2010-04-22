@@ -693,7 +693,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
  * @param bool $userdisable. (optional). When TRUE an additional option is given to allow disabling of accounts
  * @return string. HTML
  */
-function userstatus_drop_down($name, $id, $userdisable = FALSE)
+function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
 {
     global $dbUserStatus;
     // extract statuses
@@ -2307,8 +2307,11 @@ function contract_details($id, $mode='internal')
     if ($mode == 'internal')
     {
         $html .= "<p align='center'>";
-        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a> | ";
-        $html .= "<a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
+        if ($maint->term != 'yes')
+        {
+            $html .= " | <a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+        }
     }
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
 
@@ -2325,48 +2328,49 @@ function contract_details($id, $mode='internal')
             $supportedcontacts = supported_contacts($id);
             $numberofcontacts = 0;
 
-                $numberofcontacts = sizeof($supportedcontacts);
-                if ($allowedcontacts == 0)
-                {
-                    $allowedcontacts = $GLOBALS['strUnlimited'];
-                }
-                $html .= "<table align='center'>";
-                $supportcount = 1;
+            $numberofcontacts = sizeof($supportedcontacts);
+            if ($allowedcontacts == 0)
+            {
+                $allowedcontacts = $GLOBALS['strUnlimited'];
+            }
+            $html .= "<table align='center'>";
+            $supportcount = 1;
 
-                if ($numberofcontacts > 0)
+            if ($numberofcontacts > 0)
+            {
+                foreach ($supportedcontacts AS $contact)
                 {
-                    foreach ($supportedcontacts AS $contact)
+                    $html .= "<tr><th>{$GLOBALS['strContact']} #{$supportcount}:</th>";
+                    $html .= "<td>".icon('contact', 16)." ";
+                    if ($mode == 'internal')
                     {
-                        $html .= "<tr><th>{$GLOBALS['strContact']} #{$supportcount}:</th>";
-                        $html .= "<td>".icon('contact', 16)." ";
-                        if ($mode == 'internal')
-                        {
-                            $html .= "<a href=\"contact_details.php?";
-                        }
-                        else
-                        {
-                            $html .= "<a href=\"contactdetails.php?";
-                        }
-                        $html .= "id={$contact}\">".contact_realname($contact)."</a>, ";
-                        $html .= contact_site($contact). "</td>";
-
-                        if ($mode == 'internal')
-                        {
-                            $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
-                        }
-                        else
-                        {
-                            $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
-                        }
-                        $supportcount++;
+                        $html .= "<a href=\"contact_details.php?";
                     }
-                    $html .= "</table>";
+                    else
+                    {
+                        $html .= "<a href=\"contactdetails.php?";
+                    }
+                    $html .= "id={$contact}\">".contact_realname($contact)."</a>, ";
+                    $html .= contact_site($contact). "</td>";
+
+                    if ($mode == 'internal')
+                    {
+                        $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                    }
+                    else
+                    {
+                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                    }
+                    $supportcount++;
                 }
-                else
-                {
-                    $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
-                }
+                $html .= "</table>";
+            }
+            else
+            {
+                $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
+            }
         }
+
         if ($maint->allcontactssupported != 'yes')
         {
             $html .= "<p align='center'>";
@@ -2593,20 +2597,9 @@ function show_next_action($formid)
     $html .= "<input name='date' id='timetonextaction_date' size='10' value='{$date}' ";
     $html .= "onclick=\"$('ttna_date').checked = true;\" /> ";
     $html .= date_picker("{$formid}.timetonextaction_date");
-    $html .= " <select name='timeoffset' id='timeoffset' ";
-    $html .= "onclick=\"$('ttna_date').checked = true;\" >";
-    $html .= "<option value='0'></option>";
-    $html .= "<option value='0'>8:00 $strAM</option>";
-    $html .= "<option value='1'>9:00 $strAM</option>";
-    $html .= "<option value='2'>10:00 $strAM</option>";
-    $html .= "<option value='3'>11:00 $strAM</option>";
-    $html .= "<option value='4'>12:00 $strPM</option>";
-    $html .= "<option value='5'>1:00 $strPM</option>";
-    $html .= "<option value='6'>2:00 $strPM</option>";
-    $html .= "<option value='7'>3:00 $strPM</option>";
-    $html .= "<option value='8'>4:00 $strPM</option>";
-    $html .= "<option value='9'>5:00 $strPM</option>";
-    $html .= "</select>";
+    
+    $html .= time_picker();
+    
     $html .= "<br />\n</div>";
 
     return $html;
@@ -3801,7 +3794,7 @@ function user_contracts_table($userid, $mode = 'internal')
         $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, ";
         $sql .= "`{$GLOBALS['dbProducts']}` AS p ";
         $sql .= "WHERE c.id = '{$userid}' ";
-        $sql .= "AND (sc.maintenanceid=m.id AND sc.contactid='$userid') ";
+        $sql .= "AND (sc.maintenanceid=m.id AND sc.contactid='{$userid}') ";
         $sql .= "AND m.product=p.id  ";
         // Contracts we're an 'all supported' on
         $sql .= "UNION ";
@@ -3889,5 +3882,53 @@ function user_contracts_table($userid, $mode = 'internal')
     return $html;
 }
 
+
+/**
+ * 
+ * @author Paul Heaney
+ * @param int $hour
+ * @param int $minute
+ */
+function time_picker($hour = '', $minute = '')
+{
+    global $CONFIG;
+    
+    // TODO use $CONFIG['dateformat_shorttime']
+    
+    $m = 0;
+
+    if (empty($hour))
+    {
+        $hour = floor($CONFIG['start_working_day'] / 3600);
+        $m = ($CONFIG['start_working_day'] % 3600) / 60;
+    }
+    
+    if (empty($minute))
+    {
+        $minute = $m;
+    }
+
+    $html = "<select id='time_picker_hour' name='time_picker_hour'>\n";
+    for ($i = 0; $i < 24; $i++)
+    {
+        $html .= "<option value='{$i}'";
+        if ($i == $hour) $html .= " selected='selected'";
+        $html .= ">{$i}</option>\n";
+    }
+    $html .= "</select>\n";
+    
+    $html .= ":";
+    
+    $html .= "<select id='time_picker_minute' name='time_picker_minute'>\n";
+    for ($i = 0; $i < 60; $i += $CONFIG['display_minute_interval'])
+    {
+        $html .= "<option value='{$i}'";
+        if ($i == $minute) $html .= " selected='selected'";
+        $html .= ">{$i}</option>\n";
+    }
+    $html .= "</select>\n";
+    
+    return $html;
+}
 
 ?>

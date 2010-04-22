@@ -20,7 +20,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='pageintro'>";
-echo "<p>Below is a list of your existing notifications.</p>";
+echo "<p>Below is a list of your notifications.</p>";
 echo "<a href='action_details.php'>";
 echo icon('add', 16). " {$strAddNotification}</a>";
 echo "</div><br />";

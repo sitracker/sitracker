@@ -107,18 +107,26 @@ if (!isNaN(id))
             $result = mysql_query($sql);
             if (mysql_num_rows($result) > 0)
             {
-            ?>
-                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
-                if (!empty($_SERVER['HTTP_REFERER']))
-                {
-                    echo $_SERVER['HTTP_REFERER'];
+            	if ($_SESSION['userconfig']['incident_popup_onewindow'])
+            	{?>
+            		window.location = 'incident_details.php?id=' + id;
+            	<?php
+            	}
+            	else 
+            	{
+	            ?>
+	                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
+	                if (!empty($_SERVER['HTTP_REFERER']))
+	                {
+	                    echo $_SERVER['HTTP_REFERER'];
+	                }
+	                else
+	                {
+	                    echo $_CONFIG['application_webpath'];
+	                }
+	                ?>';
+	            <?php
                 }
-                else
-                {
-                    echo $_CONFIG['application_webpath'];
-                }
-                ?>';
-            <?php
             }
     }?>
 

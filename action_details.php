@@ -13,12 +13,28 @@ require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php'); 
 //This page requires authentication
+$permission = 72;
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-
-$adminuser = user_permission($sit[2],22); //Admin user
+$trigger_mode = 'user';
+if (isset($_GET['user']))
+{
+    //FIXME perms
+    if ($_GET['user'] == 'admin')
+    {
+        $user_id = 0;
+        $trigger_mode = 'system';
+    }
+    else
+    {
+        $user_id = intval($_GET['user']);
+    }
+}
+else
+{
+    $user_id = $sit[2];
+}
 $title = 'New Triggers Interface';
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-($_GET['user'] == 'admin') ? $user = 0 : $user = $sit[2];
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -229,29 +245,29 @@ else
 {
     $mode = 'new';
 }
-$trigger_mode = 'user';
-if (isset($_GET['user']))
-{
-    //FIXME perms
-    if ($_GET['user'] == 'admin')
-    {
-        $user_id = 0;
-        $trigger_mode = 'system';
-    }
-    else
-    {
-        $user_id = intval($_GET['user']);
-    }
-}
-else
-{
-    $user_id = $sit[2];
-}
-
 
 if (!empty($_POST['triggertype']))
 {
-    print_r($_POST);
+	$_POST = cleanvar($_POST);
+	$checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], 
+	                             $_POST['enabled'], $_POST['conditions']);
+	
+    if ($_POST['new_action'] == 'ACTION_NOTICE')
+	{
+        $template = $_POST['noticetemplate'];
+	}
+	elseif ($_POST['new_action'] == 'ACTION_EMAIL')
+	{
+	    $template = $_POST['emailtemplate'];
+	}
+
+	$t = new Trigger($_POST['triggertype'], $user_id, $template, 
+                     $_POST['new_action'], $checks, $parameters);
+                     
+    $success = $t->add();
+    if ($trigger_mode == 'system') $return = 'system_actions.php';
+    else $return = 'notifications.php';
+    html_redirect($return, $success, $t->getError_text());                     
 }
 else
 {
@@ -259,12 +275,13 @@ else
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     echo "<h3>Action</h3>";
+    echo $trigger_mode;
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach($trigger_types as $name => $trigger)
     {
         if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
-            ($trigger['type'] == 'user' OR !isset($trigger['type'])))
+            (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
         {
             echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
         }

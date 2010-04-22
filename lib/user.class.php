@@ -204,7 +204,6 @@ class User extends Person{
                 // Exists
                 $oldUser = mysql_fetch_object($result);
                 $s = array();
-                $s[] = "lastseen = NOW()";
 
                 $errors = 0;
                 $error_string = '';

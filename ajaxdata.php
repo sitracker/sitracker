@@ -331,8 +331,8 @@ switch ($action)
     {
         // FIXME i18n
         echo '<p align="left">Notify when: ';
-        echo "<select><option>all conditions are met</option>";
-        echo "<option>any conditions are met</option></select></p>";
+        echo "<select name='conditions'><option value='all'>all conditions are met</option>";
+        echo "<option value='any'>any conditions are met</option></select></p>";
         echo "<table>";
         foreach ($trigger_types[$triggertype]['params'] as $param)
         {
@@ -347,9 +347,11 @@ switch ($action)
             if (isset($ttvararray['{'.$param.'}']['checkreplace']))
             {
                 echo '<tr>';
+                echo "<input type='hidden' name='param[]' value='{$param}' />";
                 echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
-                echo '<td>'.check_match_drop_down($param, $param). '</td>';
-                echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']($param.'value', $param.'value')."</td></tr>";
+                echo '<td>'.check_match_drop_down('join[]'). '</td>';
+                echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value[]')."</td>";
+                echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
             }
         }
         echo '</table>';
