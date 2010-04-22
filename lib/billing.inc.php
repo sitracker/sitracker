@@ -1636,18 +1636,18 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
             $unitamount = $service->unitrate * $multiplier;
             if ($unitamount > 0 AND $service->balance != 0) $unitbalance += round($service->balance / $unitamount);
         }
-    }
-
-    if ($includenonapproved)
-    {
-        $awaiting = contract_transaction_total($contractid, BILLING_AWAITINGAPPROVAL);
-        if ($awaiting != 0) $unitbalance += round($awaiting / $unitamount);
-    }
-
-    if ($includereserved)
-    {
-        $reserved = contract_transaction_total($contractid, BILLING_RESERVED);
-        if ($reserved != 0) $unitbalance += round($reserved / $unitamount);
+        
+        if ($includenonapproved)
+        {
+            $awaiting = contract_transaction_total($contractid, BILLING_AWAITINGAPPROVAL);
+            if ($awaiting != 0) $unitbalance += round($awaiting / $unitamount);
+        }
+    
+        if ($includereserved)
+        {
+            $reserved = contract_transaction_total($contractid, BILLING_RESERVED);
+            if ($reserved != 0) $unitbalance += round($reserved / $unitamount);
+        }
     }
 
     return $unitbalance;
