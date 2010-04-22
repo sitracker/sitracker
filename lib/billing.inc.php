@@ -1105,14 +1105,14 @@ function get_incident_transactionid($incidentid)
  */
 function contract_service_table($contractid, $billing)
 {
-    global $CONFIG, $dbService;
+    global $CONFIG, $dbService, $now;
 
     $sql = "SELECT * FROM `{$dbService}` WHERE contractid = {$contractid} ORDER BY enddate DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        $shade = '';
+        $shade = 'shade1';
         $html = "\n<table align='center'>";
         $html .= "<tr>";
         if ($billing) $html .= "<th></th>";
@@ -1128,8 +1128,15 @@ function contract_service_table($contractid, $billing)
             $service->startdate = mysql2date($service->startdate . '09:00');
             $service->enddate = mysql2date($service->enddate . '17:00');
             $service->lastbilled = mysql2date($service->lastbilled);
-            $html .= "<tr class='{$shade}'>";
 
+            $expired = false;
+            if ($service->enddate < $now) $expired = true;
+            
+            $html .= "<tr class='";
+            if ($expired) $html .= "expired";
+            else $html .= $shade;
+            $html .= "'>";
+            
             if ($billing)
             {
                 $balance = get_service_balance($service->serviceid);
@@ -1179,7 +1186,17 @@ function contract_service_table($contractid, $billing)
                     {
                         $span .= "<strong>{$GLOBALS['strReserved']}</strong>: {$CONFIG['currency_symbol']}".number_format($reserved, 2)."<br />";
                     }
-                    $span .= "<strong>{$GLOBALS['strAvailableBalance']}</strong>: {$CONFIG['currency_symbol']}".number_format($balance, 2)."<br />";
+                    
+                    $span .= "<strong>{$GLOBALS['strAvailableBalance']}</strong>: ";
+                    if (!$expired)
+                    {
+                        $span .= "{$CONFIG['currency_symbol']}".number_format($balance, 2);
+                    }
+                    else
+                    {
+                        $span .= $GLOBALS['strExpired'];
+                    }
+                    $span .= "<br />";
                 }
 
                 if ($service->lastbilled > 0)
@@ -1198,7 +1215,7 @@ function contract_service_table($contractid, $billing)
                         $html .= "<span>{$span}</span>";
                 }
                 $html .= "</a></td>";
-                $html .= "<td><a href='transactions.php?serviceid={$service->serviceid}' class='info'>".ldate($CONFIG['dateformat_date'],$service->startdate);
+                $html .= "<td><a href='transactions.php?serviceid={$service->serviceid}' class='info'>".ldate($CONFIG['dateformat_date'], $service->startdate);
                 if (!empty($span))
                 {
                         $html .= "<span>{$span}</span>";
@@ -1215,18 +1232,24 @@ function contract_service_table($contractid, $billing)
 
             if ($billing)
             {
-                $html .= "<td>{$CONFIG['currency_symbol']}".number_format($balance, 2)."</td>";
+                $html .= "<td>{$CONFIG['currency_symbol']}";
+                if (!$expired) $html .= number_format($balance, 2);
+                else $html .= "0";
+                $html .= "</td>";
             }
+
             $html .= "<td><a href='contract_edit_service.php?mode=editservice&amp;serviceid={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditService']}</a>";
+
             if ($billing)
             {
                 $html .= " | <a href='contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditBalance']}</a>";
             }
             $html .= "</td></tr>\n";
+            
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
         $html .= "</table>\n";
-        if ($shade == 'shade1') $shade = 'shade2';
-        else $shade = 'shade1';
     }
     return $html;
 }
