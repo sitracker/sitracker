@@ -347,44 +347,35 @@ function saction_SetUserStatus()
                 {
                     case USERSTATUS_IN_OFFICE:
                         $accepting = 'Yes';
-                    break;
-
+                        break;
                     case USERSTATUS_NOT_IN_OFFICE:
                         $accepting = 'No';
-                    break;
-
+                        break;
                     case USERSTATUS_IN_MEETING:
                         // don't change
                         $accepting = '';
-                    break;
-
+                        break;
                     case USERSTATUS_AT_LUNCH:
                         $accepting = '';
-                    break;
-
+                        break;
                     case USERSTATUS_ON_HOLIDAY:
                         $accepting = 'No';
-                    break;
-
+                        break;
                     case USERSTATUS_WORKING_FROM_HOME:
                         $accepting = 'Yes';
-                    break;
-
+                        break;
                     case USERSTATUS_ON_TRAINING_COURSE:
                         $accepting = 'No';
-                    break;
-
+                        break;
                     case USERSTATUS_ABSENT_SICK:
                         $accepting =' No';
-                    break;
-
+                        break;
                     case USERSTATUS_WORKING_AWAY:
                         // don't change
                         $accepting = '';
-                    break;
-
+                        break;
                     default:
-                        $accepting='';
+                        $accepting = '';
                 }
                 $usql = "UPDATE `{$dbUsers}` SET status='{$newstatus}'";
                 if ($accepting != '') $usql .= ", accepting='{$accepting}'";
