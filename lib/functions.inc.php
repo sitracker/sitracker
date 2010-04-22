@@ -804,8 +804,8 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
             // Set Size-dimensions. SizeX,SizeY,SizeZ
             $sx = '200';
-            $sy='100';
-            $sz ='15';
+            $sy = '100';
+            $sz = '15';
 
             // Title
             if (!empty($title))
@@ -879,13 +879,16 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
                     $data[$i] = format_seconds($data[$i]);
                 }
 
+                $l = mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8');
+                if (strlen(urldecode($legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
+                
                 if ($use_ttf)
                 {
-                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8')." ({$data[$i]})");
+                    imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], "{$l} ({$data[$i]})");
                 }
                 else
                 {
-                    imagestring($img,2, 270, ($legendY - 1), mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8')." ({$data[$i]})", $black);
+                    imagestring($img,2, 270, ($legendY - 1), "{$l} ({$data[$i]})", $black);
                 }
                 // imagearc($img,$cx,$cy,$sx,$sy,$angle_sum[$i1] ,$angle_sum[$i], $blue);
                 $legendY += 15;

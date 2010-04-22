@@ -2307,8 +2307,11 @@ function contract_details($id, $mode='internal')
     if ($mode == 'internal')
     {
         $html .= "<p align='center'>";
-        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a> | ";
-        $html .= "<a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
+        if ($maint->term != 'yes')
+        {
+            $html .= " | <a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+        }
     }
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
 
@@ -2325,48 +2328,49 @@ function contract_details($id, $mode='internal')
             $supportedcontacts = supported_contacts($id);
             $numberofcontacts = 0;
 
-                $numberofcontacts = sizeof($supportedcontacts);
-                if ($allowedcontacts == 0)
-                {
-                    $allowedcontacts = $GLOBALS['strUnlimited'];
-                }
-                $html .= "<table align='center'>";
-                $supportcount = 1;
+            $numberofcontacts = sizeof($supportedcontacts);
+            if ($allowedcontacts == 0)
+            {
+                $allowedcontacts = $GLOBALS['strUnlimited'];
+            }
+            $html .= "<table align='center'>";
+            $supportcount = 1;
 
-                if ($numberofcontacts > 0)
+            if ($numberofcontacts > 0)
+            {
+                foreach ($supportedcontacts AS $contact)
                 {
-                    foreach ($supportedcontacts AS $contact)
+                    $html .= "<tr><th>{$GLOBALS['strContact']} #{$supportcount}:</th>";
+                    $html .= "<td>".icon('contact', 16)." ";
+                    if ($mode == 'internal')
                     {
-                        $html .= "<tr><th>{$GLOBALS['strContact']} #{$supportcount}:</th>";
-                        $html .= "<td>".icon('contact', 16)." ";
-                        if ($mode == 'internal')
-                        {
-                            $html .= "<a href=\"contact_details.php?";
-                        }
-                        else
-                        {
-                            $html .= "<a href=\"contactdetails.php?";
-                        }
-                        $html .= "id={$contact}\">".contact_realname($contact)."</a>, ";
-                        $html .= contact_site($contact). "</td>";
-
-                        if ($mode == 'internal')
-                        {
-                            $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
-                        }
-                        else
-                        {
-                            $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
-                        }
-                        $supportcount++;
+                        $html .= "<a href=\"contact_details.php?";
                     }
-                    $html .= "</table>";
+                    else
+                    {
+                        $html .= "<a href=\"contactdetails.php?";
+                    }
+                    $html .= "id={$contact}\">".contact_realname($contact)."</a>, ";
+                    $html .= contact_site($contact). "</td>";
+
+                    if ($mode == 'internal')
+                    {
+                        $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                    }
+                    else
+                    {
+                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                    }
+                    $supportcount++;
                 }
-                else
-                {
-                    $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
-                }
+                $html .= "</table>";
+            }
+            else
+            {
+                $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
+            }
         }
+
         if ($maint->allcontactssupported != 'yes')
         {
             $html .= "<p align='center'>";

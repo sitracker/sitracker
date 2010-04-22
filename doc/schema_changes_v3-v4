@@ -1,0 +1,5 @@
+-- INL 22 April 2010
+ALTER TABLE `sit_tempincoming` ADD `arrived` DATETIME NOT NULL AFTER `id`;
+
+
+

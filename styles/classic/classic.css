@@ -16,7 +16,6 @@ center      { color: #000000; }
 h1 { color: #000; background-color: #FFFFCC; margin: 0px; padding: 3px 0px 3px 0px; }
 
 th, div.windowtitle { background-color: #CCC; }
-div#footerbar { text-align: center; }
 div#statusbar { background-color: #ccc;}
 div#kbarticle { background-color: #FFFFEA; }
 div.windowbox { margin-left: auto; margin-right: auto; margin-top: 20px;}

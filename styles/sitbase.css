@@ -327,12 +327,6 @@ h1.critical { background-image: url('../images/top_red.png'); }
 .idle     { background-color: #CCffCC; } /* green - #90ee90; */
 .visible { background-color: #DDFFE1; } /* #C9EBD8 light green - visible to customer */
 
-
-#userbar,#footerbar { text-align: center; padding: 2px 0px 2px 0px; }
-
-#footerbar select { font-size: 80%; }
-#footerbar form { margin: 0px; }
-
 #statusbar { clear: both; background-color: #203894; color: #FFF; text-align: center; padding: 2px 0px 2px 0px; margin-top: 1em;}
 #statusbar a { text-decoration: none; color: #FFF; }
 #statusbar a:hover { text-decoration: underline; }

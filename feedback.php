@@ -210,23 +210,19 @@ function feedback_html_question($type, $name, $required, $options, $answer='')
     {
         case 'rating':
             $html = feedback_html_rating($name, $required, $options, $answer);
-        break;
-
+            break;
         case 'options':
             $html = feedback_html_options($name, $required, $options, $answer);
-        break;
-
+            break;
         case 'multioptions':
             $html = feedback_html_multioptions($name, $required, $options, $answer);
-        break;
-
+            break;
         case 'text':
             $html = feedback_html_text($name, $required, $options, $answer);
-        break;
-
+            break;
         default:
             $html = sprintf($GLOBALS['strErrorNoHandlerDefinedForQuestionTypeX'], $type);
-        break;
+            break;
   }
   return $html;
 }
