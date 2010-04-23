@@ -72,7 +72,7 @@ while ($incidents = mysql_fetch_array($result))
     // If you do &hellips; becomes &amp;hellips; 
     $postsitetext = '';
     
-    if (strlen($site) > 0)
+    if (strlen($site) > 30)
     {
         $site = mb_substr($site, 0, 30, 'UTF-8');
         $postsitetext .= $strEllipsis;
