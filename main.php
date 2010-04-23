@@ -10,9 +10,7 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
-// This Page Is *NOT* Valid XHTML 1.0 Transitional!
-
-
+// This Page is Valid XHTML 1.0 Transitional!
 
 $permission = 0; // not required
 require ('core.php');
@@ -106,30 +104,6 @@ foreach ($arr AS $a)
 }
 
 echo "</td></tr></table>\n";
-
-//  Users Login Details
-echo "<div id='userbar'>";
-
-// if (user_accepting($sit[2])!='Yes')
-// {
-//     $userstatus = "<span class='error'>{$strNotAcceptingIncidents}</span>";
-// }
-// else
-// {
-//     $userstatus = "<strong>{$strAcceptingIncidents}</strong>";
-// }
-//
-// echo sprintf($strLoggedInAsXAndCurrentlyXAndX,
-//             "<strong>{$sit[0]}</strong>",
-//             "<strong>".userstatus_name(user_status($sit[2]))."</strong>",
-//             $userstatus);
-
-if ($sit[3] == 'public')
-{
-    echo "- {$strPublicSharedComputerIncreasedSecurity}";
-}
-
-echo "</div>\n";
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -246,17 +220,6 @@ function save_layout(){
 /* ]]> */
 </script>
 <?php
-
-
-echo "<div id='footerbar'>";
-//echo "<form action='{$_SERVER['PHP_SELF']}'>";
-//echo "{$strSetYourStatus}: ";
-//if (isset($sit[2]))
-//{
-//   echo userstatus_bardrop_down("status", user_status($sit[2])).help_link("SetYourStatus");
-//}
-//echo "</form>\n";
-echo "</div>\n";
 if ($CONFIG['debug']) $dbg .= "\nLang: {$_SESSION['lang']}\n";
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

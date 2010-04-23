@@ -20,7 +20,7 @@ if (!extension_loaded('gd')) trigger_error("{$CONFIG['application_name']} requir
 // External variables
 $type = $_REQUEST['type'];
 $data = explode('|',cleanvar($_REQUEST['data']));
-$legends = explode('|',cleanvar($_REQUEST['legends']));
+$legends = explode('|', cleanvar($_REQUEST['legends'], TRUE, FALSE, FALSE));
 $title = urldecode(cleanvar($_REQUEST['title']));
 $unit = cleanvar($_REQUEST['unit']);
 

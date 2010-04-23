@@ -65,9 +65,6 @@ div.windowtitle img { vertical-align: middle; }
 
 .window { padding: 2px; }
 /*.window table th { background-color: #ccc; }*/
-#userbar, #footerbar, #statusbar { font-size: 85%; }
-#userbar { float: left; padding-left: 10px; }
-#footerbar { width: 50%; float: right; text-align: right; padding-right: 10px; }
 #statusbar { color: #fff; padding-left: 10px;  }
 #statusbar a { color: white; text-decoration: none; }
 #statusbar img { vertical-align: bottom; padding: 1px 0px 1px 0px;}
