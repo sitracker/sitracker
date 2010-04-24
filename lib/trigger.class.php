@@ -345,10 +345,9 @@ class Trigger extends SitEntity {
                                     "Trigger Fired ({$jtext})",
                                     CFG_JOURNAL_TRIGGERS, $this->user_id);
                 break;
-
-            case "ACTION_NONE":
-            //fallthrough
+                
             default:
+            	plugin_do('trigger_actions_defined');
                 break;
         }
 
