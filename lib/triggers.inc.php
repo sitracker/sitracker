@@ -210,8 +210,8 @@ array('name' => $strUserResetPassword,
 $trigger_types['TRIGGER_WAITING_HELD_EMAIL'] =
 array('name' => $strWaitingHeldEmail,
       'description' => $strTriggerNewHeldEmailMinsDesc,
-      'required' => array('holdingmins'),
-      'params' => array('holdingmins'),
+      'required' => array('holdingmins', 'notifymins'),
+      'params' => array('notifymins'),
       );
 
 
@@ -581,6 +581,13 @@ array('description' => $strNotifyExternalEngineerOnClose,
       'show' => FALSE
       );
 
+$ttvararray['{notifymins}'] =
+array('description' => $strNotifyMinutes,
+      'replacement' => '$param_array[\'notifymins\'];',
+      'requires' => 'notifymins',
+      'show' => TRUE
+      );
+      
 $ttvararray['{ownerid}'] =
 array('description' => $strIncidentOwner,
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',

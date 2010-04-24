@@ -205,12 +205,13 @@ class Trigger extends SitEntity {
                      $parameters = '', $param_array = array(), $id = -1)
     {
         $this->trigger_type = cleanvar($trigger_type);
-        $this->param_array = cleanvar($param_array);
+        $this->param_array = $param_array;
         $this->user_id = cleanvar($user_id);
         $this->template = cleanvar($template);
         $this->action = cleanvar($action);
-        $this->checks = cleanvar($checks);
-        $this->parameters = cleanvar($parameters);
+        $this->parameters = cleanvar($parameters, FALSE, FALSE);
+        $this->checks = $checks;
+        $this->parameters = $parameters;
         $this->id = cleanvar($id);
         debug_log("Trigger {$trigger_type} created. Options:\n" .
             print_r($param_array, TRUE));
@@ -254,10 +255,41 @@ class Trigger extends SitEntity {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
         global $dbTriggers;
 
-        //see if we have any checks first
+        // see if we were passed any checks by the trigger
+        if (!empty($this->param_array['checks']))
+        {
+        	if (!empty($this->checks))
+        	{
+                $this->checks = "({$this->checks}) && ({$this->param_array['checks']})";
+        	}
+        	else
+        	{
+        		$this->checks = $this->param_array['checks'];
+        	}
+        	$this->param_array['checks'] = '';
+        }
+        
+        //if we have any params from the actual trigger, append to user params
+        if (!empty($this->parameters))
+        {
+            $resultparams = explode(",", $this->parameters);
+            foreach ($resultparams as $assigns)
+            {
+                $values = explode("=", $assigns);
+                $this->param_array[$values[0]] = $values[1];
+                if ($CONFIG['debug'])
+                {
+                    $dbg .= "\$paramarray[{$values[0]}] = {$values[1]}\n";
+                }
+            }
+        }
+
         if (!empty($this->checks))
         {
             $checks = trigger_replace_specials($this->trigger_type, $this->checks, $this->param_array);
+            $checks = str_replace("AND", "&&", $checks);
+            $checks = str_replace("OR", "||", $checks);
+            echo $checks;
             $eresult = eval("\$value = $checks;return TRUE;");
 
             if (!$eresult)
@@ -274,24 +306,7 @@ class Trigger extends SitEntity {
                 return;
             }                           
         }
-
-        // if we have any stored parameters from the trigger, append to
-        // the dynamic ones
-        if (!empty($this->parameters))
-        {   
-            $resultparams = explode(",", $this->parameters);
-            foreach ($resultparams as $assigns)
-            {
-                $values = explode(" = ", $assigns);
-                $this->param_array[$values[0]] = $values[1];
-                $dbg .= "\$this->param_array[{$values[0]}] = {$values[1]}";
-            }
-            debug_log("Trigger parameters:\n.$dbg", TRUE);
-        }
-
-        debug_log("trigger_action({$this->trigger_type}, {$this->action}, 
-                    {$this->param_array}) called", TRUE);
-
+        
         $return = $this->trigger_action($this->action,
                                         $this->template);
         
