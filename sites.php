@@ -202,7 +202,7 @@ if ($errors == 0)
 
     if (mysql_num_rows($result) == 0)
     {
-        echo "<p align='center'>{$strSorryNoResult} ";
+        echo "<p align='center'>{$strSorryNoSearchResults}</p>";
     }
     else
     {
