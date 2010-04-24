@@ -347,7 +347,9 @@ class Trigger extends SitEntity {
                 break;
                 
             default:
-            	plugin_do('trigger_actions_defined');
+            	plugin_do('trigger_actions_defined', 
+            	          array('paramarray' => $paramarray, 
+            	                'action' => $action));
                 break;
         }
 
