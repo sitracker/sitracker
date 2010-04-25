@@ -356,7 +356,7 @@ array('description' => $strContact,
       'replacement' => '$param_array[\'contactid\'];',
       'show' => FALSE
       );
-      
+
 $ttvararray['{contactid}'][] =
 array('description' => $strContact,
       'requires' => 'incidentid',
@@ -587,7 +587,7 @@ array('description' => $strNotifyMinutes,
       'requires' => 'notifymins',
       'show' => TRUE
       );
-      
+
 $ttvararray['{ownerid}'] =
 array('description' => $strIncidentOwner,
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',
@@ -1108,7 +1108,7 @@ function triggers_to_html($user_id, $trigger_id = '')
             $html .= "<tr class='shade{$shade}'><td>".icon('trigger', 16);
             $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
             $html .= $trigger_html;
-            $html .= "</div></td></tr>";         
+            $html .= "</div></td></tr>";
         }
     }
     $html .= "</table>";
@@ -1152,7 +1152,7 @@ function trigger_action_to_html($trigger)
             $action = icon('email', 16). " ";
             $action .= $GLOBALS['strSendAnEmail'];
             break;
-            
+
         default:
             $action = $GLOBALS['strUnknown'];
             plugin_do('trigger_action_html');
@@ -1160,7 +1160,7 @@ function trigger_action_to_html($trigger)
     }
 
     $html .= $action;
-    
+
     if (!empty($t_array['template']))
     {
         $html .= " <a href='templates.php?id={$t_array['template']}'>";
@@ -1171,7 +1171,7 @@ function trigger_action_to_html($trigger)
             $html .= "<small>({$desc})</small><br />";
         }
     }
-    
+
     if ($t_array['checks'] != '' OR $t_array['parameters'] != '')
     {
         $html .= "<a href='javascript:void(0)' onclick=\"javascript:$('checksandparams{$trigger->id}').show()\">".icon('auto', 16) ." {$GLOBALS['strMore']}</a> ";
@@ -1187,7 +1187,7 @@ function trigger_action_to_html($trigger)
         }
         $html .= "</div>";
     }
-    
+
     $html .=  "<div class='triggeractions'><a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
     $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
@@ -1221,14 +1221,14 @@ function template_description($name, $type)
  */
 function check_match_drop_down($id = '')
 {
-	$html = "<select id='{$id}' name='{$id}'>";
+    $html = "<select id='{$id}' name='{$id}'>";
     $html .= "<option>is</option>";
     $html .= "<option>is not</option>";
     $html .= "<option>contains</option>";
     $html .= "<option>does not contain</option>";
     $html .= "</select>";
-        
-	return $html;
+
+    return $html;
 }
 
 /**
@@ -1237,42 +1237,42 @@ function check_match_drop_down($id = '')
  * @param array $value the values of the parameters
  * @param array $join the 'is', 'is not' selection
  * @param array $enabled the status of the checkbox
- * @param array $conditions whether to use 'all' or 'any' of the conditions
- */
+* @param array $conditions whether to use 'all' or 'any' of the conditions
+*/
 function create_check_string($param, $value, $join, $enabled, $conditions)
 {
-	//FIXME check for bad code here
-	//FIXME add extra join
-	$param_count = sizeof($param);
-	for ($i = 0; $i < $param_count; $i++)
-	{
-		if ($enabled[$i] == 'on')
-		{
-			$checks[$i] = "{".$param[$i]."}";
-			if ($join[$i] == 'is') $checks[$i] .= "==";
-			elseif ($join[$i] == 'is not') $checks[$i] .= "==";
-			elseif ($join[$i] == 'contains') $check[$i] .= "!=";
-			$checks[$i] .= $value[$i];
-		}
-	}
+    //FIXME check for bad code here
+    //FIXME add extra join
+    $param_count = sizeof($param);
+    for ($i = 0; $i < $param_count; $i++)
+    {
+        if ($enabled[$i] == 'on')
+        {
+            $checks[$i] = "{".$param[$i]."}";
+            if ($join[$i] == 'is') $checks[$i] .= "==";
+            elseif ($join[$i] == 'is not') $checks[$i] .= "==";
+            elseif ($join[$i] == 'contains') $check[$i] .= "!=";
+            $checks[$i] .= $value[$i];
+        }
+    }
 
-	$check_count = sizeof($checks);
-	for ($i = 0; $i < $check_count; $i++)
-	{
-		$final_check .= $checks[0];
-		if ($i != $check_count - 1)
-		{
-			if ($conditions == 'all')
-			{
-				$final_check .= " AND ";
-			}
-			else
-			{
-				$final_check .= " OR ";
-			}
-		}
-	}
-	return $final_check;
+    $check_count = sizeof($checks);
+    for ($i = 0; $i < $check_count; $i++)
+    {
+        $final_check .= $checks[0];
+        if ($i != $check_count - 1)
+        {
+            if ($conditions == 'all')
+            {
+                $final_check .= " AND ";
+            }
+            else
+            {
+                $final_check .= " OR ";
+            }
+        }
+    }
+    return $final_check;
 }
 
 function checks_to_html($checks)
