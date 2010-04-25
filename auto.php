@@ -593,8 +593,7 @@ function saction_CheckWaitingEmail()
        $result = mysql_query($sql);
        list($interval) = mysql_fetch_row($result);
        // so we don't get a duplicate if we receive an email exactly at check time
-       $interval--;
-       $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} > {$now}";
+       $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
        new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL", 
                         array('holdingmins' => ceil($minswaiting / 60),
                               'checks' => $checks));

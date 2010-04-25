@@ -1279,11 +1279,11 @@ function checks_to_html($checks)
 {
     if ($checks != '')
     {
-        if (strpos($checks, 'AND'))
+        if (strpos($checks, 'AND') !== FALSE)
         {
             $checks = explode(' AND ', $checks);
         }
-        elseif (strpos($checks, 'OR'))
+        elseif (strpos($checks, 'OR') !== FALSE)
         {
             $checks = explode(' OR ', $checks);
         }
@@ -1294,13 +1294,13 @@ function checks_to_html($checks)
         $html = "";
         foreach ($checks as $check)
         {
-            if (strpos($check, '=='))
+            if (strpos($check, '==') !== FALSE)
             {
                 $check = explode('==', $check);
                 $check[0] = trim($check[0]);
                 $check[1] = trim($check[1]);
             }
-            elseif (strpos($check, '!='))
+            elseif (strpos($check, '!=') !== FALSE)
             {
                 $check = explode('!=', $check);
                 $check[0] = trim($check[0]);
