@@ -1,5 +1,5 @@
 <?php
-// review_incoming_updates.php - Review/Delete Incident Updates
+// inbox.php - View/Respond to incoming email
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project
@@ -28,7 +28,7 @@ $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
 
 
-// $refresh = 60;
+$refresh = 60;
 $title = $strInbox;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -40,7 +40,7 @@ function contact_info($contactid, $email, $name)
     //$info .= "<span style='float:right;'>".gravatar($email, 16) . '</span>';
     if (!empty($contactid))
     {
-        $info .= "<a href='contact.php?id={$contactid}'>";
+        $info .= "<a href='contact_details.php?id={$contactid}'>";
         $info .= icon('contact', 16);
         $info .= "</a>";
     }
@@ -130,6 +130,9 @@ if (empty($displayid))
                 break;
             case 'subject':
                 $sql .= " ORDER BY `subject` {$sortorder}";
+                break;
+            case 'date':
+                $sql .= " ORDER BY `arrived` {$sortorder}";
                 break;
             default:
                 $sql .= " ORDER BY `id` DESC";
