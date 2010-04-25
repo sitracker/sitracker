@@ -17,7 +17,7 @@ require ('core.php');
 include_once (APPLICATION_LIBPATH . 'strings.inc.php');
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 include_once (APPLICATION_LIBPATH . 'billing.inc.php');
-require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
+require_once (APPLICATION_LIBPATH . 'trigger.class.php');
 populate_syslang();
 
 $crlg = "\n";
@@ -573,23 +573,31 @@ function saction_ChaseCustomers()
 */
 function saction_CheckWaitingEmail()
 {
-    global $dbTempIncoming, $dbUpdates;
+    global $dbTempIncoming, $dbUpdates, $dbScheduler, $now;
     $success = TRUE;
 
-    $sql = "SELECT COUNT(ti.id), UNIX_TIMESTAMP(NOW()) - `timestamp` AS minswaiting FROM `{$dbTempIncoming}` AS ti ";
-    $sql .= "LEFT JOIN `{$dbUpdates}` AS u ON ti.updateid = u.id GROUP BY ti.id";
+    $sql = "SELECT `timestamp`, UNIX_TIMESTAMP(NOW()) - `timestamp` AS minswaiting FROM `{$dbTempIncoming}` AS ti ";
+    $sql .= "LEFT JOIN `{$dbUpdates}` AS u ON ti.updateid = u.id GROUP BY ti.id ";
+    $sql .= "ORDER BY timestamp ASC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error())
     {
         trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
-    list($count, $minswaiting) = mysql_fetch_row($result);
-    if ($count > 0)
+    elseif (mysql_num_rows($result) > 0)
     {
-        trigger("TRIGGER_WAITING_HELD_EMAIL", array('holdingmins' => $minswaiting));
+	   list($timestamp, $minswaiting) = mysql_fetch_row($result);
+       $sql = "SELECT `interval` FROM `{$dbScheduler}` ";
+       $sql .= "WHERE action = 'CheckWaitingEmail'";
+       $result = mysql_query($sql);
+       list($interval) = mysql_fetch_row($result);
+       // so we don't get a duplicate if we receive an email exactly at check time
+       $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
+       new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL", 
+                        array('holdingmins' => ceil($minswaiting / 60),
+                              'checks' => $checks));
     }
-
     return $success;
 }
 

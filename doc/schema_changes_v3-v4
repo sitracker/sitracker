@@ -1,5 +1,8 @@
 -- INL 22 April 2010
 ALTER TABLE `sit_tempincoming` ADD `arrived` DATETIME NOT NULL AFTER `id`;
 
+-- KMH 24 April 2010
+DELETE FROM `sit_triggers` WHERE `id` = 8
+
 
 
