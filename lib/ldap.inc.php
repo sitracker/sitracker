@@ -267,7 +267,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
     {
         // Sucessfull
         debug_log("LDAP Valid Credentials", TRUE);
-        $usertype= LDAP_INVALID_USER;
+        $usertype = LDAP_INVALID_USER;
 
         if ($CONFIG['ldap_grponuser'])
         {

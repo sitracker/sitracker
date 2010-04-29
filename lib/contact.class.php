@@ -206,10 +206,9 @@ class Contact extends Person {
 
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            if (mysql_error())
             {
-                trigger_error("Failed to update contact", E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 $toReturn = false;
             }
             else
