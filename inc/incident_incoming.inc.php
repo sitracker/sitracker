@@ -38,6 +38,8 @@ if (mysql_num_rows($result) > 0)
 {
     $incoming = @mysql_fetch_object($result);
 
+    $lockedbyyou = false;
+    
     if (!$incoming->locked)
     {
         //it's not locked, lock for this user
@@ -45,7 +47,8 @@ if (mysql_num_rows($result) > 0)
         $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' WHERE id='{$incomingid}' AND (locked = 0 OR locked IS NULL)";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $lockedbyname = "you";
+        $lockedbyname = $strYou;
+        $lockedbyyou = true;
     }
     elseif ($incoming->locked != $sit[2])
     {
@@ -60,11 +63,12 @@ if (mysql_num_rows($result) > 0)
     }
     else
     {
-        $lockedbyname = "you";
+        $lockedbyname = $strYou;
+        $lockedbyyou = true;
     }
 
     echo "<div class='detailinfo'>";
-    if ($lockedbyname == "you")
+    if ($lockedbyyou)
     {
         echo "<div class='detaildate'>";
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$incomingid}&win=incomingview&action=updatereason'>";
