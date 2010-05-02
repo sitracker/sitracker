@@ -38,9 +38,14 @@ switch ($action)
         $name = cleanvar($_REQUEST['name']);
         $description = cleanvar($_REQUEST['description']);
         $priority = cleanvar($_REQUEST['priority']);
+        $start_time_picker_hour = cleanvar($_REQUEST['start_time_picker_hour']);
+        $start_time_picker_minute = cleanvar($_REQUEST['start_time_picker_minute']);
+        $due_time_picker_hour = cleanvar($_REQUEST['due_time_picker_hour']);
+        $due_time_picker_minute = cleanvar($_REQUEST['due_time_picker_minute']);
+        
         if (!empty($_REQUEST['duedate']))
         {
-            $duedate = strtotime($_REQUEST['duedate']);
+            $duedate = strtotime(cleanvar($_REQUEST['duedate']) . ' ' . $due_time_picker_hour . ':' . $due_time_picker_minute);
         }
         else
         {
@@ -49,7 +54,7 @@ switch ($action)
 
         if (!empty($_REQUEST['startdate']))
         {
-            $startdate = strtotime($_REQUEST['startdate']);
+            $startdate = strtotime(cleanvar($_REQUEST['startdate']) . ' ' . $start_time_picker_hour . ':' . $start_time_picker_minute);
         }
         else
         {
@@ -68,7 +73,7 @@ switch ($action)
         {
             $enddate = '';
         }
-
+        
         if ($completion == 100 AND $enddate == '') $enddate = $now;
         $value = cleanvar($_REQUEST['value']);
         $owner = cleanvar($_REQUEST['owner']);
@@ -84,7 +89,7 @@ switch ($action)
         $old_owner = cleanvar($_REQUEST['old_owner']);
         $old_distribution = cleanvar($_REQUEST['old_distribution']);
         if ($distribution == 'public') $tags = cleanvar($_POST['tags']);
-        else $tags='';
+        else $tags = '';
 
         // Validate input
         $error = array();
@@ -105,9 +110,9 @@ switch ($action)
         else
         {
             replace_tags(4, $id, $tags);
-            if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
+            if ($startdate > 0) $startdate = date('Y-m-d H:i', $startdate);
             else $startdate = '';
-            if ($duedate > 0) $duedate = date('Y-m-d', $duedate);
+            if ($duedate > 0) $duedate = date('Y-m-d H:i', $duedate);
             else $duedate='';
             if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
             else $enddate='';
@@ -139,13 +144,13 @@ switch ($action)
                 $bodytext .= "{$SYSLANG['strPriority']}: ".priority_name($old_priority)." -&gt; [b]".priority_name($priority)."[/b]\n";
             }
 
-            $old_startdate = substr($old_startdate,0,10);
+            $old_startdate = substr($old_startdate, 0, 16);
             if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00'))
             {
                 $bodytext .= "{$SYSLANG['strStartDate']}: {$old_startdate} -&gt; [b]{$startdate}[/b]\n";
             }
 
-            $old_duedate = substr($old_duedate,0,10);
+            $old_duedate = substr($old_duedate, 0, 16);
             if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_duedate} -&gt; [b]{$duedate}[/b]\n";
@@ -318,7 +323,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('task', 32)." ";
         echo "$title</h2>";
-        $sql = "SELECT * FROM `{$dbTasks}` WHERE id='$id'";
+        $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
@@ -343,17 +348,17 @@ switch ($action)
                 echo "<td>".priority_drop_down('priority',$task->priority)."</td></tr>";
                 echo "<tr><th>{$strStartDate}</th>";
                 echo "<td><input type='text' name='startdate' id='startdate' size='10' value='";
-                if ($startdate > 0) echo date('Y-m-d',$startdate);
+                if ($startdate > 0) echo date('Y-m-d', $startdate);
                 echo "' /> ";
                 echo date_picker('edittask.startdate');
-                echo " ".time_dropdown("starttime", date('H:i',$startdate));
+                echo " ".time_picker(date('H', $startdate), date('i', $startdate), 'start_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strDueDate}</th>";
                 echo "<td><input type='text' name='duedate' id='duedate' size='10' value='";
-                if ($duedate > 0) echo date('Y-m-d',$duedate);
+                if ($duedate > 0) echo date('Y-m-d', $duedate);
                 echo "' /> ";
                 echo date_picker('edittask.duedate');
-                echo " ".time_dropdown("duetime", date('H:i',$duedate));
+                echo " ".time_picker(date('H', $duedate), date('i', $duedate), 'due_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strCompletion}</th>";
                 echo "<td><input type='text' name='completion' size='3' maxlength='3' value='{$task->completion}' />&#037;</td></tr>";

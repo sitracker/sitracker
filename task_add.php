@@ -81,9 +81,10 @@ else
             $value = cleanvar($_POST['value']);
             $distribution = cleanvar($_POST['distribution']);
             $taskuser = cleanvar($_POST['taskuser']);
-            $starttime = cleanvar($_POST['starttime']);
-            $duetime = cleanvar($_POST['duetime']);
-            $endtime = cleanvar($_POST['endtime']);
+            $start_time_picker_hour = cleanvar($_POST['start_time_picker_hour']);
+            $start_time_picker_minute = cleanvar($_POST['start_time_picker_minute']);
+            $due_time_picker_hour = cleanvar($_POST['due_time_picker_hour']);
+            $due_time_picker_minute = cleanvar($_POST['due_time_picker_minute']);
 
             $_SESSION['formdata']['add_task'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
@@ -103,17 +104,17 @@ else
             }
             else
             {
-                if ($startdate > 0) $startdate = date('Y-m-d',$startdate)." ".$starttime;
+                if ($startdate > 0) $startdate = date('Y-m-d', $startdate)." ".$start_time_picker_hour.":".$start_time_picker_minute;
                 else $startdate = '';
-                if ($duedate > 0) $duedate = date('Y-m-d',$duedate)." ".$duetime;
+                if ($duedate > 0) $duedate = date('Y-m-d',$duedate)." ".$due_time_picker_hour.":".$due_time_picker_minute;
                 else $duedate='';
-                if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s')." ".$starttime;
+                if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s')." ".$start_time_picker_hour.":".$start_time_picker_minute;;
                 $sql = "INSERT INTO `{$dbTasks}` ";
                 $sql .= "(name,description,priority,owner,duedate,startdate,completion,value,distribution,created) ";
-                $sql .= "VALUES ('$name','$description','$priority','$taskuser','$duedate','$startdate','$completion','$value','$distribution','".date('Y-m-d H:i:s')."')";
+                $sql .= "VALUES ('{$name}','{$description}','{$priority}','{$taskuser}','{$duedate}','{$startdate}','{$completion}','{$value}','{$distribution}','".date('Y-m-d H:i:s')."')";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Task insert failed",E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                if (mysql_affected_rows() < 1) trigger_error("Task insert failed", E_USER_ERROR);
                 unset($_SESSION['formdata']['add_task']);
                 unset($_SESSION['formerrors']['add_task']);
                 html_redirect("tasks.php");
@@ -164,7 +165,15 @@ else
             }
             echo "/> ";
             echo date_picker('addtask.startdate');
-            echo " ".time_dropdown("starttime", date("H:i"));
+            if ($_SESSION['formdata']['add_task']['start_time_picker_hour'] != '' OR 
+                    $_SESSION['formdata']['add_task']['start_time_picker_minute'] != '' )
+            {
+                echo " ".time_picker($_SESSION['formdata']['add_task']['start_time_picker_hour'], $_SESSION['formdata']['add_task']['start_time_picker_minute'], 'start_');
+            }
+            else
+            {
+                echo " ".time_picker('', '', 'start_');
+            }
             echo "</td></tr>";
 
             echo "<tr><th>{$strDueDate}</th>";
@@ -175,13 +184,14 @@ else
             }
             echo "/> ";
             echo date_picker('addtask.duedate');
-            if ($_SESSION['formdata']['add_task']['duetime'] != '')
+            if ($_SESSION['formdata']['add_task']['due_time_picker_hour'] != '' OR 
+                    $_SESSION['formdata']['add_task']['due_time_picker_minute'] != '' )
             {
-                echo " ".time_dropdown("duetime", $_SESSION['formdata']['add_task']['duetime']);
+                echo " ".time_picker($_SESSION['formdata']['add_task']['due_time_picker_hour'], $_SESSION['formdata']['add_task']['due_time_picker_minute'], 'due_');
             }
             else
             {
-                echo " ".time_dropdown("duetime");
+                echo " ".time_picker('', '', 'due_');
             }
             echo "</td></tr>";
 
@@ -196,12 +206,6 @@ else
                 echo "value='0'";
             }
             echo "/>&#037;</td></tr>";
-            //FIXME: should this be available?
-            /*echo "<tr><th>{$strEndDate}</th>";
-            echo "<td><input type='text' name='enddate' id='enddate' size='10' /> ";
-            echo date_picker('addtask.enddate');
-            echo " ".time_dropdown("endtime");
-            echo "</td></tr>";*/
             echo "<tr><th>{$strValue}</th>";
             echo "<td><input type='text' name='value' size='6' maxlength='12'";
             if ($_SESSION['formdata']['add_task']['value'] != '')
