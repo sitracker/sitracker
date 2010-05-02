@@ -3893,7 +3893,7 @@ function time_picker($hour = '', $minute = '')
 {
     global $CONFIG;
     
-    // TODO use $CONFIG['dateformat_shorttime']
+    // FIXME TODO use $CONFIG['dateformat_shorttime']
     
     $m = 0;
 

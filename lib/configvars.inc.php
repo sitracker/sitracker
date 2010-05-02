@@ -50,6 +50,7 @@ $CFGCAT['locale'] = array('home_country',
                           'dateformat_shortdate',
                           'dateformat_shorttime',
                           'dateformat_time',
+                          'display_minute_interval',
                           'currency_symbol',
                           'default_i18n',
                           'available_i18n');
@@ -254,6 +255,8 @@ $CFGVAR['dateformat_shortdate']['title'] = 'Short date format';
 $CFGVAR['dateformat_shorttime']['title'] = 'Short time format';
 
 $CFGVAR['dateformat_time']['title'] = 'Normal time format';
+
+$CFGVAR['display_minute_interval']['title'] = 'Display minute interval';
 
 $CFGVAR['db_database']['title'] = 'MySQL Database Name';
 
