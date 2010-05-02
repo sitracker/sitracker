@@ -41,6 +41,13 @@ class Contact extends Person {
     var $dataprotection_address; ///< boolean
     var $notes;
     var $active;
+    
+    var $emailonadd; // Boolean - default sto false
+    
+    function __construct()
+    {
+        $this->emailonadd = false;
+    }
 
     function retrieveDetails()
     {
@@ -105,7 +112,7 @@ class Contact extends Person {
      */
     function add()
     {
-        global $now;
+        global $now, $sit;
         $toReturn = false;
         $generate_username = false;
 
@@ -146,6 +153,15 @@ class Contact extends Person {
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
+            
+            if ($this->emailonadd) $emaildetails = 1;
+            else $emaildetails = 0;
+            
+            trigger('TRIGGER_NEW_CONTACT', array('contactid' => $newid,
+                                     'prepassword' => $this->password,
+                                     'userid' => $sit[2],
+                                     'emaildetails' => $emaildetails
+                                     ));
         }
 
         return $toReturn;

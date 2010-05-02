@@ -427,7 +427,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $contact->county = $user_attributes[$CONFIG['ldap_county']][0];
             $contact->postcode = $user_attributes[$CONFIG['ldap_postcode']][0];
             $contact->courtesytitle = $user_attributes[$CONFIG['ldap_courtesytitle']][0];
-
+            $contact->emailonadd = false;
             $contact->source = 'ldap';
 
             if ($id == 0)
