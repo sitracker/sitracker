@@ -88,7 +88,7 @@ switch ($action)
         $context = cleanvar($_REQUEST['context']);
         $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}". DIRECTORY_SEPARATOR . "{$context}.txt";
         // Default back to english if language helpfile isn't found
-        if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}". DIRECTORY_SEPARATOR. "en-GB/{$context}.txt";
+        if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "en-GB/{$context}.txt";
         if (file_exists($helpfile))
         {
             $fp = fopen($helpfile, 'r', TRUE);
@@ -96,7 +96,10 @@ switch ($action)
             fclose($fp);
             echo nl2br($helptext);
         }
-        else echo "Error: Missing helpfile '{$_SESSION['lang']}/{$context}.txt'";
+        else
+        {
+            echo "Error: Missing helpfile '{$_SESSION['lang']}/{$context}.txt'";
+        }
         break;
     case 'dismiss_notice':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -221,7 +224,6 @@ switch ($action)
             echo "<option value='{$obj->tag}' $strIsSelected>{$obj->tag}</option>";
         }
         break;
-
     case 'products':
         $sql = "SELECT id, name FROM `{$dbProducts}` ORDER BY name ASC";
         $result = mysql_query($sql);
@@ -323,43 +325,41 @@ switch ($action)
             echo $notice_pair[$triggertype];
         }
         break;
-
     case 'checkhtml':
-    $triggertype = cleanvar($_REQUEST['triggertype']);
-    if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
-    if (is_array($trigger_types[$triggertype]['params']))
-    {
-        // FIXME i18n
-        echo '<p align="left">Notify when: ';
-        echo "<select name='conditions'><option value='all'>all conditions are met</option>";
-        echo "<option value='any'>any conditions are met</option></select></p>";
-        echo "<table>";
-        foreach ($trigger_types[$triggertype]['params'] as $param)
+        $triggertype = cleanvar($_REQUEST['triggertype']);
+        if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
+        if (is_array($trigger_types[$triggertype]['params']))
         {
-            // if we return a number here, the variable is multiply-defined;
-            // as the replacements are the same, we use the first one
-            if (is_array($ttvararray['{'.$param.'}']) AND
-                is_numeric(key($ttvararray['{'.$param.'}'])))
+            // FIXME i18n
+            echo '<p align="left">Notify when: ';
+            echo "<select name='conditions'><option value='all'>all conditions are met</option>";
+            echo "<option value='any'>any conditions are met</option></select></p>";
+            echo "<table>";
+            foreach ($trigger_types[$triggertype]['params'] as $param)
             {
-            	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
-            	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
+                // if we return a number here, the variable is multiply-defined;
+                // as the replacements are the same, we use the first one
+                if (is_array($ttvararray['{'.$param.'}']) AND
+                    is_numeric(key($ttvararray['{'.$param.'}'])))
+                {
+                	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
+                	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
+                }
+                if (isset($ttvararray['{'.$param.'}']['checkreplace']))
+                {
+                    echo '<tr>';
+                    echo "<input type='hidden' name='param[]' value='{$param}' />";
+                    echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
+                    echo '<td>'.check_match_drop_down('join[]'). '</td>';
+                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value[]')."</td>";
+                    echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
+                }
             }
-            if (isset($ttvararray['{'.$param.'}']['checkreplace']))
-            {
-                echo '<tr>';
-                echo "<input type='hidden' name='param[]' value='{$param}' />";
-                echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
-                echo '<td>'.check_match_drop_down('join[]'). '</td>';
-                echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value[]')."</td>";
-                echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
-            }
+            echo '</table>';
         }
-        echo '</table>';
-    }
-//     if ($html == " ") $html = "No variables available for this action.";
-    echo " ";
-    break;
-
+        // if ($html == " ") $html = "No variables available for this action.";
+        echo " ";
+        break;
     case 'set_user_status':
         $userstatus = cleanvar($_REQUEST['userstatus']);
         $result = set_user_status($userstatus);
@@ -372,7 +372,6 @@ switch ($action)
             echo $result;
         }
         break;
-
     default :
         plugin_do('ajaxdata_add_action', array('action' => $action));
         break;
