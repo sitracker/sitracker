@@ -376,7 +376,6 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $user->mobile = $user_attributes[$CONFIG['ldap_mobile']][0];
             $user->fax = $user_attributes[$CONFIG['ldap_fax']][0];
             $user->message = $user_attributes[$CONFIG['ldap_description']][0];
-            $user->holiday_entitlement = $CONFIG['default_entitlement'];
             $user->source = 'ldap';
 
             // TODO FIXME this doesn't take into account custom roles'
@@ -395,6 +394,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             if ($id == 0)
             {
                 $user->status = $CONFIG['ldap_default_user_status'];
+                $user->holiday_entitlement = $CONFIG['default_entitlement'];
                 $status = $user->add();
             }
             else
