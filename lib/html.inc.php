@@ -284,22 +284,32 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
  *                        When NULL the function detects which is most appropriate
  * @param bool $multi - When TRUE a multiple selection box is returned and $setting
  *                      can be an array of values to pre-select
+ * @param bool $showall - When true show all elements
+ *                        When false use the built in algorithm to enable scrolling in the items
  * @retval string HTML select element
  */
-function array_drop_down($array, $name, $setting='', $attributes='', $usekey = NULL, $multi = FALSE)
+function array_drop_down($array, $name, $setting='', $attributes='', $usekey = NULL, $multi = FALSE, $showall = FALSE)
 {
     if ($multi AND substr($name, -2) != '[]') $name .= '[]';
-    $html = "<select name='$name' id='$name' ";
+    $html = "<select name='{$name}' id='{$name}' ";
     if (!empty($attributes))
     {
          $html .= "$attributes ";
     }
+
     if ($multi)
     {
         $items = count($array);
-        if ($items > 5) $size = floor($items / 3);
-        if ($size > 10) $size = 10;
-        $html .= "multiple='multiple' size='$size' ";
+        if ($showall)
+        {
+            $size = $items;
+        }
+        else
+        {
+            if ($items > 5) $size = floor($items / 3);
+            if ($size > 10) $size = 10;
+        }
+        $html .= "multiple='multiple' size='{$size}' ";
     }
     $html .= ">\n";
 
@@ -322,7 +332,7 @@ function array_drop_down($array, $name, $setting='', $attributes='', $usekey = N
         $value = htmlentities($value, ENT_COMPAT, $GLOBALS['i18ncharset']);
         if ($usekey)
         {
-            $html .= "<option value='$key'";
+            $html .= "<option value='{$key}'";
             if ($multi === TRUE AND is_array($setting))
             {
                 if (in_array($key, $setting))
@@ -338,7 +348,7 @@ function array_drop_down($array, $name, $setting='', $attributes='', $usekey = N
         }
         else
         {
-            $html .= "<option value='$value'";
+            $html .= "<option value='{$value}'";
             if ($multi === TRUE AND is_array($setting))
             {
                 if (in_array($value, $setting))
