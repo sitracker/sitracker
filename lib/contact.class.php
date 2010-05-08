@@ -149,7 +149,7 @@ class Contact extends Person {
             {
                 // concatenate username with insert id to make unique
                 $username = $username . $newid;
-                $sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$newid}'";
+                $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET username='{$username}' WHERE id='{$newid}'";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
