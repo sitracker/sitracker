@@ -166,10 +166,14 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         echo "<li><a href='kb.php'>{$strKnowledgeBase}</a></li>";
     }
+
     if ($_SESSION['usertype'] == 'admin')
     {
         echo "<li><a href='admin.php'>{$strAdmin}</a></li>";
     }
+
+    echo "<li><a href='help.php'>{$strHelp}</a></li>";
+
     plugin_do('portal_header_menu');
     echo "<li><a href='../logout.php'>{$strLogout}</a></li>";
     echo "</ul>";
