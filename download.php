@@ -73,7 +73,7 @@ else
     $access = FALSE;
 }
 
-if ($incidentid == 0 OR empty($incidentid))
+if (($incidentid == 0) OR (empty($incidentid)))
 {
     $file_fspath = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}";
     $file_fspath2 = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}-{$filename}";
@@ -86,7 +86,7 @@ else
     $old_style = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}u{$updateid}{$fsdelim}{$filename}";
 }
 
-if (!file_exists($file_fspath) AND !file_exists($file_fspath2) AND !file_exists($old_style))
+if ((!file_exists($file_fspath)) AND (!file_exists($file_fspath2)) AND (!file_exists($old_style)))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     // header('HTTP/1.1 404 Not Found');
