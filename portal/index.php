@@ -61,7 +61,7 @@ function portal_incident_table($sql)
             $html .= "<td align='center'>".ldate($CONFIG['dateformat_datetime'], $incident->lastupdated)."</td>";
             $html .= "<td align='center'><a href='contactdetails.php?id={$incident->contactid}'>";
             $html .= "{$incident->forenames} {$incident->surname}</a></td>";
-            $html .= "<td align='center'>".incidentstatus_name($incident->status, external)."</td>";
+            $html .= "<td align='center'>".incidentstatus_name($incident->status, 'external')."</td>";
             if ($showclosed != "true")
             {
                 $html .=  "<td align='center'><a href='update.php?id={$incident->id}'>{$GLOBALS['strUpdate']}</a> | ";

@@ -50,6 +50,7 @@ $CFGCAT['locale'] = array('home_country',
                           'dateformat_shortdate',
                           'dateformat_shorttime',
                           'dateformat_time',
+                          'display_minute_interval',
                           'currency_symbol',
                           'default_i18n',
                           'available_i18n');
@@ -57,11 +58,12 @@ $CFGCAT['locale'] = array('home_country',
 $CFGCAT['sla'] = array('default_service_level',
                        'start_working_day',
                        'end_working_day',
+                       'working_days',
                        'critical_threshold',
                        'urgent_threshold',
                        'notice_threshold',
-                       'regular_contact_days',
-                       'working_days');
+                       'regular_contact_days'
+                       );
 
 
 $CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar','font_file','tag_icons');
@@ -87,18 +89,18 @@ $CFGCAT['incidents'] = array('auto_assign_incidents',
 
 
 $CFGCAT['inboundemail'] = array('enable_inbound_mail',
-                         'email_server',
-                         'email_servertype',
-                         'email_port',
-                         'email_options',
-                         'email_username',
-                         'email_password',
-                         'email_address',
-                         'email_incoming_folder',
-                         'email_archive_folder',
-                         'max_incoming_email_perday',
-                         'spam_email_subject'
-                         );
+                                'email_server',
+                                'email_servertype',
+                                'email_port',
+                                'email_options',
+                                'email_username',
+                                'email_password',
+                                'email_address',
+                                'email_incoming_folder',
+                                'email_archive_folder',
+                                'max_incoming_email_perday',
+                                'spam_email_subject'
+                                );
 
 $CFGCAT['outboundemail'] = array('support_email');
 
@@ -255,6 +257,8 @@ $CFGVAR['dateformat_shorttime']['title'] = 'Short time format';
 
 $CFGVAR['dateformat_time']['title'] = 'Normal time format';
 
+$CFGVAR['display_minute_interval']['title'] = 'Display minute interval';
+
 $CFGVAR['db_database']['title'] = 'MySQL Database Name';
 
 $CFGVAR['db_hostname']['help']="The Hostname or IP address of the MySQL Database Server, usually 'localhost'";
@@ -342,10 +346,8 @@ $CFGVAR['enable_inbound_mail']['title'] = "Enable incoming mail to SiT";
 $CFGVAR['enable_inbound_mail']['type'] = 'select';
 
 $CFGVAR['end_working_day']['title'] = 'End of the working day';
-$CFGVAR['end_working_day']['help'] = 'The number of seconds since midnight that indicate the end of the working day. (e.g. 61200 = 5pm)';
-
-$CFGVAR['end_working_day']['type'] = 'number';
-$CFGVAR['end_working_day']['unit'] = $strSeconds;
+$CFGVAR['end_working_day']['help'] = 'The time the working day ends . (e.g. 17:00)';
+$CFGVAR['end_working_day']['type'] = 'timeselector';
 
 $CFGVAR['error_logfile']['title'] = "Path to an error log file";
 $CFGVAR['error_logfile']['help'] = "The filesystem path and filename of a file that already exist and is writable to log error messages into. Enable Debug Mode to see more verbose messages in this file.";
@@ -562,9 +564,8 @@ $CFGVAR['spam_email_subject']['title'] = 'Spam Subject';
 $CFGVAR['spam_email_subject']['help'] = 'String to look for in email message subject to determine a message is spam';
 
 $CFGVAR['start_working_day']['title'] = 'Start of the working day';
-$CFGVAR['start_working_day']['help'] = 'The number of seconds since midnight that indicate the start of the working day. (e.g. 32400 = 9am)';
-$CFGVAR['start_working_day']['type'] = 'number';
-$CFGVAR['start_working_day']['unit'] = $strSeconds;
+$CFGVAR['start_working_day']['help'] = 'The time the working day starts (e.g. 9:00)';
+$CFGVAR['start_working_day']['type'] = 'timeselector';
 
 $CFGVAR['support_email']['title'] = 'From address for support emails';
 $CFGVAR['support_email']['help'] = 'Email sent by SiT that uses the template variable <code>{supportemail}</code> will come from this address';
@@ -604,7 +605,7 @@ $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';
 $CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
-$CFGVAR['working_days']['type'] = '1darray';
+$CFGVAR['working_days']['type'] = 'weekdayselector';
 
 if (function_exists('plugin_do'))
 {

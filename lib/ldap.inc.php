@@ -267,7 +267,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
     {
         // Sucessfull
         debug_log("LDAP Valid Credentials", TRUE);
-        $usertype= LDAP_INVALID_USER;
+        $usertype = LDAP_INVALID_USER;
 
         if ($CONFIG['ldap_grponuser'])
         {
@@ -376,7 +376,6 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $user->mobile = $user_attributes[$CONFIG['ldap_mobile']][0];
             $user->fax = $user_attributes[$CONFIG['ldap_fax']][0];
             $user->message = $user_attributes[$CONFIG['ldap_description']][0];
-            $user->holiday_entitlement = $CONFIG['default_entitlement'];
             $user->source = 'ldap';
 
             // TODO FIXME this doesn't take into account custom roles'
@@ -395,6 +394,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             if ($id == 0)
             {
                 $user->status = $CONFIG['ldap_default_user_status'];
+                $user->holiday_entitlement = $CONFIG['default_entitlement'];
                 $status = $user->add();
             }
             else
@@ -427,7 +427,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $contact->county = $user_attributes[$CONFIG['ldap_county']][0];
             $contact->postcode = $user_attributes[$CONFIG['ldap_postcode']][0];
             $contact->courtesytitle = $user_attributes[$CONFIG['ldap_courtesytitle']][0];
-
+            $contact->emailonadd = false;
             $contact->source = 'ldap';
 
             if ($id == 0)

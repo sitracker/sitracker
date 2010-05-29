@@ -108,9 +108,17 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $value = 'array(' . implode(',', $parts) . ')';
                     }
                     break;
+                case 'timeselector':
+                    $hour = cleanvar($_REQUEST[$catvar."time_picker_hour"]);
+                    $minute = cleanvar($_REQUEST[$catvar."time_picker_minute"]);
+                    $value = ($hour * 60 * 60) + ($minute * 60);
+                    break;
+                case 'weekdayselector':
+                    $value = 'array(' . implode(',', cleanvar($_REQUEST[$catvar])) . ')';
+                    break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
-            if (substr($value, 0, 6)=='array(')
+            if (substr($value, 0, 6) == 'array(')
             {
                 eval("\$val = $value;");
                 $value = $val;

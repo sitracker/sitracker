@@ -43,6 +43,7 @@ include_once (APPLICATION_LIBPATH . 'ftp.inc.php');
 include_once (APPLICATION_LIBPATH . 'tags.inc.php');
 include_once (APPLICATION_LIBPATH . 'string.inc.php');
 include_once (APPLICATION_LIBPATH . 'html.inc.php');
+include_once (APPLICATION_LIBPATH . 'incident_html.inc.php');
 include_once (APPLICATION_LIBPATH . 'tasks.inc.php');
 include_once (APPLICATION_LIBPATH . 'export.inc.php');
 include_once (APPLICATION_LIBPATH . 'contact.inc.php');
@@ -53,6 +54,8 @@ include_once (APPLICATION_LIBPATH . 'feedback.inc.php');
 include_once (APPLICATION_LIBPATH . 'site.inc.php');
 include_once (APPLICATION_LIBPATH . 'configfuncs.inc.php');
 include_once (APPLICATION_LIBPATH . 'incident.inc.php');
+
+include_once (APPLICATION_LIBPATH . 'deprecated.inc.php');
 
 if (version_compare(PHP_VERSION, "5.1.0", ">="))
 {
