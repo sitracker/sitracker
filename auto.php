@@ -219,7 +219,9 @@ function saction_TimeCalc()
             {
                 //if ($reviewInfo['currentowner'] != 0) //debug_log("There has been no review on incident {$incident['id']}, which was opened $newReviewTime minutes ago");
             }
-            trigger('TRIGGER_INCIDENT_REVIEW_DUE', array('incidentid' => $incident['id'], 'time' => $newReviewTime));
+            new TriggerEvent("TRIGGER_INCIDENT_REVIEW_DUE",
+                                array('incidentid' => $incident['id'],
+                                      'time' => $newReviewTime));
         }
         mysql_free_result($update_result);
 
@@ -587,14 +589,14 @@ function saction_CheckWaitingEmail()
     }
     elseif (mysql_num_rows($result) > 0)
     {
-	   list($timestamp, $minswaiting) = mysql_fetch_row($result);
-       $sql = "SELECT `interval` FROM `{$dbScheduler}` ";
-       $sql .= "WHERE action = 'CheckWaitingEmail'";
-       $result = mysql_query($sql);
-       list($interval) = mysql_fetch_row($result);
-       // so we don't get a duplicate if we receive an email exactly at check time
-       $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
-       new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL", 
+        list($timestamp, $minswaiting) = mysql_fetch_row($result);
+        $sql = "SELECT `interval` FROM `{$dbScheduler}` ";
+        $sql .= "WHERE action = 'CheckWaitingEmail'";
+        $result = mysql_query($sql);
+        list($interval) = mysql_fetch_row($result);
+        // so we don't get a duplicate if we receive an email exactly at check time
+        $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
+        new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL",
                         array('holdingmins' => ceil($minswaiting / 60),
                               'checks' => $checks));
     }
