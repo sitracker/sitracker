@@ -144,13 +144,26 @@ if (!empty($q))
     $search = $q;
 
     //INCIDENT RESULTS
+    // MySQL doesn't normally do fulltext index for words 3 characters or shorter
+    // See the MySQL option ft_min_word_len
+    if (strlen($search > 3))
+    {
     $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
     $incidentsql .= "MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE) AS score ";
     $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
     $incidentsql .= "WHERE (MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE)) ";
     $incidentsql .= "AND u.incidentid=i.id ";
     $incidentsql .= "GROUP BY u.incidentid ";
-
+    }
+    else
+    {
+        $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
+        $incidentsql .= "1 AS score ";
+        $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
+        $incidentsql .= "WHERE bodytext LIKE '% {$search} %' ";
+        $incidentsql .= "AND u.incidentid=i.id ";
+        $incidentsql .= "GROUP BY u.incidentid ";
+    }
 
     if ($domain == 'incidents' AND !empty($sort))
     {
