@@ -290,7 +290,7 @@ switch ($_REQUEST['mode'])
         //check if we already have this trigger
         if(check_trigger_exists($id, $userid, $action, $templateid, $rules, $parameters))
         {
-            html_redirect($_SERVER['PHP_SELF'], FALSE, $strADuplicateAlreadyExists); 
+            html_redirect($_SERVER['PHP_SELF'], FALSE, $strADuplicateAlreadyExists);
         }
         else
         {

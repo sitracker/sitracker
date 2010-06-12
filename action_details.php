@@ -11,7 +11,7 @@
 $permission = 71;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'trigger.class.php'); 
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 //This page requires authentication
 $permission = 72;
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -41,7 +41,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 function insertRuletext(tvar)
 {
-    tvar = tvar + ' ';
+//     tvar = tvar + ' ';
     var start = $('rules').selectionStart;
     var end = $('rules').selectionEnd;
     $('rules').value = $('rules').value.substring(0, start) + tvar + $('rules').value.substring(end, $('rules').textLength);
@@ -187,7 +187,7 @@ function switch_template()
                 xmlhttp=false;
             }
         }
-        
+
         var triggertype = $('triggertype').value;
         var triggeraction = $('new_action').value;
         var url =  "ajaxdata.php";
@@ -249,9 +249,9 @@ else
 if (!empty($_POST['triggertype']))
 {
 	$_POST = cleanvar($_POST);
-	$checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], 
+	$checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
 	                             $_POST['enabled'], $_POST['conditions']);
-	
+
     if ($_POST['new_action'] == 'ACTION_NOTICE')
 	{
         $template = $_POST['noticetemplate'];
@@ -261,13 +261,13 @@ if (!empty($_POST['triggertype']))
 	    $template = $_POST['emailtemplate'];
 	}
 
-	$t = new Trigger($_POST['triggertype'], $user_id, $template, 
+	$t = new Trigger($_POST['triggertype'], $user_id, $template,
                      $_POST['new_action'], $checks, $parameters);
-                     
+
     $success = $t->add();
     if ($trigger_mode == 'system') $return = 'system_actions.php';
     else $return = 'notifications.php';
-    html_redirect($return, $success, $t->getError_text());                     
+    html_redirect($return, $success, $t->getError_text());
 }
 else
 {
@@ -321,7 +321,7 @@ else
 //     foreach ($ttvararray as $trigger => $data)
 //     {
 //         if (is_numeric($trigger)) $data = $data[0];
-//         if (isset($data['checkreplace'])) 
+//         if (isset($data['checkreplace']))
 //         {
 //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
 //         }
