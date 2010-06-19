@@ -24,11 +24,18 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 function send_feedback($contractid)
 {
     global $CONFIG;
-    foreach ($CONFIG['no_feedback_contracts'] AS $contract)
+    if (!$CONFIG['feedback_enabled'])
     {
-        if ($contract == $contractid)
+        return FALSE;
+    }
+    else
+    {
+        foreach ($CONFIG['no_feedback_contracts'] AS $contract)
         {
-            return FALSE;
+            if ($contract == $contractid)
+            {
+                return FALSE;
+            }
         }
     }
 
