@@ -264,8 +264,14 @@ if ($emails > 0)
         switch ($results['Type'])
         {
             case 'html':
-
-                $message = $results['Alternative'][0]['Data'];
+                if (!empty($results['Alternative'][0]['Data']))
+                {
+                    $message = $results['Alternative'][0]['Data'];
+                }
+                else
+                {
+                    $message = strip_tags(html_entity_decode($results['Data'],ENT_QUOTES, 'UTF-8'));
+                }
                 break;
 
             case 'text':
