@@ -281,7 +281,7 @@ while ($incidents = mysql_fetch_array($result))
     echo "<td>";
     echo "<a href='contact_details.php?id={$incidents['contactid']}' class='info'><span>{$incidents['phone']}<br />";
     echo "{$incidents['email']}</span>{$incidents['forenames']} {$incidents['surname']}</a><br />";
-    echo htmlspecialchars($site)."{$postsitetext} </td>";
+    echo "{$site} {$postsitetext} </td>";
 
     echo "<td align='center'>";
     //FIXME functionise
