@@ -41,7 +41,9 @@ switch ($action)
         $start_time_picker_hour = cleanvar($_REQUEST['start_time_picker_hour']);
         $start_time_picker_minute = cleanvar($_REQUEST['start_time_picker_minute']);
         $due_time_picker_hour = cleanvar($_REQUEST['due_time_picker_hour']);
-        $due_time_picker_minute = cleanvar($_REQUEST['due_time_picker_minute']);
+        $due_time_picker_minute = cleanvar($_REQUEST['due_time_picker_minute']);     
+        $end_time_picker_hour = cleanvar($_REQUEST['end_time_picker_hour']);
+        $end_time_picker_minute = cleanvar($_REQUEST['end_time_picker_minute']);
         
         if (!empty($_REQUEST['duedate']))
         {
@@ -62,12 +64,12 @@ switch ($action)
         }
 
         $completion = cleanvar(str_replace('%','',$_REQUEST['completion']));
-        if ($completion!='' AND !is_numeric($completion)) $completion=0;
-        if ($completion > 100) $completion=100;
-        if ($completion < 0) $completion=0;
+        if ($completion != '' AND !is_numeric($completion)) $completion=0;
+        if ($completion > 100) $completion = 100;
+        if ($completion < 0) $completion = 0;
         if (!empty($_REQUEST['enddate']))
         {
-            $enddate = strtotime($_REQUEST['enddate']);
+            $enddate = strtotime($_REQUEST['enddate'] . ' ' . $end_time_picker_hour . ':' . $end_time_picker_minute);
         }
         else
         {
@@ -113,9 +115,9 @@ switch ($action)
             if ($startdate > 0) $startdate = date('Y-m-d H:i', $startdate);
             else $startdate = '';
             if ($duedate > 0) $duedate = date('Y-m-d H:i', $duedate);
-            else $duedate='';
-            if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
-            else $enddate='';
+            else $duedate = '';
+            if ($enddate > 0) $enddate = date('Y-m-d H:i', $enddate);
+            else $enddate = '';
             if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s');
             $sql = "UPDATE `{$dbTasks}` ";
             $sql .= "SET name='{$name}', description='{$description}', priority='{$priority}', ";
@@ -145,13 +147,13 @@ switch ($action)
             }
 
             $old_startdate = substr($old_startdate, 0, 16);
-            if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00'))
+            if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strStartDate']}: {$old_startdate} -&gt; [b]{$startdate}[/b]\n";
             }
 
             $old_duedate = substr($old_duedate, 0, 16);
-            if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00'))
+            if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_duedate} -&gt; [b]{$duedate}[/b]\n";
             }
@@ -161,7 +163,8 @@ switch ($action)
                 $bodytext .= "{$SYSLANG['strCompletion']}: {$old_completion}% -&gt; [b]{$completion}%[/b]\n";
             }
 
-            if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00:00'))
+            $old_enddate = substr($old_enddate, 0, 16);
+            if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_enddate} -&gt; [b]{$enddate}[/b]\n";
             }
@@ -367,7 +370,7 @@ switch ($action)
                 if ($enddate > 0) echo date('Y-m-d',$enddate);
                 echo "' /> ";
                 echo date_picker('edittask.enddate');
-                echo " ".time_dropdown("endtime", date('H:i',$enddate));
+                echo " ".time_picker(date('H', $enddate), date('i', $enddate), 'end_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strValue}</th>";
                 echo "<td><input type='text' name='value' size='6' maxlength='12' value='{$task->value}' /></td></tr>";
