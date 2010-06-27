@@ -839,15 +839,22 @@ function valid_username($username)
     $username = cleanvar($username);
     $valid = TRUE;
 
-    $tables = array('dbUsers', 'dbContacts');
-
-    foreach ($tables AS $table)
-    {
-        $sql = "SELECT username FROM `{$GLOBALS[$table]}` WHERE username='{$username}'";
-        if ($result = mysql_query($sql) AND mysql_num_rows($result) != 0)
+    if (!empty($username))
+    {   
+        $tables = array('dbUsers', 'dbContacts');
+    
+        foreach ($tables AS $table)
         {
-            $valid = FALSE;
+            $sql = "SELECT username FROM `{$GLOBALS[$table]}` WHERE username='{$username}'";
+            if ($result = mysql_query($sql) AND mysql_num_rows($result) != 0)
+            {
+                $valid = FALSE;
+            }
         }
+    }
+    else
+    {
+        $valid = FALSE;
     }
 
     return $valid;

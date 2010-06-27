@@ -104,10 +104,10 @@ if (cleanvar($_REQUEST['action']) == 'update')
     if ($surname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>".sprintf($strYouMustEnter, $strSurname)."</p>\n";
+        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, "'{$strSurname}'")."</p>\n";
     }
 
-    if ($email == '' OR $email=='none' OR $email=='n/a')
+    if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors++;
         $_SESSION['formerrors']['portalcontactdetails'] .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
@@ -185,8 +185,8 @@ else
     {
         echo "<tr><th>{$strUsername}</th><td>";
         echo "<input class='required' name='username' value='{$user->username}' />";
-        echo " <span class='required'><span>{$strRequired}</span></td></tr>\n";
-        echo "<input name='oldusername' value='{$user->username}' type='hidden' />";
+        echo " <span class='required'>{$strRequired}</span>\n";
+        echo "<input name='oldusername' value='{$user->username}' type='hidden' /></td></tr>\n";
 
     }
     echo "<tr><th>{$strForenames}</th><td>";
@@ -199,7 +199,6 @@ else
     else
     {
         echo "<input class='required' name='forenames' value='{$user->forenames}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strSurname}</th><td>";
@@ -210,7 +209,7 @@ else
     else
     {
         echo "<input class='required' name='surname' value='{$user->surname}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
+        echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strDepartment}</th><td><input name='department' value='{$user->department}' /></td></tr>\n";
@@ -227,7 +226,6 @@ else
     else
     {
         echo "<input class='required' name='phone' value='{$user->phone}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strMobile}</th><td>";
@@ -237,7 +235,7 @@ else
     }
     else
     {
-        echo "<input name='mobile' value='{$user->mobile}' /></td></tr>\n";
+        echo "<input name='mobile' value='{$user->mobile}' />\n";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strFax}</th><td>";
@@ -249,7 +247,7 @@ else
     {
         echo "<input name='fax' value='{$user->fax}' />";
     }
-
+    echo "</td></tr>";
     echo "<tr><th>{$strEmail}</th><td>";
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_email']))
     {
@@ -258,7 +256,7 @@ else
     else
     {
         echo "<input class='required' name='email' value='{$user->email}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
+        echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
 
@@ -280,7 +278,7 @@ else
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
         echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, TRUE, FALSE, $sit[2])."<br />";
-        echo "<input type='submit' name='add' value='{$strAdd}' /></form></p>";
+        echo "<input type='submit' name='add' value='{$strAdd}' /></p></form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
