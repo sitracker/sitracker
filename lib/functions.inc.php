@@ -634,8 +634,6 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     }
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
     $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
-    $extra_headers .= "MIME-Version: 1.0" . $crlf;
-    $extra_headers .= "Content-type: text/plain; charset={$GLOBALS['i18ncharset']}" . $crlf;
 //     $extra_headers .= "\r\n";
 
     if ($CONFIG['demo'])
@@ -884,7 +882,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
                 $l = mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8');
                 if (strlen(urldecode($legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
-                
+
                 if ($use_ttf)
                 {
                     imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], "{$l} ({$data[$i]})");
