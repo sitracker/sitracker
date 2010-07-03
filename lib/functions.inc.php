@@ -618,7 +618,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 
     if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
-    $extra_headers  = "From: {$from}" . $crlf;
+    $extra_headers  = '';
     if (!empty($replyto)) $extra_headers .= "Reply-To: {$replyto}" . $crlf;
     if (!empty($email_cc))
     {
