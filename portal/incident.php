@@ -187,7 +187,7 @@ while ($update = mysql_fetch_object($result))
         $quote[3] = "/^(&gt;&gt;&gt;(&gt;)+([\s][\d\w]).*)[\n\r]$/m";
 
         //$quote[3]="/(--\s?\s.+-{8,})/U";  // Sigs
-                $quote[4]="/(-----\s?Original Message\s?-----.*-{3,})/s";
+        $quote[4]="/(-----\s?Original Message\s?-----.*-{3,})/s";
         $quote[5] = "/(-----BEGIN PGP SIGNED MESSAGE-----)/s";
         $quote[6] = "/(-----BEGIN PGP SIGNATURE-----.*-----END PGP SIGNATURE-----)/s";
         $quote[7] = "/^(&gt;)[\r]*$/m";
@@ -218,16 +218,16 @@ while ($update = mysql_fetch_object($result))
 
 
         // Lookup some extra data
-        $updateuser = user_realname($update->userid,TRUE);
+        $updateuser = user_realname($update->userid, TRUE);
         $updatetime = readable_date($update->timestamp);
-        $currentowner = user_realname($update->currentowner,TRUE);
+        $currentowner = user_realname($update->currentowner, TRUE);
         $currentstatus = incident_status($update->currentstatus);
 
         echo "<div class='detailhead' align='center'>";
         //show update type icon
         if (array_key_exists($update->type, $updatetypes))
         {
-            if (!empty($update->sla) AND $update->type=='slamet')
+            if (!empty($update->sla) AND $update->type == 'slamet')
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
             }

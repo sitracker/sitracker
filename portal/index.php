@@ -185,9 +185,9 @@ if ($CONFIG['portal_site_incidents'] AND $otherincidents != NULL)
         $sql .= "AND c.siteid=s.id AND s.id={$_SESSION['siteid']} ";
         $sql .= "AND (1=0 ";
 
-        foreach ($otherincidents AS $maintid)
+        foreach ($otherincidents AS $incident)
         {
-            $sql .= "OR i.maintenanceid={$maintid} ";
+            $sql .= "OR i.id={$incident} ";
         }
 
         $sql .= ") ORDER BY closed DESC ";
