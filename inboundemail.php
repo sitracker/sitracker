@@ -304,11 +304,11 @@ if ($emails > 0)
         //process attachments
         if (!empty($incidentid) AND $incident_open)
         {
-            $fa_dir = $CONFIG['attachment_fspath'].$incidentid.$fsdelim;
+            $fa_dir = $CONFIG['attachment_fspath'] . $incidentid . $fsdelim;
         }
         else
         {
-            $fa_dir = $CONFIG['attachment_fspath']."updates{$fsdelim}";
+            $fa_dir = $CONFIG['attachment_fspath'] . "updates{$fsdelim}";
         }
 
         if (!file_exists($fa_dir))

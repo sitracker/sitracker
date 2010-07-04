@@ -73,7 +73,7 @@ else
     $access = FALSE;
 }
 
-if (($incidentid == 0) OR (empty($incidentid)))
+if (empty($incidentid))
 {
     $file_fspath = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}";
     $file_fspath2 = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}-{$filename}";
@@ -95,7 +95,7 @@ if ((!file_exists($file_fspath)) AND (!file_exists($file_fspath2)) AND (!file_ex
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     if ($CONFIG['debug'] === TRUE)
     {
-        echo "<p>Path: {$file_fspath}<br />Old style path: {$old_style}</p>";
+        echo "<p>Path: {$file_fspath}<br />Old style path: {$old_style}<br />Fs2 Path: {$file_fspath2}</p>";
     }
     exit;
 }
