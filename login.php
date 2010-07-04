@@ -110,9 +110,10 @@ elseif (authenticate($username, $_REQUEST['password']))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     //check if the session lang is different the their profiles
-    if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $SESSION['userconfig']['language'])
+    if ($_SESSION['lang'] != '' AND !empty($SESSION['userconfig']['language']) AND
+        $_SESSION['lang'] != $SESSION['userconfig']['language'])
     {
-        $t = new trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
+        $t = new triggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
                     'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
         $t->fire();
     }
