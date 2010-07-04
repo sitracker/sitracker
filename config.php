@@ -72,12 +72,14 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                     break;
 
                 case '1darray':
-                    $parts = explode(',', $value);
-                    foreach ($parts AS $k => $v)
+                    if ($value != '')
                     {
-                        $parts[$k] = "'{$v}'";
-                    }
-                    $value = 'array(' . implode(',', $parts) . ')';
+                        $parts = explode(',', $value);
+                        foreach ($parts AS $k => $v)
+                        {
+                            $parts[$k] = "'{$v}'";
+                        }
+                        $value = 'array(' . implode(',', $parts) . ')';
                     }
                     else
                     {
@@ -113,20 +115,20 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $value = 'array(' . implode(',', $parts) . ')';
                     }
                     break;
-                    
+
                 case 'timeselector':
                     $hour = cleanvar($_REQUEST[$catvar."time_picker_hour"]);
                     $minute = cleanvar($_REQUEST[$catvar."time_picker_minute"]);
                     $value = ($hour * 60 * 60) + ($minute * 60);
                     break;
-                    
+
                 case 'weekdayselector':
                     $value = 'array(' . implode(',', cleanvar($_REQUEST[$catvar])) . ')';
                     break;
-                
+
                 case 'number':
                     $value = intval($value);
-                break;     
+                break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
             if (substr($value, 0, 6) == 'array(')
