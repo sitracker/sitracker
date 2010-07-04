@@ -103,6 +103,15 @@ elseif (authenticate($username, $_REQUEST['password']))
     {
         $_SESSION['userconfig']['utc_offset'] == 0;
     }
+    // Defaults
+    if (empty($_SESSION['userconfig']['theme']))
+    {
+        $_SESSION['userconfig']['theme'] = $CONFIG['default_interface_style'];
+    }
+    if (empty($_SESSION['userconfig']['iconset']))
+    {
+        $_SESSION['userconfig']['iconset'] = $CONFIG['default_iconset'];
+    }
 
     // Delete any old session user notices
     $sql = "DELETE FROM `{$dbNotices}` WHERE durability='session' AND userid={$_SESSION['userid']}";
