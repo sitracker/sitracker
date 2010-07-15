@@ -115,37 +115,41 @@ elseif (!empty($siteid))
     // Find all tasks for site
     $sql = "SELECT i.id FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
     $sql .= "WHERE i.contact = c.id AND ";
-    $sql .= "c.siteid = {$siteid} AND ";
-    $sql .= "(i.status != 2 AND i.status != 7)";
+    $sql .= "c.siteid = {$siteid} ";
+    //$sql .= "AND (i.status != 2 AND i.status != 7)";
     $result = mysql_query($sql);
 
-    $sqlTask = "SELECT * FROM `{$dbTasks}` WHERE enddate IS NULL  ";
+    //
+    $sqlTask = "SELECT * FROM `{$dbTasks}` WHERE duedate IS NULL AND ";
+    $taskIDs = array();
 
-    while ($obj = mysql_fetch_object($result))
+    if (mysql_num_rows($result) > 0)
     {
-        //get info for incident-->task linktype
-        $sql = "SELECT DISTINCT origcolref, linkcolref ";
-        $sql .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt ";
-        $sql .= "WHERE l.linktype=4 ";
-        $sql .= "AND linkcolref={$obj->id} ";
-        $sql .= "AND direction='left'";
-        $resultLinks = mysql_query($sql);
-
-        //get list of tasks
-        while ($tasks = mysql_fetch_object($resultLinks))
+        while ($obj = mysql_fetch_object($result))
         {
-            //$sqlTask .= "OR id={$tasks->origcolref} ";
-            if (empty($orSQL)) $orSQL = "(";
-            else $orSQL .= " OR ";
-            $orSQL .= "id={$tasks->origcolref} ";
-        }
-
-        if (!empty($orSQL))
-        {
-            $sqlTask .= "AND {$orSQL})";
+            //get info for incident-->task linktype
+            $sql = "SELECT DISTINCT origcolref, linkcolref ";
+            $sql .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt ";
+            $sql .= "WHERE l.linktype=4 ";
+            $sql .= "AND linkcolref={$obj->id} ";
+            $sql .= "AND direction='left'";
+            $resultLinks = mysql_query($sql);
+    
+            //get list of tasks
+            while ($tasks = mysql_fetch_object($resultLinks))
+            {
+                //$sqlTask .= "OR id={$tasks->origcolref} ";
+                //if (empty($orSQL)) $orSQL = "(";
+                //else $orSQL .= " OR ";
+                //$orSQL .= "id={$tasks->origcolref} ";
+                $taskIDs[] = $tasks->origcolref;
+            }   
         }
     }
 
+    if (!empty($taskIDs)) $sqlTask .= "id IN (".implode(',', $taskIDs).")";
+    else $sqlTasks = "1=0";
+    
     $result = mysql_query($sqlTask);
 
     $show = 'incidents';
@@ -241,7 +245,7 @@ else
         $sql .= "owner='$user' AND ";
     }
 
-    if ($show=='' OR $show=='active' )
+    if ($show == '' OR $show == 'active' )
     {
         $sql .= "(completion < 100 OR completion='' OR completion IS NULL) ";
         $sql .= "AND (distribution = 'public' OR distribution = 'private') ";
@@ -378,7 +382,7 @@ if (mysql_num_rows($result) >=1 )
         }
         else if (empty($incidentid))
         {
-            $sqlIncident = "SELECT DISTINCT origcolref, linkcolref, incidents.title ";
+            $sqlIncident = "SELECT DISTINCT origcolref, linkcolref, i.title ";
             $sqlIncident .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt, ";
             $sqlIncident .= "`{$dbIncidents}` AS i ";
             $sqlIncident .= "WHERE l.linktype=4 ";

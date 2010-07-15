@@ -103,6 +103,15 @@ elseif (authenticate($username, $_REQUEST['password']))
     {
         $_SESSION['userconfig']['utc_offset'] == 0;
     }
+    // Defaults
+    if (empty($_SESSION['userconfig']['theme']))
+    {
+        $_SESSION['userconfig']['theme'] = $CONFIG['default_interface_style'];
+    }
+    if (empty($_SESSION['userconfig']['iconset']))
+    {
+        $_SESSION['userconfig']['iconset'] = $CONFIG['default_iconset'];
+    }
 
     // Delete any old session user notices
     $sql = "DELETE FROM `{$dbNotices}` WHERE durability='session' AND userid={$_SESSION['userid']}";
@@ -110,9 +119,10 @@ elseif (authenticate($username, $_REQUEST['password']))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     //check if the session lang is different the their profiles
-    if ($_SESSION['lang'] != '' AND $_SESSION['lang'] != $SESSION['userconfig']['language'])
+    if ($_SESSION['lang'] != '' AND !empty($SESSION['userconfig']['language']) AND
+        $_SESSION['lang'] != $SESSION['userconfig']['language'])
     {
-        $t = new trigger('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
+        $t = new triggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
                     'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
         $t->fire();
     }

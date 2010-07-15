@@ -160,15 +160,16 @@ else
         $result = mysql_query($sql);
         if ($result)
         {
-            if (!file_exists($old_path))
+            if (!file_exists($new_path))
             {
                 $umask = umask(0000);
-                @mkdir($CONFIG['attachment_fspath'] ."$incidentid", 0770);
+                mkdir($CONFIG['attachment_fspath'] . "$incidentid", 0770);
                 umask($umask);
             }
             while ($row = mysql_fetch_object($result))
             {
-                $filename = $row->linkcolref . "-" . $row->filename;
+                $filename = $row->linkcolref ;
+                //. "-" . $row->filename;
                 $old_file = $old_path . $filename;
                 if (file_exists($old_file))
                 {
