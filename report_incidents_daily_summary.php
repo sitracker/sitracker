@@ -31,7 +31,7 @@ $submit = cleanvar($_REQUEST['submit']);
 $startdate = cleanvar($_REQUEST['startdate']);
 $enddate = cleanvar($_REQUEST['enddate']);
 
-echo "<h2>{$title}</h2>";
+echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
 if (empty($submit))
 {

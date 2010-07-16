@@ -26,7 +26,7 @@ if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' id='incidentsbyvendor' method='post'>";
     echo "<table class='vertical'>";
     echo "<tr><th>{$strStartDate}:</th>";
@@ -68,7 +68,7 @@ else
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
     echo "<p align='center'>".sprintf($strForThePeriodXToY, $_REQUEST['startdate'], $_REQUEST['enddate'])."</p>";
 

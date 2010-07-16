@@ -87,7 +87,7 @@ elseif (empty($action))
     //The just view the global signatures
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('edit', 32)." {$title}</h2>";
 
     $sql = "SELECT id, signature FROM `{$dbEmailSig}` ORDER BY id ASC";
     $result = mysql_query($sql);
@@ -119,7 +119,7 @@ elseif (!empty($action))
     switch ($action)
     {
         case 'add':
-            echo "<h2>{$strGlobalSignature}: {$strAdd}</h2>";
+            echo "<h2>".icon('edit', 32)." {$strGlobalSignature}: {$strAdd}</h2>";
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<input type='hidden' name='formaction' value='add' />";
             echo "<table class='vertical' width='50%'>";
@@ -142,7 +142,7 @@ elseif (!empty($action))
         break;
 
         case 'edit':
-            echo "<h2>{$strGlobalSignature}: {$strEdit}</h2>";
+            echo "<h2>".icon('edit', 32)." {$strGlobalSignature}: {$strEdit}</h2>";
             ?>
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
             <input type="hidden" name="formaction" value="edit" />

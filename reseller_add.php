@@ -73,7 +73,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo show_form_errors('add_reseller');
         clear_form_errors('formerrors');
-        echo "<h2>{$strAddReseller}</h2>";
+        echo "<h2>".icon('site', 32)." {$strAddReseller}</h2>";
         echo "<p align='center'>".sprintf($strMandatoryMarked, "<sup class='red'>*</sup>")."</p>";
         echo "<form action='{$_SERVER['PHP_SELF']}?action=add' method='post' ";
         echo "onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";

@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-echo "<h2>{$strWeekView}</h2>";
+echo "<h2>".icon('holiday', 32)." {$strWeekView}</h2>";
 // Force the week view to the start first day of the week (ie. the monday)
 switch (date('D',mktime(0,0,0,$month,$day,$year)))
 {

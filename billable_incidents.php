@@ -57,7 +57,7 @@ if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strBilling}</h2>";
+    echo "<h2>".icon('billing', 32)." {$strBilling}</h2>";
 
     ?>
     <script type="text/javascript">
@@ -180,7 +180,7 @@ elseif ($mode == 'approvalpage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strBillableIncidents} - {$strApprove}</h2>";
+        echo "<h2>".icon('billing', 32)." {$strBillableIncidents} - {$strApprove}</h2>";
         ?>
         <script type="text/javascript">
         //<![CDATA[
@@ -528,7 +528,7 @@ elseif ($mode == 'invoicepage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $str .= "<h2>{$strBillableIncidents} - INVOICE</h2>";
+        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidents} - INVOICE</h2>";
 
         $resultsite = mysql_query($sitelistsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);

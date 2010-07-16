@@ -31,7 +31,7 @@ $title = $strAddProductInformation;
 if (empty($_REQUEST['submit']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$strAddProductQuestion}</h2>";
+    echo "<h2>".icon('info', 32)." {$strAddProductQuestion}</h2>";
     echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table class='vertical' align='center'>";

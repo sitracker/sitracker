@@ -45,7 +45,7 @@ if (empty($action) OR $action == "showform")
 
     if (mysql_num_rows($result) >= 1)
     {
-        echo "<h2>{$strRolePermissions}</h2>";
+        echo "<h2>".icon('trigger', 32)." {$strRolePermissions}</h2>";
 
         echo "<p align='center'><a href='role_add.php'>{$strAddRole}</a></p>";
 
@@ -125,12 +125,12 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     {
         // Echo lines have been moved to simplify i18n - Tomse 02Aug09
         //        $object = "user: ".user_realname($user);
-        echo "<h2>".sprintf($strSetPermissionsForUserX, user_realname($user))."</h2>";
+        echo "<h2>".icon('trigger', 32)." ".sprintf($strSetPermissionsForUserX, user_realname($user))."</h2>";
     }
     else
     {
         //        $object = "role: ".db_read_column('rolename', $dbRoles, $role);
-        echo "<h2>".sprintf($strSetPermissionsForRoleX, db_read_column('rolename', $dbRoles, $role))."</h2>";
+        echo "<h2>".icon('trigger', 32)." ".sprintf($strSetPermissionsForRoleX, db_read_column('rolename', $dbRoles, $role))."</h2>";
     }
 //    echo "<h2>".sprintf($strSetPermissionsForUserX, user_realname($user))."</h2>";
     if (!empty($user)) echo "<p align='center'>{$strPermissionsInhereitedCannotBeChanged}</p>";
@@ -330,7 +330,7 @@ elseif ($action == "update")
 }
 elseif ($action == "check")
 {
-    echo "<h2>{$strCheckUserAndRolePermissions}</h2>";
+    echo "<h2>".icon('trigger', 32)." {$strCheckUserAndRolePermissions}</h2>";
     if (!empty($permid))
     {
         // permission_names needs i18n bug 545

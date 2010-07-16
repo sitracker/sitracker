@@ -26,7 +26,7 @@ if (empty($_REQUEST['mode']))
 {
     $title = $strMarketingMailshot;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$strMarketingMailshot}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
     echo "<p align='center'>{$strMarketingMailshotDesc}</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center' class='vertical'>";
@@ -329,7 +329,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if ($_REQUEST['output'] == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strMarketingMailshot}</h2>";
+        echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
         echo "<p align='center'>{$strMarketingMailshotDesc}</p>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

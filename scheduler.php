@@ -35,7 +35,7 @@ switch ($_REQUEST['mode'])
         {
             $saction = mysql_fetch_object($result);
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            echo "<h2>{$strScheduler}".help_link('Scheduler')."</h2>";
+            echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
             echo "<form name='scheduleform' action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table class='vertical' width='350'>";
             echo "<tr><th>{$strAction}</th>";
@@ -227,7 +227,7 @@ switch ($_REQUEST['mode'])
         $refresh = 60;
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-        echo "<h2>{$strScheduler}".help_link('Scheduler')."</h2>";
+        echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
         echo "<h3>".ldate($CONFIG['dateformat_datetime'], $GLOBALS['now'], FALSE)."</h3>";
         $sql = "SELECT * FROM `{$dbScheduler}` ORDER BY action";
         $result = mysql_query($sql);
@@ -432,7 +432,7 @@ switch ($_REQUEST['mode'])
             // Temporary debugging output, doesn't need i18n
             if ($CONFIG['debug'])
             {
-                echo "<h2>Debug Time Issues</h2>";
+                echo "<h2>".icon('activities', 32)." Debug Time Issues</h2>";
                 echo "<div style='width: 60%; border: 1px dashed red; margin: auto; padding: 5px;'>";
                 echo "<p>Timezone: {$CONFIG['timezone']}<br />";
                 echo "User UTC offset: {$_SESSION['userconfig']['utc_offset']}<br />";

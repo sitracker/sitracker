@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-echo "<h2>{$strHolidayList}</h2>";
+echo "<h2>".icon('holiday', 32)." {$strHolidayList}</h2>";
 if (empty($type)) $type = 1;
 echo appointment_type_dropdown($type, 'list');
 echo "<h3>{$strDescendingDateOrder}</h3>";

@@ -30,7 +30,7 @@ if (empty($submit))
 
     echo show_form_errors('add_vendor');
     clear_form_errors('add_vendor');
-    echo "<h2>{$strAddVendor}</h2>";
+    echo "<h2>".icon('adduser', 32)." {$strAddVendor}</h2>";
     echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table align='center' class='vertical'>";

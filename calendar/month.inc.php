@@ -18,7 +18,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 // Display planner chart
-echo "<h2>{$strMonthView}</h2>";
+echo "<h2>".icon('holiday', 32)." {$strMonthView}</h2>";
 
 $nextyear = $year;
 if ($month < 12)

@@ -22,7 +22,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 $action = cleanvar($_REQUEST['action']);
 if ($action == 'new')
 {
-    echo "<h2>{$strNotices}</h2>";
+    echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
     echo "<p align='center'>{$strNoticesBlurb}</p>";
     echo "<div align='center'><form action='{$_SERVER[PHP_SELF]}?action=post' method='post'>";
     echo "<table align='center'>";
@@ -96,7 +96,7 @@ elseif ($action == 'delete')
 }
 else
 {
-    echo "<h2>{$strNotices}</h2>";
+    echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
 
     //get all notices
     $sql = "SELECT * FROM `{$dbNotices}` WHERE type=".NORMAL_NOTICE_TYPE." OR type=".WARNING_NOTICE_TYPE." ";

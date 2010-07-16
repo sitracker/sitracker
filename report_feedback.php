@@ -34,7 +34,7 @@ $title = $strFeedbackReport;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>{$strFeedbackReport}</h2>";
+echo "<h2>".icon('reports', 32)." {$strFeedbackReport}</h2>";
 
 function feedback_between_dates()
 {
