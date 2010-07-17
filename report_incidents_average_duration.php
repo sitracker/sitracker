@@ -95,7 +95,7 @@ if ($_REQUEST['output'] == 'csv')
 else
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<p align='center'>{$strOnlyShowsClosedCalls}</p>";
     echo "<p align='center'>";
     echo "<a href='{$_SERVER['PHP_SELF']}?mode=all&amp;increment=$increment";

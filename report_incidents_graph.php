@@ -61,7 +61,7 @@ else
     $lastmonth = 12;
 }
 
-echo "<h2>{$strIncidentsLoggedOpenClosed}</h2>";
+echo "<h2>".icon('reports', 32)." {$strIncidentsLoggedOpenClosed}</h2>";
 echo "<p align='center'>{$strIncidentsOpenedEachDay}<br />";
 echo "<a href='{$_SERVER['PHP_SELF']}?startyear=".($currentyear-2)."'>".($currentyear-2)."</a> | ";
 echo "<a href='{$_SERVER['PHP_SELF']}?startyear=".($currentyear-1)."'>".($currentyear-1)."</a> | ";

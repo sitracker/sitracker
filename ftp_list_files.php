@@ -38,7 +38,7 @@ function upload_window()
 //]]>
 </script>
 <?php
-echo "<h2>{$title}</h2>";
+echo "<h2>".icon('attach', 32)." {$title}</h2>";
 
 if (!empty($CONFIG['ftp_hostname']) AND !empty($CONFIG['ftp_username']))
 {

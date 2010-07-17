@@ -25,7 +25,7 @@ $title = $strQueryByExample;
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center'>";
     echo "<tr><th>{$strTable}:</th>";
@@ -62,7 +62,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
 {
     $table1 = cleanvar($_REQUEST['table1']);
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center'>";
     echo "<tr><th>{$strTable}:</th>";

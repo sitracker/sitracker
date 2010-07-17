@@ -56,7 +56,7 @@ switch ($_REQUEST['action'])
     break;
 
     case 'new':
-        $title = ("$strFeedbackForms - $strAdd");
+        $title = (icon('reports', 32)." $strFeedbackForms - $strAdd");
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3>{$strAddFeedbackForm}</h3>";
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
@@ -107,7 +107,7 @@ switch ($_REQUEST['action'])
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-        $title = ("$strFeedbackForms - $strEdit");
+        $title = (icon('reports', 32).! $strFeedbackForms - $strEdit");
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3>{$title}</h3>";
 

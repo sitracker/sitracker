@@ -41,7 +41,7 @@ $output = cleanvar($_POST['output']);
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='incidentsbyengineer'>";
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strStartDate}:</th>";
@@ -308,7 +308,7 @@ elseif ($_REQUEST['statistics'] == 'on')
     if ($output == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>".sprintf($strEngineersStatisticsForXMonths, round(($enddate - $startdate) / (60*60*24*30.5)))."</h2>";
+        echo "<h2>".icon('reports', 32)." ".sprintf($strEngineersStatisticsForXMonths, round(($enddate - $startdate) / (60*60*24*30.5)))."</h2>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
@@ -422,7 +422,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $count++;
     }
 
-    $html .= "<h2>{$title}</h2>";
+    $html .= "<h2>".icon('reports', 32)." {$title}</h2>";
     $html .= "<p align='center'>".sprintf($strIncidentEscalatedReportDesc, $numrows, $numrows_esc)."</p>";
     $html .= "<table width='99%' align='center'>";
     $html .= "<tr><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strIncident}</th>";

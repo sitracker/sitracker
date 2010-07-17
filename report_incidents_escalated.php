@@ -52,7 +52,7 @@ function hide_filter(hide)
 <?php
 echo "</script>";
 
-echo "<h2>{$strExternalEngineerCallDistribution}</h2>";
+echo "<h2>".icon('reports', 32)." {$strExternalEngineerCallDistribution}</h2>";
 
 $filterSQL = '';
 

@@ -25,7 +25,7 @@ if (empty($mode) OR $mode == 'showform')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strMonthlyActivityTotals}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strMonthlyActivityTotals}</h2>";
     echo "<form name='report' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical'>";
 
@@ -105,7 +105,7 @@ elseif ($mode == 'runreport')
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strMonthlyActivityTotals}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strMonthlyActivityTotals}</h2>";
     
     if (count($util) > 0)
     {

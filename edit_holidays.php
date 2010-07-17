@@ -61,7 +61,7 @@ switch ($_REQUEST['action'])
     case 'form':
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$title}</h2>";
+        echo "<h2>".icon('holiday', 32)." {$title}</h2>";
 
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status >= 1 ORDER BY realname ASC";
         $result = mysql_query($sql);
