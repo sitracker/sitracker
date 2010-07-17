@@ -61,12 +61,13 @@ if (!$_REQUEST['action'])
             exit;
         }
 
+        mysql_data_seek($checkcontract, 0);
         $availablecontract = 0;
         while ($legalcontract = mysql_fetch_object($checkcontract))
         {
-            if (($legalcontract->term != 'yes') OR
-                ($legalcontract->expirydate > $now AND $legalcontract->expirydate != -1) OR
-                ($legalcontract->incident_quantity >= 1 AND $legalcontract->incidents_used <= $legalcontract->incident_quantity))
+            if (($legalcontract->term != 'yes') AND
+                (($legalcontract->expirydate >= $now OR $legalcontract->expirydate == -1) OR
+                ($legalcontract->incident_quantity >= 1 AND $legalcontract->incidents_used < $legalcontract->incident_quantity)))
             {
                 $availablecontract++;
             }
