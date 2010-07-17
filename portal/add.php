@@ -60,6 +60,24 @@ if (!$_REQUEST['action'])
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             exit;
         }
+
+        $availablecontract = 0;
+        while ($legalcontract = mysql_fetch_object($checkcontract))
+        {
+            if (($legalcontract->term = 'no') OR
+                ($legalcontract->expirydate > $now AND $legalcontract->expirydate != -1) OR
+                ($legalcontract->incident_quantity >= 1 AND $legalcontract->incidents_used <= $legalcontract->incident_quantity))
+            {
+                $availablecontract++;
+            }
+        }
+
+        if ($availablecontract == 0)
+        {
+            echo "<p class='error'>{$strNoContractsFound}</p>";
+            include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+            exit;
+        }
     }
     echo "<form action='{$_SERVER[PHP_SELF]}?page=add&amp;action=submit' method='post'>";
     echo "<table align='center' width='50%' class='vertical'>";
