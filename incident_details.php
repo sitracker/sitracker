@@ -211,13 +211,13 @@ else
     echo priority_icon($incident->priority)." ".priority_name($incident->priority);
     if ($product_name!='')
     {
-        echo " <a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContactDetails}' target='top.opener'>";
+        echo " <a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContractDetails}' target='top.opener'>";
         echo "{$product_name}";
         echo "</a>";
     }
     elseif ($incident->maintenanceid > 0)
     {
-        echo "<a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContactDetails}' target='top.opener'>";
+        echo "<a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContractDetails}' target='top.opener'>";
         echo "{$strContract} {$incident->maintenanceid}";
         echo "</a>";
     }
