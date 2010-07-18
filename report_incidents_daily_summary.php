@@ -82,7 +82,7 @@ else
 
         while ($incident = mysql_fetch_object($result))
         {
-            $stats[date('Y-m-d', $incident->opened)]['date'] = date('l d/m/Y', $incident->opened);
+            $stats[date('Y-m-d', $incident->opened)]['date'] = ldate($CONFIG['dateformat_longdate'], $incident->opened);
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['id'] = $incident->id;
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['owner'] = $incident->owner;
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['title'] = $incident->title;
@@ -99,7 +99,7 @@ else
 
         while ($incident = mysql_fetch_object($result))
         {
-            $stats[date('Y-m-d', $incident->closed)]['date'] = date('l d/m/Y', $incident->closed);
+            $stats[date('Y-m-d', $incident->closed)]['date'] = ldate($CONFIG['dateformat_longdate'], $incident->closed);
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['id'] = $incident->id;
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['owner'] = $incident->owner;
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['title'] = $incident->title;
@@ -111,6 +111,7 @@ else
 //         echo "<pre>";
 //         print_r($stats);
 //         echo "</pre>";
+        ksort($stats);
 
         if (count($stats) > 0)
         {
@@ -139,7 +140,7 @@ else
                             if ($a['type'] == 'opened') $right .= $strOpened;
                             else $right .= $strClosed;
                             $right .= "</td><td>";
-                            $right .= "<a href='incident_details.php?id=".$a['id']."' class='direct'>".$a['id']."</td>";
+                            $right .= "<a href='javascript:incident_details_window({$a['id']})' class='direct'>".$a['id']."</td>";
                             $right .= "<td>".$a['title']."</a></td><td>".user_realname($a['owner'])."</td></tr>";
 
                             if ($a['type'] == 'opened')
