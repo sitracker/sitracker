@@ -2713,24 +2713,6 @@ function show_create_links($table, $ref)
 
 
 /**
- * Shows errors from a form, if any
- * @author Kieran Hogg
- * @return string. HTML of the form errors stored in the users session
- */
-function show_form_errors($formname)
-{
-    if ($_SESSION['formerrors'][$formname])
-    {
-        foreach ($_SESSION['formerrors'][$formname] as $error)
-        {
-            $html .= "<p class='error'>$error</p>";
-        }
-    }
-    return $html;
-}
-
-
-/**
  * Output the html for a KB article
  *
  * @param int $id ID of the KB article
@@ -3330,7 +3312,7 @@ function user_contracts_table($userid, $mode = 'internal')
 
 
 /**
- * 
+ *
  * @author Paul Heaney
  * @param int $hour
  * @param int $minute
@@ -3338,9 +3320,9 @@ function user_contracts_table($userid, $mode = 'internal')
 function time_picker($hour = '', $minute = '', $name_prefix = '')
 {
     global $CONFIG;
-    
+
     // FIXME TODO use $CONFIG['dateformat_shorttime']
-    
+
     $m = 0;
 
     if (empty($hour))
@@ -3348,7 +3330,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
         $hour = floor($CONFIG['start_working_day'] / 3600);
         $m = ($CONFIG['start_working_day'] % 3600) / 60;
     }
-    
+
     if (empty($minute))
     {
         $minute = $m;
@@ -3362,9 +3344,9 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
         $html .= ">{$i}</option>\n";
     }
     $html .= "</select>\n";
-    
+
     $html .= ":";
-    
+
     $html .= "<select id='{$name_prefix}time_picker_minute' name='{$name_prefix}time_picker_minute'>\n";
     for ($i = 0; $i < 60; $i += $CONFIG['display_minute_interval'])
     {
@@ -3373,7 +3355,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
         $html .= ">{$i}</option>\n";
     }
     $html .= "</select>\n";
-    
+
     return $html;
 }
 

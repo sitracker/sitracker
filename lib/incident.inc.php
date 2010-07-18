@@ -564,9 +564,9 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
     $sql = "SELECT count(id) AS count FROM `{$GLOBALS['dbDrafts']}` WHERE incidentid = {$incidentid} ";
     if ($type == "update") $sql .= "AND type = 'update'";
     elseif ($type == "email") $sql .= "AND type = 'email'";
-    
+
     if (!empty($userid)) $sql .= "AND userid = {$userid} ";
-    
+
     $result = mysql_query($sql);
     if (mysql_error())
     {
@@ -728,13 +728,14 @@ function incident_service_level($incidentid)
 /**
  * Load the incident entitlement for the portal
  * Moved from portal/ad.php
+ * @author Kieran Hogg
  * @param $contactid  - The contact to load the entitlement for
- * @param $siteid - The site the contact belongs to 
+ * @param $siteid - The site the contact belongs to
  */
 function load_entitlements($contactid, $siteid)
 {
     global $dbSupportContacts, $dbMaintenance, $dbProducts;
-    
+
     //get entitlement
     $sql = "SELECT m.*, p.name, ";
     $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
