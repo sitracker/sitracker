@@ -1003,11 +1003,26 @@ span.sig { color: red; }
 
 table#cols { height: 350px; }
 
-@media print
-{
-    #menu, #statusbar, h1#apptitle, #menulist, .contextmenu {visibility:hidden; display:none;}
-}
-
 #trigger_list {
 margin: 0 auto;
 }
+
+
+@media print
+{
+    #menu, #statusbar, h1#apptitle, #menulist, .contextmenu {visibility:hidden; display:none;}
+    #pageoptions {display: none;}
+}
+
+@media handheld, only screen and (max-device-width: 480px)
+{
+    * {
+    float: none;
+    }
+    .windowtitle { background-color: red;}
+    #statusbar, #languageselection { text-align: left; padding-left: 5px; }
+    #languageselection, #login { margin-left: 0px;}
+    #tail { margin: 0px;}
+
+}
+
