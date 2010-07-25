@@ -474,7 +474,7 @@ elseif ($action=='incidentform')
         }
         else
         {
-            echo "<label for='software'>{$strSkill}</label><br />".softwareproduct_drop_down('software', 1, $productid);
+            echo "<label for='software'>{$strSkill}</label><br />".softwareproduct_drop_down('software', 0, $productid);
         }
         echo " <label>{$strVersion}: <input maxlength='50' name='productversion' size='8' type='text' /></label> \n";
         echo " <label>{$strServicePacksApplied}: <input maxlength='100' name='productservicepacks' size='8' type='text' /></label>\n";
@@ -630,11 +630,11 @@ elseif ($action == 'assign')
         $timetonextaction = cleanvar($_POST['timetonextaction']);
         $date = cleanvar($_POST['date']);
         $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-        $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);  
+        $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
         $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
         $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
         $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
-        
+
         if ($send_email == 'on')
         {
             $send_email = 1;
@@ -657,6 +657,12 @@ elseif ($action == 'assign')
         if ($incidenttitle == '')
         {
             $incidenttitle = $strUntitled;
+        }
+
+        if ($software < 1)
+        {
+            $errors++;
+            $error_string .= sprintf($strFieldMustNotBeBlank, $strSkill);
         }
 
         // check for blank priority
@@ -694,7 +700,7 @@ elseif ($action == 'assign')
                 case 'date':
                     $date = explode("-", $date);
                     $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
-                    if ($timeofnextaction < 0) $timeofnextaction = 0;                   
+                    if ($timeofnextaction < 0) $timeofnextaction = 0;
                     break;
                 default:
                     $timeofnextaction = 0;
@@ -708,7 +714,7 @@ elseif ($action == 'assign')
                 $timetext .= "</b>\n\n";
                 $bodytext = $timetext.$bodytext;
             }
-            
+
             // Set the service level the contract
             if ($servicelevel == '')
             {
@@ -1014,7 +1020,7 @@ elseif ($action == 'assign')
         }
         else
         {
-            trigger_error('User input error: '. $error_string, E_USER_ERROR);
+            echo user_alert($error_string, E_USER_ERROR);
         }
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -1027,6 +1033,7 @@ elseif ($action == 'reassign')
     $nextaction = cleanvar($_REQUST['nextaction']);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
     echo "<h2>{$strIncidentAdded} - {$strSummary}</h2>";
     echo "<p align='center'>";
     $incidentnum = "<a href=\"javascript:incident_details_window('$incidentid','incident{$incidentid}');\">{$strIncident} {$incidentid}</a>";
@@ -1035,7 +1042,7 @@ elseif ($action == 'reassign')
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
     $userphone = user_phone($userid);
-    if ($userphone!='') echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
+    if ($userphone != '') echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
     $sql = "UPDATE `{$dbIncidents}` SET owner='$uid', lastupdated='$now' WHERE id='$incidentid'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -1047,6 +1054,7 @@ elseif ($action == 'reassign')
     $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reassigning', '{$now}', '{$uid}', '1', '{$nextaction}')";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 ?>

@@ -232,13 +232,18 @@ function parse_updatebody($updatebody, $striptags = TRUE)
  */
 function priority_drop_down($name, $id, $max=4, $disable = FALSE)
 {
-    global $CONFIG, $iconset;
+    global $CONFIG, $iconset, $strRequired;
     // INL 8Oct02 - Removed DB Query
     $html = "<select id='priority' name='$name' ";
     if ($disable)
     {
-        $html .= "disabled='disabled'";
+        $html .= "disabled='disabled' ";
     }
+    if ($id == 0)
+    {
+        $html .= "class='required' ";
+    }
+
 
     $html .= ">";
     if ($id == 0)
@@ -277,6 +282,10 @@ function priority_drop_down($name, $id, $max=4, $disable = FALSE)
         $html .= ">{$GLOBALS['strCritical']}</option>\n";
     }
     $html .= "</select>\n";
+    if ($id == 0)
+    {
+        $html .= "<span class='required'>{$strRequired}</span>";
+    }
 
     return $html;
 }
@@ -351,9 +360,9 @@ function show_next_action($formid)
     $html .= "<input name='date' id='timetonextaction_date' size='10' value='{$date}' ";
     $html .= "onclick=\"$('ttna_date').checked = true;\" /> ";
     $html .= date_picker("{$formid}.timetonextaction_date");
-    
+
     $html .= time_picker();
-    
+
     $html .= "<br />\n</div>";
 
     return $html;

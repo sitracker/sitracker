@@ -893,17 +893,17 @@ function product_drop_down($name, $id, $required = FALSE)
 
 
 /**
- * HTML for a drop down list of skills (was called software)
+ * HTML for a drop down list of skills
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
- * @param int $id. Software ID
- * @return HTML select
+ * @param int $id. Software/Skill ID to preselect
+ * @returns HTML select
+ * @note Skills were named 'software' in legacy versions of SiT.
  */
 function skill_drop_down($name, $id)
 {
     global $now, $dbSoftware, $strEOL;
 
-    // extract software
     $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
     $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
@@ -911,7 +911,7 @@ function skill_drop_down($name, $id)
 
     $html = "<select name='{$name}' id='{$name}' >";
 
-    if ($id == 0)
+    if ($id < 1)
     {
         $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
     }
@@ -939,16 +939,16 @@ function skill_drop_down($name, $id)
 }
 
 
-
 /**
- * Generates a HTML dropdown of software products
+ * Generates a HTML dropdown of Skills
  * @author Kieran Hogg
  * @param string $name. name/id to use for the select element
  * @return HTML select
+ * @note Software was the old name for what we now call 'Skills'
  */
 function softwareproduct_drop_down($name, $id, $productid, $visibility='internal')
 {
-    global $dbSoftware, $dbSoftwareProducts;
+    global $dbSoftware, $dbSoftwareProducts, $strRequired;
     // extract software
     $sql  = "SELECT id, name FROM `{$dbSoftware}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp WHERE s.id = sp.softwareid ";
@@ -957,9 +957,15 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-    if (mysql_num_rows($result) >=1)
+    $numrows = mysql_num_rows($result);
+    if ($numrows > 0)
     {
-        $html = "<select name='$name' id='$name'>";
+        $html = "<select name='$name' id='$name'";
+        if ($visibility == 'internal' AND $id == 0)
+        {
+            $html .= " class='required'>";
+        }
+        $html .= ">";
 
         if ($visibility == 'internal' AND $id == 0)
         {
@@ -980,6 +986,10 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
             $html .= " value='{$software->id}'>{$software->name}</option>\n";
         }
         $html .= "</select>\n";
+        if ($visibility == 'internal' AND $id == 0)
+        {
+            $html .= "<span class='required'>{$strRequired}</span>";
+        }
     }
     else
     {
