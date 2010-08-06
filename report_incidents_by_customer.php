@@ -312,7 +312,7 @@ else
                         else $csv .= $strCurrentlyOpen;
                         $csv .= "</td>";
                         $csv .= "<td>";
-                        if ($obj->closed > 0) $csv .= format_workday_minutes($obj->closed - $obj->opened);
+                        if ($obj->closed > 0) $csv .= format_workday_minutes(($obj->closed - $obj->opened) / 60);
                         $csv .= "</td>";
                         $csv .= "<td>{$obj->servicelevel}</td>";
                         $csv .= "</tr>";
