@@ -210,10 +210,12 @@ else
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                 $details = mysql_fetch_object($sresult);
                 $count = $details->incidentz;
+
+                $colspan = 4;
+
                 if (!empty($zerologged))
                 {
                     if (empty($count)) $count = 0;
-                    $colspan = 4;
                     if ($showsitesloggedfewerthanxcalls == 'on' AND $count <= $numberofcalls)
                     {
                         if ($output == 'csv')
@@ -301,7 +303,7 @@ else
                     while ($obj = mysql_fetch_object($iresult))
                     {
                         $csv .= "<tr class='{$shade1}'>";
-                        $csv .= "<td>{$obj->id}</td><td>{$obj->title}</td>";
+                        $csv .= "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>{$obj->id}</a></td><td>{$obj->title}</td>";
                         $csv .= "<td>{$obj->forenames} {$obj->surname}</td>";
                         $csv .= "<td>".software_name($obj->softwareid)."</td>";
                         $csv .= "<td>".incidentstatus_name($obj->status)."</td>";
