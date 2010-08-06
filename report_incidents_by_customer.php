@@ -71,7 +71,7 @@ if (empty($mode))
 	</script>
 	<?php
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
     echo "<form name='date' action='".$_SERVER['PHP_SELF']."?mode=run' method='post'>\n";
     echo "<table class='vertical'>\n";

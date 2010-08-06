@@ -20,7 +20,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 // Display year calendar
 if ($type < HOL_PUBLIC)
 {
-    echo "<h2>{$strCalendar}: ";
+    echo "<h2>".icon('holiday', 32)." {$strCalendar}: ";
     if ($user == 'all' && $approver == TRUE) echo $strAll;
     else echo user_realname($user,TRUE);
     if ($type == HOL_HOLIDAY)

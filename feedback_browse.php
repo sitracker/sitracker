@@ -33,7 +33,7 @@ $completed = cleanvar($_REQUEST['completed']);
 switch ($mode)
 {
     case 'viewresponse':
-        echo "<h2>{$strFeedback}</h2>";
+        echo "<h2>".icon('contract', 32)." {$strFeedback}</h2>";
         $sql = "SELECT * FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

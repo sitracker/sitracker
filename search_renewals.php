@@ -29,7 +29,7 @@ if (empty($expire))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strShowRenewals}</h2>";
+    echo "<h2>".icon('contract', 32)." {$strShowRenewals}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' >";
 
     printf("<p>{$strContractsExpiringWithinXdays}</p>", "<input maxlength='4' name='expire' size='3' type='text' />");
@@ -70,7 +70,7 @@ else
 
         if (mysql_num_rows($result) == 0)
         {
-            printf("<h2>{$strContractsExpiringWithinXdays}</h2>", $expire);
+            printf("<h2>".icon('contract', 32)." {$strContractsExpiringWithinXdays}</h2>", $expire);
             echo "<h5 class='warning'>{$strSorryNoSearchResults}</h5>\n";
         }
         else
@@ -91,7 +91,7 @@ else
             //]]>
             </script>
             <?php
-            printf("<h2>{$strContractsExpiringWithinXdays}</h2>", $expire);
+            printf("<h2>".icon('contract', 32)." {$strContractsExpiringWithinXdays}</h2>", $expire);
             printf("<h5>{$strResultsNum}</h5>", mysql_num_rows($result));
             echo "
             <table align='center'>

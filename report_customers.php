@@ -40,7 +40,7 @@ if (!function_exists('strip_comma'))
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$strCustomerExport}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strCustomerExport}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical'>";
     echo "<tr><th colspan='2' align='center'>{$strInclude}".help_link('CTRLAddRemove')."</th></tr>";
@@ -138,7 +138,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $numrows = mysql_num_rows($result);
 
     // FIXME strip slashes from output
-    $html .= "<h2>{$strCustomerExport}</h2>";
+    $html .= "<h2>".icon('reports', 32)." {$strCustomerExport}</h2>";
     $html .= "<p align='center'>".sprintf($strThisReportShowsContactForSelectedSites, $numrows)."</p>";
     $html .= "<table width='99%' align='center'>";
     $html .= "<tr><th>{$strForenames}</th><th>{$strSurname}</th><th>{$strEmail}</th><th>{$strAddress1}</th>";

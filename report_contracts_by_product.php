@@ -26,7 +26,7 @@ $title = $strCountContractsByProduct;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>{$title}</h2>";
+echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
 $sql = "SELECT * FROM `{$dbProducts}` ";
 $result = mysql_query($sql);

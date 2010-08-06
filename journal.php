@@ -39,7 +39,7 @@ if (empty($page)) $page = 1;
 if (empty($search_string)) $search_string='a';
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-echo "<h2>{$title}</h2>";
+echo "<h2>".icon('contract', 32)." {$title}</h2>";
 
 
 // Count number of journal records

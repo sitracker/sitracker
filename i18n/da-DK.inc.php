@@ -2,7 +2,7 @@
 // Translation to Danish by Carsten Jensen aka Tomse
 // Translation started 14. Oct. 2008
 
-$languagestring = ' (da-DK)';
+$languagestring = 'Dansk (da-DK)';
 $i18ncharset = 'UTF-8';
 
 // List of letters of the alphabet for this language
@@ -1347,7 +1347,7 @@ $strSalesperson = 'Sælger';
 $strSalespersonSite = 'Afdelingens salgs person';
 $strSalespersonAssignedToContactsSiteEmail = 'Email adressen på sælgeren der er knyttet til kontakt afdelingen';
 $strSat = 'Lør';
-$strSaturday = 'Lørdag';
+$strSaturday = 'Lordag';
 $strSaturdayAbbr = 'Lø';
 $strSave = 'Gem';
 $strSaveAsCSV = 'Gem som CSV';

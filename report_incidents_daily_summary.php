@@ -31,7 +31,7 @@ $submit = cleanvar($_REQUEST['submit']);
 $startdate = cleanvar($_REQUEST['startdate']);
 $enddate = cleanvar($_REQUEST['enddate']);
 
-echo "<h2>{$title}</h2>";
+echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
 if (empty($submit))
 {
@@ -82,7 +82,7 @@ else
 
         while ($incident = mysql_fetch_object($result))
         {
-            $stats[date('Y-m-d', $incident->opened)]['date']=date('l d/m/Y', $incident->opened);
+            $stats[date('Y-m-d', $incident->opened)]['date'] = ldate($CONFIG['dateformat_longdate'], $incident->opened);
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['id'] = $incident->id;
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['owner'] = $incident->owner;
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['title'] = $incident->title;
@@ -99,7 +99,7 @@ else
 
         while ($incident = mysql_fetch_object($result))
         {
-            $stats[date('Y-m-d', $incident->closed)]['date']=date('l d/m/Y', $incident->closed);
+            $stats[date('Y-m-d', $incident->closed)]['date'] = ldate($CONFIG['dateformat_longdate'], $incident->closed);
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['id'] = $incident->id;
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['owner'] = $incident->owner;
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['title'] = $incident->title;
@@ -108,11 +108,10 @@ else
         }
 
 
-/*
-        echo "<pre>";
-        print_r($stats);
-        echo "</pre>";
-*/
+//         echo "<pre>";
+//         print_r($stats);
+//         echo "</pre>";
+        ksort($stats);
 
         if (count($stats) > 0)
         {
@@ -123,57 +122,60 @@ else
                 print_r($day);
                 echo "</pre>";
                 */
-                echo "<h2>".$day['date']."</h2>";
+                echo "<h3>".$day['date']."</h3>";
                 echo "<table>";
-                $opened=0;
-                $closed=0;
-                $owners=array();
-                $right='';
+                $opened = 0;
+                $closed = 0;
+                $owners = array();
+                $right = '';
+
                 foreach ($day AS $d)
                 {
                     if (is_array($d))
                     {
-                        /*
-                        echo "<pre>";
-                        print_r($d);
-                        echo "</pre>";
-                        */
                         foreach ($d AS $a)
                         {
-                            $right .= "<tr><td>".$a['type']."</td><td><a href='incident_details.php?id=".$a['id']."' class='direct'>".$a['id']."</td><td>".$a['title']."</a></td><td>".user_realname($a['owner'])."</td></tr>";
+                            // Right hand table cells
+                            $right .= "<tr><td>";
+                            if ($a['type'] == 'opened') $right .= $strOpened;
+                            else $right .= $strClosed;
+                            $right .= "</td><td>";
+                            $right .= "<a href='javascript:incident_details_window({$a['id']})' class='direct'>".$a['id']."</td>";
+                            $right .= "<td>".$a['title']."</a></td><td>".user_realname($a['owner'])."</td></tr>";
+
                             if ($a['type'] == 'opened')
                             {
                                 $opened++;
-                                $owners[$a['owner']]['owner']=$a['owner'];
+                                $owners[$a['owner']]['owner'] = $a['owner'];
                                 $owners[$a['owner']]['opened']++;
                             }
                             else
                             {
                                 $closed++;
-                                $owners[$a['owner']]['owner']=$a['owner'];
+                                $owners[$a['owner']]['owner'] = $a['owner'];
                                 $owners[$a['owner']]['closed']++;
                             }
                         }
                     }
                 }
-    
+
                 echo "<tr><td valign='top'><table>";
-                echo "<tr><td>{$strOpened}</td><td>{$opened}</td></tr>";
-                echo "<tr><td>{$strClosed}</td><td>{$closed}</td></tr>";
                 echo "<table><tr><th>{$strUser}</th><th>{$strOpened}</th><th>{$strClosed}</th></tr>";
                 foreach ($owners AS $o)
                 {
                     echo "<tr>";
-                    echo "<td>".user_realname($o['owner'])."</td><td>";
-                    if ($o['closed'] != 0) echo $o['closed'];
-                    else echo "0";
-    
+                    echo "<td>".user_realname($o['owner']);
                     echo "</td><td>";
                     if ($o['opened']!=0) echo $o['opened'];
                     else echo "0";
+                    echo "</td><td>";
+                    if ($o['closed'] != 0) echo $o['closed'];
+                    else echo "0";
+
                     echo "</td>";
                     echo "</tr>";
                 }
+                echo "<tr><th style='text-align:right'>{$strTotal}</th><th>{$opened}</th><th>{$closed}</th></tr>";
                 echo "</table></td><td><table>";
                 echo $right;
                 echo "</table></td></tr>";

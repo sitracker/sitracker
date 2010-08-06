@@ -291,7 +291,7 @@ function dashboard_watch_incidents_edit($dashletid)
             echo "</td><tr>";
             echo "</table>";
             echo "<p align='center'>";
-            echo dashlet_link('watch_incidents', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction' => 'do_add', 'type'=>$type), false, 'dwiaddform');
+            echo dashlet_link('watch_incidents', $dashletid, $GLOBALS['strAdd'], 'save', array('editaction' => 'do_add', 'type'=>$type), false, 'dwiaddform');
             echo "</p>";
             break;
 

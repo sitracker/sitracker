@@ -27,7 +27,7 @@ $mode = cleanvar($_REQUEST['mode']);
 
 if (empty($mode))
 {
-    echo "<h2>{$strSiteTypes}</h2>";
+    echo "<h2>".icon('edit', 32)." {$strSiteTypes}</h2>";
 
     $sql = "SELECT * FROM `{$dbSiteTypes}` ORDER BY typename";
     $result = mysql_query($sql);

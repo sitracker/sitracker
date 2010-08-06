@@ -200,7 +200,7 @@ $CONFIG['access_logfile'] = '';
 
 // The plugins configuration is an array
 //$CONFIG['plugins'] = array();
-$CONFIG['plugins'] = array('');
+$CONFIG['plugins'] = array();
 
 $CONFIG['no_feedback_contracts'] = array();
 

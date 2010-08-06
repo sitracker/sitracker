@@ -893,17 +893,17 @@ function product_drop_down($name, $id, $required = FALSE)
 
 
 /**
- * HTML for a drop down list of skills (was called software)
+ * HTML for a drop down list of skills
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
- * @param int $id. Software ID
- * @return HTML select
+ * @param int $id. Software/Skill ID to preselect
+ * @returns HTML select
+ * @note Skills were named 'software' in legacy versions of SiT.
  */
 function skill_drop_down($name, $id)
 {
     global $now, $dbSoftware, $strEOL;
 
-    // extract software
     $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
     $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
@@ -911,7 +911,7 @@ function skill_drop_down($name, $id)
 
     $html = "<select name='{$name}' id='{$name}' >";
 
-    if ($id == 0)
+    if ($id < 1)
     {
         $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
     }
@@ -939,16 +939,16 @@ function skill_drop_down($name, $id)
 }
 
 
-
 /**
- * Generates a HTML dropdown of software products
+ * Generates a HTML dropdown of Skills
  * @author Kieran Hogg
  * @param string $name. name/id to use for the select element
  * @return HTML select
+ * @note Software was the old name for what we now call 'Skills'
  */
 function softwareproduct_drop_down($name, $id, $productid, $visibility='internal')
 {
-    global $dbSoftware, $dbSoftwareProducts;
+    global $dbSoftware, $dbSoftwareProducts, $strRequired;
     // extract software
     $sql  = "SELECT id, name FROM `{$dbSoftware}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp WHERE s.id = sp.softwareid ";
@@ -957,9 +957,15 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-    if (mysql_num_rows($result) >=1)
+    $numrows = mysql_num_rows($result);
+    if ($numrows > 0)
     {
-        $html = "<select name='$name' id='$name'>";
+        $html = "<select name='$name' id='$name'";
+        if ($visibility == 'internal' AND $id == 0)
+        {
+            $html .= " class='required'>";
+        }
+        $html .= ">";
 
         if ($visibility == 'internal' AND $id == 0)
         {
@@ -980,6 +986,10 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
             $html .= " value='{$software->id}'>{$software->name}</option>\n";
         }
         $html .= "</select>\n";
+        if ($visibility == 'internal' AND $id == 0)
+        {
+            $html .= "<span class='required'>{$strRequired}</span>";
+        }
     }
     else
     {
@@ -2713,24 +2723,6 @@ function show_create_links($table, $ref)
 
 
 /**
- * Shows errors from a form, if any
- * @author Kieran Hogg
- * @return string. HTML of the form errors stored in the users session
- */
-function show_form_errors($formname)
-{
-    if ($_SESSION['formerrors'][$formname])
-    {
-        foreach ($_SESSION['formerrors'][$formname] as $error)
-        {
-            $html .= "<p class='error'>$error</p>";
-        }
-    }
-    return $html;
-}
-
-
-/**
  * Output the html for a KB article
  *
  * @param int $id ID of the KB article
@@ -3330,7 +3322,7 @@ function user_contracts_table($userid, $mode = 'internal')
 
 
 /**
- * 
+ *
  * @author Paul Heaney
  * @param int $hour
  * @param int $minute
@@ -3338,9 +3330,9 @@ function user_contracts_table($userid, $mode = 'internal')
 function time_picker($hour = '', $minute = '', $name_prefix = '')
 {
     global $CONFIG;
-    
+
     // FIXME TODO use $CONFIG['dateformat_shorttime']
-    
+
     $m = 0;
 
     if (empty($hour))
@@ -3348,7 +3340,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
         $hour = floor($CONFIG['start_working_day'] / 3600);
         $m = ($CONFIG['start_working_day'] % 3600) / 60;
     }
-    
+
     if (empty($minute))
     {
         $minute = $m;
@@ -3362,9 +3354,9 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
         $html .= ">{$i}</option>\n";
     }
     $html .= "</select>\n";
-    
+
     $html .= ":";
-    
+
     $html .= "<select id='{$name_prefix}time_picker_minute' name='{$name_prefix}time_picker_minute'>\n";
     for ($i = 0; $i < 60; $i += $CONFIG['display_minute_interval'])
     {
@@ -3373,7 +3365,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
         $html .= ">{$i}</option>\n";
     }
     $html .= "</select>\n";
-    
+
     return $html;
 }
 

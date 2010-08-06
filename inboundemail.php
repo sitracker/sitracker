@@ -264,8 +264,14 @@ if ($emails > 0)
         switch ($results['Type'])
         {
             case 'html':
-
-                $message = $results['Alternative'][0]['Data'];
+                if (!empty($results['Alternative'][0]['Data']))
+                {
+                    $message = $results['Alternative'][0]['Data'];
+                }
+                else
+                {
+                    $message = strip_tags(html_entity_decode($results['Data'],ENT_QUOTES, 'UTF-8'));
+                }
                 break;
 
             case 'text':
@@ -298,11 +304,11 @@ if ($emails > 0)
         //process attachments
         if (!empty($incidentid) AND $incident_open)
         {
-            $fa_dir = $CONFIG['attachment_fspath'].$incidentid.$fsdelim;
+            $fa_dir = $CONFIG['attachment_fspath'] . $incidentid . $fsdelim;
         }
         else
         {
-            $fa_dir = $CONFIG['attachment_fspath']."updates{$fsdelim}";
+            $fa_dir = $CONFIG['attachment_fspath'] . "updates{$fsdelim}";
         }
 
         if (!file_exists($fa_dir))

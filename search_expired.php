@@ -31,7 +31,7 @@ if (empty($expired))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strShowExpiredContracts}</h2>";
+    echo "<h2>".icon('contract', 32)." {$strShowExpiredContracts}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='get' >";
     printf("<p>{$strContractsExpiredXdaysAgo}", "<input maxlength='4' name='expired' size='3' type='text' value='30' />");
     echo "<p><input name='show' type='checkbox' value='terminated'> {$strTerminated}</p>";
@@ -89,8 +89,8 @@ else
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        if ($show == "") $pagetitle = "<h2>{$strNonTerminatedContractsExpiredXdaysAgo}</h2>\n";
-        else if ($show == "terminated") $pagetitle = "<h2>{$strTerminatedContractsExpiredXdaysAgo}</h2>\n";
+        if ($show == "") $pagetitle = "<h2>".icon('contract', 32)." {$strNonTerminatedContractsExpiredXdaysAgo}</h2>\n";
+        else if ($show == "terminated") $pagetitle = "<h2>".icon('contract', 32)." {$strTerminatedContractsExpiredXdaysAgo}</h2>\n";
 
         if (mysql_num_rows($result) == 0)
         {

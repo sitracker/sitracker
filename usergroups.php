@@ -66,7 +66,7 @@ switch ($action)
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-        echo "<h2>{$strUserGroups}</h2>";
+        echo "<h2>".icon('site', 32)." {$strUserGroups}</h2>";
 
         $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
         $gresult = mysql_query($gsql);

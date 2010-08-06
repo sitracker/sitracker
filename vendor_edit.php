@@ -52,7 +52,7 @@ switch ($action)
         $vendorid = cleanvar($_REQUEST['vendorid']);
         $vendorname = cleanvar($_REQUEST['vendorname']);
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strEditVendor} {$vendorname}</h2>";
+        echo "<h2>".icon('edituser', 32)." {$strEditVendor} {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";
         echo "<table align='center'>";
         echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}'/></td></tr>";
@@ -65,7 +65,7 @@ switch ($action)
         break;
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strEditVendor}</h2>";
+        echo "<h2>".icon('edituser', 32)." {$strEditVendor}</h2>";
         $sql = "SELECT * FROM `{$dbVendors}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

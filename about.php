@@ -116,13 +116,13 @@ echo "<tr><td class='shade1' colspan='2'>{$strReleaseNotes}:</td></tr>";
 echo "<tr><td class='shade2' colspan='2'><p align='center'><a href='releasenotes.php'>{$strReleaseNotes}</a></p></td></tr>\n";
 echo "<tr><td class='shade1' colspan='2'>{$strPlugins}:</td></tr>";
 echo "<tr><td class='shade2' colspan='2'>";
-if (is_array($CONFIG['plugins']) AND count($CONFIG['plugins']) >= 1)
+if (is_array($CONFIG['plugins']) AND $CONFIG['plugins'][0] != '' AND count($CONFIG['plugins']) > 0)
 {
     foreach ($CONFIG['plugins'] AS $plugin)
     {
         echo "<p><strong>$plugin</strong>";
         if ($PLUGININFO[$plugin]['version'] != '') echo " version ".number_format($PLUGININFO[$plugin]['version'], 2)."<br />";
-        else echo "<br />";
+        else echo "- <span class='error'>$strFailed</span><br />";
 
         if ($PLUGININFO[$plugin]['description'] != '') echo "{$PLUGININFO[$plugin]['description']}<br />";
         if ($PLUGININFO[$plugin]['author'] != '') echo "{$strAuthor}: {$PLUGININFO[$plugin]['author']}<br />";
@@ -132,7 +132,10 @@ if (is_array($CONFIG['plugins']) AND count($CONFIG['plugins']) >= 1)
         echo "</p>";
     }
 }
-else echo "<p>{$strNone}</p>";
+else
+{
+    echo "<p>{$strNone}</p>";
+}
 echo "</td></tr>";
 if ($CONFIG['kb_enabled'] == FALSE OR
     $CONFIG['portal_kb_enabled'] == FALSE OR
