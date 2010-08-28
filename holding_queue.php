@@ -23,8 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 
 /**
-  * @author Tom Gerrard
-*/
+ * @author Tom Gerrard
+ */
 function generate_row($update)
 {
     global $CONFIG, $sit, $strEllipsis;
@@ -72,7 +72,7 @@ function generate_row($update)
 
     $html_row .= "<td width='20%'>";
     if (!empty($update['contactid']) AND
-        $update['fromaddr'] == contact_email($update['contactid']))
+    $update['fromaddr'] == contact_email($update['contactid']))
     {
         $html_row .= gravatar($update['fromaddr'], 16) . ' ';
         $contact_realname = contact_realname($update['contactid']);
@@ -94,7 +94,7 @@ function generate_row($update)
     $html_row .= "</td>";
 
     $html_row.="<td width='20%'><a href=\"javascript:incident_details_window('{$update['tempid']}','incomingview');\" id='update{$update['id']}' class='info'>";
-//     $html_row.="<td width='20%'><a href=\"javascript:void(0);\" id='update{$update['id']}' class='info' style='cursor:help;'>";
+    //     $html_row.="<td width='20%'><a href=\"javascript:void(0);\" id='update{$update['id']}' class='info' style='cursor:help;'>";
     if (empty($update['subject'])) $update['subject'] = $GLOBALS['strUntitled'];
     $html_row .= htmlentities($update['subject'],ENT_QUOTES, $GLOBALS['i18ncharset']);
     $html_row .= '<span>'.parse_updatebody($updatebodytext).'</span></a></td>';
@@ -103,8 +103,8 @@ function generate_row($update)
     if (mysql2date($update['reason_time']) > 0)
     {
         $span .= "<br />".sprintf($GLOBALS['strOnxAtY'],
-                            ldate($CONFIG['dateformat_date'], mysql2date($update['reason_time'])),
-                            ldate($CONFIG['dateformat_time'], mysql2date($update['reason_time'])));
+        ldate($CONFIG['dateformat_date'], mysql2date($update['reason_time'])),
+        ldate($CONFIG['dateformat_time'], mysql2date($update['reason_time'])));
     }
     $html_row .= "<td align='center' width='20%'><a class='info'>{$update['reason']}<span>{$span}</span></a></td>";
     $html_row .= "<td align='center' width='20%'>";
@@ -235,8 +235,8 @@ if (!empty($selected))
 }
 
 
-    ?>
-    <script type="text/javascript">
+?>
+<script type="text/javascript">
     <!--
         function submitform()
         {
@@ -280,20 +280,24 @@ if ($countresults > 0)
 {
     if ($countresults) mysql_data_seek($result, 0);
 
-	if (!empty($CONFIG['spam_email_subject']))
-	{
-    	while ($updates = mysql_fetch_array($result))
-    	{
-        	if (!stristr($updates['subject'], $CONFIG['spam_email_subject']))
-        	{
-            	$queuerows[$updates['id']] = generate_row($updates);
-        	}
-        	else
-        	{
-            	$spamcount++;
-        	}
-    	}
-	}
+    while ($updates = mysql_fetch_array($result))
+    {
+        if (!empty($CONFIG['spam_email_subject']))
+        {
+            if (!stristr($updates['subject'], $CONFIG['spam_email_subject']))
+            {
+                $queuerows[$updates['id']] = generate_row($updates);
+            }
+            else
+            {
+                $spamcount++;
+            }
+        }
+        else
+        {
+            $queuerows[$updates['id']] = generate_row($updates);
+        }
+    }
 }
 
 $sql = "SELECT * FROM `{$dbIncidents}` WHERE owner='0' AND status!='2'";
@@ -326,9 +330,9 @@ $realemails = $countresults - $spamcount;
 //$totalheld = $countresults + mysql_num_rows($resultnew) - $spamcount;
 
 /**
-* Incoming Email queue
-* This special queue shows a list of email received by the Inbound Email script
-*/
+ * Incoming Email queue
+ * This special queue shows a list of email received by the Inbound Email script
+ */
 if (is_array($queuerows))
 {
     echo "<h2>".icon('email', 32)." {$strIncomingEmail}</h2>";
@@ -379,11 +383,11 @@ else if ($spamcount == 0)
 
 
 /**
-* Unassigned Incidents queue
-* This special queue shows a list of incidents that are currently not assigned
-* to any engineer.
-* This could happen if a user goes on holiday but has no substitutes defined.
-*/
+ * Unassigned Incidents queue
+ * This special queue shows a list of incidents that are currently not assigned
+ * to any engineer.
+ * This could happen if a user goes on holiday but has no substitutes defined.
+ */
 if (is_array($incidentqueuerows))
 {
     if (sizeof($incidentqueuerows) > 0)
@@ -408,9 +412,9 @@ if (is_array($incidentqueuerows))
 
 
 /**
-* Spam queue
-* This special queue shows a list of incoming spam
-*/
+ * Spam queue
+ * This special queue shows a list of incoming spam
+ */
 if ($spamcount > 0)
 {
     echo "<h2>{$strSpamEmail}";
@@ -428,7 +432,7 @@ if ($spamcount > 0)
 
     while ($updates = mysql_fetch_array($result))
     {
-        if (stristr($updates['subject'],$CONFIG['spam_email_subject']))
+        if (stristr($updates['subject'], $CONFIG['spam_email_subject']))
         {
             echo generate_row($updates);
             $spam_array[] = $updates['id'].'_'.$updates['tempid'];
