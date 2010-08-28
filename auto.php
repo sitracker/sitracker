@@ -878,7 +878,7 @@ function saction_ldapSync()
                 }
                 else
                 {
-                    debug_log ("Failed to get details for {$u}");
+                    debug_log ("Failed to get details for user: {$u}");
                 }
             }
 
@@ -886,11 +886,11 @@ function saction_ldapSync()
             // TODO reassign incidents?
             foreach ($sit_db_users AS $u)
             {
-                debug_log ("Disabling {$u->username}");
+                debug_log ("Disabling User: {$u->username}");
                 $u->disable();
             }
 
-            /** CONTACTS */
+            /* CONTACTS */
 
             $contacts = array();
             if (!empty($CONFIG["ldap_customer_group"]))
@@ -978,7 +978,7 @@ function saction_ldapSync()
 
                         if (!ldap_storeDetails('', $contactid, FALSE, TRUE, $ldap_conn, $contact_attributes))
                         {
-                            trigger_error("Failed to store details for userid {$contactid}", E_USER_WARNING);
+                            trigger_error("Failed to store details for contactid {$contactid}", E_USER_WARNING);
                             $success = FALSE;
                         }
                     }
@@ -988,7 +988,7 @@ function saction_ldapSync()
                 // TODO reassign incidents?
                 foreach ($sit_db_contacts AS $c)
                 {
-                    debug_log ("Disabling {$c->username}", TRUE);
+                    debug_log ("Disabling Contact: {$c->username}", TRUE);
                     $c->disable();
                 }
             }

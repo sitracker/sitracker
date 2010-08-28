@@ -193,6 +193,7 @@ function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $pas
     	$ldap_url = "ldaps://{$host}:{$port}";
     }
 
+    debug_log ("LDAP TYPE: {$CONFIG['ldap_type']}", TRUE);
     debug_log ("LDAP URL: {$ldap_url}", TRUE);
     $ldap_conn = @ldap_connect($ldap_url);
 
@@ -486,8 +487,8 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
     	$attributes[] = $CONFIG[strtolower("ldap_{$var}")];
     }
 
-    debug_log("ldap_getDetails Filter: {$filter}", TRUE);
-    debug_log("ldap_getDetails Base: {$base}", TRUE);
+    debug_log("LDAP Filter: {$filter}", TRUE);
+    debug_log("LDAP Base: {$base}", TRUE);
     $sr = ldap_search($ldap_conn, $base, $filter, $attributes);
     
     if (ldap_count_entries($ldap_conn, $sr) != 1)
@@ -686,8 +687,8 @@ function ldapCheckObjectExists($dn, $objectType)
     
     $ldap_conn = ldapOpen(); // Need to get an admin thread
 
-    debug_log("Filter: {$filter}", TRUE);
-    debug_log("Object: {$dn}", TRUE);
+    debug_log("LDAP Filter: {$filter}", TRUE);
+    debug_log("LDAP Object: {$dn}", TRUE);
 
     // Need to surpress this error otherwise we get an warning cascaded back to the user rather than ours 
     $sr = @ldap_read($ldap_conn, $dn, $filter);
