@@ -108,7 +108,7 @@ if (empty($displayid))
                             $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
                             mysql_query($dsql);
                             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                        break;
+                           break;
                     }
                 }
         }
@@ -117,7 +117,7 @@ if (empty($displayid))
 
 
     // Show list of items in inbox
-    $sql = "SELECT * FROM `$dbTempIncoming` ";
+    $sql = "SELECT * FROM `{$dbTempIncoming}` ";
 
     if (!empty($sort))
     {
@@ -193,7 +193,7 @@ if (empty($displayid))
                 echo " title='{$strViewAndLockHeldEmail}'>";
                 if (!empty($incoming->incident_id)) echo icon('support',16) . ' ';
                 echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);
-                if (!empty($update->bodytext)) echo '<span>'.parse_updatebody(truncate_string($update->bodytext,1024)).'</span>';
+                if (!empty($update->bodytext)) echo '<span>'.parse_updatebody(truncate_string($update->bodytext, 1024)).'</span>';
                 echo "</a>";
                 if ($num_attachments > 0) echo ' '.icon('attach', 16, '', "{$strAttachments}: {$num_attachments}");
             }
