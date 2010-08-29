@@ -134,10 +134,10 @@ class Contact extends Person {
             $sql .= "siteid, address1, address2, city, county, country, postcode, email, phone, mobile, fax, ";
             $sql .= "department, notes, dataprotection_email, dataprotection_phone, dataprotection_address, ";
             $sql .= "timestamp_added, timestamp_modified, created, createdby, modified, modifiedby, contact_source) ";
-            $sql .= "VALUES ('{$this->username}', MD5('{$this->password}'), '{$this->courtesytitle}', '{$this->forenames}', '{$this->surname}', '{$this->jobtitle}', ";
-            $sql .= "'{$this->siteid}', '{$this->address1}', '{$this->address2}', '{$this->city}', '{$this->county}', '{$this->country}', '{$this->postcode}', '{$this->email}', ";
-            $sql .= "'{$this->phone}', '{$this->mobile}', '{$this->fax}', '{$this->department}', '{$this->notes}', '{$dp['email']}', ";
-            $sql .= "'{$dp['phone']}', '{$dp['address']}', '{$now}', '{$now}', NOW(), '{$_SESSION['userid']}', NOW(), '{$_SESSION['userid']}', '{$this->source}')";
+            $sql .= "VALUES ('".cleanvar($this->username)."', MD5('".cleanvar($this->password)."'), '".cleanvar($this->courtesytitle)."', '".cleanvar($this->forenames)."', '".cleanvar($this->surname)."', '".cleanvar($this->jobtitle)."', ";
+            $sql .= "'".cleanvar($this->siteid)."', '".cleanvar($this->address1)."', '".cleanvar($this->address2)."', '".cleanvar($this->city)."', '".cleanvar($this->county)."', '".cleanvar($this->country)."', '".cleanvar($this->postcode)."', '".cleanvar($this->email)."', ";
+            $sql .= "'".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', '".cleanvar($this->department)."', '".cleanvar($this->notes)."', '".cleanvar($dp['email'])."', ";
+            $sql .= "'".cleanvar($dp['phone'])."', '".cleanvar($dp['address'])."', '".cleanvar($now)."', '".cleanvar($now)."', NOW(), '".cleanvar($_SESSION['userid'])."', NOW(), '".cleanvar($_SESSION['userid'])."', '".cleanvar($this->source)."')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -183,30 +183,30 @@ class Contact extends Person {
         {
             $dp = $this->get_dataprotection();
 
-            if (!empty($this->username)) $s[] = "username = '{$this->username}'";
-            if (!empty($this->password)) $s[] = "password = MD5('{$this->password}')";
-            if (!empty($this->jobtitle)) $s[] = "jobtitle = '{$this->jobtitle}'";
-            if (!empty($this->email)) $s[] = "email = '{$this->email}'";
-            if (!empty($this->phone)) $s[] = "phone = '{$this->phone}'";
-            if (!empty($this->mobile)) $s[] = "mobile = '{$this->mobile}'";
-            if (!empty($this->fax)) $s[] = "fax = '{$this->fax}'";
-            if (!empty($this->notify_contact)) $s[] = "notify_contactid = {$this->motify_contact}'";
-            if (!empty($this->forenames)) $s[] = "forenames = '{$this->forenames}'";
-            if (!empty($this->surname)) $s[] = "surname = '{$this->surname}'";
-            if (!empty($this->courtesytitle)) $s[] = "courtesytitle = '{$this->courtesytitle}'";
-            if (!empty($this->siteid)) $s[] = "siteid = {$this->siteid}";
-            if (!empty($this->department)) $s[] = "department = '{$this->department}'";
-            if (!empty($this->address1)) $s[] = "address1 = '{$this->address1}'";
-            if (!empty($this->address2)) $s[] = "address2 = '{$this->address2}'";
-            if (!empty($this->city)) $s[] = "city = '{$this->city}'";
-            if (!empty($this->county)) $s[] = "county = '{$this->county}'";
-            if (!empty($this->country)) $s[] = "country = '{$this->country}'";
-            if (!empty($this->postcode)) $s[] = "postcode = '{$this->postcode}'";
-            if (!empty($this->dataprotection_email)) $s[] = "dataprotection_email = '{$db['email']}'";
-            if (!empty($this->dataprotection_phone)) $s[] = "dataprotection_phone = '{$db['phone']}'";
-            if (!empty($this->dataprotection_address)) $s[] = "dataprotection_address = '{$db['address']}'";
-            if (!empty($this->notes)) $s[] = "notes = '{$this->notes}'";
-            if (!empty($this->source)) $s[] = "contact_source = '{$this->source}'";
+            if (!empty($this->username)) $s[] = "username = '".cleanvar($this->username)."'";
+            if (!empty($this->password)) $s[] = "password = MD5('".cleanvar($this->password)."')";
+            if (!empty($this->jobtitle)) $s[] = "jobtitle = '".cleanvar($this->jobtitle)."'";
+            if (!empty($this->email)) $s[] = "email = '".cleanvar($this->email)."'";
+            if (!empty($this->phone)) $s[] = "phone = '".cleanvar($this->phone)."'";
+            if (!empty($this->mobile)) $s[] = "mobile = '".cleanvar($this->mobile)."'";
+            if (!empty($this->fax)) $s[] = "fax = '".cleanvar($this->fax)."'";
+            if (!empty($this->notify_contact)) $s[] = "notify_contactid = ".cleanvar($this->motify_contact)."'";
+            if (!empty($this->forenames)) $s[] = "forenames = '".cleanvar($this->forenames)."'";
+            if (!empty($this->surname)) $s[] = "surname = '".cleanvar($this->surname)."'";
+            if (!empty($this->courtesytitle)) $s[] = "courtesytitle = '".cleanvar($this->courtesytitle)."'";
+            if (!empty($this->siteid)) $s[] = "siteid = ".cleanvar($this->siteid)."";
+            if (!empty($this->department)) $s[] = "department = '".cleanvar($this->department)."'";
+            if (!empty($this->address1)) $s[] = "address1 = '".cleanvar($this->address1)."'";
+            if (!empty($this->address2)) $s[] = "address2 = '".cleanvar($this->address2)."'";
+            if (!empty($this->city)) $s[] = "city = '".cleanvar($this->city)."'";
+            if (!empty($this->county)) $s[] = "county = '".cleanvar($this->county)."'";
+            if (!empty($this->country)) $s[] = "country = '".cleanvar($this->country)."'";
+            if (!empty($this->postcode)) $s[] = "postcode = '".cleanvar($this->postcode)."'";
+            if (!empty($this->dataprotection_email)) $s[] = "dataprotection_email = '".cleanvar($db['email'])."'";
+            if (!empty($this->dataprotection_phone)) $s[] = "dataprotection_phone = '".cleanvar($db['phone'])."'";
+            if (!empty($this->dataprotection_address)) $s[] = "dataprotection_address = '".cleanvar($db['address'])."'";
+            if (!empty($this->notes)) $s[] = "notes = '".cleanvar($this->notes)."'";
+            if (!empty($this->source)) $s[] = "contact_source = '".cleanvar($this->source)."'";
             if (!empty($this->active))
             {
                 if ($this->active) $s[] = "active = 'true'";
@@ -256,8 +256,18 @@ class Contact extends Person {
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             if (mysql_affected_rows() != 1)
             {
-                trigger_error("Failed to disable contact {$this->username}", E_USER_WARNING);
-                $toReturn = false;
+                $sql = "SELECT active FROM `{$GLOBALS['dbContacts']}` WHERE id = {$this->id} AND active = 'false'";
+                $result = mysql_query($sql);
+                if (mysql_num_rows($result) == 0)
+                {
+                    trigger_error("Failed to disable contact {$this->username}", E_USER_WARNING);
+                    $toReturn = false;
+                }
+                else
+                {
+                    // The contact was already disabled
+                    $toReturn = true;
+                }
             }
             else
             {
