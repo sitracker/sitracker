@@ -107,7 +107,7 @@ switch ($_REQUEST['action'])
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-        $title = (icon('reports', 32).! $strFeedbackForms - $strEdit");
+        $title = "{$strFeedbackForms} - {$strEdit}";
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3>{$title}</h3>";
 
