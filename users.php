@@ -70,7 +70,6 @@ if ($onlineonly === 'true' OR $filtergroup === 'allonline' )
     $sql .= "AND lastseen > '".date('Y-m-d H:i:s', $startofsession). "' ";
 }
 
-// Sorting
 if (!empty($sort))
 {
     if ($sort == "realname") $sql .= " ORDER BY realname ";
@@ -110,15 +109,11 @@ echo "<th colspan='8'></th>";
 echo "</tr>\n";
 
 // show results
-$shade = 0;
+$shade = 'shade1';
 while ($users = mysql_fetch_object($result))
 {
-    // define class for table row shading
-    if ($shade) $class = "shade1";
-    else $class = "shade2";
-
     // print HTML for rows
-    echo "<tr class='{$class}'>";
+    echo "<tr class='{$shade}'>";
     echo "<td>";
     echo "<a href='mailto:{$users->email}' title='{$strEmail} ";
     echo "{$users->realname}'>";
@@ -243,9 +238,8 @@ while ($users = mysql_fetch_object($result))
     echo "</td>";
     echo "</tr>";
 
-    // invert shade
-    if ($shade == 1) $shade = 0;
-    else $shade = 1;
+    if ($shade == 'shade1') $shade = 'shade2';
+    else $shade = 'shade1';
 }
 $total = $critical + $high + $med + $low;
 echo "<tr align='center'><td></td><td align='right'>";

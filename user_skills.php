@@ -29,7 +29,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 $sql  = "SELECT * FROM `{$dbUsers}` WHERE status!=0";  // status=0 means account disabled
 
 // sort users by realname by default
-if (empty($sort) || $sort == "realname")  $sql .= " ORDER BY realname ASC";
+if (empty($sort) OR $sort == "realname")  $sql .= " ORDER BY realname ASC";
 
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -44,22 +44,18 @@ echo "<th>{$strQualifications} / {$strSkills}</th>";
 echo "</tr>";
 
 // show results
-$shade = 0;
+$shade = 'shade1';
 while ($users = mysql_fetch_array($result))
 {
-    // define class for table row shading
-    if ($shade) $class = "shade1";
-    else $class = "shade2";
-
-    echo "<tr>";
-    echo "<td rowspan='2' class='{$class}'><a href=\"mailto:{$users['email']}\">{$users['realname']}</a><br />";
+    echo "<tr class='{$shade}'>";
+    echo "<td rowspan='2'><a href=\"mailto:{$users['email']}\">{$users['realname']}</a><br />";
     echo "{$users['title']}</td>";
-    echo "<td class='{$class}'>";
+    echo "<td>";
     if (!empty($users['qualifications'])) echo "<strong>{$users['qualifications']}</strong>";
     else echo "&nbsp;";
     echo "</td></tr>\n";
-    echo "<tr>";
-    echo "<td class='$class'>";
+    echo "<tr class='{$shade}'>";
+    echo "<td>";
     $ssql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s WHERE us.softwareid = s.id AND us.userid='{$users['id']}' ORDER BY s.name ";
     $sresult = mysql_query($ssql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -98,14 +94,11 @@ while ($users = mysql_fetch_array($result))
 
     echo "</td>";
     echo "</tr>\n";
-    // invert shade
-    if ($shade == 1) $shade = 0;
-    else $shade = 1;
+
+    if ($shade == 'shade1') $shade = 'shade2';
+    else $shade = 'shade1';
 }
 echo "</table>\n";
-
-// free result and disconnect
-mysql_free_result($result);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

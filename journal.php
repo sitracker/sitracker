@@ -61,13 +61,13 @@ if (!empty($sort))
     switch ($sort)
     {
         case 'userid':
-            $sql .= " ORDER BY userid $sortorder";
+            $sql .= " ORDER BY userid {$sortorder}";
             break;
         case 'timestamp':
-            $sql .= " ORDER BY timestamp $sortorder";
+            $sql .= " ORDER BY timestamp {$sortorder}";
             break;
         case 'refid':
-            $sql .= " ORDER BY c.surname $sortorder, c.forenames $sortorder";
+            $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
             break;
         default:
             $sql .= " ORDER BY timestamp DESC";
@@ -78,7 +78,7 @@ else
 {
     $sql .= " ORDER BY timestamp DESC";
 }
-$sql .= " LIMIT $offset, $perpage ";
+$sql .= " LIMIT {$offset}, {$perpage} ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -110,13 +110,10 @@ if ($journal_count >= 1)
     echo colheader('action',$strOperation);
     echo colheader('type',$strType);
     echo "</tr>\n";
-    $shade = 0;
+    $shade = 'shade1';
     while ($journal = mysql_fetch_object($result))
     {
-        // define class for table row shading
-        if ($shade) $class = "shade1";
-        else $class = "shade2";
-        echo "<tr class='$class'>";
+        echo "<tr class='{$shade}'>";
         echo "<td>".user_realname($journal->userid,TRUE)."</td>";
         echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($journal->timestamp))."</td>";
         echo "<td>{$journal->event}</td>";
@@ -137,9 +134,9 @@ if ($journal_count >= 1)
         echo "</td>";
         echo "<td><a href='{$_SERVER['PHP_SELF']}?type={$journal->journaltype}'>{$journaltype[$journal->journaltype]}</a></td>";
         echo "</tr>\n";
-        // invert shade
-        if ($shade == 1) $shade = 0;
-        else $shade = 1;
+
+        if ($shade == 'shade1') $shade = 'shade2';
+        else $shade = 'shade1';
     }
     echo "</table>\n";
 
