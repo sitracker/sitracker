@@ -164,8 +164,8 @@ elseif ($action == "add")
     {
         if ($owner == '') $owner = 0;
         $sql  = "INSERT INTO `{$dbSites}` (name, department, address1, address2, city, county, country, postcode, telephone, fax, email, websiteurl, notes, typeid, owner) ";
-        $sql .= "VALUES ('$name', '$department' ,'$address1', '$address2', '$city', '$county', '$country', '$postcode', ";
-        $sql .= "'$telephone', '$fax', '$email', '$websiteurl', '$notes', '$typeid','$owner')";
+        $sql .= "VALUES ('{$name}', '{$department}','{$address1}', '{$address2}', '{$city}', '{$county}', '{$country}', '{$postcode}', ";
+        $sql .= "'{$telephone}', '{$fax}', '{$email}', '{$websiteurl}', '{$notes}', '{$typeid}', '{$owner}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $id = mysql_insert_id();
@@ -184,7 +184,6 @@ elseif ($action == "add")
             trigger('TRIGGER_NEW_SITE', array('siteid' => $id, 'userid' => $sit[2]));
             html_redirect("site_details.php?id={$id}");
         }
-
     }
     else
     {

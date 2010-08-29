@@ -52,7 +52,6 @@ elseif ($action == "edit")
 }
 elseif ($action == "update")
 {
-    // External Variables
     // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
     $incident_quantity = intval(cleanvar($_POST['incident_pool']));
     $name = cleanvar($_POST['name']);
@@ -95,7 +94,6 @@ elseif ($action == "update")
         {
             $licenserx = '0';
         }
-        // update site
 
         if ($active == 'true')
         {
@@ -106,9 +104,9 @@ elseif ($action == "update")
             $activeStr = 'false';
         }
 
-        $sql = "UPDATE `{$dbSites}` SET name='$name', department='$department', address1='$address1', address2='$address2', city='$city', ";
-        $sql .= "county='$county', postcode='$postcode', country='$country', telephone='$telephone', fax='$fax', email='$email', ";
-        $sql .= "websiteurl='$websiteurl', notes='$notes', typeid='$typeid', owner='$owner', freesupport='$incident_quantity', active='$activeStr' WHERE id='$site' LIMIT 1";
+        $sql = "UPDATE `{$dbSites}` SET name='{$name}', department='{$department}', address1='{$address1}', address2='{$address2}', city='{$city}', ";
+        $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
+        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
 
         // licenserx='$licenserx'
         $result = mysql_query($sql);

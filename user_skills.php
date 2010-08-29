@@ -90,7 +90,7 @@ while ($users = mysql_fetch_array($result))
         echo "&nbsp;";
     }
 
-    if ($users['id']==$sit[2]) echo " <a href='edit_user_skills.php'>{$strMySkills}</a>";
+    if ($users['id'] == $sit[2]) echo " <a href='edit_user_skills.php'>{$strMySkills}</a>";
 
     echo "</td>";
     echo "</tr>\n";
