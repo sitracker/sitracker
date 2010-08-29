@@ -50,12 +50,10 @@ elseif ($_REQUEST['win'] == 'jump')
         }
         else
         {
-            // echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='{$_SERVER['HTTP_REFERER']}';\">{$strPleaseWaitRedirect}</body></html>";
             echo "</head><body onload=\"\"><a href=\"{$_SERVER['HTTP_REFERER']}\"{$strPleaseWaitRedirect}</a>";
             echo "<script type='text/javascript'>\n//<![CDATA[\n";
             echo "var popwin = incident_details_window($incidentid,'win', true);\n";
             echo "if (!popwin) alert('{$strDidYourBrowserBlockPopupWindow}');\n";
-            //echo "else window.location='{$_SERVER['HTTP_REFERER']}';\n";
             echo "else history.go(-1);\n";
             echo "\n//]]>\n</script>\n";
             echo "</body></html>";
@@ -83,7 +81,7 @@ elseif ($_REQUEST['win'] == 'holdingview')
 {
     $_REQUEST['win'] = 'incomingview';
     $title = $strIncoming;
-    $incidentid='';
+    $incidentid = '';
 }
 else
 {
