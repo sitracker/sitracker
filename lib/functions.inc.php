@@ -958,6 +958,32 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
 
 /**
+ * Shows errors from a form, if any
+ * @author Kieran Hogg
+ * @return string. HTML of the form errors stored in the users session
+ */
+function show_form_errors($formname)
+{
+    if ($_SESSION['formerrors'][$formname])
+    {
+        foreach ($_SESSION['formerrors'][$formname] as $error)
+        {
+
+            if (substr(trim($error), 0, 1) != "<")
+            {
+                $html .= user_alert($error, E_USER_ERROR);
+            }
+            else
+            {
+                $html .= $error;
+            }
+        }
+    }
+    return $html;
+}
+
+
+/**
  * Cleans form errors
  * @author Kieran Hogg
  * @return nothing

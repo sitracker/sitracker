@@ -183,29 +183,27 @@ else
             <th>{$strType}</th>
             <th>{$strStatus}</th>
             </tr>";
-            $shade = 0;
+            $shade = 'shade1';
             while ($results = mysql_fetch_array($result))
             {
-                // define class for table row shading
-                if ($shade) $class = "shade1";
-                else $class = "shade2";
-                ?>
-                <tr class='<?php echo $class; ?>'>
-                <td align='center'  width='100'><?php echo $results["id"] ?> (<?php if ($results["externalid"] == '') echo $strNone; else echo $results["externalid"] ?>)</td>
-                <td width='150'><a href="javascript:incident_details_window('<?php echo $results["id"] ?>')"><?php echo $results["title"] ?></a></td>
-                <td align='center' width='100'><?php echo $results['forenames'].' '.$results['surname']; ?></td>
-                <td align='center' width='100'><?php echo site_name($results['siteid']) ?></td>
-                <td align='center' width='50'><?php echo $results['servicelevel']."<br />".priority_name($results["priority"]); ?></td>
-                <td align='center' width='100'><?php echo user_realname($results['owner'],TRUE) ?></td>
-                <td align='center' width='150'><?php echo ldate($CONFIG['dateformat_datetime'], $results["opened"]); ?></td>
-                <td align='center' width='150'><?php echo ldate($CONFIG['dateformat_datetime'], $results["lastupdated"]); ?></td>
-                <td align='center' width='50'><?php echo $results["type"] ?></td>
-                <td align='center' width='50'><?php echo incidentstatus_name($results["status"]); ?></td>
-                </tr>
-                <?php
-                // invert shade
-                if ($shade == 1) $shade = 0;
-                else $shade = 1;
+                echo "<tr class='{$shade}'>";
+                echo "<td align='center'  width='100'>{$results['id']} (";
+                if ($results["externalid"] == '') echo $strNone;
+                else echo $results["externalid"];
+                echo "</td>";
+                echo "<td width='150'><a href=\"javascript:incident_details_window('{$results['id']}')\">{$results['title']}</a></td>";
+                echo "<td align='center' width='100'>{$results['forenames']}' '{$results['surname']}</td>";
+                echo "<td align='center' width='100'>".site_name($results['siteid'])."</td>";
+                echo "<td align='center' width='50'>{$results['servicelevel']}<br />".priority_name($results["priority"])."</td>";
+                echo "<td align='center' width='100'>".user_realname($results['owner'], TRUE)."</td>";
+                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results["opened"])."</td>";
+                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results["lastupdated"])."></td>";
+                echo "<td align='center' width='50'>{$results['type']}</td>";
+                echo "<td align='center' width='50'>".incidentstatus_name($results["status"])."</td>";
+                echo "</tr>";
+
+                if ($shade == 'shade1') $shade = 'shade2';
+                else $shade = 'shade1';
             }
         }
         echo "</table>";

@@ -162,15 +162,14 @@ function get_service_percentage($maintid)
  * @author Ivan Lucas
  * @param int $contractid
  * @return Whether the contract should be billed
- * @retval bool TRUE:    Yes timed. should be billed
- * @retval bool FALSE:   No, not timed. Should not be billed
+ * @return bool TRUE: Yes timed. should be billed, FALSE: No, not timed. Should not be billed 
  */
 function is_contract_timed($contractid)
 {
     global $dbMaintenance, $dbServiceLevels;
     $timed = FALSE;
-    $sql = "SELECT timed FROM `$dbMaintenance` AS m, `$dbServiceLevels` AS sl ";
-    $sql .= "WHERE m.servicelevelid = sl.id AND m.id = $contractid";
+    $sql = "SELECT timed FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl ";
+    $sql .= "WHERE m.servicelevelid = sl.id AND m.id = {$contractid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -206,13 +205,13 @@ function update_last_billed_time($serviceid, $date)
         mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysql_error(), E_USER_ERROR);
             $rtnvalue = FALSE;
         }
 
         if (mysql_affected_rows() < 1)
         {
-            trigger_error("Approval failed",E_USER_ERROR);
+            trigger_error("Approval failed", E_USER_ERROR);
             $rtnvalue = FALSE;
         }
     }
@@ -252,6 +251,8 @@ function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 1)
 /**
  * Function to get an array of all billing multipliers for a billing matrix
  * @author Paul Heaney
+ * @param int $matrixid ID of the billing matrix being used, defaults to 1
+ * @return array - All available billing multipliers for the specified Matrix
  */
 function get_all_available_multipliers($matrixid=1)
 {
@@ -282,8 +283,8 @@ function get_all_available_multipliers($matrixid=1)
 /**
  * Function to find the most applicable unit rate for a particular contract
  * @author Paul Heaney
- * @param $contractid - The contract id
- * @param $date UNIX timestamp. The function will look for service that is current as of this timestamp
+ * @param int $contractid - The contract id
+ * @param string $date UNIX timestamp. The function will look for service that is current as of this timestamp
  * @return int the unit rate, -1 if non found
  */
 function get_unit_rate($contractid, $date='')
@@ -1381,9 +1382,9 @@ function make_incident_billing_array($incidentid, $totals=TRUE)
 
     $billing = get_incident_billing_details($incidentid);
 
-// echo "<pre>";
-// print_r($billing);
-// echo "</pre><hr />";
+    // echo "<pre>";
+    // print_r($billing);
+    // echo "</pre><hr />";
 
     $sql = "SELECT servicelevel, priority FROM `{$GLOBALS['dbIncidents']}` WHERE id = {$incidentid}";
     $result = mysql_query($sql);

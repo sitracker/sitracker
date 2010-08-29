@@ -137,7 +137,6 @@ elseif ($_REQUEST['mode'] == 'report')
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $numrows = mysql_num_rows($result);
 
-    // FIXME strip slashes from output
     $html .= "<h2>".icon('reports', 32)." {$strCustomerExport}</h2>";
     $html .= "<p align='center'>".sprintf($strThisReportShowsContactForSelectedSites, $numrows)."</p>";
     $html .= "<table width='99%' align='center'>";

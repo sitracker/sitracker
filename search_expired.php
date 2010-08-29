@@ -82,9 +82,6 @@ else
         else $sql .= "AND term != 'yes'";
         $sql .= "ORDER BY expirydate ASC";
 
-        // show SQL string for debugging
-        //echo $sql;
-
         // connect to database
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
