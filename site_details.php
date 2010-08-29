@@ -345,7 +345,7 @@ if (user_permission($sit[2],19)) // View contracts
             }
             echo "</td>";
             echo "</tr>";
-            // invert shade
+
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
