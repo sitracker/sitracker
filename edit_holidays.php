@@ -55,8 +55,7 @@ switch ($_REQUEST['action'])
         }
         header("Location: edit_holidays.php");
         exit;
-    break;
-
+        break;
 
     case 'form':
     default:
@@ -112,6 +111,6 @@ switch ($_REQUEST['action'])
         echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
         echo "</form>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-    break;
+        break;
 }
 ?>

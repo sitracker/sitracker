@@ -34,7 +34,6 @@ $SYSLANG = $_SESSION['syslang'];
 switch ($action)
 {
     case 'edittask':
-        // External variables
         $name = cleanvar($_REQUEST['name']);
         $description = cleanvar($_REQUEST['description']);
         $priority = cleanvar($_REQUEST['priority']);
@@ -127,10 +126,9 @@ switch ($action)
             $sql .= "WHERE id='{$id}' LIMIT 1";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            // if (mysql_affected_rows() < 1) trigger_error("Task update failed",E_USER_ERROR);
 
             // Add a note to say what changed (if required)
-            $bodytext='';
+            $bodytext = '';
             if ($name != $old_name)
             {
                 $bodytext .= "{$SYSLANG['strName']}: {$old_name} -&gt; [b]{$name}[/b]\n";
@@ -310,14 +308,14 @@ switch ($action)
         break;
     case 'delete':
         $sql = "DELETE FROM `{$dbTasks}` ";
-        $sql .= "WHERE id='$id' LIMIT 1";
+        $sql .= "WHERE id='{$id}' LIMIT 1";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbNotes}` ";
-        $sql .= "WHERE link=10 AND refid='$id' ";
+        $sql .= "WHERE link=10 AND refid='{$id}' ";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         html_redirect("tasks.php", TRUE);
         break;
@@ -328,7 +326,7 @@ switch ($action)
         echo "$title</h2>";
         $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
             while ($task = mysql_fetch_object($result))
