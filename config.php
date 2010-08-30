@@ -34,7 +34,7 @@ $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 $userid = cleanvar($_REQUEST['userid']);
 
-$edituserpermission = user_permission($sit[2],23); // edit user
+$edituserpermission = user_permission($sit[2], 23); // edit user
 
 if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
 {
@@ -128,7 +128,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 
                 case 'number':
                     $value = intval($value);
-                break;
+                    break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
             if (substr($value, 0, 6) == 'array(')
@@ -136,6 +136,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                 eval("\$val = $value;");
                 $value = $val;
             }
+
             if (empty($userid))
             {
                 $CONFIG[$catvar] = $value;

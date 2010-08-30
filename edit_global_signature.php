@@ -69,7 +69,7 @@ if (!empty($signature))
 
             journal(CFG_LOGGING_NORMAL, 'Global Signature added', "A new global signature was added", CFG_JOURNAL_ADMIN, 0);
             html_redirect("edit_global_signature.php");
-        break;
+            break;
 
         case 'edit':
             $sql = "UPDATE `{$dbEmailSig}` SET signature = '$signature' WHERE id = ".$sig_id;
@@ -78,7 +78,7 @@ if (!empty($signature))
 
             journal(CFG_LOGGING_NORMAL, 'Global Signature updated', "A global signature was updated", CFG_JOURNAL_ADMIN, 0);
             html_redirect("edit_global_signature.php");
-      break;
+          break;
   }
 
 }
@@ -135,33 +135,30 @@ elseif (!empty($action))
             echo "</table>";
             echo "<p align='center'><input name='submit' type='submit' value=\"{$strAdd}\" /></p>";
             echo "</form>\n";
-        break;
+            break;
 
         case 'delete':
             delete_signature($sig_id);
-        break;
+            break;
 
         case 'edit':
             echo "<h2>".icon('edit', 32)." {$strGlobalSignature}: {$strEdit}</h2>";
-            ?>
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-            <input type="hidden" name="formaction" value="edit" />
-            <input type="hidden" name="sig_id" value="<?php echo $sig_id ?>" />
-            <table class='vertical' width='50%'>
-            <tr>
-            <?php
+            echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
+            echo "<input type='hidden' name='formaction' value='edit' />";
+            echo "<input type='hidden' name='sig_id' value='{$sig_id}' />";
+            echo "<table class='vertical' width='50%'>";
+            echo "<tr>";
             echo "<td align='right' valign='top' class='shade1'><strong>{$strGlobalSignature}</strong>:<br />\n";
             echo "{$strGlobalSignatureDescription}<br /><br />";
             echo "$strGlobalSignatureRemember";
-            ?>
-            </td>
-            <td class="shade1"><textarea name="signature" rows="15" cols="65"><?php echo get_globalsignature($sig_id); ?></textarea></td>
-            </tr>
-            </table>
-            <?php
+            echo "</td>";
+            echo "<td class='shade1'><textarea name='signature' rows='15' cols='65'>".get_globalsignature($sig_id)."</textarea></td>";
+            echo "</tr>";
+            echo "</table>";
+            
             echo "<p align='center'><input name='submit' type='submit' value=\"{$strSave}\" /></p>";
             echo "</form>\n";
-        break;
+            break;
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
