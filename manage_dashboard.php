@@ -71,11 +71,8 @@ switch ($_REQUEST['action'])
         {
             if (beginsWith($file, "dashboard_") && endsWith($file, ".php"))
             {
-                //echo "file name ".$file."<br />";
                 if (empty($dashboard[substr($file, 10, strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
                 {
-                    //echo "file name ".$file." - ".substr($file, 10, strlen($file)-14)."<br />";
-                    //$html .= "echo "<option value='{$row->id}'>$row->realname</option>\n";";
                     $html .= "<option value='".substr($file, 10, strlen($file)-14)."'>".substr($file, 10, strlen($file)-14)." ({$file})</option>";
                 }
             }

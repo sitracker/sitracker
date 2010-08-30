@@ -122,7 +122,7 @@ if (is_array($CONFIG['plugins']) AND $CONFIG['plugins'][0] != '' AND count($CONF
     {
         echo "<p><strong>$plugin</strong>";
         if ($PLUGININFO[$plugin]['version'] != '') echo " version ".number_format($PLUGININFO[$plugin]['version'], 2)."<br />";
-        else echo "- <span class='error'>$strFailed</span><br />";
+        else echo "- <span class='error'>{$strFailed}</span><br />";
 
         if ($PLUGININFO[$plugin]['description'] != '') echo "{$PLUGININFO[$plugin]['description']}<br />";
         if ($PLUGININFO[$plugin]['author'] != '') echo "{$strAuthor}: {$PLUGININFO[$plugin]['author']}<br />";

@@ -28,13 +28,13 @@ $incidentid = urldecode(mysql_real_escape_string($hashvars['2']));
 unset($errorfields);
 
 /**
-* @author Ivan Lucas
-* @param string $name. Field name
-* @param string $required. 'true' or 'false' is the field mandatory?
-* @param string $options. delimited list of options
-* @param string $answer (optional).
-* @returns string HTML
-*/
+ * @author Ivan Lucas
+ * @param string $name. Field name
+ * @param string $required. 'true' or 'false' is the field mandatory?
+ * @param string $options. delimited list of options
+ * @param string $answer (optional).
+ * @returns string HTML
+ */
 function feedback_html_rating($name, $required, $options, $answer='')
 {
     global $CONFIG;
@@ -93,12 +93,12 @@ function feedback_html_rating($name, $required, $options, $answer='')
 
 
 /**
-* @author Ivan Lucas
-* @param string $name. Field name
-* @param string $required. 'true' or 'false' is the field mandatory?
-* @param string $options. delimited list of options
-* @param string $answer (optional).
-*/
+ * @author Ivan Lucas
+ * @param string $name. Field name
+ * @param string $required. 'true' or 'false' is the field mandatory?
+ * @param string $options. delimited list of options
+ * @param string $answer (optional).
+ */
 function feedback_html_options($name, $required, $options, $answer='')
 {
     $option_list = explode('{@}', $options);
@@ -136,11 +136,11 @@ function feedback_html_options($name, $required, $options, $answer='')
 
 
 /**
-* @author Ivan Lucas
-* @param string $name. Field name
-* @param string $required. 'true' or 'false' is the field mandatory?
-* @param string $options. delimited list of options
-*/
+ * @author Ivan Lucas
+ * @param string $name. Field name
+ * @param string $required. 'true' or 'false' is the field mandatory?
+ * @param string $options. delimited list of options
+ */
 function feedback_html_multioptions($name, $required, $options)
 {
     $option_list = explode('{@}', $options);
@@ -168,12 +168,12 @@ function feedback_html_multioptions($name, $required, $options)
 
 
 /**
-* @author Ivan Lucas
-* @param string $name. Field name
-* @param string $required. 'true' or 'false' is the field mandatory?
-* @param string $options. delimited list of options
-* @param string $answer (optional).
-*/
+ * @author Ivan Lucas
+ * @param string $name. Field name
+ * @param string $required. 'true' or 'false' is the field mandatory?
+ * @param string $options. delimited list of options
+ * @param string $answer (optional).
+ */
 function feedback_html_text($name, $required, $options, $answer='')
 {
     $option_list = explode('{@}', $options);
@@ -194,12 +194,12 @@ function feedback_html_text($name, $required, $options, $answer='')
 
 
 /**
-* @author Ivan Lucas
-* @param string $name. Field name
-* @param string $required. 'true' or 'false' is the field mandatory?
-* @param string $options. delimited list of options
-* @param string $answer (optional).
-*/
+ * @author Ivan Lucas
+ * @param string $name. Field name
+ * @param string $required. 'true' or 'false' is the field mandatory?
+ * @param string $options. delimited list of options
+ * @param string $answer (optional).
+ */
 function feedback_html_question($type, $name, $required, $options, $answer='')
 {
     $options = nl2br(trim($options));
@@ -265,7 +265,7 @@ switch ($_REQUEST['action'])
             $options = str_replace('<br/>', '{@}', $options);
             $option_list = explode('{@}', $options);
 
-            $fieldname="Q{$question->id}";
+            $fieldname = "Q{$question->id}";
 
             // Check required fields are filled
             if ($question->required == 'true' AND (strlen($_POST[$fieldname]) < 1 OR
@@ -304,19 +304,19 @@ switch ($_REQUEST['action'])
             $debugtext .= "_POST[$fieldname]={$_POST[$fieldname]}\n";
 
             // Put the SQL to be executed into an array to execute later
-            $rsql[] = "INSERT INTO `{$dbFeedbackResults}` (respondentid, questionid, result, resulttext) VALUES ('$respondentid', '$qid','$qresult', '$qresulttext')";
+            $rsql[] = "INSERT INTO `{$dbFeedbackResults}` (respondentid, questionid, result, resulttext) VALUES ('{$respondentid}', '{$qid}','{$qresult}', '{$qresulttext}')";
             // Store the field in an array
-            $fieldarray[$question->id]=$_POST[$fieldname];
+            $fieldarray[$question->id] = $_POST[$fieldname];
         }
 
         if (count($errorfields) >= 1)
         {
-            $error=implode(",",$errorfields);
-            $fielddata=base64_encode(serialize($fieldarray));
+            $error = implode(",",$errorfields);
+            $fielddata = base64_encode(serialize($fieldarray));
             //echo "<p>Error: $errortext</p>";
             //print_r($errorfields);
             //exit;
-            $errortext=urlencode($fielddata.','.$error);
+            $errortext = urlencode($fielddata.','.$error);
             echo "<?";
             echo "xml version=\"1.0\" encoding=\"\"?";
             echo ">";
@@ -368,7 +368,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
         echo "<h4>{$strThankYouCompleteForm}</h4>";
         //echo "<!-- \n {$sqltext} \n\n\n {$debugtext} -->";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-    break;
+        break;
 
     default:
         if ($_REQUEST['mode']!='bare') include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -388,7 +388,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
 
         if ($waitingforms < 1)
         {
-            echo "<h3><span class=\"failure\">{$strError}</span></h3>";
+            echo "<h3><span class='failure'>{$strError}</span></h3>";
             echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
             echo "\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n";
         }
@@ -405,7 +405,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
             }
             else
             {
-                $reqd=0;
+                $reqd = 0;
                 while ($form = mysql_fetch_object($result))
                 {
                     echo "<form action='feedback.php' method='post'>\n";
@@ -424,7 +424,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
                     $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
                     $qsql .= "WHERE formid='{$form->id}' ";
                     $qsql .= "ORDER BY taborder ASC";
-                    $qresult=mysql_query($qsql);
+                    $qresult = mysql_query($qsql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     while ($question = mysql_fetch_object($qresult))
                     {
@@ -451,7 +451,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
                         }
                         else
                         {
-                            $answer='';
+                            $answer = '';
                         }
 
                         echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
@@ -481,7 +481,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
         else echo "\n</div>\n</body>\n</html>\n";
-    break;
+        break;
 }
 
 ?>

@@ -320,6 +320,7 @@ function iso_8601_date($timestamp)
     return $date_mod;
 }
 
+
 /**
  * Decide whether the time is during a public holiday
  * @author Paul Heaney
@@ -377,9 +378,6 @@ function get_public_holidays($startdate, $enddate)
 }
 
 
-
-
-
 /**
  * Takes a UNIX Timestamp and returns a string with a pretty readable date
  * @param int $date
@@ -419,6 +417,7 @@ function readable_date($date, $lang = 'user')
     }
     return $datestring;
 }
+
 
 /**
  * @author Kieran Hogg
