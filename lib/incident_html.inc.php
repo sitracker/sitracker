@@ -16,7 +16,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 /**
- * prints the HTML for a drop down list of incident status names (EXCLUDING 'CLOSED'),
+ * Prints the HTML for a drop down list of incident status names (EXCLUDING 'CLOSED'),
  * with the given name and with the given id selected.
  * @author Ivan Lucas
  * @param string $name. Text to use for the HTML select name and id attributes
@@ -173,7 +173,6 @@ function incident_drop_down($name, $id, $contactid = 0)
         $html = "<select id='{$name}' name='{$name}' {$select}>\n";
         while ($incident = mysql_fetch_object($result))
         {
-            // FIXME unfinished
             $html .= "<option value='{$incident->id}'>[{$incident->id}] - ";
             $html .= "{$incident->title}</option>";
         }
