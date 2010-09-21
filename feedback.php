@@ -47,7 +47,7 @@ function feedback_html_rating($name, $required, $options, $answer='')
 
     $colwidth = round(100/$score_max);
 
-    $html .= "<table class='feedback'>\n";
+    $html = "<table class='feedback'>\n";
     if (empty($promptleft) == FALSE OR empty($promptright) == FALSE)
     {
         $html .= "<tr>";
@@ -66,7 +66,8 @@ function feedback_html_rating($name, $required, $options, $answer='')
         }
         $html .= "</tr>\n";
     }
-    echo "<tr>";
+
+    $html .= "<tr>\n";
     for ($c = 1; $c <= $score_max; $c++)
     {
         $html .= "<td width='{$colwidth}%' style='text-align: center;'><input type='radio' name='{$name}' value='{$c}' ";
@@ -76,6 +77,7 @@ function feedback_html_rating($name, $required, $options, $answer='')
         }
         $html .= " />$c</td>\n";
     }
+
     if ($required != 'true')
     {
         $html .= "<td><input type='radio' name='{$name}' value='0' ";
