@@ -42,6 +42,7 @@ include_once (APPLICATION_LIBPATH . 'sla.inc.php');
 include_once (APPLICATION_LIBPATH . 'ftp.inc.php');
 include_once (APPLICATION_LIBPATH . 'tags.inc.php');
 include_once (APPLICATION_LIBPATH . 'string.inc.php');
+include_once (APPLICATION_LIBPATH . 'html_drop_downs.inc.php');
 include_once (APPLICATION_LIBPATH . 'html.inc.php');
 include_once (APPLICATION_LIBPATH . 'incident_html.inc.php');
 include_once (APPLICATION_LIBPATH . 'tasks.inc.php');

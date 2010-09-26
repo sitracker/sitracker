@@ -65,16 +65,14 @@ while ($incidents = mysql_fetch_array($result))
             $timetonextaction_string = "<strong>{$strNow}</strong>";
         }
     }
-    // Make a readable site name
-    $site = site_name($incidents['siteid']);
 
     // Used to store the ellipsis if shortened, we do htmlspecialchars on $site and don't want this to be converted
     // If you do &hellips; becomes &amp;hellips; 
     $postsitetext = '';
     
-    if (strlen($site) > 30)
+    if (strlen($incidents['site']) > 30)
     {
-        $site = mb_substr($site, 0, 30, 'UTF-8');
+        $incidents['site'] = mb_substr($incidents['site'], 0, 30, 'UTF-8');
         $postsitetext .= $strEllipsis;
     }
 
@@ -281,7 +279,7 @@ while ($incidents = mysql_fetch_array($result))
     echo "<td>";
     echo "<a href='contact_details.php?id={$incidents['contactid']}' class='info'><span>{$incidents['phone']}<br />";
     echo "{$incidents['email']}</span>{$incidents['forenames']} {$incidents['surname']}</a><br />";
-    echo "{$site} {$postsitetext} </td>";
+    echo "{$incidents['site']} {$postsitetext} </td>";
 
     echo "<td align='center'>";
     //FIXME functionise

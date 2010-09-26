@@ -74,11 +74,12 @@ if (mysql_num_rows($epresult) >= 1)
 }
 
 // Generic bit of SQL, common to both queue types
-$selectsql = "SELECT i.id, escalationpath, externalid, title, owner, towner, priority, status, closingstatus, siteid, c.id AS contactid, forenames, surname, phone, email, i.maintenanceid, ";
+$selectsql = "SELECT i.id, escalationpath, externalid, title, i.owner, towner, priority, status, closingstatus, siteid, s.name AS site, c.id AS contactid, forenames, surname, ";
+$selectsql .= "IF(c.phone IS NULL, s.telephone, c.phone) AS phone, IF(c.email IS NULL, s.email, c.email) AS email, i.maintenanceid, ";
 $selectsql .= "servicelevel, softwareid, lastupdated, timeofnextaction, ";
 $selectsql .= "(timeofnextaction - $now) AS timetonextaction, opened, ($now - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
 $selectsql .= "($now - lastupdated) AS timesincelastupdate ";
-$selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS pr ";
+$selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS pr, `{$dbSites}` AS s ";
 
 echo "<div id='incidentqueues'>";
 
@@ -97,9 +98,10 @@ switch ($type)
             if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
             else $user = $sit[2]; // force to current user if username not found
         }
-        $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id ";
-        $sql .= "AND owner > 0 ";  // We always need to have an owner which is not sit
-        if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";
+        
+        $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id AND c.siteid = s.id ";
+        $sql .= "AND i.owner > 0 ";  // We always need to have an owner which is not sit
+        if ($user != 'all') $sql .= "AND (i.owner='{$user}' OR i.towner='{$user}') ";
         if (!empty($softwareid)) $sql .= "AND softwareid='$softwareid' ";
 
         if (!empty($maintexclude)) $sql .= "AND i.maintenanceid != '{$maintexclude}' ";
@@ -185,7 +187,7 @@ switch ($type)
                     break;
             }
         }
-
+echo $sql;
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $rowcount = mysql_num_rows($result);
@@ -279,7 +281,7 @@ switch ($type)
 
             // Create SQL for chosen queue
             $sql = $selectsql . "WHERE contact=c.id AND i.priority=pr.id ";
-            $sql .= "AND owner!='{$user}' AND towner!='{$user}' AND owner > 0 ";
+            $sql .= "AND i.owner!='{$user}' AND towner!='{$user}' AND i.owner > 0 ";
             $sql .= "AND $incsql ";
 
             switch ($queue)
