@@ -102,8 +102,8 @@ Copyright &copy;  2006-2007 Everaldo Coelho. Licensed under the LGPLv2</p>
 <p align='center'>Icons from the <a href='http://www.oxygen-icons.org/'>Oxygen Project</a><br />
 Copyright &copy; 2008 The Oxygen Project. Licensed under the LGPLv2</p>
 
-</td></tr>
 <?php
+echo "</td></tr>";
 echo "<tr><td class='shade1' colspan='2'>{$strLicense}:</td></tr>";
 echo "<tr><td class='shade2' colspan='2'>";
 echo "<textarea cols='100%' rows='10' readonly='readonly' style='background: transparent;'>";
@@ -127,8 +127,16 @@ if (is_array($CONFIG['plugins']) AND $CONFIG['plugins'][0] != '' AND count($CONF
         if ($PLUGININFO[$plugin]['description'] != '') echo "{$PLUGININFO[$plugin]['description']}<br />";
         if ($PLUGININFO[$plugin]['author'] != '') echo "{$strAuthor}: {$PLUGININFO[$plugin]['author']}<br />";
         if ($PLUGININFO[$plugin]['legal'] != '') echo "{$PLUGININFO[$plugin]['legal']}<br />";
-        if ($PLUGININFO[$plugin]['sitminversion'] > $application_version) echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitminversion']} or later</strong><br />";
-        if (!empty($PLUGININFO[$plugin]['sitmaxversion']) AND $PLUGININFO[$plugin]['sitmaxversion'] < $application_version) echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitmaxversion']} or earlier</strong><br />";
+
+        if ($PLUGININFO[$plugin]['sitminversion'] > $application_version)
+        {
+            echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitminversion']} or later</strong><br />";
+        }
+
+        if (!empty($PLUGININFO[$plugin]['sitmaxversion']) AND $PLUGININFO[$plugin]['sitmaxversion'] < $application_version)
+        {
+            echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitmaxversion']} or earlier</strong><br />";
+        }
         echo "</p>";
     }
 }
