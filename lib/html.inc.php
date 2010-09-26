@@ -2944,8 +2944,8 @@ function show_edit_site($site, $mode='internal')
         $html .= "<tr><th>{$GLOBALS['strPostcode']}:</th><td><input maxlength='255' name='postcode' size='40' value='{$siterow['postcode']}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strCountry']}:</th><td>".country_drop_down('country', $siterow['country'])."</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strTelephone']}:</th><td>";
-        $html .= "<input class='required' maxlength='255' name='telephone' size='40' value='{$siterow['telephone']}' />";
-        $html .= "<span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
+        $html .= "<input maxlength='255' name='telephone' size='40' value='{$siterow['telephone']}' />";
+        $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strFax']}:</th><td>";
         $html .= "<input maxlength='255' name='fax' size='40' value='{$siterow['fax']}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strEmail']}:</th><td>";
