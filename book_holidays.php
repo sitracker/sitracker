@@ -26,7 +26,7 @@ $step = $_REQUEST['step'];
 $date = cleanvar($_REQUEST['date']);
 if (!empty($_REQUEST['user']) AND user_permission($sit[2], 68))
 {
-    $user = cleanvar($_REQUEST['user']); // Manage holidays
+    $user = intval(cleanvar($_REQUEST['user'])); // Manage holidays
 }
 else
 {
@@ -291,7 +291,7 @@ elseif ($step == '1')
 }
 else
 {
-    $approvaluser = cleanvar($_REQUEST['approvaluser']);
+    $approvaluser = intval(cleanvar($_REQUEST['approvaluser']));
     $memo = cleanvar($_REQUEST['memo']);
     $type = cleanvar($_REQUEST['type']);
     $numberofdays = cleanvar($_REQUEST['numberofdays']);
