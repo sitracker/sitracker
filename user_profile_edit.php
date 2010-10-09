@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$mode = $_REQUEST['mode'];
+$mode = cleanvar($_REQUEST['mode']);
 $edituserpermission = user_permission($sit[2],23); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
@@ -249,9 +249,9 @@ elseif ($mode == 'save')
 {
     // External variables
     $user = new User();
-    $user->id = intval(cleanvar($_POST['userid']));
+    $user->id = clean_int($_POST['userid']);
 
-    $edituserid = intval(cleanvar($_POST['userid'])); // remove when tested
+    $edituserid = clean_int($_POST['userid']); // remove when tested
 
     $user->message = cleanvar($_POST['message']);
     $user->realname = cleanvar($_POST['realname']);
@@ -270,8 +270,8 @@ elseif ($mode == 'save')
 
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
-    $user->roleid = intval(cleanvar($_POST['roleid']));
-    $user->holiday_entitlement = intval(cleanvar($_POST['holiday_entitlement']));
+    $user->roleid = clean_int($_POST['roleid']);
+    $user->holiday_entitlement = clean_int($_POST['holiday_entitlement']);
     if (!empty($_POST['startdate']))
     {
         $user->startdate = date('Y-m-d',strtotime($_POST['startdate']));
