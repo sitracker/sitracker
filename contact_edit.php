@@ -139,11 +139,11 @@ elseif ($action == "edit" && isset($contact))
 else if ($action == "update")
 {
     // External variables
-    $contact = intval(cleanvar($_POST['contact']));
+    $contact = clean_int($_POST['contact']);
     $courtesytitle = cleanvar($_POST['courtesytitle']);
     $surname = cleanvar($_POST['surname']);
     $forenames = cleanvar($_POST['forenames']);
-    $siteid = cleanvar($_POST['siteid']);
+    $siteid = clean_int($_POST['siteid']);
     $email = strtolower(cleanvar($_POST['email']));
     $phone = cleanvar($_POST['phone']);
     $mobile = cleanvar($_POST['mobile']);
@@ -161,7 +161,7 @@ else if ($action == "update")
     $active = cleanvar($_POST['active']);
     $jobtitle = cleanvar($_POST['jobtitle']);
     $department = cleanvar($_POST['department']);
-    $notify_contactid = cleanvar($_POST['notify_contactid']);
+    $notify_contactid = clean_int($_POST['notify_contactid']);
     $tags = cleanvar($_POST['tags']);
 
     // Save changes to database

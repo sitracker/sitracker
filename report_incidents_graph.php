@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$startyear = cleanvar($_REQUEST['startyear']);
+$startyear = clean_int($_REQUEST['startyear']);
 
 $title = $strIncidentsLoggedOpenClosed;
 

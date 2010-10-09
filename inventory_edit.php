@@ -24,8 +24,8 @@ if(!$CONFIG['inventory_enabled'])
     exit;
 }
 
-$id = cleanvar($_GET['id']);
-$siteid = cleanvar($_REQUEST['site']);
+$id = clean_int($_GET['id']);
+$siteid = clean_int($_REQUEST['site']);
 
 // if (!empty($_GET['newsite']))
 // {
@@ -194,3 +194,5 @@ else
     
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
+
+?>

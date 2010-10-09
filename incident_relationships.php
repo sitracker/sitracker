@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 $title = $strRelations;
 include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
@@ -29,9 +29,9 @@ include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
 // External variables
 $action = $_REQUEST['action'];
-$relatedid = intval(cleanvar($_POST['relatedid']));
+$relatedid = clean_int($_POST['relatedid']);
 $relation = cleanvar($_POST['relation']);
-$rid = cleanvar($_REQUEST['rid']);
+$rid = clean_int($_REQUEST['rid']);
 
 switch ($action)
 {

@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $process = $_REQUEST['process'];
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $newcontact = mysql_real_escape_string($_REQUEST['newcontact']);
 $title = $strDeleteContact;
 

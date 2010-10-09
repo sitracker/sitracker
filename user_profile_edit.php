@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$mode = $_REQUEST['mode'];
+$mode = cleanvar($_REQUEST['mode']);
 $edituserpermission = user_permission($sit[2],23); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
@@ -30,7 +30,7 @@ else
 {
     if (!empty($_REQUEST['userid']))
     {
-        $edituserid = cleanvar($_REQUEST['userid']);
+        $edituserid = clean_int($_REQUEST['userid']);
     }
 }
 

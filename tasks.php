@@ -38,12 +38,12 @@ else
 
 
 // External variables
-$user = cleanvar($_REQUEST['user']);
+$user = clean_int($_REQUEST['user']);
 $show = cleanvar($_REQUEST['show']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
-$incident = cleanvar($_REQUEST['incident']);
-$siteid = cleanvar($_REQUEST['siteid']);
+$incident = clean_int($_REQUEST['incident']);
+$siteid = clean_int($_REQUEST['siteid']);
 
 ?>
 <script type='text/javascript'>

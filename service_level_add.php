@@ -151,7 +151,7 @@ elseif ($action == "edit")
     $timed = cleanvar($_POST['timed']);
     $allow_reopen = cleanvar($_POST['allow_reopen']);
     if ($allow_reopen != 'yes') $allow_reopen = 'no';
-    $limit = cleanvar($_POST['limit']);
+    $limit = clean_int($_POST['limit']);
     if ($limit == '') $limit = 0;
 
     if (empty($timed))
