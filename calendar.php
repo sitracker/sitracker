@@ -65,13 +65,13 @@ if (!empty($groupid)) $gidurl = "&amp;gid={$groupid}";
 
 // Defaults
 if (empty($_REQUEST['year'])) $year = date('Y');
-else $year = $_REQUEST['year'];
+else $year = intval($_REQUEST['year']);
 
 if (empty($_REQUEST['month'])) $month = date('m');
-else $month = $_REQUEST['month'];
+else $month = intval($_REQUEST['month']);
 
 if (empty($_REQUEST['day'])) $day = date('d');
-else $day = $_REQUEST['day'];
+else $day = intval($_REQUEST['day']);
 
 $calendarTypes = array('list','year','month','week','day');
 

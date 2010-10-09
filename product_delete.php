@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$productid = cleanvar($_REQUEST['id']);
+$productid = intval(cleanvar($_REQUEST['id']));
 
 if (!empty($productid))
 {
