@@ -26,7 +26,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // External Vars
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $title = $strFTPFileDetails;
 
 $sql = "SELECT * FROM `{$dbFiles}` WHERE id='{$id}' AND category='ftp' ";

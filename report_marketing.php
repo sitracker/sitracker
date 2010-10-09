@@ -185,7 +185,7 @@ elseif ($_REQUEST['mode'] == 'report')
         for ($i = 0; $i < $sitetypecount; $i++)
         {
             // $html .= "{$_POST['exc'][$i]} <br />";
-            $s .= "s.typeid = ".cleanvar($sitetype[$i]);
+            $s .= "s.typeid = ".clean_int($sitetype[$i]);
             if ($i < ($sitetypecount - 1)) $s  .= " AND ";
         }
         $s .= ")";

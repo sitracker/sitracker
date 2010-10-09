@@ -21,19 +21,19 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // Valid user
 
 // External Variables
-$day = cleanvar($_REQUEST['day']);
-$month = cleanvar($_REQUEST['month']);
-$year = cleanvar($_REQUEST['year']);
-$user = cleanvar($_REQUEST['user']);
-$type = cleanvar($_REQUEST['type']);
+$day = intval(cleanvar($_REQUEST['day']));
+$month = intval(cleanvar($_REQUEST['month']));
+$year = intval(cleanvar($_REQUEST['year']));
+$user = intval(cleanvar($_REQUEST['user']));
+$type = intval(cleanvar($_REQUEST['type']));
 $length = cleanvar($_REQUEST['length']);
 $return = cleanvar($_REQUEST['return']);
 $title = $strCalendar;
 
 // startdate in unix format
-$startdate = mktime(0,0,0,$month,$day,$year);
-$enddate = mktime(23,59,59,$month,$day,$year);
-if ($length=='') $length = 'day';
+$startdate = mktime(0,0,0, $month, $day, $year);
+$enddate = mktime(23, 59, 59, $month, $day, $year);
+if ($length == '') $length = 'day';
 
 if (user_permission($sit[2],50)) $approver = TRUE;
 else $approver = FALSE;
@@ -56,8 +56,8 @@ if ($length == '0' AND (($approver == TRUE AND ($dapprovedby = $sit[2] OR $admin
 {
     // Delete the holiday
     $sql = "DELETE FROM `{$dbHolidays}` ";
-    $sql .= "WHERE userid='$user' AND `date` = '{$year}-{$month}-{$day}' ";
-    $sql .= "AND type='$type' ";
+    $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' ";
+    $sql .= "AND type='{$type}' ";
     if (!$adminuser) $sql .= "AND (approvedby='{$sit[2]}' OR userid={$sit[2]}) ";
     $result = mysql_query($sql);
     // echo $sql;
@@ -77,7 +77,7 @@ else
                 // Cancel Holiday
                 // FIXME: doesn't check permission or anything
                 $sql = "DELETE FROM `{$dbHolidays}` ";
-                $sql .= "WHERE userid='$user' AND `date` = '{$year}-{$month}-{$day}' AND type='$type' ";
+                $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' ";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $dlength = 0;
@@ -88,7 +88,7 @@ else
             {
                 // there is an existing booking so alter it
                 $sql = "UPDATE `{$dbHolidays}` SET length='$length' ";
-                $sql .= "WHERE userid='$user' AND `date` = '{$year}-{$month}-{$day}' AND type='$type' AND length='$dlength'";
+                $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' AND length='{$dlength}'";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $dlength=$length;
@@ -98,7 +98,7 @@ else
         {
             // there is no holiday on this day, so make one
             $sql = "INSERT INTO `{$dbHolidays}` ";
-            $sql .= "SET userid='$user', type='$type', `date` = '{$year}-{$month}-{$day}', length='$length' ";
+            $sql .= "SET userid='{$user}', type='{$type}', `date` = '{$year}-{$month}-{$day}', length='{$length}' ";
             $result = mysql_query($sql);
             $dlength = $length;
             $approved = 0;
@@ -108,7 +108,7 @@ else
 
 if ($return == 'list')
 {
-    header("Location: calendar.php?display=list&type=$type&user=$user");
+    header("Location: calendar.php?display=list&type={$type}&user={$user}");
     exit;
 }
 else

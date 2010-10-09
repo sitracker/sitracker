@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
     exit;
 }
-$incomingid = cleanvar($_REQUEST['id']);
+$incomingid = clean_int($_REQUEST['id']);
 
 if ($_REQUEST['action'] == "updatereason")
 {

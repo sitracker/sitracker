@@ -93,16 +93,16 @@ function to_row($contactrow)
 // External variables
 $action = $_REQUEST['action'];
 $context = cleanvar($_REQUEST['context']);
-$updateid = cleanvar($_REQUEST['updateid']);
-$incomingid = cleanvar($_REQUEST['incomingid']);
+$updateid = intval(cleanvar($_REQUEST['updateid']));
+$incomingid = intval(cleanvar($_REQUEST['incomingid']));
 $query = cleanvar($_REQUEST['query']);
-$siteid = cleanvar($_REQUEST['siteid']);
-$contactid = cleanvar($_REQUEST['contactid']);
+$siteid = intval(cleanvar($_REQUEST['siteid']));
+$contactid = intval(cleanvar($_REQUEST['contactid']));
 $search_string = cleanvar($_REQUEST['search_string']);
 $from = cleanvar($_REQUEST['from']);
 $type = cleanvar($_REQUEST['type']);
-$maintid = cleanvar($_REQUEST['maintid']);
-$productid = cleanvar($_REQUEST['productid']);
+$maintid = intval(cleanvar($_REQUEST['maintid']));
+$productid = intval(cleanvar($_REQUEST['productid']));
 $producttext = cleanvar($_REQUEST['producttext']);
 $win = cleanvar($_REQUEST['win']);
 

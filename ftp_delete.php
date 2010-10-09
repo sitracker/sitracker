@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 $sql = "SELECT * FROM `{$dbFiles}` WHERE id='$id'"; // TODO only get necessary fields back
 $result = mysql_query($sql);

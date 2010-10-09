@@ -76,7 +76,7 @@ elseif ($mode == 'new')
 }
 elseif ($mode == 'edit')
 {
-    $typeid = cleanvar($_REQUEST['typeid']);
+    $typeid = clean_int($_REQUEST['typeid']);
     $sql = "SELECT typename FROM `{$dbSiteTypes}` WHERE typeid = {$typeid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

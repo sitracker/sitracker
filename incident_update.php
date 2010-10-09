@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External Variables
 // $bodytext = cleanvar($_REQUEST['bodytext'],FALSE,FALSE);
 $bodytext = cleanvar($_REQUEST['bodytext'], FALSE, TRUE);
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 $action = cleanvar($_REQUEST['action']);
 

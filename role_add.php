@@ -52,9 +52,9 @@ if (empty($submit))
 }
 else
 {
-    $rolename = cleanvar($_REQUEST['rolename']);
-    $description = cleanvar($_REQUEST['description']);
-    $copyfrom = cleanvar($_REQUEST['copyfrom']);
+    $rolename = clean_dbstring($_REQUEST['rolename']);
+    $description = clean_dbstring($_REQUEST['description']);
+    $copyfrom = clean_dbstring($_REQUEST['copyfrom']);
 
     $_SESSION['formdata']['role_add'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 

@@ -23,7 +23,7 @@ $approver = user_permission($sit[2], 50); // Approve holidays
 
 if (!empty($_REQUEST['user']))
 {
-    $user = cleanvar($_REQUEST['user']);
+    $user = clean_int($_REQUEST['user']);
 }
 else
 {

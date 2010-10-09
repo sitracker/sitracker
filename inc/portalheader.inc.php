@@ -120,7 +120,7 @@ require (APPLICATION_LIBPATH . 'strings.inc.php');
 
 // External variables
 $page = cleanvar($_REQUEST['page']);
-$contractid = cleanvar($_REQUEST['contractid']);
+$contractid = clean_int($_REQUEST['contractid']);
 
 $filter = array('page' => $page);
 

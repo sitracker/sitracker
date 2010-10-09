@@ -26,8 +26,8 @@ $maxresults = 1000;
 
 // External variables
 $search_title = cleanvar($_REQUEST['search_title']);
-$search_id = cleanvar($_REQUEST['search_id']);
-$search_externalid = cleanvar($_REQUEST['search_externalid']);
+$search_id = clean_int($_REQUEST['search_id']);
+$search_externalid = clean_int($_REQUEST['search_externalid']);
 $search_contact = cleanvar($_REQUEST['search_contact']);
 $search_servicelevel = cleanvar($_REQUEST['search_servicelevel']);
 $search_details = cleanvar($_REQUEST['search_details']);

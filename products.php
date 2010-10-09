@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 // External Variables
-$productid = cleanvar($_REQUEST['productid']);
+$productid = clean_int($_REQUEST['productid']);
 $display = cleanvar($_REQUEST['display']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

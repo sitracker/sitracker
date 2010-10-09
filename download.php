@@ -41,7 +41,7 @@ function mime_type($file)
 }
 
 // External variables
-$id = cleanvar(intval($_GET['id']));
+$id = clean_int($_GET['id']);
 
 $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         FROM `{$dbFiles}` AS f, `{$dbLinks}` AS l, `{$dbUpdates}` AS u
@@ -55,12 +55,12 @@ $result = mysql_query($sql);
 if (mysql_num_rows($result) > 0)
 {
     $fileobj = mysql_fetch_object($result);
-    $incidentid = cleanvar(intval($fileobj->incidentid));
-    $updateid = cleanvar(intval($fileobj->updateid));
+    $incidentid = clean_int($fileobj->incidentid);
+    $updateid = clean_int($fileobj->updateid);
     $filename = cleanvar($fileobj->filename);
     $visibility = $fileobj->category;
     $fileid = $fileobj->fileid;
-    
+
     $access = FALSE;
     if ($visibility == 'public' AND (isset($sit[2]) OR isset($_SESSION['contactid'])))
     {
@@ -74,7 +74,7 @@ if (mysql_num_rows($result) > 0)
     {
         $access = FALSE;
     }
-    
+
     if (empty($incidentid))
     {
         $file_fspath = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}";
@@ -87,7 +87,7 @@ if (mysql_num_rows($result) > 0)
         $file_fspath2 = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}{$fileid}";
         $old_style = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}u{$updateid}{$fsdelim}{$filename}";
     }
-    
+
     if ((!file_exists($file_fspath)) AND (!file_exists($file_fspath2)) AND (!file_exists($old_style)))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');

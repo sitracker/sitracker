@@ -61,9 +61,9 @@ if (isset($_POST['submit']))
         $pubdate = date('Y-m-d h:i:s');
 
         $sqlinsert = "INSERT INTO `{$dbKBArticles}` (title, keywords, distribution, author, published) ";
-        $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '$pubdate')";
+        $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '{$pubdate}')";
         mysql_query($sqlinsert);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_ERROR);
         $kbid = mysql_insert_id();
     }
     else
@@ -102,10 +102,11 @@ if (isset($_POST['submit']))
     // Set software / expertise
     if (is_array($_POST['expertise']))
     {
-        $expertise = array_unique(($_POST['expertise']));
+        $expertise = cleanvar(array_unique(($_POST['expertise'])));
         foreach ($expertise AS $value)
         {
-            $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '$value')";
+            $value = intval($value);
+            $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
         }
     }
 

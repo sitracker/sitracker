@@ -26,7 +26,7 @@ $step = $_REQUEST['step'];
 $date = cleanvar($_REQUEST['date']);
 if (!empty($_REQUEST['user']) AND user_permission($sit[2], 68))
 {
-    $user = cleanvar($_REQUEST['user']); // Manage holidays
+    $user = clean_int($_REQUEST['user']); // Manage holidays
 }
 else
 {
@@ -73,7 +73,7 @@ elseif ($step == '1')
     // External variables
     $start = cleanvar($_REQUEST['start']);
     $end = cleanvar($_REQUEST['end']);
-    $type = cleanvar($_REQUEST['type']);
+    $type = clean_int($_REQUEST['type']);
 
     if (!empty($start)) $start = strtotime("{$start} 09:00");
     else $start = 0;
@@ -291,10 +291,10 @@ elseif ($step == '1')
 }
 else
 {
-    $approvaluser = cleanvar($_REQUEST['approvaluser']);
+    $approvaluser = clean_int($_REQUEST['approvaluser']);
     $memo = cleanvar($_REQUEST['memo']);
-    $type = cleanvar($_REQUEST['type']);
-    $numberofdays = cleanvar($_REQUEST['numberofdays']);
+    $type = clean_int($_REQUEST['type']);
+    $numberofdays = clean_int($_REQUEST['numberofdays']);
     for ($h = 1; $h < $numberofdays; $h++)
     {
         $dayfield = "day{$h}";

@@ -19,11 +19,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$step = cleanvar($_REQUEST['step']);
-$id = cleanvar($_REQUEST['id']);
+$step = clean_int($_REQUEST['step']);
+$id = clean_int($_REQUEST['id']);
 $menu = cleanvar($_REQUEST['menu']);
 $incidentid = $id;
-$draftid = cleanvar($_REQUEST['draftid']);
+$draftid = clean_int($_REQUEST['draftid']);
 if (empty($draftid)) $draftid = -1;
 
 $title = $strEmail;
@@ -334,9 +334,9 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);
             $timetonextaction_hours = cleanvar($_REQUEST['timetonextaction_hours']);
             $timetonextaction_minutes = cleanvar($_REQUEST['timetonextaction_minutes']);
-            $day = cleanvar($_REQUEST['day']);
-            $month = cleanvar($_REQUEST['month']);
-            $year = cleanvar($_REQUEST['year']);
+            $day = clean_int($_REQUEST['day']);
+            $month = clean_int($_REQUEST['month']);
+            $year = clean_int($_REQUEST['year']);
             $target = cleanvar($_REQUEST['target']);
             $chase_customer = cleanvar($_REQUEST['chase_customer']);
             $chase_manager = cleanvar($_REQUEST['chase_manager']);

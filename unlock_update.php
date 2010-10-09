@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$incomingid = cleanvar($_REQUEST['id']);
+$incomingid = clean_int($_REQUEST['id']);
 
 if (empty($incomingid)) trigger_error("Update ID was not set:{$updateid}", E_USER_WARNING);
 

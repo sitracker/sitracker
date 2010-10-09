@@ -265,7 +265,7 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
 */
 function clean_int($string)
 {
-    if (!is_null($string) AND !is_numeric($string))
+    if (!is_null($string) AND $string != '' AND !is_numeric($string))
     {
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
     }
@@ -313,6 +313,10 @@ function clean_fixed_list($string, $list, $strict = FALSE)
     {
         if (!in_array($string, $list, $strict))
         {
+            if ($string != NULL AND $string != '')
+            {
+                trigger_error("Unexpected input", E_USER_WARNING);
+            }
             $string = $list[0];
         }
     }

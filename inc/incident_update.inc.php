@@ -258,44 +258,44 @@ function display_update_page($draftid=-1)
         switch ($metadata[0])
         {
             case 'none':
-                $targetNone = " SELECTED ";
+                $targetNone = " selected='selected' ";
                 break;
             case 'initialresponse':
-                $targetInitialresponse = " SELECTED ";
+                $targetInitialresponse = " selected='selected' ";
                 break;
             case 'probdef':
-                $targetProbdef = " SELECTED ";
+                $targetProbdef = " selected='selected' ";
                 break;
             case 'actionplan':
-                $targetActionplan = " SELECTED ";
+                $targetActionplan = " selected='selected' ";
                 break;
             case 'solution':
-                $targetSolution = " SELECTED ";
+                $targetSolution = " selected='selected' ";
                 break;
         }
 
         switch ($metadata[1])
         {
             case 'research':
-                $typeResearch = " SELECTED ";
+                $typeResearch = " selected='selected' ";
                 break;
             case 'emailin':
-                $typeEmailin = " SELECTED ";
+                $typeEmailin = " selected='selected' ";
                 break;
             case 'emailout':
-                $typeEmailout = " SELECTED ";
+                $typeEmailout = " selected='selected' ";
                 break;
             case 'phonecallin':
-                $typePhonecallin = " SELECTED ";
+                $typePhonecallin = " selected='selected' ";
                 break;
             case 'phonecallout':
-                $typePhonecallout = " SELECTED ";
+                $typePhonecallout = " selected='selected' ";
                 break;
             case 'externalinfo':
-                $typeExternalinfo = " SELECTED ";
+                $typeExternalinfo = " selected='selected' ";
                 break;
             case 'reviewmet':
-                $typeReviewmet = " SELECTED ";
+                $typeReviewmet = " selected='selected' ";
                 break;
         }
     }
@@ -478,12 +478,12 @@ if (empty($action))
 else if ($action == "editdraft")
 {
     include ('inc/incident_html_top.inc.php');
-    $draftid = cleanvar($_REQUEST['draftid']);
+    $draftid = clean_int($_REQUEST['draftid']);
     display_update_page($draftid);
 }
 else if ($action == "deletedraft")
 {
-    $draftid = cleanvar($_REQUEST['draftid']);
+    $draftid = clean_int($_REQUEST['draftid']);
     if ($draftid != -1)
     {
         $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
@@ -506,7 +506,7 @@ else
     $updatetype = cleanvar($_POST['updatetype']);
     $newstatus = cleanvar($_POST['newstatus']);
     $nextaction = cleanvar($_POST['nextaction']);
-    $newpriority = cleanvar($_POST['newpriority']);
+    $newpriority = clean_int($_POST['newpriority']);
     $cust_vis = cleanvar($_POST['cust_vis']);
     $timetonextaction = cleanvar($_POST['timetonextaction']);
     $date = cleanvar($_POST['date']);
@@ -514,7 +514,7 @@ else
     $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
     $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
     $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
-    $draftid = cleanvar($_POST['draftid']);
+    $draftid = clean_int($_POST['draftid']);
 
     // \p{L} A Unicode character
     // \p{N} A Unicode number

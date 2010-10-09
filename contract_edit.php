@@ -21,7 +21,7 @@ $title = $strEditContract;
 
 // External variables
 $action = $_REQUEST['action'];
-$maintid = cleanvar($_REQUEST['maintid']);
+$maintid = clean_int($_REQUEST['maintid']);
 $changeproduct = cleanvar($_REQUEST['changeproduct']);
 
 if (empty($action) OR $action == "showform")
@@ -169,15 +169,15 @@ else if ($action == "update")
     // External variables
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
     $incident_quantity = $incident_pools[$_POST['incident_poolid']];
-    $reseller = cleanvar($_POST['reseller']);
-    $licence_quantity = cleanvar($_POST['licence_quantity']);
-    $licence_type = cleanvar($_POST['licence_type']);
+    $reseller = clean_int($_POST['reseller']);
+    $licence_quantity = clean_int($_POST['licence_quantity']);
+    $licence_type = clean_int($_POST['licence_type']);
     $notes = cleanvar($_POST['notes']);
-    $admincontact = cleanvar($_POST['admincontact']);
+    $admincontact = clean_int($_POST['admincontact']);
     $terminated = cleanvar($_POST['terminated']);
-    $servicelevelid = cleanvar($_POST['servicelevelid']);
-    $incidentpoolid = cleanvar($_POST['incidentpoolid']);
-    $product = cleanvar($_POST['product']);
+    $servicelevelid = clean_int($_POST['servicelevelid']);
+    $incidentpoolid = clean_int($_POST['incidentpoolid']);
+    $product = clean_int($_POST['product']);
     $productonly = cleanvar($_POST['productonly']);
     $contacts = cleanvar($_REQUEST['contacts']);
     if ($_REQUEST['noexpiry'] == 'on') $expirydate = '-1';
