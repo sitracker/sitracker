@@ -265,7 +265,7 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
 */
 function clean_int($string)
 {
-    if (!is_numeric($string))
+    if (!is_null($string) AND !is_numeric($string))
     {
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
     }
