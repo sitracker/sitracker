@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-$roleid = cleanvar($_REQUEST['roleid']);
+$roleid = intval(cleanvar($_REQUEST['roleid']));
 
 $title = $strRole;
 
