@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 include ('calendar/calendar.inc.php');
 
-$groupid = cleanvar($_REQUEST['gid']);
+$groupid = intval(cleanvar($_REQUEST['gid']));
 if (empty($groupid)) $groupid = $_SESSION['groupid'];
 
 // External variables
@@ -33,15 +33,28 @@ foreach (array(
 {
     eval("\$$var=cleanvar(\$_REQUEST['$var']);");
 }
+
+// length is am, pm
+
+$nmonth = intval($nmonth);
+$nyear = intval($nyear);
+$type = intval($type);
+$selectedday = intval($selectedday);
+$selectedmonth = intval($selectedmonth);
+$selectedyear = intval($selectedyear);
+$selectedtype = intval($selectedtype);
+$approved = intval($approved);
+$weeknumber = intval($weeknumber);
+
 if (empty($length)) $length='day';
 $title = $strCalendar;
 $pagecss = array('calendar/planner.css.php');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if (empty($user) || $user=='current') $user = $sit[2];
+if (empty($user) || $user == 'current') $user = $sit[2];
 elseif ($user == 'all') $user = '';
 if (empty($type)) $type = HOL_HOLIDAY;
-if (user_permission($sit[2],50)) $approver = TRUE;
+if (user_permission($sit[2], 50)) $approver = TRUE;
 else $approver = FALSE;
 
 // Force user to 0 (SiT) when setting public holidays
