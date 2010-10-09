@@ -258,6 +258,47 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
 
 
 /**
+  * Make an external variable safe. Force it to be an integer.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns int - safe variable
+*/
+function clean_int($string)
+{
+    if (!is_numeric($string))
+    {
+        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+    }
+    $var = intval($string);
+
+    return $var;
+}
+
+
+/**
+  * Make an external variable safe for use in a database query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - DB safe variable
+  * @note Strips HTML
+*/
+function clean_dbstring($string)
+{
+    $string = strip_tags($string);
+
+    if (get_magic_quotes_gpc() == 1)
+    {
+        stripslashes($string);
+    }
+
+    $string = mysql_real_escape_string($string);
+
+    return $string;
+}
+
+
+
+/**
  * Return an array of available languages codes by looking at the files
  * in the i18n directory
  * @author Ivan Lucas
