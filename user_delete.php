@@ -21,11 +21,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$userid = cleanvar($_REQUEST['userid']);
+$userid = clean_int($_REQUEST['userid']);
 
 if (!empty($userid))
 {
-    $errors=0;
+    $errors = 0;
     // Check there are no files linked to this user
     $sql = "SELECT userid FROM `{$dbFiles}` WHERE userid={$userid} LIMIT 1";
     $result = mysql_query($sql);

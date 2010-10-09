@@ -20,7 +20,7 @@ require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 
 $mode = cleanvar($_REQUEST['mode']);
-$incidentid = cleanvar($_REQUEST['incidentid']);
+$incidentid = clean_int($_REQUEST['incidentid']);
 $title = "{$strUpdateIncidentXsBalance}, $incidentid";
 
 if (empty($mode))

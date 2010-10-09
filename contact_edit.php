@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strEditContact;
 
 // External variables
-$contact = cleanvar($_REQUEST['contact']);
+$contact = clean_int($_REQUEST['contact']);
 $action = cleanvar($_REQUEST['action']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -139,7 +139,7 @@ elseif ($action == "edit" && isset($contact))
 else if ($action == "update")
 {
     // External variables
-    $contact = cleanvar($_POST['contact']);
+    $contact = intval(cleanvar($_POST['contact']));
     $courtesytitle = cleanvar($_POST['courtesytitle']);
     $surname = cleanvar($_POST['surname']);
     $forenames = cleanvar($_POST['forenames']);
