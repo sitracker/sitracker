@@ -18,10 +18,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$dashboardid = $_REQUEST['id'];
+$dashboardid = intval(cleanvar($_REQUEST['id']));
 $title = $strManageYourDashboard;
 
-$sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '".$_SESSION['userid']."'";
+$sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '{$_SESSION['userid']}'";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -58,11 +58,11 @@ if (empty($dashboardid))
             if (empty($ondashboard[$obj->id]))
             {
                 //not already on dashbaord
-                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=add&amp;id=$obj->id'>{$strAdd}</a></td></tr>\n";
+                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=add&amp;id={$obj->id}'>{$strAdd}</a></td></tr>\n";
             }
             else
             {
-                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=remove&amp;id=$obj->id'>{$strRemove}</a></td></tr>\n";
+                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=remove&amp;id={$obj->id}'>{$strRemove}</a></td></tr>\n";
             }
         }
         echo "</table>\n";
@@ -103,7 +103,7 @@ else
             $dashboardstr = preg_replace($regex,"",$dashboardstr);
             break;
     }
-    $sql = "UPDATE `{$dbUsers}` SET dashboard = '$dashboardstr' WHERE id = '".$_SESSION['userid']."'";
+    $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$dashboardstr}' WHERE id = '{$_SESSION['userid']}'";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     html_redirect("manage_user_dashboard.php");
