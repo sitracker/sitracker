@@ -249,9 +249,9 @@ elseif ($mode == 'save')
 {
     // External variables
     $user = new User();
-    $user->id = cleanvar($_POST['userid']);
+    $user->id = intval(cleanvar($_POST['userid']));
 
-    $edituserid = cleanvar($_POST['userid']); // remove when tested
+    $edituserid = intval(cleanvar($_POST['userid'])); // remove when tested
 
     $user->message = cleanvar($_POST['message']);
     $user->realname = cleanvar($_POST['realname']);
@@ -270,8 +270,8 @@ elseif ($mode == 'save')
 
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
-    $user->roleid = cleanvar($_POST['roleid']);
-    $user->holiday_entitlement = cleanvar($_POST['holiday_entitlement']);
+    $user->roleid = intval(cleanvar($_POST['roleid']));
+    $user->holiday_entitlement = intval(cleanvar($_POST['holiday_entitlement']));
     if (!empty($_POST['startdate']))
     {
         $user->startdate = date('Y-m-d',strtotime($_POST['startdate']));
@@ -287,7 +287,7 @@ elseif ($mode == 'save')
     if (empty($user->emoticons)) $user->emoticons = 'false';
 
     // Some extra checking here so that users can't edit other peoples profiles
-    $edituserpermission = user_permission($sit[2],23); // edit user
+    $edituserpermission = user_permission($sit[2], 23); // edit user
     if ($edituserid != $sit[2] AND $edituserpermission == FALSE)
     {
         trigger_error('Error: No permission to edit this users profile', E_USER_ERROR);
@@ -295,7 +295,7 @@ elseif ($mode == 'save')
     }
 
     // If users status is set to 0 (disabled) force 'accepting' to no
-    if ($user->status==0) $user->accepting='No';
+    if ($user->status == 0) $user->accepting = 'No';
 
     // Update user profile
     $errors = 0;
@@ -343,8 +343,8 @@ elseif ($mode == 'save')
         }
         elseif ($result === TRUE)
         {
-            if ($edituserid==$sit[2]) $redirecturl='index.php';
-            else $redirecturl='manage_users.php';
+            if ($edituserid == $sit[2]) $redirecturl = 'index.php';
+            else $redirecturl = 'manage_users.php';
             plugin_do('save_profile_form');
 
             // password was not changed
