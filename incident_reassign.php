@@ -22,10 +22,10 @@ $forcepermission = user_permission($sit[2],40);
 
 // External variables
 $bodytext = cleanvar($_REQUEST['bodytext']);
-$id = cleanvar($_REQUEST['id']);
-$incidentid=$id;
-$backupid = cleanvar($_REQUEST['backupid']);
-$originalid = cleanvar($_REQUEST['originalid']);
+$id = clean_int($_REQUEST['id']);
+$incidentid = $id;
+$backupid = clean_int($_REQUEST['backupid']);
+$originalid = clean_int($_REQUEST['originalid']);
 $reason = cleanvar($_REQUEST['reason']);
 $action = cleanvar($_REQUEST['action']);
 $title = $strReassignIncident;
@@ -38,10 +38,10 @@ switch ($action)
         $permnewowner = cleanvar($_REQUEST['permnewowner']);
         $removetempowner = cleanvar($_REQUEST['removetempowner']);
         $fullreassign = cleanvar($_REQUEST['fullreassign']);
-        $newstatus = cleanvar($_REQUEST['newstatus']);
-        $userid = cleanvar($_REQUEST['userid']);
+        $newstatus = clean_int($_REQUEST['newstatus']);
+        $userid = clean_int($_REQUEST['userid']);
         $temporary = cleanvar($_REQUEST['temporary']);
-        $id = cleanvar($_REQUEST['id']);
+        $id = clean_int($_REQUEST['id']);
 
         if ($tempnewowner == 'yes') $temporary = 'yes';
 

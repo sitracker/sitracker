@@ -19,7 +19,7 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$incidentid = cleanvar($_REQUEST['id']);
+$incidentid = clean_int($_REQUEST['id']);
 $id = $incidentid;
 
 if ($_REQUEST['win'] == 'incomingview')
@@ -374,7 +374,7 @@ else
     echo "</div>\n\n";
     
     
-    $offset = cleanvar($_REQUEST['offset']);
+    $offset = clean_int($_REQUEST['offset']);
     if (empty($offset))
     {
         $offset = 0;

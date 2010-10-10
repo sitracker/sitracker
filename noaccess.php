@@ -16,7 +16,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // External variables
 $username = cleanvar($_REQUEST['username']);
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

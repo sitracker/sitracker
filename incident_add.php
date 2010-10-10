@@ -93,16 +93,16 @@ function to_row($contactrow)
 // External variables
 $action = $_REQUEST['action'];
 $context = cleanvar($_REQUEST['context']);
-$updateid = intval(cleanvar($_REQUEST['updateid']));
-$incomingid = intval(cleanvar($_REQUEST['incomingid']));
+$updateid = clean_int($_REQUEST['updateid']);
+$incomingid = clean_int($_REQUEST['incomingid']);
 $query = cleanvar($_REQUEST['query']);
-$siteid = intval(cleanvar($_REQUEST['siteid']));
-$contactid = intval(cleanvar($_REQUEST['contactid']));
+$siteid = clean_int($_REQUEST['siteid']);
+$contactid = clean_int($_REQUEST['contactid']);
 $search_string = cleanvar($_REQUEST['search_string']);
 $from = cleanvar($_REQUEST['from']);
 $type = cleanvar($_REQUEST['type']);
-$maintid = intval(cleanvar($_REQUEST['maintid']));
-$productid = intval(cleanvar($_REQUEST['productid']));
+$maintid = clean_int($_REQUEST['maintid']);
+$productid = clean_int($_REQUEST['productid']);
 $producttext = cleanvar($_REQUEST['producttext']);
 $win = cleanvar($_REQUEST['win']);
 
@@ -618,8 +618,8 @@ elseif ($action == 'assign')
         $probreproduction = cleanvar($_REQUEST['probreproduction']);
         $custimpact = cleanvar($_REQUEST['custimpact']);
         $other = cleanvar($_REQUEST['other']);
-        $priority = cleanvar($_REQUEST['priority']);
-        $software = cleanvar($_REQUEST['software']);
+        $priority = clean_int($_REQUEST['priority']);
+        $software = clean_int($_REQUEST['software']);
         $productversion = cleanvar($_REQUEST['productversion']);
         $productservicepacks = cleanvar($_REQUEST['productservicepacks']);
         $bodytext = cleanvar($_REQUEST['bodytext']);
@@ -627,7 +627,7 @@ elseif ($action == 'assign')
         $send_email = cleanvar($_REQUEST['send_email']);
         $inventory = cleanvar($_REQUEST['inventory']);
 
-        $timetonextaction = cleanvar($_POST['timetonextaction']);
+        $timetonextaction = clean_int($_POST['timetonextaction']);
         $date = cleanvar($_POST['date']);
         $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
         $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
@@ -772,6 +772,7 @@ elseif ($action == 'assign')
                 {
                     $var = "pinfo{$productinforow->id}";
                     $pinfo = cleanvar($_POST[$var]);
+                    $pinfo = clean_dbstring($_POST[$var]);
                     $pisql = "INSERT INTO `{$dbIncidentProductInfo}` (incidentid, productinfoid, information) ";
                     $pisql .= "VALUES ('{$incidentid}', '{$productinforow->id}', '{$pinfo}')";
                     mysql_query($pisql);
@@ -1028,9 +1029,9 @@ elseif ($action == 'assign')
 elseif ($action == 'reassign')
 {
     // External variables
-    $incidentid = cleanvar($_REQUEST['incidentid']);
-    $uid = cleanvar($_REQUEST['userid']);
-    $nextaction = cleanvar($_REQUST['nextaction']);
+    $incidentid = clean_int($_REQUEST['incidentid']);
+    $uid = clean_int($_REQUEST['userid']);
+    $nextaction = clean_dbstring($_REQUST['nextaction']);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

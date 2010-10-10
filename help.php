@@ -19,7 +19,7 @@ $title = "Help";
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $title = $strHelp;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

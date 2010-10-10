@@ -113,9 +113,9 @@ else
 
     if ($expirytype == 'time')
     {
-        $days = cleanvar($_REQUEST['expiry_days']);
-        $hours = cleanvar($_REQUEST['expiry_hours']);
-        $minutes = cleanva($_REQUEST['expiry_minutes']);
+        $days = clean_int($_REQUEST['expiry_days']);
+        $hours = clean_int($_REQUEST['expiry_hours']);
+        $minutes = clean_int($_REQUEST['expiry_minutes']);
 
         if ($days < 1 && $hours < 1 && $minutes < 1)
         {
@@ -128,9 +128,9 @@ else
     }
     elseif ($expirytype == 'date')
     {
-        $day = cleanvar($_REQUEST['day']);
-        $month = cleanvar($_REQUEST['month']);
-        $year = cleanvar($_REQUEST['year']);
+        $day = clean_int($_REQUEST['day']);
+        $month = clean_int($_REQUEST['month']);
+        $year = clean_int($_REQUEST['year']);
 
         $date = explode("-", $date);
         $expirydate = mktime(0, 0, 0, $month, $day, $year);

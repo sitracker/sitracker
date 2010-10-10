@@ -48,7 +48,7 @@ if (empty($save))
         $user = mysql_real_escape_string($_REQUEST['user']);
     }
 
-    $default = cleanvar($_REQUEST['default']);
+    $default = clean_int($_REQUEST['default']);
     $softlist = $_REQUEST['softlist'];
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -105,12 +105,13 @@ else
 {
     // External variables
     $softlist=explode(',',$_REQUEST['softlist']);
-    $backup=$_REQUEST['backup'];
-    $user=cleanvar($_REQUEST['user']);
+    $backup = clean_int($_REQUEST['backup']);
+    $user = clean_int($_REQUEST['user']);
     foreach ($backup AS $key=>$backupid)
     {
         if ($backupid > 0)
         {
+            $softlist[$key] = clean_int($softlist[$key]);
             $sql = "UPDATE `{$dbUserSoftware}` SET backupid='$backupid' WHERE userid='$user' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
         }
         // echo "{$softlist[$key]} -- $key -- $value<br />";

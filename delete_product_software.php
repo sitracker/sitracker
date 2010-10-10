@@ -24,8 +24,8 @@ $title = "{$strDisassociateSkillWithProduct}";
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$productid = cleanvar($_REQUEST['productid']);
-$softwareid = cleanvar($_REQUEST['softwareid']);
+$productid = clean_int($_REQUEST['productid']);
+$softwareid = clean_int($_REQUEST['softwareid']);
 
 if (!empty($productid) && !empty($softwareid))
 {
