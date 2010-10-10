@@ -54,7 +54,7 @@ elseif ($action == "update")
 {
     // External Variables
     // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
-    $incident_quantity = clean_int($_POST['incident_pool']));
+    $incident_quantity = clean_int($_POST['incident_pool']);
     $name = clean_dbstring($_POST['name']);
     $department = clean_dbstring($_POST['department']);
     $address1 = clean_dbstring($_POST['address1']);

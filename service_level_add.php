@@ -124,7 +124,7 @@ if (empty($action) OR $action == "showform")
 elseif ($action == "edit")
 {
     // External variables
-    $tag = trim(clean_dbstring($_POST['tag'])));
+    $tag = trim(clean_dbstring($_POST['tag']));
     $low_initial_response_mins = clean_int($_POST['low_initial_response_mins']);
     $low_prob_determ_mins = clean_int($_POST['low_prob_determ_mins']);
     $low_action_plan_mins = clean_int($_POST['low_action_plan_mins']);

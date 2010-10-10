@@ -21,11 +21,11 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // Valid user
 
 // External Variables
-$day = clean_int($_REQUEST['day']));
-$month = clean_int($_REQUEST['month']));
-$year = clean_int($_REQUEST['year']));
-$user = clean_int($_REQUEST['user']));
-$type = clean_int($_REQUEST['type']));
+$day = clean_int($_REQUEST['day']);
+$month = clean_int($_REQUEST['month']);
+$year = clean_int($_REQUEST['year']);
+$user = clean_int($_REQUEST['user']);
+$type = clean_int($_REQUEST['type']);
 $length = cleanvar($_REQUEST['length']);
 $return = cleanvar($_REQUEST['return']);
 $title = $strCalendar;
