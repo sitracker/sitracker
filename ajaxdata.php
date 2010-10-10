@@ -237,8 +237,8 @@ switch ($action)
         }
         break;
     case 'storedashboard':
-        $id = $_REQUEST['id'];
-        $val = $_REQUEST['val'];
+        $id = clean_int($_REQUEST['id']);
+        $val = clean_dbstring($_REQUEST['val']);
 
         if ($id == $_SESSION['userid'])
         {
