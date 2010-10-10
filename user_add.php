@@ -162,14 +162,14 @@ else
     $username = mysql_real_escape_string(strtolower(trim(strip_tags($_REQUEST['username']))));
     $realname = cleanvar($_REQUEST['realname']);
     $password = mysql_real_escape_string($_REQUEST['password']);
-    $groupid = cleanvar($_REQUEST['groupid']);
-    $roleid = cleanvar($_REQUEST['roleid']);
+    $groupid = clean_int($_REQUEST['groupid']);
+    $roleid = clean_int($_REQUEST['roleid']);
     $jobtitle = cleanvar($_REQUEST['jobtitle']);
     $email = cleanvar($_REQUEST['email']);
     $phone = cleanvar($_REQUEST['phone']);
     $mobile = cleanvar($_REQUEST['mobile']);
     $fax = cleanvar($_REQUEST['fax']);
-    $holiday_entitlement = cleanvar($_REQUEST['holiday_entitlement']);
+    $holiday_entitlement = clean_int($_REQUEST['holiday_entitlement']);
     if (!empty($_POST['startdate']))
     {
         $startdate = date('Y-m-d',strtotime($_POST['startdate']));

@@ -27,8 +27,8 @@ switch ($action)
 {
     case 'addnote':
         // External variables
-        $link = cleanvar($_REQUEST['link']);
-        $refid = cleanvar($_REQUEST['refid']);
+        $link = clean_int($_REQUEST['link']);
+        $refid = clean_int($_REQUEST['refid']);
         $bodytext = cleanvar($_REQUEST['bodytext'],FALSE,FALSE);
         $rpath = cleanvar($_REQUEST['rpath']);
 

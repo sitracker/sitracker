@@ -20,9 +20,9 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Variables
-$maintid = cleanvar($_REQUEST['maintid']);
-$contactid = cleanvar($_REQUEST['contactid']);
-$context = cleanvar($_REQUEST['context']);
+$maintid = clean_int($_REQUEST['maintid']);
+$contactid = clean_int($_REQUEST['contactid']);
+$context = clean_int($_REQUEST['context']);
 $action = $_REQUEST['action'];
 $title = ("$strContract - $strAddContact");
 

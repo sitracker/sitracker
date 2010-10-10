@@ -23,7 +23,7 @@ if ($CONFIG['portal_kb_enabled'] !== 'Public')
 $can_view = FALSE;
 if (!empty($_REQUEST['id']))
 {
-    $id = cleanvar($_REQUEST['id']);
+    $id = clean_int($_REQUEST['id']);
     $can_view = is_kb_article($id, 'public');
 }
 if (empty($id) OR !$can_view)

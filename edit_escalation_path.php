@@ -55,12 +55,12 @@ if (empty($_REQUEST['mode']))
 else
 {
     //make changes
-    $id = cleanvar($_REQUEST['id']);
-    $name = cleanvar($_REQUEST['name']);
-    $trackurl = cleanvar($_REQUEST['trackurl']);
-    $homeurl = cleanvar($_REQUEST['homeurl']);
-    $title = cleanvar($_REQUEST['title']);
-    $emaildomain = cleanvar($_REQUEST['emaildomain']);
+    $id = clean_int($_REQUEST['id']);
+    $name = clean_dbstring($_REQUEST['name']);
+    $trackurl = clean_dbstring($_REQUEST['trackurl']);
+    $homeurl = clean_dbstring($_REQUEST['homeurl']);
+    $title = clean_dbstring($_REQUEST['title']);
+    $emaildomain = clean_dbstring($_REQUEST['emaildomain']);
 
     $errors = 0;
     if (empty($name))

@@ -49,8 +49,8 @@ if (empty($submit))
 }
 else
 {
-	$startdate = cleanvar($_REQUEST['startdate']);
-    $enddate = cleanvar($_REQUEST['enddate']);
+    $startdate = date("Y-m-d",strtotime(cleanvar($_REQUEST['startdate'])));
+    $enddate = date("Y-m-d",strtotime(cleanvar($_REQUEST['enddate'])));
     $output = cleanvar($_REQUEST['output']);
     $users = cleanvar($_POST['users']);
 
@@ -66,6 +66,7 @@ else
         for ($i = 0; $i < $usercount; $i++)
         {
             // $html .= "{$_POST['inc'][$i]} <br />";
+            $users[$i] = clean_int($users[$i]);
             $gsql .= "u.id = {$users[$i]} ";
             if ($i < ($usercount-1)) $gsql .= " OR ";
         }

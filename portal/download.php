@@ -25,7 +25,7 @@ $inlinefiles = array('jpg','jpeg','png','gif','txt','htm','html');
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 
 // External variables
-$id = cleanvar(intval($_GET['id']));
+$id = clean_int($_GET['id']);
 
 $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         FROM `{$dbFiles}` AS f, `{$dbLinks}` AS l, `{$dbUpdates}` AS u
@@ -38,8 +38,8 @@ $sql = "SELECT *, u.id AS updateid, f.id AS fileid
 
 $result = mysql_query($sql);
 $fileobj = mysql_fetch_object($result);
-$incidentid = cleanvar(intval($fileobj->incidentid));
-$updateid = cleanvar(intval($fileobj->updateid));
+$incidentid = clean_int($fileobj->incidentid);
+$updateid = clean_int($fileobj->updateid);
 $filename = cleanvar($fileobj->filename);
 $fileid = $fileobj->fileid;
 $visibility = $fileobj->category;

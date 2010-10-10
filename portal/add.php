@@ -20,8 +20,8 @@ $accesslevel = 'any';
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
-$contractid = cleanvar($_REQUEST['contractid']);
-$productid = cleanvar($_REQUEST['product']);
+$contractid = clean_int($_REQUEST['contractid']);
+$productid = clean_int($_REQUEST['product']);
 
 if (!empty($_SESSION['formerrors']['portaladdincident']))
 {
@@ -134,15 +134,15 @@ if (!$_REQUEST['action'])
 }
 else //submit
 {
-    $contactid = $_SESSION['contactid'];
-    $contractid = cleanvar($_REQUEST['contractid']);
-    $software = cleanvar($_REQUEST['software']);
+    $contactid = clean_int($_SESSION['contactid']);
+    $contractid = clean_int($_REQUEST['contractid']);
+    $software = clean_int($_REQUEST['software']);
     $incidenttitle = cleanvar($_REQUEST['title']);
     $probdesc = cleanvar($_REQUEST['probdesc']);
     $workarounds = cleanvar($_REQUEST['workarounds']);
     $reproduction = cleanvar($_REQUEST['reproduction']);
     $servicelevel = servicelevel_id2tag(maintenance_servicelevel($contractid));
-    $productid = cleanvar($_REQUEST['productid']);
+    $productid = clean_int($_REQUEST['productid']);
 
     $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
@@ -203,7 +203,7 @@ else //submit
                 while ($productinforow = mysql_fetch_object($result))
                 {
                     $var = "pinfo{$productinforow->id}";
-                    $pinfo = cleanvar($_POST[$var]);
+                    $pinfo = clean_dbstring($_POST[$var]);
                     $pisql = "INSERT INTO `{$dbIncidentProductInfo}` (incidentid, productinfoid, information) ";
                     $pisql .= "VALUES ('{$incidentid}', '{$productinforow->id}', '{$pinfo}')";
                     mysql_query($pisql);

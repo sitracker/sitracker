@@ -19,7 +19,7 @@ include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication
 require_once(APPLICATION_LIBPATH.'auth.inc.php');
 
-$transactiond = cleanvar($_REQUEST['transactionid']);
+$transactiond = clean_int($_REQUEST['transactionid']);
 $title = $strBilling;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

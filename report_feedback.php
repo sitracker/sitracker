@@ -25,8 +25,8 @@ $type = cleanvar($_REQUEST['type']);
 $dates = cleanvar($_REQUEST['dates']);
 $startdate = strtotime(cleanvar($_REQUEST['startdate']));
 $enddate = strtotime(cleanvar($_REQUEST['enddate']));
+$formid = clean_int($CONFIG['feedback_form']);
 
-$formid = $CONFIG['feedback_form'];
 $title = $strFeedbackReport;
 
 

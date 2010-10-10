@@ -18,7 +18,7 @@ $accesslevel = 'any';
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 $showclosed = cleanvar($_REQUEST['showclosed']);
-$site = cleanvar($_REQUEST['site']);
+$site = clean_int($_REQUEST['site']);
 
 if ($CONFIG['debug']) $dbg .= "Sess: ".print_r($_SESSION,true);
 

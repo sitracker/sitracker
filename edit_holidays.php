@@ -20,7 +20,7 @@ $title = $strEditHolidayEntitlement;
 switch ($_REQUEST['action'])
 {
     case 'save':
-        $max_carryover = cleanvar($_REQUEST['max_carryover']);
+        $max_carryover = clean_int($_REQUEST['max_carryover']);
         $archivedate = strtotime($_REQUEST['archivedate']);
         if ($archivedate < 1000) $archivedate = $now;
         $default_entitlement = cleanvar($_REQUEST['default_entitlement']);

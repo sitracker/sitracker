@@ -19,9 +19,9 @@ $fsdelim = (strstr($_SERVER['SCRIPT_FILENAME'],"/")) ? "/" : "\\";
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$updateid = cleanvar($_REQUEST['updateid']);
-$timestamp = cleanvar($_REQUEST['timestamp']);
-$tempid = cleanvar($_REQUEST['tempid']);
+$updateid = clean_int($_REQUEST['updateid']);
+$timestamp = clean_int($_REQUEST['timestamp']);
+$tempid = clean_int($_REQUEST['tempid']);
 
 if (empty($updateid)) trigger_error("!Error: Update ID was not set, not deleting!: {$updateid}", E_USER_WARNING);
 

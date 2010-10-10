@@ -687,8 +687,8 @@ function sla_target_content($incidentid, $target)
 {
     $rtn = '';
     global $dbUpdates;
-    $incidentid = cleanvar($incidentid);
-    $target = cleanvar($target);
+    $incidentid = clean_int($incidentid);
+    $target = clean_dbstring($target);
 
     $sql = "SELECT bodytext FROM `{$dbUpdates}` ";
     $sql .= "WHERE incidentid = '{$incidentid}' ";

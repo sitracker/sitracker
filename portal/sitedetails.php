@@ -38,9 +38,9 @@ if (isset($_POST['submit']))
     $email = cleanvar($_POST['email']);
     $websiteurl = cleanvar($_POST['websiteurl']);
     $notes = cleanvar($_POST['notes']);
-    $typeid = cleanvar($_POST['typeid']);
-    $owner = cleanvar($_POST['owner']);
-    $site = cleanvar($_POST['site']);
+    $typeid = clean_int($_POST['typeid']);
+    $owner = clean_int($_POST['owner']);
+    $site = clean_int($_POST['site']);
     $tags = cleanvar($_POST['tags']);
     $active = cleanvar($_POST['active']);
 

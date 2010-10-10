@@ -23,7 +23,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $title = ("$strContract - $strContractDetails");
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

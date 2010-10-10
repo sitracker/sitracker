@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $rpath = cleanvar($_REQUEST['rpath']);
 
 $sql = "DELETE FROM `{$dbNotes}` WHERE id='{$id}' AND userid='{$sit[2]}' LIMIT 1";

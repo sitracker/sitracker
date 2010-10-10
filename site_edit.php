@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $action = $_REQUEST['action'];
-$site = cleanvar($_REQUEST['site']);
+$site = clean_int($_REQUEST['site']);
 
 $title = $strEditSite;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -52,26 +52,27 @@ elseif ($action == "edit")
 }
 elseif ($action == "update")
 {
+    // External Variables
     // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
-    $incident_quantity = intval(cleanvar($_POST['incident_pool']));
-    $name = cleanvar($_POST['name']);
-    $department = cleanvar($_POST['department']);
-    $address1 = cleanvar($_POST['address1']);
-    $address2 = cleanvar($_POST['address2']);
-    $city = cleanvar($_POST['city']);
-    $county = cleanvar($_POST['county']);
-    $postcode = cleanvar($_POST['postcode']);
-    $country = cleanvar($_POST['country']);
-    $telephone = cleanvar($_POST['telephone']);
-    $fax = cleanvar($_POST['fax']);
-    $email = cleanvar($_POST['email']);
-    $websiteurl = cleanvar($_POST['websiteurl']);
-    $notes = cleanvar($_POST['notes']);
-    $typeid = cleanvar($_POST['typeid']);
-    $owner = cleanvar($_POST['owner']);
-    $site = cleanvar($_POST['site']);
-    $tags = cleanvar($_POST['tags']);
-    $active = cleanvar($_POST['active']);
+    $incident_quantity = clean_int($_POST['incident_pool']));
+    $name = clean_dbstring($_POST['name']);
+    $department = clean_dbstring($_POST['department']);
+    $address1 = clean_dbstring($_POST['address1']);
+    $address2 = clean_dbstring($_POST['address2']);
+    $city = clean_dbstring($_POST['city']);
+    $county = clean_dbstring($_POST['county']);
+    $postcode = clean_dbstring($_POST['postcode']);
+    $country = clean_dbstring($_POST['country']);
+    $telephone = clean_dbstring($_POST['telephone']);
+    $fax = clean_dbstring($_POST['fax']);
+    $email = clean_dbstring($_POST['email']);
+    $websiteurl = clean_dbstring($_POST['websiteurl']);
+    $notes = clean_dbstring($_POST['notes']);
+    $typeid = clean_int($_POST['typeid']);
+    $owner = clean_int($_POST['owner']);
+    $site = clean_int($_POST['site']);
+    $tags = clean_dbstring($_POST['tags']);
+    $active = clean_dbstring($_POST['active']);
 
     // Edit site, update the database
     $errors = 0;

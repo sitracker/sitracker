@@ -134,10 +134,10 @@ class Contact extends Person {
             $sql .= "siteid, address1, address2, city, county, country, postcode, email, phone, mobile, fax, ";
             $sql .= "department, notes, dataprotection_email, dataprotection_phone, dataprotection_address, ";
             $sql .= "timestamp_added, timestamp_modified, created, createdby, modified, modifiedby, contact_source) ";
-            $sql .= "VALUES ('".cleanvar($this->username)."', MD5('".cleanvar($this->password)."'), '".cleanvar($this->courtesytitle)."', '".cleanvar($this->forenames)."', '".cleanvar($this->surname)."', '".cleanvar($this->jobtitle)."', ";
-            $sql .= "'".cleanvar($this->siteid)."', '".cleanvar($this->address1)."', '".cleanvar($this->address2)."', '".cleanvar($this->city)."', '".cleanvar($this->county)."', '".cleanvar($this->country)."', '".cleanvar($this->postcode)."', '".cleanvar($this->email)."', ";
-            $sql .= "'".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', '".cleanvar($this->department)."', '".cleanvar($this->notes)."', '".cleanvar($dp['email'])."', ";
-            $sql .= "'".cleanvar($dp['phone'])."', '".cleanvar($dp['address'])."', '".cleanvar($now)."', '".cleanvar($now)."', NOW(), '".cleanvar($_SESSION['userid'])."', NOW(), '".cleanvar($_SESSION['userid'])."', '".cleanvar($this->source)."')";
+            $sql .= "VALUES ('".clean_dbstring($this->username)."', MD5('".clean_dbstring($this->password)."'), '".clean_dbstring($this->courtesytitle)."', '".clean_dbstring($this->forenames)."', '".clean_dbstring($this->surname)."', '".clean_dbstring($this->jobtitle)."', ";
+            $sql .= "'".clean_int($this->siteid)."', '".clean_dbstring($this->address1)."', '".clean_dbstring($this->address2)."', '".clean_dbstring($this->city)."', '".clean_dbstring($this->county)."', '".clean_dbstring($this->country)."', '".clean_dbstring($this->postcode)."', '".clean_dbstring($this->email)."', ";
+            $sql .= "'".clean_dbstring($this->phone)."', '".clean_dbstring($this->mobile)."', '".clean_dbstring($this->fax)."', '".clean_dbstring($this->department)."', '".clean_dbstring($this->notes)."', '".clean_dbstring($dp['email'])."', ";
+            $sql .= "'".clean_dbstring($dp['phone'])."', '".clean_dbstring($dp['address'])."', '".clean_int($now)."', '".clean_int($now)."', NOW(), '".clean_int($_SESSION['userid'])."', NOW(), '".clean_int($_SESSION['userid'])."', '".clean_dbstring($this->source)."')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -183,30 +183,30 @@ class Contact extends Person {
         {
             $dp = $this->get_dataprotection();
 
-            if (!empty($this->username)) $s[] = "username = '".cleanvar($this->username)."'";
-            if (!empty($this->password)) $s[] = "password = MD5('".cleanvar($this->password)."')";
-            if (!empty($this->jobtitle)) $s[] = "jobtitle = '".cleanvar($this->jobtitle)."'";
-            if (!empty($this->email)) $s[] = "email = '".cleanvar($this->email)."'";
-            if (!empty($this->phone)) $s[] = "phone = '".cleanvar($this->phone)."'";
-            if (!empty($this->mobile)) $s[] = "mobile = '".cleanvar($this->mobile)."'";
-            if (!empty($this->fax)) $s[] = "fax = '".cleanvar($this->fax)."'";
-            if (!empty($this->notify_contact)) $s[] = "notify_contactid = ".cleanvar($this->motify_contact)."'";
-            if (!empty($this->forenames)) $s[] = "forenames = '".cleanvar($this->forenames)."'";
-            if (!empty($this->surname)) $s[] = "surname = '".cleanvar($this->surname)."'";
-            if (!empty($this->courtesytitle)) $s[] = "courtesytitle = '".cleanvar($this->courtesytitle)."'";
-            if (!empty($this->siteid)) $s[] = "siteid = ".cleanvar($this->siteid)."";
-            if (!empty($this->department)) $s[] = "department = '".cleanvar($this->department)."'";
-            if (!empty($this->address1)) $s[] = "address1 = '".cleanvar($this->address1)."'";
-            if (!empty($this->address2)) $s[] = "address2 = '".cleanvar($this->address2)."'";
-            if (!empty($this->city)) $s[] = "city = '".cleanvar($this->city)."'";
-            if (!empty($this->county)) $s[] = "county = '".cleanvar($this->county)."'";
-            if (!empty($this->country)) $s[] = "country = '".cleanvar($this->country)."'";
-            if (!empty($this->postcode)) $s[] = "postcode = '".cleanvar($this->postcode)."'";
-            if (!empty($this->dataprotection_email)) $s[] = "dataprotection_email = '".cleanvar($db['email'])."'";
-            if (!empty($this->dataprotection_phone)) $s[] = "dataprotection_phone = '".cleanvar($db['phone'])."'";
-            if (!empty($this->dataprotection_address)) $s[] = "dataprotection_address = '".cleanvar($db['address'])."'";
-            if (!empty($this->notes)) $s[] = "notes = '".cleanvar($this->notes)."'";
-            if (!empty($this->source)) $s[] = "contact_source = '".cleanvar($this->source)."'";
+            if (!empty($this->username)) $s[] = "username = '".clean_dbstring($this->username)."'";
+            if (!empty($this->password)) $s[] = "password = MD5('".clean_dbstring($this->password)."')";
+            if (!empty($this->jobtitle)) $s[] = "jobtitle = '".clean_dbstring($this->jobtitle)."'";
+            if (!empty($this->email)) $s[] = "email = '".clean_dbstring($this->email)."'";
+            if (!empty($this->phone)) $s[] = "phone = '".clean_dbstring($this->phone)."'";
+            if (!empty($this->mobile)) $s[] = "mobile = '".clean_dbstring($this->mobile)."'";
+            if (!empty($this->fax)) $s[] = "fax = '".clean_dbstring($this->fax)."'";
+            if (!empty($this->notify_contact)) $s[] = "notify_contactid = ".clean_int($this->motify_contact)."'";
+            if (!empty($this->forenames)) $s[] = "forenames = '".clean_dbstring($this->forenames)."'";
+            if (!empty($this->surname)) $s[] = "surname = '".clean_dbstring($this->surname)."'";
+            if (!empty($this->courtesytitle)) $s[] = "courtesytitle = '".clean_dbstring($this->courtesytitle)."'";
+            if (!empty($this->siteid)) $s[] = "siteid = ".clean_int($this->siteid)."";
+            if (!empty($this->department)) $s[] = "department = '".clean_dbstring($this->department)."'";
+            if (!empty($this->address1)) $s[] = "address1 = '".clean_dbstring($this->address1)."'";
+            if (!empty($this->address2)) $s[] = "address2 = '".clean_dbstring($this->address2)."'";
+            if (!empty($this->city)) $s[] = "city = '".clean_dbstring($this->city)."'";
+            if (!empty($this->county)) $s[] = "county = '".clean_dbstring($this->county)."'";
+            if (!empty($this->country)) $s[] = "country = '".clean_dbstring($this->country)."'";
+            if (!empty($this->postcode)) $s[] = "postcode = '".clean_dbstring($this->postcode)."'";
+            if (!empty($this->dataprotection_email)) $s[] = "dataprotection_email = '".clean_dbstring($db['email'])."'";
+            if (!empty($this->dataprotection_phone)) $s[] = "dataprotection_phone = '".clean_dbstring($db['phone'])."'";
+            if (!empty($this->dataprotection_address)) $s[] = "dataprotection_address = '".clean_dbstring($db['address'])."'";
+            if (!empty($this->notes)) $s[] = "notes = '".clean_dbstring($this->notes)."'";
+            if (!empty($this->source)) $s[] = "contact_source = '".clean_dbstring($this->source)."'";
             if (!empty($this->active))
             {
                 if ($this->active) $s[] = "active = 'true'";
