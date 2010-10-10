@@ -181,7 +181,7 @@ switch ($_REQUEST['mode'])
             $status = 'disabled';
             $interval = 0;
         }
-        $type = clean_fixed_list($_REQUEST['type'], array('interval','date');
+        $type = clean_fixed_list($_REQUEST['type'], array('interval','date'));
         $frequency = clean_fixed_list($_REQUEST['frequency'], array('','month','year'));
         $date_offset = clean_int($_REQUEST['date_offset']);
         $date_time = cleanvar($_REQUEST['date_time']);
