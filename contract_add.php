@@ -23,7 +23,7 @@ $title = $strAddContract;
 
 // External variables
 $action = $_REQUEST['action'];
-$siteid = cleanvar($_REQUEST['siteid']);
+$siteid = clean_int($_REQUEST['siteid']);
 
 // Show add maintenance form
 if ($action == "showform" OR $action=='')
@@ -203,17 +203,17 @@ if ($action == "showform" OR $action=='')
 elseif ($action == "add")
 {
     // External Variables
-    $site = cleanvar($_REQUEST['site']);
-    $product = cleanvar($_REQUEST['product']);
-    $reseller = cleanvar($_REQUEST['reseller']);
-    $licence_quantity = cleanvar($_REQUEST['licence_quantity']);
-    $licence_type = cleanvar($_REQUEST['licence_type']);
-    $admincontact = cleanvar($_REQUEST['admincontact']);
-    $notes = cleanvar($_REQUEST['notes']);
-    $servicelevelid = cleanvar($_REQUEST['servicelevelid']);
-    $incidentpoolid = cleanvar($_REQUEST['incidentpoolid']);
-    $productonly = cleanvar($_REQUEST['productonly']);
-    $term = cleanvar($_REQUEST['term']);
+    $site = clean_int($_REQUEST['site']);
+    $product = clean_int($_REQUEST['product']);
+    $reseller = clean_int($_REQUEST['reseller']);
+    $licence_quantity = clean_int($_REQUEST['licence_quantity']);
+    $licence_type = clean_int($_REQUEST['licence_type']);
+    $admincontact = clean_int($_REQUEST['admincontact']);
+    $notes = clean_dbstring($_REQUEST['notes']);
+    $servicelevelid = clean_int($_REQUEST['servicelevelid']);
+    $incidentpoolid = clean_int($_REQUEST['incidentpoolid']);
+    $productonly = clean_fixed_list($_REQUEST['productonly'], array('no','yes'));
+    $term = clean_fixed_list($_REQUEST['term'], array('no','yes'));
     $contacts = cleanvar($_REQUEST['contacts']);
     $timed = cleanvar($_REQUEST['timed']);
     $startdate = strtotime($_REQUEST['startdate']);
@@ -231,11 +231,11 @@ elseif ($action == "add")
     {
         $expirydate = strtotime($_REQUEST['expiry']);
     }
-    $amount =  cleanvar($_POST['amount']);
+    $amount =  clean_float($_POST['amount']);
     if ($amount == '') $amount = 0;
-    $unitrate =  cleanvar($_POST['unitrate']);
+    $unitrate =  clean_float($_POST['unitrate']);
     if ($unitrate == '') $unitrate = 0;
-    $incidentrate =  cleanvar($_POST['incidentrate']);
+    $incidentrate =  clean_float($_POST['incidentrate']);
     if ($incidentrate == '') $incidentrate = 0;
 
     $billtype = cleanvar($_REQUEST['billtype']);
@@ -246,7 +246,7 @@ elseif ($action == "add")
     elseif ($billtype == 'billperincident') $unitrate = 0;
 
     $allcontacts = 'no';
-    if ($contacts == 'amount') $numcontacts = cleanvar($_REQUEST['numcontacts']);
+    if ($contacts == 'amount') $numcontacts = clean_int($_REQUEST['numcontacts']);
     elseif ($contacts == 'all') $allcontacts = 'yes';
 
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");

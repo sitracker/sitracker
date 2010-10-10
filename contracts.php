@@ -22,8 +22,8 @@ $title = $strBrowseContracts;
 $pagescripts = array('AutoComplete.js');
 
 // External variables
-$productid = cleanvar($_REQUEST['productid']);
-$resellerid = cleanvar($_REQUEST['resellerid']);
+$productid = clean_int($_REQUEST['productid']);
+$resellerid = clean_int($_REQUEST['resellerid']);
 $search_string = cleanvar($_REQUEST['search_string']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);

@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$tagid = cleanvar($_REQUEST['tagid']);
+$tagid = clean_int($_REQUEST['tagid']);
 $orderby = cleanvar($_REQUEST['orderby']);
 
 if (empty($orderby)) $orderby = "name";

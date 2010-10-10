@@ -23,8 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $approve = $_REQUEST['approve'];
 $startdate = cleanvar($_REQUEST['startdate']);
-$type = cleanvar($_REQUEST['type']);
-$user = cleanvar($_REQUEST['user']);
+$type = clean_int($_REQUEST['type']);
+$user = clean_int($_REQUEST['user']);
 $length = cleanvar($_REQUEST['length']);
 $view = cleanvar($_REQUEST['view']);
 

@@ -36,13 +36,7 @@ switch ($action)
     case 'edittask':
         $name = cleanvar($_REQUEST['name']);
         $description = cleanvar($_REQUEST['description']);
-        $priority = cleanvar($_REQUEST['priority']);
-        $start_time_picker_hour = cleanvar($_REQUEST['start_time_picker_hour']);
-        $start_time_picker_minute = cleanvar($_REQUEST['start_time_picker_minute']);
-        $due_time_picker_hour = cleanvar($_REQUEST['due_time_picker_hour']);
-        $due_time_picker_minute = cleanvar($_REQUEST['due_time_picker_minute']);     
-        $end_time_picker_hour = cleanvar($_REQUEST['end_time_picker_hour']);
-        $end_time_picker_minute = cleanvar($_REQUEST['end_time_picker_minute']);
+        $priority = clean_int($_REQUEST['priority']);
         
         if (!empty($_REQUEST['duedate']))
         {
@@ -77,11 +71,11 @@ switch ($action)
         
         if ($completion == 100 AND $enddate == '') $enddate = $now;
         $value = cleanvar($_REQUEST['value']);
-        $owner = cleanvar($_REQUEST['owner']);
+        $owner = clean_int($_REQUEST['owner']);
         $distribution = cleanvar($_REQUEST['distribution']);
         $old_name = cleanvar($_REQUEST['old_name']);
         $old_description = cleanvar($_REQUEST['old_description']);
-        $old_priority = cleanvar($_REQUEST['old_priority']);
+        $old_priority = clean_int($_REQUEST['old_priority']);
         $old_startdate = cleanvar($_REQUEST['old_startdate']);
         $old_duedate = cleanvar($_REQUEST['old_duedate']);
         $old_completion = cleanvar($_REQUEST['old_completion']);

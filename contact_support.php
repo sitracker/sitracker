@@ -23,7 +23,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $mode = $_REQUEST['mode'];
 if (!empty($_REQUEST['start'])) $start = strtotime($_REQUEST['start']);
 else $start=0;

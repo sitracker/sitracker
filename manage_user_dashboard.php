@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$dashboardid = intval(cleanvar($_REQUEST['id']));
+$dashboardid = clean_int($_REQUEST['id']));
 $title = $strManageYourDashboard;
 
 $sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '{$_SESSION['userid']}'";

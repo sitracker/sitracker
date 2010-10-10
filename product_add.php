@@ -72,7 +72,7 @@ else
 {
     // External variables
     $name = cleanvar($_REQUEST['name']);
-    $vendor = cleanvar($_REQUEST['vendor']);
+    $vendor = clean_int($_REQUEST['vendor']);
     $description = cleanvar($_REQUEST['description']);
 
     $_SESSION['formdata']['add_product'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);

@@ -17,10 +17,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$incidentid = cleanvar($_REQUEST['incidentid']);
-$updateid = cleanvar($_REQUEST['updateid']);
-$contactid = cleanvar($_REQUEST['contactid']);
-$id = cleanvar($_REQUEST['id']);
+$incidentid = clean_int($_REQUEST['incidentid']);
+$updateid = clean_int($_REQUEST['updateid']);
+$contactid = clean_int($_REQUEST['contactid']);
+$id = clean_int($_REQUEST['id']);
 $error = cleanvar($_REQUEST['error']);
 $send_email = cleanvar($_REQUEST['send_email']);
 

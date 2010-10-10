@@ -621,8 +621,8 @@ elseif ($mode == 'approve')
         exit;
     }
 
-    $transactionid = cleanvar($_REQUEST['transactionid']);
-    $selected = $_POST['selected'];
+    $transactionid = clean_int($_REQUEST['transactionid']);
+    $selected = cleanvar($_POST['selected']);
 
     if (!empty($transactionid))
     {

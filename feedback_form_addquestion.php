@@ -24,16 +24,16 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 if ($_SESSION['tcs'] != $tcs) { header("Location: login.php"); exit; }
 
 // External variables
-$qid = cleanvar($_REQUEST['id']);
-$fid = cleanvar($_REQUEST['fid']);
-$formid = cleanvar($_POST['formid']);
-$question = cleanvar($_POST['question']);
-$questiontext = cleanvar($_POST['questiontext']);
-$sectiontext = cleanvar($_POST['sectiontext']);
-$taborder = cleanvar($_POST['taborder']);
-$type = cleanvar($_POST['type']);
-$required = cleanvar($_POST['required']);
-$options = cleanvar($_POST['options']);
+$qid = clean_int($_REQUEST['id']);
+$fid = clean_int($_REQUEST['fid']);
+$formid = clean_int($_POST['formid']);
+$question = clean_dbstring($_POST['question']);
+$questiontext = clean_dbstring($_POST['questiontext']);
+$sectiontext = clean_dbstring($_POST['sectiontext']);
+$taborder = clean_int($_POST['taborder']);
+$type = clean_dbstring($_POST['type']);
+$required = clean_fixed_list($_POST['required'], array('false','true'));
+$options = clean_dbstring($_POST['options']);
 
 switch ($_REQUEST['action'])
 {

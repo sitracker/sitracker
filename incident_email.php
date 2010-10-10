@@ -456,7 +456,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         $bccfield = cleanvar($_REQUEST['bccfield']);
         $subjectfield = cleanvar($_REQUEST['subjectfield'], FALSE, TRUE, FALSE);
         $emailtype = cleanvar($_REQUEST['emailtype']);
-        $newincidentstatus = cleanvar($_REQUEST['newincidentstatus']);
+        $newincidentstatus = clean_int($_REQUEST['newincidentstatus']);
         $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
         $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
         $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);

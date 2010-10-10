@@ -19,8 +19,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $mode = cleanvar($_REQUEST['mode']);
-$updateid = cleanvar($_REQUEST['updateid']);
-$incidentid = cleanvar($_REQUEST['incidentid']);
+$updateid = clean_int($_REQUEST['updateid']);
+$incidentid = clean_int($_REQUEST['incidentid']);
 $expand = cleanvar($_REQUEST['expand']);
 $view = cleanvar($_REQUEST['view']);
 $offset = cleanvar($_REQUEST['offset']);

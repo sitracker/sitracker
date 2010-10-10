@@ -52,8 +52,8 @@ $title = $strGlobalSignature;
 
 // External variables
 $action = cleanvar($_REQUEST['action']);
-$sig_id = cleanvar($_REQUEST['sig_id']);
-$signature = cleanvar($_REQUEST['signature']);
+$sig_id = clean_int($_REQUEST['sig_id']);
+$signature = clean_dbstring($_REQUEST['signature']);
 $formaction = cleanvar($_REQUEST['formaction']);
 
 if (!empty($signature))

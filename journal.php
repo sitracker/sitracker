@@ -25,9 +25,9 @@ $title = $strBrowseJournal;
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$offset = cleanvar($_REQUEST['offset']);
-$page = cleanvar($_REQUEST['page']);
-$perpage = cleanvar($_REQUEST['perpage']);
+$offset = clean_int($_REQUEST['offset']);
+$page = clean_int($_REQUEST['page']);
+$perpage = clean_int($_REQUEST['perpage']);
 $search_string = cleanvar($_REQUEST['search_string']);
 $type = cleanvar($_REQUEST['type']);
 $sort = cleanvar($_REQUEST['sort']);

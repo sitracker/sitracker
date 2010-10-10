@@ -23,8 +23,8 @@ $title = $strViewTask;
 
 // External variables
 $action = $_REQUEST['action'];
-$id = cleanvar($_REQUEST['incident']);
-$taskid = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['incident']);
+$taskid = clean_int($_REQUEST['id']);
 $mode = cleanvar($_REQUEST['mode']);
 
 if ($mode == 'incident')

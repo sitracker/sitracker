@@ -27,7 +27,7 @@ $action = $_REQUEST['action'];
 $origtab = cleanvar($_REQUEST['origtab']);
 $origref = cleanvar($_REQUEST['origref']);
 $linkref = cleanvar($_REQUEST['linkref']);
-$linktypeid = cleanvar($_REQUEST['linktype']);
+$linktypeid = clean_int($_REQUEST['linktype']);
 $direction = cleanvar($_REQUEST['dir']);
 if ($direction == '') $direction = 'lr';
 $redirect = cleanvar($_REQUEST['redirect']);

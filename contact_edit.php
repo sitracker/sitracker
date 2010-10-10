@@ -140,29 +140,29 @@ else if ($action == "update")
 {
     // External variables
     $contact = clean_int($_POST['contact']);
-    $courtesytitle = cleanvar($_POST['courtesytitle']);
-    $surname = cleanvar($_POST['surname']);
-    $forenames = cleanvar($_POST['forenames']);
+    $courtesytitle = clean_dbstring($_POST['courtesytitle']);
+    $surname = clean_dbstring($_POST['surname']);
+    $forenames = clean_dbstring($_POST['forenames']);
     $siteid = clean_int($_POST['siteid']);
-    $email = strtolower(cleanvar($_POST['email']));
-    $phone = cleanvar($_POST['phone']);
-    $mobile = cleanvar($_POST['mobile']);
-    $fax = cleanvar($_POST['fax']);
-    $address1 = cleanvar($_POST['address1']);
-    $address2 = cleanvar($_POST['address2']);
-    $city = cleanvar($_POST['city']);
-    $county = cleanvar($_POST['county']);
-    $postcode = cleanvar($_POST['postcode']);
-    $country = cleanvar($_POST['country']);
-    $notes = cleanvar($_POST['notes']);
-    $dataprotection_email = cleanvar($_POST['dataprotection_email']);
-    $dataprotection_address = cleanvar($_POST['dataprotection_address']);
-    $dataprotection_phone = cleanvar($_POST['dataprotection_phone']);
-    $active = cleanvar($_POST['active']);
-    $jobtitle = cleanvar($_POST['jobtitle']);
-    $department = cleanvar($_POST['department']);
+    $email = strtolower(clean_dbstring($_POST['email']));
+    $phone = clean_dbstring($_POST['phone']);
+    $mobile = clean_dbstring($_POST['mobile']);
+    $fax = clean_dbstring($_POST['fax']);
+    $address1 = clean_dbstring($_POST['address1']);
+    $address2 = clean_dbstring($_POST['address2']);
+    $city = clean_dbstring($_POST['city']);
+    $county = clean_dbstring($_POST['county']);
+    $postcode = clean_dbstring($_POST['postcode']);
+    $country = clean_dbstring($_POST['country']);
+    $notes = clean_dbstring($_POST['notes']);
+    $dataprotection_email = clean_dbstring($_POST['dataprotection_email']);
+    $dataprotection_address = clean_dbstring($_POST['dataprotection_address']);
+    $dataprotection_phone = clean_dbstring($_POST['dataprotection_phone']);
+    $active = clean_dbstring($_POST['active']);
+    $jobtitle = clean_dbstring($_POST['jobtitle']);
+    $department = clean_dbstring($_POST['department']);
     $notify_contactid = clean_int($_POST['notify_contactid']);
-    $tags = cleanvar($_POST['tags']);
+    $tags = clean_dbstring($_POST['tags']);
 
     // Save changes to database
     $errors = 0;

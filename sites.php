@@ -22,7 +22,7 @@ $title = $strBrowseSites;
 
 // External variables
 $search_string = cleanvar($_REQUEST['search_string']);
-$owner = cleanvar($_REQUEST['owner']);
+$owner = clean_int($_REQUEST['owner']);
 $submit_value = cleanvar($_REQUEST['submit']);
 $displayinactive = cleanvar($_REQUEST['displayinactive']);
 if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')

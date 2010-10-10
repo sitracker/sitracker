@@ -24,9 +24,9 @@ $user = cleanvar($_REQUEST['user']);
 $sent = cleanvar($_REQUEST['sent']);
 $mode = cleanvar($_REQUEST['mode']);
 $action = cleanvar($_REQUEST['action']);
-$type = cleanvar($_REQUEST['type']);
+$type = clean_int($_REQUEST['type']);
 $memo = cleanvar($_REQUEST['memo'], TRUE, FALSE, FALSE);
-$approvaluser = cleanvar($_REQUEST['approvaluser']);
+$approvaluser = clean_int($_REQUEST['approvaluser']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

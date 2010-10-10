@@ -23,12 +23,12 @@ require_once (APPLICATION_LIBPATH.'auth.inc.php');
 
 
 $mode = cleanvar($_REQUEST['mode']);
-$amount = cleanvar($_REQUEST['amount']);
-$contractid = cleanvar($_REQUEST['contractid']);
+$amount = clean_float($_REQUEST['amount']);
+$contractid = clean_int($_REQUEST['contractid']);
 $sourceservice = cleanvar($_REQUEST['sourceservice']);
 $destinationservice = cleanvar($_REQUEST['destinationservice']);
 $reason = cleanvar($_REQUEST['reason']);
-$serviceid = cleanvar($_REQUEST['serviceid']);
+$serviceid = clean_int($_REQUEST['serviceid']);
 if (empty($mode)) $mode = 'showform';
 
 switch ($mode)
@@ -172,7 +172,7 @@ switch ($mode)
         }
         else
         {
-            $originalcredit = cleanvar($_REQUEST['originalcredit']);
+            $originalcredit = clean_float($_REQUEST['originalcredit']);
 
             $startdate = strtotime($_REQUEST['startdate']);
             if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
@@ -190,11 +190,11 @@ switch ($mode)
 
             if ($editbilling == "true")
             {
-                $amount =  cleanvar($_POST['amount']);
+                $amount =  clean_float($_POST['amount']);
                 if ($amount == '') $amount = 0;
-                $unitrate =  cleanvar($_POST['unitrate']);
+                $unitrate =  clean_float($_POST['unitrate']);
                 if ($unitrate == '') $unitrate = 0;
-                $incidentrate =  cleanvar($_POST['incidentrate']);
+                $incidentrate =  clean_float($_POST['incidentrate']);
                 if ($incidentrate == '') $incidentrate = 0;
 
                 $billtype = cleanvar($_REQUEST['billtype']);

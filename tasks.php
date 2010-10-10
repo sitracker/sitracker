@@ -24,7 +24,7 @@ if (!$CONFIG['tasks_enabled'])
     header("Location: main.php");
 }
 
-$id = cleanvar($_REQUEST['incident']);
+$id = clean_int($_REQUEST['incident']);
 if (!empty($id))
 {
     $title = $strActivities;

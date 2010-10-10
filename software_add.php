@@ -77,7 +77,7 @@ else
     // External variables
     $name = cleanvar($_REQUEST['name']);
     $tags = cleanvar($_REQUEST['tags']);
-    $vendor = cleanvar($_REQUEST['vendor']);
+    $vendor = clean_int($_REQUEST['vendor']);
     if (!empty($_REQUEST['lifetime_start']))
     {
         $lifetime_start = date('Y-m-d',strtotime($_REQUEST['lifetime_start']));

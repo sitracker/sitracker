@@ -30,11 +30,11 @@ $pagescripts = array('FormProtector.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // External variables
-$user = cleanvar($_REQUEST['user']);
-$role = cleanvar($_REQUEST['role']);
+$user = clean_int($_REQUEST['user']);
+$role = clean_int($_REQUEST['role']);
 $action = cleanvar($_REQUEST['action']);
 $permselection = cleanvar($_REQUEST['perm']);
-$permid = cleanvar($_REQUEST['permid']);
+$permid = clean_int($_REQUEST['permid']);
 $seltab = cleanvar($_REQUEST['tab']);
 
 if (empty($action) OR $action == "showform")

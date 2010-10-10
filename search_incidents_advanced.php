@@ -33,7 +33,7 @@ $search_servicelevel = cleanvar($_REQUEST['search_servicelevel']);
 $search_details = cleanvar($_REQUEST['search_details']);
 $search_range = cleanvar($_REQUEST['search_range']);
 $search_date = cleanvar($_REQUEST['search_date']);
-$search_user = cleanvar($_REQUEST['search_user']);
+$search_user = clean_int($_REQUEST['search_user']);
 $action = cleanvar($_REQUEST['action']);
 
 

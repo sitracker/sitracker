@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $action = cleanvar($_REQUEST['action']);
 
 if (empty($action) OR $action=='edit')
@@ -107,7 +107,7 @@ else
       // Save
     // External variables
     $name = cleanvar($_REQUEST['name']);
-    $vendor = cleanvar($_REQUEST['vendor']);
+    $vendor = clean_int($_REQUEST['vendor']);
     $tags = cleanvar($_REQUEST['tags']);
     if (!empty($_REQUEST['lifetime_start'])) $lifetime_start = date('Y-m-d',strtotime($_REQUEST['lifetime_start']));
     else $lifetime_start = '';
