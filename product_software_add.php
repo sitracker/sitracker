@@ -23,8 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $action = mysql_real_escape_string($_REQUEST['action']);
-$productid = cleanvar($_REQUEST['productid']);
-$softwareid = cleanvar($_REQUEST['softwareid']);
+$productid = clean_int($_REQUEST['productid']);
+$softwareid = clean_int($_REQUEST['softwareid']);
 $context = cleanvar($_REQUEST['context']);
 $return = cleanvar($_REQUEST['return']);
 

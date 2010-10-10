@@ -22,9 +22,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$product = cleanvar($_REQUEST['product']);
-$information = cleanvar($_POST['information']);
-$moreinformation = cleanvar($_POST['moreinformation']);
+$product = clean_int($_REQUEST['product']);
+$information = clean_dbstring($_POST['information']);
+$moreinformation = clean_dbstring($_POST['moreinformation']);
+
 $title = $strAddProductInformation;
 
 // Show add product information form

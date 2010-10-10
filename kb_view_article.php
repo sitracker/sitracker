@@ -22,11 +22,11 @@ $title = $strKnowledgeBaseArticle;
 
 if (!empty($_REQUEST['id']))
 {
-    $id = cleanvar($_REQUEST['id']);
+    $id = clean_int($_REQUEST['id']);
 }
 if (!empty($_REQUEST['kbid']))
 {
-    $id = cleanvar($_REQUEST['kbid']);
+    $id = clean_int($_REQUEST['kbid']);
 }
 if (empty($id))
 {

@@ -23,7 +23,7 @@ $title = $strEditServiceLevel;
 
 // External variables
 $tag = cleanvar($_REQUEST['tag']);
-$priority = cleanvar($_REQUEST['priority']);
+$priority = clean_int($_REQUEST['priority']);
 $action = $_REQUEST['action'];
 
 if (empty($action) OR $action == "showform")
@@ -90,14 +90,14 @@ if (empty($action) OR $action == "showform")
 elseif ($action == "edit")
 {
     // External variables
-    $id = cleanvar($_POST['id']);
-    $initial_response_mins = cleanvar($_POST['initial_response_mins']);
-    $prob_determ_mins = cleanvar($_POST['prob_determ_mins']);
-    $action_plan_mins = cleanvar($_POST['action_plan_mins']);
-    $resolution_days = cleanvar($_POST['resolution_days']);
-    $review_days = cleanvar($_POST['review_days']);
-    $engineerPeriod = cleanvar($_POST['engineerPeriod']);
-    $customerPeriod = cleanvar($_POST['customerPeriod']);
+    $id = clean_int($_POST['id']);
+    $initial_response_mins = clean_int($_POST['initial_response_mins']);
+    $prob_determ_mins = clean_int($_POST['prob_determ_mins']);
+    $action_plan_mins = clean_int($_POST['action_plan_mins']);
+    $resolution_days = clean_int($_POST['resolution_days']);
+    $review_days = clean_int($_POST['review_days']);
+    $engineerPeriod = clean_int($_POST['engineerPeriod']);
+    $customerPeriod = clean_int($_POST['customerPeriod']);
     $allow_reopen = cleanvar($_POST['allow_reopen']);
     if (!empty($allow_reopen))
     {
@@ -107,7 +107,7 @@ elseif ($action == "edit")
     {
         $allow_reopen = 'no';
     }
-    $limit = cleanvar($_POST['limit']);
+    $limit = clean_int($_POST['limit']);
     if ($limit == '') $limit = 0;
     if (!empty($_POST['timed']))
     {

@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // FIXME i18n Whole page
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $action = $_REQUEST['action'];
 $templatetype = cleanvar($_REQUEST['template']);
 
@@ -443,7 +443,7 @@ elseif ($action == "update")
 
     $cust_vis = cleanvar($_POST['cust_vis']);
     $storeinlog = cleanvar($_POST['storeinlog']);
-    $id = cleanvar($_POST['id']);
+    $id = clean_int($_POST['id']);
     $type = cleanvar($_POST['type']);
 
 //     echo "<pre>".print_r($_POST,true)."</pre>";
