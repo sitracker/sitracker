@@ -20,8 +20,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$tag = mysql_real_escape_string($_REQUEST['tag']);
-$priority = mysql_real_escape_string($_REQUEST['priority']);
+$tag = clean_dbstring($_REQUEST['tag']);
+$priority = clean_dbstring($_REQUEST['priority']);
 $action = $_REQUEST['action'];
 
 if (empty($action) OR $action == "showform")

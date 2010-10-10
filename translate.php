@@ -206,7 +206,7 @@ elseif ($_REQUEST['mode'] == "show")
     {
         if ($showtranslated === TRUE OR ($showtranslated === FALSE AND empty($foreignvalues[$key]) === TRUE))
         {
-            if ($_REQUEST['lang'] == 'zz') $foreignvalues[$key] = $key;
+            if ($tolang == 'zz') $foreignvalues[$key] = $key;
             echo "<tr class='$shade'><td><label for=\"{$key}\"><code>{$key}</code></label></td>";
             echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
 
@@ -231,7 +231,7 @@ elseif ($_REQUEST['mode'] == "show")
     }
     echo "</table>";
     echo "<input type='hidden' name='origcount' value='{$origcount}' />";
-    echo "<input name='lang' value='{$_REQUEST['lang']}' type='hidden' /><input name='mode' value='save' type='hidden' />";
+    echo "<input name='lang' value='{$tolang}' type='hidden' /><input name='mode' value='save' type='hidden' />";
     echo "<div align='center'>";
     if (is_writable($myFile))
     {
@@ -249,8 +249,7 @@ elseif ($_REQUEST['mode'] == "save")
 {
     $badchars = array('.','/','\\');
 
-    $lang = cleanvar($_REQUEST['lang']);
-    $lang = str_replace($badchars, '', $lang);
+    $lang = str_replace($badchars, '', $tolang);
     $origcount = clean_int($_REQUEST['origcount']);
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
 
