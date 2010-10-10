@@ -61,7 +61,7 @@ elseif ($mode == 'runreport')
     if (empty($startdate)) $startdate = $now - 31536000; // 1 year ago
     if (empty($enddate)) $enddate = $now;
 
-    $calcote = cleanvar($_REQUEST['calcote']);
+    $calcote = clean_fixed_list($_REQUEST['calcote'], array('','no','yes'));
     $sql = "SELECT userid, duration, timestamp FROM `{$dbUpdates}` WHERE timestamp >= '{$startdate}' AND timestamp <= '{$enddate}' AND duration != 0 AND duration IS NOT NULL ORDER BY timestamp";
     // echo $sql;
     $result = mysql_query($sql);

@@ -72,13 +72,13 @@ else
             // External variables
             $name = cleanvar($_POST['name']);
             $description = cleanvar($_POST['description']);
-            $priority = cleanvar($_POST['priority']);
+            $priority = clean_int($_POST['priority']);
             if (!empty($_POST['duedate'])) $duedate = strtotime($_POST['duedate']);
             else $duedate = '';
             if (!empty($_POST['startdate'])) $startdate = strtotime($_POST['startdate']);
             else $startdate = '';
-            $completion = cleanvar($_POST['completion']);
-            $value = cleanvar($_POST['value']);
+            $completion = clean_int($_POST['completion']);
+            $value = clean_float($_POST['value']);
             $distribution = cleanvar($_POST['distribution']);
             $taskuser = cleanvar($_POST['taskuser']);
             $start_time_picker_hour = cleanvar($_POST['start_time_picker_hour']);

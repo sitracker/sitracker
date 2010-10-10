@@ -23,8 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $type = cleanvar($_REQUEST['type']);
-$user = cleanvar($_REQUEST['user']);
-$softwareid = cleanvar($_REQUEST['softwareid']);
+$user = clean_int($_REQUEST['user']);
+$softwareid = clean_int($_REQUEST['softwareid']);
 $queue = cleanvar($_REQUEST['queue']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
@@ -187,7 +187,7 @@ switch ($type)
                     break;
             }
         }
-echo $sql;
+
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $rowcount = mysql_num_rows($result);

@@ -25,7 +25,7 @@ $title = 'Contact Details';
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = intval(cleanvar($_REQUEST['id']));
+$id = clean_int($_REQUEST['id']);
 $output = cleanvar($_REQUEST['output']);
 $title = $strContactDetails;
 

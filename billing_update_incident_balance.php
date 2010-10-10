@@ -20,7 +20,7 @@ require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 
 $mode = cleanvar($_REQUEST['mode']);
-$incidentid = cleanvar($_REQUEST['incidentid']);
+$incidentid = clean_int($_REQUEST['incidentid']);
 $title = "{$strUpdateIncidentXsBalance}, $incidentid";
 
 if (empty($mode))
@@ -51,8 +51,8 @@ if (empty($mode))
 }
 elseif ($mode == 'update')
 {
-    $amount = cleanvar($_REQUEST['amount']);
-    $description = cleanvar($_REQUEST['description']);
+    $amount = clean_int($_REQUEST['amount']);
+    $description = clean_dbstring($_REQUEST['description']);
 
     $sql = "SELECT closed, status, owner FROM `{$dbIncidents}` WHERE id = {$incidentid}";
 

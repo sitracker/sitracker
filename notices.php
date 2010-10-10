@@ -44,7 +44,7 @@ if ($action == 'new')
 elseif ($action == 'post')
 {
     $text = cleanvar($_REQUEST['text']);
-    $type = cleanvar($_REQUEST['type']);
+    $type = clean_int($_REQUEST['type']);
     $durability = cleanvar($_REQUEST['durability']);
     $gid = md5($text);
 
@@ -80,7 +80,7 @@ elseif ($action == 'post')
 }
 elseif ($action == 'delete')
 {
-    $noticeid = cleanvar($_REQUEST['id']);
+    $noticeid = clean_int($_REQUEST['id']);
 
     $sql = "SELECT referenceid, type FROM `{$dbNotices}` WHERE id='{$noticeid}'";
     $result = mysql_query($sql);

@@ -22,8 +22,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
-$destinationid = cleanvar($_REQUEST['destinationid']);
+$id = clean_int($_REQUEST['id']);
+$destinationid = clean_int($_REQUEST['destinationid']);
 
 if (empty($id))
 {

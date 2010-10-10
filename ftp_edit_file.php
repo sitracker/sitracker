@@ -23,7 +23,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Vars
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $mode = cleanvar($_REQUEST['mode']);
 $title = $strEditFTPdetailsUpload;
 

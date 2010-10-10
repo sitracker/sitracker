@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $submit = $_REQUEST['submit'];
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 
 // No submit detected show edit form
@@ -103,30 +103,30 @@ if (empty($submit))
 else
 {
     // External variables
-    $externalid = cleanvar($_POST['externalid']);
+    $externalid = clean_int($_POST['externalid']);
     $type = cleanvar($_POST['type']);
     $ccemail = cleanvar($_POST['ccemail']);
     $escalationpath = cleanvar($_POST['escalationpath']);
     $externalengineer = cleanvar($_POST['externalengineer']);
     $externalemail = cleanvar($_POST['externalemail']);
     $title = cleanvar($_POST['title']);
-    $contact = cleanvar($_POST['contact']);
-    $software = cleanvar($_POST['software']);
+    $contact = clean_int($_POST['contact']);
+    $software = clean_int($_POST['software']);
     $productversion = cleanvar($_POST['productversion']);
     $productservicepacks = cleanvar($_POST['productservicepacks']);
-    $id = cleanvar($_POST['id']);
+    $id = clean_int($_POST['id']);
     $oldtitle = cleanvar($_POST['oldtitle']);
     $oldcontact = cleanvar($_POST['oldcontact']);
-    $maintid = cleanvar($_POST['maintid']);
+    $maintid = clean_int($_POST['maintid']);
     $oldescalationpath = cleanvar($_POST['oldescalationpath']);
-    $oldexternalid = cleanvar($_POST['oldexternalid']);
-    $oldexternalemail = cleanvar($_POST['oldexternalemail']);
+    $oldexternalid = clean_int($_POST['oldexternalid']);
+    $oldexternalemail = clean_int($_POST['oldexternalemail']);
     $oldproduct = cleanvar($_POST['oldproduct']);
     $oldproductversion = cleanvar($_POST['oldproductversion']);
     $oldproductservicepacks = cleanvar($_POST['oldproductservicepacks']);
     $oldccemail = cleanvar($_POST['oldccemail']);
     $oldexternalengineer = cleanvar($_POST['oldexternalengineer']);
-    $oldsoftware = cleanvar($_POST['oldsoftware']);
+    $oldsoftware = clean_int($_POST['oldsoftware']);
     $tags = cleanvar($_POST['tags']);
 
     // Edit the incident

@@ -27,7 +27,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 if ($_SESSION['auth'] != TRUE)
 {
     // External variables
-    $id = cleanvar($_REQUEST['id']);
+    $id = clean_int($_REQUEST['id']);
     $page = urldecode($_REQUEST['page']);
     $page = str_replace(':','', $page);
     $page = str_replace('//','', $page);

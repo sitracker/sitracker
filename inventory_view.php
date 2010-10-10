@@ -27,7 +27,7 @@ if(!$CONFIG['inventory_enabled'])
 if (is_numeric($_GET['id']))
 {
     //View site inventory
-    $id = $_GET['id'];
+    $id = clean_int($_GET['id']);
 
     if (!empty($_REQUEST['filter']))
     {

@@ -60,7 +60,7 @@ if (empty($_REQUEST['mode']))
 }
 elseif ($_REQUEST['mode'] == 'report')
 {
-    $type = cleanvar($_REQUEST['type']);
+    $type = clean_int($_REQUEST['type']);
     $sql = "SELECT * FROM `{$dbSites}` WHERE typeid='{$type}' ORDER BY name";
 
     $result = mysql_query($sql);

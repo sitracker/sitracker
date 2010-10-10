@@ -29,8 +29,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $action = $_REQUEST['action'];
 $context = cleanvar($_REQUEST['context']);
-$maintid =cleanvar($_REQUEST['maintid']);
-$contactid = cleanvar($_REQUEST['contactid']);
+$maintid = clean_int($_REQUEST['maintid']);
+$contactid = clean_int($_REQUEST['contactid']);
 $title = ("$strContract - $strRemoveASupportedContact");
 
 if (empty($action) OR $action == "showform")

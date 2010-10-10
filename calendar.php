@@ -21,32 +21,23 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 include ('calendar/calendar.inc.php');
 
-$groupid = intval(cleanvar($_REQUEST['gid']));
-if (empty($groupid)) $groupid = $_SESSION['groupid'];
+$groupid = clean_int($_REQUEST['gid']);
+if (empty($groupid)) $groupid = clean_int($_SESSION['groupid']);
 
 // External variables
-foreach (array(
-            'user', 'nmonth', 'nyear', 'type', 'selectedday', 'selectedmonth',
-            'selectedyear', 'selectedtype', 'approved', 'length', 'display',
-            'weeknumber'
-            ) as $var)
-{
-    eval("\$$var=cleanvar(\$_REQUEST['$var']);");
-}
+$user = clean_int($_REQUEST['user']);
+$nmonth = clean_int($_REQUEST['nmonth']);
+$nyear = clean_int($_REQUEST['nyear']);
+$type = clean_int($_REQUEST['type']);
+$selectedday = clean_int($_REQUEST['selectedday']);
+$selectedmonth = clean_int($_REQUEST['selectedmonth']);
+$selectedyear = clean_int($_REQUEST['selectedyear']);
+$selectedtype = clean_int($_REQUEST['selectedtype']);
+$approved = clean_int($_REQUEST['approved']);
+$length = clean_fixed_list($_REQUEST['length'], array('day','am','pm'));
+$display = clean_fixed_list($_REQUEST['display'], array('month','list','year','week','day'));
+$weeknumber = clean_int($weeknumber);
 
-// length is am, pm
-
-$nmonth = intval($nmonth);
-$nyear = intval($nyear);
-$type = intval($type);
-$selectedday = intval($selectedday);
-$selectedmonth = intval($selectedmonth);
-$selectedyear = intval($selectedyear);
-$selectedtype = intval($selectedtype);
-$approved = intval($approved);
-$weeknumber = intval($weeknumber);
-
-if (empty($length)) $length='day';
 $title = $strCalendar;
 $pagecss = array('calendar/planner.css.php');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

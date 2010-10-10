@@ -19,7 +19,7 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 
 $title = $strClose;
@@ -283,9 +283,9 @@ if (empty($_REQUEST['process']))
 else
 {
     // External variables
-    $closingstatus = cleanvar($_POST['closingstatus']);
+    $closingstatus = clean_int($_POST['closingstatus']);
     $summary = cleanvar($_POST['summary']);
-    $id = cleanvar($_POST['id']);
+    $id = clean_int($_POST['id']);
     $distribution = cleanvar($_POST['distribution']);
     $solution = cleanvar($_POST['solution']);
     $kbarticle = cleanvar($_POST['kbarticle']);

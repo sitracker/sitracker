@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External vars
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 $title = $strScheduler;
 
@@ -172,18 +172,18 @@ switch ($_REQUEST['mode'])
             $end = '0000-00-00 00:00';
         }
 
-        $status = cleanvar($_REQUEST['status']);
+        $status = clean_fixed_list($_REQUEST['status'], array('disabled','enabled'));
 
         $params = cleanvar($_REQUEST['params']);
-        $interval = cleanvar($_REQUEST['interval']);
+        $interval = clean_int($_REQUEST['interval']);
         if ($interval <= 0 AND $type == 'interval')
         {
             $status = 'disabled';
             $interval = 0;
         }
-        $type = cleanvar($_REQUEST['type']);
-        $frequency = cleanvar($_REQUEST['frequency']);
-        $date_offset = cleanvar($_REQUEST['date_offset']);
+        $type = clean_fixed_list($_REQUEST['type'], array('interval','date');
+        $frequency = clean_fixed_list($_REQUEST['frequency'], array('','month','year'));
+        $date_offset = clean_int($_REQUEST['date_offset']);
         $date_time = cleanvar($_REQUEST['date_time']);
 
         if ($date_time < 10) $date_time = "0{$date_time}:00:00";

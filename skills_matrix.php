@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $legacy = cleanvar($_REQUEST['legacy']);
-$groupid = cleanvar($_REQUEST['gid']);
+$groupid = clean_int($_REQUEST['gid']);
 
 // By default show users in home group
 if ($groupid=='all') $filtergroup = 'all';

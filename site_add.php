@@ -139,8 +139,8 @@ elseif ($action == "add")
     $email = cleanvar($_POST['email']);
     $websiteurl = cleanvar($_POST['websiteurl']);
     $notes = cleanvar($_POST['notes']);
-    $typeid = cleanvar($_POST['typeid']);
-    $owner = cleanvar($_POST['owner']);
+    $typeid = clean_int($_POST['typeid']);
+    $owner = clean_int($_POST['owner']);
 
     $_SESSION['formdata']['add_site'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 

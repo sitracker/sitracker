@@ -24,10 +24,10 @@ require (APPLICATION_LIBPATH . 'trigger.class.php');
 $title = $strForgottenDetails;
 
 // External variables
-$email = cleanvar($_REQUEST['emailaddress']);
-$username = cleanvar($_REQUEST['username']);
-$userid = cleanvar($_REQUEST['userid']);
-$contactid = cleanvar($_REQUEST['contactid']);
+$email = clean_dbstring($_REQUEST['emailaddress']);
+$username = clean_dbstring($_REQUEST['username']);
+$userid = clean_int($_REQUEST['userid']);
+$contactid = clean_int($_REQUEST['contactid']);
 
 if (!empty($userid))
 {

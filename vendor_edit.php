@@ -24,8 +24,8 @@ $action = cleanvar($_REQUEST['action']);
 switch ($action)
 {
     case 'save':
-        $vendorname = cleanvar($_REQUEST['name']);
-        $vendorid = cleanvar($_REQUEST['vendorid']);
+        $vendorname = clean_dbstring($_REQUEST['name']);
+        $vendorid = clean_int($_REQUEST['vendorid']);
 
         // check for blank name
         if ($vendorname == '')
@@ -49,8 +49,8 @@ switch ($action)
         }
         break;
     case 'edit':
-        $vendorid = cleanvar($_REQUEST['vendorid']);
-        $vendorname = cleanvar($_REQUEST['vendorname']);
+        $vendorid = clean_int($_REQUEST['vendorid']);
+        $vendorname = clean_dbstring($_REQUEST['vendorname']);
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('edituser', 32)." {$strEditVendor} {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";

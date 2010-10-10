@@ -162,7 +162,7 @@ function get_service_percentage($maintid)
  * @author Ivan Lucas
  * @param int $contractid
  * @return Whether the contract should be billed
- * @return bool TRUE: Yes timed. should be billed, FALSE: No, not timed. Should not be billed 
+ * @return bool TRUE: Yes timed. should be billed, FALSE: No, not timed. Should not be billed
  */
 function is_contract_timed($contractid)
 {
@@ -1132,12 +1132,12 @@ function contract_service_table($contractid, $billing)
 
             $expired = false;
             if ($service->enddate < $now) $expired = true;
-            
+
             $html .= "<tr class='";
             if ($expired) $html .= "expired";
             else $html .= $shade;
             $html .= "'>";
-            
+
             if ($billing)
             {
                 $balance = get_service_balance($service->serviceid);
@@ -1187,7 +1187,7 @@ function contract_service_table($contractid, $billing)
                     {
                         $span .= "<strong>{$GLOBALS['strReserved']}</strong>: {$CONFIG['currency_symbol']}".number_format($reserved, 2)."<br />";
                     }
-                    
+
                     $span .= "<strong>{$GLOBALS['strAvailableBalance']}</strong>: ";
                     if (!$expired)
                     {
@@ -1246,7 +1246,7 @@ function contract_service_table($contractid, $billing)
                 $html .= " | <a href='contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditBalance']}</a>";
             }
             $html .= "</td></tr>\n";
-            
+
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
@@ -1660,13 +1660,13 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
             $unitamount = $service->unitrate * $multiplier;
             if ($unitamount > 0 AND $service->balance != 0) $unitbalance += round($service->balance / $unitamount);
         }
-        
+
         if ($includenonapproved)
         {
             $awaiting = contract_transaction_total($contractid, BILLING_AWAITINGAPPROVAL);
             if ($awaiting != 0) $unitbalance += round($awaiting / $unitamount);
         }
-    
+
         if ($includereserved)
         {
             $reserved = contract_transaction_total($contractid, BILLING_RESERVED);
@@ -1769,6 +1769,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
         foreach ($sites AS $s)
         {
+            $s = clean_int($s);
             if (empty($sitestr)) $sitestr .= "m.site = {$s} ";
             else $sitestr .= "OR m.site = {$s} ";
         }

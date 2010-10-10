@@ -27,8 +27,8 @@ $title = $strEditTask;
 
 // External variables
 $action = $_REQUEST['action'];
-$id = cleanvar($_REQUEST['id']);
-$incident = cleanvar($_REQUEST['incident']);
+$id = clean_int($_REQUEST['id']);
+$incident = clean_int($_REQUEST['incident']);
 $SYSLANG = $_SESSION['syslang'];
 
 switch ($action)

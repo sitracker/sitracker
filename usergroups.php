@@ -32,14 +32,14 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($user = mysql_fetch_object($result))
         {
-            $usql = "UPDATE `{$dbUsers}` SET groupid = '".cleanvar($_POST["group{$user->id}"])."' WHERE id='{$user->id}'";
+            $usql = "UPDATE `{$dbUsers}` SET groupid = '".clean_int($_POST["group{$user->id}"])."' WHERE id='{$user->id}'";
             mysql_query($usql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
         html_redirect("usergroups.php");
         break;
     case 'addgroup':
-        $group = cleanvar($_REQUEST['group']);
+        $group = clean_dbstring($_REQUEST['group']);
         if (empty($group))
         {
             html_redirect("usergroups.php", FALSE, sprintf($strFieldMustNotBeBlank, "'{$strName}'"));
@@ -51,7 +51,7 @@ switch ($action)
         html_redirect("usergroups.php");
         break;
     case 'deletegroup':
-        $groupid = cleanvar($_REQUEST['groupid']);
+        $groupid = clean_int($_REQUEST['groupid']);
         // Remove group membership for all users currently assigned to this group
         $sql = "UPDATE `{$dbUsers}` SET groupid = '' WHERE groupid = '{$groupid}'";
         mysql_query($sql);

@@ -25,7 +25,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
-$groupid = cleanvar($_REQUEST['gid']);
+$groupid = clean_int($_REQUEST['gid']);
 $onlineonly = cleanvar($_REQUEST['onlineonly']);
 
 // By default show users in home group

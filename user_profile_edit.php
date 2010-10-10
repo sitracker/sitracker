@@ -30,7 +30,7 @@ else
 {
     if (!empty($_REQUEST['userid']))
     {
-        $edituserid = cleanvar($_REQUEST['userid']);
+        $edituserid = clean_int($_REQUEST['userid']);
     }
 }
 

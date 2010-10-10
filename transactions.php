@@ -30,11 +30,11 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $title = $strTransactions;
 
 // External variables
-$serviceid = cleanvar($_REQUEST['serviceid']);
+$serviceid = clean_int($_REQUEST['serviceid']);
 $startdate = cleanvar($_REQUEST['startdate']);
 $enddate = cleanvar($_REQUEST['enddate']);
 
-$site = cleanvar($_REQUEST['site']);
+$site = clean_int($_REQUEST['site']);
 $sites = $_REQUEST['sites'];
 $display = cleanvar($_REQUEST['display']);
 if (empty($display)) $display = 'html';

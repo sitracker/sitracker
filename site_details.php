@@ -23,7 +23,7 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

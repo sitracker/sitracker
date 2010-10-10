@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Variables
-$formid = cleanvar($_REQUEST['formid']);
+$formid = clean_int($_REQUEST['formid']);
 
 if (empty($formid)) $formid=1;
 

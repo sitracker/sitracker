@@ -35,10 +35,10 @@ $selected = cleanvar($_REQUEST['selected']);
 switch ($action)
 {
     case 'auto_save':
-        $userid = cleanvar($_REQUEST['userid']);
-        $incidentid = cleanvar($_REQUEST['incidentid']);
+        $userid = clean_int($_REQUEST['userid']);
+        $incidentid = clean_int($_REQUEST['incidentid']);
         $type = cleanvar($_REQUEST['type']);
-        $draftid = cleanvar($_REQUEST['draftid']);
+        $draftid = clean_int($_REQUEST['draftid']);
         $meta = cleanvar($_REQUEST['meta']);
         $content = cleanvar($_REQUEST['content']);
 
@@ -87,8 +87,8 @@ switch ($action)
         break;
     case 'dismiss_notice':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
-        $noticeid = cleanvar($_REQUEST['noticeid']);
-        $userid = cleanvar($_REQUEST['userid']);
+        $noticeid = clean_int($_REQUEST['noticeid']);
+        $userid = clean_int($_REQUEST['userid']);
         if (is_numeric($noticeid))
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE id='{$noticeid}' AND userid='{$sit[2]}'";
@@ -107,7 +107,7 @@ switch ($action)
     case 'dashboard_display':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
         $dashboard = cleanvar($_REQUEST['dashboard']);
-        $dashletid = 'win'.cleanvar($_REQUEST['did']);
+        $dashletid = 'win'.clean_int($_REQUEST['did']);
         // FIXME need some sanitation here
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_display";
@@ -118,14 +118,14 @@ switch ($action)
         require (APPLICATION_LIBPATH . 'auth.inc.php');
 
         $dashboard = cleanvar($_REQUEST['dashboard']);
-        $dashletid = 'win'.cleanvar($_REQUEST['did']);
+        $dashletid = 'win'.clean_int($_REQUEST['did']);
         // FIXME need some sanitation here
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_edit";
         echo $dashfn($dashletid);
         break;
     case 'autocomplete_sitecontact':
-        $s = cleanvar($_REQUEST['s']);
+        $s = clean_dbstring($_REQUEST['s']);
         // JSON encoded
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
@@ -165,7 +165,7 @@ switch ($action)
         echo "[".substr($str,0,-1)."]";
         break;
     case 'contact' :
-        $s = cleanvar($_REQUEST['s']);
+        $s = clean_dbstring($_REQUEST['s']);
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
@@ -180,7 +180,7 @@ switch ($action)
         echo "[".substr($str,0,-1)."]";
         break;
     case 'sites':
-        $s = cleanvar($_REQUEST['s']);
+        $s = clean_dbstring($_REQUEST['s']);
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
         $result = mysql_query($sql);
@@ -250,8 +250,7 @@ switch ($action)
         break;
     case 'checkldap':
         $ldap_host = cleanvar($_REQUEST['ldap_host']);
-        $ldap_port = cleanvar($_REQUEST['ldap_port']);
-        $ldap_type = cleanvar($_REQUEST['ldap_type']);
+        $ldap_port = clean_int($_REQUEST['ldap_port']);
         $ldap_protocol = cleanvar($_REQUEST['ldap_protocol']);
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
         $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);

@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$incidentid = cleanvar($_REQUEST['id']);
+$incidentid = clean_int($_REQUEST['id']);
 $id = $incidentid;
 
 $title = $strServiceLevels;

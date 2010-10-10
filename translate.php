@@ -251,7 +251,7 @@ elseif ($_REQUEST['mode'] == "save")
 
     $lang = cleanvar($_REQUEST['lang']);
     $lang = str_replace($badchars, '', $lang);
-    $origcount = cleanvar($_REQUEST['origcount']);
+    $origcount = clean_int($_REQUEST['origcount']);
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
 
     $filename = "{$lang}.inc.php";

@@ -143,7 +143,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $criteriaval = cleanvar($_POST['criteriaval']);
     $sortby = cleanvar($_POST['sortby']);
     $sortorder = cleanvar($_POST['sortorder']);
-    $limit = cleanvar($_POST['limit']);
+    $limit = clean_int($_POST['limit']);
     $columns = count($_POST[fields]);
     
     switch ($criteriaop)

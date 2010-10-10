@@ -258,6 +258,78 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
 
 
 /**
+  * Make an external variable safe. Force it to be an integer.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns int - safe variable
+*/
+function clean_int($string)
+{
+    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    {
+        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+    }
+    $var = intval($string);
+
+    return $var;
+}
+
+
+/**
+  * Make an external variable safe for use in a database query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - DB safe variable
+  * @note Strips HTML
+*/
+function clean_dbstring($string)
+{
+    $string = strip_tags($string);
+
+    if (get_magic_quotes_gpc() == 1)
+    {
+        stripslashes($string);
+    }
+
+    $string = mysql_real_escape_string($string);
+
+    return $string;
+}
+
+
+/**
+  * Make an external variable safe by ensuring the value is one of a list
+  * of predetermined values
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @param array $list list of safe values
+  * @param bool $strict, also check the types of the values in the list
+  * @returns mixed - DB safe variable
+  * @note If the input string isn't found in the list, the first option is used
+*/
+function clean_fixed_list($string, $list, $strict = FALSE)
+{
+    if (is_array($list))
+    {
+        if (!in_array($string, $list, $strict))
+        {
+            if ($string != NULL AND $string != '')
+            {
+                trigger_error("Unexpected input", E_USER_WARNING);
+            }
+            $string = $list[0];
+        }
+    }
+    else
+    {
+        trigger_error("Could not understand list of predetermined values for fixed_list()", E_USER_ERROR);
+        return false;
+    }
+    return $string;
+}
+
+
+/**
  * Return an array of available languages codes by looking at the files
  * in the i18n directory
  * @author Ivan Lucas
