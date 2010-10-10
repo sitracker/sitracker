@@ -28,7 +28,7 @@ $title = $strAddTask;
 
 // External variables
 $action = $_REQUEST['action'];
-$incident = $_REQUEST['incident'];
+$incident = int_val($_REQUEST['incident']);
 
 if ($incident)
 {
