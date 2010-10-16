@@ -856,7 +856,10 @@ function saction_ldapSync()
                             if (strtolower($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
                             {
                                 // User is disabled in LDAP so we want to disable
-                                $sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                if (is_object($sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]))
+                                {
+                                    $sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                }
                             }
                         }
                     }
@@ -966,7 +969,10 @@ function saction_ldapSync()
                                 if (strtolower($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
                                 {
                                     // We want to disable
-                                    $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                    if (is_object($sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]))
+                                    {
+                                        $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                    }
                                 }
                             }
                         }
