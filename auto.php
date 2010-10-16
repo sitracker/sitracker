@@ -761,7 +761,7 @@ function saction_ldapSync()
     {
         $ldap_conn = ldapOpen();
 
-        if ($ldap_conn)
+        if ($ldap_conn != -1)
         {
             // NOTE TODO FIXME would be more optimal to pass the user type into the create as in the case where the group membership isn't stored its looked up again
 
@@ -994,6 +994,10 @@ function saction_ldapSync()
                     $c->disable();
                 }
             }
+        }
+        else
+        {
+            trigger_error("Unable to connect to LDAP", E_USER_ERROR);
         }
     }
     else
