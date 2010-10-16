@@ -26,10 +26,8 @@ class Incident extends SitEntity
 {
     var $incidentid = -1;
     var $title = "no title";
-    var $ownerid = -1;
-    var $townerid = -1;
-    var $owner = "no owner";
-    var $towner = "no temp owner";
+    var $owner; // User object type
+    var $towner; // User object type
     var $skillid = -1;
     var $skill = "no skill";
     var $maintenanceid = -1;
@@ -41,6 +39,20 @@ class Incident extends SitEntity
     var $currentstatusexternal = "no status";
     var $servicelevel = "no service level";
 
+    function Incident($id=0)
+    {
+        if ($id > 0)
+        {
+            $this->incidentid = $id;
+            $this->retrieveDetails();
+        }
+        else
+        {
+            $this->owner = new User();
+            $this->owner = new User();
+        }
+    }
+    
     function retrieveDetails()
     {
     	trigger_error("Incident.retrieveDetails() not yet implemented");
@@ -63,10 +75,9 @@ class Incident extends SitEntity
      */
     function getSOAPArray()
     {
+        debug_log($this->owner);
         return array('incidentid' => $this->incidentid,
                             'title' => $this->title,
-                            'ownerid' => $this>ownerid,
-                            'townerid' => $this->townerid,
                             'owner' => $this->owner,
                             'towner' => $this->towner,
                             'skillid' => $this->skillid,
