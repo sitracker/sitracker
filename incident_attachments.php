@@ -210,18 +210,8 @@ function draw_file_row($file, $fsdelim, $incidentid, $path)
     }
     $filesize = filesize($file);
     $file_size = readable_file_size($filesize);
-
-    if (function_exists('mime_content_type'))
-    {
-        // FIXME mime_content_type is deprecated
-        $mime_type = mime_content_type($file);
-    }
-    else
-    {
-        // TODO find a reliable cross/platform low dependency way of determining mime type if possibe
-        // At the moment we leave mime_type blank if we can't find mime_content_type
-        $mime_type = '';
-    }
+    
+    $mime_type = mime_type($file);
 
     $updateid = str_replace("u", "", $filedir);
     $sql = "SELECT f.id FROM `{$GLOBALS['dbLinks']}`, `{$GLOBALS['dbFiles']}` AS f  ";
