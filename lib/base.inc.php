@@ -276,6 +276,24 @@ function clean_int($string)
 
 
 /**
+  * Make an external variable safe. Force it to be a float.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns int - safe variable
+*/
+function clean_float($string)
+{
+    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    {
+        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+    }
+    $var = floatval($string);
+
+    return $var;
+}
+
+
+/**
   * Make an external variable safe for use in a database query
   * @author Ivan Lucas
   * @param mixed $string variable to make safe
