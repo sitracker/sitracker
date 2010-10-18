@@ -114,7 +114,7 @@ if (!is_array($hmenu[20])) $hmenu[20] = array();
 $hmenu[20] = $hmenu[20] +
                 array (10=> array ( 'perm'=> 0, 'name'=> $strSites, 'url'=>"{$CONFIG['application_webpath']}sites.php", 'submenu'=>"2010"),
                        20=> array ( 'perm'=> 0, 'name'=> $strContacts, 'url'=>"{$CONFIG['application_webpath']}contacts.php?search_string=A", 'submenu'=>"2020"),
-                       35=> array ( 'perm'=> 0, 'name'=> $strMaintenance, 'url'=>"{$CONFIG['application_webpath']}contracts.php?search_string=A", 'submenu'=>"2030"),
+                       35=> array ( 'perm'=> 0, 'name'=> $strContracts, 'url'=>"{$CONFIG['application_webpath']}contracts.php?search_string=A", 'submenu'=>"2030"),
                        30=> array ( 'perm'=> 0, 'name'=> $strInventory, 'url'=>"{$CONFIG['application_webpath']}inventory.php", 'enablevar' => 'inventory_enabled'),
                        40=> array ( 'perm'=> 0, 'name'=> $strBrowseFeedback, 'url'=>"{$CONFIG['application_webpath']}feedback_browse.php", 'enablevar' => 'feedback_enabled')
 );
