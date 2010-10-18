@@ -199,7 +199,12 @@ CREATE TABLE `{$dbDashboard}` (
 INSERT INTO `{$dbDashboard}` (`id`, `name`, `enabled`) VALUES (1, 'random_tip', 'true'),
 (2, 'statistics', 'true'),
 (3, 'tasks', 'true'),
-(4, 'user_incidents', 'true');
+(4, 'user_incidents', 'true'),
+(5, 'incoming', 'true'),
+(6, 'rss', 'true'),
+(7, 'watch_incidents', 'true'),
+(8, 'holidays', 'true'),
+(9, 'tags', 'true');
 
 
 CREATE TABLE `{$dbDrafts}` (
