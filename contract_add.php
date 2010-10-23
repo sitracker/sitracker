@@ -26,7 +26,7 @@ $action = $_REQUEST['action'];
 $siteid = clean_int($_REQUEST['siteid']);
 
 // Show add maintenance form
-if ($action == "showform" OR $action=='')
+if ($action == "showform" OR $action == '')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -160,6 +160,10 @@ if ($action == "showform" OR $action=='')
     echo "/>";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
+    echo "<tr><th>{$strBillingMatrix}</th>";
+    echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['add_contract']['billing_matrix'] )."</td>";
+    echo "</tr>";
+    
     echo "<tr>";
     echo "<th>{$strFreeOfCharge}</th>";
     echo "<td><input type='checkbox' id='foc' name='foc' value='yes' ";
@@ -242,6 +246,8 @@ elseif ($action == "add")
     $foc = cleanvar($_REQUEST['foc']);
     if (empty($foc)) $foc = 'no';
 
+    $billingmatrix = clean_dbstring($_REQUEST['billing_matrix']);
+
     if ($billtype == 'billperunit') $incidentrate = 0;
     elseif ($billtype == 'billperincident') $unitrate = 0;
 
@@ -300,6 +306,11 @@ elseif ($action == "add")
         $_SESSION['formerrors']['add_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
     }
 
+    if ($timed == 'yes' AND empty($billingmatrix))
+    {
+        $errors++;
+        $_SESSION['formerrors']['add_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
+    }
 
     // add maintenance if no errors
     if ($errors == 0)
@@ -355,11 +366,11 @@ elseif ($action == "add")
         }
 
         // Add service
-        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, foc) ";
-        $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$foc}')";
+        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, billingmatrix, foc) ";
+        $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$billingmatrix}', '{$foc}')";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-        if (mysql_affected_rows() < 1) trigger_error("Insert failed",E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
 
         $serviceid = mysql_insert_id();
         update_contract_balance($maintid, $strNewContract, $amount, $serviceid);

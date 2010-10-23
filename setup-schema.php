@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
 -- NOTE system must be the first table created.
 
 CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
-  `id` int(11) NOT NULL,
+  `tag` varchar(32) NOT NULL,
   `hour` smallint(6) NOT NULL,
   `mon` float NOT NULL,
   `tue` float NOT NULL,
@@ -77,34 +77,34 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
   `sat` float NOT NULL,
   `sun` float NOT NULL,
   `holiday` float NOT NULL,
-  PRIMARY KEY  (`id`,`hour`)
+  PRIMARY KEY  (`tag`,`hour`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 INSERT INTO `{$dbBillingMatrix}` (`id`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
-(1, 0, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 1, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 2, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 6, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 3, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 4, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 5, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 7, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 8, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 9, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 10, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 11, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 12, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 13, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 14, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 15, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 16, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 17, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 18, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 19, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 20, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 21, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 22, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 23, 2, 2, 2, 2, 2, 2, 2, 2);
+('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 6, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 3, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 4, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 5, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 7, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 8, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 9, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 10, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 11, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 12, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 13, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 14, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 15, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 16, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 17, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 18, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 19, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 20, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 21, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 22, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 23, 2, 2, 2, 2, 2, 2, 2, 2);
 
 
 CREATE TABLE `{$dbBillingPeriods}` (
@@ -1145,7 +1145,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `unitrate` float NOT NULL default '0',
   `incidentrate` float NOT NULL default '0',
   `dailyrate` float NOT NULL default '0',
-  `billingmatrix` int(11) NOT NULL default '1',
+  `billingmatrix` varchar(32) NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
   `cust_ref_date` DATE NULL,
@@ -1577,7 +1577,11 @@ INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence
 ";
 
 // Upgrading from versions prior to 3.90 won't be possible via setup.php
-$upgrade_schema[390] = "";
+$upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;
+ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
+UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
+UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
+";
 
 // ********************************************************************
 

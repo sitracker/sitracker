@@ -1201,4 +1201,54 @@ function country_drop_down($name, $country, $extraattributes='')
 }
 
 
+/**
+ * Generates a drop down of all configured billing multipliers
+ * 
+ * @author Paul Heaney
+ * @param String $name  The name and id of the <select> element
+ * @param float $selected  If multiplier to select
+ * @return String HTML for the dropdown
+ */
+function billing_multiplier_dropdown($name, $selected='')
+{
+    global $CONFIG;
+    $html = "<select id='{$name}' name='{$name}'>\n";
+    
+    if (empty($selected)) $selected = $CONFIG['billing_default_multiplier'];
+   
+    foreach ($CONFIG['billing_matrix_multipliers'] AS $multiplier)
+    {
+        $html .= "<option value='{$multiplier}'";
+        if ($multiplier == $selected) $html .= " selected='selected' ";
+        $html .= ">x{$multiplier}</option>\n";
+    }
+    $html .= "</select>\n";
+    return $html;
+}
+
+
+function billing_matrix_selector($id, $selected='')
+{
+    $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrix']}`";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) >= 1)
+    {
+        $html = "<select name='{$id}' id='{$id}'>\n";
+        while ($obj = mysql_fetch_object($result))
+        {
+            $html .= "<option value='{$obj->tag}'";
+            if ($obj->tag == $selected) $html .= " selected='selected'";
+            $html .= ">{$obj->tag}</option>\n";
+        }
+        $html .= "</select>\n";
+    }
+    else
+    {
+        $html = "{$GLOBALS['strNoBillingMatrixDefined']}";
+    }
+    
+    return $html;
+}
+
 ?>
