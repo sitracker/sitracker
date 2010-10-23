@@ -52,7 +52,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
         $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-        $sql .= "VALUES('{$_REQUEST['id']}', '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}',
+        $sql .= "VALUES({$id}, '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}',
         '{$now}', 'show')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
