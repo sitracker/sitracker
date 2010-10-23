@@ -987,8 +987,6 @@ $strLogout = 'Logout';
 $strLogTriggerInJournal = 'log the action in the system journal';
 $strLow = 'Low';
 $strLowPriority = 'Low Priority';
-
-$strMaintenance = 'Maintenance';
 $strMakeVisibleInPortal = 'Make visible in portal';
 $strMap = 'Map';
 $strManageDashboardComponents = 'Manage Dashboard Components';
