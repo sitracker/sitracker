@@ -237,9 +237,9 @@ else
         $sql = "INSERT INTO `{$dbUsers}` (username, password, realname, roleid,
                 groupid, title, email, phone, mobile, fax, status,
                 holiday_entitlement, user_startdate, lastseen) ";
-        $sql .= "VALUES ('$username', '$password', '$realname', '$roleid',
-                '$groupid', '$jobtitle', '$email', '$phone', '$mobile', '$fax',
-                1, '$holiday_entitlement', '$startdate', NOW())";
+        $sql .= "VALUES ('{$username}', '{$password}', '{$realname}', '{$roleid}',
+                '{$groupid}', '{$jobtitle}', '{$email}', '{$phone}', '{$mobile}', '{$fax}',
+                1, '{$holiday_entitlement}', '{$startdate}', NOW())";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $newuserid = mysql_insert_id();
@@ -256,18 +256,21 @@ else
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         // Create permissions (set to none)
-        $sql = "SELECT * FROM `{$dbPermissions}`";
+        $sql = "SELECT id FROM `{$dbPermissions}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         while ($perm = mysql_fetch_object($result))
         {
             $psql = "INSERT INTO `{$dbUserPermissions}` (userid, permissionid, granted) ";
-            $psql .= "VALUES ('$newuserid', '{$perm->id}', 'false')";
+            $psql .= "VALUES ('{$newuserid}', '{$perm->id}', 'false')";
             mysql_query($psql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
 
-        if (!$result) echo "<p class='error'>{$strAdditionFail}</p>\n";
+        if (!$result)
+        {
+            echo "<p class='error'>{$strAdditionFail}</p>\n";
+        }
         else
         {
             setup_user_triggers($newuserid);
