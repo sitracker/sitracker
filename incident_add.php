@@ -834,7 +834,7 @@ elseif ($action == 'assign')
                     }
                 }
                 //remove from tempincoming to prevent build up
-                $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='$updateid'";
+                $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -855,11 +855,11 @@ elseif ($action == 'assign')
             {
                 // FIXME: for now we use id but in future use tag, once maintenance uses tag
                 $servicelevel = maintenance_servicelevel($maintid);
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE id='$servicelevel' AND priority='$priority' ";
+                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE id='{$servicelevel}' AND priority='{$priority}' ";
             }
             else
             {
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='$servicelevel' AND priority='$priority' ";
+                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
             }
 
             $result = mysql_query($sql);
@@ -906,7 +906,7 @@ elseif ($action == 'assign')
                 plugin_do('incident_created_contract');
             }
 
-            $html .= "<h3>{$strIncident}: $incidentid</h3>";
+            $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
             $html .=  "<p align='center'>";
             $html .= sprintf($strIncidentLoggedEngineer, $incidentid);
             $html .= "</p>\n";
@@ -1044,7 +1044,7 @@ elseif ($action == 'reassign')
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
     $userphone = user_phone($userid);
     if ($userphone != '') echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
-    $sql = "UPDATE `{$dbIncidents}` SET owner='$uid', lastupdated='$now' WHERE id='$incidentid'";
+    $sql = "UPDATE `{$dbIncidents}` SET owner='{$uid}', lastupdated='{$now}' WHERE id='{$incidentid}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

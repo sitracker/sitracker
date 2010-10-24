@@ -78,7 +78,7 @@ else
         // opened
         $sql = "SELECT id, owner, opened, title FROM `{$dbIncidents}` ";
         $sql .= "WHERE opened BETWEEN '{$startdate}' AND '{$enddate}'  ORDER BY opened";
-        $result= mysql_query($sql);
+        $result = mysql_query($sql);
 
         while ($incident = mysql_fetch_object($result))
         {
@@ -93,7 +93,7 @@ else
         // opened
         $sql = "SELECT id, owner, closed, title FROM `{$dbIncidents}` ";
         $sql .= "WHERE closed BETWEEN '{$startdate}' AND '{$enddate}'  ORDER BY closed ";
-        $result= mysql_query($sql);
+        $result = mysql_query($sql);
 
         //$stats=array();
 

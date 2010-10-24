@@ -168,7 +168,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
 
-        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='$id' LIMIT 1";
+        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $incident = mysql_fetch_object($result);
@@ -193,8 +193,8 @@ switch ($action)
         $countusers = mysql_num_rows($result);
 
         echo "<p style='font-size: 18px'>{$strOwner}: <strong>";
-        if ($sit[2] == $incident->owner) echo "{$strYou} (".user_realname($incident->owner,TRUE).")";
-        else echo user_realname($incident->owner,TRUE);
+        if ($sit[2] == $incident->owner) echo "{$strYou} (".user_realname($incident->owner, TRUE).")";
+        else echo user_realname($incident->owner, TRUE);
         echo "</strong>";
 
         if ($incident->towner > 0)
@@ -202,9 +202,9 @@ switch ($action)
             echo " ({$strTemp}: ";
             if ($sit[2] == $incident->towner)
             {
-                echo "{$strYou} (".user_realname($incident->towner,TRUE).")";
+                echo "{$strYou} (".user_realname($incident->towner, TRUE).")";
             }
-            else echo user_realname($incident->towner,TRUE);
+            else echo user_realname($incident->towner, TRUE);
             echo ")";
         }
         echo "</p>";
@@ -232,7 +232,7 @@ switch ($action)
             if ($suggested > 0)
             {
                 // Suggested user is shown as the first row
-                $sugsql = "SELECT * FROM `{$dbUsers}` WHERE id='$suggested' LIMIT 1";
+                $sugsql = "SELECT * FROM `{$dbUsers}` WHERE id='{$suggested}' LIMIT 1";
                 $sugresult = mysql_query($sugsql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 $suguser = mysql_fetch_object($sugresult);
@@ -272,7 +272,7 @@ switch ($action)
                 echo "<td align='center'>".$incpriority['2']."</td>";
                 echo "<td align='center'>".$incpriority['1']."</td>";
                 echo "<td align='center'>";
-                echo $suguser->accepting=='Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                echo $suguser->accepting == 'Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
                 echo "</td>";
                 echo "</tr>\n";
             }
@@ -307,7 +307,8 @@ switch ($action)
                     echo "<td align='center'>".$incpriority['2']."</td>";
                     echo "<td align='center'>".$incpriority['1']."</td>";
                     echo "<td align='center'>";
-                    echo $users->accepting=='Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                    if ($users->accepting == 'Yes') echo $strYes;
+                    else echo "<span class='error'>{$strNo}</span>";
                     echo "</td>";
                     echo "</tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
@@ -328,7 +329,7 @@ switch ($action)
             echo "<tr><td colspan='2'><br />{$strReassignText}</td></tr>\n";
             echo "<tr><th>{$strUpdate}:</th>";
             echo "<td>";
-            echo "<textarea name='bodytext' wrap='soft' rows='10' cols='65'>";  // FIXME wrap XHTML
+            echo "<textarea name='bodytext' wrap='soft' rows='10' cols='65'>";  // FIXME wrap isn't valid XHTML
             if (!empty($reason)) echo $reason;
             echo "</textarea>";
             echo "</td></tr>\n";

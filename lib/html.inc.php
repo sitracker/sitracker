@@ -519,7 +519,7 @@ function draw_tabs($tabsarray, $selected='')
     $html .= "</ul>";
     $html .= "</div>";
 
-    return ($html);
+    return $html;
 }
 
 
@@ -1224,18 +1224,18 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 
     if ($level == "management")
     {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>";
+        $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
     }
     elseif ($level == "engineer")
     {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>";
+        $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
     }
 
     while ($row = mysql_fetch_object($result))
     {
         $str .= "<option value='{$row->id}'>{$row->realname} ({$row->name})</option>\n";
     }
-    $str .= "</select>";
+    $str .= "</select>\n";
     $str .= "<br />";
     if ($level == "engineer")
     {
@@ -2025,8 +2025,9 @@ function format_external_id($externalid, $escalationpath='')
  * Outputs a contact's contract associate, if the viewing user is allowed
  * @author Kieran Hogg
  * @param int $userid ID of the contact
- * @retval string output html
- * @todo TODO should this be renamed, it has nothing to do with users
+ * @param string $mode ??? Defaults to Internal
+ * @return string output html
+ * @todo TODO should this be renamed, it has nothing to do with users FIXME
  */
 function user_contracts_table($userid, $mode = 'internal')
 {
@@ -2092,8 +2093,8 @@ function user_contracts_table($userid, $mode = 'internal')
                 $html .= "{$supportedrow['maintenanceid']}'>";
                 $html .= "{$GLOBALS['strContract']}: ";
                 $html .= "{$supportedrow['maintenanceid']}</a></td>";
-                $html .= "<td class='$shade'>{$supportedrow['productname']}</td>";
-                $html .= "<td class='$shade'>";
+                $html .= "<td class='{$shade}'>{$supportedrow['productname']}</td>";
+                $html .= "<td class='{$shade}'>";
                 if ($supportedrow['expirydate'] == -1)
                 {
                     $html .= $GLOBALS['strUnlimited'];
@@ -2110,7 +2111,8 @@ function user_contracts_table($userid, $mode = 'internal')
                 $html .= "</td>";
                 $html .= "</tr>\n";
                 $supportcount++;
-                $shade = 'shade2';
+                if ($shade == 'shade1') $shade = 'shade2'; 
+                else $shade = 'shade1';
             }
             $html .= "</table>\n";
         }

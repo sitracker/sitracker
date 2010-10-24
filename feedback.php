@@ -239,9 +239,9 @@ switch ($_REQUEST['action'])
         // Get respondentid
         //print_r($_REQUEST);
         $sql = "SELECT id AS respondentid FROM `{$dbFeedbackRespondents}` ";
-        $sql .= "WHERE contactid='$contactid' AND formid='$formid' AND incidentid='$incidentid' AND completed = 'no'";
+        $sql .= "WHERE contactid='$contactid' AND formid='{$formid}' AND incidentid='{$incidentid}' AND completed = 'no'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) < 1)
         {
             // FIXME: Proper error here
@@ -249,14 +249,14 @@ switch ($_REQUEST['action'])
         }
         else
         {
-            list($respondentid)=mysql_fetch_row($result);
+            list($respondentid) = mysql_fetch_row($result);
         }
         // Store this respondent and references
 
         // Loop through the questions in this form and store the results
         $sql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($question = mysql_fetch_object($result))
         {
             $qid = $question->id;
@@ -271,10 +271,13 @@ switch ($_REQUEST['action'])
 
             // Check required fields are filled
             if ($question->required == 'true' AND (strlen($_POST[$fieldname]) < 1 OR
-                    isset($_POST[$fieldname]) == FALSE)) $errorfields[] = "{$question->id}";
+                    isset($_POST[$fieldname]) == FALSE))
+                    {
+                        $errorfields[] = "{$question->id}";
+                    }
 
             // Store text responses in the appropriate field
-            if ($question->type=='text')
+            if ($question->type == 'text')
             {
                 if (strlen($_POST[$fieldname]) < 255 AND $option_list[1] < 2)
                 {
@@ -346,15 +349,18 @@ body { font:10pt Arial, Helvetica, sans-serif; }
             exit;
         }
 
-        if (empty($_REQUEST['rr'])) $rsql[] = "UPDATE `{$dbFeedbackRespondents}` SET completed='yes' WHERE formid='{$formid}' AND contactid='$contactid' AND incidentid='$incidentid'";
+        if (empty($_REQUEST['rr']))
+        {
+            $rsql[] = "UPDATE `{$dbFeedbackRespondents}` SET completed='yes' WHERE formid='{$formid}' AND contactid='{$contactid}' AND incidentid='{$incidentid}'";
+        }
 
         // Loop through array and execute the array to insert the form data
         foreach ($rsql AS $sql)
         {
             ## echo $sql."<br />";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            $sqltext.=$sql."\n";
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            $sqltext .= $sql."\n";
         }
 
         //    $sql = "UPDATE feedbackrespondents ";
@@ -373,8 +379,14 @@ body { font:10pt Arial, Helvetica, sans-serif; }
         break;
 
     default:
-        if ($_REQUEST['mode']!='bare') include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        else echo "<html>\n<head>\n<title>{$strFeedbackForm}</title>\n</head>\n<body>\n<div id='pagecontent'>\n\n";
+        if ($_REQUEST['mode'] != 'bare')
+        {
+            include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        }
+        else
+        {
+            echo "<html>\n<head>\n<title>{$strFeedbackForm}</title>\n</head>\n<body>\n<div id='pagecontent'>\n\n";
+        }
         $errorfields = explode(",",urldecode($_REQUEST['error']));
         $fielddata = unserialize(base64_decode($errorfields[0])); // unserialize(
 
@@ -436,7 +448,7 @@ body { font:10pt Arial, Helvetica, sans-serif; }
                         }
 
                         echo "<h4>Q{$question->taborder}: {$question->question}";
-                        if ($question->required=='true')
+                        if ($question->required == 'true')
                         {
                             echo "<sup style='color: red; font-size: 120%;'>*</sup>";
                             $reqd++;
@@ -478,11 +490,14 @@ body { font:10pt Arial, Helvetica, sans-serif; }
             }
         }
 
-        if ($_REQUEST['mode']!='bare')
+        if ($_REQUEST['mode'] != 'bare')
         {
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
-        else echo "\n</div>\n</body>\n</html>\n";
+        else
+        {
+            echo "\n</div>\n</body>\n</html>\n";
+        }
         break;
 }
 
