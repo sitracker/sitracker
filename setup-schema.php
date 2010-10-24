@@ -1586,6 +1586,93 @@ $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCH
 ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
 UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
 UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
+
+
+UPDATE `{$dbPermissions}` SET name = 'strAddNewSiteContact' WHERE id = 1;
+UPDATE `{$dbPermissions}` SET name = 'strAddNewSites' WHERE id = 2;
+UPDATE `{$dbPermissions}` SET name = 'strEditExistingSiteDetails' WHERE id = 3;
+UPDATE `{$dbPermissions}` SET name = 'strEditProfile' WHERE id = 4;
+UPDATE `{$dbPermissions}` SET name = 'strAddIncidents' WHERE id = 5;
+UPDATE `{$dbPermissions}` SET name = 'strViewIncidents' WHERE id = 6;
+UPDATE `{$dbPermissions}` SET name = 'strEditIncidents' WHERE id = 7;
+UPDATE `{$dbPermissions}` SET name = 'strUpdateIncidents' WHERE id = 8;
+UPDATE `{$dbPermissions}` SET name = 'strEditUserPermissions' WHERE id = 9;
+UPDATE `{$dbPermissions}` SET name = 'strEditContacts' WHERE id = 10;
+UPDATE `{$dbPermissions}` SET name = 'strViewSites' WHERE id = 11;
+UPDATE `{$dbPermissions}` SET name = 'strViewContacts' WHERE id = 12;
+UPDATE `{$dbPermissions}` SET name = 'strReassignIncidents' WHERE id = 13;
+UPDATE `{$dbPermissions}` SET name = 'strViewUsers' WHERE id = 14;
+UPDATE `{$dbPermissions}` SET name = 'strAddSupportedProducts' WHERE id = 15;
+UPDATE `{$dbPermissions}` SET name = 'strAddTemplates' WHERE id = 16;
+UPDATE `{$dbPermissions}` SET name = 'strEditTemplates' WHERE id = 17;
+UPDATE `{$dbPermissions}` SET name = 'strCloseIncidents' WHERE id = 18;
+UPDATE `{$dbPermissions}` SET name = 'strViewContracts' WHERE id = 19;
+UPDATE `{$dbPermissions}` SET name = 'strAddUsers' WHERE id = 20;
+UPDATE `{$dbPermissions}` SET name = 'strEditContracts' WHERE id = 21;
+UPDATE `{$dbPermissions}` SET name = 'strAdministrate' WHERE id = 22;
+UPDATE `{$dbPermissions}` SET name = 'strEditUser' WHERE id = 23;
+UPDATE `{$dbPermissions}` SET name = 'strAddProduct' WHERE id = 24;
+UPDATE `{$dbPermissions}` SET name = 'strAddProductInformation' WHERE id = 25;
+UPDATE `{$dbPermissions}` SET name = 'strGetHelp' WHERE id = 26;
+UPDATE `{$dbPermissions}` SET name = 'strViewYourCalendar' WHERE id = 27;
+UPDATE `{$dbPermissions}` SET name = 'strViewProductsAndSoftware' WHERE id = 28;
+UPDATE `{$dbPermissions}` SET name = 'strEditProducts' WHERE id = 29;
+UPDATE `{$dbPermissions}` SET name = 'strViewSupportedProducts' WHERE id = 30;
+-- UPDATE `{$dbPermissions}` SET name = '' WHERE id = 31;   -- There is no 31
+UPDATE `{$dbPermissions}` SET name = 'strEditSupportedProducts' WHERE id = 32;
+UPDATE `{$dbPermissions}` SET name = 'strSendEmails' WHERE id = 33;
+UPDATE `{$dbPermissions}` SET name = 'strReopenIncidents' WHERE id = 34;
+UPDATE `{$dbPermissions}` SET name = 'strSetYourStatus' WHERE id = 35;
+UPDATE `{$dbPermissions}` SET name = 'strSetContactFlags' WHERE id = 36;
+UPDATE `{$dbPermissions}` SET name = 'strRunReports' WHERE id = 37;
+UPDATE `{$dbPermissions}` SET name = 'strViewSalesIncidents' WHERE id = 38;
+UPDATE `{$dbPermissions}` SET name = 'strAddContract' WHERE id = 39;
+UPDATE `{$dbPermissions}` SET name = 'strReassignIncidentsWhenUserNotAccepting' WHERE id = 40;
+UPDATE `{$dbPermissions}` SET name = 'strViewStatus' WHERE id = 41;
+UPDATE `{$dbPermissions}` SET name = 'strReviewDeleteIncidentUpdates' WHERE id = 42;
+UPDATE `{$dbPermissions}` SET name = 'strEditGlobalSignature' WHERE id = 43;
+UPDATE `{$dbPermissions}` SET name = 'strPublishFielsToFTPSite' WHERE id = 44;
+-- UPDATE `{$dbPermissions}` SET name = '' WHERE id = 45;  -- View Mailing list subscriptions - we no longer do
+-- UPDATE `{$dbPermissions}` SET name = '' WHERE id = 46;  -- Edit Mailing list subscriptions - we no longer do
+-- UPDATE `{$dbPermissions}` SET name = '' WHERE id = 47;  -- Administrator mailing lists - we no longer do
+UPDATE `{$dbPermissions}` SET name = 'strAddFeedbackForms' WHERE id = 48;
+UPDATE `{$dbPermissions}` SET name = 'strEditFeedbackForms' WHERE id = 49;
+UPDATE `{$dbPermissions}` SET name = 'strApproveHolidays' WHERE id = 50;
+UPDATE `{$dbPermissions}` SET name = 'strViewFeedback' WHERE id = 51;
+UPDATE `{$dbPermissions}` SET name = 'strViewHiddenUpdates' WHERE id = 52;
+UPDATE `{$dbPermissions}` SET name = 'strEditServiceLevels' WHERE id = 53;
+UPDATE `{$dbPermissions}` SET name = 'strViewKnowledgebaseArticles' WHERE id = 54;
+UPDATE `{$dbPermissions}` SET name = 'strDeleteSitesContacts' WHERE id = 55;
+UPDATE `{$dbPermissions}` SET name = 'strAddSoftware' WHERE id = 56;
+UPDATE `{$dbPermissions}` SET name = 'strDisableUserAccounts' WHERE id = 57;
+UPDATE `{$dbPermissions}` SET name = 'strEditYourSkills' WHERE id = 58;
+UPDATE `{$dbPermissions}` SET name = 'strManageUsersSkills' WHERE id = 59;
+UPDATE `{$dbPermissions}` SET name = 'strPerformSearches' WHERE id = 60;
+UPDATE `{$dbPermissions}` SET name = 'strViewIncidentDetails' WHERE id = 61;
+UPDATE `{$dbPermissions}` SET name = 'strViewIncidentAttachments' WHERE id = 62;
+UPDATE `{$dbPermissions}` SET name = 'strAddReseller' WHERE id = 63;
+UPDATE `{$dbPermissions}` SET name = 'strManageEscalationPaths' WHERE id = 64;
+UPDATE `{$dbPermissions}` SET name = 'strDeleteProducts' WHERE id = 65;
+UPDATE `{$dbPermissions}` SET name = 'strInstallDashboardComponents' WHERE id = 66;
+UPDATE `{$dbPermissions}` SET name = 'strRunManagementReports' WHERE id = 67;
+UPDATE `{$dbPermissions}` SET name = 'strManageHolidays' WHERE id = 68;
+UPDATE `{$dbPermissions}` SET name = 'strViewYourTasks' WHERE id = 69;
+UPDATE `{$dbPermissions}` SET name = 'strCreateEditYourTasks' WHERE id = 70;
+UPDATE `{$dbPermissions}` SET name = 'strManageYourTriggers' WHERE id = 71;
+UPDATE `{$dbPermissions}` SET name = 'strManageSystemTriggers' WHERE id = 72;
+UPDATE `{$dbPermissions}` SET name = 'strApproveBillableIncidents' WHERE id = 73;
+UPDATE `{$dbPermissions}` SET name = 'strSetDurationWithoutActivity' WHERE id = 74;
+UPDATE `{$dbPermissions}` SET name = 'strSetNegativeTimeForDurationOnIncidents' WHERE id = 75;
+UPDATE `{$dbPermissions}` SET name = 'strViewTransactions' WHERE id = 76;
+UPDATE `{$dbPermissions}` SET name = 'strViewBillingInformation' WHERE id = 77;
+UPDATE `{$dbPermissions}` SET name = 'strPostSystemNotices' WHERE id = 78;
+UPDATE `{$dbPermissions}` SET name = 'strEditServiceBalances' WHERE id = 79;
+UPDATE `{$dbPermissions}` SET name = 'strEditServiceDetails' WHERE id = 80;
+UPDATE `{$dbPermissions}` SET name = 'strAdjustActivityDuration' WHERE id = 81;
+
+
+
+
 ";
 
 // ********************************************************************

@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH.'auth.inc.php');
 $title = $strSetPermissions;
 
 // Restrict resetting permissions in demo mode for all but the first user (usually admin)
-if ($CONFIG['demo'] AND $_SESSION['userid']!=1)
+if ($CONFIG['demo'] AND $_SESSION['userid'] != 1)
 {
     html_redirect("manage_users.php", FALSE, $strCannotPerformOperationInDemo);
 }
@@ -86,7 +86,7 @@ if (empty($action) OR $action == "showform")
         while ($perm = mysql_fetch_object($presult))
         {
             echo "<tr class='$class' onclick='trow(event);'>";
-            echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasThisPermission}'>{$perm->id}</a> {$perm->name}</td>";
+            echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasThisPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
             mysql_data_seek($result, 0);
             while ($rolerow = mysql_fetch_object($result))
             {
@@ -121,18 +121,15 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     {
         trigger_error("{$strCannotEditUserAndRole}", E_USER_ERROR);
     }
+
     if (!empty($user))
     {
-        // Echo lines have been moved to simplify i18n - Tomse 02Aug09
-        //        $object = "user: ".user_realname($user);
         echo "<h2>".icon('trigger', 32)." ".sprintf($strSetPermissionsForUserX, user_realname($user))."</h2>";
     }
     else
     {
-        //        $object = "role: ".db_read_column('rolename', $dbRoles, $role);
         echo "<h2>".icon('trigger', 32)." ".sprintf($strSetPermissionsForRoleX, db_read_column('rolename', $dbRoles, $role))."</h2>";
     }
-//    echo "<h2>".sprintf($strSetPermissionsForUserX, user_realname($user))."</h2>";
     if (!empty($user)) echo "<p align='center'>{$strPermissionsInhereitedCannotBeChanged}</p>";
 
     // Next lookup the permissions
@@ -151,7 +148,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     echo "<table align='center'>
     <tr>
     <th>{$strID}</th>
-    <th>$strRolePermissions</th>
+    <th>{$strRolePermissions}</th>
     <th>{$strPermission}</th>
     </tr>\n";
     if (empty($role) AND !empty($user))
@@ -164,10 +161,10 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     {
         $sql = "SELECT id, name, rp.granted AS granted FROM `{$dbPermissions}` AS p, `{$dbRolePermissions}` AS rp ";
         $sql.= "WHERE p.id = rp.permissionid ";
-        $sql.= "AND rp.roleid='$role' ";
+        $sql.= "AND rp.roleid='{$role}' ";
     }
     $permission_result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     while ($row = mysql_fetch_array($permission_result))
     {
         $permission_array[$row['id']] = $row;
@@ -177,24 +174,24 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     $result= mysql_query($sql);
     $class='shade1';
 
-    while ($permissions = mysql_fetch_array($result))
+    while ($permissions = mysql_fetch_object($result))
     {
-        echo "<tr class='$class' onclick='trow(event);'>";
-        echo "<td><a href='{$_SERVER['PHP_SELF']}?action=check&amp;permid={$permissions['id']}'  title='{$strCheckWhoHasPermission}'>";
-        echo $permissions['id']."</a> {$permissions['name']}</td>";
-        if (!in_array($permissions['id'],$userrolepermission))
+        echo "<tr class='{$class}' onclick='trow(event);'>";
+        echo "<td><a href='{$_SERVER['PHP_SELF']}?action=check&amp;permid={$permissions->id}'  title='{$strCheckWhoHasPermission}'>";
+        echo "{$permissions->id}</a> {$GLOBALS[$permissions->name]}</td>";
+        if (!in_array($permissions->id, $userrolepermission))
         {
             echo "<td style='text-align:center;'><input name='dummy[]' type='checkbox' disabled='disabled' /></td>";
             echo "<td style='text-align:center;'>";
-            echo "<input name=\"perm[]\" type=\"checkbox\" value=\"".$permissions['id']."\"";
-            if ($permission_array[$permissions['id']]['granted'] == 'true') echo " checked='checked'";
+            echo "<input name=\"perm[]\" type=\"checkbox\" value=\"{$permissions->id}\"";
+            if ($permission_array[$permissions->id]['granted'] == 'true') echo " checked='checked'";
             echo " />";
         }
         else
         {
             echo "<td style='text-align:center;'><input name='roledummy[]' type='checkbox' checked='checked' disabled='disabled' /></td>";
             echo "<td style='text-align:center;'><input name='dummy[]' type='checkbox' checked='checked' disabled='disabled' />";
-            echo "<input type='hidden' name='perm[]' value='{$permissions['id']}' />";
+            echo "<input type='hidden' name='perm[]' value='{$permissions->id}' />";
         }
         echo "</td></tr>\n";
         if ($class == 'shade2') $class = "shade1";
@@ -220,7 +217,7 @@ elseif ($action == "update")
             // First pass, set all access to false
             $sql = "UPDATE `{$dbRolePermissions}` SET granted='false' WHERE roleid='{$rolerow->id}'";
             $aresult = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
             if (!$aresult) echo user_alert("{$strUpdateRolePermissionsFailed}", E_USER_WARNING);
 
@@ -230,11 +227,11 @@ elseif ($action == "update")
                 reset ($_POST["{$rolerow->id}perm"]);
                 while ($x = each($_POST["{$rolerow->id}perm"]))
                 {
-                    $sql = "UPDATE `{$dbRolePermissions}` SET granted='true' WHERE roleid='{$rolerow->id}' AND permissionid='".$x[1]."' ";
+                    $sql = "UPDATE `{$dbRolePermissions}` SET granted='true' WHERE roleid='{$rolerow->id}' AND permissionid='{$x[1]}' ";
                     // echo "Updating permission ".$x[1]."<br />";
                     // flush();
                     $uresult = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                     if (mysql_affected_rows() < 1 || $uresult == FALSE)
                     {
                         // Update failed, this could be because of a missing userpemissions record so try and create one
@@ -258,9 +255,9 @@ elseif ($action == "update")
     if (empty($role) AND !empty($user))
     {
         // First pass, set all access to false
-        $sql = "UPDATE `{$dbUserPermissions}` SET granted='false' WHERE userid='$user'";
+        $sql = "UPDATE `{$dbUserPermissions}` SET granted='false' WHERE userid='{$user}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         // Second pass, loop through checkbox array setting access to true where boxes are checked
         if (is_array($permselection))
