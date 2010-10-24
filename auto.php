@@ -23,8 +23,8 @@ populate_syslang();
 $crlg = "\n";
 
 /**
-    * @author Ivan Lucas
-**/
+ * @author Ivan Lucas
+ */
 function saction_test()
 {
     echo "<h2>Testing testing 1 2 3.</h2>";
@@ -34,10 +34,10 @@ function saction_test()
 
 
 /**
-    * Select incidents awaiting closure for more than a week where the next action time is not set or has passed
-    * @author Ivan Lucas
-    * @param $closure_delay int. The amount of time (in seconds) to wait before closing
-**/
+ * Select incidents awaiting closure for more than a week where the next action time is not set or has passed
+ * @author Ivan Lucas
+ * @param $closure_delay int. The amount of time (in seconds) to wait before closing
+ */
 function saction_CloseIncidents($closure_delay)
 {
     $success = TRUE;
@@ -108,8 +108,8 @@ function saction_CloseIncidents($closure_delay)
 
 
 /**
-    * @author Ivan Lucas
-**/
+ * @author Ivan Lucas
+ */
 function saction_PurgeJournal()
 {
     global $dbJournal, $now, $CONFIG;
@@ -129,9 +129,9 @@ function saction_PurgeJournal()
 
 
 /** Calculate SLA times
-    * @author Tom Gerrard
-    * @note Moved from htdocs/auto/timecalc.php by INL for 3.40 release
-**/
+ * @author Tom Gerrard
+ * @note Moved from htdocs/auto/timecalc.php by INL for 3.40 release
+ */
 function saction_TimeCalc()
 {
     global $now;
@@ -413,10 +413,11 @@ function saction_SetUserStatus()
 }
 
 
-/** Chase / Remind customers
-    * @author Paul Heaney
-    * @note Moved from htdocs/auto/chase_customer.php by INL for 3.40
-*/
+/** 
+ * Chase / Remind customers
+ * @author Paul Heaney
+ * @note Moved from htdocs/auto/chase_customer.php by INL for 3.40
+ */
 function saction_ChaseCustomers()
 {
     global $CONFIG, $now, $sit;
@@ -570,9 +571,10 @@ function saction_ChaseCustomers()
 }
 
 
-/** Check the holding queue for waiting email
-    * @author Ivan Lucas
-*/
+/** 
+ * Check the holding queue for waiting email
+ * @author Ivan Lucas
+ */
 function saction_CheckWaitingEmail()
 {
     global $dbTempIncoming, $dbUpdates, $dbScheduler, $now;
@@ -759,7 +761,7 @@ function saction_ldapSync()
     {
         $ldap_conn = ldapOpen();
 
-        if ($ldap_conn)
+        if ($ldap_conn != -1)
         {
             // NOTE TODO FIXME would be more optimal to pass the user type into the create as in the case where the group membership isn't stored its looked up again
 
@@ -854,7 +856,10 @@ function saction_ldapSync()
                             if (strtolower($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
                             {
                                 // User is disabled in LDAP so we want to disable
-                                $sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                if (is_object($sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]))
+                                {
+                                    $sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                }
                             }
                         }
                     }
@@ -964,7 +969,10 @@ function saction_ldapSync()
                                 if (strtolower($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
                                 {
                                     // We want to disable
-                                    $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                    if (is_object($sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]))
+                                    {
+                                        $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                    }
                                 }
                             }
                         }
@@ -992,6 +1000,10 @@ function saction_ldapSync()
                     $c->disable();
                 }
             }
+        }
+        else
+        {
+            trigger_error("Unable to connect to LDAP", E_USER_ERROR);
         }
     }
     else

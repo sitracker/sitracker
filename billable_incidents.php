@@ -397,7 +397,7 @@ elseif ($mode == 'approvalpage')
                         $line .= "<td>{$a[-1]['refunds']}</td>";
                         $bill = number_format($cost, 2);
                         if ($unapprovable) $bill = "?";
-                        $line .= "<td>{$CONFIG['currency_symbol']} {$bill}</td>";
+                        $line .= "<td>{$CONFIG['currency_symbol']}{$bill}</td>";
 
                         $line .= "<td>";
                         // Approval ?

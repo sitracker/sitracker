@@ -24,7 +24,7 @@ $action = $_REQUEST['action'];
 switch ($action)
 {
     case 'add':
-        $name = $_REQUEST['reseller_name'];
+        $name = clean_dbstring($_REQUEST['reseller_name']);
 
         $errors = 0;
         if (empty($name))

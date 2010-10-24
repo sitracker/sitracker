@@ -23,7 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $type = cleanvar($_REQUEST['type']);
-$user = clean_int($_REQUEST['user']);
+if (cleanvar($_REQUEST['user']) == 'current') $user = cleanvar($_REQUEST['user']); 
+else $user = clean_int($_REQUEST['user']);
 $softwareid = clean_int($_REQUEST['softwareid']);
 $queue = cleanvar($_REQUEST['queue']);
 $sort = cleanvar($_REQUEST['sort']);

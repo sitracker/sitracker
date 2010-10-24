@@ -77,7 +77,7 @@ function contact_products_window(contactid)
 
 <?php
 echo "<h2>".icon('contact', 32)." ";
-echo "{$strBrowseContacts}</h2>";
+echo "{$title}</h2>";
 echo "<table summary='alphamenu' align='center'>";
 echo "<tr>";
 echo "<td align='center'>";

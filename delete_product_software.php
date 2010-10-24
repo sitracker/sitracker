@@ -27,9 +27,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $productid = clean_int($_REQUEST['productid']);
 $softwareid = clean_int($_REQUEST['softwareid']);
 
-if (!empty($productid) && !empty($softwareid))
+if (!empty($productid) AND !empty($softwareid))
 {
-    $sql = "DELETE FROM `{$dbSoftwareProducts}` WHERE productid='$productid' AND softwareid='$softwareid' LIMIT 1";
+    $sql = "DELETE FROM `{$dbSoftwareProducts}` WHERE productid='{$productid}' AND softwareid='{$softwareid}' LIMIT 1";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     journal(CFG_LOGGING_NORMAL, 'Skill Unlinked', "Skill $softwareid was unlinked from Product $productid", CFG_JOURNAL_PRODUCTS, $productid);

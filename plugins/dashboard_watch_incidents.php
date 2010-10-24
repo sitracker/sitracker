@@ -262,7 +262,7 @@ function dashboard_watch_incidents_edit($dashletid)
     switch ($editaction)
     {
         case 'add':
-            $type = $_REQUEST['type'];
+            $type = clean_int($_REQUEST['type']);
             echo "<h2>{$GLOBALS['strWatchAddSet']}</h2>";
             echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?editaction=do_add&type={$type}' method='post' onsubmit='return false'>";
             echo "<table class='vertical'>";
@@ -296,8 +296,8 @@ function dashboard_watch_incidents_edit($dashletid)
             break;
 
         case 'do_add':
-            $id = $_REQUEST['id'];
-            $type = $_REQUEST['type'];
+            $id =clean_int($_REQUEST['id']);
+            $type = clean_int($_REQUEST['type']);
             $sql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` VALUES ({$sit[2]},'{$type}','{$id}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
@@ -313,8 +313,8 @@ function dashboard_watch_incidents_edit($dashletid)
             }
             break;
         case 'delete':
-            $id = $_REQUEST['id'];
-            $type = $_REQUEST['type'];
+            $id =clean_int($_REQUEST['id']);
+            $type = clean_int($_REQUEST['type']);
             $sql = "DELETE FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE id = '{$id}' AND userid = {$sit[2]} AND type = '{$type}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);

@@ -159,9 +159,9 @@ if (empty($submit))
 else
 {
     // External variables
-    $username = mysql_real_escape_string(strtolower(trim(strip_tags($_REQUEST['username']))));
+    $username = clean_dbstring(strtolower(trim(strip_tags($_REQUEST['username']))));
     $realname = cleanvar($_REQUEST['realname']);
-    $password = mysql_real_escape_string($_REQUEST['password']);
+    $password = clean_dbstring($_REQUEST['password']);
     $groupid = clean_int($_REQUEST['groupid']);
     $roleid = clean_int($_REQUEST['roleid']);
     $jobtitle = cleanvar($_REQUEST['jobtitle']);

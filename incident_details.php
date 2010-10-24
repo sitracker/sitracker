@@ -339,9 +339,9 @@ else
     echo "</tr>\n";
     
     // Incident relationships
-    $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='$id' OR relatedid='$id'";
+    $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($rresult) >= 1)
     {
         echo "<tr><td colspan='2'>{$strRelations}: ";
@@ -352,14 +352,14 @@ else
                 if ($related->relation == 'child') $linktitle = 'Child';
                 else $linktitle = 'Sibling';
                 $linktitle .= ": ".incident_title($related->incidentid);
-                echo "<a href='incident_details.php?id={$related->incidentid}' title='$linktitle'>{$related->incidentid}</a> ";
+                echo "<a href='incident_details.php?id={$related->incidentid}' title='{$linktitle}'>{$related->incidentid}</a> ";
             }
             else
             {
                 if ($related->relation == 'child') $linktitle = 'Parent';
                 else $linktitle = 'Sibling';
                 $linktitle .= ": ".incident_title($related->relatedid);
-                echo "<a href='incident_details.php?id={$related->relatedid}' title='$linktitle'>{$related->relatedid}</a> ";
+                echo "<a href='incident_details.php?id={$related->relatedid}' title='{$linktitle}'>{$related->relatedid}</a> ";
             }
             echo " &nbsp;";
         }
@@ -381,8 +381,8 @@ else
     }
     
     /**
-        * @author Ivan Lucas
-    */
+     * @author Ivan Lucas
+     */
     function count_updates($incidentid)
     {
         $count_updates = 0;
@@ -398,8 +398,8 @@ else
     
     
     /**
-        * @author Paul Heaney
-    */
+     * @author Paul Heaney
+     */
     function log_nav_bar()
     {
         global $incidentid;

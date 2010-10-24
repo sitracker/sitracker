@@ -14,7 +14,8 @@ if ($CONFIG['debug'] == TRUE)
     if (isset($dbg)) echo "<hr /><pre>".print_r($dbg,true)."</pre>";
     echo "</div>";
 }
+
+echo "<div id='incidentfooter'></div>\n";
+echo "</body>\n";
+echo "</html>\n";
 ?>
-<div id='incidentfooter'></div>
-</body>
-</html>

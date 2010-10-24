@@ -101,7 +101,7 @@ elseif ($access == TRUE)
            $ext = substr($filename, strrpos($filename, '.') + 1);
             if (in_array($ext, $inlinefiles)) $inline = TRUE;
             else $inline = FALSE;
-            if ($inline) header("Content-Type: ".mime_content_type($file_fspath));
+            if ($inline) header("Content-Type: ".mime_type($file_fspath));
             else header("Content-Type: application/octet-stream");
             header("Content-Length: {$file_size}");
             if ($inline) header("Content-Disposition: inline; filename=\"{$filename}\"");

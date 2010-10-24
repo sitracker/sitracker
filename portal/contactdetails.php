@@ -41,7 +41,7 @@ if ($_SESSION['usertype'] == 'admin')
     }
     else
     {
-        $id = intval($_REQUEST['id']);
+        $id = clean_int($_REQUEST['id']);
     }
 }
 else
@@ -141,8 +141,8 @@ if (cleanvar($_REQUEST['action']) == 'update')
 }
 elseif (isset($_POST['add']))
 {
-    $maintid = intval($_POST['maintid']);
-    $contactid = intval($_GET['id']);
+    $maintid = clean_int($_POST['maintid']);
+    $contactid = clean_int($_GET['id']);
 
     if ($maintid == 0 OR $contactid == 0)
     {
@@ -178,7 +178,7 @@ else
     echo "</h2>";
 
 
-    echo "<form action='$_SERVER[PHP_SELF]?action=update' method='post'>";
+    echo "<form action='{$_SERVER[PHP_SELF]}?action=update' method='post'>";
     echo "<table align='center' class='vertical'>";
 
     if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit' )

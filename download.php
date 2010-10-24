@@ -21,25 +21,6 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $inlinefiles = array('jpg','jpeg','png','gif','txt','htm','html');
 
-function mime_type($file)
-{
-    if (function_exists("mime_content_type"))
-    {
-        return mime_content_type($file);
-    }
-    elseif (DIRECTORY_SEPARATOR == '/')
-    {
-        //This only works on *nix, but better than failing
-        $file = escapeshellarg($file);
-        $mime = shell_exec("file -bi " . $file);
-        return $mime;
-    }
-    else
-    {
-        return 'application/octet-stream';
-    }
-}
-
 // External variables
 $id = clean_int($_GET['id']);
 

@@ -260,6 +260,12 @@ $CONFIG['billing_reports_email'] = 'admin@localhost';
 // Allow incidents to be approved against overdrawn services
 $CONFIG['billing_allow_incident_approval_against_overdrawn_service'] = TRUE;
 
+// Multipliers to be used on billing matrix to allow more units tobe consumed at certain periods of time
+$CONFIG['billing_matrix_multipliers'] = array(0.5, 1, 1.5, 2, 2.5, 3);
+
+// Default billing multiplier to use
+$CONFIG['billing_default_multiplier'] = 1;
+
 $CONFIG['inventory_types']['cisco vpn'] = 'Cisco VPN';
 $CONFIG['inventory_types']['go_to_my_pc'] = 'Go to my PC';
 $CONFIG['inventory_types']['nortel vpn'] = 'Nortel VPN';

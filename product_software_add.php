@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$action = mysql_real_escape_string($_REQUEST['action']);
+$action = clean_dbstring($_REQUEST['action']);
 $productid = clean_int($_REQUEST['productid']);
 $softwareid = clean_int($_REQUEST['softwareid']);
 $context = cleanvar($_REQUEST['context']);

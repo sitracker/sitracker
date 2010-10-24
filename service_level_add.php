@@ -20,8 +20,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$tag = mysql_real_escape_string($_REQUEST['tag']);
-$priority = mysql_real_escape_string($_REQUEST['priority']);
+$tag = clean_dbstring($_REQUEST['tag']);
+$priority = clean_dbstring($_REQUEST['priority']);
 $action = $_REQUEST['action'];
 
 if (empty($action) OR $action == "showform")
@@ -124,7 +124,7 @@ if (empty($action) OR $action == "showform")
 elseif ($action == "edit")
 {
     // External variables
-    $tag = trim(clean_dbstring($_POST['tag'])));
+    $tag = trim(clean_dbstring($_POST['tag']));
     $low_initial_response_mins = clean_int($_POST['low_initial_response_mins']);
     $low_prob_determ_mins = clean_int($_POST['low_prob_determ_mins']);
     $low_action_plan_mins = clean_int($_POST['low_action_plan_mins']);
@@ -211,7 +211,7 @@ elseif ($action == "edit")
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows",E_USER_WARNING);
+        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert medium
         $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
@@ -224,8 +224,8 @@ elseif ($action == "edit")
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows",E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert high
         $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
@@ -238,8 +238,8 @@ elseif ($action == "edit")
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows",E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert critical
         $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
@@ -252,15 +252,15 @@ elseif ($action == "edit")
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows",E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         for ($i = 1; $i <= 4; $i++)
         {
             $sql = "INSERT INTO `{$dbBillingPeriods}` (servicelevelid, priority, tag, customerperiod, engineerperiod, `limit`) ";
             $sql .= "VALUES ('{$newslid}', '{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
 
         header("Location: service_levels.php");
