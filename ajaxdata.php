@@ -328,6 +328,7 @@ switch ($action)
                 	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
                 	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
                 }
+
                 if (isset($ttvararray['{'.$param.'}']['checkreplace']))
                 {
                     echo '<tr>';
