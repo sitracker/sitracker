@@ -1,6 +1,4 @@
 <?php
-// notifications.php - Page for users to setup their trigger actions
-//
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
@@ -17,7 +15,6 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strNotifications;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='pageintro'>";
 echo "<p>Below is a list of your notifications.</p>";

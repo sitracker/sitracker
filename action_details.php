@@ -302,21 +302,21 @@ else
     }
     echo "</select>";
 
-    echo "<span id='emailtemplatesbox' style='display:none'>";
+    echo "<div id='emailtemplatesbox' style='display:none'>";
     echo "<h3>Email template</h3> ";
     echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You shoud only change this if you would like to use a template you have created yourself</p>";
-    echo email_templates('emailtemplate', $trigger_mode)."</span></p>";
-    echo "<span id='noticetemplatesbox' style='display:none'>";
+    echo email_templates('emailtemplate', $trigger_mode)."</div>";
+    echo "<div id='noticetemplatesbox' style='display:none'>";
     echo "<h3>Notice template</h3> ";
     echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You should only change this if you would like to use a template you have created yourself</p>";
-    echo notice_templates('noticetemplate')."</span></p>";
+    echo notice_templates('noticetemplate')."</div>";
     echo '<div id="checksbox" style="display:none">';
     echo '<h3>Conditions</h3>';
     echo "<p style='text-align:left'>Some actions have option conditions under which you can choose to be notified.</p>";
     echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
     echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;
     echo "<div id='checkshtml'></div></div>";
-    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strAdd}' /></p></form>";
+    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strAdd}' /></p></form></div>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {
@@ -326,8 +326,7 @@ else
 //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
 //         }
 //     }
-
-
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-
+ 
 ?>

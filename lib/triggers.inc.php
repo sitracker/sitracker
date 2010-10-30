@@ -445,6 +445,12 @@ array('description' => $strFeedbackURL,
       'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_owner($param_array[\'incidentid\'])).\'&&\'.urlencode($param_array[\'incidentid\']))))));'
       );
 
+$ttvararray['{formattedtime}'][] =
+array('description' => 'Outputs a formatted time, e.g. 2 minutes, 1 hour etc.',
+      'replacement' => 'format_seconds($param_array[holdingmins] * 60);',
+      'requires' => 'holdingmins'
+      );
+
 $ttvararray['{globalsignature}'] =
 array('description' => $strGlobalSignature,
       'replacement' => 'global_signature();'
