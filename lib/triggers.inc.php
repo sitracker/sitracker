@@ -1116,6 +1116,10 @@ function triggers_to_html($user_id, $trigger_id = '')
             $html .= $trigger_html;
             $html .= "</div></td></tr>";
         }
+        else
+        {
+            trigger_error('Problem getting trigger details');
+        }
     }
     $html .= "</table>";
     return $html;
@@ -1316,9 +1320,11 @@ function checks_to_html($checks)
             {
                 trigger_error('not yet supported');
             }
-            print_r($check);
-            echo $ttvararray[$check[0]]['checkreplace'];
-            $html .= $ttvararray[$check[0]]['checkreplace']();
+
+            if ($ttvararray[$check[0]]['checkreplace'] != '')
+            {
+                $html .= $ttvararray[$check[0]]['checkreplace']();
+            }
         }
         echo $html;
     }
