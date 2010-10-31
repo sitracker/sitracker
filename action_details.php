@@ -21,8 +21,7 @@ if (isset($_GET['user']))
     //FIXME perms
     if ($_GET['user'] == 'admin')
     {
-        $user_id = 0;
-        $trigger_mode = 'system';
+        srigger_mode = 'system';
     }
     else
     {
@@ -54,51 +53,51 @@ function resetRules()
 
 function get_checks()
 {
-	$('checksbox').show();
-      var xmlhttp=false;
+    $('checksbox').show();
+    var xmlhttp=false;
 
-      if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-      {
-          try
-          {
-              xmlhttp = new XMLHttpRequest();
-          }
-          catch (e)
-          {
-              xmlhttp=false;
-          }
-      }
-      if (!xmlhttp && window.createRequest)
-      {
-          try
-          {
-              xmlhttp = window.createRequest();
-          }
-          catch (e)
-          {
-              xmlhttp=false;
-          }
-      }
-      var triggertype = $('triggertype').value;
-      var url =  "ajaxdata.php";
-      var params = "action=checkhtml&triggertype="+triggertype;;
-      xmlhttp.open("POST", url, true)
-      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xmlhttp.setRequestHeader("Content-length", params.length);
-      xmlhttp.setRequestHeader("Connection", "close");
-      xmlhttp.send(params);
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    {
+    try
+    {
+        xmlhttp = new XMLHttpRequest();
+    }
+    catch (e)
+    {
+        xmlhttp=false;
+    }
+    }
+    if (!xmlhttp && window.createRequest)
+    {
+    try
+    {
+        xmlhttp = window.createRequest();
+    }
+    catch (e)
+    {
+        xmlhttp=false;
+    }
+    }
+    var triggertype = $('triggertype').value;
+    var url =  "ajaxdata.php";
+    var params = "action=checkhtml&triggertype="+triggertype;;
+    xmlhttp.open("POST", url, true)
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader("Content-length", params.length);
+    xmlhttp.setRequestHeader("Connection", "close");
+    xmlhttp.send(params);
 
-      xmlhttp.onreadystatechange=function()
-      {
-          if (xmlhttp.readyState==4)
-          {
-              if (xmlhttp.responseText != '')
-              {
-                  //alert(xmlhttp.responseText);
-                  $("checkshtml").update(xmlhttp.responseText);
-              }
-          }
-      }
+    xmlhttp.onreadystatechange=function()
+    {
+    if (xmlhttp.readyState==4)
+    {
+        if (xmlhttp.responseText != '')
+        {
+        //alert(xmlhttp.responseText);
+        $("checkshtml").update(xmlhttp.responseText);
+        }
+    }
+    }
 }
 
 function switch_template()
@@ -107,130 +106,130 @@ function switch_template()
     //FIXME functionise the js here
     if ($('new_action').value == 'ACTION_NOTICE')
     {
-        $('noticetemplatesbox').show();
-        var xmlhttp=false;
+    $('noticetemplatesbox').show();
+    var xmlhttp=false;
 
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    {
+        try
         {
-            try
-            {
-                xmlhttp = new XMLHttpRequest();
-            }
-            catch (e)
-            {
-                xmlhttp=false;
-            }
+        xmlhttp = new XMLHttpRequest();
         }
-        if (!xmlhttp && window.createRequest)
+        catch (e)
         {
-            try
-            {
-                xmlhttp = window.createRequest();
-            }
-            catch (e)
-            {
-                xmlhttp=false;
-            }
+        xmlhttp=false;
         }
-        var triggertype = $('triggertype').value;
-        var triggeraction = $('new_action').value;
-        var url =  "ajaxdata.php";
-        var params = "action=triggerpairmatch&triggertype="+triggertype+"&triggeraction="+triggeraction;
-        xmlhttp.open("POST", url, true)
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        xmlhttp.setRequestHeader("Connection", "close");
-        xmlhttp.send(params);
+    }
+    if (!xmlhttp && window.createRequest)
+    {
+        try
+        {
+        xmlhttp = window.createRequest();
+        }
+        catch (e)
+        {
+        xmlhttp=false;
+        }
+    }
+    var triggertype = $('triggertype').value;
+    var triggeraction = $('new_action').value;
+    var url =  "ajaxdata.php";
+    var params = "action=triggerpairmatch&triggertype="+triggertype+"&triggeraction="+triggeraction;
+    xmlhttp.open("POST", url, true)
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader("Content-length", params.length);
+    xmlhttp.setRequestHeader("Connection", "close");
+    xmlhttp.send(params);
 
-        xmlhttp.onreadystatechange=function()
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4)
         {
-            if (xmlhttp.readyState==4)
-            {
-                if (xmlhttp.responseText != '')
-                {
-                    $(xmlhttp.responseText).selected = true;
-                }
-            }
+        if (xmlhttp.responseText != '')
+        {
+            $(xmlhttp.responseText).selected = true;
         }
-        $('emailtemplatesbox').hide();
-        $('parametersbox').show();
-        $('journalbox').hide();
-        $('none').hide();
-        $('rulessection').show();
+        }
+    }
+    $('emailtemplatesbox').hide();
+    $('parametersbox').show();
+    $('journalbox').hide();
+    $('none').hide();
+    $('rulessection').show();
     }
     else if ($('new_action').value == 'ACTION_EMAIL')
     {
-        $('noticetemplatesbox').hide();
-        $('emailtemplatesbox').show();
+    $('noticetemplatesbox').hide();
+    $('emailtemplatesbox').show();
 
-        var xmlhttp=false;
+    var xmlhttp=false;
 
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    {
+        try
         {
-            try
-            {
-                xmlhttp = new XMLHttpRequest();
-            }
-            catch (e)
-            {
-                xmlhttp=false;
-            }
+        xmlhttp = new XMLHttpRequest();
         }
-        if (!xmlhttp && window.createRequest)
+        catch (e)
         {
-            try
-            {
-                xmlhttp = window.createRequest();
-            }
-            catch (e)
-            {
-                xmlhttp=false;
-            }
+        xmlhttp=false;
         }
-
-        var triggertype = $('triggertype').value;
-        var triggeraction = $('new_action').value;
-        var url =  "ajaxdata.php";
-        var params = "action=triggerpairmatch&triggertype="+triggertype+"&triggeraction="+triggeraction;
-        xmlhttp.open("POST", url, true)
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        xmlhttp.setRequestHeader("Connection", "close");
-        xmlhttp.send(params);
-
-        xmlhttp.onreadystatechange=function()
+    }
+    if (!xmlhttp && window.createRequest)
+    {
+        try
         {
-            if (xmlhttp.readyState==4)
-            {
-                if (xmlhttp.responseText != '')
-                {
-                    $(xmlhttp.responseText).selected = true;
-                }
-            }
+        xmlhttp = window.createRequest();
         }
+        catch (e)
+        {
+        xmlhttp=false;
+        }
+    }
 
-        $('parametersbox').show();
-        $('journalbox').hide();
-        $('none').hide();
-        $('rulessection').show();
+    var triggertype = $('triggertype').value;
+    var triggeraction = $('new_action').value;
+    var url =  "ajaxdata.php";
+    var params = "action=triggerpairmatch&triggertype="+triggertype+"&triggeraction="+triggeraction;
+    xmlhttp.open("POST", url, true)
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader("Content-length", params.length);
+    xmlhttp.setRequestHeader("Connection", "close");
+    xmlhttp.send(params);
+
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4)
+        {
+        if (xmlhttp.responseText != '')
+        {
+            $(xmlhttp.responseText).selected = true;
+        }
+        }
+    }
+
+    $('parametersbox').show();
+    $('journalbox').hide();
+    $('none').hide();
+    $('rulessection').show();
 
     }
     else if ($('new_action').value == 'ACTION_JOURNAL')
     {
-        $('parametersbox').show();
-        $('journalbox').show();
-        $('emailtemplatesbox').hide();
-        $('noticetemplatesbox').hide();
-        $('none').hide();
+    $('parametersbox').show();
+    $('journalbox').show();
+    $('emailtemplatesbox').hide();
+    $('noticetemplatesbox').hide();
+    $('none').hide();
     }
     else
     {
-        $('noticetemplatesbox').hide();
-        $('emailtemplatesbox').hide();
-        $('parametersbox').hide();
-        $('journalbox').hide();
-        $('none').show();
-        $('rulessection').hide();
+    $('noticetemplatesbox').hide();
+    $('emailtemplatesbox').hide();
+    $('parametersbox').hide();
+    $('journalbox').hide();
+    $('none').show();
+    $('rulessection').hide();
 
     }
 }
@@ -239,7 +238,10 @@ function switch_template()
 <?php
 if (isset($_GET['id']))
 {
+    //FIXME 4.0
+    $id = clean_int($_GET['id']);
     $mode = 'edit';
+    $trigger = Trigger::fromID($id);
 }
 else
 {
@@ -248,21 +250,21 @@ else
 
 if (!empty($_POST['triggertype']))
 {
-	$_POST = cleanvar($_POST);
-	$checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
-	                             $_POST['enabled'], $_POST['conditions']);
+    $_POST = cleanvar($_POST);
+    $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
+                    $_POST['enabled'], $_POST['conditions']);
 
     if ($_POST['new_action'] == 'ACTION_NOTICE')
-	{
+    {
         $template = $_POST['noticetemplate'];
-	}
-	elseif ($_POST['new_action'] == 'ACTION_EMAIL')
-	{
-	    $template = $_POST['emailtemplate'];
-	}
+    }
+    elseif ($_POST['new_action'] == 'ACTION_EMAIL')
+    {
+        $template = $_POST['emailtemplate'];
+    }
 
-	$t = new Trigger($_POST['triggertype'], $user_id, $template,
-                     $_POST['new_action'], $checks, $parameters);
+    $t = new Trigger($_POST['triggertype'], $user_id, $template,
+            $_POST['new_action'], $checks, $parameters);
 
     $success = $t->add();
     if ($trigger_mode == 'system') $return = 'system_actions.php';
@@ -275,13 +277,12 @@ else
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     echo "<h3>Action</h3>";
-    echo $trigger_mode;
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach($trigger_types as $name => $trigger)
     {
-        if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
-            (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
+    if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
+        (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
         {
             echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
         }
@@ -294,8 +295,8 @@ else
     echo "<option/>";
     foreach($actionarray as $name => $action)
     {
-        if (($trigger_mode == 'system' AND $action['type'] == 'system') OR
-            ($action['type'] == 'user' OR !isset($action['type'])))
+    if (($trigger_mode == 'system' AND $action['type'] == 'system') OR
+        ($action['type'] == 'user' OR !isset($action['type'])))
         {
             echo "<option id='{$name}' value='{$name}'>{$action['description']}</option>\n";
         }
@@ -316,7 +317,7 @@ else
     echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
     echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;
     echo "<div id='checkshtml'></div></div>";
-    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strAdd}' /></p></form></div>";
+    echo "<br /><p><input type='submit' name='submit' value='{$strAdd}' /></p></form></div>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {
@@ -326,7 +327,9 @@ else
 //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
 //         }
 //     }
+    echo "<p align='center'><a href='notifications.php'>{$strBackToList}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 }
- 
+
 ?>
