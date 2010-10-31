@@ -280,8 +280,8 @@ else
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach($trigger_types as $name => $trigger)
     {
-    if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
-        (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
+        if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
+            (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
         {
             echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
         }
@@ -294,8 +294,8 @@ else
     echo "<option/>";
     foreach($actionarray as $name => $action)
     {
-    if (($trigger_mode == 'system' AND $action['type'] == 'system') OR
-        ($action['type'] == 'user' OR !isset($action['type'])))
+        if (($trigger_mode == 'system' AND $action['type'] == 'system') OR
+            ($action['type'] == 'user' OR !isset($action['type'])))
         {
             echo "<option id='{$name}' value='{$name}'>{$action['description']}</option>\n";
         }
