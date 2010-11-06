@@ -275,7 +275,7 @@ switch ($action)
             mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_ERROR);
+                trigger_error(mysql_error(), E_USER_ERROR);
                 echo "<p class='error'>";
                 echo "Couldn't add update, update will need to be done manually: {$sql}'</p>";
                 die();
