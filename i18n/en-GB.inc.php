@@ -1285,6 +1285,7 @@ $strOffline = 'Offline';
 $strOneOfTheSignaturesWillBeInserted = 'One of the signatures below will be chosen at random and inserted at the bottom of outgoing emails. It\'s recommended that you begin this signature with two dashes, a space and a line feed';
 $strOneTimeBillingEditor = 'One time billing editor';
 $strOnline = 'Online';
+$strOnlyAvailableOnSupportIncidents = 'Only available on support incidents';
 $strOnlyShowsClosedCalls = 'Only shows closed calls';
 $strOnlyShowNewerThan = 'Only show newer than %d days old';
 $strOnlyShowSitesWithActiveContracts = 'Only show sites with active contracts';

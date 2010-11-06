@@ -98,6 +98,10 @@ if (empty($submit))
         echo "<input name='submit' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>\n";
     }
+    else
+    {
+        echo user_alert($strOnlyAvailableOnSupportIncidents, E_USER_ERROR);
+    }
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }
 else
