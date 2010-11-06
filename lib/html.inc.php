@@ -1236,7 +1236,9 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
     
         while ($row = mysql_fetch_object($result))
         {
-            $str .= "<option value='{$row->id}'>{$row->realname} ({$row->name})</option>\n";
+            $str .= "<option value='{$row->id}' ";
+            if ($row->name == $groupname) $str .= "selected='selected' ";
+            $str .= ">{$row->realname} ({$row->name})</option>\n";
         }
         $str .= "</select>\n";
         $str .= "<br />";
@@ -1255,9 +1257,6 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 
     $str .= "</td>";
     $str .= "</tr>\n";
-
-    // FIXME make this XHTML valid
-    $str .= "<script type='text/javascript'>\n//<![CDATA[\ngroupMemberSelect(\"{$groupname}\", \"TRUE\");\n//]]>\n</script>";
 
     return $str;
 }
