@@ -1186,7 +1186,8 @@ function contract_details($id, $mode='internal')
 function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 {
     global $dbUsers, $dbGroups;
-    $str .= "<tr><th>{$title}</th>";
+
+    $str .= "<tr><th>{$title}</th>";    
     $str .= "<td align='center'>";
 
     $sql = "SELECT DISTINCT(g.name), g.id FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
@@ -1194,56 +1195,63 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    while ($row = mysql_fetch_object($result))
+    if (mysql_num_rows($result) > 0)
     {
-        if ($type == 'radio')
+        while ($row = mysql_fetch_object($result))
         {
-            $str .= "<input type='radio' name='group' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"TRUE\")' ";
+            if ($type == 'radio')
+            {
+                $str .= "<input type='radio' name='group' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"TRUE\")' ";
+            }
+            elseif ($type == 'checkbox')
+            {
+                $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
+            }
+    
+            if ($groupid == $row->id)
+            {
+                $str .= " checked='checked' ";
+                $groupname = $row->name;
+            }
+    
+            $str .= "/>{$row->name} \n";
         }
-        elseif ($type == 'checkbox')
+    
+        $str .="<br />";
+    
+    
+        $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
+        $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    
+        if ($level == "management")
         {
-            $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
+            $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
         }
-
-        if ($groupid == $row->id)
+        elseif ($level == "engineer")
         {
-            $str .= " checked='checked' ";
-            $groupname = $row->name;
+            $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
         }
-
-        $str .= "/>{$row->name} \n";
+    
+        while ($row = mysql_fetch_object($result))
+        {
+            $str .= "<option value='{$row->id}'>{$row->realname} ({$row->name})</option>\n";
+        }
+        $str .= "</select>\n";
+        $str .= "<br />";
+        if ($level == "engineer")
+        {
+            $visibility = " style='display:none'";
+        }
+    
+        $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
+        $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
     }
-
-    $str .="<br />";
-
-
-    $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
-    $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    if ($level == "management")
+    else
     {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
+        echo $strNoneAvailable;
     }
-    elseif ($level == "engineer")
-    {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
-    }
-
-    while ($row = mysql_fetch_object($result))
-    {
-        $str .= "<option value='{$row->id}'>{$row->realname} ({$row->name})</option>\n";
-    }
-    $str .= "</select>\n";
-    $str .= "<br />";
-    if ($level == "engineer")
-    {
-        $visibility = " style='display:none'";
-    }
-
-    $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
-    $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
 
     $str .= "</td>";
     $str .= "</tr>\n";
