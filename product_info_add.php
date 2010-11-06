@@ -75,7 +75,7 @@ else
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbProductInfo}` (productid, information, moreinformation) ";
-        $sql .= "VALUES ('$product', '$information', '$moreinformation')";
+        $sql .= "VALUES ('{$product}', '{$information}', '{$moreinformation}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
@@ -87,6 +87,8 @@ else
         {
             journal(CFG_LOGGING_NORMAL, 'Product Info Added', "Info was added to Product {$product}", CFG_JOURNAL_PRODUCTS, $product);
             html_redirect("products.php?productid={$product}");
+            clear_form_errors('product_info_add');
+            clear_form_data('product_info_add');
             exit;
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
