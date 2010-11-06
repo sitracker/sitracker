@@ -93,14 +93,14 @@ switch ($action)
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE id='{$noticeid}' AND userid='{$sit[2]}'";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
         elseif ($noticeid == 'all')
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE userid={$userid} LIMIT 20"; // only delete 20 max as we only show 20 max
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
         break;
@@ -130,7 +130,7 @@ switch ($action)
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -141,7 +141,7 @@ switch ($action)
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -154,7 +154,7 @@ switch ($action)
     case 'tags':
         $sql = "SELECT DISTINCT t.name FROM `{$dbSetTags}` AS st, `{$dbTags}` AS t WHERE st.tagid = t.tagid GROUP BY t.name";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -169,7 +169,7 @@ switch ($action)
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -184,7 +184,7 @@ switch ($action)
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -197,7 +197,7 @@ switch ($action)
     case 'slas':
         $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($obj = mysql_fetch_object($result))
         {
             $strIsSelected = '';
@@ -211,7 +211,7 @@ switch ($action)
     case 'products':
         $sql = "SELECT id, name FROM `{$dbProducts}` ORDER BY name ASC";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($obj = mysql_fetch_object($result))
         {
             $strIsSelected = '';
@@ -225,7 +225,7 @@ switch ($action)
     case 'skills':
         $sql = "SELECT id, name FROM `{$dbSoftware}` ORDER BY name ASC";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($obj = mysql_fetch_object($result))
         {
             $strIsSelected = '';
