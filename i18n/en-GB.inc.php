@@ -132,6 +132,7 @@ $strAListOfAvailableTriggers = 'A list of available triggers and the actions tha
 $strAll = 'All';
 $strAllActivities = 'All Activities';
 $strAllClosed = 'All Closed';
+$strAllConditionsMet = 'All Conditions Met';
 $strAllContacts = 'All Contacts';
 $strAllDay = 'all day';
 $strAllIncidents = 'All Incidents';
@@ -148,6 +149,7 @@ $strAmountToEditBy = 'Amount to edit by +ve/-ve';
 # i.e. before noon
 $strAM = 'am';
 $strAnswer = 'Answer';
+$strAnyConditionMet = 'Any Condition Met';
 # e.g. SiT is an application
 $strApplication = 'Application';
 $strApprovalStatusUnknown = 'Approval Status Unknown';
@@ -1175,6 +1177,7 @@ $strNotifyContact = 'Notify Contact';
 $strNotifyContactEmail = 'The notify contact email of a contact (if set)';
 $strNotifyContactOnClose = 'Whether the user requested to send a closing email (true or false)';
 $strNotifyExternalEngineerOnClose = 'Whether the user requested to send a closing email to the external engineer (true or false)';
+$strNotifyWhen = 'Notify When';
 $strNotEscalated = 'Not Escalated';
 $strNoServiceWithIDXFound = 'No service with ID %s found';
 $strNoPermission = 'You do not have permission to view this page';

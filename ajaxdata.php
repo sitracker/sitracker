@@ -313,10 +313,9 @@ switch ($action)
         if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
         if (is_array($trigger_types[$triggertype]['params']))
         {
-            // FIXME i18n
-            echo '<p align="left">Notify when: ';
-            echo "<select name='conditions'><option value='all'>all conditions are met</option>";
-            echo "<option value='any'>any conditions are met</option></select></p>";
+            echo '<p align="left">{$strNotifyWhen} ';
+            echo "<select name='conditions'><option value='all'>{$strAllConditionsMet}</option>";
+            echo "<option value='any'>{$strAnyConditionMet}</option></select></p>";
             echo "<table>";
             foreach ($trigger_types[$triggertype]['params'] as $param)
             {
