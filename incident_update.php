@@ -821,7 +821,7 @@ else
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
-    if ($target!='none')
+    if ($target != 'none')
     {
         // Reset the slaemail sent column, so that email reminders can be sent if the new sla target goes out
         $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='{$id}' LIMIT 1";
