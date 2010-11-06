@@ -1689,6 +1689,8 @@ $strSortResults = 'Sort Results';
 $strSource = 'Source';
 $strSourceFailCannotBeFoundX = 'Source file cannot be found %s';
 $strSpamEmail = 'Spam Email';
+# Plural of strSpamEmail
+$strSpamEmails = 'Spam Emails';
 $strSpecifyAddress = 'Specify an address for this contact that is different to the site';
 #English suffix for first - 1st
 $strst = 'st';
