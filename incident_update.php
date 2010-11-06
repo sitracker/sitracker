@@ -47,7 +47,7 @@ function display_update_page($draftid=-1)
     {
         $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
         $draftresult = mysql_query($draftsql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $draftobj = mysql_fetch_object($draftresult);
 
         $metadata = explode("|",$draftobj->meta);
@@ -269,7 +269,7 @@ function display_update_page($draftid=-1)
     clear_form_errors('update');
 
     //echo "<form action='".$_SERVER['PHP_SELF']."?id={$id}&amp;draftid={$draftid}' method='post' name='updateform' id='updateform' enctype='multipart/form-data'>";
-    echo "<form action='".$_SERVER['PHP_SELF']."?id={$id}' method='post' name='updateform' id='updateform' enctype='multipart/form-data'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' name='updateform' id='updateform' enctype='multipart/form-data'>";
     echo "<table class='vertical'>";
     echo "<tr>";
     echo "<th align='right' width='20%;'>{$GLOBALS['strSLATarget']}";
@@ -516,7 +516,7 @@ if (empty($action))
 {
     $sql = "SELECT * FROM `{$dbDrafts}` WHERE type = 'update' AND userid = '{$sit[2]}' AND incidentid = '{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
@@ -547,7 +547,7 @@ else if ($action == "deletedraft")
     {
         $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
     html_redirect("{$_SERVER['PHP_SELF']}?id={$id}");
 }
@@ -579,12 +579,15 @@ else
     // \p{L} A Unicode character
     // \p{N} A Unicode number
     // /u does a unicode search
-    if (empty($bodytext) OR
-        ((strlen($bodytext) < 4) OR
-        !preg_match('/[\p{L}\p{N}]+/u', $bodytext)))
+    if (empty($bodytext))
     {
-        //FIXME 3.40 make this two errors and i18n for
         $_SESSION['formerrors']['update'][] = sprintf($strFieldMustNotBeBlank, $strUpdate);
+        html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
+        exit;
+    }
+    elseif ((strlen($bodytext) < 4) OR !preg_match('/[\p{L}\p{N}]+/u', $bodytext))
+    {
+        $_SESSION['formerrors']['update'][] = sprintf(strMustContainFourCharacters, $strUpdate);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
         exit;
     }
@@ -839,7 +842,7 @@ else
         {
             $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
         journal(CFG_LOGGING_MAX,'Incident Updated', "Incident $id Updated", CFG_JOURNAL_SUPPORT, $id);
         html_redirect("incident_details.php?id={$id}");

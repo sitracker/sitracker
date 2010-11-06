@@ -2017,6 +2017,7 @@ $strXMinutes = '%s minutes';
 $strXMonths = '%s months';
 # e.g. '5 days old'
 $strXold = '%s old';
+$strXTotal = '%s Total';
 # e.g. 'Fred of ACME Inc'. i.e. 'Name' of 'Site'
 $strXofX = '%s of %s';
 # e.g. '5 Records'
