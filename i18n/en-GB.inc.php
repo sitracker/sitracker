@@ -441,6 +441,7 @@ $strdayssick = 'days sick leave';
 $strdaystraining = 'days training';
 $strdaysworkingaway = 'days working away';
 $strDebit = 'Debit';
+$strDebug = 'Debug';
 # Short for December
 $strDecAbbr = 'Dec';
 # Month number 12: December
@@ -1015,6 +1016,7 @@ $strLoggedUnder = 'This incident is logged under contract %d';
 $strLogIn = 'Log In';
 # Label on sign in button
 $strLogin = 'Login';
+$strLoginLogoff = 'Login/Logoff';
 # Label on sign out button
 $strLogout = 'Logout';
 $strLogTriggerInJournal = 'log the action in the system journal';
@@ -1417,6 +1419,8 @@ $strReceivedByEmail = 'This information was received in the email.  It is not ed
 $strRecent = 'Recent';
 $strRecentIncidents = 'Recent Incidents';
 $strReducedPrioritySLA = 'Reduced from %s according to SLA';
+# e.g. Ref: 12
+$strRefX = 'Ref: %s';
 $strReferences = 'References';
 $strRefresh = 'Refresh';
 #Abbreviation for Reference ID
@@ -1517,6 +1521,7 @@ $strRunReports = 'Run Reports';
 $strSalesperson = 'Salesperson';
 $strSalespersonSite = 'The site\'s salesperson';
 $strSalespersonAssignedToContactsSiteEmail = 'The email address of the salesperson attached to the contacts site';
+$strSalesIncidentsLegacy = 'Sales Incidents (Legacy}';
 # short for 'Saturday'
 $strSat = 'Sat';
 $strSaturday = 'Saturday';
@@ -1918,6 +1923,7 @@ $strUsername = 'Username';
 $strUsernameNotUnique = 'Username must be unique';
 $strUsers = 'Users';
 $strUserChangedStatus = 'User Changed Status';
+$strUserManagement = 'User Management';
 $strUserPermissionsEdited = 'User Permissions Edited';
 $strUserXPermissionsEdited = 'User %s Permissions Edited';
 # User Permission 3 - Edit existing site details
