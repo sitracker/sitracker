@@ -460,6 +460,7 @@ $strDeleteSite = 'Delete Site';
 $strDeleteSitesContacts = 'Delete Sites/Contacts';
 $strDeleted = 'Deleted';
 $strDeleteTask = 'Delete Task';
+$strDeletionOfSupportContractFailed = 'Deletion of Support ContractFailed';
 $strDenied = 'Denied';
 $strDepartment = 'Department';
 $strDescendingDateOrder = 'Descending date order';
@@ -1083,6 +1084,7 @@ $strMovedFromXtoXbyX = 'Moved from %s -&gt; %s by %s';
 $strMultipleActivitiesRunning = 'Multiple Activities Running';
 $strMultipleOptions = 'Multiple Options';
 $strMustCompleteActivitiesBeforeClosure = 'You must complete all activities for the incident before closure.';
+$strMustContainFourCharacters = 'Update must be 4 characters or more';
 $strMyDashboard = 'My Dashboard';
 $strMyDetails = 'My Details';
 $strMyHolidays = 'My Holidays';
@@ -2022,6 +2024,8 @@ $strXTotal = '%s Total';
 $strXofX = '%s of %s';
 # e.g. '5 Records'
 $strXRecords = '%s Records';
+# e.g. Linux Support for Example Site
+$strXProductForYSite = '%s for %s';
 # e.g. John's Activities
 $strXsActivities = '%s\'s Activities';
 $strXSeconds = '%s seconds';
