@@ -11,6 +11,8 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
+// FIXME i18n all strings on page
+
 // Prevent script from being run directly (ie. it must always be included
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
@@ -54,7 +56,7 @@ $CATI18N['localeprefs'] = $strLocale;
 //      options - A pipe seperated list of optios for a 'select' type
 
 
-$CFGVAR['iconset']['title'] = 'Icon set'; // FIXME i18n
+$CFGVAR['iconset']['title'] = $strIconSet;
 $CFGVAR['iconset']['type'] = 'select';
 $CFGVAR['iconset']['options'] = 'sit|oxygen|crystalclear';
 // TODO our included 'kdeclassic' icon theme doesn't appear to be in the 'sit' filename format
@@ -75,7 +77,7 @@ $CFGVAR['incident_refresh']['title'] = $strIncidentRefresh;
 $CFGVAR['incident_refresh']['type'] = 'number';
 $CFGVAR['incident_refresh']['unit'] = $strSeconds;
 
-$CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details'; // FIXME i18n
+$CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details';
 $CFGVAR['incident_popup_onewindow']['type'] = 'checkbox';
 
 $CFGVAR['theme']['title'] = $strInterfaceStyle;

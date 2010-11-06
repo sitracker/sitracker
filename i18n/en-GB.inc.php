@@ -229,6 +229,7 @@ $strBill = 'Bill';
 $strBillableIncidentApproved = 'Billable Incident Approved';
 $strBillableIncidentApprovedDesc = 'When an billable incident is approved';
 $strBillableIncidents = 'Billable Incidents';
+$strBillableIncidentsInvoice = 'Billable Incidents';
 $strBillableIncidentsForPeriodXtoX = 'Billable incidents for period %s to %s';
 $strBillableIncidentsReport = 'Billable Incidents Report';
 $strBilling = 'Billing';
@@ -811,6 +812,7 @@ $strHours = 'Hours';
 
 # i.e. short for identification; unique number
 $strID = 'ID';
+$strIconSet = 'Icon Set';
 $strIfYourBrowserNotReload = 'If your browser does not reload the page within a few seconds';
 $strIfYouShouldHaveAccess = 'If you feel that you should have access to this particular feature, please ask an administrator to grant you access';
 $strImportant = 'Important';
@@ -1575,6 +1577,7 @@ $strServiceBalanceInfo = 'The amount of remaining service balance as a number e.
 $strServiceBalanceString = 'The amount of remaining service as a percentage e.g. "34%"';
 $strServiceHistory = 'Service History';
 $strServiceID = 'Service ID';
+$strServiceIDXLastInvoiceUptoX = 'Service ID: %s last invoice time up to %s';
 $strServiceLevel = 'Service Level';
 $strServiceLevelPreventsReopen = 'The service level of this incident prevents it being reopened';
 $strServiceLevels = 'Service Levels';
