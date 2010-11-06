@@ -21,7 +21,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 if ($type < HOL_PUBLIC)
 {
     echo "<h2>".icon('holiday', 32)." {$strCalendar}: ";
-    if ($user == 'all' && $approver == TRUE) echo $strAll;
+    if ($user == 'all' AND $approver == TRUE) echo $strAll;
     else echo user_realname($user,TRUE);
     if ($type == HOL_HOLIDAY)
     {
@@ -30,7 +30,7 @@ if ($type < HOL_PUBLIC)
 
     echo appointment_type_dropdown($type, 'year');
 
-    $sql = "SELECT * FROM {$dbHolidays} WHERE userid='{$user}' AND approved=0 AND type='$type'";
+    $sql = "SELECT * FROM {$dbHolidays} WHERE userid='{$user}' AND approved=0 AND type='{$type}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result))
@@ -47,7 +47,7 @@ if ($type < HOL_PUBLIC)
             echo "<br/>\n";
         }
         echo "</td></tr>\n";
-        echo "<tr class='shade1'><td><a href='holiday_request.php?type=$type'>{$strSendRequest}</a></td></tr>";
+        echo "<tr class='shade1'><td><a href='holiday_request.php?type={$type}'>{$strSendRequest}</a></td></tr>";
         echo "</table>";
     }
     mysql_free_result($result);
@@ -60,6 +60,7 @@ else
 }
 
 echo "<p align='center'>";
+
 if (!empty($selectedday))
 {
     // FIXME i18n holiday selection
