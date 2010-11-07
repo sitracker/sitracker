@@ -24,6 +24,8 @@ $id = $incidentid;
 
 $title = $strServiceLevels;
 
+include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
+
 // Retrieve incident
 // extract incident details
 $sql  = "SELECT *, i.id AS incidentid, ";
@@ -34,18 +36,13 @@ $sql .= " OR i.contact=NULL ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 $incident = mysql_fetch_object($result);
+
 $site_name = site_name($incident->siteid);
 $product_name = product_name($incident->product);
 if ($incident->softwareid > 0) $software_name=software_name($incident->softwareid);
-$servicelevel_id = maintenance_servicelevel($incident->maintenanceid);
 $servicelevel_tag = $incident->servicelevel;
-if ($servicelevel_tag=='') $servicelevel_tag = servicelevel_id2tag(maintenance_servicelevel($incident->maintenanceid));
-$servicelevel_name = servicelevel_name($servicelevelid);
+if ($servicelevel_tag == '') $servicelevel_tag = servicelevel_id2tag(maintenance_servicelevel($incident->maintenanceid));  // FIXME sla
 $opened_for = format_seconds(time() - $incident->opened);
-
-
-include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-
 
 echo "<h2>".icon('sla', 32)." ";
 echo "{$strServiceHistory}</h2>";
@@ -62,7 +59,7 @@ if (count($slahistory) >= 1)
     {
         if (empty($history['targetsla'])) break; // Skip any empty SLA history
         if ($history['targetmet'] == FALSE) $class = 'critical';
-        else $class='shade2';
+        else $class = 'shade2';
         echo "<tr class='$class'>";
         echo "<td>";
         echo icon($slatypes[$history['targetsla']]['icon'], 16)." ";

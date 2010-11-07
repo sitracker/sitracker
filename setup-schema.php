@@ -672,7 +672,7 @@ CREATE TABLE `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevelid` int(11) NOT NULL default '1',
+  `servicelevel` varchar(10) NOT NULL default '',f
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -1574,7 +1574,7 @@ INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example pr
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevelid, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no',0,0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no','standard',0);
 
 ";
 
@@ -1667,7 +1667,14 @@ UPDATE `{$dbPermissions}` SET name = 'strAdjustActivityDuration' WHERE id = 81;
 DELETE FROM `{$dbPermissions}` WHERE id IN (45,46,47);
 DELETE FROM `{$dbRolePermissions}` WHERE permissionid IN (45,46,47);
 DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
- 
+
+ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 10 ) NOT NULL AFTER `term` ;
+UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM servicelevels WHERE id = servicelevelid);
+ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
+
+ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` ); 
+
+ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
 ";
 

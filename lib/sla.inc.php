@@ -126,12 +126,12 @@ function incident_sla_history($incidentid)
 
 /**
  * @param string $name name of select
- * @param int $id The ID which should be chosen
+ * @param string $tag The tag which should be chosen
  * @param bool $collapse Only show the tag rather than tag + priority
  * @param string $select additional parameter to the select clause e.g. onchange code
  * @return String HTML of the SLA drop down
  */
-function servicelevel_drop_down($name, $id, $collapse = FALSE, $select = '')
+function servicelevel_drop_down($name, $tag, $collapse = FALSE, $select = '')
 {
     global $dbServiceLevels;
 
@@ -141,7 +141,7 @@ function servicelevel_drop_down($name, $id, $collapse = FALSE, $select = '')
     }
     else
     {
-        $sql  = "SELECT id, priority FROM `{$dbServiceLevels}`";
+        $sql  = "SELECT id, tag, priority FROM `{$dbServiceLevels}`";
     }
     $result = mysql_query($sql);
 
@@ -151,8 +151,8 @@ function servicelevel_drop_down($name, $id, $collapse = FALSE, $select = '')
     while ($servicelevels = mysql_fetch_object($result))
     {
         $html .= "<option ";
-        $html .= "value='{$servicelevels->id}' ";
-        if ($servicelevels->id == $id)
+        $html .= "value='{$servicelevels->tag}' ";
+        if ($servicelevels->tag == $tag)
         {
             $html .= "selected='selected'";
         }
@@ -223,7 +223,13 @@ function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
 
 /* Returns a string representing the name of   */
 /* the given servicelevel. Returns an empty string if the     */
-/* priority does not exist.                                   */
+/* priority does not exist.   
+ *                                 */
+/**
+ * @deprecated  No longer use ids
+ * Enter description here ...
+ * @param unknown_type $id
+ */
 function servicelevel_name($id)
 {
     global $CONFIG;
@@ -237,6 +243,20 @@ function servicelevel_name($id)
     return $servicelevel;
 }
 
+
+/**
+ * Return the name of the SLA, if tag is empty the default SLA is returned else the tag is returned
+ * @param string $tag The tag
+ * @return string Tag Name
+ */
+function get_sla_name($tag)
+{
+    global $CONFIG;
+    
+    if ($tag == '') $tag = $CONFIG['default_service_level'];
+
+    return $tag;
+}
 
 /**
  * Find whether a given servicelevel is timed

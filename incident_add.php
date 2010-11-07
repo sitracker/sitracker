@@ -74,10 +74,10 @@ function to_row($contactrow)
         }
     }
     $str .=  "</td>";
-    $str .=  '<td>'.$contactrow['forenames'].' '.$contactrow['surname'].'</td>';
-    $str .=  '<td>'.$contactrow['name'].'</td>';
-    $str .=  '<td>'.$contactrow['productname'].'</td>';
-    $str .=  '<td>'.servicelevel_id2tag($contactrow['servicelevelid']).'</td>';
+    $str .=  "<td>{$contactrow['forenames']} {$contactrow['surname']}</td>";
+    $str .=  "<td>{$contactrow['name']}</td>";
+    $str .=  "<td>{$contactrow['productname']}</td>";
+    $str .=  "<td>{$contactrow['servicelevel']}</td>";
     if ($contactrow['expirydate'] == '-1')
     {
         $str .= "<td>{$GLOBALS['strUnlimited']}</td>";
@@ -170,7 +170,7 @@ elseif ($action == 'findcontact')
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevelid ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
     $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -187,7 +187,7 @@ elseif ($action == 'findcontact')
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevelid ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -234,8 +234,7 @@ elseif ($action == 'findcontact')
         {
             if (empty($CONFIG['preferred_maintenance']) OR
                 (is_array($CONFIG['preferred_maintenance']) AND
-                    in_array(servicelevel_id2tag($contactrow['servicelevelid']),
-                                             $CONFIG['preferred_maintenance'])))
+                    in_array($contactrow['servicelevel'], $CONFIG['preferred_maintenance'])))
             {
                 $str_prefered .= to_row($contactrow);
             }
@@ -277,8 +276,8 @@ elseif ($action == 'findcontact')
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
         if (empty($contactid))
         {
-            $sql .= "AND (surname LIKE '%$search_string%' OR forenames LIKE '%$search_string%' OR s.name LIKE '%$search_string%' ";
-            $sql .= "OR CONCAT_WS(' ', forenames, surname) LIKE '$search_string') ";
+            $sql .= "AND (surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR s.name LIKE '%{$search_string}%' ";
+            $sql .= "OR CONCAT_WS(' ', forenames, surname) LIKE '{$search_string}') ";
         }
         else $sql .= "AND c.id = '$contactid' ";
 
@@ -308,7 +307,7 @@ elseif ($action == 'findcontact')
                 {
                     $html .=  "<td><a href=\"{$_SERVER['PHP_SELF']}?action=";
                     $html .= "incidentform&amp;type=free&amp;contactid=";
-                    $html .= $contactrow['contactid']."&amp;updateid=$updateid";
+                    $html .= $contactrow['contactid']."&amp;updateid={$updateid}";
                     $html .= "&amp;win={$win}\"";
                     if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
                     {
@@ -356,8 +355,8 @@ elseif ($action == 'findcontact')
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
         if (empty($contactid))
         {
-            $sql .= "AND (surname LIKE '%$search_string%' OR forenames LIKE '%$search_string%' OR s.name LIKE '%$search_string%' ";
-            $sql .= "OR CONCAT_WS(' ', forenames, surname) = '$search_string' )";
+            $sql .= "AND (surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR s.name LIKE '%{$search_string}%' ";
+            $sql .= "OR CONCAT_WS(' ', forenames, surname) = '{$search_string}' )";
         }
         else $sql .= "AND c.id = '$contactid' ";
         $sql .= "ORDER by c.surname, c.forenames ";

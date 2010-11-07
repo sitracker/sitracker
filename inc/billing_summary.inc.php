@@ -27,7 +27,7 @@ if (empty($display)) $display = 'html';
 
 $sql = "SELECT DISTINCT(CONCAT(m.id,sl.id)), m.site, m.product, m.expirydate AS maintexpiry, s.* ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbService}` AS s, `{$dbSites}` AS site ";
-$sql .= "WHERE m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
+$sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
 
 if (empty($showfoc) OR $showfoc != 'show')
 {

@@ -994,7 +994,7 @@ function contract_details($id, $mode='internal')
         $html .= "<td>{$maint->licence_quantity} {$maint->licensetypename}</td></tr>\n";
     }
 
-    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".servicelevel_name($maint->servicelevelid)."</td></tr>";
+    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".get_sla_name($maint->serviceleveld)."</td></tr>";
     $html .= "<tr><th>{$GLOBALS['strExpiryDate']}:</th><td>";
     if ($maint->expirydate == '-1')
     {
@@ -1009,9 +1009,7 @@ function contract_details($id, $mode='internal')
 
     if ($mode == 'internal')
     {
-        $timed = db_read_column('timed', $GLOBALS['dbServiceLevels'], $maint->servicelevelid);
-        if ($timed == 'yes') $timed = TRUE;
-        else $timed = FALSE;
+        $timed = servicelevel_timed($maint->servicelevel);
         $html .= "<tr><th>{$GLOBALS['strService']}</th><td>";
         $html .= contract_service_table($id, $timed);
         $html .= "</td></tr>\n";
@@ -1082,11 +1080,11 @@ function contract_details($id, $mode='internal')
 
                     if ($mode == 'internal')
                     {
-                        $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                        $html .= "<td><a href=\"contract_delete_contact.php?contactid={$contact}&amp;maintid={$id}&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
                     }
                     else
                     {
-                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid={$contact}&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
                     }
                     $supportcount++;
                 }

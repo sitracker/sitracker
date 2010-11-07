@@ -1176,6 +1176,7 @@ switch ($_REQUEST['action'])
                             }
                         }
 
+                        // FIXME which version of SiT do we support upgrading to 4.0 from?  
                         /******************************
                          * Do Post-upgrade tasks here *
                          ******************************/
