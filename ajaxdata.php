@@ -87,7 +87,8 @@ switch ($action)
         break;
     case 'dismiss_notice':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
-        $noticeid = clean_int($_REQUEST['noticeid']);
+        // We don't use clean_int here as it may be a int or 'all' if its a string its not used directly
+        $noticeid = clean_dbstring($_REQUEST['noticeid']);
         $userid = clean_int($_REQUEST['userid']);
         if (is_numeric($noticeid))
         {
