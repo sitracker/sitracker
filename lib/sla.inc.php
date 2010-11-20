@@ -281,11 +281,6 @@ function servicelevel_timed($sltag)
 
 
 /**
- * @author Ivan Lucas
- * @deprecated
- * @note DEPRECATED service level tags should be used in favour of service level ID's
- * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
- * Find the maximum priority of a service level
  * @author Paul Heaney
  * @param string $slatag The SLA to find the max priority of
  * @return int The maximum priority of an SLA, 0 if invalid SLA
