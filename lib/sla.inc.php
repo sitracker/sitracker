@@ -303,6 +303,7 @@ function servicelevel_maxpriority($slatag)
  * @deprecated
  * @note DEPRECATED service level tags should be used in favour of service level ID's
  * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
+ *  ONLY USED IN maintenance_servicelevel NOW
  */
 function servicelevel_tag2id($sltag)
 {
