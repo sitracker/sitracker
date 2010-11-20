@@ -221,29 +221,6 @@ function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
 }
 
 
-/* Returns a string representing the name of   */
-/* the given servicelevel. Returns an empty string if the     */
-/* priority does not exist.   
- *                                 */
-/**
- * @deprecated  No longer use ids
- * Enter description here ...
- * @param unknown_type $id
- */
-function servicelevel_name($id)
-{
-    global $CONFIG;
-
-    $servicelevel = db_read_column('tag', $GLOBALS['dbServiceLevels'], $id);
-
-    if ($servicelevel == '')
-    {
-        $servicelevel = $CONFIG['default_service_level'];
-    }
-    return $servicelevel;
-}
-
-
 /**
  * Return the name of the SLA, if tag is empty the default SLA is returned else the tag is returned
  * @param string $tag The tag
