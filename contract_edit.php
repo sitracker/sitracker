@@ -196,18 +196,14 @@ else if ($action == "update")
         $errors = 1;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strReseller}'"), E_USER_ERROR);
     }
-    // check for blank licence quantity
-    if ($licence_quantity == '')
-    {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strLicenseQuantity}'"), E_USER_ERROR);
-    }
+
     // check for blank admin contact
     if ($admincontact == 0)
     {
         $errors = 1;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
     }
+
     // check for blank expiry day
     if ($expirydate == 0)
     {
