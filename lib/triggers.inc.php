@@ -722,7 +722,7 @@ array('description' => $strSLA,
 
 $ttvararray['{slatag}'] =
 array('description' => $strSLA,
-      'replacement' => 'servicelevel_id2tag(contract_slaid($param_array[\'contractid\']));',
+      'replacement' => 'maintenance_servicelevel_tag($param_array[\'contractid\']);',
       'requires' => 'contractid'
       );
 
