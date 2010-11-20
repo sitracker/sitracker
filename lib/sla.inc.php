@@ -299,24 +299,6 @@ function servicelevel_maxpriority($slatag)
 
 
 /**
- * @author Ivan Lucas
- * @deprecated
- * @note DEPRECATED service level tags should be used in favour of service level ID's
- * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
- *  ONLY USED IN maintenance_servicelevel NOW
- */
-function servicelevel_tag2id($sltag)
-{
-    $sql = "SELECT id FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$sltag}' AND priority=1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($id) = mysql_fetch_row($result);
-
-    return $id;
-}
-
-
-/**
  * Calcualtes a unix timestamp for the time of next action
  * @param int $days Number of days in the future
  * @param int $hours Number of hours in the future
@@ -328,40 +310,6 @@ function calculate_time_of_next_action($days, $hours, $minutes)
     $now = time();
     $return_value = $now + ($days * 86400) + ($hours * 3600) + ($minutes * 60);
     return ($return_value);
-}
-
-
-/**
- * Retrieves the service level ID of a given maintenance contract
- * @author Ivan Lucas
- * @param int $maintid. Contract ID
- * @return. int Service Level ID
- * @deprecated
- * @note Service level ID's are DEPRECATED service level tags should be used in favour of service level ID's
- */
-function maintenance_servicelevel($maintid)
-{
-    global $CONFIG, $dbMaintenance;
-    $sql = "SELECT servicelevelid FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) < 1)
-    {
-        // in case there is no maintenance contract associated with the incident, use default service level
-        // if there is a maintenance contract then we should throw an error because there should be
-        // service level
-        if ($maintid == 0)
-        {
-            // Convert the default service level tag to an ide and use that
-            $servicelevelid = servicelevel_tag2id($CONFIG['default_service_level']);
-        }
-    }
-    else
-    {
-        list($servicelevelid) = mysql_fetch_row($result);
-    }
-    return $servicelevelid;
 }
 
 
