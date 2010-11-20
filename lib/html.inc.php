@@ -994,7 +994,7 @@ function contract_details($id, $mode='internal')
         $html .= "<td>{$maint->licence_quantity} {$maint->licensetypename}</td></tr>\n";
     }
 
-    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".get_sla_name($maint->serviceleveld)."</td></tr>";
+    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".get_sla_name($maint->servicelevel)."</td></tr>";
     $html .= "<tr><th>{$GLOBALS['strExpiryDate']}:</th><td>";
     if ($maint->expirydate == '-1')
     {
