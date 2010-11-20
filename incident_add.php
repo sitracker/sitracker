@@ -717,7 +717,7 @@ elseif ($action == 'assign')
             // Set the service level the contract
             if ($servicelevel == '')
             {
-                $servicelevel = servicelevel_id2tag(maintenance_servicelevel($maintid));
+                $servicelevel = maintenance_servicelevel_tag($maintid);
             }
 
             // Use default service level if we didn't find one above
@@ -848,19 +848,7 @@ elseif ($action == 'assign')
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            // get the service level
-            // find out when the initial response should be according to the service level
-            if (empty($servicelevel) OR $servicelevel==0)
-            {
-                // FIXME: for now we use id but in future use tag, once maintenance uses tag
-                $servicelevel = maintenance_servicelevel($maintid);
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE id='{$servicelevel}' AND priority='{$priority}' ";
-            }
-            else
-            {
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-            }
-
+            $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             $level = mysql_fetch_object($result);

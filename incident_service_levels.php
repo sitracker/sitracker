@@ -39,9 +39,10 @@ $incident = mysql_fetch_object($result);
 
 $site_name = site_name($incident->siteid);
 $product_name = product_name($incident->product);
-if ($incident->softwareid > 0) $software_name=software_name($incident->softwareid);
+if ($incident->softwareid > 0) $software_name = software_name($incident->softwareid);
+
 $servicelevel_tag = $incident->servicelevel;
-if ($servicelevel_tag == '') $servicelevel_tag = servicelevel_id2tag(maintenance_servicelevel($incident->maintenanceid));  // FIXME sla
+if ($servicelevel_tag == '') $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
 $opened_for = format_seconds(time() - $incident->opened);
 
 echo "<h2>".icon('sla', 32)." ";

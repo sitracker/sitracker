@@ -383,6 +383,36 @@ function maintenance_servicelevel($maintid)
 
 
 /**
+ * Retrieves the service level tag of a given maintenance contract
+ * @author Paul Heaney
+ * @param int $maintid. Contract ID
+ * @return. string Service Level Tag
+ */
+function maintenance_servicelevel_tag($maintid)
+{
+    global $CONFIG, $dbMaintenance;
+    $sql = "SELECT servicelevel FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+    if (mysql_num_rows($result) < 1)
+    {
+        // in case there is no maintenance contract associated with the incident, use default service level
+        // if there is a maintenance contract then we should throw an error because there should be
+        // service level
+        if ($maintid == 0)
+        {
+            $servicelevelid = $CONFIG['default_service_level'];
+        }
+    }
+    else
+    {
+        list($servicelevel) = mysql_fetch_row($result);
+    }
+    return $servicelevel;
+}
+
+/**
  * Calculate the working time between two timestamps
  * @author Tom Gerrard, Ivan Lucas, Paul Heaney
  * @param int $t1. The start timestamp (earliest date/time)

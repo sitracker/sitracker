@@ -108,7 +108,7 @@ if ($incident->softwareid > 0)
 $servicelevel_tag = $incident->servicelevel;
 if ($servicelevel_tag == '')
 {
-    $servicelevel_tag = servicelevel_id2tag(maintenance_servicelevel($incident->maintenanceid));  // FIXME sla changes
+    $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
 }
 
 if ($incident->closed == 0)
