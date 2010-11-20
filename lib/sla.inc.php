@@ -304,19 +304,6 @@ function servicelevel_maxpriority($slatag)
  * @note DEPRECATED service level tags should be used in favour of service level ID's
  * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
  */
-function servicelevel_id2tag($id)
-{
-    global $dbServiceLevels;
-    return db_read_column('tag', $dbServiceLevels, $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @deprecated
- * @note DEPRECATED service level tags should be used in favour of service level ID's
- * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
- */
 function servicelevel_tag2id($sltag)
 {
     $sql = "SELECT id FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$sltag}' AND priority=1";
