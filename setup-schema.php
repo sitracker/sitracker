@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
   PRIMARY KEY  (`tag`,`hour`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbBillingMatrix}` (`id`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
+INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
 ('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
