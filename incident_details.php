@@ -278,18 +278,21 @@ else
     echo "<br />\n";
 
     // Total billable duration
-    $upsql = "SELECT duration ";
+    $upsql = "SELECT incidentid, duration ";
     $upsql .= "FROM `{$dbUpdates}`";
-    $upsql .= "WHERE incidentupdates = {$incidentid}";
+    $upsql .= "WHERE incidentid = {$incidentid}";
     $upresult = mysql_query($upsql);
     if (mysql_num_rows($upresult) > 0)
     {
         while ($du = mysql_fetch_object($upresult))
         {
-            $totalduration = $totalduration + {$du->duration};
+            $totalduration = $totalduration + $du->duration;
         }
         // FIXME for 12/24H clock choice
-        echo "{$strDuration}: " . print date("HH:mm:ss" $totalduration);
+        if ($totalduration > 0)
+        {
+            echo ("{$strDuration}: " . date("H:i", $totalduration*60) . "<br />\n");
+        }
     }
 
     // Show sla target/review target if incident is still open
@@ -350,6 +353,7 @@ else
             }
         }
     }
+
     echo "</td>";
     echo "</tr>\n";
 
