@@ -137,11 +137,11 @@ function servicelevel_drop_down($name, $tag, $collapse = FALSE, $select = '')
 
     if ($collapse)
     {
-        $sql = "SELECT DISTINCT id, tag FROM `{$dbServiceLevels}`";
+        $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
     }
     else
     {
-        $sql  = "SELECT id, tag, priority FROM `{$dbServiceLevels}`";
+        $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}`";
     }
     $result = mysql_query($sql);
 
