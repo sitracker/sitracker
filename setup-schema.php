@@ -1676,6 +1676,8 @@ ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `
 
 ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
+ALTER TABLE `{$dbServiceLevels}` DROP `id`;
+
 ";
 
 // ********************************************************************
