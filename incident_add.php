@@ -997,7 +997,8 @@ elseif ($action == 'assign')
                 echo "<td align='center'>{$incpriority['1']}</td>";
 
                 echo "<td align='center'>";
-                echo $userrow['accepting'] == 'Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                if ($userrow['accepting'] == 'Yes') echo $strYes;
+                else echo "<span class='error'>{$strNo}</span>";
                 echo "</td>";
                 echo "</tr>\n";
                 if ($shade == 'shade2') $shade = 'shade1';
