@@ -894,7 +894,7 @@ elseif ($action == 'assign')
             }
 
             $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
-            $html .=  "<p align='center'>";
+            $html .= "<p align='center'>";
             $html .= sprintf($strIncidentLoggedEngineer, $incidentid);
             $html .= "</p>\n";
 
@@ -977,13 +977,13 @@ elseif ($action == 'assign')
                 }
 
                 echo "</td>";
-                echo "<td>".$userrow['phone']."</td>";
+                echo "<td>{$userrow['phone']}</td>";
                 echo "<td>".user_online_icon($userrow['id'])." ".userstatus_name($userrow['status'])."</td>";
-                echo "<td>".$userrow['message']."</td>";
+                echo "<td>{$userrow['message']}</td>";
                 echo "<td align='center'>";
 
                 $incpriority = user_incidents($userrow['id']);
-                $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+                $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
                 if ($countincidents >= 1) $countactive = user_activeincidents($userrow['id']);
                 else $countactive = 0;
@@ -991,10 +991,10 @@ elseif ($action == 'assign')
                 $countdiff = $countincidents-$countactive;
 
                 echo "$countactive / {$countdiff}</td>";
-                echo "<td align='center'>".$incpriority['4']."</td>";
-                echo "<td align='center'>".$incpriority['3']."</td>";
-                echo "<td align='center'>".$incpriority['2']."</td>";
-                echo "<td align='center'>".$incpriority['1']."</td>";
+                echo "<td align='center'>{$incpriority['4']}</td>";
+                echo "<td align='center'>{$incpriority['3']}</td>";
+                echo "<td align='center'>{$incpriority['2']}</td>";
+                echo "<td align='center'>{$incpriority['1']}</td>";
 
                 echo "<td align='center'>";
                 echo $userrow['accepting'] == 'Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
