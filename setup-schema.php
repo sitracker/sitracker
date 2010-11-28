@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
   PRIMARY KEY  (`tag`,`hour`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbBillingMatrix}` (`id`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
+INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
 ('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
@@ -108,7 +108,6 @@ INSERT INTO `{$dbBillingMatrix}` (`id`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri
 
 
 CREATE TABLE `{$dbBillingPeriods}` (
-`servicelevelid` INT( 5 ) NOT NULL ,
 `engineerperiod` INT NOT NULL COMMENT 'In minutes',
 `customerperiod` INT NOT NULL COMMENT 'In minutes',
 `priority` INT( 4 ) NOT NULL,
@@ -117,7 +116,7 @@ CREATE TABLE `{$dbBillingPeriods}` (
 `modified` DATETIME NULL ,
 `modifiedby` smallint(6) NULL ,
 `limit` float NOT NULL default 0,
-PRIMARY KEY ( `servicelevelid`,`priority` )
+PRIMARY KEY ( `tag`,`priority` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -473,7 +472,7 @@ CREATE TABLE `{$dbIncidents}` (
   `towner` smallint(6) NOT NULL default '0',
   `contact` int(11) default '0',
   `priority` tinyint(4) default NULL,
-  `servicelevel` varchar(10) default NULL,
+  `servicelevel` varchar(32) default NULL,
   `status` tinyint(4) default NULL,
   `type` enum('Support','Sales','Other','Free') default 'Support',
   `maintenanceid` int(11) NOT NULL default '0',
@@ -672,7 +671,7 @@ CREATE TABLE `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevel` varchar(10) NOT NULL default '',f
+  `servicelevel` varchar(32) NOT NULL default '',f
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -1159,8 +1158,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
 
 
 CREATE TABLE `{$dbServiceLevels}` (
-  `id` int(5) NOT NULL default '0',
-  `tag` varchar(10) NOT NULL default '',
+  `tag` varchar(32) NOT NULL default '',
   `priority` int(5) NOT NULL default '0',
   `initial_response_mins` int(11) NOT NULL default '0',
   `prob_determ_mins` int(11) NOT NULL default '0',
@@ -1175,10 +1173,10 @@ CREATE TABLE `{$dbServiceLevels}` (
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
 
 
 CREATE TABLE `{$dbSetTags}` (
@@ -1677,6 +1675,12 @@ ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `
 ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
 ALTER TABLE `{$dbServiceLevels}` DROP `id`;
+
+ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
+ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+ALTER TABLE `{$dbMaintenance}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL 
+
 
 ";
 

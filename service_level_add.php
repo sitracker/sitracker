@@ -65,7 +65,7 @@ if (empty($action) OR $action == "showform")
     echo "{$title}</h2>";
     echo "<form name='add_servicelevel' action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-    echo "<p align='center'>{$strTag}: <input type='text' name='tag' value='{$_SESSION['formdata']['add_servicelevel']['tag']}' /></p>";
+    echo "<p align='center'>{$strTag}: <input type='text' name='tag' maxlength='32' value='{$_SESSION['formdata']['add_servicelevel']['tag']}' /></p>";
 
     echo "<table align='center'>";
     echo "<tr><th>{$strTimed}</th><td class='shade1'><input type='checkbox' id='timed' name='timed' value='yes' onchange='enableBillingPeriod();' {$timedchecked} />".help_link('ServiceLevelTimed')."</td></tr>";
