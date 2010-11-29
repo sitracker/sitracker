@@ -501,20 +501,21 @@ function group_selector($selected, $urlargs='')
 
 
 // FIXME use this instead of hardcoding tabs
-function draw_tabs($tabsarray, $selected='')
+function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
-    $html .= "<div class='tabcontainer'>";
-    $html .= "<ul class='tabnav'>";
+    $html .= "<div class='{$divclass}'>";
+    $html .= "<ul>";
     foreach ($tabsarray AS $tab => $url)
     {
-        $html .= "<li><a href='$url'";
+        $html .= "<li";
         if (strtolower($tab) == strtolower($selected))
         {
             $html .= " class='active'";
         }
+        $html .= ">";
         $tab = str_replace('_', ' ', $tab);
-        $html .= ">$tab</a></li>\n";
+        $html .= "<a href='{$url}'>$tab</a></li>\n";
     }
     $html .= "</ul>";
     $html .= "</div>";
