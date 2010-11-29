@@ -227,10 +227,7 @@ function feedback_html_question($type, $name, $required, $options, $answer='')
 switch ($_REQUEST['action'])
 {
     case 'save':
-        // FIXME external vars
         // Have a look to see if this respondant has already responded to this form
-        // Get respondentid
-        //print_r($_REQUEST);
         $sql = "SELECT id AS respondentid FROM `{$dbFeedbackRespondents}` ";
         $sql .= "WHERE contactid='$contactid' AND formid='{$formid}' AND incidentid='{$incidentid}' AND completed = 'no'";
         $result = mysql_query($sql);
@@ -330,7 +327,6 @@ switch ($_REQUEST['action'])
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3><div id='pagecontent'><span class=\"success\">{$strThankYou}<span></h4>";
         echo "<h4>{$strThankYouCompleteForm}</h4>";
-        //echo "<!-- \n {$sqltext} \n\n\n {$debugtext} -->";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
 
@@ -360,7 +356,7 @@ switch ($_REQUEST['action'])
         {
             echo "<h3><span class='failure'>{$strError}</span></h3>";
             echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
-            echo "\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n";
+            debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n", TRUE);
         }
         else
         {
@@ -371,7 +367,7 @@ switch ($_REQUEST['action'])
             {
                 echo "<h2>{$strError}</h2>";
                 echo "<p>{$strNoFeedBackFormToCompleteHere}</p>";
-                echo "\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n";
+                debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n", TRUE);
             }
             else
             {
