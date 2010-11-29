@@ -615,7 +615,7 @@ $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this p
 $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';
-$CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
+$CFGVAR['working_days']['help'] = 'The days which are working days';
 $CFGVAR['working_days']['type'] = 'weekdayselector';
 
 if (function_exists('plugin_do'))

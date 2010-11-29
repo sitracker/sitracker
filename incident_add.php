@@ -943,7 +943,7 @@ elseif ($action == 'assign')
             while ($userrow = mysql_fetch_array($result))
             {
                 if ($userrow['id'] == $suggested_user) $shade = 'idle';
-                echo "<tr class='$shade'>";
+                echo "<tr class='{$shade}'>";
                 // display reassign link only if person is accepting or if the current user has 'reassign when not accepting' permission
                 if ($userrow['accepting'] == 'Yes')
                 {

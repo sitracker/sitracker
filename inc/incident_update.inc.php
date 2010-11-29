@@ -423,7 +423,7 @@ function display_update_page($draftid=-1)
     echo "<th align='right'>";
     echo "<strong>{$GLOBALS['strTimeToNextAction']}</strong></th>";
     echo "<td class='shade2'>";
-   	echo show_next_action('updateform');
+   	echo show_next_action('updateform', $id);
     echo "</td></tr>";
     echo "<tr>";
     // calculate upload filesize

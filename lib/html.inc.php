@@ -500,21 +500,21 @@ function group_selector($selected, $urlargs='')
 }
 
 
-// FIXME use this instead of hardcoding tabs
-function draw_tabs($tabsarray, $selected='')
+function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
-    $html .= "<div class='tabcontainer'>";
-    $html .= "<ul class='tabnav'>";
+    $html .= "<div class='{$divclass}'>";
+    $html .= "<ul>";
     foreach ($tabsarray AS $tab => $url)
     {
-        $html .= "<li><a href='$url'";
+        $html .= "<li";
         if (strtolower($tab) == strtolower($selected))
         {
             $html .= " class='active'";
         }
+        $html .= ">";
         $tab = str_replace('_', ' ', $tab);
-        $html .= ">$tab</a></li>\n";
+        $html .= "<a href='{$url}'>$tab</a></li>\n";
     }
     $html .= "</ul>";
     $html .= "</div>";
@@ -2032,9 +2032,8 @@ function format_external_id($externalid, $escalationpath='')
  * @param int $userid ID of the contact
  * @param string $mode ??? Defaults to Internal
  * @return string output html
- * @todo TODO should this be renamed, it has nothing to do with users FIXME
  */
-function user_contracts_table($userid, $mode = 'internal')
+function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
     if ((!empty($sit[2]) AND user_permission($sit[2], 30)

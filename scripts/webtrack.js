@@ -20,9 +20,7 @@ var mainframe = '50%';
  * @author Ivan Lucas
  * @param string incidentid. The ID of the incident to display
  * @param string win. Window reference
- * @param rtn. Decides whether the window is unique
- * FIXME I can't remember how the 'rtn' param works, you'll have to figure it
- * out yourself, sorry.
+ * @param rtn. Whether to return a refernce to the window object which has just been opened
  */
 function incident_details_window(incidentid, win, rtn)
 {

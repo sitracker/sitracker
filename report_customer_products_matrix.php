@@ -1,5 +1,5 @@
 <?php
-// site_products_matrix.php -
+// report_customer_products_matrix.php -
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project
