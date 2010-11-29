@@ -1141,6 +1141,7 @@ $strNobody = 'Nobody';
 $strNoAnswerGiven = 'No Answer Given';
 $strNoActionSpecified = 'No action specified';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
+$strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
 $strNoFiles = 'No Files';
 $strNoneAvailable = 'None Available';
 $strNonTerminatedContractsExpiredXdaysAgo = 'Non-Terminated Contracts that expired up to %s days ago';

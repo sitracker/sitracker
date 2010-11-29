@@ -375,7 +375,7 @@ switch ($action)
         }
         else
         {
-            echo "<p class='warning'>{$strNoRecords}</p>";  // FIXME 3.41 better message here
+            echo "<p class='warning'>{$strNoEngineersForReassignment}</p>";
         }
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }
