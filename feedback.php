@@ -51,13 +51,6 @@ function feedback_html_rating($name, $required, $options, $answer='')
     if (empty($promptleft) == FALSE OR empty($promptright) == FALSE)
     {
         $html .= "<tr>";
-        /*  for($c=1;$c<=$score_max;$c++)
-        {
-        if ($c==1) $html.="<th width='$colwidth%'>$promptleft</th>";
-        elseif ($c==$score_max) $html.="<th width='$colwidth%'>$promptright</th>";
-        else $html.="<th width='$colwidth%'>&nbsp;</th>";
-        }
-        */
         $html .= "<th colspan='{$score_max}' style='text-align: left;'>";
         $html .= "<div style='float: right;'>{$promptright}</div><div>{$promptleft}</div></th>";
         if ($required != 'true')
@@ -292,13 +285,6 @@ switch ($_REQUEST['action'])
                     $qresulttext = $_POST[$fieldname];
                 }
             }
-            /*
-            elseif ($question->type='multioptions')
-            {
-                $qresult = '';
-                $qresulttext=implode(',',$_POST[$fieldname]);
-            }
-            */
             else
             {
                 // Store all other types of results in the result field.
@@ -318,9 +304,6 @@ switch ($_REQUEST['action'])
         {
             $error = implode(",",$errorfields);
             $fielddata = base64_encode(serialize($fieldarray));
-            //echo "<p>Error: $errortext</p>";
-            //print_r($errorfields);
-            //exit;
             $errortext = urlencode($fielddata.','.$error);
             echo "<?";
             echo "xml version=\"1.0\" encoding=\"\"?";
@@ -339,18 +322,10 @@ switch ($_REQUEST['action'])
         // Loop through array and execute the array to insert the form data
         foreach ($rsql AS $sql)
         {
-            ## echo $sql."<br />";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             $sqltext .= $sql."\n";
         }
-
-        //    $sql = "UPDATE feedbackrespondents ";
-        //$sql .= "SET completed='yes' ";
-        //$sql .= "WHERE formid='$formid' AND respondent='$respondent' AND responseref='$responseref' ";
-        //mysql_query($sql);
-        //if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-        //if (mysql_affected_rows() < 1) echo "<p>No rows affected: ($sql)</p>";
 
         $title = $strThankYou;
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
