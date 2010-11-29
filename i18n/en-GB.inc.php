@@ -674,6 +674,7 @@ $strFeedbackAfterX = 'Feedback after %s';
 $strFeedbackBeforeX = 'Feedback before %s';
 $strFeedbackBetweenXandY = 'Feedback between %s and %s';
 $strFeedbackForm = 'Feedback Form';
+$strFeedbackFormAlreadyCompleted = 'Feedback form already completed';
 $strFeedbackForms = 'Feedback Forms';
 $strFeedbackReport = 'Feedback Report';
 $strFeedbackFormsRequested = 'There are %s feedback forms that have been returned already';

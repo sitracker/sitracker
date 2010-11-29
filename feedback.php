@@ -237,8 +237,7 @@ switch ($_REQUEST['action'])
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) < 1)
         {
-            // FIXME: Proper error here
-            echo "<p>{$strErrorNoEmptyForm}</p>";
+            echo "<p>{$strFeedbackFormAlreadyCompleted}</p>";
         }
         else
         {
@@ -344,8 +343,8 @@ switch ($_REQUEST['action'])
         {
             echo "<html>\n<head>\n<title>{$strFeedbackForm}</title>\n</head>\n<body>\n<div id='pagecontent'>\n\n";
         }
-        $errorfields = explode(",",urldecode($_REQUEST['error']));
-        $fielddata = unserialize(base64_decode($errorfields[0])); // unserialize(
+        $errorfields = explode(",", urldecode($_REQUEST['error']));
+        $fielddata = unserialize(base64_decode($errorfields[0]));
 
         // Have a look to see if this person has a form waiting to be filled
         $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` ";
