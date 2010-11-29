@@ -46,7 +46,7 @@ switch ($action)
         if ($tempnewowner == 'yes') $temporary = 'yes';
 
         // Retrieve current incident details
-        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='$id' LIMIT 1";
+        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $incident = mysql_fetch_object($result);
@@ -80,7 +80,7 @@ switch ($action)
             $sql .= "towner={$sit[2]}, "; // Temp to self
             $triggeruserid = $sit[2];
         }
-        elseif ($temporary == 'yes' AND $tempnewowner != 'yes'  AND $userid==$incident->owner)
+        elseif ($temporary == 'yes' AND $tempnewowner != 'yes'  AND $userid == $incident->owner)
         {
             $sql .= "owner='{$userid}', towner=0, ";
             $triggeruserid = $userid;
@@ -95,7 +95,7 @@ switch ($action)
             $sql .= "owner='{$userid}', ";
             $triggeruserid = $userid;
         }
-        $sql .= "status='$newstatus', lastupdated='$now' WHERE id='$id' LIMIT 1";
+        $sql .= "status='{$newstatus}', lastupdated='{$now}' WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         if (isset($triggeruserid))
@@ -124,7 +124,7 @@ switch ($action)
         else $customervisibility='hide';
 
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentowner, currentstatus, customervisibility) ";
-        $sql .= "VALUES ($id, $sit[2], '$bodytext', '$assigntype', '$now', ";
+        $sql .= "VALUES ({$id}, {$sit[2]}, '{$bodytext}', '{$assigntype}', '{$now}', ";
         if ($fullreassign == 'yes')
         {
             $sql .= "'{$userid}', ";
@@ -155,7 +155,7 @@ switch ($action)
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
         // Remove any tempassigns that are pending for this incident
-        $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='$id'";
+        $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$id}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -296,16 +296,16 @@ switch ($action)
                     echo "</label></td>";
                     echo "<td>".user_online_icon($users->id).userstatus_name($users->status)."</td>";
                     $incpriority = user_incidents($users->id);
-                    $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+                    $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
                     if ($countincidents >= 1) $countactive = user_activeincidents($users->id);
                     else $countactive = 0;
                     $countdiff = $countincidents - $countactive;
                     echo "<td align='center'>$countactive / {$countdiff}</td>";
-                    echo "<td align='center'>".$incpriority['4']."</td>";
-                    echo "<td align='center'>".$incpriority['3']."</td>";
-                    echo "<td align='center'>".$incpriority['2']."</td>";
-                    echo "<td align='center'>".$incpriority['1']."</td>";
+                    echo "<td align='center'>{$incpriority['4']}</td>";
+                    echo "<td align='center'>{$incpriority['3']}</td>";
+                    echo "<td align='center'>{$incpriority['2']}</td>";
+                    echo "<td align='center'>{$incpriority['1']}</td>";
                     echo "<td align='center'>";
                     if ($users->accepting == 'Yes') echo $strYes;
                     else echo "<span class='error'>{$strNo}</span>";
