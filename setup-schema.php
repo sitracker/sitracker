@@ -1666,7 +1666,7 @@ DELETE FROM `{$dbPermissions}` WHERE id IN (45,46,47);
 DELETE FROM `{$dbRolePermissions}` WHERE permissionid IN (45,46,47);
 DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
 
-ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 10 ) NOT NULL AFTER `term` ;
+ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
 UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM servicelevels WHERE id = servicelevelid);
 ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
 
@@ -1679,7 +1679,6 @@ ALTER TABLE `{$dbServiceLevels}` DROP `id`;
 ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
 ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
-ALTER TABLE `{$dbMaintenance}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL 
 
 
 ";
