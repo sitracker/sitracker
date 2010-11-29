@@ -500,7 +500,6 @@ function group_selector($selected, $urlargs='')
 }
 
 
-// FIXME use this instead of hardcoding tabs
 function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
