@@ -105,16 +105,11 @@ if ($incident->softwareid > 0)
     $software_name = software_name($incident->softwareid);
 }
 
-$servicelevel_id = maintenance_servicelevel($incident->maintenanceid);
-
 $servicelevel_tag = $incident->servicelevel;
 if ($servicelevel_tag == '')
 {
-    $servicelevel_tag = servicelevel_id2tag(maintenance_servicelevel($incident->maintenanceid));
+    $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
 }
-
-
-$servicelevel_name = servicelevel_name($servicelevelid);
 
 if ($incident->closed == 0)
 {

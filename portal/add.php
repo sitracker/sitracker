@@ -141,7 +141,7 @@ else //submit
     $probdesc = cleanvar($_REQUEST['probdesc']);
     $workarounds = cleanvar($_REQUEST['workarounds']);
     $reproduction = cleanvar($_REQUEST['reproduction']);
-    $servicelevel = servicelevel_id2tag(maintenance_servicelevel($contractid));
+    $servicelevel = maintenance_servicelevel_tag($contractid);
     $productid = clean_int($_REQUEST['productid']);
 
     $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
@@ -220,19 +220,7 @@ else //submit
 
         if ($CONFIG['portal_creates_incidents'])
         {
-            // get the service level
-            // find out when the initial response should be according to the service level
-            if (empty($servicelevel) OR $servicelevel == 0)
-            {
-                // FIXME: for now we use id but in future use tag, once maintenance uses tag
-                $servicelevel = maintenance_servicelevel($contractid);
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE id='{$servicelevel}' AND priority='{$priority}' ";
-            }
-            else
-            {
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-            }
-
+            $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             $level = mysql_fetch_object($result);

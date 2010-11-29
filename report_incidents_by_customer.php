@@ -89,13 +89,13 @@ if (empty($mode))
 
     $sql = "SELECT DISTINCT id, tag FROM `{$dbServiceLevels}`";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         echo "<select name='slas[]' multiple='multiple' size='5'>\n";
         while ($obj = mysql_fetch_object($result))
         {
-            echo "<option value='$obj->id'>{$obj->tag}</option>\n";
+            echo "<option value='{$obj->tag}'>{$obj->tag}</option>\n";
         }
         echo "</select>\n";
     }
@@ -129,6 +129,7 @@ else
 
     $enddate = $enddate." 23:59:59";
     
+    // FIXME move this function out of line
     function does_site_have_certain_sla_contract($siteid, $slas)
     {
         $toReturn = false;
@@ -140,14 +141,14 @@ else
 
             foreach ($slas AS $s)
             {
-                if (!empty($qsql))$qsql .= " OR ";
-                $qsql .= " servicelevelid = {$s} ";
+                if (!empty($qsql)) $qsql .= " OR ";
+                $qsql .= " servicelevel = {$s} ";
             }
 
             $ssql .= "({$qsql})";
 
             $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($sresult) > 0)
             {
                 $toReturn = true;
@@ -173,7 +174,7 @@ else
     */
     // echo $sql;
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         $shade = 'shade1';
@@ -207,7 +208,7 @@ else
                 $sql.= "GROUP BY site";
                 // echo $sql;
                 $sresult = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $details = mysql_fetch_object($sresult);
                 $count = $details->incidentz;
 
@@ -290,7 +291,7 @@ else
                 $isql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s, `{$dbIncidents}` AS i ";
                 $isql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened >".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id ";
                 $iresult = mysql_query($isql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
                 if (mysql_num_rows($iresult) > 0)
                 {

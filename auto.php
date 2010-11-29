@@ -55,7 +55,7 @@ function saction_CloseIncidents($closure_delay)
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -65,7 +65,7 @@ function saction_CloseIncidents($closure_delay)
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -94,7 +94,7 @@ function saction_CloseIncidents($closure_delay)
             $resultc = mysql_query($sqlc);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 $success = FALSE;
             }
         }
@@ -119,7 +119,7 @@ function saction_PurgeJournal()
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
     if ($CONFIG['debug']); //debug_log("Purged ".mysql_affected_rows()." journal entries");
@@ -149,7 +149,7 @@ function saction_TimeCalc()
     $incident_result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -159,10 +159,9 @@ function saction_TimeCalc()
         // from the incident itself, otherwise look at contract type
         if ($incident['servicelevel'] ==  '')
         {
-            $sql = "SELECT tag FROM `{$dbServiceLevels}` s, `{$dbMaintenance}` m ";
-            $sql .= "WHERE m.id = '{$incident['maintenanceid']}' AND s.id = m.servicelevelid";
+            $sql = "SELECT servicelevel FROM  `{$dbMaintenance}` WHERE id = '{$incident['maintenanceid']}'";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $t = mysql_fetch_row($sql);
             $tag = $t[0];
             mysql_free_result($result);
@@ -179,7 +178,7 @@ function saction_TimeCalc()
         $update_result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_WARNING);
+            trigger_error(mysql_error(), E_USER_WARNING);
             $success = FALSE;
         }
 
@@ -203,7 +202,7 @@ function saction_TimeCalc()
         $update_result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_WARNING);
+            trigger_error(mysql_error(), E_USER_WARNING);
             $success = FALSE;
         }
 
@@ -264,7 +263,7 @@ function saction_TimeCalc()
             $result = mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 $success = FALSE;
             }
             $times = mysql_fetch_assoc($result);
@@ -291,7 +290,7 @@ function saction_TimeCalc()
 
                     $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident['id']}'";
                     mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 }
             }
         }
@@ -319,7 +318,7 @@ function saction_SetUserStatus()
     if (mysql_error())
     {
         $success = FALSE;
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
     }
     while ($huser = mysql_fetch_object($result))
     {
@@ -394,7 +393,7 @@ function saction_SetUserStatus()
                 if (mysql_error())
                 {
                     $success = FALSE;
-                    trigger_error(mysql_error(),E_USER_WARNING);
+                    trigger_error(mysql_error(), E_USER_WARNING);
                 }
             }
         }
@@ -407,7 +406,7 @@ function saction_SetUserStatus()
     if (mysql_error())
     {
         $success = FALSE;
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
     }
     return $success;
 }

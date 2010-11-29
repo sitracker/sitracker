@@ -112,7 +112,7 @@ while ($incidents = mysql_fetch_array($result))
 
     // Fudge for old ones
     $tag = $incidents['servicelevel'];
-    if ($tag=='') $tag = servicelevel_id2tag(maintenance_servicelevel($incidents['maintenanceid']));
+    if ($tag == '') $tag = maintenance_servicelevel_tag($incidents['maintenanceid']);
 
     $slsql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag}' AND priority='{$incidents['priority']}' ";
     $slresult = mysql_query($slsql);
@@ -121,7 +121,7 @@ while ($incidents = mysql_fetch_array($result))
     if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ($slsql)", E_USER_WARNING);
 
     // Get Last Update
-    list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incidents['id']);
+    list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incidents['id']);
 
     // Get next target
     $target = incident_get_next_target($incidents['id']);
