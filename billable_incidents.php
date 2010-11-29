@@ -38,7 +38,7 @@ if (empty($enddate)) $enddate = $now;
 
 $sitelistsql = "SELECT DISTINCT m.site, s.name ";
 $sitelistsql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbSites}` AS s ";
-$sitelistsql .= "WHERE  m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = s.id ";
+$sitelistsql .= "WHERE  m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
 
 $sitestr = '';
 

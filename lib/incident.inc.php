@@ -150,11 +150,11 @@ function create_incident_from_incoming($incomingid)
     $subject = $row->subject;
     $update = $row->updateid;
 
-    $sql = "SELECT servicelevelid, tag, product, softwareid ";
+    $sql = "SELECT tag, product, softwareid ";
     $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp ";
     $sql .= "WHERE m.id = '{$contract}' ";
-    $sql .= "AND m.servicelevelid = s.id ";
+    $sql .= "AND m.servicelevel = s.tag ";
     $sql .= "AND m.product = sp.productid LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error())
