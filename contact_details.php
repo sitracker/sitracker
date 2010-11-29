@@ -233,7 +233,7 @@ while ($contactrow = mysql_fetch_array($contactresult))
 
     // Check if user has permission to view maintenace contracts, if so display those related to this contact
 
-    echo user_contracts_table($id);
+    echo contracts_for_contacts_table($id);
 }
 mysql_free_result($contactresult);
 

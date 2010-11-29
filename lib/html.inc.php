@@ -2032,9 +2032,8 @@ function format_external_id($externalid, $escalationpath='')
  * @param int $userid ID of the contact
  * @param string $mode ??? Defaults to Internal
  * @return string output html
- * @todo TODO should this be renamed, it has nothing to do with users FIXME
  */
-function user_contracts_table($userid, $mode = 'internal')
+function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
     if ((!empty($sit[2]) AND user_permission($sit[2], 30)

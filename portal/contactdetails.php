@@ -275,7 +275,7 @@ else
     echo "<input type='hidden' name='id' value='{$id}' />";
     echo "<input type='submit' value='{$strUpdate}' /></p></form>";
 
-    echo "<br />".user_contracts_table($id, 'external');
+    echo "<br />".contracts_for_contacts_table($id, 'external');
 
     if ($_SESSION['usertype'] == 'admin')
     {
