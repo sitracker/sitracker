@@ -325,27 +325,9 @@ switch ($_REQUEST['action'])
             echo "<?";
             echo "xml version=\"1.0\" encoding=\"\"?";
             echo ">";
-    // FIXME check this code
-            ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
- "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<html xmlns='http://www.w3.org/1999/xhtml'>
-<head>
-<meta http-equiv="refresh" content="0;URL=feedback.php?ax=<?php echo "{$hashcode}&error={$errortext}&mode={$mode}"; ?>" />
-<title><?php echo $strPleaseWaitRedirect ?></title>
-<style type="text/css">
-body { font:10pt Arial, Helvetica, sans-serif; }
-</style>
-<body>
-<p><?php echo $strPleaseWaitRedirect ?></p>
-<p><?php echo $strIfYourBrowserNotReload; ?><a href='feedback.php?ax=<?php echo "{$hashcode}&error={$errortext}&mode={$mode}"; ?>'><?php echo $strFollowThisLink;?></a>.</p>
-</body>
-</head>
-</html>
-
-<?php
-//             header("Location: feedback.php?ax={$hashcode}&error={$errortext}");
+            $url = "feedback.php?ax={$hashcode}&error={$errortext}&mode={$mode}";
+            html_redirect($url, FALSE, $strErrorRequiredQuestionsNotCompleted);
             exit;
         }
 
