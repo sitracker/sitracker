@@ -350,16 +350,16 @@ function user_holiday($userid, $type= 0, $year, $month, $day, $length = FALSE)
     if ($type !=0 )
     {
         $sql .= "AND (type='$type' OR type='".HOL_PUBLIC."' OR type='".HOL_FREE."') ";
-        $sql .= "AND IF(type!=".HOL_PUBLIC.", userid='$userid', 1=1) ";
+        $sql .= "AND IF(type!=".HOL_PUBLIC.", userid='{$userid}', 1=1) ";
     }
     else
     {
-        $sql .= " AND userid='$userid' ";
+        $sql .= " AND userid='{$userid}' ";
     }
 
     if ($length != FALSE)
     {
-        $sql .= "AND length='$length' ";
+        $sql .= "AND length='{$length}' ";
     }
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -403,8 +403,8 @@ function user_count_holidays($userid, $type, $date=0,
                              $approved = array(HOL_APPROVAL_NONE, HOL_APPROVAL_GRANTED, HOL_APPROVAL_DENIED))
 {
     global $dbHolidays;
-    $sql = "SELECT id FROM `{$dbHolidays}` WHERE userid='$userid' ";
-    $sql .= "AND type='$type' AND length='day' ";
+    $sql = "SELECT id FROM `{$dbHolidays}` WHERE userid='{$userid}' ";
+    $sql .= "AND type='{$type}' AND length='day' ";
     if ($date > 0) $sql .= "AND `date` < FROM_UNIXTIME({$date})";
     if (is_array($approved))
     {

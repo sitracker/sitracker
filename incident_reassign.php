@@ -254,7 +254,7 @@ switch ($action)
                 echo "</label></td>";
                 echo "<td>".user_online_icon($suguser->id).userstatus_name($suguser->status)."</td>";
                 $incpriority = user_incidents($suguser->id);
-                $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+                $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
                 if ($countincidents >= 1)
                 {
