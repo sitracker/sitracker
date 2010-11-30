@@ -169,7 +169,7 @@ switch ($mode)
             switch ($sort)
             {
                 case 'created':
-                    $sql .= " ORDER BY created {$sortorder}";
+                    $sql .= " ORDER BY fr.created {$sortorder}";
                     break;
                 case 'contactid':
                     $sql .= " ORDER BY contactid {$sortorder}";
@@ -178,7 +178,7 @@ switch ($mode)
                     $sql .= " ORDER BY incidentid {$sortorder}";
                     break;
                 default:
-                    $sql .= " ORDER BY created DESC";
+                    $sql .= " ORDER BY fr.created DESC";
                     break;
             }
             $result = mysql_query($sql);
