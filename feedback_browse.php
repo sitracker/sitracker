@@ -36,7 +36,7 @@ switch ($mode)
         echo "<h2>".icon('contract', 32)." {$strFeedback}</h2>";
         $sql = "SELECT * FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $response = mysql_fetch_object($result);
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
@@ -143,7 +143,7 @@ switch ($mode)
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 0)
         {
@@ -182,7 +182,7 @@ switch ($mode)
                     break;
             }
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
             $countrows = mysql_num_rows($result);
 
