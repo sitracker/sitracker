@@ -93,7 +93,7 @@ else
     // add product if no errors
     if ($errors == 0)
     {
-        $sql = "INSERT INTO `{$dbProducts}` (name, vendorid, description) VALUES ('$name', '$vendor', '$description')";
+        $sql = "INSERT INTO `{$dbProducts}` (name, vendorid, description) VALUES ('{$name}', '{$vendor}', '{$description}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -101,7 +101,7 @@ else
         else
         {
             $id = mysql_insert_id();
-            journal(CFG_LOGGING_NORMAL, 'Product Added', "Product $id was added", CFG_JOURNAL_PRODUCTS, $id);
+            journal(CFG_LOGGING_NORMAL, 'Product Added', "Product {$id} was added", CFG_JOURNAL_PRODUCTS, $id);
 
             html_redirect("products.php");
         }

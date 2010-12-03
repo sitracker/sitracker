@@ -33,7 +33,7 @@ function generate_row($update)
 
     if (strlen($update['bodytext']) > 1003)
     {
-        $updatebodytext = substr($update['bodytext'],0,1000).$strEllipsis;
+        $updatebodytext = substr($update['bodytext'], 0, 1000).$strEllipsis;
     }
     else
     {
@@ -55,11 +55,11 @@ function generate_row($update)
         // Have a look if we've got a user with this email address
         $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%{$update['fromaddr']}%'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($contactmatches) = mysql_fetch_row($result);
         if ($contactmatches > 0) $shade = 'notice';
     }
-    $pluginshade = plugin_do('holdingqueue_rowshade',$update);
+    $pluginshade = plugin_do('holdingqueue_rowshade', $update);
     $shade = $pluginshade ? $pluginshade : $shade;
     $html_row = "<tr class='$shade'>";
     $html_row .= "<td style='text-align: center'>";
@@ -110,7 +110,7 @@ function generate_row($update)
     $html_row .= "<td align='center' width='20%'>";
     if (($update['locked'] != $sit[2]) && ($update['locked'] > 0))
     {
-        $html_row .= sprintf($GLOBALS['strLockedByX'], user_realname($update['locked'],TRUE));
+        $html_row .= sprintf($GLOBALS['strLockedByX'], user_realname($update['locked'], TRUE));
     }
     else
     {
@@ -200,15 +200,15 @@ if ($spam_string == $_REQUEST['delete_all_spam'])
     {
         $ids = explode('_',$spam);
 
-        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='".$ids[1]."' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='".$ids[0]."' LIMIT 1";
+        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$ids[1]}' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='{$ids[0]}' LIMIT 1";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         if (mysql_affected_rows() == 1)
         {
-            $sql = "DELETE FROM `{$dbUpdates}` WHERE id='".$ids[0]."'";
+            $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$ids[0]}'";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            $path = $CONFIG['attachment_fspath'].'updates/'.$ids[0];
+            $path = "{$CONFIG['attachment_fspath']}updates/{$ids[0]}";
             if (file_exists($path)) deldir($path);
         }
     }
@@ -219,11 +219,11 @@ if (!empty($selected))
 {
     foreach ($selected as $updateid)
     {
-        $sql = "DELETE FROM `{$dbUpdates}` WHERE id='$updateid'";
+        $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='$updateid'";
+        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $path = $CONFIG['attachment_fspath'].'updates/'.$updateid;
@@ -417,9 +417,10 @@ if (is_array($incidentqueuerows))
  */
 if ($spamcount > 0)
 {
-    echo "<h2>{$strSpamEmail}";
-    if ($spamcount > 1) echo "s"; // FIXME i18n cant we do this ?
-    echo " ({$spamcount} {$strTotal})</h2>\n";
+    echo "<h2>";
+    if ($spamcount > 1) echo $strSpamEmails;
+    else echo $strSpamEmail;
+    echo "(".sprintf($strXTotal, $spamcount).")</h2>\n";
     echo "<p align='center'>{$strIncomingEmailSpam}</p>";
 
     // Reset back for 'nasty' emails

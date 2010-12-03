@@ -14,10 +14,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-// FIXME i18n
-
 // This Page Is Valid XHTML 1.0 Transitional!   31Oct05
-
 
 $permission=32;  // Edit Supported Products
 require ('core.php');
@@ -53,19 +50,19 @@ if (empty($action) OR $action == "showform")
     else
     {
         echo "<tr><th>{$strContract} ".icon('contract', 16)."</th>";
-        echo "<td>$maintid - ".contract_product($maintid)." for ".contract_site($maintid);
-        echo "<input name=\"maintid\" type=\"hidden\" value=\"$maintid\" /></td></tr>";
+        echo "<td>".sprintf($strXProductForYSite, contract_product($maintid), contract_site($maintid));
+        echo "<input name='maintid' type='hidden' value='{$maintid}' /></td></tr>";
     }
 
     if (empty($contactid))
     {
-        echo "<tr><th>{$strSupport} {$strContact} ".icon('contact', 16)."</th><td width='400'>";
+        echo "<tr><th>{$strSupportedContacts} ".icon('contact', 16)."</th><td width='400'>";
         echo contact_drop_down("contactid", 0)."</td></tr>";
     }
     else
     {
         echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>{$contactid} - ".contact_realname($contactid);
-        echo "<input name='contactid' type='hidden' value='$contactid' /></td></tr>";
+        echo "<input name='contactid' type='hidden' value='{$contactid}' /></td></tr>";
     }
 
     echo "</table>";
@@ -92,7 +89,7 @@ elseif ($action == "delete")
     // delete maintenance support contact if no errors
     if ($errors == 0)
     {
-        $sql  = "DELETE FROM `{$dbSupportContacts}` WHERE maintenanceid='$maintid' AND contactid='$contactid'";
+        $sql  = "DELETE FROM `{$dbSupportContacts}` WHERE maintenanceid='{$maintid}' AND contactid='{$contactid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -100,13 +97,12 @@ elseif ($action == "delete")
         if (!$result)
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            trigger_error("Deletion of maintenance support conact failed: {$sql}", E_USER_WARNING);
+            trigger_error($strDeletionOfSupportContractFailed, E_USER_WARNING);
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
-        // update db and show success message
         else
         {
-            journal(CFG_LOGGING_NORMAL, 'Supported Contact Removed', "Contact $contactid removed from maintenance contract $maintid", CFG_JOURNAL_MAINTENANCED, $maintid);
+            journal(CFG_LOGGING_NORMAL, 'Supported Contact Removed', "Contact {$contactid} removed from maintenance contract $maintid", CFG_JOURNAL_MAINTENANCED, $maintid);
 
             if ($context == 'maintenance') html_redirect("contract_details.php?id={$maintid}");
             else html_redirect("contact_details.php?id={$contactid}");

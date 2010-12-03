@@ -103,6 +103,7 @@ function contract_software()
 /**
  * Returns the SLA ID of a contract
  *
+ * @deprecated In favor of tags
  * @param int $maintid ID of the contract
  * @return int ID of the SLA
  * @author Kieran Hogg
@@ -112,6 +113,21 @@ function contract_slaid($maintid)
     $maintid = intval($maintid);
     $slaid = db_read_column('servicelevelid', $GLOBALS['dbMaintenance'], $maintid);
     return $slaid;
+}
+
+
+/**
+ * Returns the SLA Tag of a contract
+ *
+ * @param int $maintid ID of the contract
+ * @return String TAG of the SLA
+ * @author Kieran Hogg
+ */
+function contract_slatag($maintid)
+{
+    $maintid = intval($maintid);
+    $slatag = db_read_column('servicelevel', $GLOBALS['dbMaintenance'], $maintid);
+    return $slatag;
 }
 
 

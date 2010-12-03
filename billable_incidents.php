@@ -38,7 +38,7 @@ if (empty($enddate)) $enddate = $now;
 
 $sitelistsql = "SELECT DISTINCT m.site, s.name ";
 $sitelistsql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbSites}` AS s ";
-$sitelistsql .= "WHERE  m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = s.id ";
+$sitelistsql .= "WHERE  m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
 
 $sitestr = '';
 
@@ -302,7 +302,6 @@ elseif ($mode == 'approvalpage')
                 $sql .= "AND i.closed <= {$enddate} ";
             }
             $sql .= "ORDER BY i.closed";
-//              echo $sql."<br />";
             $result = mysql_query($sql);
             if (mysql_error())
             {
@@ -528,7 +527,7 @@ elseif ($mode == 'invoicepage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidents} - INVOICE</h2>";
+        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidentsInvoice}</h2>";
 
         $resultsite = mysql_query($sitelistsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -553,7 +552,7 @@ elseif ($mode == 'invoicepage')
                 $result = mysql_query($sql);
                 if (mysql_error())
                 {
-                    trigger_error(mysql_error(),E_USER_WARNING);
+                    trigger_error(mysql_error(), E_USER_WARNING);
                     return FALSE;
                 }
 
@@ -577,7 +576,7 @@ elseif ($mode == 'invoicepage')
                             $servicesapproved[$obj->serviceid] = $obj->serviceid;
                             update_last_billed_time($obj->serviceid, $enddateorig);
 
-                            $servicestr .= "<p align='center'>service ID: {$obj->serviceid} last invoice time updates to {$enddateorig}</p>"; // FIXME i18n
+                            $servicestr .= "<p align='center'>".sprintf($strServiceIDXLastInvoiceUptoX, $obj->serviceid, $enddateorig)."</p>";
                         }
                     }
                 }

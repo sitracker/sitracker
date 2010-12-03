@@ -32,53 +32,71 @@ $title = $strAddProductInformation;
 if (empty($_REQUEST['submit']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo show_form_errors('product_info_add');
+    clear_form_errors('product_info_add');
+
+    if ($_SESSION['formdata']['product_info_add']['product'] != '')
+    {
+        $product = $_SESSION['formdata']['product_info_add']['product'];
+    }
+    
     echo "<h2>".icon('info', 32)." {$strAddProductQuestion}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strProduct}</th><td>".product_drop_down("product", $product, TRUE)." <span class='required'>{$strRequired}</span></td></tr>";
-    echo "<tr><th>{$strQuestion}</th><td><input name='information' size='30' class='required' /> <span class='required'>{$strRequired}</span></td></tr>";
-    echo "<tr><th>{$strAdditionalInfo}</th><td><input name='moreinformation' size='30' /></td></tr>";
+    echo "<tr><th>{$strQuestion}</th><td><input name='information' size='30' class='required' value='{$_SESSION['formdata']['product_info_add']['information']}' /> <span class='required'>{$strRequired}</span></td></tr>";
+    echo "<tr><th>{$strAdditionalInfo}</th><td><input name='moreinformation' size='30' value='{$_SESSION['formdata']['product_info_add']['moreinformation']}' /></td></tr>";
     echo "</table>";
     echo "<p align='center'><input name='submit' type='submit' value='{$strAdd}' /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+    clear_form_data('product_info_add');
 }
 else
 {
-    // FIXME these errors need tidying INL 9Jun08
-
     // Add product information
+    $_SESSION['formdata']['product_info_add'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
     $errors = 0;
-    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    
     // check for blank product
     if ($product == 0)
     {
-        $errors = 1;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strProduct}'"), E_USER_ERROR);
+        $errors++;
+        $_SESSION['formerrors']['product_info_add']['product'] = sprintf($strFieldMustNotBeBlank, $strProduct);
     }
-    // check for blank information
+
     if ($information == '')
     {
-        $errors = 1;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strQuestion}'"), E_USER_ERROR);
+        $errors++;
+        $_SESSION['formerrors']['product_info_add']['information'] = sprintf($strFieldMustNotBeBlank, $strQuestion);
     }
 
     // add product information if no errors
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbProductInfo}` (productid, information, moreinformation) ";
-        $sql .= "VALUES ('$product', '$information', '$moreinformation')";
+        $sql .= "VALUES ('{$product}', '{$information}', '{$moreinformation}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-        if (!$result) echo "<p class='error'>".sprintf($strAddXfailed, $strProductInformation)."\n";
+        if (!$result)
+        {
+            echo "<p class='error'>".sprintf($strAddXfailed, $strProductInformation)."\n";
+        }
         else
         {
             journal(CFG_LOGGING_NORMAL, 'Product Info Added', "Info was added to Product {$product}", CFG_JOURNAL_PRODUCTS, $product);
             html_redirect("products.php?productid={$product}");
+            clear_form_errors('product_info_add');
+            clear_form_data('product_info_add');
             exit;
         }
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
-    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+    else
+    {
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        html_redirect("product_info_add.php", FALSE);
+    }
 }
 ?>

@@ -95,7 +95,7 @@ switch ($type)
         {
             $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
             $uresult = mysql_query($usql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
             else $user = $sit[2]; // force to current user if username not found
         }
@@ -111,7 +111,7 @@ switch ($type)
 
         if ($user != 'all')
         {
-            echo sprintf($strUserIncidents, user_realname($user,TRUE)).": ";
+            echo sprintf($strUserIncidents, user_realname($user, TRUE)).": ";
         }
         else
         {
@@ -148,7 +148,7 @@ switch ($type)
                 }
                 break;
             default:
-                trigger_error("Invalid queue ($queue) on query string",E_USER_NOTICE);
+                trigger_error("Invalid queue ($queue) on query string", E_USER_NOTICE);
                 break;
         }        // Create SQL for Sorting
 
@@ -211,18 +211,18 @@ switch ($type)
         echo "{$strQueue}: <select class='dropdown' name='queue' onchange='window.location.href=this.options[this.selectedIndex].value'>\n";
         echo "<option ";
         if ($queue == 1) echo "selected='selected' ";
-        echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;type=$type&amp;queue=1'>{$strActionNeeded}</option>\n";
+        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=1'>{$strActionNeeded}</option>\n";
         echo "<option ";
         if ($queue == 2) echo "selected='selected' ";
-        echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;type=$type&amp;queue=2'>{$strWaiting}</option>\n";
+        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=2'>{$strWaiting}</option>\n";
         echo "<option ";
         if ($queue == 3) echo "selected='selected' ";
-        echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;type=$type&amp;queue=3'>{$strAllOpen}</option>\n";
-        if ($user!='all')
+        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=3'>{$strAllOpen}</option>\n";
+        if ($user != 'all')
         {
             echo "<option ";
             if ($queue == 4) echo "selected='selected' ";
-            echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;type=$type&amp;queue=4'>{$strAllClosed}</option>\n";
+            echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=4'>{$strAllClosed}</option>\n";
         }
         echo "</select>\n";
         echo "</form>";
@@ -230,7 +230,7 @@ switch ($type)
         if ($queue == 4 AND $CONFIG['hide_closed_incidents_older_than'] != -1 AND $_GET['show'] != 'all')
         {
             echo "<p class='info'>".sprintf($strHidingIncidentsOlderThan, $CONFIG['hide_closed_incidents_older_than']);
-            echo " - <a href='{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}&show=all'>".$strShowAll."</a></p>";
+            echo " - <a href='{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}&show=all'>{$strShowAll}</a></p>";
         }
         elseif ($queue == 4 AND $CONFIG['hide_closed_incidents_older_than'] != -1)
         {
@@ -249,7 +249,10 @@ switch ($type)
             // Incidents Table
             include (APPLICATION_INCPATH . 'incidents_table.inc.php');
         }
-        else echo "<p class='info'>{$strNoIncidents}</p>";
+        else
+        {
+            echo "<p class='info'>{$strNoIncidents}</p>";
+        }
 
         if ($user == 'all') echo "<p align='center'>".sprintf($strNumOfIncidents, $rowcount)."</p>";
 
@@ -294,7 +297,7 @@ switch ($type)
                     $sql .= "AND ((timeofnextaction > 0 AND timeofnextaction < {$now}) OR ";
                     $sql .= "(IF ((status >= 5 AND status <=8), ({$now} - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
                     $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
-                    $sql .= ") AND timeofnextaction < $now ) ";
+                    $sql .= ") AND timeofnextaction < {$now} ) ";
                     // outstanding
                     break;
                 case 2: // Waiting
@@ -317,7 +320,7 @@ switch ($type)
                     }
                     break;
                 default:
-                    trigger_error("Invalid queue ($queue) on query string",E_USER_NOTICE);
+                    trigger_error("Invalid queue ($queue) on query string", E_USER_NOTICE);
                     break;
             }
 

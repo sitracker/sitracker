@@ -191,7 +191,7 @@ switch ($step)
         echo "</td></tr>\n";
         echo "<tr><th>{$strTimeToNextAction}:</th>";
         echo "<td>";
-        echo show_next_action('updateform');
+        echo show_next_action('updateform', $id);
         echo "</td></tr>";
         plugin_do('incident_email_form1');
         echo "</table>";

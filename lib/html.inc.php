@@ -352,7 +352,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $alt = "Missing icon: '$filename.png', ($file) size {$size}";
         if ($CONFIG['debug']) trigger_error($alt, E_USER_WARNING);
-        $urlpath = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/sit";
+        $urlpath = "{$CONFIG['application_webpath']}/images/icons/sit";
         $urlpath .= "/16x16/blank.png";
     }
     $icon = "<img src=\"{$urlpath}\"";
@@ -500,21 +500,21 @@ function group_selector($selected, $urlargs='')
 }
 
 
-// FIXME use this instead of hardcoding tabs
-function draw_tabs($tabsarray, $selected='')
+function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
-    $html .= "<div class='tabcontainer'>";
-    $html .= "<ul class='tabnav'>";
+    $html .= "<div class='{$divclass}'>";
+    $html .= "<ul>";
     foreach ($tabsarray AS $tab => $url)
     {
-        $html .= "<li><a href='$url'";
+        $html .= "<li";
         if (strtolower($tab) == strtolower($selected))
         {
             $html .= " class='active'";
         }
+        $html .= ">";
         $tab = str_replace('_', ' ', $tab);
-        $html .= ">$tab</a></li>\n";
+        $html .= "<a href='{$url}'>$tab</a></li>\n";
     }
     $html .= "</ul>";
     $html .= "</div>";
@@ -994,7 +994,7 @@ function contract_details($id, $mode='internal')
         $html .= "<td>{$maint->licence_quantity} {$maint->licensetypename}</td></tr>\n";
     }
 
-    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".servicelevel_name($maint->servicelevelid)."</td></tr>";
+    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".get_sla_name($maint->servicelevel)."</td></tr>";
     $html .= "<tr><th>{$GLOBALS['strExpiryDate']}:</th><td>";
     if ($maint->expirydate == '-1')
     {
@@ -1009,9 +1009,7 @@ function contract_details($id, $mode='internal')
 
     if ($mode == 'internal')
     {
-        $timed = db_read_column('timed', $GLOBALS['dbServiceLevels'], $maint->servicelevelid);
-        if ($timed == 'yes') $timed = TRUE;
-        else $timed = FALSE;
+        $timed = servicelevel_timed($maint->servicelevel);
         $html .= "<tr><th>{$GLOBALS['strService']}</th><td>";
         $html .= contract_service_table($id, $timed);
         $html .= "</td></tr>\n";
@@ -1082,11 +1080,11 @@ function contract_details($id, $mode='internal')
 
                     if ($mode == 'internal')
                     {
-                        $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                        $html .= "<td><a href=\"contract_delete_contact.php?contactid={$contact}&amp;maintid={$id}&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
                     }
                     else
                     {
-                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid={$contact}&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
                     }
                     $supportcount++;
                 }
@@ -1186,6 +1184,7 @@ function contract_details($id, $mode='internal')
 function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 {
     global $dbUsers, $dbGroups;
+
     $str .= "<tr><th>{$title}</th>";
     $str .= "<td align='center'>";
 
@@ -1194,62 +1193,68 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    while ($row = mysql_fetch_object($result))
+    if (mysql_num_rows($result) > 0)
     {
-        if ($type == 'radio')
+        while ($row = mysql_fetch_object($result))
         {
-            $str .= "<input type='radio' name='group' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"TRUE\")' ";
+            if ($type == 'radio')
+            {
+                $str .= "<input type='radio' name='group' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"TRUE\")' ";
+            }
+            elseif ($type == 'checkbox')
+            {
+                $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
+            }
+
+            if ($groupid == $row->id)
+            {
+                $str .= " checked='checked' ";
+                $groupname = $row->name;
+            }
+
+            $str .= "/>{$row->name} \n";
         }
-        elseif ($type == 'checkbox')
+
+        $str .="<br />";
+
+
+        $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
+        $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        if ($level == "management")
         {
-            $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
+            $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
         }
-
-        if ($groupid == $row->id)
+        elseif ($level == "engineer")
         {
-            $str .= " checked='checked' ";
-            $groupname = $row->name;
+            $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
         }
 
-        $str .= "/>{$row->name} \n";
+        while ($row = mysql_fetch_object($result))
+        {
+            $str .= "<option value='{$row->id}' ";
+            if ($row->name == $groupname) $str .= "selected='selected' ";
+            $str .= ">{$row->realname} ({$row->name})</option>\n";
+        }
+        $str .= "</select>\n";
+        $str .= "<br />";
+        if ($level == "engineer")
+        {
+            $visibility = " style='display:none'";
+        }
+
+        $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
+        $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
     }
-
-    $str .="<br />";
-
-
-    $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
-    $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    if ($level == "management")
+    else
     {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
+        echo $strNoneAvailable;
     }
-    elseif ($level == "engineer")
-    {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
-    }
-
-    while ($row = mysql_fetch_object($result))
-    {
-        $str .= "<option value='{$row->id}'>{$row->realname} ({$row->name})</option>\n";
-    }
-    $str .= "</select>\n";
-    $str .= "<br />";
-    if ($level == "engineer")
-    {
-        $visibility = " style='display:none'";
-    }
-
-    $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
-    $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
 
     $str .= "</td>";
     $str .= "</tr>\n";
-
-    // FIXME make this XHTML valid
-    $str .= "<script type='text/javascript'>\n//<![CDATA[\ngroupMemberSelect(\"{$groupname}\", \"TRUE\");\n//]]>\n</script>";
 
     return $str;
 }
@@ -2027,9 +2032,8 @@ function format_external_id($externalid, $escalationpath='')
  * @param int $userid ID of the contact
  * @param string $mode ??? Defaults to Internal
  * @return string output html
- * @todo TODO should this be renamed, it has nothing to do with users FIXME
  */
-function user_contracts_table($userid, $mode = 'internal')
+function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
     if ((!empty($sit[2]) AND user_permission($sit[2], 30)
@@ -2111,7 +2115,7 @@ function user_contracts_table($userid, $mode = 'internal')
                 $html .= "</td>";
                 $html .= "</tr>\n";
                 $supportcount++;
-                if ($shade == 'shade1') $shade = 'shade2'; 
+                if ($shade == 'shade1') $shade = 'shade2';
                 else $shade = 'shade1';
             }
             $html .= "</table>\n";

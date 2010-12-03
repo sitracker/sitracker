@@ -47,12 +47,12 @@ if (empty($action) || $action == "showform")
     {
         $sql = "SELECT s.name, p.name FROM `{$dbMaintenance}` m, `{$dbSites}` s, `{$dbProducts}` p WHERE m.site=s.id ";
         $sql .= "AND m.product=p.id AND m.id='$maintid'";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         list($sitename, $product)=mysql_fetch_row($result);
 
-        echo "<tr><th>{$strContract} ".icon('contract', 16)."</th><td>$maintid - $sitename, $product</td></tr>";
-        echo "<input name=\"maintid\" type=\"hidden\" value=\"$maintid\" />";
+        echo "<tr><th>{$strContract} ".icon('contract', 16)."</th><td>{$maintid} - {$sitename}, {$product}</td></tr>";
+        echo "<input name='maintid' type='hidden' value='{$maintid}' />";
     }
 
     if (empty($contactid))
@@ -63,7 +63,7 @@ if (empty($action) || $action == "showform")
     else
     {
         echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>$contactid - ".contact_realname($contactid).", ".site_name(contact_site($contactid));
-        echo "<input name=\"contactid\" type=\"hidden\" value=\"$contactid\" />";
+        echo "<input name='contactid' type='hidden' value='{$contactid}' />";
         echo "</td></tr>";
     }
     echo "</table>";
@@ -91,7 +91,7 @@ else if ($action == "add")
 
     $sql = "SELECT * FROM `{$dbSupportContacts}` WHERE maintenanceid = '{$maintid}' AND contactid = '{$contactid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -102,7 +102,7 @@ else if ($action == "add")
     // add maintenance support contact if no errors
     if ($errors == 0)
     {
-        $sql  = "INSERT INTO `{$dbSupportContacts}` (maintenanceid, contactid) VALUES ($maintid, $contactid)";
+        $sql  = "INSERT INTO `{$dbSupportContacts}` (maintenanceid, contactid) VALUES ({$maintid}, {$contactid})";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -116,8 +116,8 @@ else if ($action == "add")
         // update database and show success message
         else
         {
-            if ($context == 'contact') html_redirect("contact_details.php?id=$contactid");
-            else html_redirect("contract_details.php?id=$maintid");
+            if ($context == 'contact') html_redirect("contact_details.php?id={$contactid}");
+            else html_redirect("contract_details.php?id={$maintid}");
         }
     }
     else

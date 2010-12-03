@@ -74,10 +74,10 @@ function to_row($contactrow)
         }
     }
     $str .=  "</td>";
-    $str .=  '<td>'.$contactrow['forenames'].' '.$contactrow['surname'].'</td>';
-    $str .=  '<td>'.$contactrow['name'].'</td>';
-    $str .=  '<td>'.$contactrow['productname'].'</td>';
-    $str .=  '<td>'.servicelevel_id2tag($contactrow['servicelevelid']).'</td>';
+    $str .=  "<td>{$contactrow['forenames']} {$contactrow['surname']}</td>";
+    $str .=  "<td>{$contactrow['name']}</td>";
+    $str .=  "<td>{$contactrow['productname']}</td>";
+    $str .=  "<td>{$contactrow['servicelevel']}</td>";
     if ($contactrow['expirydate'] == '-1')
     {
         $str .= "<td>{$GLOBALS['strUnlimited']}</td>";
@@ -170,7 +170,7 @@ elseif ($action == 'findcontact')
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevelid ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
     $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -187,7 +187,7 @@ elseif ($action == 'findcontact')
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevelid ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -234,8 +234,7 @@ elseif ($action == 'findcontact')
         {
             if (empty($CONFIG['preferred_maintenance']) OR
                 (is_array($CONFIG['preferred_maintenance']) AND
-                    in_array(servicelevel_id2tag($contactrow['servicelevelid']),
-                                             $CONFIG['preferred_maintenance'])))
+                    in_array($contactrow['servicelevel'], $CONFIG['preferred_maintenance'])))
             {
                 $str_prefered .= to_row($contactrow);
             }
@@ -277,8 +276,8 @@ elseif ($action == 'findcontact')
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
         if (empty($contactid))
         {
-            $sql .= "AND (surname LIKE '%$search_string%' OR forenames LIKE '%$search_string%' OR s.name LIKE '%$search_string%' ";
-            $sql .= "OR CONCAT_WS(' ', forenames, surname) LIKE '$search_string') ";
+            $sql .= "AND (surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR s.name LIKE '%{$search_string}%' ";
+            $sql .= "OR CONCAT_WS(' ', forenames, surname) LIKE '{$search_string}') ";
         }
         else $sql .= "AND c.id = '$contactid' ";
 
@@ -308,7 +307,7 @@ elseif ($action == 'findcontact')
                 {
                     $html .=  "<td><a href=\"{$_SERVER['PHP_SELF']}?action=";
                     $html .= "incidentform&amp;type=free&amp;contactid=";
-                    $html .= $contactrow['contactid']."&amp;updateid=$updateid";
+                    $html .= $contactrow['contactid']."&amp;updateid={$updateid}";
                     $html .= "&amp;win={$win}\"";
                     if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
                     {
@@ -356,8 +355,8 @@ elseif ($action == 'findcontact')
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
         if (empty($contactid))
         {
-            $sql .= "AND (surname LIKE '%$search_string%' OR forenames LIKE '%$search_string%' OR s.name LIKE '%$search_string%' ";
-            $sql .= "OR CONCAT_WS(' ', forenames, surname) = '$search_string' )";
+            $sql .= "AND (surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR s.name LIKE '%{$search_string}%' ";
+            $sql .= "OR CONCAT_WS(' ', forenames, surname) = '{$search_string}' )";
         }
         else $sql .= "AND c.id = '$contactid' ";
         $sql .= "ORDER by c.surname, c.forenames ";
@@ -718,7 +717,7 @@ elseif ($action == 'assign')
             // Set the service level the contract
             if ($servicelevel == '')
             {
-                $servicelevel = servicelevel_id2tag(maintenance_servicelevel($maintid));
+                $servicelevel = maintenance_servicelevel_tag($maintid);
             }
 
             // Use default service level if we didn't find one above
@@ -849,19 +848,7 @@ elseif ($action == 'assign')
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            // get the service level
-            // find out when the initial response should be according to the service level
-            if (empty($servicelevel) OR $servicelevel==0)
-            {
-                // FIXME: for now we use id but in future use tag, once maintenance uses tag
-                $servicelevel = maintenance_servicelevel($maintid);
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE id='{$servicelevel}' AND priority='{$priority}' ";
-            }
-            else
-            {
-                $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-            }
-
+            $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             $level = mysql_fetch_object($result);
@@ -907,7 +894,7 @@ elseif ($action == 'assign')
             }
 
             $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
-            $html .=  "<p align='center'>";
+            $html .= "<p align='center'>";
             $html .= sprintf($strIncidentLoggedEngineer, $incidentid);
             $html .= "</p>\n";
 
@@ -956,7 +943,7 @@ elseif ($action == 'assign')
             while ($userrow = mysql_fetch_array($result))
             {
                 if ($userrow['id'] == $suggested_user) $shade = 'idle';
-                echo "<tr class='$shade'>";
+                echo "<tr class='{$shade}'>";
                 // display reassign link only if person is accepting or if the current user has 'reassign when not accepting' permission
                 if ($userrow['accepting'] == 'Yes')
                 {
@@ -964,7 +951,7 @@ elseif ($action == 'assign')
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strAssignTo}</a></td>";
                 }
-                elseif (user_permission($sit[2],40) OR $userrow['id'] == $sit[2])
+                elseif (user_permission($sit[2], 40) OR $userrow['id'] == $sit[2])
                 {
                     echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userrow['id']}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
@@ -990,13 +977,13 @@ elseif ($action == 'assign')
                 }
 
                 echo "</td>";
-                echo "<td>".$userrow['phone']."</td>";
+                echo "<td>{$userrow['phone']}</td>";
                 echo "<td>".user_online_icon($userrow['id'])." ".userstatus_name($userrow['status'])."</td>";
-                echo "<td>".$userrow['message']."</td>";
+                echo "<td>{$userrow['message']}</td>";
                 echo "<td align='center'>";
 
                 $incpriority = user_incidents($userrow['id']);
-                $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+                $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
                 if ($countincidents >= 1) $countactive = user_activeincidents($userrow['id']);
                 else $countactive = 0;
@@ -1004,13 +991,14 @@ elseif ($action == 'assign')
                 $countdiff = $countincidents-$countactive;
 
                 echo "$countactive / {$countdiff}</td>";
-                echo "<td align='center'>".$incpriority['4']."</td>";
-                echo "<td align='center'>".$incpriority['3']."</td>";
-                echo "<td align='center'>".$incpriority['2']."</td>";
-                echo "<td align='center'>".$incpriority['1']."</td>";
+                echo "<td align='center'>{$incpriority['4']}</td>";
+                echo "<td align='center'>{$incpriority['3']}</td>";
+                echo "<td align='center'>{$incpriority['2']}</td>";
+                echo "<td align='center'>{$incpriority['1']}</td>";
 
                 echo "<td align='center'>";
-                echo $userrow['accepting'] == 'Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                if ($userrow['accepting'] == 'Yes') echo $strYes;
+                else echo "<span class='error'>{$strNo}</span>";
                 echo "</td>";
                 echo "</tr>\n";
                 if ($shade == 'shade2') $shade = 'shade1';

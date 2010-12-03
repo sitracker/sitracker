@@ -423,7 +423,7 @@ function display_update_page($draftid=-1)
     echo "<th align='right'>";
     echo "<strong>{$GLOBALS['strTimeToNextAction']}</strong></th>";
     echo "<td class='shade2'>";
-   	echo show_next_action('updateform');
+   	echo show_next_action('updateform', $id);
     echo "</td></tr>";
     echo "<tr>";
     // calculate upload filesize
@@ -519,12 +519,15 @@ else
     // \p{L} A Unicode character
     // \p{N} A Unicode number
     // /u does a unicode search
-    if (empty($bodytext) OR
-        ((strlen($bodytext) < 4) OR
-        !preg_match('/[\p{L}\p{N}]+/u', $bodytext)))
+    if (empty($bodytext))
     {
-        //FIXME 3.40 make this two errors and i18n for
         $_SESSION['formerrors']['update'][] = sprintf($strFieldMustNotBeBlank, $strUpdate);
+        html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
+        exit;
+    }
+    elseif ((strlen($bodytext) < 4) OR !preg_match('/[\p{L}\p{N}]+/u', $bodytext))
+    {
+        $_SESSION['formerrors']['update'][] = sprintf(strMustContainFourCharacters, $strUpdate);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
         exit;
     }
@@ -756,7 +759,7 @@ else
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
-    if ($target!='none')
+    if ($target != 'none')
     {
         // Reset the slaemail sent column, so that email reminders can be sent if the new sla target goes out
         $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='{$id}' LIMIT 1";

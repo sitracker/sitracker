@@ -132,6 +132,7 @@ $strAListOfAvailableTriggers = 'A list of available triggers and the actions tha
 $strAll = 'All';
 $strAllActivities = 'All Activities';
 $strAllClosed = 'All Closed';
+$strAllConditionsMet = 'All Conditions Met';
 $strAllContacts = 'All Contacts';
 $strAllDay = 'all day';
 $strAllIncidents = 'All Incidents';
@@ -148,6 +149,7 @@ $strAmountToEditBy = 'Amount to edit by +ve/-ve';
 # i.e. before noon
 $strAM = 'am';
 $strAnswer = 'Answer';
+$strAnyConditionMet = 'Any Condition Met';
 # e.g. SiT is an application
 $strApplication = 'Application';
 $strApprovalStatusUnknown = 'Approval Status Unknown';
@@ -229,6 +231,7 @@ $strBill = 'Bill';
 $strBillableIncidentApproved = 'Billable Incident Approved';
 $strBillableIncidentApprovedDesc = 'When an billable incident is approved';
 $strBillableIncidents = 'Billable Incidents';
+$strBillableIncidentsInvoice = 'Billable Incidents';
 $strBillableIncidentsForPeriodXtoX = 'Billable incidents for period %s to %s';
 $strBillableIncidentsReport = 'Billable Incidents Report';
 $strBilling = 'Billing';
@@ -441,6 +444,7 @@ $strdayssick = 'days sick leave';
 $strdaystraining = 'days training';
 $strdaysworkingaway = 'days working away';
 $strDebit = 'Debit';
+$strDebug = 'Debug';
 # Short for December
 $strDecAbbr = 'Dec';
 # Month number 12: December
@@ -460,6 +464,7 @@ $strDeleteSite = 'Delete Site';
 $strDeleteSitesContacts = 'Delete Sites/Contacts';
 $strDeleted = 'Deleted';
 $strDeleteTask = 'Delete Task';
+$strDeletionOfSupportContractFailed = 'Deletion of Support ContractFailed';
 $strDenied = 'Denied';
 $strDepartment = 'Department';
 $strDescendingDateOrder = 'Descending date order';
@@ -670,6 +675,7 @@ $strFeedbackAfterX = 'Feedback after %s';
 $strFeedbackBeforeX = 'Feedback before %s';
 $strFeedbackBetweenXandY = 'Feedback between %s and %s';
 $strFeedbackForm = 'Feedback Form';
+$strFeedbackFormAlreadyCompleted = 'Feedback form already completed';
 $strFeedbackForms = 'Feedback Forms';
 $strFeedbackReport = 'Feedback Report';
 $strFeedbackFormsRequested = 'There are %s feedback forms that have been returned already';
@@ -812,6 +818,7 @@ $strHours = 'Hours';
 
 # i.e. short for identification; unique number
 $strID = 'ID';
+$strIconSet = 'Icon Set';
 $strIfYourBrowserNotReload = 'If your browser does not reload the page within a few seconds';
 $strIfYouShouldHaveAccess = 'If you feel that you should have access to this particular feature, please ask an administrator to grant you access';
 $strImportant = 'Important';
@@ -1014,6 +1021,7 @@ $strLoggedUnder = 'This incident is logged under contract %d';
 $strLogIn = 'Log In';
 # Label on sign in button
 $strLogin = 'Login';
+$strLoginLogoff = 'Login/Logoff';
 # Label on sign out button
 $strLogout = 'Logout';
 $strLogTriggerInJournal = 'log the action in the system journal';
@@ -1083,6 +1091,7 @@ $strMovedFromXtoXbyX = 'Moved from %s -&gt; %s by %s';
 $strMultipleActivitiesRunning = 'Multiple Activities Running';
 $strMultipleOptions = 'Multiple Options';
 $strMustCompleteActivitiesBeforeClosure = 'You must complete all activities for the incident before closure.';
+$strMustContainFourCharacters = 'Update must be 4 characters or more';
 $strMyDashboard = 'My Dashboard';
 $strMyDetails = 'My Details';
 $strMyHolidays = 'My Holidays';
@@ -1134,6 +1143,7 @@ $strNobody = 'Nobody';
 $strNoAnswerGiven = 'No Answer Given';
 $strNoActionSpecified = 'No action specified';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
+$strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
 $strNoFiles = 'No Files';
 $strNoneAvailable = 'None Available';
 $strNonTerminatedContractsExpiredXdaysAgo = 'Non-Terminated Contracts that expired up to %s days ago';
@@ -1171,6 +1181,7 @@ $strNotifyContact = 'Notify Contact';
 $strNotifyContactEmail = 'The notify contact email of a contact (if set)';
 $strNotifyContactOnClose = 'Whether the user requested to send a closing email (true or false)';
 $strNotifyExternalEngineerOnClose = 'Whether the user requested to send a closing email to the external engineer (true or false)';
+$strNotifyWhen = 'Notify When';
 $strNotEscalated = 'Not Escalated';
 $strNoServiceWithIDXFound = 'No service with ID %s found';
 $strNoPermission = 'You do not have permission to view this page';
@@ -1278,6 +1289,7 @@ $strOffline = 'Offline';
 $strOneOfTheSignaturesWillBeInserted = 'One of the signatures below will be chosen at random and inserted at the bottom of outgoing emails. It\'s recommended that you begin this signature with two dashes, a space and a line feed';
 $strOneTimeBillingEditor = 'One time billing editor';
 $strOnline = 'Online';
+$strOnlyAvailableOnSupportIncidents = 'Only available on support incidents';
 $strOnlyShowsClosedCalls = 'Only shows closed calls';
 $strOnlyShowNewerThan = 'Only show newer than %d days old';
 $strOnlyShowSitesWithActiveContracts = 'Only show sites with active contracts';
@@ -1415,6 +1427,8 @@ $strReceivedByEmail = 'This information was received in the email.  It is not ed
 $strRecent = 'Recent';
 $strRecentIncidents = 'Recent Incidents';
 $strReducedPrioritySLA = 'Reduced from %s according to SLA';
+# e.g. Ref: 12
+$strRefX = 'Ref: %s';
 $strReferences = 'References';
 $strRefresh = 'Refresh';
 #Abbreviation for Reference ID
@@ -1471,6 +1485,7 @@ $strResearchNeeded = 'Research Needed';
 $strResearchNotes = 'Research Notes';
 $strReserved = 'Reserved';
 $strReset = 'Reset';
+$strResetDate = 'Reset Date';
 $strResetHolidayEntitlementCarryOverNDaysOfUnusedHoliday = 'Reset holiday entitlement and carry-over up to <em>n</em> days of unused holiday';
 $strResetPassword = 'Reset Password';
 $strResolutionReprioritisation = 'Resolution/Reprioritisation';
@@ -1514,6 +1529,7 @@ $strRunReports = 'Run Reports';
 $strSalesperson = 'Salesperson';
 $strSalespersonSite = 'The site\'s salesperson';
 $strSalespersonAssignedToContactsSiteEmail = 'The email address of the salesperson attached to the contacts site';
+$strSalesIncidentsLegacy = 'Sales Incidents (Legacy}';
 # short for 'Saturday'
 $strSat = 'Sat';
 $strSaturday = 'Saturday';
@@ -1577,6 +1593,7 @@ $strServiceBalanceInfo = 'The amount of remaining service balance as a number e.
 $strServiceBalanceString = 'The amount of remaining service as a percentage e.g. "34%"';
 $strServiceHistory = 'Service History';
 $strServiceID = 'Service ID';
+$strServiceIDXLastInvoiceUptoX = 'Service ID: %s last invoice time up to %s';
 $strServiceLevel = 'Service Level';
 $strServiceLevelPreventsReopen = 'The service level of this incident prevents it being reopened';
 $strServiceLevels = 'Service Levels';
@@ -1688,6 +1705,8 @@ $strSortResults = 'Sort Results';
 $strSource = 'Source';
 $strSourceFailCannotBeFoundX = 'Source file cannot be found %s';
 $strSpamEmail = 'Spam Email';
+# Plural of strSpamEmail
+$strSpamEmails = 'Spam Emails';
 $strSpecifyAddress = 'Specify an address for this contact that is different to the site';
 #English suffix for first - 1st
 $strst = 'st';
@@ -1912,6 +1931,7 @@ $strUsername = 'Username';
 $strUsernameNotUnique = 'Username must be unique';
 $strUsers = 'Users';
 $strUserChangedStatus = 'User Changed Status';
+$strUserManagement = 'User Management';
 $strUserPermissionsEdited = 'User Permissions Edited';
 $strUserXPermissionsEdited = 'User %s Permissions Edited';
 # User Permission 3 - Edit existing site details
@@ -2014,10 +2034,13 @@ $strXMinutes = '%s minutes';
 $strXMonths = '%s months';
 # e.g. '5 days old'
 $strXold = '%s old';
+$strXTotal = '%s Total';
 # e.g. 'Fred of ACME Inc'. i.e. 'Name' of 'Site'
 $strXofX = '%s of %s';
 # e.g. '5 Records'
 $strXRecords = '%s Records';
+# e.g. Linux Support for Example Site
+$strXProductForYSite = '%s for %s';
 # e.g. John's Activities
 $strXsActivities = '%s\'s Activities';
 $strXSeconds = '%s seconds';

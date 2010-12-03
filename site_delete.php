@@ -43,10 +43,10 @@ else
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>{$strDeleteSite}</h2>";
-        $sql="SELECT * FROM `{$dbSites}` WHERE id='$id' LIMIT 1";
+        $sql = "SELECT * FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
         $siteresult = mysql_query($sql);
         $site = mysql_fetch_object($siteresult);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         echo "<table align='center' class='vertical'>";
         echo "<tr><th>{$strSite}:</th><td><h3>{$site->name}</h3></td></tr>";
         echo "<tr><th>{$strDepartment}:</th><td>{$site->department}</td></tr>";
@@ -54,9 +54,9 @@ else
         echo "</table>";
 
         // Look for associated contacts
-        $sql = "SELECT COUNT(id) FROM `{$dbContacts}` WHERE siteid='$id'";
+        $sql = "SELECT COUNT(id) FROM `{$dbContacts}` WHERE siteid='{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($numcontacts) = mysql_fetch_row($result);
         if ($numcontacts > 0)
         {
@@ -64,9 +64,9 @@ else
         }
 
         // Look for associated maintenance contracts
-        $sql = "SELECT COUNT(id) FROM `{$dbMaintenance}` WHERE site='$id'";
+        $sql = "SELECT COUNT(id) FROM `{$dbMaintenance}` WHERE site='{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($numcontracts) = mysql_fetch_row($result);
         if ($numcontracts>0)
         {
@@ -79,15 +79,15 @@ else
             echo "<table align='center'>";
             echo "<tr><th>{$strSite}:</th><td>".site_drop_down('destinationid', 0)."</td></tr>";
             echo "</table>";
-            echo "<input type='hidden' name='id' value='$id' />";
+            echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<p><input name='submit' type='submit' value='{$strDelete}' /></p>";
             echo "</form>";
         }
         else
         {
-            $sql = "DELETE FROM `{$dbSites}` WHERE id='$id' LIMIT 1";
+            $sql = "DELETE FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             else
             {
                 // FIXME html headers need sorting here, we don't want the header before we do this
@@ -100,20 +100,20 @@ else
     {
         // Records need moving before we delete
         // Move contacts
-        $sql = "UPDATE `{$dbContacts}` SET siteid='$destinationid' WHERE siteid='$id'";
+        $sql = "UPDATE `{$dbContacts}` SET siteid='{$destinationid}' WHERE siteid='{$id}'";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         // Move contracts
-        $sql = "UPDATE `{$dbMaintenance}` SET site='$destinationid' WHERE site='$id'";
+        $sql = "UPDATE `{$dbMaintenance}` SET site='{$destinationid}' WHERE site='{$id}'";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-        $sql = "DELETE FROM `{$dbSites}` WHERE id='$id' LIMIT 1";
+        $sql = "DELETE FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-        journal(CFG_LOGGING_NORMAL, 'Site Deleted', "Site $id was deleted", CFG_JOURNAL_SITES, $id);
+        journal(CFG_LOGGING_NORMAL, 'Site Deleted', "Site {$id} was deleted", CFG_JOURNAL_SITES, $id);
 
         html_redirect("sites.php?search_string=A");
     }

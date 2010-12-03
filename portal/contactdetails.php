@@ -58,7 +58,7 @@ if (!empty($_SESSION['formerrors']['portalcontactdetails']))
 //if new details posted
 if (cleanvar($_REQUEST['action']) == 'update')
 {
-    if ($CONFIG['portal_usernames_can_be_changed'])
+    if ($CONFIG['portal_usernames_can_be_changed'] AND $_SESSION['contact_source'] == 'sit')
     {
         $username = cleanvar($_REQUEST['username']);
         $oldusername = cleanvar($_REQUEST['oldusername']);
@@ -115,7 +115,12 @@ if (cleanvar($_REQUEST['action']) == 'update')
 
     if ($errors == 0)
     {
-        $updatesql = "UPDATE `{$dbContacts}` SET username='$username', forenames='$forenames', surname='$surname', ";
+        $updatesql = "UPDATE `{$dbContacts}` SET ";
+        if ($CONFIG['portal_usernames_can_be_changed'] AND $_SESSION['contact_source'] == 'sit')
+        {
+            $updatesql .= "username='{$username}', ";
+        }
+        $updatesql .= " forenames='$forenames', surname='$surname', ";
         $updatesql .= "department='$department', address1='$address1', address2='$address2', ";
         $updatesql .= "county='$county', country='$country', postcode='$postcode', ";
         $updatesql .= "phone='$phone', mobile='$mobile', fax='$fax', email='$email'";
@@ -181,7 +186,7 @@ else
     echo "<form action='{$_SERVER[PHP_SELF]}?action=update' method='post'>";
     echo "<table align='center' class='vertical'>";
 
-    if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit' )
+    if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit')
     {
         echo "<tr><th>{$strUsername}</th><td>";
         echo "<input class='required' name='username' value='{$user->username}' />";
@@ -270,7 +275,7 @@ else
     echo "<input type='hidden' name='id' value='{$id}' />";
     echo "<input type='submit' value='{$strUpdate}' /></p></form>";
 
-    echo "<br />".user_contracts_table($id, 'external');
+    echo "<br />".contracts_for_contacts_table($id, 'external');
 
     if ($_SESSION['usertype'] == 'admin')
     {

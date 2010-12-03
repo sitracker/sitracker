@@ -103,9 +103,9 @@ if (mysql_num_rows($result) == 0)
 else
 {
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-    
+
     echo "<div id='detailsummary'>";
-    
+
     // Two column table FIXME can be divs
     echo "<table>";
     echo "<tr><td>";
@@ -156,7 +156,7 @@ else
         if ($incident->externalemail != '') echo ", <a href=\"mailto:{$incident->externalemail}\">{$incident->externalemail}</a>";
         echo "<br />\n";
     }
-    
+
     $sql = "SELECT * FROM {$dbLinks} AS l, {$dbInventory} AS i ";
     $sql .= "WHERE linktype = 7 ";
     $sql .= "AND origcolref = {$incidentid} ";
@@ -177,11 +177,11 @@ else
             echo " ({$inventory->address})";
         }
     }
-    
+
     $tags = list_tags($id, TAG_INCIDENT, TRUE);
     if (!empty($tags)) echo "{$tags}\n";
     echo "</td>";
-    
+
     echo "<td>";
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
@@ -221,9 +221,9 @@ else
     }
     else echo " <strong>{$strSiteSupport}</strong>";
     echo " / ";
-    
+
     echo "{$servicelevel_tag}<br />\n ";
-    
+
     switch (does_contact_have_billable_contract($incident->contactid))
     {
         case CONTACT_HAS_BILLABLE_CONTRACT:
@@ -233,7 +233,7 @@ else
             echo "{$strSiteHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
             break;
     }
-    
+
     $num_open_activities = open_activities_for_incident($incidentid);
     if (count($num_open_activities) > 0)
     {
@@ -241,21 +241,21 @@ else
         echo icon('timer', 16, $strOpenActivities);
         echo "</a> ";
     }
-    
+
     if (drafts_waiting_on_incident($incidentid, 'email'))
     {
         echo "<a href='javascript:email_window($incidentid)' class='info'>";
         echo icon('email', 16, $strDraftsEmailExist);
         echo "</a> ";
     }
-    
+
     if (drafts_waiting_on_incident($incidentid, 'update'))
     {
         echo "<a href='incident_update.php?id={$incidentid}&amp;popup=' class='info'>";
         echo icon('note', 16, $strDraftsUpdateExist);
         echo "</a> ";
     }
-    
+
     // Product Info
     if (!empty($incident->product))
     {
@@ -271,12 +271,30 @@ else
             }
         }
     }
-    
+
     echo sprintf($strOpenForX, $opened_for)." - ";
     echo incidentstatus_name($incident->status);
     if ($incident->status == STATUS_CLOSED) echo " (" . closingstatus_name($incident->closingstatus) . ")";
     echo "<br />\n";
-    
+
+    // Total billable duration
+    $upsql = "SELECT incidentid, duration ";
+    $upsql .= "FROM `{$dbUpdates}`";
+    $upsql .= "WHERE incidentid = {$incidentid}";
+    $upresult = mysql_query($upsql);
+    if (mysql_num_rows($upresult) > 0)
+    {
+        while ($du = mysql_fetch_object($upresult))
+        {
+            $totalduration = $totalduration + $du->duration;
+        }
+        // FIXME for 12/24H clock choice
+        if ($totalduration > 0)
+        {
+            echo ("{$strDuration}: " . date("H:i", $totalduration*60) . "<br />\n");
+        }
+    }
+
     // Show sla target/review target if incident is still open
     if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
     {
@@ -295,7 +313,7 @@ else
                 echo " ".sprintf($strSLAXDueNow , $targettype);
             }
         }
-    
+
         if ($reviewremain <= 0)
         {
             if ($reviewremain > -86400)
@@ -335,9 +353,10 @@ else
             }
         }
     }
+
     echo "</td>";
     echo "</tr>\n";
-    
+
     // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
@@ -364,22 +383,22 @@ else
             echo " &nbsp;";
         }
         echo "</td></tr>";
-    
+
     }
-    
+
     echo "</table>";
-    
+
     plugin_do('incident_details');
-    
+
     echo "</div>\n\n";
-    
-    
+
+
     $offset = clean_int($_REQUEST['offset']);
     if (empty($offset))
     {
         $offset = 0;
     }
-    
+
     /**
      * @author Ivan Lucas
      */
@@ -390,13 +409,13 @@ else
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         list ($count_updates) = mysql_fetch_row($result);
-    
+
         return $count_updates;
     }
-    
+
     $count_updates = count_updates($incidentid);
-    
-    
+
+
     /**
      * @author Paul Heaney
      */
@@ -408,7 +427,7 @@ else
         global $offset;
         global $count_updates;
         global $records;
-    
+
         $updates_per_page = intval($_SESSION['userconfig']['updates_per_page']);
         if ($offset > $updates_per_page)
         {
@@ -419,7 +438,7 @@ else
             $previous = 0;
         }
         $next = $offset + $updates_per_page;
-    
+
         $nav .= "<table width='98%' align='center'><tr>";
         $nav .= "<td align='left' style='width: 33%;'>";
         if ($offset > 0)
@@ -455,25 +474,25 @@ else
         }
         $nav .= "</td>";
         $nav .= "</tr></table>\n";
-    
+
         return $nav;
     }
-    
+
     $records = strtolower(cleanvar($_REQUEST['records']));
-    
+
     if (intval($_SESSION['userconfig']['updates_per_page']) == 0)
     {
         $records = 'all';
     }
-    
+
     if ($incidentid=='' OR $incidentid < 1)
     {
         trigger_error("Incident ID cannot be zero or blank", E_USER_ERROR);
     }
-    
+
     $sql  = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$incidentid}' ";
     $sql .= "ORDER BY timestamp {$_SESSION['userconfig']['incident_log_order']}, id {$_SESSION['userconfig']['incident_log_order']} ";
-    
+
     if (empty($records))
     {
         $numupdates = intval($_SESSION['userconfig']['updates_per_page']);
@@ -486,10 +505,10 @@ else
     {
         $sql .= "LIMIT {$offset},{$records}";
     }
-    
+
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_WARNING);
-    
+
     $keeptags = array('b','i','u','hr','&lt;', '&gt;');
     foreach ($keeptags AS $keeptag)
     {
@@ -512,11 +531,11 @@ else
             $temptag[] = "[[/'.strtoupper($keeptag).']]";
         }
     }
-    
+
     echo log_nav_bar();
     $count = 0;
     $billable_incident_approved = is_billable_incident_approved($incidentid);
-    
+
     // An idea for a 'common actions' menu, see Mantis 461, commented out for 3.50 release
     // if (!$_GET['win'])
     // {
@@ -536,7 +555,7 @@ else
     //     echo "</p></div>";
     //     echo "<div id='portalright'>";
     // }
-    
+
     // Style quoted text
     $quote[0] = "/^(&gt;([\s][\d\w]).*)[\n\r]$/m";
     $quote[1] = "/^(&gt;&gt;([\s][\d\w]).*)[\n\r]$/m";
@@ -548,7 +567,7 @@ else
     $quote[7] = "/^(&gt;)[\r]*$/m";
     $quote[8] = "/^(&gt;&gt;)[\r]*$/m";
     $quote[9] = "/^(&gt;&gt;(&gt;){1,8})[\r]*$/m";
-    
+
     $quotereplace[0] = "<span class='quote1'>\\1</span>";
     $quotereplace[1] = "<span class='quote2'>\\1</span>";
     $quotereplace[2] = "<span class='quote3'>\\1</span>";
@@ -559,32 +578,32 @@ else
     $quotereplace[7] = "<span class='quote1'>\\1</span>";
     $quotereplace[8] = "<span class='quote2'>\\1</span>";
     $quotereplace[9] = "<span class='quote3'>\\1</span>";
-    
+
     while ($update = mysql_fetch_object($result))
     {
         if (empty($firstid))
         {
             $firstid = $update->id;
         }
-    
+
         $updateid = $update->id;
         $updatebody = trim($update->bodytext);
         $updatebodylen = strlen($updatebody);
         $updatebody = str_replace($origtag, $temptag, $updatebody);
         $updatebody = str_replace($temptag, $origtag, $updatebody);
-    
+
         // Put the header part (up to the <hr /> in a seperate DIV)
         if (strpos($updatebody, '<hr>') !== FALSE)
         {
             $updatebody = "<div class='iheader'>".str_replace('<hr>',"</div>",$updatebody);
         }
-    
+
         // Lookup some extra data
         $updateuser = user_realname($update->userid,TRUE);
         $updatetime = readable_date($update->timestamp);
         $currentowner = user_realname($update->currentowner,TRUE);
         $currentstatus = incident_status($update->currentstatus);
-    
+
         $updateheadertext = $updatetypes[$update->type]['text'];
         if ($currentowner != $updateuser)
         {
@@ -594,10 +613,10 @@ else
         {
             $updateheadertext = str_replace('currentowner', $strSelf, $updateheadertext);
         }
-    
+
         $updateheadertext = str_replace('updateuser', $updateuser, $updateheadertext);
         $updateheadertext = str_replace('updateuser', $updateuser, $updateheadertext);
-    
+
         if ($update->type == 'reviewmet' AND
             ($update->sla == 'opened' OR $update->userid == 0))
         {
@@ -607,14 +626,14 @@ else
         {
             $updateheadertext = str_replace('updatereview', $strCompleted, $updateheadertext);
         }
-    
+
         if ($update->type == 'slamet')
         {
             $updateheadertext = str_replace('updatesla', $slatypes[$update->sla]['text'], $updateheadertext);
         }
-    
+
         echo "<a name='update{$count}'></a>";
-    
+
         // Print a header row for the update
         if ($updatebody == '' AND $update->customervisibility == 'show')
         {
@@ -632,7 +651,7 @@ else
         {
             echo "<div class='detailheadhidden'>";
         }
-    
+
         if ($offset > $updates_per_page)
         {
             $previous = $offset - intval($_SESSION['userconfig']['updates_per_page']);
@@ -642,7 +661,7 @@ else
             $previous = 0;
         }
         $next = $offset + intval($_SESSION['userconfig']['updates_per_page']);
-    
+
         echo "<div class='detaildate'>";
         if ($count == 0)
         {
@@ -660,16 +679,16 @@ else
             echo "<a href='#update".($count-1)."' class='info'>";
             echo icon('navup', 16, $strPreviousUpdate)."</a>";
         }
-    
+
         $updatebody = preg_replace($quote, $quotereplace, $updatebody);
-    
+
         // Make URL's into Hyperlinks
         /* This breaks BBCode by replacing URls in a tags PH 19/10/2008
         $search = array("/(?<!quot;|[=\"]|:[\\n]\/{2})\b((\w+:\/{2}|www\.).+?)"."(?=\W*([<>\s]|$))/i");
         $replace = array("<a href=\"\\1\">\\1</a>");
         $updatebody = preg_replace ($search, $replace, $updatebody);
         */
-    
+
         // [begin] Insert link for old-style attachments [[att]]file.ext[[/att]] format
         // This code is required to support attachments written prior to v3.35
         // Please don't remove without a plan for what to do about old-style
@@ -684,14 +703,14 @@ else
         }
         $updatebody = preg_replace("/\[\[att\]\](.*?)\[\[\/att\]\]/", "<a href = '{$attachment_webpath}/$1'>$1</a>", $updatebody);
         // [end] Insert link for old-style attachments [[att]]file.ext[[/att]] format
-    
+
         $updatebody = preg_replace("/href=\"(?!http[s]?:\/\/)/", "href=\"http://", $updatebody);
         $updatebody = bbcode($updatebody);
         $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(strlen('\\2')>=70 ? substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
-    
+
         // Make KB article references into a hyperlink
         $updatebody = preg_replace("/\b{$CONFIG['kb_id_prefix']}([0-9]{3,4})\b/", "<a href=\"kb_view_article.php?id=$1\" title=\"View KB Article $1\">$0</a>", $updatebody);
-    
+
         if ($currentowner != $updateuser)
         {
             echo "<a href='{$_SERVER['PHP_SELF']}?id={$incidentid}&amp;";
@@ -705,10 +724,10 @@ else
             echo icon('navdown', 16, $strNextUpdate)."</a>";
         }
         echo "</div>";
-    
+
         // Specific header
         echo "<div class='detaildate'>{$updatetime}</div>";
-    
+
         if ($update->customervisibility == 'show')
         {
             $newmode = 'hide';
@@ -717,11 +736,11 @@ else
         {
             $newmode = 'show';
         }
-    
+
         echo "<a href='incident_showhide_update.php?mode={$newmode}&amp;";
         echo "incidentid={$incidentid}&amp;updateid={$update->id}&amp;view";
         echo "={$view}&amp;expand={$expand}";
-    
+
         if ($records == 'all')
         {
             echo "&amp;offset=0&amp;records=all";
@@ -730,9 +749,9 @@ else
         {
             echo "&amp;offset={$offset}";
         }
-    
+
         echo "' name='{$update->id}' class='info'>";
-    
+
         if (array_key_exists($update->type, $updatetypes))
         {
             if ($update->customervisibility == 'show')
@@ -743,13 +762,13 @@ else
             {
                 $showhide = $strMakeVisibleInPortal;
             }
-    
+
             if (!empty($update->sla) AND $update->type=='slamet')
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $showhide);
             }
             echo icon($updatetypes[$update->type]['icon'], 16, $showhide);
-    
+
             echo "</a> {$updateheadertext}";
         }
         else
@@ -763,14 +782,14 @@ else
             {
                 echo "<span>{$strMakeVisibleInPortal}</span>";
             }
-    
+
             if ($update->sla != '')
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
             }
             echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
         }
-    
+
         echo "</div>\n";
         if (!empty($updatebody))
         {
@@ -782,7 +801,7 @@ else
             {
                 echo "<div class='detailentryhidden'>\n";
             }
-    
+
             if ($updatebodylen > 5)
             {
                 /*
@@ -799,38 +818,38 @@ else
                  */
                 echo str_replace('\r\n', "<br />", nl2br($updatebody));
             }
-    
+
             if (!empty($update->nextaction) OR $update->duration != 0)
             {
                 echo "<div class='detailhead'>";
-    
+
                 if ($update->duration != 0)
                 {
                     $inminutes = ceil($update->duration); // Always round up
                     echo  "{$strDuration}: {$inminutes} {$strMinutes}";
-    
+
                     // Permision to adjust durations is 81
                     if ($CONFIG['allow_duration_adjustment'] AND user_permission($sit[2], 81) AND !$billable_incident_approved)
                     {
                         echo " <a href='billing_edit_activity_duration.php?mode=showform&amp;incidentid={$incidentid}&amp;updateid={$update->id}'>{$strEdit}</a>";
                     }
-    
+
                     echo "<br />";
                 }
-    
+
                 if (!empty($update->nextaction))
                 {
                     echo "{$strNextAction}: {$update->nextaction}";
                 }
-    
+
                 echo "</div>";
             }
             echo "</div>";
         }
-    
+
         $count++;
     }
-    
+
     if (intval($_SESSION['userconfig']['updates_per_page']) > 0)
     {
         echo log_nav_bar();
@@ -839,7 +858,7 @@ else
     {
         echo "</div>";
     }
-    
+
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }
 ?>

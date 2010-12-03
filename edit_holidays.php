@@ -26,7 +26,7 @@ switch ($_REQUEST['action'])
         $default_entitlement = cleanvar($_REQUEST['default_entitlement']);
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status >= 1";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($users = mysql_fetch_object($result))
         {
             $fieldname="user{$users->id}";
@@ -42,15 +42,15 @@ switch ($_REQUEST['action'])
                 // Archive previous holiday
                 $hsql = "UPDATE `{$dbHolidays}` SET approved = approved+10 ";
                 $hsql .= "WHERE approved < 10 AND userid={$users->id} ";
-                $hsql .= "AND date < FROM_UNIXTIME($archivedate)";
+                $hsql .= "AND date < FROM_UNIXTIME({$archivedate})";
                 mysql_query($hsql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
                 // Update Holiday Entitlement
                 $usql = "UPDATE `{$dbUsers}` SET holiday_entitlement = ";
-                $usql .= "$new_entitlement WHERE id={$users->id} LIMIT 1";
+                $usql .= "{$new_entitlement} WHERE id={$users->id} LIMIT 1";
                 mysql_query($usql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             }
         }
         header("Location: edit_holidays.php");
@@ -64,7 +64,7 @@ switch ($_REQUEST['action'])
 
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status >= 1 ORDER BY realname ASC";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         echo "<form name='editholidays' action='{$_SERVER['PHP_SELF']}?action=save' method='post'>";
         echo "<p>{$strResetHolidayEntitlementCarryOverNDaysOfUnusedHoliday}</p>";
@@ -82,15 +82,13 @@ switch ($_REQUEST['action'])
         echo colheader('entitlement', $strEntitlement, FALSE);
         echo colheader('holidaysused', $strUsed, FALSE);
         echo colheader('holidaysremaining', sprintf($strRemaining, ''), FALSE);
-        //echo colheader('resetdate', "Reset Date", FALSE); // FIXME i18n
+        //echo colheader('resetdate', $strResetDate, FALSE);
         //echo colheader('newentitlement', $strNewEntitlement, FALSE);
         echo "</tr>";
+        $shade = 'shade1';
         while ($users = mysql_fetch_object($result))
         {
-            // define class for table row shading
-            if ($shade == 'shade1') $shade = "shade2";
-            else $shade = "shade1";
-            echo "<tr class='$shade'>";
+            echo "<tr class='{$shade}'>";
             echo "<td><input type='checkbox' name='user{$users->id}' value='yes' /></td>";
             echo "<td><a href='holidays.php?user={$users->id}'>{$users->realname}</a> ({$users->username})</td>";
 
@@ -104,6 +102,9 @@ switch ($_REQUEST['action'])
             //echo "<td style='text-align: right;'>{$users->holiday_resetdate}</td>";
             //echo "<td style='text-align: right;'><input type='text' size='4' maxlength='5' value='{$newentitlement}' /></td>";
             echo "</tr>";
+            
+            if ($shade == 'shade1') $shade = "shade2";
+            else $shade = "shade1";
         }
         echo "</table>";
         echo "<p>";

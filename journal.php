@@ -36,7 +36,7 @@ $order = cleanvar($_REQUEST['order']);
 if (empty($perpage)) $perpage = 30;
 if (empty($page)) $page = 1;
 
-if (empty($search_string)) $search_string='a';
+if (empty($search_string)) $search_string = 'a';
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('contract', 32)." {$title}</h2>";
@@ -49,7 +49,7 @@ list($totaljournals) = mysql_fetch_row($result);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
 if ($offset == '' AND $page > 0) $offset = (($page -1) * $perpage);
-elseif ($offset=='' AND empty($page)) $offset=0;
+elseif ($offset == '' AND empty($page)) $offset=0;
 
 $sql = "SELECT * FROM `{$dbJournal}` ";
 if (!empty($type)) $sql .= "WHERE journaltype='{$type}' ";
@@ -82,21 +82,20 @@ $sql .= " LIMIT {$offset}, {$perpage} ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-// FIXME needs i18n
-$journaltype[CFG_JOURNAL_DEBUG] = 'Debug';
-$journaltype[CFG_JOURNAL_LOGIN] = 'Logon/Logoff';
-$journaltype[CFG_JOURNAL_SUPPORT] = 'Support Incidents';
-$journaltype[CFG_JOURNAL_SALES] = 'Sales Incidents';  // Obsolete
-$journaltype[CFG_JOURNAL_SITES] = 'Sites';
-$journaltype[CFG_JOURNAL_CONTACTS] = 'Contacts';
-$journaltype[CFG_JOURNAL_ADMIN] = 'Admin';
-$journaltype[CFG_JOURNAL_USER] = 'User Management';
-$journaltype[CFG_JOURNAL_MAINTENANCE] = 'Maintenance';
-$journaltype[CFG_JOURNAL_PRODUCTS] = 'Products';
-$journaltype[CFG_JOURNAL_OTHER] = 'Other';
-$journaltype[CFG_JOURNAL_TRIGGERS] = 'Triggers';
-$journaltype[CFG_JOURNAL_KB] = 'Knowledge Base';
-$journaltype[CFG_JOURNAL_TASKS] = 'Tasks';
+$journaltype[CFG_JOURNAL_DEBUG] = $strDebug;
+$journaltype[CFG_JOURNAL_LOGIN] = $strLoginLogoff;
+$journaltype[CFG_JOURNAL_SUPPORT] = $strIncidents;
+$journaltype[CFG_JOURNAL_SALES] = $strSalesIncidentsLegacy;  // Obsolete
+$journaltype[CFG_JOURNAL_SITES] = $strSites;
+$journaltype[CFG_JOURNAL_CONTACTS] = $strContacts;
+$journaltype[CFG_JOURNAL_ADMIN] = $strAdmin;
+$journaltype[CFG_JOURNAL_USER] = $strUserManagement;
+$journaltype[CFG_JOURNAL_MAINTENANCE] = $strContracts;
+$journaltype[CFG_JOURNAL_PRODUCTS] = $strProducts;
+$journaltype[CFG_JOURNAL_OTHER] = $strOthers;
+$journaltype[CFG_JOURNAL_TRIGGERS] = $strTriggers;
+$journaltype[CFG_JOURNAL_KB] = $strKnowledgeBase;
+$journaltype[CFG_JOURNAL_TASKS] = $strTasks;
 
 $journal_count = mysql_num_rows($result);
 if ($journal_count >= 1)
@@ -104,17 +103,17 @@ if ($journal_count >= 1)
     echo "<table align='center'>";
     echo "<tr>";
     $filter = array('page' => $page);
-    echo colheader('userid',$strUser,$sort, $order, $filter);
+    echo colheader('userid', $strUser, $sort, $order, $filter);
     echo colheader('timestamp',"{$strTime}/{$strDate}", $sort, $order, $filter);
-    echo colheader('event',$strEvent);
-    echo colheader('action',$strOperation);
-    echo colheader('type',$strType);
+    echo colheader('event', $strEvent);
+    echo colheader('action', $strOperation);
+    echo colheader('type', $strType);
     echo "</tr>\n";
     $shade = 'shade1';
     while ($journal = mysql_fetch_object($result))
     {
         echo "<tr class='{$shade}'>";
-        echo "<td>".user_realname($journal->userid,TRUE)."</td>";
+        echo "<td>".user_realname($journal->userid, TRUE)."</td>";
         echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($journal->timestamp))."</td>";
         echo "<td>{$journal->event}</td>";
         echo "<td>";
@@ -128,7 +127,7 @@ if ($journal_count >= 1)
                 break;
             default:
                 echo "{$journal->bodytext}";
-                if (!empty($journal->refid)) echo "(Ref: {$journal->refid})";
+                if (!empty($journal->refid)) echo " (".sprintf($strRefX, $journal->refid).")";
                 break;
         }
         echo "</td>";
@@ -168,13 +167,13 @@ if ($journal_count >= 1)
 
     for ($i = $minpage; $i < $maxpage; $i++)
     {
-        if ($i <> $page) echo "<a href='{$_SERVER['PHP_SELF']}?page={$i}'>$i</a> ";
+        if ($i <> $page) echo "<a href='{$_SERVER['PHP_SELF']}?page={$i}'>{$i}</a> ";
         else echo "<strong>{$i}</strong> ";
     }
 
     if ($maxpage < ($pages -3))
     {
-        echo " {$strEllipsis} <a href='{$_SERVER['PHP_SELF']}?page=$pages'>$pages</a>";
+        echo " {$strEllipsis} <a href='{$_SERVER['PHP_SELF']}?page={$pages}'>{$pages}</a>";
     }
 
     if ($page < $pages)
