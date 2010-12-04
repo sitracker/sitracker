@@ -32,38 +32,38 @@ $title = $strFTPFileDetails;
 $sql = "SELECT * FROM `{$dbFiles}` WHERE id='{$id}' AND category='ftp' ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-$frow = mysql_fetch_array($result);
+$obj = mysql_fetch_object($result);
 
 // calculate filesize
 $j = 0;
 $ext = array($strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes);
-$pretty_file_size = $frow['size'];
+$pretty_file_size = $obj->size;
 while ($pretty_file_size >= pow(1024,$j)) ++$j;
 $pretty_file_size = round($pretty_file_size / pow(1024,$j-1) * 100) / 100 . ' ' . $ext[$j-1];
 
 echo "<h2>{$title}</h2>";
 echo "<table summary='file-details' align='center' width='60%' class='vertical'>";
-echo "<tr><th>File:</th><td><img src='".getattachmenticon($frow['filename'])."' alt=\"{$frow['filename']} ({$pretty_file_size})\" border='0' />";
-echo "<strong>{$frow['filename']}</strong> ({$pretty_file_size})</td></tr>";
-if ($frow['path'] == '')
+echo "<tr><th>File:</th><td><img src='".getattachmenticon($obj->filename)."' alt=\"{$obj->filename} ({$pretty_file_size})\" border='0' />";
+echo "<strong>{$obj->filename}</strong> ({$pretty_file_size})</td></tr>";
+if ($obj->path == '')
 {
     $ftp_path = $CONFIG['ftp_path'];
 }
 else
 {
-    $ftp_path = $CONFIG['ftp_path'].substr($frow['path'],1).'/';
+    $ftp_path = $CONFIG['ftp_path'].substr($obj->path,1).'/';
 }
 
-echo "<tr><th>Location:</th><td><a href='ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$frow['filename']}'><code>'ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$frow['filename']}</code></a></td></tr>";
-echo "<tr><th>Title:</th><td>{$frow['shortdescription']}</td></tr>";
-echo "<tr><th>Web Category:</th><td>{$frow['webcategory']}</td></tr>";
-echo "<tr><th>Description:</th><td>{$frow['longdescription']}</td></tr>";
-echo "<tr><th>File Version:</th><td>{$frow['fileversion']}</td></tr>";
-echo "<tr><th>File Date:</th><td>".ldate($CONFIG['dateformat_filedatetime'], $frow['filedate'])." <strong>by</strong> ".user_realname($frow['userid'],TRUE)."</td></tr>";
+echo "<tr><th>Location:</th><td><a href='ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$obj->filename}'><code>'ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$obj->filename}</code></a></td></tr>";
+echo "<tr><th>Title:</th><td>{$obj->shortdescription}</td></tr>";
+echo "<tr><th>Web Category:</th><td>{$obj->webcategory}</td></tr>";
+echo "<tr><th>Description:</th><td>{$obj->longdescription}</td></tr>";
+echo "<tr><th>File Version:</th><td>{$obj->fileversion}</td></tr>";
+echo "<tr><th>File Date:</th><td>".ldate($CONFIG['dateformat_filedatetime'], $obj->filedate)." <strong>by</strong> ".user_realname($obj->userid, TRUE)."</td></tr>";
 
-if ($frow['expiry'] > 0)
+if ($obj->expiry > 0)
 {
-    echo "<tr><th>Expiry:</th><td>".ldate($CONFIG['dateformat_filedatetime'], $frow['expiry'])."</td></tr>";
+    echo "<tr><th>Expiry:</th><td>".ldate($CONFIG['dateformat_filedatetime'], $obj->expiry)."</td></tr>";
 }
 echo "</table>\n";
 echo "<p align='center'>";

@@ -21,14 +21,14 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strAddIncident;
 
-function to_row($contactrow)
+function to_row($contact)
 {
     global $now, $updateid, $CONFIG, $dbg;
 
     $str = '';
-    if (($contactrow['expirydate'] < $now
-        OR $contactrow['term'] == 'yes')
-        AND $contactrow['expirydate'] != -1)
+    if (($contact->expirydate < $now
+        OR $contact->term == 'yes')
+        AND $contact->expirydate != -1)
     {
         $class = 'expired';
     }
@@ -37,34 +37,34 @@ function to_row($contactrow)
         $class = "shade2";
     }
 
-    $incidents_remaining = $contactrow['incident_quantity'] - $contactrow['incidents_used'];
+    $incidents_remaining = $contact->incident_quantity - $contact->incidents_used;
 
-    $str = "<tr class='$class'>";
-    if ($contactrow['expirydate'] < $now AND $contactrow['expirydate'] != '-1')
+    $str = "<tr class='{$class}'>";
+    if ($contact->expirydate < $now AND $contact->expirydate != '-1')
     {
         $str .=  "<td>{$GLOBALS['strExpired']}</td>";
     }
-    elseif ($contactrow['term'] == 'yes')
+    elseif ($contact->term == 'yes')
     {
         $str .=  "<td>{$GLOBALS['strTerminated']}</td>";
     }
-    elseif ($contactrow['incident_quantity'] >= 1 AND $contactrow['incidents_used'] >= $contactrow['incident_quantity'])
+    elseif ($contact->incident_quantity >= 1 AND $contact->incidents_used >= $contact->incident_quantity)
     {
-        $str .= "<td class='expired'>{$GLOBALS['strZeroRemaining']} ({$contactrow['incidents_used']}/{$contactrow['incident_quantity']} {$strUsed})</td>";
+        $str .= "<td class='expired'>{$GLOBALS['strZeroRemaining']} ({$contact->incidents_used}/{$contact->incident_quantity} {$strUsed})</td>";
     }
     else
     {
         $str .=  "<td><a href=\"{$_SERVER['PHP_SELF']}?action=incidentform&amp;type=support&amp;";
-        $str .= "contactid=".$contactrow['contactid']."&amp;maintid=".$contactrow['maintid'];
-        $str .= "&amp;producttext=".urlencode($contactrow['productname'])."&amp;productid=";
-        $str .= $contactrow['productid']."&amp;updateid=$updateid&amp;siteid=".$contactrow['siteid'];
+        $str .= "contactid={$contact->contactid}&amp;maintid={$contact->maintid}";
+        $str .= "&amp;producttext=".urlencode($contact->productname)."&amp;productid=";
+        $str .= "{$contact->productid}&amp;updateid={$updateid}&amp;siteid={$contact->siteid}";
         $str .= "&amp;win={$win}\"";
         if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
         {
             $str .= " onclick=\"return confirm_support();\"";
         }
         $str .= ">{$GLOBALS['strAddIncident']}</a> ";
-        if ($contactrow['incident_quantity'] == 0)
+        if ($contact->incident_quantity == 0)
         {
             $str .=  "({$GLOBALS['strUnlimited']})";
         }
@@ -74,17 +74,17 @@ function to_row($contactrow)
         }
     }
     $str .=  "</td>";
-    $str .=  "<td>{$contactrow['forenames']} {$contactrow['surname']}</td>";
-    $str .=  "<td>{$contactrow['name']}</td>";
-    $str .=  "<td>{$contactrow['productname']}</td>";
-    $str .=  "<td>{$contactrow['servicelevel']}</td>";
-    if ($contactrow['expirydate'] == '-1')
+    $str .=  "<td>{$contact->forenames} {$contact->surname}</td>";
+    $str .=  "<td>{$contact->name}</td>";
+    $str .=  "<td>{$contact->productname}</td>";
+    $str .=  "<td>{$contact->servicelevel}</td>";
+    if ($contact->expirydate == '-1')
     {
         $str .= "<td>{$GLOBALS['strUnlimited']}</td>";
     }
     else
     {
-        $str .=  '<td>'.ldate($CONFIG['dateformat_date'], $contactrow['expirydate']).'</td>';
+        $str .=  '<td>'.ldate($CONFIG['dateformat_date'], $contact->expirydate).'</td>';
     }
     $str .=  "</tr>\n";
     return $str;
@@ -230,17 +230,17 @@ elseif ($action == 'findcontact')
         $headers .= "<th>{$strContract}</th><th>{$strServiceLevel}</th>";
         $headers .= "<th>{$strExpiryDate}</th></tr>";
 
-        while ($contactrow = mysql_fetch_array($result))
+        while ($contactobj = mysql_fetch_object($result))
         {
             if (empty($CONFIG['preferred_maintenance']) OR
                 (is_array($CONFIG['preferred_maintenance']) AND
-                    in_array($contactrow['servicelevel'], $CONFIG['preferred_maintenance'])))
+                    in_array($contactobj->servicelevel, $CONFIG['preferred_maintenance'])))
             {
-                $str_prefered .= to_row($contactrow);
+                $str_prefered .= to_row($contactobj);
             }
             else
             {
-                $str_alternative .= to_row($contactrow);
+                $str_alternative .= to_row($contactobj);
             }
         }
 
@@ -279,7 +279,7 @@ elseif ($action == 'findcontact')
             $sql .= "AND (surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR s.name LIKE '%{$search_string}%' ";
             $sql .= "OR CONCAT_WS(' ', forenames, surname) LIKE '{$search_string}') ";
         }
-        else $sql .= "AND c.id = '$contactid' ";
+        else $sql .= "AND c.id = '{$contactid}' ";
 
         $sql .= "ORDER by c.surname, c.forenames ";
         $result = mysql_query($sql);
@@ -298,16 +298,15 @@ elseif ($action == 'findcontact')
             $html .=  "</tr>\n";
 
             $customermatches = 0;
-            while ($contactrow = mysql_fetch_array($result))
+            while ($contactobj = mysql_fetch_object($result))
             {
                 $html .=  "<tr class='shade2'>";
-                $site_incident_pool = db_read_column('freesupport', $dbSites,
-                                                     $contactrow['siteid']);
+                $site_incident_pool = db_read_column('freesupport', $dbSites, $contactobj->siteid);
                 if ($site_incident_pool > 0)
                 {
                     $html .=  "<td><a href=\"{$_SERVER['PHP_SELF']}?action=";
                     $html .= "incidentform&amp;type=free&amp;contactid=";
-                    $html .= $contactrow['contactid']."&amp;updateid={$updateid}";
+                    $html .= $contactobj->contactid."&amp;updateid={$updateid}";
                     $html .= "&amp;win={$win}\"";
                     if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
                     {
@@ -322,9 +321,9 @@ elseif ($action == 'findcontact')
                 {
                     $html .=  "<td class='expired'>{$strZeroRemaining}</td>";
                 }
-                $html .=  '<td>'.$contactrow['forenames'].' '.$contactrow['surname'].'</td>';
-                $html .=  '<td>'.site_name($contactrow['siteid']).'</td>';
-                $html .=  "</tr>\n";
+                $html .= "<td>{$contactobj->forenames} {$contactobj->surname}</td>";
+                $html .= '<td>'.site_name($contactobj->siteid).'</td>';
+                $html .= "</tr>\n";
             }
             $html .=  "</table>\n";
             $html .= "<p align='center'><a href='contact_add.php?name=".urlencode($search_string)."&amp;return=addincident'>{$strAddContact}</a></p>";
@@ -375,13 +374,13 @@ elseif ($action == 'findcontact')
             $html .= "</tr>\n";
 
             $customermatches = 0;
-            while ($contactrow = mysql_fetch_array($result))
+            while ($contactobj = mysql_fetch_object($result))
             {
                 $html .= "<tr class='shade2'>";
-                $site_incident_pool = db_read_column('freesupport', $dbSites, $contactrow['siteid']);
+                $site_incident_pool = db_read_column('freesupport', $dbSites, $contactobj->siteid);
                 if ($site_incident_pool > 0)
                 {
-                    $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?action=incidentform&amp;type=free&amp;contactid=".$contactrow['contactid']."&amp;updateid=$updateid&amp;win={$win}\" onclick=\"return confirm_free();\">";
+                    $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?action=incidentform&amp;type=free&amp;contactid={$contactobj->contactid}&amp;updateid={$updateid}&amp;win={$win}\" onclick=\"return confirm_free();\">";
                     $html .= "{$strAddSiteSupportIncident}</a> ({$site_incident_pool})</td>";
                     $customermatches++;
                 }
@@ -389,8 +388,8 @@ elseif ($action == 'findcontact')
                 {
                     $html .= "<td class='expired'>{$strZeroRemaining}</td>";
                 }
-                $html .= '<td>'.$contactrow['forenames'].' '.$contactrow['surname'].'</td>';
-                $html .= '<td>'.site_name($contactrow['siteid']).'</td>';
+                $html .= "<td>{$contactobj->forenames} {$contactobj->surname}</td>";
+                $html .= '<td>'.site_name($contactobj->siteid).'</td>';
                 $html .= "</tr>\n";
             }
             $html .= "</table>\n";
@@ -411,7 +410,7 @@ elseif ($action == 'findcontact')
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
-elseif ($action=='incidentform')
+elseif ($action == 'incidentform')
 {
     // Display form to get details of the actual incident
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -513,18 +512,18 @@ elseif ($action=='incidentform')
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $numquestions = mysql_num_rows($result);
         $cellcount = 1;
-        while ($productinforow = mysql_fetch_array($result))
+        while ($productinfoobj = mysql_fetch_object($result))
         {
             if ($cellcount & 1) echo "<tr>";
             echo "<td>";
-            echo "<label>{$productinforow['information']}";
-            if ($productinforow['moreinformation'] != '')
+            echo "<label>{$productinfoobj->information}";
+            if ($productinfoobj->moreinformation != '')
             {
-                echo " (<em>{$productinforow['moreinformation']}</em>)";
+                echo " (<em>{$productinfoobj->moreinformation}</em>)";
             }
             echo "<br />\n";
             echo "<input class='required' maxlength='50' ";
-            echo "name='pinfo{$productinforow['id']}' size='70' type='text' />";
+            echo "name='pinfo{$productinfoobj->id}' size='70' type='text' />";
             echo " <span class='required'>{$strRequired}</span>";
             echo "</label>";
             echo "</td>";
@@ -549,14 +548,12 @@ elseif ($action=='incidentform')
         $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id={$updateid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $updaterow = mysql_fetch_array($result);
-        $mailed_body_text = $updaterow['bodytext'];
+        list($mailed_body_text) = mysql_fetch_assoc($result);
 
-        $sql="SELECT subject FROM `{$dbTempIncoming}` WHERE updateid={$updateid}";
+        $sql = "SELECT subject FROM `{$dbTempIncoming}` WHERE updateid={$updateid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $updaterow = mysql_fetch_array($result);
-        $mailed_subject = $updaterow['subject'];
+        list($mailed_subject) = mysql_fetch_assoc($result);
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
@@ -940,20 +937,20 @@ elseif ($action == 'assign')
             echo "</tr>";
 
             $shade = 'shade2';
-            while ($userrow = mysql_fetch_array($result))
+            while ($userobj = mysql_fetch_obj($result))
             {
-                if ($userrow['id'] == $suggested_user) $shade = 'idle';
+                if ($userobj->id == $suggested_user) $shade = 'idle';
                 echo "<tr class='{$shade}'>";
                 // display reassign link only if person is accepting or if the current user has 'reassign when not accepting' permission
-                if ($userrow['accepting'] == 'Yes')
+                if ($userobj->accepting == 'Yes')
                 {
-                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userrow['id']}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
+                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strAssignTo}</a></td>";
                 }
-                elseif (user_permission($sit[2], 40) OR $userrow['id'] == $sit[2])
+                elseif (user_permission($sit[2], 40) OR $userobj->id == $sit[2])
                 {
-                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userrow['id']}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
+                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strForceTo}</a></td>";
                 }
@@ -965,30 +962,30 @@ elseif ($action == 'assign')
 
                 // Have a look if this user has skills with this software
                 $ssql = "SELECT softwareid FROM `{$dbUserSoftware}` ";
-                $ssql .= "WHERE userid='{$userrow['id']}' AND softwareid='{$software}' ";
+                $ssql .= "WHERE userid='{$userobj->id}' AND softwareid='{$software}' ";
                 $sresult = mysql_query($ssql);
                 if (mysql_num_rows($sresult) >= 1)
                 {
-                    echo "<strong>{$userrow['realname']}</strong>";
+                    echo "<strong>{$userobj->realname}</strong>";
                 }
                 else
                 {
-                    echo $userrow['realname'];
+                    echo $userobj->realname;
                 }
 
                 echo "</td>";
-                echo "<td>{$userrow['phone']}</td>";
-                echo "<td>".user_online_icon($userrow['id'])." ".userstatus_name($userrow['status'])."</td>";
-                echo "<td>{$userrow['message']}</td>";
+                echo "<td>{$userobj->phone}</td>";
+                echo "<td>".user_online_icon($userobj->id)." ".userstatus_name($userobj->status)."</td>";
+                echo "<td>{$userobj->message}</td>";
                 echo "<td align='center'>";
 
-                $incpriority = user_incidents($userrow['id']);
+                $incpriority = user_incidents($userobj->id);
                 $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
-                if ($countincidents >= 1) $countactive = user_activeincidents($userrow['id']);
+                if ($countincidents >= 1) $countactive = user_activeincidents($userobj->id);
                 else $countactive = 0;
 
-                $countdiff = $countincidents-$countactive;
+                $countdiff = $countincidents - $countactive;
 
                 echo "$countactive / {$countdiff}</td>";
                 echo "<td align='center'>{$incpriority['4']}</td>";
@@ -997,7 +994,7 @@ elseif ($action == 'assign')
                 echo "<td align='center'>{$incpriority['1']}</td>";
 
                 echo "<td align='center'>";
-                if ($userrow['accepting'] == 'Yes') echo $strYes;
+                if ($userobj->accepting == 'Yes') echo $strYes;
                 else echo "<span class='error'>{$strNo}</span>";
                 echo "</td>";
                 echo "</tr>\n";

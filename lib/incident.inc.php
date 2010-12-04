@@ -574,7 +574,7 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
         $rtn = FALSE;
     }
 
-    list($count) = mysql_fetch_array($result);
+    list($count) = mysql_fetch_assoc($result);
     if ($count > 0) $rtn = TRUE;
 
     return $rtn;
@@ -696,7 +696,7 @@ function sla_target_content($incidentid, $target)
     $sql .= "ORDER BY timestamp DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($bodytext) = mysql_fetch_array($result);
+    list($bodytext) = mysql_fetch_assoc($result);
     $bodytext = str_replace("<hr>", "", $bodytext);
     $rtn .= $bodytext;
     return $rtn;
@@ -719,7 +719,7 @@ function incident_service_level($incidentid)
     $result = mysql_query($sql);
 
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($servicelevel) = mysql_fetch_array($result);
+    list($servicelevel) = mysql_fetch_assoc($result);
 
     return $servicelevel;
 }

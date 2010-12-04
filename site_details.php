@@ -35,15 +35,15 @@ if ($id=='')
 
 // Display site
 echo "<table align='center' class='vertical'>";
-$sql="SELECT * FROM `{$dbSites}` WHERE id='$id' ";
+$sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
 $siteresult = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-while ($siterow = mysql_fetch_array($siteresult))
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+while ($siterow = mysql_fetch_object($siteresult))
 {
     echo "<tr><th>{$strSite}:</th><td>";
-    echo "<h3>".icon('site', 32)." ".$siterow['name']."</h3>";
+    echo "<h3>".icon('site', 32)." {$siteobj->name}</h3>";
     echo "</td></tr>";
-    if ($siterow['active'] == 'false')
+    if ($siteobj->active == 'false')
     {
         echo "<tr><th>{$strStatus}:</th><td><span class='expired'>{$strInactive}</span></td></tr>";
     }
@@ -53,34 +53,34 @@ while ($siterow = mysql_fetch_array($siteresult))
         echo "<tr><th>{$strTags}:</th><td>{$tags}</td></tr>";
     }
 
-    echo "<tr><th>{$strDepartment}:</th><td>{$siterow['department']}</td></tr>";
-    echo "<tr><th>{$strAddress1}:</th><td>{$siterow['address1']}</td></tr>";
-    echo "<tr><th>{$strAddress2}:</th><td>{$siterow['address2']}</td></tr>";
-    echo "<tr><th>{$strCity}:</th><td>{$siterow['city']}</td></tr>";
-    echo "<tr><th>{$strCounty}:</th><td>{$siterow['county']}</td></tr>";
-    echo "<tr><th>{$strCountry}:</th><td>{$siterow['country']}</td></tr>";
-    echo "<tr><th>{$strPostcode}:</th><td>{$siterow['postcode']} ";
-    if (!empty($siterow['postcode']))
+    echo "<tr><th>{$strDepartment}:</th><td>{$siteobj->department}</td></tr>";
+    echo "<tr><th>{$strAddress1}:</th><td>{$siteobj->address1}</td></tr>";
+    echo "<tr><th>{$strAddress2}:</th><td>{$siteobj->address2}</td></tr>";
+    echo "<tr><th>{$strCity}:</th><td>{$siteobj->city}</td></tr>";
+    echo "<tr><th>{$strCounty}:</th><td>{$siteobj->county}</td></tr>";
+    echo "<tr><th>{$strCountry}:</th><td>{$siteobj->country}</td></tr>";
+    echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
+    if (!empty($siteobj->postcode))
     {
         //TODO make this support different links via config
-        echo "(<a href='http://www.google.com/maps?q={$siterow['postcode']}'>{$strMap}</a>)";
+        echo "(<a href='http://www.google.com/maps?q={$siteobj->postcode}'>{$strMap}</a>)";
     }
     echo "</td></tr>";
-    echo "<tr><th>{$strTelephone}:</th><td>{$siterow['telephone']}</td></tr>";
-    echo "<tr><th>{$strFax}:</th><td>{$siterow['fax']}</td></tr>";
-    echo "<tr><th>{$strEmail}:</th><td><a href=\"mailto:".$siterow['email']."\">".$siterow['email']."</a></td></tr>";
+    echo "<tr><th>{$strTelephone}:</th><td>{$siteobj->telephone}</td></tr>";
+    echo "<tr><th>{$strFax}:</th><td>{$siteobj->fax}</td></tr>";
+    echo "<tr><th>{$strEmail}:</th><td><a href=\"mailto:{$siteobj->email}\">{$siteobj->email}</a></td></tr>";
     echo "<tr><th>{$strWebsite}:</th><td>";
-    if (!empty($siterow['websiteurl']))
+    if (!empty($siteobj->websiteurl))
     {
-        echo "<a href=\"{$siterow['websiteurl']}\">{$siterow['websiteurl']}</a>";
+        echo "<a href=\"{$siteobj->websiteurl}\">{$siteobj->websiteurl}</a>";
     }
 
     echo "</td></tr>";
-    echo "<tr><th>{$strNotes}:</th><td>".nl2br($siterow['notes'])."</td></tr>";
+    echo "<tr><th>{$strNotes}:</th><td>".nl2br($siteobj->notes)."</td></tr>";
     echo "<tr><td colspan='2'>&nbsp;</td></tr>";
     echo "<tr><th>{$strIncidents}:</th>";
-    echo "<td>".site_count_incidents($id)." <a href=\"contact_support.php?id=".$siterow['id']."&amp;mode=site\">{$strSeeHere}</a></td></tr>";
-    echo "<tr><th>{$strBillableIncidents}:</th><td><a href='transactions.php?site={$siterow['id']}'>{$strSeeHere}</a></td></tr>";
+    echo "<td>".site_count_incidents($id)." <a href=\"contact_support.php?id={$siteobj->id}&amp;mode=site\">{$strSeeHere}</a></td></tr>";
+    echo "<tr><th>{$strBillableIncidents}:</th><td><a href='transactions.php?site={$siteobj->id}'>{$strSeeHere}</a></td></tr>";
 
     $balance = $awaiting = $reserved = 0;
 
@@ -100,20 +100,20 @@ while ($siterow = mysql_fetch_array($siteresult))
 
     echo "</td></tr>";
 
-    echo "<tr><th>{$strActivities}:</th><td>".open_activities_for_site($siterow['id'])." <a href='tasks.php?siteid={$siterow['id']}'>{$strSeeHere}</a></td></tr>";
+    echo "<tr><th>{$strActivities}:</th><td>".open_activities_for_site($siteobj->id)." <a href='tasks.php?siteid={$siteobj->id}'>{$strSeeHere}</a></td></tr>";
     echo "<tr><th>{$strInventory}:</th>";
     echo "<td>".site_count_inventory_items($id);
     echo " <a href='inventory.php?site={$id}'>{$strSeeHere}</a></td></tr>";
-    $billableunits = billable_units_site($siterow['id'], $now-2678400); // Last 31 days
+    $billableunits = billable_units_site($siteobj->id, $now - 2678400); // Last 31 days
     if ($billableunits > 0)
     {
         echo "<tr><th>".sprintf($strUnitsUsedLastXdays, 31).":</th><td>{$billableunits}</td></tr>"; // More appropriate label
     }
-    echo "<tr><th>{$strIncidentPool}:</th><td>".sprintf($strRemaining, $siterow['freesupport'])."</td></tr>";
+    echo "<tr><th>{$strIncidentPool}:</th><td>".sprintf($strRemaining, $siteobj->freesupport)."</td></tr>";
     echo "<tr><th>{$strSalesperson}:</th><td>";
-    if ($siterow['owner'] >= 1)
+    if ($siteobj->owner >= 1)
     {
-        echo user_realname($siterow['owner'],TRUE);
+        echo user_realname($siteobj->owner, TRUE);
     }
     else
     {
@@ -157,61 +157,61 @@ if ($countcontacts > 0)
 
     $shade = 'shade1';
 
-    while ($contactrow = mysql_fetch_array($contactresult))
+    while ($contactobj = mysql_fetch_object($contactresult))
     {
-        if ($contactrow['active'] == 'false') $shade='expired';
-        echo "<tr class='$shade'>";
+        if ($contactobj->active == 'false') $shade='expired';
+        echo "<tr class='{$shade}'>";
         echo "<td>".icon('contact', 16, $strContact);
-        echo " <a href=\"contact_details.php?id=".$contactrow['id']."\">{$contactrow['forenames']} {$contactrow['surname']}</a></td>";
-        echo "<td>{$contactrow['jobtitle']}</td>";
-        echo "<td>{$contactrow['department']}</td>";
-        if ($contactrow['dataprotection_phone'] != 'Yes')
+        echo " <a href='contact_details.php?id={$contactobj->id}'>{$contactobj->forenames} {$contactobj->surname}</a></td>";
+        echo "<td>{$contactobj->jobtitle}</td>";
+        echo "<td>{$contactobj->department}</td>";
+        if ($contactobj->dataprotection_phone != 'Yes')
         {
-            echo "<td>{$contactrow['phone']}</td>";
+            echo "<td>{$contactobj->phone}</td>";
         }
         else
         {
             echo "<td><strong>{$strWithheld}</strong></td>";
         }
 
-        if ($contactrow['dataprotection_email'] != 'Yes')
+        if ($contactobj->dataprotection_email != 'Yes')
         {
-            echo "<td>{$contactrow['email']}</td>";
+            echo "<td>{$contactobj->email}</td>";
         }
         else
         {
             echo "<td><strong>{$strWithheld}</strong></td>";
         }
 
-        if ($contactrow['dataprotection_address'] != 'Yes')
+        if ($contactobj->dataprotection_address != 'Yes')
         {
             echo "<td>";
-            if (!empty($contactrow['address1']))
+            if (!empty($contactobj->address1))
             {
-                echo $contactrow['address1'];
+                echo $contactobj->address1;
             }
             echo "</td>";
         }
         else echo "<td><strong>{$strWithheld}</strong></td>";
 
         echo "<td>";
-        if ($contactrow['dataprotection_email'] == 'Yes')
+        if ($contactobj->dataprotection_email == 'Yes')
         {
             echo "<strong>{$strNoEmail}</strong>, ";
         }
 
-        if ($contactrow['dataprotection_phone'] == 'Yes')
+        if ($contactobj->dataprotection_phone == 'Yes')
         {
             echo "<strong>{$strNoCalls}</strong>, ";
         }
 
-        if ($contactrow['dataprotection_address'] == 'Yes')
+        if ($contactobj->dataprotection_address == 'Yes')
         {
             echo "<strong>{$strNoPost}</strong>";
         }
 
         echo "</td>";
-        echo "<td>".nl2br(substr($contactrow['notes'], 0, 500))."</td>";
+        echo "<td>".nl2br(substr($contactobj->notes, 0, 500))."</td>";
         echo "</tr>";
         if ($shade == 'shade1') $shade = 'shade2';
         else $shade = 'shade1';
@@ -280,68 +280,68 @@ if (user_permission($sit[2],19)) // View contracts
             <th>{$strNotes}</th>
         </tr>";
         $shade = 'shade1';
-        while ($results = mysql_fetch_array($result))
+        while ($results = mysql_fetch_object($result))
         {
-            if ($results['term'] == 'yes' OR
-                ($results['expirydate'] < $now AND
-                $results['expirydate'] != -1))
+            if ($results->term == 'yes' OR
+                ($results->expirydate < $now AND
+                $results->expirydate != -1))
             {
             	$shade = "expired";
             }
             echo "<tr>";
             echo "<td class='{$shade}'>".icon('contract', 16)." ";
-            echo "<a href='contract_details.php?id={$results['maintid']}'>{$strContract} {$results['maintid']}</a></td>";
-            echo "<td class='{$shade}'>{$results['product']}</td>";
+            echo "<a href='contract_details.php?id={$results->maintid}'>{$strContract} {$results->maintid}</a></td>";
+            echo "<td class='{$shade}'>{$results->product}</td>";
             echo "<td class='{$shade}'>";
-            if (empty($results['reseller']))
+            if (empty($results->reseller))
             {
                 echo $strNoReseller;
             }
             else
             {
-                echo $results['reseller'];
+                echo $results->reseller;
             }
 
             echo "</td>";
             echo "<td class='{$shade}'>";
 
-            if (empty($results['licence_type']))
+            if (empty($results->licence_type))
             {
                 echo $strNoLicense;
             }
             else
             {
-                if ($results['licence_quantity'] == 0)
+                if ($results->licence_quantity == 0)
                 {
                     echo "{$strUnlimited} ";
                 }
                 else
                 {
-                    echo "{$results['licence_quantity']} ";
+                    echo "{$results->licence_quantity} ";
                 }
-                echo $results['licence_type'];
+                echo $results->licence_type;
             }
 
             echo "</td>";
             echo "<td class='{$shade}'>";
-            if ($results['expirydate'] == -1)
+            if ($results->expirydate == -1)
             {
                 echo $strUnlimited;
             }
             else
             {
-                echo ldate($CONFIG['dateformat_date'], $results['expirydate']);
+                echo ldate($CONFIG['dateformat_date'], $results->expirydate);
             }
             echo "</td>";
-            echo "<td class='{$shade}'>{$results['admincontactsforenames']}  {$results['admincontactssurname']}</td>";
+            echo "<td class='{$shade}'>{$results->admincontactsforenames}  {$results->admincontactssurname}</td>";
             echo "<td class='{$shade}'>";
-            if ($results['maintnotes'] == '')
+            if ($results->maintnotes == '')
             {
                 echo '&nbsp;';
             }
             else
             {
-                echo nl2br($results['maintnotes']);
+                echo nl2br($results->maintnotes);
             }
             echo "</td>";
             echo "</tr>";
@@ -351,8 +351,12 @@ if (user_permission($sit[2],19)) // View contracts
         }
         echo "</table>\n";
     }
-    else echo "<p align='center'>{$strNoContractsForSite}</p>";
-    echo "<p align='center'><a href='contract_add.php?action=showform&amp;siteid=$id'>{$strAddContract}</a></p>";
+    else
+    {
+        echo "<p align='center'>{$strNoContractsForSite}</p>";
+    }
+
+    echo "<p align='center'><a href='contract_add.php?action=showform&amp;siteid={$id}'>{$strAddContract}</a></p>";
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

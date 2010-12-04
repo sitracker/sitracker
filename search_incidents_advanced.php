@@ -161,7 +161,7 @@ else
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        $countresults=  mysql_num_rows($result);
+        $countresults = mysql_num_rows($result);
         if ($countresults == 0)
         {
             echo "<h2>{$strNoResults}</h2>\n";
@@ -184,22 +184,22 @@ else
             <th>{$strStatus}</th>
             </tr>";
             $shade = 'shade1';
-            while ($results = mysql_fetch_array($result))
+            while ($results = mysql_fetch_object($result))
             {
                 echo "<tr class='{$shade}'>";
-                echo "<td align='center'  width='100'>{$results['id']} (";
-                if ($results["externalid"] == '') echo $strNone;
-                else echo $results["externalid"];
+                echo "<td align='center'  width='100'>{$results->id} (";
+                if ($results->externalid == '') echo $strNone;
+                else echo $results->externalid;
                 echo "</td>";
-                echo "<td width='150'><a href=\"javascript:incident_details_window('{$results['id']}')\">{$results['title']}</a></td>";
-                echo "<td align='center' width='100'>{$results['forenames']}' '{$results['surname']}</td>";
-                echo "<td align='center' width='100'>".site_name($results['siteid'])."</td>";
-                echo "<td align='center' width='50'>{$results['servicelevel']}<br />".priority_name($results["priority"])."</td>";
-                echo "<td align='center' width='100'>".user_realname($results['owner'], TRUE)."</td>";
-                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results["opened"])."</td>";
-                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results["lastupdated"])."></td>";
-                echo "<td align='center' width='50'>{$results['type']}</td>";
-                echo "<td align='center' width='50'>".incidentstatus_name($results["status"])."</td>";
+                echo "<td width='150'><a href=\"javascript:incident_details_window('{$results->id}')\">{$results->title}</a></td>";
+                echo "<td align='center' width='100'>{$results->forenames}' '{$results->surname}</td>";
+                echo "<td align='center' width='100'>".site_name($results->siteid)."</td>";
+                echo "<td align='center' width='50'>{$results->servicelevel}<br />".priority_name($results->priority)."</td>";
+                echo "<td align='center' width='100'>".user_realname($results->owner, TRUE)."</td>";
+                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results->opened)."</td>";
+                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results->lastupdated)."></td>";
+                echo "<td align='center' width='50'>{$results->type}</td>";
+                echo "<td align='center' width='50'>".incidentstatus_name($results->status)."</td>";
                 echo "</tr>";
 
                 if ($shade == 'shade1') $shade = 'shade2';

@@ -585,10 +585,10 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
     $time = 0;
     $timeptr = 0;
     $laststatus = 2; // closed
-    while ($update = mysql_fetch_array($result))
+    while ($update = mysql_fetch_object($result))
     {
-        //  if ($t1<=$update['timestamp'])
-        if ($t1 <= $update['timestamp'])
+        //  if ($t1<=$update->timestamp'])
+        if ($t1 <= $update->timestamp)
         {
             if ($timeptr == 0)
             {
@@ -601,11 +601,11 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
                 }
                 else
                 {
-                    $timeptr = $update['timestamp'];
+                    $timeptr = $update->timestamp;
                 }
             }
 
-            if ($t2 < $update['timestamp'])
+            if ($t2 < $update->timestamp)
             {
                 // If we have reached the very end of the range, increment time to end of range, break
                 if (is_active_status($laststatus, $states))
@@ -616,21 +616,21 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
             }
 
             // if status has changed or this is the first (active update)
-            if (is_active_status($laststatus, $states) != is_active_status($update['currentstatus'], $states))
+            if (is_active_status($laststatus, $states) != is_active_status($update->currentstatus, $states))
             {
                 // If it's active and we've not reached the end of the range, increment time
-                if (is_active_status($laststatus, $states) && ($t2 >= $update['timestamp']))
+                if (is_active_status($laststatus, $states) && ($t2 >= $update->timestamp))
                 {
-                    $time += calculate_working_time($timeptr, $update['timestamp'], $publicholidays);
+                    $time += calculate_working_time($timeptr, $update->timestamp, $publicholidays);
                 }
                 else
                 {
-                    $timeptr = $update['timestamp'];
+                    $timeptr = $update->timestamp;
                 }
                 // if it's not active set the ptr
             }
         }
-        $laststatus = $update['currentstatus'];
+        $laststatus = $update->currentstatus;
     }
     mysql_free_result($result);
 
