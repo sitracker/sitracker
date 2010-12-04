@@ -487,17 +487,17 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
 
 
 /**
- Send a template email without using a trigger
- @author Ivan Lucas
- @param int $templateid: The ID number of the template to use
- @param array $paramarray. An associative array of template parameters
+ * Send a template email without using a trigger
+ * @author Ivan Lucas
+ * @param int $templateid: The ID number of the template to use
+ * @param array $paramarray. An associative array of template parameters
              This should at the very least be
              array('incidentid' => $id, 'triggeruserid' => $sit[2])
- @param string $attach. Path and filename of file to attach
- @param string $attachtype. Type of file to attach (Default 'OCTET')
- @param string $attachdesc. Description of the attachment, (Default, same as filename)
- @return bool TRUE: The email was sent successfully, FALSE: There was an error sending the mail
- @note This is v2 of this function, it has different paramters than v1
+ * @param string $attach. Path and filename of file to attach
+ * @param string $attachtype. Type of file to attach (Default 'OCTET')
+ * @param string $attachdesc. Description of the attachment, (Default, same as filename)
+ * @return bool TRUE: The email was sent successfully, FALSE: There was an error sending the mail
+ * @note This is v2 of this function, it has different paramters than v1
  */
 function send_email_template($templateid, $paramarray, $attach='', $attachtype='', $attachdesc='')
 {
@@ -515,7 +515,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     }
 
     // Grab the template
-    $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id=$templateid LIMIT 1";
+    $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$templateid} LIMIT 1";
     $tresult = mysql_query($tsql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
@@ -625,7 +625,7 @@ function incident_id_from_subject($subject, $from)
 function count_incident_stats($incidentid)
 {
     global $dbUpdates;
-    $sql = "SELECT count(DISTINCT currentowner),count(id) FROM `{$dbUpdates}` WHERE incidentid='$incidentid' AND userid!=0 GROUP BY userid";
+    $sql = "SELECT count(DISTINCT currentowner),count(id) FROM `{$dbUpdates}` WHERE incidentid='{$incidentid}' AND userid!=0 GROUP BY userid";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($unique_users,$num_updates) = mysql_fetch_row($result);
@@ -993,13 +993,13 @@ function incident_lastupdate($id)
     }
     else
     {
-        $update = mysql_fetch_array($result);
+        $update = mysql_fetch_object($result);
 
         mysql_free_result($result);
         // Remove Tags from update Body
-        $update['body'] = trim($update['body']);
-        $update['body'] = $update['body'];
-        return array($update['userid'], $update['type'] ,$update['currentowner'], $update['currentstatus'], $update['body'], $update['timestamp'], $update['nextaction'], $update['id']);
+        $update['body'] = trim($update->body);
+        $update['body'] = $update->body;
+        return array($update->userid, $update->type ,$update->currentowner, $update->currentstatus, $update->body, $update->timestamp, $update->nextaction, $update->id);
     }
 }
 
@@ -1381,7 +1381,7 @@ function incident_backup_switchover($userid, $accepting)
                 else
                 {
                     // mark the temp assigns table so it's not showing in the holding queue
-                    $tasql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE originalowner='$userid' AND incidentid='{$incident->id}' LIMIT 1";
+                    $tasql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE originalowner='{$userid}' AND incidentid='{$incident->id}' LIMIT 1";
                     mysql_query($tasql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
