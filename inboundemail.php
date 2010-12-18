@@ -323,6 +323,11 @@ if ($emails > 0)
                 // Treat related content as attachment
                 $results['Attachments'] = $results['Related'];
             }
+            elseif(is_array($results['Attachments']) AND is_array($results['Related']))
+            {
+                // Treat related content as attachment
+                $results['Attachments'] = array_merge($results['Attachments'], $results['Related']);
+            }
             foreach ($results['Attachments'] as $attachment)
             {
                 $data = $attachment['Data'];
