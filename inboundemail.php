@@ -178,6 +178,8 @@ if ($emails > 0)
 
         // Attempt to recognise contact from the email address
         $from_email = strtolower($decoded[0]['ExtractedAddresses']['from:'][0]['address']);
+        // Work-around for a problem where email addresses with extra characters (such as apostophe) stop the email address being extracted
+        if (empty($from_email) AND !empty($decoded[0]['Headers']['from:'])) $from_email = strtolower($decoded[0]['Headers']['from:']);
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` ";
         $sql .= "WHERE email = '{$from_email}'";
         if ($result = mysql_query($sql))
