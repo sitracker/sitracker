@@ -116,7 +116,7 @@ elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
         {
             echo "Connection error, see debug log for details.\n";
         }
-        exit(1);
+       return FALSE;
     }
 
     $emails = $mailbox->getNumUnreadEmails();
