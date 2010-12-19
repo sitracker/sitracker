@@ -680,7 +680,7 @@ CREATE TABLE `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevel` varchar(32) NOT NULL default '',f
+  `servicelevel` varchar(32) NOT NULL default '',
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -1178,7 +1178,6 @@ CREATE TABLE `{$dbServiceLevels}` (
   `timed` enum('yes','no') NOT NULL default 'no',
   `allow_reopen` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'yes' COMMENT 'Allow incidents to be reopened?',
   PRIMARY KEY  (`tag`,`priority`),
-  KEY `id` (`id`),
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
@@ -1679,7 +1678,7 @@ ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `
 UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM servicelevels WHERE id = servicelevelid);
 ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
 
-ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` ); 
+ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` );
 
 ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
