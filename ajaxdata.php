@@ -58,7 +58,7 @@ switch ($action)
         }
         break;
     case 'servicelevel_timed':
-        $sltag = servicelevel_id2tag(cleanvar($_REQUEST['servicelevel']));
+        $sltag = cleanvar($_REQUEST['servicelevel']);
         if (servicelevel_timed($sltag))
         {
             echo "TRUE";

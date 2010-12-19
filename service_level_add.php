@@ -65,7 +65,7 @@ if (empty($action) OR $action == "showform")
     echo "{$title}</h2>";
     echo "<form name='add_servicelevel' action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-    echo "<p align='center'>{$strTag}: <input type='text' name='tag' value='{$_SESSION['formdata']['add_servicelevel']['tag']}' /></p>";
+    echo "<p align='center'>{$strTag}: <input type='text' name='tag' maxlength='32' value='{$_SESSION['formdata']['add_servicelevel']['tag']}' /></p>";
 
     echo "<table align='center'>";
     echo "<tr><th>{$strTimed}</th><td class='shade1'><input type='checkbox' id='timed' name='timed' value='yes' onchange='enableBillingPeriod();' {$timedchecked} />".help_link('ServiceLevelTimed')."</td></tr>";
@@ -191,17 +191,9 @@ elseif ($action == "edit")
     }
     else
     {
-        // FIXME as temporary measure until we've completely stopped using ID's, fill in the id field
-        // Find highest ID number used, and set the new ID to be one more
-        $sql = "SELECT id FROM `{$dbServiceLevels}` ORDER BY id DESC LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list($newslid) = mysql_fetch_row($result);
-        $newslid++;
-
         // Insert low
-        $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$newslid', '$tag', '1', ";
+        $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
+        $sql .= "'$tag', '1', ";
         $sql .= "'$low_initial_response_mins', ";
         $sql .= "'$low_prob_determ_mins', ";
         $sql .= "'$low_action_plan_mins', ";
@@ -214,8 +206,8 @@ elseif ($action == "edit")
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert medium
-        $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$newslid', '$tag', '2', ";
+        $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
+        $sql .= "'$tag', '2', ";
         $sql .= "'$med_initial_response_mins', ";
         $sql .= "'$med_prob_determ_mins', ";
         $sql .= "'$med_action_plan_mins', ";
@@ -228,8 +220,8 @@ elseif ($action == "edit")
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert high
-        $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$newslid', '$tag', '3', ";
+        $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
+        $sql .= "'$tag', '3', ";
         $sql .= "'$hi_initial_response_mins', ";
         $sql .= "'$hi_prob_determ_mins', ";
         $sql .= "'$hi_action_plan_mins', ";
@@ -242,8 +234,8 @@ elseif ($action == "edit")
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert critical
-        $sql = "INSERT INTO `{$dbServiceLevels}` (id, tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$newslid', '$tag', '4', ";
+        $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
+        $sql .= "'$tag', '4', ";
         $sql .= "'$crit_initial_response_mins', ";
         $sql .= "'$crit_prob_determ_mins', ";
         $sql .= "'$crit_action_plan_mins', ";
@@ -257,8 +249,8 @@ elseif ($action == "edit")
 
         for ($i = 1; $i <= 4; $i++)
         {
-            $sql = "INSERT INTO `{$dbBillingPeriods}` (servicelevelid, priority, tag, customerperiod, engineerperiod, `limit`) ";
-            $sql .= "VALUES ('{$newslid}', '{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
+            $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod, `limit`) ";
+            $sql .= "VALUES ('{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }

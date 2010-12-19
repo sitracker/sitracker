@@ -302,7 +302,7 @@ $CFGVAR['default_i18n']['type'] = 'languageselect';
 $CFGVAR['default_iconset']['title'] = 'Default Icon set';
 $CFGVAR['default_iconset']['help'] = 'The icon set that be given to new user accounts';
 $CFGVAR['default_iconset']['type'] = 'select';
-$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear';
+$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
 $CFGVAR['default_interface_style']['title'] = 'Default Theme';
 $CFGVAR['default_interface_style']['help'] = 'The theme/interface style that be given to new user accounts';
@@ -615,7 +615,7 @@ $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this p
 $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';
-$CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
+$CFGVAR['working_days']['help'] = 'The days which are working days';
 $CFGVAR['working_days']['type'] = 'weekdayselector';
 
 if (function_exists('plugin_do'))

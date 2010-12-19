@@ -108,16 +108,16 @@ INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fr
 
 
 CREATE TABLE `{$dbBillingPeriods}` (
-`servicelevelid` INT( 5 ) NOT NULL ,
 `engineerperiod` INT NOT NULL COMMENT 'In minutes',
 `customerperiod` INT NOT NULL COMMENT 'In minutes',
 `priority` INT( 4 ) NOT NULL,
 `tag` VARCHAR( 10 ) NOT NULL,
+`created` DATETIME NULL,
 `createdby` smallint(6) NULL ,
 `modified` DATETIME NULL ,
 `modifiedby` smallint(6) NULL ,
 `limit` float NOT NULL default 0,
-PRIMARY KEY ( `servicelevelid`,`priority` )
+PRIMARY KEY ( `tag`,`priority` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -222,6 +222,7 @@ CREATE TABLE `{$dbDrafts}` (
 CREATE TABLE `{$dbEmailSig}` (
   `id` int(11) NOT NULL auto_increment,
   `signature` text NOT NULL,
+  `created` DATETIME NULL,
   `createdby` INT NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` INT NULL ,
@@ -303,6 +304,7 @@ CREATE TABLE `{$dbFeedbackForms}` (
   `thanks` text NOT NULL,
   `description` text NOT NULL,
   `multi` enum('yes','no') NOT NULL default 'no',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -321,6 +323,7 @@ CREATE TABLE `{$dbFeedbackQuestions}` (
   `type` varchar(255) NOT NULL default 'text',
   `required` enum('true','false') NOT NULL default 'false',
   `options` text NOT NULL,
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -375,6 +378,7 @@ CREATE TABLE `{$dbFeedbackResults}` (
   `questionid` int(5) NOT NULL default '0',
   `result` varchar(255) NOT NULL default '',
   `resulttext` text,
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -400,6 +404,7 @@ CREATE TABLE `{$dbFiles}` (
   `expiry` DATETIME NULL,
   `fileversion` varchar(50) NULL default '',
   `published` enum('yes','no') NOT NULL default 'no',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -416,6 +421,7 @@ CREATE TABLE `{$dbGroups}` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `imageurl` varchar(255) NOT NULL default '',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -454,7 +460,8 @@ CREATE TABLE `{$dbIncidentProductInfo}` (
   `incidentid` int(11) default NULL,
   `productinfoid` int(11) default NULL,
   `information` text,
-   `createdby` smallint(6) NULL ,
+  `created` DATETIME NULL,
+  `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
   PRIMARY KEY  (`id`)
@@ -473,7 +480,7 @@ CREATE TABLE `{$dbIncidents}` (
   `towner` smallint(6) NOT NULL default '0',
   `contact` int(11) default '0',
   `priority` tinyint(4) default NULL,
-  `servicelevel` varchar(10) default NULL,
+  `servicelevel` varchar(32) default NULL,
   `status` tinyint(4) default NULL,
   `type` enum('Support','Sales','Other','Free') default 'Support',
   `maintenanceid` int(11) NOT NULL default '0',
@@ -490,6 +497,7 @@ CREATE TABLE `{$dbIncidents}` (
   `slanotice` tinyint(1) NOT NULL default '0',
   `locked` tinyint(4) NOT NULL default '0',
   `locktime` int(11) NOT NULL default '0',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -672,7 +680,7 @@ CREATE TABLE `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevelid` int(11) NOT NULL default '1',
+  `servicelevel` varchar(32) NOT NULL default '',
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -1159,8 +1167,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
 
 
 CREATE TABLE `{$dbServiceLevels}` (
-  `id` int(5) NOT NULL default '0',
-  `tag` varchar(10) NOT NULL default '',
+  `tag` varchar(32) NOT NULL default '',
   `priority` int(5) NOT NULL default '0',
   `initial_response_mins` int(11) NOT NULL default '0',
   `prob_determ_mins` int(11) NOT NULL default '0',
@@ -1171,14 +1178,13 @@ CREATE TABLE `{$dbServiceLevels}` (
   `timed` enum('yes','no') NOT NULL default 'no',
   `allow_reopen` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'yes' COMMENT 'Allow incidents to be reopened?',
   PRIMARY KEY  (`tag`,`priority`),
-  KEY `id` (`id`),
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
 
 
 CREATE TABLE `{$dbSetTags}` (
@@ -1574,7 +1580,7 @@ INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example pr
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevelid, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no',0,0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no','standard',0);
 
 ";
 
@@ -1667,7 +1673,21 @@ UPDATE `{$dbPermissions}` SET name = 'strAdjustActivityDuration' WHERE id = 81;
 DELETE FROM `{$dbPermissions}` WHERE id IN (45,46,47);
 DELETE FROM `{$dbRolePermissions}` WHERE permissionid IN (45,46,47);
 DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
- 
+
+ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
+UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM servicelevels WHERE id = servicelevelid);
+ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
+
+ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` );
+
+ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
+
+ALTER TABLE `{$dbServiceLevels}` DROP `id`;
+
+ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
+ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+
 
 ";
 

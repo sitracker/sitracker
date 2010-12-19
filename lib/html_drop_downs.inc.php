@@ -622,7 +622,7 @@ function supported_product_drop_down($name, $contactid, $productid)
             $html .= "selected='selected' ";
         }
         $html .= "value='{$products->productid}'>";
-        $html .= servicelevel_name($products->servicelevelid)." ".$products->productname.", Exp:".date($CONFIG['dateformat_shortdate'], $products->expirydate).", $remainingstring";
+        $html .= get_sla_name($products->servicelevel)." ".$products->productname.", Exp:".date($CONFIG['dateformat_shortdate'], $products->expirydate).", $remainingstring";
         $html .= "</option>\n";
     }
     $html .= "</select>\n";
@@ -754,7 +754,7 @@ function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return
 
     if ($sla !== FALSE)
     {
-        $sql .= "AND servicelevelid = '{$sla}' ";
+        $sql .= "AND servicelevel = '{$sla}' ";
     }
 
     $sql .= "ORDER BY s.name ASC";

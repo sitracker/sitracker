@@ -296,14 +296,13 @@ function priority_drop_down($name, $id, $max=4, $disable = FALSE)
  * @param string $formid. HTML ID of the form containing the controls
  * @return $html string html to output
  * @author Kieran Hogg
- * @TODO populate $id
  */
-function show_next_action($formid)
+function show_next_action($formid, $incidentid)
 {
     global $now, $strAM, $strPM;
     $html = "{$GLOBALS['strPlaceIncidentInWaitingQueue']}<br />";
 
-    $oldtimeofnextaction = incident_timeofnextaction($id); //FIXME $id never populated
+    $oldtimeofnextaction = incident_timeofnextaction($incidentid);
     if ($oldtimeofnextaction < 1)
     {
         $oldtimeofnextaction = $now;

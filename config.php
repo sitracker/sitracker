@@ -170,33 +170,28 @@ else
     echo " {$strSettings}</h2>";
 }
 
-// FIXME see draw_tabs()
-echo "<div class='tabcontainer'>";
-echo "<ul>";
+
+if (empty($seltab)) $seltab = 'application';
+if (empty($selcat)) $selcat = $CFGTAB[$seltab][0];
+
+$tabs = array();
+
 foreach ($CFGTAB AS $tab => $cat)
 {
-    if (empty($seltab)) $seltab = 'application';
-    echo "<li";
-    if ($seltab == $tab) echo " class='active'";
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$tab}&amp;userid={$userid}'>{$TABI18n[$tab]}</a></li>";
+    $tabs[$TABI18n[$tab]] = "{$_SERVER['PHP_SELF']}?tab={$tab}&amp;userid={$userid}";
 }
-echo "</ul>";
-echo "</div>";
+echo draw_tabs($tabs, $seltab);
 
+$smalltabs = array();
 
-echo "<div class='smalltabs'>";
-echo "<ul>";
 foreach ($CFGTAB[$seltab] AS $cat)
 {
-    if (empty($selcat)) $selcat = $CFGTAB[$seltab][0];
-    echo "<li";
-    if ($selcat == $cat) echo " class='active'";
     $catname = $CATI18N[$cat];
     if (empty($catname)) $catname = $cat;
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}&amp;userid={$userid}'>{$catname}</a></li>";
+    $smalltabs[$catname] = "{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}&amp;userid={$userid}";
 }
-echo "</ul>";
-echo "</div>";
+
+echo draw_tabs($smalltabs, $CATI18N[$selcat], 'smalltabs');
 
 echo "<div style='clear: both;'></div>";
 

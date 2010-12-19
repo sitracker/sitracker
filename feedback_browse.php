@@ -36,7 +36,7 @@ switch ($mode)
         echo "<h2>".icon('contract', 32)." {$strFeedback}</h2>";
         $sql = "SELECT * FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $response = mysql_fetch_object($result);
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
@@ -143,7 +143,7 @@ switch ($mode)
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 0)
         {
@@ -161,7 +161,7 @@ switch ($mode)
             $sql .= "WHERE fr.formid = ff.id ";
             if ($completed == 'no') $sql .= "AND completed='no' ";
             else $sql .= "AND completed='yes' ";
-            if (!empty($formid)) $sql .= "AND formid='$formid'";
+            if (!empty($formid)) $sql .= "AND formid='{$formid}'";
 
             if ($order == 'a' OR $order == 'ASC' OR $order == '') $sortorder = "ASC";
             else $sortorder = "DESC";
@@ -169,26 +169,26 @@ switch ($mode)
             switch ($sort)
             {
                 case 'created':
-                    $sql .= " ORDER BY created $sortorder";
+                    $sql .= " ORDER BY fr.created {$sortorder}";
                     break;
                 case 'contactid':
-                    $sql .= " ORDER BY contactid $sortorder";
+                    $sql .= " ORDER BY contactid {$sortorder}";
                     break;
                 case 'incidentid':
-                    $sql .= " ORDER BY incidentid $sortorder";
+                    $sql .= " ORDER BY incidentid {$sortorder}";
                     break;
                 default:
-                    $sql .= " ORDER BY created DESC";
+                    $sql .= " ORDER BY fr.created DESC";
                     break;
             }
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
             $countrows = mysql_num_rows($result);
 
             if (!empty($formid))
             {
-                if ($completed=='no') echo "<h3>{$strFeedbackRequested}: $formid</h3>";
+                if ($completed == 'no') echo "<h3>{$strFeedbackRequested}: $formid</h3>";
                 else echo "<h3>{$strResponsesToFeedbackForm}: $formid</h3>";
                 echo "<p align='center'><a href='feedback_form_edit.php?formid={$formid}'>{$strEdit}</a></p>";
             }
@@ -209,11 +209,11 @@ switch ($mode)
                 $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))
                 {
-                    $respondentarr = explode('-',$resp->respondent);
-                    $responserefarr = explode('-',$resp->responseref);
+                    $respondentarr = explode('-', $resp->respondent);
+                    $responserefarr = explode('-', $resp->responseref);
 
                     $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid);
-                    echo "<tr class='$shade'>";
+                    echo "<tr class='{$shade}'>";
                     echo "<td>".ldate($CONFIG['dateformat_datetime'],mysqlts2date($resp->created))."</td>";
                     echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a></td>";
                     echo "<td><a href=\"javascript:incident_details_window('{$resp->incidentid}','incident{$resp->incidentid}')\">";
@@ -241,8 +241,8 @@ switch ($mode)
                     }
                     echo "</td>";
                     echo "</tr>\n";
-                    if ($shade=='shade1') $shade='shade2';
-                    else $shade='shade1';
+                    if ($shade == 'shade1') $shade = 'shade2';
+                    else $shade = 'shade1';
                 }
                 echo "</table>\n";
                 plugin_do('feedback_browse');

@@ -74,17 +74,16 @@ if ($action == "showform" OR $action == '')
     }
 
     echo "<tr><th>{$strServiceLevel}</th><td>";
-    if ($_SESSION['formdata']['add_contract']['servicelevelid'] != '')
+    if ($_SESSION['formdata']['add_contract']['servicelevel'] != '')
     {
-        $slid = $_SESSION['formdata']['add_contract']['servicelevelid'];
+        $sltag = $_SESSION['formdata']['add_contract']['servicelevel'];
     }
     else
     {
-        $slid = 0;  // Default to first service level
+        $sltag = $CONFIG['default_service_level'];
     }
-    echo servicelevel_drop_down('servicelevelid', $slid, TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevelid'));\"")."</td></tr>\n";
+    echo servicelevel_drop_down('servicelevel', $sltag, TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
     // check the initially selected service level to decide whether to show the extra hiddentimed section
-    $sltag = servicelevel_id2tag($slid);
     $timed = servicelevel_timed($sltag);
 
     echo "<tr><th colspan='2' style='text-align: left;'><br />{$strServicePeriod}</th></tr>\n";
@@ -202,7 +201,6 @@ if ($action == "showform" OR $action == '')
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
     clear_form_data('add_contract');
-
 }
 elseif ($action == "add")
 {
@@ -214,7 +212,7 @@ elseif ($action == "add")
     $licence_type = clean_int($_REQUEST['licence_type']);
     $admincontact = clean_int($_REQUEST['admincontact']);
     $notes = clean_dbstring($_REQUEST['notes']);
-    $servicelevelid = clean_int($_REQUEST['servicelevelid']);
+    $servicelevel = clean_dbstring($_REQUEST['servicelevel']);
     $incidentpoolid = clean_int($_REQUEST['incidentpoolid']);
     $productonly = clean_fixed_list($_REQUEST['productonly'], array('no','yes'));
     $term = clean_fixed_list($_REQUEST['term'], array('no','yes'));
@@ -351,9 +349,9 @@ elseif ($action == "add")
 
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
-        $sql .= "admincontact, servicelevelid, incidentpoolid, incident_quantity, productonly, term, supportedcontacts, allcontactssupported) ";
+        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, productonly, term, supportedcontacts, allcontactssupported) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevelid}', '{$incidentpoolid}', '{$incident_quantity}', '{$productonly}', '{$term}', '{$numcontacts}', '{$allcontacts}')";
+        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$productonly}', '{$term}', '{$numcontacts}', '{$allcontacts}')";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

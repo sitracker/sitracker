@@ -70,16 +70,16 @@ else
     echo "<form action='{$url}' method='post'>";
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strName}</th>";
-    echo "<td><input class='required' name='name' value='{$row->name}' />";
+    echo "<td><input class='required' name='name' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strType}</th>";
-    echo "<td>".array_drop_down($CONFIG['inventory_types'], 'type', $row->type, '', TRUE)."</td></tr>";
+    echo "<td>".array_drop_down($CONFIG['inventory_types'], 'type', '', '', TRUE)."</td></tr>";
 
     if (!intval($siteid))
     {
         echo "<tr><th>{$strSite}</th><td>";
         echo site_drop_down('site', 0, TRUE);
-        echo " <span class='required'>{$strRequired}</td>";
+        echo " <span class='required'>{$strRequired}</span></td></tr>";
         echo "<tr><th>{$strOwner}</th><td>";
         echo contact_site_drop_down('owner', '');
         echo "</td></tr>";
@@ -88,40 +88,28 @@ else
     {
         echo "<tr><th>{$strOwner}</th><td>";
         echo "<input type='hidden' id='site' name='site' value='{$siteid}' />";
-        echo contact_site_drop_down('owner', $row->contactid, $siteid, NULL, FALSE);
+        echo contact_site_drop_down('owner', '', $siteid, NULL, FALSE);
         echo "</td></tr>";
     }
     echo "<tr><th>{$strID} ".help_link('InventoryID')."</th>";
-    echo "<td><input name='identifier' value='{$row->identifier}' /></td></tr>";
+    echo "<td><input name='identifier' /></td></tr>";
     echo "<tr><th>{$strAddress}</th>";
-    echo "<td><input name='address' value='{$row->address}' /></td></tr>";
+    echo "<td><input name='address' /></td></tr>";
     echo "<tr><th>{$strUsername}</th>";
-    echo "<td><input name='username' value='{$row->username}' /></td></tr>";
+    echo "<td><input name='username' /></td></tr>";
     echo "<tr><th>{$strPassword}</th>";
-    echo "<td><input name='password' value='{$row->password}' /></td></tr>";
+    echo "<td><input name='password' /></td></tr>";
 
 
     echo "<tr><th>{$strNotes}</th>";
     echo "<td>";
     echo bbcode_toolbar('inventorynotes');
-    echo "<textarea id='inventorynotes' rows='15' cols='60' name='notes'>{$row->notes}</textarea></td></tr>";
+    echo "<textarea id='inventorynotes' rows='15' cols='60' name='notes'></textarea></td></tr>";
 
     echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
-    echo "<td><input type='radio' name='privacy' value='private' ";
-    if ($row->privacy == 'private')
-    {
-        echo " checked='checked' ";
-        $selected = TRUE;
-    }
-    echo "/>{$strPrivate}<br />";
+    echo "<td><input type='radio' name='privacy' value='private' />{$strPrivate}<br />";
 
-    echo "<input type='radio' name='privacy' value='adminonly'";
-    if ($row->privacy == 'adminonly')
-    {
-        echo " checked='checked' ";
-        $selected = TRUE;
-    }
-    echo "/>";
+    echo "<input type='radio' name='privacy' value='adminonly' />";
     echo "{$strAdminOnly}<br />";
 
     echo "<input type='radio' name='privacy' value='none'";
