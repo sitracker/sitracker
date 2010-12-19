@@ -107,7 +107,7 @@ if (empty($action) OR $action == "showform")
         echo "</fieldset>";
         echo "<p><input name='reset' type='reset' value='{$strReset}' />";
         echo "<input type='hidden' name='action' value='update' />";
-        echo "<input type='hidden' name='role' value='update' />";
+        echo "<input type='hidden' name='role' value='{$role}' />";
         echo "<input type='hidden' name='tab' value='{$seltab}' />";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
@@ -199,7 +199,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     }
     echo "</table>";
     echo "<p><input name='user' type='hidden' value='{$user}' />";
-    echo "<input name='role' type='hidden' value='{$role}' />";
+    echo "<input name='role' type='hidden' value='' />";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
 }
@@ -215,6 +215,7 @@ elseif ($action == "update")
         while ($rolerow = mysql_fetch_object($result))
         {
             // First pass, set all access to false
+            $sql = "UPDATE `{$dbRolePermissions}`, `{$dbPermissions}` SET granted='false' WHERE `{$dbPermissions}`.`id` = `{$dbRolePermissions}`.`permissionid` AND `categoryid` = {$seltab} AND roleid={$rolerow->id}";
             $sql = "UPDATE `{$dbRolePermissions}` SET granted='false' WHERE roleid='{$rolerow->id}'";
             $aresult = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
@@ -227,8 +228,7 @@ elseif ($action == "update")
                 reset ($_POST["{$rolerow->id}perm"]);
                 while ($x = each($_POST["{$rolerow->id}perm"]))
                 {
-                    $sql = "UPDATE `{$dbRolePermissions}` SET granted='true' WHERE roleid='{$rolerow->id}' AND permissionid='{$x[1]}' ";
-                    // echo "Updating permission ".$x[1]."<br />";
+                    $sql = "UPDATE `{$dbRolePermissions}` SET granted='true' WHERE roleid='{$rolerow->id}' AND permissionid='".clean_int($x[1])."' ";
                     // flush();
                     $uresult = mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
@@ -236,11 +236,11 @@ elseif ($action == "update")
                     {
                         // Update failed, this could be because of a missing userpemissions record so try and create one
                         // echo "Update of permission ".$x[1]."failed, no problem, will try insert instead.<br />";
-                        $isql = "INSERT INTO `{$dbRolePermissions}` (roleid, permissionid, granted) ";
-                        $isql .= "VALUES ('{$rolerow->id}', '".$x[1]."', 'true')";
+                        $isql = "REPLACE INTO `{$dbRolePermissions}` (roleid, permissionid, granted) ";
+                        $isql .= "VALUES ('{$rolerow->id}', '".clean_int($x[1])."', 'true')";
                         $iresult = mysql_query($isql);
                         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                        if (mysql_affected_rows() < 1) echo user_alert("{$strUpdateUserPermission} ".$x[1]." {$strFailedOnPass2}", E_USER_WARNING);
+                        if (mysql_affected_rows() < 1) echo user_alert("{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}", E_USER_WARNING);
                     }
                 }
             }
