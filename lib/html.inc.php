@@ -2186,4 +2186,39 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
     return $html;
 }
 
+
+/**
+ * Creates an incident popup window hyperlink
+ * @author Ivan Lucas
+ * @param int $incidentid. ID of the incident
+ * @param string $linktext. Text to use as the hyperlink anchor
+ * @param string $tooltip. Tooltip text
+ * @return string the hash
+*/
+function html_incident_popup_link($incidentid, $linktext, $tooltip = NULL)
+{
+    if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
+    {
+        $windowname = "incident{$incidentid}";
+    }
+    else
+    {
+        $windowname = "sit_popup";
+    }
+    $html = "<a href=\"javascript:incident_details_window('{$incidentid}','{$windowname}')\"";
+    if (!empty($tooltip))
+    {
+        $html .= "class='info'";
+    }
+    $html .= ">{$linktext}";
+    if (!empty($tooltip))
+    {
+        $html .= "<span>{$tooltip}</span>";
+    }
+    $html .= "</a>";
+
+    return $html;
+}
+
+
 ?>

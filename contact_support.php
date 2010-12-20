@@ -93,9 +93,8 @@ while ($row=mysql_fetch_object($result))
     echo "<td>".$row->incidentid."</td>";
     // title
     echo "<td>";
-    echo "<a href=\"javascript:incident_details_window('".$row->incidentid."','incident".$row->incidentid."')\">";
-    if (trim($row->title) !='') echo $row->title; else echo $strUntitled;;
-    echo "</a>";
+    if (trim($row->title) !='') $linktext = $row->title; else $linktext = $strUntitled;;
+    echo html_incident_popup_link($row->incidentid, $linktext);
     echo "</td>";
     if ($mode=='site')
     {
@@ -108,7 +107,7 @@ while ($row=mysql_fetch_object($result))
         }
     }
     echo "<td>".product_name($row->product)."</td>";
-    if ($row->status==2) echo "<td>Closed, ".closingstatus_name($row->closingstatus)."</td>";
+    if ($row->status==2) echo "<td>{$strClosed}, ".closingstatus_name($row->closingstatus)."</td>";
     else echo "<td>".incidentstatus_name($row->status)."</td>";
     echo "<td>".user_realname($row->owner,TRUE)."</td>";
     echo "<td>".ldate($CONFIG['dateformat_date'],$row->opened)."</td>";

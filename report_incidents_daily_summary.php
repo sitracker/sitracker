@@ -140,7 +140,8 @@ else
                             if ($a['type'] == 'opened') $right .= $strOpened;
                             else $right .= $strClosed;
                             $right .= "</td><td>";
-                            $right .= "<a href='javascript:incident_details_window({$a['id']})' class='direct'>".$a['id']."</td>";
+                            $right .= html_incident_popup_link($a['id'], $a['id']);
+                            $right .= "</td>";
                             $right .= "<td>".$a['title']."</a></td><td>".user_realname($a['owner'])."</td></tr>";
 
                             if ($a['type'] == 'opened')

@@ -371,7 +371,7 @@ else
                 while ($incident = mysql_fetch_object($result))
                 {
                     echo "<tr class='{$shade}'>";
-                    echo "<td><a href=\"javascript:incident_details_window('{$incident->id}','incident{$incident->id}');\">".sprintf($strIncidentNum, $incident->id)."</a></td>";
+                    echo "<td>".html_incident_popup_link($incident->id, sprintf($strIncidentNum, $incident->id))."</td>";
                     echo "<td>".contact_realname($incident->contact)."</td><td>".contact_site($incident->contact)."</td>";
                     echo "<td>{$incident->title}</td>";
                     echo "</tr>\n";

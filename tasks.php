@@ -134,7 +134,7 @@ elseif (!empty($siteid))
             $sql .= "AND linkcolref={$obj->id} ";
             $sql .= "AND direction='left'";
             $resultLinks = mysql_query($sql);
-    
+
             //get list of tasks
             while ($tasks = mysql_fetch_object($resultLinks))
             {
@@ -143,13 +143,13 @@ elseif (!empty($siteid))
                 //else $orSQL .= " OR ";
                 //$orSQL .= "id={$tasks->origcolref} ";
                 $taskIDs[] = $tasks->origcolref;
-            }   
+            }
         }
     }
 
     if (!empty($taskIDs)) $sqlTask .= "id IN (".implode(',', $taskIDs).")";
     else $sqlTasks = "1=0";
-    
+
     $result = mysql_query($sqlTask);
 
     $show = 'incidents';
@@ -395,10 +395,7 @@ if (mysql_num_rows($result) >=1 )
             if ($obj = mysql_fetch_object($resultIncident))
             {
                 $incidentidL = $obj->linkcolref;
-                echo "<a href=\"javascript:incident_details_window('{$obj->linkcolref}'
-                      ,'incident{$obj->linkcolref}')\" class='info'>";
-                echo $obj->linkcolref;
-                echo "</a>";
+                echo html_incident_popup_link($obj->linkcolref, $obj->linkcolref);
                 $incidentTitle = $obj->title;
             }
             echo "</td>";

@@ -402,7 +402,7 @@ function give_overview()
 
             while ($irow = mysql_fetch_object($iresult))
             {
-                $string .= "<small><a href=\"javascript:incident_details_window('{$irow->id}', 'incident{$irow->id}')\"  title='{$irow->title}'>[{$irow->id}]</a></small> ";
+                $string .= "<small>".html_incident_popup_link($irow->id, "[{$irow->id}]")."</small> ";
             }
 
             $string .= "</td></tr>";
@@ -444,7 +444,7 @@ function give_overview()
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             while ($irow = mysql_fetch_object($iresult))
             {
-                $string .= "<tr><th><a href=\"javascript:incident_details_window('{$irow->id}', 'incident{$irow->id}')\" title='[{$irow->id}] - {$irow->title}'>{$irow->id}</a></th>";
+                $string .= "<tr><th>".html_incident_popup_link($irow->id, "[{$irow->id}]", $irow->title)."</th>";
                 $string .= "<td class='shade2' align='left'>{$irow->title}</td>";
                 $string .= "<td class='shade2' align='left'>{$row->realname}</td>";
                 $string .= "<td class='shade2'>{$GLOBALS[$irow->name]}</td></tr>\n";

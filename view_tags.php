@@ -83,8 +83,7 @@ else
                     if (mysql_num_rows($resultinc) > 0)
                     {
                         $objinc = mysql_fetch_object($resultinc);
-                        echo "<th>".icon('support', 16)." {$strIncident}</th><td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\">";
-                        echo "{$obj->id}: {$objinc->title}</a></td>";
+                        echo "<th>".icon('support', 16)." {$strIncident}</th><td>".html_incident_popup_link($obj->id, "{$obj->id}: {$objinc->title}")."</td>";
                     }
                     break;
                 case TAG_SITE: //site

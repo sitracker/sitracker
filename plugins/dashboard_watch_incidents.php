@@ -208,15 +208,16 @@ function dashboard_watch_incidents_display($dashletid)
                     {
                         $html .= "<tr class='$shade'>";
                         $html .= "<td>{$incident->id}</td>";
-                        $html .= "<td><a href='javascript:incident_details_window({$incident->id}) '  class='info'>".$incident->title;
-                        $html .= "<span><strong>{$GLOBALS['strCustomer']}:</strong> ".sprintf($GLOBALS['strXofX'], "{$incident->forenames} {$incident->surname}",site_name($incident->siteid));
+                        $html .= "<td>";
+                        $tooltip = "<strong>{$GLOBALS['strCustomer']}:</strong> ".sprintf($GLOBALS['strXofX'], "{$incident->forenames} {$incident->surname}",site_name($incident->siteid));
                         list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incident->id);
                         $update_body = parse_updatebody($update_body);
                         if (!empty($update_body) AND $update_body!='...')
                         {
-                            $html .= "<br />{$update_body}";
+                            $tooltip .= "<br />{$update_body}";
                         }
-                        $html .= "</span></a></td>";
+                        $html .= html_incident_popup_link($incident->id, $incident->title, $tooltip);
+                        $html .= "</td>";
                         $html .= "<td>".incidentstatus_name($incident->status)."</td>";
                         $html .= "</tr>\n";
                         if ($shade=='shade1') $shade='shade2';
@@ -401,7 +402,15 @@ function dashboard_watch_incidents_edit($dashletid)
                                 $iresult = mysql_query($sql);
                                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                                 $iobj = mysql_fetch_object($iresult);
-                                $name = "<a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>[{$obj->id}] {$iobj->title}</a>";
+                                if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
+                                {
+                                    $windowname = "incident{$obj->id}";
+                                }
+                                else
+                                {
+                                    $windowname = "sit_popup";
+                                }
+                                $name = html_incident_popup_link($obj->id, "[{$obj->id}] {$iobj->title}");
                                 break;
                         }
 

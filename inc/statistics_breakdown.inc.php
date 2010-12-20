@@ -51,8 +51,8 @@ if (mysql_num_rows($result) > 0)
     while ($row = mysql_fetch_array($result))
     {
         echo "<tr>";
-        echo "<td><a href=\"javascript:incident_details_window('{$row['id']}','incident{$row['id']}')\" class='info'>{$row['id']}</a></td>";
-        echo "<td><a href=\"javascript:incident_details_window('{$row['id']}','incident{$row['id']}')\" class='info'>{$row['title']}</a></td>";
+        echo "<td>".html_incident_popup_link($row['id'], $row['id'])."</td>";
+        echo "<td>".html_incident_popup_link($row['id'], $row['title'])."</td>";
         echo "<td>".date($CONFIG['dateformat_datetime'],$row['opened'])."</td>";
         if ($row['status'] != 2)
         {
