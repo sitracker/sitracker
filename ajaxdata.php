@@ -108,7 +108,7 @@ switch ($action)
     case 'dashboard_display':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
         $dashboard = cleanvar($_REQUEST['dashboard']);
-        $dashletid = 'win'.clean_int($_REQUEST['did']);
+        $dashletid = 'win'.cleanvar($_REQUEST['did']);
         // FIXME need some sanitation here
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_display";
@@ -119,7 +119,7 @@ switch ($action)
         require (APPLICATION_LIBPATH . 'auth.inc.php');
 
         $dashboard = cleanvar($_REQUEST['dashboard']);
-        $dashletid = 'win'.clean_int($_REQUEST['did']);
+        $dashletid = 'win'.cleanvar($_REQUEST['did']);
         // FIXME need some sanitation here
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_edit";
