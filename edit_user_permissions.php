@@ -94,7 +94,7 @@ if (empty($action) OR $action == "showform")
                 $rpresult = mysql_query($rpsql);
                 $rp = mysql_fetch_object($rpresult);
                 echo "<td style='text-align:center;'><input name='{$rolerow->id}perm[]' type='checkbox' value='{$perm->id}' ";
-                if ($rp->granted=='true') echo " checked='checked'";
+                if ($rp->granted == 'true') echo " checked='checked'";
                 echo " /></td>";
             }
             echo "</tr>\n";
