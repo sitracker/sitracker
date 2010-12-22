@@ -29,7 +29,7 @@ echo "<p align='center'><a href='service_level_add.php'>{$strAddServiceLevel}</a
 
 $tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag";
 $tresult = mysql_query($tsql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($tresult) >= 1)
 {
     echo "<table align='center'>";
@@ -38,7 +38,7 @@ if (mysql_num_rows($tresult) >= 1)
         echo "<thead><tr><th colspan='9'>{$tag->tag}</th></tr></thead>";
         $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag->tag}' ORDER BY priority";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         echo "<tr><th colspan='2'>{$strPriority}</th><th>{$strInitialResponse}</th>";
         echo "<th>{$strProblemDefinition}</th><th>{$strActionPlan}</th><th>{$strResolutionReprioritisation}</th>";
@@ -52,7 +52,7 @@ if (mysql_num_rows($tresult) >= 1)
             echo "<td>".format_workday_minutes($sla->prob_determ_mins)."</td>";
             echo "<td>".format_workday_minutes($sla->action_plan_mins)."</td>";
             // 480 mins in a working day
-            echo "<td>".format_workday_minutes($sla->resolution_days*480)."</td>";
+            echo "<td>".format_workday_minutes($sla->resolution_days * 480)."</td>";
             echo "<td>".sprintf($strXDays, $sla->review_days)."</td>";
             if ($sla->timed == 'yes')
             {

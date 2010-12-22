@@ -116,7 +116,7 @@ elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
         {
             echo "Connection error, see debug log for details.\n";
         }
-        exit(1);
+       return FALSE;
     }
 
     $emails = $mailbox->getNumUnreadEmails();
@@ -178,6 +178,8 @@ if ($emails > 0)
 
         // Attempt to recognise contact from the email address
         $from_email = strtolower($decoded[0]['ExtractedAddresses']['from:'][0]['address']);
+        // Work-around for a problem where email addresses with extra characters (such as apostophe) stop the email address being extracted
+        if (empty($from_email) AND !empty($decoded[0]['Headers']['from:'])) $from_email = strtolower($decoded[0]['Headers']['from:']);
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` ";
         $sql .= "WHERE email = '{$from_email}'";
         if ($result = mysql_query($sql))
@@ -322,6 +324,11 @@ if ($emails > 0)
             {
                 // Treat related content as attachment
                 $results['Attachments'] = $results['Related'];
+            }
+            elseif(is_array($results['Attachments']) AND is_array($results['Related']))
+            {
+                // Treat related content as attachment
+                $results['Attachments'] = array_merge($results['Attachments'], $results['Related']);
             }
             foreach ($results['Attachments'] as $attachment)
             {

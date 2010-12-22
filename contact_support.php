@@ -28,22 +28,22 @@ $mode = $_REQUEST['mode'];
 if (!empty($_REQUEST['start'])) $start = strtotime($_REQUEST['start']);
 else $start=0;
 if (!empty($_REQUEST['end'])) $end = strtotime($_REQUEST['end']);
-else $end=0;
+else $end = 0;
 $status = $_REQUEST['status'];
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if ($mode=='site') echo "<h2>".site_name($id)."</h2>";
+if ($mode == 'site') echo "<h2>".site_name($id)."</h2>";
 else echo "<h2>".contact_realname($id)."</h2>";
 
-if ($mode=='site')
+if ($mode == 'site')
 {
     $sql = "SELECT *, (closed - opened) AS duration_closed, i.id AS incidentid ";
     $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
     $sql .= "WHERE i.contact = c.id ";
     if (!empty($id) AND $id != 'all') $sql .= "AND c.siteid = '$id' ";
-    if ($status=='open') $sql .= "AND i.status != 2 ";
-    elseif ($status=='closed') $sql .= "AND i.status = 2 ";
+    if ($status == 'open') $sql .= "AND i.status != 2 ";
+    elseif ($status == 'closed') $sql .= "AND i.status = 2 ";
     if ($start > 0) $sql .= "AND opened >= $start ";
     if ($end > 0) $sql .= "AND opened <= $end ";
     $sql .= "ORDER BY opened DESC";
@@ -53,8 +53,8 @@ else
     $sql = "SELECT *, (closed - opened) AS duration_closed, i.id AS incidentid ";
     $sql .= "FROM `{$dbIncidents}` AS i WHERE ";
     $sql .= "contact='$id' ";
-    if ($status=='open') $sql .= "AND i.status!=2 ";
-    elseif ($status=='closed') $sql .= "AND i.status=2 ";
+    if ($status == 'open') $sql .= "AND i.status!=2 ";
+    elseif ($status == 'closed') $sql .= "AND i.status=2 ";
     $sql .= "ORDER BY opened DESC";
 }
 $result = mysql_query($sql);
@@ -66,7 +66,7 @@ echo "<table align='center'>";
 echo "<tr>";
 echo "<th>{$strIncidentID}</th>";
 echo "<th>{$strTitle}</th>";
-if ($mode=='site') echo "<th>{$strContact}</th>";
+if ($mode == 'site') echo "<th>{$strContact}</th>";
 echo "<th>{$strProduct}</th>";
 echo "<th>{$strStatus}</th>";
 echo "<th>{$strEngineer}</th>";
@@ -83,32 +83,33 @@ $countextincidents = 0;
 $countslaexceeded = 0;
 $productlist = array();
 $softwarelist = array();
-if ($mode=='site') $contactlist = array();
-while ($row=mysql_fetch_object($result))
+if ($mode == 'site') $contactlist = array();
+while ($row = mysql_fetch_object($result))
 {
     $targetmet = TRUE;
-    if ($row->status==2) $shade='expired';
+    if ($row->status == 2) $shade = 'expired';
     else $shade = 'shade1';
     echo "<tr class='$shade'>";
     echo "<td>".$row->incidentid."</td>";
     // title
     echo "<td>";
     echo "<a href=\"javascript:incident_details_window('".$row->incidentid."','incident".$row->incidentid."')\">";
-    if (trim($row->title) !='') echo $row->title; else echo $strUntitled;;
+    if (trim($row->title) !='') echo $row->title;
+    else echo $strUntitled;;
     echo "</a>";
     echo "</td>";
-    if ($mode=='site')
+    if ($mode == 'site')
     {
         $contactrealname = contact_realname($row->contact);
         echo "<td>{$contactrealname}</td>";
-        if ($mode=='site')
+        if ($mode == 'site')
         {
             if (!array_key_exists($contactrealname, $contactlist)) $contactlist[$contactrealname] = 1;
             else { $contactlist[$contactrealname]++; }
         }
     }
     echo "<td>".product_name($row->product)."</td>";
-    if ($row->status==2) echo "<td>Closed, ".closingstatus_name($row->closingstatus)."</td>";
+    if ($row->status == 2) echo "<td>Closed, ".closingstatus_name($row->closingstatus)."</td>";
     else echo "<td>".incidentstatus_name($row->status)."</td>";
     echo "<td>".user_realname($row->owner,TRUE)."</td>";
     echo "<td>".ldate($CONFIG['dateformat_date'],$row->opened)."</td>";
@@ -126,9 +127,21 @@ while ($row=mysql_fetch_object($result))
         {
             if ($history['targetmet'] == FALSE) $targetmet = FALSE;
         }
-        if ($targetmet == TRUE) echo $strMet;
-        else { $countslaexceeded++; echo $strExceeded; }
-    } else echo $strNoSLA;
+
+        if ($targetmet == TRUE)
+        {
+            echo $strMet;
+        }
+        else
+        {
+            $countslaexceeded++;
+            echo $strExceeded;
+        }
+    }
+    else
+    {
+        echo $strNoSLA;
+    }
     echo "</td>";
 
     if (!array_key_exists($row->product, $productlist)) $productlist[$row->product] = 1;
@@ -145,18 +158,18 @@ while ($row=mysql_fetch_object($result))
     echo "</tr>\n";
 }
 echo "</table>\n";
-if (mysql_num_rows($result)>=1 && $countclosed >= 1)
+if (mysql_num_rows($result) >= 1 && $countclosed >= 1)
 {
     echo "<p align='center'>{$strAverageIncidentDuration}: ".format_seconds($totalduration/$countclosed)."</p>";
 }
 echo "<p class='contextmenu' align='center'>{$strDisplay}: ";
-echo "<a href=\"{$_SERVER['PHP_SELF']}?id=$id&amp;mode=$mode&amp;status=open\">{$strShowOpenIncidents}</a> | ";
-echo "<a href=\"{$_SERVER['PHP_SELF']}?id=$id&amp;mode=$mode&amp;status=closed\">{$strShowClosedIncidents}</a> | ";
-echo "<a href=\"{$_SERVER['PHP_SELF']}?id=$id&amp;mode=$mode\">{$strAll}</a>";
+echo "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=open\">{$strShowOpenIncidents}</a> | ";
+echo "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=closed\">{$strShowClosedIncidents}</a> | ";
+echo "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}\">{$strAll}</a>";
 echo "</p>";
 
 $countproducts = array_sum($productlist);
-if ($mode=='site') $countcontacts = array_sum($contactlist);
+if ($mode == 'site') $countcontacts = array_sum($contactlist);
 
 if ($countproducts >= 1 OR $contactcontacts >= 1)
 {
@@ -172,7 +185,7 @@ if ($countproducts >= 1 OR $contactcontacts >= 1)
         $softwarelegends[] = urlencode(software_name($software)." ({$softwarepercentage}%)");
     }
 
-    if ($mode=='site')
+    if ($mode == 'site')
     {
         foreach ($contactlist AS $contact => $quantity)
         {
@@ -190,7 +203,7 @@ if ($countproducts >= 1 OR $contactcontacts >= 1)
         $title = urlencode("{$strIncidents}: {$strByProduct}");
         //$data="1,2,3";
         echo "<div style='text-align:center;'>";
-        echo "<img src='chart.php?type=pie&data=$data&legends=$legends&title=$title' />";
+        echo "<img src='chart.php?type=pie&data={$data}&legends={$legends}&title={$title}' />";
         echo "</div>";
 
         // Incidents by skill chart
@@ -200,11 +213,11 @@ if ($countproducts >= 1 OR $contactcontacts >= 1)
         $title = urlencode("{$strIncidents}: {$strBySkill}");
         //$data="1,2,3";
         echo "<div style='text-align:center;'>";
-        echo "<img src='chart.php?type=pie&data=$data&legends=$legends&title=$title' />";
+        echo "<img src='chart.php?type=pie&data={$data}&legends={$legends}&title={$title}' />";
         echo "</div>";
 
 
-        if ($mode=='site')
+        if ($mode == 'site')
         {
             // Incidents by contacts chart
             $data = implode('|',$contactlist);
@@ -226,19 +239,19 @@ if ($countproducts >= 1 OR $contactcontacts >= 1)
         $legends = "{$strNotEscalated} ({$internalpercent}%)|{$strEscalated} ({$externalpercent}%)";
         $title = urlencode("{$strIncidents}: {$strByEscalation}");
         echo "<div style='text-align:center;'>";
-        echo "<img src='chart.php?type=pie&data=$data&legends=$legends&title=$title' />";
+        echo "<img src='chart.php?type=pie&data={$data}&legends={$legends}&title={$title}' />";
         echo "</div>";
 
         // SLA chart
         $countslamet = ($countincidents - $countslaexceeded);
-        $metpercent = number_format(($countslamet / $countincidents * 100),1);
-        $exceededpercent = number_format(($countslaexceeded / $countincidents * 100),1);
+        $metpercent = number_format(($countslamet / $countincidents * 100), 1);
+        $exceededpercent = number_format(($countslaexceeded / $countincidents * 100), 1);
         $data = "$countslamet|$countslaexceeded";
         $keys = "a|b";
         $legends = "{$strMet} ({$metpercent}%)|{$strExceeded} ({$exceededpercent}%)";
         $title = urlencode($strSLAPerformance);
         echo "<div style='text-align:center;'>";
-        echo "<img src='chart.php?type=pie&data=$data&legends=$legends&title=$title' />";
+        echo "<img src='chart.php?type=pie&data={$data}&legends={$legends}&title={$title}' />";
         echo "</div>";
     }
 }

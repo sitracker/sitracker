@@ -77,7 +77,7 @@ if (empty($save))
             echo "<td><strong>{$software->id}</strong>: {$software->name}</td>";
             if ($software->backupid == 0)
             {
-                $software->backupid=$default;
+                $software->backupid = $default;
             }
 
             echo "<td>".software_backup_dropdown('backup[]', $user, $software->id, $software->backupid)."</td>";
@@ -85,12 +85,12 @@ if (empty($save))
             if ($class == 'shade2') $class = "shade1";
             else $class = "shade2";
             flush();
-            $softarr[]=$software->id;
+            $softarr[] = $software->id;
         }
         $softlist = implode(',',$softarr);
         echo "</table>\n";
-        echo "<input type='hidden' name='user' value='$user' />";
-        echo "<input type='hidden' name='softlist' value='$softlist' />";
+        echo "<input type='hidden' name='user' value='{$user}' />";
+        echo "<input type='hidden' name='softlist' value='{$softlist}' />";
         echo "<input type='hidden' name='save' value='vqvbgf' />";
         echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
         echo "</form>";
@@ -112,7 +112,7 @@ else
         if ($backupid > 0)
         {
             $softlist[$key] = clean_int($softlist[$key]);
-            $sql = "UPDATE `{$dbUserSoftware}` SET backupid='$backupid' WHERE userid='$user' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
+            $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
         }
         // echo "{$softlist[$key]} -- $key -- $value<br />";
         //echo "$sql <br />";

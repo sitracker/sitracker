@@ -46,7 +46,7 @@ switch ($mode)
         $sql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' ";
         $sql .= "WHERE incidentid='{$incidentid}' AND originalowner='{$originalowner}' LIMIT 1";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         header("Location: holding_queue.php");
         break;
 }

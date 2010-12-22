@@ -30,24 +30,12 @@ $sql .= "WHERE u.roleid = r.id ";
 // sort users by realname by default
 if (!isset($sort) || $sort == "realname") $sql .= " ORDER BY IF(status> 0,1,0) DESC, realname ASC";
 else if ($sort == "username") $sql .= " ORDER BY IF(status> 0,1,0) DESC, username ASC";
-
 else if ($sort == "role") $sql .= " ORDER BY roleid ASC";
-// sort incidents by job title
 else if ($sort == "jobtitle") $sql .= " ORDER BY title ASC";
-
-// sort incidents by email
 else if ($sort == "email") $sql .= " ORDER BY email ASC";
-
-// sort incidents by phone
 else if ($sort == "phone") $sql .= " ORDER BY phone ASC";
-
-// sort incidents by fax
 else if ($sort == "fax") $sql .= " ORDER BY fax ASC";
-
-// sort incidents by status
 else if ($sort == "status")  $sql .= " ORDER BY status ASC";
-
-// sort incidents by accepting calls
 else if ($sort == "accepting") $sql .= " ORDER BY accepting ASC";
 
 $result = mysql_query($sql);

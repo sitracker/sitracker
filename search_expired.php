@@ -118,15 +118,14 @@ else
                 printf ($pagetitle, $expired);
 
                 echo "<h3>{$strSearchYielded} ".mysql_num_rows($result);
-                    if (mysql_num_rows($result) == 1)
-                    {
-                        echo " {$strResult}</h3>";
-                    }
-                    else
-                    {
-                        echo " {$strResults}</h3>";
-                    }
-
+                if (mysql_num_rows($result) == 1)
+                {
+                    echo " {$strResult}</h3>";
+                }
+                else
+                {
+                    echo " {$strResults}</h3>";
+                }
 
                 echo "<table align='center'>
                 <tr>

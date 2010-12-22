@@ -78,8 +78,8 @@ if (mysql_num_rows($epresult) >= 1)
 $selectsql = "SELECT i.id, escalationpath, externalid, title, i.owner, towner, priority, status, closingstatus, siteid, s.name AS site, c.id AS contactid, forenames, surname, ";
 $selectsql .= "IF(c.phone IS NULL, s.telephone, c.phone) AS phone, IF(c.email IS NULL, s.email, c.email) AS email, i.maintenanceid, ";
 $selectsql .= "servicelevel, softwareid, lastupdated, timeofnextaction, ";
-$selectsql .= "(timeofnextaction - $now) AS timetonextaction, opened, ($now - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
-$selectsql .= "($now - lastupdated) AS timesincelastupdate ";
+$selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
+$selectsql .= "({$now} - lastupdated) AS timesincelastupdate ";
 $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS pr, `{$dbSites}` AS s ";
 
 echo "<div id='incidentqueues'>";
@@ -103,7 +103,7 @@ switch ($type)
         $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id AND c.siteid = s.id ";
         $sql .= "AND i.owner > 0 ";  // We always need to have an owner which is not sit
         if ($user != 'all') $sql .= "AND (i.owner='{$user}' OR i.towner='{$user}') ";
-        if (!empty($softwareid)) $sql .= "AND softwareid='$softwareid' ";
+        if (!empty($softwareid)) $sql .= "AND softwareid='{$softwareid}' ";
 
         if (!empty($maintexclude)) $sql .= "AND i.maintenanceid != '{$maintexclude}' ";
 
@@ -125,10 +125,10 @@ switch ($type)
                 $sql .= "AND (status!='2') ";  // not closed
                 // the "1=2" obviously false else expression is to prevent records from showing unless the IF condition is true
                 $sql .= "AND ((timeofnextaction > 0 AND timeofnextaction < {$now}) OR ";
-                if ($user != 'all') $sql .= "(status='5' AND towner=$user) OR ";
+                if ($user != 'all') $sql .= "(status='5' AND towner={$user}) OR ";
                 $sql .= "(IF ((status >= 5 AND status <=8), ({$now} - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
                 $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
-                $sql .= ") AND timeofnextaction < $now ) ";
+                $sql .= ") AND timeofnextaction < {$now} ) ";
                 break;
             case 2: // Waiting
                 echo "<span class='waitingqueue'>{$strWaiting}</span>";

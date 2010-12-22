@@ -126,28 +126,28 @@ else
             $sql .= "WHERE u.incidentid = i.id AND i.contact = c.id AND bodytext LIKE ('%$search_details%') ";
         }
 
-        if ($search_title != '') $sql.= "AND title LIKE ('%$search_title%') ";
-        if ($search_id != '') $sql.= "AND i.id LIKE ('%$search_id%') ";
-        if ($search_externalid !='') $sql.= "AND externalid LIKE ('%$search_externalid%') ";
-        if ($search_contact != '') $sql.= "AND (c.surname LIKE '%$search_contact%' OR forenames LIKE '%$search_contact%') ";
+        if ($search_title != '') $sql.= "AND title LIKE ('%{$search_title}%') ";
+        if ($search_id != '') $sql.= "AND i.id LIKE ('%{$search_id}%') ";
+        if ($search_externalid !='') $sql.= "AND externalid LIKE ('%{$search_externalid}%') ";
+        if ($search_contact != '') $sql.= "AND (c.surname LIKE '%{$search_contact}%' OR forenames LIKE '%{$search_contact}%') ";
         if ($search_servicelevel != '') $sql.= "AND (i.servicelevel = '{$search_servicelevel}') ";
         if ($search_range == 'Closed') $sql.= "AND closed != '0' ";
         if ($search_range == 'Open') $sql.= "AND closed = '0' ";
-        if ($search_date == 'Recent180') $sql.= "AND lastupdated >= '$recent_sixmonth' ";
-        if ($search_date == 'Recent90') $sql.= "AND lastupdated >= '$recent_threemonth' ";
-        if ($search_date == 'Recent30') $sql.= "AND lastupdated >= '$recent_month' ";
-        if ($search_date == 'Recent14') $sql.= "AND lastupdated >= '$recent_fortnight' ";
-        if ($search_date == 'Recent7') $sql.= "AND lastupdated >= '$recent_week' ";
-        if ($search_date == 'Recent1') $sql.= "AND lastupdated >= '$recent_today' ";
-        if ($search_date == 'RecentHour') $sql.= "AND lastupdated >= '$recent_hour' ";
-        if ($search_date == 'Old180') $sql.= "AND lastupdated <= '$recent_sixmonth' ";
-        if ($search_date == 'Old90') $sql.= "AND lastupdated <= '$recent_threemonth' ";
-        if ($search_date == 'Old30') $sql.= "AND lastupdated <= '$recent_month' ";
-        if ($search_date == 'Old7') $sql.= "AND lastupdated <= '$recent_week' ";
-        if ($search_date == 'OldHour') $sql.= "AND lastupdated <= '$recent_hour' ";
-        if ($search_user != 0) $sql.= "AND owner = '$search_user' ";
-        if ($search_priority != 0) $sql.= "AND priority = '$search_priority' ";
-        if ($search_product != 0) $sql.="AND product = '$search_product' ";
+        if ($search_date == 'Recent180}') $sql.= "AND lastupdated >= '{$recent_sixmonth}' ";
+        if ($search_date == 'Recent90}') $sql.= "AND lastupdated >= '{$recent_threemonth}' ";
+        if ($search_date == 'Recent30}') $sql.= "AND lastupdated >= '{$recent_month}' ";
+        if ($search_date == 'Recent14}') $sql.= "AND lastupdated >= '{$recent_fortnight}' ";
+        if ($search_date == 'Recent7}') $sql.= "AND lastupdated >= '{$recent_week}' ";
+        if ($search_date == 'Recent1}') $sql.= "AND lastupdated >= '{$recent_today}' ";
+        if ($search_date == 'RecentHour}') $sql.= "AND lastupdated >= '{$recent_hour}' ";
+        if ($search_date == 'Old180}') $sql.= "AND lastupdated <= '{$recent_sixmonth}' ";
+        if ($search_date == 'Old90}') $sql.= "AND lastupdated <= '{$recent_threemonth}' ";
+        if ($search_date == 'Old30}') $sql.= "AND lastupdated <= '{$recent_month}' ";
+        if ($search_date == 'Old7}') $sql.= "AND lastupdated <= '{$recent_week}' ";
+        if ($search_date == 'OldHour}') $sql.= "AND lastupdated <= '{$recent_hour}' ";
+        if ($search_user != 0) $sql.= "AND owner = '{$search_user}' ";
+        if ($search_priority != 0) $sql.= "AND priority = '{$search_priority}' ";
+        if ($search_product != 0) $sql.="AND product = '{$search_product}' ";
 
         // Sorting
         if ($sort_results == 'DateASC') $sql.="ORDER BY lastupdated ASC ";
@@ -161,7 +161,7 @@ else
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        $countresults=  mysql_num_rows($result);
+        $countresults = mysql_num_rows($result);
         if ($countresults == 0)
         {
             echo "<h2>{$strNoResults}</h2>\n";
@@ -184,22 +184,22 @@ else
             <th>{$strStatus}</th>
             </tr>";
             $shade = 'shade1';
-            while ($results = mysql_fetch_array($result))
+            while ($results = mysql_fetch_object($result))
             {
                 echo "<tr class='{$shade}'>";
-                echo "<td align='center'  width='100'>{$results['id']} (";
-                if ($results["externalid"] == '') echo $strNone;
-                else echo $results["externalid"];
+                echo "<td align='center'  width='100'>{$results->id} (";
+                if ($results->externalid == '') echo $strNone;
+                else echo $results->externalid;
                 echo "</td>";
-                echo "<td width='150'><a href=\"javascript:incident_details_window('{$results['id']}')\">{$results['title']}</a></td>";
-                echo "<td align='center' width='100'>{$results['forenames']}' '{$results['surname']}</td>";
-                echo "<td align='center' width='100'>".site_name($results['siteid'])."</td>";
-                echo "<td align='center' width='50'>{$results['servicelevel']}<br />".priority_name($results["priority"])."</td>";
-                echo "<td align='center' width='100'>".user_realname($results['owner'], TRUE)."</td>";
-                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results["opened"])."</td>";
-                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results["lastupdated"])."></td>";
-                echo "<td align='center' width='50'>{$results['type']}</td>";
-                echo "<td align='center' width='50'>".incidentstatus_name($results["status"])."</td>";
+                echo "<td width='150'><a href=\"javascript:incident_details_window('{$results->id}')\">{$results->title}</a></td>";
+                echo "<td align='center' width='100'>{$results->forenames}' '{$results->surname}</td>";
+                echo "<td align='center' width='100'>".site_name($results->siteid)."</td>";
+                echo "<td align='center' width='50'>{$results->servicelevel}<br />".priority_name($results->priority)."</td>";
+                echo "<td align='center' width='100'>".user_realname($results->owner, TRUE)."</td>";
+                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results->opened)."</td>";
+                echo "<td align='center' width='150'>".ldate($CONFIG['dateformat_datetime'], $results->lastupdated)."></td>";
+                echo "<td align='center' width='50'>{$results->type}</td>";
+                echo "<td align='center' width='50'>".incidentstatus_name($results->status)."</td>";
                 echo "</tr>";
 
                 if ($shade == 'shade1') $shade = 'shade2';

@@ -247,7 +247,7 @@ function incident_slaid($incidentid)
     $slatag = db_read_column('servicelevel', $dbIncidents, $incidentid);
     $sql = "SELECT id FROM `{$dbServiceLevels}` WHERE tag = '{$slatag}' LIMIT 1";
     $result = mysql_query($sql);
-    list($id) = mysql_fetch_array($result);
+    list($id) = mysql_fetch_assoc($result);
     return $id;
 }
 

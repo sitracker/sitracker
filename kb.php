@@ -94,9 +94,9 @@ if (!empty($search_string))
         $sql .= "title LIKE '%{$search_string}%' OR keywords LIKE '%{$search_string}%' ";
     }
 }
-if (strtolower($mode)=='recent') $sql .= "ORDER BY docid DESC LIMIT 20";
+if (strtolower($mode) == 'recent') $sql .= "ORDER BY docid DESC LIMIT 20";
 
-if (strtolower($mode)=='today') $sql .= " WHERE published > '".date('Y-m-d')."' ORDER BY published DESC";
+if (strtolower($mode) == 'today') $sql .= " WHERE published > '".date('Y-m-d')."' ORDER BY published DESC";
 
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -107,10 +107,10 @@ if (mysql_num_rows($result) >= 1)
     echo "<table align='center' width='98%'>";
     echo "<tr>";
     echo colheader('id',$strID, FALSE);
-    echo colheader('title', $strTitle,FALSE);
-    echo colheader('date', $strDate,FALSE);
-    echo colheader('author', $strAuthor,FALSE);
-    echo colheader('keywords',$strKeywords,FALSE);
+    echo colheader('title', $strTitle, FALSE);
+    echo colheader('date', $strDate, FALSE);
+    echo colheader('author', $strAuthor, FALSE);
+    echo colheader('keywords',$strKeywords, FALSE);
     echo "</tr>\n";
     $shade = 'shade1';
     while ($kbarticle = mysql_fetch_object($result))

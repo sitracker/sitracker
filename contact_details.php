@@ -44,12 +44,12 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 $sql = "SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
 $contactresult = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-while ($contactrow = mysql_fetch_array($contactresult))
+while ($contact = mysql_fetch_object($contactresult))
 {
     // Lookup the site address if this contact hasn't got a specific address set
-    if ($contactrow['address1'] == '')
+    if ($contact->address1 == '')
     {
-        $sitesql = "SELECT * FROM `{$dbSites}` WHERE id='{$contactrow['siteid']}' LIMIT 1";
+        $sitesql = "SELECT * FROM `{$dbSites}` WHERE id='{$contact->siteid}' LIMIT 1";
         $siteresult = mysql_query($sitesql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $site = mysql_fetch_object($siteresult);
@@ -62,20 +62,20 @@ while ($contactrow = mysql_fetch_array($contactresult))
     }
     else
     {
-        $address1 = $contactrow['address1'];
-        $address2 = $contactrow['address2'];
-        $city = $contactrow['city'];
-        $county = $contactrow['county'];
-        $country = $contactrow['country'];
-        $postcode = $contactrow['postcode'];
+        $address1 = $contact->address1;
+        $address2 = $contact->address2;
+        $city = $contact->city;
+        $county = $contact->county;
+        $country = $contact->country;
+        $postcode = $contact->postcode;
     }
 
     echo "<h2>".icon('contact', 32)." {$strContactDetails}</h2>";
 
     echo "<table align='center' class='vertical'>";
-    echo "<tr><th colspan='2'><h3>".gravatar($contactrow['email'], 32)." {$contactrow['forenames']} {$contactrow['surname']}";
+    echo "<tr><th colspan='2'><h3>".gravatar($contact->email, 32)." {$contact->forenames} {$contact->surname}";
     echo "</h3></th></tr>\n";
-    if ($contactrow['active'] == 'false')
+    if ($contact->active == 'false')
     {
         echo "<tr><th>{$strStatus}:</th><td><span class='expired'>{$strInactive}</span></td></tr>\n";
     }
@@ -85,17 +85,17 @@ while ($contactrow = mysql_fetch_array($contactresult))
         echo "<tr><th>{$strTags}:</th><td>{$tags}</td></tr>\n";
     }
 
-    echo "<tr><th>{$strJobTitle}:</th><td>{$contactrow['jobtitle']}</td></tr>\n";
+    echo "<tr><th>{$strJobTitle}:</th><td>{$contact->jobtitle}</td></tr>\n";
     echo "<tr><th>{$strSite}:</th><td>";
-    echo "<a href='site_details.php?id={$contactrow['siteid']}'>";
-    echo site_name($contactrow['siteid'])."</a></td></tr>\n";
-    if (!empty($contactrow['department']))
+    echo "<a href='site_details.php?id={$contact->siteid}'>";
+    echo site_name($contact->siteid)."</a></td></tr>\n";
+    if (!empty($contact->department))
     {
         echo "<tr><th>{$strDepartment}:</th>";
-        echo "<td>{$contactrow['department']}</td></tr>\n";
+        echo "<td>{$contact->department}</td></tr>\n";
     }
 
-    if ($contactrow['dataprotection_address'] != 'Yes')
+    if ($contact->dataprotection_address != 'Yes')
     {
         echo "<tr><th>{$strAddress1}:</th><td>{$address1}</td></tr>\n";
         echo "<tr><th>{$strAddress2}:</th><td>{$address2}</td></tr>\n";
@@ -111,21 +111,21 @@ while ($contactrow = mysql_fetch_array($contactresult))
         echo "<tr><th>{$strCountry}:</th><td>{$country}</td></tr>\n";
     }
 
-    if ($contactrow['dataprotection_email'] != 'Yes')
+    if ($contact->dataprotection_email != 'Yes')
     {
         echo "<tr><th>{$strEmail}:</th>";
-        echo "<td><a href=\"mailto:{$contactrow['email']}\">{$contactrow['email']}</a></td></tr>\n";
+        echo "<td><a href=\"mailto:{$contact->email}\">{$contact->email}</a></td></tr>\n";
     }
 
-    if ($contactrow['dataprotection_phone'] != 'Yes')
+    if ($contact->dataprotection_phone != 'Yes')
     {
-        echo "<tr><th>{$strTelephone}</th><td>{$contactrow['phone']}</td></tr>\n";
-        echo "<tr><th>{$strMobile}</th><td>{$contactrow['mobile']}</td></tr>\n";
-        echo "<tr><th>{$strFax}</th><td>{$contactrow['fax']}</td></tr>\n";
+        echo "<tr><th>{$strTelephone}</th><td>{$contact->phone}</td></tr>\n";
+        echo "<tr><th>{$strMobile}</th><td>{$contact->mobile}</td></tr>\n";
+        echo "<tr><th>{$strFax}</th><td>{$contact->fax}</td></tr>\n";
     }
     echo "<tr><th>{$strDataProtection}</th><td> ";
 
-    if ($contactrow['dataprotection_email'] == 'Yes')
+    if ($contact->dataprotection_email == 'Yes')
     {
         echo "<strong>{$strNoEmail}</strong>, ";
     }
@@ -134,7 +134,7 @@ while ($contactrow = mysql_fetch_array($contactresult))
         echo "{$strEmailOK}, ";
     }
 
-    if ($contactrow['dataprotection_phone'] == 'Yes')
+    if ($contact->dataprotection_phone == 'Yes')
     {
         echo "<strong>{$strNoCalls}</strong>, ";
     }
@@ -143,7 +143,7 @@ while ($contactrow = mysql_fetch_array($contactresult))
         echo "{$strCallsOK}, ";
     }
 
-    if ($contactrow['dataprotection_address'] == 'Yes')
+    if ($contact->dataprotection_address == 'Yes')
     {
         echo "<strong>{$strNoPost}</strong>";
     }
@@ -154,16 +154,16 @@ while ($contactrow = mysql_fetch_array($contactresult))
 
     echo "</td></tr>\n";
     echo "<tr><th>{$strNotes}</th><td>";
-    echo nl2br($contactrow['notes'])."</td></tr>\n";
+    echo nl2br($contact->notes)."</td></tr>\n";
 
     echo "<tr><td colspan='2'>&nbsp;</td></tr>\n";
     // Only show access details if portal is enabled
     if ($CONFIG['portal'] == TRUE)
     {
         echo "<tr><th>{$strAccessDetails}</th>";
-        echo "<td>{$strUsername}: <code>{$contactrow['username']}</code>";
-        echo ", <a href='forgotpwd.php?action=sendpwd&amp;contactid=".urlencode($contactrow['id'])."'>{$strSendPassword}</a>";
-        // echo ", password: <code>".$contactrow['password']."</code>";  ## Passwords no longer controlled from SiT INL 23Nov04
+        echo "<td>{$strUsername}: <code>{$contact->username}</code>";
+        echo ", <a href='forgotpwd.php?action=sendpwd&amp;contactid=".urlencode($contact->id)."'>{$strSendPassword}</a>";
+        // echo ", password: <code>".$contact->password']."</code>";  ## Passwords no longer controlled from SiT INL 23Nov04
         echo "</td></tr>\n";
     }
     echo "<tr><th>{$strIncidents}:</th><td>";
@@ -186,23 +186,23 @@ while ($contactrow = mysql_fetch_array($contactresult))
 
     echo "</td></tr>\n";
 
-    if ($contactrow['notify_contactid'] > 0)
+    if ($contact->notify_contactid > 0)
     {
         echo "<tr><th>{$strNotifyContact}</th><td>";
-        echo contact_realname($contactrow['notify_contactid']);
-        $notify_contact1 = contact_notify($contactrow['notify_contactid'], 1);
+        echo contact_realname($contact->notify_contactid);
+        $notify_contact1 = contact_notify($contact->notify_contactid, 1);
         if ($notify_contact1 > 0)
         {
             echo " -&gt; ".contact_realname($notify_contact1);
         }
 
-        $notify_contact2 = contact_notify($contactrow['notify_contactid'], 2);
+        $notify_contact2 = contact_notify($contact->notify_contactid, 2);
         if ($notify_contact2 > 0)
         {
             echo " -&gt; ".contact_realname($notify_contact2);
         }
 
-        $notify_contact3 = contact_notify($contactrow['notify_contactid'], 3);
+        $notify_contact3 = contact_notify($contact->notify_contactid, 3);
         if ($notify_contact3 > 0)
         {
             echo " -&gt; ".contact_realname($notify_contact3);
@@ -210,10 +210,10 @@ while ($contactrow = mysql_fetch_array($contactresult))
         echo "</td></tr>\n";
     }
 
-    if ($contactrow['timestamp_modified'] > 0)
+    if ($contact->timestamp_modified > 0)
     {
         echo "<tr><th>{$strLastUpdated}</th>";
-        echo "<td>".ldate($CONFIG['dateformat_datetime'],$contactrow['timestamp_modified'])."</td></tr>\n";
+        echo "<td>".ldate($CONFIG['dateformat_datetime'], $contact->timestamp_modified)."</td></tr>\n";
     }
 
     echo "<tr><th>{$strInventoryItems}</th>";
