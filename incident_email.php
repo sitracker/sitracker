@@ -552,7 +552,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
                 if ($filename == '') trigger_error("Filename was blank upon processing attachment: {$filename}", E_USER_WARNING);
 
                 // Check file size before sending
-                if (filesize($filename) > $CONFIG['upload_max_filesize'] || filesize($filename)==FALSE)
+                if (filesize($filename) > $CONFIG['upload_max_filesize'] || filesize($filename) == FALSE)
                 {
                     trigger_error("User Error: Attachment too large or file upload error, filename: $filename,  perms: ".fileperms($filename).", size:",filesize($filename), E_USER_WARNING);
                     // throwing an error isn't the nicest thing to do for the user but there seems to be no way of

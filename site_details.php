@@ -27,7 +27,7 @@ $id = clean_int($_REQUEST['id']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if ($id=='')
+if ($id == '')
 {
     echo "<p class='error'>{$strMustSelectASite}</p>";
     exit;
@@ -239,7 +239,7 @@ if (user_permission($sit[2],19)) // View contracts
     $sql .= "LEFT JOIN `{$dbResellers}` AS r ON r.id = m.reseller ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND admincontact = c.id AND m.site = '{$id}' ";
-    if ($activeonly=='yes' OR$_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+    if ($activeonly == 'yes' OR$_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
     {
         $sql .= "AND m.term != 'yes' ";
     }

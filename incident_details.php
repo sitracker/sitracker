@@ -485,7 +485,7 @@ else
         $records = 'all';
     }
 
-    if ($incidentid=='' OR $incidentid < 1)
+    if ($incidentid == '' OR $incidentid < 1)
     {
         trigger_error("Incident ID cannot be zero or blank", E_USER_ERROR);
     }
@@ -512,12 +512,12 @@ else
     $keeptags = array('b','i','u','hr','&lt;', '&gt;');
     foreach ($keeptags AS $keeptag)
     {
-        if (substr($keeptag,0,1)=='&')
+        if (substr($keeptag,0,1) == '&')
         {
-            $origtag[]="$keeptag";
-            $temptag[]="[[".substr($keeptag, 1, strlen($keeptag)-1)."]]";
-            $origtag[]=strtoupper("$keeptag");
-            $temptag[]="[[".strtoupper(substr($keeptag, 1, strlen($keeptag)-1))."]]";
+            $origtag[] = "$keeptag";
+            $temptag[] = "[[".substr($keeptag, 1, strlen($keeptag)-1)."]]";
+            $origtag[] = strtoupper("$keeptag");
+            $temptag[] = "[[".strtoupper(substr($keeptag, 1, strlen($keeptag)-1))."]]";
         }
         else
         {
@@ -595,7 +595,7 @@ else
         // Put the header part (up to the <hr /> in a seperate DIV)
         if (strpos($updatebody, '<hr>') !== FALSE)
         {
-            $updatebody = "<div class='iheader'>".str_replace('<hr>',"</div>",$updatebody);
+            $updatebody = "<div class='iheader'>".str_replace('<hr>', "</div>", $updatebody);
         }
 
         // Lookup some extra data
@@ -763,7 +763,7 @@ else
                 $showhide = $strMakeVisibleInPortal;
             }
 
-            if (!empty($update->sla) AND $update->type=='slamet')
+            if (!empty($update->sla) AND $update->type == 'slamet')
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $showhide);
             }

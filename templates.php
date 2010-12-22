@@ -298,11 +298,11 @@ elseif ($action == "edit")
         echo "</td></tr>\n";
 
 
-        if ($templatetype=='email') $body = $template->body;
+        if ($templatetype == 'email') $body = $template->body;
         else $body = $template->text;
         echo "<tr><th>{$strText}</th>";
         echo "<td>";
-        if ($templatetype=='notice') echo bbcode_toolbar('bodytext');
+        if ($templatetype == 'notice') echo bbcode_toolbar('bodytext');
 
         echo "<textarea id='bodytext' name='bodytext' rows='20' cols='50' onfocus=\"recordFocusElement(this);\"";
         if (strlen($body) > 3 AND substr_compare($body, 'str', 0, 3) === 0)
@@ -455,11 +455,11 @@ elseif ($action == "update")
     if ($type == 'user') $name = str_replace('_', ' ', $name);
     else $name = str_replace(' ', '_', strtoupper(trim($name)));
 
-    if ($cust_vis=='yes') $cust_vis='show';
-    else $cust_vis='hide';
+    if ($cust_vis == 'yes') $cust_vis = 'show';
+    else $cust_vis = 'hide';
 
-    if ($storeinlog=='Yes') $storeinlog='Yes';
-    else $storeinlog='No';
+    if ($storeinlog == 'Yes') $storeinlog = 'Yes';
+    else $storeinlog = 'No';
 
     switch ($template)
     {

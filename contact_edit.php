@@ -43,7 +43,7 @@ elseif ($action == "edit" && isset($contact))
 {
     // FIMXE i18n
     // Show edit contact form
-    $sql="SELECT * FROM `{$dbContacts}` WHERE id='$contact' ";
+    $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($contactobj = mysql_fetch_object($contactresult))
@@ -182,7 +182,7 @@ else if ($action == "update")
         echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSiteName}'"), E_USER_ERROR);
     }
     // check for blank name
-    if ($email == '' OR $email=='none' OR $email=='n/a')
+    if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors = 1;
         echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
@@ -214,13 +214,13 @@ else if ($action == "update")
         */
         replace_tags(1, $contact, $tags);
 
-        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='$courtesytitle', surname='$surname', forenames='$forenames', siteid='$siteid', email='$email', phone='$phone', mobile='$mobile', fax='$fax', ";
-        $sql .= "address1='$address1', address2='$address2', city='$city', county='$county', postcode='$postcode', ";
-        $sql .= "country='$country', dataprotection_email='$dataprotection_email', dataprotection_phone='$dataprotection_phone', ";
-        $sql .= "notes='$notes', dataprotection_address='$dataprotection_address' , department='$department' , jobtitle='$jobtitle', ";
-        $sql .= "notify_contactid='$notify_contactid', ";
-        $sql .= "active = '{$activeStr}', ";
-        $sql .= "timestamp_modified=$now WHERE id='$contact'";
+        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='{$courtesytitle}', surname='{$surname}', forenames='{$forenames}', siteid='{$siteid}', email='{$email}', phone='{$phone}', mobile='{$mobile}', fax='{$fax}', ";
+        $sql .= "address1='{$address1}', address2='{$address2}', city='{$city}', county='{$county}', postcode='{$postcode}', ";
+        $sql .= "country='{$country}', dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
+        $sql .= "notes='{$notes}', dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
+        $sql .= "notify_contactid='{$notify_contactid}', ";
+        $sql .= "active = '{$activeStr}}', ";
+        $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

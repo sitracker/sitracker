@@ -35,7 +35,7 @@ if (mysql_num_rows($result) > 0)
 {
     while ($product = mysql_fetch_object($result))
     {
-        $csql = "SELECT COUNT(id) AS count FROM `{$dbMaintenance}` WHERE product = {$product->id} AND NOT term = 'yes' AND expirydate > $now";
+        $csql = "SELECT COUNT(id) AS count FROM `{$dbMaintenance}` WHERE product = {$product->id} AND NOT term = 'yes' AND expirydate > {$now}";
         $cresult = mysql_query($csql);
         list($contract_count) = mysql_fetch_row($cresult);
         if ($contract_count > 0) $productlist[$product->id] = $contract_count;
@@ -50,8 +50,8 @@ if (mysql_num_rows($result) > 0)
     {
         echo "<tr class='$shade'><td>{$count}</td><td>".product_name($prod)."</td><td><a href='contracts.php?activeonly=yes&amp;productid={$prod}'>{$contcount}</a></td></tr>\n";
         $count++;
-        if ($shade=='shade1') $shade='shade2';
-        else $shade='shade1';
+        if ($shade == 'shade1') $shade = 'shade2';
+        else $shade = 'shade1';
     }
     echo "</table>\n";
 }

@@ -221,8 +221,8 @@ elseif ($_REQUEST['mode'] == "show")
                 echo "<span style='color:red;'>*</span>";
             }
             echo "</td></tr>\n";
-            if ($shade=='shade1') $shade='shade2';
-            else $shade='shade1';
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
             if (!empty($comments[$key]))
             {
                 echo "<tr><td colspan='3' class='{$shade}'><strong>{$strNotes}:</strong> {$comments[$key]}</td></tr>\n";

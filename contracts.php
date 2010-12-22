@@ -84,27 +84,27 @@ $sql .= "WHERE m.site = s.id AND m.admincontact = c.id AND m.product = p.id ";
 $sql .= "AND ((reseller = r.id AND reseller IS NOT NULL) OR reseller IS NULL) ";
 $sql .= "AND (licence_type IS NULL OR (licence_type = l.id AND licence_type IS NOT NULL)) ";
 
-if ($activeonly=='yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+if ($activeonly == 'yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
     $sql .= "AND term!='yes' AND (expirydate > $now OR expirydate = '-1') ";
 }
 
 if ($search_string != '*')
 {
-    if (strlen(utf8_decode($search_string))==1)
+    if (strlen(utf8_decode($search_string)) == 1)
     {
         // $sql .= "AND SUBSTRING(s.name,1,1)=('$search_string') ";
         $sql .= "AND s.name LIKE '{$search_string}%' ";
     }
     else
     {
-        $sql .= "AND (s.name LIKE '%$search_string%' ";
-        $sql .= "OR m.id = '$search_string') ";
+        $sql .= "AND (s.name LIKE '%{$search_string}%' ";
+        $sql .= "OR m.id = '{$search_string}') ";
     }
 
     if ($productid)
     {
-        $sql .= "AND m.product='$productid' ";
+        $sql .= "AND m.product='{$productid}' ";
     }
 
     if (!empty($resellerid))

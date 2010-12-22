@@ -171,7 +171,7 @@ if (!empty($q))
         {
             $incidentsql .= "ORDER BY i.id ";
         }
-        elseif ($sort=='incident')
+        elseif ($sort == 'incident')
         {
             $incidentsql .= " ORDER BY i.title ";
         }
@@ -289,9 +289,9 @@ if (!empty($q))
 
     if ($domain == 'sites' AND !empty($sort))
     {
-        if ($sort=='id') $sitesql .= "ORDER BY k.title ";
-        elseif ($sort=='incident') $sitesql .= " ORDER BY k.published ";
-        elseif ($sort=='date') $sitesql .= " ORDER BY k.keywords ";
+        if ($sort == 'id') $sitesql .= "ORDER BY k.title ";
+        elseif ($sort == 'incident') $sitesql .= " ORDER BY k.published ";
+        elseif ($sort == 'date') $sitesql .= " ORDER BY k.keywords ";
         else $sitesql .= " ORDER BY u.score ";
 
         if ($order == 'a' OR $order == 'ASC' OR $order == '') $sitesql .= "ASC";

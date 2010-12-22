@@ -22,8 +22,8 @@ $legacy = cleanvar($_REQUEST['legacy']);
 $groupid = clean_int($_REQUEST['gid']);
 
 // By default show users in home group
-if ($groupid=='all') $filtergroup = 'all';
-elseif ($groupid=='') $filtergroup = $_SESSION['groupid'];
+if ($groupid == 'all') $filtergroup = 'all';
+elseif ($groupid == '') $filtergroup = $_SESSION['groupid'];
 else $filtergroup = $groupid;
 
 $title = $strSkillsMatrix;
@@ -65,7 +65,7 @@ if ($numgroups >= 1)
     echo "<option value='{$_SERVER['PHP_SELF']}?gid=0";
     if (empty($legacy)) echo "'";
     else echo "&amp;legacy=yes'";
-    if ($filtergroup=='0') echo " selected='selected'";
+    if ($filtergroup == '0') echo " selected='selected'";
     echo ">{$strUsersWithNoGroup}</option>\n";
     echo "</select>\n";
     echo "</form>\n<br />";
@@ -114,7 +114,7 @@ if ($countusers > 0)
     {
     	$sql .= "AND (u.groupid='0' OR u.groupid='' OR u.groupid IS NULL) ";
     }
-    elseif ($numgroups < 1 OR $filtergroup=='all')
+    elseif ($numgroups < 1 OR $filtergroup == 'all')
     {
         $sql .= "AND 1=1 ";
     }
@@ -164,7 +164,7 @@ if ($countskills > 0 AND $countusers > 0)
                     if (empty($skills[$row->name][$user->realname]))
                     {
                         // No skill in this software
-                        echo "<td align='center' class='$shade'></td>"; // &#215;
+                        echo "<td align='center' class='{$shade}'></td>"; // &#215;
                     }
                     else
                     {
@@ -177,7 +177,7 @@ if ($countskills > 0 AND $countusers > 0)
                     }
                 }
             }
-            echo "<td align='center' class='$shade'><strong>$count</strong></td>";
+            echo "<td align='center' class='{$shade}'><strong>{$count}</strong></td>";
             echo "</tr>\n";
             $started = true;
             if ($shade == 'shade1') $shade = 'shade2';

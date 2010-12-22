@@ -62,7 +62,7 @@ if ($submit_value == 'go')
 $pagescripts = array('AutoComplete.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if ($search_string=='') $search_string='a';
+if ($search_string == '') $search_string='a';
 ?>
 <script type="text/javascript">
 //<![CDATA[

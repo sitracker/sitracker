@@ -56,7 +56,7 @@ if ($numgroups >= 1 AND $filtergroup == '0')
 {
     $sql .= "AND (groupid='0' OR groupid='' OR groupid IS NULL) ";
 }
-elseif ($numgroups == '' OR $numgroups < 1 OR $filtergroup=='all' OR $filtergroup=='allonline')
+elseif ($numgroups == '' OR $numgroups < 1 OR $filtergroup == 'all' OR $filtergroup == 'allonline')
 {
     $sql .= "AND 1=1 ";
 }
