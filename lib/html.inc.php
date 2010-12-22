@@ -352,7 +352,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $alt = "Missing icon: '$filename.png', ($file) size {$size}";
         if ($CONFIG['debug']) trigger_error($alt, E_USER_WARNING);
-        $urlpath = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/sit";
+        $urlpath = "{$CONFIG['application_webpath']}/images/icons/sit";
         $urlpath .= "/16x16/blank.png";
     }
     $icon = "<img src=\"{$urlpath}\"";
@@ -1185,7 +1185,7 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 {
     global $dbUsers, $dbGroups;
 
-    $str .= "<tr><th>{$title}</th>";    
+    $str .= "<tr><th>{$title}</th>";
     $str .= "<td align='center'>";
 
     $sql = "SELECT DISTINCT(g.name), g.id FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
@@ -1205,24 +1205,24 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
             {
                 $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
             }
-    
+
             if ($groupid == $row->id)
             {
                 $str .= " checked='checked' ";
                 $groupname = $row->name;
             }
-    
+
             $str .= "/>{$row->name} \n";
         }
-    
+
         $str .="<br />";
-    
-    
+
+
         $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
         $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    
+
         if ($level == "management")
         {
             $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
@@ -1231,7 +1231,7 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
         {
             $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
         }
-    
+
         while ($row = mysql_fetch_object($result))
         {
             $str .= "<option value='{$row->id}' ";
@@ -1244,7 +1244,7 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
         {
             $visibility = " style='display:none'";
         }
-    
+
         $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
         $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
     }
@@ -2115,7 +2115,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
                 $html .= "</td>";
                 $html .= "</tr>\n";
                 $supportcount++;
-                if ($shade == 'shade1') $shade = 'shade2'; 
+                if ($shade == 'shade1') $shade = 'shade2';
                 else $shade = 'shade1';
             }
             $html .= "</table>\n";

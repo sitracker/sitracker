@@ -291,7 +291,7 @@ else
         // FIXME for 12/24H clock choice
         if ($totalduration > 0)
         {
-            echo ("{$strDuration}: " . date("H:i", $totalduration*60) . "<br />\n");
+            echo ("{$strDuration}: " . format_seconds($totalduration*60) . "<br />\n");
         }
     }
 

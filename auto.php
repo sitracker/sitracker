@@ -1020,6 +1020,7 @@ if ($actions !== FALSE)
         // Possibly initiate a trigger here named TRIGGER_SCHED_{$action} ?
         if (function_exists($fn))
         {
+            schedule_action_started($action);
             $success = $fn($params);
             schedule_action_done($action, $success);
         }
