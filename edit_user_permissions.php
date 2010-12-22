@@ -265,7 +265,7 @@ elseif ($action == "update")
             //reset ($permselection);
             while ($x = each($permselection))
             {
-                $sql = "UPDATE `{$dbUserPermissions}` SET granted='true' WHERE userid='$user' AND permissionid='".$x[1]."' ";
+                $sql = "UPDATE `{$dbUserPermissions}` SET granted='true' WHERE userid='{$user}' AND permissionid='{$x[1]}' ";
                 # echo "Updating permission ".$x[1]."<br />";
                 # flush();
                 $result = mysql_query($sql);
@@ -275,12 +275,12 @@ elseif ($action == "update")
                     // Update failed, this could be because of a missing userpemissions record so try and create one
                     // echo "Update of permission ".$x[1]."failed, no problem, will try insert instead.<br />";
                     $isql = "INSERT INTO `{$dbUserPermissions}` (userid, permissionid, granted) ";
-                    $isql .= "VALUES ('$user', '".$x[1]."', 'true')";
+                    $isql .= "VALUES ('{$user}', '{$x[1]}', 'true')";
                     $iresult = mysql_query($isql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                     if (mysql_affected_rows() < 1)
                     {
-                        echo user_alert("{$strUpdateUserPermission} ".$x[1]." {$strFailedOnPass2}", E_USER_WARNING);
+                        echo user_alert("{$strUpdateUserPermission} {$x[1]} {$strFailedOnPass2}", E_USER_WARNING);
                     }
                 }
             }
@@ -336,7 +336,7 @@ elseif ($action == "check")
         $sql .= "FROM `{$dbRolePermissions}` AS rp, `{$dbRoles}` AS r, `{$dbUsers}` AS u ";
         $sql .= "WHERE rp.roleid = r.id ";
         $sql .= "AND r.id = u.roleid ";
-        $sql .= "AND permissionid = '$permid' AND granted='true' ";
+        $sql .= "AND permissionid = '{$permid}' AND granted='true' ";
         $sql .= "AND u.status > 0";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -375,7 +375,7 @@ elseif ($action == "check")
         {
             echo "<table align='center'>";
             echo "<tr><th>{$strUser}</th></tr>";
-            $shade='shade1';
+            $shade = 'shade1';
             while ($user = mysql_fetch_object($result))
             {
                 echo "<tr class='{$shade}'><td>&#10004; <a href='{$_SERVER['PHP_SELF']}?action=edit&amp;userid={$user->userid}#perm{$perm}'>{$user->realname}</a> ({$user->username})</td></tr>\n";

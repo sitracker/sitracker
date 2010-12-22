@@ -48,11 +48,11 @@ $filter = array('start' => $start, 'domain' => $domain, 'q' => $q);
 
 
 /**
-* Highlight a string to show it as matched, within a search result
-* @author Ivan Lucas
-* @param string $x the search result
-* @param string $var the term to be highlighted within the search result
-*/
+ * Highlight a string to show it as matched, within a search result
+ * @author Ivan Lucas
+ * @param string $x the search result
+ * @param string $var the term to be highlighted within the search result
+ */
 function search_highlight($x,$var)
 {
     //$x is the string, $var is the text to be highlighted

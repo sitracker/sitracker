@@ -126,28 +126,28 @@ else
             $sql .= "WHERE u.incidentid = i.id AND i.contact = c.id AND bodytext LIKE ('%$search_details%') ";
         }
 
-        if ($search_title != '') $sql.= "AND title LIKE ('%$search_title%') ";
-        if ($search_id != '') $sql.= "AND i.id LIKE ('%$search_id%') ";
-        if ($search_externalid !='') $sql.= "AND externalid LIKE ('%$search_externalid%') ";
-        if ($search_contact != '') $sql.= "AND (c.surname LIKE '%$search_contact%' OR forenames LIKE '%$search_contact%') ";
+        if ($search_title != '') $sql.= "AND title LIKE ('%{$search_title}%') ";
+        if ($search_id != '') $sql.= "AND i.id LIKE ('%{$search_id}%') ";
+        if ($search_externalid !='') $sql.= "AND externalid LIKE ('%{$search_externalid}%') ";
+        if ($search_contact != '') $sql.= "AND (c.surname LIKE '%{$search_contact}%' OR forenames LIKE '%{$search_contact}%') ";
         if ($search_servicelevel != '') $sql.= "AND (i.servicelevel = '{$search_servicelevel}') ";
         if ($search_range == 'Closed') $sql.= "AND closed != '0' ";
         if ($search_range == 'Open') $sql.= "AND closed = '0' ";
-        if ($search_date == 'Recent180') $sql.= "AND lastupdated >= '$recent_sixmonth' ";
-        if ($search_date == 'Recent90') $sql.= "AND lastupdated >= '$recent_threemonth' ";
-        if ($search_date == 'Recent30') $sql.= "AND lastupdated >= '$recent_month' ";
-        if ($search_date == 'Recent14') $sql.= "AND lastupdated >= '$recent_fortnight' ";
-        if ($search_date == 'Recent7') $sql.= "AND lastupdated >= '$recent_week' ";
-        if ($search_date == 'Recent1') $sql.= "AND lastupdated >= '$recent_today' ";
-        if ($search_date == 'RecentHour') $sql.= "AND lastupdated >= '$recent_hour' ";
-        if ($search_date == 'Old180') $sql.= "AND lastupdated <= '$recent_sixmonth' ";
-        if ($search_date == 'Old90') $sql.= "AND lastupdated <= '$recent_threemonth' ";
-        if ($search_date == 'Old30') $sql.= "AND lastupdated <= '$recent_month' ";
-        if ($search_date == 'Old7') $sql.= "AND lastupdated <= '$recent_week' ";
-        if ($search_date == 'OldHour') $sql.= "AND lastupdated <= '$recent_hour' ";
-        if ($search_user != 0) $sql.= "AND owner = '$search_user' ";
-        if ($search_priority != 0) $sql.= "AND priority = '$search_priority' ";
-        if ($search_product != 0) $sql.="AND product = '$search_product' ";
+        if ($search_date == 'Recent180}') $sql.= "AND lastupdated >= '{$recent_sixmonth}' ";
+        if ($search_date == 'Recent90}') $sql.= "AND lastupdated >= '{$recent_threemonth}' ";
+        if ($search_date == 'Recent30}') $sql.= "AND lastupdated >= '{$recent_month}' ";
+        if ($search_date == 'Recent14}') $sql.= "AND lastupdated >= '{$recent_fortnight}' ";
+        if ($search_date == 'Recent7}') $sql.= "AND lastupdated >= '{$recent_week}' ";
+        if ($search_date == 'Recent1}') $sql.= "AND lastupdated >= '{$recent_today}' ";
+        if ($search_date == 'RecentHour}') $sql.= "AND lastupdated >= '{$recent_hour}' ";
+        if ($search_date == 'Old180}') $sql.= "AND lastupdated <= '{$recent_sixmonth}' ";
+        if ($search_date == 'Old90}') $sql.= "AND lastupdated <= '{$recent_threemonth}' ";
+        if ($search_date == 'Old30}') $sql.= "AND lastupdated <= '{$recent_month}' ";
+        if ($search_date == 'Old7}') $sql.= "AND lastupdated <= '{$recent_week}' ";
+        if ($search_date == 'OldHour}') $sql.= "AND lastupdated <= '{$recent_hour}' ";
+        if ($search_user != 0) $sql.= "AND owner = '{$search_user}' ";
+        if ($search_priority != 0) $sql.= "AND priority = '{$search_priority}' ";
+        if ($search_product != 0) $sql.="AND product = '{$search_product}' ";
 
         // Sorting
         if ($sort_results == 'DateASC') $sql.="ORDER BY lastupdated ASC ";

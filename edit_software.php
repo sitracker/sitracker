@@ -39,7 +39,7 @@ if (empty($action) OR $action == 'edit')
         echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
         echo "<form name='editsoftware' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
         echo "<table class='vertical'>";
-        echo "<tr><th>{$strVendor}:</th><td>".vendor_drop_down('vendor',$software->vendorid)."</td></tr>\n";
+        echo "<tr><th>{$strVendor}:</th><td>".vendor_drop_down('vendor', $software->vendorid)."</td></tr>\n";
         echo "<tr><th>{$strSkill}: <sup class='red'>*</sup></th><td><input maxlength='50' name='name' size='30' value='{$software->name}' /></td></tr>";
         echo "<tr><th>{$strLifetime}:</th><td>";
         echo "<input type='text' name='lifetime_start' id='lifetime_start' size='10' value='";
@@ -104,7 +104,7 @@ elseif ($action == 'delete')
 }
 else
 {
-      // Save
+    // Save
     // External variables
     $name = cleanvar($_REQUEST['name']);
     $vendor = clean_int($_REQUEST['vendor']);
@@ -117,7 +117,7 @@ else
     // Add new
     $errors = 0;
 
-        // check for blank name
+    // check for blank name
     if ($name == '')
     {
         $errors = 1;
