@@ -1614,6 +1614,48 @@ function site_count_incidents($id)
 }
 
 
+/**
+ * @author Paul Heaney
+ */
+function display_drafts($type, $result)
+{
+    global $iconset;
+    global $id;
+    global $CONFIG;
+
+    if ($type == 'update')
+    {
+        $page = "incident_update.php";
+        $editurlspecific = '';
+    }
+    else if ($type == 'email')
+    {
+        $page = "incident_email.php";
+        $editurlspecific = "&amp;step=2";
+    }
+
+    echo "<p align='center'>{$GLOBALS['strDraftChoose']}</p>";
+
+    $html = '';
+
+    while ($obj = mysql_fetch_object($result))
+    {
+        $html .= "<div class='detailhead'>";
+        $html .= "<div class='detaildate'>".date($CONFIG['dateformat_datetime'], $obj->lastupdate);
+        $html .= "</div>";
+        $html .= "<a href='{$page}?action=editdraft&amp;draftid={$obj->id}&amp;id={$id}{$editurlspecific}' class='info'>";
+        $html .= icon('edit', 16, $GLOBALS['strDraftEdit'])."</a>";
+        $html .= "<a href='{$page}?action=deletedraft&amp;draftid={$obj->id}&amp;id={$id}' class='info'>";
+        $html .= icon('delete', 16, $GLOBALS['strDraftDelete'])."</a>";
+        $html .= "</div>";
+        $html .= "<div class='detailentry'>";
+        $html .= nl2br($obj->content)."</div>";
+    }
+
+    return $html;
+}
+
+
 function external_escalation($escalated, $incid)
 {
     foreach ($escalated as $i => $id)
