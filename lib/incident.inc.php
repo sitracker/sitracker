@@ -997,8 +997,8 @@ function incident_lastupdate($id)
 
         mysql_free_result($result);
         // Remove Tags from update Body
-        $update['body'] = trim($update->body);
-        $update['body'] = $update->body;
+        $update->body = trim($update->body);
+        $update->body = $update->body;
         return array($update->userid, $update->type ,$update->currentowner, $update->currentstatus, $update->body, $update->timestamp, $update->nextaction, $update->id);
     }
 }
