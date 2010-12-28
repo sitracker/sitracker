@@ -14,9 +14,7 @@
 // was moved to ajaxdata.php on 17Apr10, the rest of the code on this
 // page ought to be moved somewhere else as well.
 
-// The permission 35 isn't suitable for 'deleteassign' anyway.
-
-$permission = 35;  // Set your status
+$permission = 42;  // Review/Delete Incident Updates
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
