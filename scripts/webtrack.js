@@ -923,24 +923,27 @@ function hide_status_drop_down()
 function set_user_status()
 {
     var userstatus = $('userstatus_dropdown').value;
-     new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
-    {
-        method:'get',
-            onSuccess: function(transport)
-            {
-                var response = transport.responseText || "no response text";
-                if (transport.responseText)
-                {
-                    if (response != 'FALSE')
-                    {
-                        $('userstatus_summaryline').innerHTML = response;
-//                         hide_status_drop_down();
-                        $('userstatus_dropdown').blur();
-                    }
-                }
-            },
-            onFailure: function(){ alert('Something went wrong...') }
-    });
+    new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
+	    {
+	        method:'get',
+	        onSuccess: function(transport)
+	        {
+	            var response = transport.responseText || "no response text";
+	            if (transport.responseText)
+	            {
+	                if (response != 'FALSE')
+	                {
+	                    $('userstatus_summaryline').innerHTML = response;
+	                	// hide_status_drop_down();
+	                    $('userstatus_dropdown').blur();
+	                }
+	            }
+	        },
+	        onFailure: function()
+	        {
+	        	alert('Something went wrong...');
+        	}
+	    });
 }
 
 function attach_another_file(element)
@@ -963,4 +966,35 @@ function attach_another_file(element)
     var input = new Element('input', {'type': 'file', 'id': name, 'name': name, 'size': '40'});
     $(element).appendChild(br);
     $(element).appendChild(input);
+}
+
+function ignore_pending_reassignments(incidentid, originalowner)
+{
+	new Ajax.Request(application_webpath + 'ajaxdata.php?action=delete_temp_assign&incidentid='+incidentid+'&originalowner='+originalowner,
+			{
+				method: 'get',
+				onSuccess: function(transport)
+				{
+					var response = transport.responseText || "no response text";
+		            if (transport.responseText)
+		            {
+		            	if (response == 'OK')
+	            		{
+		            		Element.remove('incident'+incidentid);
+	            		}
+		            	else if (response == 'NOPERMISSION')
+		            	{
+							alert('No Permission to ignore incident reassignment');
+						}
+		            	else
+	            		{
+		            		alert ('Something went wrong ignoring reassignment');
+	            		}
+		            }
+				},
+				onFailure: function()
+				{
+					alert('Error ignoring reassignment');
+				}
+			});
 }
