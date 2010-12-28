@@ -739,14 +739,14 @@ function get_users_appointments($user, $start, $end)
     $sql.= date("Y-m-d H:i:s", $start);
     $sql.= "' AND enddate < '";
     $sql.= date("Y-m-d H:i:s", $end);
-    $sql.= "'AND (distribution = 'event' OR distribution = 'incident') AND owner = '$user'";
+    $sql.= "'AND (distribution = 'event' OR distribution = 'incident') AND owner = '{$user}'";
     $res = mysql_query($sql);
     echo mysql_error();
-    while($inf = mysql_fetch_array($res))
+    while($inf = mysql_fetch_object($res))
     {
-        if ($inf['distribution'] == 'event')
+        if ($inf->distribution == 'event')
         {
-            switch ($inf['completion'])
+            switch ($inf->completion)
             {
                 case '2':
                     $bgcolor = '#FFDDFF';
@@ -763,69 +763,69 @@ function get_users_appointments($user, $start, $end)
         }
         else
         {
-            $inf['completion'] = 2;
+            $inf->completion = 2;
             $bgcolor = '#FFDDFF';
         }
 
-        $items[] = array ('id' => $inf['id'],
-                         'description' => $inf['description'],
-                         'owner' => $inf['owner'],
-                         'completion' => $inf['completion'],
-                         'eventStartDate' => gmdate('D, d M Y H:i:s', strtotime($inf["startdate"])) . ' GMT',
-                         'eventEndDate' => gmdate('D, d M Y H:i:s', strtotime($inf["enddate"])) . ' GMT',
+        $items[] = array ('id' => $inf->id,
+                         'description' => $inf->description,
+                         'owner' => $inf->owner,
+                         'completion' => $inf->completion,
+                         'eventStartDate' => gmdate('D, d M Y H:i:s', strtotime($inf->startdate)) . ' GMT',
+                         'eventEndDate' => gmdate('D, d M Y H:i:s', strtotime($inf->enddate)) . ' GMT',
                          'bgColorCode' => $bgcolor);
     }
 
-    $sql = "SELECT UNIX_TIMESTAMP(date) type, userid FROM `{$GLOBALS['dbHolidays']}` WHERE UNIX_TIMESTAMP(date) >= '$start' AND UNIX_TIMESTAMP(date) < '$end' AND userid = '$user'";
+    $sql = "SELECT UNIX_TIMESTAMP(date) type, userid FROM `{$GLOBALS['dbHolidays']}` WHERE UNIX_TIMESTAMP(date) >= '$start' AND UNIX_TIMESTAMP(date) < '{$end}' AND userid = '{$user}'";
     $res = mysql_query($sql);
     echo mysql_error();
 
-    while($inf = mysql_fetch_array($res))
+    while($inf = mysql_fetch_object($res))
     {
-        switch ($inf['length'])
+        switch ($inf->length)
         {
             case 'am':
-                $startdate = $inf['date'] + $CONFIG['start_working_day'];
-                $enddate = $inf['date'] + ($CONFIG['start_working_day'] + $CONFIG['end_working_day']) / 2;
-            break;
+                $startdate = $inf->date + $CONFIG['start_working_day'];
+                $enddate = $inf->date + ($CONFIG['start_working_day'] + $CONFIG['end_working_day']) / 2;
+                break;
 
             case 'pm':
-                $startdate = $inf['date'] + ($CONFIG['start_working_day'] + $CONFIG['end_working_day']) / 2;
-                $enddate = $inf['date'] + $CONFIG['end_working_day'];
-            break;
+                $startdate = $inf->date + ($CONFIG['start_working_day'] + $CONFIG['end_working_day']) / 2;
+                $enddate = $inf->date + $CONFIG['end_working_day'];
+                break;
 
             default:
-                $startdate = $inf['date'] + $CONFIG['start_working_day'];
-                $enddate = $inf['date'] + $CONFIG['end_working_day'];
-            break;
+                $startdate = $inf->date + $CONFIG['start_working_day'];
+                $enddate = $inf->date + $CONFIG['end_working_day'];
+            	break;
         }
 
-        switch ($inf['type'])
+        switch ($inf->type)
         {
             case 1:
             case 2:
             case 3:
             case 4:
             case 5:
-                $description = $holidaytype[$inf['type']];
+                $description = $holidaytype[$inf->type];
                 $bgcolor = '#DDFFDD';
-            break;
+                break;
 
             case 10:
                 $description = $GLOBALS['strPublicHoliday'];
                 $bgcolor = '#ADADAD';
-            break;
+                break;
 
             default:
                 $description = $GLOBALS['strUnknown'];
                 $bgcolor = '#ADADAD';
-            break;
+                break;
         }
 
         $items[] = array (
-            'id' => $inf['id'],
+            'id' => $inf->id,
             'description' => $description,
-            'owner' => $inf['userid'],
+            'owner' => $inf->userid,
             'completion' => '2',
             'eventStartDate' => gmdate('D, d M Y H:i:s', $startdate) . ' GMT',
             'eventEndDate' => gmdate('D, d M Y H:i:s', $enddate) . ' GMT',

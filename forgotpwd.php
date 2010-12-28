@@ -43,7 +43,6 @@ switch ($_REQUEST['action'])
 {
     case 'forgotpwd':
     case 'sendpwd':
-    {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         // First look to see if this is a SiT user
         if (empty($email) AND !empty($userid))
@@ -117,10 +116,8 @@ switch ($_REQUEST['action'])
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
-    }
 
     case 'confirmreset':
-    {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if ($mode == 'user')
         {
@@ -177,7 +174,6 @@ switch ($_REQUEST['action'])
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
-    }
 
     case 'resetpasswordform':
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -197,7 +193,7 @@ switch ($_REQUEST['action'])
         {
             $userdetails = mysql_fetch_object($userresult);
             $hash = md5($userdetails->username.'.'.$userdetails->password);
-            if ($hash == $userhash AND $username==$userdetails->username)
+            if ($hash == $userhash AND $username == $userdetails->username)
             {
                 $newhash = md5($userdetails->username.'.ok.'.$userdetails->password);
                 echo "<h2>{$strSetPassword}</h2>";

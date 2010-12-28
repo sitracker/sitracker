@@ -100,13 +100,13 @@ elseif (empty($action))
 
     echo "<table align='center' width='60%'>";
     echo "<tr><th>{$strGlobalSignature}</th><th>{$strOperation}</th></tr>";
-    while ($signature = mysql_fetch_array($result))
+    while ($signature = mysql_fetch_object($result))
     {
-        $id = $signature['id'];
+        $id = $signature->id;
         echo "<tr>";
-        echo "<td class='shade1' width='70%'>".ereg_replace("\n", "<br />", $signature['signature'])."</td>";
-        echo "<td class='shade2' align='center'><a href='edit_global_signature.php?action=edit&amp;sig_id=$id'>{$strEdit}</a> | ";
-        echo "<a href='edit_global_signature.php?action=delete&amp;sig_id=$id'>{$strDelete}</a></td>";
+        echo "<td class='shade1' width='70%'>".ereg_replace("\n", "<br />", $signature->signature)."</td>";
+        echo "<td class='shade2' align='center'><a href='edit_global_signature.php?action=edit&amp;sig_id={$id}'>{$strEdit}</a> | ";
+        echo "<a href='edit_global_signature.php?action=delete&amp;sig_id={$id}'>{$strDelete}</a></td>";
         echo "</tr>";
     }
     echo "</table>";

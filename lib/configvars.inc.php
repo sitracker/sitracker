@@ -302,7 +302,7 @@ $CFGVAR['default_i18n']['type'] = 'languageselect';
 $CFGVAR['default_iconset']['title'] = 'Default Icon set';
 $CFGVAR['default_iconset']['help'] = 'The icon set that be given to new user accounts';
 $CFGVAR['default_iconset']['type'] = 'select';
-$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear';
+$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
 $CFGVAR['default_interface_style']['title'] = 'Default Theme';
 $CFGVAR['default_interface_style']['help'] = 'The theme/interface style that be given to new user accounts';

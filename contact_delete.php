@@ -32,28 +32,28 @@ if (empty($process))
     if (empty($id))
     {
         echo "<h2>{$strDeleteContact}</h2>";
-        echo "<form action=\"{$_SERVER['PHP_SELF']}?action=delete\" method=\"post\">";
+        echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
         echo "<table align='center'>";
         echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("id", 0)."</td></tr>";
         echo "</table>";
-        echo "<p><input name=\"submit1\" type=\"submit\" value=\"{$strDelete}\" /></p>";
+        echo "<p><input name='submit1' type='submit' value=\"{$strDelete}\" /></p>";
         echo "</form>";
     }
     else
     {
         echo "<h2>{$strDeleteContact}</h2>\n";
-        $sql="SELECT * FROM `{$dbContacts}` WHERE id='$id' ";
+        $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
         $contactresult = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        while ($contactrow=mysql_fetch_array($contactresult))
+        while ($contactobj = mysql_fetch_object($contactresult))
         {
             echo "<table align='center' class='vertical'>";
-            echo "<tr><th>{$strName}:</th><td><h3>".$contactrow['forenames'].' '.$contactrow['surname']."</h3></td></tr>";
-            echo "<tr><th>{$strSite}:</th><td><a href=\"site_details.php?id=".$contactrow['siteid']."\">".site_name($contactrow['siteid'])."</a></td></tr>";
-            echo "<tr><th>{$strDepartment}:</th><td>".$contactrow['department']."</td></tr>";
-            echo "<tr><th>{$strEmail}:</th><td><a href=\"mailto:".$contactrow['email']."\">".$contactrow['email']."</a></td></tr>";
-            echo "<tr><th>{$strTelephone}:</th><td>".$contactrow['phone']."</td></tr>";
-            echo "<tr><th>{$strNotes}:</th><td>".$contactrow['notes']."</td></tr>";
+            echo "<tr><th>{$strName}:</th><td><h3>{$contactobj->forenames} {$contactobj->surname}</h3></td></tr>";
+            echo "<tr><th>{$strSite}:</th><td><a href='site_details.php?id={$contactobj->siteid}'>".site_name($contactobj->siteid)."</a></td></tr>";
+            echo "<tr><th>{$strDepartment}:</th><td>{$contactobj->department}</td></tr>";
+            echo "<tr><th>{$strEmail}:</th><td><a href='mailto:{$contactobj->email}'>{$contactobj->email}</a></td></tr>";
+            echo "<tr><th>{$strTelephone}:</th><td>{$contactobj->phone}</td></tr>";
+            echo "<tr><th>{$strNotes}:</th><td>{$contactobj->notes}</td></tr>";
         }
         mysql_free_result($contactresult);
         echo "</table>\n";
@@ -65,7 +65,7 @@ if (empty($process))
         $sql  = "SELECT sc.maintenanceid AS maintenanceid, m.product, p.name AS productname, ";
         $sql .= "m.expirydate, m.term ";
         $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-        $sql .= "WHERE sc.maintenanceid = m.id AND m.product = p.id AND sc.contactid = '$id' ";
+        $sql .= "WHERE sc.maintenanceid = m.id AND m.product = p.id AND sc.contactid = '{$id}' ";
         $result=mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $totalcontracts=mysql_num_rows($result);
@@ -83,24 +83,27 @@ if (empty($process))
             echo "<p align='center'>";
             echo "<select name='newcontact'>";
             if ($id == 0)
-            echo "<option selected='selected' value='0'>Select A Contact\n";
-            while ($contacts = mysql_fetch_array($result))
+            {
+                echo "<option selected='selected' value='0'>Select A Contact\n";
+            }
+
+            while ($contacts = mysql_fetch_object($result))
             {
                 $site='';
-                if ($contacts['siteid']!='' && $contacts['siteid']!=0)
+                if ($contacts->siteid != '' && $contacts->siteid != 0)
                 {
-                    $site=" of ".site_name($contacts['siteid']);
+                    $site=" of ".site_name($contacts->siteid);
                 }
-                if ($contacts['id']!=$id)
+                if ($contacts->id != $id)
                 {
-                    echo "<option value=\"{$contacts['id']}\">";
-                    echo htmlspecialchars($contacts['surname'].', '.$contacts['forenames'].$site);
+                    echo "<option value='{$contacts->id}'>";
+                    echo htmlspecialchars($contacts->surname.', '.$contacts->forenames.$site);
                     echo "</option>\n";
                 }
             }
             echo "</select><br />";
             echo "<br />";
-            echo "<input type='hidden' name='id' value='$id' />";
+            echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<input type='hidden' name='process' value='true' />";
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
@@ -112,7 +115,7 @@ if (empty($process))
             echo "<br />";
             echo "<form action='{$_SERVER['PHP_SELF']}' onsubmit=\"return confirm_action('{$strAreYouSureDelete}', true)\" method='post'>\n";
             echo "<input type='hidden' name='newcontact' value='' />";  // empty
-            echo "<input type='hidden' name='id' value='$id' />";
+            echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<input type='hidden' name='process' value='true' />";
             echo "<p align='center'>";
             echo "<input type='submit' value='{$strDelete}' />";
@@ -127,25 +130,25 @@ else
     // save to db
     if (!empty($newcontact))
     {
-        $sql = "UPDATE `{$dbSupportContacts}` SET contactid='$newcontact' WHERE contactid='$id' ";
+        $sql = "UPDATE `{$dbSupportContacts}` SET contactid='{$newcontact}' WHERE contactid='{$id}' ";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        $sql = "UPDATE `{$dbIncidents}` SET contact='$newcontact' WHERE contact='$id' ";
+        $sql = "UPDATE `{$dbIncidents}` SET contact='{$newcontact}' WHERE contact='{$id}' ";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        $sql = "UPDATE `{$dbMaintenance}` SET admincontact='$newcontact' WHERE admincontact='$id' ";
+        $sql = "UPDATE `{$dbMaintenance}` SET admincontact='{$newcontact}' WHERE admincontact='{$id}' ";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
     // do the delete
-    $sql = "DELETE FROM `{$dbContacts}` WHERE id='$id' LIMIT 1";
+    $sql = "DELETE FROM `{$dbContacts}` WHERE id='{$id}' LIMIT 1";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    journal(CFG_LOGGING_NORMAL, 'Contact Deleted', "Contact $id was deleted", CFG_JOURNAL_CONTACTS, $id);
+    journal(CFG_LOGGING_NORMAL, 'Contact Deleted', "Contact {$id} was deleted", CFG_JOURNAL_CONTACTS, $id);
 
     if (!empty($newcontact)) html_redirect("contact_details.php?id={$newcontact}");
     else  html_redirect("contacts.php");

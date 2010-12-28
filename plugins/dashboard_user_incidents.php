@@ -36,16 +36,16 @@ function dashboard_user_incidents_display($dashletid)
     // If you alter this SQL also update the function user_activeincidents($id)
     if ($user == 'current') $user = $sit[2];
     // If the user is passed as a username lookup the userid
-    if (!is_number($user) AND $user!='current' AND $user!='all')
+    if (!is_number($user) AND $user != 'current' AND $user != 'all')
     {
-        $usql = "SELECT id FROM `{$dbUsers}` WHERE username='$user' LIMIT 1";
+        $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
         $uresult = mysql_query($usql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
         else $user = $sit[2]; // force to current user if username not found
     }
     $sql =  "WHERE i.contact = c.id AND i.priority = p.id ";
-    if ($user!='all') $sql .= "AND (owner='$user' OR towner='$user') ";
+    if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";
 
 
     $queue = 1; //we still need this for the included page so the incidents are coloured correctly
@@ -124,14 +124,14 @@ function dashboard_user_incidents_display($dashletid)
         //include ('incidents_table.inc.php');
         $shade='shade1';
         echo "<table summary=\"{$strIncidents}\">";
-        while ($row = mysql_fetch_array($result))
+        while ($obj = mysql_fetch_object($result))
         {
-            list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($row['id']);
+            list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($obj->id);
             $update_body = parse_updatebody($update_body);
-            echo "<tr><td class='$shade'>";
-            echo "<a href='javascript:incident_details_window({$row['id']})' class='info'>";
-            echo "{$row['id']} - {$row['title']} {$GLOBALS['strFor']} {$row['forenames']}   {$row['surname']}";
-            if (!empty($update_body) AND $update_body!='...')
+            echo "<tr><td class='{$shade}'>";
+            echo "<a href='javascript:incident_details_window({$obj->id})' class='info'>";
+            echo "{$obj->id} - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}";
+            if (!empty($update_body) AND $update_body != '...')
             {
                 echo "<span>{$update_body}</span>";
             }

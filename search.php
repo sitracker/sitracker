@@ -48,11 +48,11 @@ $filter = array('start' => $start, 'domain' => $domain, 'q' => $q);
 
 
 /**
-* Highlight a string to show it as matched, within a search result
-* @author Ivan Lucas
-* @param string $x the search result
-* @param string $var the term to be highlighted within the search result
-*/
+ * Highlight a string to show it as matched, within a search result
+ * @author Ivan Lucas
+ * @param string $x the search result
+ * @param string $var the term to be highlighted within the search result
+ */
 function search_highlight($x,$var)
 {
     //$x is the string, $var is the text to be highlighted
@@ -171,7 +171,7 @@ if (!empty($q))
         {
             $incidentsql .= "ORDER BY i.id ";
         }
-        elseif ($sort=='incident')
+        elseif ($sort == 'incident')
         {
             $incidentsql .= " ORDER BY i.title ";
         }
@@ -289,9 +289,9 @@ if (!empty($q))
 
     if ($domain == 'sites' AND !empty($sort))
     {
-        if ($sort=='id') $sitesql .= "ORDER BY k.title ";
-        elseif ($sort=='incident') $sitesql .= " ORDER BY k.published ";
-        elseif ($sort=='date') $sitesql .= " ORDER BY k.keywords ";
+        if ($sort == 'id') $sitesql .= "ORDER BY k.title ";
+        elseif ($sort == 'incident') $sitesql .= " ORDER BY k.published ";
+        elseif ($sort == 'date') $sitesql .= " ORDER BY k.keywords ";
         else $sitesql .= " ORDER BY u.score ";
 
         if ($order == 'a' OR $order == 'ASC' OR $order == '') $sitesql .= "ASC";

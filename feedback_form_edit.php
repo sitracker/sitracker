@@ -158,6 +158,7 @@ switch ($_REQUEST['action'])
                     echo "<table width='100%'>";
                     while ($question = mysql_fetch_object($qresult))
                     {
+                        if (empty($question->question)) $question->question = $strUntitled;
                         echo "<tr>";
                         echo "<td><strong>Q{$question->taborder}</strong></td>";
                         echo "<td><a href='feedback_form_editquestion.php?qid={$question->id}&amp;fid={$formid}'><strong>{$question->question}</strong></a></td>";
@@ -165,7 +166,7 @@ switch ($_REQUEST['action'])
                         echo "</tr>\n<tr>";
                         echo "<td>{$question->type}</td>";
                         echo "<td colspan='2'>";
-                        if ($question->required=='true') echo "<strong>{$strRequired}</strong> ";
+                        if ($question->required == 'true') echo "<strong>{$strRequired}</strong> ";
                         echo "<samp>{$question->options}</samp></td>";
                         echo "</tr>";
                     }

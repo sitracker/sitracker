@@ -58,7 +58,7 @@ $CATI18N['localeprefs'] = $strLocale;
 
 $CFGVAR['iconset']['title'] = $strIconSet;
 $CFGVAR['iconset']['type'] = 'select';
-$CFGVAR['iconset']['options'] = 'sit|oxygen|crystalclear';
+$CFGVAR['iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 // TODO our included 'kdeclassic' icon theme doesn't appear to be in the 'sit' filename format
 
 $CFGVAR['language']['title'] = $strLanguage;

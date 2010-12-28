@@ -41,9 +41,9 @@ if ($submit_value == "go")
     elseif ($search_string != '*')
     {
         $sql .= "WHERE ";
-        if (strlen(utf8_decode($search_string))==1)
+        if (strlen(utf8_decode($search_string)) == 1)
         {
-            if ($search_string=='0')
+            if ($search_string == '0')
             {
                 $sql .= "(SUBSTRING(name,1,1)=('0')
                                 OR SUBSTRING(name,1,1)=('1')
@@ -78,15 +78,15 @@ if ($submit_value == "go")
     {
             //go straight to the site
             $obj = mysql_fetch_object($result);
-            $url = "site_details.php?id=".$obj->id;
-            header("Location: $url");
+            $url = "site_details.php?id={$obj->id}";
+            header("Location: {$url}");
     }
 }
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-if ($search_string=='') $search_string='a';
+if ($search_string == '') $search_string='a';
 echo "<h2>".icon('site', 32)." ";
-echo "{$strBrowseSites}</h2>";
+echo "{title}</h2>";
 
 echo "<table summary='alphamenu' align='center'>";
 echo "<tr>";
@@ -100,7 +100,7 @@ echo "<input name='submit' type='submit' value='{$strGo}' /></p>";
 echo "</form>\n";
 if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 {
-    if ($displayinactive=="true")
+    if ($displayinactive == "true")
     {
         echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=false";
         if (!empty($search_string)) echo "&amp;search_string={$search_string}&amp;owner={$owner}";
@@ -122,7 +122,7 @@ echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
 echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
 $sitesql = "SELECT COUNT(id) FROM `{$dbSites}` WHERE owner='{$sit[2]}'";
 $siteresult = mysql_query($sitesql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 list($ownedsites) = mysql_fetch_row($siteresult);
 if ($ownedsites > 0) echo " | <a href='sites.php?owner={$sit[2]}' title='Sites'>{$strMine}</a> ";
 
@@ -161,9 +161,9 @@ if ($errors == 0)
         elseif ($search_string != '*')
         {
             $sql .= "WHERE ";
-            if (strlen(utf8_decode($search_string))==1)
+            if (strlen(utf8_decode($search_string)) == 1)
             {
-                if ($search_string=='0')
+                if ($search_string == '0')
                 {
                     $sql .= "(SUBSTRING(name,1,1)=('0')
                                     OR SUBSTRING(name,1,1)=('1')
@@ -184,10 +184,10 @@ if ($errors == 0)
             }
             else
             {
-                $sql .= "name LIKE '%$search_string%' ";
+                $sql .= "name LIKE '%{$search_string}%' ";
             }
         }
-        if ($displayinactive=="false")
+        if ($displayinactive == "false")
         {
             if ($search_string == '*') $sql .= " WHERE ";
             else $sql .= " AND ";
@@ -208,7 +208,7 @@ if ($errors == 0)
     {
         $countsites = mysql_num_rows($result);
 
-        echo "<p align='center'>{$strDisplaying} $countsites ";
+        echo "<p align='center'>{$strDisplaying} {$countsites} ";
 
         if ($countsites == 1)
         {

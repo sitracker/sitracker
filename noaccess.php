@@ -58,7 +58,6 @@ echo "</ul>";
 echo "<p align='center'>{$strIfYouShouldHaveAccess}</p>";
 echo "<p align='center'><a href=\"javascript:history.back();\">{$strPrevious}</a></p>";
 
-
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
 ?>

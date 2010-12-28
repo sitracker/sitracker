@@ -90,13 +90,14 @@ else
 
             // Validate input
             $errors = 0;
-            if ($name=='')
+            if ($name == '')
             {
                 $_SESSION['formerrors']['add_task']['name'] = sprintf($strFieldMustNotBeBlank, $strTitle);
                 $errors++;
             }
 
-            if ($startdate > $duedate AND $duedate != '' AND $duedate > 0 ) $startdate=$duedate. " ".$duetime;
+            if ($startdate > $duedate AND $duedate != '' AND $duedate > 0 ) $startdate = "{$duedate} {$duetime}";
+
             if ($errors != 0)
             {
                 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -107,7 +108,7 @@ else
                 if ($startdate > 0) $startdate = date('Y-m-d', $startdate)." ".$start_time_picker_hour.":".$start_time_picker_minute;
                 else $startdate = '';
                 if ($duedate > 0) $duedate = date('Y-m-d',$duedate)." ".$due_time_picker_hour.":".$due_time_picker_minute;
-                else $duedate='';
+                else $duedate = '';
                 if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s')." ".$start_time_picker_hour.":".$start_time_picker_minute;;
                 $sql = "INSERT INTO `{$dbTasks}` ";
                 $sql .= "(name,description,priority,owner,duedate,startdate,completion,value,distribution,created) ";

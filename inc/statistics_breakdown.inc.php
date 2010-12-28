@@ -19,12 +19,12 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-$sql = get_sql_statement($startdate,$enddate,$query,FALSE);
+$sql = get_sql_statement($startdate, $enddate, $query, FALSE);
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-$start_str = date("Y-m-d",$startdate);
-$end_str = date("Y-m-d",$enddate);
+$start_str = date("Y-m-d", $startdate);
+$end_str = date("Y-m-d", $enddate);
 
 switch ($query)
 {
@@ -39,7 +39,7 @@ switch ($query)
         break;
 }
 
-if ($start_str==$end_str) echo "<h2>".sprintf($strIncidentsVerbOnDate, $type, $start_str)."</h2>";
+if ($start_str == $end_str) echo "<h2>".sprintf($strIncidentsVerbOnDate, $type, $start_str)."</h2>";
 else echo "<h2>".sprintf($strIncidentsVerbBetweenDates, $type, $start_str, $end_str)."</h2>";
 
 echo "<table align='center'>";
@@ -48,29 +48,30 @@ if (mysql_num_rows($result) > 0)
 {
     echo "<tr><th>{$strID}</th><th>{$strTitle}</th><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strOwner}</th><th>{$strCustomer}</th><th>{$strSite}</th></tr>";
 
-    while ($row = mysql_fetch_array($result))
+    while ($obj = mysql_fetch_object($result))
     {
         echo "<tr>";
-        echo "<td><a href=\"javascript:incident_details_window('{$row['id']}','incident{$row['id']}')\" class='info'>{$row['id']}</a></td>";
-        echo "<td><a href=\"javascript:incident_details_window('{$row['id']}','incident{$row['id']}')\" class='info'>{$row['title']}</a></td>";
-        echo "<td>".date($CONFIG['dateformat_datetime'],$row['opened'])."</td>";
-        if ($row['status'] != 2)
+        echo "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>{$obj->id}</a></td>";
+        echo "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>{$obj->title}</a></td>";
+        echo "<td>".date($CONFIG['dateformat_datetime'], $obj->opened)."</td>";
+        if ($obj->status != 2)
         {
             echo "<td>{$strCurrentlyOpen}</td>";
         }
         else
         {
-            echo "<td>".date($CONFIG['dateformat_datetime'],$row['closed'])."</td>";
+            echo "<td>".date($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
         }
-        echo "<td>".user_realname($row['owner'])."</td>";
+        echo "<td>".user_realname($obj->owner)."</td>";
+
         $sql = "SELECT c.forenames, c.surname, s.name ";
         $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
-        $sql .= "WHERE s.id = c.siteid AND c.id = {$row['contact']}";
+        $sql .= "WHERE s.id = c.siteid AND c.id = {$obj->contact}";
         $contactResult = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $contact = mysql_fetch_array($contactResult);
-        echo "<td>{$contact['forenames']} {$contact['surname']}</td>";
-        echo "<td>{$contact['name']}</td>";
+        $contact = mysql_fetch_object($contactResult);
+        echo "<td>{$contact->forenames} {$contact->surname}</td>";
+        echo "<td>{$contact->name}</td>";
         echo "</tr>\n";
     }
 

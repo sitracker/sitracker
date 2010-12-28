@@ -941,5 +941,26 @@ function set_user_status()
             },
             onFailure: function(){ alert('Something went wrong...') }
     });
+}
 
+function attach_another_file(element)
+{
+    var max = 0;
+    var attachments = $(element).childNodes;
+    for ( i = 0; i < attachments.length; i++)
+    {
+        node = attachments[i];
+        if (node instanceof HTMLInputElement)
+        {
+            var id = node.id;
+            var n = parseInt(id.split("_")[1]);
+            if (n > max) max = n;
+        }
+    }
+    var next_attach_number = (max+1);
+    var br = new Element('br');
+    var name = "attachment_"+next_attach_number;
+    var input = new Element('input', {'type': 'file', 'id': name, 'name': name, 'size': '40'});
+    $(element).appendChild(br);
+    $(element).appendChild(input);
 }

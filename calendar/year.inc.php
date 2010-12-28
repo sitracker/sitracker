@@ -38,12 +38,12 @@ if ($type < HOL_PUBLIC)
         echo "<table align='center'>";
         echo "<tr class='shade2'><td><strong>{$strAwaitingApproval}</strong>:</td></tr>";
         echo "<tr class='shade1'><td>";
-        while ($dates = mysql_fetch_array($result))
+        while ($dates = mysql_fetch_object($result))
         {
-            echo date('l ', strtotime($dates['date']));
-            if ($dates['length'] == 'am') echo "{$strMorning} ";
-            if ($dates['length'] == 'pm') echo "{$strAfternoon} ";
-            echo date('jS F Y', strtotime($dates['date']));
+            echo date('l ', strtotime($dates->date));
+            if ($dates->length == 'am') echo "{$strMorning} ";
+            if ($dates->length == 'pm') echo "{$strAfternoon} ";
+            echo date('jS F Y', strtotime($dates->date));
             echo "<br/>\n";
         }
         echo "</td></tr>\n";
