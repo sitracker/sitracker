@@ -849,6 +849,7 @@ function help_link($context)
  * @param errorcode The error code from $_FILES['file']['error']
  * @param name The file name which was uploaded from $_FILES['file']['name']
  * @return String containing the error message (in HTML)
+ * @todo FIXME i18n
  */
 function get_file_upload_error_message($errorcode, $name)
 {
