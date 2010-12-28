@@ -30,12 +30,6 @@ $originalowner = cleanvar($_REQUEST['originalowner']);
 
 switch ($mode)
 {
-    case 'return': // dummy entry, just returns user back
-        header('Location: index.php');
-        break;
-    case 'editprofile':
-        header('Location: user_profile_edit.php');
-        break;
     case 'deleteassign':
         // this may not be the very best place for this functionality but it's all i could find - inl 19jan05
         // hide a record from tempassign as requested by clicking 'ignore' in the holding queue
