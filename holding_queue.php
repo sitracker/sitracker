@@ -61,7 +61,7 @@ function generate_row($update)
     }
     $pluginshade = plugin_do('holdingqueue_rowshade', $update);
     $shade = $pluginshade ? $pluginshade : $shade;
-    $html_row = "<tr class='$shade'>";
+    $html_row = "<tr class='{$shade}'>";
     $html_row .= "<td style='text-align: center'>";
     if (($update->locked == $sit[2]) OR empty($update->locked))
     {
@@ -187,7 +187,7 @@ else
     // Unlock any expired locks
     $nowdatel = date('Y-m-d H:i:s');
     $sql = "UPDATE `{$dbTempIncoming}` SET locked=NULL, lockeduntil=NULL ";
-    $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '$now' ";
+    $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '{$now}' ";
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 }

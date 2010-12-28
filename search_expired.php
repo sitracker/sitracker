@@ -77,7 +77,7 @@ else
         $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, `{$dbContacts}` AS c, ";
         $sql .= "`{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r WHERE ";
         $sql .= "(siteid = s.id AND product = p.id AND reseller = r.id AND (licence_type = l.id OR licence_type = NULL) AND admincontact = c.id) AND ";
-        $sql .= "expirydate >= $min_expiry AND expirydate <= $now ";
+        $sql .= "expirydate >= {$min_expiry} AND expirydate <= {$now} ";
         if ($show == "terminated") $sql .= "AND term='yes'";
         else $sql .= "AND term != 'yes'";
         $sql .= "ORDER BY expirydate ASC";

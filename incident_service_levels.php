@@ -61,7 +61,7 @@ if (count($slahistory) >= 1)
         if (empty($history['targetsla'])) break; // Skip any empty SLA history
         if ($history['targetmet'] == FALSE) $class = 'critical';
         else $class = 'shade2';
-        echo "<tr class='$class'>";
+        echo "<tr class='{$class}'>";
         echo "<td>";
         echo icon($slatypes[$history['targetsla']]['icon'], 16)." ";
         echo target_type_name($history['targetsla'])."</td>";
@@ -80,7 +80,10 @@ if (count($slahistory) >= 1)
     }
     echo "</table>\n";
 }
-else echo "<p align='center'>{$strNothingToDisplay}.<p>";
+else
+{
+    echo "<p align='center'>{$strNothingToDisplay}.<p>";
+}
 
 //start status summary
 $sql = "SELECT u.id AS updatesid, incidentid, userid, type, timestamp, currentstatus, is.id, is.name AS name ";

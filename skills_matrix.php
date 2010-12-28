@@ -170,7 +170,7 @@ if ($countskills > 0 AND $countusers > 0)
                     {
                         //Skill in software
                         // echo "<td align='center'>&#10004;</td>"; // Doesn't work in Windows (fonts!) rubbishy O/S
-                        echo "<td align='center' class='$shade'>";
+                        echo "<td align='center' class='{$shade}'>";
                         echo icon('tick', 16)."</td>";
                         $counting[$user->realname]++;
                         $count++;

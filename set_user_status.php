@@ -24,13 +24,9 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// External variables
 $mode = cleanvar($_REQUEST['mode']);
 $incidentid = cleanvar($_REQUEST['incidentid']);
 $originalowner = cleanvar($_REQUEST['originalowner']);
-
-
-
 
 switch ($mode)
 {

@@ -147,7 +147,7 @@ elseif ($action == "add")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     $errors = 0;
-    // check for blank name
+
     if ($name == '')
     {
         $errors++;
@@ -159,7 +159,6 @@ elseif ($action == "add")
         $_SESSION['formerrors']['add_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
     }
 
-    // add site if no errors
     if ($errors == 0)
     {
         if ($owner == '') $owner = 0;

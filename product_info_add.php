@@ -58,7 +58,6 @@ else
     $_SESSION['formdata']['product_info_add'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
     $errors = 0;
     
-    // check for blank product
     if ($product == 0)
     {
         $errors++;
