@@ -127,17 +127,7 @@ list($ownedsites) = mysql_fetch_row($siteresult);
 if ($ownedsites > 0) echo " | <a href='sites.php?owner={$sit[2]}' title='Sites'>{$strMine}</a> ";
 
 echo "</td></tr></table>";
-?>
-<script type="text/javascript">
-//<![CDATA[
-    function site_details_window(siteid)
-    {
-        URL = "site_details.php?action=edit&amp;site=" + siteid;
-        window.open(URL, "site_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-    }
-//]]>
-</script>
-<?php
+
 // check input
 if ($search_string == '')
 {
