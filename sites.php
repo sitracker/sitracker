@@ -20,7 +20,6 @@ $pagescripts = array('AutoComplete.js');
 
 $title = $strBrowseSites;
 
-// External variables
 $search_string = cleanvar($_REQUEST['search_string']);
 $owner = clean_int($_REQUEST['owner']);
 $submit_value = cleanvar($_REQUEST['submit']);
@@ -185,7 +184,6 @@ if ($errors == 0)
         }
         $sql .= " ORDER BY name ASC";
 
-        // execute query
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     }
@@ -224,7 +222,6 @@ if ($errors == 0)
         $shade = 'shade1';
         while ($results = mysql_fetch_object($result))
         {
-            // define class for table row shading
             if ($results->active == 'false') $shade = 'expired';
             echo "<tr class='{$shade}'>";
             echo "<td align='center'>{$results->id}</td>";
@@ -232,7 +229,7 @@ if ($errors == 0)
             echo "<td>".nl2br($results->department)."</td>";
             echo "<td><a href='site_edit.php?action=edit&amp;site={$results->id}'>{$strEdit}</a></td>";
             echo "</tr>";
-            // invert shade
+
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
