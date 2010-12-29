@@ -53,7 +53,7 @@ function generate_row($update)
     else if (!empty($update->fromaddr))
     {
         // Have a look if we've got a user with this email address
-        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update['fromaddr'])."%'";
+        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update->fromaddr)."%'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($contactmatches) = mysql_fetch_row($result);
@@ -233,38 +233,6 @@ if (!empty($selected))
     }
 }
 
-
-?>
-<script type="text/javascript">
-    <!--
-        function submitform()
-        {
-            document.held_emails.submit();
-        }
-
-        function checkAll(checkStatus)
-        {
-            var frm = document.held_emails.elements;
-            for(i = 0; i < frm.length; i++)
-            {
-                if (frm[i].type == 'checkbox')
-                {
-                    if (checkStatus)
-                    {
-                        frm[i].checked = true;
-                    }
-                    else
-                    {
-                        frm[i].checked = false;
-                    }
-                }
-            }
-        }
-        -->
-    </script>
-
-<?php
-
 // extract updates
 $sql  = "SELECT u.id AS id, ti.id AS tempid, u.*, ti.* ";
 $sql .= "FROM `{$dbUpdates}` AS u, `{$dbTempIncoming}` AS ti ";
@@ -337,13 +305,13 @@ if (is_array($queuerows))
     echo "<h2>".icon('email', 32)." {$strIncomingEmail}</h2>";
 
     echo "<p align='center'>{$strIncomingEmailText}</p>";
-    echo "<form action='{$_SERVER['PHP_SELF']}' name='held_emails'  method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}' id='held_emails' name='held_emails'  method='post'>";
     echo "<table align='center' style='width: 95%'>";
     echo "<tr>";
     echo "<th>";
     if ($realemails > 0)
     {
-        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(this.checked);\" />";
+        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(held_emails, this.checked);\" />";
     }
 
     echo "</th>";
@@ -362,7 +330,7 @@ if (is_array($queuerows))
     if ($realemails > 0)
     {
         echo "<tr><td>";
-        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
+        echo "<a href=\"javascript: submit_form('held_emails')\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         echo "</td></tr>";
     }
     echo "</table>\n";

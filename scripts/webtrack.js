@@ -998,3 +998,8 @@ function ignore_pending_reassignments(incidentid, originalowner)
 				}
 			});
 }
+
+function submit_form(form)
+{
+	$(form).submit();
+}
