@@ -20,7 +20,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// External Variables
 $sort = cleanvar($_REQUEST['sort']);
 
 $title = $strListSkills;

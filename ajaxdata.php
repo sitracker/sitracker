@@ -356,6 +356,29 @@ switch ($action)
             echo $result;
         }
         break;
+    case 'delete_temp_assign':
+        if (user_permission($sit[2], 42))
+        {
+            $incidentid = clean_int($_REQUEST['incidentid']);
+            $originalowner = clean_int($_REQUEST['originalowner']);
+            $sql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' ";
+            $sql .= "WHERE incidentid='{$incidentid}' AND originalowner='{$originalowner}' LIMIT 1";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                echo "FAILED";
+                trigger_error(mysql_error(), E_USER_ERROR);
+            }
+            else
+            {
+                echo "OK";
+            }
+        }
+        else
+        {
+            echo "NOPERMISSION";
+        }
+        break;
     default :
         plugin_do('ajaxdata_add_action', array('action' => $action));
         break;

@@ -60,13 +60,13 @@ if ($action == "edit")
         {
             if (document.maintform.productonly.checked==true)
             {
-                document.maintform.terminated.disabled=true;
-                document.maintform.terminated.checked=true;
+                $('terminated').disabled=true;
+                $('terminated').checked=true;
             }
             else
             {
-                document.maintform.terminated.disabled=false;
-                document.maintform.terminated.checked=false;
+            	$('terminated').disabled=false;
+            	$('terminated').checked=false;
             }
         }
         //]]>
@@ -166,7 +166,6 @@ if ($action == "edit")
 }
 else if ($action == "update")
 {
-    // External variables
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
     $incident_quantity = $incident_pools[$_POST['incident_poolid']];
     $reseller = clean_int($_POST['reseller']);
@@ -187,31 +186,26 @@ else if ($action == "update")
     if ($contacts == 'amount') $amount = cleanvar($_REQUEST['amount']);
     elseif ($contacts == 'all') $allcontacts = 'Yes';
 
-    // Update maintenance
     $errors = 0;
 
-    // check for blank reseller
     if ($reseller == 0)
     {
         $errors = 1;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strReseller}'"), E_USER_ERROR);
     }
 
-    // check for blank admin contact
     if ($admincontact == 0)
     {
         $errors = 1;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
     }
 
-    // check for blank expiry day
     if ($expirydate == 0)
     {
         $errors = 1;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strExpiryDate}'"), E_USER_ERROR);
     }
 
-    // update maintenance if no errors
     if ($errors == 0)
     {
         if (empty($productonly)) $productonly = 'no';

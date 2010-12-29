@@ -105,7 +105,6 @@ elseif ($action == 'delete')
 else
 {
     // Save
-    // External variables
     $name = cleanvar($_REQUEST['name']);
     $vendor = clean_int($_REQUEST['vendor']);
     $tags = cleanvar($_REQUEST['tags']);
@@ -114,10 +113,8 @@ else
     if (!empty($_REQUEST['lifetime_end'])) $lifetime_end = date('Y-m-d',strtotime($_REQUEST['lifetime_end']));
     else $lifetime_end = '';
 
-    // Add new
     $errors = 0;
 
-    // check for blank name
     if ($name == '')
     {
         $errors = 1;
@@ -129,14 +126,14 @@ else
         replace_tags(TAG_SKILL, $id, $tags);
 
         $sql = "UPDATE `{$dbSoftware}` SET ";
-        $sql .= "name='$name', vendorid='{$vendor}', lifetime_start='{$lifetime_start}', lifetime_end='{$lifetime_end}' ";
+        $sql .= "name='{$name}', vendorid='{$vendor}', lifetime_start='{$lifetime_start}', lifetime_end='{$lifetime_end}' ";
         $sql .= "WHERE id = '{$id}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         else
         {
-            $id=mysql_insert_id();
-            journal(CFG_LOGGING_DEBUG, 'Skill Edited', "Skill $id was edited", CFG_JOURNAL_DEBUG, $id);
+            $id = mysql_insert_id();
+            journal(CFG_LOGGING_DEBUG, 'Skill Edited', "Skill {$id} was edited", CFG_JOURNAL_DEBUG, $id);
             html_redirect("products.php?display=skills");
         }
     }

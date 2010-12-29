@@ -147,7 +147,7 @@ elseif ($step == '1')
     $end += 86400;  // ensure we still loop for single day bookings by setting end to next day
     for ($day = $start; $day < $end; $day = $day + 86400)
     {
-        if (date('D',$day) != 'Sat' && date('D',$day) != 'Sun')
+        if (date('D', $day) != 'Sat' && date('D', $day) != 'Sun')
         {
             $sql = "SELECT * FROM `{$dbHolidays}` WHERE `date` = FROM_UNIXTIME($day, '%Y-%m-%d') AND userid={$user}";
             $result = mysql_query($sql);
@@ -282,7 +282,6 @@ elseif ($step == '1')
         echo "</p>";
     }
     echo "</form>";
-
 
     echo "<br />";
 

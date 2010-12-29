@@ -77,7 +77,7 @@ else
                     }
                     break;
                 case TAG_INCIDENT: //incident
-                    $sql = "SELECT title FROM `{$dbIncidents}` WHERE id = '$obj->id'";
+                    $sql = "SELECT title FROM `{$dbIncidents}` WHERE id = '{$obj->id}'";
                     $resultinc = mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                     if (mysql_num_rows($resultinc) > 0)
@@ -139,7 +139,7 @@ else
             if ($col >= 3 OR $count == $num_tags)
             {
                 echo "</tr>\n";
-                $col=0;
+                $col = 0;
             }
         }
         echo "</table>";
