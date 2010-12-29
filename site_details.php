@@ -37,7 +37,7 @@ echo "<table align='center' class='vertical'>";
 $sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
 $siteresult = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($siterow = mysql_fetch_object($siteresult))
+while ($siteobj = mysql_fetch_object($siteresult))
 {
     echo "<tr><th>{$strSite}:</th><td>";
     echo "<h3>".icon('site', 32)." {$siteobj->name}</h3>";
