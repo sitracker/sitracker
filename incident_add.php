@@ -90,7 +90,6 @@ function to_row($contact)
     return $str;
 }
 
-// External variables
 $action = $_REQUEST['action'];
 $context = cleanvar($_REQUEST['context']);
 $updateid = clean_int($_REQUEST['updateid']);
