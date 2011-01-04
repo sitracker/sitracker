@@ -123,7 +123,7 @@ else
                 echo "</pre>";
                 */
                 echo "<h3>".$day['date']."</h3>";
-                echo "<table>";
+                echo "<table align='center' width='50%'>";
                 $opened = 0;
                 $closed = 0;
                 $owners = array();
@@ -159,7 +159,7 @@ else
                     }
                 }
 
-                echo "<tr><td valign='top'><table>";
+                echo "<tr><td valign='top' width='30%'><table>";
                 echo "<table><tr><th>{$strUser}</th><th>{$strOpened}</th><th>{$strClosed}</th></tr>";
                 foreach ($owners AS $o)
                 {
