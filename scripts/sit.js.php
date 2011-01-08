@@ -160,7 +160,7 @@ function checkLDAPDetails(statusfield)
                 }
                 else if (xmlhttp.responseText == ".LDAP_ADMIN_GROUP_INCORRECT.")
                 {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPAdminGroupIncrrect}</strong>\";
+                    $(statusfield).innerHTML = \"<strong>{$strLDAPAdminGroupIncorrect}</strong>\";
                 }
                 else if (xmlhttp.responseText == ".LDAP_MANAGER_GROUP_INCORRECT.")
                 {
