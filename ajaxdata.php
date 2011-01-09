@@ -379,6 +379,10 @@ switch ($action)
             echo "NOPERMISSION";
         }
         break;
+    case 'ldap_browse_groups':
+        $base = cleanvar($_REQUEST['ldap_base']);
+        return json_encode(ldapGroupBrowse($base));
+        break;
     default :
         plugin_do('ajaxdata_add_action', array('action' => $action));
         break;

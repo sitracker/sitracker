@@ -208,6 +208,9 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
             $html .= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
             break;
+        case 'ldapgroup':
+            $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" /> <a href=\"javascript:ldap_browse_window('', '{$setupvar}')\">{$GLOBALS['strBrowse']}</a>";
+            break;
         case 'textreadonly':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
             break;

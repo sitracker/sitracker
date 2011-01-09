@@ -460,15 +460,19 @@ $CFGVAR['ldap_bind_pass']['statusfield'] = 'TRUE';
 
 $CFGVAR['ldap_admin_group']['title'] = 'LDAP group for SIT admins';
 $CFGVAR['ldap_admin_group']['help'] = 'The full DN of the group the users are a member of which assigns the SiT! admin role e.g. <code>cn=sitadmins,ou=sitracker,o=org</code>';
+$CFGVAR['ldap_admin_group']['type'] = 'ldapgroup';
 
 $CFGVAR['ldap_manager_group']['title'] = 'LDAP group for SIT managers';
 $CFGVAR['ldap_manager_group']['help'] = 'The full DN of the group the users are a member of which assigns the SiT! manager role e.g. <code>cn=sitmanagers,ou=sitracker,o=org</code>';
+$CFGVAR['ldap_manager_group']['type'] = 'ldapgroup';
 
 $CFGVAR['ldap_user_group']['title'] = 'LDAP group for SIT users';
 $CFGVAR['ldap_user_group']['help'] = 'The full DN of the group the users are a member of which assigns the SiT! user role e.g. <code>cn=situsers,ou=sitracker,o=org</code>';
+$CFGVAR['ldap_user_group']['type'] = 'ldapgroup';
 
 $CFGVAR['ldap_customer_group']['title'] = 'LDAP Customer Group';
 $CFGVAR['ldap_customer_group']['help'] = 'The full DN of the group the identifies the person as a valid contact/customer e.g. <code>cn=sitcustomers,ou=sitracker,o=org</code>';
+$CFGVAR['ldap_customer_group']['type'] = 'ldapgroup';
 
 $CFGVAR['ldap_default_customer_siteid']['title'] = 'LDAP Customer default site';
 $CFGVAR['ldap_default_customer_siteid']['help'] = 'Place LDAP customers as contacts under this site';

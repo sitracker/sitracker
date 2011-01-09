@@ -1003,3 +1003,19 @@ function submit_form(form)
 {
 	$(form).submit();
 }
+
+function ldap_browse_window(base, field)
+{
+    // URL = "incident.php?popup=yes&id=" + incidentid;
+    // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
+    URL = "ldap_browse.php?base=" + base + "&field=" + field;
+    window.open(URL, 'ldap_browse', "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=300,height=400");
+}
+
+function ldap_browse_update_group(dn, fieldName)
+{
+	// parent = window.parent;
+	field = window.opener.parent.document.getElementById(fieldName); 
+	field.value = dn;
+	window.close();
+}

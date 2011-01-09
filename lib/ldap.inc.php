@@ -696,4 +696,45 @@ function ldapCheckGroupExists($dn, $mapping)
     return ldapCheckObjectExists($dn, $o);
 }
 
+
+function ldapGroupBrowse($base)
+{
+    global $CONFIG;
+    
+    debug_log("ldapGroupBrowse");
+    
+    $ldap_conn = ldapOpen();
+    
+    $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass={$CONFIG['ldap_grpobjecttype']}))";
+    $attribs = array('dn', 'objectClass');
+    
+    debug_log("LDAP Filter: {$filter}", TRUE);
+    
+    $sr = ldap_list($ldap_conn, $base, $filter, $attribs);
+    
+    if ($sr)
+    {
+        $entries = ldap_get_entries($ldap_conn, $sr);
+        
+        $a = array();
+        
+        for ($i = 0; $i < $entries['count']; $i++)
+        {
+            $type = 'container'; 
+            for ($j = 0; $j < $entries[$i]['objectclass']['count']; $j++)
+            {
+                if (strtolower($entries[$i]['objectclass'][$j]) == strtolower($CONFIG['ldap_grpobjecttype']))
+                {
+                    $type = 'group';
+                }
+            }
+            
+            
+            $a[] = array('dn' => $entries[$i]['dn'], 'type' => $type);
+        }
+    }
+    
+    return $a;    
+}
+
 ?>
