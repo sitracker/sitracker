@@ -26,7 +26,6 @@ $action = $_REQUEST['action'];
 switch ($action)
 {
     case 'addnote':
-        // External variables
         $link = clean_int($_REQUEST['link']);
         $refid = clean_int($_REQUEST['refid']);
         $bodytext = cleanvar($_REQUEST['bodytext'],FALSE,FALSE);
@@ -45,7 +44,7 @@ switch ($action)
             echo "<ul class='error'>";
             foreach ($error AS $err)
             {
-                echo "<li>$err</li>";
+                echo "<li>{$err}</li>";
             }
             echo "</ul>";
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -55,10 +54,10 @@ switch ($action)
             $sql = "INSERT INTO `{$dbNotes}` (userid, bodytext, link, refid) ";
             $sql .= "VALUES ('{$sit[2]}', '{$bodytext}', '{$link}', '{$refid}')";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            if (mysql_affected_rows() < 1) trigger_error("Note insert failed",E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            if (mysql_affected_rows() < 1) trigger_error("Note insert failed", E_USER_ERROR);
 
-            $sql = "UPDATE `{$dbTasks}` SET lastupdated=NOW() WHERE id=$refid";
+            $sql = "UPDATE `{$dbTasks}` SET lastupdated=NOW() WHERE id={$refid}";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 

@@ -177,50 +177,50 @@ else
     else $startdate = '';
 
     $_SESSION['formdata']['add_user'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
-    // Add user
+
     $errors = 0;
-    // check for blank real name
+
     if ($realname == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_user']['realname']= sprintf($strFieldMustNotBeBlank, $strRealName)."</p>\n";
     }
-    // check for blank username
+
     if ($username == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_user']['username']= sprintf($strFieldMustNotBeBlank, $strUsername)."</p>\n";
     }
-    // check for blank password
+
     if ($password == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_user']['password']= sprintf($strFieldMustNotBeBlank, $strPassword)."</p>\n";
     }
-    // check for blank job title
+
     if ($jobtitle == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_user']['jobtitle']= sprintf($strFieldMustNotBeBlank, $strJobTitle)."</p>\n";
     }
-    // check for blank email
+
     if ($email == '')
     {
         $errors++;
         $_SESSION['formerrors']['add_user']['email']= sprintf($strFieldMustNotBeBlank, $strEmail)."</p>\n";
     }
-    // Check username is unique
-    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE username='$username'";
+
+    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE username='{$username}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
     list($countexisting) = mysql_fetch_row($result);
     if ($countexisting >= 1)
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['']= "{$strUsernameNotUnique}</p>\n";
+        $_SESSION['formerrors']['add_user'][''] = "{$strUsernameNotUnique}</p>\n";
     }
     // Check email address is unique (discount disabled accounts)
-    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE status > 0 AND email='$email'";
+    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE status > 0 AND email='{$email}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     list($countexisting) = mysql_fetch_row($result);

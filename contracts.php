@@ -139,23 +139,12 @@ if (mysql_num_rows($result) == 0)
 }
 else
 {
-    ?>
-    <script type="text/javascript">
-    //<![CDATA[
-    function contact_details_window(contactid)
-    {
-        URL = "contact_details.php?contactid=" + contactid;
-        window.open(URL, "contact_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-    }
-    //]]>
-    </script>
-    <?php
     echo "<p align='center'>".sprintf($strResultsNum, mysql_num_rows($result))."</p>\n";
 
     echo "<table align='center' style='width: 95%;'>";
     echo "<tr>";
 
-    $filter=array('search_string' => $search_string,
+    $filter = array('search_string' => $search_string,
                   'productid' => $productid,
                   'resellerid' => $resellerid);
     echo colheader('id', $strID, $sort, $order, $filter);

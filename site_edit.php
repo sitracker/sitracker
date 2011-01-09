@@ -19,7 +19,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// External variables
 $action = $_REQUEST['action'];
 $site = clean_int($_REQUEST['site']);
 
@@ -46,13 +45,11 @@ elseif ($action == "edit")
     }
     else
     {
-        //  Show edit site form
         echo show_edit_site($site);
     }
 }
 elseif ($action == "update")
 {
-    // External Variables
     // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
     $incident_quantity = clean_int($_POST['incident_pool']);
     $name = clean_dbstring($_POST['name']);
@@ -74,16 +71,14 @@ elseif ($action == "update")
     $tags = clean_dbstring($_POST['tags']);
     $active = clean_dbstring($_POST['active']);
 
-    // Edit site, update the database
     $errors = 0;
-    // check for blank name
+
     if ($name == '')
     {
         $errors = 1;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
     }
 
-    // edit site if no errors
     if ($errors == 0)
     {
         replace_tags(3, $site, $tags);
@@ -109,7 +104,6 @@ elseif ($action == "update")
         $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
         $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
 
-        // licenserx='$licenserx'
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         else

@@ -20,12 +20,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strNewSite;
-// External variables
+
 $action = $_REQUEST['action'];
 
 if ($action == "showform" OR $action == '')
 {
-    // Show add site form
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo show_form_errors('add_site');
     clear_form_errors('add_site');
@@ -125,7 +124,6 @@ if ($action == "showform" OR $action == '')
 }
 elseif ($action == "add")
 {
-    // External variables
     $name = cleanvar($_POST['name']);
     $department = cleanvar($_POST['department']);
     $address1 = cleanvar($_POST['address1']);
@@ -147,7 +145,7 @@ elseif ($action == "add")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     $errors = 0;
-    // check for blank name
+
     if ($name == '')
     {
         $errors++;
@@ -159,7 +157,6 @@ elseif ($action == "add")
         $_SESSION['formerrors']['add_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
     }
 
-    // add site if no errors
     if ($errors == 0)
     {
         if ($owner == '') $owner = 0;
@@ -170,14 +167,13 @@ elseif ($action == "add")
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $id = mysql_insert_id();
 
-        // show error message if addition failed
         if (!$result)
         {
             echo "<p class='error'>{$strAddSiteFailed}</p>\n";
         }
-        // show success message
         else
         {
+            // show success message
             clear_form_data('add_site');
             clear_form_errors('add_site');
 

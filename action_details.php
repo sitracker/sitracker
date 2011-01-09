@@ -1,5 +1,5 @@
 <?php
-// triggers.php - Page for setting user trigger preferences
+// action_details.php - Page for setting user trigger preferences
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
@@ -40,7 +40,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 function insertRuletext(tvar)
 {
-//     tvar = tvar + ' ';
+    // tvar = tvar + ' ';
     var start = $('rules').selectionStart;
     var end = $('rules').selectionEnd;
     $('rules').value = $('rules').value.substring(0, start) + tvar + $('rules').value.substring(end, $('rules').textLength);
@@ -60,7 +60,7 @@ function get_checks()
     {
         try
         {
-            xmlhttp = new XMLHttpRequest();
+           xmlhttp = new XMLHttpRequest();
         }
         catch (e)
         {
@@ -86,7 +86,7 @@ function get_checks()
     xmlhttp.setRequestHeader("Content-length", params.length);
     xmlhttp.setRequestHeader("Connection", "close");
     xmlhttp.send(params);
-
+    
     xmlhttp.onreadystatechange=function()
     {
         if (xmlhttp.readyState==4)

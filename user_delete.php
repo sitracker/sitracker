@@ -74,7 +74,7 @@ if (!empty($userid))
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         }
 
-        journal(CFG_LOGGING_NORMAL, 'User Removed', "User $userid was removed", CFG_JOURNAL_USERS, $userid);
+        journal(CFG_LOGGING_NORMAL, 'User Removed', "User {$userid} was removed", CFG_JOURNAL_USERS, $userid);
         html_redirect("users.php");
     }
     else

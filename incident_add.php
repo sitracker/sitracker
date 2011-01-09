@@ -61,7 +61,7 @@ function to_row($contact)
         $str .= "&amp;win={$win}\"";
         if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
         {
-            $str .= " onclick=\"return confirm_support();\"";
+            $str .= " onclick=\"return confirm_action('{$GLOBALS['strContractAreYouSure']}');\"";
         }
         $str .= ">{$GLOBALS['strAddIncident']}</a> ";
         if ($contact->incident_quantity == 0)
@@ -90,7 +90,6 @@ function to_row($contact)
     return $str;
 }
 
-// External variables
 $action = $_REQUEST['action'];
 $context = cleanvar($_REQUEST['context']);
 $updateid = clean_int($_REQUEST['updateid']);
@@ -163,10 +162,10 @@ elseif ($action == 'findcontact')
         exit;
     }
     // Filter by contact
-    $contactsql .= "AND (c.surname LIKE '%$search_string%' OR c.forenames LIKE '%$search_string%' ";
-    $contactsql .= "OR SOUNDEX('$search_string') = SOUNDEX(CONCAT_WS(' ', c.forenames, c.surname)) ";
-    $contactsql .= "OR SOUNDEX('$search_string') = SOUNDEX(CONCAT_WS(', ', c.surname, c.forenames)) ";
-    $contactsql .= "OR s.name LIKE '%$search_string%') ";
+    $contactsql .= "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
+    $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(' ', c.forenames, c.surname)) ";
+    $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(', ', c.surname, c.forenames)) ";
+    $contactsql .= "OR s.name LIKE '%{$search_string}%') ";
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
@@ -182,7 +181,7 @@ elseif ($action == 'findcontact')
     }
     else
     {
-        $sql .= "AND c.id = '$contactid' ";
+        $sql .= "AND c.id = '{$contactid}' ";
     }
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
@@ -199,26 +198,14 @@ elseif ($action == 'findcontact')
     }
     else
     {
-        $sql .= "AND c.id = '$contactid' ";
+        $sql .= "AND c.id = '{$contactid}' ";
     }
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        ?>
-        <script type="text/javascript">
-        function confirm_support()
-        {
-            return window.confirm("<?php echo $strContractAreYouSure; ?>");
-        }
 
-        function confirm_free()
-        {
-            return window.confirm("<?php echo $strSiteAreYouSure; ?>");
-        }
-        </script>
-        <?php
         echo "<h2>".icon('add', 32)." {$strAddIncident} - {$strSelect} {$strContract} / {$strContact}</h2>";
         echo "<h3>".icon('contract', 32)." {$strContracts}</h3>";
         echo "<p align='center'>".sprintf($strListShowsContracts, $strAddIncident).".</p>";
@@ -310,7 +297,7 @@ elseif ($action == 'findcontact')
                     $html .= "&amp;win={$win}\"";
                     if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
                     {
-                        $html .= " onclick=\"return confirm_free();\"";
+                        $html .= " onclick=\"return confirm_action('{$strSiteAreYouSure}');\"";
                     }
                     $html .= ">";
                     $html .=  "{$strAddSiteSupportIncident}</a> (";

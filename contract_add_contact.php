@@ -46,7 +46,7 @@ if (empty($action) || $action == "showform")
     else
     {
         $sql = "SELECT s.name, p.name FROM `{$dbMaintenance}` m, `{$dbSites}` s, `{$dbProducts}` p WHERE m.site=s.id ";
-        $sql .= "AND m.product=p.id AND m.id='$maintid'";
+        $sql .= "AND m.product=p.id AND m.id='{$maintid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         list($sitename, $product)=mysql_fetch_row($result);
@@ -74,15 +74,14 @@ if (empty($action) || $action == "showform")
 }
 else if ($action == "add")
 {
-    // Add support contact
     $errors = 0;
-    // check for blank contact
+
     if ($contactid == 0)
     {
         $errors = 1;
         $errors_string .= user_alert("You must select a contact", E_USER_ERROR);
     }
-    // check for blank maintenance id
+
     if ($maintid == 0)
     {
         $errors = 1;
@@ -106,14 +105,12 @@ else if ($action == "add")
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        // show error message if addition failed
         if (!$result)
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
             echo user_alert("Addition of support contact failed", E_USER_WARNING);
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
-        // update database and show success message
         else
         {
             if ($context == 'contact') html_redirect("contact_details.php?id={$contactid}");

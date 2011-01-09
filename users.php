@@ -246,7 +246,6 @@ echo "<tr align='center'><td></td><td align='right'>";
 echo "<strong>{$strTotal}</strong> ({$total})</td><td>{$critical}</td>";
 echo "<td>{$high}</td><td>{$med}</td><td>{$low}</td>";
 
-
 echo "</tr></table>\n";
 
 mysql_free_result($result);

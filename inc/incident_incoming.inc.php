@@ -43,7 +43,7 @@ if (mysql_num_rows($result) > 0)
     if (!$incoming->locked)
     {
         //it's not locked, lock for this user
-        $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
+        $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
         $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' WHERE id='{$incomingid}' AND (locked = 0 OR locked IS NULL)";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -85,7 +85,6 @@ if (mysql_num_rows($result) > 0)
     echo icon('locked', 16, $strLocked);
     echo " ".sprintf($strLockedByX, $lockedbyname)."</div>";
 
-    //echo "<pre>".print_r($incoming,true)."</pre>";
     $usql = "SELECT * FROM `{$dbUpdates}` WHERE id='{$incoming->updateid}'";
     $uresult = mysql_query($usql);
     while ($update = mysql_fetch_object($uresult))
@@ -100,7 +99,6 @@ if (mysql_num_rows($result) > 0)
         echo parse_updatebody($updatebody, FALSE);
         echo "</div>";
     }
-
 }
 else
 {

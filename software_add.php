@@ -74,7 +74,6 @@ if (empty($submit))
 }
 else
 {
-    // External variables
     $name = cleanvar($_REQUEST['name']);
     $tags = cleanvar($_REQUEST['tags']);
     $vendor = clean_int($_REQUEST['vendor']);
@@ -98,7 +97,6 @@ else
 
     $_SESSION['formdata']['add_software'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
-    // Add new
     $errors = 0;
 
     if ($name == '')
@@ -107,7 +105,7 @@ else
         $_SESSION['formerrors']['add_software']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
     }
     // Check this is not a duplicate
-    $sql = "SELECT id FROM `{$dbSoftware}` WHERE LCASE(name)=LCASE('$name') LIMIT 1";
+    $sql = "SELECT id FROM `{$dbSoftware}` WHERE LCASE(name)=LCASE('{$name}') LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_num_rows($result) >= 1)
     {
@@ -118,7 +116,7 @@ else
     // add product if no errors
     if ($errors == 0)
     {
-        $sql = "INSERT INTO `{$dbSoftware}` (name, vendorid, lifetime_start, lifetime_end) VALUES ('$name','$vendor','$lifetime_start','$lifetime_end')";
+        $sql = "INSERT INTO `{$dbSoftware}` (name, vendorid, lifetime_start, lifetime_end) VALUES ('{$name}','{$vendor}','{$lifetime_start}','{$lifetime_end}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

@@ -53,7 +53,7 @@ function generate_row($update)
     else if (!empty($update->fromaddr))
     {
         // Have a look if we've got a user with this email address
-        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update['fromaddr'])."%'";
+        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update->fromaddr)."%'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($contactmatches) = mysql_fetch_row($result);
@@ -61,7 +61,7 @@ function generate_row($update)
     }
     $pluginshade = plugin_do('holdingqueue_rowshade', $update);
     $shade = $pluginshade ? $pluginshade : $shade;
-    $html_row = "<tr class='$shade'>";
+    $html_row = "<tr class='{$shade}'>";
     $html_row .= "<td style='text-align: center'>";
     if (($update->locked == $sit[2]) OR empty($update->locked))
     {
@@ -187,7 +187,7 @@ else
     // Unlock any expired locks
     $nowdatel = date('Y-m-d H:i:s');
     $sql = "UPDATE `{$dbTempIncoming}` SET locked=NULL, lockeduntil=NULL ";
-    $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '$now' ";
+    $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '{$now}' ";
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 }
@@ -232,38 +232,6 @@ if (!empty($selected))
         journal(CFG_LOGGING_NORMAL, 'Incident Log Entry Deleted', "Incident Log Entry $updateid was deleted", CFG_JOURNAL_INCIDENTS, $updateid);
     }
 }
-
-
-?>
-<script type="text/javascript">
-    <!--
-        function submitform()
-        {
-            document.held_emails.submit();
-        }
-
-        function checkAll(checkStatus)
-        {
-            var frm = document.held_emails.elements;
-            for(i = 0; i < frm.length; i++)
-            {
-                if (frm[i].type == 'checkbox')
-                {
-                    if (checkStatus)
-                    {
-                        frm[i].checked = true;
-                    }
-                    else
-                    {
-                        frm[i].checked = false;
-                    }
-                }
-            }
-        }
-        -->
-    </script>
-
-<?php
 
 // extract updates
 $sql  = "SELECT u.id AS id, ti.id AS tempid, u.*, ti.* ";
@@ -337,13 +305,13 @@ if (is_array($queuerows))
     echo "<h2>".icon('email', 32)." {$strIncomingEmail}</h2>";
 
     echo "<p align='center'>{$strIncomingEmailText}</p>";
-    echo "<form action='{$_SERVER['PHP_SELF']}' name='held_emails'  method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}' id='held_emails' name='held_emails'  method='post'>";
     echo "<table align='center' style='width: 95%'>";
     echo "<tr>";
     echo "<th>";
     if ($realemails > 0)
     {
-        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(this.checked);\" />";
+        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(held_emails, this.checked);\" />";
     }
 
     echo "</th>";
@@ -362,7 +330,7 @@ if (is_array($queuerows))
     if ($realemails > 0)
     {
         echo "<tr><td>";
-        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
+        echo "<a href=\"javascript: submit_form('held_emails')\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         echo "</td></tr>";
     }
     echo "</table>\n";
@@ -394,6 +362,7 @@ if (is_array($incidentqueuerows))
         echo "<h2>".icon('support', 32)." {$strUnassignedIncidents}</h2>";
 
         echo "<table align='center' style='width: 95%'>";
+        echo "<tr>";
         echo "<th>{$strDate}</th>";
         echo "<th>{$strFrom}</th>";
         echo "<th>{$strSubject}</th>";
@@ -516,7 +485,7 @@ if (mysql_num_rows($result) >= 1)
     $rhtml .= "<h2>".icon('reassign', 32, $strPendingReassignments);
     $rhtml .= " {$strPendingReassignments}</h2>";
     $rhtml .= "<p align='center'>{$strAutoReassignmentsThatCouldntBeMade}</p>";
-    $rhtml .= "<table align='center' style='width: 95%;'>";
+    $rhtml .= "<table id='pendingreassignments' align='center' style='width: 95%;'>";
     $rhtml .= "<tr><th title='{$strLastUpdated}'>{$strDate}</th><th title='{$strCurrentOwner}'>{$strFrom}</th>";
     $rhtml .= "<th title='{$strIncidentTitle}'>{$strSubject}</th><th>{$strMessage}</th>";
     $rhtml .= "<th>{$strOperation}</th></tr>\n";
@@ -545,14 +514,14 @@ if (mysql_num_rows($result) >= 1)
                 $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;backupid={$backupid}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strReassignTo} {$backupname}'>{$strAssignToBackup}</a> | ";
             }
 
-            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strReassign}'>{$strAssignToOther}</a> | <a href='set_user_status.php?mode=deleteassign&amp;incidentid={$assign->incidentid}&amp;originalowner={$assign->originalowner}' title='{$strIgnoreThisAndDelete}'>{$strIgnore}</a></td>";
+            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strReassign}'>{$strAssignToOther}</a> | <a href=\"javascript:ignore_pending_reassignments('{$assign->incidentid}', '{$assign->originalowner}');\">{$strIgnore}</a></td>";
             $rhtml .= "</tr>\n";
         }
         elseif ($assign->owner != $assign->originalowner AND $useraccepting == 'yes')
         {
             $show = TRUE;
             // display a row to assign the incident back to the original owner
-            $rhtml .= "<tr class='shade2'>";
+            $rhtml .= "<tr id='incident{$assign->id}' class='shade2'>";
             $rhtml .= "<td>".ldate($CONFIG['dateformat_datetime'], $assign->lastupdated)."</td>";
             $rhtml .= "<td>".user_realname($assign->owner,TRUE)."</td>";
             $rhtml .= "<td>[<a href=\"javascript:wt_winpopup('incident_details.php?id={$assign->id}&amp;popup=yes', 'mini')\">{$assign->id}</a>] {$assign->title}</td>";
@@ -567,7 +536,7 @@ if (mysql_num_rows($result) >= 1)
             $rhtml .= "<td>";
             $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;originalid={$assign->originalowner}&amp;popup=yes','mini');\" title='{$strReassignTo} {$originalname}'>{$strReturnToOriginalOwner}</a> | ";
 
-            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strAssignToOther}'>{$strAssignToOther}</a> | <a href='set_user_status.php?mode=deleteassign&amp;incidentid={$assign->incidentid}&amp;originalowner={$assign->originalowner}' title='{$strIgnoreThisAndDelete}'>{$strIgnore}</a></td>";
+            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strAssignToOther}'>{$strAssignToOther}</a> | <a href=\"javascript:ignore_pending_reassignments('{$assign->incidentid}', '{$assign->originalowner}');\">{$strIgnore}</a></td>";
             $rhtml .= "</tr>\n";
         }
     }

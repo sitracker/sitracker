@@ -89,7 +89,6 @@ switch ($action)
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
 
-
         $sql = "UPDATE `{$dbIncidents}` SET externalengineer = '{$new_extenal_engineer}', externalemail = '{$new_external_email}' ";
         $sql .= " WHERE externalemail = '{$old_email_address}' AND closed = '0'";
         $result = mysql_query($sql);
@@ -100,7 +99,6 @@ switch ($action)
         echo '<h1>{$strNoActionSpecified}</h1>';
         break;
 }
-
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

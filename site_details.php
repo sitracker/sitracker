@@ -22,7 +22,6 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// External variables
 $id = clean_int($_REQUEST['id']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -38,7 +37,7 @@ echo "<table align='center' class='vertical'>";
 $sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
 $siteresult = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($siterow = mysql_fetch_object($siteresult))
+while ($siteobj = mysql_fetch_object($siteresult))
 {
     echo "<tr><th>{$strSite}:</th><td>";
     echo "<h3>".icon('site', 32)." {$siteobj->name}</h3>";
@@ -131,7 +130,6 @@ echo "<p align='center'><a href='site_edit.php?action=edit&amp;site={$id}'>{$str
 echo "<a href='site_delete.php?id={$id}'>{$strDelete}</a>";
 echo "</p>";
 
-// Display Contacts
 echo "<h3>{$strContacts}</h3>";
 
 // List Contacts
@@ -251,23 +249,7 @@ if (user_permission($sit[2],19)) // View contracts
     $countcontracts = mysql_num_rows($result);
     if ($countcontracts > 0)
     {
-        ?>
-        <script type="text/javascript">
-        //<![CDATA[
-        function support_contacts_window(maintenanceid)
-        {
-            URL = "support_contacts.php?maintid=" + maintenanceid;
-            window.open(URL, "support_contacts_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-        }
-        function contact_details_window(contactid)
-        {
-            URL = "contact_details.php?contactid=" + contactid;
-            window.open(URL, "contact_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-        }
-        //]]>
-        </script>
-        <p align='center'>
-        <?php
+        echo "<p align='center'>";
         echo mysql_num_rows($result)." $strContracts</p>";
         echo "<table align='center'>
         <tr>
