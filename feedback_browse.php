@@ -270,5 +270,6 @@ switch ($mode)
             }
         }
 }
+plugin_do('feedback_browse_endpage_extend');
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>
