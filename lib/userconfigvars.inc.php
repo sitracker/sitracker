@@ -40,7 +40,6 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
 
-
 // i18n keys for categories
 $CATI18N['themeprefs'] = $strTheme;
 $CATI18N['displayprefs'] = $strDisplay;

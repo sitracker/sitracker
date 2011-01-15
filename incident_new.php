@@ -1009,7 +1009,7 @@ elseif ($action == 'reassign')
 
     echo "<h2>{$strIncidentAdded} - {$strSummary}</h2>";
     echo "<p align='center'>";
-    $incidentnum = "<a href=\"javascript:incident_details_window('$incidentid','incident{$incidentid}');\">{$strIncident} {$incidentid}</a>";
+    $incidentnum = html_incident_popup_link($incidentid, sprintf($strIncidentNum, $incidentid));
     $queuename = "<strong style='color: red'>{$strActionNeeded}</strong>";
     $name = user_realname($uid);
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);

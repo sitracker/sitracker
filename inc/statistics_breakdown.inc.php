@@ -51,8 +51,8 @@ if (mysql_num_rows($result) > 0)
     while ($obj = mysql_fetch_object($result))
     {
         echo "<tr>";
-        echo "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>{$obj->id}</a></td>";
-        echo "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>{$obj->title}</a></td>";
+        echo "<td>".html_incident_popup_link($obj->id, $obj->id)."</td>";
+        echo "<td>".html_incident_popup_link($obj->id, $obj->title)."</td>";
         echo "<td>".date($CONFIG['dateformat_datetime'], $obj->opened)."</td>";
         if ($obj->status != 2)
         {

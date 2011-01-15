@@ -395,10 +395,7 @@ if (mysql_num_rows($result) >=1 )
             if ($obj = mysql_fetch_object($resultIncident))
             {
                 $incidentidL = $obj->linkcolref;
-                echo "<a href=\"javascript:incident_details_window('{$obj->linkcolref}'
-                      ,'incident{$obj->linkcolref}')\" class='info'>";
-                echo $obj->linkcolref;
-                echo "</a>";
+                echo html_incident_popup_link($obj->linkcolref, $obj->linkcolref);
                 $incidentTitle = $obj->title;
             }
             echo "</td>";

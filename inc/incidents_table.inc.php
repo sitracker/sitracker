@@ -67,9 +67,9 @@ while ($incidents = mysql_fetch_object($result))
     }
 
     // Used to store the ellipsis if shortened, we do htmlspecialchars on $site and don't want this to be converted
-    // If you do &hellips; becomes &amp;hellips; 
+    // If you do &hellips; becomes &amp;hellips;
     $postsitetext = '';
-    
+
     if (strlen($incidents->site) > 30)
     {
         $incidents->site = mb_substr($incidents->site, 0, 30, 'UTF-8');
@@ -244,27 +244,20 @@ while ($incidents = mysql_fetch_object($result))
         echo icon('draft', 16, $strDraftsExist).' ';
     }
 
-    if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
-    {
         $windowname = "incident{$incidents->id}";
-    }
-    else
-    {
-        $windowname = "sit_popup";
-    }
     echo "<a href=\"javascript:incident_details_window('{$incidents->id}','{$windowname}')\" class='info'>";
     if (trim($incidents->title) != '')
     {
-        echo ($incidents->title);
+        $linktext = ($incidents->title);
     }
     else
     {
-        echo $strUntitled;
+        $linktext = $strUntitled;
     }
 
     if (!empty($update_body) AND $update_body != '...')
     {
-        echo "<span>{$update_body}</span>";
+        $tooltip = $update_body;
     }
     else
     {
@@ -272,9 +265,10 @@ while ($incidents = mysql_fetch_object($result))
         $update_headertext = $updatetypes[$update_type]['text'];
         $update_headertext = str_replace('currentowner', $update_currentownername,$update_headertext);
         $update_headertext = str_replace('updateuser', $update_user, $update_headertext);
-        echo "<span>{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp)." </span>";
+        $tooltip = "{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp);
     }
-    echo "</a></td>";
+    echo html_incident_popup_link($incidents['id'], $linktext, $tooltip);
+    echo "</td>";
 
     echo "<td>";
     echo "<a href='contact_details.php?id={$incidents->contactid}' class='info'><span>{$incidents->phone}<br />";
