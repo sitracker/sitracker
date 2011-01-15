@@ -153,27 +153,25 @@ function saction_TimeCalc()
         $success = FALSE;
     }
 
-    while ($incident = mysql_fetch_array($incident_result))
+    while ($incident = mysql_fetch_object($incident_result))
     {
         // Get the service level timings for this class of incident, we may have one
         // from the incident itself, otherwise look at contract type
-        if ($incident['servicelevel'] ==  '')
+        if ($incident->servicelevel ==  '')
         {
-            $sql = "SELECT servicelevel FROM  `{$dbMaintenance}` WHERE id = '{$incident['maintenanceid']}'";
+            $sql = "SELECT servicelevel FROM  `{$dbMaintenance}` WHERE id = '{$incident->maintenanceid}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $t = mysql_fetch_row($sql);
             $tag = $t[0];
             mysql_free_result($result);
         }
-        else $tag = $incident['servicelevel'];
-
-        if ($CONFIG['debug']) //debug_log($incident['id']." is a $tag incident");
+        else $tag = $incident->servicelevel;
 
         $newReviewTime = -1;
         $newSlaTime = -1;
 
-        $sql = "SELECT id, type, sla, timestamp, currentstatus FROM `{$dbUpdates}` WHERE incidentid='{$incident['id']}' ";
+        $sql = "SELECT id, type, sla, timestamp, currentstatus FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
         $sql .=" AND type = 'slamet' ORDER BY id DESC LIMIT 1";
         $update_result = mysql_query($sql);
         if (mysql_error())
@@ -188,8 +186,8 @@ function saction_TimeCalc()
         }
         else
         {
-            $slaInfo = mysql_fetch_array($update_result);
-            $newSlaTime = calculate_incident_working_time($incident['id'],$slaInfo['timestamp'],$now);
+            $slaInfo = mysql_fetch_object($update_result);
+            $newSlaTime = calculate_incident_working_time($incident->id, $slaInfo->timestamp, $now);
             if ($CONFIG['debug'])
             {
                 //debug_log("   Last SLA record is ".$slaInfo['sla']." at ".date("jS F Y H:i",$slaInfo['timestamp'])." which is $newSlaTime working minutes ago");
@@ -197,7 +195,7 @@ function saction_TimeCalc()
         }
         mysql_free_result($update_result);
 
-        $sql = "SELECT id, type, sla, timestamp, currentstatus, currentowner FROM `{$dbUpdates}` WHERE incidentid='{$incident['id']}' ";
+        $sql = "SELECT id, type, sla, timestamp, currentstatus, currentowner FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
         $sql .= "AND type='reviewmet' ORDER BY id DESC LIMIT 1";
         $update_result = mysql_query($sql);
         if (mysql_error())
@@ -212,14 +210,14 @@ function saction_TimeCalc()
         }
         else
         {
-            $reviewInfo = mysql_fetch_array($update_result);
-            $newReviewTime = floor($now-$reviewInfo['timestamp'])/60;
+            $reviewInfo = mysql_fetch_object($update_result);
+            $newReviewTime = floor($now - $reviewInfo->timestamp) / 60;
             if ($CONFIG['debug'])
             {
                 //if ($reviewInfo['currentowner'] != 0) //debug_log("There has been no review on incident {$incident['id']}, which was opened $newReviewTime minutes ago");
             }
             new TriggerEvent("TRIGGER_INCIDENT_REVIEW_DUE",
-                                array('incidentid' => $incident['id'],
+                                array('incidentid' => $incident->id,
                                       'time' => $newReviewTime));
         }
         mysql_free_result($update_result);
@@ -258,8 +256,8 @@ function saction_TimeCalc()
 
             // Query the database for the next SLA and review times...
 
-            $sql = "SELECT ($slaRequest*$coefficient) as 'next_sla_time', review_days ";
-            $sql .= "FROM `{$dbServiceLevels}` WHERE tag = '$tag' AND priority = '{$incident['priority']}'";
+            $sql = "SELECT ($slaRequest * $coefficient) as 'next_sla_time', review_days ";
+            $sql .= "FROM `{$dbServiceLevels}` WHERE tag = '{$tag}' AND priority = '{$incident->priority}'";
             $result = mysql_query($sql);
             if (mysql_error())
             {
@@ -275,7 +273,7 @@ function saction_TimeCalc()
                 //debug_log("Reviews need to be made every ".($times['review_days']*24*60)." minutes");
             }
 
-            if ($incident['slanotice'] == 0)
+            if ($incident->slanotice == 0)
             {
                 //reaching SLA
                 if ($times['next_sla_time'] > 0) $reach = $newSlaTime / $times['next_sla_time'];
@@ -284,11 +282,11 @@ function saction_TimeCalc()
                 {
                     $timetil = $times['next_sla_time']-$newSlaTime;
 
-                    trigger('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident['id'],
-                                                                  'nextslatime' => $times['next_sla_time'],
+                    trigger('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident->id,
+                                                                  'nextslatime' => $times->next_sla_time,
                                                                   'nextsla' => $NextslaName));
 
-                    $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident['id']}'";
+                    $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident->id}'";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 }

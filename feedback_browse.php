@@ -219,7 +219,7 @@ switch ($mode)
                     echo "<td>".html_incident_popup_link($resp->incidentid, "{$strIncident} [{$resp->incidentid}]")." - ";
                     echo incident_title($resp->incidentid)."</td>";
                     $url = "feedback.php?ax={$hashcode}";
-                    if ($resp->multi=='yes') $url .= "&amp;rr=1";
+                    if ($resp->multi == 'yes') $url .= "&amp;rr=1";
 
                     echo "<td>";
                     if ($resp->completed == 'no') echo "<a href='{$url}' title='{$url}' target='_blank'>URL</a>";
@@ -228,8 +228,8 @@ switch ($mode)
                     if ($resp->completed == 'no')
                     {
                         //if ($resp->remind<1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a reminder by email'>Remind</a>";
-                        //elseif ($resp->remind==1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Second reminder by email'>Remind Again</a>";
-                        //elseif ($resp->remind==2) echo "<a href='formactions.php?action=callremind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Third reminder by phone call, click here when its done'>Remind by Phone</a>";
+                        //elseif ($resp->remind == 1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Second reminder by email'>Remind Again</a>";
+                        //elseif ($resp->remind == 2) echo "<a href='formactions.php?action=callremind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Third reminder by phone call, click here when its done'>Remind by Phone</a>";
                         //else echo "<strike title='Already sent 3 reminders'>Remind</strike>";
                         //echo " &bull; ";
                         //echo "<a href='formactions.php?action=delete&amp;id={$resp->respid}' title='Remove this form'>Delete</a>";
@@ -269,5 +269,6 @@ switch ($mode)
             }
         }
 }
+plugin_do('feedback_browse_endpage_extend');
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

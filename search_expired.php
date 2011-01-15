@@ -77,9 +77,9 @@ else
         $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, `{$dbContacts}` AS c, ";
         $sql .= "`{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r WHERE ";
         $sql .= "(siteid = s.id AND product = p.id AND reseller = r.id AND (licence_type = l.id OR licence_type = NULL) AND admincontact = c.id) AND ";
-        $sql .= "expirydate >= $min_expiry AND expirydate <= $now ";
-        if ($show == "terminated") $sql .= "AND term='yes'";
-        else $sql .= "AND term != 'yes'";
+        $sql .= "expirydate >= {$min_expiry} AND expirydate <= {$now} ";
+        if ($show == "terminated") $sql .= "AND term='yes' ";
+        else $sql .= "AND term != 'yes' ";
         $sql .= "ORDER BY expirydate ASC";
 
         // connect to database
@@ -101,32 +101,18 @@ else
             if ($_REQUEST['output'] == 'screen')
             {
                 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-                ?>
-                <script type="text/javascript">
-                function support_contacts_window(maintenanceid)
-                {
-                    URL = "support_contacts.php?maintid=" + maintenanceid;
-                    window.open(URL, "support_contacts_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-                }
-                function contact_details_window(contactid)
-                {
-                    URL = "contact_details.php?contactid=" + contactid;
-                    window.open(URL, "contact_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-                }
-                </script>
-                <?php
+
                 printf ($pagetitle, $expired);
 
                 echo "<h3>{$strSearchYielded} ".mysql_num_rows($result);
-                    if (mysql_num_rows($result) == 1)
-                    {
-                        echo " {$strResult}</h3>";
-                    }
-                    else
-                    {
-                        echo " {$strResults}</h3>";
-                    }
-
+                if (mysql_num_rows($result) == 1)
+                {
+                    echo " {$strResult}</h3>";
+                }
+                else
+                {
+                    echo " {$strResults}</h3>";
+                }
 
                 echo "<table align='center'>
                 <tr>
@@ -153,7 +139,7 @@ else
 
                     echo "<td align='center' class='{$shade}' width='75'>{$results->licence_quantity} {$results->licence_type}</td>";
                     echo "<td align='center' class='{$shade}' width='100'>".ldate($CONFIG['dateformat_date'], $results->expirydate)."</td>";
-                    echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: contact_details_window({$results->admincontact})\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
+                    echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: wt_winpopup('contact_details.php?contactid={$results->admincontact}')\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
 
                     echo "<td class='{$shade}'>{$results->admincontactphone}</td>";
                     echo "<td class='{$shade}'>{$results->admincontactemail}</td>";

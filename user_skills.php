@@ -20,7 +20,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// External Variables
 $sort = cleanvar($_REQUEST['sort']);
 
 $title = $strListSkills;
@@ -45,20 +44,20 @@ echo "</tr>";
 
 // show results
 $shade = 'shade1';
-while ($users = mysql_fetch_array($result))
+while ($users = mysql_fetch_object($result))
 {
     echo "<tr class='{$shade}'>";
-    echo "<td rowspan='2'><a href=\"mailto:{$users['email']}\">{$users['realname']}</a><br />";
-    echo "{$users['title']}</td>";
+    echo "<td rowspan='2'><a href=\"mailto:{$users->email}\">{$users->realname}</a><br />";
+    echo "{$users->title}</td>";
     echo "<td>";
-    if (!empty($users['qualifications'])) echo "<strong>{$users['qualifications']}</strong>";
+    if (!empty($users->qualifications)) echo "<strong>{$users->qualifications}</strong>";
     else echo "&nbsp;";
     echo "</td></tr>\n";
     echo "<tr class='{$shade}'>";
     echo "<td>";
-    $ssql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s WHERE us.softwareid = s.id AND us.userid='{$users['id']}' ORDER BY s.name ";
+    $ssql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s WHERE us.softwareid = s.id AND us.userid='{$users->id}' ORDER BY s.name ";
     $sresult = mysql_query($ssql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $countskills = mysql_num_rows($sresult);
     $nobackup = 0;
     if ($countskills >= 1)
@@ -67,13 +66,13 @@ while ($users = mysql_fetch_array($result))
         while ($software = mysql_fetch_object($sresult))
         {
             echo "{$software->name}";
-            if ($software->backupid > 0) echo " <em style='color: #555;'>(".user_realname($software->backupid,TRUE).")</em>";
+            if ($software->backupid > 0) echo " <em style='color: #555;'>(".user_realname($software->backupid, TRUE). ")</em>";
             if ($software->backupid == 0) $nobackup++;
             if ($c < $countskills) echo ", ";
             else
             {
                 echo "<br /><br />&bull; $countskills ".$strSkills;
-                if (($nobackup+1) >= $countskills)
+                if (($nobackup + 1) >= $countskills)
                 {
                     echo ", <strong>{$strNoSubstitutes}</strong>.";
                 }
@@ -90,7 +89,7 @@ while ($users = mysql_fetch_array($result))
         echo "&nbsp;";
     }
 
-    if ($users['id'] == $sit[2]) echo " <a href='edit_user_skills.php'>{$strMySkills}</a>";
+    if ($users->id == $sit[2]) echo " <a href='edit_user_skills.php'>{$strMySkills}</a>";
 
     echo "</td>";
     echo "</tr>\n";

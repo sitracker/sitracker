@@ -43,10 +43,9 @@ if (empty($submit))
 }
 else
 {
-    // External variables
     $name = cleanvar($_REQUEST['name']);
     $_SESSION['formdata'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
-    // Add new
+
     $errors = 0;
 
     // check for blank name
@@ -59,7 +58,7 @@ else
     // add product if no errors
     if ($errors == 0)
     {
-        $sql = "INSERT INTO `{$dbVendors}` (name) VALUES ('$name')";
+        $sql = "INSERT INTO `{$dbVendors}` (name) VALUES ('{$name}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

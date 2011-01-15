@@ -166,7 +166,7 @@ switch ($_REQUEST['action'])
                         echo "</tr>\n<tr>";
                         echo "<td>{$question->type}</td>";
                         echo "<td colspan='2'>";
-                        if ($question->required=='true') echo "<strong>{$strRequired}</strong> ";
+                        if ($question->required == 'true') echo "<strong>{$strRequired}</strong> ";
                         echo "<samp>{$question->options}</samp></td>";
                         echo "</tr>";
                     }

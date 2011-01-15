@@ -82,35 +82,35 @@ if (empty($action) OR $action == "showform")
     echo "<th>{$strReview}</th></tr>";
     echo "<tr class='shade1'>";
     echo "<td>{$strLow}</td>";
-    echo "<td><input type='text' size='5' name='low_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['low_initial_response_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='low_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['low_prob_determ_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='low_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['low_action_plan_mins'] }' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='low_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['low_resolution_days']}' /> $strDays</td>";
-    echo "<td><input type='text' size='5' name='low_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['low_review_days']}' /> $strDays</td>";
+    echo "<td><input type='text' size='5' name='low_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['low_initial_response_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='low_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['low_prob_determ_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='low_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['low_action_plan_mins'] }' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='low_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['low_resolution_days']}' /> {$strDays}</td>";
+    echo "<td><input type='text' size='5' name='low_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['low_review_days']}' /> {$strDays}</td>";
     echo "</tr>\n";
     echo "<tr class='shade2'>";
     echo "<td>{$strMedium}</td>";
-    echo "<td><input type='text' size='5' name='med_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['med_initial_response_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='med_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['med_prob_determ_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='med_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['med_action_plan_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='med_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['med_resolution_days']}' /> $strDays</td>";
-    echo "<td><input type='text' size='5' name='med_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['med_review_days']}' /> $strDays</td>";
+    echo "<td><input type='text' size='5' name='med_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['med_initial_response_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='med_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['med_prob_determ_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='med_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['med_action_plan_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='med_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['med_resolution_days']}' /> {$strDays}</td>";
+    echo "<td><input type='text' size='5' name='med_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['med_review_days']}' /> {$strDays}</td>";
     echo "</tr>\n";
     echo "<tr class='shade1'>";
     echo "<td>{$strHigh}</td>";
-    echo "<td><input type='text' size='5' name='hi_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['hi_initial_response_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='hi_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['hi_prob_determ_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='hi_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['hi_action_plan_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='hi_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['hi_resolution_days']}' /> $strDays</td>";
-    echo "<td><input type='text' size='5' name='hi_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['hi_review_days']}' /> $strDays</td>";
+    echo "<td><input type='text' size='5' name='hi_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['hi_initial_response_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='hi_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['hi_prob_determ_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='hi_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['hi_action_plan_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='hi_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['hi_resolution_days']}' /> {$strDays}</td>";
+    echo "<td><input type='text' size='5' name='hi_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['hi_review_days']}' /> {$strDays}</td>";
     echo "</tr>\n";
     echo "<tr class='shade2'>";
     echo "<td>{$strCritical}</td>";
-    echo "<td><input type='text' size='5' name='crit_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['crit_initial_response_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='crit_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['crit_prob_determ_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='crit_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['crit_action_plan_mins']}' /> $strMinutes</td>";
-    echo "<td><input type='text' size='5' name='crit_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['crit_resolution_days']}' /> $strDays</td>";
-    echo "<td><input type='text' size='5' name='crit_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['crit_review_days']}' /> $strDays</td>";
+    echo "<td><input type='text' size='5' name='crit_initial_response_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['crit_initial_response_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='crit_prob_determ_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['crit_prob_determ_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='crit_action_plan_mins' maxlength='5' value='{$_SESSION['formdata']['add_servicelevel']['crit_action_plan_mins']}' /> {$strMinutes}</td>";
+    echo "<td><input type='text' size='5' name='crit_resolution_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['crit_resolution_days']}' /> {$strDays}</td>";
+    echo "<td><input type='text' size='5' name='crit_review_days' maxlength='3' value='{$_SESSION['formdata']['add_servicelevel']['crit_review_days']}' /> {$strDays}</td>";
     echo "</tr>\n";
     echo "</table>";
 
@@ -193,12 +193,12 @@ elseif ($action == "edit")
     {
         // Insert low
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$tag', '1', ";
-        $sql .= "'$low_initial_response_mins', ";
-        $sql .= "'$low_prob_determ_mins', ";
-        $sql .= "'$low_action_plan_mins', ";
-        $sql .= "'$low_resolution_days', ";
-        $sql .= "'$low_review_days', ";
+        $sql .= "'{$tag}', '1', ";
+        $sql .= "'{$low_initial_response_mins}', ";
+        $sql .= "'{$low_prob_determ_mins}', ";
+        $sql .= "'{$low_action_plan_mins}', ";
+        $sql .= "'{$low_resolution_days}', ";
+        $sql .= "'{$low_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
@@ -207,12 +207,12 @@ elseif ($action == "edit")
 
         // Insert medium
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$tag', '2', ";
-        $sql .= "'$med_initial_response_mins', ";
-        $sql .= "'$med_prob_determ_mins', ";
-        $sql .= "'$med_action_plan_mins', ";
-        $sql .= "'$med_resolution_days', ";
-        $sql .= "'$med_review_days', ";
+        $sql .= "'{$tag}', '2', ";
+        $sql .= "'{$med_initial_response_mins}', ";
+        $sql .= "'{$med_prob_determ_mins}', ";
+        $sql .= "'{$med_action_plan_mins}', ";
+        $sql .= "'{$med_resolution_days}', ";
+        $sql .= "'{$med_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
@@ -221,12 +221,12 @@ elseif ($action == "edit")
 
         // Insert high
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$tag', '3', ";
-        $sql .= "'$hi_initial_response_mins', ";
-        $sql .= "'$hi_prob_determ_mins', ";
-        $sql .= "'$hi_action_plan_mins', ";
-        $sql .= "'$hi_resolution_days', ";
-        $sql .= "'$hi_review_days', ";
+        $sql .= "'{$tag}', '3', ";
+        $sql .= "'{$hi_initial_response_mins}', ";
+        $sql .= "'{$hi_prob_determ_mins}', ";
+        $sql .= "'{$hi_action_plan_mins}', ";
+        $sql .= "'{$hi_resolution_days}', ";
+        $sql .= "'{$hi_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);
@@ -235,12 +235,12 @@ elseif ($action == "edit")
 
         // Insert critical
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
-        $sql .= "'$tag', '4', ";
-        $sql .= "'$crit_initial_response_mins', ";
-        $sql .= "'$crit_prob_determ_mins', ";
-        $sql .= "'$crit_action_plan_mins', ";
-        $sql .= "'$crit_resolution_days', ";
-        $sql .= "'$crit_review_days', ";
+        $sql .= "'{$tag}', '4', ";
+        $sql .= "'{$crit_initial_response_mins}', ";
+        $sql .= "'{$crit_prob_determ_mins}', ";
+        $sql .= "'{$crit_action_plan_mins}', ";
+        $sql .= "'{$crit_resolution_days}', ";
+        $sql .= "'{$crit_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
         mysql_query($sql);

@@ -120,7 +120,7 @@ elseif ($action == "add")
         else
         {
             journal(CFG_LOGGING_NORMAL, 'Product Added', "Skill $softwareid was added to product $productid", CFG_JOURNAL_PRODUCTS, $productid);
-            if ($return=='true') html_redirect("product_software_add.php?productid={$productid}&return=true");
+            if ($return == 'true') html_redirect("product_software_add.php?productid={$productid}&return=true");
             else html_redirect("products.php?productid={$productid}");
         }
     }

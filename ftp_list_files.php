@@ -24,20 +24,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strFTPFilesDB;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-// External Variables
 $orderby = cleanvar($_REQUEST['orderby']);
 
-?>
-<script type="text/javascript">
-//<![CDATA[
-function upload_window()
-{
-    URL = "ftp_upload_file.php";
-        window.open(URL, "upload_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
-}
-//]]>
-</script>
-<?php
 echo "<h2>".icon('attach', 32)." {$title}</h2>";
 
 if (!empty($CONFIG['ftp_hostname']) AND !empty($CONFIG['ftp_username']))
@@ -64,35 +52,35 @@ switch ($orderby)
 {
     case 'filename':
         $sql .= "ORDER by filename ";
-    break;
+        break;
 
     case 'shortdescription':
         $sql .= "ORDER by shortdescription ";
-    break;
+        break;
 
     case 'size':
         $sql .= "ORDER by size ";
-    break;
+        break;
 
     case 'version':
         $sql .= "ORDER BY fileversion ";
-    break;
+        break;
 
     case 'expiry':
         $sql .= "ORDER by expiry ";
-    break;
+        break;
 
     case 'date':
         $sql .= "ORDER BY filedate ";
-    break;
+        break;
 
     case 'published':
         $sql .= "ORDER BY published ";
-    break;
+        break;
 
     default:
         $sql .= "ORDER by filename ";
-    break;
+        break;
 }
 
 $result = mysql_query($sql);
@@ -108,11 +96,11 @@ if (mysql_numrows($result) > 0)
         if ($published == 'no') echo "<tr class='urgent'>";
         else echo "<tr>";
         echo "<td align='right'><img src=\"".getattachmenticon($filename)."\" alt=\"$filename ($pretty_file_size)\" border='0' /></td>";
-        echo "<td><strong><a href=\"ftp_file_details.php?id=$id\">$filename</a></strong></td>";
+        echo "<td><strong><a href=\"ftp_file_details.php?id={$id}\">$filename</a></strong></td>";
         echo "<td>$pretty_file_size</td>";
         echo "<td>$shortdescription</td>";
         echo "<td>$fileversion</td>";
-        echo "<td>".ldate($CONFIG['dateformat_filedatetime'],$filedate)."</td>";
+        echo "<td>".ldate($CONFIG['dateformat_filedatetime'], $filedate)."</td>";
         echo "<td>";
         if ($expiry == 0)
         {

@@ -19,7 +19,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $permission = 67; // Run Reports
 
-
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -90,7 +89,7 @@ else
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['type'] = 'opened';
         }
 
-        // opened
+        // closed
         $sql = "SELECT id, owner, closed, title FROM `{$dbIncidents}` ";
         $sql .= "WHERE closed BETWEEN '{$startdate}' AND '{$enddate}'  ORDER BY closed ";
         $result = mysql_query($sql);
@@ -107,23 +106,14 @@ else
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['type'] = 'closed';
         }
 
-
-//         echo "<pre>";
-//         print_r($stats);
-//         echo "</pre>";
         ksort($stats);
 
         if (count($stats) > 0)
         {
             foreach ($stats AS $day)
             {
-                /*
-                echo "<pre>";
-                print_r($day);
-                echo "</pre>";
-                */
-                echo "<h3>".$day['date']."</h3>";
-                echo "<table>";
+                echo "<h3>{$day['date']}</h3>";
+                echo "<table align='center' width='50%'>";
                 $opened = 0;
                 $closed = 0;
                 $owners = array();
@@ -160,14 +150,14 @@ else
                     }
                 }
 
-                echo "<tr><td valign='top'><table>";
+                echo "<tr><td valign='top' width='30%'><table>";
                 echo "<table><tr><th>{$strUser}</th><th>{$strOpened}</th><th>{$strClosed}</th></tr>";
                 foreach ($owners AS $o)
                 {
                     echo "<tr>";
                     echo "<td>".user_realname($o['owner']);
                     echo "</td><td>";
-                    if ($o['opened']!=0) echo $o['opened'];
+                    if ($o['opened'] != 0) echo $o['opened'];
                     else echo "0";
                     echo "</td><td>";
                     if ($o['closed'] != 0) echo $o['closed'];

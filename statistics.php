@@ -333,7 +333,7 @@ function give_overview()
     {
         echo "<h2>{$GLOBALS['strByVendor']}</h2>";
         echo "<table class='vertical' align='center'><tr>";
-        while ($vendors = mysql_fetch_array($result))
+        while ($vendors = mysql_fetch_object($result))
         {
             // This should use the software and relate to the product and then to the vendor
             /*
@@ -345,7 +345,7 @@ function give_overview()
 
             $sqlVendor = "SELECT COUNT(i.id) AS count, istatus.name FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbIncidentStatus']}` AS istatus, `{$GLOBALS['dbSoftware']}` AS s ";
             $sqlVendor .= "WHERE i.status = istatus.id AND closed = 0 AND i.softwareid = s.id ";
-            $sqlVendor .= "AND s.vendorid = {$vendors['vendorid']} ";
+            $sqlVendor .= "AND s.vendorid = {$vendors->vendorid} ";
             $sqlVendor .= "GROUP BY i.status";
 
             $resultVendor = mysql_query($sqlVendor);
@@ -354,7 +354,7 @@ function give_overview()
             if (mysql_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
-                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors['name']}</strong>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendorsname}</strong>";
                 echo "<table class='vertical' align='center'>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {

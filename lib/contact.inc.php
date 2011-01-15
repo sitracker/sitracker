@@ -33,10 +33,7 @@ function customerExistsInDB($username)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    while( $res = mysql_fetch_array($result) )
-    {
-        $exists = 1;
-    }
+    if (mysql_num_rows($result) > 0) $exists = 1;
 
     return $exists;
 }
@@ -52,7 +49,7 @@ function contact_realname($id)
     global $dbContacts;
     $sql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -82,7 +79,7 @@ function contact_site($id)
     //
     $sql = "SELECT s.name FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id AND c.id = '{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -160,7 +157,7 @@ function contact_count_incidents($id)
 
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE contact='{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
     mysql_free_result($result);
 
@@ -224,7 +221,7 @@ function contact_vcard($id)
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
     $sql .= "WHERE c.siteid = s.id AND c.id = '{$id}' LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $contact = mysql_fetch_object($result);
     $vcard = "BEGIN:VCARD\r\n";
     $vcard .= "N:{$contact->surname};{$contact->forenames};{$contact->courtesytitle}\r\n";
@@ -294,7 +291,7 @@ function contact_drop_down($name, $id, $showsite = FALSE, $required = FALSE)
     }
 
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select name='$name' id='$name'";
     if ($required)

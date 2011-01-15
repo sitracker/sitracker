@@ -77,9 +77,9 @@ else
         echo "<p>";
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strVendor}</th><th>{$strIncidents}</th></tr>";
-        while ($row = mysql_fetch_array($result))
+        while ($obj = mysql_fetch_object($result))
         {
-            echo "<tr><td class='shade1'>".$row['name']."</td><td class='shade1'>".$row['volume']."</td></tr>";
+            echo "<tr><td class='shade1'>{$obj->name}</td><td class='shade1'>{$obj->volume}</td></tr>";
         }
         echo "</table>";
         echo "</p>";
