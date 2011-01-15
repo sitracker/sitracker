@@ -134,7 +134,7 @@ elseif (!empty($siteid))
             $sql .= "AND linkcolref={$obj->id} ";
             $sql .= "AND direction='left'";
             $resultLinks = mysql_query($sql);
-    
+
             //get list of tasks
             while ($tasks = mysql_fetch_object($resultLinks))
             {
@@ -143,13 +143,13 @@ elseif (!empty($siteid))
                 //else $orSQL .= " OR ";
                 //$orSQL .= "id={$tasks->origcolref} ";
                 $taskIDs[] = $tasks->origcolref;
-            }   
+            }
         }
     }
 
     if (!empty($taskIDs)) $sqlTask .= "id IN (".implode(',', $taskIDs).")";
     else $sqlTasks = "1=0";
-    
+
     $result = mysql_query($sqlTask);
 
     $show = 'incidents';
@@ -612,12 +612,12 @@ if (mysql_num_rows($result) >=1 )
         // Show add activity link if the incident is open
         if (incident_status($id) != 2 AND !$engineerhasrunnintask)
         {
-            echo "<p align='center'><a href='task_add.php?incident={$id}'>{$strStartNewActivity}</a></p>";
+            echo "<p align='center'><a href='task_new.php?incident={$id}'>{$strStartNewActivity}</a></p>";
         }
     }
     else if ($show != 'incidents')
     {
-        echo "<p align='center'><a href='task_add.php'>{$strAddTask}</a></p>";
+        echo "<p align='center'><a href='task_new.php'>{$strNewTask}</a></p>";
     }
 
     if ($mode == 'incident')
@@ -681,12 +681,12 @@ else
     if ($mode == 'incident')
     {
         echo "<p align='center'>";
-        echo "<a href='task_add.php?incident={$id}'>{$strStartNewActivity}";
+        echo "<a href='task_new.php?incident={$id}'>{$strStartNewActivity}";
         echo "</a></p>";
     }
     else if ($show != 'incidents')
     {
-        echo "<p align='center'><a href='task_add.php'>{$strAddTask}</a></p>";
+        echo "<p align='center'><a href='task_new.php'>{$strNewTask}</a></p>";
     }
 }
 

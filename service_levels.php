@@ -25,7 +25,7 @@ $title = $strServiceLevels;
 
 echo "<h2>".icon('sla', 32)." {$title}</h2>";
 
-echo "<p align='center'><a href='service_level_add.php'>{$strAddServiceLevel}</a></p>";
+echo "<p align='center'><a href='service_level_new.php'>{$strNewServiceLevel}</a></p>";
 
 $tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag";
 $tresult = mysql_query($tsql);

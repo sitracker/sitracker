@@ -88,7 +88,7 @@ function get_checks()
     xmlhttp.setRequestHeader("Content-length", params.length);
     xmlhttp.setRequestHeader("Connection", "close");
     xmlhttp.send(params);
-    
+
     xmlhttp.onreadystatechange=function()
     {
         if (xmlhttp.readyState==4)
@@ -317,7 +317,7 @@ else
     echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
     echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;
     echo "<div id='checkshtml'></div></div>";
-    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strAdd}' /></p></form>";
+    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strNew}' /></p></form>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {

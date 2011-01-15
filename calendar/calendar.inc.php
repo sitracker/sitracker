@@ -238,7 +238,7 @@ function draw_calendar($nmonth, $nyear)
                 if ($dtype==1 || $dtype=='' || $dtype==5 || $dtype==3 || $dtype==2 || $dtype==4)
                 {
                     echo "<td class=\"$shade\" style=\"width: 15px; $style\">";
-                    echo "<a href=\"holiday_add.php?type=$type&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
+                    echo "<a href=\"holiday_new.php?type=$type&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
                 }
                 else
                 {
@@ -268,7 +268,7 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
         $html .= "<h2><a href=\"javascript:void(0);\">[X]</a> {$year}-{$month}-{$day} {$time}</h2>";
         if ($mode == 'book')
         {
-            $html .= "<a href='holiday_add.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length={$time}'>{$GLOBALS['strBookHoliday']}</a><br />";
+            $html .= "<a href='holiday_new.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length={$time}'>{$GLOBALS['strBookHoliday']}</a><br />";
         }
 //         else $html .= "<a href=''>Cancel Holiday</a><br />";
 //          TODO: Add the ability to cancel holiday from the holiday planner
@@ -440,7 +440,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
             for($cday = $day; $cday <= $lastday; $cday++)
             {
                 $shade = 'shade1';
-                if ((date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat' 
+                if ((date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat'
                         OR date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun'))
                 {
                     // Add  day on for a weekend

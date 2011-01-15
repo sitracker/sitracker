@@ -1,5 +1,5 @@
 <?php
-// add_maintenance_support_contract.php - Associates a contact with a contract
+// contract_add_contact.php - Associates a contact with a contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project
@@ -24,7 +24,7 @@ $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
 $context = clean_int($_REQUEST['context']);
 $action = $_REQUEST['action'];
-$title = ("$strContract - $strAddContact");
+$title = ("$strContract - $strNewContact");
 
 // Valid user, check permissions
 if (empty($action) || $action == "showform")
@@ -32,7 +32,7 @@ if (empty($action) || $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>{$strAssociateContactWithContract}</h2>";
 
-    echo "<form action='{$_SERVER['PHP_SELF']}?action=add' method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post'>";
     echo "<input type='hidden' name='context' value='{$context}' />";
     echo "<table align='center' class='vertical'>";
 

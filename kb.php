@@ -42,7 +42,7 @@ echo "</td></tr>";
 echo "<tr><td valign='middle'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?mode=RECENT'>{$strRecent}</a> | ";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
-echo "<a href='kb_article.php'>{$strAdd}</a>";
+echo "<a href='kb_article.php'>{$strNew}</a>";
 echo "</tr>";
 echo "</table>";
 echo "</form>";
@@ -166,7 +166,7 @@ else
 }
 
 // echo "<!---SQL === $sql --->";
-echo "<p align='center'><a href='kb_article.php'>{$strAddNew}</a></p>";
+echo "<p align='center'><a href='kb_article.php'>{$strNew}</a></p>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

@@ -94,9 +94,9 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 ?>
 <script type='text/javascript'>
 //<![CDATA[
-var id = <?php 
+var id = <?php
     if (!empty($q)) echo "\"{$q}\"";
-    else echo '""'; 
+    else echo '""';
     ?>;
 if (!isNaN(id))
 {
@@ -112,7 +112,7 @@ if (!isNaN(id))
             		window.location = 'incident_details.php?id=' + id;
             	<?php
             	}
-            	else 
+            	else
             	{
 	            ?>
 	                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
@@ -485,8 +485,8 @@ if (!empty($q))
                     <td>{$row->email}</td>
                     <td>{$row->telephone}</td>
                     <td>{$row->fax}</td>
-                    <td><a href='incident_add.php?action=findcontact&amp;contactid={$row->contactid}'>
-                        {$strAddIncident}</a>
+                    <td><a href='incident_new.php?action=findcontact&amp;contactid={$row->contactid}'>
+                        {$strNewIncident}</a>
                     </td>
                   </tr>";
 

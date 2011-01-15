@@ -140,7 +140,7 @@ if (empty($productid) AND $display!='skills')
             echo "</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_add.php?softwareid={$software->id}'>{$strLink}</a> ";
+            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
             echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
             echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
             echo "</td>";
@@ -218,7 +218,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
             echo "<td>{$countlinked}</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_add.php?softwareid={$software->id}'>{$strLink}</a> ";
+            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
             echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
             echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
             echo "</td>";
@@ -310,7 +310,7 @@ else
                 echo "<tr><td>&nbsp;</td><td><em>{$strNoSkillsLinkedToProduct}</em></td><td>&nbsp;</td></tr>\n";
             }
             echo "</table>\n";
-            echo "<p align='center'><a href='product_software_add.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
+            echo "<p align='center'><a href='product_software_new.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
 
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$product->id}'";
             $result = mysql_query($sql);
@@ -330,7 +330,7 @@ else
                 }
                 echo "</table>";
             }
-            echo "<p align='center'><a href='product_info_add.php?product={$product->id}'>{$strAddProductQuestion}</a></p>";
+            echo "<p align='center'><a href='product_info_new.php?product={$product->id}'>{$strNewProductQuestion}</a></p>";
 
             $sql = "SELECT * FROM `{$dbMaintenance}` WHERE product='{$product->id}' ORDER BY id DESC";
             $result = mysql_query($sql);
@@ -391,7 +391,7 @@ else
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
 }
 
-echo "<p align='center'><a href='vendor_add.php'>{$strAddVendor}</a> | <a href='product_add.php'>{$strAddProduct}</a> | <a href='software_add.php'>{$strAddSkill}</a>";
+echo "<p align='center'><a href='vendor_new.php'>{$strNewVendor}</a> | <a href='product_new.php'>{$strNewProduct}</a> | <a href='software_new.php'>{$strNewSkill}</a>";
 
 if ($display == 'skills' OR $display == 'software')
 {

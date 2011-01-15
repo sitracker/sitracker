@@ -56,9 +56,9 @@ switch ($_REQUEST['action'])
     break;
 
     case 'new':
-        $title = (icon('reports', 32)." $strFeedbackForms - $strAdd");
+        $title = (icon('reports', 32)." $strFeedbackForms - $strNew");
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h3>{$strAddFeedbackForm}</h3>";
+        echo "<h3>{$strNewFeedbackForm}</h3>";
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
         echo "<table summary='Form' align='center' class='vertical'>";
         echo "<tr>";
@@ -172,7 +172,7 @@ switch ($_REQUEST['action'])
                     }
                     echo "</table>";
                 }
-                echo "<p><a href='feedback_form_addquestion.php?fid={$formid}'>{$strAdd}</a><br />{$strSaveTheMainFormFirst}</p>";
+                echo "<p><a href='feedback_form_newquestion.php?fid={$formid}'>{$strNew}</a><br />{$strSaveTheMainFormFirst}</p>";
                 echo "</td></tr>\n";
                 echo "<tr>";
                 echo "<td><input type='hidden' name='formid' value='{$formid}' />";

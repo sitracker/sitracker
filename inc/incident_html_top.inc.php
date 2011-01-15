@@ -216,7 +216,7 @@ if ($menu != 'hide')
             {
                 echo "<a class='barlink' href='unlock_update.php?id={$id}'>{$strUnlock}</a> | ";
                 echo "<a class='barlink' href=\"javascript:window.location='move_update.php?id={$id}&amp;updateid={$inupdate->updateid}&amp;contactid={$inupdate->contactid}&amp;win=incomingview'\" >{$strAssign}</a> | ";
-                echo "<a class='barlink' href=\"javascript:window.opener.location='incident_add.php?action=findcontact&amp;incomingid={$id}&amp;search_string={$inupdate->emailfrom}&amp;from={$inupdate->from}&amp;contactid={$inupdate->contactid}&amp;win=incomingcreate'; window.close();\">{$strCreate}</a> | ";
+                echo "<a class='barlink' href=\"javascript:window.opener.location='incident_new.php?action=findcontact&amp;incomingid={$id}&amp;search_string={$inupdate->emailfrom}&amp;from={$inupdate->from}&amp;contactid={$inupdate->contactid}&amp;win=incomingcreate'; window.close();\">{$strCreate}</a> | ";
                 echo "<a class='barlink' href=\"javascript:window.opener.location='delete_update.php?updateid={$inupdate->updateid}&amp;tempid={$inupdate->id}&amp;timestamp={$inupdate->timestamp}'; window.close(); \">{$strDelete}</a>";
             }
         }

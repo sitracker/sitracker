@@ -24,7 +24,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('billing', 32)." {$title}</h2>";
 
-echo "<p align='center'><a href='billing_matrix_add.php'>Add new Billing Matrix</a></p>";
+echo "<p align='center'><a href='billing_matrix_new.php'>Add new Billing Matrix</a></p>";
 
 $sql = "SELECT DISTINCT tag FROM `{$dbBillingMatrix}";
 $result = mysql_query($sql);
@@ -45,7 +45,7 @@ if (mysql_num_rows($result) >= 1)
         echo "<tr><th>{$strHour}</th><th>{$strMonday}</th><th>{$strTuesday}</th>";
         echo "<th>{$strWednesday}</th><th>{$strThursday}</th><th>{$strFriday}</th>";
         echo "<th>{$strSaturday}</th><th>{$strSunday}</th><th>{$strPublicHoliday}</th></tr>\n";
-        
+
         while ($obj = mysql_fetch_object($matrixresult))
         {
             echo "<tr><td>{$obj->hour}</td><td>{$obj->mon}</td><td>{$obj->tue}</td>";

@@ -11,7 +11,7 @@
 $permission = 71;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'trigger.class.php');   
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -22,7 +22,7 @@ echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='pageintro'>";
 echo "<p>Below is a list of your notifications.</p>";
 echo "<a href='action_details.php'>";
-echo icon('add', 16). " {$strAddNotification}</a>";
+echo icon('new', 16). " {$strNewNotification}</a>";
 echo "</div><br />";
 echo triggers_to_html($sit[2]);
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

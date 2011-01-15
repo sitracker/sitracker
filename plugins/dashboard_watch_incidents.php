@@ -261,10 +261,10 @@ function dashboard_watch_incidents_edit($dashletid)
 
     switch ($editaction)
     {
-        case 'add':
+        case 'new':
             $type = clean_int($_REQUEST['type']);
             echo "<h2>{$GLOBALS['strWatchAddSet']}</h2>";
-            echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?editaction=do_add&type={$type}' method='post' onsubmit='return false'>";
+            echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?editaction=do_new&type={$type}' method='post' onsubmit='return false'>";
             echo "<table class='vertical'>";
             echo "<tr><td>";
 
@@ -291,11 +291,11 @@ function dashboard_watch_incidents_edit($dashletid)
             echo "</td><tr>";
             echo "</table>";
             echo "<p align='center'>";
-            echo dashlet_link('watch_incidents', $dashletid, $GLOBALS['strAdd'], 'save', array('editaction' => 'do_add', 'type'=>$type), false, 'dwiaddform');
+            echo dashlet_link('watch_incidents', $dashletid, $GLOBALS['strNew'], 'save', array('editaction' => 'do_new', 'type'=>$type), false, 'dwiaddform');
             echo "</p>";
             break;
 
-        case 'do_add':
+        case 'do_new':
             $id =clean_int($_REQUEST['id']);
             $type = clean_int($_REQUEST['type']);
             $sql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` VALUES ({$sit[2]},'{$type}','{$id}')";
@@ -355,13 +355,13 @@ function dashboard_watch_incidents_edit($dashletid)
                 echo "</strong></td><td align='right'>";
                 switch ($i)
                 {
-                    case 0: $linktext = $GLOBALS['strAddSite'];
+                    case 0: $linktext = $GLOBALS['strNewSite'];
                         break;
-                    case 1: $linktext = $GLOBALS['strAddContact'];
+                    case 1: $linktext = $GLOBALS['strNewContact'];
                         break;
-                    case 2: $linktext = $GLOBALS['strAddUser'];
+                    case 2: $linktext = $GLOBALS['strNewUser'];
                         break;
-                    case 3: $linktext = $GLOBALS['strAddIncident'];
+                    case 3: $linktext = $GLOBALS['strNewIncident'];
                         break;
                 }
                 echo dashlet_link('watch_incidents', $dashletid, $linktext, 'edit', array('editaction' => 'add', 'type' => $i));

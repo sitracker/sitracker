@@ -152,7 +152,7 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
         {
             echo "?contractid={$contractid}";
         }
-        echo "'>{$strAddIncident}</a></li>";
+        echo "'>{$strNewIncident}</a></li>";
     }
     else
     {

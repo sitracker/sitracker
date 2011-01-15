@@ -630,10 +630,10 @@ function bbcode_toolbar($elementid)
  * @param $refid int The ID of the item this note if for
  * @return string The HTML to display
  */
-function add_note_form($linkid, $refid)
+function new_note_form($linkid, $refid)
 {
     global $now, $sit, $iconset;
-    $html = "<form name='addnote' action='note_add.php' method='post'>";
+    $html = "<form name='addnote' action='note_new.php' method='post'>";
     $html .= "<div class='detailhead note'> <div class='detaildate'>".readable_date($now)."</div>\n";
     $html .= icon('note', 16, $GLOBALS['strNote ']);
     $html .= " ".sprintf($GLOBALS['strNewNoteByX'], user_realname($sit[2]))."</div>\n";
@@ -659,7 +659,7 @@ function add_note_form($linkid, $refid)
 
     $html .= "<input type='hidden' name='action' value='addnote' />";
     $html .= "<input type='hidden' name='rpath' value='{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' />";
-    $html .= "<div style='text-align: right'><input type='submit' value='{$GLOBALS['strAddNote']}' /></div>\n";
+    $html .= "<div style='text-align: right'><input type='submit' value='{$GLOBALS['strNewNote']}' /></div>\n";
     $html .= "</div>\n";
     $html .= "</form>";
     return $html;
@@ -805,7 +805,7 @@ function dashlet_link($dashboard, $dashletid, $text='', $action='', $params='', 
             $html .= "&{$pname}={$pvalue}";
         }
     }
-    //$html .= "&editaction=do_add&type={$type}";
+    //$html .= "&editaction=do_new&type={$type}";
 
     if ($action != 'dashboard_save')
     {
@@ -1036,7 +1036,7 @@ function contract_details($id, $mode='internal')
         $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
         if ($maint->term != 'yes')
         {
-            $html .= " | <a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+            $html .= " | <a href='contract_new_service.php?contractid={$id}'>{$GLOBALS['strNewService']}</a></p>";
         }
     }
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
@@ -1107,26 +1107,26 @@ function contract_details($id, $mode='internal')
 
             if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0 AND $mode == 'internal')
             {
-                $html .= "<p align='center'><a href='contract_add_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
-                $html .= "{$GLOBALS['strAddContact']}</a></p>";
+                $html .= "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
+                $html .= "{$GLOBALS['strNewContact']}</a></p>";
             }
             else
             {
-                $html .= "<h3>{$GLOBALS['strAddContact']}</h3>";
+                $html .= "<h3>{$GLOBALS['strNewContact']}</h3>";
                 $html .= "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
                 $html .= "add' method='post' >";
-                $html .= "<p align='center'>{$GLOBLAS['strAddNewSupportedContact']} ";
+                $html .= "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
                 $html .= contact_site_drop_down('contactid',
                                                 'contactid',
                                                 maintenance_siteid($id),
                                                 supported_contacts($id));
                 $html .= help_link('NewSupportedContact');
-                $html .= " <input type='submit' value='{$GLOBALS['strAdd']}' /></p></form>";
+                $html .= " <input type='submit' value='{$GLOBALS['strNew']}' /></p></form>";
             }
             if ($mode == 'external')
             {
                 $html .= "<p align='center'><a href='addcontact.php'>";
-                $html .= "{$GLOBALS['strAddNewSiteContact']}</a></p>";
+                $html .= "{$GLOBALS['strNewSiteContact']}</a></p>";
             }
         }
 
@@ -1509,7 +1509,7 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
 function show_create_links($table, $ref)
 {
     global $dbLinkTypes;
-    $html .= "<p align='center'>{$GLOBALS['strAddLink']}: ";
+    $html .= "<p align='center'>{$GLOBALS['strNewLink']}: ";
     $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE origtab='$table' OR linktab='$table' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -1519,16 +1519,16 @@ function show_create_links($table, $ref)
     {
         if ($linktype->origtab == $table AND $linktype->linktab != $table)
         {
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a>";
         }
         elseif ($linktype->origtab != $table AND $linktype->linktab == $table)
         {
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->rlname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->rlname}</a>";
         }
         else
         {
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a> | ";
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}&amp;dir=rl'>{$linktype->rlname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a> | ";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}&amp;dir=rl'>{$linktype->rlname}</a>";
         }
 
         if ($rowcount < $numlinktypes) $html .= " | ";
@@ -1817,19 +1817,19 @@ function show_edit_site($site, $mode='internal')
  * @return string $html add contact form html
  * @author Kieran Hogg
  */
-function show_add_contact($siteid = 0, $mode = 'internal')
+function show_new_contact($siteid = 0, $mode = 'internal')
 {
     global $CONFIG;
     $returnpage = cleanvar($_REQUEST['return']);
     if (!empty($_REQUEST['name']))
     {
         $name = explode(' ',cleanvar(urldecode($_REQUEST['name'])), 2);
-        $_SESSION['formdata']['add_contact']['forenames'] = ucfirst($name[0]);
-        $_SESSION['formdata']['add_contact']['surname'] = ucfirst($name[1]);
+        $_SESSION['formdata']['new_contact']['forenames'] = ucfirst($name[0]);
+        $_SESSION['formdata']['new_contact']['surname'] = ucfirst($name[1]);
     }
 
-    $html = show_form_errors('add_contact');
-    clear_form_errors('add_contact');
+    $html = show_form_errors('new_contact');
+    clear_form_errors('new_contact');
     $html .= "<h2>".icon('contact', 32)." ";
     $html .= "{$GLOBALS['strNewContact']}</h2>";
 
@@ -1846,36 +1846,36 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "\n<table><tr><td align='center'>{$GLOBALS['strTitle']}<br />";
     $html .= "<input maxlength='50' name='courtesytitle' title=\"";
     $html .= "{$GLOBALS['strCourtesyTitle']}\" size='7'";
-    if ($_SESSION['formdata']['add_contact']['courtesytitle'] != '')
+    if ($_SESSION['formdata']['new_contact']['courtesytitle'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['courtesytitle']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['courtesytitle']}'";
     }
     $html .= "/></td>\n";
 
     $html .= "<td align='center'>{$GLOBALS['strForenames']}<br />";
     $html .= "<input class='required' maxlength='100' name='forenames' ";
     $html .= "size='15' title=\"{$GLOBALS['strForenames']}\"";
-    if ($_SESSION['formdata']['add_contact']['forenames'] != '')
+    if ($_SESSION['formdata']['new_contact']['forenames'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['forenames']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['forenames']}'";
     }
     $html .= "/></td>\n";
 
     $html .= "<td align='center'>{$GLOBALS['strSurname']}<br />";
     $html .= "<input class='required' maxlength='100' name='surname' ";
     $html .= "size='20' title=\"{$GLOBALS['strSurname']}\"";
-    if ($_SESSION['formdata']['add_contact']['surname'] != '')
+    if ($_SESSION['formdata']['new_contact']['surname'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['surname']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['surname']}'";
     }
     $html .= " /> <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
     $html .= "</table>\n</td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strJobTitle']}</th><td><input maxlength='255'";
     $html .= " name='jobtitle' size='35' title=\"{$GLOBALS['strJobTitle']}\"";
-    if ($_SESSION['formdata']['add_contact']['jobtitle'] != '')
+    if ($_SESSION['formdata']['new_contact']['jobtitle'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['jobtitle']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['jobtitle']}'";
     }
     $html .= " /></td></tr>\n";
     if ($mode == 'internal')
@@ -1890,17 +1890,17 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     }
 
     $html .= "<tr><th>{$GLOBALS['strDepartment']}</th><td><input maxlength='255' name='department' size='35'";
-    if ($_SESSION['formdata']['add_contact']['department'] != '')
+    if ($_SESSION['formdata']['new_contact']['department'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['department']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['department']}'";
     }
     $html .= "/></td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strEmail']}</th><td>";
     $html .= "<input class='required' maxlength='100' name='email' size='35'";
-    if ($_SESSION['formdata']['add_contact']['email'])
+    if ($_SESSION['formdata']['new_contact']['email'])
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['email']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['email']}'";
     }
     $html .= "/> <span class='required'>{$GLOBALS['strRequired']}</span> ";
 
@@ -1910,9 +1910,9 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "</td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strTelephone']}</th><td><input maxlength='50' name='phone' size='35'";
-    if ($_SESSION['formdata']['add_contact']['phone'] != '')
+    if ($_SESSION['formdata']['new_contact']['phone'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['phone']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['phone']}'";
     }
     $html .= "/> ";
 
@@ -1922,16 +1922,16 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "</td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strMobile']}</th><td><input maxlength='100' name='mobile' size='35'";
-    if ($_SESSION['formdata']['add_contact']['mobile'] != '')
+    if ($_SESSION['formdata']['new_contact']['mobile'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['mobile']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['mobile']}'";
     }
     $html .= "/></td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strFax']}</th><td><input maxlength='50' name='fax' size='35'";
-    if ($_SESSION['formdata']['add_contact']['fax'])
+    if ($_SESSION['formdata']['new_contact']['fax'])
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['fax']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['fax']}'";
     }
     $html .= "/></td></tr>\n";
 
@@ -1954,9 +1954,9 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     if ($mode == 'internal')
     {
         $html .= "<tr><th>{$GLOBALS['strNotes']}</th><td><textarea cols='60' rows='5' name='notes'>";
-        if ($_SESSION['formdata']['add_contact']['notes'] != '')
+        if ($_SESSION['formdata']['new_contact']['notes'] != '')
         {
-            $html .= $_SESSION['formdata']['add_contact']['notes'];
+            $html .= $_SESSION['formdata']['new_contact']['notes'];
         }
         $html .= "</textarea></td></tr>\n";
     }
@@ -1969,11 +1969,11 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
-    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strAddContact']}\" /></p>";
+    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strNewContact']}\" /></p>";
     $html .= "</form>\n";
 
     //cleanup form vars
-    clear_form_data('add_contact');
+    clear_form_data('new_contact');
 
     return $html;
 }
@@ -2129,7 +2129,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
         if ($mode == 'internal')
         {
             $html .= "<p align='center'>";
-            $html .= "<a href='contract_add_contact.php?contactid={$userid}&amp;context=contact'>";
+            $html .= "<a href='contract_new_contact.php?contactid={$userid}&amp;context=contact'>";
             $html .= "{$GLOBALS['strAssociateContactWithContract']}</a></p>\n";
         }
 

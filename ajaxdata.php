@@ -380,7 +380,7 @@ switch ($action)
         }
         break;
     default :
-        plugin_do('ajaxdata_add_action', array('action' => $action));
+        plugin_do('ajaxdata_new_action', array('action' => $action));
         break;
 }
 

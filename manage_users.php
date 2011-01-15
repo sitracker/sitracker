@@ -43,7 +43,7 @@ if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
 echo "<h2>".icon('user', 32)." {$strManageUsers}</h2>";
 echo "<p class='contextmenu' align='center'>";
-echo "<a href='user_add.php?action=showform'>{$strAddUser}</a> | ";
+echo "<a href='user_new.php?action=showform'>{$strNewUser}</a> | ";
 echo "<a href='edit_user_permissions.php'>{$strRolePermissions}</a>";
 echo "</p>";
 echo "<table align='center'>";

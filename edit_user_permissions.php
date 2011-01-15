@@ -47,7 +47,7 @@ if (empty($action) OR $action == "showform")
     {
         echo "<h2>".icon('trigger', 32)." {$strRolePermissions}</h2>";
 
-        echo "<p align='center'><a href='role_add.php'>{$strAddRole}</a></p>";
+        echo "<p align='center'><a href='role_new.php'>{$strNewRole}</a></p>";
 
         echo "<div class='tabcontainer'>";
         echo "<ul>";

@@ -103,7 +103,7 @@ else
 }
 echo "</td></tr><tr><td valign='middle'>";
 
-echo "<a href='contact_add.php'>{$strAdd}</a> | ";
+echo "<a href='contact_new.php'>{$strNew}</a> | ";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
 echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>";
 echo "</td></tr></table>";
@@ -148,7 +148,7 @@ else
                 }
                 $sql .= " ) ";
             }
-            
+
             if ($displayinactive == "false")
             {
                 $sql .= " AND c.active = 'true' AND s.active = 'true'";
@@ -196,7 +196,7 @@ else
                 if ($results->fax == '') echo "<em>{$strNone}</em>";
                 else echo $results->fax;
                 echo "</td>";
-                echo "<td><a href='incident_add.php?action=findcontact&amp;contactid={$results->id}'>{$strAddIncident}</a> | ";
+                echo "<td><a href='incident_new.php?action=findcontact&amp;contactid={$results->id}'>{$strNewIncident}</a> | ";
                 echo "<a href='contact_edit.php?action=edit&amp;contact={$results->id}'>{$strEditContact}</a>";
                 echo "</td></tr>";
 

@@ -241,7 +241,7 @@ else
 {
     echo "<p align='center'>{$strNoContactsForSite}</p>";
 }
-echo "<p align='center'><a href='contact_add.php?siteid={$id}'>{$strAddContact}</a></p>";
+echo "<p align='center'><a href='contact_new.php?siteid={$id}'>{$strNewContact}</a></p>";
 
 
 // Valid user, check perms
@@ -359,7 +359,7 @@ if (user_permission($sit[2],19)) // View contracts
         echo "<p align='center'>{$strNoContractsForSite}</p>";
     }
 
-    echo "<p align='center'><a href='contract_add.php?action=showform&amp;siteid={$id}'>{$strAddContract}</a></p>";
+    echo "<p align='center'><a href='contract_new.php?action=showform&amp;siteid={$id}'>{$strNewContract}</a></p>";
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
