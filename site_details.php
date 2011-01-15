@@ -59,24 +59,32 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strCounty}:</th><td>{$siteobj->county}</td></tr>";
     echo "<tr><th>{$strCountry}:</th><td>{$siteobj->country}</td></tr>";
     echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
-    if (!empty($siteobj->postcode))
+    if (!empty($siteobj->address1))
     {
         //TODO make this support different links via config
-        echo "(<a target='_blank' href='http://www.google.com/maps?q={$siterow['postcode']}, {$siterow['address1']}";
-        if (!empty($siterow['address2']))
+        echo "(<a target='_blank' href='http://www.google.com/maps?q={$siteobj->address1}";
+        if (!empty($siteobj->address2))
         {
-            echo ", {$siterow['address2']}";
+            echo ", {$siteobj->address2}";
         }
-        echo ", {$siterow['city']}";
-        if (!empty($siterow['country']))
+        if (!empty($siteobj->postcode))
         {
-            echo ", {$siterow['country']}";
+            echo ", {$siteobj->postcode}";
         }
-        if (!empty($siterow['county']))
+        if (!empty($siteobj->city))
         {
-            echo ", {$siterow['county']}";
+            echo ", {$siteobj->city}";
         }
-        echo "'>{$strMap}</a>)";    }
+        if (!empty($siteobj->country))
+        {
+            echo ", {$siteobj->country}";
+        }
+        if (!empty($siteobj->county))
+        {
+            echo ", {$siteobj->county}";
+        }
+        echo "'>{$strMap}</a>)";
+    }
     echo "</td></tr>";
     echo "<tr><th>{$strTelephone}:</th><td>{$siteobj->telephone}</td></tr>";
     echo "<tr><th>{$strFax}:</th><td>{$siteobj->fax}</td></tr>";
