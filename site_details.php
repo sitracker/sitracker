@@ -62,8 +62,21 @@ while ($siteobj = mysql_fetch_object($siteresult))
     if (!empty($siteobj->postcode))
     {
         //TODO make this support different links via config
-        echo "(<a href='http://www.google.com/maps?q={$siteobj->postcode}'>{$strMap}</a>)";
-    }
+        echo "(<a target='_blank' href='http://www.google.com/maps?q={$siterow['postcode']}, {$siterow['address1']}";
+        if (!empty($siterow['address2']))
+        {
+            echo ", {$siterow['address2']}";
+        }
+        echo ", {$siterow['city']}";
+        if (!empty($siterow['country']))
+        {
+            echo ", {$siterow['country']}";
+        }
+        if (!empty($siterow['county']))
+        {
+            echo ", {$siterow['county']}";
+        }
+        echo "'>{$strMap}</a>)";    }
     echo "</td></tr>";
     echo "<tr><th>{$strTelephone}:</th><td>{$siteobj->telephone}</td></tr>";
     echo "<tr><th>{$strFax}:</th><td>{$siteobj->fax}</td></tr>";
