@@ -24,6 +24,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 if (!empty($_SESSION['lang'])) $lang = $_SESSION['lang'];
 else $lang = $CONFIG['default_i18n'];
 $SYSLANG = $_SESSION['syslang'];
+plugin_do('before_page');
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n";
 echo "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang}\" lang=\"{$lang}\">\n";
@@ -109,6 +110,7 @@ if (is_array($pagescripts))
     unset($pagescripts, $pscript);
 }
 
+plugin_do('html_head');
 echo "</head>\n";
 echo "<body>\n";
 echo "<div id='masthead'><h1 id='apptitle'>{$CONFIG['application_name']}</h1></div>\n";
