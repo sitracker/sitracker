@@ -500,6 +500,14 @@ function group_selector($selected, $urlargs='')
 }
 
 
+/**
+ * Creates HTML for a tabbed interface
+ * @author Ivan Lucas
+ * @param array $tabsarray
+ * @param string $selected (optional)
+ * @param string $divclass (optional)
+ * @return string HTML
+ */
 function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
