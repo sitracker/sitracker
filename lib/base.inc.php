@@ -109,7 +109,7 @@ define ("REASON_INCIDENT_CLOSED", 2);
  * Begin global variable definitions
  **/
 // Version number of the application, (numbers only)
-$application_version = '3.99';
+$application_version = '3.90';
 
 // Revision string, e.g. 'beta2' or 'svn' or ''
 $application_revision = 'svn';
