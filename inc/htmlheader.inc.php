@@ -94,7 +94,7 @@ if ($_SESSION['auth'] == TRUE)
     echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
     echo "<link rel='search' type='application/opensearchdescription+xml' title='{$CONFIG['application_shortname']} Search' href='{$CONFIG['application_webpath']}opensearch.php' />\n";
 }
-
+plugin_do('html_head');
 echo "</head>\n";
 echo "<body>\n";
 
@@ -304,11 +304,11 @@ if ($sit[0] != '')
     {
         // Check if scheduler is running (bug 108)
         $failure = 0;
-    
+
         $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
         $schedulerresult = mysql_query($schedulersql);
         if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
-    
+
         while ($schedule = mysql_fetch_object($schedulerresult))
         {
             $sqlinterval = ("$schedule->interval");
