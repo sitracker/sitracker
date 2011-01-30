@@ -129,13 +129,21 @@ function dashboard_user_incidents_display($dashletid)
             list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($obj->id);
             $update_body = parse_updatebody($update_body);
             echo "<tr><td class='{$shade}'>";
-            echo "<a href='javascript:incident_details_window({$obj->id})' class='info'>";
-            echo "{$obj->id} - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}";
+            if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
+            {
+                $windowname = "incident{$obj->id}";
+            }
+            else
+            {
+                $windowname = "sit_popup";
+            }
+            $tooltip = '';
             if (!empty($update_body) AND $update_body != '...')
             {
-                echo "<span>{$update_body}</span>";
+                $tooltip = $update_body;
             }
-            echo "</a></td></tr>\n";
+            echo html_incident_popup_link($obj->id, "{$obj->id} - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}", $tooltip);
+            echo "</td></tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }

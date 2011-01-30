@@ -94,9 +94,9 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 ?>
 <script type='text/javascript'>
 //<![CDATA[
-var id = <?php 
+var id = <?php
     if (!empty($q)) echo "\"{$q}\"";
-    else echo '""'; 
+    else echo '""';
     ?>;
 if (!isNaN(id))
 {
@@ -112,7 +112,7 @@ if (!isNaN(id))
             		window.location = 'incident_details.php?id=' + id;
             	<?php
             	}
-            	else 
+            	else
             	{
 	            ?>
 	                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
@@ -266,11 +266,9 @@ if (!empty($q))
         $shade = 'shade1';
         while($row = mysql_fetch_object($incidentresult))
         {
-            $url = "javascript:incident_details_window('{$row->id}', 'incident{$row->id}')";
             echo "<tr class='{$shade}'>
                     <td><a href=\"incident_details.php?id={$row->id}\">{$row->id}</a></td>
-                    <td><a href=\"{$url}\">".search_highlight($row->title,
-                    $search)."</a></td>
+                    <td>".html_incident_popup_link($row->id, search_highlight($row->title, $search))."</td>
                     <td>".search_highlight($row->bodytext, $search)."</td>
                     <td>".ldate($CONFIG['dateformat_datetime'], $row->timestamp)."</td></tr>";
 
@@ -368,7 +366,6 @@ if (!empty($q))
         $shade = 'shade1';
         while ($row = mysql_fetch_object($siteresult))
         {
-            $url = "javascript:incident_details_window('{$row->id}', 'incident{$row->id}')";
             echo "<tr class='{$shade}'>
                     <td>{$row->id}</td>
                     <td><a href='site_details.php?id={$row->id}&action=show'>{$row->name}</a></td>
@@ -485,8 +482,8 @@ if (!empty($q))
                     <td>{$row->email}</td>
                     <td>{$row->telephone}</td>
                     <td>{$row->fax}</td>
-                    <td><a href='incident_add.php?action=findcontact&amp;contactid={$row->contactid}'>
-                        {$strAddIncident}</a>
+                    <td><a href='incident_new.php?action=findcontact&amp;contactid={$row->contactid}'>
+                        {$strNewIncident}</a>
                     </td>
                   </tr>";
 
@@ -584,7 +581,6 @@ if (!empty($q))
         $shade = 'shade1';
         while($row = mysql_fetch_object($userresult))
         {
-            $url = "javascript:incident_details_window('{$row->id}', 'incident{$row->id}')";
             echo "<tr class='{$shade}'>
                     <td>".user_online_icon($row->id)." {$row->realname}</td>
                     <td>{$row->email}</td>

@@ -40,7 +40,7 @@ switch ($mode)
         $response = mysql_fetch_object($result);
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
-        echo "<tr><th>{$strIncident}</th><td><a href=\"javascript:incident_details_window('{$response->incidentid}','incident{$response->incidentid}')\">{$response->incidentid} - ".incident_title($response->incidentid)."</a></td>\n";
+        echo "<tr><th>{$strIncident}</th><td>".html_incident_popup_link($response->incidentid, "{$response->incidentid} - ".incident_title($response->incidentid))."</td>\n";
         echo "<tr><th>{$strForm}</th><td>{$response->formid}</td>\n";
         echo "<tr><th>{$strDate}</th><td>{$response->created}</td>\n";
         echo "<tr><th>{$strCompleted}</th><td>{$response->completed}</td>\n";
@@ -216,8 +216,7 @@ switch ($mode)
                     echo "<tr class='{$shade}'>";
                     echo "<td>".ldate($CONFIG['dateformat_datetime'],mysqlts2date($resp->created))."</td>";
                     echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a></td>";
-                    echo "<td><a href=\"javascript:incident_details_window('{$resp->incidentid}','incident{$resp->incidentid}')\">";
-                    echo "{$strIncident} [{$resp->incidentid}]</a> - ";
+                    echo "<td>".html_incident_popup_link($resp->incidentid, "{$strIncident} [{$resp->incidentid}]")." - ";
                     echo incident_title($resp->incidentid)."</td>";
                     $url = "feedback.php?ax={$hashcode}";
                     if ($resp->multi == 'yes') $url .= "&amp;rr=1";

@@ -50,7 +50,7 @@ else
     echo "<p class='info'>{$strNoRecords}</p>";
 }
 
-echo "<p align='center'><a href='inventory_add.php?newsite=1'>";
+echo "<p align='center'><a href='inventory_new.php?newsite=1'>";
 echo "{$strSiteNotListed}</a></p>";
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

@@ -59,10 +59,31 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strCounty}:</th><td>{$siteobj->county}</td></tr>";
     echo "<tr><th>{$strCountry}:</th><td>{$siteobj->country}</td></tr>";
     echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
-    if (!empty($siteobj->postcode))
+    if (!empty($siteobj->address1))
     {
         //TODO make this support different links via config
-        echo "(<a href='http://www.google.com/maps?q={$siteobj->postcode}'>{$strMap}</a>)";
+        echo "(<a target='_blank' href='http://www.google.com/maps?q={$siteobj->address1}";
+        if (!empty($siteobj->address2))
+        {
+            echo ", {$siteobj->address2}";
+        }
+        if (!empty($siteobj->postcode))
+        {
+            echo ", {$siteobj->postcode}";
+        }
+        if (!empty($siteobj->city))
+        {
+            echo ", {$siteobj->city}";
+        }
+        if (!empty($siteobj->country))
+        {
+            echo ", {$siteobj->country}";
+        }
+        if (!empty($siteobj->county))
+        {
+            echo ", {$siteobj->county}";
+        }
+        echo "'>{$strMap}</a>)";
     }
     echo "</td></tr>";
     echo "<tr><th>{$strTelephone}:</th><td>{$siteobj->telephone}</td></tr>";
@@ -220,7 +241,7 @@ else
 {
     echo "<p align='center'>{$strNoContactsForSite}</p>";
 }
-echo "<p align='center'><a href='contact_add.php?siteid={$id}'>{$strAddContact}</a></p>";
+echo "<p align='center'><a href='contact_new.php?siteid={$id}'>{$strNewContact}</a></p>";
 
 
 // Valid user, check perms
@@ -338,7 +359,7 @@ if (user_permission($sit[2],19)) // View contracts
         echo "<p align='center'>{$strNoContractsForSite}</p>";
     }
 
-    echo "<p align='center'><a href='contract_add.php?action=showform&amp;siteid={$id}'>{$strAddContract}</a></p>";
+    echo "<p align='center'><a href='contract_new.php?action=showform&amp;siteid={$id}'>{$strNewContract}</a></p>";
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

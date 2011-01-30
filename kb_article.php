@@ -39,17 +39,17 @@ if (isset($_POST['submit']))
     $distribution = cleanvar($_POST['distribution']);
     $sql = array();
 
-    $_SESSION['formdata']['kb_add_article'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+    $_SESSION['formdata']['kb_new_article'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     if ($kbtitle == '')
     {
-        $_SESSION['formerrors']['kb_add_article']['title'] = sprintf($strFieldMustNotBeBlank, $strTitle);
+        $_SESSION['formerrors']['kb_new_article']['title'] = sprintf($strFieldMustNotBeBlank, $strTitle);
         $errors++;
     }
     if ($keywords == '')
     {
-        $_SESSION['formerrors']['kb_add_article']['keywords'] = sprintf($strFieldMustNotBeBlank, $strKeywords);
+        $_SESSION['formerrors']['kb_new_article']['keywords'] = sprintf($strFieldMustNotBeBlank, $strKeywords);
         $errors++;
     }
 
@@ -334,7 +334,7 @@ else
     }
     else
     {
-        echo $strAdd;
+        echo $strNew;
     }
     echo "' /></p>";
     echo $sectionstore;

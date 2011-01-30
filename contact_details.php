@@ -225,7 +225,7 @@ while ($contact = mysql_fetch_object($contactresult))
     echo "</table>\n";
 
     echo "<p align='center'>";
-    echo "<a href='incident_add.php?action=findcontact&amp;contactid={$id}'>{$strAddIncident}</a> | ";
+    echo "<a href='incident_new.php?action=findcontact&amp;contactid={$id}'>{$strNewIncident}</a> | ";
     echo "<a href='contact_details.php?id={$id}&amp;output=vcard'>".icon('vcard', 16)." vCard</a> | ";
     echo "<a href='contact_edit.php?action=edit&amp;contact={$id}'>{$strEdit}</a> | ";
     echo "<a href='contact_delete.php?id={$id}'>{$strDelete}</a>";

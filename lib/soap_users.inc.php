@@ -39,7 +39,7 @@ $server->wsdl->addComplexType('user',
                                                 'i18n' => array ('name' => 'i18n', 'type' => 'xsd:string')
                                             )
                                     );
-                                    
+
 $server->wsdl->addComplexType('user_list',
                                             'complexType',
                                             'array',
@@ -60,7 +60,7 @@ $server->wsdl->addComplexType('user_list_response',
                                             )
                                         );
 
-$server->wsdl->addComplexType('add_user_response',
+$server->wsdl->addComplexType('new_user_response',
                                             'complexType',
                                             'struct',
                                             'all',
@@ -81,9 +81,9 @@ $server->wsdl->addComplexType('group',
                                             )
                                     );
 
-$server->register('add_user',
+$server->register('new_user',
         array('sessionid' => 'xsd:string',  'user' => 'tns:user'), // Input
-        array('return'  => 'tns:add_user_response'), // return
+        array('return'  => 'tns:new_user_response'), // return
         $soap_namespace);
 
 

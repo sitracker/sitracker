@@ -55,7 +55,7 @@ if (empty($mode))
 }
 elseif ($mode == 'new')
 {
-    $form = new Form("sitetypes", $strAdd, $dbSiteTypes, "insert", $strNewSiteType);
+    $form = new Form("sitetypes", $strNew, $dbSiteTypes, "insert", $strNewSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);
     $form->setReturnURLSuccess($_SERVER['PHP_SELF']);
     $c1 = new Cell();

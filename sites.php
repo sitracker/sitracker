@@ -116,7 +116,7 @@ if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 }
 echo "</td></tr>";
 echo "<tr><td valign='middle'>";
-echo "<a href='site_add.php'>{$strAddSite}</a> | ";
+echo "<a href='site_new.php'>{$strNewSite}</a> | ";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
 echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
 $sitesql = "SELECT COUNT(id) FROM `{$dbSites}` WHERE owner='{$sit[2]}'";

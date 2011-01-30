@@ -12,7 +12,7 @@
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections 
+$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -65,7 +65,7 @@ if (empty($mode))
     function processForm()
     {
         // confirm_action('Are you sure you wish to update the last billed time to {$enddateorig}');
-        
+
         var approval = $('approvalpage');
         var invoice = $('invoicepage');
 
@@ -339,8 +339,8 @@ elseif ($mode == 'approvalpage')
                             $line .= "<input type='checkbox' name='selected[]' value='{$obj->transactionid}' />";
                         }
                         $line .= "</td>";
-                        $line .= "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>";
-                        $line .= "{$obj->id}</a></td><td>{$obj->title}</td><td>".contact_realname($obj->contact)."</td>";
+                        $line .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td>";
+                        $line .= "<td>{$obj->title}</td><td>".contact_realname($obj->contact)."</td>";
                         $line .= "<td>".user_realname($obj->owner)."</td>";
                         $line .= "<td>".ldate($CONFIG['dateformat_datetime'], $obj->opened)."</td><td>".ldate($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
 

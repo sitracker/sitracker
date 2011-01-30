@@ -53,7 +53,7 @@ if (mysql_num_rows($result))
         echo "<td>";
         if ($approver == TRUE)
         {
-            echo "<a href='holiday_add.php?hid={$dates->holidayid}&amp;year=";
+            echo "<a href='holiday_new.php?hid={$dates->holidayid}&amp;year=";
             echo substr($dates->date, 0, 4) ."&amp;month=".substr($dates->date, 5, 2);
             echo "&amp;day=".substr($dates->date, 8, 2)."&amp;user={$dates->userid}";
             echo "&amp;type={$dates->type}&amp;length=0&amp;return=list' ";

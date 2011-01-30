@@ -128,7 +128,7 @@ else
     if (empty($enddate)) $enddate = date('Y-m-d');
 
     $enddate = $enddate." 23:59:59";
-    
+
     // FIXME move this function out of line
     function does_site_have_certain_sla_contract($siteid, $slas)
     {
@@ -203,7 +203,7 @@ else
             if ((!empty($slas) AND !does_site_have_certain_sla_contract($site->id, $slas)) OR empty($slas))
             {
                 $sql = "SELECT count(i.id) AS incidentz, s.name AS site FROM `{$dbContacts}` AS c, `{$dbSites}` AS s, `{$dbIncidents}` AS i, `{$dbMaintenance}` AS m ";
-                $sql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened > ".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id "; 
+                $sql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened > ".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id ";
                 $sql .= "AND m.id = i.maintenanceid AND m.reseller = '{$site->reseller}' ";
                 $sql.= "GROUP BY site";
                 // echo $sql;
@@ -304,7 +304,7 @@ else
                     while ($obj = mysql_fetch_object($iresult))
                     {
                         $csv .= "<tr class='{$shade1}'>";
-                        $csv .= "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>{$obj->id}</a></td><td>{$obj->title}</td>";
+                        $csv .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td><td>{$obj->title}</td>";
                         $csv .= "<td>{$obj->forenames} {$obj->surname}</td>";
                         $csv .= "<td>".software_name($obj->softwareid)."</td>";
                         $csv .= "<td>".incidentstatus_name($obj->status)."</td>";

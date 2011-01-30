@@ -1,5 +1,5 @@
 <?php
-// role_add.php - Page to add role to SiT!
+// role.php - Page to add role to SiT!
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project

@@ -29,7 +29,7 @@ array('name' => $strEmail,
       );
 
 $actionarray['ACTION_CREATE_INCIDENT'] =
-array('name' => $strAddIncident,
+array('name' => $strNewIncident,
       'description' => $strCreateAnIncident,
       'requires' => array('updateid'),
       'permission' => array(),

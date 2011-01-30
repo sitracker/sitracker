@@ -9,7 +9,7 @@
 $permission = 71;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-require (APPLICATION_LIBPATH . 'trigger.class.php');   
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -20,7 +20,7 @@ echo "<div id='pageintro'>";
 //FIXME wording
 echo "<p align='center'>You can be notified in different ways when things occur, your current notifications are listed below.";
 echo "<br /><br /><a href='action_details.php'>";
-echo icon('add', 16). " {$strAddNotification}</a></p>";
+echo icon('add', 16). " {$strNewNotification}</a></p>";
 echo "</div><br />";
 echo triggers_to_html(1);
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

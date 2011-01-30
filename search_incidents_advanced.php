@@ -191,7 +191,7 @@ else
                 if ($results->externalid == '') echo $strNone;
                 else echo $results->externalid;
                 echo "</td>";
-                echo "<td width='150'><a href=\"javascript:incident_details_window('{$results->id}')\">{$results->title}</a></td>";
+                echo "<td width='150'>".html_incident_popup_link($results->id, $results->title)."</td>";
                 echo "<td align='center' width='100'>{$results->forenames}' '{$results->surname}</td>";
                 echo "<td align='center' width='100'>".site_name($results->siteid)."</td>";
                 echo "<td align='center' width='50'>{$results->servicelevel}<br />".priority_name($results->priority)."</td>";

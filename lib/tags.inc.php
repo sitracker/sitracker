@@ -43,7 +43,7 @@ function get_tag_id($tag)
 /**
  * @author Ivan Lucas
  */
-function add_tag($id, $type, $tag)
+function new_tag($id, $type, $tag)
 {
     global $dbSetTags;
     /*
@@ -114,7 +114,7 @@ function replace_tags($type, $id, $tagstring)
     $tag_array = explode(" ", $tags);
     foreach ($tag_array AS $tag)
     {
-        add_tag($id, $type, trim($tag));
+        new_tag($id, $type, trim($tag));
     }
 }
 
