@@ -19,7 +19,7 @@ $str1Year = 'سنه واحده';
 $str3rd = 'الثالث';
 
 $strAbout = 'عن';
-$strAboutPerson = 'غن s%';
+$strAboutPerson = 'عن %s';
 $strAboutXMinutesAgo = 'من %d دقائق';
 $strAboveMustBeCompletedToAllowDeductions = 'السابق يجب ان يكتمل قبل السماح بالخصم';
 $strAbsentSick = 'غائب مريض';

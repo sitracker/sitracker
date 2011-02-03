@@ -3,7 +3,7 @@
 //                or convert plain text to HTML ...
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -500,6 +500,14 @@ function group_selector($selected, $urlargs='')
 }
 
 
+/**
+ * Creates HTML for a tabbed interface
+ * @author Ivan Lucas
+ * @param array $tabsarray
+ * @param string $selected (optional)
+ * @param string $divclass (optional)
+ * @return string HTML
+ */
 function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);

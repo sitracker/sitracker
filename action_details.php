@@ -21,7 +21,6 @@ if (isset($_GET['user']))
     //FIXME perms
     if ($_GET['user'] == 'admin')
     {
-        $user_id = 0;
         $trigger_mode = 'system';
     }
     else
@@ -61,14 +60,13 @@ function get_checks()
     {
         try
         {
-	       xmlhttp = new XMLHttpRequest();
+           xmlhttp = new XMLHttpRequest();
         }
         catch (e)
         {
             xmlhttp=false;
         }
     }
-
     if (!xmlhttp && window.createRequest)
     {
         try
@@ -170,22 +168,22 @@ function switch_template()
         {
             try
             {
-                xmlhttp = new XMLHttpRequest();
+            xmlhttp = new XMLHttpRequest();
             }
             catch (e)
             {
-                xmlhttp=false;
+            xmlhttp=false;
             }
         }
         if (!xmlhttp && window.createRequest)
         {
             try
             {
-                xmlhttp = window.createRequest();
+            xmlhttp = window.createRequest();
             }
             catch (e)
             {
-                xmlhttp=false;
+            xmlhttp=false;
             }
         }
 
@@ -232,7 +230,6 @@ function switch_template()
         $('journalbox').hide();
         $('none').show();
         $('rulessection').hide();
-
     }
 }
 //]]>
@@ -240,7 +237,10 @@ function switch_template()
 <?php
 if (isset($_GET['id']))
 {
+    //FIXME 4.0
+    $id = clean_int($_GET['id']);
     $mode = 'edit';
+    $trigger = Trigger::fromID($id);
 }
 else
 {
@@ -249,21 +249,21 @@ else
 
 if (!empty($_POST['triggertype']))
 {
-	$_POST = cleanvar($_POST);
-	$checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
-	                             $_POST['enabled'], $_POST['conditions']);
+    $_POST = cleanvar($_POST);
+    $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
+                    $_POST['enabled'], $_POST['conditions']);
 
     if ($_POST['new_action'] == 'ACTION_NOTICE')
-	{
+    {
         $template = $_POST['noticetemplate'];
-	}
-	elseif ($_POST['new_action'] == 'ACTION_EMAIL')
-	{
-	    $template = $_POST['emailtemplate'];
-	}
+    }
+    elseif ($_POST['new_action'] == 'ACTION_EMAIL')
+    {
+        $template = $_POST['emailtemplate'];
+    }
 
-	$t = new Trigger($_POST['triggertype'], $user_id, $template,
-                     $_POST['new_action'], $checks, $parameters);
+    $t = new Trigger($_POST['triggertype'], $user_id, $template,
+            $_POST['new_action'], $checks, $parameters);
 
     $success = $t->add();
     if ($trigger_mode == 'system') $return = 'system_actions.php';
@@ -276,7 +276,6 @@ else
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     echo "<h3>Action</h3>";
-    echo $trigger_mode;
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach($trigger_types as $name => $trigger)
@@ -303,14 +302,14 @@ else
     }
     echo "</select>";
 
-    echo "<span id='emailtemplatesbox' style='display:none'>";
+    echo "<div id='emailtemplatesbox' style='display:none'>";
     echo "<h3>Email template</h3> ";
     echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You shoud only change this if you would like to use a template you have created yourself</p>";
-    echo email_templates('emailtemplate', $trigger_mode)."</span></p>";
-    echo "<span id='noticetemplatesbox' style='display:none'>";
+    echo email_templates('emailtemplate', $trigger_mode)."</div>";
+    echo "<div id='noticetemplatesbox' style='display:none'>";
     echo "<h3>Notice template</h3> ";
     echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You should only change this if you would like to use a template you have created yourself</p>";
-    echo notice_templates('noticetemplate')."</span></p>";
+    echo notice_templates('noticetemplate')."</div>";
     echo '<div id="checksbox" style="display:none">';
     echo '<h3>Conditions</h3>';
     echo "<p style='text-align:left'>Some actions have option conditions under which you can choose to be notified.</p>";
@@ -327,7 +326,8 @@ else
 //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
 //         }
 //     }
-
+    echo "<p align='center'><a href='notifications.php'>{$strBackToList}</a></p>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
 }
 

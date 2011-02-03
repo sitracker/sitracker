@@ -2,7 +2,7 @@
 // strings.inc.php - Set up strings
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -69,22 +69,23 @@ $hmenu[1020] = $hmenu[1020] +
 // TODO v3.40 set a permission for triggers
 if (!is_array($hmenu[1030])) $hmenu[1030] = array();
 $hmenu[1030] = $hmenu[1030] +
-                array (05 => array ( 'perm'=> 22, 'name'=> $strConfigure, 'url'=>"{$CONFIG['application_webpath']}config.php"),
-                       10=> array ( 'perm'=> 22, 'name'=> $strUsers, 'url'=>"{$CONFIG['application_webpath']}manage_users.php", 'submenu'=>"103010"),
-                       20=> array ( 'perm'=> 43, 'name'=> $strGlobalSignature, 'url'=>"{$CONFIG['application_webpath']}edit_global_signature.php"),
-                       30=> array ( 'perm'=> 22, 'name'=> $strTemplates, 'url'=>"{$CONFIG['application_webpath']}templates.php"),
-                       40=> array ( 'perm'=> 22, 'name'=> $strSetPublicHolidays, 'url'=>"{$CONFIG['application_webpath']}calendar.php?type=10&amp;display=year", 'enablevar' => 'holidays_enabled'),
-                       50=> array ( 'perm'=> 22, 'name'=> $strFTPFilesDB, 'url'=>"{$CONFIG['application_webpath']}ftp_list_files.php"),
-                       60=> array ( 'perm'=> 22, 'name'=> $strServiceLevels, 'url'=>"{$CONFIG['application_webpath']}service_levels.php"),
-                       65=> array ( 'perm'=> 81, 'name'=> $strBillingMatrix, 'url'=>"{$CONFIG['application_webpath']}billing_matrix.php"),
-                       70=> array ( 'perm'=> 7, 'name'=> $strBulkModify, 'url'=>"{$CONFIG['application_webpath']}bulk_modify.php?action=external_esc"),
-                       80=> array ( 'perm'=> 64, 'name'=> $strEscalationPaths, 'url'=>"{$CONFIG['application_webpath']}escalation_paths.php"),
-                       90=> array ( 'perm'=> 66, 'name'=> $strManageDashboardComponents, 'url'=>"{$CONFIG['application_webpath']}manage_dashboard.php"),
-                       100=> array ( 'perm'=> 78, 'name'=> $strNotices, 'url'=>"{$CONFIG['application_webpath']}notices.php"),
-                       120=> array ( 'perm'=> 22, 'name'=> $strSystemActions, 'url'=>"{$CONFIG['application_webpath']}triggers.php?user=0"),
-                       130=> array ( 'perm'=> 22, 'name'=> $strScheduler, 'url'=>"{$CONFIG['application_webpath']}scheduler.php"),
-                       140=> array ( 'perm'=> 49, 'name'=> $strFeedbackForms, 'url'=>"", 'submenu'=>"103090", 'enablevar' => 'feedback_enabled'),
-                       150=> array ( 'perm'=> 22, 'name'=> $strJournal, 'url'=>"{$CONFIG['application_webpath']}journal.php")
+                array (10 => array ( 'perm'=> 22, 'name'=> $strConfigure, 'url'=>"{$CONFIG['application_webpath']}config.php"),
+                       20=> array ( 'perm'=> 22, 'name'=> $strUsers, 'url'=>"{$CONFIG['application_webpath']}manage_users.php", 'submenu'=>"103010"),
+                       30=> array ( 'perm'=> 43, 'name'=> $strGlobalSignature, 'url'=>"{$CONFIG['application_webpath']}edit_global_signature.php"),
+                       40=> array ( 'perm'=> 22, 'name'=> $strTemplates, 'url'=>"{$CONFIG['application_webpath']}templates.php"),
+                       50=> array ( 'perm'=> 22, 'name'=> $strSetPublicHolidays, 'url'=>"{$CONFIG['application_webpath']}calendar.php?type=10&amp;display=year", 'enablevar' => 'holidays_enabled'),
+                       60=> array ( 'perm'=> 22, 'name'=> $strFTPFilesDB, 'url'=>"{$CONFIG['application_webpath']}ftp_list_files.php"),
+                       70=> array ( 'perm'=> 22, 'name'=> $strServiceLevels, 'url'=>"{$CONFIG['application_webpath']}service_levels.php"),
+                       80=> array ( 'perm'=> 81, 'name'=> $strBillingMatrix, 'url'=>"{$CONFIG['application_webpath']}billing_matrix.php"),
+                       90=> array ( 'perm'=> 7, 'name'=> $strBulkModify, 'url'=>"{$CONFIG['application_webpath']}bulk_modify.php?action=external_esc"),
+                       100=> array ( 'perm'=> 64, 'name'=> $strEscalationPaths, 'url'=>"{$CONFIG['application_webpath']}escalation_paths.php"),
+                       105=> array ( 'perm'=> 66, 'name'=> $strManageDashboardComponents, 'url'=>"{$CONFIG['application_webpath']}manage_dashboard.php"),
+                       110=> array ( 'perm'=> 22, 'name'=> $strManagePlugins, 'url' => "{$CONFIG['application_webpath']}manage_plugins.php"),
+                       120=> array ( 'perm'=> 78, 'name'=> $strNotices, 'url'=>"{$CONFIG['application_webpath']}notices.php"),
+                       130=> array ( 'perm'=> 22, 'name'=> $strSystemActions, 'url'=>"{$CONFIG['application_webpath']}triggers.php?user=0"),
+                       140=> array ( 'perm'=> 22, 'name'=> $strScheduler, 'url'=>"{$CONFIG['application_webpath']}scheduler.php"),
+                       150=> array ( 'perm'=> 49, 'name'=> $strFeedbackForms, 'url'=>"", 'submenu'=>"103090", 'enablevar' => 'feedback_enabled'),
+                       160=> array ( 'perm'=> 22, 'name'=> $strJournal, 'url'=>"{$CONFIG['application_webpath']}journal.php")
 );
 // Control Panel: Manage Users submenu
 if (!is_array($hmenu[103010])) $hmenu[103010] = array();

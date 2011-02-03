@@ -2,7 +2,7 @@
 // incidents_table.inc.php - Prints out a table of incidents based on the query that was executed in the page that included this file
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -267,7 +267,7 @@ while ($incidents = mysql_fetch_object($result))
         $update_headertext = str_replace('updateuser', $update_user, $update_headertext);
         $tooltip = "{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp);
     }
-    echo html_incident_popup_link($incidents['id'], $linktext, $tooltip);
+    echo html_incident_popup_link($incidents->id, $linktext, $tooltip);
     echo "</td>";
 
     echo "<td>";

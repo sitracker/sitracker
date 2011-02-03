@@ -2,7 +2,7 @@
 // base.inc.php - core constants, core utility functions and files
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -109,7 +109,7 @@ define ("REASON_INCIDENT_CLOSED", 2);
  * Begin global variable definitions
  **/
 // Version number of the application, (numbers only)
-$application_version = '3.99';
+$application_version = '3.90';
 
 // Revision string, e.g. 'beta2' or 'svn' or ''
 $application_revision = 'svn';

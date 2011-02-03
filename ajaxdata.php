@@ -2,7 +2,7 @@
 // ajaxdata.php - Return data for AJAX calls
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -332,10 +332,10 @@ switch ($action)
                 if (isset($ttvararray['{'.$param.'}']['checkreplace']))
                 {
                     echo '<tr>';
-                    echo "<input type='hidden' name='param[]' value='{$param}' />";
+                    echo "<td><input type='hidden' name='param[]' value='{$param}' /></td>";
                     echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
                     echo '<td>'.check_match_drop_down('join[]'). '</td>';
-                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value[]')."</td>";
+                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']()."</td>";
                     echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
                 }
             }

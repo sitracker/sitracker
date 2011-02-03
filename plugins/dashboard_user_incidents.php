@@ -2,7 +2,7 @@
 // dashboard_user_incidents.php - List of users active incidents
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -142,7 +142,7 @@ function dashboard_user_incidents_display($dashletid)
             {
                 $tooltip = $update_body;
             }
-            echo html_incident_popup_link($obj->id'], "{$obj->id} - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}", $tooltip);
+            echo html_incident_popup_link($obj->id, "{$obj->id} - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}", $tooltip);
             echo "</td></tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
