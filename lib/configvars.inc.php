@@ -19,7 +19,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
-$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'holidays', 'feedback', 'inventory', 'otherfeatures');
+$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
 $CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap');
 $TABI18n['plugins'] = $strPlugins;
 
@@ -65,6 +65,8 @@ $CFGCAT['sla'] = array('default_service_level',
                        'regular_contact_days'
                        );
 
+$CFGCAT['billing'] = array('billing_matrix_multipliers',
+                            'billing_default_multiplier');
 
 $CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar','font_file','tag_icons');
 
@@ -167,6 +169,7 @@ $CATI18N['portal'] = $strPortal;
 $CATI18N['ftp'] = $strFTP;
 $CATI18N['kb'] = $strKnowledgeBase;
 $CATI18N['sla'] = $strServiceLevels;
+$CATI18N['billing'] = $strBilling;
 $CATI18N['holidays'] = $strHolidays;
 $CATI18N['feedback'] = $strFeedback;
 $CATI18N['paths'] = $strPaths;
@@ -177,6 +180,7 @@ $CATI18N['otherfeatures'] = $strOther;
 
 // Text to introduce a configuration category, may contain HTML
 $CATINTRO['sla'] = "This section allows you to configure how service levels are used, configure the <abbr title='Service Level Agreements'>SLA</abbr>'s themselves on the <a href='service_levels.php'>Service Levels</a> page.";
+$CATINFO['billing'] = "This section allows you to configure the system level billing options";
 $CATINTRO['outboundemail'] = "SiT! uses the PHP mail() function to send outbound emails, you can configure this via your php.ini file, see your php documentation for more details.";
 $CATINTRO['inboundemail'] = "Before enabling inbound email with POP/IMAP you must also configure the Scheduler to run, see the <a href='http://sitracker.org/wiki/Scheduler'>documentation</a> for more details.";
 
@@ -221,6 +225,13 @@ $CFGVAR['auto_assign_incidents']['type'] = 'checkbox';
 $CFGVAR['available_i18n']['title'] = "Languages Available";
 $CFGVAR['available_i18n']['help'] = "The languages available for users to select at login or in their profile.";
 $CFGVAR['available_i18n']['type'] = 'languagemultiselect';
+
+$CFGVAR['billing_matrix_multipliers']['title'] = "Billing Matrix Multipliers";
+$CFGVAR['billing_matrix_multipliers']['help'] = "A comma separated list of possible multipliers to use in a billing matrix e.g. 0.5,1,1.5 would allow 0.5, 1 and 1.5 multipliers";
+$CFGVAR['billing_matrix_multipliers']['type'] = '1darray';
+
+$CFGVAR['billing_default_multiplier']['title'] = "Default Billing Multiplier";
+$CFGVAR['billing_default_multiplier']['help'] = "The default billing multiplier if non is set";
 
 $CFGVAR['bugtracker_url']['title'] = 'Bug tracker URL';
 $CFGVAR['bugtracker_url']['help'] = "The <abbr title='Uniform Resource Locator'>URL</abbr> of a web page to report bugs with SiT!  We recommend you don't alter this setting unless you really need to.";
@@ -291,7 +302,7 @@ $CFGVAR['default_i18n']['type'] = 'languageselect';
 $CFGVAR['default_iconset']['title'] = 'Default Icon set';
 $CFGVAR['default_iconset']['help'] = 'The icon set that be given to new user accounts';
 $CFGVAR['default_iconset']['type'] = 'select';
-$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear';
+$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
 $CFGVAR['default_interface_style']['title'] = 'Default Theme';
 $CFGVAR['default_interface_style']['help'] = 'The theme/interface style that be given to new user accounts';
@@ -604,7 +615,7 @@ $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this p
 $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';
-$CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
+$CFGVAR['working_days']['help'] = 'The days which are working days';
 $CFGVAR['working_days']['type'] = 'weekdayselector';
 
 if (function_exists('plugin_do'))

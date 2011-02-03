@@ -35,68 +35,72 @@ if (empty($submit))
     $sql  = "SELECT * FROM `{$dbIncidents}` WHERE id='$id'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $incident = mysql_fetch_array($result);
+    $incident = mysql_fetch_object($result);
 
     // SUPPORT INCIDENT
-    if ($incident["type"] == "Support")
+    if ($incident->type == "Support")
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post' name='editform'>";
         echo "<table class='vertical'>";
-        echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"".$incident['title']."\" /></td></tr>\n";
+        echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"{$incident->title}\" /></td></tr>\n";
         echo "<tr><th>{$strTags}</th><td><textarea rows='2' cols='40' name='tags'>".list_tags($id, 2, false)."</textarea></td></tr>\n";
         echo "<tr><th>{$strImportant}</th>";
         echo "<td>{$strChangingContact}. ";
-        if ($incident['maintenanceid'] >= 1)
+        if ($incident->maintenanceid >= 1)
         {
-            echo sprintf($strLoggedUnder, $incident['maintenanceid']).". ";
+            echo sprintf($strLoggedUnder, $incident->maintenanceid).". ";
         }
 
         else echo "{$strIncidentNoContract}. ";
         echo "{$strToChangeContract}.";
         echo "</td></tr>\n";
         echo "<tr><th>{$strContract}</th></td><td>";
-        echo maintenance_drop_down('contract', $incident['maintenanceid'], contact_siteid($incident['contact']), '', TRUE, TRUE, '', incident_slaid($incident['id']))."</td></tr>\n";
+        echo maintenance_drop_down('contract', $incident->maintenanceid, contact_siteid($incident->contact), '', TRUE, TRUE, '', $incident->servicelevel)."</td></tr>\n";
         echo "<tr><th>{$strContact}</th><td>";
-        echo contact_drop_down("contact", $incident["contact"], TRUE)."</td></tr>\n";
+        echo contact_drop_down("contact", $incident->contact, TRUE)."</td></tr>\n";
         flush();
-        $maintid = maintenance_siteid($incident['maintenanceid']);
+        $maintid = maintenance_siteid($incident->maintenanceid);
         echo "<tr><th>{$strSite}</th><td>".site_name($maintid)."</td></tr>";
-        echo "<tr><th>{$strSkill}</th><td>".skill_drop_down("software", $incident["softwareid"])."</td></tr>\n";
+        echo "<tr><th>{$strSkill}</th><td>".skill_drop_down("software", $incident->softwareid)."</td></tr>\n";
         echo "<tr><th>{$strVersion}</th>";
-        echo "<td><input maxlength='50' name='productversion' size='30' type='text' value=\"{$incident["productversion"]}\" /></td></tr>\n";
+        echo "<td><input maxlength='50' name='productversion' size='30' type='text' value=\"{$incident->productversion}\" /></td></tr>\n";
         echo "<tr><th>{$strServicePacksApplied}</th>";
-        echo "<td><input maxlength='100' name='productservicepacks' size='30' type='text' value=\"{$incident["productservicepacks"]}\" /></td></tr>\n";
+        echo "<td><input maxlength='100' name='productservicepacks' size='30' type='text' value=\"{$incident->productservicepacks}\" /></td></tr>\n";
         echo "<tr><th>CC {$strEmail}</th>";
-        echo "<td><input maxlength='255' name='ccemail' size='30' type='text' value=\"{$incident["ccemail"]}\" /></td></tr>\n";
+        echo "<td><input maxlength='255' name='ccemail' size='30' type='text' value=\"{$incident->ccemail}\" /></td></tr>\n";
         echo "<tr><th>{$strEscalation}</th>";
-        echo "<td>".escalation_path_drop_down('escalationpath', $incident['escalationpath'])."</td></tr>";
+        echo "<td>".escalation_path_drop_down('escalationpath', $incident->escalationpath)."</td></tr>";
         echo "<tr><th>{$strExternalID}</th>";
-        echo "<td><input maxlength='50' name='externalid' size='30' type='text' value=\"{$incident["externalid"]}\" /></td></tr>\n";
+        echo "<td><input maxlength='50' name='externalid' size='30' type='text' value=\"{$incident->externalid}\" /></td></tr>\n";
         echo "<tr><th>{$strExternalEngineersName}</th>";
-        echo "<td><input maxlength='80' name='externalengineer' size='30' type='text' value=\"{$incident["externalengineer"]}\" /></td></tr>\n";
+        echo "<td><input maxlength='80' name='externalengineer' size='30' type='text' value=\"{$incident->externalengineer}\" /></td></tr>\n";
         echo "<tr><th>{$strExternalEmail}</th>";
-        echo "<td><input maxlength='255' name='externalemail' size='30' type='text' value=\"{$incident["externalemail"]}\" /></td></tr>\n";
+        echo "<td><input maxlength='255' name='externalemail' size='30' type='text' value=\"{$incident->externalemail}\" /></td></tr>\n";
         plugin_do('edit_incident_form');
         echo "</table>\n";
         echo "<p align='center'>";
         echo "<input name='type' type='hidden' value='Support' />";
 
         echo "<input name='id' type='hidden' value=\"{$id}\" />";
-        echo "<input name='oldtitle' type='hidden' value=\"{$incident['title']}\" />";
-        echo "<input name='oldcontact' type='hidden' value=\"{$incident['contact']}\" />";
-        echo "<input name='oldccemail' type='hidden' value=\"{$incident['ccemail']}\" />";
-        echo "<input name='oldescalationpath' type='hidden' value=\"".db_read_column('name', $dbEscalationPaths, $incident["escalationpath"])."\" />";
-        echo "<input name='oldexternalid' type='hidden' value=\"{$incident['externalid']}\" />";
-        echo "<input name='oldexternalengineer' type='hidden' value=\"{$incident['externalengineer']}\" />";
-        echo "<input name='oldexternalemail' type='hidden' value=\"{$incident['externalemail']}\" />";
-        echo "<input name='oldpriority' type='hidden' value=\"{$incident['priority']}\" />";
-        echo "<input name='oldstatus' type='hidden' value=\"{$incident['status']}\" />";
-        echo "<input name='oldproductversion' type='hidden' value=\"{$incident['productversion']}\" />";
-        echo "<input name='oldproductservicepacks' type='hidden' value=\"{$incident['productservicepacks']}\" />";
-        echo "<input name='oldsoftware' type='hidden' value=\"{$incident['softwareid']}\" />";
+        echo "<input name='oldtitle' type='hidden' value=\"{$incident->title}\" />";
+        echo "<input name='oldcontact' type='hidden' value=\"{$incident->contact}\" />";
+        echo "<input name='oldccemail' type='hidden' value=\"{$incident->ccemail}\" />";
+        echo "<input name='oldescalationpath' type='hidden' value=\"".db_read_column('name', $dbEscalationPaths, $incident->escalationpath)."\" />";
+        echo "<input name='oldexternalid' type='hidden' value=\"{$incident->externalid}\" />";
+        echo "<input name='oldexternalengineer' type='hidden' value=\"{$incident->externalengineer}\" />";
+        echo "<input name='oldexternalemail' type='hidden' value=\"{$incident->externalemail}\" />";
+        echo "<input name='oldpriority' type='hidden' value=\"{$incident->priority}\" />";
+        echo "<input name='oldstatus' type='hidden' value=\"{$incident->status}\" />";
+        echo "<input name='oldproductversion' type='hidden' value=\"{$incident->productversion}\" />";
+        echo "<input name='oldproductservicepacks' type='hidden' value=\"{$incident->productservicepacks}\" />";
+        echo "<input name='oldsoftware' type='hidden' value=\"{$incident->softwareid}\" />";
 
         echo "<input name='submit' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>\n";
+    }
+    else
+    {
+        echo user_alert($strOnlyAvailableOnSupportIncidents, E_USER_ERROR);
     }
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }
@@ -159,10 +163,10 @@ else
 
         // update support incident
         $sql = "UPDATE `{$dbIncidents}` ";
-        $sql .= "SET externalid='$externalid', ccemail='$ccemail', ";
-        $sql .= "escalationpath='$escalationpath', externalengineer='$externalengineer', externalemail='$externalemail', title='$title', ";
-        $sql .= "contact='$contact', softwareid='$software', productversion='$productversion', ";
-        $sql .= "productservicepacks='$productservicepacks', lastupdated='$now' WHERE id='$id'";
+        $sql .= "SET externalid='{$externalid}', ccemail='{$ccemail}', ";
+        $sql .= "escalationpath='{$escalationpath}', externalengineer='{$externalengineer}', externalemail='{$externalemail}', title='{$title}', ";
+        $sql .= "contact='{$contact}', softwareid='{$software}', productversion='{$productversion}', ";
+        $sql .= "productservicepacks='{$productservicepacks}', lastupdated='{$now}' WHERE id='{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         if (!$result)

@@ -36,8 +36,8 @@ if (is_numeric($_GET['id']))
 
     echo "<h2>".icon('site', 32)." ".site_name($siteid)."</h2>";
     echo "<p align='center'>";
-    echo "<a href='inventory_add.php?site={$siteid}'>";
-    echo icon('add', 16)." {$strAddNew}</a> | ";
+    echo "<a href='inventory_new.php?site={$siteid}'>";
+    echo icon('new', 16)." {$strNew}</a> | ";
     echo "<a href='inventory.php'>".icon('site', 16)." {$strBackToSites}</a></p>";
     $sql = "SELECT *, i.name AS name , i.id AS id, ";
     $sql .= "i.notes AS notes, ";
@@ -118,9 +118,9 @@ if (is_numeric($_GET['id']))
             else $shade = 'shade1';
         }
         echo "</table>";
-        echo "<p align='center'>".icon('add', 16);
-        echo " <a href='inventory_add.php?site={$siteid}'>";
-        echo "{$strAddNew}</a></p>";
+        echo "<p align='center'>".icon('new', 16);
+        echo " <a href='inventory_new.php?site={$siteid}'>";
+        echo "{$strNew}</a></p>";
     }
     else
     {

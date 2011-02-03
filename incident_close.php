@@ -502,7 +502,7 @@ else
             if ($send_email == 'yes')
             {
                 $notifycontact = 1;
-                if ($wait=='yes')
+                if ($wait == 'yes')
                 {
                     $awaitingclosure = 1;
                 }

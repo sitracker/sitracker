@@ -109,7 +109,7 @@ define ("REASON_INCIDENT_CLOSED", 2);
  * Begin global variable definitions
  **/
 // Version number of the application, (numbers only)
-$application_version = '3.99';
+$application_version = '3.90';
 
 // Revision string, e.g. 'beta2' or 'svn' or ''
 $application_revision = 'svn';
@@ -270,6 +270,24 @@ function clean_int($string)
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
     }
     $var = intval($string);
+
+    return $var;
+}
+
+
+/**
+  * Make an external variable safe. Force it to be a float.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns int - safe variable
+*/
+function clean_float($string)
+{
+    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    {
+        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+    }
+    $var = floatval($string);
 
     return $var;
 }

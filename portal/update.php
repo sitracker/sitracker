@@ -19,7 +19,7 @@ include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 // External vars
-$id = intval($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 // First check the portal user is allowed to access this incident
 $sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = $id LIMIT 1";
@@ -169,7 +169,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         }
 
         //set incident back to active
-        $id = intval($_REQUEST['id']);
+        $id = clean_int($_REQUEST['id']);
         $sql = "UPDATE `{$dbIncidents}` SET status=1, lastupdated='$now' WHERE id='{$id}'";
         mysql_query($sql);
         if (mysql_error())

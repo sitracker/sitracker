@@ -28,11 +28,12 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 list($incidentcontact) = mysql_fetch_row($result);
 if ($incidentcontact == $_SESSION['contactid'])
 {
+    $id = clean_int($_REQUEST['id']);
+    
     if (empty($_REQUEST['reason']))
     {
-        $id = $_REQUEST['id'];
         echo "<h2>".icon('close', 32, $strClosureRequestForIncident);
-        echo " {$strClosureRequestForIncident} {$_REQUEST['id']}</h2>";
+        echo " {$strClosureRequestForIncident} {$id}</h2>";
         echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?page=close&amp;id={$id}' method='post'>";
         echo "<p>{$strReason}:</p><textarea name='reason' cols='50' rows='10'></textarea><br />";
         echo "<p><input type='submit' value=\"{$strRequestClosure}\" /></p></form></div>";
@@ -49,9 +50,9 @@ if ($incidentcontact == $_SESSION['contactid'])
         // FIXME i18n ? In db ?
         $reason = "Incident closure requested via the portal by [b]{$user->forenames} {$user->surname}[/b]\n\n";
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
-        $owner = incident_owner($_REQUEST['id']);
+        $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-        $sql .= "VALUES('{$_REQUEST['id']}', '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}',
+        $sql .= "VALUES({$id}, '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}',
         '{$now}', 'show')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

@@ -18,8 +18,6 @@ $server->wsdl->addComplexType('incident',
                                         '',
                                         array('incidentid' => array ('name' => 'incidentid', 'type' => 'xsd:int'),
                                                 'title' => array ('name' => 'title', 'type' => 'xsd:string'),
-                                                'ownerid' => array('name' => 'ownerid', 'type' => 'xsd:int'),
-                                                'townerid' => array('name' => 'townerid', 'type' => 'xsd:int'),
                                                 'owner' => array('name' => 'owner', 'type' => 'xsd:string'),
                                                 'towner' => array('name' => 'towner', 'type' => 'xsd:string'),
                                                 'skillid' => array('name' => 'skillid', 'type' => 'xsd:int'),
@@ -109,10 +107,6 @@ function list_incidents($sessionid, $owner=0, $status=1)
                 	$incident = new Incident();
                     $incident->incidentid = $obj->id;
                     $incident->title = $obj->title;
-                    $incident->owner = $obj->ownerName;
-                    $incident->ownerid= $obj->owner;
-                    $incident->towner = $obj->townerName;
-                    $incident->townerid = $obj->towner;
                     $incident->priority = $obj->priorityName;
                     $incident->priorityid = $obj->priority;
                     $incident->currentstatusid = $obj->status;
@@ -122,6 +116,16 @@ function list_incidents($sessionid, $owner=0, $status=1)
                     $incident->skillid = $obj->softwareid;
                     $incident->maintenanceid = $obj->maintenanceid;
                     $incident->servicelevel = $obj->servicelevel;
+                    
+                    $owner = new User();
+                    $onwer->id = $obj->owner;
+                    $owner->realname = $obj->ownerName;
+                    $incident->owner = $owner;
+                    
+                    $towner = new User();
+                    $tonwer->id = $obj->towner;
+                    $towner->realname = $obj->townerName;
+                    $incident->towner = $towner;
                     
                     $incidents[] = $incident;
                 }

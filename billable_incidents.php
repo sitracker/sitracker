@@ -12,7 +12,7 @@
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections 
+$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -38,7 +38,7 @@ if (empty($enddate)) $enddate = $now;
 
 $sitelistsql = "SELECT DISTINCT m.site, s.name ";
 $sitelistsql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbSites}` AS s ";
-$sitelistsql .= "WHERE  m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = s.id ";
+$sitelistsql .= "WHERE  m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
 
 $sitestr = '';
 
@@ -65,7 +65,7 @@ if (empty($mode))
     function processForm()
     {
         // confirm_action('Are you sure you wish to update the last billed time to {$enddateorig}');
-        
+
         var approval = $('approvalpage');
         var invoice = $('invoicepage');
 
@@ -302,7 +302,6 @@ elseif ($mode == 'approvalpage')
                 $sql .= "AND i.closed <= {$enddate} ";
             }
             $sql .= "ORDER BY i.closed";
-//              echo $sql."<br />";
             $result = mysql_query($sql);
             if (mysql_error())
             {
@@ -340,8 +339,8 @@ elseif ($mode == 'approvalpage')
                             $line .= "<input type='checkbox' name='selected[]' value='{$obj->transactionid}' />";
                         }
                         $line .= "</td>";
-                        $line .= "<td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\" class='info'>";
-                        $line .= "{$obj->id}</a></td><td>{$obj->title}</td><td>".contact_realname($obj->contact)."</td>";
+                        $line .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td>";
+                        $line .= "<td>{$obj->title}</td><td>".contact_realname($obj->contact)."</td>";
                         $line .= "<td>".user_realname($obj->owner)."</td>";
                         $line .= "<td>".ldate($CONFIG['dateformat_datetime'], $obj->opened)."</td><td>".ldate($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
 
@@ -397,7 +396,7 @@ elseif ($mode == 'approvalpage')
                         $line .= "<td>{$a[-1]['refunds']}</td>";
                         $bill = number_format($cost, 2);
                         if ($unapprovable) $bill = "?";
-                        $line .= "<td>{$CONFIG['currency_symbol']} {$bill}</td>";
+                        $line .= "<td>{$CONFIG['currency_symbol']}{$bill}</td>";
 
                         $line .= "<td>";
                         // Approval ?
@@ -528,7 +527,7 @@ elseif ($mode == 'invoicepage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidents} - INVOICE</h2>";
+        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidentsInvoice}</h2>";
 
         $resultsite = mysql_query($sitelistsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -553,7 +552,7 @@ elseif ($mode == 'invoicepage')
                 $result = mysql_query($sql);
                 if (mysql_error())
                 {
-                    trigger_error(mysql_error(),E_USER_WARNING);
+                    trigger_error(mysql_error(), E_USER_WARNING);
                     return FALSE;
                 }
 
@@ -577,7 +576,7 @@ elseif ($mode == 'invoicepage')
                             $servicesapproved[$obj->serviceid] = $obj->serviceid;
                             update_last_billed_time($obj->serviceid, $enddateorig);
 
-                            $servicestr .= "<p align='center'>service ID: {$obj->serviceid} last invoice time updates to {$enddateorig}</p>"; // FIXME i18n
+                            $servicestr .= "<p align='center'>".sprintf($strServiceIDXLastInvoiceUptoX, $obj->serviceid, $enddateorig)."</p>";
                         }
                     }
                 }

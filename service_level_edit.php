@@ -33,9 +33,9 @@ if (empty($action) OR $action == "showform")
     echo "<h2>".icon('sla', 32)." {$title}</h2>";
     echo "<p align='center'>{$tag} ".priority_name($priority)."</p>";
 
-    $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='$tag' AND priority='$priority'";
+    $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag}' AND priority='{$priority}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $sla = mysql_fetch_object($result);
 
     echo "<form name='edit_servicelevel' action='{$_SERVER['PHP_SELF']}' method='post'>";
@@ -55,9 +55,9 @@ if (empty($action) OR $action == "showform")
     if ($sla->timed == 'yes')
     {
         echo "<input type='checkbox' name='timed' id='timed' onchange='enableBillingPeriod();' checked='checked' />";
-        $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE servicelevelid = {$sla->id} AND priority = {$priority} AND tag = '{$tag}'";
+        $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE AND priority = {$priority} AND tag = '{$tag}'";
         $billingResult = mysql_query($billingSQL);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $billing = mysql_fetch_object($billingResult);
 
         $customerPeriod = $billing->customerperiod;
@@ -81,7 +81,6 @@ if (empty($action) OR $action == "showform")
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<input type='hidden' name='tag' value='{$tag}' />";
     echo "<input type='hidden' name='priority' value='{$priority}' />";
-    echo "<input type='hidden' name='id' value='{$sla->id}' />";
     echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
     echo "<p align='center'><a href='service_levels.php'>{$strBackToList}</a></p>";
     echo "</form>";
@@ -90,7 +89,6 @@ if (empty($action) OR $action == "showform")
 elseif ($action == "edit")
 {
     // External variables
-    $id = clean_int($_POST['id']);
     $initial_response_mins = clean_int($_POST['initial_response_mins']);
     $prob_determ_mins = clean_int($_POST['prob_determ_mins']);
     $action_plan_mins = clean_int($_POST['action_plan_mins']);
@@ -117,39 +115,39 @@ elseif ($action == "edit")
     }
     else $timed = 0;
 
-    $sql = "UPDATE `{$dbServiceLevels}` SET initial_response_mins='$initial_response_mins', ";
-    $sql .= "prob_determ_mins='$prob_determ_mins', ";
-    $sql .= "action_plan_mins='$action_plan_mins', ";
-    $sql .= "resolution_days='$resolution_days', ";
-    $sql .= "review_days='$review_days', ";
-    $sql .= "timed='$timed', ";
-    $sql .= "allow_reopen='$allow_reopen' ";
-    $sql .= "WHERE tag='$tag' AND priority='$priority'";
+    $sql = "UPDATE `{$dbServiceLevels}` SET initial_response_mins='{$initial_response_mins}', ";
+    $sql .= "prob_determ_mins='{$prob_determ_mins}', ";
+    $sql .= "action_plan_mins='{$action_plan_mins}', ";
+    $sql .= "resolution_days='{$resolution_days}', ";
+    $sql .= "review_days='{$review_days}', ";
+    $sql .= "timed='{$timed}', ";
+    $sql .= "allow_reopen='{$allow_reopen}' ";
+    $sql .= "WHERE tag='{$tag}' AND priority='{$priority}'";
     mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     //if (mysql_affected_rows() == 0) trigger_error("UPDATE affected zero rows",E_USER_WARNING);
     else
     {
-        $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE servicelevelid = {$id} AND priority = {$priority} AND tag = '{$tag}'";
+        $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE priority = {$priority} AND tag = '{$tag}'";
         $billingResult = mysql_query($billingSQL);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $billing = mysql_fetch_object($billingResult);
 
         if (!empty($billing))
         {
             //update
             $sql = "UPDATE `{$dbBillingPeriods}` SET customerperiod = '{$customerPeriod}', engineerperiod = '{$engineerPeriod}', `limit` = '{$limit}' ";
-            $sql .= "WHERE servicelevelid = '{$id}' AND priority = {$priority} AND tag = '{$tag}'";
+            $sql .= "WHERE priority = {$priority} AND tag = '{$tag}'";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
         else
         {
             //insert
-            $sql = "INSERT INTO `{$dbBillingPeriods}` (servicelevelid, priority, tag, customerperiod, engineerperiod, `limit`) ";
-            $sql .= "VALUES ('{$id}', '{$priority}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
+            $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod, `limit`) ";
+            $sql .= "VALUES ('{$priority}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
 
         header("Location: service_levels.php");

@@ -53,15 +53,15 @@ if ($result = @mysql_query($sql))
 if ($deleted_files)
 {
     // We delete using ID and timestamp to make sure we dont' delete the wrong update by accident
-    $sql = "DELETE FROM `{$dbUpdates}` WHERE id='$updateid' AND timestamp='$timestamp'";  // We might in theory have more than one ...
+    $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}' AND timestamp='{$timestamp}'";  // We might in theory have more than one ...
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='$tempid'";
+    $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$tempid}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 }
 
-journal(CFG_LOGGING_NORMAL, 'Incident Log Entry Deleted', "Incident Log Entry $updateid was deleted from Incident $incidentid", CFG_JOURNAL_INCIDENTS, $incidentid);
+journal(CFG_LOGGING_NORMAL, 'Incident Log Entry Deleted', "Incident Log Entry {$updateid} was deleted from Incident {$incidentid}", CFG_JOURNAL_INCIDENTS, $incidentid);
 html_redirect("holding_queue.php");
 ?>

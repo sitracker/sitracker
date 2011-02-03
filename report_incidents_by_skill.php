@@ -55,15 +55,15 @@ if (empty($_REQUEST['mode']))
 }
 else
 {
-    $monthbreakdownstatus = $_REQUEST['monthbreakdown'];
+    $monthbreakdownstatus = cleanvar($_REQUEST['monthbreakdown']);
     $startdate = strtotime($_REQUEST['startdate']);
     $enddate = strtotime($_REQUEST['enddate']);
+    $software = clean_int($_REQUEST['software']);
 
     $sql = "SELECT count(s.id) AS softwarecount, s.name, s.id ";
     $sql .= "FROM `{$dbSoftware}` AS s, `{$dbIncidents}` AS i ";
     $sql .= "WHERE s.id = i.softwareid AND i.opened > '{$startdate}' ";
     if (!empty($enddate)) $sql .= "AND i.opened < '{$enddate}' ";
-    $software = $_REQUEST['software'];
     if (!empty($software)) $sql .= "AND s.id ='{$software}' ";
     $sql .= "GROUP BY s.id ORDER BY softwarecount DESC";
 
@@ -75,12 +75,12 @@ else
     $softwareID[0] = 0;
     $c = 0;
     $count = 0;
-    while ($row = mysql_fetch_array($result))
+    while ($obj = mysql_fetch_object($result))
     {
-        $countArray[$c] = $row['softwarecount'];
+        $countArray[$c] = $obj->softwarecount;
         $count += $countArray[$c];
-        $softwareNames[$c] = $row['name'];
-        $softwareID[$c] = $row['id'];
+        $softwareNames[$c] = $obj->name;
+        $softwareID[$c] = $obj->id;
         $c++;
     }
 

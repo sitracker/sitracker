@@ -55,7 +55,7 @@ if (empty($mode))
 }
 elseif ($mode == 'new')
 {
-    $form = new Form("sitetypes", $strAdd, $dbSiteTypes, "insert", $strNewSiteType);
+    $form = new Form("sitetypes", $strNew, $dbSiteTypes, "insert", $strNewSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);
     $form->setReturnURLSuccess($_SERVER['PHP_SELF']);
     $c1 = new Cell();
@@ -82,7 +82,7 @@ elseif ($mode == 'edit')
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        list($typename) = mysql_fetch_array($result);
+        list($typename) = mysql_fetch_assoc($result);
     }
     $form = new Form("sitetypes", $strEdit, $dbSiteTypes, "update", $strEditSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);

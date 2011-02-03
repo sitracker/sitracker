@@ -40,7 +40,7 @@ echo autocomplete('search_string', 'contract');
 if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 {
     echo "<label><input type='checkbox' name='activeonly' value='yes' ";
-    if ($activeonly=='yes') echo "checked='checked' ";
+    if ($activeonly == 'yes') echo "checked='checked' ";
     echo "/> {$strShowActiveOnly}</label>";
 }
 echo "<br />{$strByProduct}: ";
@@ -56,7 +56,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td valign='middle'>";
 
-echo "<a href='contract_add.php'>{$strAddContract}</a> | ";
+echo "<a href='contract_new.php'>{$strNewContract}</a> | ";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
 echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*'>{$strAll}</a>";
 
@@ -84,27 +84,27 @@ $sql .= "WHERE m.site = s.id AND m.admincontact = c.id AND m.product = p.id ";
 $sql .= "AND ((reseller = r.id AND reseller IS NOT NULL) OR reseller IS NULL) ";
 $sql .= "AND (licence_type IS NULL OR (licence_type = l.id AND licence_type IS NOT NULL)) ";
 
-if ($activeonly=='yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+if ($activeonly == 'yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
     $sql .= "AND term!='yes' AND (expirydate > $now OR expirydate = '-1') ";
 }
 
 if ($search_string != '*')
 {
-    if (strlen(utf8_decode($search_string))==1)
+    if (strlen(utf8_decode($search_string)) == 1)
     {
         // $sql .= "AND SUBSTRING(s.name,1,1)=('$search_string') ";
         $sql .= "AND s.name LIKE '{$search_string}%' ";
     }
     else
     {
-        $sql .= "AND (s.name LIKE '%$search_string%' ";
-        $sql .= "OR m.id = '$search_string') ";
+        $sql .= "AND (s.name LIKE '%{$search_string}%' ";
+        $sql .= "OR m.id = '{$search_string}') ";
     }
 
     if ($productid)
     {
-        $sql .= "AND m.product='$productid' ";
+        $sql .= "AND m.product='{$productid}' ";
     }
 
     if (!empty($resellerid))
@@ -139,23 +139,12 @@ if (mysql_num_rows($result) == 0)
 }
 else
 {
-    ?>
-    <script type="text/javascript">
-    //<![CDATA[
-    function contact_details_window(contactid)
-    {
-        URL = "contact_details.php?contactid=" + contactid;
-        window.open(URL, "contact_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-    }
-    //]]>
-    </script>
-    <?php
     echo "<p align='center'>".sprintf($strResultsNum, mysql_num_rows($result))."</p>\n";
 
     echo "<table align='center' style='width: 95%;'>";
     echo "<tr>";
 
-    $filter=array('search_string' => $search_string,
+    $filter = array('search_string' => $search_string,
                   'productid' => $productid,
                   'resellerid' => $resellerid);
     echo colheader('id', $strID, $sort, $order, $filter);
@@ -168,90 +157,88 @@ else
     echo "<th>{$strActions}</th>";
     echo "</tr>\n";
     $shade = 'shade1';
-    while ($results = mysql_fetch_array($result))
+    while ($results = mysql_fetch_object($result))
     {
         // define class for table row shading
-        if (($results['expirydate']<$now AND $results['expirydate'] != '-1') || ( $results['term'] == 'yes' AND $results['productonly'] == 'no'))
+        if (($results->expirydate < $now AND $results->expirydate != '-1') || ( $results->term == 'yes' AND $results->productonly == 'no'))
         {
             $shade = 'expired';
         }
-        elseif ($results['productonly'] == 'yes')
+        elseif ($results->productonly == 'yes')
         {
             $shade = 'notice';
         }
         else
         {
-                // invert shade
-                if ($shade == 'shade1') $shade = 'shade2';
-                else $shade = 'shade1';
+            // invert shade
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
 
         echo "<tr class='{$shade}'>";
-        echo "<td><a href='contract_details.php?id={$results['maintid']}'>{$strContract} {$results['maintid']}</a></td>";
-        echo "<td>{$results["product"]}</td>";
-        echo "<td><a href='site_details.php?id={$results['siteid']}#contracts'>".htmlspecialchars($results['site'])."</a><br />";
-        echo "{$strAdminContact}: <a href='contact_details.php?mode=popup&amp;id={$results['admincontact']}' target='_blank'>{$results['admincontactforenames']} {$results['admincontactsurname']}</a></td>";
+        echo "<td><a href='contract_details.php?id={$results->maintid}'>{$strContract} {$results->maintid}</a></td>";
+        echo "<td>{$results->product}</td>";
+        echo "<td><a href='site_details.php?id={$results->siteid}#contracts'>".htmlspecialchars($results->site)."</a><br />";
+        echo "{$strAdminContact}: <a href='contact_details.php?mode=popup&amp;id={$results->admincontact}' target='_blank'>{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
 
         echo "<td>";
 
-        if (empty($results['reseller']))
+        if (empty($results->reseller))
         {
             echo $strNoReseller;
         }
         else
         {
-            echo $results['reseller'];
+            echo $results->reseller;
         }
 
         echo "</td><td>";
 
-        if (empty($results['licence_type']))
+        if (empty($results->licence_type))
         {
             echo $strNoLicense;
         }
         else
         {
-            if ($results['licence_quantity'] == 0)
+            if ($results->licence_quantity == 0)
             {
                 echo "{$strUnlimited} ";
             }
             else
             {
-                echo "{$results['licence_quantity']} ";
+                echo "{$results->licence_quantity} ";
             }
 
-            echo $results['licence_type'];
+            echo $results->licence_type;
         }
 
         echo "</td><td>";
-        if ($results["expirydate"] == '-1')
+        if ($results->expirydate == '-1')
         {
             echo $strUnlimited;
         }
         else
         {
-            echo ldate($CONFIG['dateformat_date'], $results["expirydate"]);
+            echo ldate($CONFIG['dateformat_date'], $results->expirydate);
         }
         echo "</td>";
 
         echo "<td>";
-        if ($results["notes"] == '')
+        if ($results->notes == '')
         {
             echo "&nbsp;";
         }
         else
         {
-            echo nl2br($results["notes"]);
+            echo nl2br($results->notes);
         }
 
         echo "</td>";
-        echo "<td><a href='contract_edit.php?action=edit&amp;maintid={$results['maintid']}'>{$strEdit}</a></td>";
+        echo "<td><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$strEdit}</a></td>";
         echo"</tr>";
     }
 
     echo "</table>";
-    // free result and disconnect
-    mysql_free_result($result);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

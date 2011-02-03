@@ -1,5 +1,5 @@
 <?php
-// add_maintenance_support_contract.php - Associates a contact with a contract
+// contract_add_contact.php - Associates a contact with a contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -24,7 +24,7 @@ $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
 $context = clean_int($_REQUEST['context']);
 $action = $_REQUEST['action'];
-$title = ("$strContract - $strAddContact");
+$title = ("$strContract - $strNewContact");
 
 // Valid user, check permissions
 if (empty($action) || $action == "showform")
@@ -32,7 +32,7 @@ if (empty($action) || $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>{$strAssociateContactWithContract}</h2>";
 
-    echo "<form action='{$_SERVER['PHP_SELF']}?action=add' method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post'>";
     echo "<input type='hidden' name='context' value='{$context}' />";
     echo "<table align='center' class='vertical'>";
 
@@ -46,13 +46,13 @@ if (empty($action) || $action == "showform")
     else
     {
         $sql = "SELECT s.name, p.name FROM `{$dbMaintenance}` m, `{$dbSites}` s, `{$dbProducts}` p WHERE m.site=s.id ";
-        $sql .= "AND m.product=p.id AND m.id='$maintid'";
-        $result=mysql_query($sql);
+        $sql .= "AND m.product=p.id AND m.id='{$maintid}'";
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         list($sitename, $product)=mysql_fetch_row($result);
 
-        echo "<tr><th>{$strContract} ".icon('contract', 16)."</th><td>$maintid - $sitename, $product</td></tr>";
-        echo "<input name=\"maintid\" type=\"hidden\" value=\"$maintid\" />";
+        echo "<tr><th>{$strContract} ".icon('contract', 16)."</th><td>{$maintid} - {$sitename}, {$product}</td></tr>";
+        echo "<input name='maintid' type='hidden' value='{$maintid}' />";
     }
 
     if (empty($contactid))
@@ -63,7 +63,7 @@ if (empty($action) || $action == "showform")
     else
     {
         echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>$contactid - ".contact_realname($contactid).", ".site_name(contact_site($contactid));
-        echo "<input name=\"contactid\" type=\"hidden\" value=\"$contactid\" />";
+        echo "<input name='contactid' type='hidden' value='{$contactid}' />";
         echo "</td></tr>";
     }
     echo "</table>";
@@ -74,15 +74,14 @@ if (empty($action) || $action == "showform")
 }
 else if ($action == "add")
 {
-    // Add support contact
     $errors = 0;
-    // check for blank contact
+
     if ($contactid == 0)
     {
         $errors = 1;
         $errors_string .= user_alert("You must select a contact", E_USER_ERROR);
     }
-    // check for blank maintenance id
+
     if ($maintid == 0)
     {
         $errors = 1;
@@ -91,7 +90,7 @@ else if ($action == "add")
 
     $sql = "SELECT * FROM `{$dbSupportContacts}` WHERE maintenanceid = '{$maintid}' AND contactid = '{$contactid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -102,22 +101,20 @@ else if ($action == "add")
     // add maintenance support contact if no errors
     if ($errors == 0)
     {
-        $sql  = "INSERT INTO `{$dbSupportContacts}` (maintenanceid, contactid) VALUES ($maintid, $contactid)";
+        $sql  = "INSERT INTO `{$dbSupportContacts}` (maintenanceid, contactid) VALUES ({$maintid}, {$contactid})";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        // show error message if addition failed
         if (!$result)
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
             echo user_alert("Addition of support contact failed", E_USER_WARNING);
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
-        // update database and show success message
         else
         {
-            if ($context == 'contact') html_redirect("contact_details.php?id=$contactid");
-            else html_redirect("contract_details.php?id=$maintid");
+            if ($context == 'contact') html_redirect("contact_details.php?id={$contactid}");
+            else html_redirect("contract_details.php?id={$maintid}");
         }
     }
     else

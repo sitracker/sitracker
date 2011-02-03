@@ -622,7 +622,7 @@ function supported_product_drop_down($name, $contactid, $productid)
             $html .= "selected='selected' ";
         }
         $html .= "value='{$products->productid}'>";
-        $html .= servicelevel_name($products->servicelevelid)." ".$products->productname.", Exp:".date($CONFIG['dateformat_shortdate'], $products->expirydate).", $remainingstring";
+        $html .= get_sla_name($products->servicelevel)." ".$products->productname.", Exp:".date($CONFIG['dateformat_shortdate'], $products->expirydate).", $remainingstring";
         $html .= "</option>\n";
     }
     $html .= "</select>\n";
@@ -754,7 +754,7 @@ function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return
 
     if ($sla !== FALSE)
     {
-        $sql .= "AND servicelevelid = '{$sla}' ";
+        $sql .= "AND servicelevel = '{$sla}' ";
     }
 
     $sql .= "ORDER BY s.name ASC";
@@ -1200,5 +1200,55 @@ function country_drop_down($name, $country, $extraattributes='')
     return $html;
 }
 
+
+/**
+ * Generates a drop down of all configured billing multipliers
+ * 
+ * @author Paul Heaney
+ * @param String $name  The name and id of the <select> element
+ * @param float $selected  If multiplier to select
+ * @return String HTML for the dropdown
+ */
+function billing_multiplier_dropdown($name, $selected='')
+{
+    global $CONFIG;
+    $html = "<select id='{$name}' name='{$name}'>\n";
+    
+    if (empty($selected)) $selected = $CONFIG['billing_default_multiplier'];
+   
+    foreach ($CONFIG['billing_matrix_multipliers'] AS $multiplier)
+    {
+        $html .= "<option value='{$multiplier}'";
+        if ($multiplier == $selected) $html .= " selected='selected' ";
+        $html .= ">x{$multiplier}</option>\n";
+    }
+    $html .= "</select>\n";
+    return $html;
+}
+
+
+function billing_matrix_selector($id, $selected='')
+{
+    $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrix']}`";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) >= 1)
+    {
+        $html = "<select name='{$id}' id='{$id}'>\n";
+        while ($obj = mysql_fetch_object($result))
+        {
+            $html .= "<option value='{$obj->tag}'";
+            if ($obj->tag == $selected) $html .= " selected='selected'";
+            $html .= ">{$obj->tag}</option>\n";
+        }
+        $html .= "</select>\n";
+    }
+    else
+    {
+        $html = "{$GLOBALS['strNoBillingMatrixDefined']}";
+    }
+    
+    return $html;
+}
 
 ?>

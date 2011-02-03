@@ -28,16 +28,16 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 function generate_row($update)
 {
     global $CONFIG, $sit, $strEllipsis;
-    if (empty($update['fromaddr']) AND !empty($update['from'])) $update['fromaddr'] = $update['from'];
-    $update['fromaddr'] = strtolower($update['fromaddr']);
+    if (empty($update->fromaddr) AND !empty($update->from)) $update->fromaddr = $update->from;
+    $update->fromaddr = strtolower($update->fromaddr);
 
-    if (strlen($update['bodytext']) > 1003)
+    if (strlen($update->bodytext) > 1003)
     {
-        $updatebodytext = substr($update['bodytext'],0,1000).$strEllipsis;
+        $updatebodytext = substr($update->bodytext, 0, 1000).$strEllipsis;
     }
     else
     {
-        $updatebodytext = $update['bodytext'];
+        $updatebodytext = $update->bodytext;
     }
 
     $search = array( '<b>',  '</b>',  '<i>',  '</i>',  '<u>',  '</u>',  '&lt;',  '&gt;');
@@ -46,92 +46,91 @@ function generate_row($update)
     if ($updatebodytext == '') $updatebodytext = '&nbsp;';
 
     $shade = 'shade1';
-    if ($update['contactid'] != 0)
+    if ($update->contactid != 0)
     {
         $shade = 'idle';
     }
-    else if (!empty($update['fromaddr']))
+    else if (!empty($update->fromaddr))
     {
         // Have a look if we've got a user with this email address
-        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%{$update['fromaddr']}%'";
+        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update->fromaddr)."%'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($contactmatches) = mysql_fetch_row($result);
         if ($contactmatches > 0) $shade = 'notice';
     }
-    $pluginshade = plugin_do('holdingqueue_rowshade',$update);
+    $pluginshade = plugin_do('holdingqueue_rowshade', $update);
     $shade = $pluginshade ? $pluginshade : $shade;
-    $html_row = "<tr class='$shade'>";
+    $html_row = "<tr class='{$shade}'>";
     $html_row .= "<td style='text-align: center'>";
-    if (($update['locked'] == $sit[2]) OR empty($update['locked']))
+    if (($update->locked == $sit[2]) OR empty($update->locked))
     {
-        $html_row .= "<input type='checkbox' name='selected[]' value='".$update['updateid']."' />";
+        $html_row .= "<input type='checkbox' name='selected[]' value='{$update->updateid}' />";
     }
     $html_row .= "</td>";
-    $html_row .= "<td align='center' width='20%'>".date($CONFIG['dateformat_datetime'],$update['timestamp']).'</td>';
+    $html_row .= "<td align='center' width='20%'>".date($CONFIG['dateformat_datetime'], $update->timestamp).'</td>';
 
     $html_row .= "<td width='20%'>";
-    if (!empty($update['contactid']) AND
-    $update['fromaddr'] == contact_email($update['contactid']))
+    if (!empty($update->contactid) AND
+        $update->fromaddr == contact_email($update->contactid))
     {
-        $html_row .= gravatar($update['fromaddr'], 16) . ' ';
-        $contact_realname = contact_realname($update['contactid']);
-        $html_row .= "<a href='contact_details.php?id={$update['contactid']}' class='info'>";
-        $html_row .= "{$contact_realname}<span>".htmlentities($update['fromaddr'],ENT_QUOTES, $GLOBALS['i18ncharset'])."</span></a>";
-        $html_row .= " of ".contact_site($update['contactid']);
-        if ($update['emailfrom'] != $contact_realname)
+        $html_row .= gravatar($update->fromaddr, 16) . ' ';
+        $contact_realname = contact_realname($update->contactid);
+        $html_row .= "<a href='contact_details.php?id={$update->contactid}' class='info'>";
+        $html_row .= "{$contact_realname}<span>".htmlentities($update->fromaddr, ENT_QUOTES, $GLOBALS['i18ncharset'])."</span></a>";
+        $html_row .= " of ".contact_site($update->contactid);
+        if ($update->emailfrom != $contact_realname)
         {
             $html_row .= "<br />\n";
-            $html_row .= htmlentities($update['emailfrom'],ENT_QUOTES, $GLOBALS['i18ncharset']);
+            $html_row .= htmlentities($update->emailfrom, ENT_QUOTES, $GLOBALS['i18ncharset']);
         }
     }
     else
     {
-        $html_row .= gravatar($update['fromaddr'], 16) . ' ';
-        $html_row .= "<a href=\"mailto:{$update['fromaddr']}\">{$update['fromaddr']}</a><br />\n";
-        $html_row .= htmlentities($update['emailfrom'],ENT_QUOTES, $GLOBALS['i18ncharset']);
+        $html_row .= gravatar($update->fromaddr, 16) . ' ';
+        $html_row .= "<a href=\"mailto:{$update->fromaddr}\">{$update->fromaddr}</a><br />\n";
+        $html_row .= htmlentities($update->emailfrom, ENT_QUOTES, $GLOBALS['i18ncharset']);
     }
     $html_row .= "</td>";
 
-    $html_row.="<td width='20%'><a href=\"javascript:incident_details_window('{$update['tempid']}','incomingview');\" id='update{$update['id']}' class='info'>";
-    //     $html_row.="<td width='20%'><a href=\"javascript:void(0);\" id='update{$update['id']}' class='info' style='cursor:help;'>";
-    if (empty($update['subject'])) $update['subject'] = $GLOBALS['strUntitled'];
-    $html_row .= htmlentities($update['subject'],ENT_QUOTES, $GLOBALS['i18ncharset']);
+    $html_row.="<td width='20%'><a href=\"javascript:incident_details_window('{$update->tempid}','incomingview');\" id='update{$update->id}' class='info'>";
+    if (empty($update->subject)) $update->subject = $GLOBALS['strUntitled'];
+    $html_row .= htmlentities($update->subject, ENT_QUOTES, $GLOBALS['i18ncharset']);
     $html_row .= '<span>'.parse_updatebody($updatebodytext).'</span></a></td>';
 
-    $span = sprintf($GLOBALS['strByX'], user_realname($update['reason_user']));
-    if (mysql2date($update['reason_time']) > 0)
+    $span = sprintf($GLOBALS['strByX'], user_realname($update->reason_user));
+    if (mysql2date($update->reason_time) > 0)
     {
         $span .= "<br />".sprintf($GLOBALS['strOnxAtY'],
-        ldate($CONFIG['dateformat_date'], mysql2date($update['reason_time'])),
-        ldate($CONFIG['dateformat_time'], mysql2date($update['reason_time'])));
+        ldate($CONFIG['dateformat_date'], mysql2date($update->reason_time)),
+        ldate($CONFIG['dateformat_time'], mysql2date($update->reason_time)));
     }
-    $html_row .= "<td align='center' width='20%'><a class='info'>{$update['reason']}<span>{$span}</span></a></td>";
+    $html_row .= "<td align='center' width='20%'><a class='info'>{$update->reason}<span>{$span}</span></a></td>";
     $html_row .= "<td align='center' width='20%'>";
-    if (($update['locked'] != $sit[2]) && ($update['locked'] > 0))
+    if (($update->locked != $sit[2]) && ($update->locked > 0))
     {
-        $html_row .= sprintf($GLOBALS['strLockedByX'], user_realname($update['locked'],TRUE));
+        $html_row .= sprintf($GLOBALS['strLockedByX'], user_realname($update->locked, TRUE));
     }
     else
     {
-        if ($update['locked'] == $sit[2])
+        if ($update->locked == $sit[2])
         {
-            $html_row .="<a href='{$_SERVER['PHP_SELF']}?unlock={$update['tempid']}'";
+            $html_row .="<a href='{$_SERVER['PHP_SELF']}?unlock={$update->tempid}'";
             $html_row.= " title='{$GLOBALS['strUnlockThisToBeModifiedByOther']}'> {$GLOBALS['strUnlock']}</a> | ";
         }
         else
         {
-            $html_row .= "<a href=\"javascript:incident_details_window('{$update['tempid']}'";
-            $html_row .= ",'incomingview');\" id='update{$update['id']}' class='info'";
+            $html_row .= "<a href=\"javascript:incident_details_window('{$update->tempid}'";
+            $html_row .= ",'incomingview');\" id='update{$update->id}' class='info'";
             $html_row .= " title='View and lock this held e-mail'>{$GLOBALS['strView']}</a> | ";
         }
 
-        if ($update['reason_id'] == 2)
+        if ($update->reason_id == 2)
         {
-            $html_row .= "<a href='incident_reopen.php?id={$update['incident_id']}&updateid={$update['updateid']}'>{$GLOBALS['strReopen']}</a> | ";
+            $html_row .= "<a href='incident_reopen.php?id={$update->incident_id}&updateid={$update->updateid}'>{$GLOBALS['strReopen']}</a> | ";
         }
 
-        $html_row.= "<a href='delete_update.php?updateid=".$update['id']."&amp;tempid=".$update['tempid']."&amp;timestamp=".$update['timestamp']."' title='{$strRemoveThisPermanently}' onclick=\"return confirm_action('{$GLOBALS['strAreYouSureDelete']}');\"> {$GLOBALS['strDelete']}</a>";
+        $html_row.= "<a href='delete_update.php?updateid={$update->id}&amp;tempid={$update->tempid}&amp;timestamp={$update->timestamp}' title='{$strRemoveThisPermanently}' onclick=\"return confirm_action('{$GLOBALS['strAreYouSureDelete']}');\"> {$GLOBALS['strDelete']}</a>";
     }
     $html_row .= "</td></tr>\n";
     return $html_row;
@@ -188,7 +187,7 @@ else
     // Unlock any expired locks
     $nowdatel = date('Y-m-d H:i:s');
     $sql = "UPDATE `{$dbTempIncoming}` SET locked=NULL, lockeduntil=NULL ";
-    $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '$now' ";
+    $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '{$now}' ";
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 }
@@ -200,15 +199,15 @@ if ($spam_string == $_REQUEST['delete_all_spam'])
     {
         $ids = explode('_',$spam);
 
-        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='".$ids[1]."' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='".$ids[0]."' LIMIT 1";
+        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$ids[1]}' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='{$ids[0]}' LIMIT 1";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         if (mysql_affected_rows() == 1)
         {
-            $sql = "DELETE FROM `{$dbUpdates}` WHERE id='".$ids[0]."'";
+            $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$ids[0]}'";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            $path = $CONFIG['attachment_fspath'].'updates/'.$ids[0];
+            $path = "{$CONFIG['attachment_fspath']}updates/{$ids[0]}";
             if (file_exists($path)) deldir($path);
         }
     }
@@ -219,11 +218,11 @@ if (!empty($selected))
 {
     foreach ($selected as $updateid)
     {
-        $sql = "DELETE FROM `{$dbUpdates}` WHERE id='$updateid'";
+        $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='$updateid'";
+        $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $path = $CONFIG['attachment_fspath'].'updates/'.$updateid;
@@ -233,38 +232,6 @@ if (!empty($selected))
         journal(CFG_LOGGING_NORMAL, 'Incident Log Entry Deleted', "Incident Log Entry $updateid was deleted", CFG_JOURNAL_INCIDENTS, $updateid);
     }
 }
-
-
-?>
-<script type="text/javascript">
-    <!--
-        function submitform()
-        {
-            document.held_emails.submit();
-        }
-
-        function checkAll(checkStatus)
-        {
-            var frm = document.held_emails.elements;
-            for(i = 0; i < frm.length; i++)
-            {
-                if (frm[i].type == 'checkbox')
-                {
-                    if (checkStatus)
-                    {
-                        frm[i].checked = true;
-                    }
-                    else
-                    {
-                        frm[i].checked = false;
-                    }
-                }
-            }
-        }
-        -->
-    </script>
-
-<?php
 
 // extract updates
 $sql  = "SELECT u.id AS id, ti.id AS tempid, u.*, ti.* ";
@@ -280,13 +247,13 @@ if ($countresults > 0)
 {
     if ($countresults) mysql_data_seek($result, 0);
 
-    while ($updates = mysql_fetch_array($result))
+    while ($updates = mysql_fetch_object($result))
     {
         if (!empty($CONFIG['spam_email_subject']))
         {
-            if (!stristr($updates['subject'], $CONFIG['spam_email_subject']))
+            if (!stristr($updates->subject, $CONFIG['spam_email_subject']))
             {
-                $queuerows[$updates['id']] = generate_row($updates);
+                $queuerows[$updates->id] = generate_row($updates);
             }
             else
             {
@@ -295,7 +262,7 @@ if ($countresults > 0)
         }
         else
         {
-            $queuerows[$updates['id']] = generate_row($updates);
+            $queuerows[$updates->id] = generate_row($updates);
         }
     }
 }
@@ -338,13 +305,13 @@ if (is_array($queuerows))
     echo "<h2>".icon('email', 32)." {$strIncomingEmail}</h2>";
 
     echo "<p align='center'>{$strIncomingEmailText}</p>";
-    echo "<form action='{$_SERVER['PHP_SELF']}' name='held_emails'  method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}' id='held_emails' name='held_emails'  method='post'>";
     echo "<table align='center' style='width: 95%'>";
     echo "<tr>";
     echo "<th>";
     if ($realemails > 0)
     {
-        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(this.checked);\" />";
+        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(held_emails, this.checked);\" />";
     }
 
     echo "</th>";
@@ -363,7 +330,7 @@ if (is_array($queuerows))
     if ($realemails > 0)
     {
         echo "<tr><td>";
-        echo "<a href=\"javascript: submitform()\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
+        echo "<a href=\"javascript: submit_form('held_emails')\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
         echo "</td></tr>";
     }
     echo "</table>\n";
@@ -395,6 +362,7 @@ if (is_array($incidentqueuerows))
         echo "<h2>".icon('support', 32)." {$strUnassignedIncidents}</h2>";
 
         echo "<table align='center' style='width: 95%'>";
+        echo "<tr>";
         echo "<th>{$strDate}</th>";
         echo "<th>{$strFrom}</th>";
         echo "<th>{$strSubject}</th>";
@@ -417,9 +385,10 @@ if (is_array($incidentqueuerows))
  */
 if ($spamcount > 0)
 {
-    echo "<h2>{$strSpamEmail}";
-    if ($spamcount > 1) echo "s"; // FIXME i18n cant we do this ?
-    echo " ({$spamcount} {$strTotal})</h2>\n";
+    echo "<h2>";
+    if ($spamcount > 1) echo $strSpamEmails;
+    else echo $strSpamEmail;
+    echo "(".sprintf($strXTotal, $spamcount).")</h2>\n";
     echo "<p align='center'>{$strIncomingEmailSpam}</p>";
 
     // Reset back for 'nasty' emails
@@ -430,12 +399,12 @@ if ($spamcount > 0)
     echo "<th>{$strSubject}</th><th>{$strMessage}</th>";
     echo "<th>{$strOperation}</th></tr>\n";
 
-    while ($updates = mysql_fetch_array($result))
+    while ($updates = mysql_fetch_object($result))
     {
-        if (stristr($updates['subject'], $CONFIG['spam_email_subject']))
+        if (stristr($updates->subject, $CONFIG['spam_email_subject']))
         {
             echo generate_row($updates);
-            $spam_array[] = $updates['id'].'_'.$updates['tempid'];
+            $spam_array[] = "{$updates->id} {$updates->tempid}";
         }
     }
     echo "</table>";
@@ -516,7 +485,7 @@ if (mysql_num_rows($result) >= 1)
     $rhtml .= "<h2>".icon('reassign', 32, $strPendingReassignments);
     $rhtml .= " {$strPendingReassignments}</h2>";
     $rhtml .= "<p align='center'>{$strAutoReassignmentsThatCouldntBeMade}</p>";
-    $rhtml .= "<table align='center' style='width: 95%;'>";
+    $rhtml .= "<table id='pendingreassignments' align='center' style='width: 95%;'>";
     $rhtml .= "<tr><th title='{$strLastUpdated}'>{$strDate}</th><th title='{$strCurrentOwner}'>{$strFrom}</th>";
     $rhtml .= "<th title='{$strIncidentTitle}'>{$strSubject}</th><th>{$strMessage}</th>";
     $rhtml .= "<th>{$strOperation}</th></tr>\n";
@@ -545,14 +514,14 @@ if (mysql_num_rows($result) >= 1)
                 $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;backupid={$backupid}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strReassignTo} {$backupname}'>{$strAssignToBackup}</a> | ";
             }
 
-            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strReassign}'>{$strAssignToOther}</a> | <a href='set_user_status.php?mode=deleteassign&amp;incidentid={$assign->incidentid}&amp;originalowner={$assign->originalowner}' title='{$strIgnoreThisAndDelete}'>{$strIgnore}</a></td>";
+            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strReassign}'>{$strAssignToOther}</a> | <a href=\"javascript:ignore_pending_reassignments('{$assign->incidentid}', '{$assign->originalowner}');\">{$strIgnore}</a></td>";
             $rhtml .= "</tr>\n";
         }
         elseif ($assign->owner != $assign->originalowner AND $useraccepting == 'yes')
         {
             $show = TRUE;
             // display a row to assign the incident back to the original owner
-            $rhtml .= "<tr class='shade2'>";
+            $rhtml .= "<tr id='incident{$assign->id}' class='shade2'>";
             $rhtml .= "<td>".ldate($CONFIG['dateformat_datetime'], $assign->lastupdated)."</td>";
             $rhtml .= "<td>".user_realname($assign->owner,TRUE)."</td>";
             $rhtml .= "<td>[<a href=\"javascript:wt_winpopup('incident_details.php?id={$assign->id}&amp;popup=yes', 'mini')\">{$assign->id}</a>] {$assign->title}</td>";
@@ -567,7 +536,7 @@ if (mysql_num_rows($result) >= 1)
             $rhtml .= "<td>";
             $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;originalid={$assign->originalowner}&amp;popup=yes','mini');\" title='{$strReassignTo} {$originalname}'>{$strReturnToOriginalOwner}</a> | ";
 
-            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strAssignToOther}'>{$strAssignToOther}</a> | <a href='set_user_status.php?mode=deleteassign&amp;incidentid={$assign->incidentid}&amp;originalowner={$assign->originalowner}' title='{$strIgnoreThisAndDelete}'>{$strIgnore}</a></td>";
+            $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;asktemp=temporary&amp;popup=yes','mini');\" title='{$strAssignToOther}'>{$strAssignToOther}</a> | <a href=\"javascript:ignore_pending_reassignments('{$assign->incidentid}', '{$assign->originalowner}');\">{$strIgnore}</a></td>";
             $rhtml .= "</tr>\n";
         }
     }

@@ -97,8 +97,14 @@ switch ($action)
 
             echo "<th>{$strRequired}:</th>";
             echo "<td>";
-            if ($question->required=='true') echo "<input type='checkbox' name='required' value='true' checked='checked' />";
-            else echo "<input type='checkbox' name='required' value='true' />";
+            if ($question->required == 'true')
+            {
+                echo "<input type='checkbox' name='required' value='true' checked='checked' />";
+            }
+            else
+            {
+                echo "<input type='checkbox' name='required' value='true' />";
+            }
             echo "</td></tr>\n<tr>";
 
             echo "<td><input type='hidden' name='qid' value='{$qid}' />";

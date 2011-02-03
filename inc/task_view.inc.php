@@ -14,17 +14,21 @@
 // included by view_task.php
 
 if ($mode != 'incident')
+{
     echo "<h2>".icon('task', 32)." $title</h2>";
+}
 else
+{
     echo "<h2><img
     src='{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/activities.png'
     width='32' height='32' alt='' /> $strViewActivity</h2>";
+}
 
 if ($mode != 'incident') echo "<div style='width: 90%; margin-left: auto; margin-right: auto;'>";
 
 $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$taskid}'";
 $result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($result) >= 1)
 {
     $task = mysql_fetch_object($result);
@@ -108,7 +112,7 @@ if (mysql_num_rows($result) >= 1)
 
         // Notes
         echo "<div style='width: 48%; float: right; border: 1px solid #CCCCFF;'>";
-        echo add_note_form(NOTE_TASK, $taskid);
+        echo new_note_form(NOTE_TASK, $taskid);
         echo show_notes(NOTE_TASK, $taskid);
 
         echo "</div>";
@@ -116,7 +120,7 @@ if (mysql_num_rows($result) >= 1)
     elseif ($mode == 'incident')
     {
         echo "<div style='width: 48%; margin-left: auto; margin-right: auto;border: 1px solid #CCCCFF;'>";
-        echo add_note_form(NOTE_TASK, $taskid);
+        echo new_note_form(NOTE_TASK, $taskid);
         echo show_notes(NOTE_TASK, $taskid, FALSE);
 
         echo "</div>";

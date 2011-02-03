@@ -43,10 +43,10 @@ elseif ($action == "edit" && isset($contact))
 {
     // FIMXE i18n
     // Show edit contact form
-    $sql="SELECT * FROM `{$dbContacts}` WHERE id='$contact' ";
+    $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($contactrow=mysql_fetch_array($contactresult))
+    while ($contactobj = mysql_fetch_object($contactresult))
     {
         // User does not have access
         echo "<h2>".icon('contact', 32)." ";
@@ -55,41 +55,41 @@ elseif ($action == "edit" && isset($contact))
         echo "<p align='center'>".sprintf($strMandatoryMarked, "<sup class='red'>*</sup>")."</p>";
         echo "<table align='center' class='vertical'>";
         echo "<tr><th>{$strName}: <sup class='red'>*</sup><br />{$strTitle}, {$strForenames}, {$strSurname}</th>";
-        echo "<td><input maxlength='50' name='courtesytitle' title='Courtesy Title (Mr, Mrs, Miss, Dr. etc.)' size='7' value='{$contactrow['courtesytitle']}' />\n"; // i18n courtesy title
-        echo "<input maxlength='100' name='forenames' size='15' title='Firstnames (or initials)' value='{$contactrow['forenames']}' />\n";
-        echo "<input maxlength='100' name='surname' size='20' title='{$strSurname}' value='{$contactrow['surname']}' />";
+        echo "<td><input maxlength='50' name='courtesytitle' title='Courtesy Title (Mr, Mrs, Miss, Dr. etc.)' size='7' value='{$contactobj->courtesytitle}' />\n"; // i18n courtesy title
+        echo "<input maxlength='100' name='forenames' size='15' title='Firstnames (or initials)' value='{$contactobj->forenames}' />\n";
+        echo "<input maxlength='100' name='surname' size='20' title='{$strSurname}' value='{$contactobj->surname}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strTags}:</th><td><textarea rows='2' cols='60' name='tags'>";
         echo list_tags($contact, TAG_CONTACT, false)."</textarea></td></tr>\n";
         echo "<tr><th>{$strJobTitle}:</th><td>";
-        echo "<input maxlength='255' name='jobtitle' size='40' value=\"{$contactrow['jobtitle']}\" />";
+        echo "<input maxlength='255' name='jobtitle' size='40' value='{$contactobj->jobtitle}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strSite}: <sup class='red'>*</sup></th><td>";
-        echo site_drop_down('siteid', $contactrow['siteid'])."</td></tr>\n";
+        echo site_drop_down('siteid', $contactobj->siteid)."</td></tr>\n";
         echo "<tr><th>{$strDepartment}:</th><td>";
-        echo "<input maxlength='100' name='department' size='40' value='{$contactrow['department']}' />";
+        echo "<input maxlength='100' name='department' size='40' value='{$contactobj->department}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strEmail}: <sup class='red'>*</sup></th><td>";
-        echo "<input maxlength='100' name='email' size='40' value='{$contactrow['email']}' />";
+        echo "<input maxlength='100' name='email' size='40' value='{$contactobj->email}' />";
         echo "<label>";
-        echo html_checkbox('dataprotection_email', $contactrow['dataprotection_email']);
+        echo html_checkbox('dataprotection_email', $contactobj->dataprotection_email);
         echo "{$strEmail} {$strDataProtection}</label>";
         echo "</td></tr>\n";
         echo "<tr><th>{$strTelephone}:</th><td>";
-        echo "<input maxlength='50' name='phone' size='40' value='{$contactrow['phone']}' />";
+        echo "<input maxlength='50' name='phone' size='40' value='{$contactobj->phone}' />";
         echo "<label>";
-        echo html_checkbox('dataprotection_phone', $contactrow['dataprotection_phone']);
+        echo html_checkbox('dataprotection_phone', $contactobj->dataprotection_phone);
         echo "{$strTelephone} {$strDataProtection}</label>";
         echo "</td></tr>\n";
         echo "<tr><th>{$strMobile}:</th><td>";
-        echo "<input maxlength='50' name='mobile' size='40' value='{$contactrow['mobile']}' /></td></tr>\n";
+        echo "<input maxlength='50' name='mobile' size='40' value='{$contactobj->mobile}' /></td></tr>\n";
         echo "<tr><th>{$strFax}:</th><td>";
-        echo "<input maxlength='50' name='fax' size='40' value='{$contactrow['fax']}' /></td></tr>\n";
+        echo "<input maxlength='50' name='fax' size='40' value='{$contactobj->fax}' /></td></tr>\n";
         echo "<tr><th>{$strActive}:</th><td><input type='checkbox' name='active' ";
-        if ($contactrow['active'] == 'true') echo "checked='checked'";
+        if ($contactobj->active == 'true') echo "checked='checked'";
         echo " value='true' /></td></tr> <tr><th></th><td>";
         echo "<input type='checkbox' id='usesiteaddress' name='usesiteaddress' value='yes' onclick='togglecontactaddress();' ";
-        if ($contactrow['address1'] !='')
+        if ($contactobj->address1 !='')
         {
             echo "checked='checked'";
             $extraattributes = '';
@@ -101,31 +101,31 @@ elseif ($action == "edit" && isset($contact))
         echo "/> ";
         echo "{$strSpecifyAddress}</td></tr>\n";
         echo "<tr><th>{$strAddress}:</th><td><label>";
-        echo html_checkbox('dataprotection_address', $contactrow['dataprotection_address']);
+        echo html_checkbox('dataprotection_address', $contactobj->dataprotection_address);
         echo " {$strAddress} {$strDataProtection}</label></td></tr>\n";
         echo "<tr><th>{$strAddress1}:</th><td>";
-        echo "<input maxlength='255' id='address1' name='address1' size='40' value='{$contactrow['address1']}' {$extraattributes} />";
+        echo "<input maxlength='255' id='address1' name='address1' size='40' value='{$contactobj->address1}' {$extraattributes} />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strAddress2}:</th><td>";
-        echo "<input maxlength='255' id='address2' name='address2' size='40' value='{$contactrow['address2']}' {$extraattributes} />";
+        echo "<input maxlength='255' id='address2' name='address2' size='40' value='{$contactobj->address2}' {$extraattributes} />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strCity}:</th><td>";
-        echo "<input maxlength='255' id='city' name='city' size='40' value='{$contactrow['city']}' {$extraattributes} />";
+        echo "<input maxlength='255' id='city' name='city' size='40' value='{$contactobj->city}' {$extraattributes} />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strCounty}:</th><td>";
-        echo "<input maxlength='255' id='county' name='county' size='40' value='{$contactrow['county']}' {$extraattributes} />";
+        echo "<input maxlength='255' id='county' name='county' size='40' value='{$contactobj->county}' {$extraattributes} />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strPostcode}:</th><td>";
-        echo "<input maxlength='255' id='postcode' name='postcode' size='40' value='{$contactrow['postcode']}' {$extraattributes} />";
+        echo "<input maxlength='255' id='postcode' name='postcode' size='40' value='{$contactobj->postcode}' {$extraattributes} />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strCountry}:</th><td>";
-        echo country_drop_down('country', $contactrow['country'], $extraattributes);
+        echo country_drop_down('country', $contactobj->country, $extraattributes);
         echo "</td></tr>\n";
         echo "<tr><th>{$strNotifyContact}:</th><td>";
-        echo contact_site_drop_down('notify_contactid', $contactrow['notify_contactid'], $contactrow['siteid'], $contact, TRUE, TRUE);
+        echo contact_site_drop_down('notify_contactid', $contactobj->notify_contactid, $contactobj->siteid, $contact, TRUE, TRUE);
         echo "</td></tr>\n";
         echo "<tr><th>{$strNotes}:</th><td>";
-        echo "<textarea rows='5' cols='60' name='notes'>{$contactrow['notes']}</textarea></td></tr>\n";
+        echo "<textarea rows='5' cols='60' name='notes'>{$contactobj->notes}</textarea></td></tr>\n";
 
         plugin_do('edit_contact_form');
         echo "</table>";
@@ -182,7 +182,7 @@ else if ($action == "update")
         echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSiteName}'"), E_USER_ERROR);
     }
     // check for blank name
-    if ($email == '' OR $email=='none' OR $email=='n/a')
+    if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors = 1;
         echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
@@ -214,13 +214,13 @@ else if ($action == "update")
         */
         replace_tags(1, $contact, $tags);
 
-        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='$courtesytitle', surname='$surname', forenames='$forenames', siteid='$siteid', email='$email', phone='$phone', mobile='$mobile', fax='$fax', ";
-        $sql .= "address1='$address1', address2='$address2', city='$city', county='$county', postcode='$postcode', ";
-        $sql .= "country='$country', dataprotection_email='$dataprotection_email', dataprotection_phone='$dataprotection_phone', ";
-        $sql .= "notes='$notes', dataprotection_address='$dataprotection_address' , department='$department' , jobtitle='$jobtitle', ";
-        $sql .= "notify_contactid='$notify_contactid', ";
-        $sql .= "active = '{$activeStr}', ";
-        $sql .= "timestamp_modified=$now WHERE id='$contact'";
+        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='{$courtesytitle}', surname='{$surname}', forenames='{$forenames}', siteid='{$siteid}', email='{$email}', phone='{$phone}', mobile='{$mobile}', fax='{$fax}', ";
+        $sql .= "address1='{$address1}', address2='{$address2}', city='{$city}', county='{$county}', postcode='{$postcode}', ";
+        $sql .= "country='{$country}', dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
+        $sql .= "notes='{$notes}', dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
+        $sql .= "notify_contactid='{$notify_contactid}', ";
+        $sql .= "active = '{$activeStr}}', ";
+        $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

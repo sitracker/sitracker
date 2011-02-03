@@ -41,7 +41,7 @@ if ($_SESSION['usertype'] == 'admin')
     }
     else
     {
-        $id = intval($_REQUEST['id']);
+        $id = clean_int($_REQUEST['id']);
     }
 }
 else
@@ -58,7 +58,7 @@ if (!empty($_SESSION['formerrors']['portalcontactdetails']))
 //if new details posted
 if (cleanvar($_REQUEST['action']) == 'update')
 {
-    if ($CONFIG['portal_usernames_can_be_changed'])
+    if ($CONFIG['portal_usernames_can_be_changed'] AND $_SESSION['contact_source'] == 'sit')
     {
         $username = cleanvar($_REQUEST['username']);
         $oldusername = cleanvar($_REQUEST['oldusername']);
@@ -115,7 +115,12 @@ if (cleanvar($_REQUEST['action']) == 'update')
 
     if ($errors == 0)
     {
-        $updatesql = "UPDATE `{$dbContacts}` SET username='$username', forenames='$forenames', surname='$surname', ";
+        $updatesql = "UPDATE `{$dbContacts}` SET ";
+        if ($CONFIG['portal_usernames_can_be_changed'] AND $_SESSION['contact_source'] == 'sit')
+        {
+            $updatesql .= "username='{$username}', ";
+        }
+        $updatesql .= " forenames='$forenames', surname='$surname', ";
         $updatesql .= "department='$department', address1='$address1', address2='$address2', ";
         $updatesql .= "county='$county', country='$country', postcode='$postcode', ";
         $updatesql .= "phone='$phone', mobile='$mobile', fax='$fax', email='$email'";
@@ -141,8 +146,8 @@ if (cleanvar($_REQUEST['action']) == 'update')
 }
 elseif (isset($_POST['add']))
 {
-    $maintid = intval($_POST['maintid']);
-    $contactid = intval($_GET['id']);
+    $maintid = clean_int($_POST['maintid']);
+    $contactid = clean_int($_GET['id']);
 
     if ($maintid == 0 OR $contactid == 0)
     {
@@ -178,10 +183,10 @@ else
     echo "</h2>";
 
 
-    echo "<form action='$_SERVER[PHP_SELF]?action=update' method='post'>";
+    echo "<form action='{$_SERVER[PHP_SELF]}?action=update' method='post'>";
     echo "<table align='center' class='vertical'>";
 
-    if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit' )
+    if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit')
     {
         echo "<tr><th>{$strUsername}</th><td>";
         echo "<input class='required' name='username' value='{$user->username}' />";
@@ -270,7 +275,7 @@ else
     echo "<input type='hidden' name='id' value='{$id}' />";
     echo "<input type='submit' value='{$strUpdate}' /></p></form>";
 
-    echo "<br />".user_contracts_table($id, 'external');
+    echo "<br />".contracts_for_contacts_table($id, 'external');
 
     if ($_SESSION['usertype'] == 'admin')
     {
@@ -278,7 +283,7 @@ else
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
         echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, TRUE, FALSE, $sit[2])."<br />";
-        echo "<input type='submit' name='add' value='{$strAdd}' /></p></form>";
+        echo "<input type='submit' name='add' value='{$strNew}' /></p></form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

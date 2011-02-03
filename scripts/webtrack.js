@@ -16,14 +16,12 @@ var isIE = /*@cc_on!@*/false;
 var mainframe = '50%';
 
 /**
-  * Open a popup window to show incident details
-  * @author Ivan Lucas
-  * @param string incidentid. The ID of the incident to display
-  * @param string win. Window reference
-  * @param rtn. Decides whether the window is unique
-  * FIXME I can't remember how the 'rtn' param works, you'll have to figure it
-  * out yourself, sorry.
-**/
+ * Open a popup window to show incident details
+ * @author Ivan Lucas
+ * @param string incidentid. The ID of the incident to display
+ * @param string win. Window reference
+ * @param rtn. Whether to return a refernce to the window object which has just been opened
+ */
 function incident_details_window(incidentid, win, rtn)
 {
     // URL = "incident.php?popup=yes&id=" + incidentid;
@@ -39,11 +37,11 @@ function incident_details_window(incidentid, win, rtn)
 
 
 /**
-  * Open a popup window
-  * @author Ivan Lucas
-  * @param string url. The URL to open in the popup window
-  * @param string mini. set to 'mini' to open a compact window
-**/
+ * Open a popup window
+ * @author Ivan Lucas
+ * @param string url. The URL to open in the popup window
+ * @param string mini. set to 'mini' to open a compact window
+ */
 function wt_winpopup(url, mini)
 {
     if (mini=='mini')
@@ -58,11 +56,11 @@ function wt_winpopup(url, mini)
 
 
 /**
-  * Yes/No dialog
-  * @param msg string - A message to display
-  * @param del - Set to true when the action involves deleting data
-  * @returns bool TRUE or false, depending on which button was pressed, yes = true, false = no
-**/
+ * Yes/No dialog
+ * @param msg string - A message to display
+ * @param del - Set to true when the action involves deleting data
+ * @returns bool TRUE or false, depending on which button was pressed, yes = true, false = no
+ */
 function confirm_action(msg, del)
 {
     if (del == true && show_confirmation_delete != 'TRUE') return true;
@@ -73,10 +71,10 @@ function confirm_action(msg, del)
 
 
 /**
-  * Open a popup window showing help
-  * @author Ivan Lucas
-  * @param int helpid. The help ID to display
-**/
+ * Open a popup window showing help
+ * @author Ivan Lucas
+ * @param int helpid. The help ID to display
+ */
 function help_window(helpid)
 {
     URL = application_webpath + "help.php?id=" + helpid;
@@ -85,11 +83,10 @@ function help_window(helpid)
 
 
 /**
-  *
-  * @author Tom Gerrard
-  * @param int id
-  * @note Related to the calendar
-**/
+ * @author Tom Gerrard
+ * @param int id
+ * @note Related to the calendar
+ */
 function appointment(id)
 {
 
@@ -109,12 +106,12 @@ function appointment(id)
 
 
 /**
-  * Get some text and display it
-  * @author Paul Heaney, Ivan Lucas
-  * @param string page
-  * @param string component
-  * @param string update
-**/
+ * Get some text and display it
+ * @author Paul Heaney, Ivan Lucas
+ * @param string page
+ * @param string component
+ * @param string update
+ */
 function get_and_display(page, component, update)
 {
     // Do certain special things for dashlets
@@ -178,11 +175,10 @@ function get_and_display(page, component, update)
 
 
 /**
-  *
-  * @author Unknown ???
-  * @param string page
-  * @param string component
-**/
+ * @author Unknown ???
+ * @param string page
+ * @param string component
+ */
 function ajax_save(page, component)
 {
     new Ajax.Request(page, {
@@ -193,12 +189,12 @@ function ajax_save(page, component)
 
 
 /**
-  * Delete an option from a HTML select tag
-  * @author Unknown ???
-  * @note This Javascript code placed in the public domain
+ * Delete an option from a HTML select tag
+ * @author Unknown ???
+ * @note This Javascript code placed in the public domain
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
-**/
+ */
 function deleteOption(object,index)
 {
     object.options[index] = null;
@@ -206,12 +202,12 @@ function deleteOption(object,index)
 
 
 /**
-  * Add an option to a HTML select tag
-  * @author Unknown ???
-  * @note This Javascript code placed in the public domain
+ * Add an option to a HTML select tag
+ * @author Unknown ???
+ * @note This Javascript code placed in the public domain
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
-**/
+ */
 function addOption(object,text,value)
 {
     var defaultSelected = true;
@@ -222,12 +218,12 @@ function addOption(object,text,value)
 
 
 /**
-  * Copy selected options from one HTML select tag to another
-  * @author Unknown ???
-  * @note This Javascript code placed in the public domain
+ * Copy selected options from one HTML select tag to another
+ * @author Unknown ???
+ * @note This Javascript code placed in the public domain
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
-**/
+ */
 function copySelected(fromObject,toObject)
 {
     for (var i=0, l=fromObject.options.length;i < l;i++)
@@ -245,12 +241,12 @@ function copySelected(fromObject,toObject)
 
 
 /**
-  * Copy all options from one HTML select tag to another
-  * @author Unknown ???
-  * @note This Javascript code placed in the public domain
+ * Copy all options from one HTML select tag to another
+ * @author Unknown ???
+ * @note This Javascript code placed in the public domain
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
-**/
+ */
 function copyAll(fromObject,toObject)
 {
     for (var i=0, l=fromObject.options.length;i < l;i++)
@@ -264,11 +260,11 @@ function copyAll(fromObject,toObject)
 }
 
 /**
-  * @author Unknown ???
-  * @note This Javascript code placed in the public domain
+ * @author Unknown ???
+ * @note This Javascript code placed in the public domain
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
-**/
+ */
 function populateHidden(fromObject,toObject)
 {
     var output = '';
@@ -282,9 +278,9 @@ function populateHidden(fromObject,toObject)
 
 
 /**
-  * Check or uncheck all checkboxes on a form
-  * @author Ivan Lucas
-*/
+ * Check or uncheck all checkboxes on a form
+ * @author Ivan Lucas
+ */
 function checkAll(formid, checkstatus)
 {
     var form = $(formid);
@@ -301,9 +297,9 @@ var MAX_COLS = 80 ;
 
 
 /**
-  * Change the length of a text area
-  * @author Unknown ???
-**/
+ * Change the length of a text area
+ * @author Unknown ???
+ */
 function changeTextAreaLength( e )
 {
     var txtLength = e.value.length;
@@ -338,8 +334,8 @@ function changeTextAreaLength( e )
 }
 
 /**
-  * @author Unknown ???
-**/
+ * @author Unknown ???
+ */
 function resetTextAreaLength ( e )
 {
     e.cols = MIN_COLS ;
@@ -347,10 +343,10 @@ function resetTextAreaLength ( e )
 }
 
 /**
-  * Return a random number
-  * @author Ivan Lucas
-  * @retval int Random number
-**/
+ * Return a random number
+ * @author Ivan Lucas
+ * @retval int Random number
+ */
 function get_random()
 {
     var ranNum= Math.floor(Math.random()*1000000000000);
@@ -359,10 +355,10 @@ function get_random()
 
 
 /**
-  * Display/Hide the time to next action fields
-  * @author Ivan Lucas
-  *
-**/
+ * Display/Hide the time to next action fields
+ * @author Ivan Lucas
+ *
+ */
 function update_ttna() {
     if ($('ttna_time').checked)
     {
@@ -389,10 +385,10 @@ function update_ttna() {
 
 
 /**
-  * Check whether a service level is timed when adding a contract
-  * @author Unknown ???
-  *
-**/
+ * Check whether a service level is timed when adding a contract
+ * @author Unknown ???
+ *
+ */
 function addcontract_sltimed(servicelevel)
 {
     new Ajax.Request(application_webpath + 'ajaxdata.php?action=servicelevel_timed&servicelevel=' + servicelevel + '&rand=' + get_random(),
@@ -421,8 +417,8 @@ function addcontract_sltimed(servicelevel)
 
 
 /**
-  * @author Paul Heaney
-**/
+ * @author Paul Heaney
+ */
 function addservice_showbilling(form)
 {
     /*var a = $('billtype');
@@ -449,9 +445,9 @@ function addservice_showbilling(form)
 
 
 /**
-  * Hide context help [?] popups
-  * @author Ivan Lucas
-**/
+ * Hide context help [?] popups
+ * @author Ivan Lucas
+ */
 function hidecontexthelp(event)
 {
     var element = event.element();
@@ -471,9 +467,9 @@ function hidecontexthelp(event)
 
 
 /**
-  * find the real position of an element
-  * @author http://www.quirksmode.org/js/findpos.html
-**/
+ * find the real position of an element
+ * @author http://www.quirksmode.org/js/findpos.html
+ */
 function findPos(obj) {
     var curleft = curtop = 0;
     if (obj.offsetParent) {
@@ -488,9 +484,9 @@ function findPos(obj) {
 
 
 /**
-  * Show context help [?] popups
-  * @author Ivan Lucas
-**/
+ * Show context help [?] popups
+ * @author Ivan Lucas
+ */
 function contexthelp(elem, context, auth)
 {
     var epos = findPos(elem);
@@ -543,8 +539,8 @@ function contexthelp(elem, context, auth)
 
 
 /**
-  * Open an incident window for the incident number specified in the 'jump to' search field
-*/
+ * Open an incident window for the incident number specified in the 'jump to' search field
+ */
 function jumpto()
 {
     incident_details_window(document.jumptoincident.incident.value, 'incident'+document.jumptoincident.incident.value);
@@ -552,8 +548,8 @@ function jumpto()
 
 
 /**
-  * Clear/reset the 'jump to' search field
-*/
+ * Clear/reset the 'jump to' search field
+ */
 function clearjumpto()
 {
     $('searchfield').value = "";
@@ -593,8 +589,7 @@ function close_page_redirect(url)
 
 /**
  * Below used for selecting GroupMembership from a select field
-*/
-
+ */
 function doSelect(select, element)
 {
     var includes = document.getElementById(element);
@@ -643,10 +638,10 @@ function togglePlusMinus(div)
 
 
 /**
-  * Collapses or expands kb article sections as needed during edit
-  * Requires scriptaculous/effects.js
-  * @author Ivan Lucas
-**/
+ * Collapses or expands kb article sections as needed during edit
+ * Requires scriptaculous/effects.js
+ * @author Ivan Lucas
+ */
 function kbSectionCollapse()
 {
     var sections = ['summary', 'symptoms', 'cause', 'question', 'answer', 'solution',
@@ -673,13 +668,13 @@ function kbSectionCollapse()
 
 
 /**
-  * Insert BBCode to a textarea or input at the caret point or around current
-  * selection
-  * @author Ivan Lucas
-  * @param string element. ID of the HTML input or textarea
-  * @param string The tag to insert
-  * @param string the end tag to insert
-**/
+ * Insert BBCode to a textarea or input at the caret point or around current
+ * selection
+ * @author Ivan Lucas
+ * @param string element. ID of the HTML input or textarea
+ * @param string The tag to insert
+ * @param string the end tag to insert
+ */
 function insertBBCode(element, tag, endtag)
 {
     if (element.length > 0)
@@ -840,10 +835,9 @@ ResizeableTextarea.prototype = {
 
 
 /**
-  * Toggle the enabled/disabled (read-only) state of a multi-select
-  * @author Ivan Lucas
-
-*/
+ * Toggle the enabled/disabled (read-only) state of a multi-select
+ * @author Ivan Lucas
+ */
 function toggle_multiselect(elem)
 {
     if ($(elem).disabled)
@@ -859,13 +853,13 @@ function toggle_multiselect(elem)
 
 
 /**
-  * Toggle the checkboxes in a table by clicking on the parent table cell
-  * and toggle highlight table rows by clicking on a row cell
-  * (only cells without a checkbox)
-  * @author Ivan Lucas
-  * @param e event
-  * @note example: <tr ondblclick='trow(event);'>
-*/
+ * Toggle the checkboxes in a table by clicking on the parent table cell
+ * and toggle highlight table rows by clicking on a row cell
+ * (only cells without a checkbox)
+ * @author Ivan Lucas
+ * @param e event
+ * @note example: <tr ondblclick='trow(event);'>
+ */
 function trow(e)
 {
   var e = e || window.event;
@@ -891,9 +885,9 @@ function trow(e)
 
 
 /**
-  * Enable/Disable the contact address fields
-  * @author Ivan Lucas
-*/
+ * Enable/Disable the contact address fields
+ * @author Ivan Lucas
+ */
 function togglecontactaddress()
 {
     var setting = false;
@@ -929,23 +923,83 @@ function hide_status_drop_down()
 function set_user_status()
 {
     var userstatus = $('userstatus_dropdown').value;
-     new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
-    {
-        method:'get',
-            onSuccess: function(transport)
-            {
-                var response = transport.responseText || "no response text";
-                if (transport.responseText)
-                {
-                    if (response != 'FALSE')
-                    {
-                        $('userstatus_summaryline').innerHTML = response;
-//                         hide_status_drop_down();
-                        $('userstatus_dropdown').blur();
-                    }
-                }
-            },
-            onFailure: function(){ alert('Something went wrong...') }
-    });
+    new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
+	    {
+	        method:'get',
+	        onSuccess: function(transport)
+	        {
+	            var response = transport.responseText || "no response text";
+	            if (transport.responseText)
+	            {
+	                if (response != 'FALSE')
+	                {
+	                    $('userstatus_summaryline').innerHTML = response;
+	                	// hide_status_drop_down();
+	                    $('userstatus_dropdown').blur();
+	                }
+	            }
+	        },
+	        onFailure: function()
+	        {
+	        	alert('Something went wrong...');
+        	}
+	    });
+}
 
+function attach_another_file(element)
+{
+    var max = 0;
+    var attachments = $(element).childNodes;
+    for ( i = 0; i < attachments.length; i++)
+    {
+        node = attachments[i];
+        if (node instanceof HTMLInputElement)
+        {
+            var id = node.id;
+            var n = parseInt(id.split("_")[1]);
+            if (n > max) max = n;
+        }
+    }
+    var next_attach_number = (max+1);
+    var br = new Element('br');
+    var name = "attachment_"+next_attach_number;
+    var input = new Element('input', {'type': 'file', 'id': name, 'name': name, 'size': '40'});
+    $(element).appendChild(br);
+    $(element).appendChild(input);
+}
+
+function ignore_pending_reassignments(incidentid, originalowner)
+{
+	new Ajax.Request(application_webpath + 'ajaxdata.php?action=delete_temp_assign&incidentid='+incidentid+'&originalowner='+originalowner,
+			{
+				method: 'get',
+				onSuccess: function(transport)
+				{
+					var response = transport.responseText || "no response text";
+		            if (transport.responseText)
+		            {
+		            	if (response == 'OK')
+	            		{
+		            		Element.remove('incident'+incidentid);
+	            		}
+		            	else if (response == 'NOPERMISSION')
+		            	{
+							alert('No Permission to ignore incident reassignment');
+						}
+		            	else
+	            		{
+		            		alert ('Something went wrong ignoring reassignment');
+	            		}
+		            }
+				},
+				onFailure: function()
+				{
+					alert('Error ignoring reassignment');
+				}
+			});
+}
+
+function submit_form(form)
+{
+	$(form).submit();
 }

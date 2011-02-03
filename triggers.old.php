@@ -78,7 +78,7 @@ switch ($_REQUEST['mode'])
         }
         break;
 
-    case 'add':
+    case 'new':
         $id = cleanvar($_GET['id']);
         // Check that this is a defined trigger
         if (!array_key_exists($id, $triggerarray))
@@ -413,7 +413,7 @@ switch ($_REQUEST['mode'])
                     echo "<td>";
                     if ($selecteduser != -1)
                     {
-                        echo "<a href='{$_SERVER['PHP_SELF']}?mode=add&amp;id={$trigger}&amp;user={$selecteduser}'>{$strAddAction}</a>";
+                        echo "<a href='{$_SERVER['PHP_SELF']}?mode=add&amp;id={$trigger}&amp;user={$selecteduser}'>{$strNewAction}</a>";
                     }
                     echo "</td>";
                     echo "</tr>\n";

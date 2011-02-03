@@ -105,7 +105,7 @@ if (empty($mode))
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strQualifications} ".help_link('QualificationsTip')."</th>";
-    echo "<td><input maxlength='100' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
+    echo "<td><input maxlength='255' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
     echo "<tr><th>{$strEmailSignature} ".help_link('EmailSignatureTip')."</th>";
     echo "<td><textarea name='signature' rows='4' cols='40'>".strip_tags($user->signature)."</textarea></td></tr>\n";
     $entitlement = user_holiday_entitlement($edituserid);

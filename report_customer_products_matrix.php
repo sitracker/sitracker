@@ -1,5 +1,5 @@
 <?php
-// site_products_matrix.php -
+// report_customer_products_matrix.php -
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -80,35 +80,35 @@ switch ($_POST['action'])
             $html .= "</tr>";
             $csv .= "\"\n";
 
-            while ($site = mysql_fetch_array($result))
+            while ($site = mysql_fetch_object($result))
             {
-                $html .= "<tr><td>{$site['site']}</td>";
-                $csv .= strip_comma($site['site']);
+                $html .= "<tr><td>{$site->site}</td>";
+                $csv .= strip_comma($site->site);
 
                 $prodsql  = "SELECT p.name AS product, p.id AS productid, m.expirydate AS expirydate, m.term AS term, ";
                 $prodsql .= "m.productonly AS productonly, m.licence_type AS licencetype, ";
                 $prodsql .= "m.licence_quantity AS licencequantity FROM `{$dbProducts}` AS p, `{$dbMaintenance}` AS m ";
-                $prodsql .= "WHERE p.id=m.product AND m.site='{$site['siteid']}' ";
+                $prodsql .= "WHERE p.id=m.product AND m.site='{$site->siteid}' ";
                 if (!empty($vendor)) $sql .= "AND p.vendorid='{$vendor}' ";
                 $prodsql .= "AND expirydate <= $max_expiry AND expirydate >= $min_expiry ";
                 $prodsql .= "AND m.term!='yes' ";
                 $prodsql .= "ORDER BY expirydate ASC";
-//                 echo $prodsql;
+
                 $prodresult = mysql_query($prodsql);
                 if (mysql_error()) trigger_error('!Error: MySQL Query Error:',mysql_error(), E_USER_WARNING);
 
                 if (mysql_num_rows($prodresult)>0)
                 {
                     $numofproducts = mysql_num_rows($prodresult);
-                    while ($siteproducts = mysql_fetch_array($prodresult))
+                    while ($siteproducts = mysql_fetch_object($prodresult))
                     {
-                        $supportedproduct[$site['siteid']][$siteproducts['productid']] = $siteproducts['product'];
+                        $supportedproduct[$site->siteid][$siteproducts->productid] = $siteproducts->product;
                     }
                 }
                 // products list
                 foreach ($product AS $prodid => $prodname)
                 {
-                    if (array_key_exists($prodid, $supportedproduct[$site['siteid']]))
+                    if (array_key_exists($prodid, $supportedproduct[$site->siteid]))
                     {
                         $html .= "<td>{$prodname}</td>";
                         $csv .= "\",\"".strip_comma($prodname);
@@ -138,8 +138,6 @@ switch ($_POST['action'])
             {
                 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
                 echo $html;
-//                 echo "<hr />";
-//                 echo "<pre>{$csv}</pre>";
                 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             }
         }

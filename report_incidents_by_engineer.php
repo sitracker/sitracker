@@ -95,7 +95,7 @@ elseif ($_REQUEST['statistics'] == 'on')
     else $enddate = mktime(23,59,59,31,12,date('Y'));
 
     $includecount = count($inc);
-    if ($includecount >= 1)
+    if (is_array($inc) AND $includecount >= 1)
     {
         // $html .= "<strong>Include:</strong><br />";
         $incsql .= "(";
@@ -137,7 +137,7 @@ elseif ($_REQUEST['statistics'] == 'on')
 
     $sql .= " GROUP BY u.id ";
 
-    //echo $sql;
+    // echo $sql;
 
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -329,7 +329,7 @@ elseif ($_REQUEST['mode'] == 'report')
     else $enddate = mktime(23,59,59,31,12,date('Y'));
 
     $includecount = count($inc);
-    if ($includecount >= 1)
+    if (is_array($inc) AND $includecount >= 1)
     {
         // $html .= "<strong>Include:</strong><br />";
         $incsql .= "(";

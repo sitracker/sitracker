@@ -1008,6 +1008,7 @@ function clear_form_data($formname)
 
 /**
  * Finds out which scheduled tasks should be run right now
+ * Ensures that a task cannot start until the previous iteration has completed
  * @author Ivan Lucas, Paul Heaney
  * @return array
  */
@@ -1019,8 +1020,8 @@ function schedule_actions_due()
     $actions = FALSE;
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'interval' ";
     $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval` <= $now, UNIX_TIMESTAMP(NOW())) ";
-    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -1036,7 +1037,8 @@ function schedule_actions_due()
     $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'month' AND (DAYOFMONTH(CURDATE()) > date_offset OR (DAYOFMONTH(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
-    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -1054,8 +1056,8 @@ function schedule_actions_due()
     $sql .= "AND ((date_type = 'year' AND (DAYOFYEAR(CURDATE()) > date_offset ";
     $sql .= "OR (DAYOFYEAR(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
-    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
-
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -1066,7 +1068,7 @@ function schedule_actions_due()
         }
     }
 
-    debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
+    if (is_array($actions)) debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
 
     return $actions;
 }

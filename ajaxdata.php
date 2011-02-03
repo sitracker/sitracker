@@ -58,7 +58,7 @@ switch ($action)
         }
         break;
     case 'servicelevel_timed':
-        $sltag = servicelevel_id2tag(cleanvar($_REQUEST['servicelevel']));
+        $sltag = cleanvar($_REQUEST['servicelevel']);
         if (servicelevel_timed($sltag))
         {
             echo "TRUE";
@@ -87,27 +87,28 @@ switch ($action)
         break;
     case 'dismiss_notice':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
-        $noticeid = clean_int($_REQUEST['noticeid']);
+        // We don't use clean_int here as it may be a int or 'all' if its a string its not used directly
+        $noticeid = clean_dbstring($_REQUEST['noticeid']);
         $userid = clean_int($_REQUEST['userid']);
         if (is_numeric($noticeid))
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE id='{$noticeid}' AND userid='{$sit[2]}'";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
         elseif ($noticeid == 'all')
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE userid={$userid} LIMIT 20"; // only delete 20 max as we only show 20 max
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
         break;
     case 'dashboard_display':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
         $dashboard = cleanvar($_REQUEST['dashboard']);
-        $dashletid = 'win'.clean_int($_REQUEST['did']);
+        $dashletid = 'win'.cleanvar($_REQUEST['did']);
         // FIXME need some sanitation here
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_display";
@@ -118,7 +119,7 @@ switch ($action)
         require (APPLICATION_LIBPATH . 'auth.inc.php');
 
         $dashboard = cleanvar($_REQUEST['dashboard']);
-        $dashletid = 'win'.clean_int($_REQUEST['did']);
+        $dashletid = 'win'.cleanvar($_REQUEST['did']);
         // FIXME need some sanitation here
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
         $dashfn = "dashboard_{$dashboard}_edit";
@@ -130,7 +131,7 @@ switch ($action)
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -141,7 +142,7 @@ switch ($action)
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -154,7 +155,7 @@ switch ($action)
     case 'tags':
         $sql = "SELECT DISTINCT t.name FROM `{$dbSetTags}` AS st, `{$dbTags}` AS t WHERE st.tagid = t.tagid GROUP BY t.name";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -169,7 +170,7 @@ switch ($action)
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -184,7 +185,7 @@ switch ($action)
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
@@ -197,7 +198,7 @@ switch ($action)
     case 'slas':
         $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($obj = mysql_fetch_object($result))
         {
             $strIsSelected = '';
@@ -211,7 +212,7 @@ switch ($action)
     case 'products':
         $sql = "SELECT id, name FROM `{$dbProducts}` ORDER BY name ASC";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($obj = mysql_fetch_object($result))
         {
             $strIsSelected = '';
@@ -225,7 +226,7 @@ switch ($action)
     case 'skills':
         $sql = "SELECT id, name FROM `{$dbSoftware}` ORDER BY name ASC";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($obj = mysql_fetch_object($result))
         {
             $strIsSelected = '';
@@ -237,8 +238,8 @@ switch ($action)
         }
         break;
     case 'storedashboard':
-        $id = $_REQUEST['id'];
-        $val = $_REQUEST['val'];
+        $id = clean_int($_REQUEST['id']);
+        $val = clean_dbstring($_REQUEST['val']);
 
         if ($id == $_SESSION['userid'])
         {
@@ -313,10 +314,9 @@ switch ($action)
         if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
         if (is_array($trigger_types[$triggertype]['params']))
         {
-            // FIXME i18n
-            echo '<p align="left">Notify when: ';
-            echo "<select name='conditions'><option value='all'>all conditions are met</option>";
-            echo "<option value='any'>any conditions are met</option></select></p>";
+            echo '<p align="left">{$strNotifyWhen} ';
+            echo "<select name='conditions'><option value='all'>{$strAllConditionsMet}</option>";
+            echo "<option value='any'>{$strAnyConditionMet}</option></select></p>";
             echo "<table>";
             foreach ($trigger_types[$triggertype]['params'] as $param)
             {
@@ -328,6 +328,7 @@ switch ($action)
                 	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
                 	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
                 }
+
                 if (isset($ttvararray['{'.$param.'}']['checkreplace']))
                 {
                     echo '<tr>';
@@ -355,8 +356,31 @@ switch ($action)
             echo $result;
         }
         break;
+    case 'delete_temp_assign':
+        if (user_permission($sit[2], 42))
+        {
+            $incidentid = clean_int($_REQUEST['incidentid']);
+            $originalowner = clean_int($_REQUEST['originalowner']);
+            $sql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' ";
+            $sql .= "WHERE incidentid='{$incidentid}' AND originalowner='{$originalowner}' LIMIT 1";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                echo "FAILED";
+                trigger_error(mysql_error(), E_USER_ERROR);
+            }
+            else
+            {
+                echo "OK";
+            }
+        }
+        else
+        {
+            echo "NOPERMISSION";
+        }
+        break;
     default :
-        plugin_do('ajaxdata_add_action', array('action' => $action));
+        plugin_do('ajaxdata_new_action', array('action' => $action));
         break;
 }
 

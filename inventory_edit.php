@@ -138,7 +138,7 @@ else
     echo "<tr><th>{$strNotes}</th>";
     echo "<td>";
     echo bbcode_toolbar('inventorynotes');
-    echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>$row->notes</textarea></td></tr>";
+    echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>{$row->notes}</textarea></td></tr>";
 
     if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR

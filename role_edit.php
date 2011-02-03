@@ -1,5 +1,5 @@
 <?php
-// role_add.php - Page to add role to SiT!
+// role_new.php - Page to add role to SiT!
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -82,8 +82,8 @@ else
 
     if ($errors == 0)
     {
-        clear_form_data('role_add');
-        clear_form_errors('role_add');
+        clear_form_data('role_new');
+        clear_form_errors('role_new');
 
         $sql = "UPDATE `{$dbRoles}` SET rolename = '{$rolename}', description = '{$description}' WHERE id = {$roleid}";
         $result = mysql_query($sql);

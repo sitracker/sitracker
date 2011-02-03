@@ -57,7 +57,7 @@ if ($incidentid == '')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    while ($updates = mysql_fetch_array($result))
+    while ($updates = mysql_fetch_object($result))
     {
         $update_timestamp_string = ldate($CONFIG['dateformat_datetime'], $updates["timestamp"]);
         echo "<br />";
@@ -66,70 +66,70 @@ if ($incidentid == '')
 
         // Header bar for each update
         // FIXME this should be using a function or something, no point duplicating this code here. INL 7Nov08
-        switch ($updates['type'])
+        switch ($updates->type)
         {
             case 'opening':
-                echo "Opened by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Opened by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'reassigning':
-                echo "Reassigned by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['currentowner'] != 0)  // only say who it was assigned to if the currentowner field is filled in
+                echo "Reassigned by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->currentowner != 0)  // only say who it was assigned to if the currentowner field is filled in
                 {
-                    echo " To <strong>".user_realname($updates['currentowner'],TRUE)."</strong>";
+                    echo " To <strong>".user_realname($updates->currentowner, TRUE)."</strong>";
                 }
                 break;
             case 'email':
-                echo "Email Sent by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Email Sent by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'closing':
-                echo "Closed by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Closed by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'reopening':
-                echo "Reopened by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Reopened by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'phonecallout':
-                echo "Call made by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Call made by <strong>".user_realname($updates->userid ,TRUE)."</strong>";
                 break;
             case 'phonecallin':
-                echo "Call taken by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Call taken by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'research':
-                echo "Researched by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Researched by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'webupdate':
-                echo "Web Update by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Web Update by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'emailout':
-                echo "Email sent by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Email sent by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'emailin':
-                echo "Email received by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Email received by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'externalinfo':
-                echo "External info added by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "External info added by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'probdef':
-                echo "Problem Definition by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Problem Definition by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'solution':
-                echo "Final Solution by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Final Solution by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             default:
-                echo "Updated by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Updated by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
         }
 
-        if ($updates['nextaction']!='') echo " Next Action: <strong>".$updates['nextaction'].'</strong>';
+        if ($updates->nextaction != '') echo " Next Action: <strong>{$updates->nextaction}</strong>";
 
         echo " - {$update_timestamp_string}</th></tr>";
         echo "<tr><td class='shade2' width='100%'>";
         $updatecounter++;
-        echo parse_updatebody($updates['bodytext']);
+        echo parse_updatebody($updates->bodytext);
 
         echo "</td></tr>";
         echo "</table>";

@@ -11,12 +11,14 @@
 
 
 $permission = 37; // Run Reports
-$title = $strSiteProducts;
+
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
+
+$title = $strSiteProducts;
 
 if (empty($_REQUEST['mode']))
 {

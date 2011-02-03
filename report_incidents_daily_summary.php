@@ -19,7 +19,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $permission = 67; // Run Reports
 
-
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -78,7 +77,7 @@ else
         // opened
         $sql = "SELECT id, owner, opened, title FROM `{$dbIncidents}` ";
         $sql .= "WHERE opened BETWEEN '{$startdate}' AND '{$enddate}'  ORDER BY opened";
-        $result= mysql_query($sql);
+        $result = mysql_query($sql);
 
         while ($incident = mysql_fetch_object($result))
         {
@@ -90,10 +89,10 @@ else
             $stats[date('Y-m-d', $incident->opened)][$incident->id]['opened']['type'] = 'opened';
         }
 
-        // opened
+        // closed
         $sql = "SELECT id, owner, closed, title FROM `{$dbIncidents}` ";
         $sql .= "WHERE closed BETWEEN '{$startdate}' AND '{$enddate}'  ORDER BY closed ";
-        $result= mysql_query($sql);
+        $result = mysql_query($sql);
 
         //$stats=array();
 
@@ -107,23 +106,14 @@ else
             $stats[date('Y-m-d', $incident->closed)][$incident->id]['closed']['type'] = 'closed';
         }
 
-
-//         echo "<pre>";
-//         print_r($stats);
-//         echo "</pre>";
         ksort($stats);
 
         if (count($stats) > 0)
         {
             foreach ($stats AS $day)
             {
-                /*
-                echo "<pre>";
-                print_r($day);
-                echo "</pre>";
-                */
-                echo "<h3>".$day['date']."</h3>";
-                echo "<table>";
+                echo "<h3>{$day['date']}</h3>";
+                echo "<table align='center' width='50%'>";
                 $opened = 0;
                 $closed = 0;
                 $owners = array();
@@ -140,7 +130,8 @@ else
                             if ($a['type'] == 'opened') $right .= $strOpened;
                             else $right .= $strClosed;
                             $right .= "</td><td>";
-                            $right .= "<a href='javascript:incident_details_window({$a['id']})' class='direct'>".$a['id']."</td>";
+                            $right .= html_incident_popup_link($a['id'], $a['id']);
+                            $right .= "</td>";
                             $right .= "<td>".$a['title']."</a></td><td>".user_realname($a['owner'])."</td></tr>";
 
                             if ($a['type'] == 'opened')
@@ -159,14 +150,14 @@ else
                     }
                 }
 
-                echo "<tr><td valign='top'><table>";
+                echo "<tr><td valign='top' width='30%'><table>";
                 echo "<table><tr><th>{$strUser}</th><th>{$strOpened}</th><th>{$strClosed}</th></tr>";
                 foreach ($owners AS $o)
                 {
                     echo "<tr>";
                     echo "<td>".user_realname($o['owner']);
                     echo "</td><td>";
-                    if ($o['opened']!=0) echo $o['opened'];
+                    if ($o['opened'] != 0) echo $o['opened'];
                     else echo "0";
                     echo "</td><td>";
                     if ($o['closed'] != 0) echo $o['closed'];

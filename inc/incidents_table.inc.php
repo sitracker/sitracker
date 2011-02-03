@@ -47,18 +47,18 @@ echo colheader('info', $strInfo, $sort, $order, $filter);
 echo "</tr>";
 // Display the Support Incidents Themselves
 $shade = 0;
-while ($incidents = mysql_fetch_array($result))
+while ($incidents = mysql_fetch_object($result))
 {
     // calculate time to next action string
-    if ($incidents["timeofnextaction"] == 0)
+    if ($incidents->timeofnextaction == 0)
     {
         $timetonextaction_string = "&nbsp;";  // was 'no time set'
     }
     else
     {
-        if (($incidents["timeofnextaction"] - $now) > 0)
+        if (($incidents->timeofnextaction - $now) > 0)
         {
-            $timetonextaction_string = format_seconds($incidents["timeofnextaction"] - $now);
+            $timetonextaction_string = format_seconds($incidents->timeofnextaction - $now);
         }
         else
         {
@@ -67,64 +67,64 @@ while ($incidents = mysql_fetch_array($result))
     }
 
     // Used to store the ellipsis if shortened, we do htmlspecialchars on $site and don't want this to be converted
-    // If you do &hellips; becomes &amp;hellips; 
+    // If you do &hellips; becomes &amp;hellips;
     $postsitetext = '';
-    
-    if (strlen($incidents['site']) > 30)
+
+    if (strlen($incidents->site) > 30)
     {
-        $incidents['site'] = mb_substr($incidents['site'], 0, 30, 'UTF-8');
+        $incidents->site = mb_substr($incidents->site, 0, 30, 'UTF-8');
         $postsitetext .= $strEllipsis;
     }
 
 
     // Make a readble last updated field
-    if ($incidents['lastupdated'] > $now - 300)
+    if ($incidents->lastupdated > $now - 300)
     {
-        $when = sprintf($strAgo, format_seconds($now - $incidents['lastupdated']));
+        $when = sprintf($strAgo, format_seconds($now - $incidents->lastupdated));
         if ($when == 0) $when = $strJustNow;
         $updated = "<em class='updatednow'>{$when}</em>";
     }
-    elseif ($incidents['lastupdated'] > $now - 1800)
+    elseif ($incidents->lastupdated > $now - 1800)
     {
-        $updated = "<em class='updatedveryrecently'>".sprintf($strAgo, format_seconds($now - $incidents['lastupdated']))."</em>";
+        $updated = "<em class='updatedveryrecently'>".sprintf($strAgo, format_seconds($now - $incidents->lastupdated))."</em>";
     }
-    elseif ($incidents['lastupdated'] > $now - 3600)
+    elseif ($incidents->lastupdated > $now - 3600)
     {
-        $updated = "<em class='updatedrecently'>".sprintf($strAgo, format_seconds($now - $incidents['lastupdated']))."</em>";
+        $updated = "<em class='updatedrecently'>".sprintf($strAgo, format_seconds($now - $incidents->lastupdated))."</em>";
     }
-    elseif (date('dmy', $incidents['lastupdated']) == date('dmy', $now))
+    elseif (date('dmy', $incidents->lastupdated) == date('dmy', $now))
     {
-        $updated = "{$strToday} @ ".ldate($CONFIG['dateformat_time'], $incidents['lastupdated']);
+        $updated = "{$strToday} @ ".ldate($CONFIG['dateformat_time'], $incidents->lastupdated);
     }
-    elseif (date('dmy', $incidents['lastupdated']) == date('dmy', ($now-86400)))
+    elseif (date('dmy', $incidents->lastupdated) == date('dmy', ($now - 86400)))
     {
-        $updated = "{$strYesterday} @ ".ldate($CONFIG['dateformat_time'], $incidents['lastupdated']);
+        $updated = "{$strYesterday} @ ".ldate($CONFIG['dateformat_time'], $incidents->lastupdated);
     }
-    elseif ($incidents['lastupdated'] < $now - 86400 AND
-            $incidents['lastupdated'] > $now - (86400 * 6))
+    elseif ($incidents->lastupdated < $now - 86400 AND
+            $incidents->lastupdated > $now - (86400 * 6))
     {
-        $updated = ldate('l', $incidents['lastupdated'])." @ ".ldate($CONFIG['dateformat_time'], $incidents['lastupdated']);
+        $updated = ldate('l', $incidents->lastupdated)." @ ".ldate($CONFIG['dateformat_time'], $incidents->lastupdated);
     }
     else
     {
-        $updated = ldate($CONFIG['dateformat_datetime'], $incidents["lastupdated"]);
+        $updated = ldate($CONFIG['dateformat_datetime'], $incidents->lastupdated);
     }
 
     // Fudge for old ones
-    $tag = $incidents['servicelevel'];
-    if ($tag=='') $tag = servicelevel_id2tag(maintenance_servicelevel($incidents['maintenanceid']));
+    $tag = $incidents->servicelevel;
+    if ($tag == '') $tag = maintenance_servicelevel_tag($incidents->maintenanceid);
 
-    $slsql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag}' AND priority='{$incidents['priority']}' ";
+    $slsql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag}' AND priority='{$incidents->priority}' ";
     $slresult = mysql_query($slsql);
     if (mysql_error()) trigger_error("mysql query error ".mysql_error(), E_USER_WARNING);
     $servicelevel = mysql_fetch_object($slresult);
     if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ($slsql)", E_USER_WARNING);
 
     // Get Last Update
-    list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incidents['id']);
+    list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incidents->id);
 
     // Get next target
-    $target = incident_get_next_target($incidents['id']);
+    $target = incident_get_next_target($incidents->id);
     $working_day_mins = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
     // Calculate time remaining in SLA
     switch ($target->type)
@@ -151,7 +151,7 @@ while ($incidents = mysql_fetch_array($result))
     else $slaremain = 0;
 
     // Get next review time
-    $reviewsince = incident_time_since_review($incidents['id']);  // time since last review in minutes
+    $reviewsince = incident_time_since_review($incidents->id);  // time since last review in minutes
     $reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes (1440 minutes in a day)
     if ($reviewtarget > 0)
     {
@@ -178,7 +178,7 @@ while ($incidents = mysql_fetch_array($result))
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-                if ($incidents["priority"] == 4) $class = 'critical';  // Force critical incidents to be critical always
+                if ($incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
             }
             elseif ($slaremain < 0)
             {
@@ -210,61 +210,54 @@ while ($incidents = mysql_fetch_array($result))
 
     // Create URL for External ID's
     $externalid = '';
-    $escalationpath = $incidents['escalationpath'];
-    if (!empty($incidents['escalationpath']) AND !empty($incidents['externalid']))
+    $escalationpath = $incidents->escalationpath;
+    if (!empty($incidents->escalationpath) AND !empty($incidents->externalid))
     {
-        $epathurl = str_replace('%externalid%',$incidents['externalid'],$epath[$escalationpath]['track_url']);
-        $externalid = "<a href=\"{$epathurl}\" title=\"{$epath[$escalationpath]['url_title']}\">{$incidents['externalid']}</a>";
+        $epathurl = str_replace('%externalid%',$incidents->externalid, $epath[$escalationpath]['track_url']);
+        $externalid = "<a href=\"{$epathurl}\" title=\"{$epath[$escalationpath]['url_title']}\">{$incidents->externalid}</a>";
     }
-    elseif (empty($incidents['externalid']) AND $incidents['escalationpath'] >= 1)
+    elseif (empty($incidents->externalid) AND $incidents->escalationpath >= 1)
     {
         $epathurl = $epath[$escalationpath]['home_url'];
         $externalid = "<a href=\"{$epathurl}\" title=\"{$epath[$escalationpath]['url_title']}\">{$epath[$escalationpath]['name']}</a>";
     }
-    elseif (empty($incidents['escalationpath']) AND !empty($incidents['externalid']))
+    elseif (empty($incidents->escalationpath) AND !empty($incidents->externalid))
     {
-        $externalid = format_external_id($incidents['externalid']);
+        $externalid = format_external_id($incidents->externalid);
     }
 
     echo "<tr class='{$class}'>";
     echo "<td align='center'>";
 
-    echo "<a href='incident_details.php?id={$incidents['id']}' class='direct'>{$incidents['id']}</a>";
+    echo "<a href='incident_details.php?id={$incidents->id}' class='direct'>{$incidents->id}</a>";
     if ($externalid != '') echo "<br />{$externalid}";
     echo "</td>";
     echo "<td>";
-    if (!empty($incidents['softwareid'])) echo software_name($incidents['softwareid'])."<br />";
-    if (count(open_activities_for_incident($incidents['id'])) > 0)
+    if (!empty($incidents->softwareid)) echo software_name($incidents->softwareid)."<br />";
+    if (count(open_activities_for_incident($incidents->id)) > 0)
     {
         echo icon('timer', 16, $strOpenActivities).' ';
     }
 
-    if (drafts_waiting_on_incident($incidents['id'], 'all', $sit[2]))
+    if (drafts_waiting_on_incident($incidents->id, 'all', $sit[2]))
     {
         echo icon('draft', 16, $strDraftsExist).' ';
     }
 
-    if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
+        $windowname = "incident{$incidents->id}";
+    echo "<a href=\"javascript:incident_details_window('{$incidents->id}','{$windowname}')\" class='info'>";
+    if (trim($incidents->title) != '')
     {
-        $windowname = "incident{$incidents['id']}";
+        $linktext = ($incidents->title);
     }
     else
     {
-        $windowname = "sit_popup";
-    }
-    echo "<a href=\"javascript:incident_details_window('{$incidents['id']}','{$windowname}')\" class='info'>";
-    if (trim($incidents['title']) != '')
-    {
-        echo ($incidents['title']);
-    }
-    else
-    {
-        echo $strUntitled;
+        $linktext = $strUntitled;
     }
 
     if (!empty($update_body) AND $update_body != '...')
     {
-        echo "<span>{$update_body}</span>";
+        $tooltip = $update_body;
     }
     else
     {
@@ -272,14 +265,15 @@ while ($incidents = mysql_fetch_array($result))
         $update_headertext = $updatetypes[$update_type]['text'];
         $update_headertext = str_replace('currentowner', $update_currentownername,$update_headertext);
         $update_headertext = str_replace('updateuser', $update_user, $update_headertext);
-        echo "<span>{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp)." </span>";
+        $tooltip = "{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp);
     }
-    echo "</a></td>";
+    echo html_incident_popup_link($incidents->id, $linktext, $tooltip);
+    echo "</td>";
 
     echo "<td>";
-    echo "<a href='contact_details.php?id={$incidents['contactid']}' class='info'><span>{$incidents['phone']}<br />";
-    echo "{$incidents['email']}</span>{$incidents['forenames']} {$incidents['surname']}</a><br />";
-    echo "{$incidents['site']} {$postsitetext} </td>";
+    echo "<a href='contact_details.php?id={$incidents->contactid}' class='info'><span>{$incidents->phone}<br />";
+    echo "{$incidents->email}</span>{$incidents->forenames} {$incidents->surname}</a><br />";
+    echo "{$incidents->site} {$postsitetext} </td>";
 
     echo "<td align='center'>";
     //FIXME functionise
@@ -289,13 +283,13 @@ while ($incidents = mysql_fetch_array($result))
     if ($count_obj->count != 4)
     {
         // Service Level / Priority
-        if (!empty($incidents['maintenanceid']))
+        if (!empty($incidents->maintenanceid))
         {
             echo $servicelevel->tag."<br />";
         }
-        elseif (!empty($incidents['servicelevel']))
+        elseif (!empty($incidents->servicelevel))
         {
-            echo $incidents['servicelevel']."<br />";
+            echo "{$incidents->servicelevel}<br />";
         }
         else
         {
@@ -303,29 +297,29 @@ while ($incidents = mysql_fetch_array($result))
         }
     }
     $blinktime = (time() - ($servicelevel->initial_response_mins * 60));
-    if ($incidents['priority'] == 4 AND $incidents['lastupdated'] <= $blinktime)
+    if ($incidents->priority == 4 AND $incidents->lastupdated <= $blinktime)
     {
-        echo "<strong class='critical'>".priority_name($incidents["priority"])."</strong>";
+        echo "<strong class='critical'>".priority_name($incidents->priority)."</strong>";
     }
     else
     {
-        echo priority_name($incidents['priority']);
+        echo priority_name($incidents->priority);
     }
     echo "</td>\n";
 
     echo "<td align='center'>";
-    if ($incidents['status'] == 5 AND $incidents['towner'] == $sit[2])
+    if ($incidents->status == 5 AND $incidents->towner == $sit[2])
     {
         echo "<strong>{$strAwaitingYourResponse}</strong>";
     }
     else
     {
-        echo incidentstatus_name($incidents["status"]);
+        echo incidentstatus_name($incidents->status);
     }
 
-    if ($incidents['status'] == 2)
+    if ($incidents->status == 2)
     {
-        echo "<br />".closingstatus_name($incidents['closingstatus']);
+        echo "<br />".closingstatus_name($incidents->closingstatus);
     }
 
     echo "</td>\n";
@@ -334,17 +328,17 @@ while ($incidents = mysql_fetch_array($result))
     echo "{$updated}";
     echo " {$strby} {$update_user}";
 
-    if ($incidents['towner'] > 0 AND $incidents['towner'] != $user)
+    if ($incidents->towner > 0 AND $incidents->towner != $user)
     {
-        if ($incidents['owner'] != $user OR $user == 'all')
+        if ($incidents->owner != $user OR $user == 'all')
         {
-        	echo "<br />{$strOwner}: <strong>".user_realname($incidents['owner'],TRUE)."</strong>";
+        	echo "<br />{$strOwner}: <strong>".user_realname($incidents->owner, TRUE)."</strong>";
         }
-        echo "<br />{$strTemp}: <strong>".user_realname($incidents['towner'],TRUE)."</strong>";
+        echo "<br />{$strTemp}: <strong>".user_realname($incidents->towner, TRUE)."</strong>";
     }
-    elseif ($incidents['owner'] != $user)
+    elseif ($incidents->owner != $user)
     {
-        echo "<br />{$strOwner}: <strong>".user_realname($incidents['owner'],TRUE)."</strong>";
+        echo "<br />{$strOwner}: <strong>".user_realname($incidents->owner, TRUE)."</strong>";
     }
 
     echo "</td>\n";
@@ -379,7 +373,7 @@ while ($incidents = mysql_fetch_array($result))
 
     if($_SESSION['userconfig']['show_next_action'] == TRUE)
     {
-        $update = incident_lastupdate($incidents['id']);
+        $update = incident_lastupdate($incidents->id);
 
         if ($update[6] != '')
         {
@@ -401,7 +395,7 @@ while ($incidents = mysql_fetch_array($result))
         echo "<td align='center' class='review'>";
         if ($reviewremain > -86400)
         {
-            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
+            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain * -1) * 60));
         }
         else
         {
@@ -411,8 +405,8 @@ while ($incidents = mysql_fetch_array($result))
     else
     {
         echo "<td align='center'>";
-        if ($incidents['status'] == 2) echo "{$strAge}: ".format_seconds($incidents["duration_closed"]);
-        else echo sprintf($strXold, format_seconds($incidents["duration"]));
+        if ($incidents->status == 2) echo "{$strAge}: ".format_seconds($incidents->duration_closed);
+        else echo sprintf($strXold, format_seconds($incidents->duration));
     }
     echo "</td>";
     echo "</tr>\n";

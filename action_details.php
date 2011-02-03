@@ -1,5 +1,5 @@
 <?php
-// triggers.php - Page for setting user trigger preferences
+// action_details.php - Page for setting user trigger preferences
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
@@ -41,7 +41,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 function insertRuletext(tvar)
 {
-//     tvar = tvar + ' ';
+    // tvar = tvar + ' ';
     var start = $('rules').selectionStart;
     var end = $('rules').selectionEnd;
     $('rules').value = $('rules').value.substring(0, start) + tvar + $('rules').value.substring(end, $('rules').textLength);
@@ -54,51 +54,52 @@ function resetRules()
 
 function get_checks()
 {
-	$('checksbox').show();
-      var xmlhttp=false;
+    $('checksbox').show();
+    var xmlhttp=false;
 
-      if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-      {
-          try
-          {
-              xmlhttp = new XMLHttpRequest();
-          }
-          catch (e)
-          {
-              xmlhttp=false;
-          }
-      }
-      if (!xmlhttp && window.createRequest)
-      {
-          try
-          {
-              xmlhttp = window.createRequest();
-          }
-          catch (e)
-          {
-              xmlhttp=false;
-          }
-      }
-      var triggertype = $('triggertype').value;
-      var url =  "ajaxdata.php";
-      var params = "action=checkhtml&triggertype="+triggertype;;
-      xmlhttp.open("POST", url, true)
-      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xmlhttp.setRequestHeader("Content-length", params.length);
-      xmlhttp.setRequestHeader("Connection", "close");
-      xmlhttp.send(params);
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    {
+        try
+        {
+	       xmlhttp = new XMLHttpRequest();
+        }
+        catch (e)
+        {
+            xmlhttp=false;
+        }
+    }
 
-      xmlhttp.onreadystatechange=function()
-      {
-          if (xmlhttp.readyState==4)
-          {
-              if (xmlhttp.responseText != '')
-              {
-                  //alert(xmlhttp.responseText);
-                  $("checkshtml").update(xmlhttp.responseText);
-              }
-          }
-      }
+    if (!xmlhttp && window.createRequest)
+    {
+        try
+        {
+            xmlhttp = window.createRequest();
+        }
+        catch (e)
+        {
+            xmlhttp=false;
+        }
+    }
+    var triggertype = $('triggertype').value;
+    var url =  "ajaxdata.php";
+    var params = "action=checkhtml&triggertype="+triggertype;;
+    xmlhttp.open("POST", url, true)
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.setRequestHeader("Content-length", params.length);
+    xmlhttp.setRequestHeader("Connection", "close");
+    xmlhttp.send(params);
+
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4)
+        {
+            if (xmlhttp.responseText != '')
+            {
+                //alert(xmlhttp.responseText);
+                $("checkshtml").update(xmlhttp.responseText);
+            }
+        }
+    }
 }
 
 function switch_template()
@@ -316,7 +317,7 @@ else
     echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
     echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;
     echo "<div id='checkshtml'></div></div>";
-    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strAdd}' /></p></form>";
+    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strNew}' /></p></form>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {

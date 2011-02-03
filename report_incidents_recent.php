@@ -22,17 +22,6 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strRecentIncidents;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-echo "<script type='text/javascript'>";
-?>
-//<![CDATA[
-function incident_details_window_l(incidentid,second)
-{
-    URL = "<?php  echo $CONFIG['application_uriprefix'].$CONFIG['application_webpath'] ?>incident_details.php?id=" + incidentid + "&amp;javascript=enabled";
-    window.open(URL, "sit_popup", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
-}
-//]]>
-<?php
-echo "</script>";
 
 $sites = array();
 
@@ -60,7 +49,7 @@ if (mysql_num_rows($result) > 0)
     {
         if ($prvincid!=$row->id)
         {
-            echo "<strong>[{$row->siteid}] {$row->name}</strong> {$strIncident}: <a href=\"javascript:incident_details_window_l('{$row->id}', 'incident{$row->id}')\">{$row->id}</a>  ";
+            echo "<strong>[{$row->siteid}] {$row->name}</strong> {$strIncident}: <a href=\"javascript:incident_details_window('{$row->id}', 'sit_popup')\">{$row->id}</a>  ";
             echo "{$strDate}: ".ldate('d M Y', $row->opened)." ";
             echo "{$strProduct}: ".product_name($row->product);
             $site = $row->siteid;

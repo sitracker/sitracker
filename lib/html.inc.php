@@ -352,7 +352,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
     {
         $alt = "Missing icon: '$filename.png', ($file) size {$size}";
         if ($CONFIG['debug']) trigger_error($alt, E_USER_WARNING);
-        $urlpath = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/sit";
+        $urlpath = "{$CONFIG['application_webpath']}/images/icons/sit";
         $urlpath .= "/16x16/blank.png";
     }
     $icon = "<img src=\"{$urlpath}\"";
@@ -500,26 +500,34 @@ function group_selector($selected, $urlargs='')
 }
 
 
-// FIXME use this instead of hardcoding tabs
-function draw_tabs($tabsarray, $selected='')
+/**
+ * Creates HTML for a tabbed interface
+ * @author Ivan Lucas
+ * @param array $tabsarray
+ * @param string $selected (optional)
+ * @param string $divclass (optional)
+ * @return string HTML
+ */
+function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
-    $html .= "<div class='tabcontainer'>";
-    $html .= "<ul class='tabnav'>";
+    $html .= "<div class='{$divclass}'>";
+    $html .= "<ul>";
     foreach ($tabsarray AS $tab => $url)
     {
-        $html .= "<li><a href='$url'";
+        $html .= "<li";
         if (strtolower($tab) == strtolower($selected))
         {
             $html .= " class='active'";
         }
+        $html .= ">";
         $tab = str_replace('_', ' ', $tab);
-        $html .= ">$tab</a></li>\n";
+        $html .= "<a href='{$url}'>$tab</a></li>\n";
     }
     $html .= "</ul>";
     $html .= "</div>";
 
-    return ($html);
+    return $html;
 }
 
 
@@ -630,10 +638,10 @@ function bbcode_toolbar($elementid)
  * @param $refid int The ID of the item this note if for
  * @return string The HTML to display
  */
-function add_note_form($linkid, $refid)
+function new_note_form($linkid, $refid)
 {
     global $now, $sit, $iconset;
-    $html = "<form name='addnote' action='note_add.php' method='post'>";
+    $html = "<form name='addnote' action='note_new.php' method='post'>";
     $html .= "<div class='detailhead note'> <div class='detaildate'>".readable_date($now)."</div>\n";
     $html .= icon('note', 16, $GLOBALS['strNote ']);
     $html .= " ".sprintf($GLOBALS['strNewNoteByX'], user_realname($sit[2]))."</div>\n";
@@ -659,7 +667,7 @@ function add_note_form($linkid, $refid)
 
     $html .= "<input type='hidden' name='action' value='addnote' />";
     $html .= "<input type='hidden' name='rpath' value='{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' />";
-    $html .= "<div style='text-align: right'><input type='submit' value='{$GLOBALS['strAddNote']}' /></div>\n";
+    $html .= "<div style='text-align: right'><input type='submit' value='{$GLOBALS['strNewNote']}' /></div>\n";
     $html .= "</div>\n";
     $html .= "</form>";
     return $html;
@@ -805,7 +813,7 @@ function dashlet_link($dashboard, $dashletid, $text='', $action='', $params='', 
             $html .= "&{$pname}={$pvalue}";
         }
     }
-    //$html .= "&editaction=do_add&type={$type}";
+    //$html .= "&editaction=do_new&type={$type}";
 
     if ($action != 'dashboard_save')
     {
@@ -849,6 +857,7 @@ function help_link($context)
  * @param errorcode The error code from $_FILES['file']['error']
  * @param name The file name which was uploaded from $_FILES['file']['name']
  * @return String containing the error message (in HTML)
+ * @todo FIXME i18n
  */
 function get_file_upload_error_message($errorcode, $name)
 {
@@ -994,7 +1003,7 @@ function contract_details($id, $mode='internal')
         $html .= "<td>{$maint->licence_quantity} {$maint->licensetypename}</td></tr>\n";
     }
 
-    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".servicelevel_name($maint->servicelevelid)."</td></tr>";
+    $html .= "<tr><th>{$GLOBALS['strServiceLevel']}:</th><td>".get_sla_name($maint->servicelevel)."</td></tr>";
     $html .= "<tr><th>{$GLOBALS['strExpiryDate']}:</th><td>";
     if ($maint->expirydate == '-1')
     {
@@ -1009,9 +1018,7 @@ function contract_details($id, $mode='internal')
 
     if ($mode == 'internal')
     {
-        $timed = db_read_column('timed', $GLOBALS['dbServiceLevels'], $maint->servicelevelid);
-        if ($timed == 'yes') $timed = TRUE;
-        else $timed = FALSE;
+        $timed = servicelevel_timed($maint->servicelevel);
         $html .= "<tr><th>{$GLOBALS['strService']}</th><td>";
         $html .= contract_service_table($id, $timed);
         $html .= "</td></tr>\n";
@@ -1037,7 +1044,7 @@ function contract_details($id, $mode='internal')
         $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
         if ($maint->term != 'yes')
         {
-            $html .= " | <a href='contract_add_service.php?contractid={$id}'>{$GLOBALS['strAddService']}</a></p>";
+            $html .= " | <a href='contract_new_service.php?contractid={$id}'>{$GLOBALS['strNewService']}</a></p>";
         }
     }
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
@@ -1082,11 +1089,11 @@ function contract_details($id, $mode='internal')
 
                     if ($mode == 'internal')
                     {
-                        $html .= "<td><a href=\"contract_delete_contact.php?contactid=".$contact."&amp;maintid=$id&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                        $html .= "<td><a href=\"contract_delete_contact.php?contactid={$contact}&amp;maintid={$id}&amp;context=maintenance\">{$GLOBALS['strRemove']}</a></td></tr>\n";
                     }
                     else
                     {
-                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid=".$contact."&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
+                        $html .= "<td><a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;contactid={$contact}&amp;action=remove\">{$GLOBALS['strRemove']}</a></td></tr>\n";
                     }
                     $supportcount++;
                 }
@@ -1108,26 +1115,26 @@ function contract_details($id, $mode='internal')
 
             if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0 AND $mode == 'internal')
             {
-                $html .= "<p align='center'><a href='contract_add_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
-                $html .= "{$GLOBALS['strAddContact']}</a></p>";
+                $html .= "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
+                $html .= "{$GLOBALS['strNewContact']}</a></p>";
             }
             else
             {
-                $html .= "<h3>{$GLOBALS['strAddContact']}</h3>";
+                $html .= "<h3>{$GLOBALS['strNewContact']}</h3>";
                 $html .= "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
                 $html .= "add' method='post' >";
-                $html .= "<p align='center'>{$GLOBLAS['strAddNewSupportedContact']} ";
+                $html .= "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
                 $html .= contact_site_drop_down('contactid',
                                                 'contactid',
                                                 maintenance_siteid($id),
                                                 supported_contacts($id));
                 $html .= help_link('NewSupportedContact');
-                $html .= " <input type='submit' value='{$GLOBALS['strAdd']}' /></p></form>";
+                $html .= " <input type='submit' value='{$GLOBALS['strNew']}' /></p></form>";
             }
             if ($mode == 'external')
             {
                 $html .= "<p align='center'><a href='addcontact.php'>";
-                $html .= "{$GLOBALS['strAddNewSiteContact']}</a></p>";
+                $html .= "{$GLOBALS['strNewSiteContact']}</a></p>";
             }
         }
 
@@ -1186,6 +1193,7 @@ function contract_details($id, $mode='internal')
 function group_user_selector($title, $level="engineer", $groupid, $type='radio')
 {
     global $dbUsers, $dbGroups;
+
     $str .= "<tr><th>{$title}</th>";
     $str .= "<td align='center'>";
 
@@ -1194,62 +1202,68 @@ function group_user_selector($title, $level="engineer", $groupid, $type='radio')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    while ($row = mysql_fetch_object($result))
+    if (mysql_num_rows($result) > 0)
     {
-        if ($type == 'radio')
+        while ($row = mysql_fetch_object($result))
         {
-            $str .= "<input type='radio' name='group' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"TRUE\")' ";
+            if ($type == 'radio')
+            {
+                $str .= "<input type='radio' name='group' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"TRUE\")' ";
+            }
+            elseif ($type == 'checkbox')
+            {
+                $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
+            }
+
+            if ($groupid == $row->id)
+            {
+                $str .= " checked='checked' ";
+                $groupname = $row->name;
+            }
+
+            $str .= "/>{$row->name} \n";
         }
-        elseif ($type == 'checkbox')
+
+        $str .="<br />";
+
+
+        $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
+        $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        if ($level == "management")
         {
-            $str .= "<input type='checkbox' name='{$row->name}' id='{$row->name}' onclick='groupMemberSelect(\"{$row->name}\", \"FALSE\")' ";
+            $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>\n";
         }
-
-        if ($groupid == $row->id)
+        elseif ($level == "engineer")
         {
-            $str .= " checked='checked' ";
-            $groupname = $row->name;
+            $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>\n";
         }
 
-        $str .= "/>{$row->name} \n";
+        while ($row = mysql_fetch_object($result))
+        {
+            $str .= "<option value='{$row->id}' ";
+            if ($row->name == $groupname) $str .= "selected='selected' ";
+            $str .= ">{$row->realname} ({$row->name})</option>\n";
+        }
+        $str .= "</select>\n";
+        $str .= "<br />";
+        if ($level == "engineer")
+        {
+            $visibility = " style='display:none'";
+        }
+
+        $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
+        $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
     }
-
-    $str .="<br />";
-
-
-    $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
-    $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    if ($level == "management")
+    else
     {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20'>";
+        echo $strNoneAvailable;
     }
-    elseif ($level == "engineer")
-    {
-        $str .= "<select name='users[]' id='include' multiple='multiple' size='20' style='display:none'>";
-    }
-
-    while ($row = mysql_fetch_object($result))
-    {
-        $str .= "<option value='{$row->id}'>{$row->realname} ({$row->name})</option>\n";
-    }
-    $str .= "</select>";
-    $str .= "<br />";
-    if ($level == "engineer")
-    {
-        $visibility = " style='display:none'";
-    }
-
-    $str .= "<input type='button' id='selectall' onclick='doSelect(true, \"include\")' value='Select All' {$visibility} />";
-    $str .= "<input type='button' id='clearselection' onclick='doSelect(false, \"include\")' value='Clear Selection' {$visibility} />";
 
     $str .= "</td>";
     $str .= "</tr>\n";
-
-    // FIXME make this XHTML valid
-    $str .= "<script type='text/javascript'>\n//<![CDATA[\ngroupMemberSelect(\"{$groupname}\", \"TRUE\");\n//]]>\n</script>";
 
     return $str;
 }
@@ -1503,7 +1517,7 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
 function show_create_links($table, $ref)
 {
     global $dbLinkTypes;
-    $html .= "<p align='center'>{$GLOBALS['strAddLink']}: ";
+    $html .= "<p align='center'>{$GLOBALS['strNewLink']}: ";
     $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE origtab='$table' OR linktab='$table' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -1513,16 +1527,16 @@ function show_create_links($table, $ref)
     {
         if ($linktype->origtab == $table AND $linktype->linktab != $table)
         {
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a>";
         }
         elseif ($linktype->origtab != $table AND $linktype->linktab == $table)
         {
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->rlname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->rlname}</a>";
         }
         else
         {
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a> | ";
-            $html .= "<a href='link_add.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}&amp;dir=rl'>{$linktype->rlname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a> | ";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}&amp;dir=rl'>{$linktype->rlname}</a>";
         }
 
         if ($rowcount < $numlinktypes) $html .= " | ";
@@ -1718,7 +1732,7 @@ function show_edit_site($site, $mode='internal')
     $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='$site' ";
     $siteresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($siterow = mysql_fetch_array($siteresult))
+    while ($obj = mysql_fetch_object($siteresult))
     {
         if ($mode == 'internal')
         {
@@ -1735,7 +1749,7 @@ function show_edit_site($site, $mode='internal')
         $html .= "confirm_action(\"{$GLOBALS['strAreYouSureMakeTheseChanges']}\")'>";
         $html .= "<table align='center' class='vertical'>";
         $html .= "<tr><th>{$GLOBALS['strName']}:</th>";
-        $html .= "<td><input class='required' maxlength='50' name='name' size='40' value='{$siterow['name']}' />";
+        $html .= "<td><input class='required' maxlength='50' name='name' size='40' value='{$obj->name}' />";
         $html .= " <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
         if ($mode == 'internal')
         {
@@ -1743,34 +1757,34 @@ function show_edit_site($site, $mode='internal')
             $html .= list_tags($site, TAG_SITE, false)."</textarea>\n";
         }
         $html .= "<tr><th>{$GLOBALS['strDepartment']}:</th>";
-        $html .= "<td><input maxlength='50' name='department' size='40' value='{$siterow['department']}' />";
+        $html .= "<td><input maxlength='50' name='department' size='40' value='{$obj->department}' />";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strAddress1']}:</th>";
         $html .= "<td><input maxlength='50' name='address1'";
-        $html .= "size='40' value='{$siterow['address1']}' />";
+        $html .= "size='40' value='{$obj->address1}' />";
         $html .= "</td></tr>\n";
-        $html .= "<tr><th>{$GLOBALS['strAddress2']}: </th><td><input maxlength='50' name='address2' size='40' value='{$siterow['address2']}' /></td></tr>\n";
-        $html .= "<tr><th>{$GLOBALS['strCity']}:</th><td><input maxlength='255' name='city' size='40' value='{$siterow['city']}' /></td></tr>\n";
-        $html .= "<tr><th>{$GLOBALS['strCounty']}:</th><td><input maxlength='255' name='county' size='40' value='{$siterow['county']}' /></td></tr>\n";
-        $html .= "<tr><th>{$GLOBALS['strPostcode']}:</th><td><input maxlength='255' name='postcode' size='40' value='{$siterow['postcode']}' /></td></tr>\n";
-        $html .= "<tr><th>{$GLOBALS['strCountry']}:</th><td>".country_drop_down('country', $siterow['country'])."</td></tr>\n";
+        $html .= "<tr><th>{$GLOBALS['strAddress2']}: </th><td><input maxlength='50' name='address2' size='40' value='{$obj->address2}' /></td></tr>\n";
+        $html .= "<tr><th>{$GLOBALS['strCity']}:</th><td><input maxlength='255' name='city' size='40' value='{$obj->city}' /></td></tr>\n";
+        $html .= "<tr><th>{$GLOBALS['strCounty']}:</th><td><input maxlength='255' name='county' size='40' value='{$obj->county}' /></td></tr>\n";
+        $html .= "<tr><th>{$GLOBALS['strPostcode']}:</th><td><input maxlength='255' name='postcode' size='40' value='{$obj->postcode}' /></td></tr>\n";
+        $html .= "<tr><th>{$GLOBALS['strCountry']}:</th><td>".country_drop_down('country', $obj->country)."</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strTelephone']}:</th><td>";
-        $html .= "<input maxlength='255' name='telephone' size='40' value='{$siterow['telephone']}' />";
+        $html .= "<input maxlength='255' name='telephone' size='40' value='{$obj->telephone}' />";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strFax']}:</th><td>";
-        $html .= "<input maxlength='255' name='fax' size='40' value='{$siterow['fax']}' /></td></tr>\n";
+        $html .= "<input maxlength='255' name='fax' size='40' value='{$obj->fax}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strEmail']}:</th><td>";
-        $html .= "<input maxlength='255' name='email' size='40' value='{$siterow['email']}' />";
+        $html .= "<input maxlength='255' name='email' size='40' value='{$obj->email}' />";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strWebsite']}:</th><td>";
-        $html .= "<input maxlength='255' name='websiteurl' size='40' value='{$siterow['websiteurl']}' /></td></tr>\n";
+        $html .= "<input maxlength='255' name='websiteurl' size='40' value='{$obj->websiteurl}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strSiteType']}:</th><td>\n";
-        $html .= sitetype_drop_down('typeid', $siterow['typeid']);
+        $html .= sitetype_drop_down('typeid', $obj->typeid);
         $html .= "</td></tr>\n";
         if ($mode == 'internal')
         {
             $html .= "<tr><th>{$GLOBALS['strSalesperson']}:</th><td>";
-            $html .= user_drop_down('owner', $siterow['owner'], $accepting = FALSE, '', '', TRUE);
+            $html .= user_drop_down('owner', $obj->owner, $accepting = FALSE, '', '', TRUE);
             $html .= "</td></tr>\n";
         }
 
@@ -1778,19 +1792,19 @@ function show_edit_site($site, $mode='internal')
         {
             $html .= "<tr><th>{$GLOBALS['strIncidentPool']}:</th>";
             $incident_pools = explode(',', "{$GLOBALS['strNone']},{$CONFIG['incident_pools']}");
-            if (array_key_exists($siterow['freesupport'], $incident_pools) == FALSE)
+            if (array_key_exists($obj->freesupport, $incident_pools) == FALSE)
             {
-                array_unshift($incident_pools,$siterow['freesupport']);
+                array_unshift($incident_pools, $obj->freesupport);
             }
-            $html .= "<td>".array_drop_down($incident_pools,'incident_pool',$siterow['freesupport'])."</td></tr>";
+            $html .= "<td>".array_drop_down($incident_pools,'incident_pool',$obj->freesupport)."</td></tr>";
             $html .= "<tr><th>{$GLOBALS['strActive']}:</th><td><input type='checkbox' name='active' ";
-            if ($siterow['active'] == 'true')
+            if ($obj->active == 'true')
             {
-                $html .= "checked='".$siterow['active']."'";
+                $html .= "checked='{$obj->active}'";
             }
             $html .= " value='true' /></td></tr>\n";
             $html .= "<tr><th>{$GLOBALS['strNotes']}:</th><td>";
-            $html .= "<textarea rows='5' cols='30' name='notes'>{$siterow['notes']}</textarea>";
+            $html .= "<textarea rows='5' cols='30' name='notes'>{$obj->notes}</textarea>";
             $html .= "</td></tr>\n";
         }
         plugin_do('edit_site_form');
@@ -1811,19 +1825,19 @@ function show_edit_site($site, $mode='internal')
  * @return string $html add contact form html
  * @author Kieran Hogg
  */
-function show_add_contact($siteid = 0, $mode = 'internal')
+function show_new_contact($siteid = 0, $mode = 'internal')
 {
     global $CONFIG;
     $returnpage = cleanvar($_REQUEST['return']);
     if (!empty($_REQUEST['name']))
     {
         $name = explode(' ',cleanvar(urldecode($_REQUEST['name'])), 2);
-        $_SESSION['formdata']['add_contact']['forenames'] = ucfirst($name[0]);
-        $_SESSION['formdata']['add_contact']['surname'] = ucfirst($name[1]);
+        $_SESSION['formdata']['new_contact']['forenames'] = ucfirst($name[0]);
+        $_SESSION['formdata']['new_contact']['surname'] = ucfirst($name[1]);
     }
 
-    $html = show_form_errors('add_contact');
-    clear_form_errors('add_contact');
+    $html = show_form_errors('new_contact');
+    clear_form_errors('new_contact');
     $html .= "<h2>".icon('contact', 32)." ";
     $html .= "{$GLOBALS['strNewContact']}</h2>";
 
@@ -1840,36 +1854,36 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "\n<table><tr><td align='center'>{$GLOBALS['strTitle']}<br />";
     $html .= "<input maxlength='50' name='courtesytitle' title=\"";
     $html .= "{$GLOBALS['strCourtesyTitle']}\" size='7'";
-    if ($_SESSION['formdata']['add_contact']['courtesytitle'] != '')
+    if ($_SESSION['formdata']['new_contact']['courtesytitle'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['courtesytitle']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['courtesytitle']}'";
     }
     $html .= "/></td>\n";
 
     $html .= "<td align='center'>{$GLOBALS['strForenames']}<br />";
     $html .= "<input class='required' maxlength='100' name='forenames' ";
     $html .= "size='15' title=\"{$GLOBALS['strForenames']}\"";
-    if ($_SESSION['formdata']['add_contact']['forenames'] != '')
+    if ($_SESSION['formdata']['new_contact']['forenames'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['forenames']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['forenames']}'";
     }
     $html .= "/></td>\n";
 
     $html .= "<td align='center'>{$GLOBALS['strSurname']}<br />";
     $html .= "<input class='required' maxlength='100' name='surname' ";
     $html .= "size='20' title=\"{$GLOBALS['strSurname']}\"";
-    if ($_SESSION['formdata']['add_contact']['surname'] != '')
+    if ($_SESSION['formdata']['new_contact']['surname'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['surname']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['surname']}'";
     }
     $html .= " /> <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
     $html .= "</table>\n</td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strJobTitle']}</th><td><input maxlength='255'";
     $html .= " name='jobtitle' size='35' title=\"{$GLOBALS['strJobTitle']}\"";
-    if ($_SESSION['formdata']['add_contact']['jobtitle'] != '')
+    if ($_SESSION['formdata']['new_contact']['jobtitle'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['jobtitle']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['jobtitle']}'";
     }
     $html .= " /></td></tr>\n";
     if ($mode == 'internal')
@@ -1884,17 +1898,17 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     }
 
     $html .= "<tr><th>{$GLOBALS['strDepartment']}</th><td><input maxlength='255' name='department' size='35'";
-    if ($_SESSION['formdata']['add_contact']['department'] != '')
+    if ($_SESSION['formdata']['new_contact']['department'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['department']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['department']}'";
     }
     $html .= "/></td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strEmail']}</th><td>";
     $html .= "<input class='required' maxlength='100' name='email' size='35'";
-    if ($_SESSION['formdata']['add_contact']['email'])
+    if ($_SESSION['formdata']['new_contact']['email'])
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['email']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['email']}'";
     }
     $html .= "/> <span class='required'>{$GLOBALS['strRequired']}</span> ";
 
@@ -1904,9 +1918,9 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "</td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strTelephone']}</th><td><input maxlength='50' name='phone' size='35'";
-    if ($_SESSION['formdata']['add_contact']['phone'] != '')
+    if ($_SESSION['formdata']['new_contact']['phone'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['phone']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['phone']}'";
     }
     $html .= "/> ";
 
@@ -1916,16 +1930,16 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "</td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strMobile']}</th><td><input maxlength='100' name='mobile' size='35'";
-    if ($_SESSION['formdata']['add_contact']['mobile'] != '')
+    if ($_SESSION['formdata']['new_contact']['mobile'] != '')
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['mobile']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['mobile']}'";
     }
     $html .= "/></td></tr>\n";
 
     $html .= "<tr><th>{$GLOBALS['strFax']}</th><td><input maxlength='50' name='fax' size='35'";
-    if ($_SESSION['formdata']['add_contact']['fax'])
+    if ($_SESSION['formdata']['new_contact']['fax'])
     {
-        $html .= "value='{$_SESSION['formdata']['add_contact']['fax']}'";
+        $html .= "value='{$_SESSION['formdata']['new_contact']['fax']}'";
     }
     $html .= "/></td></tr>\n";
 
@@ -1948,9 +1962,9 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     if ($mode == 'internal')
     {
         $html .= "<tr><th>{$GLOBALS['strNotes']}</th><td><textarea cols='60' rows='5' name='notes'>";
-        if ($_SESSION['formdata']['add_contact']['notes'] != '')
+        if ($_SESSION['formdata']['new_contact']['notes'] != '')
         {
-            $html .= $_SESSION['formdata']['add_contact']['notes'];
+            $html .= $_SESSION['formdata']['new_contact']['notes'];
         }
         $html .= "</textarea></td></tr>\n";
     }
@@ -1963,11 +1977,11 @@ function show_add_contact($siteid = 0, $mode = 'internal')
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
-    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strAddContact']}\" /></p>";
+    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strNewContact']}\" /></p>";
     $html .= "</form>\n";
 
     //cleanup form vars
-    clear_form_data('add_contact');
+    clear_form_data('new_contact');
 
     return $html;
 }
@@ -2025,10 +2039,10 @@ function format_external_id($externalid, $escalationpath='')
  * Outputs a contact's contract associate, if the viewing user is allowed
  * @author Kieran Hogg
  * @param int $userid ID of the contact
- * @retval string output html
- * @todo TODO should this be renamed, it has nothing to do with users
+ * @param string $mode ??? Defaults to Internal
+ * @return string output html
  */
-function user_contracts_table($userid, $mode = 'internal')
+function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
     if ((!empty($sit[2]) AND user_permission($sit[2], 30)
@@ -2067,19 +2081,19 @@ function user_contracts_table($userid, $mode = 'internal')
 
             $supportcount = 1;
             $shade = 'shade2';
-            while ($supportedrow = mysql_fetch_array($result))
+            while ($obj = mysql_fetch_obj($result))
             {
-                if ($supportedrow['term'] == 'yes')
+                if ($obj->term == 'yes')
                 {
                     $shade = 'expired';
                 }
 
-                if ($supportedrow['expirydate'] < $now AND $supportedrow['expirydate'] != -1)
+                if ($obj->expirydate < $now AND $obj->expirydate != -1)
                 {
                     $shade = 'expired';
                 }
 
-                $html .= "<tr><td class='$shade'>";
+                $html .= "<tr><td class='{$shade}'>";
                 $html .= ''.icon('contract', 16)." ";
                 if ($mode == 'internal')
                 {
@@ -2089,20 +2103,20 @@ function user_contracts_table($userid, $mode = 'internal')
                 {
                     $html .= "<a href='contracts.php?id=";
                 }
-                $html .= "{$supportedrow['maintenanceid']}'>";
+                $html .= "{$obj->maintenanceid}'>";
                 $html .= "{$GLOBALS['strContract']}: ";
-                $html .= "{$supportedrow['maintenanceid']}</a></td>";
-                $html .= "<td class='$shade'>{$supportedrow['productname']}</td>";
-                $html .= "<td class='$shade'>";
-                if ($supportedrow['expirydate'] == -1)
+                $html .= "{$obj->maintenanceid}</a></td>";
+                $html .= "<td class='{$shade}'>{$obj->productname}</td>";
+                $html .= "<td class='{$shade}'>";
+                if ($obj->expirydate == -1)
                 {
                     $html .= $GLOBALS['strUnlimited'];
                 }
                 else
                 {
-                    $html .= ldate($CONFIG['dateformat_date'], $supportedrow['expirydate']);
+                    $html .= ldate($CONFIG['dateformat_date'], $obj->expirydate);
                 }
-                if ($supportedrow['term'] == 'yes')
+                if ($obj->term == 'yes')
                 {
                     $html .= " {$GLOBALS['strTerminated']}";
                 }
@@ -2110,7 +2124,8 @@ function user_contracts_table($userid, $mode = 'internal')
                 $html .= "</td>";
                 $html .= "</tr>\n";
                 $supportcount++;
-                $shade = 'shade2';
+                if ($shade == 'shade1') $shade = 'shade2';
+                else $shade = 'shade1';
             }
             $html .= "</table>\n";
         }
@@ -2122,7 +2137,7 @@ function user_contracts_table($userid, $mode = 'internal')
         if ($mode == 'internal')
         {
             $html .= "<p align='center'>";
-            $html .= "<a href='contract_add_contact.php?contactid={$userid}&amp;context=contact'>";
+            $html .= "<a href='contract_new_contact.php?contactid={$userid}&amp;context=contact'>";
             $html .= "{$GLOBALS['strAssociateContactWithContract']}</a></p>\n";
         }
 
@@ -2179,5 +2194,40 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
 
     return $html;
 }
+
+
+/**
+ * Creates an incident popup window hyperlink
+ * @author Ivan Lucas
+ * @param int $incidentid. ID of the incident
+ * @param string $linktext. Text to use as the hyperlink anchor
+ * @param string $tooltip. Tooltip text
+ * @return string the hash
+*/
+function html_incident_popup_link($incidentid, $linktext, $tooltip = NULL)
+{
+    if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
+    {
+        $windowname = "incident{$incidentid}";
+    }
+    else
+    {
+        $windowname = "sit_popup";
+    }
+    $html = "<a href=\"javascript:incident_details_window('{$incidentid}','{$windowname}')\"";
+    if (!empty($tooltip))
+    {
+        $html .= "class='info'";
+    }
+    $html .= ">{$linktext}";
+    if (!empty($tooltip))
+    {
+        $html .= "<span>{$tooltip}</span>";
+    }
+    $html .= "</a>";
+
+    return $html;
+}
+
 
 ?>

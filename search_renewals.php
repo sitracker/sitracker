@@ -75,22 +75,6 @@ else
         }
         else
         {
-            ?>
-            <script type="text/javascript">
-            //<![CDATA[
-            function support_contacts_window(maintenanceid)
-            {
-                URL = "support_contacts.php?maintid=" + maintenanceid;
-                window.open(URL, "support_contacts_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-            }
-            function contact_details_window(contactid)
-            {
-                URL = "contact_details.php?id=" + contactid;
-                window.open(URL, "contact_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=550,height=640");
-            }
-            //]]>
-            </script>
-            <?php
             printf("<h2>".icon('contract', 32)." {$strContractsExpiringWithinXdays}</h2>", $expire);
             printf("<h5>{$strResultsNum}</h5>", mysql_num_rows($result));
             echo "
@@ -106,23 +90,23 @@ else
             <th>{$strNotes}</th>
             </tr>";
             $shade = 'shade1';
-            while ($results = mysql_fetch_array($result))
+            while ($results = mysql_fetch_object($result))
             {
                 echo "<tr>";
-                echo "<td align='center' class='{$shade}' width='50'><a href='contract_edit.php?action=edit&amp;maintid={$results['maintid']}'>{$results['maintid']}</a></td>";
-                echo "<td align='center' class='{$shade}' width='100'>{$results['site']}</td>";
-                echo "<td align='center' class='{$shade}' width='100'>{$results['product']}</td>";
-                echo "<td align='center' class='{$shade}' width='100'>{$results['reseller']}</td>";
-                echo "<td align='center' class='{$shade}' width='75'>{$results['licence_quantity']} {$results['licence_type']}</td>";
-                echo "<td align='center' class='{$shade}' width='100'>".ldate($CONFIG['dateformat_date'], $results['expirydate'])."</td>";
-                echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: contact_details_window({$results['admincontact']}\">{$results['admincontactforenames']} {$results['admincontactsurname']}</a></td>";
-                if ($results['notes'] == '')
+                echo "<td align='center' class='{$shade}' width='50'><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$results->maintid}</a></td>";
+                echo "<td align='center' class='{$shade}' width='100'>{$results->site}</td>";
+                echo "<td align='center' class='{$shade}' width='100'>{$results->product}</td>";
+                echo "<td align='center' class='{$shade}' width='100'>{$results->reseller}</td>";
+                echo "<td align='center' class='{$shade}' width='75'>{$results->licence_quantity} {$results->licence_type}</td>";
+                echo "<td align='center' class='{$shade}' width='100'>".ldate($CONFIG['dateformat_date'], $results->expirydate)."</td>";
+                echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: contact_details_window('contact_details.php?id={$results->admincontact}')\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
+                if ($results->notes == '')
                 {
                     $notes = "&nbsp;";
                 }
                 else
                 {
-                    $notes = nl2br($results["notes"]);
+                    $notes = nl2br($results->notes);
                 }
                 echo "<td align='center' class='{$shade}' width='150'>{$notes}</td>";
                 echo "</tr>";

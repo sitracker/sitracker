@@ -75,7 +75,7 @@ else
         $sql .= " home_url = '{$homeurl}', url_title = '{$title}', email_domain = '{$emaildomain}' ";
         $sql .= " WHERE id = '{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         if (!$result)
         {

@@ -1,5 +1,5 @@
 <?php
-// user_add.php - Form for adding users
+// user_new.php - Form for adding users
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$title = $strAddUser;
+$title = $strNewUser;
 
 // External variables
 $submit = $_REQUEST['submit'];
@@ -38,8 +38,8 @@ if (empty($submit))
 
     $numgroups = count($grouparr);
 
-    echo show_form_errors('add_user');
-    clear_form_errors('add_user');
+    echo show_form_errors('new_user');
+    clear_form_errors('new_user');
 
     echo "<h2>".icon('user', 32)." ";
     echo "{$strNewUser}</h2>";
@@ -48,32 +48,32 @@ if (empty($submit))
     echo "<table align='center' class='vertical'>\n";
     echo "<tr><th>{$strRealName}</th>";
     echo "<td><input maxlength='50' name='realname' size='30' class='required' ";
-    if ($_SESSION['formdata']['add_user']['realname'] != '')
+    if ($_SESSION['formdata']['new_user']['realname'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['realname']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['realname']}'";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strUsername}</th>";
     echo "<td><input maxlength='50' name='username' size='30' class='required' ";
-    if ($_SESSION['formdata']['add_user']['username'] != '')
+    if ($_SESSION['formdata']['new_user']['username'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['username']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['username']}'";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr id='password'><th>{$strPassword}</th>";
     echo "<td><input maxlength='50' name='password' size='30' type='password' class='required' ";
-    if ($_SESSION['formdata']['add_user']['password'] != '')
+    if ($_SESSION['formdata']['new_user']['password'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['password']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['password']}'";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strGroup}</th>";
-    if ($_SESSION['formdata']['add_user']['groupid'] != '')
+    if ($_SESSION['formdata']['new_user']['groupid'] != '')
     {
-        echo "<td>".group_drop_down('groupid', $_SESSION['formdata']['add_user']['groupid'])."</td>";
+        echo "<td>".group_drop_down('groupid', $_SESSION['formdata']['new_user']['groupid'])."</td>";
     }
     else
     {
@@ -82,9 +82,9 @@ if (empty($submit))
     echo "</tr>";
 
     echo "<tr><th>{$strRole}</th>";
-    if ($_SESSION['formdata']['add_user']['roleid'] != '')
+    if ($_SESSION['formdata']['new_user']['roleid'] != '')
     {
-        echo "<td>".role_drop_down('roleid', $_SESSION['formdata']['add_user']['roleid'])."</td>";
+        echo "<td>".role_drop_down('roleid', $_SESSION['formdata']['new_user']['roleid'])."</td>";
     }
     else
     {
@@ -93,46 +93,46 @@ if (empty($submit))
     echo "</tr>";
 
     echo "<tr><th>{$strJobTitle}</th><td><input maxlength='50' name='jobtitle' size='30' class='required' ";
-    if ($_SESSION['formdata']['add_user']['jobtitle'] != '')
+    if ($_SESSION['formdata']['new_user']['jobtitle'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['jobtitle']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['jobtitle']}'";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr id='email'><th>{$strEmail}</th><td><input maxlength='50' name='email' size='30'  class='required' ";
-    if ($_SESSION['formdata']['add_user']['email'] != '')
+    if ($_SESSION['formdata']['new_user']['email'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['email']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['email']}'";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strTelephone}</th><td><input maxlength='50' name='phone' size='30' ";
-    if ($_SESSION['formdata']['add_user']['phone'] != '')
+    if ($_SESSION['formdata']['new_user']['phone'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['phone']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['phone']}'";
     }
     echo "/></td></tr>\n";
 
     echo "<tr><th>{$strMobile}</th><td><input maxlength='50' name='mobile' size='30' ";
-    if ($_SESSION['formdata']['add_user']['mobile'] != '')
+    if ($_SESSION['formdata']['new_user']['mobile'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['mobile']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['mobile']}'";
     }
     echo "/></td></tr>\n";
 
     echo "<tr><th>{$strFax}</th><td><input maxlength='50' name='fax' size='30' ";
-    if ($_SESSION['formdata']['add_user']['fax'] != '')
+    if ($_SESSION['formdata']['new_user']['fax'] != '')
     {
-        echo "value='{$_SESSION['formdata']['add_user']['fax']}'";
+        echo "value='{$_SESSION['formdata']['new_user']['fax']}'";
     }
     echo "/></td></tr>\n";
 
     if ($CONFIG['holidays_enabled'])
     {
         echo "<tr><th>{$strHolidayEntitlement}</th><td><input maxlength='3' name='holiday_entitlement' size='3' ";
-        if ($_SESSION['formdata']['add_user']['holiday_entitlement'] != '')
+        if ($_SESSION['formdata']['new_user']['holiday_entitlement'] != '')
         {
-            echo "value='{$_SESSION['formdata']['add_user']['holiday_entitlement']}'";
+            echo "value='{$_SESSION['formdata']['new_user']['holiday_entitlement']}'";
         }
         else
         {
@@ -142,26 +142,26 @@ if (empty($submit))
 
         echo "<tr><th>{$strStartDate} ".help_link('UserStartdate')."</th>";
         echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
-        if ($_SESSION['formdata']['add_user']['startdate'] != '')
-        echo "value='{$_SESSION['formdata']['add_user']['startdate']}'";
+        if ($_SESSION['formdata']['new_user']['startdate'] != '')
+        echo "value='{$_SESSION['formdata']['new_user']['startdate']}'";
         echo "/> ";
         echo date_picker('adduser.startdate');
         echo "</td></tr>\n";
     }
-    plugin_do('add_user_form');
+    plugin_do('new_user_form');
     echo "</table>\n";
-    echo "<p><input name='submit' type='submit' value='{$strAddUser}' /></p>";
+    echo "<p><input name='submit' type='submit' value='{$strNewUser}' /></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
-    clear_form_data('add_user');
+    clear_form_data('new_user');
 }
 else
 {
     // External variables
-    $username = mysql_real_escape_string(strtolower(trim(strip_tags($_REQUEST['username']))));
+    $username = clean_dbstring(strtolower(trim(strip_tags($_REQUEST['username']))));
     $realname = cleanvar($_REQUEST['realname']);
-    $password = mysql_real_escape_string($_REQUEST['password']);
+    $password = clean_dbstring($_REQUEST['password']);
     $groupid = clean_int($_REQUEST['groupid']);
     $roleid = clean_int($_REQUEST['roleid']);
     $jobtitle = cleanvar($_REQUEST['jobtitle']);
@@ -176,58 +176,58 @@ else
     }
     else $startdate = '';
 
-    $_SESSION['formdata']['add_user'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
-    // Add user
+    $_SESSION['formdata']['new_user'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
+
     $errors = 0;
-    // check for blank real name
+
     if ($realname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['realname']= sprintf($strFieldMustNotBeBlank, $strRealName)."</p>\n";
+        $_SESSION['formerrors']['new_user']['realname']= sprintf($strFieldMustNotBeBlank, $strRealName)."</p>\n";
     }
-    // check for blank username
+
     if ($username == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['username']= sprintf($strFieldMustNotBeBlank, $strUsername)."</p>\n";
+        $_SESSION['formerrors']['new_user']['username']= sprintf($strFieldMustNotBeBlank, $strUsername)."</p>\n";
     }
-    // check for blank password
+
     if ($password == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['password']= sprintf($strFieldMustNotBeBlank, $strPassword)."</p>\n";
+        $_SESSION['formerrors']['new_user']['password']= sprintf($strFieldMustNotBeBlank, $strPassword)."</p>\n";
     }
-    // check for blank job title
+
     if ($jobtitle == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['jobtitle']= sprintf($strFieldMustNotBeBlank, $strJobTitle)."</p>\n";
+        $_SESSION['formerrors']['new_user']['jobtitle']= sprintf($strFieldMustNotBeBlank, $strJobTitle)."</p>\n";
     }
-    // check for blank email
+
     if ($email == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['email']= sprintf($strFieldMustNotBeBlank, $strEmail)."</p>\n";
+        $_SESSION['formerrors']['new_user']['email']= sprintf($strFieldMustNotBeBlank, $strEmail)."</p>\n";
     }
-    // Check username is unique
-    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE username='$username'";
+
+    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE username='{$username}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
     list($countexisting) = mysql_fetch_row($result);
     if ($countexisting >= 1)
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['']= "{$strUsernameNotUnique}</p>\n";
+        $_SESSION['formerrors']['new_user'][''] = "{$strUsernameNotUnique}</p>\n";
     }
     // Check email address is unique (discount disabled accounts)
-    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE status > 0 AND email='$email'";
+    $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE status > 0 AND email='{$email}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     list($countexisting) = mysql_fetch_row($result);
     if ($countexisting >= 1)
     {
         $errors++;
-        $_SESSION['formerrors']['add_user']['duplicate_email'] = "{$strEmailMustBeUnique}</p>\n";
+        $_SESSION['formerrors']['new_user']['duplicate_email'] = "{$strEmailMustBeUnique}</p>\n";
     }
 
     // add information if no errors
@@ -237,9 +237,9 @@ else
         $sql = "INSERT INTO `{$dbUsers}` (username, password, realname, roleid,
                 groupid, title, email, phone, mobile, fax, status,
                 holiday_entitlement, user_startdate, lastseen) ";
-        $sql .= "VALUES ('$username', '$password', '$realname', '$roleid',
-                '$groupid', '$jobtitle', '$email', '$phone', '$mobile', '$fax',
-                1, '$holiday_entitlement', '$startdate', NOW())";
+        $sql .= "VALUES ('{$username}', '{$password}', '{$realname}', '{$roleid}',
+                '{$groupid}', '{$jobtitle}', '{$email}', '{$phone}', '{$mobile}', '{$fax}',
+                1, '{$holiday_entitlement}', '{$startdate}', NOW())";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $newuserid = mysql_insert_id();
@@ -256,26 +256,29 @@ else
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         // Create permissions (set to none)
-        $sql = "SELECT * FROM `{$dbPermissions}`";
+        $sql = "SELECT id FROM `{$dbPermissions}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         while ($perm = mysql_fetch_object($result))
         {
             $psql = "INSERT INTO `{$dbUserPermissions}` (userid, permissionid, granted) ";
-            $psql .= "VALUES ('$newuserid', '{$perm->id}', 'false')";
+            $psql .= "VALUES ('{$newuserid}', '{$perm->id}', 'false')";
             mysql_query($psql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
 
-        if (!$result) echo "<p class='error'>{$strAdditionFail}</p>\n";
+        if (!$result)
+        {
+            echo "<p class='error'>{$strAdditionFail}</p>\n";
+        }
         else
         {
             setup_user_triggers($newuserid);
             trigger('TRIGGER_NEW_USER', array('userid' => $newuserid));
             html_redirect("manage_users.php#userid{$newuserid}");
         }
-        clear_form_data('add_user');
-        clear_form_errors('add_user');
+        clear_form_data('new_user');
+        clear_form_errors('new_user');
     }
     else
     {

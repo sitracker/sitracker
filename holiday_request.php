@@ -169,18 +169,18 @@ if (!$sent)
                 echo "{$strSendRequestsTo}: ";
                 echo "<select name='approvaluser'>";
                 echo "<option selected='selected' value='0'></option>\n";
-                while ($users = mysql_fetch_array($result))
+                while ($users = mysql_fetch_object($result))
                 {
                     echo "<option";
-                    if ($users['groupid'] == $groupid) echo " selected='selected'";
-                    echo " value='{$users['id']}'";
-                    echo ">{$users['realname']}</option>\n";
+                    if ($users->groupid == $groupid) echo " selected='selected'";
+                    echo " value='{$users->id}'";
+                    echo ">{$users->realname}</option>\n";
                 }
                 echo "</select>";
                 echo "</p>";
 
                 // Force resend if there are no new additions to be requested
-                if ($waiting == FALSE AND $action!='resend') $action='resend';
+                if ($waiting == FALSE AND $action != 'resend') $action = 'resend';
                 echo "<input type='hidden' name='action' value='{$action}' />";
                 echo "<p align='center'>{$strRequestSendComments}<br />";
                 echo "<textarea name='memo' rows='3' cols='40'></textarea>";
@@ -207,7 +207,7 @@ if (!$sent)
         // Show all holidays where requests have not been sent
 
         $sql = "SELECT * FROM `{$dbHolidays}` WHERE approved = ".HOL_APPROVAL_NONE." AND userid != 0 ";
-        if (!empty($type)) $sql .= "AND type='$type' ";
+        if (!empty($type)) $sql .= "AND type='{$type}' ";
         $sql .= "AND type != ".HOL_PUBLIC.' ';
         if ($mode == 'approval') $sql .= "AND approvedby = 0 ";
         $sql .= "ORDER BY date, length";

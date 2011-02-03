@@ -19,6 +19,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 // Use session language if available, else use default language
 if (!empty($_SESSION['lang'])) $lang = $_SESSION['lang'];
 else $lang = $CONFIG['default_i18n'];
+plugin_do('before_page');
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n";
 echo "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang}\" lang=\"{$lang}\">\n";
@@ -94,10 +95,11 @@ if ($_SESSION['auth'] == TRUE)
     echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
     echo "<link rel='search' type='application/opensearchdescription+xml' title='{$CONFIG['application_shortname']} Search' href='{$CONFIG['application_webpath']}opensearch.php' />\n";
 }
-
+plugin_do('html_head');
 echo "</head>\n";
 echo "<body>\n";
 
+plugin_do('page_start');
 echo "<div id='masthead'>";
 echo "<div id='mastheadcontent'>";
 if ($sit[0] != '')
@@ -304,11 +306,11 @@ if ($sit[0] != '')
     {
         // Check if scheduler is running (bug 108)
         $failure = 0;
-    
+
         $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
         $schedulerresult = mysql_query($schedulersql);
         if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
-    
+
         while ($schedule = mysql_fetch_object($schedulerresult))
         {
             $sqlinterval = ("$schedule->interval");

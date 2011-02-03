@@ -126,22 +126,22 @@ function incident_sla_history($incidentid)
 
 /**
  * @param string $name name of select
- * @param int $id The ID which should be chosen
+ * @param string $tag The tag which should be chosen
  * @param bool $collapse Only show the tag rather than tag + priority
  * @param string $select additional parameter to the select clause e.g. onchange code
  * @return String HTML of the SLA drop down
  */
-function servicelevel_drop_down($name, $id, $collapse = FALSE, $select = '')
+function servicelevel_drop_down($name, $tag, $collapse = FALSE, $select = '')
 {
     global $dbServiceLevels;
 
     if ($collapse)
     {
-        $sql = "SELECT DISTINCT id, tag FROM `{$dbServiceLevels}`";
+        $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
     }
     else
     {
-        $sql  = "SELECT id, priority FROM `{$dbServiceLevels}`";
+        $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}`";
     }
     $result = mysql_query($sql);
 
@@ -151,8 +151,8 @@ function servicelevel_drop_down($name, $id, $collapse = FALSE, $select = '')
     while ($servicelevels = mysql_fetch_object($result))
     {
         $html .= "<option ";
-        $html .= "value='{$servicelevels->id}' ";
-        if ($servicelevels->id == $id)
+        $html .= "value='{$servicelevels->tag}' ";
+        if ($servicelevels->tag == $tag)
         {
             $html .= "selected='selected'";
         }
@@ -221,22 +221,19 @@ function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
 }
 
 
-/* Returns a string representing the name of   */
-/* the given servicelevel. Returns an empty string if the     */
-/* priority does not exist.                                   */
-function servicelevel_name($id)
+/**
+ * Return the name of the SLA, if tag is empty the default SLA is returned else the tag is returned
+ * @param string $tag The tag
+ * @return string Tag Name
+ */
+function get_sla_name($tag)
 {
     global $CONFIG;
+    
+    if ($tag == '') $tag = $CONFIG['default_service_level'];
 
-    $servicelevel = db_read_column('tag', $GLOBALS['dbServiceLevels'], $id);
-
-    if ($servicelevel == '')
-    {
-        $servicelevel = $CONFIG['default_service_level'];
-    }
-    return $servicelevel;
+    return $tag;
 }
-
 
 /**
  * Find whether a given servicelevel is timed
@@ -261,11 +258,6 @@ function servicelevel_timed($sltag)
 
 
 /**
- * @author Ivan Lucas
- * @deprecated
- * @note DEPRECATED service level tags should be used in favour of service level ID's
- * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
- * Find the maximum priority of a service level
  * @author Paul Heaney
  * @param string $slatag The SLA to find the max priority of
  * @return int The maximum priority of an SLA, 0 if invalid SLA
@@ -280,36 +272,6 @@ function servicelevel_maxpriority($slatag)
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($priority) = mysql_fetch_row($result);
     return $priority;
-}
-
-
-/**
- * @author Ivan Lucas
- * @deprecated
- * @note DEPRECATED service level tags should be used in favour of service level ID's
- * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
- */
-function servicelevel_id2tag($id)
-{
-    global $dbServiceLevels;
-    return db_read_column('tag', $dbServiceLevels, $id);
-}
-
-
-/**
- * @author Ivan Lucas
- * @deprecated
- * @note DEPRECATED service level tags should be used in favour of service level ID's
- * @note Temporary solution, eventually we will move away from using servicelevel id's  and just use tags instead
- */
-function servicelevel_tag2id($sltag)
-{
-    $sql = "SELECT id FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$sltag}' AND priority=1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($id) = mysql_fetch_row($result);
-
-    return $id;
 }
 
 
@@ -329,17 +291,15 @@ function calculate_time_of_next_action($days, $hours, $minutes)
 
 
 /**
- * Retrieves the service level ID of a given maintenance contract
- * @author Ivan Lucas
+ * Retrieves the service level tag of a given maintenance contract
+ * @author Paul Heaney
  * @param int $maintid. Contract ID
- * @return. int Service Level ID
- * @deprecated
- * @note Service level ID's are DEPRECATED service level tags should be used in favour of service level ID's
+ * @return. string Service Level Tag
  */
-function maintenance_servicelevel($maintid)
+function maintenance_servicelevel_tag($maintid)
 {
     global $CONFIG, $dbMaintenance;
-    $sql = "SELECT servicelevelid FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
+    $sql = "SELECT servicelevel FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -350,17 +310,15 @@ function maintenance_servicelevel($maintid)
         // service level
         if ($maintid == 0)
         {
-            // Convert the default service level tag to an ide and use that
-            $servicelevelid = servicelevel_tag2id($CONFIG['default_service_level']);
+            $servicelevelid = $CONFIG['default_service_level'];
         }
     }
     else
     {
-        list($servicelevelid) = mysql_fetch_row($result);
+        list($servicelevel) = mysql_fetch_row($result);
     }
-    return $servicelevelid;
+    return $servicelevel;
 }
-
 
 /**
  * Calculate the working time between two timestamps
@@ -627,10 +585,10 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
     $time = 0;
     $timeptr = 0;
     $laststatus = 2; // closed
-    while ($update = mysql_fetch_array($result))
+    while ($update = mysql_fetch_object($result))
     {
-        //  if ($t1<=$update['timestamp'])
-        if ($t1 <= $update['timestamp'])
+        //  if ($t1<=$update->timestamp'])
+        if ($t1 <= $update->timestamp)
         {
             if ($timeptr == 0)
             {
@@ -643,11 +601,11 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
                 }
                 else
                 {
-                    $timeptr = $update['timestamp'];
+                    $timeptr = $update->timestamp;
                 }
             }
 
-            if ($t2 < $update['timestamp'])
+            if ($t2 < $update->timestamp)
             {
                 // If we have reached the very end of the range, increment time to end of range, break
                 if (is_active_status($laststatus, $states))
@@ -658,21 +616,21 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
             }
 
             // if status has changed or this is the first (active update)
-            if (is_active_status($laststatus, $states) != is_active_status($update['currentstatus'], $states))
+            if (is_active_status($laststatus, $states) != is_active_status($update->currentstatus, $states))
             {
                 // If it's active and we've not reached the end of the range, increment time
-                if (is_active_status($laststatus, $states) && ($t2 >= $update['timestamp']))
+                if (is_active_status($laststatus, $states) && ($t2 >= $update->timestamp))
                 {
-                    $time += calculate_working_time($timeptr, $update['timestamp'], $publicholidays);
+                    $time += calculate_working_time($timeptr, $update->timestamp, $publicholidays);
                 }
                 else
                 {
-                    $timeptr = $update['timestamp'];
+                    $timeptr = $update->timestamp;
                 }
                 // if it's not active set the ptr
             }
         }
-        $laststatus = $update['currentstatus'];
+        $laststatus = $update->currentstatus;
     }
     mysql_free_result($result);
 

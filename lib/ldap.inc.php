@@ -567,24 +567,6 @@ function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOn
 }
 
 /**
- * Gets the details of a contact from the database from their email
- * @author Lea Anthony
- * @param string $email. Email
- */
-function getContactDetailsFromDBByEmail($email)
-{
-    global $dbContacts;
-
-    $sql = "SELECT * FROM `{$dbContacts}` WHERE email='$email'";
-
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    return mysql_fetch_array($result);
-
-}
-
-/**
  * Checks that the email address given is a contact that has not yet
  * been imported into the DB, then imports them.
  * @author Lea Anthony
@@ -595,24 +577,7 @@ function ldapImportCustomerFromEmail($email)
 {
     global $CONFIG;
     $toReturn = false;
-    /*
-    global $dbContacts;
 
-    $r = getContactDetailsFromDBByEmail($email);
-
-    if( ! empty($r) )
-    {
-        // This contact already exists
-        return;
-    }
-
-    // Create user
-    $details = ldapGetCustomerDetailsFromEmail(email);
-
-
-    ldapCreateContact($details);
- */
-    
     /*
      * Check if contact exists
      * is contact sit

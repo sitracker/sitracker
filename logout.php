@@ -42,6 +42,6 @@ if (isset($_COOKIE[session_name()]))
 // redirect
 if (!empty($CONFIG['logout_url'])) $url = $CONFIG['logout_url'];
 else $url = $CONFIG['application_webpath']."index.php";
-header ("Location: $url");
+header ("Location: {$url}");
 exit;
 ?>
