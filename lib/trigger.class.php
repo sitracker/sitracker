@@ -12,6 +12,7 @@
 // This lib is currently included at the end of auth.inc.php
 
 //include_once (APPLICATION_LIBPATH . 'incident.inc.php');
+require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require_once (APPLICATION_LIBPATH . 'mime.inc.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
