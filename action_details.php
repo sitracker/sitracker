@@ -275,6 +275,11 @@ else
     echo "<h2>New action</h2>";
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
+    if ($trigger_mode == 'system')
+    {
+	echo "<h3>User</h3>";
+        echo "Which action will the action apply to: 'all' will add an entry for ALL users, 'system' will add an action without a user, useful for e.g. automateid emails to customers.</p>";
+    }
     echo "<h3>Action</h3>";
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
