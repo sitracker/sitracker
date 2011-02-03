@@ -2,7 +2,7 @@
 // htmlheader.inc.php - Header html to be included at the top of pages
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,7 +24,7 @@ echo "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang}\" lang=\"{$lang}\">\n";
 echo "<head>\n";
 echo "<!-- SiT (Support Incident Tracker) - Support call tracking system\n";
-echo "     Copyright (C) 2010 The Support Incident Tracker Project\n";
+echo "     Copyright (C) 2010-2011 The Support Incident Tracker Project\n";
 echo "     Copyright (C) 2000-2009 Salford Software Ltd. and Contributors\n\n";
 echo "     This software may be used and distributed according to the terms\n";
 echo "     of the GNU General Public License, incorporated herein by reference. -->\n";
