@@ -3,7 +3,7 @@
 // TODO description
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -23,12 +23,12 @@ require_once (APPLICATION_LIBPATH.'auth.inc.php');
 
 
 $mode = cleanvar($_REQUEST['mode']);
-$amount = cleanvar($_REQUEST['amount']);
-$contractid = cleanvar($_REQUEST['contractid']);
+$amount = clean_float($_REQUEST['amount']);
+$contractid = clean_int($_REQUEST['contractid']);
 $sourceservice = cleanvar($_REQUEST['sourceservice']);
 $destinationservice = cleanvar($_REQUEST['destinationservice']);
 $reason = cleanvar($_REQUEST['reason']);
-$serviceid = cleanvar($_REQUEST['serviceid']);
+$serviceid = clean_int($_REQUEST['serviceid']);
 if (empty($mode)) $mode = 'showform';
 
 switch ($mode)
@@ -84,7 +84,7 @@ switch ($mode)
                         echo "<input type='hidden' name='editbilling' id='editbilling' value='true' />";
                         echo "<input type='hidden' name='originalcredit' id='originalcredit' value='{$obj->creditamount}' />";
                         echo "<label>";
-                        echo "<input type='radio' name='billtype' value='billperunit' onchange=\"addservice_showbilling('serviceform');\" ";
+                        echo "<input type='radio' name='billtype' value='billperunit' onchange=\"newservice_showbilling('serviceform');\" ";
                         if (!empty($obj->unitrate) AND $obj->unitrate > 0)
                         {
                             echo "checked='checked' ";
@@ -93,7 +93,7 @@ switch ($mode)
                         }
                         echo "/> {$strPerUnit}</label>";
                         echo "<label>";
-                        echo "<input type='radio' name='billtype' value='billperincident' onchange=\"addservice_showbilling('serviceform');\" ";
+                        echo "<input type='radio' name='billtype' value='billperincident' onchange=\"newservice_showbilling('serviceform');\" ";
                         if (!empty($obj->incidentrate) AND $obj->incidentrate > 0)
                         {
                             echo "checked='checked' ";
@@ -172,7 +172,7 @@ switch ($mode)
         }
         else
         {
-            $originalcredit = cleanvar($_REQUEST['originalcredit']);
+            $originalcredit = clean_float($_REQUEST['originalcredit']);
 
             $startdate = strtotime($_REQUEST['startdate']);
             if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
@@ -190,11 +190,11 @@ switch ($mode)
 
             if ($editbilling == "true")
             {
-                $amount =  cleanvar($_POST['amount']);
+                $amount =  clean_float($_POST['amount']);
                 if ($amount == '') $amount = 0;
-                $unitrate =  cleanvar($_POST['unitrate']);
+                $unitrate =  clean_float($_POST['unitrate']);
                 if ($unitrate == '') $unitrate = 0;
-                $incidentrate =  cleanvar($_POST['incidentrate']);
+                $incidentrate =  clean_float($_POST['incidentrate']);
                 if ($incidentrate == '') $incidentrate = 0;
 
                 $billtype = cleanvar($_REQUEST['billtype']);

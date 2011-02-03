@@ -2,7 +2,7 @@
 // help.php - Get context sensitive help
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,7 +19,7 @@ $title = "Help";
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $title = $strHelp;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

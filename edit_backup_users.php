@@ -2,7 +2,7 @@
 // edit_backup_users.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -48,11 +48,11 @@ if (empty($save))
         $user = mysql_real_escape_string($_REQUEST['user']);
     }
 
-    $default = cleanvar($_REQUEST['default']);
+    $default = clean_int($_REQUEST['default']);
     $softlist = $_REQUEST['softlist'];
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>".sprintf($strDefineSubstituteEngineersFor, user_realname($user,TRUE))."</h2>\n";
+    echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user,TRUE))."</h2>\n";
     echo "<form name='def' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<p align='center'>{$strDefaultSubstitute}: ";
@@ -77,7 +77,7 @@ if (empty($save))
             echo "<td><strong>{$software->id}</strong>: {$software->name}</td>";
             if ($software->backupid == 0)
             {
-                $software->backupid=$default;
+                $software->backupid = $default;
             }
 
             echo "<td>".software_backup_dropdown('backup[]', $user, $software->id, $software->backupid)."</td>";
@@ -85,12 +85,12 @@ if (empty($save))
             if ($class == 'shade2') $class = "shade1";
             else $class = "shade2";
             flush();
-            $softarr[]=$software->id;
+            $softarr[] = $software->id;
         }
         $softlist = implode(',',$softarr);
         echo "</table>\n";
-        echo "<input type='hidden' name='user' value='$user' />";
-        echo "<input type='hidden' name='softlist' value='$softlist' />";
+        echo "<input type='hidden' name='user' value='{$user}' />";
+        echo "<input type='hidden' name='softlist' value='{$softlist}' />";
         echo "<input type='hidden' name='save' value='vqvbgf' />";
         echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
         echo "</form>";
@@ -105,13 +105,14 @@ else
 {
     // External variables
     $softlist=explode(',',$_REQUEST['softlist']);
-    $backup=$_REQUEST['backup'];
-    $user=cleanvar($_REQUEST['user']);
+    $backup = clean_int($_REQUEST['backup']);
+    $user = clean_int($_REQUEST['user']);
     foreach ($backup AS $key=>$backupid)
     {
         if ($backupid > 0)
         {
-            $sql = "UPDATE `{$dbUserSoftware}` SET backupid='$backupid' WHERE userid='$user' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
+            $softlist[$key] = clean_int($softlist[$key]);
+            $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
         }
         // echo "{$softlist[$key]} -- $key -- $value<br />";
         //echo "$sql <br />";

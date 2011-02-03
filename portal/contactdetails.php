@@ -2,7 +2,7 @@
 // portal/contact_details.php - Shows contact details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -41,7 +41,7 @@ if ($_SESSION['usertype'] == 'admin')
     }
     else
     {
-        $id = intval($_REQUEST['id']);
+        $id = clean_int($_REQUEST['id']);
     }
 }
 else
@@ -58,7 +58,7 @@ if (!empty($_SESSION['formerrors']['portalcontactdetails']))
 //if new details posted
 if (cleanvar($_REQUEST['action']) == 'update')
 {
-    if ($CONFIG['portal_usernames_can_be_changed'])
+    if ($CONFIG['portal_usernames_can_be_changed'] AND $_SESSION['contact_source'] == 'sit')
     {
         $username = cleanvar($_REQUEST['username']);
         $oldusername = cleanvar($_REQUEST['oldusername']);
@@ -104,10 +104,10 @@ if (cleanvar($_REQUEST['action']) == 'update')
     if ($surname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>".sprintf($strYouMustEnter, $strSurname)."</p>\n";
+        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, "'{$strSurname}'")."</p>\n";
     }
 
-    if ($email == '' OR $email=='none' OR $email=='n/a')
+    if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors++;
         $_SESSION['formerrors']['portalcontactdetails'] .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
@@ -115,7 +115,12 @@ if (cleanvar($_REQUEST['action']) == 'update')
 
     if ($errors == 0)
     {
-        $updatesql = "UPDATE `{$dbContacts}` SET username='$username', forenames='$forenames', surname='$surname', ";
+        $updatesql = "UPDATE `{$dbContacts}` SET ";
+        if ($CONFIG['portal_usernames_can_be_changed'] AND $_SESSION['contact_source'] == 'sit')
+        {
+            $updatesql .= "username='{$username}', ";
+        }
+        $updatesql .= " forenames='$forenames', surname='$surname', ";
         $updatesql .= "department='$department', address1='$address1', address2='$address2', ";
         $updatesql .= "county='$county', country='$country', postcode='$postcode', ";
         $updatesql .= "phone='$phone', mobile='$mobile', fax='$fax', email='$email'";
@@ -141,8 +146,8 @@ if (cleanvar($_REQUEST['action']) == 'update')
 }
 elseif (isset($_POST['add']))
 {
-    $maintid = intval($_POST['maintid']);
-    $contactid = intval($_GET['id']);
+    $maintid = clean_int($_POST['maintid']);
+    $contactid = clean_int($_GET['id']);
 
     if ($maintid == 0 OR $contactid == 0)
     {
@@ -178,15 +183,15 @@ else
     echo "</h2>";
 
 
-    echo "<form action='$_SERVER[PHP_SELF]?action=update' method='post'>";
+    echo "<form action='{$_SERVER[PHP_SELF]}?action=update' method='post'>";
     echo "<table align='center' class='vertical'>";
 
-    if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit' )
+    if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit')
     {
         echo "<tr><th>{$strUsername}</th><td>";
         echo "<input class='required' name='username' value='{$user->username}' />";
-        echo " <span class='required'><span>{$strRequired}</span></td></tr>\n";
-        echo "<input name='oldusername' value='{$user->username}' type='hidden' />";
+        echo " <span class='required'>{$strRequired}</span>\n";
+        echo "<input name='oldusername' value='{$user->username}' type='hidden' /></td></tr>\n";
 
     }
     echo "<tr><th>{$strForenames}</th><td>";
@@ -199,7 +204,6 @@ else
     else
     {
         echo "<input class='required' name='forenames' value='{$user->forenames}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strSurname}</th><td>";
@@ -210,7 +214,7 @@ else
     else
     {
         echo "<input class='required' name='surname' value='{$user->surname}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
+        echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strDepartment}</th><td><input name='department' value='{$user->department}' /></td></tr>\n";
@@ -227,7 +231,6 @@ else
     else
     {
         echo "<input class='required' name='phone' value='{$user->phone}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strMobile}</th><td>";
@@ -237,7 +240,7 @@ else
     }
     else
     {
-        echo "<input name='mobile' value='{$user->mobile}' /></td></tr>\n";
+        echo "<input name='mobile' value='{$user->mobile}' />\n";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strFax}</th><td>";
@@ -249,7 +252,7 @@ else
     {
         echo "<input name='fax' value='{$user->fax}' />";
     }
-
+    echo "</td></tr>";
     echo "<tr><th>{$strEmail}</th><td>";
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_email']))
     {
@@ -258,7 +261,7 @@ else
     else
     {
         echo "<input class='required' name='email' value='{$user->email}' />";
-        echo " <span class='required'><span>{$strRequired}</span>";
+        echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
 
@@ -272,7 +275,7 @@ else
     echo "<input type='hidden' name='id' value='{$id}' />";
     echo "<input type='submit' value='{$strUpdate}' /></p></form>";
 
-    echo "<br />".user_contracts_table($id, 'external');
+    echo "<br />".contracts_for_contacts_table($id, 'external');
 
     if ($_SESSION['usertype'] == 'admin')
     {
@@ -280,7 +283,7 @@ else
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
         echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, TRUE, FALSE, $sit[2])."<br />";
-        echo "<input type='submit' name='add' value='{$strAdd}' /></form></p>";
+        echo "<input type='submit' name='add' value='{$strNew}' /></p></form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

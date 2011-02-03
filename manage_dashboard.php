@@ -2,7 +2,7 @@
 // manager_dashboard.php - Page to install a new dashboard component
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -71,11 +71,8 @@ switch ($_REQUEST['action'])
         {
             if (beginsWith($file, "dashboard_") && endsWith($file, ".php"))
             {
-                //echo "file name ".$file."<br />";
                 if (empty($dashboard[substr($file, 10, strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
                 {
-                    //echo "file name ".$file." - ".substr($file, 10, strlen($file)-14)."<br />";
-                    //$html .= "echo "<option value='{$row->id}'>$row->realname</option>\n";";
                     $html .= "<option value='".substr($file, 10, strlen($file)-14)."'>".substr($file, 10, strlen($file)-14)." ({$file})</option>";
                 }
             }
@@ -105,7 +102,7 @@ switch ($_REQUEST['action'])
 
         break;
     case 'installdashboard':
-        $dashboardcomponents = $_REQUEST['comp'];
+        $dashboardcomponents = cleanvar($_REQUEST['comp']);
         if (is_array($dashboardcomponents))
         {
             $count = count($dashboardcomponents);
@@ -136,7 +133,7 @@ switch ($_REQUEST['action'])
                         // Dashboard component install failed, roll back
                         $dsql = "DELETE FROM `{$dbDashboard}` WHERE `name` = '{$comp}'";
                         mysql_query($dsql);
-                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                     }
                 }
                 html_redirect("manage_dashboard.php", $installed);
@@ -145,7 +142,7 @@ switch ($_REQUEST['action'])
         break;
 
     case 'upgradecomponent':
-        $id = $_REQUEST['id'];
+        $id = clean_int($_REQUEST['id']);
         $sql = "SELECT * FROM `{$dbDashboard}` WHERE id = {$id}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -178,7 +175,7 @@ switch ($_REQUEST['action'])
 
                     $sql = "UPDATE `{$dbDashboard}` SET version = '{$version}' WHERE id = {$obj->id}";
                     mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                     html_redirect($_SERVER['PHP_SELF']);
                 }
                 else
@@ -199,8 +196,8 @@ switch ($_REQUEST['action'])
         break;
 
     case 'enable':
-        $id = $_REQUEST['id'];
-        $enable = $_REQUEST['enable'];
+        $id = clean_int($_REQUEST['id']);
+        $enable = clean_dbstring($_REQUEST['enable']);
         $sql = "UPDATE `{$dbDashboard}` SET enabled = '{$enable}' WHERE id = '{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);

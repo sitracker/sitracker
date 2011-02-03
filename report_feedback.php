@@ -2,7 +2,7 @@
 // new_feedback.php - Feedback report menu
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,8 +25,8 @@ $type = cleanvar($_REQUEST['type']);
 $dates = cleanvar($_REQUEST['dates']);
 $startdate = strtotime(cleanvar($_REQUEST['startdate']));
 $enddate = strtotime(cleanvar($_REQUEST['enddate']));
+$formid = clean_int($CONFIG['feedback_form']);
 
-$formid = $CONFIG['feedback_form'];
 $title = $strFeedbackReport;
 
 
@@ -34,7 +34,7 @@ $title = $strFeedbackReport;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>{$strFeedbackReport}</h2>";
+echo "<h2>".icon('reports', 32)." {$strFeedbackReport}</h2>";
 
 function feedback_between_dates()
 {

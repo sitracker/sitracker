@@ -2,7 +2,7 @@
 // holidays.php -
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -23,7 +23,7 @@ $approver = user_permission($sit[2], 50); // Approve holidays
 
 if (!empty($_REQUEST['user']))
 {
-    $user = cleanvar($_REQUEST['user']);
+    $user = clean_int($_REQUEST['user']);
 }
 else
 {
@@ -123,7 +123,7 @@ if ($numwaiting > 0)
             echo "<td>";
             if ($dates->length == 'pm' OR $dates->length == 'day')
             {
-                echo "<a href='holiday_add.php?type={$dates->type}&amp;user=$user";
+                echo "<a href='holiday_new.php?type={$dates->type}&amp;user=$user";
                 echo "&amp;year=".date('Y',$dates->date)."&amp;month=";
                 echo date('m',$dates->date)."&amp;day=";
                 echo date('d',$dates->date)."&amp;length=am' ";
@@ -133,7 +133,7 @@ if ($numwaiting > 0)
 
             if ($dates->length == 'am' OR $dates->length == 'day')
             {
-                echo "<a href='holiday_add.php?type={$dates->type}&amp;user=$user";
+                echo "<a href='holiday_new.php?type={$dates->type}&amp;user=$user";
                 echo "&amp;year=".date('Y',$dates->date)."&amp;month=";
                 echo date('m',$dates->date)."&amp;day=";
                 echo date('d',$dates->date)."&amp;length=pm' ";
@@ -143,7 +143,7 @@ if ($numwaiting > 0)
 
             if ($dates->length == 'am' OR $dates->length == 'pm')
             {
-                echo "<a href='holiday_add.php?type={$dates->type}&amp;user=$user";
+                echo "<a href='holiday_new.php?type={$dates->type}&amp;user=$user";
                 echo "&amp;year=".date('Y',$dates->date)."&amp;month=";
                 echo date('m',$dates->date)."&amp;day=";
                 echo date('d',$dates->date)."&amp;length=day' ";
@@ -153,7 +153,7 @@ if ($numwaiting > 0)
 
             if ($sit[2] == $user)
             {
-                echo "<a href='holiday_add.php?year=".date('Y',$dates->date);
+                echo "<a href='holiday_new.php?year=".date('Y',$dates->date);
                 echo "&amp;month=".date('m',$dates->date)."&amp;day=";
                 echo date('d',$dates->date)."&amp;user={$sit[2]}&amp;type=";
                 echo "{$dates->type}&amp;length=0&amp;return=holidays' ";
@@ -209,7 +209,7 @@ foreach ($holidaytype AS $htypeid => $htype)
             if ($dates->approved == HOL_APPROVAL_GRANTED AND $dates->date >= $today)
             {
                 echo "<td>";
-                echo "<a href='holiday_add.php?year=".date('Y',$dates->date);
+                echo "<a href='holiday_new.php?year=".date('Y',$dates->date);
                 echo "&amp;month=".date('m',$dates->date)."&amp;day=";
                 echo date('d',$dates->date)."&amp;user={$sit[2]}&amp;type=";
                 echo "{$dates->type}&amp;length=0&amp;return=holidays' ";

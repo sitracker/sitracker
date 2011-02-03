@@ -2,7 +2,7 @@
 // kb.php - Browse knowledge base articles
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -42,7 +42,7 @@ echo "</td></tr>";
 echo "<tr><td valign='middle'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?mode=RECENT'>{$strRecent}</a> | ";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
-echo "<a href='kb_article.php'>{$strAdd}</a>";
+echo "<a href='kb_article.php'>{$strNew}</a>";
 echo "</tr>";
 echo "</table>";
 echo "</form>";
@@ -94,9 +94,9 @@ if (!empty($search_string))
         $sql .= "title LIKE '%{$search_string}%' OR keywords LIKE '%{$search_string}%' ";
     }
 }
-if (strtolower($mode)=='recent') $sql .= "ORDER BY docid DESC LIMIT 20";
+if (strtolower($mode) == 'recent') $sql .= "ORDER BY docid DESC LIMIT 20";
 
-if (strtolower($mode)=='today') $sql .= " WHERE published > '".date('Y-m-d')."' ORDER BY published DESC";
+if (strtolower($mode) == 'today') $sql .= " WHERE published > '".date('Y-m-d')."' ORDER BY published DESC";
 
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -107,10 +107,10 @@ if (mysql_num_rows($result) >= 1)
     echo "<table align='center' width='98%'>";
     echo "<tr>";
     echo colheader('id',$strID, FALSE);
-    echo colheader('title', $strTitle,FALSE);
-    echo colheader('date', $strDate,FALSE);
-    echo colheader('author', $strAuthor,FALSE);
-    echo colheader('keywords',$strKeywords,FALSE);
+    echo colheader('title', $strTitle, FALSE);
+    echo colheader('date', $strDate, FALSE);
+    echo colheader('author', $strAuthor, FALSE);
+    echo colheader('keywords',$strKeywords, FALSE);
     echo "</tr>\n";
     $shade = 'shade1';
     while ($kbarticle = mysql_fetch_object($result))
@@ -166,7 +166,7 @@ else
 }
 
 // echo "<!---SQL === $sql --->";
-echo "<p align='center'><a href='kb_article.php'>{$strAddNew}</a></p>";
+echo "<p align='center'><a href='kb_article.php'>{$strNew}</a></p>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

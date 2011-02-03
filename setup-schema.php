@@ -2,7 +2,7 @@
 // setup-schema.php - Defines database schema for use in setup.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
 -- NOTE system must be the first table created.
 
 CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
-  `id` int(11) NOT NULL,
+  `tag` varchar(32) NOT NULL,
   `hour` smallint(6) NOT NULL,
   `mon` float NOT NULL,
   `tue` float NOT NULL,
@@ -77,47 +77,47 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
   `sat` float NOT NULL,
   `sun` float NOT NULL,
   `holiday` float NOT NULL,
-  PRIMARY KEY  (`id`,`hour`)
+  PRIMARY KEY  (`tag`,`hour`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbBillingMatrix}` (`id`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
-(1, 0, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 1, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 2, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 6, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 3, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 4, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 5, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 7, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 8, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 9, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 10, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 11, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 12, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 13, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 14, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 15, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 16, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 17, 1, 1, 1, 1, 1, 1.5, 2, 2),
-(1, 18, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 19, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 20, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 21, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
-(1, 22, 2, 2, 2, 2, 2, 2, 2, 2),
-(1, 23, 2, 2, 2, 2, 2, 2, 2, 2);
+INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
+('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 6, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 3, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 4, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 5, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 7, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 8, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 9, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 10, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 11, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 12, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 13, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 14, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 15, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 16, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 17, 1, 1, 1, 1, 1, 1.5, 2, 2),
+('Default', 18, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 19, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 20, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 21, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2),
+('Default', 22, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 23, 2, 2, 2, 2, 2, 2, 2, 2);
 
 
 CREATE TABLE `{$dbBillingPeriods}` (
-`servicelevelid` INT( 5 ) NOT NULL ,
 `engineerperiod` INT NOT NULL COMMENT 'In minutes',
 `customerperiod` INT NOT NULL COMMENT 'In minutes',
 `priority` INT( 4 ) NOT NULL,
 `tag` VARCHAR( 10 ) NOT NULL,
+`created` DATETIME NULL,
 `createdby` smallint(6) NULL ,
 `modified` DATETIME NULL ,
 `modifiedby` smallint(6) NULL ,
 `limit` float NOT NULL default 0,
-PRIMARY KEY ( `servicelevelid`,`priority` )
+PRIMARY KEY ( `tag`,`priority` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -199,7 +199,12 @@ CREATE TABLE `{$dbDashboard}` (
 INSERT INTO `{$dbDashboard}` (`id`, `name`, `enabled`) VALUES (1, 'random_tip', 'true'),
 (2, 'statistics', 'true'),
 (3, 'tasks', 'true'),
-(4, 'user_incidents', 'true');
+(4, 'user_incidents', 'true'),
+(5, 'incoming', 'true'),
+(6, 'rss', 'true'),
+(7, 'watch_incidents', 'true'),
+(8, 'holidays', 'true'),
+(9, 'tags', 'true');
 
 
 CREATE TABLE `{$dbDrafts}` (
@@ -217,6 +222,7 @@ CREATE TABLE `{$dbDrafts}` (
 CREATE TABLE `{$dbEmailSig}` (
   `id` int(11) NOT NULL auto_increment,
   `signature` text NOT NULL,
+  `created` DATETIME NULL,
   `createdby` INT NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` INT NULL ,
@@ -298,6 +304,7 @@ CREATE TABLE `{$dbFeedbackForms}` (
   `thanks` text NOT NULL,
   `description` text NOT NULL,
   `multi` enum('yes','no') NOT NULL default 'no',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -316,6 +323,7 @@ CREATE TABLE `{$dbFeedbackQuestions}` (
   `type` varchar(255) NOT NULL default 'text',
   `required` enum('true','false') NOT NULL default 'false',
   `options` text NOT NULL,
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -370,6 +378,7 @@ CREATE TABLE `{$dbFeedbackResults}` (
   `questionid` int(5) NOT NULL default '0',
   `result` varchar(255) NOT NULL default '',
   `resulttext` text,
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -395,6 +404,7 @@ CREATE TABLE `{$dbFiles}` (
   `expiry` DATETIME NULL,
   `fileversion` varchar(50) NULL default '',
   `published` enum('yes','no') NOT NULL default 'no',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -411,6 +421,7 @@ CREATE TABLE `{$dbGroups}` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `imageurl` varchar(255) NOT NULL default '',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -449,7 +460,8 @@ CREATE TABLE `{$dbIncidentProductInfo}` (
   `incidentid` int(11) default NULL,
   `productinfoid` int(11) default NULL,
   `information` text,
-   `createdby` smallint(6) NULL ,
+  `created` DATETIME NULL,
+  `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
   PRIMARY KEY  (`id`)
@@ -468,7 +480,7 @@ CREATE TABLE `{$dbIncidents}` (
   `towner` smallint(6) NOT NULL default '0',
   `contact` int(11) default '0',
   `priority` tinyint(4) default NULL,
-  `servicelevel` varchar(10) default NULL,
+  `servicelevel` varchar(32) default NULL,
   `status` tinyint(4) default NULL,
   `type` enum('Support','Sales','Other','Free') default 'Support',
   `maintenanceid` int(11) NOT NULL default '0',
@@ -485,6 +497,7 @@ CREATE TABLE `{$dbIncidents}` (
   `slanotice` tinyint(1) NOT NULL default '0',
   `locked` tinyint(4) NOT NULL default '0',
   `locktime` int(11) NOT NULL default '0',
+  `created` DATETIME NULL,
   `createdby` smallint(6) NULL ,
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
@@ -667,7 +680,7 @@ CREATE TABLE `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevelid` int(11) NOT NULL default '1',
+  `servicelevel` varchar(32) NOT NULL default '',
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -726,7 +739,7 @@ INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `link
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_LANGUAGE_DIFFERS', 3, 'strNoticeLanguageDiffersDesc', 'strNoticeLanguageDiffers', 'strKeepCurrentLanguage', '{applicationurl}user_profile_edit.php?mode=savesessionlang', 'session', '{currentlang}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_CONTACT', 3, 'strNoticeNewContactDesc', 'strNoticeNewContact', 'strViewContact', '{applicationurl}contact_details.php?id={contactid}', 'sticky','{contactid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_REVIEW_DUE', 3, 'strNoticeIncidentReviewDueDesc', 'strNoticeIncidentReviewDue', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_KB_CREATED', 3, 'strNoticeKBCreatedDesc', 'strNoticeKBCreated', 'strViewArticle', '{applicationurl}kbarticle?id={kbid}', 'sticky', '{kbid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_KB_CREATED', 3, 'strNoticeKBCreatedDesc', 'strNoticeKBCreated', 'strViewArticle', '{applicationurl}kb_view_article.php?id={kbid}', 'sticky', '{kbid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_HELD_EMAIL', 3, 'strNoticeNewHeldEmailDesc', 'strNoticeNewHeldEmail', 'strViewHoldingQueue', '{applicationurl}holding_queue.php', 'sticky', '{holdingemailid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_MINS_HELD_EMAIL', 3, 'strNoticeMinsHeldEmailDesc', 'strNoticeMinsHeldEmail', 'strViewHoldingQueue', '{applicationurl}holding_queue.php', 'sticky', '{holdingemailid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_SIT_UPGRADED', 3, 'strNoticeSitUpgradedDesc', 'strNoticeSitUpgraded', 'strWhatsNew', '{applicationurl}releasenotes.php?v={applicationversion}', 'sticky', '{applicationversion}');
@@ -748,86 +761,83 @@ CREATE TABLE IF NOT EXISTS `{$dbPermissions}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-INSERT INTO `{$dbPermissions}` VALUES(1, 2, 'Add new contacts');
-INSERT INTO `{$dbPermissions}` VALUES(2, 2, 'Add new sites');
-INSERT INTO `{$dbPermissions}` VALUES(3, 2, 'Edit existing site details');
-INSERT INTO `{$dbPermissions}` VALUES(4, 7, 'Edit your profile');
-INSERT INTO `{$dbPermissions}` VALUES(5, 1, 'Add Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(6, 1, 'View Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(7, 1, 'Edit Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(8, 1, 'Update Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(9, 7, 'Edit User Permissions');
-INSERT INTO `{$dbPermissions}` VALUES(10, 2, 'Edit contacts');
-INSERT INTO `{$dbPermissions}` VALUES(11, 2, 'View Sites');
-INSERT INTO `{$dbPermissions}` VALUES(12, 2, 'View Contacts');
-INSERT INTO `{$dbPermissions}` VALUES(13, 1, 'Reassign Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(14, 11, 'View Users');
-INSERT INTO `{$dbPermissions}` VALUES(15, 3, 'Add Supported Products');
-INSERT INTO `{$dbPermissions}` VALUES(16, 7, 'Add Templates');
-INSERT INTO `{$dbPermissions}` VALUES(17, 7, 'Edit Templates');
-INSERT INTO `{$dbPermissions}` VALUES(18, 1, 'Close Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(19, 3, 'View Maintenance Contracts');
-INSERT INTO `{$dbPermissions}` VALUES(20, 7, 'Add Users');
-INSERT INTO `{$dbPermissions}` VALUES(21, 3, 'Edit Maintenance Contracts');
-INSERT INTO `{$dbPermissions}` VALUES(22, 7, 'Administrate');
-INSERT INTO `{$dbPermissions}` VALUES(23, 7, 'Edit User');
-INSERT INTO `{$dbPermissions}` VALUES(24, 3, 'Add Product');
-INSERT INTO `{$dbPermissions}` VALUES(25, 3, 'Add Product Information');
-INSERT INTO `{$dbPermissions}` VALUES(26, 11, 'Get Help');
-INSERT INTO `{$dbPermissions}` VALUES(27, 10, 'View Your Calendar');
-INSERT INTO `{$dbPermissions}` VALUES(28, 3, 'View Products and Software');
-INSERT INTO `{$dbPermissions}` VALUES(29, 3, 'Edit Products');
-INSERT INTO `{$dbPermissions}` VALUES(30, 3, 'View Supported Products');
-INSERT INTO `{$dbPermissions}` VALUES(32, 3, 'Edit Supported Products');
-INSERT INTO `{$dbPermissions}` VALUES(33, 11, 'Send Emails');
-INSERT INTO `{$dbPermissions}` VALUES(34, 1, 'Reopen Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(35, 11, 'Set your status');
-INSERT INTO `{$dbPermissions}` VALUES(36, 2, 'Set contact flags');
-INSERT INTO `{$dbPermissions}` VALUES(37, 9, 'Run Reports');
-INSERT INTO `{$dbPermissions}` VALUES(38, 1, 'View Sales Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(39, 3, 'Add Maintenance Contract');
-INSERT INTO `{$dbPermissions}` VALUES(40, 1, 'Reassign Incident when user not accepting');
-INSERT INTO `{$dbPermissions}` VALUES(41, 11, 'View Status');
-INSERT INTO `{$dbPermissions}` VALUES(42, 1, 'Review/Delete Incident updates');
-INSERT INTO `{$dbPermissions}` VALUES(43, 7, 'Edit Global Signature');
-INSERT INTO `{$dbPermissions}` VALUES(44, 11, 'Publish files to FTP site');
-INSERT INTO `{$dbPermissions}` VALUES(45, 11, 'View Mailing List Subscriptions');
-INSERT INTO `{$dbPermissions}` VALUES(46, 11, 'Edit Mailing List Subscriptions');
-INSERT INTO `{$dbPermissions}` VALUES(47, 11, 'Administrate Mailing Lists');
-INSERT INTO `{$dbPermissions}` VALUES(48, 7, 'Add Feedback Forms');
-INSERT INTO `{$dbPermissions}` VALUES(49, 7, 'Edit Feedback Forms');
-INSERT INTO `{$dbPermissions}` VALUES(50, 10, 'Approve Holidays');
-INSERT INTO `{$dbPermissions}` VALUES(51, 1, 'View Feedback');
-INSERT INTO `{$dbPermissions}` VALUES(52, 1, 'View Hidden Updates');
-INSERT INTO `{$dbPermissions}` VALUES(53, 7, 'Edit Service Levels');
-INSERT INTO `{$dbPermissions}` VALUES(54, 5, 'View KB Articles');
-INSERT INTO `{$dbPermissions}` VALUES(55, 2, 'Delete Sites/Contacts');
-INSERT INTO `{$dbPermissions}` VALUES(56, 3, 'Add Software');
-INSERT INTO `{$dbPermissions}` VALUES(57, 7, 'Disable User Accounts');
-INSERT INTO `{$dbPermissions}` VALUES(58, 7, 'Edit your Software Skills');
-INSERT INTO `{$dbPermissions}` VALUES(59, 7, 'Manage users software skills');
-INSERT INTO `{$dbPermissions}` VALUES(60, 11, 'Perform Searches');
-INSERT INTO `{$dbPermissions}` VALUES(61, 1, 'View Incident Details');
-INSERT INTO `{$dbPermissions}` VALUES(62, 1, 'View Incident Attachments');
-INSERT INTO `{$dbPermissions}` VALUES(63, 3, 'Add Reseller');
-INSERT INTO `{$dbPermissions}` VALUES(64, 7, 'Manage Escalation Paths');
-INSERT INTO `{$dbPermissions}` VALUES(65, 3, 'Delete Products');
-INSERT INTO `{$dbPermissions}` VALUES(66, 7, 'Install Dashboard Components');
-INSERT INTO `{$dbPermissions}` VALUES(67, 9, 'Run Management Reports');
-INSERT INTO `{$dbPermissions}` VALUES(68, 10, 'Manage Holidays');
-INSERT INTO `{$dbPermissions}` VALUES(69, 4, 'View your Tasks');
-INSERT INTO `{$dbPermissions}` VALUES(70, 4, 'Create/Edit your Tasks');
-INSERT INTO `{$dbPermissions}` VALUES(71, 7, 'Manage your Triggers');
-INSERT INTO `{$dbPermissions}` VALUES(72, 7, 'Manage System Triggers');
-INSERT INTO `{$dbPermissions}` VALUES(73, 8, 'Approve Billable Incidents');
-INSERT INTO `{$dbPermissions}` VALUES(74, 8, 'Set duration without activity (for billable incidents)');
-INSERT INTO `{$dbPermissions}` VALUES(75, 8, 'Set negative time for duration on incidents (for billable incidents - refunds)');
-INSERT INTO `{$dbPermissions}` VALUES(76, 8, 'View Transactions');
-INSERT INTO `{$dbPermissions}` VALUES(77, 8, 'View Billing Information');
-INSERT INTO `{$dbPermissions}` VALUES(78, 11, 'Post System Notices');
-INSERT INTO `{$dbPermissions}` VALUES(79, 8, 'Edit Service Balances');
-INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'Edit Service Details');
-INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'Adjust durations on activities');
+INSERT INTO `{$dbPermissions}` VALUES(1, 2, 'strAddNewSiteContact');
+INSERT INTO `{$dbPermissions}` VALUES(2, 2, 'strAddNewSites');
+INSERT INTO `{$dbPermissions}` VALUES(3, 2, 'strEditExistingSiteDetails');
+INSERT INTO `{$dbPermissions}` VALUES(4, 7, 'strEditProfile');
+INSERT INTO `{$dbPermissions}` VALUES(5, 1, 'strAddIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(6, 1, 'strViewIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(7, 1, 'strEditIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(8, 1, 'strUpdateIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(9, 7, 'strEditUserPermissions');
+INSERT INTO `{$dbPermissions}` VALUES(10, 2, 'strEditContacts');
+INSERT INTO `{$dbPermissions}` VALUES(11, 2, 'strViewSites');
+INSERT INTO `{$dbPermissions}` VALUES(12, 2, 'strViewContacts');
+INSERT INTO `{$dbPermissions}` VALUES(13, 1, 'strReassignIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(14, 11, 'strViewUsers');
+INSERT INTO `{$dbPermissions}` VALUES(15, 3, 'strAddSupportedProducts');
+INSERT INTO `{$dbPermissions}` VALUES(16, 7, 'strAddTemplates');
+INSERT INTO `{$dbPermissions}` VALUES(17, 7, 'strEditTemplates');
+INSERT INTO `{$dbPermissions}` VALUES(18, 1, 'strCloseIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(19, 3, 'strViewContracts');
+INSERT INTO `{$dbPermissions}` VALUES(20, 7, 'strAddUsers');
+INSERT INTO `{$dbPermissions}` VALUES(21, 3, 'strEditContracts');
+INSERT INTO `{$dbPermissions}` VALUES(22, 7, 'strAdministrate');
+INSERT INTO `{$dbPermissions}` VALUES(23, 7, 'strEditUser');
+INSERT INTO `{$dbPermissions}` VALUES(24, 3, 'strAddProduct');
+INSERT INTO `{$dbPermissions}` VALUES(25, 3, 'strAddProductInformation');
+INSERT INTO `{$dbPermissions}` VALUES(26, 11, 'strGetHelp');
+INSERT INTO `{$dbPermissions}` VALUES(27, 10, 'strViewYourCalendar');
+INSERT INTO `{$dbPermissions}` VALUES(28, 3, 'strViewProductsAndSoftware');
+INSERT INTO `{$dbPermissions}` VALUES(29, 3, 'strEditProducts');
+INSERT INTO `{$dbPermissions}` VALUES(30, 3, 'strViewSupportedProducts');
+INSERT INTO `{$dbPermissions}` VALUES(32, 3, 'strEditSupportedProducts');
+INSERT INTO `{$dbPermissions}` VALUES(33, 11, 'strSendEmails');
+INSERT INTO `{$dbPermissions}` VALUES(34, 1, 'strReopenIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(35, 11, 'strSetYourStatus');
+INSERT INTO `{$dbPermissions}` VALUES(36, 2, 'strSetContactFlags');
+INSERT INTO `{$dbPermissions}` VALUES(37, 9, 'strRunReports');
+INSERT INTO `{$dbPermissions}` VALUES(38, 1, 'strViewSalesIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(39, 3, 'strAddContract');
+INSERT INTO `{$dbPermissions}` VALUES(40, 1, 'strReassignIncidentsWhenUserNotAccepting');
+INSERT INTO `{$dbPermissions}` VALUES(41, 11, 'strViewStatus');
+INSERT INTO `{$dbPermissions}` VALUES(42, 1, 'strReviewDeleteIncidentUpdates');
+INSERT INTO `{$dbPermissions}` VALUES(43, 7, 'strEditGlobalSignature');
+INSERT INTO `{$dbPermissions}` VALUES(44, 11, 'strPublishFielsToFTPSite');
+INSERT INTO `{$dbPermissions}` VALUES(48, 7, 'strAddFeedbackForms');
+INSERT INTO `{$dbPermissions}` VALUES(49, 7, 'strEditFeedbackForms');
+INSERT INTO `{$dbPermissions}` VALUES(50, 10, 'strApproveHolidays');
+INSERT INTO `{$dbPermissions}` VALUES(51, 1, 'strViewFeedback');
+INSERT INTO `{$dbPermissions}` VALUES(52, 1, 'strViewHiddenUpdates');
+INSERT INTO `{$dbPermissions}` VALUES(53, 7, 'strEditServiceLevels');
+INSERT INTO `{$dbPermissions}` VALUES(54, 5, 'strViewKnowledgebaseArticles');
+INSERT INTO `{$dbPermissions}` VALUES(55, 2, 'strDeleteSitesContacts');
+INSERT INTO `{$dbPermissions}` VALUES(56, 3, 'strAddSoftware');
+INSERT INTO `{$dbPermissions}` VALUES(57, 7, 'strDisableUserAccounts');
+INSERT INTO `{$dbPermissions}` VALUES(58, 7, 'strEditYourSkills');
+INSERT INTO `{$dbPermissions}` VALUES(59, 7, 'strManageUsersSkills');
+INSERT INTO `{$dbPermissions}` VALUES(60, 11, 'strPerformSearches');
+INSERT INTO `{$dbPermissions}` VALUES(61, 1, 'strViewIncidentDetails');
+INSERT INTO `{$dbPermissions}` VALUES(62, 1, 'strViewIncidentAttachments');
+INSERT INTO `{$dbPermissions}` VALUES(63, 3, 'strAddReseller');
+INSERT INTO `{$dbPermissions}` VALUES(64, 7, 'strManageEscalationPaths');
+INSERT INTO `{$dbPermissions}` VALUES(65, 3, 'strDeleteProducts');
+INSERT INTO `{$dbPermissions}` VALUES(66, 7, 'strInstallDashboardComponents');
+INSERT INTO `{$dbPermissions}` VALUES(67, 9, 'strRunManagementReports');
+INSERT INTO `{$dbPermissions}` VALUES(68, 10, 'strManageHolidays');
+INSERT INTO `{$dbPermissions}` VALUES(69, 4, 'strViewYourTasks');
+INSERT INTO `{$dbPermissions}` VALUES(70, 4, 'strCreateEditYourTasks');
+INSERT INTO `{$dbPermissions}` VALUES(71, 7, 'strManageYourTriggers');
+INSERT INTO `{$dbPermissions}` VALUES(72, 7, 'strManageSystemTriggers');
+INSERT INTO `{$dbPermissions}` VALUES(73, 8, 'strApproveBillableIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(74, 8, 'strSetDurationWithoutActivity');
+INSERT INTO `{$dbPermissions}` VALUES(75, 8, 'strSetNegativeTimeForDurationOnIncidents');
+INSERT INTO `{$dbPermissions}` VALUES(76, 8, 'strViewTransactions');
+INSERT INTO `{$dbPermissions}` VALUES(77, 8, 'strViewBillingInformation');
+INSERT INTO `{$dbPermissions}` VALUES(78, 11, 'strPostSystemNotices');
+INSERT INTO `{$dbPermissions}` VALUES(79, 8, 'strEditServiceBalances');
+INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'strEditServiceDetails');
+INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'strAdjustActivityDuration');
 
 
 CREATE TABLE `{$dbPermissionCategories}` (
@@ -1145,7 +1155,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `unitrate` float NOT NULL default '0',
   `incidentrate` float NOT NULL default '0',
   `dailyrate` float NOT NULL default '0',
-  `billingmatrix` int(11) NOT NULL default '1',
+  `billingmatrix` varchar(32) NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
   `cust_ref_date` DATE NULL,
@@ -1157,8 +1167,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
 
 
 CREATE TABLE `{$dbServiceLevels}` (
-  `id` int(5) NOT NULL default '0',
-  `tag` varchar(10) NOT NULL default '',
+  `tag` varchar(32) NOT NULL default '',
   `priority` int(5) NOT NULL default '0',
   `initial_response_mins` int(11) NOT NULL default '0',
   `prob_determ_mins` int(11) NOT NULL default '0',
@@ -1169,14 +1178,13 @@ CREATE TABLE `{$dbServiceLevels}` (
   `timed` enum('yes','no') NOT NULL default 'no',
   `allow_reopen` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'yes' COMMENT 'Allow incidents to be reopened?',
   PRIMARY KEY  (`tag`,`priority`),
-  KEY `id` (`id`),
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES (0, 'standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
 
 
 CREATE TABLE `{$dbSetTags}` (
@@ -1572,12 +1580,116 @@ INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example pr
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevelid, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no',0,0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no','standard',0);
 
 ";
 
 // Upgrading from versions prior to 3.90 won't be possible via setup.php
-$upgrade_schema[390] = "";
+$upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;
+ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
+UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
+UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
+
+
+UPDATE `{$dbPermissions}` SET name = 'strAddNewSiteContact' WHERE id = 1;
+UPDATE `{$dbPermissions}` SET name = 'strAddNewSites' WHERE id = 2;
+UPDATE `{$dbPermissions}` SET name = 'strEditExistingSiteDetails' WHERE id = 3;
+UPDATE `{$dbPermissions}` SET name = 'strEditProfile' WHERE id = 4;
+UPDATE `{$dbPermissions}` SET name = 'strAddIncidents' WHERE id = 5;
+UPDATE `{$dbPermissions}` SET name = 'strViewIncidents' WHERE id = 6;
+UPDATE `{$dbPermissions}` SET name = 'strEditIncidents' WHERE id = 7;
+UPDATE `{$dbPermissions}` SET name = 'strUpdateIncidents' WHERE id = 8;
+UPDATE `{$dbPermissions}` SET name = 'strEditUserPermissions' WHERE id = 9;
+UPDATE `{$dbPermissions}` SET name = 'strEditContacts' WHERE id = 10;
+UPDATE `{$dbPermissions}` SET name = 'strViewSites' WHERE id = 11;
+UPDATE `{$dbPermissions}` SET name = 'strViewContacts' WHERE id = 12;
+UPDATE `{$dbPermissions}` SET name = 'strReassignIncidents' WHERE id = 13;
+UPDATE `{$dbPermissions}` SET name = 'strViewUsers' WHERE id = 14;
+UPDATE `{$dbPermissions}` SET name = 'strAddSupportedProducts' WHERE id = 15;
+UPDATE `{$dbPermissions}` SET name = 'strAddTemplates' WHERE id = 16;
+UPDATE `{$dbPermissions}` SET name = 'strEditTemplates' WHERE id = 17;
+UPDATE `{$dbPermissions}` SET name = 'strCloseIncidents' WHERE id = 18;
+UPDATE `{$dbPermissions}` SET name = 'strViewContracts' WHERE id = 19;
+UPDATE `{$dbPermissions}` SET name = 'strAddUsers' WHERE id = 20;
+UPDATE `{$dbPermissions}` SET name = 'strEditContracts' WHERE id = 21;
+UPDATE `{$dbPermissions}` SET name = 'strAdministrate' WHERE id = 22;
+UPDATE `{$dbPermissions}` SET name = 'strEditUser' WHERE id = 23;
+UPDATE `{$dbPermissions}` SET name = 'strAddProduct' WHERE id = 24;
+UPDATE `{$dbPermissions}` SET name = 'strAddProductInformation' WHERE id = 25;
+UPDATE `{$dbPermissions}` SET name = 'strGetHelp' WHERE id = 26;
+UPDATE `{$dbPermissions}` SET name = 'strViewYourCalendar' WHERE id = 27;
+UPDATE `{$dbPermissions}` SET name = 'strViewProductsAndSoftware' WHERE id = 28;
+UPDATE `{$dbPermissions}` SET name = 'strEditProducts' WHERE id = 29;
+UPDATE `{$dbPermissions}` SET name = 'strViewSupportedProducts' WHERE id = 30;
+-- UPDATE `{$dbPermissions}` SET name = '' WHERE id = 31;   -- There is no 31
+UPDATE `{$dbPermissions}` SET name = 'strEditSupportedProducts' WHERE id = 32;
+UPDATE `{$dbPermissions}` SET name = 'strSendEmails' WHERE id = 33;
+UPDATE `{$dbPermissions}` SET name = 'strReopenIncidents' WHERE id = 34;
+UPDATE `{$dbPermissions}` SET name = 'strSetYourStatus' WHERE id = 35;
+UPDATE `{$dbPermissions}` SET name = 'strSetContactFlags' WHERE id = 36;
+UPDATE `{$dbPermissions}` SET name = 'strRunReports' WHERE id = 37;
+UPDATE `{$dbPermissions}` SET name = 'strViewSalesIncidents' WHERE id = 38;
+UPDATE `{$dbPermissions}` SET name = 'strAddContract' WHERE id = 39;
+UPDATE `{$dbPermissions}` SET name = 'strReassignIncidentsWhenUserNotAccepting' WHERE id = 40;
+UPDATE `{$dbPermissions}` SET name = 'strViewStatus' WHERE id = 41;
+UPDATE `{$dbPermissions}` SET name = 'strReviewDeleteIncidentUpdates' WHERE id = 42;
+UPDATE `{$dbPermissions}` SET name = 'strEditGlobalSignature' WHERE id = 43;
+UPDATE `{$dbPermissions}` SET name = 'strPublishFielsToFTPSite' WHERE id = 44;
+UPDATE `{$dbPermissions}` SET name = 'strAddFeedbackForms' WHERE id = 48;
+UPDATE `{$dbPermissions}` SET name = 'strEditFeedbackForms' WHERE id = 49;
+UPDATE `{$dbPermissions}` SET name = 'strApproveHolidays' WHERE id = 50;
+UPDATE `{$dbPermissions}` SET name = 'strViewFeedback' WHERE id = 51;
+UPDATE `{$dbPermissions}` SET name = 'strViewHiddenUpdates' WHERE id = 52;
+UPDATE `{$dbPermissions}` SET name = 'strEditServiceLevels' WHERE id = 53;
+UPDATE `{$dbPermissions}` SET name = 'strViewKnowledgebaseArticles' WHERE id = 54;
+UPDATE `{$dbPermissions}` SET name = 'strDeleteSitesContacts' WHERE id = 55;
+UPDATE `{$dbPermissions}` SET name = 'strAddSoftware' WHERE id = 56;
+UPDATE `{$dbPermissions}` SET name = 'strDisableUserAccounts' WHERE id = 57;
+UPDATE `{$dbPermissions}` SET name = 'strEditYourSkills' WHERE id = 58;
+UPDATE `{$dbPermissions}` SET name = 'strManageUsersSkills' WHERE id = 59;
+UPDATE `{$dbPermissions}` SET name = 'strPerformSearches' WHERE id = 60;
+UPDATE `{$dbPermissions}` SET name = 'strViewIncidentDetails' WHERE id = 61;
+UPDATE `{$dbPermissions}` SET name = 'strViewIncidentAttachments' WHERE id = 62;
+UPDATE `{$dbPermissions}` SET name = 'strAddReseller' WHERE id = 63;
+UPDATE `{$dbPermissions}` SET name = 'strManageEscalationPaths' WHERE id = 64;
+UPDATE `{$dbPermissions}` SET name = 'strDeleteProducts' WHERE id = 65;
+UPDATE `{$dbPermissions}` SET name = 'strInstallDashboardComponents' WHERE id = 66;
+UPDATE `{$dbPermissions}` SET name = 'strRunManagementReports' WHERE id = 67;
+UPDATE `{$dbPermissions}` SET name = 'strManageHolidays' WHERE id = 68;
+UPDATE `{$dbPermissions}` SET name = 'strViewYourTasks' WHERE id = 69;
+UPDATE `{$dbPermissions}` SET name = 'strCreateEditYourTasks' WHERE id = 70;
+UPDATE `{$dbPermissions}` SET name = 'strManageYourTriggers' WHERE id = 71;
+UPDATE `{$dbPermissions}` SET name = 'strManageSystemTriggers' WHERE id = 72;
+UPDATE `{$dbPermissions}` SET name = 'strApproveBillableIncidents' WHERE id = 73;
+UPDATE `{$dbPermissions}` SET name = 'strSetDurationWithoutActivity' WHERE id = 74;
+UPDATE `{$dbPermissions}` SET name = 'strSetNegativeTimeForDurationOnIncidents' WHERE id = 75;
+UPDATE `{$dbPermissions}` SET name = 'strViewTransactions' WHERE id = 76;
+UPDATE `{$dbPermissions}` SET name = 'strViewBillingInformation' WHERE id = 77;
+UPDATE `{$dbPermissions}` SET name = 'strPostSystemNotices' WHERE id = 78;
+UPDATE `{$dbPermissions}` SET name = 'strEditServiceBalances' WHERE id = 79;
+UPDATE `{$dbPermissions}` SET name = 'strEditServiceDetails' WHERE id = 80;
+UPDATE `{$dbPermissions}` SET name = 'strAdjustActivityDuration' WHERE id = 81;
+
+DELETE FROM `{$dbPermissions}` WHERE id IN (45,46,47);
+DELETE FROM `{$dbRolePermissions}` WHERE permissionid IN (45,46,47);
+DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
+
+ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
+UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM servicelevels WHERE id = servicelevelid);
+ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
+
+ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` );
+
+ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
+
+ALTER TABLE `{$dbServiceLevels}` DROP `id`;
+
+ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
+ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+
+
+";
 
 // ********************************************************************
 

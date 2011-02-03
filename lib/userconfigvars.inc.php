@@ -3,13 +3,15 @@
 //                      and functions to manage them
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
+
+// FIXME i18n all strings on page
 
 // Prevent script from being run directly (ie. it must always be included
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
@@ -38,7 +40,6 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
 
-
 // i18n keys for categories
 $CATI18N['themeprefs'] = $strTheme;
 $CATI18N['displayprefs'] = $strDisplay;
@@ -54,9 +55,9 @@ $CATI18N['localeprefs'] = $strLocale;
 //      options - A pipe seperated list of optios for a 'select' type
 
 
-$CFGVAR['iconset']['title'] = 'Icon set'; // FIXME i18n
+$CFGVAR['iconset']['title'] = $strIconSet;
 $CFGVAR['iconset']['type'] = 'select';
-$CFGVAR['iconset']['options'] = 'sit|oxygen|crystalclear';
+$CFGVAR['iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 // TODO our included 'kdeclassic' icon theme doesn't appear to be in the 'sit' filename format
 
 $CFGVAR['language']['title'] = $strLanguage;
@@ -75,7 +76,7 @@ $CFGVAR['incident_refresh']['title'] = $strIncidentRefresh;
 $CFGVAR['incident_refresh']['type'] = 'number';
 $CFGVAR['incident_refresh']['unit'] = $strSeconds;
 
-$CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details'; // FIXME i18n
+$CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details';
 $CFGVAR['incident_popup_onewindow']['type'] = 'checkbox';
 
 $CFGVAR['theme']['title'] = $strInterfaceStyle;

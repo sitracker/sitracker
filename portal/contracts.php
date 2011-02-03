@@ -2,7 +2,7 @@
 // portal/contracts.inc.php - Shows contact details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,8 +19,8 @@ include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 
-$id = intval($_GET['id']);
-$contactid = intval($_GET['contactid']);
+$id = clean_int($_GET['id']);
+$contactid = clean_int($_GET['contactid']);
 $action = cleanvar($_GET['action']);
 if ($id != 0 AND $contactid != 0 AND $action == 'remove')
 {
@@ -46,7 +46,7 @@ if ($id != 0 AND $contactid != 0 AND $action == 'remove')
 }
 elseif ($id != 0 AND $action == 'add' AND intval($_POST['contactid'] != 0))
 {
-    $contactid = intval($_POST['contactid']);
+    $contactid = clean_int($_POST['contactid']);
     $sql = "INSERT INTO `{$dbSupportContacts}`
             (maintenanceid, contactid)
             VALUES('{$id}', '{$contactid}')";

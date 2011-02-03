@@ -2,7 +2,7 @@
 // view_task.php - Display existing task
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -23,8 +23,8 @@ $title = $strViewTask;
 
 // External variables
 $action = $_REQUEST['action'];
-$id = cleanvar($_REQUEST['incident']);
-$taskid = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['incident']);
+$taskid = clean_int($_REQUEST['id']);
 $mode = cleanvar($_REQUEST['mode']);
 
 if ($mode == 'incident')

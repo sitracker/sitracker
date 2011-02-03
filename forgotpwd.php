@@ -2,7 +2,7 @@
 // forgotpwd.php - Forgotten password page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,10 +24,10 @@ require (APPLICATION_LIBPATH . 'trigger.class.php');
 $title = $strForgottenDetails;
 
 // External variables
-$email = cleanvar($_REQUEST['emailaddress']);
-$username = cleanvar($_REQUEST['username']);
-$userid = cleanvar($_REQUEST['userid']);
-$contactid = cleanvar($_REQUEST['contactid']);
+$email = clean_dbstring($_REQUEST['emailaddress']);
+$username = clean_dbstring($_REQUEST['username']);
+$userid = clean_int($_REQUEST['userid']);
+$contactid = clean_int($_REQUEST['contactid']);
 
 if (!empty($userid))
 {
@@ -43,7 +43,6 @@ switch ($_REQUEST['action'])
 {
     case 'forgotpwd':
     case 'sendpwd':
-    {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         // First look to see if this is a SiT user
         if (empty($email) AND !empty($userid))
@@ -117,10 +116,8 @@ switch ($_REQUEST['action'])
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
-    }
 
     case 'confirmreset':
-    {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if ($mode == 'user')
         {
@@ -177,7 +174,6 @@ switch ($_REQUEST['action'])
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
-    }
 
     case 'resetpasswordform':
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -197,7 +193,7 @@ switch ($_REQUEST['action'])
         {
             $userdetails = mysql_fetch_object($userresult);
             $hash = md5($userdetails->username.'.'.$userdetails->password);
-            if ($hash == $userhash AND $username==$userdetails->username)
+            if ($hash == $userhash AND $username == $userdetails->username)
             {
                 $newhash = md5($userdetails->username.'.ok.'.$userdetails->password);
                 echo "<h2>{$strSetPassword}</h2>";

@@ -2,7 +2,7 @@
 // ldapv2.inc.php - LDAP function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -193,6 +193,7 @@ function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $pas
     	$ldap_url = "ldaps://{$host}:{$port}";
     }
 
+    debug_log ("LDAP TYPE: {$CONFIG['ldap_type']}", TRUE);
     debug_log ("LDAP URL: {$ldap_url}", TRUE);
     $ldap_conn = @ldap_connect($ldap_url);
 
@@ -267,7 +268,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
     {
         // Sucessfull
         debug_log("LDAP Valid Credentials", TRUE);
-        $usertype= LDAP_INVALID_USER;
+        $usertype = LDAP_INVALID_USER;
 
         if ($CONFIG['ldap_grponuser'])
         {
@@ -376,7 +377,6 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $user->mobile = $user_attributes[$CONFIG['ldap_mobile']][0];
             $user->fax = $user_attributes[$CONFIG['ldap_fax']][0];
             $user->message = $user_attributes[$CONFIG['ldap_description']][0];
-            $user->holiday_entitlement = $CONFIG['default_entitlement'];
             $user->source = 'ldap';
 
             // TODO FIXME this doesn't take into account custom roles'
@@ -395,6 +395,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             if ($id == 0)
             {
                 $user->status = $CONFIG['ldap_default_user_status'];
+                $user->holiday_entitlement = $CONFIG['default_entitlement'];
                 $status = $user->add();
             }
             else
@@ -427,7 +428,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $contact->county = $user_attributes[$CONFIG['ldap_county']][0];
             $contact->postcode = $user_attributes[$CONFIG['ldap_postcode']][0];
             $contact->courtesytitle = $user_attributes[$CONFIG['ldap_courtesytitle']][0];
-
+            $contact->emailonadd = false;
             $contact->source = 'ldap';
 
             if ($id == 0)
@@ -486,8 +487,8 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
     	$attributes[] = $CONFIG[strtolower("ldap_{$var}")];
     }
 
-    debug_log("ldap_getDetails Filter: {$filter}", TRUE);
-    debug_log("ldap_getDetails Base: {$base}", TRUE);
+    debug_log("LDAP Filter: {$filter}", TRUE);
+    debug_log("LDAP Base: {$base}", TRUE);
     $sr = ldap_search($ldap_conn, $base, $filter, $attributes);
     
     if (ldap_count_entries($ldap_conn, $sr) != 1)
@@ -566,24 +567,6 @@ function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOn
 }
 
 /**
- * Gets the details of a contact from the database from their email
- * @author Lea Anthony
- * @param string $email. Email
- */
-function getContactDetailsFromDBByEmail($email)
-{
-    global $dbContacts;
-
-    $sql = "SELECT * FROM `{$dbContacts}` WHERE email='$email'";
-
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    return mysql_fetch_array($result);
-
-}
-
-/**
  * Checks that the email address given is a contact that has not yet
  * been imported into the DB, then imports them.
  * @author Lea Anthony
@@ -594,24 +577,7 @@ function ldapImportCustomerFromEmail($email)
 {
     global $CONFIG;
     $toReturn = false;
-    /*
-    global $dbContacts;
 
-    $r = getContactDetailsFromDBByEmail($email);
-
-    if( ! empty($r) )
-    {
-        // This contact already exists
-        return;
-    }
-
-    // Create user
-    $details = ldapGetCustomerDetailsFromEmail(email);
-
-
-    ldapCreateContact($details);
- */
-    
     /*
      * Check if contact exists
      * is contact sit
@@ -686,8 +652,8 @@ function ldapCheckObjectExists($dn, $objectType)
     
     $ldap_conn = ldapOpen(); // Need to get an admin thread
 
-    debug_log("Filter: {$filter}", TRUE);
-    debug_log("Object: {$dn}", TRUE);
+    debug_log("LDAP Filter: {$filter}", TRUE);
+    debug_log("LDAP Object: {$dn}", TRUE);
 
     // Need to surpress this error otherwise we get an warning cascaded back to the user rather than ours 
     $sr = @ldap_read($ldap_conn, $dn, $filter);

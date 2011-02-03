@@ -2,7 +2,7 @@
 // feedback.inc.php - functions relating to feedback
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,11 +24,18 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 function send_feedback($contractid)
 {
     global $CONFIG;
-    foreach ($CONFIG['no_feedback_contracts'] AS $contract)
+    if (!$CONFIG['feedback_enabled'])
     {
-        if ($contract == $contractid)
+        return FALSE;
+    }
+    else
+    {
+        foreach ($CONFIG['no_feedback_contracts'] AS $contract)
         {
-            return FALSE;
+            if ($contract == $contractid)
+            {
+                return FALSE;
+            }
         }
     }
 

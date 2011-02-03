@@ -2,7 +2,7 @@
 // users.php - List users
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,7 +25,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
-$groupid = cleanvar($_REQUEST['gid']);
+$groupid = clean_int($_REQUEST['gid']);
 $onlineonly = cleanvar($_REQUEST['onlineonly']);
 
 // By default show users in home group
@@ -56,7 +56,7 @@ if ($numgroups >= 1 AND $filtergroup == '0')
 {
     $sql .= "AND (groupid='0' OR groupid='' OR groupid IS NULL) ";
 }
-elseif ($numgroups == '' OR $numgroups < 1 OR $filtergroup=='all' OR $filtergroup=='allonline')
+elseif ($numgroups == '' OR $numgroups < 1 OR $filtergroup == 'all' OR $filtergroup == 'allonline')
 {
     $sql .= "AND 1=1 ";
 }
@@ -70,7 +70,6 @@ if ($onlineonly === 'true' OR $filtergroup === 'allonline' )
     $sql .= "AND lastseen > '".date('Y-m-d H:i:s', $startofsession). "' ";
 }
 
-// Sorting
 if (!empty($sort))
 {
     if ($sort == "realname") $sql .= " ORDER BY realname ";
@@ -110,15 +109,11 @@ echo "<th colspan='8'></th>";
 echo "</tr>\n";
 
 // show results
-$shade = 0;
+$shade = 'shade1';
 while ($users = mysql_fetch_object($result))
 {
-    // define class for table row shading
-    if ($shade) $class = "shade1";
-    else $class = "shade2";
-
     // print HTML for rows
-    echo "<tr class='{$class}'>";
+    echo "<tr class='{$shade}'>";
     echo "<td>";
     echo "<a href='mailto:{$users->email}' title='{$strEmail} ";
     echo "{$users->realname}'>";
@@ -243,15 +238,13 @@ while ($users = mysql_fetch_object($result))
     echo "</td>";
     echo "</tr>";
 
-    // invert shade
-    if ($shade == 1) $shade = 0;
-    else $shade = 1;
+    if ($shade == 'shade1') $shade = 'shade2';
+    else $shade = 'shade1';
 }
 $total = $critical + $high + $med + $low;
 echo "<tr align='center'><td></td><td align='right'>";
 echo "<strong>{$strTotal}</strong> ({$total})</td><td>{$critical}</td>";
 echo "<td>{$high}</td><td>{$med}</td><td>{$low}</td>";
-
 
 echo "</tr></table>\n";
 

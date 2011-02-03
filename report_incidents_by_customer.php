@@ -2,7 +2,7 @@
 // site_incidents.php - csv file showing how many incidents each site logged
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -26,7 +26,7 @@ $enddate = cleanvar($_REQUEST['end']);
 $mode = cleanvar($_REQUEST['mode']);
 $zerologged = cleanvar($_REQUEST['zerologged']);
 $showsitesloggedfewerthanxcalls = cleanvar($_REQUEST['showsitesloggedfewerthanxcalls']);
-$numberofcalls = cleanvar($_REQUEST['numberofcalls']);
+$numberofcalls = clean_int($_REQUEST['numberofcalls']);
 $showincidentdetails = cleanvar($_REQUEST['showincidentdetails']);
 $onlyshowactivesites = cleanvar($_REQUEST['onlyshowactivesites']);
 $slas = cleanvar($_REQUEST['slas']);
@@ -71,7 +71,7 @@ if (empty($mode))
 	</script>
 	<?php
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
     echo "<form name='date' action='".$_SERVER['PHP_SELF']."?mode=run' method='post'>\n";
     echo "<table class='vertical'>\n";
@@ -89,13 +89,13 @@ if (empty($mode))
 
     $sql = "SELECT DISTINCT id, tag FROM `{$dbServiceLevels}`";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         echo "<select name='slas[]' multiple='multiple' size='5'>\n";
         while ($obj = mysql_fetch_object($result))
         {
-            echo "<option value='$obj->id'>{$obj->tag}</option>\n";
+            echo "<option value='{$obj->tag}'>{$obj->tag}</option>\n";
         }
         echo "</select>\n";
     }
@@ -128,7 +128,8 @@ else
     if (empty($enddate)) $enddate = date('Y-m-d');
 
     $enddate = $enddate." 23:59:59";
-    
+
+    // FIXME move this function out of line
     function does_site_have_certain_sla_contract($siteid, $slas)
     {
         $toReturn = false;
@@ -140,14 +141,14 @@ else
 
             foreach ($slas AS $s)
             {
-                if (!empty($qsql))$qsql .= " OR ";
-                $qsql .= " servicelevelid = {$s} ";
+                if (!empty($qsql)) $qsql .= " OR ";
+                $qsql .= " servicelevel = {$s} ";
             }
 
             $ssql .= "({$qsql})";
 
             $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($sresult) > 0)
             {
                 $toReturn = true;
@@ -173,7 +174,7 @@ else
     */
     // echo $sql;
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         $shade = 'shade1';
@@ -202,18 +203,20 @@ else
             if ((!empty($slas) AND !does_site_have_certain_sla_contract($site->id, $slas)) OR empty($slas))
             {
                 $sql = "SELECT count(i.id) AS incidentz, s.name AS site FROM `{$dbContacts}` AS c, `{$dbSites}` AS s, `{$dbIncidents}` AS i, `{$dbMaintenance}` AS m ";
-                $sql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened > ".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id "; 
+                $sql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened > ".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id ";
                 $sql .= "AND m.id = i.maintenanceid AND m.reseller = '{$site->reseller}' ";
                 $sql.= "GROUP BY site";
                 // echo $sql;
                 $sresult = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $details = mysql_fetch_object($sresult);
                 $count = $details->incidentz;
+
+                $colspan = 4;
+
                 if (!empty($zerologged))
                 {
                     if (empty($count)) $count = 0;
-                    $colspan = 4;
                     if ($showsitesloggedfewerthanxcalls == 'on' AND $count <= $numberofcalls)
                     {
                         if ($output == 'csv')
@@ -288,7 +291,7 @@ else
                 $isql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s, `{$dbIncidents}` AS i ";
                 $isql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened >".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id ";
                 $iresult = mysql_query($isql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
                 if (mysql_num_rows($iresult) > 0)
                 {
@@ -301,7 +304,7 @@ else
                     while ($obj = mysql_fetch_object($iresult))
                     {
                         $csv .= "<tr class='{$shade1}'>";
-                        $csv .= "<td>{$obj->id}</td><td>{$obj->title}</td>";
+                        $csv .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td><td>{$obj->title}</td>";
                         $csv .= "<td>{$obj->forenames} {$obj->surname}</td>";
                         $csv .= "<td>".software_name($obj->softwareid)."</td>";
                         $csv .= "<td>".incidentstatus_name($obj->status)."</td>";
@@ -312,7 +315,7 @@ else
                         else $csv .= $strCurrentlyOpen;
                         $csv .= "</td>";
                         $csv .= "<td>";
-                        if ($obj->closed > 0) $csv .= format_workday_minutes($obj->closed - $obj->opened);
+                        if ($obj->closed > 0) $csv .= format_workday_minutes(($obj->closed - $obj->opened) / 60);
                         $csv .= "</td>";
                         $csv .= "<td>{$obj->servicelevel}</td>";
                         $csv .= "</tr>";

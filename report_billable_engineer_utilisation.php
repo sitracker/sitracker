@@ -2,7 +2,7 @@
 // ??
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,7 +25,7 @@ if (empty($mode) OR $mode == 'showform')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strMonthlyActivityTotals}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strMonthlyActivityTotals}</h2>";
     echo "<form name='report' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical'>";
 
@@ -61,7 +61,7 @@ elseif ($mode == 'runreport')
     if (empty($startdate)) $startdate = $now - 31536000; // 1 year ago
     if (empty($enddate)) $enddate = $now;
 
-    $calcote = cleanvar($_REQUEST['calcote']);
+    $calcote = clean_fixed_list($_REQUEST['calcote'], array('','no','yes'));
     $sql = "SELECT userid, duration, timestamp FROM `{$dbUpdates}` WHERE timestamp >= '{$startdate}' AND timestamp <= '{$enddate}' AND duration != 0 AND duration IS NOT NULL ORDER BY timestamp";
     // echo $sql;
     $result = mysql_query($sql);
@@ -105,7 +105,7 @@ elseif ($mode == 'runreport')
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strMonthlyActivityTotals}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strMonthlyActivityTotals}</h2>";
     
     if (count($util) > 0)
     {

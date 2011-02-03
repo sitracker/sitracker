@@ -2,7 +2,7 @@
 // index.php - Welcome screen and login form
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,7 +27,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 if ($_SESSION['auth'] != TRUE)
 {
     // External variables
-    $id = cleanvar($_REQUEST['id']);
+    $id = clean_int($_REQUEST['id']);
     $page = urldecode($_REQUEST['page']);
     $page = str_replace(':','', $page);
     $page = str_replace('//','', $page);

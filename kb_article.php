@@ -2,7 +2,7 @@
 // kb_article.php - Form to add a knowledgebase article
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -39,17 +39,17 @@ if (isset($_POST['submit']))
     $distribution = cleanvar($_POST['distribution']);
     $sql = array();
 
-    $_SESSION['formdata']['kb_add_article'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+    $_SESSION['formdata']['kb_new_article'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     if ($kbtitle == '')
     {
-        $_SESSION['formerrors']['kb_add_article']['title'] = sprintf($strFieldMustNotBeBlank, $strTitle);
+        $_SESSION['formerrors']['kb_new_article']['title'] = sprintf($strFieldMustNotBeBlank, $strTitle);
         $errors++;
     }
     if ($keywords == '')
     {
-        $_SESSION['formerrors']['kb_add_article']['keywords'] = sprintf($strFieldMustNotBeBlank, $strKeywords);
+        $_SESSION['formerrors']['kb_new_article']['keywords'] = sprintf($strFieldMustNotBeBlank, $strKeywords);
         $errors++;
     }
 
@@ -61,9 +61,9 @@ if (isset($_POST['submit']))
         $pubdate = date('Y-m-d h:i:s');
 
         $sqlinsert = "INSERT INTO `{$dbKBArticles}` (title, keywords, distribution, author, published) ";
-        $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '$pubdate')";
+        $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '{$pubdate}')";
         mysql_query($sqlinsert);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_ERROR);
         $kbid = mysql_insert_id();
     }
     else
@@ -102,10 +102,11 @@ if (isset($_POST['submit']))
     // Set software / expertise
     if (is_array($_POST['expertise']))
     {
-        $expertise = array_unique(($_POST['expertise']));
+        $expertise = cleanvar(array_unique(($_POST['expertise'])));
         foreach ($expertise AS $value)
         {
-            $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '$value')";
+            $value = intval($value);
+            $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
         }
     }
 
@@ -333,7 +334,7 @@ else
     }
     else
     {
-        echo $strAdd;
+        echo $strNew;
     }
     echo "' /></p>";
     echo $sectionstore;

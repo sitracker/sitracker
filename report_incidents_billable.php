@@ -2,7 +2,7 @@
 // billable_incidents.php - List of all billable incidents between two optional datess
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,7 +33,7 @@ if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strBillableIncidentsReport}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strBillableIncidentsReport}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='billableincidents'>";
     echo "<table class='vertical'>";
@@ -69,7 +69,7 @@ elseif ($mode == 'report')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strBillableIncidentsReport}</h2>";
+        echo "<h2>".icon('reports', 32)." {$strBillableIncidentsReport}</h2>";
     }
 
     $sqlsite = "SELECT DISTINCT m.site FROM `{$dbMaintenance}` AS m ";

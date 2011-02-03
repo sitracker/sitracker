@@ -2,7 +2,7 @@
 // portal/sitedetails.inc.php - Displays the site details to admins
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -38,9 +38,9 @@ if (isset($_POST['submit']))
     $email = cleanvar($_POST['email']);
     $websiteurl = cleanvar($_POST['websiteurl']);
     $notes = cleanvar($_POST['notes']);
-    $typeid = cleanvar($_POST['typeid']);
-    $owner = cleanvar($_POST['owner']);
-    $site = cleanvar($_POST['site']);
+    $typeid = clean_int($_POST['typeid']);
+    $owner = clean_int($_POST['owner']);
+    $site = clean_int($_POST['site']);
     $tags = cleanvar($_POST['tags']);
     $active = cleanvar($_POST['active']);
 

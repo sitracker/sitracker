@@ -2,7 +2,7 @@
 // view_tags.php - Page to view the tags on either a record or in general
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$tagid = cleanvar($_REQUEST['tagid']);
+$tagid = clean_int($_REQUEST['tagid']);
 $orderby = cleanvar($_REQUEST['orderby']);
 
 if (empty($orderby)) $orderby = "name";
@@ -77,14 +77,13 @@ else
                     }
                     break;
                 case TAG_INCIDENT: //incident
-                    $sql = "SELECT title FROM `{$dbIncidents}` WHERE id = '$obj->id'";
+                    $sql = "SELECT title FROM `{$dbIncidents}` WHERE id = '{$obj->id}'";
                     $resultinc = mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                     if (mysql_num_rows($resultinc) > 0)
                     {
                         $objinc = mysql_fetch_object($resultinc);
-                        echo "<th>".icon('support', 16)." {$strIncident}</th><td><a href=\"javascript:incident_details_window('{$obj->id}','incident{$obj->id}')\">";
-                        echo "{$obj->id}: {$objinc->title}</a></td>";
+                        echo "<th>".icon('support', 16)." {$strIncident}</th><td>".html_incident_popup_link($obj->id, "{$obj->id}: {$objinc->title}")."</td>";
                     }
                     break;
                 case TAG_SITE: //site
@@ -139,7 +138,7 @@ else
             if ($col >= 3 OR $count == $num_tags)
             {
                 echo "</tr>\n";
-                $col=0;
+                $col = 0;
             }
         }
         echo "</table>";

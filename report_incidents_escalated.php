@@ -3,7 +3,7 @@
 // external_engineers.php - Shows incidents that have been escalated
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -31,12 +31,6 @@ $filter = cleanvar($_REQUEST['filter']);
 echo "<script type='text/javascript'>";
 ?>
 //<![CDATA[
-function incident_details_window_l(incidentid,second)
-{
-    URL = "<?php  echo $CONFIG['application_uriprefix'].$CONFIG['application_webpath'] ?>incident_details.php?id=" + incidentid + "&amp;javascript=enabled";
-    window.open(URL, "sit_popup", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
-}
-
 function hide_filter(hide)
 {
     if (hide==true)
@@ -52,7 +46,7 @@ function hide_filter(hide)
 <?php
 echo "</script>";
 
-echo "<h2>{$strExternalEngineerCallDistribution}</h2>";
+echo "<h2>".icon('reports', 32)." {$strExternalEngineerCallDistribution}</h2>";
 
 $filterSQL = '';
 
@@ -166,7 +160,7 @@ while ($escalations = mysql_fetch_object($escs))
         $esc[$name]['count']++;
         $esc[$name][$obj->priority]++;
         $str = "<span><strong>".$obj->forenames." ".$obj->surname."</strong><br />".$obj->siteName."</span>";
-        $esc[$name]['calls'][$i]['text'] = "<a href=\"javascript:incident_details_window_l('".$obj->id."', 'incident".$obj->id."')\"  title=\"{$obj->title}\" class='info'>[".$obj->id."]{$str}</a> #".$obj->externalid." ".$obj->title;
+        $esc[$name]['calls'][$i]['text'] = "<a href=\"javascript:incident_details_window('{$obj->id}', 'sit_popup')\"  title=\"{$obj->title}\" class='info'>[".$obj->id."]{$str}</a> #".$obj->externalid." ".$obj->title;
         $esc[$name]['calls'][$i]['text'] .= "<br />".contact_realname($obj->contact).', '.contact_site($obj->contact);
         $esc[$name]['calls'][$i]['software'] = $obj->name;
         $esc[$name]['calls'][$i]['status'] = $obj->status;

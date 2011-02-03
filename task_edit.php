@@ -2,7 +2,7 @@
 // exit_task.php - Edit existing task
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,20 +27,20 @@ $title = $strEditTask;
 
 // External variables
 $action = $_REQUEST['action'];
-$id = cleanvar($_REQUEST['id']);
-$incident = cleanvar($_REQUEST['incident']);
+$id = clean_int($_REQUEST['id']);
+$incident = clean_int($_REQUEST['incident']);
 $SYSLANG = $_SESSION['syslang'];
 
 switch ($action)
 {
     case 'edittask':
-        // External variables
         $name = cleanvar($_REQUEST['name']);
         $description = cleanvar($_REQUEST['description']);
-        $priority = cleanvar($_REQUEST['priority']);
+        $priority = clean_int($_REQUEST['priority']);
+        
         if (!empty($_REQUEST['duedate']))
         {
-            $duedate = strtotime($_REQUEST['duedate']);
+            $duedate = strtotime(cleanvar($_REQUEST['duedate']) . ' ' . $due_time_picker_hour . ':' . $due_time_picker_minute);
         }
         else
         {
@@ -49,7 +49,7 @@ switch ($action)
 
         if (!empty($_REQUEST['startdate']))
         {
-            $startdate = strtotime($_REQUEST['startdate']);
+            $startdate = strtotime(cleanvar($_REQUEST['startdate']) . ' ' . $start_time_picker_hour . ':' . $start_time_picker_minute);
         }
         else
         {
@@ -57,25 +57,25 @@ switch ($action)
         }
 
         $completion = cleanvar(str_replace('%','',$_REQUEST['completion']));
-        if ($completion!='' AND !is_numeric($completion)) $completion=0;
-        if ($completion > 100) $completion=100;
-        if ($completion < 0) $completion=0;
+        if ($completion != '' AND !is_numeric($completion)) $completion=0;
+        if ($completion > 100) $completion = 100;
+        if ($completion < 0) $completion = 0;
         if (!empty($_REQUEST['enddate']))
         {
-            $enddate = strtotime($_REQUEST['enddate']);
+            $enddate = strtotime($_REQUEST['enddate'] . ' ' . $end_time_picker_hour . ':' . $end_time_picker_minute);
         }
         else
         {
             $enddate = '';
         }
-
+        
         if ($completion == 100 AND $enddate == '') $enddate = $now;
         $value = cleanvar($_REQUEST['value']);
-        $owner = cleanvar($_REQUEST['owner']);
+        $owner = clean_int($_REQUEST['owner']);
         $distribution = cleanvar($_REQUEST['distribution']);
         $old_name = cleanvar($_REQUEST['old_name']);
         $old_description = cleanvar($_REQUEST['old_description']);
-        $old_priority = cleanvar($_REQUEST['old_priority']);
+        $old_priority = clean_int($_REQUEST['old_priority']);
         $old_startdate = cleanvar($_REQUEST['old_startdate']);
         $old_duedate = cleanvar($_REQUEST['old_duedate']);
         $old_completion = cleanvar($_REQUEST['old_completion']);
@@ -84,7 +84,7 @@ switch ($action)
         $old_owner = cleanvar($_REQUEST['old_owner']);
         $old_distribution = cleanvar($_REQUEST['old_distribution']);
         if ($distribution == 'public') $tags = cleanvar($_POST['tags']);
-        else $tags='';
+        else $tags = '';
 
         // Validate input
         $error = array();
@@ -105,12 +105,12 @@ switch ($action)
         else
         {
             replace_tags(4, $id, $tags);
-            if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
+            if ($startdate > 0) $startdate = date('Y-m-d H:i', $startdate);
             else $startdate = '';
-            if ($duedate > 0) $duedate = date('Y-m-d', $duedate);
-            else $duedate='';
-            if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
-            else $enddate='';
+            if ($duedate > 0) $duedate = date('Y-m-d H:i', $duedate);
+            else $duedate = '';
+            if ($enddate > 0) $enddate = date('Y-m-d H:i', $enddate);
+            else $enddate = '';
             if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s');
             $sql = "UPDATE `{$dbTasks}` ";
             $sql .= "SET name='{$name}', description='{$description}', priority='{$priority}', ";
@@ -120,10 +120,9 @@ switch ($action)
             $sql .= "WHERE id='{$id}' LIMIT 1";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            // if (mysql_affected_rows() < 1) trigger_error("Task update failed",E_USER_ERROR);
 
             // Add a note to say what changed (if required)
-            $bodytext='';
+            $bodytext = '';
             if ($name != $old_name)
             {
                 $bodytext .= "{$SYSLANG['strName']}: {$old_name} -&gt; [b]{$name}[/b]\n";
@@ -139,14 +138,14 @@ switch ($action)
                 $bodytext .= "{$SYSLANG['strPriority']}: ".priority_name($old_priority)." -&gt; [b]".priority_name($priority)."[/b]\n";
             }
 
-            $old_startdate = substr($old_startdate,0,10);
-            if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00'))
+            $old_startdate = substr($old_startdate, 0, 16);
+            if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strStartDate']}: {$old_startdate} -&gt; [b]{$startdate}[/b]\n";
             }
 
-            $old_duedate = substr($old_duedate,0,10);
-            if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00'))
+            $old_duedate = substr($old_duedate, 0, 16);
+            if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_duedate} -&gt; [b]{$duedate}[/b]\n";
             }
@@ -156,7 +155,8 @@ switch ($action)
                 $bodytext .= "{$SYSLANG['strCompletion']}: {$old_completion}% -&gt; [b]{$completion}%[/b]\n";
             }
 
-            if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00:00'))
+            $old_enddate = substr($old_enddate, 0, 16);
+            if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_enddate} -&gt; [b]{$enddate}[/b]\n";
             }
@@ -275,7 +275,7 @@ switch ($action)
             mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_ERROR);
+                trigger_error(mysql_error(), E_USER_ERROR);
                 echo "<p class='error'>";
                 echo "Couldn't add update, update will need to be done manually: {$sql}'</p>";
                 die();
@@ -302,14 +302,14 @@ switch ($action)
         break;
     case 'delete':
         $sql = "DELETE FROM `{$dbTasks}` ";
-        $sql .= "WHERE id='$id' LIMIT 1";
+        $sql .= "WHERE id='{$id}' LIMIT 1";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbNotes}` ";
-        $sql .= "WHERE link=10 AND refid='$id' ";
+        $sql .= "WHERE link=10 AND refid='{$id}' ";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         html_redirect("tasks.php", TRUE);
         break;
@@ -318,9 +318,9 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('task', 32)." ";
         echo "$title</h2>";
-        $sql = "SELECT * FROM `{$dbTasks}` WHERE id='$id'";
+        $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
             while ($task = mysql_fetch_object($result))
@@ -343,17 +343,17 @@ switch ($action)
                 echo "<td>".priority_drop_down('priority',$task->priority)."</td></tr>";
                 echo "<tr><th>{$strStartDate}</th>";
                 echo "<td><input type='text' name='startdate' id='startdate' size='10' value='";
-                if ($startdate > 0) echo date('Y-m-d',$startdate);
+                if ($startdate > 0) echo date('Y-m-d', $startdate);
                 echo "' /> ";
                 echo date_picker('edittask.startdate');
-                echo " ".time_dropdown("starttime", date('H:i',$startdate));
+                echo " ".time_picker(date('H', $startdate), date('i', $startdate), 'start_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strDueDate}</th>";
                 echo "<td><input type='text' name='duedate' id='duedate' size='10' value='";
-                if ($duedate > 0) echo date('Y-m-d',$duedate);
+                if ($duedate > 0) echo date('Y-m-d', $duedate);
                 echo "' /> ";
                 echo date_picker('edittask.duedate');
-                echo " ".time_dropdown("duetime", date('H:i',$duedate));
+                echo " ".time_picker(date('H', $duedate), date('i', $duedate), 'due_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strCompletion}</th>";
                 echo "<td><input type='text' name='completion' size='3' maxlength='3' value='{$task->completion}' />&#037;</td></tr>";
@@ -362,7 +362,7 @@ switch ($action)
                 if ($enddate > 0) echo date('Y-m-d',$enddate);
                 echo "' /> ";
                 echo date_picker('edittask.enddate');
-                echo " ".time_dropdown("endtime", date('H:i',$enddate));
+                echo " ".time_picker(date('H', $enddate), date('i', $enddate), 'end_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strValue}</th>";
                 echo "<td><input type='text' name='value' size='6' maxlength='12' value='{$task->value}' /></td></tr>";

@@ -2,7 +2,7 @@
 // incident_graph.php - Shows incidents opened and closed each day over twelve months
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$startyear = cleanvar($_REQUEST['startyear']);
+$startyear = clean_int($_REQUEST['startyear']);
 
 $title = $strIncidentsLoggedOpenClosed;
 
@@ -61,7 +61,7 @@ else
     $lastmonth = 12;
 }
 
-echo "<h2>{$strIncidentsLoggedOpenClosed}</h2>";
+echo "<h2>".icon('reports', 32)." {$strIncidentsLoggedOpenClosed}</h2>";
 echo "<p align='center'>{$strIncidentsOpenedEachDay}<br />";
 echo "<a href='{$_SERVER['PHP_SELF']}?startyear=".($currentyear-2)."'>".($currentyear-2)."</a> | ";
 echo "<a href='{$_SERVER['PHP_SELF']}?startyear=".($currentyear-1)."'>".($currentyear-1)."</a> | ";

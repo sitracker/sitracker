@@ -2,7 +2,7 @@
 // yearly_customer_export.php - List the numbers and titles of incidents logged by each site in the past year.
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,7 +27,7 @@ $title = $strIncidentsBySite;
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<p align='center'>".sprintf($strReportListsIncidentsLoggedThatEachSiteLoggedOverPastXMonths, 12)."</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table summary='Site Selection Table' class='vertical'>";
@@ -106,7 +106,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $numrows = mysql_num_rows($result);
 
-    $html .= "<h2>{$title}</h2>";
+    $html .= "<h2>".icon('reports', 32)." {$title}</h2>";
     $html .= "<p align='center'>".sprintf($strIncidentsBySiteReportDesc, $numrows)."</p>";
     $html .= "<table width='99%' align='center'>";
     $html .= "<tr><th>{$strOpened}</th><th>{$strIncident}</th><th>{$strExternalID}</th><th>{$strTitle}</th><th>{$strContact}</th><th>{$strSite}</th><th>{$strType}</th></tr>";

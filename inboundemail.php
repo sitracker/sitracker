@@ -2,7 +2,7 @@
 // inboundemail.php - Process incoming emails
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -13,6 +13,7 @@
 // Note2: to be called from auto.php
 
 require_once ('core.php');
+require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 require (APPLICATION_LIBPATH . 'mime_parser.inc.php');
 require (APPLICATION_LIBPATH . 'rfc822_addresses.inc.php');
@@ -21,7 +22,6 @@ require (APPLICATION_LIBPATH . 'mailbox.class.php');
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
     include (APPLICATION_LIBPATH . 'strings.inc.php');
-    require (APPLICATION_LIBPATH . 'functions.inc.php');
     require_once (APPLICATION_LIBPATH . 'base.inc.php');
 }
 else
@@ -116,7 +116,7 @@ elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
         {
             echo "Connection error, see debug log for details.\n";
         }
-        exit(1);
+       return FALSE;
     }
 
     $emails = $mailbox->getNumUnreadEmails();
@@ -178,6 +178,8 @@ if ($emails > 0)
 
         // Attempt to recognise contact from the email address
         $from_email = strtolower($decoded[0]['ExtractedAddresses']['from:'][0]['address']);
+        // Work-around for a problem where email addresses with extra characters (such as apostophe) stop the email address being extracted
+        if (empty($from_email) AND !empty($decoded[0]['Headers']['from:'])) $from_email = strtolower($decoded[0]['Headers']['from:']);
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` ";
         $sql .= "WHERE email = '{$from_email}'";
         if ($result = mysql_query($sql))
@@ -264,8 +266,14 @@ if ($emails > 0)
         switch ($results['Type'])
         {
             case 'html':
-
-                $message = $results['Alternative'][0]['Data'];
+                if (!empty($results['Alternative'][0]['Data']))
+                {
+                    $message = $results['Alternative'][0]['Data'];
+                }
+                else
+                {
+                    $message = strip_tags(html_entity_decode($results['Data'],ENT_QUOTES, 'UTF-8'));
+                }
                 break;
 
             case 'text':
@@ -298,11 +306,11 @@ if ($emails > 0)
         //process attachments
         if (!empty($incidentid) AND $incident_open)
         {
-            $fa_dir = $CONFIG['attachment_fspath'].$incidentid.$fsdelim;
+            $fa_dir = $CONFIG['attachment_fspath'] . $incidentid . $fsdelim;
         }
         else
         {
-            $fa_dir = $CONFIG['attachment_fspath']."updates{$fsdelim}";
+            $fa_dir = $CONFIG['attachment_fspath'] . "updates{$fsdelim}";
         }
 
         if (!file_exists($fa_dir))
@@ -316,6 +324,11 @@ if ($emails > 0)
             {
                 // Treat related content as attachment
                 $results['Attachments'] = $results['Related'];
+            }
+            elseif(is_array($results['Attachments']) AND is_array($results['Related']))
+            {
+                // Treat related content as attachment
+                $results['Attachments'] = array_merge($results['Attachments'], $results['Related']);
             }
             foreach ($results['Attachments'] as $attachment)
             {
@@ -428,7 +441,7 @@ if ($emails > 0)
             $sql .= "'".mysql_real_escape_string($subject)."', ";
             $sql .= "'{$reason}', '{$contactid}' )";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $holdingemailid = mysql_insert_id();
 
             trigger('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
@@ -450,7 +463,7 @@ if ($emails > 0)
             $sql .= "WHERE incidentid = '{$incidentid}' AND timestamp > '{$fifteenminsago}' ";
             $sql .= "ORDER BY id DESC LIMIT 1";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
             if (mysql_num_rows($result) > 0)
             {
@@ -471,7 +484,7 @@ if ($emails > 0)
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
                 $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $updateid = mysql_insert_id();
 
                 if ($incident_open) // Do not translate/i18n fixed string
@@ -480,7 +493,7 @@ if ($emails > 0)
                     $sql = "UPDATE `{$GLOBALS['dbIncidents']}` SET status='1', lastupdated='".time()."', timeofnextaction='0' ";
                     $sql .= "WHERE id='{$incidentid}'";
                     mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 }
                 else
                 {
@@ -494,7 +507,7 @@ if ($emails > 0)
                         $sql .= "', '".mysql_real_escape_string($from_name);
                         $sql .= "', '".mysql_real_escape_string($subject)."', '{$reason}', ".REASON_INCIDENT_CLOSED.", '{$oldincidentid}', '$contactid' )";
                         mysql_query($sql);
-                        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     }
                     else
                     {
@@ -506,7 +519,7 @@ if ($emails > 0)
                         $sql .= "'".mysql_real_escape_string($from_name)."', '".mysql_real_escape_string($subject);
                         $sql .= "', '{$reason}', '{$contactid}' )";
                         mysql_query($sql);
-                        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     }
                     $holdingemailid = mysql_insert_id();
                 }
@@ -525,7 +538,7 @@ if ($emails > 0)
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
                     $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1)";
                     mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 }
             }
         }
@@ -545,7 +558,7 @@ if ($emails > 0)
                 $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
                 $sql .= "AND linktype = 5 ";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error() ,E_USER_WARNING);
                 debug_log("Creating a link between $updateid and file {$att['fileid']}");
             }
         }

@@ -41,5 +41,8 @@ if ($CONFIG['debug'] == TRUE)
     if (isset($dbg)) echo "<hr /><pre>".print_r($dbg,true)."</pre>";
     echo "</div>";
 }
+plugin_do('page_end');
+
 echo "\n</body>\n</html>\n";
+plugin_do('after_page');
 ?>

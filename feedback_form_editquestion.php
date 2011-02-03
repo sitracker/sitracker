@@ -2,7 +2,7 @@
 // edit_feedback_question.php - Form for editing feedback questions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -97,8 +97,14 @@ switch ($action)
 
             echo "<th>{$strRequired}:</th>";
             echo "<td>";
-            if ($question->required=='true') echo "<input type='checkbox' name='required' value='true' checked='checked' />";
-            else echo "<input type='checkbox' name='required' value='true' />";
+            if ($question->required == 'true')
+            {
+                echo "<input type='checkbox' name='required' value='true' checked='checked' />";
+            }
+            else
+            {
+                echo "<input type='checkbox' name='required' value='true' />";
+            }
             echo "</td></tr>\n<tr>";
 
             echo "<td><input type='hidden' name='qid' value='{$qid}' />";

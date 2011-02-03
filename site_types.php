@@ -2,7 +2,7 @@
 // site_types.php - Page to list/add/edit site types
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,7 +27,7 @@ $mode = cleanvar($_REQUEST['mode']);
 
 if (empty($mode))
 {
-    echo "<h2>{$strSiteTypes}</h2>";
+    echo "<h2>".icon('edit', 32)." {$strSiteTypes}</h2>";
 
     $sql = "SELECT * FROM `{$dbSiteTypes}` ORDER BY typename";
     $result = mysql_query($sql);
@@ -55,7 +55,7 @@ if (empty($mode))
 }
 elseif ($mode == 'new')
 {
-    $form = new Form("sitetypes", $strAdd, $dbSiteTypes, "insert", $strNewSiteType);
+    $form = new Form("sitetypes", $strNew, $dbSiteTypes, "insert", $strNewSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);
     $form->setReturnURLSuccess($_SERVER['PHP_SELF']);
     $c1 = new Cell();
@@ -76,13 +76,13 @@ elseif ($mode == 'new')
 }
 elseif ($mode == 'edit')
 {
-    $typeid = cleanvar($_REQUEST['typeid']);
+    $typeid = clean_int($_REQUEST['typeid']);
     $sql = "SELECT typename FROM `{$dbSiteTypes}` WHERE typeid = {$typeid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        list($typename) = mysql_fetch_array($result);
+        list($typename) = mysql_fetch_assoc($result);
     }
     $form = new Form("sitetypes", $strEdit, $dbSiteTypes, "update", $strEditSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);

@@ -2,7 +2,7 @@
 // escalation_paths.php - List escalation paths
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -56,7 +56,7 @@ if (mysql_num_rows($result) >= 1)
 }
 else echo "<p align='center'>{$strNoRecords}</p>";
 
-echo "<p align='center'><a href='escalation_path_add.php'>{$strAdd}</a></p>";
+echo "<p align='center'><a href='escalation_path_new.php'>{$strNew}</a></p>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

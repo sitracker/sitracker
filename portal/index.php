@@ -2,7 +2,7 @@
 // portal/index.php - Lists incidents in the portal
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -18,7 +18,7 @@ $accesslevel = 'any';
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 $showclosed = cleanvar($_REQUEST['showclosed']);
-$site = cleanvar($_REQUEST['site']);
+$site = clean_int($_REQUEST['site']);
 
 if ($CONFIG['debug']) $dbg .= "Sess: ".print_r($_SESSION,true);
 
@@ -61,7 +61,7 @@ function portal_incident_table($sql)
             $html .= "<td align='center'>".ldate($CONFIG['dateformat_datetime'], $incident->lastupdated)."</td>";
             $html .= "<td align='center'><a href='contactdetails.php?id={$incident->contactid}'>";
             $html .= "{$incident->forenames} {$incident->surname}</a></td>";
-            $html .= "<td align='center'>".incidentstatus_name($incident->status, external)."</td>";
+            $html .= "<td align='center'>".incidentstatus_name($incident->status, 'external')."</td>";
             if ($showclosed != "true")
             {
                 $html .=  "<td align='center'><a href='update.php?id={$incident->id}'>{$GLOBALS['strUpdate']}</a> | ";
@@ -146,7 +146,7 @@ else
     echo "<a href='entitlement.php'>";
 }
 
-echo icon('add', 16, $strAddIncident)." {$strAddIncident}</a></p>";
+echo icon('new', 16, $strNewIncident)." {$strNewIncident}</a></p>";
 
 //find list of other incidents we're allowed to see
 $otherincidents = array();
@@ -185,9 +185,9 @@ if ($CONFIG['portal_site_incidents'] AND $otherincidents != NULL)
         $sql .= "AND c.siteid=s.id AND s.id={$_SESSION['siteid']} ";
         $sql .= "AND (1=0 ";
 
-        foreach ($otherincidents AS $maintid)
+        foreach ($otherincidents AS $incident)
         {
-            $sql .= "OR i.maintenanceid={$maintid} ";
+            $sql .= "OR i.id={$incident} ";
         }
 
         $sql .= ") ORDER BY closed DESC ";

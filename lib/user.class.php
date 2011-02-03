@@ -132,9 +132,9 @@ class User extends Person{
 
         $toReturn = FALSE;
 
-        $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username = '{$this->username}'";
+        $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username = '".cleanvar($this->username)."'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) != 0)
         {
@@ -148,10 +148,10 @@ class User extends Person{
             $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (username, password, realname, roleid, ";
             $sql .= "groupid, title, email, phone, mobile, fax, status, var_style, ";
             $sql .= "holiday_entitlement, user_startdate, lastseen, user_source) ";
-            $sql .= "VALUES ('{$this->username}', MD5('{$this->password}'), '{$this->realname}', '{$this->roleid}', ";
-            $sql .= "'{$this->group->id}', '{$this->jobtitle}', '{$this->email}', '{$this->phone}', '{$this->mobile}', '{$this->fax}', ";
-            $sql .= "{$this->status}, '{$this->style}', ";
-            $sql .= "'{$this->holiday_entitlement}', '{$this->startdate}', 0, '{$this->source}')";
+            $sql .= "VALUES ('".cleanvar($this->username)."', MD5('".cleanvar($this->password)."'), '".cleanvar($this->realname)."', '".cleanvar($this->roleid)."', ";
+            $sql .= "'".cleanvar($this->group->id)."', '".cleanvar($this->jobtitle)."', '".cleanvar($this->email)."', '".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', ";
+            $sql .= "".cleanvar($this->status).", '".cleanvar($this->style)."', ";
+            $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, '".cleanvar($this->source)."')";
             $result = mysql_query($sql);
             if (mysql_error())
             {
@@ -208,12 +208,12 @@ class User extends Person{
                 $errors = 0;
                 $error_string = '';
 
-                if (!empty($this->password)) $s[] = "password = MD5('{$this->password}')";
-                if (!empty($this->realname)) $s[] = "realname = '{$this->realname}'";
-                if (!empty($this->roleid)) $s[] = "roleid = {$this->roleid}";
-                if (!empty($this->group) AND !empty($this->group->id)) $s[] = "groupid = {$this->group->id}";
-                if (!empty($this->jobtitle)) $s[] = "title = '{$this->jobtitle}'";
-                if (!empty($this->signature)) $s[] = "signature = '{$this->signature}'";
+                if (!empty($this->password)) $s[] = "password = MD5('".cleanvar($this->password)."')";
+                if (!empty($this->realname)) $s[] = "realname = '".cleanvar($this->realname)."'";
+                if (!empty($this->roleid)) $s[] = "roleid = ".cleanvar($this->roleid)."";
+                if (!empty($this->group) AND !empty($this->group->id)) $s[] = "groupid = ".cleanvar($this->group->id)."";
+                if (!empty($this->jobtitle)) $s[] = "title = '".cleanvar($this->jobtitle)."'";
+                if (!empty($this->signature)) $s[] = "signature = '".cleanvar($this->signature)."'";
                 if (!empty($this->email))
                 {
                     $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE status > 0 AND email='{$this->email}' AND id != {$this->id}";
@@ -227,9 +227,9 @@ class User extends Person{
                     }
                     $s[] = "email = '{$this->email}'";
                 }
-                if (!empty($this->phone)) $s[] = "phone = '{$this->phone}'";
-                if (!empty($this->mobile)) $s[] = "mobile = '{$this->mobile}'";
-                if (!empty($this->fax)) $s[] = "fax = '{$this->fax}'";
+                if (!empty($this->phone)) $s[] = "phone = '".cleanvar($this->phone)."'";
+                if (!empty($this->mobile)) $s[] = "mobile = '".cleanvar($this->mobile)."'";
+                if (!empty($this->fax)) $s[] = "fax = '".cleanvar($this->fax)."'";
                 if (!empty($this->status))
                 {
                     if ($oldUser->status != $this->status)
@@ -240,38 +240,37 @@ class User extends Person{
                     }
                     $s[] = "status = {$this->status}";
                 }
-                if (!empty($this->message)) $s[] = "message = '{$this->message}'";
+                if (!empty($this->message)) $s[] = "message = '".cleanvar($this->message)."'";
                 if (is_bool($this->accepting))
                 {
                     if ($this->accepting) $s[] = "accepting = 'Yes'";
                     else $s[] = "accepting = 'No'";
                 }
-                if (!empty($this->holiday_entitlement)) $s[] = "holiday_entitlement = {$this->holiday_entitlement}";
-                if (!empty($this->holiday_resetdate)) $s[] = "holiday_restdate = '{$this->holiday_resetdate}'";
-                if (!empty($this->qualifications)) $s[] = "qualifications = '{$this->qualifications}'";
-                if (!empty($this->incident_refresh) OR $this->incident_refresh === 0) $s[] = "var_incident_refresh = {$this->incident_refresh}";
-                if (!empty($this->update_order)) $s[] = "var_update_order = '{$this->update_order}'";
-                if (!empty($this->num_updates_view)) $s[] = "var_num_updates_view = {$this->num_updates_view}";
-                if (!empty($this->style)) $s[] = "var_style = {$this->style}";
-                if (!empty($this->hide_auto_updates)) $s[] = "var_hideautoupdates = '{$this->hide_auto_updates}'";
-                if (!empty($this->hideheader)) $s[] = "var_hideheader = '{$this->hideheader}'";
-                if (!empty($this->monitor)) $s[] = "var_monitor = '{$this->monitor}'";
-                if (!empty($this->i18n)) $s[] = "var_i18n = '{$this->i18n}'";
-                if (!empty($this->utc_offset) OR $this->utc_offset === 0) $s[] = "var_utc_offset = {$this->utc_offset}";
-                if (!empty($this->emoticons)) $s[] = "var_emoticons = '{$this->emoticons}'";
-                if (!empty($this->startdate)) $s[] = "user_startdate = '{$this->startdate}'";
-                if (!empty($this->icq)) $s[] = "icq = '{$this->icq}'";
-                if (!empty($this->aim)) $s[] = "aim = '{$this->aim}'";
-                if (!empty($this->msn)) $s[] = "msn = '{$this->msn}'";
+                if (!empty($this->holiday_entitlement)) $s[] = "holiday_entitlement = ".cleanvar($this->holiday_entitlement)."";
+                if (!empty($this->holiday_resetdate)) $s[] = "holiday_restdate = '".cleanvar($this->holiday_resetdate)."'";
+                if (!empty($this->qualifications)) $s[] = "qualifications = '".cleanvar($this->qualifications)."'";
+                if (!empty($this->incident_refresh) OR $this->incident_refresh === 0) $s[] = "var_incident_refresh = ".cleanvar($this->incident_refresh)."";
+                if (!empty($this->update_order)) $s[] = "var_update_order = '".cleanvar($this->update_order)."'";
+                if (!empty($this->num_updates_view)) $s[] = "var_num_updates_view = ".cleanvar($this->num_updates_view)."";
+                if (!empty($this->style)) $s[] = "var_style = ".cleanvar($this->style)."";
+                if (!empty($this->hide_auto_updates)) $s[] = "var_hideautoupdates = '".cleanvar($this->hide_auto_updates)."'";
+                if (!empty($this->hideheader)) $s[] = "var_hideheader = '".cleanvar($this->hideheader)."'";
+                if (!empty($this->monitor)) $s[] = "var_monitor = '".cleanvar($this->monitor)."'";
+                if (!empty($this->i18n)) $s[] = "var_i18n = '".cleanvar($this->i18n)."'";
+                if (!empty($this->utc_offset) OR $this->utc_offset === 0) $s[] = "var_utc_offset = ".cleanvar($this->utc_offset)."";
+                if (!empty($this->emoticons)) $s[] = "var_emoticons = '".cleanvar($this->emoticons)."'";
+                if (!empty($this->startdate)) $s[] = "user_startdate = '".cleanvar($this->startdate)."'";
+                if (!empty($this->icq)) $s[] = "icq = '".cleanvar($this->icq)."'";
+                if (!empty($this->aim)) $s[] = "aim = '".cleanvar($this->aim)."'";
+                if (!empty($this->msn)) $s[] = "msn = '".cleanvar($this->msn)."'";
 
                 if ($errors == 0)
                 {
                     $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
                     $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    if (mysql_affected_rows() != 1)
+                    if (mysql_error())
                     {
-                        trigger_error("Failed to update user", E_USER_WARNING);
+                        trigger_error(mysql_error(), E_USER_WARNING);
                         $toReturn = FALSE;
                     }
                     else
@@ -312,8 +311,18 @@ class User extends Person{
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             if (mysql_affected_rows() != 1)
             {
-                trigger_error("Failed to disable user {$this->username}", E_USER_WARNING);
-                $toReturn = FALSE;
+                $sql = "SELECT status FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id} AND status = 0 ";
+                $result = mysql_query($result);
+                if (mysql_num_rows($result) == 0)
+                {
+                    trigger_error("Failed to disable user {$this->username}", E_USER_WARNING);
+                    $toReturn = FALSE;
+                }
+                else
+                {
+                    // Already disabled
+                    $toReturn = TRUE;
+                }
             }
             else
             {
@@ -327,7 +336,11 @@ class User extends Person{
 
     function getSOAPArray()
     {
-        trigger_error("User.getSOAPArray() not yet implemented");
+        // trigger_error("User.getSOAPArray() not yet implemented");
+        $a = array('userid' => $this->id,
+                      'realname' => $this->realname);
+        debug_log("A:".$a);
+        return $a;
     }
 }
 

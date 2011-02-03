@@ -2,7 +2,7 @@
 // year.inc.php - Displays a year view of the calendar
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -20,8 +20,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 // Display year calendar
 if ($type < HOL_PUBLIC)
 {
-    echo "<h2>{$strCalendar}: ";
-    if ($user == 'all' && $approver == TRUE) echo $strAll;
+    echo "<h2>".icon('holiday', 32)." {$strCalendar}: ";
+    if ($user == 'all' AND $approver == TRUE) echo $strAll;
     else echo user_realname($user,TRUE);
     if ($type == HOL_HOLIDAY)
     {
@@ -30,7 +30,7 @@ if ($type < HOL_PUBLIC)
 
     echo appointment_type_dropdown($type, 'year');
 
-    $sql = "SELECT * FROM {$dbHolidays} WHERE userid='{$user}' AND approved=0 AND type='$type'";
+    $sql = "SELECT * FROM {$dbHolidays} WHERE userid='{$user}' AND approved=0 AND type='{$type}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result))
@@ -38,16 +38,16 @@ if ($type < HOL_PUBLIC)
         echo "<table align='center'>";
         echo "<tr class='shade2'><td><strong>{$strAwaitingApproval}</strong>:</td></tr>";
         echo "<tr class='shade1'><td>";
-        while ($dates = mysql_fetch_array($result))
+        while ($dates = mysql_fetch_object($result))
         {
-            echo date('l ', strtotime($dates['date']));
-            if ($dates['length'] == 'am') echo "{$strMorning} ";
-            if ($dates['length'] == 'pm') echo "{$strAfternoon} ";
-            echo date('jS F Y', strtotime($dates['date']));
+            echo date('l ', strtotime($dates->date));
+            if ($dates->length == 'am') echo "{$strMorning} ";
+            if ($dates->length == 'pm') echo "{$strAfternoon} ";
+            echo date('jS F Y', strtotime($dates->date));
             echo "<br/>\n";
         }
         echo "</td></tr>\n";
-        echo "<tr class='shade1'><td><a href='holiday_request.php?type=$type'>{$strSendRequest}</a></td></tr>";
+        echo "<tr class='shade1'><td><a href='holiday_request.php?type={$type}'>{$strSendRequest}</a></td></tr>";
         echo "</table>";
     }
     mysql_free_result($result);
@@ -60,6 +60,7 @@ else
 }
 
 echo "<p align='center'>";
+
 if (!empty($selectedday))
 {
     // FIXME i18n holiday selection
@@ -87,17 +88,17 @@ if (!empty($selectedday))
         {
             // FIXME i18n ALL these
             case 'am':
-                echo "You can make it <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=pm'>the afternoon instead</a>, or select the <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=day'>full day</a>. ";
+                echo "You can make it <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=pm'>the afternoon instead</a>, or select the <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=day'>full day</a>. ";
                 break;
             case 'pm':
-                echo "You can make it <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=am'>the morning</a> instead, or select the <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=day'>full day</a>. ";
+                echo "You can make it <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=am'>the morning</a> instead, or select the <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=day'>full day</a>. ";
                 break;
             case 'day':
-                echo "You can make it <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=am'>the morning</a>, or <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=pm'>the afternoon</a> instead. ";
+                echo "You can make it <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=am'>the morning</a>, or <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=pm'>the afternoon</a> instead. ";
         }
         if ($length != '0')
         {
-            echo "Or you can <a href='holiday_add.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=0'>deselect</a> it. ";
+            echo "Or you can <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=0'>deselect</a> it. ";
             echo "<a href='calendar.php?type=$type&amp;user=$user' title='Clear this message'>Okay</a>.";
         }
     }
@@ -107,12 +108,12 @@ if (!empty($selectedday))
         echo "Approved by ".user_realname($xapprovedby).".";
         if ($length!='0' && $approver == TRUE && $sit[2] == $xapprovedby)
         {
-            echo "&nbsp;As approver for this holiday you can <a href='holiday_add.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=0'>deselect</a> it."; // FIXME i18n
+            echo "&nbsp;As approver for this holiday you can <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=0'>deselect</a> it."; // FIXME i18n
         }
     }
     else
     {
-        echo "<span class='error'>Declined</span>.  You should <a href='holiday_add.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=0'>deselect</a> it."; // FIXME i18n
+        echo "<span class='error'>Declined</span>.  You should <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=0'>deselect</a> it."; // FIXME i18n
     }
 }
 else

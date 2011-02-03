@@ -2,7 +2,7 @@
 // string.inc.php - String functions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -37,13 +37,25 @@ function leading_zero($length,$number)
 }
 
 
-function beginsWith( $str, $sub )
+/**
+ * Determines whether a string starts with a given substring
+ * @param string $str. Haystack
+ * @param string $sub. Needle
+ * @return bool. TRUE means the string was found
+ */
+function beginsWith($str, $sub)
 {
    return ( substr( $str, 0, strlen( $sub ) ) === $sub );
 }
 
 
-function endsWith( $str, $sub )
+/**
+ * Determines whether a string ends with a given substring
+ * @param string $str. Haystack
+ * @param string $sub. Needle
+ * @return bool. TRUE means the string was found
+ */
+function endsWith($str, $sub)
 {
    return ( substr( $str, strlen( $str ) - strlen( $sub ) ) === $sub );
 }

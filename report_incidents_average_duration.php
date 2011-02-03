@@ -2,7 +2,7 @@
 // average_incident_duration.php - Report showing average duration of incidents
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,7 +25,7 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $mode = cleanvar($_REQUEST['mode']);
 $title = $strAverageIncidentDuration;
 
@@ -95,7 +95,7 @@ if ($_REQUEST['output'] == 'csv')
 else
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<p align='center'>{$strOnlyShowsClosedCalls}</p>";
     echo "<p align='center'>";
     echo "<a href='{$_SERVER['PHP_SELF']}?mode=all&amp;increment=$increment";

@@ -2,7 +2,7 @@
 // week.inc.php - Displays a week view of the calendar
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-echo "<h2>{$strWeekView}</h2>";
+echo "<h2>".icon('holiday', 32)." {$strWeekView}</h2>";
 // Force the week view to the start first day of the week (ie. the monday)
 switch (date('D',mktime(0,0,0,$month,$day,$year)))
 {

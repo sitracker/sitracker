@@ -6,7 +6,7 @@
 //           everything is can be configured from the GUI now anyway
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -34,7 +34,7 @@ $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 $userid = cleanvar($_REQUEST['userid']);
 
-$edituserpermission = user_permission($sit[2],23); // edit user
+$edituserpermission = user_permission($sit[2], 23); // edit user
 
 if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
 {
@@ -72,12 +72,19 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                     break;
 
                 case '1darray':
-                    $parts = explode(',', $value);
-                    foreach ($parts AS $k => $v)
+                    if ($value != '')
                     {
-                        $parts[$k] = "'{$v}'";
+                        $parts = explode(',', $value);
+                        foreach ($parts AS $k => $v)
+                        {
+                            $parts[$k] = "'{$v}'";
+                        }
+                        $value = 'array(' . implode(',', $parts) . ')';
                     }
-                    $value = 'array(' . implode(',', $parts) . ')';
+                    else
+                    {
+                        $value = 'array()';
+                    }
                     break;
 
                 case '2darray':
@@ -108,13 +115,28 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                         $value = 'array(' . implode(',', $parts) . ')';
                     }
                     break;
+
+                case 'timeselector':
+                    $hour = cleanvar($_REQUEST[$catvar."time_picker_hour"]);
+                    $minute = cleanvar($_REQUEST[$catvar."time_picker_minute"]);
+                    $value = ($hour * 60 * 60) + ($minute * 60);
+                    break;
+
+                case 'weekdayselector':
+                    $value = 'array(' . implode(',', cleanvar($_REQUEST[$catvar])) . ')';
+                    break;
+
+                case 'number':
+                    $value = intval($value);
+                    break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
-            if (substr($value, 0, 6)=='array(')
+            if (substr($value, 0, 6) == 'array(')
             {
                 eval("\$val = $value;");
                 $value = $val;
             }
+
             if (empty($userid))
             {
                 $CONFIG[$catvar] = $value;
@@ -148,33 +170,28 @@ else
     echo " {$strSettings}</h2>";
 }
 
-// FIXME see draw_tabs()
-echo "<div class='tabcontainer'>";
-echo "<ul>";
+
+if (empty($seltab)) $seltab = 'application';
+if (empty($selcat)) $selcat = $CFGTAB[$seltab][0];
+
+$tabs = array();
+
 foreach ($CFGTAB AS $tab => $cat)
 {
-    if (empty($seltab)) $seltab = 'application';
-    echo "<li";
-    if ($seltab == $tab) echo " class='active'";
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$tab}&amp;userid={$userid}'>{$TABI18n[$tab]}</a></li>";
+    $tabs[$TABI18n[$tab]] = "{$_SERVER['PHP_SELF']}?tab={$tab}&amp;userid={$userid}";
 }
-echo "</ul>";
-echo "</div>";
+echo draw_tabs($tabs, $seltab);
 
+$smalltabs = array();
 
-echo "<div class='smalltabs'>";
-echo "<ul>";
 foreach ($CFGTAB[$seltab] AS $cat)
 {
-    if (empty($selcat)) $selcat = $CFGTAB[$seltab][0];
-    echo "<li";
-    if ($selcat == $cat) echo " class='active'";
     $catname = $CATI18N[$cat];
     if (empty($catname)) $catname = $cat;
-    echo "><a href='{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}&amp;userid={$userid}'>{$catname}</a></li>";
+    $smalltabs[$catname] = "{$_SERVER['PHP_SELF']}?tab={$seltab}&amp;cat={$cat}&amp;userid={$userid}";
 }
-echo "</ul>";
-echo "</div>";
+
+echo draw_tabs($smalltabs, $CATI18N[$selcat], 'smalltabs');
 
 echo "<div style='clear: both;'></div>";
 

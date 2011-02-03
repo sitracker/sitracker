@@ -49,8 +49,8 @@ if (empty($submit))
 }
 else
 {
-	$startdate = cleanvar($_REQUEST['startdate']);
-    $enddate = cleanvar($_REQUEST['enddate']);
+    $startdate = date("Y-m-d", strtotime(cleanvar($_REQUEST['startdate'])));
+    $enddate = date("Y-m-d", strtotime(cleanvar($_REQUEST['enddate'])));
     $output = cleanvar($_REQUEST['output']);
     $users = cleanvar($_POST['users']);
 
@@ -66,6 +66,7 @@ else
         for ($i = 0; $i < $usercount; $i++)
         {
             // $html .= "{$_POST['inc'][$i]} <br />";
+            $users[$i] = clean_int($users[$i]);
             $gsql .= "u.id = {$users[$i]} ";
             if ($i < ($usercount-1)) $gsql .= " OR ";
         }
@@ -74,7 +75,7 @@ else
     }
     $sql .= "GROUP BY h.userid, h.type";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
     	while ($obj = mysql_fetch_object($result))
@@ -105,8 +106,10 @@ else
     }
     else
     {
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     	echo "<h2>{$strHolidayUsage}<h2>";
         echo "<p class='warning'>{$strNoRecords}</p>";
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 
     

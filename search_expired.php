@@ -2,7 +2,7 @@
 // search_expired.php - Search expired contracts
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -31,7 +31,7 @@ if (empty($expired))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$strShowExpiredContracts}</h2>";
+    echo "<h2>".icon('contract', 32)." {$strShowExpiredContracts}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='get' >";
     printf("<p>{$strContractsExpiredXdaysAgo}", "<input maxlength='4' name='expired' size='3' type='text' value='30' />");
     echo "<p><input name='show' type='checkbox' value='terminated'> {$strTerminated}</p>";
@@ -77,20 +77,17 @@ else
         $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, `{$dbContacts}` AS c, ";
         $sql .= "`{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r WHERE ";
         $sql .= "(siteid = s.id AND product = p.id AND reseller = r.id AND (licence_type = l.id OR licence_type = NULL) AND admincontact = c.id) AND ";
-        $sql .= "expirydate >= $min_expiry AND expirydate <= $now ";
-        if ($show == "terminated") $sql .= "AND term='yes'";
-        else $sql .= "AND term != 'yes'";
+        $sql .= "expirydate >= {$min_expiry} AND expirydate <= {$now} ";
+        if ($show == "terminated") $sql .= "AND term='yes' ";
+        else $sql .= "AND term != 'yes' ";
         $sql .= "ORDER BY expirydate ASC";
-
-        // show SQL string for debugging
-        //echo $sql;
 
         // connect to database
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        if ($show == "") $pagetitle = "<h2>{$strNonTerminatedContractsExpiredXdaysAgo}</h2>\n";
-        else if ($show == "terminated") $pagetitle = "<h2>{$strTerminatedContractsExpiredXdaysAgo}</h2>\n";
+        if ($show == "") $pagetitle = "<h2>".icon('contract', 32)." {$strNonTerminatedContractsExpiredXdaysAgo}</h2>\n";
+        else if ($show == "terminated") $pagetitle = "<h2>".icon('contract', 32)." {$strTerminatedContractsExpiredXdaysAgo}</h2>\n";
 
         if (mysql_num_rows($result) == 0)
         {
@@ -104,32 +101,18 @@ else
             if ($_REQUEST['output'] == 'screen')
             {
                 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-                ?>
-                <script type="text/javascript">
-                function support_contacts_window(maintenanceid)
-                {
-                    URL = "support_contacts.php?maintid=" + maintenanceid;
-                    window.open(URL, "support_contacts_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-                }
-                function contact_details_window(contactid)
-                {
-                    URL = "contact_details.php?contactid=" + contactid;
-                    window.open(URL, "contact_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-                }
-                </script>
-                <?php
+
                 printf ($pagetitle, $expired);
 
                 echo "<h3>{$strSearchYielded} ".mysql_num_rows($result);
-                    if (mysql_num_rows($result) == 1)
-                    {
-                        echo " {$strResult}</h3>";
-                    }
-                    else
-                    {
-                        echo " {$strResults}</h3>";
-                    }
-
+                if (mysql_num_rows($result) == 1)
+                {
+                    echo " {$strResult}</h3>";
+                }
+                else
+                {
+                    echo " {$strResults}</h3>";
+                }
 
                 echo "<table align='center'>
                 <tr>
@@ -156,7 +139,7 @@ else
 
                     echo "<td align='center' class='{$shade}' width='75'>{$results->licence_quantity} {$results->licence_type}</td>";
                     echo "<td align='center' class='{$shade}' width='100'>".ldate($CONFIG['dateformat_date'], $results->expirydate)."</td>";
-                    echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: contact_details_window({$results->admincontact})\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
+                    echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: wt_winpopup('contact_details.php?contactid={$results->admincontact}')\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
 
                     echo "<td class='{$shade}'>{$results->admincontactphone}</td>";
                     echo "<td class='{$shade}'>{$results->admincontactemail}</td>";

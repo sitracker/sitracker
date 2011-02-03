@@ -2,7 +2,7 @@
 // close_incident.php - Display a form for closing an incident
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,7 +19,7 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 
 $title = $strClose;
@@ -283,9 +283,9 @@ if (empty($_REQUEST['process']))
 else
 {
     // External variables
-    $closingstatus = cleanvar($_POST['closingstatus']);
+    $closingstatus = clean_int($_POST['closingstatus']);
     $summary = cleanvar($_POST['summary']);
-    $id = cleanvar($_POST['id']);
+    $id = clean_int($_POST['id']);
     $distribution = cleanvar($_POST['distribution']);
     $solution = cleanvar($_POST['solution']);
     $kbarticle = cleanvar($_POST['kbarticle']);
@@ -502,7 +502,7 @@ else
             if ($send_email == 'yes')
             {
                 $notifycontact = 1;
-                if ($wait=='yes')
+                if ($wait == 'yes')
                 {
                     $awaitingclosure = 1;
                 }

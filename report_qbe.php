@@ -2,7 +2,7 @@
 // qbe.php - Very simple query by example
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,7 +25,7 @@ $title = $strQueryByExample;
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center'>";
     echo "<tr><th>{$strTable}:</th>";
@@ -62,7 +62,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
 {
     $table1 = cleanvar($_REQUEST['table1']);
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center'>";
     echo "<tr><th>{$strTable}:</th>";
@@ -143,7 +143,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $criteriaval = cleanvar($_POST['criteriaval']);
     $sortby = cleanvar($_POST['sortby']);
     $sortorder = cleanvar($_POST['sortorder']);
-    $limit = cleanvar($_POST['limit']);
+    $limit = clean_int($_POST['limit']);
     $columns = count($_POST[fields]);
     
     switch ($criteriaop)

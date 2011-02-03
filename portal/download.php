@@ -2,7 +2,7 @@
 // download.php - Pass a file to the browser for download
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,7 +25,7 @@ $inlinefiles = array('jpg','jpeg','png','gif','txt','htm','html');
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 
 // External variables
-$id = cleanvar(intval($_GET['id']));
+$id = clean_int($_GET['id']);
 
 $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         FROM `{$dbFiles}` AS f, `{$dbLinks}` AS l, `{$dbUpdates}` AS u
@@ -38,8 +38,8 @@ $sql = "SELECT *, u.id AS updateid, f.id AS fileid
 
 $result = mysql_query($sql);
 $fileobj = mysql_fetch_object($result);
-$incidentid = cleanvar(intval($fileobj->incidentid));
-$updateid = cleanvar(intval($fileobj->updateid));
+$incidentid = clean_int($fileobj->incidentid);
+$updateid = clean_int($fileobj->updateid);
 $filename = cleanvar($fileobj->filename);
 $fileid = $fileobj->fileid;
 $visibility = $fileobj->category;
@@ -101,7 +101,7 @@ elseif ($access == TRUE)
            $ext = substr($filename, strrpos($filename, '.') + 1);
             if (in_array($ext, $inlinefiles)) $inline = TRUE;
             else $inline = FALSE;
-            if ($inline) header("Content-Type: ".mime_content_type($file_fspath));
+            if ($inline) header("Content-Type: ".mime_type($file_fspath));
             else header("Content-Type: application/octet-stream");
             header("Content-Length: {$file_size}");
             if ($inline) header("Content-Disposition: inline; filename=\"{$filename}\"");

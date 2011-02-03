@@ -2,7 +2,7 @@
 // triggers.class.php - A representation of a trigger
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -12,6 +12,7 @@
 // This lib is currently included at the end of auth.inc.php
 
 //include_once (APPLICATION_LIBPATH . 'incident.inc.php');
+require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require_once (APPLICATION_LIBPATH . 'mime.inc.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');

@@ -2,7 +2,7 @@
 // approve_transaction.php - Page which does the approval of a transaction
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2007 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,7 +19,7 @@ include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication
 require_once(APPLICATION_LIBPATH.'auth.inc.php');
 
-$transactiond = cleanvar($_REQUEST['transactionid']);
+$transactiond = clean_int($_REQUEST['transactionid']);
 $title = $strBilling;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

@@ -3,7 +3,7 @@
 // Summary of all sites and their balances and expiry date.(sf 1931092)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,7 +27,7 @@ if (empty($display)) $display = 'html';
 
 $sql = "SELECT DISTINCT(CONCAT(m.id,sl.id)), m.site, m.product, m.expirydate AS maintexpiry, s.* ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbService}` AS s, `{$dbSites}` AS site ";
-$sql .= "WHERE m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
+$sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
 
 if (empty($showfoc) OR $showfoc != 'show')
 {

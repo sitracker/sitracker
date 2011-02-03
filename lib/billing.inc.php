@@ -2,7 +2,7 @@
 // billing.inc.php - functions relating to billing
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -31,7 +31,7 @@ function does_contact_have_billable_contract($contactid)
 
     $siteid = contact_siteid($contactid);
     $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = {$siteid} ";
+    $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
     $result = mysql_query($sql);
 
@@ -78,7 +78,7 @@ function get_billable_contract_id($contactid)
 
     $siteid = contact_siteid($contactid);
     $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = {$siteid} ";
+    $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
 
     $result = mysql_query($sql);
@@ -107,7 +107,7 @@ function get_site_billable_contract_id($siteid)
     $return = -1;
 
     $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = {$siteid} ";
+    $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
 
     $result = mysql_query($sql);
@@ -162,15 +162,14 @@ function get_service_percentage($maintid)
  * @author Ivan Lucas
  * @param int $contractid
  * @return Whether the contract should be billed
- * @retval bool TRUE:    Yes timed. should be billed
- * @retval bool FALSE:   No, not timed. Should not be billed
+ * @return bool TRUE: Yes timed. should be billed, FALSE: No, not timed. Should not be billed
  */
 function is_contract_timed($contractid)
 {
     global $dbMaintenance, $dbServiceLevels;
     $timed = FALSE;
-    $sql = "SELECT timed FROM `$dbMaintenance` AS m, `$dbServiceLevels` AS sl ";
-    $sql .= "WHERE m.servicelevelid = sl.id AND m.id = $contractid";
+    $sql = "SELECT timed FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl ";
+    $sql .= "WHERE m.servicelevel = sl.tag AND m.id = {$contractid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -206,13 +205,13 @@ function update_last_billed_time($serviceid, $date)
         mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysql_error(), E_USER_ERROR);
             $rtnvalue = FALSE;
         }
 
         if (mysql_affected_rows() < 1)
         {
-            trigger_error("Approval failed",E_USER_ERROR);
+            trigger_error("Approval failed", E_USER_ERROR);
             $rtnvalue = FALSE;
         }
     }
@@ -224,11 +223,13 @@ function update_last_billed_time($serviceid, $date)
  * Find the billing multiple that should be applied given the day, time and matrix in use
  * @author Paul Heaney
  * @param string $dayofweek 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' or 'holiday'
+ * @param int $hour The hour in the day, values in the range 0 - 23
+ * @param string $billingmatrix The billing matrix to get the multiple from, defaults to 'Default'
  * @return float - The applicable multiplier for the time of day and billing matrix being used
  */
-function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 1)
+function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 'Default')
 {
-    $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrix']} WHERE hour = {$hour} AND id = {$billingmatrix}";
+    $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrix']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
 
     $result = mysql_query($sql);
     if (mysql_error())
@@ -252,14 +253,17 @@ function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 1)
 /**
  * Function to get an array of all billing multipliers for a billing matrix
  * @author Paul Heaney
+ * @param String $matrixid The TAG of the billing matrix being used, defaults to 'Default'
+ * @return array - All available billing multipliers for the specified Matrix
  */
-function get_all_available_multipliers($matrixid=1)
+function get_all_available_multipliers($matrixid='')
 {
     $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
 
     foreach ($days AS $d)
     {
-        $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrix']}` WHERE id = {$matrixid}";
+        $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrix']}` ";
+        if (!empty($matrixid)) $sql .= " WHERE tag = '{$matrixid}'";
         $result = mysql_query($sql);
         if (mysql_error())
         {
@@ -282,8 +286,8 @@ function get_all_available_multipliers($matrixid=1)
 /**
  * Function to find the most applicable unit rate for a particular contract
  * @author Paul Heaney
- * @param $contractid - The contract id
- * @param $date UNIX timestamp. The function will look for service that is current as of this timestamp
+ * @param int $contractid - The contract id
+ * @param string $date UNIX timestamp. The function will look for service that is current as of this timestamp
  * @return int the unit rate, -1 if non found
  */
 function get_unit_rate($contractid, $date='')
@@ -450,7 +454,7 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
         $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
     }
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($balance) = mysql_fetch_row($result);
 
     if ($includenonapproved)
@@ -477,16 +481,16 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
 function get_overdraft($contractid)
 {
     $rtnvalue = FALSE;
-    $sql = "SELECT DISTINCT sl.id, sl.tag FROM `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenance']}` AS m ";
-    $sql .= "WHERE m.servicelevelid = sl.id AND m.id = {$contractid}";
+    $sql = "SELECT DISTINCT sl.tag FROM `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenance']}` AS m ";
+    $sql .= "WHERE m.servicelevel = sl.tag AND m.id = {$contractid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting servicelevel details. ".mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 1)
     {
-        list($id, $tag) = mysql_fetch_row($result);
+        list($tag) = mysql_fetch_row($result);
         $sql = "SELECT DISTINCT limit FROM `{$GLOBALS['dbBillingPeriods']}` ";
-        $sql .= "WHERE servicelevelid = $id AND tag = '{$tag}'";
+        $sql .= "WHERE AND tag = '{$tag}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("Error getting servicelevel details. ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) == 1)
@@ -1062,7 +1066,7 @@ function is_billable_incident_approved($incidentid)
     $sql .= "AND direction = 'left' ";
     $sql .= "AND t.transactionstatus = '".BILLING_APPROVED."'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0) return TRUE;
     else return FALSE;
@@ -1085,7 +1089,7 @@ function get_incident_transactionid($incidentid)
     $sql .= "AND linkcolref = {$incidentid} ";
     $sql .= "AND direction = 'left' ";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -1131,12 +1135,12 @@ function contract_service_table($contractid, $billing)
 
             $expired = false;
             if ($service->enddate < $now) $expired = true;
-            
+
             $html .= "<tr class='";
             if ($expired) $html .= "expired";
             else $html .= $shade;
             $html .= "'>";
-            
+
             if ($billing)
             {
                 $balance = get_service_balance($service->serviceid);
@@ -1173,6 +1177,8 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
                 }
+                
+                $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
 
                 if ($balance != $service->balance)
                 {
@@ -1186,7 +1192,7 @@ function contract_service_table($contractid, $billing)
                     {
                         $span .= "<strong>{$GLOBALS['strReserved']}</strong>: {$CONFIG['currency_symbol']}".number_format($reserved, 2)."<br />";
                     }
-                    
+
                     $span .= "<strong>{$GLOBALS['strAvailableBalance']}</strong>: ";
                     if (!$expired)
                     {
@@ -1245,7 +1251,7 @@ function contract_service_table($contractid, $billing)
                 $html .= " | <a href='contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditBalance']}</a>";
             }
             $html .= "</td></tr>\n";
-            
+
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
@@ -1381,9 +1387,9 @@ function make_incident_billing_array($incidentid, $totals=TRUE)
 
     $billing = get_incident_billing_details($incidentid);
 
-// echo "<pre>";
-// print_r($billing);
-// echo "</pre><hr />";
+    // echo "<pre>";
+    // print_r($billing);
+    // echo "</pre><hr />";
 
     $sql = "SELECT servicelevel, priority FROM `{$GLOBALS['dbIncidents']}` WHERE id = {$incidentid}";
     $result = mysql_query($sql);
@@ -1507,6 +1513,7 @@ function make_incident_billing_array($incidentid, $totals=TRUE)
             }
 
             if (!empty($billing['refunds'])) $billing_a[-1]['refunds'] = $billing['refunds']/$customerPeriod; // return refunds as a number of units
+            else $billing_a[-1]['refunds'] = 0;
 
         }
 
@@ -1575,6 +1582,17 @@ function get_incident_billable_breakdown_array($incidentid)
 {
     $billable = make_incident_billing_array($incidentid, FALSE);
 
+    $billingmatrix = '';
+    
+    $serviceid = get_serviceid(incident_maintid($incidentid));
+    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbService']}` WHERE serviceid = {$serviceid}";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error("Unable to get billing matrix for service {$serviceid} ".mysql_error(),E_USER_WARNING);
+    }
+    list($billingmatrix) = mysql_fetch_row($result);
+    
     //echo "<pre>";
     //print_r($billable);
     //echo "</pre>";
@@ -1605,7 +1623,7 @@ function get_incident_billable_breakdown_array($incidentid)
                         $dayofweek = "holiday";
                     }
 
-                    $multiplier = get_billable_multiplier($dayofweek, $hour, 1); //FIXME make this not hard coded
+                    $multiplier = get_billable_multiplier($dayofweek, $hour, $billingmatrix);
 
                     $billing[$engineerName]['owner'] = $engineerName;
                     $billing[$engineerName][$multiplier]['multiplier'] = $multiplier;
@@ -1659,13 +1677,13 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
             $unitamount = $service->unitrate * $multiplier;
             if ($unitamount > 0 AND $service->balance != 0) $unitbalance += round($service->balance / $unitamount);
         }
-        
+
         if ($includenonapproved)
         {
             $awaiting = contract_transaction_total($contractid, BILLING_AWAITINGAPPROVAL);
             if ($awaiting != 0) $unitbalance += round($awaiting / $unitamount);
         }
-    
+
         if ($includereserved)
         {
             $reserved = contract_transaction_total($contractid, BILLING_RESERVED);
@@ -1749,7 +1767,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
     $sql .= "FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbService']}` AS p, ";
     $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbSites']}` AS s ";
     $sql .= "WHERE t.serviceid = p.serviceid AND p.contractid = m.id "; // AND t.date <= '{$enddateorig}' ";
-    $sql .= "AND m.servicelevelid = sl.id AND sl.timed = 'yes' AND m.site = s.id ";
+    $sql .= "AND m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
     //// $sql .= "AND t.date > p.lastbilled AND m.site = {$objsite->site} ";
     if ($serviceid > 0) $sql .= "AND t.serviceid = {$serviceid} ";
     if (!empty($startdate)) $sql .= "AND t.dateupdated >= '{$startdate}' ";
@@ -1768,6 +1786,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
         foreach ($sites AS $s)
         {
+            $s = clean_int($s);
             if (empty($sitestr)) $sitestr .= "m.site = {$s} ";
             else $sitestr .= "OR m.site = {$s} ";
         }
@@ -1871,11 +1890,14 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $str .= "\"";
                 switch ($transaction->transactionstatus)
                 {
-                    case BILLING_APPROVED: $str .= $GLOBALS['strApproved'];
+                    case BILLING_APPROVED:
+                        $str .= $GLOBALS['strApproved'];
                         break;
-                    case BILLING_AWAITINGAPPROVAL: $str .= $GLOBALS['strAwaitingApproval'];
+                    case BILLING_AWAITINGAPPROVAL:
+                        $str .= $GLOBALS['strAwaitingApproval'];
                         break;
-                    case BILLING_RESERVED: $str .= $GLOBALS['strReserved'];
+                    case BILLING_RESERVED:
+                        $str .= $GLOBALS['strReserved'];
                         break;
                 }
                 $str .= "\",";

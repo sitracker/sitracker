@@ -2,7 +2,7 @@
 // incoming.inc.php - Displays tempincoming data
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
     exit;
 }
-$incomingid = cleanvar($_REQUEST['id']);
+$incomingid = clean_int($_REQUEST['id']);
 
 if ($_REQUEST['action'] == "updatereason")
 {
@@ -38,14 +38,17 @@ if (mysql_num_rows($result) > 0)
 {
     $incoming = @mysql_fetch_object($result);
 
+    $lockedbyyou = false;
+    
     if (!$incoming->locked)
     {
         //it's not locked, lock for this user
-        $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
+        $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
         $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' WHERE id='{$incomingid}' AND (locked = 0 OR locked IS NULL)";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $lockedbyname = "you";
+        $lockedbyname = $strYou;
+        $lockedbyyou = true;
     }
     elseif ($incoming->locked != $sit[2])
     {
@@ -60,11 +63,12 @@ if (mysql_num_rows($result) > 0)
     }
     else
     {
-        $lockedbyname = "you";
+        $lockedbyname = $strYou;
+        $lockedbyyou = true;
     }
 
     echo "<div class='detailinfo'>";
-    if ($lockedbyname == "you")
+    if ($lockedbyyou)
     {
         echo "<div class='detaildate'>";
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$incomingid}&win=incomingview&action=updatereason'>";
@@ -81,7 +85,6 @@ if (mysql_num_rows($result) > 0)
     echo icon('locked', 16, $strLocked);
     echo " ".sprintf($strLockedByX, $lockedbyname)."</div>";
 
-    //echo "<pre>".print_r($incoming,true)."</pre>";
     $usql = "SELECT * FROM `{$dbUpdates}` WHERE id='{$incoming->updateid}'";
     $uresult = mysql_query($usql);
     while ($update = mysql_fetch_object($uresult))
@@ -96,7 +99,6 @@ if (mysql_num_rows($result) > 0)
         echo parse_updatebody($updatebody, FALSE);
         echo "</div>";
     }
-
 }
 else
 {

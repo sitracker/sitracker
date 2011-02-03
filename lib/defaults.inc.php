@@ -2,7 +2,7 @@
 // defaults.inc.php - Provide configuration defaults
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -200,7 +200,7 @@ $CONFIG['access_logfile'] = '';
 
 // The plugins configuration is an array
 //$CONFIG['plugins'] = array();
-$CONFIG['plugins'] = array('');
+$CONFIG['plugins'] = array();
 
 $CONFIG['no_feedback_contracts'] = array();
 
@@ -259,6 +259,12 @@ $CONFIG['billing_reports_email'] = 'admin@localhost';
 
 // Allow incidents to be approved against overdrawn services
 $CONFIG['billing_allow_incident_approval_against_overdrawn_service'] = TRUE;
+
+// Multipliers to be used on billing matrix to allow more units tobe consumed at certain periods of time
+$CONFIG['billing_matrix_multipliers'] = array(0.5, 1, 1.5, 2, 2.5, 3);
+
+// Default billing multiplier to use
+$CONFIG['billing_default_multiplier'] = 1;
 
 $CONFIG['inventory_types']['cisco vpn'] = 'Cisco VPN';
 $CONFIG['inventory_types']['go_to_my_pc'] = 'Go to my PC';

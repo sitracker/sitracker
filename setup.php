@@ -2,7 +2,7 @@
 // setup.php - Install/Upgrade and set up plugins
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -679,7 +679,7 @@ switch ($_REQUEST['action'])
                 {
                     $newcfgfile .= $setupval == TRUE ? "TRUE" : "FALSE";
                 }
-                elseif (substr($setupval, 0, 6)=='array(')
+                elseif (substr($setupval, 0, 6) == 'array(')
                 {
                     $newcfgfile .= stripslashes("{$setupval}");
                 }
@@ -1176,6 +1176,7 @@ switch ($_REQUEST['action'])
                             }
                         }
 
+                        // FIXME which version of SiT do we support upgrading to 4.0 from?  
                         /******************************
                          * Do Post-upgrade tasks here *
                          ******************************/
@@ -1450,7 +1451,7 @@ switch ($_REQUEST['action'])
                     {
                         echo "<p class='error'>SiT! requires PHP 5.0.0 or later</p>";
                     }
-                    elseif (@ini_get('register_globals')==1 OR strtolower(@ini_get('register_globals'))=='on')
+                    elseif (@ini_get('register_globals') == 1 OR strtolower(@ini_get('register_globals')) == 'on')
                     {
                         echo "<p class='error'>SiT! strongly recommends that you change your php.ini setting <code>register_globals</code> to OFF.</p>";
                     }

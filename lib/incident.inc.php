@@ -2,7 +2,7 @@
 // incident.inc.php - functions relating to incidents
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -137,7 +137,7 @@ function create_incident_from_incoming($incomingid)
     $sql = "SELECT * FROM `{$dbTempIncoming}` ";
     $sql .= "WHERE id = '{$incomingid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     $row = mysql_fetch_object($result);
     $contact = $row->contactid;
@@ -150,16 +150,16 @@ function create_incident_from_incoming($incomingid)
     $subject = $row->subject;
     $update = $row->updateid;
 
-    $sql = "SELECT servicelevelid, tag, product, softwareid ";
+    $sql = "SELECT tag, product, softwareid ";
     $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp ";
     $sql .= "WHERE m.id = '{$contract}' ";
-    $sql .= "AND m.servicelevelid = s.id ";
+    $sql .= "AND m.servicelevel = s.tag ";
     $sql .= "AND m.product = sp.productid LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -206,7 +206,7 @@ function move_update_to_incident($update, $incident)
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         return FALSE;
     }
     else
@@ -254,7 +254,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
     global $now, $dbUsers, $dbIncidents, $dbUserSoftware, $startofsession;
     $sql = "SELECT product, softwareid, priority, contact, owner FROM `{$dbIncidents}` WHERE id={$incidentid} LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (!$result)
     {
@@ -344,7 +344,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
                 }
 
                 // Get one ticket for having five or less incidents
-                if ($queue_size <=5) $ticket[] = $user->userid;
+                if ($queue_size <= 5) $ticket[] = $user->userid;
 
                 // Get up to three tickets, one less ticket for each critical incident in queue
                 for ($c = 1; $c < (3 - $queued_critical); $c++)
@@ -405,7 +405,7 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $rtn = FALSE;
     }
 
@@ -415,7 +415,7 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $rtn = FALSE;
     }
 
@@ -440,7 +440,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', ";
     $sql .= "lastupdated='{$time}', closed='0' WHERE id='{$incident}' LIMIT 1";
     mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     $owner = incident_owner($incident);
     // add update
@@ -451,7 +451,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -467,7 +467,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -478,7 +478,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -487,17 +487,17 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
 
 
 /**
- Send a template email without using a trigger
- @author Ivan Lucas
- @param int $templateid: The ID number of the template to use
- @param array $paramarray. An associative array of template parameters
+ * Send a template email without using a trigger
+ * @author Ivan Lucas
+ * @param int $templateid: The ID number of the template to use
+ * @param array $paramarray. An associative array of template parameters
              This should at the very least be
              array('incidentid' => $id, 'triggeruserid' => $sit[2])
- @param string $attach. Path and filename of file to attach
- @param string $attachtype. Type of file to attach (Default 'OCTET')
- @param string $attachdesc. Description of the attachment, (Default, same as filename)
- @return bool TRUE: The email was sent successfully, FALSE: There was an error sending the mail
- @note This is v2 of this function, it has different paramters than v1
+ * @param string $attach. Path and filename of file to attach
+ * @param string $attachtype. Type of file to attach (Default 'OCTET')
+ * @param string $attachdesc. Description of the attachment, (Default, same as filename)
+ * @return bool TRUE: The email was sent successfully, FALSE: There was an error sending the mail
+ * @note This is v2 of this function, it has different paramters than v1
  */
 function send_email_template($templateid, $paramarray, $attach='', $attachtype='', $attachdesc='')
 {
@@ -515,9 +515,9 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     }
 
     // Grab the template
-    $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id=$templateid LIMIT 1";
+    $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$templateid} LIMIT 1";
     $tresult = mysql_query($tsql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
     $paramarray = array('incidentid' => $paramarray['incidentid'], 'triggeruserid' => $sit[2]);
     $from = replace_specials($template->fromfield, $paramarray);
@@ -564,17 +564,17 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
     $sql = "SELECT count(id) AS count FROM `{$GLOBALS['dbDrafts']}` WHERE incidentid = {$incidentid} ";
     if ($type == "update") $sql .= "AND type = 'update'";
     elseif ($type == "email") $sql .= "AND type = 'email'";
-    
+
     if (!empty($userid)) $sql .= "AND userid = {$userid} ";
-    
+
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         $rtn = FALSE;
     }
 
-    list($count) = mysql_fetch_array($result);
+    list($count) = mysql_fetch_assoc($result);
     if ($count > 0) $rtn = TRUE;
 
     return $rtn;
@@ -625,9 +625,9 @@ function incident_id_from_subject($subject, $from)
 function count_incident_stats($incidentid)
 {
     global $dbUpdates;
-    $sql = "SELECT count(DISTINCT currentowner),count(id) FROM `{$dbUpdates}` WHERE incidentid='$incidentid' AND userid!=0 GROUP BY userid";
+    $sql = "SELECT count(DISTINCT currentowner),count(id) FROM `{$dbUpdates}` WHERE incidentid='{$incidentid}' AND userid!=0 GROUP BY userid";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($unique_users,$num_updates) = mysql_fetch_row($result);
     return array($unique_users,$num_updates);;
 }
@@ -648,7 +648,7 @@ function average_incident_duration($start,$end,$states)
     if ($end > 0) $sql .= "AND opened <= {$end} ";
 
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $totalduration = 0;
     $totalworkingduration = 0;
@@ -687,8 +687,8 @@ function sla_target_content($incidentid, $target)
 {
     $rtn = '';
     global $dbUpdates;
-    $incidentid = cleanvar($incidentid);
-    $target = cleanvar($target);
+    $incidentid = clean_int($incidentid);
+    $target = clean_dbstring($target);
 
     $sql = "SELECT bodytext FROM `{$dbUpdates}` ";
     $sql .= "WHERE incidentid = '{$incidentid}' ";
@@ -696,7 +696,7 @@ function sla_target_content($incidentid, $target)
     $sql .= "ORDER BY timestamp DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($bodytext) = mysql_fetch_array($result);
+    list($bodytext) = mysql_fetch_assoc($result);
     $bodytext = str_replace("<hr>", "", $bodytext);
     $rtn .= $bodytext;
     return $rtn;
@@ -719,7 +719,7 @@ function incident_service_level($incidentid)
     $result = mysql_query($sql);
 
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($servicelevel) = mysql_fetch_array($result);
+    list($servicelevel) = mysql_fetch_assoc($result);
 
     return $servicelevel;
 }
@@ -728,13 +728,14 @@ function incident_service_level($incidentid)
 /**
  * Load the incident entitlement for the portal
  * Moved from portal/ad.php
+ * @author Kieran Hogg
  * @param $contactid  - The contact to load the entitlement for
- * @param $siteid - The site the contact belongs to 
+ * @param $siteid - The site the contact belongs to
  */
 function load_entitlements($contactid, $siteid)
 {
     global $dbSupportContacts, $dbMaintenance, $dbProducts;
-    
+
     //get entitlement
     $sql = "SELECT m.*, p.name, ";
     $sql .= "(m.incident_quantity - m.incidents_used) AS availableincidents ";
@@ -753,7 +754,7 @@ function load_entitlements($contactid, $siteid)
     $sql .= "ORDER BY expirydate DESC ";
 
     $contractresult = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     while ($contract = mysql_fetch_object($contractresult))
     {
         $_SESSION['entitlement'][] = serialize($contract);
@@ -984,21 +985,21 @@ function incident_lastupdate($id)
     $sql = "SELECT userid, type, sla, currentowner, currentstatus, LEFT(bodytext,500) AS body, timestamp, nextaction, id ";
     $sql .= "FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND bodytext != '' ORDER BY timestamp DESC, id DESC LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
-        trigger_error("Zero records while retrieving incident last update for incident {$id}",E_USER_WARNING);
+        trigger_error("Zero records while retrieving incident last update for incident {$id}", E_USER_WARNING);
     }
     else
     {
-        $update = mysql_fetch_array($result);
+        $update = mysql_fetch_object($result);
 
         mysql_free_result($result);
         // Remove Tags from update Body
-        $update['body'] = trim($update['body']);
-        $update['body'] = $update['body'];
-        return array($update['userid'], $update['type'] ,$update['currentowner'], $update['currentstatus'], $update['body'], $update['timestamp'], $update['nextaction'], $update['id']);
+        $update->body = trim($update->body);
+        $update->body = $update->body;
+        return array($update->userid, $update->type ,$update->currentowner, $update->currentstatus, $update->body, $update->timestamp, $update->nextaction, $update->id);
     }
 }
 
@@ -1013,7 +1014,7 @@ function incident_firstupdate($id)
     $sql = "SELECT bodytext FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND customervisibility='show' ";
     $sql .= "ORDER BY timestamp ASC, id ASC LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) >= 1)
     {
@@ -1053,7 +1054,7 @@ function incidentstatus_name($id, $type='internal')
 
     $sql = "SELECT {$type} FROM `{$dbIncidentStatus}` WHERE id='{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -1194,7 +1195,7 @@ function incident_get_next_target($incidentid)
     // Find the most recent SLA target that was met
     $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND type='slamet' ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $target = '';
     if (mysql_num_rows($result) > 0)
@@ -1281,7 +1282,7 @@ function incident_time_since_review($incidentid)
     $sql .= "WHERE incidentid='{$incidentid}' AND type='reviewmet' ";
     $sql .= "ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -1310,7 +1311,7 @@ function incident_backup_switchover($userid, $accepting)
     $usersql .= "FROM `{$dbUsers}` AS u, `{$dbUserStatus}` AS us ";
     $usersql .= "WHERE u.id = '{$userid}' AND u.status = us.id";
     $userresult = mysql_query($usersql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $user = mysql_fetch_row($userresult);
 
     if (strtolower($accepting) == 'no')
@@ -1318,7 +1319,7 @@ function incident_backup_switchover($userid, $accepting)
         // Look through the incidents that this user OWNS (and are not closed)
         $sql = "SELECT * FROM `{$dbIncidents}` WHERE (owner='{$userid}' OR towner='{$userid}') AND status!=2";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($incident = mysql_fetch_object($result))
         {
             // Try and find a backup/substitute engineer
@@ -1330,7 +1331,7 @@ function incident_backup_switchover($userid, $accepting)
                 // Look to see if this assignment is in the queue already
                 $fsql = "SELECT * FROM `{$dbTempAssigns}` WHERE incidentid='{$incident->id}' AND originalowner='{$userid}'";
                 $fresult = mysql_query($fsql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 if (mysql_num_rows($fresult) < 1)
                 {
                     // it's not in the queue, and the user isn't accepting so add it
@@ -1338,7 +1339,7 @@ function incident_backup_switchover($userid, $accepting)
                     $userstatus = $user['status'];
                     $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '$userstatus')";
                     mysql_query($usql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
             }
             else
@@ -1348,7 +1349,7 @@ function incident_backup_switchover($userid, $accepting)
                 $rusql = "UPDATE `{$dbIncidents}` SET ";
                 $rusql .= "towner='{$backupid}', lastupdated='$now' WHERE id='{$incident->id}' LIMIT 1";
                 mysql_query($rusql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
                 // add update
                 $username = user_realname($userid);
@@ -1363,26 +1364,26 @@ function incident_backup_switchover($userid, $accepting)
                 $risql .= "'{$backupid}', ";
                 $risql .= "'{$incident->status}')";
                 mysql_query($risql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
                 // Look to see if this assignment is in the queue already
                 $fsql = "SELECT * FROM `{$dbTempAssigns}` WHERE incidentid='{$incident->id}' AND originalowner='{$userid}'";
                 $fresult = mysql_query($fsql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 if (mysql_num_rows($fresult) < 1)
                 {
                     //$userstatus=user_status($userid);
                     $userstatus = $user['status'];
                     $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus,assigned) VALUES ('{$incident->id}', '{$userid}', '$userstatus','yes')";
                     mysql_query($usql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
                 else
                 {
                     // mark the temp assigns table so it's not showing in the holding queue
-                    $tasql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE originalowner='$userid' AND incidentid='{$incident->id}' LIMIT 1";
+                    $tasql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE originalowner='{$userid}' AND incidentid='{$incident->id}' LIMIT 1";
                     mysql_query($tasql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
             }
         }
@@ -1396,7 +1397,7 @@ function incident_backup_switchover($userid, $accepting)
         // The user is now ACCEPTING, so first have a look to see if there are any reassignments in the queue
         $sql = "SELECT * FROM `{$dbTempAssigns}` WHERE originalowner='{$userid}' ";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($assign = mysql_fetch_object($result))
         {
             if ($assign->assigned == 'yes')
@@ -1405,7 +1406,7 @@ function incident_backup_switchover($userid, $accepting)
                 $lsql = "SELECT id,status FROM `{$dbIncidents}` ";
                 $lsql .= "WHERE id='{$assign->incidentid}' AND owner='{$assign->originalowner}' AND towner!=''";
                 $lresult = mysql_query($lsql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 while ($incident = mysql_fetch_object($lresult))
                 {
                     // Find our tempassign
@@ -1449,7 +1450,7 @@ function incident_backup_switchover($userid, $accepting)
                         // remove from assign queue now, all done
                         $rsql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$assign->incidentid}' AND originalowner='{$assign->originalowner}'";
                         mysql_query($rsql);
-                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                     }
                 }
             }
@@ -1458,7 +1459,7 @@ function incident_backup_switchover($userid, $accepting)
                 // now have a look to see if the reassign was completed
                 $ssql = "SELECT id FROM `{$dbIncidents}` WHERE id='{$assign->incidentid}' LIMIT 1";
                 $sresult = mysql_query($ssql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 if (mysql_num_rows($sresult) >= 1)
                 {
                     // reassign wasn't completed, or it was already assigned back, simply remove from assign queue
@@ -1564,11 +1565,11 @@ function holding_email_update_id($holding_email)
 
 function delete_holding_queue_update($updateid)
 {
-    $sql = "DELETE FROM {$GLOBALS['dbTempIncoming']} WHERE updateid = '{$updateid}'";
+    $sql = "DELETE FROM `{$GLOBALS['dbTempIncoming']}` WHERE updateid = '{$updateid}'";
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+        trigger_error(mysql_error(). "  {$sql}", E_USER_WARNING);
         return FALSE;
     }
     else
@@ -1583,7 +1584,7 @@ function num_unread_emails()
     global $dbTempIncoming;
     $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(). "  {$sql}", E_USER_WARNING);
     list($count) = mysql_fetch_row($result);
     return $count;
 }
@@ -1605,11 +1606,53 @@ function site_count_incidents($id)
     $sql .= "WHERE i.contact = c.id ";
     $sql .= "AND c.siteid='$id'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
     mysql_free_result($result);
 
     return $count;
+}
+
+
+/**
+ * @author Paul Heaney
+ */
+function display_drafts($type, $result)
+{
+    global $iconset;
+    global $id;
+    global $CONFIG;
+
+    if ($type == 'update')
+    {
+        $page = "incident_update.php";
+        $editurlspecific = '';
+    }
+    else if ($type == 'email')
+    {
+        $page = "incident_email.php";
+        $editurlspecific = "&amp;step=2";
+    }
+
+    echo "<p align='center'>{$GLOBALS['strDraftChoose']}</p>";
+
+    $html = '';
+
+    while ($obj = mysql_fetch_object($result))
+    {
+        $html .= "<div class='detailhead'>";
+        $html .= "<div class='detaildate'>".date($CONFIG['dateformat_datetime'], $obj->lastupdate);
+        $html .= "</div>";
+        $html .= "<a href='{$page}?action=editdraft&amp;draftid={$obj->id}&amp;id={$id}{$editurlspecific}' class='info'>";
+        $html .= icon('edit', 16, $GLOBALS['strDraftEdit'])."</a>";
+        $html .= "<a href='{$page}?action=deletedraft&amp;draftid={$obj->id}&amp;id={$id}' class='info'>";
+        $html .= icon('delete', 16, $GLOBALS['strDraftDelete'])."</a>";
+        $html .= "</div>";
+        $html .= "<div class='detailentry'>";
+        $html .= nl2br($obj->content)."</div>";
+    }
+
+    return $html;
 }
 
 

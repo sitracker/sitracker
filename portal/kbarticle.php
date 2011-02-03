@@ -2,7 +2,7 @@
 // kbarticle.php - Display a single portal knowledge base article
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -23,7 +23,7 @@ if ($CONFIG['portal_kb_enabled'] !== 'Public')
 $can_view = FALSE;
 if (!empty($_REQUEST['id']))
 {
-    $id = cleanvar($_REQUEST['id']);
+    $id = clean_int($_REQUEST['id']);
     $can_view = is_kb_article($id, 'public');
 }
 if (empty($id) OR !$can_view)

@@ -2,7 +2,7 @@
 // book_holidays.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -26,7 +26,7 @@ $step = $_REQUEST['step'];
 $date = cleanvar($_REQUEST['date']);
 if (!empty($_REQUEST['user']) AND user_permission($sit[2], 68))
 {
-    $user = cleanvar($_REQUEST['user']); // Manage holidays
+    $user = clean_int($_REQUEST['user']); // Manage holidays
 }
 else
 {
@@ -73,7 +73,7 @@ elseif ($step == '1')
     // External variables
     $start = cleanvar($_REQUEST['start']);
     $end = cleanvar($_REQUEST['end']);
-    $type = cleanvar($_REQUEST['type']);
+    $type = clean_int($_REQUEST['type']);
 
     if (!empty($start)) $start = strtotime("{$start} 09:00");
     else $start = 0;
@@ -147,7 +147,7 @@ elseif ($step == '1')
     $end += 86400;  // ensure we still loop for single day bookings by setting end to next day
     for ($day = $start; $day < $end; $day = $day + 86400)
     {
-        if (date('D',$day) != 'Sat' && date('D',$day) != 'Sun')
+        if (date('D', $day) != 'Sat' && date('D', $day) != 'Sun')
         {
             $sql = "SELECT * FROM `{$dbHolidays}` WHERE `date` = FROM_UNIXTIME($day, '%Y-%m-%d') AND userid={$user}";
             $result = mysql_query($sql);
@@ -156,14 +156,14 @@ elseif ($step == '1')
             // need to do something different when there are more than one row
             if (mysql_num_rows($result) > 0)
             {
-                while ($existing_holiday = mysql_fetch_array($result))
+                while ($existing_holiday = mysql_fetch_object($result))
                 {
-                    $holiday_type = holiday_type($existing_holiday['type']);
-                    $holiday_legend = strtoupper(substr($holiday_type,0,1));
+                    $holiday_type = holiday_type($existing_holiday->type);
+                    $holiday_legend = strtoupper(substr($holiday_type, 0, 1));
                     echo "<tr>";
-                    echo "<td class='shade2' align='right'> ".ldate('l jS M y',$day)." </td>";
+                    echo "<td class='shade2' align='right'> ".ldate('l jS M y', $day)." </td>";
                     echo "<td class='shade1' align='center'>";
-                    if ($existing_holiday['length'] == 'day')
+                    if ($existing_holiday->length == 'day')
                     {
                         echo "<input type='radio' name='dummy{$daynumber}' value='day' disabled='disabled' />";
                     }
@@ -173,7 +173,7 @@ elseif ($step == '1')
                     }
                     echo "</td>";
                     echo "<td class='shade1' align='center'>";
-                    if ($existing_holiday['length'] == 'day')
+                    if ($existing_holiday->length == 'day')
                     {
                         echo $holiday_legend;
                     }
@@ -185,11 +185,11 @@ elseif ($step == '1')
 
                     // am
                     echo "<td class='shade2' align='center'>";
-                    if ($existing_holiday['length'] == 'am' )
+                    if ($existing_holiday->length == 'am' )
                     {
                         echo $holiday_legend;
                     }
-                    elseif ($existing_holiday['length'] != 'day')
+                    elseif ($existing_holiday->length != 'day')
                     {
                         if (($type == HOL_SICKNESS && $day < $today) || ($type != HOL_SICKNESS))
                         {
@@ -206,11 +206,11 @@ elseif ($step == '1')
 
                     // pm
                     echo "<td class='shade1' align='center'>";
-                    if ($existing_holiday['length'] == 'pm')
+                    if ($existing_holiday->length == 'pm')
                     {
                         echo $holiday_legend;
                     }
-                    elseif ($existing_holiday['length'] != 'day')
+                    elseif ($existing_holiday->length != 'day')
                     {
                         if (($type == HOL_SICKNESS && $day < $today) || ($type != HOL_SICKNESS))
                         {
@@ -229,7 +229,7 @@ elseif ($step == '1')
             }
             else
             {
-                $sql = "SELECT * FROM `{$dbHolidays}` WHERE `date` = '".date('Y-m-d',$day)."' AND type='".HOL_PUBLIC."' ";
+                $sql = "SELECT * FROM `{$dbHolidays}` WHERE `date` = '".date('Y-m-d', $day)."' AND type='".HOL_PUBLIC."' ";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 if (mysql_num_rows($result) > 0)
@@ -241,7 +241,7 @@ elseif ($step == '1')
                 }
                 else
                 {
-                    echo "<tr><td class='shade2' align='right'>".ldate('l jS M y',$day)." </td>";
+                    echo "<tr><td class='shade2' align='right'>".ldate('l jS M y', $day)." </td>";
                     // Don't allow booking sickness in the future, still not sure
                     // whether we should allow this or not - it could be useful
                     // in the case of long term illness
@@ -283,7 +283,6 @@ elseif ($step == '1')
     }
     echo "</form>";
 
-
     echo "<br />";
 
     echo "<p align='center'><a href='book_holidays.php?user={$user}'>{$strReturnWithoutSaving}</a></p>";
@@ -291,10 +290,10 @@ elseif ($step == '1')
 }
 else
 {
-    $approvaluser = cleanvar($_REQUEST['approvaluser']);
+    $approvaluser = clean_int($_REQUEST['approvaluser']);
     $memo = cleanvar($_REQUEST['memo']);
-    $type = cleanvar($_REQUEST['type']);
-    $numberofdays = cleanvar($_REQUEST['numberofdays']);
+    $type = clean_int($_REQUEST['type']);
+    $numberofdays = clean_int($_REQUEST['numberofdays']);
     for ($h = 1; $h < $numberofdays; $h++)
     {
         $dayfield = "day{$h}";
@@ -318,7 +317,7 @@ else
             // check to see if there is other holiday booked on this day
             // and modify that where required.
             $sql = "REPLACE INTO `{$dbHolidays}` (userid, type, date, length, approved, approvedby) ";
-            $sql .= "VALUES ('{$user}', '$type', FROM_UNIXTIME({$$d}, '%Y-%m-%d'), '{$$len}', '".HOL_APPROVAL_NONE."', '$approvaluser') ";
+            $sql .= "VALUES ('{$user}', '{$type}', FROM_UNIXTIME({$$d}, '%Y-%m-%d'), '{$$len}', '".HOL_APPROVAL_NONE."', '{$approvaluser}') ";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }

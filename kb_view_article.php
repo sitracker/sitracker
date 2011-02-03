@@ -2,7 +2,7 @@
 // kb_view_article.php - Display a single knowledge base article
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,11 +22,11 @@ $title = $strKnowledgeBaseArticle;
 
 if (!empty($_REQUEST['id']))
 {
-    $id = cleanvar($_REQUEST['id']);
+    $id = clean_int($_REQUEST['id']);
 }
 if (!empty($_REQUEST['kbid']))
 {
-    $id = cleanvar($_REQUEST['kbid']);
+    $id = clean_int($_REQUEST['kbid']);
 }
 if (empty($id))
 {

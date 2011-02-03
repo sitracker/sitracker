@@ -1,8 +1,8 @@
 <?php
-// role_add.php - Page to add role to SiT!
+// role_new.php - Page to add role to SiT!
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-$roleid = cleanvar($_REQUEST['roleid']);
+$roleid = clean_int($_REQUEST['roleid']);
 
 $submit = cleanvar($_REQUEST['submit']);
 
@@ -58,9 +58,9 @@ if (empty($submit))
 }
 else
 {
-    $rolename = cleanvar($_REQUEST['rolename']);
-    $description = cleanvar($_REQUEST['description']);
-    $copyfrom = cleanvar($_REQUEST['copyfrom']);
+    $rolename = clean_dbstring($_REQUEST['rolename']);
+    $description = clean_dbstring($_REQUEST['description']);
+    $copyfrom = clean_dbstring($_REQUEST['copyfrom']);
 
     $_SESSION['formdata']['role_edit'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
@@ -82,8 +82,8 @@ else
 
     if ($errors == 0)
     {
-        clear_form_data('role_add');
-        clear_form_errors('role_add');
+        clear_form_data('role_new');
+        clear_form_errors('role_new');
 
         $sql = "UPDATE `{$dbRoles}` SET rolename = '{$rolename}', description = '{$description}' WHERE id = {$roleid}";
         $result = mysql_query($sql);

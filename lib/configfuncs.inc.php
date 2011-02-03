@@ -2,7 +2,7 @@
 // configfuncs.inc.php - functions relating to confg center
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -206,10 +206,24 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             break;
         case 'ldappassword':
             $html .= "<input type='password' id='cfg{$setupvar}' name='{$setupvar}' size='16' value=\"{$value}\" /> ".password_reveal_link("cfg{$setupvar}");
-            $html.= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
+            $html .= " &nbsp; <a href='javascript:void(0);' onclick=\"checkLDAPDetails('status{$setupvar}');\">{$GLOBALS['strCheckLDAPDetails']}</a>";
             break;
         case 'textreadonly':
             $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" readonly='readonly' />";
+            break;
+        case 'timeselector':
+            $inmins = $value / 60; // Seconds -> Minutes
+            $hours = floor($inmins / 60);
+            $minutes = $inmins % 60;
+            $html .= time_picker($hours, $minutes, $setupvar);
+            break;
+        case 'weekdayselector':
+            $replace = array('array(', ')', "'");
+            $value = str_replace($replace, '',  $value);
+            $days = array('0' => 'Sunday', '1' => 'Monday', '2' => 'Tuesday', '3' => 'Wednesday', 
+                            '4' => 'Thursday', '5' => 'Friday', '6' => 'Saturday');
+            $value = explode(',', $value);
+            $html .= array_drop_down($days, $setupvar, $value, '', TRUE, TRUE, TRUE);
             break;
         case 'text':
         default:

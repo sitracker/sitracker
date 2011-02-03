@@ -2,7 +2,7 @@
 // delete_user.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -21,11 +21,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$userid = cleanvar($_REQUEST['userid']);
+$userid = clean_int($_REQUEST['userid']);
 
 if (!empty($userid))
 {
-    $errors=0;
+    $errors = 0;
     // Check there are no files linked to this user
     $sql = "SELECT userid FROM `{$dbFiles}` WHERE userid={$userid} LIMIT 1";
     $result = mysql_query($sql);
@@ -74,7 +74,7 @@ if (!empty($userid))
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         }
 
-        journal(CFG_LOGGING_NORMAL, 'User Removed', "User $userid was removed", CFG_JOURNAL_USERS, $userid);
+        journal(CFG_LOGGING_NORMAL, 'User Removed', "User {$userid} was removed", CFG_JOURNAL_USERS, $userid);
         html_redirect("users.php");
     }
     else

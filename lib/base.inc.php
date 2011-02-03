@@ -2,7 +2,7 @@
 // base.inc.php - core constants, core utility functions and files
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -109,7 +109,7 @@ define ("REASON_INCIDENT_CLOSED", 2);
  * Begin global variable definitions
  **/
 // Version number of the application, (numbers only)
-$application_version = '3.99';
+$application_version = '3.90';
 
 // Revision string, e.g. 'beta2' or 'svn' or ''
 $application_revision = 'svn';
@@ -195,11 +195,13 @@ function stripslashes_array($data)
  * @param bool $mysqlescape whether to mysql_escape()
  * @param array $disallowedchars array of chars to remove
  * @param array $replacechars array of chars to replace as $orig => $replace
- * @return variable
+  * @param bool $intval whether to get the integer value of the variable
+  * @todo TODO this function could use a bit of tidy-up
+  * @returns variable
  */
 function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
                 $mysqlescape = TRUE, $disallowedchars = array(),
-                $replacechars = array())
+                $replacechars = array(), $intval = FALSE)
 {
     if (is_array($vars))
     {
@@ -244,9 +246,104 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
             $var = mysql_real_escape_string($var);
         }
 
+        if ($intval)
+        {
+            $var = intval($val);
+        }
+
         $var = trim($var);
     }
     return $var;
+}
+
+
+/**
+  * Make an external variable safe. Force it to be an integer.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns int - safe variable
+*/
+function clean_int($string)
+{
+    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    {
+        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+    }
+    $var = intval($string);
+
+    return $var;
+}
+
+
+/**
+  * Make an external variable safe. Force it to be a float.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns int - safe variable
+*/
+function clean_float($string)
+{
+    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    {
+        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+    }
+    $var = floatval($string);
+
+    return $var;
+}
+
+
+/**
+  * Make an external variable safe for use in a database query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - DB safe variable
+  * @note Strips HTML
+*/
+function clean_dbstring($string)
+{
+    $string = strip_tags($string);
+
+    if (get_magic_quotes_gpc() == 1)
+    {
+        stripslashes($string);
+    }
+
+    $string = mysql_real_escape_string($string);
+
+    return $string;
+}
+
+
+/**
+  * Make an external variable safe by ensuring the value is one of a list
+  * of predetermined values
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @param array $list list of safe values
+  * @param bool $strict, also check the types of the values in the list
+  * @returns mixed - DB safe variable
+  * @note If the input string isn't found in the list, the first option is used
+*/
+function clean_fixed_list($string, $list, $strict = FALSE)
+{
+    if (is_array($list))
+    {
+        if (!in_array($string, $list, $strict))
+        {
+            if ($string != NULL AND $string != '')
+            {
+                trigger_error("Unexpected input", E_USER_WARNING);
+            }
+            $string = $list[0];
+        }
+    }
+    else
+    {
+        trigger_error("Could not understand list of predetermined values for fixed_list()", E_USER_ERROR);
+        return false;
+    }
+    return $string;
 }
 
 

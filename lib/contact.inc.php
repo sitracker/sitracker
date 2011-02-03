@@ -5,7 +5,7 @@
 //       Moving this functions here as a short term measure (PH 2010-04-11)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,10 +33,7 @@ function customerExistsInDB($username)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    while( $res = mysql_fetch_array($result) )
-    {
-        $exists = 1;
-    }
+    if (mysql_num_rows($result) > 0) $exists = 1;
 
     return $exists;
 }
@@ -52,7 +49,7 @@ function contact_realname($id)
     global $dbContacts;
     $sql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -82,7 +79,7 @@ function contact_site($id)
     //
     $sql = "SELECT s.name FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id AND c.id = '{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -160,7 +157,7 @@ function contact_count_incidents($id)
 
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE contact='{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
     mysql_free_result($result);
 
@@ -224,7 +221,7 @@ function contact_vcard($id)
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
     $sql .= "WHERE c.siteid = s.id AND c.id = '{$id}' LIMIT 1";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $contact = mysql_fetch_object($result);
     $vcard = "BEGIN:VCARD\r\n";
     $vcard .= "N:{$contact->surname};{$contact->forenames};{$contact->courtesytitle}\r\n";
@@ -294,7 +291,7 @@ function contact_drop_down($name, $id, $showsite = FALSE, $required = FALSE)
     }
 
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select name='$name' id='$name'";
     if ($required)
@@ -378,9 +375,9 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
     $sql .= "ORDER BY surname ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    
+
     $html = "<select name='$name'>";
-    
+
     if (mysql_num_rows($result) > 0)
     {
         if ($allownone) $html .= "<option value='' selected='selected'>{$GLOBALS['strNone']}</option>";
@@ -406,7 +403,7 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
     }
     else
     {
-        $html .= "<option value=''>{$GLOBALS['strNone']}</option>";   
+        $html .= "<option value=''>{$GLOBALS['strNone']}</option>";
     }
 
     $html .= "</select>\n";
@@ -489,7 +486,7 @@ function contact_username($userid)
  *
  * @author Kieran Hogg
  */
-function process_add_contact($mode = 'internal')
+function process_new_contact($mode = 'internal')
 {
     global $now, $CONFIG, $dbContacts, $sit;
     // Add new contact
@@ -523,31 +520,31 @@ function process_add_contact($mode = 'internal')
     $department = cleanvar($_REQUEST['department']);
     $notes = cleanvar($_REQUEST['notes']);
     $returnpage = cleanvar($_REQUEST['return']);
-    $_SESSION['formdata']['add_contact'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
+    $_SESSION['formdata']['new_contact'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     $errors = 0;
     // check for blank name
     if ($surname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['surname'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSurname']);
+        $_SESSION['formerrors']['new_contact']['surname'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSurname']);
     }
     // check for blank site
     if ($siteid == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
+        $_SESSION['formerrors']['new_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
     }
     // check for blank email
     if ($email == '' OR $email=='none' OR $email=='n/a')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['email'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strEmail']);
+        $_SESSION['formerrors']['new_contact']['email'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strEmail']);
     }
     if ($siteid == 0 OR $siteid == '')
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
+        $_SESSION['formerrors']['new_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
     }
     // Check this is not a duplicate
     $sql = "SELECT id FROM `{$dbContacts}` WHERE email='$email' AND LCASE(surname)=LCASE('$surname') LIMIT 1";
@@ -555,7 +552,7 @@ function process_add_contact($mode = 'internal')
     if (mysql_num_rows($result) >= 1)
     {
         $errors++;
-        $_SESSION['formerrors']['add_contact']['duplicate'] = $GLOBALS['strContactRecordExists'];
+        $_SESSION['formerrors']['new_contact']['duplicate'] = $GLOBALS['strContactRecordExists'];
     }
 
 
@@ -618,7 +615,7 @@ function process_add_contact($mode = 'internal')
         {
             if ($mode == 'internal')
             {
-                html_redirect("contact_add.php", FALSE);
+                html_redirect("contact_new.php", FALSE);
             }
             else
             {
@@ -627,8 +624,8 @@ function process_add_contact($mode = 'internal')
         }
         else
         {
-            clear_form_data('add_contact');
-            clear_form_errors('add_contact');
+            clear_form_data('new_contact');
+            clear_form_errors('new_contact');
             $sql = "SELECT username, password FROM `{$dbContacts}` WHERE id={$newid}";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -645,7 +642,7 @@ function process_add_contact($mode = 'internal')
 
                 if ($returnpage == 'addincident')
                 {
-                    html_redirect("incident_add.php?action=findcontact&contactid={$newid}");
+                    html_redirect("incident_new.php?action=findcontact&contactid={$newid}");
                     exit;
                 }
                 elseif ($mode == 'internal')
@@ -666,7 +663,7 @@ function process_add_contact($mode = 'internal')
     {
         if ($mode == 'internal')
         {
-            html_redirect('contact_add.php', FALSE);
+            html_redirect('contact_new.php', FALSE);
         }
         else
         {

@@ -2,7 +2,7 @@
 // report_marketing.php - Print/Export a list of contacts by product
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -26,7 +26,7 @@ if (empty($_REQUEST['mode']))
 {
     $title = $strMarketingMailshot;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$strMarketingMailshot}</h2>";
+    echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
     echo "<p align='center'>{$strMarketingMailshotDesc}</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center' class='vertical'>";
@@ -185,7 +185,7 @@ elseif ($_REQUEST['mode'] == 'report')
         for ($i = 0; $i < $sitetypecount; $i++)
         {
             // $html .= "{$_POST['exc'][$i]} <br />";
-            $s .= "s.typeid = ".cleanvar($sitetype[$i]);
+            $s .= "s.typeid = ".clean_int($sitetype[$i]);
             if ($i < ($sitetypecount - 1)) $s  .= " AND ";
         }
         $s .= ")";
@@ -329,7 +329,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if ($_REQUEST['output'] == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strMarketingMailshot}</h2>";
+        echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
         echo "<p align='center'>{$strMarketingMailshotDesc}</p>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

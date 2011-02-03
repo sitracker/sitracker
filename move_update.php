@@ -2,7 +2,7 @@
 // move_update.php - Moves an incident from the pending/holding queue
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -17,10 +17,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$incidentid = cleanvar($_REQUEST['incidentid']);
-$updateid = cleanvar($_REQUEST['updateid']);
-$contactid = cleanvar($_REQUEST['contactid']);
-$id = cleanvar($_REQUEST['id']);
+$incidentid = clean_int($_REQUEST['incidentid']);
+$updateid = clean_int($_REQUEST['updateid']);
+$contactid = clean_int($_REQUEST['contactid']);
+$id = clean_int($_REQUEST['id']);
 $error = cleanvar($_REQUEST['error']);
 $send_email = cleanvar($_REQUEST['send_email']);
 
@@ -57,7 +57,7 @@ if ($incidentid == '')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    while ($updates = mysql_fetch_array($result))
+    while ($updates = mysql_fetch_object($result))
     {
         $update_timestamp_string = ldate($CONFIG['dateformat_datetime'], $updates["timestamp"]);
         echo "<br />";
@@ -66,70 +66,70 @@ if ($incidentid == '')
 
         // Header bar for each update
         // FIXME this should be using a function or something, no point duplicating this code here. INL 7Nov08
-        switch ($updates['type'])
+        switch ($updates->type)
         {
             case 'opening':
-                echo "Opened by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Opened by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'reassigning':
-                echo "Reassigned by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['currentowner'] != 0)  // only say who it was assigned to if the currentowner field is filled in
+                echo "Reassigned by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->currentowner != 0)  // only say who it was assigned to if the currentowner field is filled in
                 {
-                    echo " To <strong>".user_realname($updates['currentowner'],TRUE)."</strong>";
+                    echo " To <strong>".user_realname($updates->currentowner, TRUE)."</strong>";
                 }
                 break;
             case 'email':
-                echo "Email Sent by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Email Sent by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'closing':
-                echo "Closed by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Closed by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'reopening':
-                echo "Reopened by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Reopened by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
             case 'phonecallout':
-                echo "Call made by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Call made by <strong>".user_realname($updates->userid ,TRUE)."</strong>";
                 break;
             case 'phonecallin':
-                echo "Call taken by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Call taken by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'research':
-                echo "Researched by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Researched by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'webupdate':
-                echo "Web Update by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Web Update by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'emailout':
-                echo "Email sent by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Email sent by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'emailin':
-                echo "Email received by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Email received by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'externalinfo':
-                echo "External info added by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "External info added by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'probdef':
-                echo "Problem Definition by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Problem Definition by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             case 'solution':
-                echo "Final Solution by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
+                echo "Final Solution by <strong>".user_realname($updates->userid, TRUE)."</strong>";
                 break;
             default:
-                echo "Updated by <strong>".user_realname($updates['userid'],TRUE)."</strong>";
-                if ($updates['customervisibility'] == 'show') echo " (Customer Visible)";
+                echo "Updated by <strong>".user_realname($updates->userid, TRUE)."</strong>";
+                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
                 break;
         }
 
-        if ($updates['nextaction']!='') echo " Next Action: <strong>".$updates['nextaction'].'</strong>';
+        if ($updates->nextaction != '') echo " Next Action: <strong>{$updates->nextaction}</strong>";
 
         echo " - {$update_timestamp_string}</th></tr>";
         echo "<tr><td class='shade2' width='100%'>";
         $updatecounter++;
-        echo parse_updatebody($updates['bodytext']);
+        echo parse_updatebody($updates->bodytext);
 
         echo "</td></tr>";
         echo "</table>";
@@ -160,15 +160,16 @@ else
         $result = mysql_query($sql);
         if ($result)
         {
-            if (!file_exists($old_path))
+            if (!file_exists($new_path))
             {
                 $umask = umask(0000);
-                @mkdir($CONFIG['attachment_fspath'] ."$incidentid", 0770);
+                mkdir($CONFIG['attachment_fspath'] . "$incidentid", 0770);
                 umask($umask);
             }
             while ($row = mysql_fetch_object($result))
             {
-                $filename = $row->linkcolref . "-" . $row->filename;
+                $filename = $row->linkcolref ;
+                //. "-" . $row->filename;
                 $old_file = $old_path . $filename;
                 if (file_exists($old_file))
                 {

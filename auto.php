@@ -2,7 +2,7 @@
 // auto.php - Regular SiT! maintenance tasks (for scheduling)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -23,8 +23,8 @@ populate_syslang();
 $crlg = "\n";
 
 /**
-    * @author Ivan Lucas
-**/
+ * @author Ivan Lucas
+ */
 function saction_test()
 {
     echo "<h2>Testing testing 1 2 3.</h2>";
@@ -34,10 +34,10 @@ function saction_test()
 
 
 /**
-    * Select incidents awaiting closure for more than a week where the next action time is not set or has passed
-    * @author Ivan Lucas
-    * @param $closure_delay int. The amount of time (in seconds) to wait before closing
-**/
+ * Select incidents awaiting closure for more than a week where the next action time is not set or has passed
+ * @author Ivan Lucas
+ * @param $closure_delay int. The amount of time (in seconds) to wait before closing
+ */
 function saction_CloseIncidents($closure_delay)
 {
     $success = TRUE;
@@ -55,7 +55,7 @@ function saction_CloseIncidents($closure_delay)
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -65,7 +65,7 @@ function saction_CloseIncidents($closure_delay)
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -94,7 +94,7 @@ function saction_CloseIncidents($closure_delay)
             $resultc = mysql_query($sqlc);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 $success = FALSE;
             }
         }
@@ -108,8 +108,8 @@ function saction_CloseIncidents($closure_delay)
 
 
 /**
-    * @author Ivan Lucas
-**/
+ * @author Ivan Lucas
+ */
 function saction_PurgeJournal()
 {
     global $dbJournal, $now, $CONFIG;
@@ -119,7 +119,7 @@ function saction_PurgeJournal()
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
     if ($CONFIG['debug']); //debug_log("Purged ".mysql_affected_rows()." journal entries");
@@ -129,9 +129,9 @@ function saction_PurgeJournal()
 
 
 /** Calculate SLA times
-    * @author Tom Gerrard
-    * @note Moved from htdocs/auto/timecalc.php by INL for 3.40 release
-**/
+ * @author Tom Gerrard
+ * @note Moved from htdocs/auto/timecalc.php by INL for 3.40 release
+ */
 function saction_TimeCalc()
 {
     global $now;
@@ -149,37 +149,34 @@ function saction_TimeCalc()
     $incident_result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         $success = FALSE;
     }
 
-    while ($incident = mysql_fetch_array($incident_result))
+    while ($incident = mysql_fetch_object($incident_result))
     {
         // Get the service level timings for this class of incident, we may have one
         // from the incident itself, otherwise look at contract type
-        if ($incident['servicelevel'] ==  '')
+        if ($incident->servicelevel ==  '')
         {
-            $sql = "SELECT tag FROM `{$dbServiceLevels}` s, `{$dbMaintenance}` m ";
-            $sql .= "WHERE m.id = '{$incident['maintenanceid']}' AND s.id = m.servicelevelid";
+            $sql = "SELECT servicelevel FROM  `{$dbMaintenance}` WHERE id = '{$incident->maintenanceid}'";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $t = mysql_fetch_row($sql);
             $tag = $t[0];
             mysql_free_result($result);
         }
-        else $tag = $incident['servicelevel'];
-
-        if ($CONFIG['debug']) //debug_log($incident['id']." is a $tag incident");
+        else $tag = $incident->servicelevel;
 
         $newReviewTime = -1;
         $newSlaTime = -1;
 
-        $sql = "SELECT id, type, sla, timestamp, currentstatus FROM `{$dbUpdates}` WHERE incidentid='{$incident['id']}' ";
+        $sql = "SELECT id, type, sla, timestamp, currentstatus FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
         $sql .=" AND type = 'slamet' ORDER BY id DESC LIMIT 1";
         $update_result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_WARNING);
+            trigger_error(mysql_error(), E_USER_WARNING);
             $success = FALSE;
         }
 
@@ -189,8 +186,8 @@ function saction_TimeCalc()
         }
         else
         {
-            $slaInfo = mysql_fetch_array($update_result);
-            $newSlaTime = calculate_incident_working_time($incident['id'],$slaInfo['timestamp'],$now);
+            $slaInfo = mysql_fetch_object($update_result);
+            $newSlaTime = calculate_incident_working_time($incident->id, $slaInfo->timestamp, $now);
             if ($CONFIG['debug'])
             {
                 //debug_log("   Last SLA record is ".$slaInfo['sla']." at ".date("jS F Y H:i",$slaInfo['timestamp'])." which is $newSlaTime working minutes ago");
@@ -198,12 +195,12 @@ function saction_TimeCalc()
         }
         mysql_free_result($update_result);
 
-        $sql = "SELECT id, type, sla, timestamp, currentstatus, currentowner FROM `{$dbUpdates}` WHERE incidentid='{$incident['id']}' ";
+        $sql = "SELECT id, type, sla, timestamp, currentstatus, currentowner FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
         $sql .= "AND type='reviewmet' ORDER BY id DESC LIMIT 1";
         $update_result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_WARNING);
+            trigger_error(mysql_error(), E_USER_WARNING);
             $success = FALSE;
         }
 
@@ -213,13 +210,15 @@ function saction_TimeCalc()
         }
         else
         {
-            $reviewInfo = mysql_fetch_array($update_result);
-            $newReviewTime = floor($now-$reviewInfo['timestamp'])/60;
+            $reviewInfo = mysql_fetch_object($update_result);
+            $newReviewTime = floor($now - $reviewInfo->timestamp) / 60;
             if ($CONFIG['debug'])
             {
                 //if ($reviewInfo['currentowner'] != 0) //debug_log("There has been no review on incident {$incident['id']}, which was opened $newReviewTime minutes ago");
             }
-            trigger('TRIGGER_INCIDENT_REVIEW_DUE', array('incidentid' => $incident['id'], 'time' => $newReviewTime));
+            new TriggerEvent("TRIGGER_INCIDENT_REVIEW_DUE",
+                                array('incidentid' => $incident->id,
+                                      'time' => $newReviewTime));
         }
         mysql_free_result($update_result);
 
@@ -257,12 +256,12 @@ function saction_TimeCalc()
 
             // Query the database for the next SLA and review times...
 
-            $sql = "SELECT ($slaRequest*$coefficient) as 'next_sla_time', review_days ";
-            $sql .= "FROM `{$dbServiceLevels}` WHERE tag = '$tag' AND priority = '{$incident['priority']}'";
+            $sql = "SELECT ($slaRequest * $coefficient) as 'next_sla_time', review_days ";
+            $sql .= "FROM `{$dbServiceLevels}` WHERE tag = '{$tag}' AND priority = '{$incident->priority}'";
             $result = mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 $success = FALSE;
             }
             $times = mysql_fetch_assoc($result);
@@ -274,7 +273,7 @@ function saction_TimeCalc()
                 //debug_log("Reviews need to be made every ".($times['review_days']*24*60)." minutes");
             }
 
-            if ($incident['slanotice'] == 0)
+            if ($incident->slanotice == 0)
             {
                 //reaching SLA
                 if ($times['next_sla_time'] > 0) $reach = $newSlaTime / $times['next_sla_time'];
@@ -283,13 +282,13 @@ function saction_TimeCalc()
                 {
                     $timetil = $times['next_sla_time']-$newSlaTime;
 
-                    trigger('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident['id'],
-                                                                  'nextslatime' => $times['next_sla_time'],
+                    trigger('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident->id,
+                                                                  'nextslatime' => $times->next_sla_time,
                                                                   'nextsla' => $NextslaName));
 
-                    $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident['id']}'";
+                    $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident->id}'";
                     mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 }
             }
         }
@@ -317,7 +316,7 @@ function saction_SetUserStatus()
     if (mysql_error())
     {
         $success = FALSE;
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
     }
     while ($huser = mysql_fetch_object($result))
     {
@@ -392,7 +391,7 @@ function saction_SetUserStatus()
                 if (mysql_error())
                 {
                     $success = FALSE;
-                    trigger_error(mysql_error(),E_USER_WARNING);
+                    trigger_error(mysql_error(), E_USER_WARNING);
                 }
             }
         }
@@ -405,16 +404,17 @@ function saction_SetUserStatus()
     if (mysql_error())
     {
         $success = FALSE;
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
     }
     return $success;
 }
 
 
-/** Chase / Remind customers
-    * @author Paul Heaney
-    * @note Moved from htdocs/auto/chase_customer.php by INL for 3.40
-*/
+/** 
+ * Chase / Remind customers
+ * @author Paul Heaney
+ * @note Moved from htdocs/auto/chase_customer.php by INL for 3.40
+ */
 function saction_ChaseCustomers()
 {
     global $CONFIG, $now, $sit;
@@ -568,9 +568,10 @@ function saction_ChaseCustomers()
 }
 
 
-/** Check the holding queue for waiting email
-    * @author Ivan Lucas
-*/
+/** 
+ * Check the holding queue for waiting email
+ * @author Ivan Lucas
+ */
 function saction_CheckWaitingEmail()
 {
     global $dbTempIncoming, $dbUpdates, $dbScheduler, $now;
@@ -587,14 +588,14 @@ function saction_CheckWaitingEmail()
     }
     elseif (mysql_num_rows($result) > 0)
     {
-	   list($timestamp, $minswaiting) = mysql_fetch_row($result);
-       $sql = "SELECT `interval` FROM `{$dbScheduler}` ";
-       $sql .= "WHERE action = 'CheckWaitingEmail'";
-       $result = mysql_query($sql);
-       list($interval) = mysql_fetch_row($result);
-       // so we don't get a duplicate if we receive an email exactly at check time
-       $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
-       new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL", 
+        list($timestamp, $minswaiting) = mysql_fetch_row($result);
+        $sql = "SELECT `interval` FROM `{$dbScheduler}` ";
+        $sql .= "WHERE action = 'CheckWaitingEmail'";
+        $result = mysql_query($sql);
+        list($interval) = mysql_fetch_row($result);
+        // so we don't get a duplicate if we receive an email exactly at check time
+        $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
+        new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL",
                         array('holdingmins' => ceil($minswaiting / 60),
                               'checks' => $checks));
     }
@@ -757,7 +758,7 @@ function saction_ldapSync()
     {
         $ldap_conn = ldapOpen();
 
-        if ($ldap_conn)
+        if ($ldap_conn != -1)
         {
             // NOTE TODO FIXME would be more optimal to pass the user type into the create as in the case where the group membership isn't stored its looked up again
 
@@ -852,7 +853,10 @@ function saction_ldapSync()
                             if (strtolower($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
                             {
                                 // User is disabled in LDAP so we want to disable
-                                $sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                if (is_object($sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]))
+                                {
+                                    $sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                }
                             }
                         }
                     }
@@ -876,7 +880,7 @@ function saction_ldapSync()
                 }
                 else
                 {
-                    debug_log ("Failed to get details for {$u}");
+                    debug_log ("Failed to get details for user: {$u}");
                 }
             }
 
@@ -884,11 +888,11 @@ function saction_ldapSync()
             // TODO reassign incidents?
             foreach ($sit_db_users AS $u)
             {
-                debug_log ("Disabling {$u->username}");
+                debug_log ("Disabling User: {$u->username}");
                 $u->disable();
             }
 
-            /** CONTACTS */
+            /* CONTACTS */
 
             $contacts = array();
             if (!empty($CONFIG["ldap_customer_group"]))
@@ -962,7 +966,10 @@ function saction_ldapSync()
                                 if (strtolower($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
                                 {
                                     // We want to disable
-                                    $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                    if (is_object($sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]))
+                                    {
+                                        $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->disable();
+                                    }
                                 }
                             }
                         }
@@ -976,7 +983,7 @@ function saction_ldapSync()
 
                         if (!ldap_storeDetails('', $contactid, FALSE, TRUE, $ldap_conn, $contact_attributes))
                         {
-                            trigger_error("Failed to store details for userid {$contactid}", E_USER_WARNING);
+                            trigger_error("Failed to store details for contactid {$contactid}", E_USER_WARNING);
                             $success = FALSE;
                         }
                     }
@@ -986,10 +993,14 @@ function saction_ldapSync()
                 // TODO reassign incidents?
                 foreach ($sit_db_contacts AS $c)
                 {
-                    debug_log ("Disabling {$c->username}", TRUE);
+                    debug_log ("Disabling Contact: {$c->username}", TRUE);
                     $c->disable();
                 }
             }
+        }
+        else
+        {
+            trigger_error("Unable to connect to LDAP", E_USER_ERROR);
         }
     }
     else
@@ -1009,6 +1020,7 @@ if ($actions !== FALSE)
         // Possibly initiate a trigger here named TRIGGER_SCHED_{$action} ?
         if (function_exists($fn))
         {
+            schedule_action_started($action);
             $success = $fn($params);
             schedule_action_done($action, $success);
         }

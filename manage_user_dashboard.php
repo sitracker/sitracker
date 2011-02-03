@@ -1,8 +1,8 @@
 <?php
-// add_to_dashboard.php - Page for users to add components to their dashboard
+// manage_user_dashboard.php - Page for users to add components to their dashboard
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -18,10 +18,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$dashboardid = $_REQUEST['id'];
+$dashboardid = clean_int($_REQUEST['id']);
 $title = $strManageYourDashboard;
 
-$sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '".$_SESSION['userid']."'";
+$sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '{$_SESSION['userid']}'";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
@@ -58,11 +58,11 @@ if (empty($dashboardid))
             if (empty($ondashboard[$obj->id]))
             {
                 //not already on dashbaord
-                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=add&amp;id=$obj->id'>{$strAdd}</a></td></tr>\n";
+                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=new&amp;id={$obj->id}'>{$strNew}</a></td></tr>\n";
             }
             else
             {
-                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=remove&amp;id=$obj->id'>{$strRemove}</a></td></tr>\n";
+                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=remove&amp;id={$obj->id}'>{$strRemove}</a></td></tr>\n";
             }
         }
         echo "</table>\n";
@@ -79,7 +79,7 @@ else
     $action = $_REQUEST['action'];
     switch ($action)
     {
-        case 'add':
+        case 'new':
             // Find the emptiest column and add the dashlet there
             $col = array(0 => 0,1 => 0, 2 => 0);
             $dashlets = explode(',', $dashboardstr);
@@ -103,7 +103,7 @@ else
             $dashboardstr = preg_replace($regex,"",$dashboardstr);
             break;
     }
-    $sql = "UPDATE `{$dbUsers}` SET dashboard = '$dashboardstr' WHERE id = '".$_SESSION['userid']."'";
+    $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$dashboardstr}' WHERE id = '{$_SESSION['userid']}'";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     html_redirect("manage_user_dashboard.php");

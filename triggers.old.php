@@ -2,7 +2,7 @@
 // triggers.php - Page for setting user trigger preferences
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -78,7 +78,7 @@ switch ($_REQUEST['mode'])
         }
         break;
 
-    case 'add':
+    case 'new':
         $id = cleanvar($_GET['id']);
         // Check that this is a defined trigger
         if (!array_key_exists($id, $triggerarray))
@@ -290,7 +290,7 @@ switch ($_REQUEST['mode'])
         //check if we already have this trigger
         if(check_trigger_exists($id, $userid, $action, $templateid, $rules, $parameters))
         {
-            html_redirect($_SERVER['PHP_SELF'], FALSE, $strADuplicateAlreadyExists); 
+            html_redirect($_SERVER['PHP_SELF'], FALSE, $strADuplicateAlreadyExists);
         }
         else
         {
@@ -413,7 +413,7 @@ switch ($_REQUEST['mode'])
                     echo "<td>";
                     if ($selecteduser != -1)
                     {
-                        echo "<a href='{$_SERVER['PHP_SELF']}?mode=add&amp;id={$trigger}&amp;user={$selecteduser}'>{$strAddAction}</a>";
+                        echo "<a href='{$_SERVER['PHP_SELF']}?mode=add&amp;id={$trigger}&amp;user={$selecteduser}'>{$strNewAction}</a>";
                     }
                     echo "</td>";
                     echo "</tr>\n";

@@ -2,7 +2,7 @@
 // maintenance_details.php - Show contract details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -23,7 +23,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $title = ("$strContract - $strContractDetails");
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

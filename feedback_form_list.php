@@ -2,7 +2,7 @@
 // browse_feedback_form.php - Browse feedback forms
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strBrowseFeedbackForms;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>{$title}</h2>";
+echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
 $sql = "SELECT * FROM `{$dbFeedbackForms}`";
 $result = mysql_query($sql);

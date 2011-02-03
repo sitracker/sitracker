@@ -2,7 +2,7 @@
 // statistics.php - Over view and stats of calls logged - intended for last 24hours
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -333,7 +333,7 @@ function give_overview()
     {
         echo "<h2>{$GLOBALS['strByVendor']}</h2>";
         echo "<table class='vertical' align='center'><tr>";
-        while ($vendors = mysql_fetch_array($result))
+        while ($vendors = mysql_fetch_object($result))
         {
             // This should use the software and relate to the product and then to the vendor
             /*
@@ -345,7 +345,7 @@ function give_overview()
 
             $sqlVendor = "SELECT COUNT(i.id) AS count, istatus.name FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbIncidentStatus']}` AS istatus, `{$GLOBALS['dbSoftware']}` AS s ";
             $sqlVendor .= "WHERE i.status = istatus.id AND closed = 0 AND i.softwareid = s.id ";
-            $sqlVendor .= "AND s.vendorid = {$vendors['vendorid']} ";
+            $sqlVendor .= "AND s.vendorid = {$vendors->vendorid} ";
             $sqlVendor .= "GROUP BY i.status";
 
             $resultVendor = mysql_query($sqlVendor);
@@ -354,7 +354,7 @@ function give_overview()
             if (mysql_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
-                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors['name']}</strong>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendorsname}</strong>";
                 echo "<table class='vertical' align='center'>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {
@@ -402,7 +402,7 @@ function give_overview()
 
             while ($irow = mysql_fetch_object($iresult))
             {
-                $string .= "<small><a href=\"javascript:incident_details_window('{$irow->id}', 'incident{$irow->id}')\"  title='{$irow->title}'>[{$irow->id}]</a></small> ";
+                $string .= "<small>".html_incident_popup_link($irow->id, "[{$irow->id}]")."</small> ";
             }
 
             $string .= "</td></tr>";
@@ -444,7 +444,7 @@ function give_overview()
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             while ($irow = mysql_fetch_object($iresult))
             {
-                $string .= "<tr><th><a href=\"javascript:incident_details_window('{$irow->id}', 'incident{$irow->id}')\" title='[{$irow->id}] - {$irow->title}'>{$irow->id}</a></th>";
+                $string .= "<tr><th>".html_incident_popup_link($irow->id, "[{$irow->id}]", $irow->title)."</th>";
                 $string .= "<td class='shade2' align='left'>{$irow->title}</td>";
                 $string .= "<td class='shade2' align='left'>{$row->realname}</td>";
                 $string .= "<td class='shade2'>{$GLOBALS[$irow->name]}</td></tr>\n";

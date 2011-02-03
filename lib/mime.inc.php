@@ -84,12 +84,7 @@ class MIME_mail
             else
                 $headers=$headers[0];
         }
-        if ($from)
-        {
-            //$headers = preg_replace("!(from:\ ?.+?[\r\n]?\b)!i", '', $headers);
-            $headers = preg_replace("!(from:\b?.+?[\n]?\b)!i", '', $headers);
-        }
-                $this->headers = chop($headers);
+        $this->headers = chop($headers);
         $this->mimeparts[] = '' ;   //Bump up location 0;
         $this->errstr = '';
         return;

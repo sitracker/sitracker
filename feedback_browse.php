@@ -2,7 +2,7 @@
 // browse_feedback.php - View a list of feedback
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,14 +33,14 @@ $completed = cleanvar($_REQUEST['completed']);
 switch ($mode)
 {
     case 'viewresponse':
-        echo "<h2>{$strFeedback}</h2>";
+        echo "<h2>".icon('contract', 32)." {$strFeedback}</h2>";
         $sql = "SELECT * FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $response = mysql_fetch_object($result);
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
-        echo "<tr><th>{$strIncident}</th><td><a href=\"javascript:incident_details_window('{$response->incidentid}','incident{$response->incidentid}')\">{$response->incidentid} - ".incident_title($response->incidentid)."</a></td>\n";
+        echo "<tr><th>{$strIncident}</th><td>".html_incident_popup_link($response->incidentid, "{$response->incidentid} - ".incident_title($response->incidentid))."</td>\n";
         echo "<tr><th>{$strForm}</th><td>{$response->formid}</td>\n";
         echo "<tr><th>{$strDate}</th><td>{$response->created}</td>\n";
         echo "<tr><th>{$strCompleted}</th><td>{$response->completed}</td>\n";
@@ -143,7 +143,7 @@ switch ($mode)
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 0)
         {
@@ -161,7 +161,7 @@ switch ($mode)
             $sql .= "WHERE fr.formid = ff.id ";
             if ($completed == 'no') $sql .= "AND completed='no' ";
             else $sql .= "AND completed='yes' ";
-            if (!empty($formid)) $sql .= "AND formid='$formid'";
+            if (!empty($formid)) $sql .= "AND formid='{$formid}'";
 
             if ($order == 'a' OR $order == 'ASC' OR $order == '') $sortorder = "ASC";
             else $sortorder = "DESC";
@@ -169,26 +169,26 @@ switch ($mode)
             switch ($sort)
             {
                 case 'created':
-                    $sql .= " ORDER BY created $sortorder";
+                    $sql .= " ORDER BY fr.created {$sortorder}";
                     break;
                 case 'contactid':
-                    $sql .= " ORDER BY contactid $sortorder";
+                    $sql .= " ORDER BY contactid {$sortorder}";
                     break;
                 case 'incidentid':
-                    $sql .= " ORDER BY incidentid $sortorder";
+                    $sql .= " ORDER BY incidentid {$sortorder}";
                     break;
                 default:
-                    $sql .= " ORDER BY created DESC";
+                    $sql .= " ORDER BY fr.created DESC";
                     break;
             }
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
             $countrows = mysql_num_rows($result);
 
             if (!empty($formid))
             {
-                if ($completed=='no') echo "<h3>{$strFeedbackRequested}: $formid</h3>";
+                if ($completed == 'no') echo "<h3>{$strFeedbackRequested}: $formid</h3>";
                 else echo "<h3>{$strResponsesToFeedbackForm}: $formid</h3>";
                 echo "<p align='center'><a href='feedback_form_edit.php?formid={$formid}'>{$strEdit}</a></p>";
             }
@@ -209,18 +209,17 @@ switch ($mode)
                 $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))
                 {
-                    $respondentarr = explode('-',$resp->respondent);
-                    $responserefarr = explode('-',$resp->responseref);
+                    $respondentarr = explode('-', $resp->respondent);
+                    $responserefarr = explode('-', $resp->responseref);
 
                     $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid);
-                    echo "<tr class='$shade'>";
+                    echo "<tr class='{$shade}'>";
                     echo "<td>".ldate($CONFIG['dateformat_datetime'],mysqlts2date($resp->created))."</td>";
                     echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a></td>";
-                    echo "<td><a href=\"javascript:incident_details_window('{$resp->incidentid}','incident{$resp->incidentid}')\">";
-                    echo "{$strIncident} [{$resp->incidentid}]</a> - ";
+                    echo "<td>".html_incident_popup_link($resp->incidentid, "{$strIncident} [{$resp->incidentid}]")." - ";
                     echo incident_title($resp->incidentid)."</td>";
                     $url = "feedback.php?ax={$hashcode}";
-                    if ($resp->multi=='yes') $url .= "&amp;rr=1";
+                    if ($resp->multi == 'yes') $url .= "&amp;rr=1";
 
                     echo "<td>";
                     if ($resp->completed == 'no') echo "<a href='{$url}' title='{$url}' target='_blank'>URL</a>";
@@ -229,8 +228,8 @@ switch ($mode)
                     if ($resp->completed == 'no')
                     {
                         //if ($resp->remind<1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a reminder by email'>Remind</a>";
-                        //elseif ($resp->remind==1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Second reminder by email'>Remind Again</a>";
-                        //elseif ($resp->remind==2) echo "<a href='formactions.php?action=callremind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Third reminder by phone call, click here when its done'>Remind by Phone</a>";
+                        //elseif ($resp->remind == 1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Second reminder by email'>Remind Again</a>";
+                        //elseif ($resp->remind == 2) echo "<a href='formactions.php?action=callremind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a Third reminder by phone call, click here when its done'>Remind by Phone</a>";
                         //else echo "<strike title='Already sent 3 reminders'>Remind</strike>";
                         //echo " &bull; ";
                         //echo "<a href='formactions.php?action=delete&amp;id={$resp->respid}' title='Remove this form'>Delete</a>";
@@ -241,8 +240,8 @@ switch ($mode)
                     }
                     echo "</td>";
                     echo "</tr>\n";
-                    if ($shade=='shade1') $shade='shade2';
-                    else $shade='shade1';
+                    if ($shade == 'shade1') $shade = 'shade2';
+                    else $shade = 'shade1';
                 }
                 echo "</table>\n";
                 plugin_do('feedback_browse');
@@ -270,5 +269,6 @@ switch ($mode)
             }
         }
 }
+plugin_do('feedback_browse_endpage_extend');
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

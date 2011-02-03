@@ -2,7 +2,7 @@
 // incidents_by_vendor.php - List the number of incidents for each vendor
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -26,7 +26,7 @@ if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' id='incidentsbyvendor' method='post'>";
     echo "<table class='vertical'>";
     echo "<tr><th>{$strStartDate}:</th>";
@@ -68,7 +68,7 @@ else
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
     echo "<p align='center'>".sprintf($strForThePeriodXToY, $_REQUEST['startdate'], $_REQUEST['enddate'])."</p>";
 
@@ -77,9 +77,9 @@ else
         echo "<p>";
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strVendor}</th><th>{$strIncidents}</th></tr>";
-        while ($row = mysql_fetch_array($result))
+        while ($obj = mysql_fetch_object($result))
         {
-            echo "<tr><td class='shade1'>".$row['name']."</td><td class='shade1'>".$row['volume']."</td></tr>";
+            echo "<tr><td class='shade1'>{$obj->name}</td><td class='shade1'>{$obj->volume}</td></tr>";
         }
         echo "</table>";
         echo "</p>";

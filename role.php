@@ -1,8 +1,8 @@
 <?php
-// role_add.php - Page to add role to SiT!
+// role.php - Page to add role to SiT!
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-$roleid = cleanvar($_REQUEST['roleid']);
+$roleid = clean_int($_REQUEST['roleid']);
 
 $title = $strRole;
 

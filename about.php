@@ -2,7 +2,7 @@
 // about.php - Credit, Copyright and Licence page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -102,8 +102,8 @@ Copyright &copy;  2006-2007 Everaldo Coelho. Licensed under the LGPLv2</p>
 <p align='center'>Icons from the <a href='http://www.oxygen-icons.org/'>Oxygen Project</a><br />
 Copyright &copy; 2008 The Oxygen Project. Licensed under the LGPLv2</p>
 
-</td></tr>
 <?php
+echo "</td></tr>";
 echo "<tr><td class='shade1' colspan='2'>{$strLicense}:</td></tr>";
 echo "<tr><td class='shade2' colspan='2'>";
 echo "<textarea cols='100%' rows='10' readonly='readonly' style='background: transparent;'>";
@@ -116,23 +116,34 @@ echo "<tr><td class='shade1' colspan='2'>{$strReleaseNotes}:</td></tr>";
 echo "<tr><td class='shade2' colspan='2'><p align='center'><a href='releasenotes.php'>{$strReleaseNotes}</a></p></td></tr>\n";
 echo "<tr><td class='shade1' colspan='2'>{$strPlugins}:</td></tr>";
 echo "<tr><td class='shade2' colspan='2'>";
-if (is_array($CONFIG['plugins']) AND count($CONFIG['plugins']) >= 1)
+if (is_array($CONFIG['plugins']) AND $CONFIG['plugins'][0] != '' AND count($CONFIG['plugins']) > 0)
 {
     foreach ($CONFIG['plugins'] AS $plugin)
     {
         echo "<p><strong>$plugin</strong>";
         if ($PLUGININFO[$plugin]['version'] != '') echo " version ".number_format($PLUGININFO[$plugin]['version'], 2)."<br />";
-        else echo "<br />";
+        else echo "- <span class='error'>{$strFailed}</span><br />";
 
         if ($PLUGININFO[$plugin]['description'] != '') echo "{$PLUGININFO[$plugin]['description']}<br />";
         if ($PLUGININFO[$plugin]['author'] != '') echo "{$strAuthor}: {$PLUGININFO[$plugin]['author']}<br />";
         if ($PLUGININFO[$plugin]['legal'] != '') echo "{$PLUGININFO[$plugin]['legal']}<br />";
-        if ($PLUGININFO[$plugin]['sitminversion'] > $application_version) echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitminversion']} or later</strong><br />";
-        if (!empty($PLUGININFO[$plugin]['sitmaxversion']) AND $PLUGININFO[$plugin]['sitmaxversion'] < $application_version) echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitmaxversion']} or earlier</strong><br />";
+
+        if ($PLUGININFO[$plugin]['sitminversion'] > $application_version)
+        {
+            echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitminversion']} or later</strong><br />";
+        }
+
+        if (!empty($PLUGININFO[$plugin]['sitmaxversion']) AND $PLUGININFO[$plugin]['sitmaxversion'] < $application_version)
+        {
+            echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitmaxversion']} or earlier</strong><br />";
+        }
         echo "</p>";
     }
 }
-else echo "<p>{$strNone}</p>";
+else
+{
+    echo "<p>{$strNone}</p>";
+}
 echo "</td></tr>";
 if ($CONFIG['kb_enabled'] == FALSE OR
     $CONFIG['portal_kb_enabled'] == FALSE OR

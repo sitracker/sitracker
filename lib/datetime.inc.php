@@ -2,7 +2,7 @@
 // datetime.inc.php - functions relating to date and time
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -320,6 +320,7 @@ function iso_8601_date($timestamp)
     return $date_mod;
 }
 
+
 /**
  * Decide whether the time is during a public holiday
  * @author Paul Heaney
@@ -377,9 +378,6 @@ function get_public_holidays($startdate, $enddate)
 }
 
 
-
-
-
 /**
  * Takes a UNIX Timestamp and returns a string with a pretty readable date
  * @param int $date
@@ -419,6 +417,7 @@ function readable_date($date, $lang = 'user')
     }
     return $datestring;
 }
+
 
 /**
  * @author Kieran Hogg

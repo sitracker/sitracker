@@ -2,7 +2,7 @@
 // file.inc.php - functions relating to files
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -253,5 +253,25 @@ function return_bytes($val)
             $val *= 1024;
     }
     return $val;
+}
+
+
+function mime_type($file)
+{
+    if (function_exists("mime_content_type"))
+    {
+        return mime_content_type($file);
+    }
+    elseif (DIRECTORY_SEPARATOR == '/')
+    {
+        //This only works on *nix, but better than failing
+        $file = escapeshellarg($file);
+        $mime = shell_exec("file -bi " . $file);
+        return $mime;
+    }
+    else
+    {
+        return 'application/octet-stream';
+    }
 }
 ?>

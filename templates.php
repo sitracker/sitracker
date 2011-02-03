@@ -2,7 +2,7 @@
 // templates.php - Manage email and notice templates
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,7 +33,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
 
     echo "<h2>".icon('templates', 32)." ";
     echo "{$strTemplates}</h2>";
-    echo "<p align='center'><a href='triggers.php'>{$strTriggers}</a> | <a href='template_add.php'>{$strAddTemplate}</a></p>";
+    echo "<p align='center'><a href='triggers.php'>{$strTriggers}</a> | <a href='template_new.php'>{$strNewTemplate}</a></p>";
 
     $sql = "SELECT * FROM `{$dbEmailTemplates}` ORDER BY id";
     $result = mysql_query($sql);
@@ -298,11 +298,11 @@ elseif ($action == "edit")
         echo "</td></tr>\n";
 
 
-        if ($templatetype=='email') $body = $template->body;
+        if ($templatetype == 'email') $body = $template->body;
         else $body = $template->text;
         echo "<tr><th>{$strText}</th>";
         echo "<td>";
-        if ($templatetype=='notice') echo bbcode_toolbar('bodytext');
+        if ($templatetype == 'notice') echo bbcode_toolbar('bodytext');
 
         echo "<textarea id='bodytext' name='bodytext' rows='20' cols='50' onfocus=\"recordFocusElement(this);\"";
         if (strlen($body) > 3 AND substr_compare($body, 'str', 0, 3) === 0)
@@ -455,11 +455,11 @@ elseif ($action == "update")
     if ($type == 'user') $name = str_replace('_', ' ', $name);
     else $name = str_replace(' ', '_', strtoupper(trim($name)));
 
-    if ($cust_vis=='yes') $cust_vis='show';
-    else $cust_vis='hide';
+    if ($cust_vis == 'yes') $cust_vis = 'show';
+    else $cust_vis = 'hide';
 
-    if ($storeinlog=='Yes') $storeinlog='Yes';
-    else $storeinlog='No';
+    if ($storeinlog == 'Yes') $storeinlog = 'Yes';
+    else $storeinlog = 'No';
 
     switch ($template)
     {

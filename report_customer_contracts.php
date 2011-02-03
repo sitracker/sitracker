@@ -2,7 +2,7 @@
 // supportbycontract.php - Shows sites and their contracts
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -42,6 +42,10 @@ if (!empty($_REQUEST['siteid'])) $sql .= "WHERE id='{$siteid}'";
 else $sql .= "ORDER BY s.name";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+if ($_REQUEST['mode'] == 'csv')
+{
+    echo "{$strSite},{$strProduct},{$strLicense},{$strExpiryDate},{$strAllContacts},{$strEngineer} 1, {$strEngineer} 2, {$strEngineer} 3, {$strEngineer} 4\n";
+}
 while ($site = mysql_fetch_object($result))
 {
     $msql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, r.name AS reseller, ";
@@ -55,18 +59,17 @@ while ($site = mysql_fetch_object($result))
     $msql .= "AND m.term!='yes' ";
     $msql .= "AND m.expirydate > '$now' ";     $msql .= "ORDER BY expirydate DESC";
 
-    echo "\n<!-- $msql -->\n";
+//    echo "\n<!-- $msql -->\n";
     $mresult = mysql_query($msql);
     if (mysql_num_rows($mresult)>=1)
     {
         if ($_REQUEST['mode'] == 'csv')
         {
-            echo "{$site->sitename}\n";
-            echo "{$strProduct},{$strLicense},{$strExpiryDate},{$strAllContacts},{$strEngineer} 1, {$strEngineer} 2, {$strEngineer} 3, {$strEngineer} 4\n";
             while ($maint = mysql_fetch_object($mresult))
             {
                 if ($maint->expirydate > $now AND $maint->term != 'yes')
                 {
+                    echo "{$site->sitename},";
                     echo "{$maint->product},";
                     echo "{$maint->licence_quantity} {$maint->licence_type},";
                     echo ldate($CONFIG['dateformat_date'], $maint->expirydate).",";

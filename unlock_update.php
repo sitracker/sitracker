@@ -2,7 +2,7 @@
 // unlock_update.php - Unlocks incident updates
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$incomingid = cleanvar($_REQUEST['id']);
+$incomingid = clean_int($_REQUEST['id']);
 
 if (empty($incomingid)) trigger_error("Update ID was not set:{$updateid}", E_USER_WARNING);
 

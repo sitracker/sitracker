@@ -1,8 +1,8 @@
 <?php
-// review_incoming_updates.php - Review/Delete Incident Updates
+// inbox.php - View/Respond to incoming email
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -28,7 +28,7 @@ $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
 
 
-// $refresh = 60;
+$refresh = 60;
 $title = $strInbox;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -40,7 +40,7 @@ function contact_info($contactid, $email, $name)
     //$info .= "<span style='float:right;'>".gravatar($email, 16) . '</span>';
     if (!empty($contactid))
     {
-        $info .= "<a href='contact.php?id={$contactid}'>";
+        $info .= "<a href='contact_details.php?id={$contactid}'>";
         $info .= icon('contact', 16);
         $info .= "</a>";
     }
@@ -108,7 +108,7 @@ if (empty($displayid))
                             $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
                             mysql_query($dsql);
                             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                        break;
+                           break;
                     }
                 }
         }
@@ -117,7 +117,7 @@ if (empty($displayid))
 
 
     // Show list of items in inbox
-    $sql = "SELECT * FROM `$dbTempIncoming` ";
+    $sql = "SELECT * FROM `{$dbTempIncoming}` ";
 
     if (!empty($sort))
     {
@@ -130,6 +130,9 @@ if (empty($displayid))
                 break;
             case 'subject':
                 $sql .= " ORDER BY `subject` {$sortorder}";
+                break;
+            case 'date':
+                $sql .= " ORDER BY `arrived` {$sortorder}";
                 break;
             default:
                 $sql .= " ORDER BY `id` DESC";
@@ -190,7 +193,7 @@ if (empty($displayid))
                 echo " title='{$strViewAndLockHeldEmail}'>";
                 if (!empty($incoming->incident_id)) echo icon('support',16) . ' ';
                 echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);
-                if (!empty($update->bodytext)) echo '<span>'.parse_updatebody(truncate_string($update->bodytext,1024)).'</span>';
+                if (!empty($update->bodytext)) echo '<span>'.parse_updatebody(truncate_string($update->bodytext, 1024)).'</span>';
                 echo "</a>";
                 if ($num_attachments > 0) echo ' '.icon('attach', 16, '', "{$strAttachments}: {$num_attachments}");
             }

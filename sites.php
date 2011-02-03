@@ -2,7 +2,7 @@
 // browse_sites.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -20,9 +20,8 @@ $pagescripts = array('AutoComplete.js');
 
 $title = $strBrowseSites;
 
-// External variables
 $search_string = cleanvar($_REQUEST['search_string']);
-$owner = cleanvar($_REQUEST['owner']);
+$owner = clean_int($_REQUEST['owner']);
 $submit_value = cleanvar($_REQUEST['submit']);
 $displayinactive = cleanvar($_REQUEST['displayinactive']);
 if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
@@ -41,9 +40,9 @@ if ($submit_value == "go")
     elseif ($search_string != '*')
     {
         $sql .= "WHERE ";
-        if (strlen(utf8_decode($search_string))==1)
+        if (strlen(utf8_decode($search_string)) == 1)
         {
-            if ($search_string=='0')
+            if ($search_string == '0')
             {
                 $sql .= "(SUBSTRING(name,1,1)=('0')
                                 OR SUBSTRING(name,1,1)=('1')
@@ -78,15 +77,15 @@ if ($submit_value == "go")
     {
             //go straight to the site
             $obj = mysql_fetch_object($result);
-            $url = "site_details.php?id=".$obj->id;
-            header("Location: $url");
+            $url = "site_details.php?id={$obj->id}";
+            header("Location: {$url}");
     }
 }
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-if ($search_string=='') $search_string='a';
+if ($search_string == '') $search_string='a';
 echo "<h2>".icon('site', 32)." ";
-echo "{$strBrowseSites}</h2>";
+echo "{title}</h2>";
 
 echo "<table summary='alphamenu' align='center'>";
 echo "<tr>";
@@ -100,7 +99,7 @@ echo "<input name='submit' type='submit' value='{$strGo}' /></p>";
 echo "</form>\n";
 if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 {
-    if ($displayinactive=="true")
+    if ($displayinactive == "true")
     {
         echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=false";
         if (!empty($search_string)) echo "&amp;search_string={$search_string}&amp;owner={$owner}";
@@ -117,27 +116,17 @@ if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 }
 echo "</td></tr>";
 echo "<tr><td valign='middle'>";
-echo "<a href='site_add.php'>{$strAddSite}</a> | ";
+echo "<a href='site_new.php'>{$strNewSite}</a> | ";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
 echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
 $sitesql = "SELECT COUNT(id) FROM `{$dbSites}` WHERE owner='{$sit[2]}'";
 $siteresult = mysql_query($sitesql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 list($ownedsites) = mysql_fetch_row($siteresult);
 if ($ownedsites > 0) echo " | <a href='sites.php?owner={$sit[2]}' title='Sites'>{$strMine}</a> ";
 
 echo "</td></tr></table>";
-?>
-<script type="text/javascript">
-//<![CDATA[
-    function site_details_window(siteid)
-    {
-        URL = "site_details.php?action=edit&amp;site=" + siteid;
-        window.open(URL, "site_details_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=450,height=240");
-    }
-//]]>
-</script>
-<?php
+
 // check input
 if ($search_string == '')
 {
@@ -161,9 +150,9 @@ if ($errors == 0)
         elseif ($search_string != '*')
         {
             $sql .= "WHERE ";
-            if (strlen(utf8_decode($search_string))==1)
+            if (strlen(utf8_decode($search_string)) == 1)
             {
-                if ($search_string=='0')
+                if ($search_string == '0')
                 {
                     $sql .= "(SUBSTRING(name,1,1)=('0')
                                     OR SUBSTRING(name,1,1)=('1')
@@ -184,10 +173,10 @@ if ($errors == 0)
             }
             else
             {
-                $sql .= "name LIKE '%$search_string%' ";
+                $sql .= "name LIKE '%{$search_string}%' ";
             }
         }
-        if ($displayinactive=="false")
+        if ($displayinactive == "false")
         {
             if ($search_string == '*') $sql .= " WHERE ";
             else $sql .= " AND ";
@@ -195,7 +184,6 @@ if ($errors == 0)
         }
         $sql .= " ORDER BY name ASC";
 
-        // execute query
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     }
@@ -208,7 +196,7 @@ if ($errors == 0)
     {
         $countsites = mysql_num_rows($result);
 
-        echo "<p align='center'>{$strDisplaying} $countsites ";
+        echo "<p align='center'>{$strDisplaying} {$countsites} ";
 
         if ($countsites == 1)
         {
@@ -234,7 +222,6 @@ if ($errors == 0)
         $shade = 'shade1';
         while ($results = mysql_fetch_object($result))
         {
-            // define class for table row shading
             if ($results->active == 'false') $shade = 'expired';
             echo "<tr class='{$shade}'>";
             echo "<td align='center'>{$results->id}</td>";
@@ -242,7 +229,7 @@ if ($errors == 0)
             echo "<td>".nl2br($results->department)."</td>";
             echo "<td><a href='site_edit.php?action=edit&amp;site={$results->id}'>{$strEdit}</a></td>";
             echo "</tr>";
-            // invert shade
+
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }

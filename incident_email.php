@@ -2,7 +2,7 @@
 // incident_email.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,11 +19,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$step = cleanvar($_REQUEST['step']);
-$id = cleanvar($_REQUEST['id']);
+$step = clean_int($_REQUEST['step']);
+$id = clean_int($_REQUEST['id']);
 $menu = cleanvar($_REQUEST['menu']);
 $incidentid = $id;
-$draftid = cleanvar($_REQUEST['draftid']);
+$draftid = clean_int($_REQUEST['draftid']);
 if (empty($draftid)) $draftid = -1;
 
 $title = $strEmail;
@@ -191,7 +191,7 @@ switch ($step)
         echo "</td></tr>\n";
         echo "<tr><th>{$strTimeToNextAction}:</th>";
         echo "<td>";
-        echo show_next_action('updateform');
+        echo show_next_action('updateform', $id);
         echo "</td></tr>";
         plugin_do('incident_email_form1');
         echo "</table>";
@@ -334,9 +334,9 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);
             $timetonextaction_hours = cleanvar($_REQUEST['timetonextaction_hours']);
             $timetonextaction_minutes = cleanvar($_REQUEST['timetonextaction_minutes']);
-            $day = cleanvar($_REQUEST['day']);
-            $month = cleanvar($_REQUEST['month']);
-            $year = cleanvar($_REQUEST['year']);
+            $day = clean_int($_REQUEST['day']);
+            $month = clean_int($_REQUEST['month']);
+            $year = clean_int($_REQUEST['year']);
             $target = cleanvar($_REQUEST['target']);
             $chase_customer = cleanvar($_REQUEST['chase_customer']);
             $chase_manager = cleanvar($_REQUEST['chase_manager']);
@@ -369,7 +369,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         if ($draftid == -1)
         {
             // Grab the template
-            $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id=$emailtype LIMIT 1";
+            $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$emailtype} LIMIT 1";
             $tresult = mysql_query($tsql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
@@ -414,8 +414,11 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         $file_size = readable_file_size($CONFIG['upload_max_filesize']);
         echo "(&lt; $file_size)";
         echo "</th><td>";
-        echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$CONFIG['upload_max_filesize']}' />";
-        echo "<input type='file' name='attachment' size='40' />";
+        echo "<input type='hidden' name='kb	' value='{$CONFIG['upload_max_filesize']}' />";
+        echo "<div id='attachments'>";
+        echo "<input type='file' id='attachment_1' name='attachment_1' size='40' />";
+        echo "</div>";
+        echo "<br /><a href=\"javascript:attach_another_file('attachments')\">{$strAttachAnotherFile}</a>";
         echo "</td></tr>";
         echo "<tr><th>{$strMessage}</th><td>";
         echo "<textarea name='bodytext' id='bodytext' rows='20' cols='65'>";
@@ -456,7 +459,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         $bccfield = cleanvar($_REQUEST['bccfield']);
         $subjectfield = cleanvar($_REQUEST['subjectfield'], FALSE, TRUE, FALSE);
         $emailtype = cleanvar($_REQUEST['emailtype']);
-        $newincidentstatus = cleanvar($_REQUEST['newincidentstatus']);
+        $newincidentstatus = clean_int($_REQUEST['newincidentstatus']);
         $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
         $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
         $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);
@@ -470,72 +473,64 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         $chase_customer = cleanvar($_REQUEST['chase_customer']);
         $chase_manager = cleanvar($_REQUEST['chase_manager']);
 
-        // move attachment to a safe place for processing later
-        if ($_FILES['attachment']['name'] != '')       // Should be using this format throughout TPG 13/08/2002
+        $files = array();
+
+        $size_of_files = 0;
+        
+        // Check file size is below limit 
+        foreach ($_FILES AS $file)
         {
-            $umask = umask(0000);
-            $mk = TRUE;
-            if (!file_exists($CONFIG['attachment_fspath'].$id))
+            if ($file['name'] != '')
             {
-                $mk = mkdir($CONFIG['attachment_fspath'].$id, 0770, TRUE);
-                if (!$mk)
+                $errorcode = $file['error'];
+                // check the for errors related to file size in php.ini(upload_max_filesize).
+                if ($errorcode == 1 || $errorcode == 2)
                 {
-                    trigger_error('Failed creating incident attachment directory: '.$CONFIG['attachment_fspath'].$id, E_USER_WARNING);
+                    $errors = 1;
+                    $error_string .= "<p class='error'>".get_file_upload_error_message($errorcode, $file['name'])."</p>\n";
                 }
+                
+                $size_of_files += filesize($file['tmp_name']);
             }
-
-            $name = $_FILES['attachment']['name'];
-            $size = filesize($_FILES['attachment']['tmp_name']);
-            $sql = "INSERT INTO `{$dbFiles}`(filename, size, userid, usertype) ";
-            $sql .= "VALUES('{$name}', '{$size}', '{$sit[2]}', '1')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $fileid = mysql_insert_id();
-
-            $filename = $CONFIG['attachment_fspath'].$id.$fsdelim.$fileid."-".$name;
-
-            $mv = rename($_FILES['attachment']['tmp_name'], $filename);
-            if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
-            $attachmenttype = $_FILES['attachment']['type'];
         }
-        $errors = 0;
-        // check to field
+        
+        $errors = 0;        
+
+        if ($size_of_files > $CONFIG['upload_max_filesize'])
+        {
+            $errors = 1;
+            $error_string .= "<p class='error'>{$strAttachedFilesExceedMaxSize}</p>\n";
+        }
+
         if ($tofield == '')
         {
             $errors = 1;
             $error_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strTo)."</p>\n";
         }
-        // check from field
+
         if ($fromfield == '')
         {
             $errors = 1;
             $error_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strFrom)."</p>\n";
         }
-        // check reply to field
+
         if ($replytofield == '')
         {
             $errors = 1;
             $error_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strReplyTo)."</p>\n";
         }
-        $errorcode = $_FILES['attachment']['error'];
-        // check the for errors related to file size in php.ini(upload_max_filesize) TODO: Should i18n this..
-        if ($errorcode == 1 || $errorcode == 2)
-        {
-            $errors = 1;
-            $error_string .= "<p>".get_file_upload_error_message($_FILES['attachment']['error'], $_FILES['attachment']['name'])."</p>\n";
-        }
+
         // Store email body in session if theres been an error
         if ($errors > 0) $_SESSION['temp-emailbody'] = $bodytext;
         else unset($_SESSION['temp-emailbody']);
 
-        // send email if no errors
         if ($errors == 0)
         {
-            $extra_headers = "Reply-To: $replytofield\nErrors-To: ".user_email($sit[2])."\n";
+            $extra_headers = "Reply-To: {$replytofield}\nErrors-To: ".user_email($sit[2])."\n";
             $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
             $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
-            if ($ccfield != '')  $extra_headers .= "CC: $ccfield\n";
-            if ($bccfield != '') $extra_headers .= "BCC: $bccfield\n";
+            if ($ccfield != '')  $extra_headers .= "CC: {$ccfield}\n";
+            if ($bccfield != '') $extra_headers .= "BCC: {$bccfield}\n";
             $extra_headers .= "\n"; // add an extra crlf to create a null line to separate headers from body
                                 // this appears to be required by some email clients - INL
 
@@ -543,33 +538,66 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             // INL 5 Aug 09, quoted-printable seems to split lines in unexpected places, base64 seems to work ok
             $mime -> attach($bodytext, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
 
-            // check for attachment
-            //        if ($_FILES['attachment']['name']!='' || strlen($filename) > 3)
-            if ($filename != '' && strlen($filename) > 3)
+            foreach ($_FILES AS $file)
             {
-                //          if (!isset($filename)) $filename = $attachment_fspath.$_FILES['attachment']['name'];   ??? TPG 13/08/2002
-                if (!file_exists($filename)) trigger_error("File did not exist upon processing attachment: {$filename}", E_USER_WARNING);
-                if ($filename == '') trigger_error("Filename was blank upon processing attachment: {$filename}", E_USER_WARNING);
-
-                // Check file size before sending
-                if (filesize($filename) > $CONFIG['upload_max_filesize'] || filesize($filename)==FALSE)
+                // move attachment to a safe place for processing later
+                if ($file['name'] != '' AND strlen($file['name']) > 3)
                 {
-                    trigger_error("User Error: Attachment too large or file upload error, filename: $filename,  perms: ".fileperms($filename).", size:",filesize($filename), E_USER_WARNING);
-                    // throwing an error isn't the nicest thing to do for the user but there seems to be no way of
-                    // checking file sizes at the client end before the attachment is uploaded. - INL
-                }
+                    $umask = umask(0000);
+                    $mk = TRUE;
+                    if (!file_exists($CONFIG['attachment_fspath'].$id))
+                    {
+                        $mk = mkdir($CONFIG['attachment_fspath'].$id, 0770, TRUE);
+                        if (!$mk)
+                        {
+                            trigger_error('Failed creating incident attachment directory: '.$CONFIG['attachment_fspath'].$id, E_USER_WARNING);
+                        }
+                    }
+        
+                    $name = $file['name'];
+                    $size = filesize($file['tmp_name']);
+                    $sql = "INSERT INTO `{$dbFiles}`(filename, size, userid, usertype) ";
+                    $sql .= "VALUES('{$name}', '{$size}', '{$sit[2]}', '1')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                    $fileid = mysql_insert_id();
+        
+                    $filename = "{$CONFIG['attachment_fspath']}{$id}{$fsdelim}{$fileid}-{$name}";
+        
+                    $mv = rename($file['tmp_name'], $filename);
+                    if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
+                    $attachmenttype = $file['type'];
+                    
+                    $f = array();
+                    $f['name'] = $name;
+                    $f['filename'] = $filename;
+                    $f['attachmenttype'] = $file['type'];
+                    $f['fileid'] = $fileid;
+                    $files[] = $f;
+                    
+                    if (!file_exists($filename)) trigger_error("File did not exist upon processing attachment: {$filename}", E_USER_WARNING);
+    
+                    // Check file size before sending
+                    if (filesize($filename) > $CONFIG['upload_max_filesize'] || filesize($filename) == FALSE)
+                    {
+                        trigger_error("User Error: Attachment too large or file upload error, filename: {$filename},  perms: ".fileperms($filename).", size:",filesize($filename), E_USER_WARNING);
+                        // throwing an error isn't the nicest thing to do for the user but there seems to be no way of
+                        // checking file sizes at the client end before the attachment is uploaded. - INL
+                    }
 
-                if (preg_match("!/x\-.+!i", $attachmenttype)) $type = OCTET;
-                else $type = str_replace("\n","",$attachmenttype);
-                $disp = "attachment; filename=\"$name\"; name=\"$name\";";
-                $mime -> fattach($filename, "Attachment for incident $id", $type, 'base64', $disp);
+                    // Set to OCTET if application type contains x- e.g.  application/x-http-php
+                    if (preg_match("!/x\-.+!i", $file['type'])) $type = OCTET;
+                    else $type = str_replace("\n","", $file['type']);
+                    $disp = "attachment; filename=\"{$name}\"; name=\"{$name}\";";
+                    $mime -> fattach($filename, "Attachment for incident {$id}", $type, 'base64', $disp);
+                }
             }
 
             // Lookup the email template (we need this to find out if the update should be visible or not)
-            $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id='$emailtype' ";
+            $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id='{$emailtype}' ";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) < 1) trigger_error("Email template '{$meailtype}' not found",E_USER_WARNING);
+            if (mysql_num_rows($result) < 1) trigger_error("Email template '{$meailtype}' not found", E_USER_WARNING);
             $emailtype = mysql_fetch_object($result);
             $storeinlog = $emailtype->storeinlog;
             $templatename = $emailtype->name;
@@ -659,7 +687,21 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
                     $updateheader .= "{$SYSLANG['strReplyTo']}: [b]{$replytofield}[/b]\n";
                     if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "CC: [b]{$ccfield}[/b]\n";
                     if ($bccfield != '') $updateheader .= "BCC: [b]{$bccfield}[/b]\n";
-                    if ($filename != '') $updateheader .= "{$SYSLANG['strAttachment']}: [b][[att={$fileid}]]".$name."[[/att]][/b]\n";
+                    if (!empty($files))
+                    {
+                        if (count($files) > 1) $updateheader .= "{$SYSLANG['strAttachments']}: ";
+                        else $updateheader .= "{$SYSLANG['strAttachment']}: ";
+
+                        foreach ($files AS $file)
+                        {
+                            if ($file['filename'] != '')
+                            {
+                                $updateheader .= "[b][[att={$file['fileid']}]]".$file['name']."[[/att]][/b] ";
+                            }
+                        }
+                        
+                        $updateheader .= "\n";
+                    }
                     $updateheader .= "{$SYSLANG['strSubject']}: [b]{$subjectfield}[/b]\n";
     
                     if (!empty($updateheader)) $updateheader .= "<hr>";
@@ -671,34 +713,32 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
-    
-    																$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
-                    $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 }
 			     
                 if ($storeinlog == 'No')
                 {
-                //Create a small note in the log to say the mail was sent but not logged (short )
-																$updatebody  = "{$SYSLANG['strUpdateNotLogged']} \n";
-                $updatebody .= "[b] {$SYSLANG['strTemplate']}: [/b]".$templatename."\n";
-                $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
-                $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
-                $updatebody = mysql_real_escape_string($updatebody);
+                    //Create a small note in the log to say the mail was sent but not logged (short )
+					$updatebody  = "{$SYSLANG['strUpdateNotLogged']} \n";
+                    $updatebody .= "[b] {$SYSLANG['strTemplate']}: [/b]".$templatename."\n";
+                    $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
+                    $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
+                    $updatebody = mysql_real_escape_string($updatebody);
+    
+					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
+                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $updateid = mysql_insert_id();
+				}
 
-																$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
-                $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                $updateid = mysql_insert_id();
-
-																$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
-                $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-																}
-
+				foreach ($files AS $file)
+				{
+					$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+                    $sql .= "VALUES (5, '{$updateid}', '{$file['fileid']}', 'left', '{$sit[2]}')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+				}
+				
                 $owner = incident_owner($id);
 
                 // Handle meeting of service level targets
@@ -795,7 +835,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
             else
             {
                 include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-                echo "<p class='error'>{$SYSLANG['strErrorSendingEmail']}: $mailerror</p>\n";
+                echo "<p class='error'>{$SYSLANG['strErrorSendingEmail']}: {$mailerror}</p>\n";
                 include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
             }
         }
@@ -806,7 +846,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         }
         break;
     default:
-        trigger_error("{$SYSLANG['strInvalidParameter']}: $step", E_USER_ERROR);
+        trigger_error("{$SYSLANG['strInvalidParameter']}: {$step}", E_USER_ERROR);
         break;
 } // end switch step
 

@@ -2,7 +2,7 @@
 // tasks.php - List tasks
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,7 +24,7 @@ if (!$CONFIG['tasks_enabled'])
     header("Location: main.php");
 }
 
-$id = cleanvar($_REQUEST['incident']);
+$id = clean_int($_REQUEST['incident']);
 if (!empty($id))
 {
     $title = $strActivities;
@@ -38,12 +38,12 @@ else
 
 
 // External variables
-$user = cleanvar($_REQUEST['user']);
+$user = clean_int($_REQUEST['user']);
 $show = cleanvar($_REQUEST['show']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
-$incident = cleanvar($_REQUEST['incident']);
-$siteid = cleanvar($_REQUEST['siteid']);
+$incident = clean_int($_REQUEST['incident']);
+$siteid = clean_int($_REQUEST['siteid']);
 
 ?>
 <script type='text/javascript'>
@@ -115,36 +115,40 @@ elseif (!empty($siteid))
     // Find all tasks for site
     $sql = "SELECT i.id FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
     $sql .= "WHERE i.contact = c.id AND ";
-    $sql .= "c.siteid = {$siteid} AND ";
-    $sql .= "(i.status != 2 AND i.status != 7)";
+    $sql .= "c.siteid = {$siteid} ";
+    //$sql .= "AND (i.status != 2 AND i.status != 7)";
     $result = mysql_query($sql);
 
-    $sqlTask = "SELECT * FROM `{$dbTasks}` WHERE enddate IS NULL  ";
+    //
+    $sqlTask = "SELECT * FROM `{$dbTasks}` WHERE duedate IS NULL AND ";
+    $taskIDs = array();
 
-    while ($obj = mysql_fetch_object($result))
+    if (mysql_num_rows($result) > 0)
     {
-        //get info for incident-->task linktype
-        $sql = "SELECT DISTINCT origcolref, linkcolref ";
-        $sql .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt ";
-        $sql .= "WHERE l.linktype=4 ";
-        $sql .= "AND linkcolref={$obj->id} ";
-        $sql .= "AND direction='left'";
-        $resultLinks = mysql_query($sql);
-
-        //get list of tasks
-        while ($tasks = mysql_fetch_object($resultLinks))
+        while ($obj = mysql_fetch_object($result))
         {
-            //$sqlTask .= "OR id={$tasks->origcolref} ";
-            if (empty($orSQL)) $orSQL = "(";
-            else $orSQL .= " OR ";
-            $orSQL .= "id={$tasks->origcolref} ";
-        }
+            //get info for incident-->task linktype
+            $sql = "SELECT DISTINCT origcolref, linkcolref ";
+            $sql .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt ";
+            $sql .= "WHERE l.linktype=4 ";
+            $sql .= "AND linkcolref={$obj->id} ";
+            $sql .= "AND direction='left'";
+            $resultLinks = mysql_query($sql);
 
-        if (!empty($orSQL))
-        {
-            $sqlTask .= "AND {$orSQL})";
+            //get list of tasks
+            while ($tasks = mysql_fetch_object($resultLinks))
+            {
+                //$sqlTask .= "OR id={$tasks->origcolref} ";
+                //if (empty($orSQL)) $orSQL = "(";
+                //else $orSQL .= " OR ";
+                //$orSQL .= "id={$tasks->origcolref} ";
+                $taskIDs[] = $tasks->origcolref;
+            }
         }
     }
+
+    if (!empty($taskIDs)) $sqlTask .= "id IN (".implode(',', $taskIDs).")";
+    else $sqlTasks = "1=0";
 
     $result = mysql_query($sqlTask);
 
@@ -241,7 +245,7 @@ else
         $sql .= "owner='$user' AND ";
     }
 
-    if ($show=='' OR $show=='active' )
+    if ($show == '' OR $show == 'active' )
     {
         $sql .= "(completion < 100 OR completion='' OR completion IS NULL) ";
         $sql .= "AND (distribution = 'public' OR distribution = 'private') ";
@@ -378,7 +382,7 @@ if (mysql_num_rows($result) >=1 )
         }
         else if (empty($incidentid))
         {
-            $sqlIncident = "SELECT DISTINCT origcolref, linkcolref, incidents.title ";
+            $sqlIncident = "SELECT DISTINCT origcolref, linkcolref, i.title ";
             $sqlIncident .= "FROM `{$dbLinks}` AS l, `{$dbLinkTypes}` AS lt, ";
             $sqlIncident .= "`{$dbIncidents}` AS i ";
             $sqlIncident .= "WHERE l.linktype=4 ";
@@ -391,10 +395,7 @@ if (mysql_num_rows($result) >=1 )
             if ($obj = mysql_fetch_object($resultIncident))
             {
                 $incidentidL = $obj->linkcolref;
-                echo "<a href=\"javascript:incident_details_window('{$obj->linkcolref}'
-                      ,'incident{$obj->linkcolref}')\" class='info'>";
-                echo $obj->linkcolref;
-                echo "</a>";
+                echo html_incident_popup_link($obj->linkcolref, $obj->linkcolref);
                 $incidentTitle = $obj->title;
             }
             echo "</td>";
@@ -608,12 +609,12 @@ if (mysql_num_rows($result) >=1 )
         // Show add activity link if the incident is open
         if (incident_status($id) != 2 AND !$engineerhasrunnintask)
         {
-            echo "<p align='center'><a href='task_add.php?incident={$id}'>{$strStartNewActivity}</a></p>";
+            echo "<p align='center'><a href='task_new.php?incident={$id}'>{$strStartNewActivity}</a></p>";
         }
     }
     else if ($show != 'incidents')
     {
-        echo "<p align='center'><a href='task_add.php'>{$strAddTask}</a></p>";
+        echo "<p align='center'><a href='task_new.php'>{$strNewTask}</a></p>";
     }
 
     if ($mode == 'incident')
@@ -677,12 +678,12 @@ else
     if ($mode == 'incident')
     {
         echo "<p align='center'>";
-        echo "<a href='task_add.php?incident={$id}'>{$strStartNewActivity}";
+        echo "<a href='task_new.php?incident={$id}'>{$strStartNewActivity}";
         echo "</a></p>";
     }
     else if ($show != 'incidents')
     {
-        echo "<p align='center'><a href='task_add.php'>{$strAddTask}</a></p>";
+        echo "<p align='center'><a href='task_new.php'>{$strNewTask}</a></p>";
     }
 }
 

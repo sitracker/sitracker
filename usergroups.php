@@ -2,7 +2,7 @@
 // usergroups.php - Manage user group membership
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -32,14 +32,14 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($user = mysql_fetch_object($result))
         {
-            $usql = "UPDATE `{$dbUsers}` SET groupid = '".cleanvar($_POST["group{$user->id}"])."' WHERE id='{$user->id}'";
+            $usql = "UPDATE `{$dbUsers}` SET groupid = '".clean_int($_POST["group{$user->id}"])."' WHERE id='{$user->id}'";
             mysql_query($usql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
         html_redirect("usergroups.php");
         break;
     case 'addgroup':
-        $group = cleanvar($_REQUEST['group']);
+        $group = clean_dbstring($_REQUEST['group']);
         if (empty($group))
         {
             html_redirect("usergroups.php", FALSE, sprintf($strFieldMustNotBeBlank, "'{$strName}'"));
@@ -51,7 +51,7 @@ switch ($action)
         html_redirect("usergroups.php");
         break;
     case 'deletegroup':
-        $groupid = cleanvar($_REQUEST['groupid']);
+        $groupid = clean_int($_REQUEST['groupid']);
         // Remove group membership for all users currently assigned to this group
         $sql = "UPDATE `{$dbUsers}` SET groupid = '' WHERE groupid = '{$groupid}'";
         mysql_query($sql);
@@ -66,7 +66,7 @@ switch ($action)
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-        echo "<h2>{$strUserGroups}</h2>";
+        echo "<h2>".icon('site', 32)." {$strUserGroups}</h2>";
 
         $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
         $gresult = mysql_query($gsql);
@@ -90,7 +90,7 @@ switch ($action)
         }
         echo "<tr><td><input type='text' name='group' value='' size='10' maxlength='255' />";
         echo "<input type='hidden' name='action' value='addgroup' />";
-        echo "</td><td><input type='submit' name='add' value='{$strAdd}' /></td></tr>\n";
+        echo "</td><td><input type='submit' name='add' value='{$strNew}' /></td></tr>\n";
         echo "</table>";
         echo "</form>";
 

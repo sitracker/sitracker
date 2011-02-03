@@ -2,7 +2,7 @@
 // calendar.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -21,27 +21,31 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 include ('calendar/calendar.inc.php');
 
-$groupid = cleanvar($_REQUEST['gid']);
-if (empty($groupid)) $groupid = $_SESSION['groupid'];
+$groupid = clean_int($_REQUEST['gid']);
+if (empty($groupid)) $groupid = clean_int($_SESSION['groupid']);
 
 // External variables
-foreach (array(
-            'user', 'nmonth', 'nyear', 'type', 'selectedday', 'selectedmonth',
-            'selectedyear', 'selectedtype', 'approved', 'length', 'display',
-            'weeknumber'
-            ) as $var)
-{
-    eval("\$$var=cleanvar(\$_REQUEST['$var']);");
-}
-if (empty($length)) $length='day';
+$user = clean_int($_REQUEST['user']);
+$nmonth = clean_int($_REQUEST['nmonth']);
+$nyear = clean_int($_REQUEST['nyear']);
+$type = clean_int($_REQUEST['type']);
+$selectedday = clean_int($_REQUEST['selectedday']);
+$selectedmonth = clean_int($_REQUEST['selectedmonth']);
+$selectedyear = clean_int($_REQUEST['selectedyear']);
+$selectedtype = clean_int($_REQUEST['selectedtype']);
+$approved = clean_int($_REQUEST['approved']);
+$length = clean_fixed_list($_REQUEST['length'], array('day','am','pm'));
+$display = clean_fixed_list($_REQUEST['display'], array('month','list','year','week','day'));
+$weeknumber = clean_int($weeknumber);
+
 $title = $strCalendar;
 $pagecss = array('calendar/planner.css.php');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if (empty($user) || $user=='current') $user = $sit[2];
+if (empty($user) || $user == 'current') $user = $sit[2];
 elseif ($user == 'all') $user = '';
 if (empty($type)) $type = HOL_HOLIDAY;
-if (user_permission($sit[2],50)) $approver = TRUE;
+if (user_permission($sit[2], 50)) $approver = TRUE;
 else $approver = FALSE;
 
 // Force user to 0 (SiT) when setting public holidays
@@ -52,13 +56,13 @@ if (!empty($groupid)) $gidurl = "&amp;gid={$groupid}";
 
 // Defaults
 if (empty($_REQUEST['year'])) $year = date('Y');
-else $year = $_REQUEST['year'];
+else $year = intval($_REQUEST['year']);
 
 if (empty($_REQUEST['month'])) $month = date('m');
-else $month = $_REQUEST['month'];
+else $month = intval($_REQUEST['month']);
 
 if (empty($_REQUEST['day'])) $day = date('d');
-else $day = $_REQUEST['day'];
+else $day = intval($_REQUEST['day']);
 
 $calendarTypes = array('list','year','month','week','day');
 

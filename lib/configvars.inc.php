@@ -3,7 +3,7 @@
 //                      and functions to manage them
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,7 +19,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
-$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'holidays', 'feedback', 'inventory', 'otherfeatures');
+$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
 $CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap');
 $TABI18n['plugins'] = $strPlugins;
 
@@ -50,6 +50,7 @@ $CFGCAT['locale'] = array('home_country',
                           'dateformat_shortdate',
                           'dateformat_shorttime',
                           'dateformat_time',
+                          'display_minute_interval',
                           'currency_symbol',
                           'default_i18n',
                           'available_i18n');
@@ -57,12 +58,15 @@ $CFGCAT['locale'] = array('home_country',
 $CFGCAT['sla'] = array('default_service_level',
                        'start_working_day',
                        'end_working_day',
+                       'working_days',
                        'critical_threshold',
                        'urgent_threshold',
                        'notice_threshold',
-                       'regular_contact_days',
-                       'working_days');
+                       'regular_contact_days'
+                       );
 
+$CFGCAT['billing'] = array('billing_matrix_multipliers',
+                            'billing_default_multiplier');
 
 $CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar','font_file','tag_icons');
 
@@ -87,18 +91,18 @@ $CFGCAT['incidents'] = array('auto_assign_incidents',
 
 
 $CFGCAT['inboundemail'] = array('enable_inbound_mail',
-                         'email_server',
-                         'email_servertype',
-                         'email_port',
-                         'email_options',
-                         'email_username',
-                         'email_password',
-                         'email_address',
-                         'email_incoming_folder',
-                         'email_archive_folder',
-                         'max_incoming_email_perday',
-                         'spam_email_subject'
-                         );
+                                'email_server',
+                                'email_servertype',
+                                'email_port',
+                                'email_options',
+                                'email_username',
+                                'email_password',
+                                'email_address',
+                                'email_incoming_folder',
+                                'email_archive_folder',
+                                'max_incoming_email_perday',
+                                'spam_email_subject'
+                                );
 
 $CFGCAT['outboundemail'] = array('support_email');
 
@@ -165,6 +169,7 @@ $CATI18N['portal'] = $strPortal;
 $CATI18N['ftp'] = $strFTP;
 $CATI18N['kb'] = $strKnowledgeBase;
 $CATI18N['sla'] = $strServiceLevels;
+$CATI18N['billing'] = $strBilling;
 $CATI18N['holidays'] = $strHolidays;
 $CATI18N['feedback'] = $strFeedback;
 $CATI18N['paths'] = $strPaths;
@@ -175,6 +180,7 @@ $CATI18N['otherfeatures'] = $strOther;
 
 // Text to introduce a configuration category, may contain HTML
 $CATINTRO['sla'] = "This section allows you to configure how service levels are used, configure the <abbr title='Service Level Agreements'>SLA</abbr>'s themselves on the <a href='service_levels.php'>Service Levels</a> page.";
+$CATINFO['billing'] = "This section allows you to configure the system level billing options";
 $CATINTRO['outboundemail'] = "SiT! uses the PHP mail() function to send outbound emails, you can configure this via your php.ini file, see your php documentation for more details.";
 $CATINTRO['inboundemail'] = "Before enabling inbound email with POP/IMAP you must also configure the Scheduler to run, see the <a href='http://sitracker.org/wiki/Scheduler'>documentation</a> for more details.";
 
@@ -220,6 +226,13 @@ $CFGVAR['available_i18n']['title'] = "Languages Available";
 $CFGVAR['available_i18n']['help'] = "The languages available for users to select at login or in their profile.";
 $CFGVAR['available_i18n']['type'] = 'languagemultiselect';
 
+$CFGVAR['billing_matrix_multipliers']['title'] = "Billing Matrix Multipliers";
+$CFGVAR['billing_matrix_multipliers']['help'] = "A comma separated list of possible multipliers to use in a billing matrix e.g. 0.5,1,1.5 would allow 0.5, 1 and 1.5 multipliers";
+$CFGVAR['billing_matrix_multipliers']['type'] = '1darray';
+
+$CFGVAR['billing_default_multiplier']['title'] = "Default Billing Multiplier";
+$CFGVAR['billing_default_multiplier']['help'] = "The default billing multiplier if non is set";
+
 $CFGVAR['bugtracker_url']['title'] = 'Bug tracker URL';
 $CFGVAR['bugtracker_url']['help'] = "The <abbr title='Uniform Resource Locator'>URL</abbr> of a web page to report bugs with SiT!  We recommend you don't alter this setting unless you really need to.";
 
@@ -255,6 +268,8 @@ $CFGVAR['dateformat_shorttime']['title'] = 'Short time format';
 
 $CFGVAR['dateformat_time']['title'] = 'Normal time format';
 
+$CFGVAR['display_minute_interval']['title'] = 'Display minute interval';
+
 $CFGVAR['db_database']['title'] = 'MySQL Database Name';
 
 $CFGVAR['db_hostname']['help']="The Hostname or IP address of the MySQL Database Server, usually 'localhost'";
@@ -287,7 +302,7 @@ $CFGVAR['default_i18n']['type'] = 'languageselect';
 $CFGVAR['default_iconset']['title'] = 'Default Icon set';
 $CFGVAR['default_iconset']['help'] = 'The icon set that be given to new user accounts';
 $CFGVAR['default_iconset']['type'] = 'select';
-$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear';
+$CFGVAR['default_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
 $CFGVAR['default_interface_style']['title'] = 'Default Theme';
 $CFGVAR['default_interface_style']['help'] = 'The theme/interface style that be given to new user accounts';
@@ -342,10 +357,8 @@ $CFGVAR['enable_inbound_mail']['title'] = "Enable incoming mail to SiT";
 $CFGVAR['enable_inbound_mail']['type'] = 'select';
 
 $CFGVAR['end_working_day']['title'] = 'End of the working day';
-$CFGVAR['end_working_day']['help'] = 'The number of seconds since midnight that indicate the end of the working day. (e.g. 61200 = 5pm)';
-
-$CFGVAR['end_working_day']['type'] = 'number';
-$CFGVAR['end_working_day']['unit'] = $strSeconds;
+$CFGVAR['end_working_day']['help'] = 'The time the working day ends . (e.g. 17:00)';
+$CFGVAR['end_working_day']['type'] = 'timeselector';
 
 $CFGVAR['error_logfile']['title'] = "Path to an error log file";
 $CFGVAR['error_logfile']['help'] = "The filesystem path and filename of a file that already exist and is writable to log error messages into. Enable Debug Mode to see more verbose messages in this file.";
@@ -562,9 +575,8 @@ $CFGVAR['spam_email_subject']['title'] = 'Spam Subject';
 $CFGVAR['spam_email_subject']['help'] = 'String to look for in email message subject to determine a message is spam';
 
 $CFGVAR['start_working_day']['title'] = 'Start of the working day';
-$CFGVAR['start_working_day']['help'] = 'The number of seconds since midnight that indicate the start of the working day. (e.g. 32400 = 9am)';
-$CFGVAR['start_working_day']['type'] = 'number';
-$CFGVAR['start_working_day']['unit'] = $strSeconds;
+$CFGVAR['start_working_day']['help'] = 'The time the working day starts (e.g. 9:00)';
+$CFGVAR['start_working_day']['type'] = 'timeselector';
 
 $CFGVAR['support_email']['title'] = 'From address for support emails';
 $CFGVAR['support_email']['help'] = 'Email sent by SiT that uses the template variable <code>{supportemail}</code> will come from this address';
@@ -603,8 +615,8 @@ $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this p
 $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';
-$CFGVAR['working_days']['help'] = 'Comma separated list of working days (Where 0 = Sun, 1 = Mon... 6 = Sat)';
-$CFGVAR['working_days']['type'] = '1darray';
+$CFGVAR['working_days']['help'] = 'The days which are working days';
+$CFGVAR['working_days']['type'] = 'weekdayselector';
 
 if (function_exists('plugin_do'))
 {

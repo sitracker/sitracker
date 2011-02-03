@@ -2,7 +2,7 @@
 // site_products.php - List products that sites have under contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -11,17 +11,19 @@
 
 
 $permission = 37; // Run Reports
-$title = $strSiteProducts;
+
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
+$title = $strSiteProducts;
+
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical'>";
 
@@ -60,7 +62,7 @@ if (empty($_REQUEST['mode']))
 }
 elseif ($_REQUEST['mode'] == 'report')
 {
-    $type = cleanvar($_REQUEST['type']);
+    $type = clean_int($_REQUEST['type']);
     $sql = "SELECT * FROM `{$dbSites}` WHERE typeid='{$type}' ORDER BY name";
 
     $result = mysql_query($sql);

@@ -2,7 +2,7 @@
 // functions.inc.php - Function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -42,7 +42,9 @@ include_once (APPLICATION_LIBPATH . 'sla.inc.php');
 include_once (APPLICATION_LIBPATH . 'ftp.inc.php');
 include_once (APPLICATION_LIBPATH . 'tags.inc.php');
 include_once (APPLICATION_LIBPATH . 'string.inc.php');
+include_once (APPLICATION_LIBPATH . 'html_drop_downs.inc.php');
 include_once (APPLICATION_LIBPATH . 'html.inc.php');
+include_once (APPLICATION_LIBPATH . 'incident_html.inc.php');
 include_once (APPLICATION_LIBPATH . 'tasks.inc.php');
 include_once (APPLICATION_LIBPATH . 'export.inc.php');
 include_once (APPLICATION_LIBPATH . 'contact.inc.php');
@@ -53,6 +55,8 @@ include_once (APPLICATION_LIBPATH . 'feedback.inc.php');
 include_once (APPLICATION_LIBPATH . 'site.inc.php');
 include_once (APPLICATION_LIBPATH . 'configfuncs.inc.php');
 include_once (APPLICATION_LIBPATH . 'incident.inc.php');
+
+include_once (APPLICATION_LIBPATH . 'deprecated.inc.php');
 
 if (version_compare(PHP_VERSION, "5.1.0", ">="))
 {
@@ -169,7 +173,7 @@ function authenticate($username, $password)
 	        elseif ($obj->user_source == 'ldap')
 	        {
 	            // Auth against LDAP and sync
-	            $toReturn =  authenticateLDAP($username, $password, $obj->id);
+	            $toReturn =  authenticateLDAP(stripslashes($username), $password, $obj->id);
 	            if ($toReturn === -1)
 	            {
 	                // Communication with LDAP server failed
@@ -615,7 +619,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 
     if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
-    $extra_headers  = "From: {$from}" . $crlf;
+    $extra_headers  = '';
     if (!empty($replyto)) $extra_headers .= "Reply-To: {$replyto}" . $crlf;
     if (!empty($email_cc))
     {
@@ -631,8 +635,6 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     }
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
     $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
-    $extra_headers .= "MIME-Version: 1.0" . $crlf;
-    $extra_headers .= "Content-type: text/plain; charset={$GLOBALS['i18ncharset']}" . $crlf;
 //     $extra_headers .= "\r\n";
 
     if ($CONFIG['demo'])
@@ -881,7 +883,7 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
                 $l = mb_substr(urldecode($legends[$i]), 0, 27, 'UTF-8');
                 if (strlen(urldecode($legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
-                
+
                 if ($use_ttf)
                 {
                     imagettftext($img, 8, 0, 270, ($legendY + 9), $black, $CONFIG['font_file'], "{$l} ({$data[$i]})");
@@ -957,6 +959,32 @@ function draw_chart_image($type, $width, $height, $data, $legends, $title='', $u
 
 
 /**
+ * Shows errors from a form, if any
+ * @author Kieran Hogg
+ * @return string. HTML of the form errors stored in the users session
+ */
+function show_form_errors($formname)
+{
+    if ($_SESSION['formerrors'][$formname])
+    {
+        foreach ($_SESSION['formerrors'][$formname] as $error)
+        {
+
+            if (substr(trim($error), 0, 1) != "<")
+            {
+                $html .= user_alert($error, E_USER_ERROR);
+            }
+            else
+            {
+                $html .= $error;
+            }
+        }
+    }
+    return $html;
+}
+
+
+/**
  * Cleans form errors
  * @author Kieran Hogg
  * @return nothing
@@ -980,6 +1008,7 @@ function clear_form_data($formname)
 
 /**
  * Finds out which scheduled tasks should be run right now
+ * Ensures that a task cannot start until the previous iteration has completed
  * @author Ivan Lucas, Paul Heaney
  * @return array
  */
@@ -991,8 +1020,8 @@ function schedule_actions_due()
     $actions = FALSE;
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'interval' ";
     $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval` <= $now, UNIX_TIMESTAMP(NOW())) ";
-    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -1008,7 +1037,8 @@ function schedule_actions_due()
     $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'month' AND (DAYOFMONTH(CURDATE()) > date_offset OR (DAYOFMONTH(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
-    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -1026,8 +1056,8 @@ function schedule_actions_due()
     $sql .= "AND ((date_type = 'year' AND (DAYOFYEAR(CURDATE()) > date_offset ";
     $sql .= "OR (DAYOFYEAR(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
-    $sql .= "AND IF(laststarted > 0, laststarted <= lastran, 1=1)";
-
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -1038,7 +1068,7 @@ function schedule_actions_due()
         }
     }
 
-    debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
+    if (is_array($actions)) debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
 
     return $actions;
 }

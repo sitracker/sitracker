@@ -2,7 +2,7 @@
 // transactions.php - List of transactions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -30,11 +30,11 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $title = $strTransactions;
 
 // External variables
-$serviceid = cleanvar($_REQUEST['serviceid']);
+$serviceid = clean_int($_REQUEST['serviceid']);
 $startdate = cleanvar($_REQUEST['startdate']);
 $enddate = cleanvar($_REQUEST['enddate']);
 
-$site = cleanvar($_REQUEST['site']);
+$site = clean_int($_REQUEST['site']);
 $sites = $_REQUEST['sites'];
 $display = cleanvar($_REQUEST['display']);
 if (empty($display)) $display = 'html';

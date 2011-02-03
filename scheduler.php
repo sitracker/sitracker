@@ -2,7 +2,7 @@
 // scheduler.php - List and allow editing of scheduled actions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External vars
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 $title = $strScheduler;
 
@@ -35,7 +35,7 @@ switch ($_REQUEST['mode'])
         {
             $saction = mysql_fetch_object($result);
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            echo "<h2>{$strScheduler}".help_link('Scheduler')."</h2>";
+            echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
             echo "<form name='scheduleform' action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table class='vertical' width='350'>";
             echo "<tr><th>{$strAction}</th>";
@@ -172,18 +172,18 @@ switch ($_REQUEST['mode'])
             $end = '0000-00-00 00:00';
         }
 
-        $status = cleanvar($_REQUEST['status']);
+        $status = clean_fixed_list($_REQUEST['status'], array('disabled','enabled'));
 
         $params = cleanvar($_REQUEST['params']);
-        $interval = cleanvar($_REQUEST['interval']);
+        $interval = clean_int($_REQUEST['interval']);
         if ($interval <= 0 AND $type == 'interval')
         {
             $status = 'disabled';
             $interval = 0;
         }
-        $type = cleanvar($_REQUEST['type']);
-        $frequency = cleanvar($_REQUEST['frequency']);
-        $date_offset = cleanvar($_REQUEST['date_offset']);
+        $type = clean_fixed_list($_REQUEST['type'], array('interval','date'));
+        $frequency = clean_fixed_list($_REQUEST['frequency'], array('','month','year'));
+        $date_offset = clean_int($_REQUEST['date_offset']);
         $date_time = cleanvar($_REQUEST['date_time']);
 
         if ($date_time < 10) $date_time = "0{$date_time}:00:00";
@@ -227,7 +227,7 @@ switch ($_REQUEST['mode'])
         $refresh = 60;
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-        echo "<h2>{$strScheduler}".help_link('Scheduler')."</h2>";
+        echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
         echo "<h3>".ldate($CONFIG['dateformat_datetime'], $GLOBALS['now'], FALSE)."</h3>";
         $sql = "SELECT * FROM `{$dbScheduler}` ORDER BY action";
         $result = mysql_query($sql);
@@ -432,7 +432,7 @@ switch ($_REQUEST['mode'])
             // Temporary debugging output, doesn't need i18n
             if ($CONFIG['debug'])
             {
-                echo "<h2>Debug Time Issues</h2>";
+                echo "<h2>".icon('activities', 32)." Debug Time Issues</h2>";
                 echo "<div style='width: 60%; border: 1px dashed red; margin: auto; padding: 5px;'>";
                 echo "<p>Timezone: {$CONFIG['timezone']}<br />";
                 echo "User UTC offset: {$_SESSION['userconfig']['utc_offset']}<br />";

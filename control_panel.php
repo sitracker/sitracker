@@ -2,7 +2,7 @@
 // control_panel.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -56,7 +56,7 @@ if (user_permission($sit[2],22)) // Administrate
     echo "<tr><td><a href='templates.php'>{$strManageEmailTemplates}</a></td></tr>";
     echo "<tr><td><a href='journal.php'>{$strBrowse} {$CONFIG['application_shortname']} {$strJournal}</a></td></tr>";
     echo "<tr><td><a href='service_levels.php'>{$strServiceLevels}</a></td></tr>";
-    echo "<tr><td><a href='product_info_add.php?action=showform'>{$strAddProductInformation}</a></td></tr>";
+    echo "<tr><td><a href='product_info_new.php?action=showform'>{$strNewProductInformation}</a></td></tr>";
     echo "<tr><td><a href='calendar.php?type=10&amp;display=year'>{$strSetPublicHolidays}</a></td></tr>";
     echo "<tr><td><a href='contacts_show_orphans.php'>{$strShowOrphandedContacts}</a></td></tr>";
     echo "</tbody>";

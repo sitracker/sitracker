@@ -2,7 +2,7 @@
 // products.php - List products
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 // External Variables
-$productid = cleanvar($_REQUEST['productid']);
+$productid = clean_int($_REQUEST['productid']);
 $display = cleanvar($_REQUEST['display']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -96,7 +96,7 @@ if (empty($productid) AND $display!='skills')
 
     $sql = "SELECT s.* FROM `{$dbSoftware}` AS s LEFT JOIN `{$dbSoftwareProducts}` AS sp ON s.id = sp.softwareid WHERE sp.softwareid IS NULL";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >= 1)
     {
         echo "<h2>".icon('skill', 32)." Skills not linked</h2>";
@@ -104,35 +104,35 @@ if (empty($productid) AND $display!='skills')
         echo "<table summary='' align='center' width='55%'>";
         echo "<tr><th>{$strSkill}</th><th>{$strLifetime}</th>";
         echo "<th>Engineers</th><th>{$strIncidents}</th><th>{$strOperation}</th></tr>";
-        while ($software = mysql_fetch_array($result))
+        while ($software = mysql_fetch_object($result))
         {
-            $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid = '{$software['id']}'";
+            $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid = '{$software->id}'";
             $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($countengineers) = mysql_fetch_row($sresult);
 
-            $ssql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE softwareid='{$software['id']}'";
+            $ssql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE softwareid='{$software->id}'";
             $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($countincidents) = mysql_fetch_row($sresult);
 
             echo "<tr class='$shade'><td>".icon('skill', 16)." ";
-            echo "{$software['name']}</td>";
+            echo "{$software->name}</td>";
             echo "<td>";
-            if ($software['lifetime_start'] > 1)
+            if ($software->lifetime_start > 1)
             {
-                echo ldate($CONFIG['dateformat_shortdate'],mysql2date($software['lifetime_start']))." {$strTo} ";
+                echo ldate($CONFIG['dateformat_shortdate'],mysql2date($software->lifetime_start))." {$strTo} ";
             }
             else
             {
                 echo "&#8734;";
             }
 
-            if ($software['lifetime_end'] > 1)
+            if ($software->lifetime_end > 1)
             {
-                echo ldate($CONFIG['dateformat_shortdate'],mysql2date($software['lifetime_end']));
+                echo ldate($CONFIG['dateformat_shortdate'], mysql2date($software->lifetime_end));
             }
-            elseif ($software['lifetime_start'] > 1)
+            elseif ($software->lifetime_start > 1)
             {
                 echo "&#8734;";
             }
@@ -140,9 +140,9 @@ if (empty($productid) AND $display!='skills')
             echo "</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_add.php?softwareid={$software['id']}'>{$strLink}</a> ";
-            echo "| <a href='edit_software.php?id={$software['id']}'>{$strEdit}</a> ";
-            echo "| <a href='edit_software.php?id={$software['id']}&amp;action=delete'>{$strDelete}</a>";
+            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
+            echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
+            echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
             echo "</td>";
             echo "</tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
@@ -151,12 +151,12 @@ if (empty($productid) AND $display!='skills')
         echo "</table>";
     }
 }
-elseif (empty($productid) AND ($display=='skills' OR $display=='software'))
+elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
 {
     echo "<h2>".icon('skill', 32)." {$strSkills}</h2>";
     $sql = "SELECT s.*, v.name AS vendorname FROM `{$dbSoftware}` AS s LEFT JOIN `{$dbVendors}` AS v ON s.vendorid = v.id ORDER BY name";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >= 1)
     {
         echo "<table align='center'>";
@@ -168,7 +168,7 @@ elseif (empty($productid) AND ($display=='skills' OR $display=='software'))
         {
             $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid='{$software->id}'";
             $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($countengineers) = mysql_fetch_row($sresult);
 
             // Count linked products
@@ -179,7 +179,7 @@ elseif (empty($productid) AND ($display=='skills' OR $display=='software'))
 
             $ssql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE softwareid='{$software->id}'";
             $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($countincidents) = mysql_fetch_row($sresult);
 
             $lifetime_start = mysql2date($software->lifetime_start);
@@ -218,7 +218,7 @@ elseif (empty($productid) AND ($display=='skills' OR $display=='software'))
             echo "<td>{$countlinked}</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_add.php?softwareid={$software->id}'>{$strLink}</a> ";
+            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
             echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
             echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
             echo "</td>";
@@ -260,45 +260,45 @@ else
                 echo "<tr><th>{$strSkill}</th><th>{$strLifetime}</th>";
                 echo "<th>{$strEngineers}</th><th>{$strIncidents}</th>";
                 echo "<th>{$strActions}</th></tr>";
-                $shade='shade2';
-                while ($software=mysql_fetch_array($swresult))
+                $shade = 'shade2';
+                while ($software = mysql_fetch_object($swresult))
                 {
-                    $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid='{$software['id']}'";
+                    $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid='{$software->id}'";
                     $sresult = mysql_query($ssql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     list($countengineers) = mysql_fetch_row($sresult);
 
-                    $ssql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE softwareid='{$software['id']}'";
+                    $ssql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE softwareid='{$software->id}'";
                     $sresult = mysql_query($ssql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     list($countincidents) = mysql_fetch_row($sresult);
 
                     echo "<tr class='$shade'><td>".icon('skill', 16)." ";
-                    echo "{$software['name']}</td>";
+                    echo "{$software->name}</td>";
                     echo "<td>";
-                    if ($software['lifetime_start'] > 1)
+                    if ($software->lifetime_start > 1)
                     {
-                        echo ldate($CONFIG['dateformat_shortdate'],mysql2date($software['lifetime_start']))." {$strTo} ";
+                        echo ldate($CONFIG['dateformat_shortdate'], mysql2date($software->lifetime_start))." {$strTo} ";
                     }
                     else
                     {
                         echo "&#8734;";
                     }
 
-                    if ($software['lifetime_end'] > 1)
+                    if ($software->lifetime_end > 1)
                     {
-                        echo ldate($CONFIG['dateformat_shortdate'],mysql2date($software['lifetime_end']));
+                        echo ldate($CONFIG['dateformat_shortdate'], mysql2date($software->lifetime_end));
                     }
-                    elseif ($software['lifetime_start'] > 1)
+                    elseif ($software->lifetime_start > 1)
                     {
                         echo "&#8734;";
                     }
                     echo "</td>";
                     echo "<td>{$countengineers}</td>";
                     echo "<td>{$countincidents}</td>";
-                    echo "<td><a href='delete_product_software.php?productid={$product->id}&amp;softwareid={$software['softwareid']}'>{$strUnlink}</a> ";
-                    echo "| <a href='edit_software.php?id={$software['softwareid']}'>{$strEdit}</a> ";
-                    echo "| <a href='edit_software.php?id={$software['softwareid']}&amp;action=delete'>{$strDelete}</a>";
+                    echo "<td><a href='delete_product_software.php?productid={$product->id}&amp;softwareid={$software->softwareid}'>{$strUnlink}</a> ";
+                    echo "| <a href='edit_software.php?id={$software->softwareid}'>{$strEdit}</a> ";
+                    echo "| <a href='edit_software.php?id={$software->softwareid}&amp;action=delete'>{$strDelete}</a>";
                     echo "</td>";
                     echo "</tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
@@ -310,7 +310,7 @@ else
                 echo "<tr><td>&nbsp;</td><td><em>{$strNoSkillsLinkedToProduct}</em></td><td>&nbsp;</td></tr>\n";
             }
             echo "</table>\n";
-            echo "<p align='center'><a href='product_software_add.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
+            echo "<p align='center'><a href='product_software_new.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
 
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$product->id}'";
             $result = mysql_query($sql);
@@ -321,20 +321,20 @@ else
                 echo "<table align='center'>";
                 echo "<tr><th>{$strQuestion}</th><th>{$strAdditionalInfo}</th></tr>";
                 $shade = 'shade1';
-                while ($productinforow = mysql_fetch_array($result))
+                while ($productinfoobj = mysql_fetch_object($result))
                 {
-                    echo "<tr class='$shade'><td>{$productinforow['information']}</td>";
-                    echo "<td>{$productinforow['moreinformation']}</td></tr>\n";
+                    echo "<tr class='{$shade}'><td>{$productinfoobj->information}</td>";
+                    echo "<td>{$productinfoobj->moreinformation}</td></tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
                     else $shade = 'shade1';
                 }
                 echo "</table>";
             }
-            echo "<p align='center'><a href='product_info_add.php?product={$product->id}'>{$strAddProductQuestion}</a></p>";
+            echo "<p align='center'><a href='product_info_new.php?product={$product->id}'>{$strNewProductQuestion}</a></p>";
 
             $sql = "SELECT * FROM `{$dbMaintenance}` WHERE product='{$product->id}' ORDER BY id DESC";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($result) >= 1)
             {
                 echo "<h3>{$strRelatedContracts}</h3>";
@@ -361,7 +361,7 @@ else
 
             $sql = "SELECT * FROM `{$dbIncidents}` WHERE product={$product->id} ORDER BY id DESC";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($result) >= 1)
             {
                 echo "<h3>{$strRelatedIncidents}</h3>";
@@ -371,7 +371,7 @@ else
                 while ($incident = mysql_fetch_object($result))
                 {
                     echo "<tr class='{$shade}'>";
-                    echo "<td><a href=\"javascript:incident_details_window('{$incident->id}','incident{$incident->id}');\">".sprintf($strIncidentNum, $incident->id)."</a></td>";
+                    echo "<td>".html_incident_popup_link($incident->id, sprintf($strIncidentNum, $incident->id))."</td>";
                     echo "<td>".contact_realname($incident->contact)."</td><td>".contact_site($incident->contact)."</td>";
                     echo "<td>{$incident->title}</td>";
                     echo "</tr>\n";
@@ -382,7 +382,6 @@ else
 
             }
         }
-
     }
     else
     {
@@ -392,7 +391,7 @@ else
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
 }
 
-echo "<p align='center'><a href='vendor_add.php'>{$strAddVendor}</a> | <a href='product_add.php'>{$strAddProduct}</a> | <a href='software_add.php'>{$strAddSkill}</a>";
+echo "<p align='center'><a href='vendor_new.php'>{$strNewVendor}</a> | <a href='product_new.php'>{$strNewProduct}</a> | <a href='software_new.php'>{$strNewSkill}</a>";
 
 if ($display == 'skills' OR $display == 'software')
 {

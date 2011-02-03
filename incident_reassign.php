@@ -2,7 +2,7 @@
 // reassign_incident.php - Form for re-assigning an incident to another user
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,10 +22,10 @@ $forcepermission = user_permission($sit[2],40);
 
 // External variables
 $bodytext = cleanvar($_REQUEST['bodytext']);
-$id = cleanvar($_REQUEST['id']);
-$incidentid=$id;
-$backupid = cleanvar($_REQUEST['backupid']);
-$originalid = cleanvar($_REQUEST['originalid']);
+$id = clean_int($_REQUEST['id']);
+$incidentid = $id;
+$backupid = clean_int($_REQUEST['backupid']);
+$originalid = clean_int($_REQUEST['originalid']);
 $reason = cleanvar($_REQUEST['reason']);
 $action = cleanvar($_REQUEST['action']);
 $title = $strReassignIncident;
@@ -38,15 +38,15 @@ switch ($action)
         $permnewowner = cleanvar($_REQUEST['permnewowner']);
         $removetempowner = cleanvar($_REQUEST['removetempowner']);
         $fullreassign = cleanvar($_REQUEST['fullreassign']);
-        $newstatus = cleanvar($_REQUEST['newstatus']);
-        $userid = cleanvar($_REQUEST['userid']);
+        $newstatus = clean_int($_REQUEST['newstatus']);
+        $userid = clean_int($_REQUEST['userid']);
         $temporary = cleanvar($_REQUEST['temporary']);
-        $id = cleanvar($_REQUEST['id']);
+        $id = clean_int($_REQUEST['id']);
 
         if ($tempnewowner == 'yes') $temporary = 'yes';
 
         // Retrieve current incident details
-        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='$id' LIMIT 1";
+        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $incident = mysql_fetch_object($result);
@@ -80,7 +80,7 @@ switch ($action)
             $sql .= "towner={$sit[2]}, "; // Temp to self
             $triggeruserid = $sit[2];
         }
-        elseif ($temporary == 'yes' AND $tempnewowner != 'yes'  AND $userid==$incident->owner)
+        elseif ($temporary == 'yes' AND $tempnewowner != 'yes'  AND $userid == $incident->owner)
         {
             $sql .= "owner='{$userid}', towner=0, ";
             $triggeruserid = $userid;
@@ -95,7 +95,7 @@ switch ($action)
             $sql .= "owner='{$userid}', ";
             $triggeruserid = $userid;
         }
-        $sql .= "status='$newstatus', lastupdated='$now' WHERE id='$id' LIMIT 1";
+        $sql .= "status='{$newstatus}', lastupdated='{$now}' WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         if (isset($triggeruserid))
@@ -124,7 +124,7 @@ switch ($action)
         else $customervisibility='hide';
 
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentowner, currentstatus, customervisibility) ";
-        $sql .= "VALUES ($id, $sit[2], '$bodytext', '$assigntype', '$now', ";
+        $sql .= "VALUES ({$id}, {$sit[2]}, '{$bodytext}', '{$assigntype}', '{$now}', ";
         if ($fullreassign == 'yes')
         {
             $sql .= "'{$userid}', ";
@@ -155,7 +155,7 @@ switch ($action)
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
         // Remove any tempassigns that are pending for this incident
-        $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='$id'";
+        $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$id}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -168,7 +168,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
 
-        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='$id' LIMIT 1";
+        $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         $incident = mysql_fetch_object($result);
@@ -193,8 +193,8 @@ switch ($action)
         $countusers = mysql_num_rows($result);
 
         echo "<p style='font-size: 18px'>{$strOwner}: <strong>";
-        if ($sit[2] == $incident->owner) echo "{$strYou} (".user_realname($incident->owner,TRUE).")";
-        else echo user_realname($incident->owner,TRUE);
+        if ($sit[2] == $incident->owner) echo "{$strYou} (".user_realname($incident->owner, TRUE).")";
+        else echo user_realname($incident->owner, TRUE);
         echo "</strong>";
 
         if ($incident->towner > 0)
@@ -202,9 +202,9 @@ switch ($action)
             echo " ({$strTemp}: ";
             if ($sit[2] == $incident->towner)
             {
-                echo "{$strYou} (".user_realname($incident->towner,TRUE).")";
+                echo "{$strYou} (".user_realname($incident->towner, TRUE).")";
             }
-            else echo user_realname($incident->towner,TRUE);
+            else echo user_realname($incident->towner, TRUE);
             echo ")";
         }
         echo "</p>";
@@ -232,7 +232,7 @@ switch ($action)
             if ($suggested > 0)
             {
                 // Suggested user is shown as the first row
-                $sugsql = "SELECT * FROM `{$dbUsers}` WHERE id='$suggested' LIMIT 1";
+                $sugsql = "SELECT * FROM `{$dbUsers}` WHERE id='{$suggested}' LIMIT 1";
                 $sugresult = mysql_query($sugsql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 $suguser = mysql_fetch_object($sugresult);
@@ -254,7 +254,7 @@ switch ($action)
                 echo "</label></td>";
                 echo "<td>".user_online_icon($suguser->id).userstatus_name($suguser->status)."</td>";
                 $incpriority = user_incidents($suguser->id);
-                $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+                $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
                 if ($countincidents >= 1)
                 {
@@ -272,7 +272,7 @@ switch ($action)
                 echo "<td align='center'>".$incpriority['2']."</td>";
                 echo "<td align='center'>".$incpriority['1']."</td>";
                 echo "<td align='center'>";
-                echo $suguser->accepting=='Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                echo $suguser->accepting == 'Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
                 echo "</td>";
                 echo "</tr>\n";
             }
@@ -296,18 +296,19 @@ switch ($action)
                     echo "</label></td>";
                     echo "<td>".user_online_icon($users->id).userstatus_name($users->status)."</td>";
                     $incpriority = user_incidents($users->id);
-                    $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+                    $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
 
                     if ($countincidents >= 1) $countactive = user_activeincidents($users->id);
                     else $countactive = 0;
                     $countdiff = $countincidents - $countactive;
                     echo "<td align='center'>$countactive / {$countdiff}</td>";
-                    echo "<td align='center'>".$incpriority['4']."</td>";
-                    echo "<td align='center'>".$incpriority['3']."</td>";
-                    echo "<td align='center'>".$incpriority['2']."</td>";
-                    echo "<td align='center'>".$incpriority['1']."</td>";
+                    echo "<td align='center'>{$incpriority['4']}</td>";
+                    echo "<td align='center'>{$incpriority['3']}</td>";
+                    echo "<td align='center'>{$incpriority['2']}</td>";
+                    echo "<td align='center'>{$incpriority['1']}</td>";
                     echo "<td align='center'>";
-                    echo $users->accepting=='Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                    if ($users->accepting == 'Yes') echo $strYes;
+                    else echo "<span class='error'>{$strNo}</span>";
                     echo "</td>";
                     echo "</tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
@@ -328,7 +329,7 @@ switch ($action)
             echo "<tr><td colspan='2'><br />{$strReassignText}</td></tr>\n";
             echo "<tr><th>{$strUpdate}:</th>";
             echo "<td>";
-            echo "<textarea name='bodytext' wrap='soft' rows='10' cols='65'>";  // FIXME wrap XHTML
+            echo "<textarea name='bodytext' wrap='soft' rows='10' cols='65'>";  // FIXME wrap isn't valid XHTML
             if (!empty($reason)) echo $reason;
             echo "</textarea>";
             echo "</td></tr>\n";
@@ -374,7 +375,7 @@ switch ($action)
         }
         else
         {
-            echo "<p class='warning'>{$strNoRecords}</p>";  // FIXME 3.41 better message here
+            echo "<p class='warning'>{$strNoEngineersForReassignment}</p>";
         }
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }

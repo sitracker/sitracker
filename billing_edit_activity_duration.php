@@ -3,7 +3,7 @@
 // Page to adjust the duration of a timed activity
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -21,8 +21,8 @@ require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $mode = cleanvar($_REQUEST['mode']);
-$updateid = cleanvar($_REQUEST['updateid']);
-$incidentid = cleanvar($_REQUEST['incidentid']);
+$updateid = clean_int($_REQUEST['updateid']);
+$incidentid = clean_int($_REQUEST['incidentid']);
 $id = $incidentid; // So he header works
 $title = $strAdjustActivityDuration;
 
@@ -31,9 +31,9 @@ switch ($mode)
     case 'edit':
         $sql = "SELECT bodytext, duration FROM `{$dbUpdates}` WHERE id = {$updateid} AND duration IS NOT NULL AND duration != 0";
 
-        $oldduration = cleanvar($_REQUEST['oldduration']);
+        $oldduration = clean_int($_REQUEST['oldduration']);
         $reason = cleanvar($_REQUEST['reason']);
-        $newduration = cleanvar($_REQUEST['newduration']); // In minutes
+        $newduration = clean_int($_REQUEST['newduration']); // In minutes
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

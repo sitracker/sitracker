@@ -2,7 +2,7 @@
 // edit_product.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -20,18 +20,18 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $name = $_REQUEST['name'];
 $action = $_POST['action'];
 
 if ($action == 'save')
 {
     // External variables
-    $vendor = cleanvar($_POST['vendor']);
-    $name = cleanvar($_POST['name']);
-    $description = cleanvar($_POST['description']);
-    $productid = cleanvar($_POST['productid']);
-    $tags = cleanvar($_POST['tags']);
+    $vendor = clean_int($_POST['vendor']);
+    $name = clean_dbstring($_POST['name']);
+    $description = clean_dbstring($_POST['description']);
+    $productid = clean_int($_POST['productid']);
+    $tags = clean_dbstring($_POST['tags']);
 
     replace_tags(TAG_PRODUCT, $productid, $tags);
 

@@ -4,9 +4,9 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
     exit;
 }
-
 session_name($CONFIG['session_name']);
 session_start();
+plugin_do('before_page');
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xml:lang=\"{$_SESSION['lang']}\" lang=\"{$_SESSION['lang']}\">\n<head><title>";
 if (!empty($incidentid)) echo "{$incidentid} - ";
@@ -60,6 +60,7 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
 // FIXME put here some js to set action field then post form
 
+plugin_do('html_head');
 echo "</head>";
 echo "<body onload=\"self.focus()\">";
 
@@ -105,16 +106,11 @@ if ($incident->softwareid > 0)
     $software_name = software_name($incident->softwareid);
 }
 
-$servicelevel_id = maintenance_servicelevel($incident->maintenanceid);
-
 $servicelevel_tag = $incident->servicelevel;
 if ($servicelevel_tag == '')
 {
-    $servicelevel_tag = servicelevel_id2tag(maintenance_servicelevel($incident->maintenanceid));
+    $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
 }
-
-
-$servicelevel_name = servicelevel_name($servicelevelid);
 
 if ($incident->closed == 0)
 {
@@ -221,7 +217,7 @@ if ($menu != 'hide')
             {
                 echo "<a class='barlink' href='unlock_update.php?id={$id}'>{$strUnlock}</a> | ";
                 echo "<a class='barlink' href=\"javascript:window.location='move_update.php?id={$id}&amp;updateid={$inupdate->updateid}&amp;contactid={$inupdate->contactid}&amp;win=incomingview'\" >{$strAssign}</a> | ";
-                echo "<a class='barlink' href=\"javascript:window.opener.location='incident_add.php?action=findcontact&amp;incomingid={$id}&amp;search_string={$inupdate->emailfrom}&amp;from={$inupdate->from}&amp;contactid={$inupdate->contactid}&amp;win=incomingcreate'; window.close();\">{$strCreate}</a> | ";
+                echo "<a class='barlink' href=\"javascript:window.opener.location='incident_new.php?action=findcontact&amp;incomingid={$id}&amp;search_string={$inupdate->emailfrom}&amp;from={$inupdate->from}&amp;contactid={$inupdate->contactid}&amp;win=incomingcreate'; window.close();\">{$strCreate}</a> | ";
                 echo "<a class='barlink' href=\"javascript:window.opener.location='delete_update.php?updateid={$inupdate->updateid}&amp;tempid={$inupdate->id}&amp;timestamp={$inupdate->timestamp}'; window.close(); \">{$strDelete}</a>";
             }
         }
@@ -243,7 +239,7 @@ if ($menu != 'hide')
         if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
 
-        echo "<a class='barlink' href='javascript:help_window({$permission});'>{$strHelpChar}</a>";
+        echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
         if (!empty($_REQUEST['popup'])) echo " | <a class=barlink href='javascript:window.close();'>{$strCloseWindow}</a>";
     }
     else
@@ -254,7 +250,7 @@ if ($menu != 'hide')
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_attachments.php?id={$id}&amp;popup={$popup}' accesskey='F'>{$strFiles}</a> | ";
         if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
-        echo "<a class='barlink' href='javascript:help_window({$permission});'>{$strHelpChar}</a>";
+        echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
         if (!empty($_REQUEST['popup'])) echo " | <a class='barlink' href='javascript:window.close();'>{$strCloseWindow}</a>";
     }
 }

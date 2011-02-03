@@ -2,7 +2,7 @@
 // portal/entitlement.inc.php - Lists contacts entitlments in the portal included by ../portal.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,10 +33,16 @@ if (sizeof($_SESSION['entitlement']) >= 1)
     echo colheader('actions', $strOperation);
     echo "</tr>";
     $shade = 'shade1';
-    
+
     foreach ($_SESSION['entitlement'] AS $contract)
     {
         $contract = unserialize($contract);
+        if (($contract->term == 'yes') OR
+            ($contract->expirydate < $now AND $contract->expirydate != -1) OR
+            ($contract->incident_quantity >= 1 AND $contract->incidents_used >= $contract->incident_quantity))
+        {
+            $shade = 'expired';
+        }
         echo "<tr class='$shade'>";
         echo "<td>";
         // Only show link to contract details if the contract belongs to our site
@@ -78,9 +84,13 @@ if (sizeof($_SESSION['entitlement']) >= 1)
         {
             echo $strZeroRemaining;
         }
+        elseif ($contract->term == 'yes')
+        {
+            echo $strTerminated;
+        }
         else
         {
-            echo "<a href='add.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strAddIncident}</a>";
+             echo "<a href='add.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strNewIncident}</a>";
         }
         echo "</td></tr>\n";
         if ($shade == 'shade1') $shade = 'shade2';

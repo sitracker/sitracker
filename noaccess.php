@@ -2,7 +2,7 @@
 // noaccess.php - Tell the user access is denied
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -16,7 +16,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // External variables
 $username = cleanvar($_REQUEST['username']);
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -57,7 +57,6 @@ foreach ($refused AS $id)
 echo "</ul>";
 echo "<p align='center'>{$strIfYouShouldHaveAccess}</p>";
 echo "<p align='center'><a href=\"javascript:history.back();\">{$strPrevious}</a></p>";
-
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

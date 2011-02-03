@@ -2,7 +2,7 @@
 // notices.php - modify and add global notices
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,7 +22,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 $action = cleanvar($_REQUEST['action']);
 if ($action == 'new')
 {
-    echo "<h2>{$strNotices}</h2>";
+    echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
     echo "<p align='center'>{$strNoticesBlurb}</p>";
     echo "<div align='center'><form action='{$_SERVER[PHP_SELF]}?action=post' method='post'>";
     echo "<table align='center'>";
@@ -44,7 +44,7 @@ if ($action == 'new')
 elseif ($action == 'post')
 {
     $text = cleanvar($_REQUEST['text']);
-    $type = cleanvar($_REQUEST['type']);
+    $type = clean_int($_REQUEST['type']);
     $durability = cleanvar($_REQUEST['durability']);
     $gid = md5($text);
 
@@ -80,7 +80,7 @@ elseif ($action == 'post')
 }
 elseif ($action == 'delete')
 {
-    $noticeid = cleanvar($_REQUEST['id']);
+    $noticeid = clean_int($_REQUEST['id']);
 
     $sql = "SELECT referenceid, type FROM `{$dbNotices}` WHERE id='{$noticeid}'";
     $result = mysql_query($sql);
@@ -96,7 +96,7 @@ elseif ($action == 'delete')
 }
 else
 {
-    echo "<h2>{$strNotices}</h2>";
+    echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
 
     //get all notices
     $sql = "SELECT * FROM `{$dbNotices}` WHERE type=".NORMAL_NOTICE_TYPE." OR type=".WARNING_NOTICE_TYPE." ";

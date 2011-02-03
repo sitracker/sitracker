@@ -2,7 +2,7 @@
 // edit_profile.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$mode = $_REQUEST['mode'];
+$mode = cleanvar($_REQUEST['mode']);
 $edituserpermission = user_permission($sit[2],23); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
@@ -30,7 +30,7 @@ else
 {
     if (!empty($_REQUEST['userid']))
     {
-        $edituserid = cleanvar($_REQUEST['userid']);
+        $edituserid = clean_int($_REQUEST['userid']);
     }
 }
 
@@ -105,7 +105,7 @@ if (empty($mode))
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strQualifications} ".help_link('QualificationsTip')."</th>";
-    echo "<td><input maxlength='100' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
+    echo "<td><input maxlength='255' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
     echo "<tr><th>{$strEmailSignature} ".help_link('EmailSignatureTip')."</th>";
     echo "<td><textarea name='signature' rows='4' cols='40'>".strip_tags($user->signature)."</textarea></td></tr>\n";
     $entitlement = user_holiday_entitlement($edituserid);
@@ -249,9 +249,9 @@ elseif ($mode == 'save')
 {
     // External variables
     $user = new User();
-    $user->id = cleanvar($_POST['userid']);
+    $user->id = clean_int($_POST['userid']);
 
-    $edituserid = cleanvar($_POST['userid']); // remove when tested
+    $edituserid = clean_int($_POST['userid']); // remove when tested
 
     $user->message = cleanvar($_POST['message']);
     $user->realname = cleanvar($_POST['realname']);
@@ -270,8 +270,8 @@ elseif ($mode == 'save')
 
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
-    $user->roleid = cleanvar($_POST['roleid']);
-    $user->holiday_entitlement = cleanvar($_POST['holiday_entitlement']);
+    $user->roleid = clean_int($_POST['roleid']);
+    $user->holiday_entitlement = clean_int($_POST['holiday_entitlement']);
     if (!empty($_POST['startdate']))
     {
         $user->startdate = date('Y-m-d',strtotime($_POST['startdate']));
@@ -287,7 +287,7 @@ elseif ($mode == 'save')
     if (empty($user->emoticons)) $user->emoticons = 'false';
 
     // Some extra checking here so that users can't edit other peoples profiles
-    $edituserpermission = user_permission($sit[2],23); // edit user
+    $edituserpermission = user_permission($sit[2], 23); // edit user
     if ($edituserid != $sit[2] AND $edituserpermission == FALSE)
     {
         trigger_error('Error: No permission to edit this users profile', E_USER_ERROR);
@@ -295,7 +295,7 @@ elseif ($mode == 'save')
     }
 
     // If users status is set to 0 (disabled) force 'accepting' to no
-    if ($user->status==0) $user->accepting='No';
+    if ($user->status == 0) $user->accepting = 'No';
 
     // Update user profile
     $errors = 0;
@@ -343,8 +343,8 @@ elseif ($mode == 'save')
         }
         elseif ($result === TRUE)
         {
-            if ($edituserid==$sit[2]) $redirecturl='index.php';
-            else $redirecturl='manage_users.php';
+            if ($edituserid == $sit[2]) $redirecturl = 'index.php';
+            else $redirecturl = 'manage_users.php';
             plugin_do('save_profile_form');
 
             // password was not changed

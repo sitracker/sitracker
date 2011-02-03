@@ -29,7 +29,7 @@ array('name' => $strEmail,
       );
 
 $actionarray['ACTION_CREATE_INCIDENT'] =
-array('name' => $strAddIncident,
+array('name' => $strNewIncident,
       'description' => $strCreateAnIncident,
       'requires' => array('updateid'),
       'permission' => array(),
@@ -356,7 +356,7 @@ array('description' => $strContact,
       'replacement' => '$param_array[\'contactid\'];',
       'show' => FALSE
       );
-      
+
 $ttvararray['{contactid}'][] =
 array('description' => $strContact,
       'requires' => 'incidentid',
@@ -424,7 +424,7 @@ array('description' => $strContractProduct,
 
 $ttvararray['{contractsla}'] =
 array('description' => $strContractsSLA,
-      'replacement' => 'maintenance_servicelevel($param_array[\'contractid\']);',
+      'replacement' => 'maintenance_servicelevel_tag($param_array[\'contractid\']);',
       'requires' => 'contractid'
       );
 
@@ -443,6 +443,12 @@ $ttvararray['{feedbackurl}'] =
 array('description' => $strFeedbackURL,
       'requires' => 'incidentid',
       'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_owner($param_array[\'incidentid\'])).\'&&\'.urlencode($param_array[\'incidentid\']))))));'
+      );
+
+$ttvararray['{formattedtime}'][] =
+array('description' => 'Outputs a formatted time, e.g. 2 minutes, 1 hour etc.',
+      'replacement' => 'format_seconds($param_array[holdingmins] * 60);',
+      'requires' => 'holdingmins'
       );
 
 $ttvararray['{globalsignature}'] =
@@ -587,7 +593,7 @@ array('description' => $strNotifyMinutes,
       'requires' => 'notifymins',
       'show' => TRUE
       );
-      
+
 $ttvararray['{ownerid}'] =
 array('description' => $strIncidentOwner,
       'replacement' => 'incident_owner($param_array[\'incidentid\']);',
@@ -722,7 +728,7 @@ array('description' => $strSLA,
 
 $ttvararray['{slatag}'] =
 array('description' => $strSLA,
-      'replacement' => 'servicelevel_id2tag(contract_slaid($param_array[\'contractid\']));',
+      'replacement' => 'maintenance_servicelevel_tag($param_array[\'contractid\']);',
       'requires' => 'contractid'
       );
 
@@ -1090,14 +1096,14 @@ function trigger_to_array($trigger)
 
 function triggers_to_html($user_id, $trigger_id = '')
 {
-    global $dbTriggers, $sit, $trigger_types;
+    global $dbTriggers, $sit, $trigger_types, $strTrigger, $strActions;
 
     $user_id = cleanvar($user_id);
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
     $html = "<table class='vertical' id='trigger_list'>";
-    $html .= "<tr><th>Trigger</th><th>Actions</th></tr>";
+    $html .= "<tr><th>{$strTrigger}</th><th>{$strActions}</th></tr>";
     $i = 1;
     foreach ($trigger_types AS $trigger => $description)
     {
@@ -1108,7 +1114,11 @@ function triggers_to_html($user_id, $trigger_id = '')
             $html .= "<tr class='shade{$shade}'><td>".icon('trigger', 16);
             $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
             $html .= $trigger_html;
-            $html .= "</div></td></tr>";         
+            $html .= "</div></td></tr>";
+        }
+        else
+        {
+            trigger_error('Problem getting trigger details');
         }
     }
     $html .= "</table>";
@@ -1134,7 +1144,7 @@ function trigger_to_html($trigger, $user_id)
 
 function trigger_action_to_html($trigger)
 {
-    global $trigger_types, $actionarray;
+    global $trigger_types, $actionarray, $strChecks, $strParameters, $strMore, $strLess, $strEllipsis;
     $t_array = trigger_to_array($trigger);
     switch ($t_array['action'])
     {
@@ -1152,7 +1162,7 @@ function trigger_action_to_html($trigger)
             $action = icon('email', 16). " ";
             $action .= $GLOBALS['strSendAnEmail'];
             break;
-            
+
         default:
             $action = $GLOBALS['strUnknown'];
             plugin_do('trigger_action_html');
@@ -1160,7 +1170,7 @@ function trigger_action_to_html($trigger)
     }
 
     $html .= $action;
-    
+
     if (!empty($t_array['template']))
     {
         $html .= " <a href='templates.php?id={$t_array['template']}'>";
@@ -1171,24 +1181,38 @@ function trigger_action_to_html($trigger)
             $html .= "<small>({$desc})</small><br />";
         }
     }
-    
+
     if ($t_array['checks'] != '' OR $t_array['parameters'] != '')
     {
-        $html .= "<a href='javascript:void(0)' onclick=\"javascript:$('checksandparams{$trigger->id}').show()\">".icon('auto', 16) ." {$GLOBALS['strMore']}</a> ";
-        $html .= "<div id='checksandparams{$trigger->id}' style='display:none'>";
+        $html .= "<span id='more_checks{$trigger->id}'>";
+        $html .= "<a href='javascript:void(0)' ";
+        $html .= "onclick=\"javascript:$('checksandparams{$trigger->id}').show(); $('less_checks{$trigger->id}').show(); $('more_checks{$trigger->id}').hide()\">";
+        $html .= icon('auto', 16) ." {$strMore}{$strEllipsis}</a></span> ";
+
+        $html .= "<span id='less_checks{$trigger->id}' style='display:none'>";
+        $html .= "<a href='javascript:void(0)' ";
+        $html .= "onclick=\"javascript:$('checksandparams{$trigger->id}').hide(); $('less_checks{$trigger->id}').hide(); $('more_checks{$trigger->id}').show()\">";
+        $html .= icon('auto', 16) ." {$strLess}{$strEllipsis}</a></span> ";
+
+        $html .= "<span id='checksandparams{$trigger->id}' style='display:none'>";
         if ($t_array['checks'] != '')
         {
-            $html .= "<strong>Checks</strong>: ";
-            $html .= checks_to_html($t_array['checks'])." ".help_link('trigger_checks')." ";
+            $html .= "<strong>{$strChecks}</strong>: ";
+            //FIXME 4.0
+            //$html .= checks_to_html($t_array['checks'])." ".help_link('trigger_checks')." ";
+            $html .= $t_array['checks']." ".help_link('trigger_checks')." ";
+
         }
         if ($t_array['parameters'] != '')
         {
             $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
         }
-        $html .= "</div>";
+        $html .= "</span>";
     }
-    
-    $html .=  "<div class='triggeractions'><a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
+
+    $html .=  "<div class='triggeractions'>";
+    //FIXME 4.0, add edit back in
+    //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
     $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
 }
@@ -1221,14 +1245,14 @@ function template_description($name, $type)
  */
 function check_match_drop_down($id = '')
 {
-	$html = "<select id='{$id}' name='{$id}'>";
+    $html = "<select id='{$id}' name='{$id}'>";
     $html .= "<option>is</option>";
     $html .= "<option>is not</option>";
     $html .= "<option>contains</option>";
     $html .= "<option>does not contain</option>";
     $html .= "</select>";
-        
-	return $html;
+
+    return $html;
 }
 
 /**
@@ -1237,55 +1261,57 @@ function check_match_drop_down($id = '')
  * @param array $value the values of the parameters
  * @param array $join the 'is', 'is not' selection
  * @param array $enabled the status of the checkbox
- * @param array $conditions whether to use 'all' or 'any' of the conditions
- */
+* @param array $conditions whether to use 'all' or 'any' of the conditions
+*/
 function create_check_string($param, $value, $join, $enabled, $conditions)
 {
-	//FIXME check for bad code here
-	//FIXME add extra join
-	$param_count = sizeof($param);
-	for ($i = 0; $i < $param_count; $i++)
-	{
-		if ($enabled[$i] == 'on')
-		{
-			$checks[$i] = "{".$param[$i]."}";
-			if ($join[$i] == 'is') $checks[$i] .= "==";
-			elseif ($join[$i] == 'is not') $checks[$i] .= "==";
-			elseif ($join[$i] == 'contains') $check[$i] .= "!=";
-			$checks[$i] .= $value[$i];
-		}
-	}
+    //FIXME check for bad code here
+    //FIXME add extra join
+    $param_count = sizeof($param);
+    for ($i = 0; $i < $param_count; $i++)
+    {
+        if ($enabled[$i] == 'on')
+        {
+            $checks[$i] = "{".$param[$i]."}";
+            if ($join[$i] == 'is') $checks[$i] .= "==";
+            elseif ($join[$i] == 'is not') $checks[$i] .= "==";
+            elseif ($join[$i] == 'contains') $check[$i] .= "!=";
+            $checks[$i] .= $value[$i];
+        }
+    }
 
-	$check_count = sizeof($checks);
-	for ($i = 0; $i < $check_count; $i++)
-	{
-		$final_check .= $checks[0];
-		if ($i != $check_count - 1)
-		{
-			if ($conditions == 'all')
-			{
-				$final_check .= " AND ";
-			}
-			else
-			{
-				$final_check .= " OR ";
-			}
-		}
-	}
-	return $final_check;
+    $check_count = sizeof($checks);
+    for ($i = 0; $i < $check_count; $i++)
+    {
+        $final_check .= $checks[0];
+        if ($i != $check_count - 1)
+        {
+            if ($conditions == 'all')
+            {
+                $final_check .= " AND ";
+            }
+            else
+            {
+                $final_check .= " OR ";
+            }
+        }
+    }
+    return $final_check;
 }
 
+//FIXME 4.0
 function checks_to_html($checks)
 {
+    $checks = trim($checks);
     if ($checks != '')
     {
         if (strpos($checks, 'AND') !== FALSE)
         {
-            $checks = explode(' AND ', $checks);
+            $checks = explode('AND', $checks);
         }
         elseif (strpos($checks, 'OR') !== FALSE)
         {
-            $checks = explode(' OR ', $checks);
+            $checks = explode('OR', $checks);
         }
         else
         {
@@ -1294,6 +1320,7 @@ function checks_to_html($checks)
         $html = "";
         foreach ($checks as $check)
         {
+            $original_check = $check;
             if (strpos($check, '==') !== FALSE)
             {
                 $check = explode('==', $check);
@@ -1309,13 +1336,20 @@ function checks_to_html($checks)
             else
             {
                 trigger_error('not yet supported');
+                $html .= $original_check;
             }
-            print_r($check);
-            echo $ttvararray[$check[0]]['checkreplace'];
-            $html .= $ttvararray[$check[0]]['checkreplace']();
+
+            if ($ttvararray[$check[0]]['checkreplace'] != '')
+            {
+                $html .= $ttvararray[$check[0]]['checkreplace']();
+            }
+            else
+            {
+                $html .= $original_check;
+            }
         }
-        echo $html;
     }
+    return $html;
 }
 
 /**

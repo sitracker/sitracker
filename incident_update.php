@@ -2,7 +2,7 @@
 // incident_update.php - For for logging updates to an incident
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External Variables
 // $bodytext = cleanvar($_REQUEST['bodytext'],FALSE,FALSE);
 $bodytext = cleanvar($_REQUEST['bodytext'], FALSE, TRUE);
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 $action = cleanvar($_REQUEST['action']);
 
@@ -47,7 +47,7 @@ function display_update_page($draftid=-1)
     {
         $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
         $draftresult = mysql_query($draftsql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $draftobj = mysql_fetch_object($draftresult);
 
         $metadata = explode("|",$draftobj->meta);
@@ -269,7 +269,7 @@ function display_update_page($draftid=-1)
     clear_form_errors('update');
 
     //echo "<form action='".$_SERVER['PHP_SELF']."?id={$id}&amp;draftid={$draftid}' method='post' name='updateform' id='updateform' enctype='multipart/form-data'>";
-    echo "<form action='".$_SERVER['PHP_SELF']."?id={$id}' method='post' name='updateform' id='updateform' enctype='multipart/form-data'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' name='updateform' id='updateform' enctype='multipart/form-data'>";
     echo "<table class='vertical'>";
     echo "<tr>";
     echo "<th align='right' width='20%;'>{$GLOBALS['strSLATarget']}";
@@ -481,7 +481,7 @@ function display_update_page($draftid=-1)
     echo "<th align='right'>";
     echo "<strong>{$GLOBALS['strTimeToNextAction']}</strong></th>";
     echo "<td class='shade2'>";
-    echo show_next_action('updateform');
+    echo show_next_action('updateform', $id);
     echo "</td></tr>";
     echo "<tr>";
     // calculate upload filesize
@@ -516,7 +516,7 @@ if (empty($action))
 {
     $sql = "SELECT * FROM `{$dbDrafts}` WHERE type = 'update' AND userid = '{$sit[2]}' AND incidentid = '{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
@@ -547,7 +547,7 @@ else if ($action == "deletedraft")
     {
         $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
     html_redirect("{$_SERVER['PHP_SELF']}?id={$id}");
 }
@@ -579,12 +579,15 @@ else
     // \p{L} A Unicode character
     // \p{N} A Unicode number
     // /u does a unicode search
-    if (empty($bodytext) OR
-        ((strlen($bodytext) < 4) OR
-        !preg_match('/[\p{L}\p{N}]+/u', $bodytext)))
+    if (empty($bodytext))
     {
-        //FIXME 3.40 make this two errors and i18n for
         $_SESSION['formerrors']['update'][] = sprintf($strFieldMustNotBeBlank, $strUpdate);
+        html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
+        exit;
+    }
+    elseif ((strlen($bodytext) < 4) OR !preg_match('/[\p{L}\p{N}]+/u', $bodytext))
+    {
+        $_SESSION['formerrors']['update'][] = sprintf(strMustContainFourCharacters, $strUpdate);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
         exit;
     }
@@ -818,7 +821,7 @@ else
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
-    if ($target!='none')
+    if ($target != 'none')
     {
         // Reset the slaemail sent column, so that email reminders can be sent if the new sla target goes out
         $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='{$id}' LIMIT 1";
@@ -839,7 +842,7 @@ else
         {
             $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
         journal(CFG_LOGGING_MAX,'Incident Updated', "Incident $id Updated", CFG_JOURNAL_SUPPORT, $id);
         html_redirect("incident_details.php?id={$id}");

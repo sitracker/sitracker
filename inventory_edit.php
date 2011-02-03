@@ -2,7 +2,7 @@
 // inventory_edit.php - Edit inventory items
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,8 +24,8 @@ if(!$CONFIG['inventory_enabled'])
     exit;
 }
 
-$id = cleanvar($_GET['id']);
-$siteid = cleanvar($_REQUEST['site']);
+$id = clean_int($_GET['id']);
+$siteid = clean_int($_REQUEST['site']);
 
 // if (!empty($_GET['newsite']))
 // {
@@ -138,7 +138,7 @@ else
     echo "<tr><th>{$strNotes}</th>";
     echo "<td>";
     echo bbcode_toolbar('inventorynotes');
-    echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>$row->notes</textarea></td></tr>";
+    echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>{$row->notes}</textarea></td></tr>";
 
     if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
@@ -194,3 +194,5 @@ else
     
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
+
+?>

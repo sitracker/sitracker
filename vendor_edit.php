@@ -2,7 +2,7 @@
 // edit_vendor.php - Page to edit vendor details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,8 +24,8 @@ $action = cleanvar($_REQUEST['action']);
 switch ($action)
 {
     case 'save':
-        $vendorname = cleanvar($_REQUEST['name']);
-        $vendorid = cleanvar($_REQUEST['vendorid']);
+        $vendorname = clean_dbstring($_REQUEST['name']);
+        $vendorid = clean_int($_REQUEST['vendorid']);
 
         // check for blank name
         if ($vendorname == '')
@@ -49,10 +49,10 @@ switch ($action)
         }
         break;
     case 'edit':
-        $vendorid = cleanvar($_REQUEST['vendorid']);
-        $vendorname = cleanvar($_REQUEST['vendorname']);
+        $vendorid = clean_int($_REQUEST['vendorid']);
+        $vendorname = clean_dbstring($_REQUEST['vendorname']);
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strEditVendor} {$vendorname}</h2>";
+        echo "<h2>".icon('edituser', 32)." {$strEditVendor} {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";
         echo "<table align='center'>";
         echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}'/></td></tr>";
@@ -65,7 +65,7 @@ switch ($action)
         break;
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>{$strEditVendor}</h2>";
+        echo "<h2>".icon('edituser', 32)." {$strEditVendor}</h2>";
         $sql = "SELECT * FROM `{$dbVendors}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -82,7 +82,7 @@ switch ($action)
             }
             echo "</table>";
         }
-        echo "<p align='center'><a href='vendor_add.php'>{$strAddVendor}</a></p>";
+        echo "<p align='center'><a href='vendor_new.php'>{$strNewVendor}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
 }

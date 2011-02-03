@@ -2,7 +2,7 @@
 // dashboard_rss.php - Display your rss feeds on the dashboard
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -142,19 +142,19 @@ function dashboard_rss_edit($dashletid)
 
     switch ($action)
     {
-        case 'add':
-            echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strAddRSSAtomFeed']}</h2>";
-            echo "<form id='dashrssaddform' action='{$_SERVER['PHP_SELF']}?action=do_add' method='post'>";
+        case 'new':
+            echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strNewRSSAtomFeed']}</h2>";
+            echo "<form id='dashrssaddform' action='{$_SERVER['PHP_SELF']}?action=do_new' method='post'>";
             echo "<table class='vertical'>";
             echo "<tr><td><label>".icon('feed-icon', 12, $GLOBALS['strFeedIcon'])." ";
             echo "{$GLOBALS['strRSSAtomURL']}: <input type='text' name='url' size='45' /></label></td></tr>\n";
             echo "<tr><td><label>{$GLOBALS['strDisplay']}: <input type='text' name='items' size='3' value='0' /></label> ({$GLOBALS['str0MeansUnlimited']})</td></tr>";
             echo "</table>";
-            // <input name='submit' type='submit' value='{$GLOBALS['strAdd']}' />
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction'=>'do_add'), false, 'dashrssaddform')."</p>";
+            // <input name='submit' type='submit' value='{$GLOBALS['strNew']}' />
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strNew'], 'save', array('editaction'=>'do_new'), false, 'dashrssaddform')."</p>";
             echo "</form>";
             break;
-        case 'do_add':
+        case 'do_new':
             $url = cleanvar($_REQUEST['url']);
             $enable = cleanvar($_REQUEST['enable']);
             $items = cleanvar($_REQUEST['items']);
@@ -312,7 +312,7 @@ function dashboard_rss_edit($dashletid)
                 echo "<p align='center'>{$GLOBALS['strNoFeedsCurrentlyPresent']}</p>";
             }
 
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction'=>'add'))."</p>";
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strNew'], 'edit', array('editaction'=>'add'))."</p>";
             break;
     }
 

@@ -2,7 +2,7 @@
 // yearly_enginer_export.php - List the numbers and titles of incidents logged to each engineer in the past year.
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010 The Support Incident Tracker Project
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -41,7 +41,7 @@ $output = cleanvar($_POST['output']);
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>{$title}</h2>";
+    echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='incidentsbyengineer'>";
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strStartDate}:</th>";
@@ -95,7 +95,7 @@ elseif ($_REQUEST['statistics'] == 'on')
     else $enddate = mktime(23,59,59,31,12,date('Y'));
 
     $includecount = count($inc);
-    if ($includecount >= 1)
+    if (is_array($inc) AND $includecount >= 1)
     {
         // $html .= "<strong>Include:</strong><br />";
         $incsql .= "(";
@@ -137,7 +137,7 @@ elseif ($_REQUEST['statistics'] == 'on')
 
     $sql .= " GROUP BY u.id ";
 
-    //echo $sql;
+    // echo $sql;
 
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -308,7 +308,7 @@ elseif ($_REQUEST['statistics'] == 'on')
     if ($output == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>".sprintf($strEngineersStatisticsForXMonths, round(($enddate - $startdate) / (60*60*24*30.5)))."</h2>";
+        echo "<h2>".icon('reports', 32)." ".sprintf($strEngineersStatisticsForXMonths, round(($enddate - $startdate) / (60*60*24*30.5)))."</h2>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
@@ -329,7 +329,7 @@ elseif ($_REQUEST['mode'] == 'report')
     else $enddate = mktime(23,59,59,31,12,date('Y'));
 
     $includecount = count($inc);
-    if ($includecount >= 1)
+    if (is_array($inc) AND $includecount >= 1)
     {
         // $html .= "<strong>Include:</strong><br />";
         $incsql .= "(";
@@ -422,7 +422,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $count++;
     }
 
-    $html .= "<h2>{$title}</h2>";
+    $html .= "<h2>".icon('reports', 32)." {$title}</h2>";
     $html .= "<p align='center'>".sprintf($strIncidentEscalatedReportDesc, $numrows, $numrows_esc)."</p>";
     $html .= "<table width='99%' align='center'>";
     $html .= "<tr><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strIncident}</th>";
