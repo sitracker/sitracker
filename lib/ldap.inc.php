@@ -705,7 +705,7 @@ function ldapGroupBrowse($base)
     
     $ldap_conn = ldapOpen();
     
-    $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass={$CONFIG['ldap_grpobjecttype']}))";
+    $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass=domain)(objectClass={$CONFIG['ldap_grpobjecttype']}))";
     $attribs = array('dn', 'objectClass');
     
     debug_log("LDAP Filter: {$filter}", TRUE);
