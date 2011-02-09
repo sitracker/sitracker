@@ -1529,7 +1529,7 @@ CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
 CREATE TABLE `{$dbUserSoftware}` (
   `userid` smallint(6) NOT NULL default '0',
   `softwareid` int(5) NOT NULL default '0',
-  `backupid` tinyint(4) NOT NULL default '0',
+  `backupid` smallint(6) NOT NULL default '0',
   PRIMARY KEY  (`userid`,`softwareid`),
   KEY `backupid` (`backupid`)
 ) ENGINE=MyISAM COMMENT='Defines which software users have expertise with' DEFAULT CHARACTER SET = utf8;

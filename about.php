@@ -72,7 +72,7 @@ echo "<tr><td class='shade2' colspan='2'>";
 ?>
 <h4>SiT! Support Incident Tracker</h4>
 <p align='center'>
-Copyright &copy; 2010 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />
+Copyright &copy; 2010-2011 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />
 Copyright &copy; 2000-2009 Salford Software Ltd. and Contributors<br />
 Licensed under the GNU General Public License.<br /></p>
 
