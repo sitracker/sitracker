@@ -33,6 +33,7 @@ else
     $user_id = $sit[2];
 }
 $title = 'New Triggers Interface';
+
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 ?>
 <script type="text/javascript">
@@ -252,7 +253,6 @@ if (!empty($_POST['triggertype']))
     $_POST = cleanvar($_POST);
     $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
                     $_POST['enabled'], $_POST['conditions']);
-
     if ($_POST['new_action'] == 'ACTION_NOTICE')
     {
         $template = $_POST['noticetemplate'];
@@ -335,5 +335,4 @@ else
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
 }
-
 ?>

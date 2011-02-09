@@ -1304,7 +1304,7 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     $check_count = sizeof($checks);
     for ($i = 0; $i < $check_count; $i++)
     {
-        $final_check .= $checks[0];
+        $final_check .= $checks[$i];
         if ($i != $check_count - 1)
         {
             if ($conditions == 'all')
