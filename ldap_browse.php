@@ -25,53 +25,36 @@ echo "<h2>{$strLDAP}</h2>";
 $base = cleanvar($_REQUEST['base']);
 $field = cleanvar($_REQUEST['field']);
 
-$entries = ldapGroupBrowse($base);
+$ldap_type = cleanvar($_REQUEST['ldap_type']);
+$ldap_host = cleanvar($_REQUEST['ldap_host']);
+$ldap_port = clean_int($_REQUEST['ldap_port']);
+$ldap_protocol = clean_int($_REQUEST['ldap_protocol']);
+$ldap_security = cleanvar($_REQUEST['ldap_security']);
+$ldap_bind_user = cleanvar($_REQUEST['ldap_bind_user']);
+$ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
+
+// $entries = ldapGroupBrowse($base);
+
+echo "<form name='ldap_browse' action='{$_SERVER['PHP_SELF']}'>";
+foreach (array('ldap_type', 'ldap_host', 'ldap_port', 'ldap_protocol', 'ldap_security', 'ldap_bind_user', 'ldap_bind_pass', 'base', 'field') AS $i)
+{
+    echo "<input type='hidden' id='{$i}' name='{$i}' value='{$$i}' />\n";        
+} 
+echo "</form>";
 
 echo "Current Level: {$base}<br /><br />";
 
-echo "<table>";
+?>
+    <script type='text/javascript'>
+    //<![CDATA[
 
-if (!empty($base))
-{
-    $context = explode(',', $base);
+        ldap_browse_select_container('<?php echo $base ?>', '<?php echo $field ?>');        
     
-    array_shift($context);
-    
-    $up_one_level = implode(',', $context);
-    
-    echo "<tr>";
-    echo "<td>".icon('navup', 16)."</td>";
-    echo "<td>..</td>";
-    echo "<td><a href='{$_SERVER['PHP_SELF']}?base={$up_one_level}'>Up</a></td>";
-    echo "</tr>";
-}
+    //]]>
+    </script>
+<?php
 
-foreach ($entries AS $entry)
-{
-    $name = explode(',', $entry['dn']);
-    $n = explode('=', $name[0]);
-    
-    echo "<tr>";
-    
-    if ($entry['type'] == 'container')
-    {
-        $a = urlencode($entry['dn']);
-        "";
-        echo "<td><a href='{$_SERVER['PHP_SELF']}?base={$a}&amp;field={$field}'>".icon('navdown', 16)."</a></td>";
-        echo "<td><a href='{$_SERVER['PHP_SELF']}?base={$a}&amp;field={$field}'>".icon('kb', 16)."</a></td>";
-        echo "<td><a href='{$_SERVER['PHP_SELF']}?base={$a}&amp;field={$field}'>{$n[1]}</a></td>";
-    }
-    else 
-    {
-        echo "<td></td>";
-        echo "<td><a onclick=\"ldap_browse_update_group('{$entry['dn']}', '{$field}');\" href='javascript:void(0)'>".icon('site', 16)."</a></td>";
-        echo "<td><a onclick=\"ldap_browse_update_group('{$entry['dn']}', '{$field}');\" href='javascript:void(0)'>{$n[1]}</a></td>";
-    }
-    
-    echo "</tr>";
-}
-
-echo "</table>";
+echo "<div id='ldap_browse_contents' />";
 
 include (APPLICATION_INCPATH . 'minimal_footer.inc.php');
 

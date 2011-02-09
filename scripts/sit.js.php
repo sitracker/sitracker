@@ -24,6 +24,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 header('Content-type: text/javascript');
 
+$site_icon = icon('site', 16);
+$navdown_icon = icon('navdown', 16);
+$navup_icon = icon('navup', 16);
+$kb_icon = icon('kb', 16);
+
 echo "
 var application_webpath = '{$CONFIG['application_webpath']}';
 var strJanAbbr = '{$strJanAbbr}';
@@ -55,8 +60,15 @@ var strFinalUpdate = \"{$strFinalUpdate}\";
 var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
 
+var strUp = \"{$strUp}\";
+
 var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
 var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
+
+var icon_site = '{$site_icon}';
+var icon_navdown = '{$navdown_icon}';
+var icon_kb = '{$kb_icon}';
+var icon_navup = '{$navup_icon}';
 
 /* Please don't add functions here, these functions below need moving to webtrack.js
    this file is to make i18n keys available in javascript

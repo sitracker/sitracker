@@ -697,44 +697,101 @@ function ldapCheckGroupExists($dn, $mapping)
 }
 
 
-function ldapGroupBrowse($base)
+function ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass)
 {
     global $CONFIG;
     
     debug_log("ldapGroupBrowse");
+
+    $ldap_conn = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass);
     
-    $ldap_conn = ldapOpen();
+    $return = array();
     
-    $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass=domain)(objectClass={$CONFIG['ldap_grpobjecttype']}))";
-    $attribs = array('dn', 'objectClass');
+    if (!empty($base))
+    {
+        if ($base == '[root]') $base = '';
+        $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass=domain)(objectClass={$CONFIG['ldap_grpobjecttype']}))";
+        $attribs = array('dn', 'objectClass');
+        debug_log("LDAP Filter: {$filter}", TRUE);
+    
+        $sr = ldap_list($ldap_conn, $base, $filter, $attribs);
+        
+        if ($sr)
+        {
+            $entries = ldap_get_entries($ldap_conn, $sr);
+    
+//            echo "<pre>";
+//            print_r($entries);
+//            echo "</pre>";
+            
+            $a = array();
+            
+            for ($i = 0; $i < $entries['count']; $i++)
+            {
+                $type = 'container'; 
+                for ($j = 0; $j < $entries[$i]['objectclass']['count']; $j++)
+                {
+                    if (strtolower($entries[$i]['objectclass'][$j]) == strtolower($CONFIG['ldap_grpobjecttype']))
+                    {
+                        $type = 'group';
+                    }
+                }
+                
+                $name = explode(',', $entries[$i]['dn']);
+                $cn = explode('=', $name[0]);
+                
+                $return[] = array('dn' => $entries[$i]['dn'], 'cn' => $cn[1], 'type' => $type);
+            }
+        }
+    }
+    else
+    {
+        $return = ldapNamingContexts($ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass); 
+    }
+    
+    
+    return $return;
+}
+
+
+function ldapNamingContexts($ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass)
+{
+    debug_log("ldapNamingContexts");
+
+    $ldap_conn = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass);
+
+    $filter = "(objectClass=*)";
+    $attribs = array('namingContexts', 'rootDomainNamingContext', 'defaultNamingContext');
     
     debug_log("LDAP Filter: {$filter}", TRUE);
     
-    $sr = ldap_list($ldap_conn, $base, $filter, $attribs);
+    $sr = ldap_read($ldap_conn, "", $filter, $attribs);
+    
+    $return = array(); 
     
     if ($sr)
     {
         $entries = ldap_get_entries($ldap_conn, $sr);
-        
-        $a = array();
-        
-        for ($i = 0; $i < $entries['count']; $i++)
+
+        if (!empty($entries[0]['defaultnamingcontext']))
         {
-            $type = 'container'; 
-            for ($j = 0; $j < $entries[$i]['objectclass']['count']; $j++)
+            $return[] = array('dn' => $entries[0]['defaultnamingcontext'][0], 'cn' => $entries[0]['defaultnamingcontext'][0], 'type' => 'container');
+        }
+        else if (!empty($entries[0]['rootdomainnamingcontext']))
+        {
+            $return[] = array('dn' => $entries[0]['rootdomainnamingcontext'][0], 'cn' => $entries[0]['rootdomainnamingcontext'][0], 'type' => 'container');
+        }
+        else
+        {
+            for ($i = 0; $i < $entries[0]['namingcontexts']['count']; $i++)
             {
-                if (strtolower($entries[$i]['objectclass'][$j]) == strtolower($CONFIG['ldap_grpobjecttype']))
-                {
-                    $type = 'group';
-                }
+                if (empty($entries[0]['namingcontexts'][$i])) $entries[0]['namingcontexts'][$i] = '[root]';
+                $return[] = array('dn' => $entries[0]['namingcontexts'][$i], 'cn' => $entries[0]['namingcontexts'][$i], 'type' => 'container');
             }
-            
-            
-            $a[] = array('dn' => $entries[$i]['dn'], 'type' => $type);
         }
     }
     
-    return $a;    
+    return $return;
 }
 
 ?>

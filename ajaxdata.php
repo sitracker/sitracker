@@ -380,8 +380,16 @@ switch ($action)
         }
         break;
     case 'ldap_browse_groups':
-        $base = cleanvar($_REQUEST['ldap_base']);
-        return json_encode(ldapGroupBrowse($base));
+        $base = cleanvar($_REQUEST['base']);
+        $field = cleanvar($_REQUEST['field']);
+        $ldap_type = cleanvar($_REQUEST['ldap_type']);
+        $ldap_host = cleanvar($_REQUEST['ldap_host']);
+        $ldap_port = clean_int($_REQUEST['ldap_port']);
+        $ldap_protocol = clean_int($_REQUEST['ldap_protocol']);
+        $ldap_security = cleanvar($_REQUEST['ldap_security']);
+        $ldap_bind_user = cleanvar($_REQUEST['ldap_bind_user']);
+        $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
+        echo json_encode(ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass));
         break;
     default :
         plugin_do('ajaxdata_add_action', array('action' => $action));
