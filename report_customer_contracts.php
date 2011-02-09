@@ -53,13 +53,11 @@ while ($site = mysql_fetch_object($result))
     $msql .= "c.surname AS admincontactssurname, m.notes AS maintnotes, m.allcontactssupported ";
     $msql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r ";
     $msql .= "WHERE m.product=p.id ";
-    $msql .= "AND m.reseller=r.id AND licence_type=l.id AND admincontact=c.id ";
+    $msql .= "AND m.reseller=r.id AND if(licence_type = 0, 6, ifnull(licence_type, 6)) = l.id AND admincontact = c.id ";
     $msql .= "AND m.site = '{$site->id}' ";
-//     $msql .= "AND p.vendorid=2 ";    // novell products only
     $msql .= "AND m.term!='yes' ";
     $msql .= "AND m.expirydate > '$now' ";     $msql .= "ORDER BY expirydate DESC";
 
-//    echo "\n<!-- $msql -->\n";
     $mresult = mysql_query($msql);
     if (mysql_num_rows($mresult)>=1)
     {
@@ -74,13 +72,12 @@ while ($site = mysql_fetch_object($result))
                     echo "{$maint->licence_quantity} {$maint->licence_type},";
                     echo ldate($CONFIG['dateformat_date'], $maint->expirydate).",";
                     
-                    if ($maint->allcontactssupported == 'yes') echo "$strYes,";
-                    else echo "{$sstrNo},"; 
+                    if ($maint->allcontactssupported == 'yes') echo "{$strYes},";
+                    else echo "{$strNo},"; 
                     
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
-                    ## echo "<!-- ($csql) -->";
                     $cresult = mysql_query($csql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     while ($contact = mysql_fetch_object($cresult))
@@ -106,7 +103,7 @@ while ($site = mysql_fetch_object($result))
             echo "<th style='text-align: left;'>{$strEngineer} 4</th></tr>\n";
             while ($maint = mysql_fetch_object($mresult))
             {
-                if ($maint->expirydate > $now AND $maint->term != 'no')
+                if ($maint->expirydate > $now AND $maint->term != 'yes')
                 {
                     echo "<tr>";
                     echo "<td width='20%'>{$maint->product}</td>";
@@ -114,14 +111,13 @@ while ($site = mysql_fetch_object($result))
                     echo "<td>".ldate($CONFIG['dateformat_date'], $maint->expirydate)."</td>";
 
                     echo "<td>";
-                    if ($maint->allcontactssupported == 'yes') echo "$strYes,";
-                    else echo "{$sstrNo},";
+                    if ($maint->allcontactssupported == 'yes') echo $strYes;
+                    else echo $strNo;
                     echo "</td>";
                     
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
-                    ## echo "<!-- ($csql) -->";
                     $cresult = mysql_query($csql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     while ($contact = mysql_fetch_object($cresult))

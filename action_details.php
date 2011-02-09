@@ -33,6 +33,7 @@ else
     $user_id = $sit[2];
 }
 $title = 'New Triggers Interface';
+
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 ?>
 <script type="text/javascript">
@@ -252,7 +253,6 @@ if (!empty($_POST['triggertype']))
     $_POST = cleanvar($_POST);
     $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
                     $_POST['enabled'], $_POST['conditions']);
-
     if ($_POST['new_action'] == 'ACTION_NOTICE')
     {
         $template = $_POST['noticetemplate'];
@@ -275,6 +275,11 @@ else
     echo "<h2>New action</h2>";
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
+    if ($trigger_mode == 'system')
+    {
+	echo "<h3>User</h3>";
+        echo "Which action will the action apply to: 'all' will add an entry for ALL users, 'system' will add an action without a user, useful for e.g. automateid emails to customers.</p>";
+    }
     echo "<h3>Action</h3>";
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
@@ -330,5 +335,4 @@ else
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
 }
-
 ?>

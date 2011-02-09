@@ -835,21 +835,37 @@ plugin_do('trigger_variables');
  */
 function email_templates($name, $triggertype='system', $selected = '')
 {
-    global $dbEmailTemplates, $dbTriggers;;
+    global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults;
     $html .= "<select id='{$name}' name='{$name}'>";
-    $html .= "<option></option>";
-    $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
-    $sql .= "WHERE type='{$triggertype}' ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($template = mysql_fetch_object($result))
-    {
-    //$name = strpos()
-    //$name = str_replace("_", " ", $name);
-    $name = strtolower($name);
-    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
-    //$html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
 
+    foreach (array($triggertype, 'usertemplate') as $type)
+    {   
+        if ($type == 'usertemplate')
+        { 
+            $html .= "<option disabled='disabled'></option><option disabled='disabled'>=== {$strPersonalTemplates} ===</option>";
+        }
+
+        $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
+        $sql .= "WHERE type='{$type}' ORDER BY name";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) > 0)
+        {
+            while ($template = mysql_fetch_object($result))
+            {
+                //$name = strpos()
+                //$name = str_replace("_", " ", $name);
+                $name = strtolower($name);
+                $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
+                //$html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
+
+            }
+        }
+        else
+        {
+            $html .= "<option disabled='disabled'>{$strNoResults}</option>";
+        }
+        
     }
     $html .= "</select>\n";
     return $html;
@@ -864,14 +880,19 @@ function email_templates($name, $triggertype='system', $selected = '')
  */
 function notice_templates($name, $selected = '')
 {
-    global $dbNoticeTemplates;
+    global $dbNoticeTemplates, $strPersonalTemplates;
     $html .= "<select id='{$name}' name='{$name}'>";
-    $html .= "<option></option>";
-    $sql = "SELECT id, name, description FROM `{$dbNoticeTemplates}` ORDER BY name ASC";
+    $sql = "SELECT id, name, description, type FROM `{$dbNoticeTemplates}` ORDER BY type,name ASC";
     $query = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($template = mysql_fetch_object($query))
     {
+        $user_header = false;
+        if (!$user_header AND $template->type == USER_DEFINED_NOTICE_TYPE)
+        {
+            $user_header = true;
+            $html .= "<option></option><option>=== {$strPersonalTemplates} ===</option>";
+        }
 	    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
     }
     $html .= "</select>\n";
@@ -1283,7 +1304,7 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     $check_count = sizeof($checks);
     for ($i = 0; $i < $check_count; $i++)
     {
-        $final_check .= $checks[0];
+        $final_check .= $checks[$i];
         if ($i != $check_count - 1)
         {
             if ($conditions == 'all')

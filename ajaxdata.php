@@ -314,7 +314,7 @@ switch ($action)
         if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
         if (is_array($trigger_types[$triggertype]['params']))
         {
-            echo '<p align="left">{$strNotifyWhen} ';
+            echo "<p align='left'>{$strNotifyWhen} ";
             echo "<select name='conditions'><option value='all'>{$strAllConditionsMet}</option>";
             echo "<option value='any'>{$strAnyConditionMet}</option></select></p>";
             echo "<table>";
@@ -335,7 +335,7 @@ switch ($action)
                     echo "<td><input type='hidden' name='param[]' value='{$param}' /></td>";
                     echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
                     echo '<td>'.check_match_drop_down('join[]'). '</td>';
-                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']()."</td>";
+                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value[]')."</td>";
                     echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
                 }
             }

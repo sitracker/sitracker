@@ -1336,6 +1336,7 @@ $strPercentageEscalated = 'Percentage Escalated';
 $strPerformSearches = 'Perform Searches';
 $strPeriod = 'Period';
 $strPeriodStarted = 'Period Started';
+$strPersonalTemplates = 'Personal Templates';
 $strPendingReassignments = 'Pending Re-Assignments';
 $strPermission = 'Permission';
 $strPermissionDenied = 'Permission Denied';
