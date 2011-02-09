@@ -314,7 +314,7 @@ switch ($action)
         if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
         if (is_array($trigger_types[$triggertype]['params']))
         {
-            echo '<p align="left">{$strNotifyWhen} ';
+            echo "<p align='left'>{$strNotifyWhen} ";
             echo "<select name='conditions'><option value='all'>{$strAllConditionsMet}</option>";
             echo "<option value='any'>{$strAnyConditionMet}</option></select></p>";
             echo "<table>";

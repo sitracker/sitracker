@@ -495,7 +495,7 @@ function user_holiday_resetdate($userid)
  * @param string $attribs. Extra attributes for the select control
  * @return string HTML
  */
-function user_drop_down($name, $id = 0, $accepting = TRUE, $exclude = FALSE, $attribs= '', $return = FALSE)
+function user_drop_down($name='', $id = 0, $accepting = TRUE, $exclude = FALSE, $attribs= '', $return = true)
 {
     // INL 1Jul03 Now only shows users with status > 0 (ie current users)
     // INL 2Nov04 Optional accepting field, to hide the status 'Not Accepting'
