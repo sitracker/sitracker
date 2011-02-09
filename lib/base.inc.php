@@ -71,6 +71,7 @@ define ('NORMAL_NOTICE_TYPE', 0);
 define ('WARNING_NOTICE_TYPE', 1);
 define ('CRITICAL_NOTICE_TYPE', 2);
 define ('TRIGGER_NOTICE_TYPE', 3);
+define ('USER_DEFINED_NOTICE_TYPE', 4);
 
 // Incident statuses
 define ("STATUS_ACTIVE",1);

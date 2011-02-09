@@ -470,7 +470,7 @@ elseif ($action == "update")
             $sql .= "WHERE id='$id' LIMIT 1";
             break;
         case 'notice':
-            $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='{$name}', description='{$description}', type='', ";
+            $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='{$name}', description='{$description}', type='".USER_DEFINED_NOTICE_TYPE."', ";
             $sql .= "linktext='{$linktext}', link='{$link}', durability='{$durability}', ";
             $sql .= "text='{$bodytext}' ";
             $sql .= "WHERE id='{$id}' LIMIT 1";
