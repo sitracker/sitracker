@@ -122,7 +122,7 @@ if ($action == "showform" OR $action == '')
 
     clear_form_data('new_site');
 }
-elseif ($action == "add")
+elseif ($action == "new")
 {
     $name = cleanvar($_POST['name']);
     $department = cleanvar($_POST['department']);

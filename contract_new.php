@@ -202,7 +202,7 @@ if ($action == "showform" OR $action == '')
 
     clear_form_data('new_contract');
 }
-elseif ($action == "add")
+elseif ($action == 'new')
 {
     // External Variables
     $site = clean_int($_REQUEST['site']);

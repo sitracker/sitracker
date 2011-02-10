@@ -63,14 +63,14 @@ if (empty($action) OR $action == "showform")
     }
     echo "</table>";
 
-    echo "<input type='hidden' name='action' value='add' />";
+    echo "<input type='hidden' name='action' value='new' />";
     echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
 
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($action == "add")
+elseif ($action == "new")
 {
     $tag = clean_dbstring($_REQUEST['tag']);
 
