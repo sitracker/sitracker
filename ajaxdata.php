@@ -325,8 +325,8 @@ switch ($action)
                 if (is_array($ttvararray['{'.$param.'}']) AND
                     is_numeric(key($ttvararray['{'.$param.'}'])))
                 {
-                	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
-                	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
+                    //echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
+                    $ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
                 }
 
                 if (isset($ttvararray['{'.$param.'}']['checkreplace']))

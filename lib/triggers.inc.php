@@ -1231,13 +1231,14 @@ function trigger_action_to_html($trigger)
         }
         if ($t_array['parameters'] != '')
         {
+            // FIXME i18n
             $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
         }
         $html .= "</span>";
     }
 
     $html .=  "<div class='triggeractions'>";
-    //FIXME 4.0, add edit back in
+    //FIXME 3.90, add edit back in
     //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
     $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
@@ -1268,6 +1269,7 @@ function template_description($name, $type)
  * Provides a drop down list of matching functions
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
+ * @todo FIXME 3.90 i18n
  */
 function check_match_drop_down($id = '')
 {

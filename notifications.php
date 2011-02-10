@@ -17,7 +17,7 @@ $title = $strNotifications;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='pageintro'>";
-//FIXME wording
+// FIXME v3.90 wording
 echo "<p align='center'>You can be notified in different ways when things occur, your current notifications are listed below.";
 echo "<br /><br /><a href='action_details.php'>";
 echo icon('add', 16). " {$strNewNotification}</a></p>";
