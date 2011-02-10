@@ -1240,7 +1240,7 @@ function trigger_action_to_html($trigger)
     $html .=  "<div class='triggeractions'>";
     //FIXME 3.90, add edit back in
     //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
-    $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
+    $html .= "<a href='triggers.php?action=delete&amp;id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
 }
 
