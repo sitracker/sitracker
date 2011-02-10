@@ -734,7 +734,7 @@ function saction_CheckTasksDue()
         {
             while ($row = mysql_fetch_object($result))
             {
-                $t = new triggerEvent('TRIGGER_TASK_DUE', array('taskid' => $row->id))s;
+                $t = new triggerEvent('TRIGGER_TASK_DUE', array('taskid' => $row->id));
             }
         }
     }
