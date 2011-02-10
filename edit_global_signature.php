@@ -20,10 +20,10 @@
 function get_globalsignature($sig_id)
 {
     global $dbEmailSig;
-    $sql = "SELECT signature FROM `{$dbEmailSig}` WHERE id = $sig_id";
-    $result=mysql_query($sql);
+    $sql = "SELECT signature FROM `{$dbEmailSig}` WHERE id = {$sig_id}";
+    $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    list($signature)=mysql_fetch_row($result);
+    list($signature) = mysql_fetch_row($result);
     mysql_free_result($result);
     return $signature;
 }
@@ -31,7 +31,7 @@ function get_globalsignature($sig_id)
 function delete_signature($sig_id)
 {
     global $dbEmailSig;
-    $sql = "DELETE FROM `{$dbEmailSig}` WHERE id = $sig_id";
+    $sql = "DELETE FROM `{$dbEmailSig}` WHERE id = {$sig_id}";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -72,7 +72,7 @@ if (!empty($signature))
             break;
 
         case 'edit':
-            $sql = "UPDATE `{$dbEmailSig}` SET signature = '$signature' WHERE id = ".$sig_id;
+            $sql = "UPDATE `{$dbEmailSig}` SET signature = '$signature' WHERE id = {$sig_id}";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -127,7 +127,7 @@ elseif (!empty($action))
 
             echo "<td align='right' valign='top' class='shade1'><strong>{$strGlobalSignature}</strong>:<br />\n";
             echo "{$strGlobalSignatureDescription}<br /><br />";
-            echo "$strGlobalSignatureRemember";
+            echo $strGlobalSignatureRemember;
             echo "</td>";
 
             echo "<td class='shade1'><textarea name='signature' rows='15' cols='65'></textarea></td>";
@@ -150,7 +150,7 @@ elseif (!empty($action))
             echo "<tr>";
             echo "<td align='right' valign='top' class='shade1'><strong>{$strGlobalSignature}</strong>:<br />\n";
             echo "{$strGlobalSignatureDescription}<br /><br />";
-            echo "$strGlobalSignatureRemember";
+            echo $strGlobalSignatureRemember;
             echo "</td>";
             echo "<td class='shade1'><textarea name='signature' rows='15' cols='65'>".get_globalsignature($sig_id)."</textarea></td>";
             echo "</tr>";
