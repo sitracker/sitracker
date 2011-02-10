@@ -1139,7 +1139,7 @@ function triggers_to_html($user_id, $trigger_id = '')
         }
         else
         {
-            trigger_error('Problem getting trigger details');
+            trigger_error("Problem getting trigger details for {$trigger}");
         }
     }
     $html .= "</table>";
