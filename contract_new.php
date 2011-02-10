@@ -383,7 +383,7 @@ elseif ($action == "add")
         else
         {
             // show success message
-            trigger('TRIGGER_NEW_CONTRACT', array('contractid' => $maintid, 'userid' => $sit[2]));
+            $t = new TriggerEvent('TRIGGER_NEW_CONTRACT', array('contractid' => $maintid, 'userid' => $sit[2]));
             html_redirect("contract_details.php?id=$maintid");
         }
         clear_form_data('new_contract');

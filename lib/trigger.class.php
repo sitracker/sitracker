@@ -24,7 +24,7 @@ class TriggerEvent {
     function TriggerEvent($trigger_type, $param_array = '')
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types, $dbTriggers;
-        
+
         $trigger_type = cleanvar($trigger_type);
         // Check that this is a defined trigger
         if (!array_key_exists($trigger_type, $trigger_types))
@@ -39,16 +39,16 @@ class TriggerEvent {
         $result = mysql_query($sql);
         if (mysql_error())
         {
-            trigger_error("MySQL Query Error " . 
+            trigger_error("MySQL Query Error " .
                           mysql_error(), E_USER_WARNING);
             return FALSE;
         }
 
         while ($trigger = mysql_fetch_object($result))
         {
-            $trigger = new Trigger($trigger_type, 
-                                   $trigger->userid, $trigger->template, 
-                                   $trigger->action, $trigger->checks, 
+            $trigger = new Trigger($trigger_type,
+                                   $trigger->userid, $trigger->template,
+                                   $trigger->action, $trigger->checks,
                                    $trigger->parameters, $param_array);
             $rtn = $trigger->fire();
         }
@@ -61,13 +61,13 @@ class TriggerEvent {
 
 class Trigger extends SitEntity {
     function retrieveDetails(){}
-    
+
     function add()
     {
         global $dbTriggers;
         $exists = $this->check_exists($this->trigger_type,
-                                      $this->userid, $this->template, 
-                                      $this->action, $this->checks, 
+                                      $this->userid, $this->template,
+                                      $this->action, $this->checks,
                                       $this->parameters);
 
         if (!$exists)
@@ -78,7 +78,7 @@ class Trigger extends SitEntity {
             $sql .= "'{$this->action}', '{$this->template}', ";
             $sql .= "'{$this->parameters}', '{$this->checks}')";
             mysql_query($sql);
-            if (mysql_error()) 
+            if (mysql_error())
             {
                 $this->error_text .= trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 return FALSE;
@@ -89,7 +89,7 @@ class Trigger extends SitEntity {
         {
             return FALSE;
         }
-        
+
     }
     function edit()
     {
@@ -105,7 +105,7 @@ class Trigger extends SitEntity {
             $sql .= "checks = '{$this->checks}' ";
             $sql .= "WHERE id = {$this->trigger_id}";
             mysql_query($sql);
-            if (mysql_error()) 
+            if (mysql_error())
             {
                 $this->error_text .= trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 return FALSE;
@@ -119,24 +119,24 @@ class Trigger extends SitEntity {
         }
     }
     function getSOAPArray(){}
-    
+
     // Begin getters and setters
-    public function getTrigger_type() { return $this->trigger_type; } 
-    public function getParam_array() { return $this->param_array; } 
-    public function getUser_id() { return $this->user_id; } 
-    public function getTemplate() { return $this->template; } 
-    public function getAction() { return $this->action; } 
-    public function getChecks() { return $this->checks; } 
-    public function getParameters() { return $this->parameters; } 
-    public function getError_text() { return $this->error_text; } 
-    public function setTrigger_type($x) { $this->trigger_type = $x; } 
-    public function setParam_array($x) { $this->param_array = $x; } 
-    public function setUser_id($x) { $this->user_id = $x; } 
-    public function setTemplate($x) { $this->template = $x; } 
-    public function setAction($x) { $this->action = $x; } 
-    public function setChecks($x) { $this->checks = $x; } 
-    public function setParameters($x) { $this->parameters = $x; } 
-    public function setError_text($x) { $this->error_text = $x; } 
+    public function getTrigger_type() { return $this->trigger_type; }
+    public function getParam_array() { return $this->param_array; }
+    public function getUser_id() { return $this->user_id; }
+    public function getTemplate() { return $this->template; }
+    public function getAction() { return $this->action; }
+    public function getChecks() { return $this->checks; }
+    public function getParameters() { return $this->parameters; }
+    public function getError_text() { return $this->error_text; }
+    public function setTrigger_type($x) { $this->trigger_type = $x; }
+    public function setParam_array($x) { $this->param_array = $x; }
+    public function setUser_id($x) { $this->user_id = $x; }
+    public function setTemplate($x) { $this->template = $x; }
+    public function setAction($x) { $this->action = $x; }
+    public function setChecks($x) { $this->checks = $x; }
+    public function setParameters($x) { $this->parameters = $x; }
+    public function setError_text($x) { $this->error_text = $x; }
     // End getters and setters
 
     /**
@@ -176,7 +176,7 @@ class Trigger extends SitEntity {
     private $template;
 
     /**
-     * The action the trigger uses, this is arbitrary as actions can be 
+     * The action the trigger uses, this is arbitrary as actions can be
      * provided by plugins etc
      * @var string
      */
@@ -193,7 +193,7 @@ class Trigger extends SitEntity {
      * @var string
      */
     private $parameters;
-    
+
     /**
      * If the trigger fails, put the errors here
      */
@@ -202,7 +202,7 @@ class Trigger extends SitEntity {
     /**
      * Constructs a new Trigger object
      */
-    function __construct($trigger_type, $user_id, $template, $action, $checks = '', 
+    function __construct($trigger_type, $user_id, $template, $action, $checks = '',
                      $parameters = '', $param_array = array(), $id = -1)
     {
         $this->trigger_type = cleanvar($trigger_type);
@@ -237,8 +237,8 @@ class Trigger extends SitEntity {
             return FALSE;
         }
 
-        $trigger = mysql_fetch_object($result);        
-        $t = new Trigger($trigger->triggerid, $trigger->userid, 
+        $trigger = mysql_fetch_object($result);
+        $t = new Trigger($trigger->triggerid, $trigger->userid,
                          $trigger->template, $trigger->action, $trigger->checks,
                          $trigger->parameters, '', $id);
         return $t;
@@ -269,7 +269,7 @@ class Trigger extends SitEntity {
         	}
         	$this->param_array['checks'] = '';
         }
-        
+
         //if we have any params from the actual trigger, append to user params
         if (!empty($this->parameters))
         {
@@ -295,22 +295,22 @@ class Trigger extends SitEntity {
 
             if (!$eresult)
             {
-                trigger_error("Error in trigger rule for 
-                                {$this->trigger_type}, check your 
-                                <a href='triggers.php'>trigger rules</a>", 
+                trigger_error("Error in trigger rule for
+                                {$this->trigger_type}, check your
+                                <a href='triggers.php'>trigger rules</a>",
                                 E_USER_WARNING);
             }
-            
+
             // if we fail, we jump to the next trigger
             if ($value === FALSE)
             {
                 return;
-            }                           
+            }
         }
-        
+
         $return = $this->trigger_action($this->action,
                                         $this->template);
-        
+
         return $return;
     }
 
@@ -361,10 +361,10 @@ class Trigger extends SitEntity {
                                     "Trigger Fired ({$jtext})",
                                     CFG_JOURNAL_TRIGGERS, $this->user_id);
                 break;
-                
+
             default:
-            	plugin_do('trigger_actions_defined', 
-            	          array('paramarray' => $paramarray, 
+            	plugin_do('trigger_actions_defined',
+            	          array('paramarray' => $paramarray,
             	                'action' => $action));
                 break;
         }
@@ -479,7 +479,7 @@ class Trigger extends SitEntity {
             $refid = cleanvar(trigger_replace_specials($this->trigger_type, $notice->refid, $this->param_array));
             $durability = $notice->durability;
             debug_log("notice: $notice_text", TRUE);
-            
+
             /** Not sure this makes sense KH 10/04/10
             if ($user_id == 0 AND $this->param_array['userid'] > 0)
             {
@@ -567,9 +567,9 @@ class Trigger extends SitEntity {
 
     public function debug()
     {
-        $text = 'Variables: Trigger($trigger_type, $user_id, $template, $action, 
+        $text = 'Variables: Trigger($trigger_type, $user_id, $template, $action,
                          $checks, $parameters, $param_array, $id)<br />';
-        $text .= "Values: Trigger({$this->trigger_type}, {$this->user_id}, {$this->template}, {$this->action}, 
+        $text .= "Values: Trigger({$this->trigger_type}, {$this->user_id}, {$this->template}, {$this->action},
                           {$this->checks}, {$this->parameters}, {$this->param_array}, {$this->id})<br />";
         return $text;
     }

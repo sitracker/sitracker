@@ -274,7 +274,7 @@ else
         else
         {
             setup_user_triggers($newuserid);
-            trigger('TRIGGER_NEW_USER', array('userid' => $newuserid));
+            $t = new TriggerEvent('TRIGGER_NEW_USER', array('userid' => $newuserid));
             html_redirect("manage_users.php#userid{$newuserid}");
         }
         clear_form_data('new_user');

@@ -177,7 +177,7 @@ elseif ($action == "add")
             clear_form_data('new_site');
             clear_form_errors('new_site');
 
-            trigger('TRIGGER_NEW_SITE', array('siteid' => $id, 'userid' => $sit[2]));
+            $t = new TriggerEvent('TRIGGER_NEW_SITE', array('siteid' => $id, 'userid' => $sit[2]));
             html_redirect("site_details.php?id={$id}");
         }
     }

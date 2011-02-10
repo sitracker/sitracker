@@ -839,9 +839,9 @@ function email_templates($name, $triggertype='system', $selected = '')
     $html .= "<select id='{$name}' name='{$name}'>";
 
     foreach (array($triggertype, 'usertemplate') as $type)
-    {   
+    {
         if ($type == 'usertemplate')
-        { 
+        {
             $html .= "<option disabled='disabled'></option><option disabled='disabled'>=== {$strPersonalTemplates} ===</option>";
         }
 
@@ -865,7 +865,7 @@ function email_templates($name, $triggertype='system', $selected = '')
         {
             $html .= "<option disabled='disabled'>{$strNoResults}</option>";
         }
-        
+
     }
     $html .= "</select>\n";
     return $html;
@@ -1129,17 +1129,13 @@ function triggers_to_html($user_id, $trigger_id = '')
     foreach ($trigger_types AS $trigger => $description)
     {
         $trigger_html = trigger_to_html($trigger, $user_id);
-        if ($trigger_html != FALSE)
+        if (!empty($trigger_html))
         {
             $shade = ($i % 2) + 1;
             $html .= "<tr class='shade{$shade}'><td>".icon('trigger', 16);
             $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
             $html .= $trigger_html;
             $html .= "</div></td></tr>";
-        }
-        else
-        {
-            trigger_error('Problem getting trigger details');
         }
     }
     $html .= "</table>";
@@ -1149,17 +1145,26 @@ function triggers_to_html($user_id, $trigger_id = '')
 function trigger_to_html($trigger, $user_id)
 {
     global $dbTriggers;
+    $html = '';
     $sql = "SELECT id FROM `{$dbTriggers}` ";
     $sql .= "WHERE userid = '{$user_id}' ";
     $sql .= "AND triggerid = '{$trigger}'";
     $result = mysql_query($sql);
-    if (mysql_num_rows($result) == 0) return FALSE;
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($row = mysql_fetch_object($result))
+    if (mysql_error())
     {
-        $t = Trigger::fromID($row->id);
-        $html .= trigger_action_to_html($t);
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        trigger_error("Problem getting trigger details for {$trigger}");
+        return FALSE;
     }
+    if (mysql_num_rows($result) >= 0)
+    {
+        while ($row = mysql_fetch_object($result))
+        {
+            $t = Trigger::fromID($row->id);
+            $html .= trigger_action_to_html($t);
+        }
+    }
+
     return $html;
 }
 
@@ -1226,13 +1231,14 @@ function trigger_action_to_html($trigger)
         }
         if ($t_array['parameters'] != '')
         {
+            // FIXME i18n
             $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
         }
         $html .= "</span>";
     }
 
     $html .=  "<div class='triggeractions'>";
-    //FIXME 4.0, add edit back in
+    //FIXME 3.90, add edit back in
     //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
     $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
@@ -1263,6 +1269,7 @@ function template_description($name, $type)
  * Provides a drop down list of matching functions
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
+ * @todo FIXME 3.90 i18n
  */
 function check_match_drop_down($id = '')
 {

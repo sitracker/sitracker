@@ -570,7 +570,7 @@ else
     $timetonextaction = cleanvar($_POST['timetonextaction']);
     $date = cleanvar($_POST['date']);
     $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-    $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);  
+    $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
     $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
     $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
     $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
@@ -724,7 +724,7 @@ else
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     $updateid = mysql_insert_id();
-    trigger('TRIGGER_INCIDENT_UPDATED_INTERNAL', array('incidentid' => $id, 'userid' => $sit[2]));
+    $t = new TriggerEvent('TRIGGER_INCIDENT_UPDATED_INTERNAL', array('incidentid' => $id, 'userid' => $sit[2]));
 
     //upload file, here because we need updateid
     if ($_FILES['attachment']['name'] != '')
