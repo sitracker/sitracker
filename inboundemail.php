@@ -444,7 +444,7 @@ if ($emails > 0)
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $holdingemailid = mysql_insert_id();
 
-            trigger('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
+            $t = new TriggerEvent('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
 
         }
         else
@@ -527,7 +527,7 @@ if ($emails > 0)
                 //incident ID of 0 here, but apparently we do :/
                 if (FALSE !== incident_status($incidentid))
                 {
-                    trigger('TRIGGER_INCIDENT_UPDATED_EXTERNAL', array('incidentid' => $incidentid));
+                    $t = new TriggerEvent('TRIGGER_INCIDENT_UPDATED_EXTERNAL', array('incidentid' => $incidentid));
                 }
             }
             else

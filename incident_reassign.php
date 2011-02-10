@@ -100,7 +100,7 @@ switch ($action)
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         if (isset($triggeruserid))
         {
-            trigger('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $triggeruserid, 'incidentid' => $incidentid));
+            $t = new TriggerEvent('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $triggeruserid, 'incidentid' => $incidentid));
         }
 //         if ($CONFIG['debug'])
 //         {
@@ -114,7 +114,7 @@ switch ($action)
         // add update
         if (strtolower(user_accepting($userid)) != "yes")
         {
-            $bodytext = "({$strIncidentAssignmentWasForcedUserNotAccept})<hr>\n" . $bodytext;   
+            $bodytext = "({$strIncidentAssignmentWasForcedUserNotAccept})<hr>\n" . $bodytext;
         }
 
         if ($temporary == 'yes') $assigntype = 'tempassigning';

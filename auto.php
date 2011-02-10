@@ -282,9 +282,9 @@ function saction_TimeCalc()
                 {
                     $timetil = $times['next_sla_time']-$newSlaTime;
 
-                    trigger('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident->id,
-                                                                  'nextslatime' => $times->next_sla_time,
-                                                                  'nextsla' => $NextslaName));
+                    $t = new TriggerEvent('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident->id,
+                    'nextslatime' => $times->next_sla_time,
+                    'nextsla' => $NextslaName));
 
                     $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident->id}'";
                     mysql_query($sql);
@@ -410,7 +410,7 @@ function saction_SetUserStatus()
 }
 
 
-/** 
+/**
  * Chase / Remind customers
  * @author Paul Heaney
  * @note Moved from htdocs/auto/chase_customer.php by INL for 3.40
@@ -568,7 +568,7 @@ function saction_ChaseCustomers()
 }
 
 
-/** 
+/**
  * Check the holding queue for waiting email
  * @author Ivan Lucas
  */
@@ -734,7 +734,7 @@ function saction_CheckTasksDue()
         {
             while ($row = mysql_fetch_object($result))
             {
-                trigger('TRIGGER_TASK_DUE', array('taskid' => $row->id));
+                $t = new triggerEvent('TRIGGER_TASK_DUE', array('taskid' => $row->id))s;
             }
         }
     }
