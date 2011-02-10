@@ -50,7 +50,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
         // Find out what kind of link we are to make
-        $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE id='$linktypeid'";
+        $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE id='{$linktypeid}'";
         $result = mysql_query($sql);
         while ($linktype = mysql_fetch_object($result))
         {
