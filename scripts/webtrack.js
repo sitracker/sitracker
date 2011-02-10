@@ -1040,11 +1040,23 @@ function ldap_browse_select_container(ldap_base, field)
 					var response = transport.responseText || "no response text";
 		            if (transport.responseText)
 		            {
-		            	var html = '<table>';
+		            	var html = 'Current Level: '
+		            		
+		            	if (ldap_base.length > 0) html += ldap_base;
+		            	else html += '[root]';
+		            	
+		            	html += '<table>';
 	            		
 	            		if (ldap_base.length > 0)
             			{
-	            			parent = ldap_base.substring(ldap_base.indexOf(',')+1);
+	            			if (ldap_base.indexOf(',') == -1)
+            				{
+	            				parent = '';
+            				}
+	            			else
+            				{
+	            				parent = ldap_base.substring(ldap_base.indexOf(',')+1);
+            				}
 	            			
 	            			html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
 	            			html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";

@@ -785,8 +785,15 @@ function ldapNamingContexts($ldap_host, $ldap_port, $ldap_type, $ldap_protocol, 
         {
             for ($i = 0; $i < $entries[0]['namingcontexts']['count']; $i++)
             {
-                if (empty($entries[0]['namingcontexts'][$i])) $entries[0]['namingcontexts'][$i] = '[root]';
-                $return[] = array('dn' => $entries[0]['namingcontexts'][$i], 'cn' => $entries[0]['namingcontexts'][$i], 'type' => 'container');
+                if (empty($entries[0]['namingcontexts'][$i]))
+                {
+                    $return = ldapGroupBrowse('[root]', $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass);
+                    break;
+                }
+                else
+                {
+                    $return[] = array('dn' => $entries[0]['namingcontexts'][$i], 'cn' => $entries[0]['namingcontexts'][$i], 'type' => 'container');
+                }
             }
         }
     }

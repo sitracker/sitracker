@@ -33,23 +33,10 @@ $ldap_security = cleanvar($_REQUEST['ldap_security']);
 $ldap_bind_user = cleanvar($_REQUEST['ldap_bind_user']);
 $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
 
-// $entries = ldapGroupBrowse($base);
-
-echo "<form name='ldap_browse' action='{$_SERVER['PHP_SELF']}'>";
-foreach (array('ldap_type', 'ldap_host', 'ldap_port', 'ldap_protocol', 'ldap_security', 'ldap_bind_user', 'ldap_bind_pass', 'base', 'field') AS $i)
-{
-    echo "<input type='hidden' id='{$i}' name='{$i}' value='{$$i}' />\n";        
-} 
-echo "</form>";
-
-echo "Current Level: {$base}<br /><br />";
-
 ?>
     <script type='text/javascript'>
     //<![CDATA[
-
         ldap_browse_select_container('<?php echo $base ?>', '<?php echo $field ?>');        
-    
     //]]>
     </script>
 <?php
