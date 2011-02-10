@@ -1880,6 +1880,7 @@ $strTuesdayAbbr = 'Tu';
 $strType = 'Type';
 
 $strURLTitle = 'URL Title';
+$strUp = 'Up';
 $strUpgrade = 'Upgrade';
 $strUpdate = 'Update';
 $strUpdateFailed = 'Update Failed';
