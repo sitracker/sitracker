@@ -26,7 +26,7 @@ $product = clean_int($_REQUEST['product']);
 $information = clean_dbstring($_POST['information']);
 $moreinformation = clean_dbstring($_POST['moreinformation']);
 
-$title = $strNewProductInformation;
+$title = $strAddProductInformation;
 
 // Show add product information form
 if (empty($_REQUEST['submit']))
@@ -40,7 +40,7 @@ if (empty($_REQUEST['submit']))
         $product = $_SESSION['formdata']['product_info_new']['product'];
     }
 
-    echo "<h2>".icon('info', 32)." {$strNewProductQuestion}</h2>";
+    echo "<h2>".icon('info', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strProduct}</th><td>".product_drop_down("product", $product, TRUE)." <span class='required'>{$strRequired}</span></td></tr>";
