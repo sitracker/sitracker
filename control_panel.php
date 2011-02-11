@@ -32,23 +32,23 @@ echo "<tr><td><a href='edit_user_skills.php'>{$strMySkills}</a></td></tr>";
 echo "<tr><td><a href='edit_backup_users.php'>{$strMySubstitutes}</a></td></tr>";
 echo "<tr><td><a href='holidays.php'>{$strMyHolidays}</a></td></tr>";
 echo "</tbody>\n";
-if (user_permission($sit[2],42)) // Review/Delete Incident Updates
+if (user_permission($sit[2], 42)) // Review/Delete Incident Updates
 {
     echo "<thead><tr><th>{$strTechnicalSupportAdmin}</th></tr></thead>";
     echo "<tbody><tr><td><a href='holding_queue.php'>{$strHoldingQueue}</a></td></tr></tbody>";
 }
 
-if (user_permission($sit[2],44)) // FTP Publishing
+if (user_permission($sit[2], 44)) // FTP Publishing
 {
     echo "<thead><tr><th>{$strFiles}</th></tr></thead>";
     echo "<tbody><tr><td><a href='ftp_list_files.php'>{$strManageFTPFiles}</a></td></tr></tbody>";
 }
-if (user_permission($sit[2],50)) // Approve holidays
+if (user_permission($sit[2], 50)) // Approve holidays
 {
     echo "<thead><tr><th>{$strManageUsers}</th></tr></thead>";
     echo "<tbody><tr><td><a href='holiday_request.php?user=all&mode=approval'>{$strApproveHolidays}</a></td></tr></tbody>";
 }
-if (user_permission($sit[2],22)) // Administrate
+if (user_permission($sit[2], 22)) // Administrate
 {
     echo "<thead><tr><th>{$strAdministratorsOnly}</th></tr></thead>";
     echo "<tbody>";

@@ -206,7 +206,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->tag}' $strIsSelected>{$obj->tag}</option>";
+            echo "<option value='{$obj->tag}' {$strIsSelected}>{$obj->tag}</option>";
         }
         break;
     case 'products':
@@ -220,7 +220,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
+            echo "<option value='{$obj->id}' {$strIsSelected}>{$obj->name}</option>";
         }
         break;
     case 'skills':
@@ -234,7 +234,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
+            echo "<option value='{$obj->id}' {$strIsSelected}>{$obj->name}</option>";
         }
         break;
     case 'storedashboard':
@@ -244,7 +244,7 @@ switch ($action)
         if ($id == $_SESSION['userid'])
         {
             //check you're changing your own
-            $sql = "UPDATE `{$dbUsers}` SET dashboard = '$val' WHERE id = '$id'";
+            $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$val}' WHERE id = {$id}";
             $contactresult = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }

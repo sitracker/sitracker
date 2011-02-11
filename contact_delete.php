@@ -89,7 +89,7 @@ if (empty($process))
 
             while ($contacts = mysql_fetch_object($result))
             {
-                $site='';
+                $site = '';
                 if ($contacts->siteid != '' && $contacts->siteid != 0)
                 {
                     $site=" of ".site_name($contacts->siteid);
