@@ -45,7 +45,7 @@ if (empty($action) OR $action == 'edit')
         echo "<input type='text' name='lifetime_start' id='lifetime_start' size='10' value='";
         if ($software->lifetime_start > 1)
         {
-            echo date('Y-m-d',mysql2date($software->lifetime_start));
+            echo date('Y-m-d', mysql2date($software->lifetime_start));
         }
         echo "' /> ";
         echo date_picker('editsoftware.lifetime_start');
@@ -53,7 +53,7 @@ if (empty($action) OR $action == 'edit')
         echo "<input type='text' name='lifetime_end' id='lifetime_end' size='10' value='";
         if ($software->lifetime_end > 1)
         {
-            echo date('Y-m-d',mysql2date($software->lifetime_end));
+            echo date('Y-m-d', mysql2date($software->lifetime_end));
         }
         echo "' /> ";
         echo date_picker('editsoftware.lifetime_end');
@@ -73,7 +73,7 @@ elseif ($action == 'delete')
 {
     // Delete
     // First check there are no incidents using this software
-    $sql = "SELECT count(id) FROM `{$dbIncidents}` WHERE softwareid='{$id}'";
+    $sql = "SELECT count(id) FROM `{$dbIncidents}` WHERE softwareid={$id}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($countincidents) = mysql_fetch_row($result);
@@ -90,11 +90,11 @@ elseif ($action == 'delete')
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-        $sql = "DELETE FROM `{$dbSoftwareProducts}` WHERE softwareid='{$id}'";
+        $sql = "DELETE FROM `{$dbSoftwareProducts}` WHERE softwareid={$id}";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-        $sql = "DELETE FROM `{$dbUserSoftware}` WHERE softwareid='{$id}'";
+        $sql = "DELETE FROM `{$dbUserSoftware}` WHERE softwareid={$id}";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
@@ -108,9 +108,9 @@ else
     $name = cleanvar($_REQUEST['name']);
     $vendor = clean_int($_REQUEST['vendor']);
     $tags = cleanvar($_REQUEST['tags']);
-    if (!empty($_REQUEST['lifetime_start'])) $lifetime_start = date('Y-m-d',strtotime($_REQUEST['lifetime_start']));
+    if (!empty($_REQUEST['lifetime_start'])) $lifetime_start = date('Y-m-d', strtotime($_REQUEST['lifetime_start']));
     else $lifetime_start = '';
-    if (!empty($_REQUEST['lifetime_end'])) $lifetime_end = date('Y-m-d',strtotime($_REQUEST['lifetime_end']));
+    if (!empty($_REQUEST['lifetime_end'])) $lifetime_end = date('Y-m-d', strtotime($_REQUEST['lifetime_end']));
     else $lifetime_end = '';
 
     $errors = 0;

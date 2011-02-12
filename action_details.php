@@ -8,6 +8,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
+// FIXME i18n whole page
+
 $permission = 71;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -277,7 +279,7 @@ else
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     if ($trigger_mode == 'system')
     {
-	echo "<h3>User</h3>";
+	    echo "<h3>User</h3>";
         echo "Which action will the action apply to: 'all' will add an entry for ALL users, 'system' will add an action without a user, useful for e.g. automateid emails to customers.</p>";
     }
     echo "<h3>Action</h3>";

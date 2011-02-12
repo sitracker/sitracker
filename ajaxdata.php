@@ -206,7 +206,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->tag}' $strIsSelected>{$obj->tag}</option>";
+            echo "<option value='{$obj->tag}' {$strIsSelected}>{$obj->tag}</option>";
         }
         break;
     case 'products':
@@ -220,7 +220,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
+            echo "<option value='{$obj->id}' {$strIsSelected}>{$obj->name}</option>";
         }
         break;
     case 'skills':
@@ -234,7 +234,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
+            echo "<option value='{$obj->id}' {$strIsSelected}>{$obj->name}</option>";
         }
         break;
     case 'storedashboard':
@@ -244,7 +244,7 @@ switch ($action)
         if ($id == $_SESSION['userid'])
         {
             //check you're changing your own
-            $sql = "UPDATE `{$dbUsers}` SET dashboard = '$val' WHERE id = '$id'";
+            $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$val}' WHERE id = {$id}";
             $contactresult = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
@@ -378,6 +378,18 @@ switch ($action)
         {
             echo "NOPERMISSION";
         }
+        break;
+    case 'ldap_browse_groups':
+        $base = cleanvar($_REQUEST['base']);
+        $field = cleanvar($_REQUEST['field']);
+        $ldap_type = cleanvar($_REQUEST['ldap_type']);
+        $ldap_host = cleanvar($_REQUEST['ldap_host']);
+        $ldap_port = clean_int($_REQUEST['ldap_port']);
+        $ldap_protocol = clean_int($_REQUEST['ldap_protocol']);
+        $ldap_security = cleanvar($_REQUEST['ldap_security']);
+        $ldap_bind_user = cleanvar($_REQUEST['ldap_bind_user']);
+        $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
+        echo json_encode(ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass));
         break;
     default :
         plugin_do('ajaxdata_new_action', array('action' => $action));

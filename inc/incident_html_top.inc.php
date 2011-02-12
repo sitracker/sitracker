@@ -195,7 +195,7 @@ if ($_REQUEST['win'] == 'incomingview')
 }
 else
 {
-    echo "<h1 class='$class'>{$title}: {$incidentid} - {$incident->title}</h1>";
+    echo "<h1 class='{$class}'>{$title}: {$incidentid} - {$incident->title}</h1>";
 }
 
 echo "<div id='navmenu'>";
@@ -208,7 +208,7 @@ if ($menu != 'hide')
                 WHERE ti.id = '{$id}'
                 AND ti.updateid = u.id";
         $insresult = mysql_query($insql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($insresult) > 0)
         {
             $inupdate = mysql_fetch_object($insresult);

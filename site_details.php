@@ -92,7 +92,9 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strWebsite}:</th><td>";
     if (!empty($siteobj->websiteurl))
     {
-        echo "<a href=\"{$siteobj->websiteurl}\">{$siteobj->websiteurl}</a>";
+        if (preg_match('/^http|^https/', $siteobj->websiteurl)) $prefix = '';
+        else $prefix = 'http://'; 
+        echo "<a href=\"{$prefix}{$siteobj->websiteurl}\">{$siteobj->websiteurl}</a>";
     }
 
     echo "</td></tr>";

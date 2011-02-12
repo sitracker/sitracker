@@ -36,7 +36,7 @@ if ($action == 'save')
     replace_tags(TAG_PRODUCT, $productid, $tags);
 
     // update database
-    $sql = "UPDATE `{$dbProducts}` SET vendorid='$vendor', name='$name', description='$description' WHERE id='$productid' LIMIT 1 ";
+    $sql = "UPDATE `{$dbProducts}` SET vendorid='{$vendor}', name='{$name}', description='{$description}' WHERE id='{$productid}' LIMIT 1 ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -46,7 +46,7 @@ if ($action == 'save')
     }
     else
     {
-        journal(CFG_LOGGING_NORMAL, 'Product Edited', "Product $productid was edited", CFG_JOURNAL_PRODUCTS, $productid);
+        journal(CFG_LOGGING_NORMAL, 'Product Edited', "Product {$productid} was edited", CFG_JOURNAL_PRODUCTS, $productid);
         html_redirect("products.php");
     }
 }
@@ -61,7 +61,7 @@ else
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' >";
     echo "<table align='center' class='vertical'>";
 
-    $sql = "SELECT * FROM `{$dbProducts}` WHERE id='$id' ";
+    $sql = "SELECT * FROM `{$dbProducts}` WHERE id={$id} ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error: ".mysql_error(), E_USER_WARNING);
 
@@ -82,7 +82,7 @@ else
     echo "<tr><th>{$strTags}:</th>";
     echo "<td><textarea rows='2' cols='30' name='tags'>".list_tags($id, TAG_PRODUCT, false)."</textarea></td></tr>\n";
     echo "</table>";
-    echo "<input type='hidden' name='productid' value='$id' />";
+    echo "<input type='hidden' name='productid' value='{$id}' />";
     echo "<input type='hidden' name='action' value='save' />";
     echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
     echo "</form>";
