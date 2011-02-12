@@ -66,4 +66,6 @@ else
         setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
     }
 }
+
+require_once (APPLICATION_LIBPATH . 'trigger.class.php');
 ?>
