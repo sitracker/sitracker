@@ -33,6 +33,8 @@ $ldap_security = cleanvar($_REQUEST['ldap_security']);
 $ldap_bind_user = cleanvar($_REQUEST['ldap_bind_user']);
 $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
 
+echo "<div id='ldap_browse_contents' />";
+
 ?>
     <script type='text/javascript'>
     //<![CDATA[
@@ -40,8 +42,6 @@ $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
     //]]>
     </script>
 <?php
-
-echo "<div id='ldap_browse_contents' />";
 
 include (APPLICATION_INCPATH . 'minimal_footer.inc.php');
 

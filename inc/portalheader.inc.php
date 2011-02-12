@@ -149,7 +149,7 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         // This is needed so the code will unserialize
         $contractid = unserialize($_SESSION['entitlement'][0])->id;
-        echo "<li><a href='add.php";
+        echo "<li><a href='new.php";
         if ($CONFIG['portal_creates_incidents'])
         {
             echo "?contractid={$contractid}";
