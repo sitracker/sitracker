@@ -133,13 +133,13 @@ echo "<p align='center'>";
 
 if (!$CONFIG['portal_creates_incidents'])
 {
-    echo "<a href='add.php'>";
+    echo "<a href='new.php'>";
 }
 elseif (sizeof($_SESSION['entitlement']) == 1)
 {
     //only one contract
     $contractid = unserialize($_SESSION['entitlement'][0])->id;
-    echo "<a href='add.php?contractid={$contractid}'>";
+    echo "<a href='new.php?contractid={$contractid}'>";
 }
 else
 {
