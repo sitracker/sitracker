@@ -7,16 +7,11 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-// FIXME Added by ivan because triggers.class.php was never included and that file
-// Included other vital files such as incident.inc.php - INL 29Feb08
-// Caution: This include here might not be the right place. Kieran can you
-// check.
-//include('trigger.class.php');
-
-//$actionarray['ACTION_NONE'] =
-//array('name' => $strNone,
-//      'description' => $strDoNothing,
-//      );
+/** 
+ * Trigger action definitions
+ * These are the avilable actions to be taken if a trigger is fired
+ * To extend these, implement a plugin which attaches to the trigger_actions hook
+ */
 
 $actionarray['ACTION_NOTICE'] =
 array('name' => $strNotice,
@@ -44,14 +39,18 @@ array('name' => 'Journal',
 
 plugin_do('trigger_actions');
 
-// Define a list of available triggers, trigger() will need to be called in the appropriate
-// place in the code for each of these
-//
-// id - trigger name
-// description - when the trigger is fired
-// required - parameters the triggers needs to fire, 'provides' these to templates
-// params - Rules the trigger can check, mimics 'subscription'-type events
-// type - Trigger type (eg. incident, contact etc)
+/** 
+ * Trigger type definitions
+ * These are the avilable triggers that can be fired
+ * To extend these, implement a plugin which attaches to the trigger_types hook
+ *
+ * array definitions:
+ * name - trigger name, can be anything descriptive, not seen by the end-user
+ * description - when the trigger is fired, shown to the end-user
+ * required - variables that are needed and can be used for templates
+ * params - Rules the trigger can check, mimics 'subscription'-type events
+ * type - Trigger type (eg. incident, contact etc)
+ */
 
 $trigger_types['TRIGGER_CONTACT_RESET_PASSWORD'] =
 array('name' => $strContactResetPassword,
@@ -719,6 +718,12 @@ array('description' => $strSalespersonSite,
       'requires' => 'siteid'
       );
 
+$ttvararray['{slaactionplan}'] =
+array('description' => $strActionPlanSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'action_plan\');',
+      'requires' => 'incidentid'
+      );
+
 $ttvararray['{slaid}'] =
 array('description' => $strSLA,
       'replacement' => 'contract_slaid($param_array[\'contractid\']);',
@@ -726,10 +731,28 @@ array('description' => $strSLA,
       'show' => FALSE
       );
 
+$ttvararray['{slainitialresponse}'] =
+array('description' => $strInitialResponseSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'initial_response\');',
+      'requires' => 'incidentid'
+      );
+
+$ttvararray['{slaproblemdefinition}'] =
+array('description' => $strProblemDefinitionSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'prob_determ\');',
+      'requires' => 'incidentid'
+      );
+
 $ttvararray['{slatag}'] =
 array('description' => $strSLA,
       'replacement' => 'maintenance_servicelevel_tag($param_array[\'contractid\']);',
       'requires' => 'contractid'
+      );
+
+$ttvararray['{slaresolutionreprioritisation}'] =
+array('description' => $strResolutionReprioritisationSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'resolution\');',
+      'requires' => 'incidentid'
       );
 
 $ttvararray['{supportemail}'] =

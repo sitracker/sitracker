@@ -1668,4 +1668,50 @@ function external_escalation($escalated, $incid)
 
     return "no";
 }
+
+/**
+ * Get an SLA of an incident in human-readable format
+ * Written for trigger templates but can be re-used
+ * @param int $incident_id. Incident ID
+ * @param string $type. Type of the SLA, from: initial_response, prob_determ, action_plan, resolution
+ * @return string
+ */
+function incident_sla($incident_id, $type)
+{
+    global $dbServiceLevels;
+    $incident = incident($incident_id);
+    $sql = "SELECT * FROM `{$dbServiceLevels}` ";
+    $sql .= "WHERE tag = '{$incident->servicelevel}' AND priority = '{$incident->priority}'";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        return "Error getting SLA";
+    }
+    else
+    {
+        $sla_obj = mysql_fetch_object($result);
+        switch ($type)
+        {
+            case 'prob_determ':
+                $sla = $sla_obj->prob_determ_mins;
+            break;
+
+            case 'action_plan':
+                $sla = $sla_obj->action_plan_mins;
+            break;
+
+            case 'resolution':
+                $sla = $sla_obj->resolution_days * 480;
+            break;
+    
+            case 'initial_response':
+            default:
+                $sla = $sla_obj->initial_response_mins;
+            break;
+
+        }
+        return format_workday_minutes($sla);
+    }
+}
 ?>
