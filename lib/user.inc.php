@@ -61,7 +61,7 @@ function user_id($username, $password)
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
-        $userid= 0;
+        $userid = 0;
     }
     else
     {
@@ -122,7 +122,7 @@ function user_realname($id, $allowhtml = FALSE)
             }
         }
     }
-    elseif (!empty($incidents['email']))
+    elseif (!empty($incidents->email))
     {
         // TODO this code does not belong here
         // The SQL is also looking at all escalation paths not just the relevant
@@ -132,7 +132,7 @@ function user_realname($id, $allowhtml = FALSE)
         if (!empty($from))
         {
             $frommail = strtolower(substr(strstr($from[0], '@'), 1));
-            $customerdomain = strtolower(substr(strstr($incidents['email'], '@'), 1));
+            $customerdomain = strtolower(substr(strstr($incidents->email, '@'), 1));
 
             if ($frommail == $customerdomain) return $GLOBALS['strCustomer'];
 

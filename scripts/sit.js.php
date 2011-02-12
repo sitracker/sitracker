@@ -62,6 +62,8 @@ var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
 
 var strUp = \"{$strUp}\";
 
+var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
+
 var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
 var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
 
