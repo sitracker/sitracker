@@ -712,7 +712,9 @@ function ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protoc
          if ($ldap_conn != -1)
          {   
             if ($base == '[root]') $base = '';
-            $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass=domain)(objectClass={$CONFIG['ldap_grpobjecttype']}))";
+            
+            $groupObjType = constant("LDAP_{$ldap_type}_GRPOBJECTTYPE");
+            $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass=domain)(objectClass={$groupObjType}))";
             $attribs = array('dn', 'objectClass');
             debug_log("LDAP Filter: {$filter}", TRUE);
         
@@ -731,7 +733,7 @@ function ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protoc
                     $type = 'container'; 
                     for ($j = 0; $j < $entries[$i]['objectclass']['count']; $j++)
                     {
-                        if (strtolower($entries[$i]['objectclass'][$j]) == strtolower($CONFIG['ldap_grpobjecttype']))
+                        if (strtolower($entries[$i]['objectclass'][$j]) == strtolower($groupObjType))
                         {
                             $type = 'group';
                         }
