@@ -1306,23 +1306,24 @@ CREATE TABLE `{$dbTempAssigns}` (
 
 
 CREATE TABLE `{$dbTempIncoming}` (
-  `id` int(11) NOT NULL auto_increment,
-  `updateid` int(11) NOT NULL default '0',
-  `path` varchar(255) NOT NULL default '',
-  `incidentid` int(11) NOT NULL default '0',
-  `from` varchar(255) default NULL,
-  `subject` varchar(255) default NULL,
-  `emailfrom` varchar(255) default NULL,
-  `locked` smallint(6) default NULL,
-  `lockeduntil` datetime default NULL,
-  `reason` varchar(255) default NULL,
-  `reason_user` int(11) NOT NULL,
-  `reason_time` datetime NOT NULL,
-  `reason_id` tinyint(1) default 1,
-  `incident_id` int(11) default NULL,
-  `contactid` int(11) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `updateid` (`updateid`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `arrived` datetime NOT NULL,
+    `updateid` int(11) NOT NULL DEFAULT '0',
+    `path` varchar(255) NOT NULL DEFAULT '',
+    `incidentid` int(11) NOT NULL DEFAULT '0',
+    `from` varchar(255) DEFAULT NULL,
+    `subject` varchar(255) DEFAULT NULL,
+    `emailfrom` varchar(255) DEFAULT NULL,
+    `locked` smallint(6) DEFAULT NULL,
+    `lockeduntil` datetime DEFAULT NULL,
+    `reason` varchar(255) DEFAULT NULL,
+    `reason_user` int(11) NOT NULL,
+    `reason_time` datetime NOT NULL,
+    `reason_id` tinyint(1) DEFAULT '1',
+    `incident_id` int(11) DEFAULT NULL,
+    `contactid` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    KEY `updateid` (`updateid`)
 ) ENGINE=MyISAM COMMENT='Temporary store for incoming attachment paths' DEFAULT CHARACTER SET = utf8;
 
 
