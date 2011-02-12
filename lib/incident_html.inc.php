@@ -297,7 +297,7 @@ function priority_drop_down($name, $id, $max=4, $disable = FALSE)
  * @return $html string html to output
  * @author Kieran Hogg
  */
-function show_next_action($formid, $incidentid)
+function show_next_action($formid, $incidentid = '')
 {
     global $now, $strAM, $strPM;
     $html = "{$GLOBALS['strPlaceIncidentInWaitingQueue']}<br />";
