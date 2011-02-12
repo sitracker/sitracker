@@ -229,7 +229,7 @@ function saction_TimeCalc()
             $coefficient = 1;
             $NextslaName = $GLOBALS['strSLATarget'];
 
-            switch ($slaInfo['sla'])
+            switch ($slaInfo->sla)
             {
                 case 'opened':
                     $slaRequest='initial_response_mins';
