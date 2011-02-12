@@ -159,7 +159,7 @@ elseif ($step == '1')
                 while ($existing_holiday = mysql_fetch_object($result))
                 {
                     $holiday_type = holiday_type($existing_holiday->type);
-                    $holiday_legend = strtoupper(substr($holiday_type, 0, 1));
+                    $holiday_legend = strtoupper(mb_substr($holiday_type, 0, 1));
                     echo "<tr>";
                     echo "<td class='shade2' align='right'> ".ldate('l jS M y', $day)." </td>";
                     echo "<td class='shade1' align='center'>";

@@ -26,8 +26,8 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = substr(strip_tags($_POST['lang']), 0, 5);
-if (substr($language, 2, 1) != '-' OR strpos('.', $language) !== FALSE)
+$language = mb_substr(strip_tags($_POST['lang']), 0, 5);
+if (mb_substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE)
 {
     $language = 'xx-xx'; // default lang
 }
@@ -90,7 +90,7 @@ elseif (authenticate($username, $_REQUEST['password']))
         {
             if ($conf->value === 'TRUE') $conf->value = TRUE;
             if ($conf->value === 'FALSE') $conf->value = FALSE;
-            if (substr($conf->value, 0, 6) == 'array(')
+            if (mb_substr($conf->value, 0, 6) == 'array(')
             {
                     eval("\$val = {$conf->value};");
                     $conf->value = $val;

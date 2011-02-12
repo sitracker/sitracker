@@ -70,12 +70,12 @@ function populate_syslang2()
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
             $values = trim(str_replace($badchars, '', $values));
-            if (substr($values, 0, 3) == "str")
+            if (mb_substr($values, 0, 3) == "str")
             {
                 $vars = explode("=", $values);
                 $vars[0] = trim($vars[0]);
-                $vars[1] = trim(substr_replace($vars[1], "",-2));
-                $vars[1] = substr_replace($vars[1], "",0, 1);
+                $vars[1] = trim(mb_substr_replace($vars[1], "",-2));
+                $vars[1] = mb_substr_replace($vars[1], "",0, 1);
                 $SYSLANG[$vars[0]] = $vars[1];
             }
         }

@@ -47,7 +47,7 @@ $fp = fopen($CONFIG['creditsfile'], "r");
 while (!feof($fp))
 {
     $line = trim(fgets($fp, 4096));
-    if (substr($line, 0, 1) != '#' AND substr($line, 0, 1) != ' ' AND substr($line, 0, 1) != '') $credits[] = $line;
+    if (mb_substr($line, 0, 1) != '#' AND mb_substr($line, 0, 1) != ' ' AND mb_substr($line, 0, 1) != '') $credits[] = $line;
 }
 
 fclose($fp);

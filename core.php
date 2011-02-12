@@ -107,7 +107,7 @@ if ($result AND mysql_num_rows($result) > 0)
     {
         if ($conf->value === 'TRUE') $conf->value = TRUE;
         if ($conf->value === 'FALSE') $conf->value = FALSE;
-        if (substr($conf->value, 0, 6) == 'array(')
+        if (mb_substr($conf->value, 0, 6) == 'array(')
         {
                 eval("\$val = {$conf->value};");
                 $conf->value = $val;
@@ -136,7 +136,7 @@ if (empty($CONFIG['application_uriprefix']))
         {
             $scheme = 'http';
         }
-        $CONFIG['application_uriprefix'] =  "{$scheme}://{$_SERVER['HTTP_HOST']}";
+        if (isset($_SERVER['HTTP_HOST'])) $CONFIG['application_uriprefix'] =  "{$scheme}://{$_SERVER['HTTP_HOST']}";
         unset($scheme);
     }
 }

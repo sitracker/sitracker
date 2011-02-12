@@ -374,7 +374,7 @@ function getattachmenticon($filename)
 {
     global $CONFIG, $iconset;
     // Maybe sometime make this use mime typesad of file extensions
-    $ext = strtolower(substr($filename, (strlen($filename)-3) , 3));
+    $ext = mb_strtolower(mb_substr($filename, (mb_strlen($filename)-3) , 3));
     $imageurl = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/mimetypes/unknown.png";
 
     $type_image = "{$CONFIG['application_webpath']}images/icons/{$iconset}/32x32/file_image.png";

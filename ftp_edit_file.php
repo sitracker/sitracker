@@ -58,7 +58,7 @@ switch ($mode)
         }
         else
         {
-            $ftp_path=$CONFIG['ftp_path'].substr($obj->path,1).'/';
+            $ftp_path=$CONFIG['ftp_path'].mb_substr($obj->path,1).'/';
         }
 
         echo "<tr><th>{$strLocation}:</th><td><a href=\"ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$obj->filename}\"><code>";

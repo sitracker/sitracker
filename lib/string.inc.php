@@ -45,7 +45,7 @@ function leading_zero($length,$number)
  */
 function beginsWith($str, $sub)
 {
-   return ( substr( $str, 0, strlen( $sub ) ) === $sub );
+   return ( mb_substr( $str, 0, mb_strlen( $sub ) ) === $sub );
 }
 
 
@@ -57,7 +57,7 @@ function beginsWith($str, $sub)
  */
 function endsWith($str, $sub)
 {
-   return ( substr( $str, strlen( $str ) - strlen( $sub ) ) === $sub );
+   return ( mb_substr( $str, strlen( $str ) - mb_strlen( $sub ) ) === $sub );
 }
 
 
@@ -112,7 +112,7 @@ function string_find_all($haystack, $needle, $limit=0)
 function truncate_string($text, $maxlength=255, $html = TRUE)
 {
     global $strEllipsis;
-    if (strlen($text) > $maxlength)
+    if (mb_strlen($text) > $maxlength)
     {
         // Leave space for ellipses
         if ($html == TRUE)
@@ -140,53 +140,6 @@ function truncate_string($text, $maxlength=255, $html = TRUE)
 
 
 /**
- * UTF8 substr() replacement
- * @author Anon / Public Domain
- * @note see http://www.php.net/manual/en/function.substr.php#57899
- */
-function utf8_substr($str, $from, $len)
-{
-    # utf8 substr
-    # www.yeap.lv
-    return preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$from.'}'.
-                    '((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$len.'}).*#s',
-                    '$1',$str);
-}
-
-
-/**
- * UTF8 strlen() replacement
- * @author anpaza at mail dot ru / Public Domain
- * @note see http://www.php.net/manual/en/function.strlen.php#59258
- */
-function utf8_strlen($str)
-{
-    $i = 0;
-    $count = 0;
-    $len = strlen ($str);
-    while ($i < $len)
-    {
-    $chr = ord ($str[$i]);
-    $count++;
-    $i++;
-    if ($i >= $len)
-        break;
-
-    if ($chr & 0x80)
-    {
-        $chr <<= 1;
-        while ($chr & 0x80)
-        {
-        $i++;
-        $chr <<= 1;
-        }
-    }
-    }
-    return $count;
-}
-
-
-/**
  * Array filter callback to list only valid language files
  * @author Ivan Lucas
  * @param string $var. Filename to check
@@ -196,7 +149,7 @@ function utf8_strlen($str)
 function filter_i18n_filenames($var)
 {
     $validity = FALSE;
-    if (substr($var, -8) === '.inc.php') $validity = TRUE;
+    if (mb_substr($var, -8) === '.inc.php') $validity = TRUE;
     else $validity = FALSE;
 
     return $validity;
@@ -211,7 +164,7 @@ function filter_i18n_filenames($var)
  */
 function i18n_filename_to_code(&$elem, $key)
 {
-    $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -8);
+    $elem = mb_substr($elem, mb_strrpos($elem,DIRECTORY_SEPARATOR)+1, -8);
 }
 
 
@@ -244,7 +197,7 @@ function filter_css_filenames($var)
  */
 function css_filename_to_themename(&$elem, $key)
 {
-    $elem = substr($elem, strrpos($elem,DIRECTORY_SEPARATOR)+1, -4);
+    $elem = mb_substr($elem, mb_strrpos($elem,DIRECTORY_SEPARATOR)+1, -4);
 }
 
 
@@ -325,5 +278,43 @@ function encode_email_subject($subject, $charset)
     return $encoded_subject;
 }
 
+
+
+//Check to see if it exists in case PHP has this function later
+if (!function_exists("mb_substr_replace")){
+
+    /**
+     * Encode email subject as per RFC 2047
+     * @author chuayw2000 at hotmail dot com
+     * @return string.
+     * @note From: http://uk.php.net/manual/en/function.substr-replace.php#59544
+     * @note Same parameters as substr_replace with the extra encoding parameter.
+     */
+    function mb_substr_replace($string,$replacement,$start,$length=null,$encoding = null)
+    {
+        if ($encoding == null)
+        {
+            if ($length == null)
+            {
+                return mb_substr($string,0,$start).$replacement;
+            }
+            else
+            {
+                return mb_substr($string,0,$start).$replacement.mb_substr($string,$start + $length);
+            }
+        }
+        else
+        {
+            if ($length == null)
+            {
+                return mb_substr($string,0,$start,$encoding).$replacement;
+            }
+            else
+            {
+                return mb_substr($string,0,$start,$encoding). $replacement. mb_substr($string,$start + $length,mb_strlen($string,$encoding),$encoding);
+            }
+        }
+    }
+}
 
 ?>

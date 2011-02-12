@@ -81,9 +81,9 @@ if (!empty($search_string))
     {
         $sql .= "docid=('{$search_string}') ";
     }
-    elseif (strtoupper(substr($search_string,0,strlen($CONFIG['kb_id_prefix']))) == strtoupper($CONFIG['kb_id_prefix']))
+    elseif (mb_strtoupper(mb_substr($search_string, 0, mb_strlen($CONFIG['kb_id_prefix']))) == mb_strtoupper($CONFIG['kb_id_prefix']))
     {
-        $sql .= "docid='".substr($search_string,strlen($CONFIG['kb_id_prefix']))."' ";
+        $sql .= "docid='" . mb_substr($search_string, mb_strlen($CONFIG['kb_id_prefix']))."' ";
     }
     else if ($search_string_len<=2)
     {

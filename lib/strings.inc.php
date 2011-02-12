@@ -17,7 +17,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 //create array of strings in the system's language for updates etc
-$SYSLANG = $_SESSION['syslang'];
+if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
 // Hierarchical Menus
 /* Arrays containing menu options for the top menu, each menu has an associated permission number and this is used */
@@ -228,7 +228,7 @@ $hmenu[6050] = $hmenu[6050] +
 if (!is_array($hmenu[70])) $hmenu[70] = array();
 $hmenu[70] + $hmenu[70] =
             array (10=> array ( 'perm'=> 0, 'name'=> "{$strHelpContents}...", 'url'=>"{$CONFIG['application_webpath']}help.php"),
-                   15=> array ( 'perm'=> 0, 'name'=> "{$strGetHelpOnline}", 'url'=>"http://sitracker.org/wiki/Documentation".strtoupper(substr($_SESSION['lang'],0,2))),
+                   15=> array ( 'perm'=> 0, 'name'=> "{$strGetHelpOnline}", 'url'=>"http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'],0,2))),
                    20=> array ( 'perm'=> 0, 'name'=> "{$strTranslate}", 'url'=>"{$CONFIG['application_webpath']}translate.php"),
                    30=> array ( 'perm'=> 0, 'name'=> "{$strReportBug}", 'url'=>$CONFIG['bugtracker_url']),
                    40=> array ( 'perm'=> 0, 'name'=> "{$strReleaseNotes}", 'url'=>"{$CONFIG['application_webpath']}releasenotes.php"),

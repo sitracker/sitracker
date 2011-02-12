@@ -131,7 +131,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                     break;
             }
             $savevar[$catvar] = mysql_real_escape_string($value);
-            if (substr($value, 0, 6) == 'array(')
+            if (mb_substr($value, 0, 6) == 'array(')
             {
                 eval("\$val = $value;");
                 $value = $val;

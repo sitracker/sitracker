@@ -1335,12 +1335,12 @@ function alpha_index($baseurl = '#')
     $html = '';
     if (!empty($i18nAlphabet))
     {
-        $len = utf8_strlen($i18nAlphabet);
+        $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
-            $html .= urlencode(utf8_substr($i18nAlphabet, $i, 1))."\">";
-            $html .= utf8_substr($i18nAlphabet, $i, 1)."</a> | \n";
+            $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
+            $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
 
         }
     }

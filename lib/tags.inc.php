@@ -267,7 +267,7 @@ function show_tag_cloud($orderby="name", $showcount = FALSE)
     list($min) = mysql_fetch_row($countresult);
     unset($countsql, $countresult);
 
-    if (substr($_SERVER['SCRIPT_NAME'],-8) != "main.php")
+    if (mb_substr($_SERVER['SCRIPT_NAME'],-8) != "main.php")
     {
         //not in the dashbaord
         $html .= "<p align='center'>{$GLOBALS['strSort']}: <a href='view_tags.php?orderby=name'>{$GLOBALS['strAlphabetically']}</a> | ";

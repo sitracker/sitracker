@@ -54,8 +54,8 @@ if (mysql_num_rows($result))
         if ($approver == TRUE)
         {
             echo "<a href='holiday_new.php?hid={$dates->holidayid}&amp;year=";
-            echo substr($dates->date, 0, 4) ."&amp;month=".substr($dates->date, 5, 2);
-            echo "&amp;day=".substr($dates->date, 8, 2)."&amp;user={$dates->userid}";
+            echo mb_substr($dates->date, 0, 4) ."&amp;month=".mb_substr($dates->date, 5, 2);
+            echo "&amp;day=".mb_substr($dates->date, 8, 2)."&amp;user={$dates->userid}";
             echo "&amp;type={$dates->type}&amp;length=0&amp;return=list' ";
             echo "onclick=\"return window.confirm('{$dates->realname}: ".ldate('l jS F Y', mysql2date($dates->date));
             echo ": {$strAreYouSureDelete}', true);\">{$strDelete}</a>";
