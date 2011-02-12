@@ -1034,7 +1034,11 @@ function ldap_browse_select_container(ldap_base, field)
 			{
 				method: 'POST', 
 				parameters: {action: 'ldap_browse_groups', base: ldap_base, ldap_type: ldap_type, ldap_host: ldap_host, ldap_port: ldap_port,
-								ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass}, 
+								ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass},
+				onCreate: function()
+				{
+					$('ldap_browse_contents').innerHTML = "<p align='center'<img src='"+application_webpath + "images/ajax-loader.gif' /><br />Loading</p>";
+				},
 				onSuccess: function(transport)
 				{
 					var response = transport.responseText || "no response text";
