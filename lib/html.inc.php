@@ -2081,7 +2081,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
 
             $supportcount = 1;
             $shade = 'shade2';
-            while ($obj = mysql_fetch_obj($result))
+            while ($obj = mysql_fetch_object($result))
             {
                 if ($obj->term == 'yes')
                 {
