@@ -33,6 +33,7 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
                                'updates_per_page',
                                'show_table_legends',
                                'incident_popup_onewindow',
+                               'external_links_newwindow',
                                'show_confirmation_caution',
                                'show_confirmation_delete',
                                'show_inactive_data'
@@ -59,6 +60,9 @@ $CFGVAR['iconset']['title'] = $strIconSet;
 $CFGVAR['iconset']['type'] = 'select';
 $CFGVAR['iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 // TODO our included 'kdeclassic' icon theme doesn't appear to be in the 'sit' filename format
+
+$CFGVAR['external_links_newwindow']['title'] = 'Open external links in a new window';
+$CFGVAR['external_links_newwindow']['type'] = 'checkbox';
 
 $CFGVAR['language']['title'] = $strLanguage;
 $CFGVAR['language']['type'] = 'userlanguageselect';
