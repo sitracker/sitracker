@@ -82,22 +82,8 @@ elseif (authenticate($username, $_REQUEST['password']))
     if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
 
     // Read user config from database
-    $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$user->id}";
-    $result = @mysql_query($sql);
-    if ($result AND mysql_num_rows($result) > 0)
-    {
-        while ($conf = mysql_fetch_object($result))
-        {
-            if ($conf->value === 'TRUE') $conf->value = TRUE;
-            if ($conf->value === 'FALSE') $conf->value = FALSE;
-            if (substr($conf->value, 0, 6) == 'array(')
-            {
-                    eval("\$val = {$conf->value};");
-                    $conf->value = $val;
-            }
-            $_SESSION['userconfig'][$conf->config] = $conf->value;
-        }
-    }
+    $_SESSION['userconfig'] = get_user_config_vars($user->id);
+
     // Make sure utc_offset cannot be blank
     if ($_SESSION['userconfig']['utc_offset'] == '')
     {
