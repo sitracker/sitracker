@@ -299,7 +299,7 @@ function calculate_time_of_next_action($days, $hours, $minutes)
 function maintenance_servicelevel_tag($maintid)
 {
     global $CONFIG, $dbMaintenance;
-    $sql = "SELECT servicelevelid FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
+    $sql = "SELECT servicelevel FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
