@@ -86,7 +86,7 @@ $trigger_types['TRIGGER_INCIDENT_CREATED'] =
 array('name' => $strIncidentCreated,
       'description' => $strTriggerNewIncidentCreatedDesc,
       'required' => array('incidentid'),
-      'params' => array('contactid', 'siteid', 'priority', 'contractid', 'slaid', 'sitesalespersonid', 'sendemail')
+      'params' => array('contactid', 'siteid', 'incidentpriority', 'contractid', 'slaid', 'salespersonid', 'sendemail')
       );
 
 $trigger_types['TRIGGER_INCIDENT_NEARING_SLA'] =
@@ -135,7 +135,7 @@ $trigger_types['TRIGGER_PORTAL_INCIDENT_CREATED'] =
 array('name' => $strPortalIncidentCreated,
       'description' => $strTriggerPortalIncidentCreated,
       'required' => array('incidentid'),
-      'params' => array('incidentid', 'contactid', 'siteid', 'priority', 'contractid', 'slaid', 'sitesalespersonid')
+      'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriority', 'contractid', 'slaid', 'sitesalespersonid')
     );
 
 $trigger_types['TRIGGER_NEW_CONTACT'] =
@@ -319,9 +319,10 @@ array('description' => $strAwaitingClosureVar,
       );
 
 $ttvararray['{contactid}'] =
-array('description' => $strContactID,
+array('description' => $strContact,
       'requires' => 'incidentid',
       'replacement' => 'incident_contact($param_array[\'incidentid\']);',
+      'checkreplace' => 'contact_drop_down',
       'show' => FALSE
       );
 
@@ -635,6 +636,14 @@ array('description' => $strSalesperson,
       'replacement' => 'user_realname(db_read_column(\'owner\', $GLOBALS[\'dbSites\'], $param_array[\'siteid\']));'
       );
 
+$ttvararray['{salespersonid}'] =
+array('description' => $strSalesperson,
+      'requires' => 'siteid',
+      'show' => FALSE,
+      'replacement' => 'db_read_column(\'owner\', $GLOBALS[\'dbSites\'], incident_site($param_array[\'incidentid\']));',
+      'checkreplace' => 'user_drop_down'
+      );
+
 $ttvararray['{salespersonemail}'][] =
 array('description' => $strSalespersonAssignedToContactsSiteEmail,
       'requires' => 'siteid',
@@ -681,10 +690,18 @@ array('description' => $strCurrentUsersSignature,
       'replacement' => 'user_signature($_SESSION[\'userid\']);'
       );
 
-$ttvararray['{siteid}'] =
+$ttvararray['{siteid}'][] =
 array('description' => $strSite,
       'requires' => 'siteid',
       'replacement' => '$param_array[\'siteid\'];',
+      'checkreplace' => 'site_drop_down',
+      'show' => FALSE
+      );
+
+$ttvararray['{siteid}'][] =
+array('description' => $strSite,
+      'requires' => 'incidentid',
+      'replacement' => 'contact_site(incident_contact($param_array[\'incidentid\']));',
       'checkreplace' => 'site_drop_down',
       'show' => FALSE
       );
@@ -736,6 +753,7 @@ $ttvararray['{slaid}'] =
 array('description' => $strSLA,
       'replacement' => 'contract_slaid($param_array[\'contractid\']);',
       'requires' => 'contractid',
+      'checkreplace' => 'servicelevel_drop_down',
       'show' => FALSE
       );
 

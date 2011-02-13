@@ -272,7 +272,7 @@ function contact_vcard($id)
  * and with the given id  selected.
  * @author Ivan Lucas
  */
-function contact_drop_down($name, $id, $showsite = FALSE, $required = FALSE)
+function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE)
 {
     global $dbContacts, $dbSites;
     if ($showsite)
