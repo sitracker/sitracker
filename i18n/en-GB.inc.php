@@ -808,6 +808,7 @@ $strIncident = 'Incident';
 $strIncidentActivitiesIntro = 'This page is to keep track of activities relating to an incident where time spent dealing with the incident needs to be known';
 $strIncidentAdded = 'Incident Added';
 $strIncidentAssigned = 'Incident Assigned';
+$strIncidentAssigner = 'Incident Assigner';
 $strIncidentAssignmentWasForcedUserNotAccept = 'Incident assignment was forced because the user was not accepting';
 $strIncidentsBySiteReportDesc = 'This report is a list of %s incidents for all sites that you selected';
 $strIncidentCCList = 'Extra email addresses to CC regarding incidents';

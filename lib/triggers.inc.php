@@ -72,7 +72,7 @@ array('name' => $strIncidentAssigned,
       'description' => $strTriggerNewIncidentAssignedDesc,
       'required' => array('incidentid', 'userid'),
       'object' => 'incident',
-      'params' => array('ownerid', 'userstatus'),
+      'params' => array('ownerid', 'userstatus', 'incidentassigner'),
       );
 
 $trigger_types['TRIGGER_INCIDENT_CLOSED'] =
@@ -275,10 +275,11 @@ $notice_pair = array('TRIGGER_INCIDENT_ASSIGNED' => 'NOTICE_INCIDENT_ASSIGNED',
  * Template variables (Alphabetical order)
  * description - Friendly label
  * replacement - Quoted PHP code to be run to perform the template var replacement
- * requires -Optional field. single string or array. Specifies the 'required' params from the trigger that is needed for this replacement
+ * requires -Optional field. single string or array. Specifies the required params from the trigger that is needed for this replacement
  * action - Optional field, when set the var will only be available for that action
  * type - Optional field, defines where a variable can be used, system, incident or user
  */
+
 $ttvararray['{applicationname}'] =
 array('description' => $CONFIG['application_name'],
       'replacement' => '$CONFIG[\'application_name\'];'
@@ -467,6 +468,12 @@ $ttvararray['{holdingmins}'] =
 array('description' => $strHoldingQueueMinutes,
       'replacement' => '$param_array[\'holdingmins\'];',
       'requires' => 'holdingmins'
+      );
+
+$ttvararray['{incidentassigner}'] =
+array('description' => $strIncidentAssigner,
+      'replacement' => '$param_array[\'incidentassigner\'];',
+      'checkreplace' => 'user_drop_down'
       );
 
 $ttvararray['{incidentccemail}'] =
@@ -1264,7 +1271,7 @@ function trigger_action_to_html($trigger)
     $html .=  "<div class='triggeractions'>";
     //FIXME 3.90, add edit back in
     //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
-    $html .= "<a href='triggers.php?action=delete&amp;id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
+    $html .= "<a href='action_details.php?action=delete&amp;id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
 }
 
