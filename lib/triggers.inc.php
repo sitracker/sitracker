@@ -71,6 +71,7 @@ $trigger_types['TRIGGER_INCIDENT_ASSIGNED'] =
 array('name' => $strIncidentAssigned,
       'description' => $strTriggerNewIncidentAssignedDesc,
       'required' => array('incidentid', 'userid'),
+      'object' => 'incident',
       'params' => array('ownerid', 'userstatus'),
       );
 
