@@ -110,7 +110,6 @@ elseif (authenticate($username, $_REQUEST['password']))
     {
         $t = new triggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
                     'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
-        $t->fire();
     }
 
     if ($SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')

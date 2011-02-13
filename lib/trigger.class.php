@@ -49,7 +49,7 @@ class TriggerEvent {
             $trigger = new Trigger($trigger_type,
                                    $trigger->userid, $trigger->template,
                                    $trigger->action, $trigger->checks,
-                                   $trigger->parameters, $param_array);
+                                   $trigger->parameters, $param_array, $trigger->id);
             $rtn = $trigger->fire();
         }
 
@@ -270,6 +270,11 @@ class Trigger extends SitEntity {
             $this->param_array['checks'] = '';
         }
 
+        if (!isset($this->param_array['userid'])) 
+        {
+            $this->param_array['userid']= $sit[2];
+        }
+        
         //if we have any params from the actual trigger, append to user params
         if (!empty($this->parameters))
         {
@@ -295,7 +300,7 @@ class Trigger extends SitEntity {
             if (!$eresult)
             {
                 trigger_error("Error in trigger rule for
-                                {$this->trigger_type}, check your
+                                {$this->trigger_type} (ID: $this->id), check your
                                 <a href='triggers.php'>trigger rules</a>",
                                 E_USER_WARNING);
             }
@@ -326,17 +331,22 @@ class Trigger extends SitEntity {
         global $CONFIG, $dbg, $dbTriggers;
         $user_prefs = get_user_config_vars($this->user_id);
         $user_status =  user_status($this->user_id);
+        $out_of_office_pref = $user_prefs['notifications_away'];
         if ($user_status != USERSTATUS_ACCOUNT_DISABLED)
         {
             switch ($action)
             {
                 case "ACTION_EMAIL":
-                    if ((empty($out_of_office_pref) OR $out_of_office_pref == 'all') OR
-                        ($out_of_office_pref == 'emails' AND 
-                        ($user_status == USERSTATUS_NOT_IN_OFFICE OR
-                            $user_status == USERSTATUS_ON_HOLIDAY OR 
-                            $user_status == USERSTATUS_ABSENT_SICK OR 
-                            $user_status == USERSTATUS_WORKING_AWAY)))
+                    if (empty($out_of_office_pref) OR
+                       (($user_status == USERSTATUS_NOT_IN_OFFICE OR
+                         $user_status == USERSTATUS_ON_HOLIDAY OR 
+                         $user_status == USERSTATUS_ABSENT_SICK OR 
+                         $user_status == USERSTATUS_WORKING_AWAY) AND
+                         ($out_of_office_pref == 'emails' OR $out_of_office_pref == 'all')) OR
+                         ($user_status != USERSTATUS_NOT_IN_OFFICE AND
+                          $user_status != USERSTATUS_ON_HOLIDAY AND 
+                          $user_status != USERSTATUS_ABSENT_SICK AND 
+                          $user_status != USERSTATUS_WORKING_AWAY))
                     {
                         debug_log("send_trigger_email($template) called", TRUE);
                         $rtnvalue = $this->send_trigger_email($template);
@@ -348,12 +358,16 @@ class Trigger extends SitEntity {
                     break;
 
                 case "ACTION_NOTICE":
-                    if ((empty($out_of_office_pref) OR $out_of_office_pref == 'all') OR
-                        ($out_of_office_pref == 'notices' AND 
-                        ($user_status == USERSTATUS_NOT_IN_OFFICE OR
-                            $user_status == USERSTATUS_ON_HOLIDAY OR 
-                            $user_status == USERSTATUS_ABSENT_SICK OR 
-                            $user_status == USERSTATUS_WORKING_AWAY)))
+                    if (empty($out_of_office_pref) OR
+                       (($user_status == USERSTATUS_NOT_IN_OFFICE OR
+                         $user_status == USERSTATUS_ON_HOLIDAY OR 
+                         $user_status == USERSTATUS_ABSENT_SICK OR 
+                         $user_status == USERSTATUS_WORKING_AWAY) AND
+                         ($out_of_office_pref == 'notices' OR $out_of_office_pref == 'all')) OR
+                         ($user_status != USERSTATUS_NOT_IN_OFFICE AND
+                          $user_status != USERSTATUS_ON_HOLIDAY AND 
+                          $user_status != USERSTATUS_ABSENT_SICK AND 
+                          $user_status != USERSTATUS_WORKING_AWAY))
                     {
                         debug_log("create_trigger_notice($template) called", TRUE);
                         $rtnvalue = $this->create_trigger_notice($template);
