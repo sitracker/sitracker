@@ -1324,26 +1324,26 @@ function check_match_drop_down($id = '')
 */
 function create_check_string($param, $value, $join, $enabled, $conditions)
 {
-    //FIXME check for bad code here
-    //FIXME add extra join
     $param_count = sizeof($param);
+
     for ($i = 0; $i < $param_count; $i++)
-    {
+    {   
         if ($enabled[$i] == 'on')
         {
             $checks[$i] = "{".$param[$i]."}";
             if ($join[$i] == 'is') $checks[$i] .= "==";
-            elseif ($join[$i] == 'is not') $checks[$i] .= "==";
-            elseif ($join[$i] == 'contains') $check[$i] .= "!=";
+            elseif ($join[$i] == 'is not') $checks[$i] .= "!=";
+            elseif ($join[$i] == 'contains') trigger_error("Contains not yet supported");
+            elseif ($join[$i] == 'does not contain') trigger_error("Contains not yet supported");
             $checks[$i] .= $value[$i];
         }
     }
 
     $check_count = sizeof($checks);
-    for ($i = 0; $i < $check_count; $i++)
+    foreach ($checks as $key => $value)
     {
-        $final_check .= $checks[$i];
-        if ($i != $check_count - 1)
+        $final_check .= $checks[$key];
+        if ($check_count != 1)
         {
             if ($conditions == 'all')
             {
@@ -1354,7 +1354,9 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
                 $final_check .= " OR ";
             }
         }
+        $check_count --;
     }
+
     return $final_check;
 }
 

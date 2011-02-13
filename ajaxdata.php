@@ -318,6 +318,7 @@ switch ($action)
             echo "<select name='conditions'><option value='all'>{$strAllConditionsMet}</option>";
             echo "<option value='any'>{$strAnyConditionMet}</option></select></p>";
             echo "<table>";
+            $i = 0;
             foreach ($trigger_types[$triggertype]['params'] as $param)
             {
                 // if we return a number here, the variable is multiply-defined;
@@ -332,11 +333,14 @@ switch ($action)
                 if (isset($ttvararray['{'.$param.'}']['checkreplace']))
                 {
                     echo '<tr>';
-                    echo "<td><input type='hidden' name='param[]' value='{$param}' /></td>";
+                    echo "<td><input type='hidden' name='param[{$i}]' value='{$param}' /></td>";
                     echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
-                    echo '<td>'.check_match_drop_down('join[]'). '</td>';
-                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value[]')."</td>";
-                    echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
+                    echo '<td>'.check_match_drop_down('join['.$i.']'). '</td>';
+                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value['.$i.']')."</td>";
+                    // put a hidden input so we can see unchecked boxes
+                    echo "<td><input type='hidden' name='enabled[{$i}]' value='off' />";
+                    echo "<input type='checkbox' name='enabled[{$i}]' />{$strEnableCondition}</td></tr>";
+                    $i++;
                 }
             }
             echo '</table>';
