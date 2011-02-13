@@ -72,7 +72,7 @@ array('name' => $strIncidentAssigned,
       'description' => $strTriggerNewIncidentAssignedDesc,
       'required' => array('incidentid', 'userid'),
       'object' => 'incident',
-      'params' => array('ownerid', 'userstatus', 'incidentassigner'),
+      'params' => array('ownerid', 'userstatus', 'incidentassigner')
       );
 
 $trigger_types['TRIGGER_INCIDENT_CLOSED'] =
@@ -86,7 +86,7 @@ $trigger_types['TRIGGER_INCIDENT_CREATED'] =
 array('name' => $strIncidentCreated,
       'description' => $strTriggerNewIncidentCreatedDesc,
       'required' => array('incidentid'),
-      'params' => array('contactid', 'siteid', 'incidentpriority', 'contractid', 'slaid', 'salespersonid', 'sendemail')
+      'params' => array('contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'salespersonid', 'sendemail')
       );
 
 $trigger_types['TRIGGER_INCIDENT_NEARING_SLA'] =
@@ -135,7 +135,7 @@ $trigger_types['TRIGGER_PORTAL_INCIDENT_CREATED'] =
 array('name' => $strPortalIncidentCreated,
       'description' => $strTriggerPortalIncidentCreated,
       'required' => array('incidentid'),
-      'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriority', 'contractid', 'slaid', 'sitesalespersonid')
+      'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'sitesalespersonid')
     );
 
 $trigger_types['TRIGGER_NEW_CONTACT'] =
@@ -251,7 +251,7 @@ $email_pair = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PAS
 
 $notice_pair = array('TRIGGER_INCIDENT_ASSIGNED' => 'NOTICE_INCIDENT_ASSIGNED',
                     'TRIGGER_INCIDENT_CLOSED' => 'NOTICE_INCIDENT_CLOSED',
-                    'TRIGGER_INCIDENT_CREATED' => 'NOTICE_KB_CREATED',
+                    'TRIGGER_INCIDENT_CREATED' => 'NOTICE_INCIDENT_CREATED',
                     'TRIGGER_INCIDENT_NEARING_SLA' => 'NOTICE_INCIDENT_NEARING_SLA',
                     'TRIGGER_INCIDENT_REVIEW_DUE' => 'NOTICE_INCIDENT_REVIEW_DUE',
                     'TRIGGER_INCIDENT_UPDATED_EXTERNAL' => 'blank',
@@ -530,6 +530,13 @@ $ttvararray['{incidentpriority}'] =
 array('description' => $strIncidentPriority,
       'requires' => 'incidentid',
       'replacement' => 'priority_name(incident_priority($param_array[incidentid]));',
+      );
+
+$ttvararray['{incidentpriorityid}'] =
+array('description' => $strIncidentPriority,
+      'requires' => 'incidentid',
+      'replacement' => 'incident_priority($param_array[incidentid]);',
+      'show' => FALSE,
       'checkreplace' => 'priority_drop_down'
       );
 
