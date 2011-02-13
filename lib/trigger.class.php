@@ -300,8 +300,8 @@ class Trigger extends SitEntity {
             if (!$eresult)
             {
                 trigger_error("Error in trigger rule for
-                                {$this->trigger_type} (ID: $this->id), check your
-                                <a href='triggers.php'>trigger rules</a>",
+                                {$this->trigger_type}, check your
+                                <a href='triggers.php'>trigger rules</a><br />ID: $this->id, rule: $this->checks",
                                 E_USER_WARNING);
             }
 
