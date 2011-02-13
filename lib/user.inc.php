@@ -1014,4 +1014,31 @@ function userstatus_summaryline($userstatus = '', $accepting = '')
     return $html;
 }
 
+/**
+ * Gets the list of user vars
+ * @param int $userid - User  ID
+ * @return array The user's config vars
+*/
+function get_user_config_vars($userid)
+{
+    global $dbUserConfig;
+    $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$userid}";
+    $result = @mysql_query($sql);
+    if ($result AND mysql_num_rows($result) > 0)
+    {
+        while ($conf = mysql_fetch_object($result))
+        {
+            if ($conf->value === 'TRUE') $conf->value = TRUE;
+            if ($conf->value === 'FALSE') $conf->value = FALSE;
+            if (substr($conf->value, 0, 6) == 'array(')
+            {
+                    eval("\$val = {$conf->value};");
+                    $conf->value = $val;
+            }
+            $userconfig[$conf->config] = $conf->value;
+        }
+    }
+    return $userconfig;
+}
+
 ?>

@@ -799,19 +799,19 @@ else
             break;
         case 'initialresponse':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'initialresponse','The Initial Response has been made.')";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'initialresponse','{$SYSLANG['strInitialResponseHasBeenMade']}')";
             break;
         case 'probdef':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','The problem has been defined.')";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']})";
             break;
         case 'actionplan':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','An action plan has been made.')";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']})";
             break;
         case 'solution':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','The incident has been resolved or reprioritised.\nThe issue should now be brought to a close or a new problem definition created within the service level.')";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']})";
             break;
     }
 
