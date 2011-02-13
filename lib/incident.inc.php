@@ -142,6 +142,7 @@ function create_incident_from_incoming($incomingid)
     $row = mysql_fetch_object($result);
     $contact = $row->contactid;
     $contract = guess_contract_id($contact);
+
     if (!$contract)
     {
         // we have no contract to log against, update stays in incoming
@@ -156,6 +157,7 @@ function create_incident_from_incoming($incomingid)
     $sql .= "WHERE m.id = '{$contract}' ";
     $sql .= "AND m.servicelevel = s.tag ";
     $sql .= "AND m.product = sp.productid LIMIT 1";
+
     $result = mysql_query($sql);
     if (mysql_error())
     {
@@ -174,6 +176,12 @@ function create_incident_from_incoming($incomingid)
     {
         $rtn = FALSE;
     }
+    else 
+    {
+        $sql = "DELETE FROM `$dbTempIncoming` WHERE id = '{$incomingid}'";
+        $result = mysql_query($sql);
+    }
+    
 
     if ($CONFIG['auto_assign_incidents'])
     {

@@ -156,7 +156,7 @@ $trigger_types['TRIGGER_NEW_HELD_EMAIL'] =
 array('name' => $strNewHeldEmail,
       'description' => $strTriggerNewHeldEmailDesc,
       'required' => array('holdingemailid'),
-      'params' => array(),
+      'params' => array('subject', 'contactid', 'siteid'),
       );
 
 $trigger_types['TRIGGER_NEW_SITE'] =
@@ -537,7 +537,7 @@ array('description' => $strIncidentPriority,
       'requires' => 'incidentid',
       'replacement' => 'incident_priority($param_array[incidentid]);',
       'show' => FALSE,
-      'checkreplace' => 'priority_drop_down'
+      'checkreplace' => 'freeform'
       );
 
 $ttvararray['{incidentsoftware}'] =
@@ -1435,6 +1435,12 @@ function checks_to_html($checks)
             }
         }
     }
+    return $html;
+}
+
+function freeform($name)
+{
+    $html = "<input name='name' />";
     return $html;
 }
 
