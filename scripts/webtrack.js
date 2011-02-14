@@ -1113,7 +1113,7 @@ function ldap_browse_select_container(ldap_base, field)
 				},
 				onFailure: function()
 				{
-					alert('Error ignoring reassignment');
+					alert('Error browsing LDAP');
 				}
 			});
 }
