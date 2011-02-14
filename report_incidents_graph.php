@@ -76,8 +76,8 @@ for ($year = $startyear; $year < $lastyear; $year++)
     for ($month = $startmonth; $month <= $lastmonth; $month++)
     {
         // loop through months
-        $monthname = date('F',mktime(0, 0, 0, $month, 1, $year));
-        $daysinmonth = date('t',mktime(0, 0, 0, $month, 1, $year));
+        $monthname = date('F', mktime(0, 0, 0, $month, 1, $year));
+        $daysinmonth = date('t', mktime(0, 0, 0, $month, 1, $year));
         $colspan = ($daysinmonth * 2) + 1;  // have to calculate number of cols since ie doesn't seem to do colspan=0
         echo "<tr><td align='center' colspan='{$colspan}'><h2><a href='{$_SERVER['PHP_SELF']}?startyear={$year}&startmonth={$month}'>{$monthname} {$year}</a></h2></td></tr>\n";
         echo "<tr align='center'>";
@@ -159,8 +159,8 @@ for ($year = $startyear; $year < $lastyear; $year++)
 
     if ($startmonth > 1)
     {
-        $lastmonth=$startmonth-1;
-        $startmonth=1;
+        $lastmonth = $startmonth - 1;
+        $startmonth = 1;
     }
 }
 echo "</table>\n\n";
