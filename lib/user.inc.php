@@ -61,7 +61,7 @@ function user_id($username, $password)
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
-        $userid= 0;
+        $userid = 0;
     }
     else
     {
@@ -122,7 +122,7 @@ function user_realname($id, $allowhtml = FALSE)
             }
         }
     }
-    elseif (!empty($incidents['email']))
+    elseif (!empty($incidents->email))
     {
         // TODO this code does not belong here
         // The SQL is also looking at all escalation paths not just the relevant
@@ -132,7 +132,7 @@ function user_realname($id, $allowhtml = FALSE)
         if (!empty($from))
         {
             $frommail = strtolower(substr(strstr($from[0], '@'), 1));
-            $customerdomain = strtolower(substr(strstr($incidents['email'], '@'), 1));
+            $customerdomain = strtolower(substr(strstr($incidents->email, '@'), 1));
 
             if ($frommail == $customerdomain) return $GLOBALS['strCustomer'];
 
@@ -1012,6 +1012,33 @@ function userstatus_summaryline($userstatus = '', $accepting = '')
     }
     $html .= "</span>";
     return $html;
+}
+
+/**
+ * Gets the list of user vars
+ * @param int $userid - User  ID
+ * @return array The user's config vars
+*/
+function get_user_config_vars($userid)
+{
+    global $dbUserConfig;
+    $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$userid}";
+    $result = @mysql_query($sql);
+    if ($result AND mysql_num_rows($result) > 0)
+    {
+        while ($conf = mysql_fetch_object($result))
+        {
+            if ($conf->value === 'TRUE') $conf->value = TRUE;
+            if ($conf->value === 'FALSE') $conf->value = FALSE;
+            if (substr($conf->value, 0, 6) == 'array(')
+            {
+                    eval("\$val = {$conf->value};");
+                    $conf->value = $val;
+            }
+            $userconfig[$conf->config] = $conf->value;
+        }
+    }
+    return $userconfig;
 }
 
 ?>
