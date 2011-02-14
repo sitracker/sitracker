@@ -384,7 +384,7 @@ if ($sit[0] != '')
             echo "<div class='noticebar {$class}' id='notice{$notice->id}'><p class='{$class}'>";
             if ($notice->type == TRIGGER_NOTICE_TYPE)
             {
-                echo "<span><a href='{$CONFIG['application_webpath']}triggers.php'>";
+                echo "<span><a href='{$CONFIG['application_webpath']}notifications.php'>";
                 echo "{$strSettings}</a> | ";
                 echo "<a href='javascript:void(0);' onclick=\"dismissNotice({$notice->id}, {$_SESSION['userid']})\">";
                 echo "{$strDismiss}</a></span>";

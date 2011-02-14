@@ -31,7 +31,7 @@ function guess_contract_id($contactid)
 
     $contactid = intval($contactid);
     $sql = "SELECT * FROM `{$dbSupportContacts}` ";
-    $sql .= "WHERE contactid = '{$contactid}'";
+    $sql .= "WHERE contactid = {$contactid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
@@ -44,7 +44,7 @@ function guess_contract_id($contactid)
     elseif ($num_contracts == 1)
     {
         $row = mysql_fetch_object($result);
-        $contractid = $row->id;
+        $contractid = $row->maintenanceid;
     }
     else
     {
