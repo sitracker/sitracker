@@ -826,16 +826,13 @@ function ldap_is_account_disabled($attribute)
     
     if ($CONFIG['ldap_type'] == 'AD')
     {
-        debug_log("ldap_is_account_disabled '{$attribute}' '{$CONFIG['ldap_logindisabledvalue']}'");
         // Need to use mask
         if ($attribute & $CONFIG['ldap_logindisabledvalue'])
         {
-            debug_log("Disabled");
             return true;
         }
         else
         {
-            debug_log("Enabled");
             return false;
         }
     }
