@@ -82,14 +82,8 @@ define ('LDAP_AD_CITY', 'l');
 define ('LDAP_AD_COUNTY', 'st');
 define ('LDAP_AD_POSTCODE', 'postalCode');
 define ('LDAP_AD_COURTESYTITLE', 'generationQualifier'); // Doesn't seem to have'
-/* 
- * NOTE: Given the way LoginDisabled works in AD this will only work in a limited number of circumstances
- * It will only work on NORMAL_ACCOUNT + ACCOUNTDISABLED
- * http://support.microsoft.com/kb/305144
- * TODO add support for a mask to handle this
- */
-define ('LDAP_AD_LOGINDISABLEDATTRIBUTE', 'userAccountControl');  // CHECK
-define ('LDAP_AD_LOGINDISABLEDVALUE', '514');  // This is soley NORMAL_ACCOUNT + ACCOUNTDISABLED   
+define ('LDAP_AD_LOGINDISABLEDATTRIBUTE', 'userAccountControl');
+define ('LDAP_AD_LOGINDISABLEDVALUE', 2); // Bit mask or 2 used to identify disabled   
 
 // TODO check
 define ('LDAP_OPENLDAP_SURNAME', 'sn');
@@ -814,6 +808,48 @@ function ldapNamingContexts($ldap_host, $ldap_port, $ldap_type, $ldap_protocol, 
     }
     
     return $return;
+}
+
+
+/**
+ * Function to identify whether a user account is disabled 
+ * handles bit mask filter used by AD
+ * 
+ * @param mixed $attribute String or integer value representing the 
+ *	 				login disabled attribute in LDAP
+ * @return bool TRUE for disabled, false otherwise
+ * @author Paul Heaney
+ */
+function ldap_is_account_disabled($attribute)
+{
+    global $CONFIG;
+    
+    if ($CONFIG['ldap_type'] == 'AD')
+    {
+        debug_log("ldap_is_account_disabled '{$attribute}' '{$CONFIG['ldap_logindisabledvalue']}'");
+        // Need to use mask
+        if ($attribute & $CONFIG['ldap_logindisabledvalue'])
+        {
+            debug_log("Disabled");
+            return true;
+        }
+        else
+        {
+            debug_log("Enabled");
+            return false;
+        }
+    }
+    else
+    {
+        if (strtolower($attribute) != strtolower($CONFIG['ldap_logindisabledvalue']))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 ?>
