@@ -1134,6 +1134,7 @@ $strNewSiteType = 'New Site Type';
 $strNewSkill = 'New Skill';
 $strNewStatus = 'New Status';
 $strNewSupportedContact = 'New Supported Contact';
+$strNewTask = 'New Task';
 $strNewTemplate = 'New Template';
 $strNewUser = 'New User';
 $strNewVendor = 'New Vendor';
