@@ -62,6 +62,7 @@ $strActivityMarkedCompleteSuccessfully = 'Activity Marked Complete Successfully'
 $strActivityStarted = 'Activity started: %s';
 $strAddActionToXTrigger = 'Add Action to \'%s\' trigger';
 # i.e. Create, New
+$strAdd = 'Add';
 $strAddContract = 'Add New Contracts';
 $strAddContractConfirm = 'Are you sure you want to add this contact?';
 $strAdded = 'Added';
