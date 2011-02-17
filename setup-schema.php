@@ -339,7 +339,7 @@ CREATE TABLE `{$dbFeedbackReport}` (
   `responseref` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `completed` enum('yes','no') NOT NULL default 'no',
-  `created` timestamp(14) NOT NULL,
+  `created` timestamp NOT NULL,
   `incidentid` int(5) NOT NULL default '0',
   `contactid` int(5) NOT NULL default '0',
   `createdby` smallint(6) NULL ,
@@ -362,7 +362,7 @@ CREATE TABLE `{$dbFeedbackRespondents}` (
   `incidentid` int(11) NOT NULL default '0',
   `email` varchar(255) NOT NULL default '',
   `completed` enum('yes','no') NOT NULL default 'no',
-  `created` timestamp(14) NOT NULL,
+  `created` timestamp NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `responseref` (`incidentid`),
   KEY `formid` (`formid`),
@@ -561,7 +561,7 @@ CREATE TABLE `{$dbInventory}` (
 CREATE TABLE `{$dbJournal}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
-  `timestamp` timestamp(14) NOT NULL,
+  `timestamp` timestamp NOT NULL,
   `event` varchar(40) NOT NULL default '',
   `bodytext` text NOT NULL,
   `journaltype` int(11) NOT NULL default '0',
@@ -692,7 +692,7 @@ CREATE TABLE `{$dbMaintenance}` (
 CREATE TABLE `{$dbNotes}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
-  `timestamp` timestamp(14) NOT NULL,
+  `timestamp` timestamp NOT NULL,
   `bodytext` text NOT NULL,
   `link` int(11) NOT NULL default '0',
   `refid` int(11) NOT NULL default '0',
@@ -1289,7 +1289,7 @@ CREATE TABLE `{$dbTasks}` (
   `value` float(6,2) default NULL,
   `distribution` enum('public','private', 'incident', 'event') NOT NULL default 'public',
   `created` datetime NOT NULL default '0000-00-00 00:00:00',
-  `lastupdated` timestamp(14) NOT NULL,
+  `lastupdated` timestamp NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
