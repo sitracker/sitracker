@@ -206,7 +206,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->tag}' $strIsSelected>{$obj->tag}</option>";
+            echo "<option value='{$obj->tag}' {$strIsSelected}>{$obj->tag}</option>";
         }
         break;
     case 'products':
@@ -220,7 +220,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
+            echo "<option value='{$obj->id}' {$strIsSelected}>{$obj->name}</option>";
         }
         break;
     case 'skills':
@@ -234,7 +234,7 @@ switch ($action)
             {
                 $strIsSelected = "selected='selected'";
             }
-            echo "<option value='{$obj->id}' $strIsSelected>{$obj->name}</option>";
+            echo "<option value='{$obj->id}' {$strIsSelected}>{$obj->name}</option>";
         }
         break;
     case 'storedashboard':
@@ -244,7 +244,7 @@ switch ($action)
         if ($id == $_SESSION['userid'])
         {
             //check you're changing your own
-            $sql = "UPDATE `{$dbUsers}` SET dashboard = '$val' WHERE id = '$id'";
+            $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$val}' WHERE id = {$id}";
             $contactresult = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
@@ -314,10 +314,11 @@ switch ($action)
         if (is_numeric($trigger_type)) $trigger_type = $trigger_type[0];
         if (is_array($trigger_types[$triggertype]['params']))
         {
-            echo '<p align="left">{$strNotifyWhen} ';
+            echo "<p align='left'>{$strNotifyWhen} ";
             echo "<select name='conditions'><option value='all'>{$strAllConditionsMet}</option>";
             echo "<option value='any'>{$strAnyConditionMet}</option></select></p>";
             echo "<table>";
+            $i = 0;
             foreach ($trigger_types[$triggertype]['params'] as $param)
             {
                 // if we return a number here, the variable is multiply-defined;
@@ -325,18 +326,21 @@ switch ($action)
                 if (is_array($ttvararray['{'.$param.'}']) AND
                     is_numeric(key($ttvararray['{'.$param.'}'])))
                 {
-                	//echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
-                	$ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
+                    //echo "\$ttvararray[\{{$param}\}] = ".$ttvararray['{'.$param.'}'];
+                    $ttvararray['{'.$param.'}'] = $ttvararray['{'.$param.'}'][0];
                 }
 
                 if (isset($ttvararray['{'.$param.'}']['checkreplace']))
                 {
                     echo '<tr>';
-                    echo "<td><input type='hidden' name='param[]' value='{$param}' /></td>";
+                    echo "<td><input type='hidden' name='param[{$i}]' value='{$param}' /></td>";
                     echo '<td align="right">'.$ttvararray['{'.$param.'}']['description']. '</td>';
-                    echo '<td>'.check_match_drop_down('join[]'). '</td>';
-                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']()."</td>";
-                    echo "<td><input type='checkbox' name='enabled[]' />{$strEnableCondition}</td></tr>";
+                    echo '<td>'.check_match_drop_down('join['.$i.']'). '</td>';
+                    echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value['.$i.']')."</td>";
+                    // put a hidden input so we can see unchecked boxes
+                    echo "<td><input type='hidden' name='enabled[{$i}]' value='off' />";
+                    echo "<input type='checkbox' name='enabled[{$i}]' />{$strEnableCondition}</td></tr>";
+                    $i++;
                 }
             }
             echo '</table>';
@@ -378,6 +382,18 @@ switch ($action)
         {
             echo "NOPERMISSION";
         }
+        break;
+    case 'ldap_browse_groups':
+        $base = cleanvar($_REQUEST['base']);
+        $field = cleanvar($_REQUEST['field']);
+        $ldap_type = cleanvar($_REQUEST['ldap_type']);
+        $ldap_host = cleanvar($_REQUEST['ldap_host']);
+        $ldap_port = clean_int($_REQUEST['ldap_port']);
+        $ldap_protocol = clean_int($_REQUEST['ldap_protocol']);
+        $ldap_security = cleanvar($_REQUEST['ldap_security']);
+        $ldap_bind_user = cleanvar($_REQUEST['ldap_bind_user']);
+        $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
+        echo json_encode(ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass));
         break;
     default :
         plugin_do('ajaxdata_new_action', array('action' => $action));

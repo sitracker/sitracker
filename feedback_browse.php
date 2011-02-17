@@ -84,7 +84,7 @@ switch ($mode)
                 }
                 if ($numresults>0) $average=number_format(($cumul/$numresults), 2);
                 $percent =number_format((($average-1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
-                $totalresult+=$average;
+                $totalresult += $average;
                 $html .= "<td>{$average}</td></tr>";
                 // <strong>({$percent}%)</strong><br />";
             }
@@ -106,7 +106,7 @@ switch ($mode)
                     $sql .= "AND i.owner = u.id ";
                     $sql .= "AND f.id = r.respondentid ";
                     $sql .= "AND r.questionid = '{$qrow->id}' ";
-                    $sql .= "AND f.id = '$responseid' ";
+                    $sql .= "AND f.id = '{$responseid}' ";
                     $sql .= "AND f.completed = 'yes' \n";
                     $sql .= "ORDER BY i.owner, i.id";
                     $result = mysql_query($sql);
@@ -188,8 +188,8 @@ switch ($mode)
 
             if (!empty($formid))
             {
-                if ($completed == 'no') echo "<h3>{$strFeedbackRequested}: $formid</h3>";
-                else echo "<h3>{$strResponsesToFeedbackForm}: $formid</h3>";
+                if ($completed == 'no') echo "<h3>{$strFeedbackRequested}: {$formid}</h3>";
+                else echo "<h3>{$strResponsesToFeedbackForm}: {$formid}</h3>";
                 echo "<p align='center'><a href='feedback_form_edit.php?formid={$formid}'>{$strEdit}</a></p>";
             }
             else
@@ -201,9 +201,9 @@ switch ($mode)
             {
                 echo "<table summary='feedback forms' width='95%' align='center'>";
                 echo "<tr>";
-                echo colheader('created',$strDate, $sort, $order, $filter);
-                echo colheader('contactid',$strContact,$sort, $order, $filter);
-                echo colheader('incidentid',$strIncident,$sort, $order, $filter);
+                echo colheader('created', $strDate, $sort, $order, $filter);
+                echo colheader('contactid', $strContact,$sort, $order, $filter);
+                echo colheader('incidentid', $strIncident,$sort, $order, $filter);
                 echo "<th>{$strOperation}</th>";
                 echo "</tr>\n";
                 $shade = 'shade1';

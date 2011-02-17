@@ -82,14 +82,8 @@ define ('LDAP_AD_CITY', 'l');
 define ('LDAP_AD_COUNTY', 'st');
 define ('LDAP_AD_POSTCODE', 'postalCode');
 define ('LDAP_AD_COURTESYTITLE', 'generationQualifier'); // Doesn't seem to have'
-/* 
- * NOTE: Given the way LoginDisabled works in AD this will only work in a limited number of circumstances
- * It will only work on NORMAL_ACCOUNT + ACCOUNTDISABLED
- * http://support.microsoft.com/kb/305144
- * TODO add support for a mask to handle this
- */
-define ('LDAP_AD_LOGINDISABLEDATTRIBUTE', 'userAccountControl');  // CHECK
-define ('LDAP_AD_LOGINDISABLEDVALUE', '514');  // This is soley NORMAL_ACCOUNT + ACCOUNTDISABLED   
+define ('LDAP_AD_LOGINDISABLEDATTRIBUTE', 'userAccountControl');
+define ('LDAP_AD_LOGINDISABLEDVALUE', 2); // Bit mask or 2 used to identify disabled   
 
 // TODO check
 define ('LDAP_OPENLDAP_SURNAME', 'sn');
@@ -694,6 +688,165 @@ function ldapCheckGroupExists($dn, $mapping)
     $o = constant("LDAP_{$mapping}_GRPOBJECTTYPE");
 
     return ldapCheckObjectExists($dn, $o);
+}
+
+
+function ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass)
+{
+    global $CONFIG;
+    
+    debug_log("ldapGroupBrowse");
+   
+    $return = array();
+    
+    if (!empty($base))
+    {
+        $ldap_conn = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass);
+        
+         if ($ldap_conn != -1)
+         {   
+            if ($base == '[root]') $base = '';
+            
+            $groupObjType = constant("LDAP_{$ldap_type}_GRPOBJECTTYPE");
+            $filter = "(|(objectClass=Organization)(objectClass=OrganizationalUnit)(objectClass=domain)(objectClass={$groupObjType}))";
+            $attribs = array('dn', 'objectClass');
+            debug_log("LDAP Filter: {$filter}", TRUE);
+        
+            $sr = ldap_list($ldap_conn, $base, $filter, $attribs);
+            
+            if ($sr)
+            {
+                $return[] = array('status' => 'ok');
+
+                $entries = ldap_get_entries($ldap_conn, $sr);
+        
+                $a = array();
+                
+                for ($i = 0; $i < $entries['count']; $i++)
+                {
+                    $type = 'container'; 
+                    for ($j = 0; $j < $entries[$i]['objectclass']['count']; $j++)
+                    {
+                        if (strtolower($entries[$i]['objectclass'][$j]) == strtolower($groupObjType))
+                        {
+                            $type = 'group';
+                        }
+                    }
+                    
+                    $name = explode(',', $entries[$i]['dn']);
+                    $cn = explode('=', $name[0]);
+                    
+                    $return[] = array('dn' => $entries[$i]['dn'], 'cn' => $cn[1], 'type' => $type);
+                }
+            }
+        }
+        else
+        {
+            $return[] = array('status' => 'bad');
+        }
+    }
+    else
+    {
+        $return = ldapNamingContexts($ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass); 
+    }
+    
+    
+    return $return;
+}
+
+
+function ldapNamingContexts($ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass)
+{
+    debug_log("ldapNamingContexts");
+
+    $ldap_conn = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass);
+
+    $return = array();
+    
+    if ($ldap_conn != -1)
+    {
+        $filter = "(objectClass=*)";
+        $attribs = array('namingContexts', 'rootDomainNamingContext', 'defaultNamingContext');
+        
+        debug_log("LDAP Filter: {$filter}", TRUE);
+        
+        $sr = ldap_read($ldap_conn, "", $filter, $attribs);
+
+        if ($sr)
+        {
+            $return[] = array('status' => 'ok');
+            $entries = ldap_get_entries($ldap_conn, $sr);
+    
+            if (!empty($entries[0]['defaultnamingcontext']))
+            {
+                $return[] = array('dn' => $entries[0]['defaultnamingcontext'][0], 'cn' => $entries[0]['defaultnamingcontext'][0], 'type' => 'container');
+            }
+            else if (!empty($entries[0]['rootdomainnamingcontext']))
+            {
+                $return[] = array('dn' => $entries[0]['rootdomainnamingcontext'][0], 'cn' => $entries[0]['rootdomainnamingcontext'][0], 'type' => 'container');
+            }
+            else
+            {
+                for ($i = 0; $i < $entries[0]['namingcontexts']['count']; $i++)
+                {
+                    if (empty($entries[0]['namingcontexts'][$i]))
+                    {
+                        $return = ldapGroupBrowse('[root]', $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass);
+                        break;
+                    }
+                    else
+                    {
+                        $return[] = array('dn' => $entries[0]['namingcontexts'][$i], 'cn' => $entries[0]['namingcontexts'][$i], 'type' => 'container');
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        $return[] = array('status' => 'connectfailed');
+    }
+    
+    return $return;
+}
+
+
+/**
+ * Function to identify whether a user account is disabled 
+ * handles bit mask filter used by AD
+ * 
+ * @param mixed $attribute String or integer value representing the 
+ *	 				login disabled attribute in LDAP
+ * @return bool TRUE for disabled, false otherwise
+ * @author Paul Heaney
+ */
+function ldap_is_account_disabled($attribute)
+{
+    global $CONFIG;
+    
+    if ($CONFIG['ldap_type'] == 'AD')
+    {
+        // Need to use mask
+        if ($attribute & $CONFIG['ldap_logindisabledvalue'])
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if (strtolower($attribute) != strtolower($CONFIG['ldap_logindisabledvalue']))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 ?>

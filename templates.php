@@ -33,7 +33,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
 
     echo "<h2>".icon('templates', 32)." ";
     echo "{$strTemplates}</h2>";
-    echo "<p align='center'><a href='triggers.php'>{$strTriggers}</a> | <a href='template_new.php'>{$strNewTemplate}</a></p>";
+    echo "<a href='template_new.php'>{$strNewTemplate}</a></p>";
 
     $sql = "SELECT * FROM `{$dbEmailTemplates}` ORDER BY id";
     $result = mysql_query($sql);
@@ -470,7 +470,7 @@ elseif ($action == "update")
             $sql .= "WHERE id='$id' LIMIT 1";
             break;
         case 'notice':
-            $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='{$name}', description='{$description}', type='', ";
+            $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='{$name}', description='{$description}', type='".USER_DEFINED_NOTICE_TYPE."', ";
             $sql .= "linktext='{$linktext}', link='{$link}', durability='{$durability}', ";
             $sql .= "text='{$bodytext}' ";
             $sql .= "WHERE id='{$id}' LIMIT 1";

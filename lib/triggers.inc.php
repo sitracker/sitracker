@@ -7,16 +7,11 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-// FIXME Added by ivan because triggers.class.php was never included and that file
-// Included other vital files such as incident.inc.php - INL 29Feb08
-// Caution: This include here might not be the right place. Kieran can you
-// check.
-//include('trigger.class.php');
-
-//$actionarray['ACTION_NONE'] =
-//array('name' => $strNone,
-//      'description' => $strDoNothing,
-//      );
+/** 
+ * Trigger action definitions
+ * These are the avilable actions to be taken if a trigger is fired
+ * To extend these, implement a plugin which attaches to the trigger_actions hook
+ */
 
 $actionarray['ACTION_NOTICE'] =
 array('name' => $strNotice,
@@ -44,14 +39,18 @@ array('name' => 'Journal',
 
 plugin_do('trigger_actions');
 
-// Define a list of available triggers, trigger() will need to be called in the appropriate
-// place in the code for each of these
-//
-// id - trigger name
-// description - when the trigger is fired
-// required - parameters the triggers needs to fire, 'provides' these to templates
-// params - Rules the trigger can check, mimics 'subscription'-type events
-// type - Trigger type (eg. incident, contact etc)
+/** 
+ * Trigger type definitions
+ * These are the avilable triggers that can be fired
+ * To extend these, implement a plugin which attaches to the trigger_types hook
+ *
+ * array definitions:
+ * name - trigger name, can be anything descriptive, not seen by the end-user
+ * description - when the trigger is fired, shown to the end-user
+ * required - variables that are needed and can be used for templates
+ * params - Rules the trigger can check, mimics 'subscription'-type events
+ * type - Trigger type (eg. incident, contact etc)
+ */
 
 $trigger_types['TRIGGER_CONTACT_RESET_PASSWORD'] =
 array('name' => $strContactResetPassword,
@@ -72,7 +71,8 @@ $trigger_types['TRIGGER_INCIDENT_ASSIGNED'] =
 array('name' => $strIncidentAssigned,
       'description' => $strTriggerNewIncidentAssignedDesc,
       'required' => array('incidentid', 'userid'),
-      'params' => array('ownerid', 'userstatus'),
+      'object' => 'incident',
+      'params' => array('ownerid', 'userstatus', 'incidentassigner')
       );
 
 $trigger_types['TRIGGER_INCIDENT_CLOSED'] =
@@ -86,7 +86,7 @@ $trigger_types['TRIGGER_INCIDENT_CREATED'] =
 array('name' => $strIncidentCreated,
       'description' => $strTriggerNewIncidentCreatedDesc,
       'required' => array('incidentid'),
-      'params' => array('contactid', 'siteid', 'priority', 'contractid', 'slaid', 'sitesalespersonid', 'sendemail')
+      'params' => array('contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'salespersonid', 'sendemail')
       );
 
 $trigger_types['TRIGGER_INCIDENT_NEARING_SLA'] =
@@ -135,7 +135,7 @@ $trigger_types['TRIGGER_PORTAL_INCIDENT_CREATED'] =
 array('name' => $strPortalIncidentCreated,
       'description' => $strTriggerPortalIncidentCreated,
       'required' => array('incidentid'),
-      'params' => array('incidentid', 'contactid', 'siteid', 'priority', 'contractid', 'slaid', 'sitesalespersonid')
+      'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'sitesalespersonid')
     );
 
 $trigger_types['TRIGGER_NEW_CONTACT'] =
@@ -156,7 +156,7 @@ $trigger_types['TRIGGER_NEW_HELD_EMAIL'] =
 array('name' => $strNewHeldEmail,
       'description' => $strTriggerNewHeldEmailDesc,
       'required' => array('holdingemailid'),
-      'params' => array(),
+      'params' => array('subject', 'contactid', 'siteid'),
       );
 
 $trigger_types['TRIGGER_NEW_SITE'] =
@@ -251,7 +251,7 @@ $email_pair = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PAS
 
 $notice_pair = array('TRIGGER_INCIDENT_ASSIGNED' => 'NOTICE_INCIDENT_ASSIGNED',
                     'TRIGGER_INCIDENT_CLOSED' => 'NOTICE_INCIDENT_CLOSED',
-                    'TRIGGER_INCIDENT_CREATED' => 'NOTICE_KB_CREATED',
+                    'TRIGGER_INCIDENT_CREATED' => 'NOTICE_INCIDENT_CREATED',
                     'TRIGGER_INCIDENT_NEARING_SLA' => 'NOTICE_INCIDENT_NEARING_SLA',
                     'TRIGGER_INCIDENT_REVIEW_DUE' => 'NOTICE_INCIDENT_REVIEW_DUE',
                     'TRIGGER_INCIDENT_UPDATED_EXTERNAL' => 'blank',
@@ -275,10 +275,11 @@ $notice_pair = array('TRIGGER_INCIDENT_ASSIGNED' => 'NOTICE_INCIDENT_ASSIGNED',
  * Template variables (Alphabetical order)
  * description - Friendly label
  * replacement - Quoted PHP code to be run to perform the template var replacement
- * requires -Optional field. single string or array. Specifies the 'required' params from the trigger that is needed for this replacement
+ * requires -Optional field. single string or array. Specifies the required params from the trigger that is needed for this replacement
  * action - Optional field, when set the var will only be available for that action
  * type - Optional field, defines where a variable can be used, system, incident or user
  */
+
 $ttvararray['{applicationname}'] =
 array('description' => $CONFIG['application_name'],
       'replacement' => '$CONFIG[\'application_name\'];'
@@ -318,9 +319,10 @@ array('description' => $strAwaitingClosureVar,
       );
 
 $ttvararray['{contactid}'] =
-array('description' => $strContactID,
+array('description' => $strContact,
       'requires' => 'incidentid',
       'replacement' => 'incident_contact($param_array[\'incidentid\']);',
+      'checkreplace' => 'contact_drop_down',
       'show' => FALSE
       );
 
@@ -469,6 +471,12 @@ array('description' => $strHoldingQueueMinutes,
       'requires' => 'holdingmins'
       );
 
+$ttvararray['{incidentassigner}'] =
+array('description' => $strIncidentAssigner,
+      'replacement' => '$param_array[\'incidentassigner\'];',
+      'checkreplace' => 'user_drop_down'
+      );
+
 $ttvararray['{incidentccemail}'] =
 array('description' => $strIncidentCCList,
       'requires' => 'incidentid',
@@ -522,7 +530,14 @@ $ttvararray['{incidentpriority}'] =
 array('description' => $strIncidentPriority,
       'requires' => 'incidentid',
       'replacement' => 'priority_name(incident_priority($param_array[incidentid]));',
-      'checkreplace' => 'priority_drop_down'
+      );
+
+$ttvararray['{incidentpriorityid}'] =
+array('description' => $strIncidentPriority,
+      'requires' => 'incidentid',
+      'replacement' => 'incident_priority($param_array[incidentid]);',
+      'show' => FALSE,
+      'checkreplace' => 'freeform'
       );
 
 $ttvararray['{incidentsoftware}'] =
@@ -628,6 +643,14 @@ array('description' => $strSalesperson,
       'replacement' => 'user_realname(db_read_column(\'owner\', $GLOBALS[\'dbSites\'], $param_array[\'siteid\']));'
       );
 
+$ttvararray['{salespersonid}'] =
+array('description' => $strSalesperson,
+      'requires' => 'siteid',
+      'show' => FALSE,
+      'replacement' => 'db_read_column(\'owner\', $GLOBALS[\'dbSites\'], incident_site($param_array[\'incidentid\']));',
+      'checkreplace' => 'user_drop_down'
+      );
+
 $ttvararray['{salespersonemail}'][] =
 array('description' => $strSalespersonAssignedToContactsSiteEmail,
       'requires' => 'siteid',
@@ -674,10 +697,18 @@ array('description' => $strCurrentUsersSignature,
       'replacement' => 'user_signature($_SESSION[\'userid\']);'
       );
 
-$ttvararray['{siteid}'] =
+$ttvararray['{siteid}'][] =
 array('description' => $strSite,
       'requires' => 'siteid',
       'replacement' => '$param_array[\'siteid\'];',
+      'checkreplace' => 'site_drop_down',
+      'show' => FALSE
+      );
+
+$ttvararray['{siteid}'][] =
+array('description' => $strSite,
+      'requires' => 'incidentid',
+      'replacement' => 'contact_site(incident_contact($param_array[\'incidentid\']));',
       'checkreplace' => 'site_drop_down',
       'show' => FALSE
       );
@@ -719,17 +750,42 @@ array('description' => $strSalespersonSite,
       'requires' => 'siteid'
       );
 
+$ttvararray['{slaactionplan}'] =
+array('description' => $strActionPlanSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'action_plan\');',
+      'requires' => 'incidentid'
+      );
+
 $ttvararray['{slaid}'] =
 array('description' => $strSLA,
       'replacement' => 'contract_slaid($param_array[\'contractid\']);',
       'requires' => 'contractid',
+      'checkreplace' => 'servicelevel_drop_down',
       'show' => FALSE
+      );
+
+$ttvararray['{slainitialresponse}'] =
+array('description' => $strInitialResponseSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'initial_response\');',
+      'requires' => 'incidentid'
+      );
+
+$ttvararray['{slaproblemdefinition}'] =
+array('description' => $strProblemDefinitionSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'prob_determ\');',
+      'requires' => 'incidentid'
       );
 
 $ttvararray['{slatag}'] =
 array('description' => $strSLA,
       'replacement' => 'maintenance_servicelevel_tag($param_array[\'contractid\']);',
       'requires' => 'contractid'
+      );
+
+$ttvararray['{slaresolutionreprioritisation}'] =
+array('description' => $strResolutionReprioritisationSLA,
+      'replacement' => 'incident_sla($param_array[\'incidentid\'], \'resolution\');',
+      'requires' => 'incidentid'
       );
 
 $ttvararray['{supportemail}'] =
@@ -835,20 +891,36 @@ plugin_do('trigger_variables');
  */
 function email_templates($name, $triggertype='system', $selected = '')
 {
-    global $dbEmailTemplates, $dbTriggers;;
+    global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults;
     $html .= "<select id='{$name}' name='{$name}'>";
-    $html .= "<option></option>";
-    $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
-    $sql .= "WHERE type='{$triggertype}' ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($template = mysql_fetch_object($result))
+
+    foreach (array($triggertype, 'usertemplate') as $type)
     {
-    //$name = strpos()
-    //$name = str_replace("_", " ", $name);
-    $name = strtolower($name);
-    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
-    //$html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
+        if ($type == 'usertemplate')
+        {
+            $html .= "<option disabled='disabled'></option><option disabled='disabled'>=== {$strPersonalTemplates} ===</option>";
+        }
+
+        $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
+        $sql .= "WHERE type='{$type}' ORDER BY name";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) > 0)
+        {
+            while ($template = mysql_fetch_object($result))
+            {
+                //$name = strpos()
+                //$name = str_replace("_", " ", $name);
+                $name = strtolower($name);
+                $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
+                //$html .= "<option disabled='disabled' style='color: #333; text-indent: 10px;' value='{$template->name}'>".$GLOBALS[$template->description]."</option>\n";
+
+            }
+        }
+        else
+        {
+            $html .= "<option disabled='disabled'>{$strNoResults}</option>";
+        }
 
     }
     $html .= "</select>\n";
@@ -864,14 +936,19 @@ function email_templates($name, $triggertype='system', $selected = '')
  */
 function notice_templates($name, $selected = '')
 {
-    global $dbNoticeTemplates;
+    global $dbNoticeTemplates, $strPersonalTemplates;
     $html .= "<select id='{$name}' name='{$name}'>";
-    $html .= "<option></option>";
-    $sql = "SELECT id, name, description FROM `{$dbNoticeTemplates}` ORDER BY name ASC";
+    $sql = "SELECT id, name, description, type FROM `{$dbNoticeTemplates}` ORDER BY type,name ASC";
     $query = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($template = mysql_fetch_object($query))
     {
+        $user_header = false;
+        if (!$user_header AND $template->type == USER_DEFINED_NOTICE_TYPE)
+        {
+            $user_header = true;
+            $html .= "<option></option><option>=== {$strPersonalTemplates} ===</option>";
+        }
 	    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
     }
     $html .= "</select>\n";
@@ -1108,17 +1185,13 @@ function triggers_to_html($user_id, $trigger_id = '')
     foreach ($trigger_types AS $trigger => $description)
     {
         $trigger_html = trigger_to_html($trigger, $user_id);
-        if ($trigger_html != FALSE)
+        if (!empty($trigger_html))
         {
             $shade = ($i % 2) + 1;
             $html .= "<tr class='shade{$shade}'><td>".icon('trigger', 16);
             $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
             $html .= $trigger_html;
             $html .= "</div></td></tr>";
-        }
-        else
-        {
-            trigger_error('Problem getting trigger details');
         }
     }
     $html .= "</table>";
@@ -1128,17 +1201,26 @@ function triggers_to_html($user_id, $trigger_id = '')
 function trigger_to_html($trigger, $user_id)
 {
     global $dbTriggers;
+    $html = '';
     $sql = "SELECT id FROM `{$dbTriggers}` ";
     $sql .= "WHERE userid = '{$user_id}' ";
     $sql .= "AND triggerid = '{$trigger}'";
     $result = mysql_query($sql);
-    if (mysql_num_rows($result) == 0) return FALSE;
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($row = mysql_fetch_object($result))
+    if (mysql_error())
     {
-        $t = Trigger::fromID($row->id);
-        $html .= trigger_action_to_html($t);
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        trigger_error("Problem getting trigger details for {$trigger}");
+        return FALSE;
     }
+    if (mysql_num_rows($result) >= 0)
+    {
+        while ($row = mysql_fetch_object($result))
+        {
+            $t = Trigger::fromID($row->id);
+            $html .= trigger_action_to_html($t);
+        }
+    }
+
     return $html;
 }
 
@@ -1205,15 +1287,16 @@ function trigger_action_to_html($trigger)
         }
         if ($t_array['parameters'] != '')
         {
+            // FIXME i18n
             $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
         }
         $html .= "</span>";
     }
 
     $html .=  "<div class='triggeractions'>";
-    //FIXME 4.0, add edit back in
+    //FIXME 3.90, add edit back in
     //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
-    $html .= "<a href='triggers.php?action=delete&id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
+    $html .= "<a href='action_details.php?action=delete&amp;id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
     return $html;
 }
 
@@ -1242,6 +1325,7 @@ function template_description($name, $type)
  * Provides a drop down list of matching functions
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
+ * @todo FIXME 3.90 i18n
  */
 function check_match_drop_down($id = '')
 {
@@ -1265,26 +1349,26 @@ function check_match_drop_down($id = '')
 */
 function create_check_string($param, $value, $join, $enabled, $conditions)
 {
-    //FIXME check for bad code here
-    //FIXME add extra join
     $param_count = sizeof($param);
+
     for ($i = 0; $i < $param_count; $i++)
-    {
+    {   
         if ($enabled[$i] == 'on')
         {
             $checks[$i] = "{".$param[$i]."}";
             if ($join[$i] == 'is') $checks[$i] .= "==";
-            elseif ($join[$i] == 'is not') $checks[$i] .= "==";
-            elseif ($join[$i] == 'contains') $check[$i] .= "!=";
+            elseif ($join[$i] == 'is not') $checks[$i] .= "!=";
+            elseif ($join[$i] == 'contains') trigger_error("Contains not yet supported");
+            elseif ($join[$i] == 'does not contain') trigger_error("Contains not yet supported");
             $checks[$i] .= $value[$i];
         }
     }
 
     $check_count = sizeof($checks);
-    for ($i = 0; $i < $check_count; $i++)
+    foreach ($checks as $key => $value)
     {
-        $final_check .= $checks[0];
-        if ($i != $check_count - 1)
+        $final_check .= $checks[$key];
+        if ($check_count != 1)
         {
             if ($conditions == 'all')
             {
@@ -1295,7 +1379,9 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
                 $final_check .= " OR ";
             }
         }
+        $check_count --;
     }
+
     return $final_check;
 }
 
@@ -1349,6 +1435,12 @@ function checks_to_html($checks)
             }
         }
     }
+    return $html;
+}
+
+function freeform($name)
+{
+    $html = "<input name='name' />";
     return $html;
 }
 

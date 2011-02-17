@@ -727,7 +727,7 @@ function dismissNotice(noticeid, userid)
 function toggleMenuPanel()
 {
     alert('hello');
-$('menupanel').toggle();
+    $('menupanel').toggle();
 /*    if ($('menupanel').style.display == 'block')
     {
 //         $('mainframe').style.width = mainframe;
@@ -1002,4 +1002,118 @@ function ignore_pending_reassignments(incidentid, originalowner)
 function submit_form(form)
 {
 	$(form).submit();
+}
+
+function ldap_browse_window(base, field)
+{
+    // URL = "incident.php?popup=yes&id=" + incidentid;
+    // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
+    URL = "ldap_browse.php?base=" + base + "&field=" + field;
+    window.open(URL, 'ldap_browse', "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=300,height=400");
+}
+
+function ldap_browse_update_group(dn, fieldName)
+{
+	// parent = window.parent;
+	field = window.opener.parent.document.getElementById(fieldName); 
+	field.value = dn;
+	window.close();
+}
+
+function ldap_browse_select_container(ldap_base, field)
+{
+	ldap_type = window.opener.parent.document.getElementById('ldap_type').value;
+	ldap_host = window.opener.parent.document.getElementById('ldap_host').value;
+	ldap_port = window.opener.parent.document.getElementById('ldap_port').value;
+	ldap_protocol = window.opener.parent.document.getElementById('ldap_protocol').value;
+	ldap_security = window.opener.parent.document.getElementById('ldap_security').value;
+	ldap_bind_user = window.opener.parent.document.getElementById('ldap_bind_user').value;
+	ldap_bind_pass = window.opener.parent.document.getElementById('cfgldap_bind_pass').value;
+	
+	new Ajax.Request(application_webpath + 'ajaxdata.php',
+			{
+				method: 'POST', 
+				parameters: {action: 'ldap_browse_groups', base: ldap_base, ldap_type: ldap_type, ldap_host: ldap_host, ldap_port: ldap_port,
+								ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass},
+				onCreate: function()
+				{
+					$('ldap_browse_contents').innerHTML = "<p align='center'<img src='"+application_webpath + "images/ajax-loader.gif' /><br />Loading</p>";
+				},
+				onSuccess: function(transport)
+				{
+					var response = transport.responseText || "no response text";
+		            if (transport.responseText)
+		            {
+		            	var html = 'Current Level: '
+		            		
+		            	if (ldap_base.length > 0) html += ldap_base;
+		            	else html += '[root]';
+		            	
+		            	html += '<table>';
+	            		
+	            		if (ldap_base.length > 0)
+            			{
+	            			if (ldap_base.indexOf(',') == -1)
+            				{
+	            				parent = '';
+            				}
+	            			else
+            				{
+	            				parent = ldap_base.substring(ldap_base.indexOf(',')+1);
+            				}
+	            			
+	            			html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
+	            			html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";
+	            			html += "</tr>";
+            			}
+		            		
+		            	var data = response.evalJSON();
+		            	if (data.length == 0)
+	            		{
+		            		html += "<tr><td colspan='3'>ERROR</td></tr>";
+	            		}
+		            	else
+	            		{
+		            		if (data[0].status == 'ok')
+		            		{
+				            	for (i = 1; i < data.length; i++)
+			            		{
+				            		html += '<tr>';		            		
+				            		
+				            		if (data[i].type == 'container')
+			            			{
+				            			html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navdown+"</a></td>";
+				            			html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_kb+"</a></td>";
+				            			html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+			            			}
+				            		else if (data[i].type == 'group')
+			            			{
+				            			html += "<td></td>";
+				            			html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_site+"</a></td>";
+				            			html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+			            			}
+				            		
+				            		html += '</tr>';
+			            		}
+		            		}
+		            		else if (data[0].status == 'connectfailed')
+	            			{
+		            			html += "<tr><td colspan='3'>"+strLDAPTestFailed+"</td></tr>";
+	            			}
+		            		else
+	            			{
+		            			html += "<tr><td colspan='3'>"+data[0].status+"</td></tr>";
+	            			}
+	            		}
+		            	
+		            	html += '</table>';
+		            	
+			            $('ldap_browse_contents').innerHTML = html;
+		            }
+				},
+				onFailure: function()
+				{
+					alert('Error browsing LDAP');
+				}
+			});
 }

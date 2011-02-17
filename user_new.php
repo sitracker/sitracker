@@ -41,7 +41,7 @@ if (empty($submit))
     echo show_form_errors('new_user');
     clear_form_errors('new_user');
 
-    echo "<h2>".icon('user', 32)." ";
+    echo "<h2>".icon('newuser', 32)." ";
     echo "{$strNewUser}</h2>";
     echo "<form id='adduser' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
@@ -274,7 +274,7 @@ else
         else
         {
             setup_user_triggers($newuserid);
-            trigger('TRIGGER_NEW_USER', array('userid' => $newuserid));
+            $t = new TriggerEvent('TRIGGER_NEW_USER', array('userid' => $newuserid));
             html_redirect("manage_users.php#userid{$newuserid}");
         }
         clear_form_data('new_user');

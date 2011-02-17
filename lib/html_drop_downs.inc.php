@@ -334,7 +334,7 @@ function interfacestyle_drop_down($name, $setting)
  * @param int $selected.  Group ID to preselect
  * @return HTML select
  */
-function group_drop_down($name, $selected)
+function group_drop_down($name = '', $selected = '')
 {
     global $grouparr, $numgroups;
     $html = "<select name='$name'>";
@@ -673,7 +673,7 @@ function role_drop_down($name, $id)
  * @param bool $showinactive Whether to show the sites marked inactive, defaults to false
  * @return string The HTML for the drop down
  */
-function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
+function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALSE)
 {
     global $dbSites, $strEllipsis;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
@@ -732,7 +732,7 @@ function site_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
  * @param bool $return. Whether to return to HTML or echo
  * @param bool $showonlyactive. True show only active (with a future expiry date), false shows all
  */
-function maintenance_drop_down($name, $id, $siteid = '', $excludes = '', $return = FALSE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
+function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $return = TRUE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
 {
     global $GLOBALS, $now;
     // TODO make maintenance_drop_down a hierarchical selection box sites/contracts

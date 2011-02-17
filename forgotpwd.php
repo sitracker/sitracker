@@ -95,7 +95,6 @@ switch ($_REQUEST['action'])
                 $hash = md5($row->username.'.'.$row->password);
                 $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&contactid={$row->id}&hash={$hash}";
                 $t = new TriggerEvent('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
-                //trigger('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
                 echo "<h3>{$strInformationSent}</h3>";
                 echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
                 if (empty($email) AND !empty($contactid))

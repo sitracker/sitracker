@@ -649,7 +649,7 @@ elseif ($mode == 'approve')
     if ($percent !== FALSE)
     {
         $siteid = db_read_column('site', $dbMaintenance, $maintid);
-    	trigger('TRIGGER_SERVICE_LIMIT', array('contractid' => $maintid, 'serviceremaining' => $percent, 'siteid' => $siteid));
+        $t = new TriggerEvent('TRIGGER_SERVICE_LIMIT', array('contractid' => $maintid, 'serviceremaining' => $percent, 'siteid' => $siteid));
     }
 
     if ($status)

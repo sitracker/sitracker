@@ -29,17 +29,17 @@ echo "<h2>".icon('escalation', 32, $strEscalationPaths)." {$title}</h2>";
 
 $sql = "SELECT * FROM `{$dbEscalationPaths}` ORDER BY name";
 $result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($result) >= 1)
 {
     echo "<table align='center'>";
     echo "<tr>";
-    echo colheader('name',$strName);
-    echo colheader('track_url',$strTrackURL);
-    echo colheader('home_url',$strHomeURL);
-    echo colheader('url_title',$strURLTitle);
-    echo colheader('email_domain',$strEmailDomain);
-    echo colheader('edit',$strOperation);
+    echo colheader('name', $strName);
+    echo colheader('track_url', $strTrackURL);
+    echo colheader('home_url', $strHomeURL);
+    echo colheader('url_title', $strURLTitle);
+    echo colheader('email_domain', $strEmailDomain);
+    echo colheader('edit', $strOperation);
     echo "</tr>";
     while ($path = mysql_fetch_object($result))
     {

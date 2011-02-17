@@ -1176,7 +1176,7 @@ switch ($_REQUEST['action'])
                             }
                         }
 
-                        // FIXME which version of SiT do we support upgrading to 4.0 from?  
+                        // FIXME which version of SiT do we support upgrading to 4.0 from?
                         /******************************
                          * Do Post-upgrade tasks here *
                          ******************************/
@@ -1358,7 +1358,7 @@ switch ($_REQUEST['action'])
                             echo "<h2>Upgrade complete</h2>";
                             echo "<p>Upgraded to v{$application_version}</p>";
                             include (APPLICATION_LIBPATH . 'triggers.inc.php');
-                            trigger("TRIGGER_SIT_UPGRADED", array('applicationversion' => $application_version));
+                            $t = new TriggerEvent("TRIGGER_SIT_UPGRADED", array('applicationversion' => $application_version));
                         }
                         else
                         {

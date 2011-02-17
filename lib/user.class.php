@@ -175,7 +175,7 @@ class User extends Person{
                 }
 
                 setup_user_triggers($toReturn);
-                trigger('TRIGGER_NEW_USER', array('userid' => $toReturn));
+                $t = new TriggerEvent('TRIGGER_NEW_USER', array('userid' => $toReturn));
             }
         }
 

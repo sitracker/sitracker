@@ -229,7 +229,7 @@ function saction_TimeCalc()
             $coefficient = 1;
             $NextslaName = $GLOBALS['strSLATarget'];
 
-            switch ($slaInfo['sla'])
+            switch ($slaInfo->sla)
             {
                 case 'opened':
                     $slaRequest='initial_response_mins';
@@ -282,9 +282,9 @@ function saction_TimeCalc()
                 {
                     $timetil = $times['next_sla_time']-$newSlaTime;
 
-                    trigger('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident->id,
-                                                                  'nextslatime' => $times->next_sla_time,
-                                                                  'nextsla' => $NextslaName));
+                    $t = new TriggerEvent('TRIGGER_INCIDENT_NEARING_SLA', array('incidentid' => $incident->id,
+                    'nextslatime' => $times->next_sla_time,
+                    'nextsla' => $NextslaName));
 
                     $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident->id}'";
                     mysql_query($sql);
@@ -410,7 +410,7 @@ function saction_SetUserStatus()
 }
 
 
-/** 
+/**
  * Chase / Remind customers
  * @author Paul Heaney
  * @note Moved from htdocs/auto/chase_customer.php by INL for 3.40
@@ -568,7 +568,7 @@ function saction_ChaseCustomers()
 }
 
 
-/** 
+/**
  * Check the holding queue for waiting email
  * @author Ivan Lucas
  */
@@ -734,7 +734,7 @@ function saction_CheckTasksDue()
         {
             while ($row = mysql_fetch_object($result))
             {
-                trigger('TRIGGER_TASK_DUE', array('taskid' => $row->id));
+                $t = new triggerEvent('TRIGGER_TASK_DUE', array('taskid' => $row->id));
             }
         }
     }
@@ -838,7 +838,7 @@ function saction_ldapSync()
                             // User is disabled in the SIT db, check to see if we need to re-enable
                             if (!empty($user_attributes[$CONFIG['ldap_logindisabledattribute']]))
                             {
-                                if (strtolower($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]) != strtolower($CONFIG['ldap_logindisabledvalue']))
+                                if (ldap_is_account_disabled($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]))
                                 {
                                     // The user is enabled in LDAP so we want to enable
                                     debug_log("Re-enabling user '{$u}' in the SiT users database", TRUE);
@@ -850,7 +850,7 @@ function saction_ldapSync()
                         else
                         {
                             // User is not disabled in the SiT database, check to see if we need to disable
-                            if (strtolower($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
+                            if (ldap_is_account_disabled($user_attributes[$CONFIG['ldap_logindisabledattribute']][0]))
                             {
                                 // User is disabled in LDAP so we want to disable
                                 if (is_object($sit_db_users[$user_attributes[$CONFIG['ldap_userattribute']][0]]))
@@ -952,7 +952,7 @@ function saction_ldapSync()
                                 // User disabled in SIT check if needs renameding
                                 if (!empty($contact_attributes[$CONFIG['ldap_logindisabledattribute']]))
                                 {
-                                    if (strtolower($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]) != strtolower($CONFIG['ldap_logindisabledvalue']))
+                                    if (!ldap_is_account_disabled($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]))
                                     {
                                         // We want to enable
                                         $sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]->active = 'true';
@@ -963,7 +963,7 @@ function saction_ldapSync()
                             elseif (!empty($contact_attributes[$CONFIG['ldap_logindisabledattribute']]))
                             {
                                 // User not disabled in SiT though attribite is available to us
-                                if (strtolower($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]) == strtolower($CONFIG['ldap_logindisabledvalue']))
+                                if (ldap_is_account_disabled($contact_attributes[$CONFIG['ldap_logindisabledattribute']][0]))
                                 {
                                     // We want to disable
                                     if (is_object($sit_db_contacts[$contact_attributes[$CONFIG['ldap_userattribute']][0]]))

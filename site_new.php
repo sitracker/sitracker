@@ -122,7 +122,7 @@ if ($action == "showform" OR $action == '')
 
     clear_form_data('new_site');
 }
-elseif ($action == "add")
+elseif ($action == "new")
 {
     $name = cleanvar($_POST['name']);
     $department = cleanvar($_POST['department']);
@@ -177,7 +177,7 @@ elseif ($action == "add")
             clear_form_data('new_site');
             clear_form_errors('new_site');
 
-            trigger('TRIGGER_NEW_SITE', array('siteid' => $id, 'userid' => $sit[2]));
+            $t = new TriggerEvent('TRIGGER_NEW_SITE', array('siteid' => $id, 'userid' => $sit[2]));
             html_redirect("site_details.php?id={$id}");
         }
     }

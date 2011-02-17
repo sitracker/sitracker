@@ -8,4 +8,4 @@ config.inc.php
 .project
 .buildpath
 .settings
-
+.svn

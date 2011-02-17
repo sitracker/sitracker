@@ -58,7 +58,7 @@ if (empty($dashboardid))
             if (empty($ondashboard[$obj->id]))
             {
                 //not already on dashbaord
-                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=new&amp;id={$obj->id}'>{$strNew}</a></td></tr>\n";
+                echo "<tr><th>{$strName}:</th><td>{$obj->name}</td><td><a href='{$_SERVER['PHP_SELF']}?action=new&amp;id={$obj->id}'>{$strAdd}</a></td></tr>\n";
             }
             else
             {

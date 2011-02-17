@@ -610,7 +610,7 @@ elseif ($action == 'assign')
         $send_email = cleanvar($_REQUEST['send_email']);
         $inventory = cleanvar($_REQUEST['inventory']);
 
-        $timetonextaction = clean_int($_POST['timetonextaction']);
+        $timetonextaction = cleanvar($_POST['timetonextaction']);
         $date = cleanvar($_POST['date']);
         $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
         $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);

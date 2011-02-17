@@ -131,7 +131,7 @@ function incident_sla_history($incidentid)
  * @param string $select additional parameter to the select clause e.g. onchange code
  * @return String HTML of the SLA drop down
  */
-function servicelevel_drop_down($name, $tag, $collapse = FALSE, $select = '')
+function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = '')
 {
     global $dbServiceLevels;
 

@@ -85,7 +85,7 @@ if ($submit_value == "go")
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 if ($search_string == '') $search_string='a';
 echo "<h2>".icon('site', 32)." ";
-echo "{title}</h2>";
+echo "{$title}</h2>";
 
 echo "<table summary='alphamenu' align='center'>";
 echo "<tr>";
