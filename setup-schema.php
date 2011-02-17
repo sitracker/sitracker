@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
   `id` int(1) NOT NULL default '0',
   `version` float(3,2) NOT NULL default '0.00',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 -- NOTE system must be the first table created.
 
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
   `config` varchar(255) NOT NULL,
   `value` text,
   PRIMARY KEY  (`config`)
-) TYPE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbContacts}` (
@@ -185,7 +185,7 @@ CREATE TABLE `{$dbContacts}` (
   KEY `forenames` (`forenames`),
   KEY `surname` (`surname`),
   KEY `notify_contactid` (`notify_contactid`)
-) TYPE=MyISAM DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbDashboard}` (
@@ -1523,7 +1523,7 @@ CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
   `value` text,
   PRIMARY KEY  (`userid`,`config`),
   KEY `userid` (`userid`)
-) TYPE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbUserSoftware}` (
