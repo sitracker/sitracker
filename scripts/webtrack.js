@@ -1117,3 +1117,24 @@ function ldap_browse_select_container(ldap_base, field)
 				}
 			});
 }
+
+/**
+ * Display/Hide contents of a password field
+ * (converts from a password to text field and back)
+ * @author Ivan Lucas
+ * @param string elem. The ID of the password input HTML element
+**/
+function password_reveal(elem)
+{
+   var elemlink = 'link' + elem;
+   if ($(elem).type == 'password')
+   {
+       $(elem).type = 'text';
+       $(elemlink).innerHTML = strHide;
+   }
+   else
+   {
+       $(elem).type = 'password';
+       $(elemlink).innerHTML = strReveal;
+   }
+}

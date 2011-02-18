@@ -71,6 +71,8 @@ var strSelectKBSections = \"{$strSelectKBSections}\";
 var strFinalUpdate = \"{$strFinalUpdate}\";
 var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
+var strHide = \"{$strHide}\";
+var strReveal = \"{$strReveal}\";
 
 var strUp = \"{$strUp}\";
 
@@ -87,29 +89,6 @@ var icon_navup = '{$navup_icon}';
 /* Please don't add functions here, these functions below need moving to webtrack.js
    this file is to make i18n keys available in javascript
 */
-
-
-
-/**
-  * Display/Hide contents of a password field
-  * (converts from a password to text field and back)
-  * @author Ivan Lucas
-  * @param string elem. The ID of the password input HTML element
-**/
-function password_reveal(elem)
-{
-    var elemlink = 'link' + elem;
-    if ($(elem).type == 'password')
-    {
-        $(elem).type = 'text';
-        $(elemlink).innerHTML = '{$strHide}';
-    }
-    else
-    {
-        $(elem).type = 'password';
-        $(elemlink).innerHTML = '{$strReveal}';
-    }
-}
 
 
 
