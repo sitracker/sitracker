@@ -22,6 +22,18 @@ session_start();
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
+if ($_SESSION['auth'] == TRUE)
+{
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
+}
+else
+{
+    $theme = $CONFIG['default_interface_style'];
+    $iconset = $CONFIG['default_iconset'];
+}
+if (empty($iconset)) $iconset = 'sit';
+
 header('Content-type: text/javascript');
 
 $site_icon = icon('site', 16);
