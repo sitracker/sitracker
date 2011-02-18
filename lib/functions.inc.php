@@ -1389,11 +1389,12 @@ if (is_array($CONFIG['plugins']))
 {
     foreach ($CONFIG['plugins'] AS $plugin)
     {
+        $pllugin = trim($plugin);
         // Remove any dots
         $plugin = str_replace('.','',$plugin);
         // Remove any slashes
-
         $plugin = str_replace('/','',$plugin);
+
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
         if ($plugin != '')
         {
