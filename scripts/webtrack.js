@@ -1118,6 +1118,109 @@ function ldap_browse_select_container(ldap_base, field)
 			});
 }
 
+
+/**
+ * Check the LDAP details entered and display the results
+ * @author Paul heaney
+ * @param string statusfield element ID of the DIV that will contain the status text
+*/
+function checkLDAPDetails(statusfield)
+{
+   $(statusfield).innerHTML = '<strong>'+strCheckingDetails+'</strong>';
+
+   var server = $('ldap_host').value;
+   var port = $('ldap_port').value;
+   var type = $('ldap_type').options[$('ldap_type').selectedIndex].value;
+   var protocol = $('ldap_protocol').options[$('ldap_protocol').selectedIndex].value;
+   var security = $('ldap_security').options[$('ldap_security').selectedIndex].value;
+   var user = $('ldap_bind_user').value;
+   var password = $('cfgldap_bind_pass').value;
+   var userBase = $('ldap_user_base').value;
+   var adminGrp = $('ldap_admin_group').value;
+   var managerGrp = $('ldap_manager_group').value;
+   var userGrp = $('ldap_user_group').value;
+   var customerGrp = $('ldap_customer_group').value;
+
+   // Auto save
+   var xmlhttp=false;
+
+   if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+   {
+       try
+       {
+           xmlhttp = new XMLHttpRequest();
+       }
+       catch (e)
+       {
+           xmlhttp=false;
+       }
+   }
+   if (!xmlhttp && window.createRequest)
+   {
+       try
+       {
+           xmlhttp = window.createRequest();
+       }
+       catch (e)
+       {
+           xmlhttp=false;
+       }
+   }
+
+   var url =  'ajaxdata.php';
+   var params = 'action=checkldap&ldap_host='+server+'&ldap_type='+type+'&ldap_port='+port+'&ldap_protocol='+protocol+'&ldap_security='+security+'&ldap_bind_user='+encodeURIComponent(user)+'&ldap_bind_pass='+encodeURIComponent(password)+'&ldap_user_base='+userBase+'&ldap_admin_group='+adminGrp+'&ldap_manager_group='+managerGrp+'&ldap_user_group='+userGrp+'&ldap_customer_group='+customerGrp;
+   xmlhttp.open('POST', url, true)
+   xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+   xmlhttp.setRequestHeader('Content-length', params.length);
+   xmlhttp.setRequestHeader('Connection', 'close');
+
+   xmlhttp.onreadystatechange=function()
+   {
+       if (xmlhttp.readyState==4)
+       {
+           if (xmlhttp.responseText != '')
+           {
+               if (xmlhttp.responseText == LDAP_PASSWORD_INCORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strPasswordIncorrect+'</strong>';
+               }
+               else if (xmlhttp.responseText == LDAP_BASE_INCORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPUserBaseDNIncorrect+'</strong>';
+               }
+               else if (xmlhttp.responseText == LDAP_ADMIN_GROUP_INCORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPAdminGroupIncorrect+'</strong>';
+               }
+               else if (xmlhttp.responseText == LDAP_MANAGER_GROUP_INCORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPManagerGroupIncorrect+'</strong>';
+               }
+               else if (xmlhttp.responseText == LDAP_USER_GROUP_INCORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPUserGroupIncorrect+'</strong>';
+               }
+               else if (xmlhttp.responseText == LDAP_CUSTOMER_GROUP_INCORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPCustomerGroupIncorrect+'</strong>';
+               }
+               else if (xmlhttp.responseText == LDAP_CORRECT)
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPTestSucessful+'</strong>';
+               }
+               else
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPTestFailed+'</strong>';
+               }
+           }
+       }
+   }
+   xmlhttp.send(params);
+}
+
+
+
+
 /**
  * Display/Hide contents of a password field
  * (converts from a password to text field and back)
