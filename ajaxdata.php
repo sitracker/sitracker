@@ -35,7 +35,7 @@ $selected = cleanvar($_REQUEST['selected']);
 switch ($action)
 {
     case 'auto_save':
-        $userid = clean_int($_REQUEST['userid']);
+        $userid = $_SESSION['userid'];
         $incidentid = clean_int($_REQUEST['incidentid']);
         $type = cleanvar($_REQUEST['type']);
         $draftid = clean_int($_REQUEST['draftid']);
