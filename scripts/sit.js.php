@@ -40,6 +40,8 @@ $site_icon = icon('site', 16);
 $navdown_icon = icon('navdown', 16);
 $navup_icon = icon('navup', 16);
 $kb_icon = icon('kb', 16);
+$save_icon = icon('save', 16, $strSaveDraft);
+$info_icon = icon('info', 16, $strDraftLastSaved);
 
 echo "
 var application_webpath = '{$CONFIG['application_webpath']}';
@@ -106,6 +108,8 @@ var icon_site = '{$site_icon}';
 var icon_navdown = '{$navdown_icon}';
 var icon_kb = '{$kb_icon}';
 var icon_navup = '{$navup_icon}';
+var save_icon = '{$save_icon}';
+var info_icon = '{$info_icon}';
 
 /* 
     Please don't add functions here, these functions below need moving to webtrack.js

@@ -25,7 +25,8 @@ $bodytext = cleanvar($_REQUEST['bodytext'], FALSE, TRUE);
 $id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 $action = cleanvar($_REQUEST['action']);
-
+$draftid = cleanvar($_REQUEST['draftid']);
+if (empty($draftid)) $draftid = -1;
 
 $title = $strUpdate;
 
@@ -190,76 +191,10 @@ function display_update_page($draftid=-1)
         object.updatetype.options[Current].value = object.currentText.value;
     }
 
-    <?php
-        echo "var draftid = {$draftid}";
-    ?>
-
-    // Auto save
-    function save_content(){
-        var xmlhttp=false;
-
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-            try {
-                xmlhttp = new XMLHttpRequest();
-            } catch (e) {
-                xmlhttp=false;
-            }
-        }
-        if (!xmlhttp && window.createRequest) {
-            try {
-                xmlhttp = window.createRequest();
-            } catch (e) {
-                xmlhttp=false;
-            }
-        }
-
-        var toPass = $('updatelog').value;
-        //alert(toPass.value);
-
-        var meta = $('target').value+"|"+$('updatetype').value+"|"+$('cust_vis').checked+"|";
-        meta += $('priority').value+"|"+$('newstatus').value+"|"+$('nextaction').value+"|";
-
-        if (toPass != '')
-        {
-            // xmlhttp.open("GET", "ajaxdata.php?action=auto_save&userid="+<?php echo $_SESSION['userid']; ?>+"&type=update&incidentid="+<?php echo $id; ?>+"&draftid="+draftid+"&meta="+meta+"&content="+escape(toPass), true);
-            var url = "ajaxdata.php";
-            var params = "action=auto_save&userid="+<?php echo $_SESSION['userid']; ?>+"&type=update&incidentid="+<?php echo $id; ?>+"&draftid="+draftid+"&meta="+meta+"&content="+encodeURIComponent(toPass);
-            xmlhttp.open("POST", url, true)
-            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
-            xmlhttp.setRequestHeader("Content-length", params.length);
-            xmlhttp.setRequestHeader("Connection", "close");
-
-            xmlhttp.onreadystatechange=function() {
-                //remove this in the future after testing
-                if (xmlhttp.readyState==4) {
-                    if (xmlhttp.responseText != ''){
-                        //alert(xmlhttp.responseText);
-                        if (draftid == -1)
-                        {
-                            draftid = xmlhttp.responseText;
-                            $('draftid').value = draftid;
-                        }
-                        var currentTime = new Date();
-                        var hours = currentTime.getHours();
-                        var minutes = currentTime.getMinutes();
-                        if (minutes < 10)
-                        {
-                            minutes = "0"+minutes;
-                        }
-                        var seconds = currentTime.getSeconds();
-                        if (seconds < 10)
-                        {
-                            seconds = "0"+seconds;
-                        }
-                        $('updatestr').innerHTML = '<?php echo "<a href=\"javascript:save_content();\">".icon('save', 16, $GLOBALS['strSaveDraft'])."</a> ".icon('info', 16, $GLOBALS['strDraftLastSaved'])." "; ?>' + hours + ':' + minutes + ':' + seconds;
-                    }
-                }
-            }
-            xmlhttp.send(params);
-        }
-    }
-
-    setInterval("save_content()", 10000); //every 10 seconds
+    new PeriodicalExecuter(function(pe) {
+        setInterval("save_update_draft('"+<?php echo $id; ?>+"')")
+    },
+    10);
 
     //-->
     </script>
@@ -420,7 +355,7 @@ function display_update_page($draftid=-1)
     echo "<textarea name='bodytext' id='updatelog' rows='13' cols='50'>";
     if ($draftid != -1) echo $draftobj->content;
     echo "</textarea>";
-    echo "<div id='updatestr'><a href='javascript:save_content();'>".icon('save', 16, $GLOBALS['strSaveDraft'])."</a></div>";
+    echo "<div id='updatestr'><a href=\"javascript:save_update_draft('{$id}');\">".icon('save', 16, $GLOBALS['strSaveDraft'])."</a></div>";
     echo "</td></tr>";
 
     if ($target->type == 'initialresponse')
@@ -496,16 +431,8 @@ function display_update_page($draftid=-1)
     echo "</table>";
     echo "<p class='center'>";
     echo "<input type='hidden' name='action' value='update' />";
-    if ($draftid == -1)
-    {
-        $localdraft = '';
-    }
-    else
-    {
-        $localdraft = $draftid;
-    }
 
-    echo "<input type='hidden' name='draftid' id='draftid' value='{$localdraft}' />";
+    echo "<input type='hidden' name='draftid' id='draftid' value='{$draftid}' />";
     echo "<input type='hidden' name='storepriority' value='".incident_priority($id)."' />";
     echo "<input type='submit' name='submit' value='{$GLOBALS['strUpdateIncident']}' /></p>";
     echo "</form>";
@@ -537,7 +464,6 @@ if (empty($action))
 else if ($action == "editdraft")
 {
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-    $draftid = cleanvar($_REQUEST['draftid']);
     display_update_page($draftid);
 }
 else if ($action == "deletedraft")

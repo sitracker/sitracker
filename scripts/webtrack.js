@@ -1297,3 +1297,71 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         xmlhttp.send(params);
     }
 }
+
+
+// Auto save
+function save_update_draft(incidentid){
+    var xmlhttp=false;
+
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+        try {
+            xmlhttp = new XMLHttpRequest();
+        } catch (e) {
+            xmlhttp=false;
+        }
+    }
+    if (!xmlhttp && window.createRequest) {
+        try {
+            xmlhttp = window.createRequest();
+        } catch (e) {
+            xmlhttp=false;
+        }
+    }
+
+    var toPass = $('updatelog').value;
+    //alert(toPass.value);
+
+    var meta = $('target').value+"|"+$('updatetype').value+"|"+$('cust_vis').checked+"|";
+    meta += $('priority').value+"|"+$('newstatus').value+"|"+$('nextaction').value+"|";
+
+    var draftid = $('draftid').value;
+    
+    if (toPass != '')
+    {
+        // xmlhttp.open("GET", "ajaxdata.php?action=auto_save&userid="+<?php echo $_SESSION['userid']; ?>+"&type=update&incidentid="+<?php echo $id; ?>+"&draftid="+draftid+"&meta="+meta+"&content="+escape(toPass), true);
+        var url = "ajaxdata.php";
+        var params = "action=auto_save&type=update&incidentid="+incidentid+"&draftid="+draftid+"&meta="+meta+"&content="+encodeURIComponent(toPass);
+        xmlhttp.open("POST", url, true)
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
+        xmlhttp.setRequestHeader("Content-length", params.length);
+        xmlhttp.setRequestHeader("Connection", "close");
+
+        xmlhttp.onreadystatechange=function() {
+            //remove this in the future after testing
+            if (xmlhttp.readyState==4) {
+                if (xmlhttp.responseText != ''){
+                    //alert(xmlhttp.responseText);
+                    if (draftid == -1)
+                    {
+                        draftid = xmlhttp.responseText;
+                        $('draftid').value = draftid;
+                    }
+                    var currentTime = new Date();
+                    var hours = currentTime.getHours();
+                    var minutes = currentTime.getMinutes();
+                    if (minutes < 10)
+                    {
+                        minutes = "0"+minutes;
+                    }
+                    var seconds = currentTime.getSeconds();
+                    if (seconds < 10)
+                    {
+                        seconds = "0"+seconds;
+                    }
+                    $('updatestr').innerHTML = "<a href=\"javascript:save_update_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
+                }
+            }
+        }
+        xmlhttp.send(params);
+    }
+}
