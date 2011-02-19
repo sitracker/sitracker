@@ -254,6 +254,7 @@ switch ($action)
         $ldap_port = clean_int($_REQUEST['ldap_port']);
         $ldap_protocol = cleanvar($_REQUEST['ldap_protocol']);
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
+        $ldap_type = cleanvar($_REQUEST['ldap_type']);
         $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);
         $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);
         $ldap_user_base = cleanvar($_REQUEST['ldap_user_base']);
