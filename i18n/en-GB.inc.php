@@ -757,6 +757,7 @@ $strHasBeenAutoMovedToX = '%s has been automatically moved to %s\'s %s queue';
 # Incident 3 has been moved to John's Action Needed queue, three %s variables in this: incident number, queue name, users name
 $strHasBeenMovedToX = '%s has been moved to %s\'s %s queue';
 $strHAVESkills = 'HAVE Skills';
+$strHaveForgottenUsername = 'Have you forgotten your username?  If so you should contact an administrator.';
 $strHeldEmailsNum = '%d Held Emails';
 $strHelp = 'Help';
 $strHelpAbout = 'About';
