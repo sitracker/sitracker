@@ -923,26 +923,26 @@ function set_user_status()
 {
     var userstatus = $('userstatus_dropdown').value;
     new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
-	    {
-	        method:'get',
-	        onSuccess: function(transport)
-	        {
-	            var response = transport.responseText || "no response text";
-	            if (transport.responseText)
-	            {
-	                if (response != 'FALSE')
-	                {
-	                    $('userstatus_summaryline').innerHTML = response;
-	                	// hide_status_drop_down();
-	                    $('userstatus_dropdown').blur();
-	                }
-	            }
-	        },
-	        onFailure: function()
-	        {
-	        	alert('Something went wrong...');
-        	}
-	    });
+            {
+        method:'get',
+        onSuccess: function(transport)
+        {
+            var response = transport.responseText || "no response text";
+            if (transport.responseText)
+            {
+                if (response != 'FALSE')
+                {
+                    $('userstatus_summaryline').innerHTML = response;
+                    // hide_status_drop_down();
+                    $('userstatus_dropdown').blur();
+                }
+            }
+        },
+        onFailure: function()
+        {
+            alert('Something went wrong...');
+        }
+            });
 }
 
 function attach_another_file(element)
@@ -969,38 +969,38 @@ function attach_another_file(element)
 
 function ignore_pending_reassignments(incidentid, originalowner)
 {
-	new Ajax.Request(application_webpath + 'ajaxdata.php?action=delete_temp_assign&incidentid='+incidentid+'&originalowner='+originalowner,
-			{
-				method: 'get',
-				onSuccess: function(transport)
-				{
-					var response = transport.responseText || "no response text";
-		            if (transport.responseText)
-		            {
-		            	if (response == 'OK')
-	            		{
-		            		Element.remove('incident'+incidentid);
-	            		}
-		            	else if (response == 'NOPERMISSION')
-		            	{
-							alert('No Permission to ignore incident reassignment');
-						}
-		            	else
-	            		{
-		            		alert ('Something went wrong ignoring reassignment');
-	            		}
-		            }
-				},
-				onFailure: function()
-				{
-					alert('Error ignoring reassignment');
-				}
-			});
+    new Ajax.Request(application_webpath + 'ajaxdata.php?action=delete_temp_assign&incidentid='+incidentid+'&originalowner='+originalowner,
+            {
+        method: 'get',
+        onSuccess: function(transport)
+        {
+            var response = transport.responseText || "no response text";
+            if (transport.responseText)
+            {
+                if (response == 'OK')
+                {
+                    Element.remove('incident'+incidentid);
+                }
+                else if (response == 'NOPERMISSION')
+                {
+                    alert('No Permission to ignore incident reassignment');
+                }
+                else
+                {
+                    alert ('Something went wrong ignoring reassignment');
+                }
+            }
+        },
+        onFailure: function()
+        {
+            alert('Error ignoring reassignment');
+        }
+            });
 }
 
 function submit_form(form)
 {
-	$(form).submit();
+    $(form).submit();
 }
 
 function ldap_browse_window(base, field)
@@ -1013,108 +1013,108 @@ function ldap_browse_window(base, field)
 
 function ldap_browse_update_group(dn, fieldName)
 {
-	// parent = window.parent;
-	field = window.opener.parent.document.getElementById(fieldName); 
-	field.value = dn;
-	window.close();
+    // parent = window.parent;
+    field = window.opener.parent.document.getElementById(fieldName); 
+    field.value = dn;
+    window.close();
 }
 
 function ldap_browse_select_container(ldap_base, field)
 {
-	ldap_type = window.opener.parent.document.getElementById('ldap_type').value;
-	ldap_host = window.opener.parent.document.getElementById('ldap_host').value;
-	ldap_port = window.opener.parent.document.getElementById('ldap_port').value;
-	ldap_protocol = window.opener.parent.document.getElementById('ldap_protocol').value;
-	ldap_security = window.opener.parent.document.getElementById('ldap_security').value;
-	ldap_bind_user = window.opener.parent.document.getElementById('ldap_bind_user').value;
-	ldap_bind_pass = window.opener.parent.document.getElementById('cfgldap_bind_pass').value;
-	
-	new Ajax.Request(application_webpath + 'ajaxdata.php',
-			{
-				method: 'POST', 
-				parameters: {action: 'ldap_browse_groups', base: ldap_base, ldap_type: ldap_type, ldap_host: ldap_host, ldap_port: ldap_port,
-								ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass},
-				onCreate: function()
-				{
-					$('ldap_browse_contents').innerHTML = "<p align='center'<img src='"+application_webpath + "images/ajax-loader.gif' /><br />Loading</p>";
-				},
-				onSuccess: function(transport)
-				{
-					var response = transport.responseText || "no response text";
-		            if (transport.responseText)
-		            {
-		            	var html = 'Current Level: '
-		            		
-		            	if (ldap_base.length > 0) html += ldap_base;
-		            	else html += '[root]';
-		            	
-		            	html += '<table>';
-	            		
-	            		if (ldap_base.length > 0)
-            			{
-	            			if (ldap_base.indexOf(',') == -1)
-            				{
-	            				parent = '';
-            				}
-	            			else
-            				{
-	            				parent = ldap_base.substring(ldap_base.indexOf(',')+1);
-            				}
-	            			
-	            			html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
-	            			html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";
-	            			html += "</tr>";
-            			}
-		            		
-		            	var data = response.evalJSON();
-		            	if (data.length == 0)
-	            		{
-		            		html += "<tr><td colspan='3'>ERROR</td></tr>";
-	            		}
-		            	else
-	            		{
-		            		if (data[0].status == 'ok')
-		            		{
-				            	for (i = 1; i < data.length; i++)
-			            		{
-				            		html += '<tr>';		            		
-				            		
-				            		if (data[i].type == 'container')
-			            			{
-				            			html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navdown+"</a></td>";
-				            			html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_kb+"</a></td>";
-				            			html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
-			            			}
-				            		else if (data[i].type == 'group')
-			            			{
-				            			html += "<td></td>";
-				            			html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_site+"</a></td>";
-				            			html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
-			            			}
-				            		
-				            		html += '</tr>';
-			            		}
-		            		}
-		            		else if (data[0].status == 'connectfailed')
-	            			{
-		            			html += "<tr><td colspan='3'>"+strLDAPTestFailed+"</td></tr>";
-	            			}
-		            		else
-	            			{
-		            			html += "<tr><td colspan='3'>"+data[0].status+"</td></tr>";
-	            			}
-	            		}
-		            	
-		            	html += '</table>';
-		            	
-			            $('ldap_browse_contents').innerHTML = html;
-		            }
-				},
-				onFailure: function()
-				{
-					alert('Error browsing LDAP');
-				}
-			});
+    ldap_type = window.opener.parent.document.getElementById('ldap_type').value;
+    ldap_host = window.opener.parent.document.getElementById('ldap_host').value;
+    ldap_port = window.opener.parent.document.getElementById('ldap_port').value;
+    ldap_protocol = window.opener.parent.document.getElementById('ldap_protocol').value;
+    ldap_security = window.opener.parent.document.getElementById('ldap_security').value;
+    ldap_bind_user = window.opener.parent.document.getElementById('ldap_bind_user').value;
+    ldap_bind_pass = window.opener.parent.document.getElementById('cfgldap_bind_pass').value;
+
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
+            {
+        method: 'POST', 
+        parameters: {action: 'ldap_browse_groups', base: ldap_base, ldap_type: ldap_type, ldap_host: ldap_host, ldap_port: ldap_port,
+            ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass},
+            onCreate: function()
+            {
+                $('ldap_browse_contents').innerHTML = "<p align='center'<img src='"+application_webpath + "images/ajax-loader.gif' /><br />Loading</p>";
+            },
+            onSuccess: function(transport)
+            {
+                var response = transport.responseText || "no response text";
+                if (transport.responseText)
+                {
+                    var html = 'Current Level: '
+
+                        if (ldap_base.length > 0) html += ldap_base;
+                        else html += '[root]';
+
+                    html += '<table>';
+
+                    if (ldap_base.length > 0)
+                    {
+                        if (ldap_base.indexOf(',') == -1)
+                        {
+                            parent = '';
+                        }
+                        else
+                        {
+                            parent = ldap_base.substring(ldap_base.indexOf(',')+1);
+                        }
+
+                        html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
+                        html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";
+                        html += "</tr>";
+                    }
+
+                    var data = response.evalJSON();
+                    if (data.length == 0)
+                    {
+                        html += "<tr><td colspan='3'>ERROR</td></tr>";
+                    }
+                    else
+                    {
+                        if (data[0].status == 'ok')
+                        {
+                            for (i = 1; i < data.length; i++)
+                            {
+                                html += '<tr>';		            		
+
+                                if (data[i].type == 'container')
+                                {
+                                    html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navdown+"</a></td>";
+                                    html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_kb+"</a></td>";
+                                    html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+                                }
+                                else if (data[i].type == 'group')
+                                {
+                                    html += "<td></td>";
+                                    html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_site+"</a></td>";
+                                    html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+                                }
+
+                                html += '</tr>';
+                            }
+                        }
+                        else if (data[0].status == 'connectfailed')
+                        {
+                            html += "<tr><td colspan='3'>"+strLDAPTestFailed+"</td></tr>";
+                        }
+                        else
+                        {
+                            html += "<tr><td colspan='3'>"+data[0].status+"</td></tr>";
+                        }
+                    }
+
+                    html += '</table>';
+
+                    $('ldap_browse_contents').innerHTML = html;
+                }
+            },
+            onFailure: function()
+            {
+                alert('Error browsing LDAP');
+            }
+            });
 }
 
 
@@ -1140,53 +1140,53 @@ function checkLDAPDetails(statusfield)
    var userGrp = $('ldap_user_group').value;
    var customerGrp = $('ldap_customer_group').value;
 
-	new Ajax.Request(application_webpath + 'ajaxdata.php',
-			{
-				method: 'POST', 
-				parameters: {action: 'checkldap', ldap_host: server, ldap_type: type, ldap_port: port, ldap_protocol: protocol, ldap_security: security, 
-								ldap_bind_user: user, ldap_bind_pass: password, ldap_user_base: userBase, 
-								ldap_admin_group: adminGrp, ldap_manager_group: managerGrp, ldap_user_group: userGrp, ldap_customer_group: customerGrp},
-				onSuccess: function(transport)
-				{
-					var response = transport.responseText || "no response text";
-	            	if (transport.responseText == LDAP_PASSWORD_INCORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strPasswordIncorrect+'</strong>';
-	                }
-	                else if (transport.responseText == LDAP_BASE_INCORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPUserBaseDNIncorrect+'</strong>';
-	                }
-	                else if (transport.responseText == LDAP_ADMIN_GROUP_INCORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPAdminGroupIncorrect+'</strong>';
-	                }
-	                else if (transport.responseText == LDAP_MANAGER_GROUP_INCORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPManagerGroupIncorrect+'</strong>';
-	                }
-	                else if (transport.responseText == LDAP_USER_GROUP_INCORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPUserGroupIncorrect+'</strong>';
-	                }
-	                else if (transport.responseText == LDAP_CUSTOMER_GROUP_INCORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPCustomerGroupIncorrect+'</strong>';
-	                }
-	                else if (transport.responseText == LDAP_CORRECT)
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPTestSucessful+'</strong>';
-	                }
-	                else
-	                {
-	                    $(statusfield).innerHTML = '<strong>'+strLDAPTestFailed+'</strong>';
-	                }
-				},
-				onFailure: function()
-				{
-					$(statusfield).innerHTML = '<strong>'+strLDAPTestFailed+'</strong>';
-				}
-			});
+   new Ajax.Request(application_webpath + 'ajaxdata.php',
+           {
+               method: 'POST', 
+               parameters: {action: 'checkldap', ldap_host: server, ldap_type: type, ldap_port: port, ldap_protocol: protocol, ldap_security: security, 
+                               ldap_bind_user: user, ldap_bind_pass: password, ldap_user_base: userBase, 
+                               ldap_admin_group: adminGrp, ldap_manager_group: managerGrp, ldap_user_group: userGrp, ldap_customer_group: customerGrp},
+               onSuccess: function(transport)
+               {
+                   var response = transport.responseText || "no response text";
+                   if (transport.responseText == LDAP_PASSWORD_INCORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strPasswordIncorrect+'</strong>';
+                   }
+                   else if (transport.responseText == LDAP_BASE_INCORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPUserBaseDNIncorrect+'</strong>';
+                   }
+                   else if (transport.responseText == LDAP_ADMIN_GROUP_INCORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPAdminGroupIncorrect+'</strong>';
+                   }
+                   else if (transport.responseText == LDAP_MANAGER_GROUP_INCORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPManagerGroupIncorrect+'</strong>';
+                   }
+                   else if (transport.responseText == LDAP_USER_GROUP_INCORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPUserGroupIncorrect+'</strong>';
+                   }
+                   else if (transport.responseText == LDAP_CUSTOMER_GROUP_INCORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPCustomerGroupIncorrect+'</strong>';
+                   }
+                   else if (transport.responseText == LDAP_CORRECT)
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPTestSucessful+'</strong>';
+                   }
+                   else
+                   {
+                       $(statusfield).innerHTML = '<strong>'+strLDAPTestFailed+'</strong>';
+                   }
+               },
+               onFailure: function()
+               {
+                   $(statusfield).innerHTML = '<strong>'+strLDAPTestFailed+'</strong>';
+               }
+           });
 }
 
 
@@ -1212,41 +1212,19 @@ function password_reveal(elem)
 }
 
 
+/**
+ * Function to save a mail draft
+ * @param incidentid Incident ID draft is for
+ * @author Paul Heaney
+ */
 function save_email_draft(incidentid){
-    var xmlhttp=false;
-
     var draftid = $('draftid').value;
-    
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-    {
-        try
-        {
-            xmlhttp = new XMLHttpRequest();
-        }
-        catch (e)
-        {
-            xmlhttp=false;
-        }
-    }
-    if (!xmlhttp && window.createRequest)
-    {
-        try
-        {
-            xmlhttp = window.createRequest();
-        }
-        catch (e)
-        {
-            xmlhttp=false;
-        }
-    }
-
     var toPass = $('bodytext').value;
-    //alert(toPass.value);
-
-/*
-Format of meta data
-$emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$timetonextaction_hours|$timetonextaction_minutes|$day|$month|$year|$target|$chase_customer|$chase_manager|$from|$replyTo|$ccemail|$bccemail|$toemail|$subject|$body
-*/
+    
+    /*
+     * 	Format of meta data
+	$emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$timetonextaction_hours|$timetonextaction_minutes|$day|$month|$year|$target|$chase_customer|$chase_manager|$from|$replyTo|$ccemail|$bccemail|$toemail|$subject|$body
+     */
 
     var meta = $('emailtype').value+"|"+$('newincidentstatus').value+"|"+$('timetonextaction_none').value+"|";
     meta = meta+$('timetonextaction_days').value+"|"+$('timetonextaction_hours').value+"|";
@@ -1259,109 +1237,84 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
 
     if (toPass != '')
     {
-        var url =  "ajaxdata.php";
-        var params = "action=auto_save&type=email&incidentid="+incidentid+"&draftid="+draftid+"&meta="+encodeURIComponent(meta)+"&content="+encodeURIComponent(toPass);
-        xmlhttp.open("POST", url, true)
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        xmlhttp.setRequestHeader("Connection", "close");
-
-
-        xmlhttp.onreadystatechange=function()
-        {
-            if (xmlhttp.readyState==4)
-            {
-                if (xmlhttp.responseText != '')
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
                 {
-                    if (draftid == -1)
+                    method: 'POST', 
+                    parameters: {action: 'auto_save', type: 'email', incidentid: incidentid, draftid: draftid, meta: meta, content: toPass},
+                    onSuccess: function(transport)
                     {
-                        draftid = xmlhttp.responseText;
+                        var response = transport.responseText || "no response text";
+                        if (response.responseText != '')
+                        {
+                            if (draftid == -1)
+                            {
+                                draftid = response.responseText;
+                            }
+                            var currentTime = new Date();
+                            var hours = currentTime.getHours();
+                            var minutes = currentTime.getMinutes();
+                            if (minutes < 10)
+                            {
+                                minutes = "0" + minutes;
+                            }
+                            var seconds = currentTime.getSeconds();
+                            if (seconds < 10)
+                            {
+                                seconds = "0" + seconds;
+                            }
+                            $('updatestr').innerHTML = "<a href=\"javascript:save_email_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
+                            $('draftid').value = draftid;
+                        }
                     }
-                    var currentTime = new Date();
-                    var hours = currentTime.getHours();
-                    var minutes = currentTime.getMinutes();
-                    if (minutes < 10)
-                    {
-                        minutes = "0" + minutes;
-                    }
-                    var seconds = currentTime.getSeconds();
-                    if (seconds < 10)
-                    {
-                        seconds = "0" + seconds;
-                    }
-                    $('updatestr').innerHTML = "<a href=\"javascript:save_email_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
-                    $('draftid').value = draftid;
-                }
-            }
-        }
-        xmlhttp.send(params);
+                });
     }
 }
 
 
-// Auto save
+/**
+ * Function to save a update draft
+ * @param incidentid Incident ID draft is for
+ * @author Paul Heaney
+ */
 function save_update_draft(incidentid){
-    var xmlhttp=false;
-
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-        try {
-            xmlhttp = new XMLHttpRequest();
-        } catch (e) {
-            xmlhttp=false;
-        }
-    }
-    if (!xmlhttp && window.createRequest) {
-        try {
-            xmlhttp = window.createRequest();
-        } catch (e) {
-            xmlhttp=false;
-        }
-    }
-
     var toPass = $('updatelog').value;
-    //alert(toPass.value);
 
     var meta = $('target').value+"|"+$('updatetype').value+"|"+$('cust_vis').checked+"|";
     meta += $('priority').value+"|"+$('newstatus').value+"|"+$('nextaction').value+"|";
 
     var draftid = $('draftid').value;
-    
+
     if (toPass != '')
     {
-        // xmlhttp.open("GET", "ajaxdata.php?action=auto_save&userid="+<?php echo $_SESSION['userid']; ?>+"&type=update&incidentid="+<?php echo $id; ?>+"&draftid="+draftid+"&meta="+meta+"&content="+escape(toPass), true);
-        var url = "ajaxdata.php";
-        var params = "action=auto_save&type=update&incidentid="+incidentid+"&draftid="+draftid+"&meta="+meta+"&content="+encodeURIComponent(toPass);
-        xmlhttp.open("POST", url, true)
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        xmlhttp.setRequestHeader("Connection", "close");
-
-        xmlhttp.onreadystatechange=function() {
-            //remove this in the future after testing
-            if (xmlhttp.readyState==4) {
-                if (xmlhttp.responseText != ''){
-                    //alert(xmlhttp.responseText);
-                    if (draftid == -1)
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
+                {
+                    method: 'POST', 
+                    parameters: {action: 'auto_save', type: 'update', incidentid: incidentid, draftid: draftid, meta: meta, content: toPass},
+                    onSuccess: function(transport)
                     {
-                        draftid = xmlhttp.responseText;
-                        $('draftid').value = draftid;
+                        var response = transport.responseText || "no response text";
+                        if (response.responseText != '')
+                        {
+                            if (draftid == -1)
+                            {
+                                draftid = response.responseText;
+                            }
+                            var currentTime = new Date();
+                            var hours = currentTime.getHours();
+                            var minutes = currentTime.getMinutes();
+                            if (minutes < 10)
+                            {
+                                minutes = "0" + minutes;
+                            }
+                            var seconds = currentTime.getSeconds();
+                            if (seconds < 10)
+                            {
+                                seconds = "0" + seconds;
+                            }
+                            $('updatestr').innerHTML = "<a href=\"javascript:save_update_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
+                            $('draftid').value = draftid;
+                        }
                     }
-                    var currentTime = new Date();
-                    var hours = currentTime.getHours();
-                    var minutes = currentTime.getMinutes();
-                    if (minutes < 10)
-                    {
-                        minutes = "0"+minutes;
-                    }
-                    var seconds = currentTime.getSeconds();
-                    if (seconds < 10)
-                    {
-                        seconds = "0"+seconds;
-                    }
-                    $('updatestr').innerHTML = "<a href=\"javascript:save_update_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
-                }
-            }
-        }
-        xmlhttp.send(params);
+                });
     }
 }
