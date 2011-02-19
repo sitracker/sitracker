@@ -182,7 +182,7 @@ function get_and_display(page, component, update)
 function ajax_save(page, component)
 {
     new Ajax.Request(page, {
-    parameters: $(component).serialize(true)
+    	parameters: $(component).serialize(true)
     });
     $(component).innerHTML = 'Saved';
 }
@@ -517,18 +517,17 @@ function contexthelp(elem, context, auth)
     if (span.innerHTML == '')
     {
         new Ajax.Request(application_webpath + 'ajaxdata.php?action=contexthelp&context=' + context + '&rand=' + get_random() + '&auth=' + auth,
-        //new Ajax.Request('ajaxdata.php?action=contexthelp&context=' + context + '&rand=' + get_random(),
             {
                 method:'get',
-                    onSuccess: function(transport)
+                onSuccess: function(transport)
+                {
+                    var response = transport.responseText || "no response text";
+                    if (transport.responseText)
                     {
-                        var response = transport.responseText || "no response text";
-                        if (transport.responseText)
-                        {
-                            span.innerHTML = transport.responseText;
-                        }
-                    },
-                    onFailure: function(){ alert('Context Help Error\nSorry, we could not retrieve the help tip') }
+                        span.innerHTML = transport.responseText;
+                    }
+                },
+                onFailure: function(){ alert('Context Help Error\nSorry, we could not retrieve the help tip') }
             });
     }
     span.observe('mouseout', hidecontexthelp);
