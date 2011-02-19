@@ -65,22 +65,12 @@ var strSaturdayAbbr = '{$strSaturdayAbbr}';
 var strSundayAbbr = '{$strSundayAbbr}';
 
 var strAreYouSureUpdateLastBilled = \"{$strAreYouSureUpdateLastBilled}\";
-var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
-var strKnowledgeBaseArticle = \"{$strKnowledgeBaseArticle}\";
-var strSelectKBSections = \"{$strSelectKBSections}\";
-var strFinalUpdate = \"{$strFinalUpdate}\";
-var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
-var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
-var strHide = \"{$strHide}\";
-var strReveal = \"{$strReveal}\";
-
-var strUp = \"{$strUp}\";
-
-var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
-
 var strCheckingDetails = \"{$strCheckingDetails}\";
-
-var strPasswordIncorrect = \"{$strPasswordIncorrect}\";
+var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
+var strFinalUpdate = \"{$strFinalUpdate}\";
+var strHide = \"{$strHide}\";
+var strKnowledgeBaseArticle = \"{$strKnowledgeBaseArticle}\";
+var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
 var strLDAPUserBaseDNIncorrect = \"{$strLDAPUserBaseDNIncorrect}\";
 var strLDAPAdminGroupIncorrect = \"{$strLDAPAdminGroupIncorrect}\";
 var strLDAPManagerGroupIncorrect = \"{$strLDAPManagerGroupIncorrect}\";
@@ -88,7 +78,14 @@ var strLDAPUserGroupIncorrect = \"{$strLDAPUserGroupIncorrect}\";
 var strLDAPCustomerGroupIncorrect = \"{$strLDAPCustomerGroupIncorrect}\";
 var strLDAPTestSucessful = \"{$strLDAPTestSucessful}\";
 var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
+var strPasswordIncorrect = \"{$strPasswordIncorrect}\";
+var strReveal = \"{$strReveal}\";
+var strSelectKBSections = \"{$strSelectKBSections}\";
+var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
+var strUp = \"{$strUp}\";
+var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
 
+/* CONSTANTS */
 
 var LDAP_PASSWORD_INCORRECT = ".LDAP_PASSWORD_INCORRECT.";
 var LDAP_BASE_INCORRECT = ".LDAP_BASE_INCORRECT.";
@@ -98,22 +95,22 @@ var LDAP_USER_GROUP_INCORRECT = ".LDAP_USER_GROUP_INCORRECT.";
 var LDAP_CUSTOMER_GROUP_INCORRECT = ".LDAP_CUSTOMER_GROUP_INCORRECT.";
 var LDAP_CORRECT = ".LDAP_CORRECT.";
 
-
-
+/* SESSIONS */
 
 var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
 var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
+
+/* ICONS */
 
 var icon_site = '{$site_icon}';
 var icon_navdown = '{$navdown_icon}';
 var icon_kb = '{$kb_icon}';
 var icon_navup = '{$navup_icon}';
 
-/* Please don't add functions here, these functions below need moving to webtrack.js
-   this file is to make i18n keys available in javascript
+/* 
+    Please don't add functions here, these functions below need moving to webtrack.js
+    this file is to make i18n keys available in javascript
 */
-
-
 ";
 
 ?>
