@@ -219,11 +219,6 @@ switch ($step)
         <script type='text/javascript'>
         //<![CDATA[
 
-        function confirm_send_mail()
-        {
-            return window.confirm('<?php echo $strAreYouSureSendEmail ?>');
-        }
-
         <?php
             echo "var draftid = {$draftid};";
         ?>
@@ -394,7 +389,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         }
 
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' ";
-        echo "enctype='multipart/form-data' onsubmit='return confirm_send_mail();' >";
+        echo "enctype='multipart/form-data' onsubmit=\"return confirm_action('{$strAreYouSureSendEmail}');\" >";
         echo "<table align='center' class='vertical' width='95%'>";
         echo "<tr><th width='30%'>{$strFrom}</th><td><input maxlength='100' ";
         echo "name='fromfield' id='fromfield' size='40' value=\"{$from}\" /></td></tr>\n";
