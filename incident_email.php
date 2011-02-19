@@ -219,104 +219,11 @@ switch ($step)
         <script type='text/javascript'>
         //<![CDATA[
 
-        <?php
-            echo "var draftid = {$draftid};";
-        ?>
-
-        // Auto save
-        function save_content(){
-            var xmlhttp=false;
-
-            if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-            {
-                try
-                {
-                    xmlhttp = new XMLHttpRequest();
-                }
-                catch (e)
-                {
-                    xmlhttp=false;
-                }
-            }
-            if (!xmlhttp && window.createRequest)
-            {
-                try
-                {
-                    xmlhttp = window.createRequest();
-                }
-                catch (e)
-                {
-                    xmlhttp=false;
-                }
-            }
-
-            var toPass = $('bodytext').value;
-            //alert(toPass.value);
-
-/*
-Format of meta data
-$emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$timetonextaction_hours|$timetonextaction_minutes|$day|$month|$year|$target|$chase_customer|$chase_manager|$from|$replyTo|$ccemail|$bccemail|$toemail|$subject|$body
-*/
-
-            var meta = $('emailtype').value+"|"+$('newincidentstatus').value+"|"+$('timetonextaction_none').value+"|";
-            meta = meta+$('timetonextaction_days').value+"|"+$('timetonextaction_hours').value+"|";
-            meta = meta+$('timetonextaction_minutes').value+"||||";
-            meta = meta+$('target').value+"|"+$('chase_customer').value+"|";
-            meta = meta+$('chase_manager').value+"|"+$('fromfield').value+"|"+$('replytofield').value+"|";
-            meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
-            meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|"
-            meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
-
-            if (toPass != '')
-            {
-                /*
-                xmlhttp.open("GET", "ajaxdata.php?action=auto_save&userid="+<?php echo $_SESSION['userid']; ?>+
-                             "&type=email&incidentid="+<?php echo $id; ?>+
-                             "&draftid="+draftid+"&meta="+meta+"&content="+
-                             escape(toPass), true);
-             */
-
-                var url =  "ajaxdata.php";
-                var params = "action=auto_save&userid="+<?php echo $_SESSION['userid']; ?>+"&type=email&incidentid="+<?php echo $id; ?>+"&draftid="+draftid+"&meta="+encodeURIComponent(meta)+"&content="+encodeURIComponent(toPass);
-                xmlhttp.open("POST", url, true)
-                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
-                xmlhttp.setRequestHeader("Content-length", params.length);
-                xmlhttp.setRequestHeader("Connection", "close");
-
-
-                xmlhttp.onreadystatechange=function()
-                {
-                    if (xmlhttp.readyState==4)
-                    {
-                        if (xmlhttp.responseText != '')
-                        {
-                            if (draftid == -1)
-                            {
-                                draftid = xmlhttp.responseText;
-                            }
-                            var currentTime = new Date();
-                            var hours = currentTime.getHours();
-                            var minutes = currentTime.getMinutes();
-                            if (minutes < 10)
-                            {
-                                minutes = "0" + minutes;
-                            }
-                            var seconds = currentTime.getSeconds();
-                            if (seconds < 10)
-                            {
-                                seconds = "0" + seconds;
-                            }
-                            $('updatestr').innerHTML = '<?php echo "<a href=\"javascript:save_content();\">".icon('save', 16, $GLOBALS['strSaveDraft'])."</a> ".icon('info', 16, $GLOBALS['strDraftLastSaved'])." "; ?>' + hours + ':' + minutes + ':' + seconds;
-                            $('draftid').value = draftid;
-                        }
-                    }
-                }
-                xmlhttp.send(params);
-            }
-        }
-
-        setInterval("save_content()", 10000); //every 10 seconds
-
+        new PeriodicalExecuter(function(pe) {
+                                        setInterval("save_email_draft('"+<?php echo $id; ?>+"')")
+                                    },
+                                    10);
+        
         //]]>
         </script>
         <?php
@@ -419,7 +326,7 @@ $emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$tim
         echo "<textarea name='bodytext' id='bodytext' rows='20' cols='65'>";
         echo $body;
         echo "</textarea>";
-        echo "<div id='updatestr'><a href='javascript:save_content();'>".icon('save', 16, $strSaveDraft)."</a></div>";
+        echo "<div id='updatestr'><a href=\"javascript:save_email_draft('{$id}');\">".icon('save', 16, $strSaveDraft)."</a></div>";
         echo "</td></tr>";
         plugin_do('incident_email_form2');
         echo "</table>";

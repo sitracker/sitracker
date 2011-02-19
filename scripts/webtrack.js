@@ -1210,3 +1210,90 @@ function password_reveal(elem)
        $(elemlink).innerHTML = strReveal;
    }
 }
+
+
+function save_email_draft(incidentid){
+    var xmlhttp=false;
+
+    var draftid = $('draftid').value;
+    
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
+    {
+        try
+        {
+            xmlhttp = new XMLHttpRequest();
+        }
+        catch (e)
+        {
+            xmlhttp=false;
+        }
+    }
+    if (!xmlhttp && window.createRequest)
+    {
+        try
+        {
+            xmlhttp = window.createRequest();
+        }
+        catch (e)
+        {
+            xmlhttp=false;
+        }
+    }
+
+    var toPass = $('bodytext').value;
+    //alert(toPass.value);
+
+/*
+Format of meta data
+$emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$timetonextaction_hours|$timetonextaction_minutes|$day|$month|$year|$target|$chase_customer|$chase_manager|$from|$replyTo|$ccemail|$bccemail|$toemail|$subject|$body
+*/
+
+    var meta = $('emailtype').value+"|"+$('newincidentstatus').value+"|"+$('timetonextaction_none').value+"|";
+    meta = meta+$('timetonextaction_days').value+"|"+$('timetonextaction_hours').value+"|";
+    meta = meta+$('timetonextaction_minutes').value+"||||";
+    meta = meta+$('target').value+"|"+$('chase_customer').value+"|";
+    meta = meta+$('chase_manager').value+"|"+$('fromfield').value+"|"+$('replytofield').value+"|";
+    meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
+    meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|"
+    meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
+
+    if (toPass != '')
+    {
+        var url =  "ajaxdata.php";
+        var params = "action=auto_save&type=email&incidentid="+incidentid+"&draftid="+draftid+"&meta="+encodeURIComponent(meta)+"&content="+encodeURIComponent(toPass);
+        xmlhttp.open("POST", url, true)
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8");
+        xmlhttp.setRequestHeader("Content-length", params.length);
+        xmlhttp.setRequestHeader("Connection", "close");
+
+
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4)
+            {
+                if (xmlhttp.responseText != '')
+                {
+                    if (draftid == -1)
+                    {
+                        draftid = xmlhttp.responseText;
+                    }
+                    var currentTime = new Date();
+                    var hours = currentTime.getHours();
+                    var minutes = currentTime.getMinutes();
+                    if (minutes < 10)
+                    {
+                        minutes = "0" + minutes;
+                    }
+                    var seconds = currentTime.getSeconds();
+                    if (seconds < 10)
+                    {
+                        seconds = "0" + seconds;
+                    }
+                    $('updatestr').innerHTML = "<a href=\"javascript:save_email_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
+                    $('draftid').value = draftid;
+                }
+            }
+        }
+        xmlhttp.send(params);
+    }
+}
