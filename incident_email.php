@@ -220,7 +220,7 @@ switch ($step)
         //<![CDATA[
 
         new PeriodicalExecuter(function(pe) {
-                                        setInterval("save_email_draft('"+<?php echo $id; ?>+"')")
+                                        setInterval("save_draft('"+<?php echo $id; ?>+"', 'email')")
                                     },
                                     10);
         
@@ -326,7 +326,7 @@ switch ($step)
         echo "<textarea name='bodytext' id='bodytext' rows='20' cols='65'>";
         echo $body;
         echo "</textarea>";
-        echo "<div id='updatestr'><a href=\"javascript:save_email_draft('{$id}');\">".icon('save', 16, $strSaveDraft)."</a></div>";
+        echo "<div id='updatestr'><a href=\"javascript:save_draft('{$id}', 'email');\">".icon('save', 16, $strSaveDraft)."</a></div>";
         echo "</td></tr>";
         plugin_do('incident_email_form2');
         echo "</table>";

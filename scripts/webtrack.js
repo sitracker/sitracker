@@ -1213,83 +1213,42 @@ function password_reveal(elem)
 
 
 /**
- * Function to save a mail draft
+ * Function to save a draft
  * @param incidentid Incident ID draft is for
+ * @param type The type of draft to save, valid options are email or update
  * @author Paul Heaney
  */
-function save_email_draft(incidentid){
+function save_draft(incidentid, type){
     var draftid = $('draftid').value;
-    var toPass = $('bodytext').value;
-    
-    /*
-     * 	Format of meta data
-	$emailtype|$newincidentstatus|$timetonextaction_none|$timetonextaction_days|$timetonextaction_hours|$timetonextaction_minutes|$day|$month|$year|$target|$chase_customer|$chase_manager|$from|$replyTo|$ccemail|$bccemail|$toemail|$subject|$body
-     */
+    var toPass = '';
 
-    var meta = $('emailtype').value+"|"+$('newincidentstatus').value+"|"+$('timetonextaction_none').value+"|";
-    meta = meta+$('timetonextaction_days').value+"|"+$('timetonextaction_hours').value+"|";
-    meta = meta+$('timetonextaction_minutes').value+"||||";
-    meta = meta+$('target').value+"|"+$('chase_customer').value+"|";
-    meta = meta+$('chase_manager').value+"|"+$('fromfield').value+"|"+$('replytofield').value+"|";
-    meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
-    meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|"
-    meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
-
-    if (toPass != '')
+    if (type == 'update')
     {
-        new Ajax.Request(application_webpath + 'ajaxdata.php',
-                {
-                    method: 'POST', 
-                    parameters: {action: 'auto_save', type: 'email', incidentid: incidentid, draftid: draftid, meta: meta, content: toPass},
-                    onSuccess: function(transport)
-                    {
-                        var response = transport.responseText || "no response text";
-                        if (response.responseText != '')
-                        {
-                            if (draftid == -1)
-                            {
-                                draftid = response.responseText;
-                            }
-                            var currentTime = new Date();
-                            var hours = currentTime.getHours();
-                            var minutes = currentTime.getMinutes();
-                            if (minutes < 10)
-                            {
-                                minutes = "0" + minutes;
-                            }
-                            var seconds = currentTime.getSeconds();
-                            if (seconds < 10)
-                            {
-                                seconds = "0" + seconds;
-                            }
-                            $('updatestr').innerHTML = "<a href=\"javascript:save_email_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
-                            $('draftid').value = draftid;
-                        }
-                    }
-                });
+        var meta = $('target').value+"|"+$('updatetype').value+"|"+$('cust_vis').checked+"|";
+        meta += $('priority').value+"|"+$('newstatus').value+"|"+$('nextaction').value+"|";
+        
+        toPass = $('updatelog').value;
     }
-}
-
-
-/**
- * Function to save a update draft
- * @param incidentid Incident ID draft is for
- * @author Paul Heaney
- */
-function save_update_draft(incidentid){
-    var toPass = $('updatelog').value;
-
-    var meta = $('target').value+"|"+$('updatetype').value+"|"+$('cust_vis').checked+"|";
-    meta += $('priority').value+"|"+$('newstatus').value+"|"+$('nextaction').value+"|";
-
-    var draftid = $('draftid').value;
+    else if (type == 'email')
+    {
+        var meta = $('emailtype').value+"|"+$('newincidentstatus').value+"|"+$('timetonextaction_none').value+"|";
+        meta = meta+$('timetonextaction_days').value+"|"+$('timetonextaction_hours').value+"|";
+        meta = meta+$('timetonextaction_minutes').value+"||||";
+        meta = meta+$('target').value+"|"+$('chase_customer').value+"|";
+        meta = meta+$('chase_manager').value+"|"+$('fromfield').value+"|"+$('replytofield').value+"|";
+        meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
+        meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|"
+        meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
+        
+        toPass = $('bodytext').value;
+    }
 
     if (toPass != '')
     {
         new Ajax.Request(application_webpath + 'ajaxdata.php',
                 {
                     method: 'POST', 
-                    parameters: {action: 'auto_save', type: 'update', incidentid: incidentid, draftid: draftid, meta: meta, content: toPass},
+                    parameters: {action: 'auto_save', type: type, incidentid: incidentid, draftid: draftid, meta: meta, content: toPass},
                     onSuccess: function(transport)
                     {
                         var response = transport.responseText || "no response text";
@@ -1311,7 +1270,7 @@ function save_update_draft(incidentid){
                             {
                                 seconds = "0" + seconds;
                             }
-                            $('updatestr').innerHTML = "<a href=\"javascript:save_update_draft('"+incidentid+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
+                            $('updatestr').innerHTML = "<a href=\"javascript:save_draft('"+incidentid+"', '"+type+"');\">"+save_icon+"</a> "+info_icon+" " + hours + ':' + minutes + ':' + seconds;
                             $('draftid').value = draftid;
                         }
                     }

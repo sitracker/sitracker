@@ -192,7 +192,7 @@ function display_update_page($draftid=-1)
     }
 
     new PeriodicalExecuter(function(pe) {
-        setInterval("save_update_draft('"+<?php echo $id; ?>+"')")
+        setInterval("save_draft('"+<?php echo $id; ?>+"', 'update')")
     },
     10);
 
@@ -355,7 +355,7 @@ function display_update_page($draftid=-1)
     echo "<textarea name='bodytext' id='updatelog' rows='13' cols='50'>";
     if ($draftid != -1) echo $draftobj->content;
     echo "</textarea>";
-    echo "<div id='updatestr'><a href=\"javascript:save_update_draft('{$id}');\">".icon('save', 16, $GLOBALS['strSaveDraft'])."</a></div>";
+    echo "<div id='updatestr'><a href=\"javascript:save_draft('{$id}', 'update');\">".icon('save', 16, $GLOBALS['strSaveDraft'])."</a></div>";
     echo "</td></tr>";
 
     if ($target->type == 'initialresponse')
