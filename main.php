@@ -136,7 +136,7 @@ $('savelayout').style.display='none';
 window.onload = function() {
    dashlets.each(
        function(item) {
-        new Draggable(item, {revert: true});
+            new Draggable(item, {revert: true});
        }
    );
 }

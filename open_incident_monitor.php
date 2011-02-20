@@ -26,16 +26,16 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 <!-- Begin
 function start()
 {
-var _loc = "incident_monitor.php ";
-var _name= "monitor";
-var _features="fullscreen";
-var _replace=true;
-bigwin=window.open(_loc,_name,_features,_replace);
+    var _loc = "incident_monitor.php ";
+    var _name= "monitor";
+    var _features="fullscreen";
+    var _replace=true;
+    bigwin=window.open(_loc,_name,_features,_replace);
 }
 
 function end()
 {
-bigwin.close();
+    bigwin.close();
 }
 
 //end-->
