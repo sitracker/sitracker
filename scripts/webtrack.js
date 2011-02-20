@@ -1438,3 +1438,14 @@ function set_terminated()
         $('terminated').checked = false;
     }
 }
+
+
+function validate_field(field, error)
+{
+    if ($(field).value == '')
+    {
+        alert(error);
+        $(field).focus( );
+        return false;
+    }
+}
