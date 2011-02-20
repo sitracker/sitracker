@@ -405,21 +405,9 @@ elseif ($action == 'incidentform')
     plugin_do('incident_add_form_top');
 
     echo "<h2>".icon('new', 32)." {$strNewIncident} - {$strDetails}</h2>";
-    ?>
-    <script type="text/javascript">
-    function validateForm(form)
-    {
-        if (form.incidenttitle.value == '')
-        {
-            alert(strYouMustEnterIncidentTitle);
-            form.incidenttitle.focus( );
-            return false;
-        }
-    }
-    </script>
-    <?php
+
     echo "<form action='{$_SERVER['PHP_SELF']}?action=assign'";
-    echo " method='post' id='supportdetails' name='supportdetails' onsubmit=\"return validateForm(this)\">";
+    echo " method='post' id='supportdetails' name='supportdetails' onsubmit=\"return validate_field('incidenttitle', '{$strYouMustEnterIncidentTitle}')\">";
     echo "<input type='hidden' name='type' value=\"{$type}\" />";
     echo "<input type='hidden' name='contactid' value=\"{$contactid}\" />";
     echo "<input type='hidden' name='productid' value=\"{$productid}\" />";
@@ -428,9 +416,8 @@ elseif ($action == 'incidentform')
 
     if (!empty($updateid))
     {
-        echo "<input type='hidden' name='updateid' value='$updateid' />";
+        echo "<input type='hidden' name='updateid' value='{$updateid}' />";
     }
-
 
     echo "<table class='vertical' width='90%'>";
     echo "<tr><td>";

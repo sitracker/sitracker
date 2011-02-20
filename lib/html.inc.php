@@ -344,13 +344,13 @@ function icon($filename, $size='', $alt='', $title='', $id='')
 
     $file = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/{$iconset}";
     $file .= "/{$size}x{$size}/{$filename}.png";
-
+    
     $urlpath = "{$CONFIG['application_webpath']}images/icons/{$iconset}";
     $urlpath .= "/{$size}x{$size}/{$filename}.png";
 
     if (!file_exists($file))
     {
-        $alt = "Missing icon: '$filename.png', ($file) size {$size}";
+        $alt = "Missing icon: '{$filename}.png', ({$file}) size {$size}";
         if ($CONFIG['debug']) trigger_error($alt, E_USER_WARNING);
         $urlpath = "{$CONFIG['application_webpath']}/images/icons/sit";
         $urlpath .= "/16x16/blank.png";
@@ -465,7 +465,7 @@ function group_selector($selected, $urlargs='')
 {
     $gsql = "SELECT * FROM `{$GLOBALS['dbGroups']}` ORDER BY name";
     $gresult = mysql_query($gsql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     while ($group = mysql_fetch_object($gresult))
     {
         $grouparr[$group->id] = $group->name;
@@ -686,7 +686,7 @@ function show_notes($linkid, $refid, $delete = TRUE)
     global $sit, $iconset, $dbNotes;
     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='{$linkid}' AND refid='{$refid}' ORDER BY timestamp DESC, id DESC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $countnotes = mysql_num_rows($result);
     if ($countnotes >= 1)
     {
@@ -2140,7 +2140,6 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
             $html .= "<a href='contract_new_contact.php?contactid={$userid}&amp;context=contact'>";
             $html .= "{$GLOBALS['strAssociateContactWithContract']}</a></p>\n";
         }
-
     }
 
     return $html;

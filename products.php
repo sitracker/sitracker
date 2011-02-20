@@ -116,7 +116,7 @@ if (empty($productid) AND $display!='skills')
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             list($countincidents) = mysql_fetch_row($sresult);
 
-            echo "<tr class='$shade'><td>".icon('skill', 16)." ";
+            echo "<tr class='{$shade}'><td>".icon('skill', 16)." ";
             echo "{$software->name}</td>";
             echo "<td>";
             if ($software->lifetime_start > 1)
@@ -273,7 +273,7 @@ else
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     list($countincidents) = mysql_fetch_row($sresult);
 
-                    echo "<tr class='$shade'><td>".icon('skill', 16)." ";
+                    echo "<tr class='{$shade}'><td>".icon('skill', 16)." ";
                     echo "{$software->name}</td>";
                     echo "<td>";
                     if ($software->lifetime_start > 1)

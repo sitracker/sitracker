@@ -49,15 +49,10 @@ $siteid = clean_int($_REQUEST['siteid']);
 <script type='text/javascript'>
 //<![CDATA[
 
-/**
-  * @author Paul Heaney
-**/
-function submitform()
-{
-    document.tasks.submit();
-}
-
-setInterval("countUp()", 1000); //every 1 seconds
+new PeriodicalExecuter(function(pe) {
+            countUp()
+        },
+        1);
 
 //]]>
 </script>
@@ -308,7 +303,7 @@ else
 if (mysql_num_rows($result) >=1 )
 {
     if ($show) $filter = array('show' => $show);
-    echo "<form action='{$_SERVER['PHP_SELF']}' name='tasks'  method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}' id='tasks' name='tasks'  method='post'>";
     echo "<br /><table align='center'>";
     echo "<tr>";
     $filter['mode'] = $mode;
@@ -581,13 +576,11 @@ if (mysql_num_rows($result) >=1 )
         echo "<tr>";
         echo "<td colspan='7'>";
         //echo "<label for='action'>{$strAction} ";
-        echo "<select name='action' onchange='submitform();'>";
+        echo "<select name='action' onchange=\"submit_form('tasks');\">";
         echo "<option>{$strSelectAction}</option>";
         echo "<option value='markcomplete'>{$strMarkComplete}</option>";
         echo "<option value='postpone'>{$strPostpone}</option>";
         echo "</select>";
-        //echo "<a href=\"javascript: submitform()\">{$strMarkComplete}</a>";
-        //echo " <a href=\"javascript: submitform()\">{$strPostpone}</a>";
         echo "</td>";
         echo "</tr>";
     }
