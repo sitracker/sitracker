@@ -41,19 +41,6 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 <script type="text/javascript">
 //<![CDATA[
 
-function insertRuletext(tvar)
-{
-    // tvar = tvar + ' ';
-    var start = $('rules').selectionStart;
-    var end = $('rules').selectionEnd;
-    $('rules').value = $('rules').value.substring(0, start) + tvar + $('rules').value.substring(end, $('rules').textLength);
-}
-
-function resetRules()
-{
-    $('rules').value = '';
-}
-
 function get_checks()
 {
     $('checksbox').show();
