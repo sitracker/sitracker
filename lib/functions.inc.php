@@ -1441,24 +1441,29 @@ function plugin_register($context, $action)
 
 
 /**
- * Call a plugin function that handles a given context
- * @author Ivan Lucas
- * @param string $context - Plugin context,
- * @param string $optparms - Optional parameters
- * @retval mixed - Whatever the plugin function returns
- * @note This function calls a plugin function or multiple plugin
- *  functions, if they exist.
- *  see http://sitracker.org/wiki/CreatingPlugins for help and a list
- *  of contexts
- */
+    * Call a plugin function that handles a given context
+    * @author Ivan Lucas
+    * @param string $context - Plugin context,
+    * @param string $optparms - Optional parameters
+    * @retval mixed - Whatever the plugin function returns
+    * @note This function calls a plugin function or multiple plugin
+    *  functions, if they exist.
+    *  see http://sitracker.org/wiki/CreatingPlugins for help and a list
+    *  of contexts
+*/
 function plugin_do($context, $optparams = FALSE)
 {
     global $PLUGINACTIONS;
-    foreach ($GLOBALS as $key => $val)
-    {
-        global $$key;
-    }
 
+    // Make global variables available to plugins, careful not overwrite vars
+    // used in plugin_do function scope (Mantis 1433)
+    foreach ($GLOBALS as $key => $val) 
+    { 
+        if ($key != 'context' AND $key != 'optparams' AND $key != 'PLUGINACTIONS')
+        {
+            global $$key; 
+        }
+    }
     $rtnvalue = '';
     if (is_array($PLUGINACTIONS[$context]))
     {
@@ -1481,8 +1486,7 @@ function plugin_do($context, $optparams = FALSE)
             }
             elseif (is_array($rtn) AND !is_array($rtnvalue))
             {
-                $rtnvalue = array();
-                array_push($rtnvalue, $rtn);
+                $rtnvalue=array(); array_push($rtnvalue, $rtn);
             }
             else
             {
