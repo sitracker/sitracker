@@ -414,7 +414,7 @@ elseif ($action == 'incidentform')
 
     if (!empty($updateid))
     {
-        echo "<input type='hidden' name='updateid' value='$updateid' />";
+        echo "<input type='hidden' name='updateid' value='{$updateid}' />";
     }
 
     echo "<table class='vertical' width='90%'>";
