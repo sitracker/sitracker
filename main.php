@@ -77,7 +77,7 @@ $cols1 = substr($cols1, 0, -1);
 $cols2 = substr($cols2, 0, -1);
 echo "<p id='pageoptions'>".help_link("Dashboard")." <a href='manage_user_dashboard.php' title='{$strManageYourDashboard}'>";
 echo icon('dashboardadd', 16)."</a> ";
-echo "<a href=\"javascript:save_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";
+echo "<a href=\"javascript:save_dashboard_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";
 echo "\n<table border=\"0\" width=\"99%\" id='cols'><tr>\n"; //id='dashboardlayout'
 echo "<td width=\"33%\" valign='top' id='col0'>";
 
@@ -123,9 +123,9 @@ Droppables.add('col0', {ghosting: true, onDrop: moveItem, hoverclass: 'droptarge
 Droppables.add('col1', {ghosting: true, onDrop: moveItem, hoverclass: 'droptarget', containment: contain1});
 Droppables.add('col2', {ghosting: true, onDrop: moveItem, hoverclass: 'droptarget', containment: contain2});
 
-Sortable.create('col0', { tag:'div', only:'windowbox', onUpdate: save_layout});
-Sortable.create('col1', { tag:'div', only:'windowbox', onUpdate: save_layout});
-Sortable.create('col2', { tag:'div', only:'windowbox', onUpdate: save_layout});
+Sortable.create('col0', { tag:'div', only:'windowbox', onUpdate: save_dashboard_layout});
+Sortable.create('col1', { tag:'div', only:'windowbox', onUpdate: save_dashboard_layout});
+Sortable.create('col2', { tag:'div', only:'windowbox', onUpdate: save_dashboard_layout});
 
 // Set drop area by default  non cleared.
 $('col0').cleared = false;
@@ -151,7 +151,7 @@ function moveItem( draggable,droparea){
 //    }
 // //    draggable.parentNode.removeChild(draggable);
    droparea.appendChild(draggable);
-   save_layout();
+   save_dashboard_layout();
 }
 
 
