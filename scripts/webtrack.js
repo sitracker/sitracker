@@ -1456,3 +1456,26 @@ function contact_products_window(contactid)
     URL = "contact_products.php?id=" + contactid;
     window.open(URL, "contact_products_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=520,height=240");
 }
+
+
+/**
+ * 
+ * @returns {Boolean}
+ * @author Paul Heaney
+ */
+function process_billable_incidents_form()
+{
+    var approval = $('approvalpage');
+    var invoice = $('invoicepage');
+
+    var enddate = $('enddate').value;
+
+    var toReturn = true;
+
+    if (invoice.checked)
+    {
+        toReturn = confirm_action(strAreYouSureUpdateLastBilled);
+    }
+
+    return toReturn;
+}

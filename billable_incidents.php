@@ -59,32 +59,6 @@ if (empty($mode))
 
     echo "<h2>".icon('billing', 32)." {$strBilling}</h2>";
 
-    ?>
-    <script type="text/javascript">
-    //<![CDATA[
-    function processForm()
-    {
-        // confirm_action('Are you sure you wish to update the last billed time to {$enddateorig}');
-
-        var approval = $('approvalpage');
-        var invoice = $('invoicepage');
-
-        var enddate = $('enddate').value;
-
-        var toReturn = true;
-
-        if (invoice.checked)
-        {
-            toReturn = confirm_action(strAreYouSureUpdateLastBilled);
-        }
-
-        return toReturn;
-    }
-
-    //]]>
-    </script>
-    <?php
-
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='billableincidents'>";
     echo "<table class='vertical'>";
 
@@ -118,9 +92,9 @@ if (empty($mode))
     echo "<td><input type='checkbox' name='sitebreakdown' id='sitebreakdown' size='10' /> ";
     echo "</td></tr></tbody>\n";
 
-//    echo "<tbody style='display:none' id='showapprovedsection' ><tr><th>Show only awaiting approved:</th>";
-//    echo "<td><input type='checkbox' name='showonlyapproved' value='true' checked='checked' />";
-//    echo "</td></tr></tbody>\n";
+    //    echo "<tbody style='display:none' id='showapprovedsection' ><tr><th>Show only awaiting approved:</th>";
+    //    echo "<td><input type='checkbox' name='showonlyapproved' value='true' checked='checked' />";
+    //    echo "</td></tr></tbody>\n";
 
     echo "<tbody id='showfoc'><tr><th>{$strShowFreeOfCharge}</th>";
     echo "<td><input type='checkbox' id='foc' name='foc' value='show' checked='checked' /></td></tr></tbody>";
@@ -155,7 +129,7 @@ if (empty($mode))
     echo "</table>";
 
     echo "<p align='center'>";
-    echo "<input type='submit' name='runreport' value='{$strRunReport}' onclick=\"return processForm();\" /></p>";
+    echo "<input type='submit' name='runreport' value='{$strRunReport}' onclick=\"return process_billable_incidents_form();\" /></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
