@@ -141,20 +141,6 @@ window.onload = function() {
    );
 }
 
-// The target drop area contains a snippet of instructional
-// text that we want to remove when the first item
-// is dropped into it.
-function moveItem( draggable,droparea){
-//    if (!droparea.cleared) {
-// //       droparea.innerHTML = '';
-//       droparea.cleared = true;
-//    }
-// //    draggable.parentNode.removeChild(draggable);
-   droparea.appendChild(draggable);
-   save_dashboard_layout();
-}
-
-
 /* ]]> */
 </script>
 <?php
