@@ -1318,3 +1318,123 @@ function moveItem(draggable, droparea){
     droparea.appendChild(draggable);
     save_dashboard_layout();
 }
+
+
+/**
+ * @author Kieran Hogg?
+ */
+function get_checks()
+{
+    $('checksbox').show();
+    var triggertype = $('triggertype').value;
+
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
+            {
+                method: 'POST', 
+                parameters: {action: 'checkhtml', triggertype: triggertype},
+                onSuccess: function(transport)
+                {
+                    var response = transport.responseText || "no response text";
+                    if (response.responseText != '')
+                    {
+                        $("checkshtml").update(response.responseText);
+                    }
+                }
+            });
+}
+
+
+/**
+ * @author Kieran Hogg?
+ */
+function switch_template()
+{
+    get_checks();
+    //FIXME functionise the js here
+    if ($('new_action').value == 'ACTION_NOTICE')
+    {
+        $('noticetemplatesbox').show();
+        var triggertype = $('triggertype').value;
+        var triggeraction = $('new_action').value;
+
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
+                {
+                    method: 'POST', 
+                    parameters: {action: 'triggerpairmatch', triggertype: triggertype, triggeraction: triggeraction},
+                    onSuccess: function(transport)
+                    {
+                        var response = transport.responseText || "no response text";
+                        if (response.responseText != '')
+                        {
+                            $(response.responseText).selected = true;
+                        }
+                    }
+                });
+        
+        $('emailtemplatesbox').hide();
+        $('parametersbox').show();
+        $('journalbox').hide();
+        $('none').hide();
+        $('rulessection').show();
+    }
+    else if ($('new_action').value == 'ACTION_EMAIL')
+    {
+        $('noticetemplatesbox').hide();
+        $('emailtemplatesbox').show();
+
+        var triggertype = $('triggertype').value;
+        var triggeraction = $('new_action').value;
+
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
+                {
+                    method: 'POST', 
+                    parameters: {action: 'triggerpairmatch', triggertype: triggertype, triggeraction: triggeraction},
+                    onSuccess: function(transport)
+                    {
+                        var response = transport.responseText || "no response text";
+                        if (response.responseText != '')
+                        {
+                            $(response.responseText).selected = true;
+                        }
+                    }
+                });
+        
+        $('parametersbox').show();
+        $('journalbox').hide();
+        $('none').hide();
+        $('rulessection').show();
+
+    }
+    else if ($('new_action').value == 'ACTION_JOURNAL')
+    {
+        $('parametersbox').show();
+        $('journalbox').show();
+        $('emailtemplatesbox').hide();
+        $('noticetemplatesbox').hide();
+        $('none').hide();
+    }
+    else
+    {
+        $('noticetemplatesbox').hide();
+        $('emailtemplatesbox').hide();
+        $('parametersbox').hide();
+        $('journalbox').hide();
+        $('none').show();
+        $('rulessection').hide();
+    }
+}
+
+
+function set_terminated()
+{
+    if (document.maintform.productonly.checked == true)
+    {
+        $('terminated').disabled = true;
+        $('terminated').checked = true;
+    }
+    else
+    {
+        $('terminated').disabled = false;
+        $('terminated').checked = false;
+    }
+}
