@@ -181,35 +181,6 @@ elseif ($mode == 'approvalpage')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('billing', 32)." {$strBillableIncidents} - {$strApprove}</h2>";
-        ?>
-        <script type="text/javascript">
-        //<![CDATA[
-        function submitform(form)
-        {
-            $(form).request();
-        }
-
-        function checkAll(checkStatus, form)
-        {
-            var frm = Form.getElements(form);
-            for(i = 0; i < frm.length; i++)
-            {
-                if (frm[i].type == 'checkbox')
-                {
-                    if (checkStatus)
-                    {
-                        frm[i].checked = true;
-                    }
-                    else
-                    {
-                        frm[i].checked = false;
-                    }
-                }
-            }
-        }
-        //]]>
-        </script>
-        <?php
 
         echo "<p align='center'>{$strThisReportShowsIncidentsClosedInThisPeriod} ";
         echo ldate($CONFIG['dateformat_date'], $startdate)." - ".ldate($CONFIG['dateformat_date'], $enddate)."</p>";
@@ -252,7 +223,7 @@ elseif ($mode == 'approvalpage')
             $str .= "<table align='center' width='80%'>";
 
             $str .= "<tr>";
-            $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(this.checked, {$sitenamenospaces});\" /></th>";
+            $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
             $str .= "<th>{$strID}</th><th>{$strIncidentTitle}</th><th>{$strContact}</th>";
             $str .= "<th>{$strEngineer}</th><th>{$strOpened}</th><th>{$strClosed}</th>";
 
