@@ -153,7 +153,7 @@ function get_and_display(page, component, update)
     {
         if (component.substr(0,3) == 'win') dashletrefresh[component].stop();
         new Ajax.Updater(component, page, {
-        method: 'get',
+            method: 'get',
             onFailure: function() {
                 $(component).innerHTML = 'Error: could not load data: ' + url;
             },
@@ -349,7 +349,7 @@ function resetTextAreaLength ( e )
  */
 function get_random()
 {
-    var ranNum= Math.floor(Math.random()*1000000000000);
+    var ranNum = Math.floor(Math.random()*1000000000000);
     return ranNum;
 }
 
@@ -391,27 +391,28 @@ function update_ttna() {
  */
 function addcontract_sltimed(servicelevel)
 {
-    new Ajax.Request(application_webpath + 'ajaxdata.php?action=servicelevel_timed&servicelevel=' + servicelevel + '&rand=' + get_random(),
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
         {
             method:'get',
-                onSuccess: function(transport)
+            parameters: {action: 'servicelevel_timed', servicelevel: servicelevel, rand: get_random()},
+            onSuccess: function(transport)
+            {
+                var response = transport.responseText || "no response text";
+                if (transport.responseText)
                 {
-                    var response = transport.responseText || "no response text";
-                    if (transport.responseText)
+                    if (response == 'TRUE')
                     {
-                        if (response == 'TRUE')
-                        {
-                            $('hiddentimed').show();
-                            $('timed').value = 'yes';
-                        }
-                        else
-                        {
-                             $('hiddentimed').hide();
-                             $('timed').value = 'no';
-                        }
+                        $('hiddentimed').show();
+                        $('timed').value = 'yes';
                     }
-                },
-                onFailure: function(){ alert('Something went wrong...') }
+                    else
+                    {
+                         $('hiddentimed').hide();
+                         $('timed').value = 'no';
+                    }
+                }
+            },
+            onFailure: function(){ alert('Something went wrong...') }
         });
 }
 
@@ -516,9 +517,10 @@ function contexthelp(elem, context, auth)
     }
     if (span.innerHTML == '')
     {
-        new Ajax.Request(application_webpath + 'ajaxdata.php?action=contexthelp&context=' + context + '&rand=' + get_random() + '&auth=' + auth,
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
             {
                 method:'get',
+                parameters: {action: 'contexthelp', context: context, rand: get_random(), auth: auth},
                 onSuccess: function(transport)
                 {
                     var response = transport.responseText || "no response text";
@@ -557,20 +559,20 @@ function clearjumpto()
 
 function email_window(incidentid)
 {
-  URL = application_webpath + "incident_email.php?menu=hide&id=" + incidentid;
-  window.open(URL, "email_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
+    URL = application_webpath + "incident_email.php?menu=hide&id=" + incidentid;
+    window.open(URL, "email_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
 }
 
 function close_window(incidentid)
 {
-  URL = application_webpath + "incident_close.php?menu=hide&id=" + incidentid;
-  window.open(URL, "email_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
+    URL = application_webpath + "incident_close.php?menu=hide&id=" + incidentid;
+    window.open(URL, "email_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
 }
 
 function help_window(helpid)
 {
-  URL = application_webpath + "help.php?id=" + helpid;
-  window.open(URL, "help_window", "toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=500");
+    URL = application_webpath + "help.php?id=" + helpid;
+    window.open(URL, "help_window", "toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=500");
 }
 
 // INL - switch tab, see php function draw_tabs_submit()
@@ -704,17 +706,18 @@ function dismissNotice(noticeid, userid)
     if (noticeid == 'all') var div = 'noticearea';
     else var div = 'notice' + noticeid;
 
-    new Ajax.Request(application_webpath + 'ajaxdata.php?action=dismiss_notice&noticeid=' + noticeid + '&userid=' + userid + '&rand=' + get_random(),
-    {
-        method:'get',
-            onSuccess: function(transport)
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
             {
-                $(div).fade();
-                $(div).removeClassName('noticebar');
-                if ($$('.noticebar').length < 2) $('dismissall').fade();
-            },
-            onFailure: function(){ alert('Notice Error\nSorry, we could not dismiss the notice.') }
-    });
+                method:'get',
+                parameters: {action: 'dismiss_notice', noticeid: noticeid, userid: userid, rand: get_random()},
+                onSuccess: function(transport)
+                {
+                    $(div).fade();
+                    $(div).removeClassName('noticebar');
+                    if ($$('.noticebar').length < 2) $('dismissall').fade();
+                },
+                onFailure: function(){ alert('Notice Error\nSorry, we could not dismiss the notice.') }
+            });
 }
 
 
@@ -922,26 +925,27 @@ function hide_status_drop_down()
 function set_user_status()
 {
     var userstatus = $('userstatus_dropdown').value;
-    new Ajax.Request(application_webpath + 'ajaxdata.php?action=set_user_status&userstatus=' + userstatus + '&rand=' + get_random(),
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
             {
-        method:'get',
-        onSuccess: function(transport)
-        {
-            var response = transport.responseText || "no response text";
-            if (transport.responseText)
-            {
-                if (response != 'FALSE')
+                method:'get',
+                parameters: {action: 'set_user_status', userstatus: userstatus, rand: get_random()},
+                onSuccess: function(transport)
                 {
-                    $('userstatus_summaryline').innerHTML = response;
-                    // hide_status_drop_down();
-                    $('userstatus_dropdown').blur();
+                    var response = transport.responseText || "no response text";
+                    if (transport.responseText)
+                    {
+                        if (response != 'FALSE')
+                        {
+                            $('userstatus_summaryline').innerHTML = response;
+                            // hide_status_drop_down();
+                            $('userstatus_dropdown').blur();
+                        }
+                    }
+                },
+                onFailure: function()
+                {
+                    alert('Something went wrong...');
                 }
-            }
-        },
-        onFailure: function()
-        {
-            alert('Something went wrong...');
-        }
             });
 }
 
@@ -969,32 +973,33 @@ function attach_another_file(element)
 
 function ignore_pending_reassignments(incidentid, originalowner)
 {
-    new Ajax.Request(application_webpath + 'ajaxdata.php?action=delete_temp_assign&incidentid='+incidentid+'&originalowner='+originalowner,
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
             {
-        method: 'get',
-        onSuccess: function(transport)
-        {
-            var response = transport.responseText || "no response text";
-            if (transport.responseText)
-            {
-                if (response == 'OK')
+                method: 'get',
+                parameters: {action: 'delete_temp_assign', incidentid: incidentid, originalowner: originalowner},
+                onSuccess: function(transport)
                 {
-                    Element.remove('incident'+incidentid);
-                }
-                else if (response == 'NOPERMISSION')
+                    var response = transport.responseText || "no response text";
+                    if (transport.responseText)
+                    {
+                        if (response == 'OK')
+                        {
+                            Element.remove('incident'+incidentid);
+                        }
+                        else if (response == 'NOPERMISSION')
+                        {
+                            alert('No Permission to ignore incident reassignment');
+                        }
+                        else
+                        {
+                            alert ('Something went wrong ignoring reassignment');
+                        }
+                    }
+                },
+                onFailure: function()
                 {
-                    alert('No Permission to ignore incident reassignment');
+                    alert('Error ignoring reassignment');
                 }
-                else
-                {
-                    alert ('Something went wrong ignoring reassignment');
-                }
-            }
-        },
-        onFailure: function()
-        {
-            alert('Error ignoring reassignment');
-        }
             });
 }
 
@@ -1031,89 +1036,89 @@ function ldap_browse_select_container(ldap_base, field)
 
     new Ajax.Request(application_webpath + 'ajaxdata.php',
             {
-        method: 'POST', 
-        parameters: {action: 'ldap_browse_groups', base: ldap_base, ldap_type: ldap_type, ldap_host: ldap_host, ldap_port: ldap_port,
-            ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass},
-            onCreate: function()
-            {
-                $('ldap_browse_contents').innerHTML = "<p align='center'<img src='"+application_webpath + "images/ajax-loader.gif' /><br />Loading</p>";
-            },
-            onSuccess: function(transport)
-            {
-                var response = transport.responseText || "no response text";
-                if (transport.responseText)
+                method: 'POST', 
+                parameters: {action: 'ldap_browse_groups', base: ldap_base, ldap_type: ldap_type, ldap_host: ldap_host, ldap_port: ldap_port,
+                ldap_protocol: ldap_protocol, ldap_security: ldap_security, ldap_bind_user: ldap_bind_user, ldap_bind_pass: ldap_bind_pass},
+                onCreate: function()
                 {
-                    var html = 'Current Level: '
-
-                        if (ldap_base.length > 0) html += ldap_base;
-                        else html += '[root]';
-
-                    html += '<table>';
-
-                    if (ldap_base.length > 0)
+                    $('ldap_browse_contents').innerHTML = "<p align='center'<img src='"+application_webpath + "images/ajax-loader.gif' /><br />Loading</p>";
+                },
+                onSuccess: function(transport)
+                {
+                    var response = transport.responseText || "no response text";
+                    if (transport.responseText)
                     {
-                        if (ldap_base.indexOf(',') == -1)
+                        var html = 'Current Level: '
+    
+                            if (ldap_base.length > 0) html += ldap_base;
+                            else html += '[root]';
+    
+                        html += '<table>';
+    
+                        if (ldap_base.length > 0)
                         {
-                            parent = '';
+                            if (ldap_base.indexOf(',') == -1)
+                            {
+                                parent = '';
+                            }
+                            else
+                            {
+                                parent = ldap_base.substring(ldap_base.indexOf(',')+1);
+                            }
+    
+                            html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
+                            html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";
+                            html += "</tr>";
+                        }
+    
+                        var data = response.evalJSON();
+                        if (data.length == 0)
+                        {
+                            html += "<tr><td colspan='3'>ERROR</td></tr>";
                         }
                         else
                         {
-                            parent = ldap_base.substring(ldap_base.indexOf(',')+1);
-                        }
-
-                        html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
-                        html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";
-                        html += "</tr>";
-                    }
-
-                    var data = response.evalJSON();
-                    if (data.length == 0)
-                    {
-                        html += "<tr><td colspan='3'>ERROR</td></tr>";
-                    }
-                    else
-                    {
-                        if (data[0].status == 'ok')
-                        {
-                            for (i = 1; i < data.length; i++)
+                            if (data[0].status == 'ok')
                             {
-                                html += '<tr>';		            		
-
-                                if (data[i].type == 'container')
+                                for (i = 1; i < data.length; i++)
                                 {
-                                    html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navdown+"</a></td>";
-                                    html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_kb+"</a></td>";
-                                    html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+                                    html += '<tr>';		            		
+    
+                                    if (data[i].type == 'container')
+                                    {
+                                        html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navdown+"</a></td>";
+                                        html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_kb+"</a></td>";
+                                        html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+                                    }
+                                    else if (data[i].type == 'group')
+                                    {
+                                        html += "<td></td>";
+                                        html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_site+"</a></td>";
+                                        html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
+                                    }
+    
+                                    html += '</tr>';
                                 }
-                                else if (data[i].type == 'group')
-                                {
-                                    html += "<td></td>";
-                                    html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_site+"</a></td>";
-                                    html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
-                                }
-
-                                html += '</tr>';
+                            }
+                            else if (data[0].status == 'connectfailed')
+                            {
+                                html += "<tr><td colspan='3'>"+strLDAPTestFailed+"</td></tr>";
+                            }
+                            else
+                            {
+                                html += "<tr><td colspan='3'>"+data[0].status+"</td></tr>";
                             }
                         }
-                        else if (data[0].status == 'connectfailed')
-                        {
-                            html += "<tr><td colspan='3'>"+strLDAPTestFailed+"</td></tr>";
-                        }
-                        else
-                        {
-                            html += "<tr><td colspan='3'>"+data[0].status+"</td></tr>";
-                        }
+    
+                        html += '</table>';
+    
+                        $('ldap_browse_contents').innerHTML = html;
                     }
-
-                    html += '</table>';
-
-                    $('ldap_browse_contents').innerHTML = html;
+                },
+                onFailure: function()
+                {
+                    alert('Error browsing LDAP');
                 }
-            },
-            onFailure: function()
-            {
-                alert('Error browsing LDAP');
-            }
             });
 }
 
