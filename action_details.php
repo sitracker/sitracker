@@ -57,50 +57,21 @@ function resetRules()
 function get_checks()
 {
     $('checksbox').show();
-    var xmlhttp=false;
-
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-    {
-        try
-        {
-           xmlhttp = new XMLHttpRequest();
-        }
-        catch (e)
-        {
-            xmlhttp=false;
-        }
-    }
-    if (!xmlhttp && window.createRequest)
-    {
-        try
-        {
-            xmlhttp = window.createRequest();
-        }
-        catch (e)
-        {
-            xmlhttp=false;
-        }
-    }
     var triggertype = $('triggertype').value;
-    var url =  "ajaxdata.php";
-    var params = "action=checkhtml&triggertype="+triggertype;;
-    xmlhttp.open("POST", url, true)
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.setRequestHeader("Content-length", params.length);
-    xmlhttp.setRequestHeader("Connection", "close");
-    xmlhttp.send(params);
 
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4)
-        {
-            if (xmlhttp.responseText != '')
+    new Ajax.Request(application_webpath + 'ajaxdata.php',
             {
-                //alert(xmlhttp.responseText);
-                $("checkshtml").update(xmlhttp.responseText);
-            }
-        }
-    }
+                method: 'POST', 
+                parameters: {action: 'checkhtml', triggertype: triggertype},
+                onSuccess: function(transport)
+                {
+                    var response = transport.responseText || "no response text";
+                    if (response.responseText != '')
+                    {
+                        $("checkshtml").update(response.responseText);
+                    }
+                }
+            });
 }
 
 function switch_template()
@@ -110,50 +81,23 @@ function switch_template()
     if ($('new_action').value == 'ACTION_NOTICE')
     {
         $('noticetemplatesbox').show();
-        var xmlhttp=false;
-
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-        {
-            try
-            {
-                xmlhttp = new XMLHttpRequest();
-            }
-            catch (e)
-            {
-                xmlhttp=false;
-            }
-        }
-        if (!xmlhttp && window.createRequest)
-        {
-            try
-            {
-                xmlhttp = window.createRequest();
-            }
-            catch (e)
-            {
-                xmlhttp=false;
-            }
-        }
         var triggertype = $('triggertype').value;
         var triggeraction = $('new_action').value;
-        var url =  "ajaxdata.php";
-        var params = "action=triggerpairmatch&triggertype="+triggertype+"&triggeraction="+triggeraction;
-        xmlhttp.open("POST", url, true)
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        xmlhttp.setRequestHeader("Connection", "close");
-        xmlhttp.send(params);
 
-        xmlhttp.onreadystatechange=function()
-        {
-            if (xmlhttp.readyState==4)
-            {
-                if (xmlhttp.responseText != '')
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
                 {
-                    $(xmlhttp.responseText).selected = true;
-                }
-            }
-        }
+                    method: 'POST', 
+                    parameters: {action: 'triggerpairmatch', triggertype: triggertype, triggeraction: triggeraction},
+                    onSuccess: function(transport)
+                    {
+                        var response = transport.responseText || "no response text";
+                        if (response.responseText != '')
+                        {
+                            $(response.responseText).selected = true;
+                        }
+                    }
+                });
+        
         $('emailtemplatesbox').hide();
         $('parametersbox').show();
         $('journalbox').hide();
@@ -165,52 +109,23 @@ function switch_template()
         $('noticetemplatesbox').hide();
         $('emailtemplatesbox').show();
 
-        var xmlhttp=false;
-
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-        {
-            try
-            {
-            xmlhttp = new XMLHttpRequest();
-            }
-            catch (e)
-            {
-            xmlhttp=false;
-            }
-        }
-        if (!xmlhttp && window.createRequest)
-        {
-            try
-            {
-            xmlhttp = window.createRequest();
-            }
-            catch (e)
-            {
-            xmlhttp=false;
-            }
-        }
-
         var triggertype = $('triggertype').value;
         var triggeraction = $('new_action').value;
-        var url =  "ajaxdata.php";
-        var params = "action=triggerpairmatch&triggertype="+triggertype+"&triggeraction="+triggeraction;
-        xmlhttp.open("POST", url, true)
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.setRequestHeader("Content-length", params.length);
-        xmlhttp.setRequestHeader("Connection", "close");
-        xmlhttp.send(params);
 
-        xmlhttp.onreadystatechange=function()
-        {
-            if (xmlhttp.readyState==4)
-            {
-                if (xmlhttp.responseText != '')
+        new Ajax.Request(application_webpath + 'ajaxdata.php',
                 {
-                    $(xmlhttp.responseText).selected = true;
-                }
-            }
-        }
-
+                    method: 'POST', 
+                    parameters: {action: 'triggerpairmatch', triggertype: triggertype, triggeraction: triggeraction},
+                    onSuccess: function(transport)
+                    {
+                        var response = transport.responseText || "no response text";
+                        if (response.responseText != '')
+                        {
+                            $(response.responseText).selected = true;
+                        }
+                    }
+                });
+        
         $('parametersbox').show();
         $('journalbox').hide();
         $('none').hide();
