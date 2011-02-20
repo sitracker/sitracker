@@ -32,8 +32,6 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
 if (mysql_num_rows($result) >= 1)
 {
-
-
     while ($matrix = mysql_fetch_object($result))
     {
         $sql = "SELECT * FROM `{$dbBillingMatrix}` WHERE tag = '{$matrix->tag}'";
