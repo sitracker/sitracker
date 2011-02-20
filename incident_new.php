@@ -1004,7 +1004,10 @@ elseif ($action == 'reassign')
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
     $userphone = user_phone($userid);
-    if ($userphone != '') echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
+    if ($userphone != '') 
+    {
+        echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
+    }
     $sql = "UPDATE `{$dbIncidents}` SET owner='{$uid}', lastupdated='{$now}' WHERE id='{$incidentid}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
