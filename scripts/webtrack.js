@@ -134,7 +134,7 @@ function get_and_display(page, component, update)
     {
         if (dashletrefresh[component] != null) dashletrefresh[component].stop();
         dashletrefresh[component] = new Ajax.PeriodicalUpdater(component, page, {
-        method: 'get', frequency: 30, decay: 1.25,
+            method: 'get', frequency: 30, decay: 1.25,
             onCreate: function(){
                 if (refreshicon != null)
                 {
@@ -184,7 +184,7 @@ function ajax_save(page, component)
     new Ajax.Request(page, {
     	parameters: $(component).serialize(true)
     });
-    $(component).innerHTML = 'Saved';
+    $(component).innerHTML = strSaved;
 }
 
 
