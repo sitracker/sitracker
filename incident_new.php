@@ -402,6 +402,8 @@ elseif ($action == 'incidentform')
     // Display form to get details of the actual incident
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
+    plugin_do('incident_add_form_top');
+
     echo "<h2>".icon('new', 32)." {$strNewIncident} - {$strDetails}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}?action=assign'";
