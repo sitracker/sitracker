@@ -201,7 +201,6 @@ if (mysql_num_rows($mresult) >= 1)
         }
 
         $sql .= "ORDER BY i.contact, i.id";
-        // echo "==== $sql ====";
         $result = mysql_query($sql);
 
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
