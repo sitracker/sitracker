@@ -420,7 +420,7 @@ if ($sit[0] != '')
             }
 
             echo "<small>";
-            echo "<em> (".format_date_friendly(strtotime($notice->timestamp)).")</em>";
+            echo "<em> (".format_date_friendly(mysql2date($notice->timestamp)).")</em>";
             echo "</small></p></div>\n";
         }
 
