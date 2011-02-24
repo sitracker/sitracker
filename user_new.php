@@ -41,7 +41,7 @@ if (empty($submit))
     echo show_form_errors('new_user');
     clear_form_errors('new_user');
 
-    echo "<h2>".icon('user', 32)." ";
+    echo "<h2>".icon('newuser', 32)." ";
     echo "{$strNewUser}</h2>";
     echo "<form id='adduser' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";

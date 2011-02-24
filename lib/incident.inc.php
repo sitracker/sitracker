@@ -142,6 +142,7 @@ function create_incident_from_incoming($incomingid)
     $row = mysql_fetch_object($result);
     $contact = $row->contactid;
     $contract = guess_contract_id($contact);
+
     if (!$contract)
     {
         // we have no contract to log against, update stays in incoming
@@ -156,6 +157,7 @@ function create_incident_from_incoming($incomingid)
     $sql .= "WHERE m.id = '{$contract}' ";
     $sql .= "AND m.servicelevel = s.tag ";
     $sql .= "AND m.product = sp.productid LIMIT 1";
+
     $result = mysql_query($sql);
     if (mysql_error())
     {
@@ -174,6 +176,12 @@ function create_incident_from_incoming($incomingid)
     {
         $rtn = FALSE;
     }
+    else 
+    {
+        $sql = "DELETE FROM `$dbTempIncoming` WHERE id = '{$incomingid}'";
+        $result = mysql_query($sql);
+    }
+    
 
     if ($CONFIG['auto_assign_incidents'])
     {
@@ -1126,11 +1134,14 @@ function increment_incidents_used($maintid)
 
 
 /**
+ * Counts the number of incidents opened on a specific date
+ * @param int $day The day of the month
+ * @param int $month The month of the year
+ * @param int $year The year
  * @author Ivan Lucas
  */
 function countdayincidents($day, $month, $year)
 {
-    // Counts the number of incidents opened on a specified day
     global $dbIncidents;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
@@ -1144,11 +1155,14 @@ function countdayincidents($day, $month, $year)
 
 
 /**
+ * Counts the number of incidents closed on a specific date
+ * @param int $day The day of the month
+ * @param int $month The month of the year
+ * @param int $year The year
  * @author Ivan Lucas
  */
 function countdayclosedincidents($day, $month, $year)
 {
-    // Counts the number of incidents closed on a specified day
     global $dbIncidents;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
@@ -1162,12 +1176,15 @@ function countdayclosedincidents($day, $month, $year)
 
 
 /**
+ * Counts the number of incidents open on a specific date
+ * @param int $day The day of the month
+ * @param int $month The month of the year
+ * @param int $year The year
  * @author Ivan Lucas
  */
 function countdaycurrentincidents($day, $month, $year)
 {
     global $dbIncidents;
-    // Counts the number of incidents currently open on a specified day
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` ";
@@ -1337,7 +1354,7 @@ function incident_backup_switchover($userid, $accepting)
                     // it's not in the queue, and the user isn't accepting so add it
                     //$userstatus=user_status($userid);
                     $userstatus = $user['status'];
-                    $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '$userstatus')";
+                    $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '{$userstatus}')";
                     mysql_query($usql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
@@ -1347,7 +1364,7 @@ function incident_backup_switchover($userid, $accepting)
                 // do an automatic temporary reassign
                 // update incident
                 $rusql = "UPDATE `{$dbIncidents}` SET ";
-                $rusql .= "towner='{$backupid}', lastupdated='$now' WHERE id='{$incident->id}' LIMIT 1";
+                $rusql .= "towner='{$backupid}', lastupdated='{$now}' WHERE id='{$incident->id}' LIMIT 1";
                 mysql_query($rusql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
@@ -1667,5 +1684,51 @@ function external_escalation($escalated, $incid)
     }
 
     return "no";
+}
+
+/**
+ * Get an SLA of an incident in human-readable format
+ * Written for trigger templates but can be re-used
+ * @param int $incident_id. Incident ID
+ * @param string $type. Type of the SLA, from: initial_response, prob_determ, action_plan, resolution
+ * @return string
+ */
+function incident_sla($incident_id, $type)
+{
+    global $dbServiceLevels;
+    $incident = incident($incident_id);
+    $sql = "SELECT * FROM `{$dbServiceLevels}` ";
+    $sql .= "WHERE tag = '{$incident->servicelevel}' AND priority = '{$incident->priority}'";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        return "Error getting SLA";
+    }
+    else
+    {
+        $sla_obj = mysql_fetch_object($result);
+        switch ($type)
+        {
+            case 'prob_determ':
+                $sla = $sla_obj->prob_determ_mins;
+            break;
+
+            case 'action_plan':
+                $sla = $sla_obj->action_plan_mins;
+            break;
+
+            case 'resolution':
+                $sla = $sla_obj->resolution_days * 480;
+            break;
+    
+            case 'initial_response':
+            default:
+                $sla = $sla_obj->initial_response_mins;
+            break;
+
+        }
+        return format_workday_minutes($sla);
+    }
 }
 ?>

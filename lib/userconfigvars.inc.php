@@ -19,7 +19,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-$CFGTAB['application'] = array('themeprefs', 'displayprefs', 'localeprefs');
+$CFGTAB['application'] = array('themeprefs', 'displayprefs', 'localeprefs', 'notificationprefs');
 $TABI18n['application'] = $strApplication;
 
 $CFGCAT['themeprefs'] = array('theme','iconset',
@@ -41,10 +41,14 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
 
 $CFGCAT['localeprefs'] = array('language','utc_offset');
 
+$CFGCAT['notificationprefs'] = array('notifications_away');
+
 // i18n keys for categories
 $CATI18N['themeprefs'] = $strTheme;
 $CATI18N['displayprefs'] = $strDisplay;
 $CATI18N['localeprefs'] = $strLocale;
+$CATI18N['notificationprefs'] = $strNotifications;
+
 
 // Descriptions of all the config variables
 // each config var may have these elements:
@@ -111,6 +115,10 @@ $CFGVAR['updates_per_page']['type'] = 'number';
 $CFGVAR['utc_offset']['title'] = $strUTCOffset;
 $CFGVAR['utc_offset']['type'] = 'timezoneselect';
 
+$CFGVAR['notifications_away']['title'] = $strNotificationsAway;
+$CFGVAR['notifications_away']['help'] = "Which notifications to receive when your status is set to 'Not in Office', 'Absent Sick', 'On Holiday' or 'Working Away'";
+$CFGVAR['notifications_away']['type'] = 'select';
+$CFGVAR['notifications_away']['options'] = 'all|notices|emails|none';
 
 if (function_exists('plugin_do'))
 {

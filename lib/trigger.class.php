@@ -23,7 +23,7 @@ require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 class TriggerEvent {
     function TriggerEvent($trigger_type, $param_array = '')
     {
-        global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types, $dbTriggers;
+        global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
 
         $trigger_type = cleanvar($trigger_type);
         // Check that this is a defined trigger
@@ -49,7 +49,7 @@ class TriggerEvent {
             $trigger = new Trigger($trigger_type,
                                    $trigger->userid, $trigger->template,
                                    $trigger->action, $trigger->checks,
-                                   $trigger->parameters, $param_array);
+                                   $trigger->parameters, $param_array, $trigger->id);
             $rtn = $trigger->fire();
         }
 
@@ -259,17 +259,22 @@ class Trigger extends SitEntity {
         // see if we were passed any checks by the trigger
         if (!empty($this->param_array['checks']))
         {
-        	if (!empty($this->checks))
-        	{
+            if (!empty($this->checks))
+            {
                 $this->checks = "({$this->checks}) && ({$this->param_array['checks']})";
-        	}
-        	else
-        	{
-        		$this->checks = $this->param_array['checks'];
-        	}
-        	$this->param_array['checks'] = '';
+            }
+            else
+            {
+                $this->checks = $this->param_array['checks'];
+            }
+            $this->param_array['checks'] = '';
         }
 
+        if (!isset($this->param_array['userid'])) 
+        {
+            $this->param_array['userid']= $sit[2];
+        }
+        
         //if we have any params from the actual trigger, append to user params
         if (!empty($this->parameters))
         {
@@ -290,14 +295,13 @@ class Trigger extends SitEntity {
             $checks = trigger_replace_specials($this->trigger_type, $this->checks, $this->param_array);
             $checks = str_replace("AND", "&&", $checks);
             $checks = str_replace("OR", "||", $checks);
-            echo $checks;
             $eresult = eval("\$value = $checks;return TRUE;");
 
             if (!$eresult)
             {
                 trigger_error("Error in trigger rule for
                                 {$this->trigger_type}, check your
-                                <a href='triggers.php'>trigger rules</a>",
+                                <a href='triggers.php'>trigger rules</a><br />ID: $this->id, rule: $this->checks",
                                 E_USER_WARNING);
             }
 
@@ -325,50 +329,91 @@ class Trigger extends SitEntity {
     private function trigger_action($action, $template)
     {
         global $CONFIG, $dbg, $dbTriggers;
-        switch ($action)
+        $user_prefs = get_user_config_vars($this->user_id);
+        $user_status =  user_status($this->user_id);
+        $out_of_office_pref = $user_prefs['notifications_away'];
+        if ($user_status != USERSTATUS_ACCOUNT_DISABLED)
         {
-            case "ACTION_EMAIL":
-                debug_log("send_trigger_email($template) called", TRUE);
-                $rtnvalue = $this->send_trigger_email($sit[2], $template);
-                break;
-
-            case "ACTION_NOTICE":
-                debug_log("create_trigger_notice($template) called", TRUE);
-                $rtnvalue = $this->create_trigger_notice($template);
-                break;
-
-            case "ACTION_CREATE_INCIDENT":
-                debug_log("creating incident with holdingemailid:
-                    {$this->param_array['holdingemailid']}", TRUE);
-                $rtnvalue = $this->create_incident_from_incoming(
-                    $this->param_array['holdingemailid']);
-                break;
-
-            case "ACTION_JOURNAL":
-                if (is_array($this->param_array))
-                {
-                    foreach (array_keys($this->param_array) AS $param)
+            switch ($action)
+            {
+                case "ACTION_EMAIL":
+                    if (empty($out_of_office_pref) OR
+                       (($user_status == USERSTATUS_NOT_IN_OFFICE OR
+                         $user_status == USERSTATUS_ON_HOLIDAY OR 
+                         $user_status == USERSTATUS_ABSENT_SICK OR 
+                         $user_status == USERSTATUS_WORKING_AWAY) AND
+                         ($out_of_office_pref == 'emails' OR $out_of_office_pref == 'all')) OR
+                         ($user_status != USERSTATUS_NOT_IN_OFFICE AND
+                          $user_status != USERSTATUS_ON_HOLIDAY AND 
+                          $user_status != USERSTATUS_ABSENT_SICK AND 
+                          $user_status != USERSTATUS_WORKING_AWAY))
                     {
-                        $jtext .= "$param: {$this->param_array[$param]}; ";
+                        debug_log("send_trigger_email($template) called", TRUE);
+                        $rtnvalue = $this->send_trigger_email($template);
                     }
-                }
-                else
-                {
-                    $jtext = '';
-                }
+                    else 
+                    {
+                        return true;
+                    } 
+                    break;
 
-                $rtnvalue = journal(CFG_LOGGING_NORMAL, $this->trigger_type,
-                                    "Trigger Fired ({$jtext})",
-                                    CFG_JOURNAL_TRIGGERS, $this->user_id);
-                break;
+                case "ACTION_NOTICE":
+                    if (empty($out_of_office_pref) OR
+                       (($user_status == USERSTATUS_NOT_IN_OFFICE OR
+                         $user_status == USERSTATUS_ON_HOLIDAY OR 
+                         $user_status == USERSTATUS_ABSENT_SICK OR 
+                         $user_status == USERSTATUS_WORKING_AWAY) AND
+                         ($out_of_office_pref == 'notices' OR $out_of_office_pref == 'all')) OR
+                         ($user_status != USERSTATUS_NOT_IN_OFFICE AND
+                          $user_status != USERSTATUS_ON_HOLIDAY AND 
+                          $user_status != USERSTATUS_ABSENT_SICK AND 
+                          $user_status != USERSTATUS_WORKING_AWAY))
+                    {
+                        debug_log("create_trigger_notice($template) called", TRUE);
+                        $rtnvalue = $this->create_trigger_notice($template);
+                    }
+                    else 
+                    {
+                        return true;
+                    }
+                    break;
 
-            default:
-            	plugin_do('trigger_actions_defined',
-            	          array('paramarray' => $paramarray,
-            	                'action' => $action));
-                break;
+                case "ACTION_CREATE_INCIDENT":
+                    debug_log("creating incident with holdingemailid:
+                        {$this->param_array['holdingemailid']}", TRUE);
+                    $rtnvalue = $this->create_incident_from_incoming(
+                        $this->param_array['holdingemailid']);
+                    break;
+
+                case "ACTION_JOURNAL":
+                    if (is_array($this->param_array))
+                    {
+                        foreach (array_keys($this->param_array) AS $param)
+                        {
+                            $jtext .= "$param: {$this->param_array[$param]}; ";
+                        }
+                    }
+                    else
+                    {
+                        $jtext = '';
+                    }
+
+                    $rtnvalue = journal(CFG_LOGGING_NORMAL, $this->trigger_type,
+                                        "Trigger Fired ({$jtext})",
+                                        CFG_JOURNAL_TRIGGERS, $this->user_id);
+                    break;
+
+                default:
+                    plugin_do('trigger_actions_defined',
+                            array('paramarray' => $paramarray,
+                                    'action' => $action));
+                    break;
+            }
         }
-
+        else 
+        {
+            return true;
+        } 
         return $rtnvalue;
     }
 
@@ -380,16 +425,15 @@ class Trigger extends SitEntity {
     /**
         * Sends an email for a trigger
         * @author Kieran Hogg
-        * @param $user_id integer. The user to send the email to
         * @param $template string. The name of the email template to use
         * trigger
  */
-    private function send_trigger_email($user_id, $template)
+    private function send_trigger_email($template)
     {
         global $CONFIG, $dbg, $dbEmailTemplates;
         if ($CONFIG['debug'])
         {
-            $dbg .= "TRIGGER: send_trigger_email({$user_id},{$trigger_type}, {$this->param_array})\n";
+            $dbg .= "TRIGGER: send_trigger_email({$trigger->userid},{$trigger_type}, {$this->param_array})\n";
         }
         // $trigger_types[$this->trigger_type]['type'])
 
@@ -410,7 +454,6 @@ class Trigger extends SitEntity {
         //add this in manually, this is who we're sending the email to
         $this->param_array['triggeruserid'] = $this->user_id;
 
-        // INL removed $this-> from the $this->trigger_replace_specials() below, since it's not in this class (yet?) - 2010-4-11
         $from = trigger_replace_specials($this->trigger_type, $template->fromfield, $this->param_array);
         $toemail = trigger_replace_specials($this->trigger_type, $template->tofield, $this->param_array);
         $replytoemail = trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);

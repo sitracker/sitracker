@@ -227,9 +227,10 @@ function parse_updatebody($updatebody, $striptags = TRUE)
  * @param int $id. ID of priority to pre-select. None selected if 0 or blank.
  * @param int $max. The maximum priority ID to list.
  * @param bool $disable. Disable the control when TRUE.
+ * @param bool $required. Whether to show the required style or not
  * @return string. HTML
  */
-function priority_drop_down($name, $id, $max=4, $disable = FALSE)
+function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required = FALSE)
 {
     global $CONFIG, $iconset, $strRequired;
     // INL 8Oct02 - Removed DB Query
@@ -281,7 +282,7 @@ function priority_drop_down($name, $id, $max=4, $disable = FALSE)
         $html .= ">{$GLOBALS['strCritical']}</option>\n";
     }
     $html .= "</select>\n";
-    if ($id == 0)
+    if ($id == 0 AND $required)
     {
         $html .= "<span class='required'>{$strRequired}</span>";
     }
@@ -297,7 +298,7 @@ function priority_drop_down($name, $id, $max=4, $disable = FALSE)
  * @return $html string html to output
  * @author Kieran Hogg
  */
-function show_next_action($formid, $incidentid)
+function show_next_action($formid, $incidentid = '')
 {
     global $now, $strAM, $strPM;
     $html = "{$GLOBALS['strPlaceIncidentInWaitingQueue']}<br />";

@@ -201,7 +201,7 @@ else
 
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-    if (mysql_affected_rows() < 1) trigger_error("Insert failed",E_USER_ERROR);
+    if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
 
     $serviceid = mysql_insert_id();
 

@@ -120,7 +120,8 @@ if (is_array($CONFIG['plugins']) AND $CONFIG['plugins'][0] != '' AND count($CONF
 {
     foreach ($CONFIG['plugins'] AS $plugin)
     {
-        echo "<p><strong>$plugin</strong>";
+        $plugin = trim($plugin);
+        echo "<p><strong>{$plugin}</strong>";
         if ($PLUGININFO[$plugin]['version'] != '') echo " version ".number_format($PLUGININFO[$plugin]['version'], 2)."<br />";
         else echo "- <span class='error'>{$strFailed}</span><br />";
 
