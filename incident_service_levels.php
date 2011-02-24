@@ -42,7 +42,10 @@ $product_name = product_name($incident->product);
 if ($incident->softwareid > 0) $software_name = software_name($incident->softwareid);
 
 $servicelevel_tag = $incident->servicelevel;
-if ($servicelevel_tag == '') $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
+if ($servicelevel_tag == '') 
+{
+    $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
+}
 $opened_for = format_seconds(time() - $incident->opened);
 
 echo "<h2>".icon('sla', 32)." ";
@@ -59,23 +62,41 @@ if (count($slahistory) >= 1)
     foreach ($slahistory AS $history)
     {
         if (empty($history['targetsla'])) break; // Skip any empty SLA history
-        if ($history['targetmet'] == FALSE) $class = 'critical';
-        else $class = 'shade2';
+        if ($history['targetmet'] == FALSE) 
+        {
+            $class = 'critical';
+        }
+        else 
+        { 
+            $class = 'shade2';
+        }
         echo "<tr class='{$class}'>";
         echo "<td>";
         echo icon($slatypes[$history['targetsla']]['icon'], 16)." ";
         echo target_type_name($history['targetsla'])."</td>";
         echo "<td>";
-        if (!empty($history['userid'])) echo user_realname($history['userid'], TRUE);
+        if (!empty($history['userid'])) 
+        {
+            echo user_realname($history['userid'], TRUE);
+        }
         echo "</td>";
         echo "<td>".format_workday_minutes($history['targettime'])."</td>";
         echo "<td>";
-        if ($history['timestamp'] == 0) echo "<em>";
+        if ($history['timestamp'] == 0) 
+        {
+            echo "<em>";
+        }
         echo format_workday_minutes($history['actualtime']);
-        if ($history['timestamp'] == 0) echo "</em>";
+        if ($history['timestamp'] == 0) 
+        {
+            echo "</em>";
+        }
         echo "</td>";
         echo "<td>";
-        if ($history['timestamp'] > 0) echo ldate($CONFIG['dateformat_datetime'],$history['timestamp']);
+        if ($history['timestamp'] > 0) 
+        {
+            echo ldate($CONFIG['dateformat_datetime'],$history['timestamp']);
+        }
         echo "</td>";
     }
     echo "</table>\n";
@@ -116,8 +137,14 @@ if (mysql_num_rows($result) > 0)
         $last = $row->timestamp;
     }
 
-    if ($incident->status == 7 OR $incident->status == 2) $end = $incident->closed;
-    else $end = $now;
+    if ($incident->status == 7 OR $incident->status == 2)
+    {
+        $end = $incident->closed;
+    }
+    else 
+    {
+        $end = $now;
+    }
 
     $publicholidays = get_public_holidays($incident->opened, $end);
 

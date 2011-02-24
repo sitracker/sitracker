@@ -1446,6 +1446,7 @@ function freeform($name)
 
 /**
  * @deprecated DEPRECATED trigger() function, use the TriggerEvent class instead
+ * @TODO remove after 4.0
  */
 function trigger($trigger_id, $param_array)
 {
