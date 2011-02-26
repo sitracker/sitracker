@@ -77,7 +77,7 @@ $cols1 = substr($cols1, 0, -1);
 $cols2 = substr($cols2, 0, -1);
 echo "<p id='pageoptions'>".help_link("Dashboard")." <a href='manage_user_dashboard.php' title='{$strManageYourDashboard}'>";
 echo icon('dashboardadd', 16)."</a> ";
-echo "<a href=\"javascript:save_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";
+echo "<a href=\"javascript:save_dashboard_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";
 echo "\n<table border=\"0\" width=\"99%\" id='cols'><tr>\n"; //id='dashboardlayout'
 echo "<td width=\"33%\" valign='top' id='col0'>";
 
@@ -123,9 +123,9 @@ Droppables.add('col0', {ghosting: true, onDrop: moveItem, hoverclass: 'droptarge
 Droppables.add('col1', {ghosting: true, onDrop: moveItem, hoverclass: 'droptarget', containment: contain1});
 Droppables.add('col2', {ghosting: true, onDrop: moveItem, hoverclass: 'droptarget', containment: contain2});
 
-Sortable.create('col0', { tag:'div', only:'windowbox', onUpdate: save_layout});
-Sortable.create('col1', { tag:'div', only:'windowbox', onUpdate: save_layout});
-Sortable.create('col2', { tag:'div', only:'windowbox', onUpdate: save_layout});
+Sortable.create('col0', { tag:'div', only:'windowbox', onUpdate: save_dashboard_layout});
+Sortable.create('col1', { tag:'div', only:'windowbox', onUpdate: save_dashboard_layout});
+Sortable.create('col2', { tag:'div', only:'windowbox', onUpdate: save_dashboard_layout});
 
 // Set drop area by default  non cleared.
 $('col0').cleared = false;
@@ -136,86 +136,10 @@ $('savelayout').style.display='none';
 window.onload = function() {
    dashlets.each(
        function(item) {
-        new Draggable(item, {revert: true});
+            new Draggable(item, {revert: true});
        }
    );
 }
-
-// The target drop area contains a snippet of instructional
-// text that we want to remove when the first item
-// is dropped into it.
-function moveItem( draggable,droparea){
-//    if (!droparea.cleared) {
-// //       droparea.innerHTML = '';
-//       droparea.cleared = true;
-//    }
-// //    draggable.parentNode.removeChild(draggable);
-   droparea.appendChild(draggable);
-   save_layout();
-}
-
-
-function save_layout(){
-        var xmlhttp=false;
-        /*@cc_on @*/
-        /*@if (@_jscript_version >= 5)
-        // JScript gives us Conditional compilation, we can cope with old IE versions.
-        // and security blocked creation of the objects.
-        try {
-        xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-        try {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        } catch (E) {
-        xmlhttp = false;
-        }
-        }
-        @end @*/
-        if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-            try {
-                xmlhttp = new XMLHttpRequest();
-            } catch (e) {
-                xmlhttp=false;
-            }
-        }
-        if (!xmlhttp && window.createRequest) {
-            try {
-                xmlhttp = window.createRequest();
-            } catch (e) {
-                xmlhttp=false;
-            }
-        }
-
-        var toPass = '';
-        for (var i = 0; i < 3; i++)
-        {
-            colid = 'col' + i;
-            var col = $(colid).childNodes;
-            var s = '';
-//             alert(colid + '=' + col.length);
-            for (var x = 0; x < col.length; x++){
-                // s = s+col.item(x).id.substr(5)+"-";
-//                 alert('x = '+x + col.item(x).id);
-                s = s+i+"-"+col.item(x).id.substr(5)+",";
-            }
-            //alert(s);
-            toPass = toPass+s.substr(0,s.length-1)+",";
-        }
-
-
-        xmlhttp.open("GET", "ajaxdata.php?action=storedashboard&id="+<?php echo $_SESSION['userid']; ?>+"&val="+escape(toPass), true);
-
-        xmlhttp.onreadystatechange=function() {
-            //remove this in the future after testing
-            if (xmlhttp.readyState==4) {
-                if (xmlhttp.responseText != ''){
-                    //alert(xmlhttp.responseText);
-                }
-            }
-        }
-        xmlhttp.send(null);
-        $('savelayout').style.display='none';
-    }
 
 /* ]]> */
 </script>

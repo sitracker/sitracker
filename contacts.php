@@ -63,19 +63,7 @@ $pagescripts = array('AutoComplete.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 if ($search_string == '') $search_string='a';
-?>
-<script type="text/javascript">
-//<![CDATA[
-function contact_products_window(contactid)
-{
-    URL = "contact_products.php?id=" + contactid;
-    window.open(URL, "contact_products_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=520,height=240");
-}
 
-//]]>
-</script>
-
-<?php
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
 echo "<table summary='alphamenu' align='center'>";

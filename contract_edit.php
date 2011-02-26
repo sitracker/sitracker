@@ -52,26 +52,7 @@ if ($action == "edit")
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Error", E_USER_WARNING);
         $maint = mysql_fetch_object($result);
-        ?>
-        <script type='text/javascript'>
-        //<![CDATA[
 
-        function set_terminated()
-        {
-            if (document.maintform.productonly.checked==true)
-            {
-                $('terminated').disabled=true;
-                $('terminated').checked=true;
-            }
-            else
-            {
-            	$('terminated').disabled=false;
-            	$('terminated').checked=false;
-            }
-        }
-        //]]>
-        </script>
-        <?php
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
         echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
