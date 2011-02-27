@@ -635,7 +635,7 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
     mysql_free_result($result);
 
     // Calculate remainder
-    if (is_active_status($laststatus, $states) AND ($t2 >= $update['timestamp']))
+    if (is_active_status($laststatus, $states) AND ($t2 >= $update->timestamp))
     {
         $time += calculate_working_time($timeptr, $t2, $publicholidays);
     }
