@@ -24,14 +24,36 @@ $legends = explode('|', cleanvar($_REQUEST['legends'], TRUE, FALSE, FALSE));
 $title = urldecode(cleanvar($_REQUEST['title']));
 $unit = cleanvar($_REQUEST['unit']);
 
-$img = draw_chart_image($type, 500, 150, $data, $legends, $title, $unit);
+// require (APPLICATION_LIBPATH . 'chart_original.class.php');
+require (APPLICATION_LIBPATH . 'chart_pchart.class.php');
+
+$chart = new OriginalChart(500, 150);
+$chart->setTitle($title);
+$chart->setData($data);
+$chart->setLegends($legends);
+$chart->setUnit($unit);
+
+switch ($type)
+{
+    case 'pie':
+        $chart->draw_pie_chart();
+        break;
+    case 'line':
+        $chart->draw_line_chart();
+        break;
+    case 'bar':
+        $chart->draw_bar_chart();
+       break;
+    default:
+        $chart->draw_error();
+}
 
 // output to browser
 // flush image
-header('Content-type: image/png');
-header("Content-disposition-type: attachment\r\n");
-header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
-imagepng($img);
-imagedestroy($img);
+//header('Content-type: image/png');
+//header("Content-disposition-type: attachment\r\n");
+//header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
+//imagepng($chart->img);
+//imagedestroy($chart->img);
 
 ?>
