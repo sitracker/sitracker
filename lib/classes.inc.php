@@ -71,4 +71,48 @@ abstract class Person extends SitEntity {
     var $source; ///< default: sit, ldap etc
 }
 
+abstract class Chart {
+    var $width;
+    var $height;
+    
+    var $title;
+    var $data;
+    var $legends;
+    var $unit;
+    
+    function Chart($width=500, $height=150)
+    {
+        $this->width = $width;
+        $this->height = $height;
+    }
+    
+    function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    
+    function setData($data)
+    {
+        $this->data = $data;
+    }
+    
+    function setLegends($legends)
+    {
+        $this->legends = $legends;
+    }
+    
+    function setUnit($unit)
+    {
+        $this->unit = $unit;
+    }
+    
+    abstract protected function draw_pie_chart();
+    
+    abstract protected function draw_line_chart();
+    
+    abstract protected function draw_bar_chart();
+    
+    abstract protected function draw_error();
+}
+
 ?>
