@@ -35,7 +35,7 @@ $selected = cleanvar($_REQUEST['selected']);
 switch ($action)
 {
     case 'auto_save':
-        $userid = clean_int($_REQUEST['userid']);
+        $userid = $_SESSION['userid'];
         $incidentid = clean_int($_REQUEST['incidentid']);
         $type = cleanvar($_REQUEST['type']);
         $draftid = clean_int($_REQUEST['draftid']);
@@ -238,7 +238,7 @@ switch ($action)
         }
         break;
     case 'storedashboard':
-        $id = clean_int($_REQUEST['id']);
+        $id = $_SESSION['userid'];
         $val = clean_dbstring($_REQUEST['val']);
 
         if ($id == $_SESSION['userid'])
@@ -254,6 +254,7 @@ switch ($action)
         $ldap_port = clean_int($_REQUEST['ldap_port']);
         $ldap_protocol = cleanvar($_REQUEST['ldap_protocol']);
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
+        $ldap_type = cleanvar($_REQUEST['ldap_type']);
         $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);
         $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);
         $ldap_user_base = cleanvar($_REQUEST['ldap_user_base']);

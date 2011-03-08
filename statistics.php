@@ -455,8 +455,8 @@ function give_overview()
 
     mysql_free_result($result);
 
-    $totalresult=0;
-    $numquestions=0;
+    $totalresult = 0;
+    $numquestions = 0;
     $qsql = "SELECT * FROM `{$GLOBALS['dbFeedbackQuestions']}` WHERE formid='1' AND type='rating' ORDER BY taborder";
     $qresult = mysql_query($qsql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);

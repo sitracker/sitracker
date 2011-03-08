@@ -1134,11 +1134,14 @@ function increment_incidents_used($maintid)
 
 
 /**
+ * Counts the number of incidents opened on a specific date
+ * @param int $day The day of the month
+ * @param int $month The month of the year
+ * @param int $year The year
  * @author Ivan Lucas
  */
 function countdayincidents($day, $month, $year)
 {
-    // Counts the number of incidents opened on a specified day
     global $dbIncidents;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
@@ -1152,11 +1155,14 @@ function countdayincidents($day, $month, $year)
 
 
 /**
+ * Counts the number of incidents closed on a specific date
+ * @param int $day The day of the month
+ * @param int $month The month of the year
+ * @param int $year The year
  * @author Ivan Lucas
  */
 function countdayclosedincidents($day, $month, $year)
 {
-    // Counts the number of incidents closed on a specified day
     global $dbIncidents;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
@@ -1170,12 +1176,15 @@ function countdayclosedincidents($day, $month, $year)
 
 
 /**
+ * Counts the number of incidents open on a specific date
+ * @param int $day The day of the month
+ * @param int $month The month of the year
+ * @param int $year The year
  * @author Ivan Lucas
  */
 function countdaycurrentincidents($day, $month, $year)
 {
     global $dbIncidents;
-    // Counts the number of incidents currently open on a specified day
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` ";
@@ -1345,7 +1354,7 @@ function incident_backup_switchover($userid, $accepting)
                     // it's not in the queue, and the user isn't accepting so add it
                     //$userstatus=user_status($userid);
                     $userstatus = $user['status'];
-                    $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '$userstatus')";
+                    $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '{$userstatus}')";
                     mysql_query($usql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
@@ -1355,7 +1364,7 @@ function incident_backup_switchover($userid, $accepting)
                 // do an automatic temporary reassign
                 // update incident
                 $rusql = "UPDATE `{$dbIncidents}` SET ";
-                $rusql .= "towner='{$backupid}', lastupdated='$now' WHERE id='{$incident->id}' LIMIT 1";
+                $rusql .= "towner='{$backupid}', lastupdated='{$now}' WHERE id='{$incident->id}' LIMIT 1";
                 mysql_query($rusql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 

@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
   `id` int(1) NOT NULL default '0',
   `version` float(3,2) NOT NULL default '0.00',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 -- NOTE system must be the first table created.
 
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
   `config` varchar(255) NOT NULL,
   `value` text,
   PRIMARY KEY  (`config`)
-) TYPE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbContacts}` (
@@ -183,7 +183,7 @@ CREATE TABLE `{$dbContacts}` (
   KEY `forenames` (`forenames`),
   KEY `surname` (`surname`),
   KEY `notify_contactid` (`notify_contactid`)
-) TYPE=MyISAM DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbDashboard}` (
@@ -339,7 +339,7 @@ CREATE TABLE `{$dbFeedbackReport}` (
   `responseref` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `completed` enum('yes','no') NOT NULL default 'no',
-  `created` timestamp(14) NOT NULL,
+  `created` timestamp NOT NULL,
   `incidentid` int(5) NOT NULL default '0',
   `contactid` int(5) NOT NULL default '0',
   `createdby` smallint(6) NULL ,
@@ -362,7 +362,7 @@ CREATE TABLE `{$dbFeedbackRespondents}` (
   `incidentid` int(11) NOT NULL default '0',
   `email` varchar(255) NOT NULL default '',
   `completed` enum('yes','no') NOT NULL default 'no',
-  `created` timestamp(14) NOT NULL,
+  `created` timestamp NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `responseref` (`incidentid`),
   KEY `formid` (`formid`),
@@ -561,7 +561,7 @@ CREATE TABLE `{$dbInventory}` (
 CREATE TABLE `{$dbJournal}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
-  `timestamp` timestamp(14) NOT NULL,
+  `timestamp` timestamp NOT NULL,
   `event` varchar(40) NOT NULL default '',
   `bodytext` text NOT NULL,
   `journaltype` int(11) NOT NULL default '0',
@@ -692,7 +692,7 @@ CREATE TABLE `{$dbMaintenance}` (
 CREATE TABLE `{$dbNotes}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
-  `timestamp` timestamp(14) NOT NULL,
+  `timestamp` timestamp NOT NULL,
   `bodytext` text NOT NULL,
   `link` int(11) NOT NULL default '0',
   `refid` int(11) NOT NULL default '0',
@@ -1289,7 +1289,7 @@ CREATE TABLE `{$dbTasks}` (
   `value` float(6,2) default NULL,
   `distribution` enum('public','private', 'incident', 'event') NOT NULL default 'public',
   `created` datetime NOT NULL default '0000-00-00 00:00:00',
-  `lastupdated` timestamp(14) NOT NULL,
+  `lastupdated` timestamp NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner` (`owner`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
@@ -1522,7 +1522,7 @@ CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
   `value` text,
   PRIMARY KEY  (`userid`,`config`),
   KEY `userid` (`userid`)
-) TYPE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbUserSoftware}` (

@@ -293,7 +293,7 @@ function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $html = "<select name='$name' id='$name'";
+    $html = "<select name='{$name}' id='{$name}'";
     if ($required)
     {
         $html .= " class='required' ";
@@ -314,7 +314,7 @@ function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE
 
         if ($showsite AND $prevsite != $contacts->siteid)
         {
-            $html .= "<optgroup label='".htmlentities($contacts->sitename, ENT_COMPAT, 'UTF-8').", ".htmlentities($contacts->department, ENT_COMPAT, $GLOBALS['i18ncharset'])."'>";
+            $html .= "<optgroup label='{$contacts->sitename}, {$contacts->department}'>";
         }
 
         $realname = "{$contacts->forenames} {$contacts->surname}";

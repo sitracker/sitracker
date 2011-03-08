@@ -22,12 +22,26 @@ session_start();
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
+if ($_SESSION['auth'] == TRUE)
+{
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
+}
+else
+{
+    $theme = $CONFIG['default_interface_style'];
+    $iconset = $CONFIG['default_iconset'];
+}
+if (empty($iconset)) $iconset = 'sit';
+
 header('Content-type: text/javascript');
 
 $site_icon = icon('site', 16);
 $navdown_icon = icon('navdown', 16);
 $navup_icon = icon('navup', 16);
 $kb_icon = icon('kb', 16);
+$save_icon = icon('save', 16, $strSaveDraft);
+$info_icon = icon('info', 16, $strDraftLastSaved);
 
 echo "
 var application_webpath = '{$CONFIG['application_webpath']}';
@@ -53,157 +67,55 @@ var strSaturdayAbbr = '{$strSaturdayAbbr}';
 var strSundayAbbr = '{$strSundayAbbr}';
 
 var strAreYouSureUpdateLastBilled = \"{$strAreYouSureUpdateLastBilled}\";
-var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
-var strKnowledgeBaseArticle = \"{$strKnowledgeBaseArticle}\";
-var strSelectKBSections = \"{$strSelectKBSections}\";
-var strFinalUpdate = \"{$strFinalUpdate}\";
+var strCheckingDetails = \"{$strCheckingDetails}\";
 var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
-var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
-
-var strUp = \"{$strUp}\";
-
+var strFinalUpdate = \"{$strFinalUpdate}\";
+var strHide = \"{$strHide}\";
+var strKnowledgeBaseArticle = \"{$strKnowledgeBaseArticle}\";
 var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
+var strLDAPUserBaseDNIncorrect = \"{$strLDAPUserBaseDNIncorrect}\";
+var strLDAPAdminGroupIncorrect = \"{$strLDAPAdminGroupIncorrect}\";
+var strLDAPManagerGroupIncorrect = \"{$strLDAPManagerGroupIncorrect}\";
+var strLDAPUserGroupIncorrect = \"{$strLDAPUserGroupIncorrect}\";
+var strLDAPCustomerGroupIncorrect = \"{$strLDAPCustomerGroupIncorrect}\";
+var strLDAPTestSucessful = \"{$strLDAPTestSucessful}\";
+var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
+var strPasswordIncorrect = \"{$strPasswordIncorrect}\";
+var strReveal = \"{$strReveal}\";
+var strSaved = \"{$strSaved}\";
+var strSelectKBSections = \"{$strSelectKBSections}\";
+var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
+var strUp = \"{$strUp}\";
+var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
+
+/* CONSTANTS */
+
+var LDAP_PASSWORD_INCORRECT = ".LDAP_PASSWORD_INCORRECT.";
+var LDAP_BASE_INCORRECT = ".LDAP_BASE_INCORRECT.";
+var LDAP_ADMIN_GROUP_INCORRECT = ".LDAP_ADMIN_GROUP_INCORRECT.";
+var LDAP_MANAGER_GROUP_INCORRECT = ".LDAP_MANAGER_GROUP_INCORRECT.";
+var LDAP_USER_GROUP_INCORRECT = ".LDAP_USER_GROUP_INCORRECT.";
+var LDAP_CUSTOMER_GROUP_INCORRECT = ".LDAP_CUSTOMER_GROUP_INCORRECT.";
+var LDAP_CORRECT = ".LDAP_CORRECT.";
+
+/* SESSIONS */
 
 var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
 var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
+
+/* ICONS */
 
 var icon_site = '{$site_icon}';
 var icon_navdown = '{$navdown_icon}';
 var icon_kb = '{$kb_icon}';
 var icon_navup = '{$navup_icon}';
+var save_icon = '{$save_icon}';
+var info_icon = '{$info_icon}';
 
-/* Please don't add functions here, these functions below need moving to webtrack.js
-   this file is to make i18n keys available in javascript
+/* 
+    Please don't add functions here, these functions below need moving to webtrack.js
+    this file is to make i18n keys available in javascript
 */
-
-
-
-/**
-  * Display/Hide contents of a password field
-  * (converts from a password to text field and back)
-  * @author Ivan Lucas
-  * @param string elem. The ID of the password input HTML element
-**/
-function password_reveal(elem)
-{
-    var elemlink = 'link' + elem;
-    if ($(elem).type == 'password')
-    {
-        $(elem).type = 'text';
-        $(elemlink).innerHTML = '{$strHide}';
-    }
-    else
-    {
-        $(elem).type = 'password';
-        $(elemlink).innerHTML = '{$strReveal}';
-    }
-}
-
-
-
-/**
-  * Check the LDAP details entered and display the results
-  * @author Paul heaney
-  * @param string statusfield element ID of the DIV that will contain the status text
-*/
-function checkLDAPDetails(statusfield)
-{
-    $(statusfield).innerHTML = \"<strong>{$strCheckingDetails}</strong>\";
-
-    var server = $('ldap_host').value;
-    var port = $('ldap_port').value;
-    var type = $('ldap_type').options[$('ldap_type').selectedIndex].value;
-    var protocol = $('ldap_protocol').options[$('ldap_protocol').selectedIndex].value;
-    var security = $('ldap_security').options[$('ldap_security').selectedIndex].value;
-    var user = $('ldap_bind_user').value;
-    var password = $('cfgldap_bind_pass').value;
-    var userBase = $('ldap_user_base').value;
-    var adminGrp = $('ldap_admin_group').value;
-    var managerGrp = $('ldap_manager_group').value;
-    var userGrp = $('ldap_user_group').value;
-    var customerGrp = $('ldap_customer_group').value;
-
-    // Auto save
-    var xmlhttp=false;
-
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined')
-    {
-        try
-        {
-            xmlhttp = new XMLHttpRequest();
-        }
-        catch (e)
-        {
-            xmlhttp=false;
-        }
-    }
-    if (!xmlhttp && window.createRequest)
-    {
-        try
-        {
-            xmlhttp = window.createRequest();
-        }
-        catch (e)
-        {
-            xmlhttp=false;
-        }
-    }
-
-    var url =  \"ajaxdata.php\";
-    var params = \"action=checkldap&ldap_host=\"+server+\"&ldap_type=\"+type+\"&ldap_port=\"+port+\"&ldap_protocol=\"+protocol+\"&ldap_security=\"+security+" .
-            "\"&ldap_bind_user=\"+encodeURIComponent(user)+\"&ldap_bind_pass=\"+encodeURIComponent(password)+\"&ldap_user_base=\"+userBase+\"&ldap_admin_group=\"+adminGrp+\"&ldap_manager_group=\"+managerGrp+" .
-            "\"&ldap_user_group=\"+userGrp+\"&ldap_customer_group=\"+customerGrp;
-    xmlhttp.open(\"POST\", url, true)
-    xmlhttp.setRequestHeader(\"Content-type\", \"application/x-www-form-urlencoded\");
-    xmlhttp.setRequestHeader(\"Content-length\", params.length);
-    xmlhttp.setRequestHeader(\"Connection\", \"close\");
-
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4)
-        {
-            if (xmlhttp.responseText != '')
-            {
-                if (xmlhttp.responseText == ".LDAP_PASSWORD_INCORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strPasswordIncorrect}</strong>\";
-                }
-                else if (xmlhttp.responseText == ".LDAP_BASE_INCORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPUserBaseDNIncorrect}</strong>\";
-                }
-                else if (xmlhttp.responseText == ".LDAP_ADMIN_GROUP_INCORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPAdminGroupIncorrect}</strong>\";
-                }
-                else if (xmlhttp.responseText == ".LDAP_MANAGER_GROUP_INCORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPManagerGroupIncorrect}</strong>\";
-                }
-                else if (xmlhttp.responseText == ".LDAP_USER_GROUP_INCORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPUserGroupIncorrect}</strong>\";
-                }
-                else if (xmlhttp.responseText == ".LDAP_CUSTOMER_GROUP_INCORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPCustomerGroupIncorrect}</strong>\";
-                }
-                else if (xmlhttp.responseText == ".LDAP_CORRECT.")
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPTestSucessful}</strong>\";
-                }
-                else
-                {
-                    $(statusfield).innerHTML = \"<strong>{$strLDAPTestFailed}</strong>\";
-                }
-            }
-        }
-    }
-    xmlhttp.send(params);
-}
 ";
-
-
-
 
 ?>

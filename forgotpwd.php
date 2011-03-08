@@ -222,7 +222,7 @@ switch ($_REQUEST['action'])
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p>Have you forgotten your username?  If so you should contact an administrator.</p>"; // FIXME i18n
+                echo "<p>{$strHaveForgottenUsername}</p>";
                 echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
