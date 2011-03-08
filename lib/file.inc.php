@@ -95,9 +95,9 @@ function rec_copy($from_path, $to_path)
 
                 if (is_file($file))
                 {
-                    if (!(substr(rtrim($file),strlen(rtrim($file))-8, 4) == 'mail'
-                        || substr(rtrim($file),strlen(rtrim($file))-10, 5) == 'part1'
-                        || substr(rtrim($file),strlen(rtrim($file))-8, 4) == '.vcf'))
+                    if (!(mb_substr(rtrim($file),mb_strlen(rtrim($file))-8, 4) == 'mail'
+                        || mb_substr(rtrim($file),mb_strlen(rtrim($file))-10, 5) == 'part1'
+                        || mb_substr(rtrim($file),mb_strlen(rtrim($file))-8, 4) == '.vcf'))
                     {
                         copy($from_path.$file, $to_path.$file);
                     }

@@ -23,7 +23,7 @@ if ($_POST['submit'])
     $errors = 0;
     foreach (array_keys($_POST['visibility']) as $id)
     {
-    	$id = intval($id);
+    	$id = clean_int($id);
 
         if ($id != 0)
         {
@@ -49,7 +49,7 @@ if ($_POST['submit'])
 
         $sql = "UPDATE `{$dbMaintenance}` ";
         $sql .= $visiblesql;
-        $sql .= "WHERE id='{$id}'";
+        $sql .= "WHERE id = {$id}";
 
         $result = mysql_query($sql);
         if (mysql_error())

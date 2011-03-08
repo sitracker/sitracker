@@ -303,7 +303,7 @@ switch ($step)
         echo "<tr><th>{$strReplyTo}</th><td><input maxlength='100' name='replytofield' ";
         echo "id='replytofield' size='40' value=\"{$replyto}\" /></td></tr>\n";
         if (trim($ccemail) == ",") $ccemail = '';
-        if (substr($ccemail, 0, 1) == ",") $ccfield = substr($ccemail, 1, strlen($ccemail));
+        if (mb_substr($ccemail, 0, 1) == ",") $ccfield = mb_substr($ccemail, 1, mb_strlen($ccemail));
         echo "<tr><th>{$strCC}</th><td><input maxlength='100' name='ccfield' ";
         echo "id='ccfield' size='40' value=\"{$ccemail}\" /></td></tr>\n";
         echo "<tr><th>{$strBCC}</th><td><input maxlength='100' name='bccfield' ";
@@ -332,7 +332,7 @@ switch ($step)
         echo "</table>";
         echo "<p align='center'>";
         echo "<input name='newincidentstatus' id='newincidentstatus' type='hidden' value='{$newincidentstatus}' />";
-        echo "<input name='timetonextaction' id='timetonextaction' type='hidden' value='{$timetonextaction}' />";       
+        echo "<input name='timetonextaction' id='timetonextaction' type='hidden' value='{$timetonextaction}' />";
         echo "<input name='timetonextaction_none' id='timetonextaction_none' type='hidden' value='{$timetonextaction_none}' />";
         echo "<input name='timetonextaction_days' id='timetonextaction_days' type='hidden' value='{$timetonextaction_days}' />";
         echo "<input name='timetonextaction_hours' id='timetonextaction_hours' type='hidden' value='{$timetonextaction_hours}' />";
@@ -378,8 +378,8 @@ switch ($step)
         $files = array();
 
         $size_of_files = 0;
-        
-        // Check file size is below limit 
+
+        // Check file size is below limit
         foreach ($_FILES AS $file)
         {
             if ($file['name'] != '')
@@ -391,12 +391,12 @@ switch ($step)
                     $errors = 1;
                     $error_string .= "<p class='error'>".get_file_upload_error_message($errorcode, $file['name'])."</p>\n";
                 }
-                
+
                 $size_of_files += filesize($file['tmp_name']);
             }
         }
-        
-        $errors = 0;        
+
+        $errors = 0;
 
         if ($size_of_files > $CONFIG['upload_max_filesize'])
         {
@@ -455,7 +455,7 @@ switch ($step)
                             trigger_error('Failed creating incident attachment directory: '.$CONFIG['attachment_fspath'].$id, E_USER_WARNING);
                         }
                     }
-        
+
                     $name = $file['name'];
                     $size = filesize($file['tmp_name']);
                     $sql = "INSERT INTO `{$dbFiles}`(filename, size, userid, usertype) ";
@@ -463,22 +463,22 @@ switch ($step)
                     mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     $fileid = mysql_insert_id();
-        
+
                     $filename = "{$CONFIG['attachment_fspath']}{$id}{$fsdelim}{$fileid}-{$name}";
-        
+
                     $mv = rename($file['tmp_name'], $filename);
                     if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
                     $attachmenttype = $file['type'];
-                    
+
                     $f = array();
                     $f['name'] = $name;
                     $f['filename'] = $filename;
                     $f['attachmenttype'] = $file['type'];
                     $f['fileid'] = $fileid;
                     $files[] = $f;
-                    
+
                     if (!file_exists($filename)) trigger_error("File did not exist upon processing attachment: {$filename}", E_USER_WARNING);
-    
+
                     // Check file size before sending
                     if (filesize($filename) > $CONFIG['upload_max_filesize'] || filesize($filename) == FALSE)
                     {
@@ -601,22 +601,22 @@ switch ($step)
                                 $updateheader .= "[b][[att={$file['fileid']}]]".$file['name']."[[/att]][/b] ";
                             }
                         }
-                        
+
                         $updateheader .= "\n";
                     }
                     $updateheader .= "{$SYSLANG['strSubject']}: [b]{$subjectfield}[/b]\n";
-    
+
                     if (!empty($updateheader)) $updateheader .= "<hr>";
                     $updatebody = $timetext . $updateheader . $bodytext;
                     $updatebody = mysql_real_escape_string($updatebody);
-    
+
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
                 }
-			     
+
                 if ($storeinlog == 'No')
                 {
                     //Create a small note in the log to say the mail was sent but not logged (short )
@@ -625,7 +625,7 @@ switch ($step)
                     $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                     $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updatebody = mysql_real_escape_string($updatebody);
-    
+
 					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
                     mysql_query($sql);
@@ -640,7 +640,7 @@ switch ($step)
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 				}
-				
+
                 $owner = incident_owner($id);
 
                 // Handle meeting of service level targets

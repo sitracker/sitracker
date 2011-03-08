@@ -570,7 +570,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
     {
         $logentry = $_SERVER["SCRIPT_NAME"] . ' ' .$logentry;
 
-        if (substr($logentry, -1) != "\n") $logentry .= "\n";
+        if (mb_substr($logentry, -1) != "\n") $logentry .= "\n";
         if (!empty($CONFIG['error_logfile']))
         {
             if (is_writable($CONFIG['error_logfile']))
@@ -657,6 +657,10 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 }
 
 
+/**
+ * @deprecated DEPRECATED - INL 12 Feb 2011
+ * @see PHP function is_numeric()
+ */
 if (!function_exists('is_number'))
 {
     function is_number($string)
@@ -970,7 +974,7 @@ function show_form_errors($formname)
         foreach ($_SESSION['formerrors'][$formname] as $error)
         {
 
-            if (substr(trim($error), 0, 1) != "<")
+            if (mb_substr(trim($error), 0, 1) != "<")
             {
                 $html .= user_alert($error, E_USER_ERROR);
             }
@@ -1300,7 +1304,7 @@ function populate_syslang()
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
             $values = trim(str_replace($badchars, '', $values));
-            if (substr($values, 0, 3) == "str")
+            if (mb_substr($values, 0, 3) == "str")
             {
                 $vars = explode("=", $values);
                 $vars[0] = trim($vars[0]);

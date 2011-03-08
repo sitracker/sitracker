@@ -395,9 +395,9 @@ if ($sit[0] != '')
                 echo "{$strDismiss}</a></span>";
             }
 
-            if (substr($notice->text, 0, 4) == '$str')
+            if (mb_substr($notice->text, 0, 4) == '$str')
             {
-                $v = substr($notice->text, 1);
+                $v = mb_substr($notice->text, 1);
                 echo $GLOBALS[$v];
             }
             else
@@ -408,7 +408,7 @@ if ($sit[0] != '')
             if (!empty($notice->link))
             {
                 echo " - <a href='{$notice->link}'>";
-                if (substr($notice->linktext, 0, 3) == 'str')
+                if (mb_substr($notice->linktext, 0, 3) == 'str')
                 {
                     echo $GLOBALS[$notice->linktext];
                 }
@@ -420,7 +420,7 @@ if ($sit[0] != '')
             }
 
             echo "<small>";
-            echo "<em> (".format_date_friendly(strtotime($notice->timestamp)).")</em>";
+            echo "<em> (".format_date_friendly(mysql2date($notice->timestamp)).")</em>";
             echo "</small></p></div>\n";
         }
 

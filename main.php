@@ -72,9 +72,9 @@ foreach ($dashboardcomponents AS $db)
 
 $colstr = $col0.",".$col1.",".$col2;
 
-$cols0 = substr($cols0, 0, -1);
-$cols1 = substr($cols1, 0, -1);
-$cols2 = substr($cols2, 0, -1);
+$cols0 = mb_substr($cols0, 0, -1);
+$cols1 = mb_substr($cols1, 0, -1);
+$cols2 = mb_substr($cols2, 0, -1);
 echo "<p id='pageoptions'>".help_link("Dashboard")." <a href='manage_user_dashboard.php' title='{$strManageYourDashboard}'>";
 echo icon('dashboardadd', 16)."</a> ";
 echo "<a href=\"javascript:save_dashboard_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";

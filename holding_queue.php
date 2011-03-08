@@ -33,7 +33,7 @@ function generate_row($update)
 
     if (strlen($update->bodytext) > 1003)
     {
-        $updatebodytext = substr($update->bodytext, 0, 1000).$strEllipsis;
+        $updatebodytext = mb_substr($update->bodytext, 0, 1000).$strEllipsis;
     }
     else
     {
@@ -139,7 +139,7 @@ function generate_row($update)
 
 function deldir($location)
 {
-    if (substr($location,-1) <> "/")
+    if (mb_substr($location,-1) <> "/")
     $location = $location."/";
     if (is_dir($location))
     {

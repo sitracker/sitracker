@@ -74,14 +74,16 @@ function contact_info($contactid, $email, $name)
 
 if (empty($displayid))
 {
-    echo "<h2>".icon('email', 32)." {$CONFIG['email_address']}: {$strInbox}</h2>";
+
     if ($CONFIG['enable_inbound_mail'] == 'disabled')
     {
         echo "<p class='warning'>{$strInboundEmailIsDisabled}</p>";
     }
-
-    echo "<p align='center'>{$strIncomingEmailText}.  <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></p>";
-
+    else
+    {
+        echo "<h2>".icon('email', 32)." {$CONFIG['email_address']}: {$strInbox}</h2>";
+        echo "<p align='center'>{$strIncomingEmailText}.  <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></p>";
+    }
 
     // Perform action on selected items
     if (!empty($_REQUEST['action']))
