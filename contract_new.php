@@ -183,7 +183,7 @@ if ($action == "showform" OR $action == '')
     echo " ({$str0MeansUnlimited})</td></tr>\n";
 
     echo "<tr><th>{$strLicenseType}</th><td>";
-    licence_type_drop_down("licence_type", 0);
+    licence_type_drop_down("licence_type", LICENCE_SITE);
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strIncidentPool}</th>";
