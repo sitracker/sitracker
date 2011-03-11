@@ -195,10 +195,10 @@ else
         }
         echo "<br />";
     }
-    if ($software_name!='' OR $incident->productversion != '' OR $incident->productservicepacks!='')
+    if ($software_name != '' OR $incident->productversion != '' OR $incident->productservicepacks != '')
     {
         echo $software_name;
-        if ($incident->productversion != '' OR $incident->productservicepacks!='')
+        if ($incident->productversion != '' OR $incident->productservicepacks != '')
         {
             echo " (".$incident->productversion;
             if ($incident->productservicepacks!='') echo $incident->productservicepacks;
@@ -207,7 +207,7 @@ else
         echo "<br />\n";
     }
     echo priority_icon($incident->priority)." ".priority_name($incident->priority);
-    if ($product_name!='')
+    if ($product_name != '')
     {
         echo " <a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContractDetails}' target='top.opener'>";
         echo "{$product_name}";
