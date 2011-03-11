@@ -247,6 +247,9 @@ elseif ($action == "edit")
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
+        clear_form_data("new_servicelevel");
+        clear_form_errors("new_servicelevel");
+        
         for ($i = 1; $i <= 4; $i++)
         {
             $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod, `limit`) ";
