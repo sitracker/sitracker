@@ -33,7 +33,7 @@ $sql  = "SELECT *,s.id AS siteid FROM `{$dbSites}` AS s, `{$dbMaintenance}` AS m
 $sql .= "WHERE s.id = m.site ";
 $sql .= "AND ((m.id = sc.maintenanceid ";
 $sql .= "AND sc.contactid = i.contact) ";
-$sql .= "OR (m.allcontactssupported = 'yes' AND i.contact in (SELECT id FROM contacts WHERE siteid = s.id))) ";
+$sql .= "OR (m.allcontactssupported = 'yes' AND i.contact in (SELECT id FROM {$dbcontacts} WHERE siteid = s.id))) ";
 $sql .= "AND i.opened > '{$monthago}' ";
 $sql .= "ORDER BY s.id, i.id";
 

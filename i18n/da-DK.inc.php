@@ -3,6 +3,10 @@
 $languagestring = ' (da-DK)';
 $i18ncharset = 'UTF-8';
 
+// List of letters of the alphabet for this language
+// in standard alphabetical order (upper case, where applicable)
+$i18nAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
+
 // list of strings (Alphabetical by key)
 $str0MeansUnlimited = '0 Betyder Uendeligt';
 $str1Day = '1 Dag';
@@ -674,6 +678,7 @@ $strHandled = 'Håndteret';
 $strHasBeenAutoMovedToX = '%s er automatisk flyttet til %s\'s %s kø';
 $strHasBeenMovedToX = '%s er flyttet til %s\'s %s kø';
 $strHAVESkills = 'HAR færdigheder';
+$strHaveForgottenUsername = 'Har du glemt dit brugernavn? Kontakt da en administrator.';
 $strHeldEmailsNum = '%d holdte emails';
 $strHelp = 'Hjælp';
 $strHelpAbout = 'Om';
