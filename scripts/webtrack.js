@@ -71,18 +71,6 @@ function confirm_action(msg, del)
 
 
 /**
- * Open a popup window showing help
- * @author Ivan Lucas
- * @param int helpid. The help ID to display
- */
-function help_window(helpid)
-{
-    URL = application_webpath + "help.php?id=" + helpid;
-    window.open(URL, "help_window", "toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=500");
-}
-
-
-/**
  * @author Tom Gerrard
  * @param int id
  * @note Related to the calendar
