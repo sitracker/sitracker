@@ -90,11 +90,13 @@ Copyright &copy; 2002 NuSphere Corporation. Licensed under the LGPL v2.</p>
 <p align='center'>MagpieRSS 0.72 by <a href='http://magpierss.sourceforge.net/'>Kellan Elliott-McCrea</a><br />
 Copyright &copy; Kellan Elliott-McCrea. Licensed under the GPL v2.</p>
 
-<p align='center'>Prototype JavaScript framework 1.6.0.3 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
-Copyright &copy; 2005-2008 Sam Stephenson. Licensed under an MIT style license.</p>
+<p align='center'>pChart 2.1.0 from the <a href='http://www.pchart.net'>pChart project</a>.   Licensed under GPLv3</p>
 
-<p align='center'>script.aculo.us 1.8.3 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
-Copyright &copy; 2005-2009 Thomas Fuchs. Licensed under an MIT style license.</p>
+<p align='center'>Prototype JavaScript framework 1.7 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
+Copyright &copy; 2005-2010 Sam Stephenson. Licensed under an MIT style license.</p>
+
+<p align='center'>script.aculo.us 1.9.0 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
+Copyright &copy; 2005-2010 Thomas Fuchs. Licensed under an MIT style license.</p>
 
 <p align='center'>Icons from the Crystal Project by <a href='http://www.everaldo.com/'>Everaldo Coelho</a><br />
 Copyright &copy;  2006-2007 Everaldo Coelho. Licensed under the LGPLv2</p>
