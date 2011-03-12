@@ -194,7 +194,7 @@ function dashboard_watch_incidents_display($dashletid)
                         $html .= "</tr>\n";
                     }
 
-                    $shade='shade1';
+                    $shade = 'shade1';
                     while ($incident = mysql_fetch_object($iresult))
                     {
                         $html .= "<tr class='$shade'>";
@@ -253,7 +253,7 @@ function dashboard_watch_incidents_edit($dashletid)
 
     switch ($editaction)
     {
-        case 'new':
+        case 'add':
             $type = clean_int($_REQUEST['type']);
             echo "<h2>{$GLOBALS['strWatchAddSet']}</h2>";
             echo "<form id='dwiaddform' action='{$_SERVER['PHP_SELF']}?editaction=do_new&type={$type}' method='post' onsubmit='return false'>";
@@ -370,28 +370,28 @@ function dashboard_watch_incidents_edit($dashletid)
                             case 0: //site
                                 $sql = "SELECT name FROM `{$GLOBALS['dbSites']}` WHERE id = {$obj->id}";
                                 $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                                 $iobj = mysql_fetch_object($iresult);
                                 $name = $iobj->name;
                                 break;
                             case 1: //contact
                                 $sql = "SELECT forenames, surname FROM `{$GLOBALS['dbContacts']}` WHERE id = {$obj->id}";
                                 $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                                 $iobj = mysql_fetch_object($iresult);
                                 $name = $iobj->forenames.' '.$iobj->surname;
                                 break;
                             case 2: //Engineer
                                 $sql = "SELECT realname FROM `{$GLOBALS['dbUsers']}` WHERE id = {$obj->id}";
                                 $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                                 $iobj = mysql_fetch_object($iresult);
                                 $name = $iobj->realname;
                                 break;
                             case 3: //Incident
                                 $sql = "SELECT title FROM `{$GLOBALS['dbIncidents']}` WHERE id = {$obj->id}";
                                 $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                                 $iobj = mysql_fetch_object($iresult);
                                 if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
                                 {
