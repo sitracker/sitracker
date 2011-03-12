@@ -1431,13 +1431,6 @@ function validate_field(field, error)
 }
 
 
-function contact_products_window(contactid)
-{
-    URL = "contact_products.php?id=" + contactid;
-    window.open(URL, "contact_products_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=520,height=240");
-}
-
-
 /**
  * 
  * @returns {Boolean}
