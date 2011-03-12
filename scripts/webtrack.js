@@ -44,7 +44,7 @@ function incident_details_window(incidentid, win, rtn)
  */
 function wt_winpopup(url, mini)
 {
-    if (mini=='mini')
+    if (mini == 'mini')
     {
         window.open(url, "sit_minipopup", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
     }
@@ -90,17 +90,17 @@ function help_window(helpid)
 function appointment(id)
 {
 
-    if ($(id).style.visibility=='visible')
+    if ($(id).style.visibility == 'visible')
     {
-        $(id).style.visibility='hidden';
-        $(id).style.display='none';
+        $(id).style.visibility = 'hidden';
+        $(id).style.display = 'none';
     }
     else
     {
         var parent = $(id).ancestors();
         parent[0].makePositioned();
-        $(id).style.visibility='visible';
-        $(id).style.display='block';
+        $(id).style.visibility = 'visible';
+        $(id).style.display = 'block';
     }
 }
 
@@ -233,7 +233,7 @@ function copySelected(fromObject,toObject)
             addOption(toObject,fromObject.options[i].text,fromObject.options[i].value);
         }
     }
-    for (var i=fromObject.options.length-1;i >-1;i-- )
+    for (var i = fromObject.options.length-1; i >-1; i--)
     {
         if (fromObject.options[i].selected) deleteOption(fromObject,i);
     }
@@ -249,11 +249,11 @@ function copySelected(fromObject,toObject)
  */
 function copyAll(fromObject,toObject)
 {
-    for (var i=0, l=fromObject.options.length;i < l;i++)
+    for (var i=0, l = fromObject.options.length; i < l; i++)
     {
         addOption(toObject,fromObject.options[i].text,fromObject.options[i].value);
     }
-    for (var i=fromObject.options.length-1;i > -1;i--)
+    for (var i = fromObject.options.length-1; i > -1; i--)
     {
         deleteOption(fromObject,i);
     }
@@ -268,7 +268,7 @@ function copyAll(fromObject,toObject)
 function populateHidden(fromObject,toObject)
 {
     var output = '';
-    for (var i=0, l=fromObject.options.length;i < l;i++)
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
         output += escape(fromObject.name) + '=' + escape(fromObject.options[i].value) + '&';
     }
@@ -306,12 +306,12 @@ function changeTextAreaLength( e )
     var numRows = 0 ;
     var arrNewLines = e.value.split("\n");
 
-    for(var i=0; i<=arrNewLines.length-1; i++)
+    for(var i = 0; i <= arrNewLines.length-1; i++)
     {
         numRows++;
         if (arrNewLines[i].length > MAX_COLS-5)
         {
-            numRows += Math.floor(arrNewLines[i].length/MAX_COLS)
+            numRows += Math.floor(arrNewLines[i].length / MAX_COLS)
         }
     }
 
@@ -319,7 +319,8 @@ function changeTextAreaLength( e )
     {
         e.cols = MIN_COLS ;
         e.rows = MIN_ROWS ;
-    } else
+    }
+    else
     {
         if (numRows <= 1)
         {
@@ -763,12 +764,12 @@ function resizeTextarea(t)
 
 function enableBillingPeriod()
 {
-    if ($('timed').checked==true)
+    if ($('timed').checked == true)
     {
         $('engineerBillingPeriod').show();
         $('customerBillingPeriod').show();
         $('limit').show();
-        $('allow_reopen').checked=false;
+        $('allow_reopen').checked = false;
         $('allow_reopen').disable();
     }
     else
@@ -1010,15 +1011,12 @@ function submit_form(form)
 
 function ldap_browse_window(base, field)
 {
-    // URL = "incident.php?popup=yes&id=" + incidentid;
-    // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
     URL = "ldap_browse.php?base=" + base + "&field=" + field;
     window.open(URL, 'ldap_browse', "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=300,height=400");
 }
 
 function ldap_browse_update_group(dn, fieldName)
 {
-    // parent = window.parent;
     field = window.opener.parent.document.getElementById(fieldName); 
     field.value = dn;
     window.close();
