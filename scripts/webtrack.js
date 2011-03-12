@@ -570,12 +570,6 @@ function close_window(incidentid)
     window.open(URL, "email_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
 }
 
-function help_window(helpid)
-{
-    URL = application_webpath + "help.php?id=" + helpid;
-    window.open(URL, "help_window", "toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=500");
-}
-
 // INL - switch tab, see php function draw_tabs_submit()
 function gotab(tab) {
     document.actiontabs.action.value=tab;
