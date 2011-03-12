@@ -24,8 +24,7 @@ $legends = explode('|', cleanvar($_REQUEST['legends'], TRUE, FALSE, FALSE));
 $title = urldecode(cleanvar($_REQUEST['title']));
 $unit = cleanvar($_REQUEST['unit']);
 
-// require (APPLICATION_LIBPATH . 'chart_original.class.php');
-require (APPLICATION_LIBPATH . 'chart_pchart.class.php');
+require (APPLICATION_LIBPATH . 'chart_original.class.php');
 
 $chart = new OriginalChart(500, 150);
 $chart->setTitle($title);
@@ -50,10 +49,10 @@ switch ($type)
 
 // output to browser
 // flush image
-//header('Content-type: image/png');
-//header("Content-disposition-type: attachment\r\n");
-//header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
-//imagepng($chart->img);
-//imagedestroy($chart->img);
+header('Content-type: image/png');
+header("Content-disposition-type: attachment\r\n");
+header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
+imagepng($chart->img);
+imagedestroy($chart->img);
 
 ?>
