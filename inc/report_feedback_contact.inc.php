@@ -24,15 +24,6 @@ $maxscore = $CONFIG['feedback_max_score'];
 $formid = $CONFIG['feedback_form'];
 $now = time();
 
-echo "<script type='text/javascript'>\n//<![CDATA[\n";
-echo "
-function incident_details_window(incidentid,win)
-{
-    URL = '../incident_details.php?id=' + incidentid;
-    window.open(URL, 'sit_popup', 'toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600');
-}
-";
-echo "\n//]]>\n</script>";
 echo "<div style='margin: 20px'>";
 echo "<h2><a href='{$CONFIG['application_webpath']}report_feedback.php'>{$strFeedback}</a> {$strScores}: {$strByContact}</h2>";
 echo feedback_between_dates();
@@ -196,7 +187,7 @@ if (mysql_num_rows($mresult) >= 1)
         {
             if ($crow->result != '')
             {
-                $html.= "<p>{$crow->result}<br /><em><a href=\"javascript:incident_details_window(\'{$crow->incidentid}\',\'incident35393\')\">{$crow->incidentid}</a> {$crow->title}</em></p>";
+                $html.= "<p>{$crow->result}<br /><em><a href=\"javascript:incident_details_window(\'{$crow->incidentid}\','sit_popup', false)\">{$crow->incidentid}</a> {$crow->title}</em></p>";
             }
         }
 
