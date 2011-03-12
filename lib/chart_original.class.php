@@ -169,11 +169,12 @@ class OriginalChart extends Chart{
             }
         }
     
-        imagerectangle($this->img, 250, $legendY - 5, 470, $legendY + ($this->numberOfDataElements() * 15), $this->black);
+        $originalLegendY = $legendY;
     
         //Top of the pie.
         for ($i = 0; $i < $this->numberOfDataElements(); $i++)
         {
+            $wrapped = false;
             // If its the same angle don't try and draw anything otherwise you end up with the whole pie being this colour
             if ($angle_sum[$i - 1] != $angle_sum[$i])
             {
@@ -189,19 +190,29 @@ class OriginalChart extends Chart{
     
             $l = mb_substr(urldecode($this->legends[$i]), 0, 27, 'UTF-8');
             if (strlen(urldecode($this->legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
-    
+
+            $ll = "{$l} ({$this->data[$i]})";
+            if (strlen($ll) > 27)
+            {
+                $ll = "{$l}\n({$this->data[$i]})";
+                $wrapped = true;
+            }
+                
             if ($this->use_ttf)
             {
-                imagettftext($this->img, 8, 0, 270, ($legendY + 9), $this->black, $CONFIG['font_file'], "{$l} ({$this->data[$i]})");
+                imagettftext($this->img, 8, 0, 270, ($legendY + 9), $this->black, $CONFIG['font_file'], $ll);
             }
             else
             {
-                imagestring($this->img,2, 270, ($legendY - 1), "{$l} ({$this->data[$i]})", $this->black);
+                imagestring($this->img,2, 270, ($legendY - 1), $ll, $this->black);
             }
-            // imagearc($this->img,$cx,$cy,$sx,$sy,$angle_sum[$i1] ,$angle_sum[$i], $blue);
+
             $legendY += 15;
+            if ($wrapped) $legendY += 15;
         }
         
+        imagerectangle($this->img, 250, $originalLegendY - 5, 470, $legendY, $this->black);
+
         $this->output();
     }
     
