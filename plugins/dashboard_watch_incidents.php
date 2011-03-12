@@ -47,16 +47,7 @@ function dashboard_watch_incidents_display($dashletid)
 {
     global $CONFIG, $sit;
 
-    $html = "<script type='text/javascript'>
-    //<![CDATA[
-    function statusform_submit(user)
-    {
-        URL = \"incidents.php?status=\" + window.document.statusform.status.options[window.document.statusform.status.selectedIndex].value + \"&amp;user=\" + user;
-        window.confirm(URL);
-        window.location.href = URL;
-    }
-    //]]>
-    </script>";
+    $html = "";
 
 // FIXME, commented out the queue selector, needs recoding to work with one-file dashboards - Ivan 22May08
 
