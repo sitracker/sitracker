@@ -58,13 +58,16 @@ foreach ($dashboardcomponents AS $db)
     $c = explode("-",$db);
     switch ($c[0])
     {
-        case 0: $col0++;
+        case 0:
+            $col0++;
             $cols0 .= $c[1].",";
             break;
-        case 1: $col1++;
+        case 1: 
+            $col1++;
             $cols1 .= $c[1].",";
             break;
-        case 2: $col2++;
+        case 2:
+            $col2++;
             $cols2 .= $c[1].",";
             break;
     }
@@ -81,7 +84,7 @@ echo "<a href=\"javascript:save_dashboard_layout();\" id='savelayout' title='{$s
 echo "\n<table border=\"0\" width=\"99%\" id='cols'><tr>\n"; //id='dashboardlayout'
 echo "<td width=\"33%\" valign='top' id='col0'>";
 
-$arr = explode(",",$cols0);
+$arr = explode(",", $cols0);
 foreach ($arr AS $a)
 {
     show_dashboard_component(0, $a);
@@ -97,7 +100,7 @@ foreach ($arr AS $a)
 
 echo "</td>\n<td width=\"33%\" valign=\"top\" id='col2'>";
 
-$arr = explode(",",$cols2);
+$arr = explode(",", $cols2);
 foreach ($arr AS $a)
 {
     show_dashboard_component(2, $a);
