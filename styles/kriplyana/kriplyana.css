@@ -125,3 +125,15 @@ div#statusbar strong { color:#fff;}
 #userstatus_dropdown option.enable { color: #00C000; }
 #userstatus_dropdown option.disable { color: #C00000; }
 #userstatus_dropdown option.seperator { border-top: 1px solid #8F9DC5; }
+
+input[type=submit], input[type=button], input[type=reset]
+{
+    margin-top: 4px;
+    background: #4B5C94;
+    color: white; border:
+    1px solid #4B5C94;
+    /*text-transform: uppercase;*/
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
