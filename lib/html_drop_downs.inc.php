@@ -585,52 +585,6 @@ function sitetype_drop_down($name, $id)
 
 
 /**
- * Returns the HTML for a drop down list of upported products for the given contact and with the
- * given name and with the given product selected
- * @author Ivan Lucas
- * @todo FIXME this should use the contract and not the contact
- */
-function supported_product_drop_down($name, $contactid, $productid)
-{
-    global $CONFIG, $dbSupportContacts, $dbMaintenance, $dbProducts, $strXIncidentsLeft;
-
-    $sql = "SELECT *, p.id AS productid, p.name AS productname FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-    $sql .= "WHERE sc.maintenanceid = m.id AND m.product = p.id ";
-    $sql .= "AND sc.contactid='$contactid'";
-
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if ($CONFIG['debug']) $html .= "<!-- Original product {$productid}-->";
-    $html .= "<select name=\"$name\">\n";
-    if ($productid == 0)
-    {
-        $html .= "<option selected='selected' value='0'>No Contract - Not Product Related</option>\n";
-    }
-
-    if ($productid == -1)
-    {
-        $html .= "<option selected='selected' value='0'></option>\n";
-    }
-
-    while ($products = mysql_fetch_objecy($result))
-    {
-        $remainingstring = sprintf($strXIncidentsLeft, incidents_remaining($products->incidentpoolid));
-        $html .= "<option ";
-        if ($productid == $products->productid)
-        {
-            $html .= "selected='selected' ";
-        }
-        $html .= "value='{$products->productid}'>";
-        $html .= get_sla_name($products->servicelevel)." ".$products->productname.", Exp:".date($CONFIG['dateformat_shortdate'], $products->expirydate).", $remainingstring";
-        $html .= "</option>\n";
-    }
-    $html .= "</select>\n";
-    return $html;
-}
-
-
-/**
  * A HTML Select listbox for user roles
  * @author Ivan Lucas
  * @param string $name. name to use for the select element
