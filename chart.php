@@ -47,12 +47,4 @@ switch ($type)
         $chart->draw_error();
 }
 
-// output to browser
-// flush image
-header('Content-type: image/png');
-header("Content-disposition-type: attachment\r\n");
-header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
-imagepng($chart->img);
-imagedestroy($chart->img);
-
 ?>

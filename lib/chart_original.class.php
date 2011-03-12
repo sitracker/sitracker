@@ -201,6 +201,8 @@ class OriginalChart extends Chart{
             // imagearc($this->img,$cx,$cy,$sx,$sy,$angle_sum[$i1] ,$angle_sum[$i], $blue);
             $legendY += 15;
         }
+        
+        $this->output();
     }
     
     
@@ -231,6 +233,8 @@ class OriginalChart extends Chart{
         }
 
         imagestring($this->img,3, 10, 10, $this->title, $this->red);
+        
+        $this->output();
     }
     
     
@@ -260,6 +264,8 @@ class OriginalChart extends Chart{
             imagestring($this->img, 3, ($i * $colwidth) + 4, $legendheight, mb_substr($this->legends[$i], 0, 5,'UTF-8'), $this->darkblue);
         }
         imagestring($this->img,3, 10, 10, $this->title, $this->red);
+        
+        $this->output();
     }
     
     
@@ -267,5 +273,18 @@ class OriginalChart extends Chart{
     {
         imagerectangle($this->img, $this->width - 1, $this->height - 1, 1, 1, $this->red);
         imagestring($this->img, 3, 10, 10, "Invalid chart type", $this->red);
+    }
+    
+    
+    /**
+     * Output image to browser, we have to this this manually as some APIs do it automatically
+     */
+    function output()
+    {
+        header('Content-type: image/png');
+        header("Content-disposition-type: attachment\r\n");
+        header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
+        imagepng($this->img);
+        imagedestroy($this->img);
     }
 }
