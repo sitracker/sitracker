@@ -137,3 +137,27 @@ input[type=submit], input[type=button], input[type=reset]
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
+
+.tabcontainer ul li
+{
+    display: block;
+    float: left;
+    height: 23px;
+    margin: 1px 1px 0 1px;
+    border: 1px solid #4B5C94;
+    -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px;
+    border-bottom: 1px solid #fff;
+    text-align: center;
+    background: #4B5C94;
+    /*padding: 0;*/
+    /*margin: 0;*/
+}
+
+.tabcontainer ul li a:hover
+{
+    color: #4B5C94;
+    background: #EEF6FF;
+    -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px;
+}
