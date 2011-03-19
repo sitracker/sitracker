@@ -533,7 +533,7 @@ function contexthelp(elem, context, auth)
  */
 function jumpto()
 {
-    incident_details_window(document.jumptoincident.incident.value, 'incident'+document.jumptoincident.incident.value);
+    incident_details_window($('incident').value, 'incident'+$('incident').value);
 }
 
 
