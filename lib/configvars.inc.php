@@ -77,7 +77,8 @@ $CFGCAT['portal'] = array('portal',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
-                          'portal_interface_style');
+                          'portal_interface_style',
+                          'portal_iconset');
 
 $CFGCAT['holidays'] = array('holidays_enabled',
                             'default_entitlement');
@@ -533,6 +534,12 @@ $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
 
 $CFGVAR['portal_interface_style']['title'] = "Portal interface style";
 $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
+
+$CFGVAR['portal_iconset']['title'] = 'Portal Icon set';
+$CFGVAR['portal_iconset']['help'] = 'The icon set used in the portal';
+$CFGVAR['portal_iconset']['type'] = 'select';
+$CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
+
 
 $CFGVAR['portal_kb_enabled']['help'] = "Public puts a link on the login page, Private makes it available on login for contacts";
 $CFGVAR['portal_kb_enabled']['options'] = 'Public|Private|Disabled';
