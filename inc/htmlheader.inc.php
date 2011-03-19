@@ -59,6 +59,8 @@ else
     $theme = $CONFIG['default_interface_style'];
     $iconset = $CONFIG['default_iconset'];
 }
+
+if (empty($theme)) $theme = $CONFIG['default_interface_style']; 
 if (empty($iconset)) $iconset = $CONFIG['default_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
