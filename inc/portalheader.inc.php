@@ -91,11 +91,11 @@ if ($_SESSION['portalauth'] == TRUE)
 }
 else
 {
-    $theme = $CONFIG['default_interface_style'];
+    $theme = $CONFIG['portal_interface_style'];
     $iconset = $CONFIG['default_iconset'];
 }
 
-if (empty($theme)) $theme = $CONFIG['default_interface_style']; 
+if (empty($theme)) $theme = $CONFIG['portal_interface_style']; 
 if (empty($iconset)) $iconset = $CONFIG['default_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 
