@@ -576,7 +576,7 @@ function close_page_redirect(url)
  */
 function doSelect(select, element)
 {
-    var includes = document.getElementById(element);
+    var includes = $(element);
     for(i = 0; i < includes.length; i++)
     {
         includes[i].selected = select;
@@ -590,7 +590,7 @@ function groupMemberSelect(group, clear)
         doSelect(false, 'include');
     }
 
-    var includes = document.getElementById('include');
+    var includes = $('include');
     $a = $(group);
     for(i = 0; i < includes.length; i++)
     {
@@ -1407,7 +1407,7 @@ function switch_template()
 
 function set_terminated()
 {
-    if (document.maintform.productonly.checked == true)
+    if ($('productonly').checked == true)
     {
         $('terminated').disabled = true;
         $('terminated').checked = true;
