@@ -1142,6 +1142,20 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 }
 
 
+/**
+ * Function to add a additional charting library to SiT!
+ * Please use this function rather than manually adjusting the array, prevents 
+ * plugins accidentally corrupting the array
+ * @param String $library The library to add
+ * @author Paul Heaney
+ */
+function add_charting_library($library)
+{
+    global $CONFIG;
+    
+    $CONFIG['available_charts'][] = $library;
+}
+
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
 

@@ -24,9 +24,28 @@ $legends = explode('|', cleanvar($_REQUEST['legends'], TRUE, FALSE, FALSE));
 $title = urldecode(cleanvar($_REQUEST['title']));
 $unit = cleanvar($_REQUEST['unit']);
 
-require (APPLICATION_LIBPATH . 'chart_original.class.php');
+function __autoload($name)
+{
+    $name = strtolower($name);
+    $locations = array(APPLICATION_LIBPATH . "chart_{$name}.class.php",
+                        APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . "chart_{$name}.class.php",
+                        APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . "{$name}.class.php");
+                        
+    foreach ($locations AS $l)
+    {
+        if (file_exists($l))
+        {
+            require_once ($l);
+            return true;
+        }
+    }
+    
+    return false;
+}
 
-$chart = new OriginalChart(500, 150);
+debug_log("Charting library being used is {$CONFIG['default_chart']}");
+
+$chart = new $CONFIG['default_chart'](500, 150);
 $chart->setTitle($title);
 $chart->setData($data);
 $chart->setLegends($legends);

@@ -68,7 +68,7 @@ $CFGCAT['sla'] = array('default_service_level',
 $CFGCAT['billing'] = array('billing_matrix_multipliers',
                             'billing_default_multiplier');
 
-$CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar','font_file','tag_icons');
+$CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar', 'font_file', 'tag_icons', 'default_chart');
 
 $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv', 'ftp_path');
 
@@ -592,6 +592,10 @@ $CFGVAR['support_manager']['type'] = 'userselect';
 $CFGVAR['tag_icons']['title'] = "Tag Icons";
 $CFGVAR['tag_icons']['help'] = "You can specify icons to display next to certain tags, enter tag/icon associations one per line, format: tag=>icon";
 $CFGVAR['tag_icons']['type'] = '2darray';
+
+$CFGVAR['default_chart']['title'] = "Default Chart";
+$CFGVAR['default_chart']['help'] = "The dedfault charting library to use.";
+$CFGVAR['default_chart']['type'] = 'chartselector';
 
 $CFGVAR['tasks_enabled']['title'] = "Enable Tasks";
 $CFGVAR['tasks_enabled']['type'] = 'checkbox';

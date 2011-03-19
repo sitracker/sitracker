@@ -228,6 +228,9 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             $value = explode(',', $value);
             $html .= array_drop_down($days, $setupvar, $value, '', TRUE, TRUE, TRUE);
             break;
+        case 'chartselector':
+            $html .= chart_selector($value);
+            break;
         case 'text':
         default:
             if (strlen($CONFIG[$setupvar]) < 65)

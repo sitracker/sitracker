@@ -1205,4 +1205,27 @@ function billing_matrix_selector($id, $selected='')
     return $html;
 }
 
+
+/**
+ * Generates a drop down of the available charting libraries
+ * @author Paul Heaney
+ */
+function chart_selector($selected)
+{
+    global $CONFIG;
+    
+    $html = "<select id='default_chart' name='default_chart'>";
+    
+    foreach ($CONFIG['available_charts'] AS $c)
+    {
+        $html .= "<option value='{$c}' ";
+        if ($selected == $c) $html .= "selected='selected'";
+        $html .= ">{$c}</option>";
+    }
+    
+    $html .= "</select>";
+    
+    return  $html;
+}
+
 ?>

@@ -353,4 +353,7 @@ $CONFIG['currency_symbol'] = '&curren;';
 
 $CONFIG['display_minute_interval'] = 15;
 
+$CONFIG['available_charts'] = array('OriginalChart');
+
+$CONFIG['default_chart'] = 'OriginalChart';
 ?>
