@@ -406,6 +406,9 @@ elseif ($action == 'incidentform')
 
     echo "<h2>".icon('new', 32)." {$strNewIncident} - {$strDetails}</h2>";
 
+    $slatag = contract_slatag($maintid);
+    $maxprority = servicelevel_maxpriority($slatag);
+
     echo "<form action='{$_SERVER['PHP_SELF']}?action=assign'";
     echo " method='post' id='supportdetails' name='supportdetails' onsubmit=\"return validate_field('incidenttitle', '{$strYouMustEnterIncidentTitle}')\">";
     echo "<input type='hidden' name='type' value=\"{$type}\" />";
@@ -562,7 +565,7 @@ elseif ($action == 'incidentform')
     echo help_link('VisibleToCustomer')."<br />";
     echo "<label><input name='send_email' type='checkbox' checked='checked' /> ";
     echo "{$strSendOpeningEmailDesc}</label><br />";
-    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", 1, 4, FALSE)." </td></tr>";
+    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", 1, $maxprority, FALSE)." </td></tr>";
     echo "</table>\n";
     echo "<input type='hidden' name='win' value='{$win}' />";
     echo "<p align='center'><input name='submit' type='submit' value='{$strNewIncident}' /></p>";

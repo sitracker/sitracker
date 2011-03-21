@@ -115,7 +115,8 @@ if (!$_REQUEST['action'])
     }
 
     echo "<tr><th width='20%'>{$strProblemDescription}:</th><td class='shade1'>";
-    echo $strTheMoreInformation."<br />";
+    echo $strTheMoreInformation;
+    echo " <span class='required'>{$strRequired}</span>" . "<br />";
     echo "<textarea name='probdesc' rows='20' cols='60'>";
     if (!empty($_SESSION['formdata']['portaladdincident']['probdesc']))
     {
