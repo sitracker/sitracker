@@ -1,8 +1,6 @@
 /* Webtrack Flashy Style */
 /* by Tom */
 
-@import url("/styles/webtrack.css");
-
 body		{ background-color: #FFFFFF; color: #000066; font-family: Tahoma, Helvetica, sans serif; }
 p		    { font-size: 8pt; color: #000066; }
 table		{ font-size: 8pt; color: #000066; }
