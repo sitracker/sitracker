@@ -29,11 +29,10 @@ $monthago = time()-(60 * 60 * 24 * 30.5);
 
 echo "<h2>{$strRecentIncidents} (".sprintf($strSinceX, ldate($CONFIG['dateformat_date'], $monthago)).")</h2>";
 
-$sql  = "SELECT *,s.id AS siteid FROM `{$dbSites}` AS s, `{$dbMaintenance}` AS m, `{$dbSupportContacts}` AS sc, `{$dbIncidents}` AS i ";
-$sql .= "WHERE s.id = m.site ";
-$sql .= "AND ((m.id = sc.maintenanceid ";
-$sql .= "AND sc.contactid = i.contact) ";
-$sql .= "OR (m.allcontactssupported = 'yes' AND i.contact in (SELECT id FROM {$dbcontacts} WHERE siteid = s.id))) ";
+$sql  = "SELECT s.name, i.id, i.opened, m.product, s.id AS siteid FROM `{$dbSites}` AS s, `{$dbContacts}` as c, `{$dbMaintenance}` AS m, `{$dbIncidents}` AS i ";
+$sql .= "WHERE s.id = c.siteid ";
+$sql .= "AND m.id = i.maintenanceid ";
+$sql .= "AND i.contact = c.id ";
 $sql .= "AND i.opened > '{$monthago}' ";
 $sql .= "ORDER BY s.id, i.id";
 
