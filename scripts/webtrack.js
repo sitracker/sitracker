@@ -1452,3 +1452,46 @@ function process_billable_incidents_form()
 
     return toReturn;
 }
+
+
+/**
+ * @author Ivan Lucas
+ */
+function recordFocusElement(element)
+{
+   $('focuselement').value = element.identify();
+   $('templatevariables').show();
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function clearFocusElement()
+{
+   $('focuselement').value = '';
+   $('templatevariables').hide();
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function insertTemplateVar(tvar)
+{
+   var element = $('focuselement').value;
+   if (element.length > 0)
+   {
+       var start = $(element).selectionStart;
+       var end = $(element).selectionEnd;
+       // alert('start:' + start + '  end: ' + end + 'len: ' + $(element).textLength);
+       if ($(element).readAttribute('readonly') != 'readonly')
+       {
+           $(element).value = $(element).value.substring(0, start) + tvar + $(element).value.substring(end, $(element).textLength);
+       }
+   }
+   else
+   {
+       alert(strSelectAFieldForTemplates);
+   }
+}

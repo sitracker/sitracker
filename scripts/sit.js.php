@@ -85,6 +85,7 @@ var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
 var strPasswordIncorrect = \"{$strPasswordIncorrect}\";
 var strReveal = \"{$strReveal}\";
 var strSaved = \"{$strSaved}\";
+var strSelectAFieldForTemplates = \"{$strSelectAFieldForTemplates}\";
 var strSelectKBSections = \"{$strSelectKBSections}\";
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
 var strUp = \"{$strUp}\";
