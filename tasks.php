@@ -590,15 +590,6 @@ if (mysql_num_rows($result) >=1 )
 
     if ($mode == 'incident')
     {
-        echo "<script type='text/javascript'>\n//<![CDATA[\ncountUp();\n//]]>\n</script>";  //force a quick udate
-    }
-
-    //echo "<pre>";
-    //print_r($billing);
-    //echo "</pre>";
-
-    if ($mode == 'incident')
-    {
         // Show add activity link if the incident is open
         if (incident_status($id) != 2 AND !$engineerhasrunnintask)
         {
