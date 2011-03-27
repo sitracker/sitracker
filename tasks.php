@@ -220,8 +220,8 @@ else
         echo "selected='selected' ";
     }
 
-    echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;show=active";
-    echo "&amp;sort=$sort&amp;order=$order'>{$strActive}</option>\n";
+    echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;show=active";
+    echo "&amp;sort={$sort}&amp;order={$order}'>{$strActive}</option>\n";
     echo "<option ";
     if ($show == 'completed')
     {
@@ -229,7 +229,7 @@ else
     }
 
     echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;show=completed";
-    echo "&amp;sort=$sort&amp;order=$order'>{$strCompleted}</option>\n";
+    echo "&amp;sort={$sort}&amp;order={$order}'>{$strCompleted}</option>\n";
 
     echo "</select>\n";
     echo "</form><br />";
@@ -237,7 +237,7 @@ else
     $sql = "SELECT * FROM `{$dbTasks}` WHERE ";
     if ($user != 'all')
     {
-        $sql .= "owner='$user' AND ";
+        $sql .= "owner='{$user}' AND ";
     }
 
     if ($show == '' OR $show == 'active' )
