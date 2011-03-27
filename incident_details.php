@@ -97,7 +97,6 @@ if (mysql_num_rows($result) == 0)
 {
     // Incident doesn't exist
     html_redirect("main.php", FALSE, $strInvalidIncidentID);
-
 }
 else
 {
