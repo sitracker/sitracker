@@ -464,7 +464,7 @@ switch ($step)
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     $fileid = mysql_insert_id();
         
-                    $filename = "{$CONFIG['attachment_fspath']}{$id}{$fsdelim}{$fileid}-{$name}";
+                    $filename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}-{$name}";
         
                     $mv = rename($file['tmp_name'], $filename);
                     if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);

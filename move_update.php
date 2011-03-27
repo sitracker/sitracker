@@ -148,8 +148,8 @@ else
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-        $old_path = $CONFIG['attachment_fspath']. 'updates' . $fsdelim;
-        $new_path = $CONFIG['attachment_fspath'] . $incidentid . $fsdelim;
+        $old_path = $CONFIG['attachment_fspath']. 'updates' . DIRECTORY_SEPARATOR;
+        $new_path = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
         //move attachments from updates to incident
         $sql = "SELECT linkcolref, filename FROM `{$dbLinks}` AS l, ";
@@ -166,6 +166,7 @@ else
                 mkdir($CONFIG['attachment_fspath'] . "$incidentid", 0770);
                 umask($umask);
             }
+
             while ($row = mysql_fetch_object($result))
             {
                 $filename = $row->linkcolref ;
@@ -189,7 +190,7 @@ else
             $sql = "SELECT incidentid, bodytext, timestamp FROM `{$dbUpdates}` WHERE id='{$updateid}'";
             $uresult = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            list($oldincidentid, $bodytext, $timestamp)=mysql_fetch_row($uresult);
+            list($oldincidentid, $bodytext, $timestamp) = mysql_fetch_row($uresult);
 
             if ($oldincidentid == 0) $oldincidentid = 'Inbox';
 

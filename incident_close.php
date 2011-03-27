@@ -51,39 +51,28 @@ if (empty($_REQUEST['process']))
     <!--
     function enablekb()
     {
-        // INL 28Nov07 Yes I know a lot of this javascript is horrible
-        // it's old and I'm tired and can't be bothered right now
-        // the newer stuff at the bottom is pretty and uses prototype.js
-        // syntax
-        if (document.closeform.kbtitle.disabled==true)
+        if ($('kbtitle').disabled == true)
         {
             // Enable KB
-            document.closeform.kbtitle.disabled=false;
-            //document.closeform.cust_vis1.disabled=true;
-            //document.closeform.cust_vis1.checked=true;
-            //document.closeform.cust_vis2.checked=true;
-            //document.closeform.cust_vis2.disabled=true;
-            // Enable KB includes
-            //document.closeform.incsummary.disabled=false;
-            document.closeform.summary.disabled=false;
-            document.closeform.incsymptoms.disabled=false;
-            document.closeform.symptoms.disabled=false;
-            document.closeform.inccause.disabled=false;
-            document.closeform.cause.disabled=false;
-            document.closeform.incquestion.disabled=false;
-            document.closeform.question.disabled=false;
-            document.closeform.incanswer.disabled=false;
-            document.closeform.answer.disabled=false;
-            //document.closeform.incsolution.disabled=false;
-            document.closeform.solution.disabled=false;
-            document.closeform.incworkaround.disabled=false;
-            document.closeform.workaround.disabled=false;
-            document.closeform.incstatus.disabled=false;
-            document.closeform.status.disabled=false;
-            document.closeform.incadditional.disabled=false;
-            document.closeform.additional.disabled=false;
-            document.closeform.increferences.disabled=false;
-            document.closeform.references.disabled=false;
+            $('kbtitle').disabled = false;
+            $('summary').disabled = false;
+            $('incsymptoms').disabled = false;
+            $('symptoms').disabled = false;
+            $('inccause').disabled = false;
+            $('cause').disabled = false;
+            $('incquestion').disabled = false;
+            $('question').disabled = false;
+            $('incanswer').disabled = false;
+            $('answer').disabled = false;
+            $('solution').disabled = false;
+            $('incworkaround').disabled = false;
+            $('workaround').disabled = false;
+            $('incstatus').disabled = false;
+            $('status').disabled = false;
+            $('incadditional').disabled = false;
+            $('additional').disabled = false;
+            $('increferences').disabled = false;
+            $('references').disabled = false;
             $('helptext').innerHTML = strSelectKBSections;
             $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strKnowledgeBaseArticle + "</strong>:";
             // Show the table rows for KB article
@@ -101,40 +90,34 @@ if (empty($_REQUEST['process']))
         else
         {
             // Disable KB
-            document.closeform.kbtitle.disabled=true;
-            //document.closeform.cust_vis1.disabled=false;
-            //document.closeform.cust_vis2.disabled=false;
-            // Disable KB includes
-            document.closeform.incsymptoms.checked=false;
-            document.closeform.incsymptoms.disabled=true;
-            document.closeform.symptoms.disabled=true;
-            document.closeform.inccause.checked=false;
-            document.closeform.inccause.disabled=true;
-            document.closeform.cause.disabled=true;
-            document.closeform.incquestion.checked=false;
-            document.closeform.incquestion.disabled=true;
-            document.closeform.question.disabled=true;
-            document.closeform.incanswer.checked=false;
-            document.closeform.incanswer.disabled=true;
-            document.closeform.answer.disabled=true;
-            // document.closeform.incsolution.checked=false;
-            // document.closeform.incsolution.disabled=true;
-            // document.closeform.solution.disabled=true;
-            document.closeform.incworkaround.checked=false;
-            document.closeform.incworkaround.disabled=true;
-            document.closeform.workaround.disabled=true;
-            document.closeform.incstatus.checked=false;
-            document.closeform.incstatus.disabled=true;
-            document.closeform.status.disabled=true;
-            document.closeform.incadditional.checked=false;
-            document.closeform.incadditional.disabled=true;
-            document.closeform.additional.disabled=true;
-            document.closeform.increferences.checked=false;
-            document.closeform.increferences.disabled=true;
-            document.closeform.references.disabled=true;
-            document.closeform.incworkaround.checked=false;
-            document.closeform.incworkaround.disabled=true;
-            document.closeform.workaround.disabled=true;
+            $('kbtitle').disabled = true;
+            $('incsymptoms').checked = false;
+            $('incsymptoms').disabled = true;
+            $('symptoms').disabled = true;
+            $('inccause').checked = false;
+            $('inccause').disabled = true;
+            $('cause').disabled = true;
+            $('incquestion').checked = false;
+            $('incquestion').disabled = true;
+            $('question').disabled = true;
+            $('incanswer').checked = false;
+            $('incanswer').disabled = true;
+            $('answer').disabled = true;
+            $('incworkaround').checked = false;
+            $('incworkaround').disabled = true;
+            $('workaround').disabled = true;
+            $('incstatus').checked = false;
+            $('incstatus').disabled = true;
+            $('status').disabled = true;
+            $('incadditional').checked = false;
+            $('incadditional').disabled = true;
+            $('additional').disabled = true;
+            $('increferences').checked = false;
+            $('increferences').disabled = true;
+            $('references').disabled = true;
+            $('incworkaround').checked = false;
+            $('incworkaround').disabled = true;
+            $('workaround').disabled = true;
             $('helptext').innerHTML = strEnterDetailsAboutIncidentToBeStoredInLog;
             $('helptext').innerHTML = $('helptext').innerHTML + ' '  + strSummaryOfProblemAndResolution;
             $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strFinalUpdate + "</strong>:";
@@ -155,7 +138,38 @@ if (empty($_REQUEST['process']))
     function editbox(object, boxname)
     {
         var boxname;
-        object.boxname.disabled=true;
+        object.boxname.disabled = true;
+    }
+
+    
+    
+    function revealTextAreaIncidentClose(checkbox, textarea)
+    {
+        if ($(checkbox).checked)
+        {
+            $(textarea).disabled = false;
+            $(textarea).style.display = ''
+        }
+        else
+        {
+            $(textarea).disabled = true;
+            $(textarea).style.display = 'none'
+        }
+    }
+
+    function clickInBox(box)
+    {
+        if (this.enabled)
+        {
+            alert('enabled');
+            this.value = saveValue;
+            setTimeout('document.articlform.'+box+'.blur()',1);
+        }
+        else
+        {
+            //alert('not');
+            saveValue = this.value;
+        }
     }
 
     -->
@@ -169,7 +183,7 @@ if (empty($_REQUEST['process']))
     echo "{$strMarkForClosure}</label><br />";
     echo "<label><input type='radio' name='wait' value='no' />{$strCloseImmediately}</label></td></tr>\n";
     echo "<tr><th>{$strKnowledgeBase}";
-    echo "</th><td><label><input type='checkbox' name='kbarticle' onchange='enablekb();' value='yes' />";
+    echo "</th><td><label><input type='checkbox' id='kbarticle' name='kbarticle' onchange='enablekb();' value='yes' />";
     echo "{$strNewKBArticle}</label></td></tr>\n";
 
     echo "<tr id='titlerow' style='display:none;'><th>{$strTitle}</th>";
@@ -213,23 +227,23 @@ if (empty($_REQUEST['process']))
     echo "</textarea>\n";
     echo "</td></tr>";
 
-    echo "<tr id='symptomsrow' style='display:none;'><th><label>{$strSymptoms}<br /><input type='checkbox' name='incsymptoms' onclick=\"if (this.checked) {document.closeform.symptoms.disabled = false; document.closeform.symptoms.style.display=''} else { saveValue=document.closeform.symptoms.value; document.closeform.symptoms.disabled = true; document.closeform.symptoms.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='symptoms' name='symptoms' cols='40' style='display: none;' rows='8' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.symptoms.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='symptomsrow' style='display:none;'><th><label>{$strSymptoms}<br /><input type='checkbox' id='incsymptoms' name='incsymptoms' onclick=\"revealTextAreaIncidentClose('incsymptoms', 'symptoms')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='symptoms' name='symptoms' cols='40' style='display: none;' rows='8' onfocus=\"clickInBox('symptoms')\"></textarea></td></tr>";
 
-    echo "<tr id='causerow' style='display:none;'><th><label>{$strCause}<br /><input type='checkbox' name='inccause' onclick=\"if (this.checked) {document.closeform.cause.disabled = false; document.closeform.cause.style.display=''} else { saveValue=document.closeform.cause.value; document.closeform.cause.disabled = true; document.closeform.cause.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='cause' name='cause' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.cause.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='causerow' style='display:none;'><th><label>{$strCause}<br /><input type='checkbox' id='inccause' name='inccause' onclick=\"revealTextAreaIncidentClose('inccause', 'cause')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='cause' name='cause' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('cause');\"></textarea></td></tr>";
 
-    echo "<tr id='questionrow' style='display:none;'><th><label>{$strQuestion}<br /><input type='checkbox' name='incquestion' onclick=\"if (this.checked) {document.closeform.question.disabled = false; document.closeform.question.style.display=''} else { saveValue=document.closeform.question.value; document.closeform.question.disabled = true; document.closeform.question.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='question' name='question' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.question.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='questionrow' style='display:none;'><th><label>{$strQuestion}<br /><input type='checkbox' id='incquestion' name='incquestion' onclick=\"revealTextAreaIncidentClose('incquestion', 'question')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='question' name='question' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('question')\"></textarea></td></tr>";
 
-    echo "<tr id='answerrow' style='display:none;'><th><label>{$strAnswer}<br /><input type='checkbox' name='incanswer' onclick=\"if (this.checked) {document.closeform.answer.disabled = false; document.closeform.answer.style.display=''} else { saveValue=document.closeform.answer.value; document.closeform.answer.disabled = true; document.closeform.answer.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='answer' name='answer' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.answer.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='answerrow' style='display:none;'><th><label>{$strAnswer}<br /><input type='checkbox' id='incanswer' name='incanswer' onclick=\"revealTextAreaIncidentClose('incanswer', 'answer')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='answer' name='answer' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('answer')\"></textarea></td></tr>";
 
     echo "<tr><th><label>{$strSolution}</label>";
     echo "<br /><span class='required'>{$strRequired}</span><br />";
-    echo "<input type='checkbox' name='incsolution' onclick=\"if (this.checked) {document.closeform.solution.disabled = false; document.closeform.solution.style.display=''} else { saveValue=document.closeform.solution.value; document.closeform.solution.disabled = true; document.closeform.solution.style.display='none'}\" checked='checked' disabled='disabled' /></th>";
+    echo "<input type='checkbox' name='incsolution' onclick=\"revealTextAreaIncidentClose('incsolution', 'solution')\" checked='checked' disabled='disabled' /></th>";
 
-    echo "<td><textarea id='solution' name='solution' cols='40' rows='8' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articleform.solution.blur()',1); } else saveValue=this.value;\">";
+    echo "<td><textarea id='solution' name='solution' cols='40' rows='8' onfocus=\"clickInBox('solution')\">";
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND (type='solution' OR type='actionplan') ORDER BY timestamp DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -242,17 +256,17 @@ if (empty($_REQUEST['process']))
     echo "</textarea>\n";
     echo "</td></tr>";
 
-    echo "<tr id='workaroundrow' style='display:none;'><th><label>{$strWorkaround}<br /><input type='checkbox' name='incworkaround' onclick=\"if (this.checked) {document.closeform.workaround.disabled = false; document.closeform.workaround.style.display=''} else { saveValue=document.closeform.workaround.value; document.closeform.workaround.disabled = true; document.closeform.workaround.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='workaround' name='workaround' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.workaround.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='workaroundrow' style='display:none;'><th><label>{$strWorkaround}<br /><input type='checkbox' id='incworkaround' name='incworkaround' onclick=\"revealTextAreaIncidentClose('incworkaround', 'workaround')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='workaround' name='workaround' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('workaround')\"></textarea></td></tr>";
 
-    echo "<tr id='statusrow' style='display:none;'><th><label>{$strStatus}<br /><input type='checkbox' name='incstatus' onclick=\"if (this.checked) {document.closeform.status.disabled = false; document.closeform.status.style.display=''} else { saveValue=document.closeform.status.value; document.closeform.status.disabled = true; document.closeform.status.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='status' name='status' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.status.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='statusrow' style='display:none;'><th><label>{$strStatus}<br /><input type='checkbox' id='incstatus' name='incstatus' onclick=\"revealTextAreaIncidentClose('incstatus', 'status')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='status' name='status' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('status')\"></textarea></td></tr>";
 
-    echo "<tr id='inforow' style='display:none;'><th><label>{$strAdditionalInfo}<br /><input type='checkbox' name='incadditional' onclick=\"if (this.checked) {document.closeform.additional.disabled = false; document.closeform.additional.style.display=''} else { saveValue=document.closeform.additional.value; document.closeform.additional.disabled = true; document.closeform.additional.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='additional' name='additional' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.additional.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='inforow' style='display:none;'><th><label>{$strAdditionalInfo}<br /><input type='checkbox' id='incadditional' name='incadditional' onclick=\"revealTextAreaIncidentClose('incadditional', 'additional')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='additional' name='additional' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('additional')\"></textarea></td></tr>";
 
-    echo "<tr id='referencesrow' style='display:none;'><th><label>{$strReferences}<br /><input type='checkbox' name='increferences' onclick=\"if (this.checked) {document.closeform.references.disabled = false; document.closeform.references.style.display=''} else { saveValue=document.closeform.references.value; document.closeform.references.disabled = true; document.closeform.references.style.display='none'}\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='references' name='references' cols='40' rows='8' style='display: none;' onfocus=\"if (this.enabled) { this.value = saveValue; setTimeout('document.articlform.references.blur()',1); } else saveValue=this.value;\"></textarea></td></tr>";
+    echo "<tr id='referencesrow' style='display:none;'><th><label>{$strReferences}<br /><input type='checkbox' id='increferences' name='increferences' onclick=\"revealTextAreaIncidentClose('increferences', 'references')\" disabled='disabled' /></label></th>";
+    echo "<td><textarea id='references' name='references' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('references')\"></textarea></td></tr>";
 
     echo "<tr><th>{$strClosingStatus}</th><td>";
     echo closingstatus_drop_down("closingstatus", 0, TRUE);
@@ -274,7 +288,7 @@ if (empty($_REQUEST['process']))
     echo "</table>\n";
     echo "<p align='center'>";
     echo "<input name='type' type='hidden' value='Support' />";
-    echo "<input name='id' type='hidden' value='$id' />";
+    echo "<input name='id' type='hidden' value='{$id}' />";
     echo "<input type='hidden' name='process' value='closeincident' />";
     echo "<input name='submit' type='submit' value=\"{$strClose}\" /></p>";
     echo "</form>";
@@ -342,7 +356,7 @@ else
                 list($closure_delay) = mysql_fetch_row($result);
             }
             $timeofnextaction = $now + $closure_delay;
-            $sql = "UPDATE `{$dbIncidents}` SET status='7', lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'";
+            $sql = "UPDATE `{$dbIncidents}` SET status='7', lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id={$id}";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
@@ -357,7 +371,7 @@ else
             else
             {
                 // mark incident as closed
-                $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}' WHERE id='{$id}'";
+                $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}' WHERE id={$id}";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -388,7 +402,7 @@ else
             {
                 // Problem Definition
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-                $sql .= "VALUES ('$id', '$sit[2]', 'probdef', '{$currentowner}', '{$currentstatus}', '$summary', '$now', 'hide')";
+                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'probdef', '{$currentowner}', '{$currentstatus}', '{$summary}', '{$now}', 'hide')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -397,7 +411,7 @@ else
             {
                 // Final Solution
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-                $sql .= "VALUES ('$id', '$sit[2]', 'solution', '{$currentowner}', '{$currentstatus}', '$solution', '$now', 'hide')";
+                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'solution', '{$currentowner}', '{$currentstatus}', '{$solution}', '$now', 'hide')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -414,7 +428,7 @@ else
             {
                 // Update - mark for closure
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '$now')";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -422,7 +436,7 @@ else
             {
                 // Update - close immediately
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '$now')";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -434,7 +448,7 @@ else
             }
 
             //notify related inicdents this has been closed
-            $sql = "SELECT distinct (relatedid) AS relateid FROM `{$dbRelatedIncidents}` AS r, `{$dbIncidents}` AS i WHERE incidentid = '$id' ";
+            $sql = "SELECT distinct (relatedid) AS relateid FROM `{$dbRelatedIncidents}` AS r, `{$dbIncidents}` AS i WHERE incidentid = {$id} ";
             $sql .= "AND i.id = r.relatedid AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING;
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -446,7 +460,7 @@ else
                 $relatedincidents[] = $a->relateid;
             }
 
-            $sql = "SELECT distinct (incidentid) AS relateid FROM `{$dbRelatedIncidents}` AS r, `{$dbIncidents}` AS i WHERE relatedid = '$id' ";
+            $sql = "SELECT distinct (incidentid) AS relateid FROM `{$dbRelatedIncidents}` AS r, `{$dbIncidents}` AS i WHERE relatedid = {$id} ";
             $sql .= "AND i.id = r.incidentid AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING;
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -466,7 +480,7 @@ else
                     if ($relatedid != $id)
                     {
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner,currentstatus, bodytext, timestamp) ";
-                        $sql .= "VALUES ('$relatedid', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', 'New Status: [b]Active[/b]<hr>\nRelated incident [$id] has been closed', '$now')";
+                        $sql .= "VALUES ('$relatedid', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', 'New Status: [b]Active[/b]<hr>\nRelated incident [{$id}] has been closed', '{$now}')";
                         $result = mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -535,16 +549,16 @@ else
                 $sql .= "'{$kbtitle}', ";
                 $sql .= "'{$distribution}', ";
                 $sql .= "'".mysql_real_escape_string($sit[2])."', ";
-                $sql .= "'".date('Y-m-d H:i:s', mktime(date('H'),date('i'),date('s'),date('m'),date('d'),date('Y')))."', ";
+                $sql .= "'".date('Y-m-d H:i:s', mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('Y')))."', ";
                 $sql .= "'[$id]') ";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $docid = mysql_insert_id();
 
                 // Update the incident to say that a KB article was created, with the KB Article number
-                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4,$docid);
+                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid);
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '$sit[2]', 'default', '$update', '$now')";
+                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'default', '{$update}', '{$now}')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

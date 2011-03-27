@@ -125,8 +125,6 @@ $application_revision = 'svn';
 // The number of errors that have occurred
 $siterrors = 0;
 
-$fsdelim = DIRECTORY_SEPARATOR;
-
 // Time settings
 $now = time();
 // next 16 hours, based on reminders being run at midnight this is today
@@ -203,9 +201,9 @@ function stripslashes_array($data)
  * @param bool $mysqlescape whether to mysql_escape()
  * @param array $disallowedchars array of chars to remove
  * @param array $replacechars array of chars to replace as $orig => $replace
-  * @param bool $intval whether to get the integer value of the variable
-  * @todo TODO this function could use a bit of tidy-up
-  * @returns variable
+ * @param bool $intval whether to get the integer value of the variable
+ * @todo TODO this function could use a bit of tidy-up
+ * @returns variable
  */
 function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
                 $mysqlescape = TRUE, $disallowedchars = array(),

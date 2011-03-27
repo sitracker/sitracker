@@ -774,8 +774,8 @@ elseif ($action == 'assign')
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-                $old_path = $CONFIG['attachment_fspath']. 'updates' . $fsdelim;
-                $new_path = $CONFIG['attachment_fspath'] . $incidentid . $fsdelim;
+                $old_path = $CONFIG['attachment_fspath']. 'updates' . DIRECTORY_SEPARATOR;
+                $new_path = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
                 //move attachments from updates to incident
                 $sql = "SELECT linkcolref, filename FROM `{$dbLinks}` AS l, ";

@@ -560,13 +560,13 @@ function close_window(incidentid)
 
 // INL - switch tab, see php function draw_tabs_submit()
 function gotab(tab) {
-    document.actiontabs.action.value=tab;
+    document.actiontabs.action.value = tab;
     document.actiontabs.submit();
 }
 
 function close_page_redirect(url)
 {
-    window.opener.location=url;
+    window.opener.location = url;
     window.close();
 }
 

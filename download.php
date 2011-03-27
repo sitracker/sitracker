@@ -58,15 +58,15 @@ if (mysql_num_rows($result) > 0)
 
     if (empty($incidentid))
     {
-        $file_fspath = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}";
-        $file_fspath2 = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}-{$filename}";
-        $old_style = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$filename}";
+        $file_fspath = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$fileid}";
+        $file_fspath2 = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
+        $old_style = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$filename}";
     }
     else
     {
-        $file_fspath = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}{$fileid}-{$filename}";
-        $file_fspath2 = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}{$fileid}";
-        $old_style = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}u{$updateid}{$fsdelim}{$filename}";
+        $file_fspath = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
+        $file_fspath2 = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$fileid}";
+        $old_style = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "u{$updateid}" . DIRECTORY_SEPARATOR . "{$filename}";
     }
 
     if ((!file_exists($file_fspath)) AND (!file_exists($file_fspath2)) AND (!file_exists($old_style)))
@@ -106,7 +106,7 @@ if (mysql_num_rows($result) > 0)
                 $ext = substr($filename, strrpos($filename, '.') + 1);
                 if (in_array($ext, $inlinefiles)) $inline = TRUE;
                 else $inline = FALSE;
-                if ($inline) header("Content-Type: ".mime_type($file_fspath));
+                if ($inline) header("Content-Type: " . mime_type($file_fspath));
                 else header("Content-Type: application/octet-stream");
                 header("Content-Length: {$file_size}");
                 if ($inline) header("Content-Disposition: inline; filename=\"{$filename}\"");
