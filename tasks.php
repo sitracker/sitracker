@@ -469,7 +469,7 @@ if (mysql_num_rows($result) >=1 )
             echo ">";
             if ($startdate > 0)
             {
-                echo ldate($CONFIG['dateformat_date'],$startdate);
+                echo ldate($CONFIG['dateformat_date'], $startdate);
             }
 
             echo "</td>";
@@ -482,7 +482,7 @@ if (mysql_num_rows($result) >=1 )
             echo ">";
             if ($duedate > 0)
             {
-                echo ldate($CONFIG['dateformat_date'],$duedate);
+                echo ldate($CONFIG['dateformat_date'], $duedate);
             }
             echo "</td>";
         }
@@ -499,7 +499,7 @@ if (mysql_num_rows($result) >=1 )
                 echo "addActivity(act);";
                 echo "\n//]]>\n</script>";
 
-                echo "$strNotCompleted</td>";
+                echo "{$strNotCompleted}</td>";
                 $duration = $now - $startdate;
 
                 //echo "<td id='duration{$task->id}'><em><div id='duration{$task->id}'>".format_seconds($duration)."</div></em></td>";
