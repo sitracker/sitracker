@@ -96,8 +96,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) == 0)
 {
     // Incident doesn't exist
-    // FIXME better error message - CJ 21/3-10
-    html_redirect("main.php", FALSE, $strNotApplicableAbbrev);
+    html_redirect("main.php", FALSE, $strInvalidIncidentID);
 
 }
 else

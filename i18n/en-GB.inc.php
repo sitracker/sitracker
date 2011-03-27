@@ -899,6 +899,7 @@ $strIntroduction = 'Introduction';
 $strInvalidCredentials = 'Invalid username/password combination';
 $strInvalidDetails = 'Invalid Details';
 $strInvalidEmailAddress = 'Invalid email address';
+$strInvalidIncidentID = 'Invalid Incident ID';
 $strInvalidParameter = 'Invalid parameter';
 $strInvalidUserID = 'Invalid user id';
 $strInvalidUsername = 'Invalid username, please try another';
