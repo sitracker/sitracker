@@ -18,8 +18,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// FIXME i18n Whole page
-
 // External variables
 $id = cleanvar($_REQUEST['id']);
 $action = $_REQUEST['action'];
@@ -181,10 +179,12 @@ elseif ($action == "edit")
         {
             echo $strOther;
         }
+
         // Set up required params, each template type needs an entry here TODO add the rest
         if ($template->type == 'user') $required = array('incidentid', 'userid');
         elseif ($template->type == 'incident') $required = array('incidentid', 'triggeruserid');
         else $required = $triggerarray[$trigaction->triggerid]['required'];
+
         if (!empty($required) AND $CONFIG['debug'])
         {
             debug_log("Variables required by email template {$template->id}: ".print_r($required, TRUE));
