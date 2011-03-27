@@ -803,18 +803,12 @@ else
 
             if ($updatebodylen > 5)
             {
-                /*
-                 * @modifier: Rick Bonkestoter
-                 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-                 */
+                // Some webmail systems use the wrong encodeing (\r\n) instead of (\n\r) (Rick Bonkestoter)
                 echo str_replace('\r\n', "<br />", nl2br($updatebody));
             }
             else
             {
-                /*
-                 * @modifier: Rick Bonkestoter
-                 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-                 */
+                // Some webmail systems use the wrong encodeing (\r\n) instead of (\n\r) (Rick Bonkestoter)
                 echo str_replace('\r\n', "<br />", nl2br($updatebody));
             }
 
