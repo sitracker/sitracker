@@ -153,7 +153,6 @@ if (empty($_REQUEST['process']))
     {
         if (this.enabled)
         {
-            alert('enabled');
             this.value = saveValue;
             setTimeout('document.articlform.'+box+'.blur()',1);
         }
