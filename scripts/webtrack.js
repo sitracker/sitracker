@@ -1597,3 +1597,131 @@ function revealTextAreaIncidentClose(checkbox, textarea)
         $(textarea).style.display = 'none'
     }
 }
+
+
+/*
+    MOVED FROM incident_update.php
+    TODO still needs some work
+*/
+
+<!--
+function slaChange(sla)
+{
+    if (sla == 'none')
+    {
+        notarget();
+    }
+    else if (sla == 'initialresponse')
+    {
+        initialresponse();
+    }
+    else if (sla == 'probdef')
+    {
+        probdef();
+    }
+    else if (sla == 'actionplan')
+    {
+        actionplan();
+    }
+    else if (sla == 'solution')
+    {
+        reprioritise();
+    }
+}
+
+function notarget()
+{
+    // remove last option
+    var length = $('updatetype').length;
+    if (length > 6)
+    {
+        $('updatetype').selectedIndex = 6;
+        var Current = $('updatetype').selectedIndex;
+        $('updatetype').options[Current] = null;
+    }
+    $('priority').value = $('storepriority').value;
+    //object.priority.disabled=true;
+    $('priority').disabled = false;
+    $('updatetype').selectedIndex = 0;
+    $('updatetype').disabled = false;
+}
+
+
+function initialresponse()
+{
+    // remove last option
+    var length = $('updatetype').length;
+    if (length > 6)
+    {
+        $('updatetype').selectedIndex = 6;
+        var Current = $('updatetype').selectedIndex;
+        $('updatetype').options[Current] = null;
+    }
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').selectedIndex = 0;
+    $('updatetype').disabled = false;
+}
+
+
+function actionplan()
+{
+    // remove last option
+    var length = $('updatetype').length;
+    if (length > 6)
+    {
+        $('updatetype').selectedIndex = 6;
+        var Current = $('updatetype').selectedIndex;
+        $('updatetype').options[Current] = null;
+    }
+    var defaultSelected = true;
+    var selected = true;
+    var optionName = new Option('Action Plan', 'actionplan', defaultSelected, selected)
+    var length = $('updatetype').length;
+    $('updatetype').options[length] = optionName;
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').disabled = true;
+}
+
+function reprioritise()
+{
+    // remove last option
+    var length = $('updatetype').length;
+    if (length > 6)
+    {
+        $('updatetype').selectedIndex = 6;
+        var Current = $('updatetype').selectedIndex;
+        $('updatetype').options[Current] = null;
+    }
+    // add new option
+    var defaultSelected = true;
+    var selected = true;
+    var optionName = new Option('Reprioritise', 'solution', defaultSelected, selected)
+    var length = $('updatetype').length;
+    $('updatetype').options[length] = optionName;
+    $('priority').disabled = false;
+    $('updatetype').disabled = true;
+}
+
+function probdef()
+{
+    // remove last option
+    var length = $('updatetype').length;
+    if (length > 6)
+    {
+        $('updatetype').selectedIndex = 6;
+        var Current = $('updatetype').selectedIndex;
+        $('updatetype').options[Current] = null;
+    }
+
+    var defaultSelected = true;
+    var selected = true;
+    var optionName = new Option('Problem Definition', 'probdef', defaultSelected, selected)
+    var length = $('updatetype').length;
+    $('updatetype').options[length] = optionName;
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').disabled = true;
+}
+
