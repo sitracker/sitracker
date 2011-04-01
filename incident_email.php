@@ -723,7 +723,7 @@ switch ($step)
                 {
                     if (window.confirm('The email was sent successfully, click OK to close this window'))
                     {
-                        window.opener.location='incident_details.php?id=<?php echo $id; ?>';
+                        window.opener.location = 'incident_details.php?id=<?php echo $id; ?>';
                         window.close();
                     }
                 }
