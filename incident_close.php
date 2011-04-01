@@ -29,7 +29,7 @@ if (empty($_REQUEST['process']))
 {
     $sql = "SELECT owner FROM `{$dbIncidents}` WHERE id = '{$incidentid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     list($owner) = mysql_fetch_row($result);
 
     if ($owner == 0)
@@ -135,14 +135,6 @@ if (empty($_REQUEST['process']))
         }
     }
 
-    function editbox(object, boxname)
-    {
-        var boxname;
-        object.boxname.disabled = true;
-    }
-
-    
-    
     function revealTextAreaIncidentClose(checkbox, textarea)
     {
         if ($(checkbox).checked)
