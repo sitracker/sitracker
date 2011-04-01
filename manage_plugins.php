@@ -44,15 +44,14 @@ function getplugininfovalue($string)
 
 function gethtmlstring($body, $prefix, $suffix, $offset=0)
 {
-    $begin=@strpos($body, $prefix, $offset);
-    $begin+=strlen($prefix);
-    $end=strpos($body, $suffix, $begin);
-    $length=$end-$begin;
+    $begin = @strpos($body, $prefix, $offset);
+    $begin += strlen($prefix);
+    $end = strpos($body, $suffix, $begin);
+    $length = $end - $begin;
     $htmlstring = substr($body, $begin, $length);
 
     return $htmlstring;
 }
-
 
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -107,7 +106,7 @@ if ($_REQUEST['action'] == 'checkforupdates')
     // $startloc = strpos($plugins_directory, '</caption>', 200);
     // $endloc = strpos($plugins_directory, '</table>', $startloc) - $startloc;
     $plugins_directory = gethtmlstring($plugins_directory, '</caption>', '</table>', 200);
-//     echo "<pre>".htmlentities($plugins_directory)."</pre>";
+    // echo "<pre>".htmlentities($plugins_directory)."</pre>";
     //preg_match_all("|<[^>]+>(.*)</[^>]+>|U", "<b>example: </b><div align=left>this is a test</div>",   $out, PREG_PATTERN_ORDER);
 
     // preg_match_all("/>(\w*)<\/a>\b<\/td><td>(\w*)<\/td>/msU", $plugins_directory, $out, &$pluginnames);
@@ -133,9 +132,6 @@ if ($_REQUEST['action'] == 'checkforupdates')
     }
     ksort($available_plugins);
 }
-
-
-
 
 
 switch ($seltab)
