@@ -1495,3 +1495,105 @@ function insertTemplateVar(tvar)
        alert(strSelectAFieldForTemplates);
    }
 }
+
+
+function enablekb()
+{
+    if ($('kbtitle').disabled == true)
+    {
+        // Enable KB
+        $('kbtitle').disabled = false;
+        $('summary').disabled = false;
+        $('incsymptoms').disabled = false;
+        $('symptoms').disabled = false;
+        $('inccause').disabled = false;
+        $('cause').disabled = false;
+        $('incquestion').disabled = false;
+        $('question').disabled = false;
+        $('incanswer').disabled = false;
+        $('answer').disabled = false;
+        $('solution').disabled = false;
+        $('incworkaround').disabled = false;
+        $('workaround').disabled = false;
+        $('incstatus').disabled = false;
+        $('status').disabled = false;
+        $('incadditional').disabled = false;
+        $('additional').disabled = false;
+        $('increferences').disabled = false;
+        $('references').disabled = false;
+        $('helptext').innerHTML = strSelectKBSections;
+        $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strKnowledgeBaseArticle + "</strong>:";
+        // Show the table rows for KB article
+        $('titlerow').show();
+        $('distributionrow').show();
+        $('symptomsrow').show();
+        $('causerow').show();
+        $('questionrow').show();
+        $('answerrow').show();
+        $('workaroundrow').show();
+        $('statusrow').show();
+        $('inforow').show();
+        $('referencesrow').show();
+    }
+    else
+    {
+        // Disable KB
+        $('kbtitle').disabled = true;
+        $('incsymptoms').checked = false;
+        $('incsymptoms').disabled = true;
+        $('symptoms').disabled = true;
+        $('inccause').checked = false;
+        $('inccause').disabled = true;
+        $('cause').disabled = true;
+        $('incquestion').checked = false;
+        $('incquestion').disabled = true;
+        $('question').disabled = true;
+        $('incanswer').checked = false;
+        $('incanswer').disabled = true;
+        $('answer').disabled = true;
+        $('incworkaround').checked = false;
+        $('incworkaround').disabled = true;
+        $('workaround').disabled = true;
+        $('incstatus').checked = false;
+        $('incstatus').disabled = true;
+        $('status').disabled = true;
+        $('incadditional').checked = false;
+        $('incadditional').disabled = true;
+        $('additional').disabled = true;
+        $('increferences').checked = false;
+        $('increferences').disabled = true;
+        $('references').disabled = true;
+        $('incworkaround').checked = false;
+        $('incworkaround').disabled = true;
+        $('workaround').disabled = true;
+        $('helptext').innerHTML = strEnterDetailsAboutIncidentToBeStoredInLog;
+        $('helptext').innerHTML = $('helptext').innerHTML + ' '  + strSummaryOfProblemAndResolution;
+        $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strFinalUpdate + "</strong>:";
+        // Hide the table rows for KB article
+        $('titlerow').hide();
+        $('distributionrow').hide();
+        $('symptomsrow').hide();
+        $('causerow').hide();
+        $('questionrow').hide();
+        $('answerrow').hide();
+        $('workaroundrow').hide();
+        $('statusrow').hide();
+        $('inforow').hide();
+        $('referencesrow').hide();
+    }
+}
+
+
+function revealTextAreaIncidentClose(checkbox, textarea)
+{
+    if ($(checkbox).checked)
+    {
+        $(textarea).disabled = false;
+        $(textarea).style.display = ''
+    }
+    else
+    {
+        $(textarea).disabled = true;
+        $(textarea).style.display = 'none'
+    }
+}
