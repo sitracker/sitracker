@@ -149,20 +149,6 @@ if (empty($_REQUEST['process']))
         }
     }
 
-    function clickInBox(box)
-    {
-        if (this.enabled)
-        {
-            this.value = saveValue;
-            setTimeout('document.articlform.'+box+'.blur()',1);
-        }
-        else
-        {
-            //alert('not');
-            saveValue = this.value;
-        }
-    }
-
     -->
     </script>
     <?php
@@ -219,22 +205,22 @@ if (empty($_REQUEST['process']))
     echo "</td></tr>";
 
     echo "<tr id='symptomsrow' style='display:none;'><th><label>{$strSymptoms}<br /><input type='checkbox' id='incsymptoms' name='incsymptoms' onclick=\"revealTextAreaIncidentClose('incsymptoms', 'symptoms')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='symptoms' name='symptoms' cols='40' style='display: none;' rows='8' onfocus=\"clickInBox('symptoms')\"></textarea></td></tr>";
+    echo "<td><textarea id='symptoms' name='symptoms' cols='40' style='display: none;' rows='8' ></textarea></td></tr>";
 
     echo "<tr id='causerow' style='display:none;'><th><label>{$strCause}<br /><input type='checkbox' id='inccause' name='inccause' onclick=\"revealTextAreaIncidentClose('inccause', 'cause')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='cause' name='cause' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('cause');\"></textarea></td></tr>";
+    echo "<td><textarea id='cause' name='cause' cols='40' rows='8' style='display: none;' ></textarea></td></tr>";
 
     echo "<tr id='questionrow' style='display:none;'><th><label>{$strQuestion}<br /><input type='checkbox' id='incquestion' name='incquestion' onclick=\"revealTextAreaIncidentClose('incquestion', 'question')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='question' name='question' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('question')\"></textarea></td></tr>";
+    echo "<td><textarea id='question' name='question' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
 
     echo "<tr id='answerrow' style='display:none;'><th><label>{$strAnswer}<br /><input type='checkbox' id='incanswer' name='incanswer' onclick=\"revealTextAreaIncidentClose('incanswer', 'answer')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='answer' name='answer' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('answer')\"></textarea></td></tr>";
+    echo "<td><textarea id='answer' name='answer' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
 
     echo "<tr><th><label>{$strSolution}</label>";
     echo "<br /><span class='required'>{$strRequired}</span><br />";
     echo "<input type='checkbox' name='incsolution' onclick=\"revealTextAreaIncidentClose('incsolution', 'solution')\" checked='checked' disabled='disabled' /></th>";
 
-    echo "<td><textarea id='solution' name='solution' cols='40' rows='8' onfocus=\"clickInBox('solution')\">";
+    echo "<td><textarea id='solution' name='solution' cols='40' rows='8' >";
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND (type='solution' OR type='actionplan') ORDER BY timestamp DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -248,16 +234,16 @@ if (empty($_REQUEST['process']))
     echo "</td></tr>";
 
     echo "<tr id='workaroundrow' style='display:none;'><th><label>{$strWorkaround}<br /><input type='checkbox' id='incworkaround' name='incworkaround' onclick=\"revealTextAreaIncidentClose('incworkaround', 'workaround')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='workaround' name='workaround' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('workaround')\"></textarea></td></tr>";
+    echo "<td><textarea id='workaround' name='workaround' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
 
     echo "<tr id='statusrow' style='display:none;'><th><label>{$strStatus}<br /><input type='checkbox' id='incstatus' name='incstatus' onclick=\"revealTextAreaIncidentClose('incstatus', 'status')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='status' name='status' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('status')\"></textarea></td></tr>";
+    echo "<td><textarea id='status' name='status' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
 
     echo "<tr id='inforow' style='display:none;'><th><label>{$strAdditionalInfo}<br /><input type='checkbox' id='incadditional' name='incadditional' onclick=\"revealTextAreaIncidentClose('incadditional', 'additional')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='additional' name='additional' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('additional')\"></textarea></td></tr>";
+    echo "<td><textarea id='additional' name='additional' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
 
     echo "<tr id='referencesrow' style='display:none;'><th><label>{$strReferences}<br /><input type='checkbox' id='increferences' name='increferences' onclick=\"revealTextAreaIncidentClose('increferences', 'references')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='references' name='references' cols='40' rows='8' style='display: none;' onfocus=\"clickInBox('references')\"></textarea></td></tr>";
+    echo "<td><textarea id='references' name='references' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
 
     echo "<tr><th>{$strClosingStatus}</th><td>";
     echo closingstatus_drop_down("closingstatus", 0, TRUE);
