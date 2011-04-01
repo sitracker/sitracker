@@ -35,7 +35,9 @@ else
 {
     $start = $_GET['start'];
 }
+
 $domain = cleanvar($_GET['domain']);
+
 if (isset($_GET['q']))
 {
     $q = cleanvar($_GET['q']);
@@ -44,8 +46,8 @@ elseif (isset($_GET['search_string']))
 {
     $q = $_GET['search_string'];
 }
-$filter = array('start' => $start, 'domain' => $domain, 'q' => $q);
 
+$filter = array('start' => $start, 'domain' => $domain, 'q' => $q);
 
 /**
  * Highlight a string to show it as matched, within a search result
@@ -227,7 +229,7 @@ if (!empty($q))
             $end = $results;
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
-                                          "<strong>".($begin+1)."</strong>",
+                                          "<strong>".($begin + 1)."</strong>",
                                           "<strong>".$end."</strong>",
                                           "<strong>{$results}</strong>")."</p>";
         echo "<p align='center'>";
