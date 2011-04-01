@@ -1725,3 +1725,22 @@ function probdef()
     $('updatetype').disabled = true;
 }
 
+
+/**
+ * Sets visibility of an element
+ * 
+ * @param element String of the element to show/hide
+ * @param visibility boolean whether to show or hide
+ * @author Paul Heaney
+ */
+function set_object_visibility(element, visibility)
+{
+    if (visibility == true)
+    {
+        $(element).hide();
+    }
+    else
+    {
+        $(element).show();
+    }
+}
