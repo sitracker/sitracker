@@ -59,11 +59,6 @@ function display_update_page($draftid=-1)
     ?>
     <script type="text/javascript">
     <!--
-    function deleteOption(object) {
-        var Current = object.updatetype.selectedIndex;
-        object.updatetype.options[Current] = null;
-    }
-
     function slaChange(sla, object)
     {
     	if (sla == 'none')
