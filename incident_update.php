@@ -180,12 +180,6 @@ function display_update_page($draftid=-1)
         object.updatetype.disabled=true;
     }
 
-    function replaceOption(object) {
-        var Current = object.updatetype.selectedIndex;
-        object.updatetype.options[Current].text = object.currentText.value;
-        object.updatetype.options[Current].value = object.currentText.value;
-    }
-
     new PeriodicalExecuter(function(pe) {
         setInterval("save_draft('"+<?php echo $id; ?>+"', 'update')")
     },
