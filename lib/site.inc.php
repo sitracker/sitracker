@@ -97,3 +97,38 @@ function site_salesperson($siteid)
 }
 
 
+
+/**
+ * Identified whether a site as a contract for a certain SLA or set of SLAs
+ * 
+ * @param int $siteid  ID of the site
+ * @param array $slas Array of SLA tags
+ * @author Paul Heaney
+ */
+function does_site_have_certain_sla_contract($siteid, $slas)
+{
+    $toReturn = false;
+    global $CONFIG, $dbMaintenance, $dbServiceLevels;
+
+    if (!empty($slas))
+    {
+        $ssql = "SELECT id FROM `{$dbMaintenance}` WHERE site = '{$siteid}' AND ";
+
+        foreach ($slas AS $s)
+        {
+            if (!empty($qsql)) $qsql .= " OR ";
+            $qsql .= " servicelevel = {$s} ";
+        }
+
+        $ssql .= "({$qsql})";
+
+        $sresult = mysql_query($ssql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($sresult) > 0)
+        {
+            $toReturn = true;
+        }
+    }
+
+    return $toReturn;
+}
