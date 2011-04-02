@@ -1185,6 +1185,7 @@ $strNoOrphandedContacts = 'No orphanded contacts';
 $strNotificationEmail = 'Notification Email';
 $strNotifications = 'Notifications';
 $strNotificationsAway = 'Notifications when away';
+$strNotificationDescription = 'You can be notified in different ways when events occur, your current notifications are listed below.';
 $strNotifyContact = 'Notify Contact';
 $strNotifyContactEmail = 'The notify contact email of a contact (if set)';
 $strNotifyContactOnClose = 'Whether the user requested to send a closing email (true or false)';

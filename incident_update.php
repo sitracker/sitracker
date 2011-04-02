@@ -31,8 +31,8 @@ if (empty($draftid)) $draftid = -1;
 $title = $strUpdate;
 
 /**
-    * Update page
-*/
+ * Update page
+ */
 function display_update_page($draftid=-1)
 {
     global $id;

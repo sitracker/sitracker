@@ -588,7 +588,6 @@ function kbSectionCollapse()
         }
         else
         {
-            //$(section).hide();
             if ($(section).display != 'none') Effect.BlindUp(section, { duration: 0.2 });
             $(span).innerHTML = '[+]';
         }
