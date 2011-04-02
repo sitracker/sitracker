@@ -1531,7 +1531,6 @@ function incident_update_notarget()
     deleteOption($('updatetype'), 6);
     $('priority').value = $('storepriority').value;
     $('priority').disabled = false;
-    $('updatetype').selectedIndex = 0;
     $('updatetype').disabled = false;
 }
 
@@ -1541,7 +1540,6 @@ function incident_update_initialresponse()
     deleteOption($('updatetype'), 6);    
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
-    $('updatetype').selectedIndex = 0;
     $('updatetype').disabled = false;
 }
 
