@@ -102,11 +102,11 @@ else
 {
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
-    echo "<div id='detailsummary'>";
+    echo "<div id='detailsummary'>\n";
 
-    // Two column table FIXME can be divs
-    echo "<table>";
-    echo "<tr><td>";
+    echo "<div id='row'>\n";
+    echo "<div id='left'>\n";
+    
     // First column: Contact Details
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
@@ -178,9 +178,10 @@ else
 
     $tags = list_tags($id, TAG_INCIDENT, TRUE);
     if (!empty($tags)) echo "{$tags}\n";
-    echo "</td>";
-
-    echo "<td>";
+    
+    echo "</div>\n";
+    echo "<div id='right'>";
+    
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
     {
@@ -352,16 +353,17 @@ else
         }
     }
 
-    echo "</td>";
-    echo "</tr>\n";
-
-    // Incident relationships
+    echo "</div>\n";
+    echo "</div>\n";
+        
+//    // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($rresult) >= 1)
     {
-        echo "<tr><td colspan='2'>{$strRelations}: ";
+        echo "<div id='relationshiprow'>\n";
+        echo "<div id='relationshipleft'>\n{$strRelations}: ";
         while ($related = mysql_fetch_object($rresult))
         {
             if ($related->relatedid == $id)
@@ -380,15 +382,15 @@ else
             }
             echo " &nbsp;";
         }
-        echo "</td></tr>";
+        echo "</div>\n";
+        
+        echo "</div>\n";
 
     }
 
-    echo "</table>";
-
     plugin_do('incident_details');
 
-    echo "</div>\n\n";
+    echo "</div>\n";
 
 
     $offset = clean_int($_REQUEST['offset']);
@@ -846,10 +848,11 @@ else
     {
         echo log_nav_bar();
     }
-    if (!$_GET['win'])
-    {
-        echo "</div>";
-    }
+    
+//    if (!$_GET['win'])
+//    {
+//        echo "</div><!-- AA -->";
+//    }
 
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }

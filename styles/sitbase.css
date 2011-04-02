@@ -705,6 +705,8 @@ div.detailfoot
     margin-left: auto;
     margin-right: auto;
     border-bottom: 3px solid #203894;
+    display: table;
+    width: 100%;
 }
 #detailsummary table, .detailentry table
 {
@@ -727,6 +729,15 @@ div.detailfoot
     vertical-align: text-top;
 }
 
+#row, #relationshiprow
+{
+    display: table-row;	
+}
+
+#left, #right, #relationshipleft
+{
+    display: table-cell;
+}
 
 .statusline { color: green; }
 
