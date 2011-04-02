@@ -278,12 +278,6 @@ function checkAll(formid, checkstatus)
 }
 
 
-var MIN_ROWS = 3 ;
-var MAX_ROWS = 10 ;
-var MIN_COLS = 40 ;
-var MAX_COLS = 80 ;
-
-
 /**
  * Return a random number
  * @author Ivan Lucas
