@@ -290,7 +290,7 @@ else
         // FIXME for 12/24H clock choice
         if ($totalduration > 0)
         {
-            echo ("{$strDuration}: " . format_seconds($totalduration*60) . "<br />\n");
+            echo ("{$strDuration}: " . format_seconds($totalduration * 60) . "<br />\n");
         }
     }
 
@@ -305,7 +305,7 @@ else
             }
             elseif ($slaremain < 0)
             {
-                echo " ".sprintf($strSLAXLate, $targettype, format_workday_minutes((0-$slaremain)));
+                echo " ".sprintf($strSLAXLate, $targettype, format_workday_minutes((0 - $slaremain)));
             }
             else
             {
@@ -317,7 +317,7 @@ else
         {
             if ($reviewremain > -86400)
             {
-                echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
+                echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo, format_seconds(($reviewremain * -1) * 60));
             }
             else
             {
@@ -356,7 +356,7 @@ else
     echo "</div>\n";
     echo "</div>\n";
         
-//    // Incident relationships
+    // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
