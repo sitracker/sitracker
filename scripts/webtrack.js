@@ -355,7 +355,7 @@ function addcontract_sltimed(servicelevel)
 /**
  * @author Paul Heaney
  */
-function addservice_showbilling(form)
+function newservice_showbilling(form)
 {
     /*var a = $('billtype');
     alert("A: "+a.value);*/
