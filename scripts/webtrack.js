@@ -133,7 +133,7 @@ function get_and_display(page, component, update)
                 if (refreshicon != null) $(refreshicon).src = origicon;
             },
             onLoaded: function(){
-            if (refreshicon != null) $(refreshicon).src = origicon;
+                if (refreshicon != null) $(refreshicon).src = origicon;
             }
         });
     }
@@ -157,7 +157,7 @@ function get_and_display(page, component, update)
             onLoaded: function() {
                 if (refreshicon != null) $(refreshicon).src = origicon;
             }
-       });
+        });
     }
 }
 
@@ -214,14 +214,14 @@ function addOption(object,text,value)
  */
 function copySelected(fromObject,toObject)
 {
-    for (var i=0, l=fromObject.options.length;i < l;i++)
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
         if (fromObject.options[i].selected)
         {
-            addOption(toObject,fromObject.options[i].text,fromObject.options[i].value);
+            addOption(toObject,fromObject.options[i].text, fromObject.options[i].value);
         }
     }
-    for (var i = fromObject.options.length-1; i >-1; i--)
+    for (var i = fromObject.options.length - 1; i > -1; i--)
     {
         if (fromObject.options[i].selected) deleteOption(fromObject,i);
     }
@@ -235,15 +235,15 @@ function copySelected(fromObject,toObject)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function copyAll(fromObject,toObject)
+function copyAll(fromObject, toObject)
 {
-    for (var i=0, l = fromObject.options.length; i < l; i++)
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
-        addOption(toObject,fromObject.options[i].text,fromObject.options[i].value);
+        addOption(toObject, fromObject.options[i].text, fromObject.options[i].value);
     }
-    for (var i = fromObject.options.length-1; i > -1; i--)
+    for (var i = fromObject.options.length - 1; i > -1; i--)
     {
-        deleteOption(fromObject,i);
+        deleteOption(fromObject, i);
     }
 }
 
@@ -274,7 +274,6 @@ function checkAll(formid, checkstatus)
     var form = $(formid);
     checkboxes = form.getInputs('checkbox');
     checkboxes.each(function(e) { e.checked = checkstatus});
-
 }
 
 
@@ -285,7 +284,7 @@ function checkAll(formid, checkstatus)
  */
 function get_random()
 {
-    var ranNum = Math.floor(Math.random()*1000000000000);
+    var ranNum = Math.floor(Math.random() * 1000000000000);
     return ranNum;
 }
 
@@ -396,8 +395,7 @@ function hidecontexthelp(event)
     {
         element.firstDescendant().style.display = 'none';
     }
-    //element.addClassName('active');
-    //   alert(element);
+
     element.stopObserving('blur', hidecontexthelp);
     element.stopObserving('click', hidecontexthelp);
 }
