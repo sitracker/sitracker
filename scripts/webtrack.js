@@ -1576,11 +1576,9 @@ function actionplan()
         var Current = $('updatetype').selectedIndex;
         $('updatetype').options[Current] = null;
     }
-    var defaultSelected = true;
-    var selected = true;
-    var optionName = new Option('Action Plan', 'actionplan', defaultSelected, selected)
-    var length = $('updatetype').length;
-    $('updatetype').options[length] = optionName;
+    
+    addOption($('updatetype'), 'Action Plan', 'actionplan');
+    
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
     $('updatetype').disabled = true;
@@ -1596,12 +1594,9 @@ function reprioritise()
         var Current = $('updatetype').selectedIndex;
         $('updatetype').options[Current] = null;
     }
-    // add new option
-    var defaultSelected = true;
-    var selected = true;
-    var optionName = new Option('Reprioritise', 'solution', defaultSelected, selected)
-    var length = $('updatetype').length;
-    $('updatetype').options[length] = optionName;
+
+    addOption($('updatetype'), 'Reprioritise', 'solution');
+    
     $('priority').disabled = false;
     $('updatetype').disabled = true;
 }
@@ -1617,11 +1612,8 @@ function probdef()
         $('updatetype').options[Current] = null;
     }
 
-    var defaultSelected = true;
-    var selected = true;
-    var optionName = new Option('Problem Definition', 'probdef', defaultSelected, selected)
-    var length = $('updatetype').length;
-    $('updatetype').options[length] = optionName;
+    addOption($('updatetype'), 'Problem Definition', 'probdef');
+    
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
     $('updatetype').disabled = true;
