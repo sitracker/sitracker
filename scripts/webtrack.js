@@ -1538,8 +1538,7 @@ function notarget()
     if (length > 6)
     {
         $('updatetype').selectedIndex = 6;
-        var Current = $('updatetype').selectedIndex;
-        $('updatetype').options[Current] = null;
+        deleteOption($('updatetype'), 6)
     }
     $('priority').value = $('storepriority').value;
     //object.priority.disabled=true;
@@ -1556,8 +1555,7 @@ function initialresponse()
     if (length > 6)
     {
         $('updatetype').selectedIndex = 6;
-        var Current = $('updatetype').selectedIndex;
-        $('updatetype').options[Current] = null;
+        deleteOption($('updatetype'), 6)
     }
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
@@ -1573,8 +1571,7 @@ function actionplan()
     if (length > 6)
     {
         $('updatetype').selectedIndex = 6;
-        var Current = $('updatetype').selectedIndex;
-        $('updatetype').options[Current] = null;
+        deleteOption($('updatetype'), 6)
     }
     
     addOption($('updatetype'), 'Action Plan', 'actionplan');
@@ -1591,8 +1588,7 @@ function reprioritise()
     if (length > 6)
     {
         $('updatetype').selectedIndex = 6;
-        var Current = $('updatetype').selectedIndex;
-        $('updatetype').options[Current] = null;
+        deleteOption($('updatetype'), 6)
     }
 
     addOption($('updatetype'), 'Reprioritise', 'solution');
