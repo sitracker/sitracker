@@ -56,8 +56,6 @@ include_once (APPLICATION_LIBPATH . 'site.inc.php');
 include_once (APPLICATION_LIBPATH . 'configfuncs.inc.php');
 include_once (APPLICATION_LIBPATH . 'incident.inc.php');
 
-include_once (APPLICATION_LIBPATH . 'deprecated.inc.php');
-
 if (version_compare(PHP_VERSION, "5.1.0", ">="))
 {
     date_default_timezone_set($CONFIG['timezone']);
