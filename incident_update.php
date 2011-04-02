@@ -148,7 +148,7 @@ function display_update_page($draftid=-1)
     }
 
 
-    echo "<select name='target' id='target' class='dropdown' onchange=\"slaChange($('target').value)\">\n";
+    echo "<select name='target' id='target' class='dropdown' onchange=\"incident_update_sla_change($('target').value)\">\n";
     echo "<option value='none' {$targetNone}>{$GLOBALS['strNone']}</option>\n";
     switch ($target->type)
     {

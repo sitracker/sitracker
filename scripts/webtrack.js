@@ -1506,32 +1506,32 @@ function revealTextAreaIncidentClose(checkbox, textarea)
     TODO still needs some work
 */
 
-<!--
-function slaChange(sla)
+function incident_update_sla_change(sla)
 {
     if (sla == 'none')
     {
-        notarget();
+        incident_update_notarget();
     }
     else if (sla == 'initialresponse')
     {
-        initialresponse();
+        incident_update_initialresponse();
     }
     else if (sla == 'probdef')
     {
-        probdef();
+        incident_update_probdef();
     }
     else if (sla == 'actionplan')
     {
-        actionplan();
+        incident_update_actionplan();
     }
     else if (sla == 'solution')
     {
-        reprioritise();
+        incident_update_reprioritise();
     }
 }
 
-function notarget()
+
+function incident_update_notarget()
 {
     // remove last option
     var length = $('updatetype').length;
@@ -1548,7 +1548,7 @@ function notarget()
 }
 
 
-function initialresponse()
+function incident_update_initialresponse()
 {
     // remove last option
     var length = $('updatetype').length;
@@ -1564,7 +1564,26 @@ function initialresponse()
 }
 
 
-function actionplan()
+function incident_update_probdef()
+{
+    // remove last option
+    var length = $('updatetype').length;
+    if (length > 6)
+    {
+        $('updatetype').selectedIndex = 6;
+        var Current = $('updatetype').selectedIndex;
+        $('updatetype').options[Current] = null;
+    }
+
+    addOption($('updatetype'), 'Problem Definition', 'probdef');
+    
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').disabled = true;
+}
+
+
+function incident_update_actionplan()
 {
     // remove last option
     var length = $('updatetype').length;
@@ -1581,7 +1600,8 @@ function actionplan()
     $('updatetype').disabled = true;
 }
 
-function reprioritise()
+
+function incident_update_reprioritise()
 {
     // remove last option
     var length = $('updatetype').length;
@@ -1594,24 +1614,6 @@ function reprioritise()
     addOption($('updatetype'), 'Reprioritise', 'solution');
     
     $('priority').disabled = false;
-    $('updatetype').disabled = true;
-}
-
-function probdef()
-{
-    // remove last option
-    var length = $('updatetype').length;
-    if (length > 6)
-    {
-        $('updatetype').selectedIndex = 6;
-        var Current = $('updatetype').selectedIndex;
-        $('updatetype').options[Current] = null;
-    }
-
-    addOption($('updatetype'), 'Problem Definition', 'probdef');
-    
-    $('priority').value = $('storepriority').value;
-    $('priority').disabled = true;
     $('updatetype').disabled = true;
 }
 
