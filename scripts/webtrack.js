@@ -823,6 +823,7 @@ function togglecontactaddress()
     $('postcode').disabled = setting;
 }
 
+
 function show_status_drop_down()
 {
     $('userstatus').hide();
@@ -830,11 +831,13 @@ function show_status_drop_down()
     $('userstatus_dropdown').focus();
 }
 
+
 function hide_status_drop_down()
 {
     $('userstatus').appear();
     $('status_drop_down').hide();
 }
+
 
 function set_user_status()
 {
@@ -863,6 +866,7 @@ function set_user_status()
             });
 }
 
+
 function attach_another_file(element)
 {
     var max = 0;
@@ -884,6 +888,7 @@ function attach_another_file(element)
     $(element).appendChild(br);
     $(element).appendChild(input);
 }
+
 
 function ignore_pending_reassignments(incidentid, originalowner)
 {
@@ -917,10 +922,12 @@ function ignore_pending_reassignments(incidentid, originalowner)
             });
 }
 
+
 function submit_form(form)
 {
     $(form).submit();
 }
+
 
 function ldap_browse_window(base, field)
 {
@@ -928,12 +935,14 @@ function ldap_browse_window(base, field)
     window.open(URL, 'ldap_browse', "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=300,height=400");
 }
 
+
 function ldap_browse_update_group(dn, fieldName)
 {
     field = window.opener.parent.document.getElementById(fieldName); 
     field.value = dn;
     window.close();
 }
+
 
 function ldap_browse_select_container(ldap_base, field)
 {
@@ -1221,6 +1230,7 @@ function save_dashboard_layout(){
 
     $('savelayout').style.display='none';
 }
+
 
 //The target drop area contains a snippet of instructional
 //text that we want to remove when the first item
