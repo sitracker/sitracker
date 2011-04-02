@@ -1528,7 +1528,6 @@ function incident_update_sla_change(sla)
 
 function incident_update_notarget()
 {
-    deleteOption($('updatetype'), 6);
     $('priority').value = $('storepriority').value;
     $('priority').disabled = false;
     $('updatetype').disabled = false;
@@ -1537,7 +1536,6 @@ function incident_update_notarget()
 
 function incident_update_initialresponse()
 {
-    deleteOption($('updatetype'), 6);    
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
     $('updatetype').disabled = false;
@@ -1546,7 +1544,6 @@ function incident_update_initialresponse()
 
 function incident_update_probdef()
 {
-    deleteOption($('updatetype'), 6);
     addOption($('updatetype'), strProblemDefinition, 'probdef');   
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
@@ -1556,7 +1553,6 @@ function incident_update_probdef()
 
 function incident_update_actionplan()
 {
-    deleteOption($('updatetype'), 6);   
     addOption($('updatetype'), strActionPlan, 'actionplan');
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
@@ -1566,7 +1562,6 @@ function incident_update_actionplan()
 
 function incident_update_reprioritise()
 {
-    deleteOption($('updatetype'), 6);
     addOption($('updatetype'), strResolutionReprioritisation, 'solution');
     $('priority').disabled = false;
     $('updatetype').disabled = true;

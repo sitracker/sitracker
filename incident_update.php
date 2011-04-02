@@ -479,6 +479,7 @@ else
     ## if ($target!='') $bodytext = "Target: $target\n".$bodytext;
 
     // Check the updatetype field, if it's blank look at the target
+    
     if (empty($updatetype))
     {
         switch ($target)
@@ -509,9 +510,9 @@ else
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, customervisibility, nextaction) ";
         $sql .= "VALUES ('{$id}', '{$sit[2]}', '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', 'show' , '{$nextaction}')";
     }
-    // invisible update
     else
     {
+        // invisible update
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, nextaction) ";
         $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', '{$nextaction}')";
     }
@@ -597,15 +598,15 @@ else
             break;
         case 'probdef':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']})";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']}')";
             break;
         case 'actionplan':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']})";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']}')";
             break;
         case 'solution':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']})";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']}')";
             break;
     }
 
