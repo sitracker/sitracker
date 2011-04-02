@@ -617,8 +617,7 @@ else
         $updateheadertext = str_replace('updateuser', $updateuser, $updateheadertext);
         $updateheadertext = str_replace('updateuser', $updateuser, $updateheadertext);
 
-        if ($update->type == 'reviewmet' AND
-            ($update->sla == 'opened' OR $update->userid == 0))
+        if ($update->type == 'reviewmet' AND ($update->sla == 'opened' OR $update->userid == 0))
         {
             $updateheadertext = str_replace('updatereview', $strPeriodStarted, $updateheadertext);
         }
