@@ -68,6 +68,10 @@ var strFridayAbbr = '{$strFridayAbbr}';
 var strSaturdayAbbr = '{$strSaturdayAbbr}';
 var strSundayAbbr = '{$strSundayAbbr}';
 
+var strActionPlan = '{$strActionPlan}';
+var strProblemDefinition = '{$strProblemDefinition}'
+var strResolutionReprioritisation = '{$strResolutionReprioritisation}';
+
 var strAreYouSureUpdateLastBilled = \"{$strAreYouSureUpdateLastBilled}\";
 var strCheckingDetails = \"{$strCheckingDetails}\";
 var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
