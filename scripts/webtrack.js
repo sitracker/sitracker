@@ -285,45 +285,6 @@ var MAX_COLS = 80 ;
 
 
 /**
- * Change the length of a text area
- * @author Unknown ???
- */
-function changeTextAreaLength( e )
-{
-    var txtLength = e.value.length;
-    var numRows = 0 ;
-    var arrNewLines = e.value.split("\n");
-
-    for(var i = 0; i <= arrNewLines.length-1; i++)
-    {
-        numRows++;
-        if (arrNewLines[i].length > MAX_COLS-5)
-        {
-            numRows += Math.floor(arrNewLines[i].length / MAX_COLS)
-        }
-    }
-
-    if (txtLength == 0)
-    {
-        e.cols = MIN_COLS ;
-        e.rows = MIN_ROWS ;
-    }
-    else
-    {
-        if (numRows <= 1)
-        {
-            e.cols = (txtLength % MAX_COLS) + 1 >= MIN_COLS ? ((txtLength % MAX_COLS) + 1) : MIN_COLS ;
-        }
-        else
-        {
-            e.cols = MAX_COLS ;
-            e.rows = numRows > MAX_ROWS ? MAX_ROWS : numRows ;
-        }
-    }
-}
-
-
-/**
  * Return a random number
  * @author Ivan Lucas
  * @retval int Random number
