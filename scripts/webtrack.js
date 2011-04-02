@@ -1501,11 +1501,6 @@ function revealTextAreaIncidentClose(checkbox, textarea)
 }
 
 
-/*
-    MOVED FROM incident_update.php
-    TODO still needs some work
-*/
-
 function incident_update_sla_change(sla)
 {
     if (sla == 'none')
@@ -1533,10 +1528,7 @@ function incident_update_sla_change(sla)
 
 function incident_update_notarget()
 {
-    // remove last option
-    $('updatetype').selectedIndex = 6;
-    deleteOption($('updatetype'), 6)
-
+    deleteOption($('updatetype'), 6);
     $('priority').value = $('storepriority').value;
     $('priority').disabled = false;
     $('updatetype').selectedIndex = 0;
@@ -1546,10 +1538,7 @@ function incident_update_notarget()
 
 function incident_update_initialresponse()
 {
-    // remove last option
-    $('updatetype').selectedIndex = 6;
-    deleteOption($('updatetype'), 6)
-    
+    deleteOption($('updatetype'), 6);    
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
     $('updatetype').selectedIndex = 0;
@@ -1559,12 +1548,8 @@ function incident_update_initialresponse()
 
 function incident_update_probdef()
 {
-    // remove last option
-    $('updatetype').selectedIndex = 6;
-    deleteOption($('updatetype'), 6)
-
-    addOption($('updatetype'), strProblemDefinition, 'probdef');
-    
+    deleteOption($('updatetype'), 6);
+    addOption($('updatetype'), strProblemDefinition, 'probdef');   
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
     $('updatetype').disabled = true;
@@ -1573,12 +1558,8 @@ function incident_update_probdef()
 
 function incident_update_actionplan()
 {
-    // remove last option
-    $('updatetype').selectedIndex = 6;
-    deleteOption($('updatetype'), 6)
-    
+    deleteOption($('updatetype'), 6);   
     addOption($('updatetype'), strActionPlan, 'actionplan');
-    
     $('priority').value = $('storepriority').value;
     $('priority').disabled = true;
     $('updatetype').disabled = true;
@@ -1587,12 +1568,8 @@ function incident_update_actionplan()
 
 function incident_update_reprioritise()
 {
-    // remove last option
-    $('updatetype').selectedIndex = 6;
-    deleteOption($('updatetype'), 6)
-
+    deleteOption($('updatetype'), 6);
     addOption($('updatetype'), strResolutionReprioritisation, 'solution');
-    
     $('priority').disabled = false;
     $('updatetype').disabled = true;
 }
