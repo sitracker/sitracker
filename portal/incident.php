@@ -28,7 +28,7 @@ $user = mysql_fetch_object($result);
 if ($user->contact != $_SESSION['contactid']
     AND !in_array($user->maintenanceid, $_SESSION['contracts']))
 {
-    echo "<p class='warning'>$strNoPermission.</p>";
+    echo "<p class='warning'>{$strNoPermission}</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     exit;
 }
@@ -68,9 +68,9 @@ foreach ($keeptags AS $keeptag)
     if (substr($keeptag,0,1)=='&')
     {
         $origtag[] = $keeptag;
-        $temptag[] = "[[".substr($keeptag, 1, strlen($keeptag)-1)."]]";
+        $temptag[] = "[[".substr($keeptag, 1, strlen($keeptag) - 1)."]]";
         $origtag[] = strtoupper("$keeptag");
-        $temptag[] = "[[".strtoupper(substr($keeptag, 1, strlen($keeptag)-1))."]]";
+        $temptag[] = "[[".strtoupper(substr($keeptag, 1, strlen($keeptag) - 1))."]]";
     }
     else
     {

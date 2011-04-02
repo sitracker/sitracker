@@ -21,10 +21,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // seed with microseconds since last "whole" second
-mt_srand((double)microtime()*1000000);
+mt_srand((double) microtime() * 1000000);
 $maxVal = 1000000;
 $minVal = 1;
-$randvala = (mt_rand() % ($maxVal-$minVal)) + $minVal;
+$randvala = (mt_rand() % ($maxVal - $minVal)) + $minVal;
 // seed with current time
 mt_srand($now);
 $maxVal = 1000000;
@@ -66,24 +66,24 @@ if (!isset($temp_directory))
 
     for ($t_day = 1; $t_day <= 31; $t_day++)
     {
-        echo "<option value=\"$t_day\" ";
+        echo "<option value='{$t_day}' ";
         if ($t_day == date("j"))
         {
             echo "selected='selected'";
         }
-        echo ">$t_day</option>\n";
+        echo ">{$t_day}</option>\n";
     }
 
     echo "</select><select name='month' onclick=\"window.document.publishform.expiry_none[1].checked = true;\">";
 
     for ($t_month = 1; $t_month <= 12; $t_month++)
     {
-        echo "<option value=\"$t_month\"";
+        echo "<option value='{$t_month}'";
         if ($t_month == date("n"))
         {
             echo " selected='selected'";
         }
-        echo ">". date ("F", mktime(0,0,0,$t_month,1,2000)) ."</option>\n";
+        echo ">". date ("F", mktime(0, 0, 0, $t_month, 1, 2000)) ."</option>\n";
     }
 
     echo "</select><select name='year' onclick=\"window.document.publishform.expiry_none[1].checked = true;\">";
