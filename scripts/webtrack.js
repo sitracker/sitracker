@@ -1270,7 +1270,7 @@ function get_checks()
 function switch_template()
 {
     get_checks();
-    //FIXME functionise the js here
+
     if ($('new_action').value == 'ACTION_NOTICE')
     {
         $('noticetemplatesbox').show();
