@@ -637,15 +637,15 @@ else
         // Print a header row for the update
         if ($updatebody == '' AND $update->customervisibility == 'show')
         {
-            echo "<div class='detailinfo'>";
+            echo "<div id='detailinfo-{$update->id}' class='detailinfo'>";
         }
         elseif ($updatebody == '' AND $update->customervisibility != 'show')
         {
-            echo "<div class='detailinfohidden'>";
+            echo "<div id='detailinfohidden-{$update->id}' class='detailinfohidden'>";
         }
         elseif ($updatebody != '' AND $update->customervisibility == 'show')
         {
-            echo "<div class='detailhead'>";
+            echo "<div id='detailhead-{$update->id}' class='detailhead'>";
         }
         else
         {
@@ -795,11 +795,11 @@ else
         {
             if ($update->customervisibility == 'show')
             {
-                echo "<div class='detailentry'>\n";
+                echo "<div id='detailentry-{$update->id}' class='detailentry'>\n";
             }
             else
             {
-                echo "<div class='detailentryhidden'>\n";
+                echo "<div id='detailentryhidden-{$update->id}' class='detailentryhidden'>\n";
             }
 
             if ($updatebodylen > 5)
@@ -815,7 +815,7 @@ else
 
             if (!empty($update->nextaction) OR $update->duration != 0)
             {
-                echo "<div class='detailhead'>";
+                echo "<div id='detailhead-{$update->id}' class='detailhead'>";
 
                 if ($update->duration != 0)
                 {
