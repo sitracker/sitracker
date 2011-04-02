@@ -322,14 +322,6 @@ function changeTextAreaLength( e )
     }
 }
 
-/**
- * @author Unknown ???
- */
-function resetTextAreaLength ( e )
-{
-    e.cols = MIN_COLS ;
-    e.rows = MIN_ROWS ;
-}
 
 /**
  * Return a random number
