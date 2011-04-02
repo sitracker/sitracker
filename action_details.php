@@ -16,6 +16,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php');
 //This page requires authentication
 $permission = 72;
+
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 $trigger_mode = 'user';
 if (isset($_GET['user']))
@@ -53,8 +54,8 @@ else
 if (!empty($_POST['triggertype']))
 {
     $_POST = cleanvar($_POST);
-    $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'],
-                    $_POST['enabled'], $_POST['conditions']);
+    $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], $_POST['enabled'], $_POST['conditions']);
+
     if ($_POST['new_action'] == 'ACTION_NOTICE')
     {
         $template = $_POST['noticetemplate'];
@@ -64,8 +65,7 @@ if (!empty($_POST['triggertype']))
         $template = $_POST['emailtemplate'];
     }
 
-    $t = new Trigger($_POST['triggertype'], $user_id, $template,
-            $_POST['new_action'], $checks, $parameters);
+    $t = new Trigger($_POST['triggertype'], $user_id, $template, $_POST['new_action'], $checks, $parameters);
 
     $success = $t->add();
     if ($trigger_mode == 'system') $return = 'system_actions.php';
@@ -74,18 +74,18 @@ if (!empty($_POST['triggertype']))
 }
 else
 {
-    echo "<h2>New action</h2>";
+    echo "<h2>{$strNewAction}</h2>";
     echo "<div id='container'>";
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     if ($trigger_mode == 'system')
     {
-	    echo "<h3>User</h3>";
+	    echo "<h3>{$strUser}</h3>";
         echo "Which action will the action apply to: 'all' will add an entry for ALL users, 'system' will add an action without a user, useful for e.g. automateid emails to customers.</p>";
     }
-    echo "<h3>Action</h3>";
+    echo "<h3>{$strAction}</h3>";
     echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
-    foreach($trigger_types as $name => $trigger)
+    foreach ($trigger_types as $name => $trigger)
     {
         if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
             (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
@@ -95,11 +95,11 @@ else
     }
     echo "</select>";
 
-    echo "<h3>Notification Method</h3>";
+    echo "<h3>{$strNotificationMethod}</h3>";
     echo "<p style='text-align:left'>Choose which method of notification</p>";
     echo "<select id='new_action' name='new_action' onchange='switch_template()' onkeyup='switch_template()'>";
     echo "<option/>";
-    foreach($actionarray as $name => $action)
+    foreach ($actionarray as $name => $action)
     {
         if (($trigger_mode == 'system' AND $action['type'] == 'system') OR
             ($action['type'] == 'user' OR !isset($action['type'])))
@@ -110,15 +110,19 @@ else
     echo "</select>";
 
     echo "<div id='emailtemplatesbox' style='display:none'>";
-    echo "<h3>Email template</h3> ";
+    echo "<h3>{$strEmailTemplate}</h3> ";
+
     echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You shoud only change this if you would like to use a template you have created yourself</p>";
     echo email_templates('emailtemplate', $trigger_mode)."</div>";
+
     echo "<div id='noticetemplatesbox' style='display:none'>";
-    echo "<h3>Notice template</h3> ";
+
+    echo "<h3>{$strNoticeTemplate}</h3> ";
     echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You should only change this if you would like to use a template you have created yourself</p>";
     echo notice_templates('noticetemplate')."</div>";
     echo '<div id="checksbox" style="display:none">';
-    echo '<h3>Conditions</h3>';
+
+    echo "<h3>{$strConditions}</h3>";
     echo "<p style='text-align:left'>Some actions have option conditions under which you can choose to be notified.</p>";
     echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
     echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;

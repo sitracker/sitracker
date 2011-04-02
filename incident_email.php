@@ -28,7 +28,6 @@ if (empty($draftid)) $draftid = -1;
 
 $title = $strEmail;
 
-
 if (empty($step))
 {
     $action = $_REQUEST['action'];
@@ -72,7 +71,6 @@ if (empty($step))
 switch ($step)
 {
     case 1:
-        // show form 1
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
         echo "<h2>".icon('email', 32)." {$strSendEmail}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' name='updateform' method='post'>";
@@ -203,7 +201,6 @@ switch ($step)
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
         break;
     case 2:
-        // show form 2
         if ($draftid != -1)
         {
             $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
