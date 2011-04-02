@@ -36,6 +36,7 @@ function getplugininfo($string)
     }
 }
 
+
 function getplugininfovalue($string)
 {
     return trim(substr($string, strpos($string, '=', 12)+1)," \t\n\r\0\x0B;\'\"");
@@ -136,42 +137,41 @@ if ($_REQUEST['action'] == 'checkforupdates')
 
 switch ($seltab)
 {
-        case $strRepository:
-            if (is_array($available_plugins))
-            {
-                echo "<h2>{$strAvailablePlugins}</h2>";
+    case $strRepository:
+        if (is_array($available_plugins))
+        {
+            echo "<h2>{$strAvailablePlugins}</h2>";
 
-                echo "<table align='center'>";
-                echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
-                $shade = 'shade1';
-                foreach($available_plugins AS $avail_plugin => $avail_plugin_details)
+            echo "<table align='center'>";
+            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            $shade = 'shade1';
+            foreach($available_plugins AS $avail_plugin => $avail_plugin_details)
+            {
+                $operation = '';
+                if (!empty($avail_plugin_details['url']))
                 {
-                    $operation = '';
-                    if (!empty($avail_plugin_details['url']))
-                    {
-                        $operation .= "<a href='{$avail_plugin_details['url']}'>{$strVisitHomepage}</a>";
-                    }
-                    if (!in_array($avail_plugin, $ondisk_plugins))
-                    {
-                        echo "<tr class='{$shade}'>";
-                        echo "<td>{$avail_plugin}</td>";
-                        echo "<td>{$avail_plugin_details['version']}</td>";
-                        echo "<td>{$avail_plugin_details['desc']}</td>";
-                        echo "<td>{$avail_plugin_details['author']}</td>";
-                        echo "<td>{$operation}</td>";
-                        echo "</tr>";
-                        if ($shade == 'shade2') $shade = 'shade1';
-                        else $shade = 'shade2';
-                    }
+                    $operation .= "<a href='{$avail_plugin_details['url']}'>{$strVisitHomepage}</a>";
                 }
-                echo "</table>";
+                if (!in_array($avail_plugin, $ondisk_plugins))
+                {
+                    echo "<tr class='{$shade}'>";
+                    echo "<td>{$avail_plugin}</td>";
+                    echo "<td>{$avail_plugin_details['version']}</td>";
+                    echo "<td>{$avail_plugin_details['desc']}</td>";
+                    echo "<td>{$avail_plugin_details['author']}</td>";
+                    echo "<td>{$operation}</td>";
+                    echo "</tr>";
+                    if ($shade == 'shade2') $shade = 'shade1';
+                    else $shade = 'shade2';
+                }
             }
-            else
-            {
-                echo "<p>{$strNone}</p>"; // FIXME better message
-            }
-            break;
-
+            echo "</table>";
+        }
+        else
+        {
+            echo "<p>{$strNoAvailablePlugins}</p>";
+        }
+        break;
 
     case $strInstalled:
     default:

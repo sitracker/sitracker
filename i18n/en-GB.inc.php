@@ -1152,6 +1152,7 @@ $strNo = 'No';
 $strNobody = 'Nobody';
 $strNoAnswerGiven = 'No Answer Given';
 $strNoActionSpecified = 'No action specified';
+$strNoAvailablePlugins = 'No Available Plugins';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
 $strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
 $strNoFiles = 'No Files';
