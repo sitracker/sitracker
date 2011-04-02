@@ -414,7 +414,7 @@ function findPos(obj) {
 
         } while (obj = obj.offsetParent);
     }
-    return [curleft,curtop];
+    return [curleft, curtop];
 }
 
 
@@ -610,7 +610,7 @@ function insertBBCode(element, tag, endtag)
     {
         var start = $(element).selectionStart;
         var end = $(element).selectionEnd;
-        //             alert('start:' + start + '  end: ' + end + 'len: ' + $(element).textLength);
+
         if ($(element).readAttribute('readonly') != 'readonly')
         {
             $(element).value = $(element).value.substring(0, start) + tag + $(element).value.substring(start, end) + endtag + $(element).value.substring(end, $(element).textLength);
@@ -674,20 +674,6 @@ function toggleMenuPanel()
     }*/
 }
 
-function resizeTextarea(t)
-{
-    a = t.value.split('\n');
-    b = 1;
-    for (x = 0;x < a.length; x++)
-    {
-        if (a[x].length >= t.cols)
-        {
-            b += Math.floor(a[x].length/t.cols);
-        }
-    }
-    b += a.length;
-    if (b > t.rows) t.rows = b;
-}
 
 function enableBillingPeriod()
 {
