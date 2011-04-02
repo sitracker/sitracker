@@ -183,7 +183,7 @@ function ajax_save(page, component)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function deleteOption(object,index)
+function deleteOption(object, index)
 {
     object.options[index] = null;
 }
@@ -196,7 +196,7 @@ function deleteOption(object,index)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function addOption(object,text,value)
+function addOption(object, text, value)
 {
     var defaultSelected = true;
     var selected = true;
@@ -212,7 +212,7 @@ function addOption(object,text,value)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function copySelected(fromObject,toObject)
+function copySelected(fromObject, toObject)
 {
     for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
@@ -253,7 +253,7 @@ function copyAll(fromObject, toObject)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function populateHidden(fromObject,toObject)
+function populateHidden(fromObject, toObject)
 {
     var output = '';
     for (var i = 0, l = fromObject.options.length; i < l; i++)
@@ -1374,7 +1374,7 @@ function validate_field(field, error)
 
 /**
  * 
- * @returns {Boolean}
+ * @returns Boolean
  * @author Paul Heaney
  */
 function process_billable_incidents_form()
