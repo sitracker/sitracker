@@ -244,8 +244,6 @@ while ($incidents = mysql_fetch_object($result))
         echo icon('draft', 16, $strDraftsExist).' ';
     }
 
-        $windowname = "incident{$incidents->id}";
-    echo "<a href=\"javascript:incident_details_window('{$incidents->id}','{$windowname}')\" class='info'>";
     if (trim($incidents->title) != '')
     {
         $linktext = ($incidents->title);
