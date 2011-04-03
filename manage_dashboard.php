@@ -53,7 +53,7 @@ switch ($_REQUEST['action'])
 
         $sql = "SELECT name FROM `{$dbDashboard}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         echo "<h2>".icon('dashboard', 32)." ";
         echo $strInstallDashboardComponents."</h2>";
@@ -65,15 +65,15 @@ switch ($_REQUEST['action'])
 
         $path = APPLICATION_PLUGINPATH;
 
-        $dir_handle = @opendir($path) or trigger_error("Unable to open dashboard directory $path", E_USER_ERROR);
+        $dir_handle = @opendir($path) or trigger_error("Unable to open dashboard directory {$path}", E_USER_ERROR);
 
         while ($file = readdir($dir_handle))
         {
-            if (beginsWith($file, "dashboard_") && endsWith($file, ".php"))
+            if (beginsWith($file, "dashboard_") AND endsWith($file, ".php"))
             {
-                if (empty($dashboard[substr($file, 10, strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
+                if (empty($dashboard[substr($file, 10, strlen($file) - 14)]))  //this is 14 due to .php =4 and dashboard_ = 10
                 {
-                    $html .= "<option value='".substr($file, 10, strlen($file)-14)."'>".substr($file, 10, strlen($file)-14)." ({$file})</option>";
+                    $html .= "<option value='".substr($file, 10, strlen($file) - 14)."'>".substr($file, 10, strlen($file) - 14)." ({$file})</option>";
                 }
             }
         }
@@ -113,7 +113,7 @@ switch ($_REQUEST['action'])
                 $sql .= "('{$dashboardcomponents[$i]}', 'true'), ";
             }
             $result = mysql_query(substr($sql, 0, strlen($sql)-2));
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
             if (!$result)
             {
@@ -145,7 +145,7 @@ switch ($_REQUEST['action'])
         $id = clean_int($_REQUEST['id']);
         $sql = "SELECT * FROM `{$dbDashboard}` WHERE id = {$id}";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) > 0)
         {
@@ -200,7 +200,7 @@ switch ($_REQUEST['action'])
         $enable = clean_dbstring($_REQUEST['enable']);
         $sql = "UPDATE `{$dbDashboard}` SET enabled = '{$enable}' WHERE id = '{$id}'";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         if (!$result)
         {
@@ -217,16 +217,16 @@ switch ($_REQUEST['action'])
 
         $sql = "SELECT * FROM `{$dbDashboard}`";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         echo "<h2>".icon('dashboard', 32)." ";
         echo "{$strManageDashboardComponents}</h2>";
         echo "<table class='vertical' align='center'><tr>";
-        echo colheader('id',$strID);
-        echo colheader('name',$strName);
-        echo colheader('enabled',$strEnabled);
-        echo colheader('version',$strVersion);
-        echo colheader('upgrade',$strUpgrade);
+        echo colheader('id', $strID);
+        echo colheader('name', $strName);
+        echo colheader('enabled', $strEnabled);
+        echo colheader('version', $strVersion);
+        echo colheader('upgrade', $strUpgrade);
         echo "</tr>";
         while ($dashboardnames = mysql_fetch_object($result))
         {
@@ -241,7 +241,7 @@ switch ($_REQUEST['action'])
 
             echo "<tr class='shade2'><td>{$dashboardnames->id}</td>";
             echo "<td>{$dashboardnames->name}</td>";
-            echo "<td><a href='".$_SERVER['PHP_SELF']."?action=enable&amp;id={$dashboardnames->id}&amp;enable={$opposite}'>";
+            echo "<td><a href='{$_SERVER['PHP_SELF']}?action=enable&amp;id={$dashboardnames->id}&amp;enable={$opposite}'>";
             if ($dashboardnames->enabled == 'true') echo $strYes;
             else echo $strNo;
             echo "</a></td>";

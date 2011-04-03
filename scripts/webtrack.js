@@ -103,7 +103,7 @@ function appointment(id)
 function get_and_display(page, component, update)
 {
     // Do certain special things for dashlets
-    if (component.substr(0,3) == 'win')
+    if (component.substr(0, 3) == 'win')
     {
         // Get the ID for the refresh icon so we can replace it, store the original first
         var refreshicon = component.replace(/win/, "refresh");
