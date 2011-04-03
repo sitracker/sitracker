@@ -121,7 +121,7 @@ while ($incidents = mysql_fetch_object($result))
     $slresult = mysql_query($slsql);
     if (mysql_error()) trigger_error("mysql query error ".mysql_error(), E_USER_WARNING);
     $servicelevel = mysql_fetch_object($slresult);
-    if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ($slsql)", E_USER_WARNING);
+    if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ({$slsql})", E_USER_WARNING);
 
     // Get Last Update
     list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incidents->id);
@@ -167,7 +167,7 @@ while ($incidents = mysql_fetch_object($result))
 
     // Remove Tags from update Body
     $update_body = parse_updatebody($update_body);
-    $update_user = user_realname($update_userid,TRUE);
+    $update_user = user_realname($update_userid, TRUE);
 
     // ======= Row Colors / Shading =======
     // Define Row Shading lowest to highest priority so that unimportant colors are overwritten by important ones
@@ -396,11 +396,11 @@ while ($incidents = mysql_fetch_object($result))
         echo "<td align='center' class='review'>";
         if ($reviewremain > -86400)
         {
-            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain * -1) * 60));
+            echo icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain * -1) * 60));
         }
         else
         {
-            echo "".icon('review', 16)." {$strReviewDueNow}";
+            echo icon('review', 16)." {$strReviewDueNow}";
         }
     }
     else
