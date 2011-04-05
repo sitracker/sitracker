@@ -42,6 +42,8 @@ $navup_icon = icon('navup', 16);
 $kb_icon = icon('kb', 16);
 $save_icon = icon('save', 16, $strSaveDraft);
 $info_icon = icon('info', 16, $strDraftLastSaved);
+$icon_ldap_container = icon('ldap-directory', 16);
+$icon_ldap_group = icon('ldap-group', 16);
 
 echo "
 var application_webpath = '{$CONFIG['application_webpath']}';
@@ -66,6 +68,10 @@ var strFridayAbbr = '{$strFridayAbbr}';
 var strSaturdayAbbr = '{$strSaturdayAbbr}';
 var strSundayAbbr = '{$strSundayAbbr}';
 
+var strActionPlan = '{$strActionPlan}';
+var strProblemDefinition = '{$strProblemDefinition}'
+var strResolutionReprioritisation = '{$strResolutionReprioritisation}';
+
 var strAreYouSureUpdateLastBilled = \"{$strAreYouSureUpdateLastBilled}\";
 var strCheckingDetails = \"{$strCheckingDetails}\";
 var strEnterDetailsAboutIncidentToBeStoredInLog = \"{$strEnterDetailsAboutIncidentToBeStoredInLog}\";
@@ -83,6 +89,7 @@ var strLDAPTestFailed = \"{$strLDAPTestFailed}\";
 var strPasswordIncorrect = \"{$strPasswordIncorrect}\";
 var strReveal = \"{$strReveal}\";
 var strSaved = \"{$strSaved}\";
+var strSelectAFieldForTemplates = \"{$strSelectAFieldForTemplates}\";
 var strSelectKBSections = \"{$strSelectKBSections}\";
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
 var strUp = \"{$strUp}\";
@@ -111,6 +118,9 @@ var icon_kb = '{$kb_icon}';
 var icon_navup = '{$navup_icon}';
 var save_icon = '{$save_icon}';
 var info_icon = '{$info_icon}';
+var icon_ldap_group = '{$icon_ldap_group}';
+var icon_ldap_container = '{$icon_ldap_container}';
+
 
 /* 
     Please don't add functions here, these functions below need moving to webtrack.js

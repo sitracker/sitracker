@@ -24,14 +24,46 @@ $legends = explode('|', cleanvar($_REQUEST['legends'], TRUE, FALSE, FALSE));
 $title = urldecode(cleanvar($_REQUEST['title']));
 $unit = cleanvar($_REQUEST['unit']);
 
-$img = draw_chart_image($type, 500, 150, $data, $legends, $title, $unit);
+function __autoload($name)
+{
+    $name = strtolower($name);
+    $locations = array(APPLICATION_LIBPATH . "chart_{$name}.class.php",
+                        APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . "chart_{$name}.class.php",
+                        APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . "{$name}.class.php");
+                        
+    foreach ($locations AS $l)
+    {
+        if (file_exists($l))
+        {
+            require_once ($l);
+            return true;
+        }
+    }
+    
+    return false;
+}
 
-// output to browser
-// flush image
-header('Content-type: image/png');
-header("Content-disposition-type: attachment\r\n");
-header("Content-disposition: filename=sit_chart_".date('Y-m-d').".png");
-imagepng($img);
-imagedestroy($img);
+debug_log("Charting library being used is {$CONFIG['default_chart']}");
+
+$chart = new $CONFIG['default_chart'](500, 150);
+$chart->setTitle($title);
+$chart->setData($data);
+$chart->setLegends($legends);
+$chart->setUnit($unit);
+
+switch ($type)
+{
+    case 'pie':
+        $chart->draw_pie_chart();
+        break;
+    case 'line':
+        $chart->draw_line_chart();
+        break;
+    case 'bar':
+        $chart->draw_bar_chart();
+       break;
+    default:
+        $chart->draw_error();
+}
 
 ?>

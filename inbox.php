@@ -110,10 +110,10 @@ if (empty($displayid))
                             $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
                             mysql_query($dsql);
                             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                           break;
+                            break;
                     }
                 }
-        }
+            }
         }
     }
 

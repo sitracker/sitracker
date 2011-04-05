@@ -18,8 +18,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-// FIXME i18n Whole page
-
 // External variables
 $id = cleanvar($_REQUEST['id']);
 $action = $_REQUEST['action'];
@@ -33,7 +31,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
 
     echo "<h2>".icon('templates', 32)." ";
     echo "{$strTemplates}</h2>";
-    echo "<a href='template_new.php'>{$strNewTemplate}</a></p>";
+    echo "<p align='center'><a href='template_new.php'>{$strNewTemplate}</a></p>";
 
     $sql = "SELECT * FROM `{$dbEmailTemplates}` ORDER BY id";
     $result = mysql_query($sql);
@@ -50,7 +48,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
         $templates[$notice->name] = array('id' => $notice->id, 'template' => 'notice', 'name'=> $notice->name, 'type' => $notice->type, 'desc' => $notice->description);
     }
     ksort($templates);
-    $shade='shade1';
+    $shade = 'shade1';
     echo "<table align='center'>";
     echo "<tr><th>{$strType}</th><th>{$strUsed}</th><th>{$strTemplate}</th><th>{$strOperation}</th></tr>";
     foreach ($templates AS $template)
@@ -118,67 +116,19 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
 }
 elseif ($action == "edit")
 {
-    ?>
-    <script type='text/javascript'>
-    //<![CDATA[
-
-    /**
-      * @author Ivan Lucas
-    **/
-    function recordFocusElement(element)
-    {
-        $('focuselement').value = element.identify();
-        $('templatevariables').show();
-    }
-
-    /**
-      * @author Ivan Lucas
-    **/
-    function clearFocusElement()
-    {
-        $('focuselement').value = '';
-        $('templatevariables').hide();
-    }
-
-    /**
-      * @author Ivan Lucas
-    **/
-    function insertTemplateVar(tvar)
-    {
-        var element = $('focuselement').value;
-        if (element.length > 0)
-        {
-            var start = $(element).selectionStart;
-            var end = $(element).selectionEnd;
-//             alert('start:' + start + '  end: ' + end + 'len: ' + $(element).textLength);
-            if ($(element).readAttribute('readonly') != 'readonly')
-            {
-                $(element).value = $(element).value.substring(0, start) + tvar + $(element).value.substring(end, $(element).textLength);
-            }
-        }
-        else
-        {
-            alert('<?php echo $strSelectAFieldForTemplates?>');
-        }
-    }
-//]]>
-</script>
-    <?php
-
-
     // Retrieve the template from the database, whether it's email or notice
     switch ($templatetype)
     {
         case 'email':
-            if (!is_numeric($id)) $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE name='$id' LIMIT 1";
-            else $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id='$id'";
-            $title = "{$strEdit}: $strEmailTemplate";
+            if (!is_numeric($id)) $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE name='{$id}' LIMIT 1";
+            else $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id='{$id}'";
+            $title = "{$strEdit}: {$strEmailTemplate}";
             $templateaction = 'ACTION_EMAIL';
             break;
         case 'notice':
         default:
-            if (!is_numeric($id)) $sql = "SELECT * FROM `{$dbNoticeTemplates}` WHERE name='$id' LIMIT 1";
-            else $sql = "SELECT * FROM `{$dbNoticeTemplates}` WHERE id='$id' LIMIT 1";
+            if (!is_numeric($id)) $sql = "SELECT * FROM `{$dbNoticeTemplates}` WHERE name='{$id}' LIMIT 1";
+            else $sql = "SELECT * FROM `{$dbNoticeTemplates}` WHERE id='{$id}' LIMIT 1";
             $title = "{$strEdit}: {$strNoticeTemplate}";
             $templateaction = 'ACTION_NOTICE';
     }
@@ -196,7 +146,7 @@ elseif ($action == "edit")
         echo "<form name='edittemplate' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
         echo "<table class='vertical' width='100%'>";
 
-        $tsql = "SELECT * FROM `{$dbTriggers}` WHERE action = '{$templateaction}' AND template = '$id' LIMIT 1";
+        $tsql = "SELECT * FROM `{$dbTriggers}` WHERE action = '{$templateaction}' AND template = '{$id}' LIMIT 1";
         $tresult = mysql_query($tsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($tresult) >= 1)
@@ -229,10 +179,12 @@ elseif ($action == "edit")
         {
             echo $strOther;
         }
+
         // Set up required params, each template type needs an entry here TODO add the rest
         if ($template->type == 'user') $required = array('incidentid', 'userid');
         elseif ($template->type == 'incident') $required = array('incidentid', 'triggeruserid');
         else $required = $triggerarray[$trigaction->triggerid]['required'];
+
         if (!empty($required) AND $CONFIG['debug'])
         {
             debug_log("Variables required by email template {$template->id}: ".print_r($required, TRUE));
@@ -416,9 +368,9 @@ elseif ($action == "delete")
         exit;
     }
     // We only allow user templates to be deleted
-    $sql = "DELETE FROM `{$dbEmailTemplates}` WHERE id='$id' AND type='user' LIMIT 1";
+    $sql = "DELETE FROM `{$dbEmailTemplates}` WHERE id='{$id}' AND type='user' LIMIT 1";
     mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     header("Location: {$_SERVER['PHP_SELF']}?action=showform");
     exit;
 }
@@ -446,7 +398,7 @@ elseif ($action == "update")
     $id = cleanvar($_POST['id']);
     $type = cleanvar($_POST['type']);
 
-//     echo "<pre>".print_r($_POST,true)."</pre>";
+    // echo "<pre>".print_r($_POST,true)."</pre>";
 
     // User templates may not have _ (underscore) in their names, we replace with spaces
     // in contrast system templates must have _ (underscore) instead of spaces, so we do a replace

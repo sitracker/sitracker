@@ -32,6 +32,8 @@ $tresult = mysql_query($tsql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($tresult) >= 1)
 {
+    $minsinday = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
+    
     echo "<table align='center'>";
     while ($tag = mysql_fetch_object($tresult))
     {
@@ -52,7 +54,7 @@ if (mysql_num_rows($tresult) >= 1)
             echo "<td>".format_workday_minutes($sla->prob_determ_mins)."</td>";
             echo "<td>".format_workday_minutes($sla->action_plan_mins)."</td>";
             // 480 mins in a working day
-            echo "<td>".format_workday_minutes($sla->resolution_days * 480)."</td>";
+            echo "<td>".format_workday_minutes($sla->resolution_days * $minsinday)."</td>";
             echo "<td>".sprintf($strXDays, $sla->review_days)."</td>";
             if ($sla->timed == 'yes')
             {

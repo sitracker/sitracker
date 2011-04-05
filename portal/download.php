@@ -54,19 +54,19 @@ else
     $access = FALSE;
 }
 
-$file_fspath = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}{$fileid}-{$filename}";
+$file_fspath = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
 
 if ($incidentid == 0 OR empty($incidentid))
 {
-    $file_fspath = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}";
-    $file_fspath2 = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$fileid}-{$filename}";
-    $old_style = "{$CONFIG['attachment_fspath']}updates{$fsdelim}{$filename}";
+    $file_fspath = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$fileid}";
+    $file_fspath2 = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
+    $old_style = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$filename}";
 }
 else
 {
-    $file_fspath = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}{$fileid}-{$filename}";
-    $file_fspath2 = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}{$fileid}";
-    $old_style = "{$CONFIG['attachment_fspath']}{$incidentid}{$fsdelim}u{$updateid}{$fsdelim}{$filename}";
+    $file_fspath = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
+    $file_fspath2 = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$fileid}";
+    $old_style = "{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "u{$updateid}" . DIRECTORY_SEPARATOR . "{$filename}";
 }
 
 if (!file_exists($file_fspath) AND !file_exists($file_fspath2) AND !file_exists($old_style))

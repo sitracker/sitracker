@@ -62,7 +62,7 @@ else
         $sql .= "licence_quantity, l.name AS licence_type, expirydate, admincontact, ";
         $sql .= "c.forenames AS admincontactforenames, c.surname AS admincontactsurname, m.notes ";
         $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r ";
-        $sql .= "WHERE (m.site = s.id AND product = p.id AND reseller = r.id AND licence_type = l.id AND admincontact = c.id) AND ";
+        $sql .= "WHERE (m.site = s.id AND product = p.id AND reseller = r.id AND if(licence_type = 0, 4, ifnull(licence_type, 4))=l.id  AND admincontact = c.id) AND ";
         $sql .= "expirydate <= {$max_expiry} AND expirydate >= {$now} ORDER BY expirydate ASC";
 
         $result = mysql_query($sql);

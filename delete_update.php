@@ -13,7 +13,6 @@
 $permission = 42; // Delete Incident Updates
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
-$fsdelim = (strstr($_SERVER['SCRIPT_FILENAME'],"/")) ? "/" : "\\";
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -26,7 +25,7 @@ $tempid = clean_int($_REQUEST['tempid']);
 if (empty($updateid)) trigger_error("!Error: Update ID was not set, not deleting!: {$updateid}", E_USER_WARNING);
 
 $deleted_files = TRUE;
-$path = $CONFIG['attachment_fspath'].'updates'.$fsdelim;
+$path = $CONFIG['attachment_fspath'].'updates' . DIRECTORY_SEPARATOR;
 
 $sql = "SELECT linkcolref, filename FROM `{$dbLinks}` as l, `{$dbFiles}` as f ";
 $sql .= "WHERE origcolref = '{$updateid}' ";
@@ -37,7 +36,7 @@ if ($result = @mysql_query($sql))
 {
     while ($row = mysql_fetch_object($result))
     {
-        $file = $path.$row->linkcolref."-".$row->filename;
+        $file = $path.$row->linkcolref . "-" . $row->filename;
         if (file_exists($file))
         {
             $del = unlink($file);

@@ -220,8 +220,8 @@ else
         echo "selected='selected' ";
     }
 
-    echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;show=active";
-    echo "&amp;sort=$sort&amp;order=$order'>{$strActive}</option>\n";
+    echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;show=active";
+    echo "&amp;sort={$sort}&amp;order={$order}'>{$strActive}</option>\n";
     echo "<option ";
     if ($show == 'completed')
     {
@@ -229,7 +229,7 @@ else
     }
 
     echo "value='{$_SERVER['PHP_SELF']}?user=$user&amp;show=completed";
-    echo "&amp;sort=$sort&amp;order=$order'>{$strCompleted}</option>\n";
+    echo "&amp;sort={$sort}&amp;order={$order}'>{$strCompleted}</option>\n";
 
     echo "</select>\n";
     echo "</form><br />";
@@ -237,7 +237,7 @@ else
     $sql = "SELECT * FROM `{$dbTasks}` WHERE ";
     if ($user != 'all')
     {
-        $sql .= "owner='$user' AND ";
+        $sql .= "owner='{$user}' AND ";
     }
 
     if ($show == '' OR $show == 'active' )
@@ -469,7 +469,7 @@ if (mysql_num_rows($result) >=1 )
             echo ">";
             if ($startdate > 0)
             {
-                echo ldate($CONFIG['dateformat_date'],$startdate);
+                echo ldate($CONFIG['dateformat_date'], $startdate);
             }
 
             echo "</td>";
@@ -482,7 +482,7 @@ if (mysql_num_rows($result) >=1 )
             echo ">";
             if ($duedate > 0)
             {
-                echo ldate($CONFIG['dateformat_date'],$duedate);
+                echo ldate($CONFIG['dateformat_date'], $duedate);
             }
             echo "</td>";
         }
@@ -499,7 +499,7 @@ if (mysql_num_rows($result) >=1 )
                 echo "addActivity(act);";
                 echo "\n//]]>\n</script>";
 
-                echo "$strNotCompleted</td>";
+                echo "{$strNotCompleted}</td>";
                 $duration = $now - $startdate;
 
                 //echo "<td id='duration{$task->id}'><em><div id='duration{$task->id}'>".format_seconds($duration)."</div></em></td>";
@@ -587,15 +587,6 @@ if (mysql_num_rows($result) >=1 )
 
     echo "</table>\n";
     echo "</form>";
-
-    if ($mode == 'incident')
-    {
-        echo "<script type='text/javascript'>\n//<![CDATA[\ncountUp();\n//]]>\n</script>";  //force a quick udate
-    }
-
-    //echo "<pre>";
-    //print_r($billing);
-    //echo "</pre>";
 
     if ($mode == 'incident')
     {

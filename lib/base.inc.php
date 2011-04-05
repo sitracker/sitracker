@@ -106,6 +106,13 @@ define ('SITE_HAS_BILLABLE_CONTRACT', 2);
 define ("REASON_POSSIBLE_NEW_INCIDENT", 1);
 define ("REASON_INCIDENT_CLOSED", 2);
 
+// Licence
+define ("LICENCE_PER_USER", 1);
+define ("LICENCE_PER_WORKSTATION", 2);
+define ("LICENCE_PER_SERVER", 3);
+define ("LICENCE_SITE", 4);
+define ("LICENCE_EVALUATION", 5);
+
 /**
  * Begin global variable definitions
  **/
@@ -117,8 +124,6 @@ $application_revision = 'svn';
 
 // The number of errors that have occurred
 $siterrors = 0;
-
-$fsdelim = DIRECTORY_SEPARATOR;
 
 // Time settings
 $now = time();
@@ -196,9 +201,9 @@ function stripslashes_array($data)
  * @param bool $mysqlescape whether to mysql_escape()
  * @param array $disallowedchars array of chars to remove
  * @param array $replacechars array of chars to replace as $orig => $replace
-  * @param bool $intval whether to get the integer value of the variable
-  * @todo TODO this function could use a bit of tidy-up
-  * @returns variable
+ * @param bool $intval whether to get the integer value of the variable
+ * @todo TODO this function could use a bit of tidy-up
+ * @returns variable
  */
 function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
                 $mysqlescape = TRUE, $disallowedchars = array(),

@@ -53,7 +53,7 @@ while ($site = mysql_fetch_object($result))
     $msql .= "c.surname AS admincontactssurname, m.notes AS maintnotes, m.allcontactssupported ";
     $msql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r ";
     $msql .= "WHERE m.product=p.id ";
-    $msql .= "AND m.reseller=r.id AND if(licence_type = 0, 6, ifnull(licence_type, 6)) = l.id AND admincontact = c.id ";
+    $msql .= "AND m.reseller=r.id AND if(licence_type = 0, 4, ifnull(licence_type, 4)) = l.id AND admincontact = c.id ";
     $msql .= "AND m.site = '{$site->id}' ";
     $msql .= "AND m.term!='yes' ";
     $msql .= "AND m.expirydate > '$now' ";     $msql .= "ORDER BY expirydate DESC";

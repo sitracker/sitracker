@@ -96,19 +96,17 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) == 0)
 {
     // Incident doesn't exist
-    // FIXME better error message - CJ 21/3-10
-    html_redirect("main.php", FALSE, $strNotApplicableAbbrev);
-
+    html_redirect("main.php", FALSE, $strInvalidIncidentID);
 }
 else
 {
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
-    echo "<div id='detailsummary'>";
+    echo "<div id='detailsummary'>\n";
 
-    // Two column table FIXME can be divs
-    echo "<table>";
-    echo "<tr><td>";
+    echo "<div id='row'>\n";
+    echo "<div id='left'>\n";
+    
     // First column: Contact Details
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
@@ -180,9 +178,10 @@ else
 
     $tags = list_tags($id, TAG_INCIDENT, TRUE);
     if (!empty($tags)) echo "{$tags}\n";
-    echo "</td>";
-
-    echo "<td>";
+    
+    echo "</div>\n";
+    echo "<div id='right'>";
+    
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
     {
@@ -195,10 +194,10 @@ else
         }
         echo "<br />";
     }
-    if ($software_name!='' OR $incident->productversion != '' OR $incident->productservicepacks!='')
+    if ($software_name != '' OR $incident->productversion != '' OR $incident->productservicepacks != '')
     {
         echo $software_name;
-        if ($incident->productversion != '' OR $incident->productservicepacks!='')
+        if ($incident->productversion != '' OR $incident->productservicepacks != '')
         {
             echo " (".$incident->productversion;
             if ($incident->productservicepacks!='') echo $incident->productservicepacks;
@@ -207,7 +206,7 @@ else
         echo "<br />\n";
     }
     echo priority_icon($incident->priority)." ".priority_name($incident->priority);
-    if ($product_name!='')
+    if ($product_name != '')
     {
         echo " <a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContractDetails}' target='top.opener'>";
         echo "{$product_name}";
@@ -291,7 +290,7 @@ else
         // FIXME for 12/24H clock choice
         if ($totalduration > 0)
         {
-            echo ("{$strDuration}: " . format_seconds($totalduration*60) . "<br />\n");
+            echo ("{$strDuration}: " . format_seconds($totalduration * 60) . "<br />\n");
         }
     }
 
@@ -306,7 +305,7 @@ else
             }
             elseif ($slaremain < 0)
             {
-                echo " ".sprintf($strSLAXLate, $targettype, format_workday_minutes((0-$slaremain)));
+                echo " ".sprintf($strSLAXLate, $targettype, format_workday_minutes((0 - $slaremain)));
             }
             else
             {
@@ -318,7 +317,7 @@ else
         {
             if ($reviewremain > -86400)
             {
-                echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain*-1) * 60));
+                echo "<br />".icon('review', 16)." ".sprintf($strReviewDueAgo, format_seconds(($reviewremain * -1) * 60));
             }
             else
             {
@@ -354,16 +353,17 @@ else
         }
     }
 
-    echo "</td>";
-    echo "</tr>\n";
-
+    echo "</div>\n";
+    echo "</div>\n";
+        
     // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($rresult) >= 1)
     {
-        echo "<tr><td colspan='2'>{$strRelations}: ";
+        echo "<div id='relationshiprow'>\n";
+        echo "<div id='relationshipleft'>\n{$strRelations}: ";
         while ($related = mysql_fetch_object($rresult))
         {
             if ($related->relatedid == $id)
@@ -382,15 +382,15 @@ else
             }
             echo " &nbsp;";
         }
-        echo "</td></tr>";
+        echo "</div>\n";
+        
+        echo "</div>\n";
 
     }
 
-    echo "</table>";
-
     plugin_do('incident_details');
 
-    echo "</div>\n\n";
+    echo "</div>\n";
 
 
     $offset = clean_int($_REQUEST['offset']);
@@ -617,8 +617,7 @@ else
         $updateheadertext = str_replace('updateuser', $updateuser, $updateheadertext);
         $updateheadertext = str_replace('updateuser', $updateuser, $updateheadertext);
 
-        if ($update->type == 'reviewmet' AND
-            ($update->sla == 'opened' OR $update->userid == 0))
+        if ($update->type == 'reviewmet' AND ($update->sla == 'opened' OR $update->userid == 0))
         {
             $updateheadertext = str_replace('updatereview', $strPeriodStarted, $updateheadertext);
         }
@@ -637,15 +636,15 @@ else
         // Print a header row for the update
         if ($updatebody == '' AND $update->customervisibility == 'show')
         {
-            echo "<div class='detailinfo'>";
+            echo "<div id='detailinfo-{$update->id}' class='detailinfo'>";
         }
         elseif ($updatebody == '' AND $update->customervisibility != 'show')
         {
-            echo "<div class='detailinfohidden'>";
+            echo "<div id='detailinfohidden-{$update->id}' class='detailinfohidden'>";
         }
         elseif ($updatebody != '' AND $update->customervisibility == 'show')
         {
-            echo "<div class='detailhead'>";
+            echo "<div id='detailhead-{$update->id}' class='detailhead'>";
         }
         else
         {
@@ -795,33 +794,27 @@ else
         {
             if ($update->customervisibility == 'show')
             {
-                echo "<div class='detailentry'>\n";
+                echo "<div id='detailentry-{$update->id}' class='detailentry'>\n";
             }
             else
             {
-                echo "<div class='detailentryhidden'>\n";
+                echo "<div id='detailentryhidden-{$update->id}' class='detailentryhidden'>\n";
             }
 
             if ($updatebodylen > 5)
             {
-                /*
-                 * @modifier: Rick Bonkestoter
-                 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-                 */
+                // Some webmail systems use the wrong encodeing (\r\n) instead of (\n\r) (Rick Bonkestoter)
                 echo str_replace('\r\n', "<br />", nl2br($updatebody));
             }
             else
             {
-                /*
-                 * @modifier: Rick Bonkestoter
-                 * @desc: some webmail systems use the wrong encodeing (\r\n) instead of (\n\r)
-                 */
+                // Some webmail systems use the wrong encodeing (\r\n) instead of (\n\r) (Rick Bonkestoter)
                 echo str_replace('\r\n', "<br />", nl2br($updatebody));
             }
 
             if (!empty($update->nextaction) OR $update->duration != 0)
             {
-                echo "<div class='detailhead'>";
+                echo "<div id='detailhead-{$update->id}' class='detailhead'>";
 
                 if ($update->duration != 0)
                 {
@@ -854,10 +847,11 @@ else
     {
         echo log_nav_bar();
     }
-    if (!$_GET['win'])
-    {
-        echo "</div>";
-    }
+    
+//    if (!$_GET['win'])
+//    {
+//        echo "</div><!-- AA -->";
+//    }
 
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }
