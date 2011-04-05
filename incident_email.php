@@ -28,7 +28,6 @@ if (empty($draftid)) $draftid = -1;
 
 $title = $strEmail;
 
-
 if (empty($step))
 {
     $action = $_REQUEST['action'];
@@ -72,7 +71,6 @@ if (empty($step))
 switch ($step)
 {
     case 1:
-        // show form 1
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
         echo "<h2>".icon('email', 32)." {$strSendEmail}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' name='updateform' method='post'>";
@@ -203,7 +201,6 @@ switch ($step)
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
         break;
     case 2:
-        // show form 2
         if ($draftid != -1)
         {
             $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
@@ -464,7 +461,7 @@ switch ($step)
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     $fileid = mysql_insert_id();
 
-                    $filename = "{$CONFIG['attachment_fspath']}{$id}{$fsdelim}{$fileid}-{$name}";
+                    $filename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}-{$name}";
 
                     $mv = rename($file['tmp_name'], $filename);
                     if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
@@ -723,7 +720,7 @@ switch ($step)
                 {
                     if (window.confirm('The email was sent successfully, click OK to close this window'))
                     {
-                        window.opener.location='incident_details.php?id=<?php echo $id; ?>';
+                        window.opener.location = 'incident_details.php?id=<?php echo $id; ?>';
                         window.close();
                     }
                 }

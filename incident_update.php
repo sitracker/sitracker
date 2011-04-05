@@ -31,8 +31,8 @@ if (empty($draftid)) $draftid = -1;
 $title = $strUpdate;
 
 /**
-    * Update page
-*/
+ * Update page
+ */
 function display_update_page($draftid=-1)
 {
     global $id;
@@ -58,138 +58,6 @@ function display_update_page($draftid=-1)
 
     ?>
     <script type="text/javascript">
-    <!--
-    function deleteOption(object) {
-        var Current = object.updatetype.selectedIndex;
-        object.updatetype.options[Current] = null;
-    }
-
-    function slaChange(sla, object)
-    {
-    	if (sla == 'none')
-        {
-        	notarget(object);
-        }
-        else if (sla == 'initialresponse')
-        {
-        	initialresponse(object);
-        }
-        else if (sla == 'probdef')
-        {
-            probdef(object);
-        }
-        else if (sla == 'actionplan')
-        {
-        	actionplan(object);
-        }
-        else if (sla == 'solution')
-        {
-        	reprioritise(object);
-        }
-    }
-
-    function notarget(object)
-    {
-        // remove last option
-        var length = object.updatetype.length;
-        if (length > 6)
-        {
-            object.updatetype.selectedIndex=6;
-            var Current = object.updatetype.selectedIndex;
-            object.updatetype.options[Current] = null;
-        }
-        object.priority.value=object.storepriority.value;
-        //object.priority.disabled=true;
-        object.priority.disabled=false;
-        object.updatetype.selectedIndex=0;
-        object.updatetype.disabled=false;
-    }
-
-
-    function initialresponse(object)
-    {
-        // remove last option
-        var length = object.updatetype.length;
-        if (length > 6)
-        {
-            object.updatetype.selectedIndex=6;
-            var Current = object.updatetype.selectedIndex;
-            object.updatetype.options[Current] = null;
-        }
-        object.priority.value=object.storepriority.value;
-        object.priority.disabled=true;
-        object.updatetype.selectedIndex=0;
-        object.updatetype.disabled=false;
-    }
-
-
-    function actionplan(object)
-    {
-        // remove last option
-        var length = object.updatetype.length;
-        if (length > 6)
-        {
-            object.updatetype.selectedIndex=6;
-            var Current = object.updatetype.selectedIndex;
-            object.updatetype.options[Current] = null;
-        }
-        var defaultSelected = true;
-        var selected = true;
-        var optionName = new Option('Action Plan', 'actionplan', defaultSelected, selected)
-        var length = object.updatetype.length;
-        object.updatetype.options[length] = optionName;
-        object.priority.value=object.storepriority.value;
-        object.priority.disabled=true;
-        object.updatetype.disabled=true;
-    }
-
-    function reprioritise(object)
-    {
-        // remove last option
-        var length = object.updatetype.length;
-        if (length > 6)
-        {
-            object.updatetype.selectedIndex=6;
-            var Current = object.updatetype.selectedIndex;
-            object.updatetype.options[Current] = null;
-        }
-        // add new option
-        var defaultSelected = true;
-        var selected = true;
-        var optionName = new Option('Reprioritise', 'solution', defaultSelected, selected)
-        var length = object.updatetype.length;
-        object.updatetype.options[length] = optionName;
-        object.priority.disabled=false;
-        document.updateform.priority.disabled=false;
-        object.updatetype.disabled=true;
-    }
-
-    function probdef(object)
-    {
-        // remove last option
-        var length = object.updatetype.length;
-        if (length > 6)
-        {
-            object.updatetype.selectedIndex=6;
-            var Current = object.updatetype.selectedIndex;
-            object.updatetype.options[Current] = null;
-        }
-
-        var defaultSelected = true;
-        var selected = true;
-        var optionName = new Option('Problem Definition', 'probdef', defaultSelected, selected)
-        var length = object.updatetype.length;
-        object.updatetype.options[length] = optionName;
-        object.priority.value=object.storepriority.value;
-        object.priority.disabled=true;
-        object.updatetype.disabled=true;
-    }
-
-    function replaceOption(object) {
-        var Current = object.updatetype.selectedIndex;
-        object.updatetype.options[Current].text = object.currentText.value;
-        object.updatetype.options[Current].value = object.currentText.value;
-    }
 
     new PeriodicalExecuter(function(pe) {
         setInterval("save_draft('"+<?php echo $id; ?>+"', 'update')")
@@ -280,7 +148,7 @@ function display_update_page($draftid=-1)
     }
 
 
-    echo "<select name='target' id='target' class='dropdown' onchange=\"slaChange($('target').value, this.form)\">\n";
+    echo "<select name='target' id='target' class='dropdown' onchange=\"incident_update_sla_change($('target').value)\">\n";
     echo "<option value='none' {$targetNone}>{$GLOBALS['strNone']}</option>\n";
     switch ($target->type)
     {
@@ -430,10 +298,10 @@ function display_update_page($draftid=-1)
     echo "</tr>";
     echo "</table>";
     echo "<p class='center'>";
-    echo "<input type='hidden' name='action' value='update' />";
+    echo "<input type='hidden' name='action' id='action' value='update' />";
 
     echo "<input type='hidden' name='draftid' id='draftid' value='{$draftid}' />";
-    echo "<input type='hidden' name='storepriority' value='".incident_priority($id)."' />";
+    echo "<input type='hidden' name='storepriority' id='storepriority' value='".incident_priority($id)."' />";
     echo "<input type='submit' name='submit' value='{$GLOBALS['strUpdateIncident']}' /></p>";
     echo "</form>";
 }
@@ -611,6 +479,7 @@ else
     ## if ($target!='') $bodytext = "Target: $target\n".$bodytext;
 
     // Check the updatetype field, if it's blank look at the target
+    
     if (empty($updatetype))
     {
         switch ($target)
@@ -641,9 +510,9 @@ else
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, customervisibility, nextaction) ";
         $sql .= "VALUES ('{$id}', '{$sit[2]}', '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', 'show' , '{$nextaction}')";
     }
-    // invisible update
     else
     {
+        // invisible update
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, nextaction) ";
         $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', '{$nextaction}')";
     }
@@ -729,15 +598,15 @@ else
             break;
         case 'probdef':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']})";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']}')";
             break;
         case 'actionplan':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']})";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']}')";
             break;
         case 'solution':
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']})";
+            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']}')";
             break;
     }
 

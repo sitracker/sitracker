@@ -35,7 +35,7 @@ $rid = clean_int($_REQUEST['rid']);
 
 switch ($action)
 {
-    case 'new':
+    case 'add':
         // First check that the incident we're trying to relate to actually exists
         $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE id = {$relatedid}";
         $result = mysql_query($sql);

@@ -1599,7 +1599,6 @@ function get_incident_billable_breakdown_array($incidentid)
 
     if (!empty($billable))
     {
-
         foreach ($billable AS $engineer)
         {
             if (is_array($engineer) AND empty($engineer['refunds']))

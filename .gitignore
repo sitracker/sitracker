@@ -1,4 +1,4 @@
-# Excllude local config file
+# Exclude local config file
 config.inc.php
 
 # Ignore temp files 
@@ -9,3 +9,6 @@ config.inc.php
 .buildpath
 .settings
 .svn
+
+# Directories created by dolphin
+.directory

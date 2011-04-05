@@ -68,7 +68,7 @@ $CFGCAT['sla'] = array('default_service_level',
 $CFGCAT['billing'] = array('billing_matrix_multipliers',
                             'billing_default_multiplier');
 
-$CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar','font_file','tag_icons');
+$CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar', 'font_file', 'tag_icons', 'default_chart');
 
 $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv', 'ftp_path');
 
@@ -77,7 +77,8 @@ $CFGCAT['portal'] = array('portal',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
-                          'portal_interface_style');
+                          'portal_interface_style',
+                          'portal_iconset');
 
 $CFGCAT['holidays'] = array('holidays_enabled',
                             'default_entitlement');
@@ -534,6 +535,12 @@ $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
 $CFGVAR['portal_interface_style']['title'] = "Portal interface style";
 $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
 
+$CFGVAR['portal_iconset']['title'] = 'Portal Icon set';
+$CFGVAR['portal_iconset']['help'] = 'The icon set used in the portal';
+$CFGVAR['portal_iconset']['type'] = 'select';
+$CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
+
+
 $CFGVAR['portal_kb_enabled']['help'] = "Public puts a link on the login page, Private makes it available on login for contacts";
 $CFGVAR['portal_kb_enabled']['options'] = 'Public|Private|Disabled';
 $CFGVAR['portal_kb_enabled']['title'] = "Portal/Public Knowledge base";
@@ -592,6 +599,10 @@ $CFGVAR['support_manager']['type'] = 'userselect';
 $CFGVAR['tag_icons']['title'] = "Tag Icons";
 $CFGVAR['tag_icons']['help'] = "You can specify icons to display next to certain tags, enter tag/icon associations one per line, format: tag=>icon";
 $CFGVAR['tag_icons']['type'] = '2darray';
+
+$CFGVAR['default_chart']['title'] = "Default Chart";
+$CFGVAR['default_chart']['help'] = "The dedfault charting library to use.";
+$CFGVAR['default_chart']['type'] = 'chartselector';
 
 $CFGVAR['tasks_enabled']['title'] = "Enable Tasks";
 $CFGVAR['tasks_enabled']['type'] = 'checkbox';

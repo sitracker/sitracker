@@ -111,26 +111,25 @@ if ($incidentcontact == $_SESSION['contactid'])
         //upload file, here because we need updateid
         if ($_FILES['attachment']['name'] != '')
         {
-            // try to figure out what delimeter is being used (for windows or unix)...
-            //.... // $delim = (strstr($filesarray[$c],"/")) ? "/" : "\\";
-            $delim = (strstr($_FILES['attachment']['tmp_name'],"/")) ? "/" : "\\";
-
             // make incident attachment dir if it doesn't exist
             $umask = umask(0000);
-            if (!file_exists("{$CONFIG['attachment_fspath']}{$id}{$fsdelim}"))
+            
+            $directory = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR;
+            
+            if (!file_exists($directory))
             {
-                $mk = @mkdir("{$CONFIG['attachment_fspath']}{$id}{$fsdelim}", 0770, TRUE);
+                $mk = @mkdir($directory, 0770, TRUE);
                 if (!$mk)
                 {
                     $errors++;
                     $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    trigger_error("Failed creating incident attachment directory: {$CONFIG['attachment_fspath']}{$id}{$fsdelim}", E_USER_WARNING);
+                    trigger_error("Failed creating incident attachment directory: {$directory}", E_USER_WARNING);
                 }
             }
             umask($umask);
-            $newfilename = "{$CONFIG['attachment_fspath']}{$id}{$fsdelim}{$fileid}-{$_FILES['attachment']['name']}";
+            $newfilename = "{$directory}{$fileid}-{$_FILES['attachment']['name']}";
 
             // Move the uploaded file from the temp directory into the incidents attachment dir
             $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
@@ -170,7 +169,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 
         //set incident back to active
         $id = clean_int($_REQUEST['id']);
-        $sql = "UPDATE `{$dbIncidents}` SET status=1, lastupdated='$now' WHERE id='{$id}'";
+        $sql = "UPDATE `{$dbIncidents}` SET status=1, lastupdated='{$now}' WHERE id='{$id}'";
         mysql_query($sql);
         if (mysql_error())
         {
@@ -190,7 +189,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 }
 else
 {
-    echo "<p class='warning'>$strNoPermission.</p>";
+    echo "<p class='warning'>{$strNoPermission}.</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     exit;
 }

@@ -47,6 +47,9 @@ echo colheader('info', $strInfo, $sort, $order, $filter);
 echo "</tr>";
 // Display the Support Incidents Themselves
 $shade = 0;
+
+$number_of_slas = number_of_slas();
+
 while ($incidents = mysql_fetch_object($result))
 {
     // calculate time to next action string
@@ -118,7 +121,7 @@ while ($incidents = mysql_fetch_object($result))
     $slresult = mysql_query($slsql);
     if (mysql_error()) trigger_error("mysql query error ".mysql_error(), E_USER_WARNING);
     $servicelevel = mysql_fetch_object($slresult);
-    if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ($slsql)", E_USER_WARNING);
+    if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ({$slsql})", E_USER_WARNING);
 
     // Get Last Update
     list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incidents->id);
@@ -164,7 +167,7 @@ while ($incidents = mysql_fetch_object($result))
 
     // Remove Tags from update Body
     $update_body = parse_updatebody($update_body);
-    $update_user = user_realname($update_userid,TRUE);
+    $update_user = user_realname($update_userid, TRUE);
 
     // ======= Row Colors / Shading =======
     // Define Row Shading lowest to highest priority so that unimportant colors are overwritten by important ones
@@ -233,7 +236,9 @@ while ($incidents = mysql_fetch_object($result))
     if ($externalid != '') echo "<br />{$externalid}";
     echo "</td>";
     echo "<td>";
+
     if (!empty($incidents->softwareid)) echo software_name($incidents->softwareid)."<br />";
+
     if (count(open_activities_for_incident($incidents->id)) > 0)
     {
         echo icon('timer', 16, $strOpenActivities).' ';
@@ -244,8 +249,6 @@ while ($incidents = mysql_fetch_object($result))
         echo icon('draft', 16, $strDraftsExist).' ';
     }
 
-        $windowname = "incident{$incidents->id}";
-    echo "<a href=\"javascript:incident_details_window('{$incidents->id}','{$windowname}')\" class='info'>";
     if (trim($incidents->title) != '')
     {
         $linktext = ($incidents->title);
@@ -261,11 +264,11 @@ while ($incidents = mysql_fetch_object($result))
     }
     else
     {
-        $update_currentownername = user_realname($update_currentowner,TRUE);
+        $update_currentownername = user_realname($update_currentowner, TRUE);
         $update_headertext = $updatetypes[$update_type]['text'];
-        $update_headertext = str_replace('currentowner', $update_currentownername,$update_headertext);
+        $update_headertext = str_replace('currentowner', $update_currentownername, $update_headertext);
         $update_headertext = str_replace('updateuser', $update_user, $update_headertext);
-        $tooltip = "{$update_headertext} on ".date($CONFIG['dateformat_datetime'],$update_timestamp);
+        $tooltip = "{$update_headertext} on ".date($CONFIG['dateformat_datetime'], $update_timestamp);
     }
     echo html_incident_popup_link($incidents->id, $linktext, $tooltip);
     echo "</td>";
@@ -276,16 +279,14 @@ while ($incidents = mysql_fetch_object($result))
     echo "{$incidents->site} {$postsitetext} </td>";
 
     echo "<td align='center'>";
-    //FIXME functionise
-    $slsql = "SELECT COUNT(*) AS count FROM `{$dbServiceLevels}`";
-    $slresult = mysql_query($slsql);
-    $count_obj = mysql_fetch_object($slresult);
-    if ($count_obj->count != 4)
+
+    // Only display th eSLA name if more than one SLA defined   
+    if ($number_of_slas > 1)
     {
         // Service Level / Priority
         if (!empty($incidents->maintenanceid))
         {
-            echo $servicelevel->tag."<br />";
+            echo "{$servicelevel->tag}<br />";
         }
         elseif (!empty($incidents->servicelevel))
         {
@@ -395,11 +396,11 @@ while ($incidents = mysql_fetch_object($result))
         echo "<td align='center' class='review'>";
         if ($reviewremain > -86400)
         {
-            echo "".icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain * -1) * 60));
+            echo icon('review', 16)." ".sprintf($strReviewDueAgo ,format_seconds(($reviewremain * -1) * 60));
         }
         else
         {
-            echo "".icon('review', 16)." {$strReviewDueNow}";
+            echo icon('review', 16)." {$strReviewDueNow}";
         }
     }
     else
@@ -433,4 +434,5 @@ else
 }
 
 if ($CONFIG['debug']) echo "<!-- End of Support Incidents Table -->\n";
+
 ?>

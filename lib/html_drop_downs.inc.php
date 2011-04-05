@@ -128,7 +128,7 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbUserStatus}` ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select name='$name'>\n";
     if ($userdisable)
@@ -169,7 +169,7 @@ function userstatus_bardrop_down($name, $id)
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbUserStatus}` ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select id='userstatus_dropdown' name='$name' title='{$GLOBALS['strSetYourStatus']}' ";
     $html .= "onchange=\"set_user_status();\" onblur=\"hide_status_drop_down();\">";
@@ -212,7 +212,7 @@ function emailtemplate_drop_down($name, $id, $type)
 
     $sql  = "SELECT id, name, description FROM `{$dbEmailTemplates}` WHERE type='{$type}' ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select name=\"{$name}\">";
     if ($id == 0)
@@ -280,7 +280,7 @@ function escalation_path_drop_down($name, $id)
     $sql  = "SELECT id, name FROM `{$dbEscalationPaths}` ";
     $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $html = "<select name='{$name}' id='{$name}' >";
     $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
     while ($path = mysql_fetch_object($result))
@@ -343,7 +343,7 @@ function group_drop_down($name = '', $selected = '')
     {
         foreach ($grouparr AS $groupid => $groupname)
         {
-            $html .= "<option value='$groupid'";
+            $html .= "<option value='{$groupid}'";
             if ($groupid == $selected)
             {
                 $html .= " selected='selected'";
@@ -371,7 +371,7 @@ function product_drop_down($name, $id, $required = FALSE)
     // extract products
     $sql  = "SELECT id, name FROM `{$dbProducts}` ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}'";
     if ($required)
@@ -416,7 +416,7 @@ function skill_drop_down($name, $id)
     $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
     $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}' >";
 
@@ -464,7 +464,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
     $sql .= "AND productid = '$productid' ";
     $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $numrows = mysql_num_rows($result);
     if ($numrows > 0)
@@ -522,7 +522,7 @@ function vendor_drop_down($name, $id, $required = FALSE)
     global $dbVendors;
     $sql = "SELECT id, name FROM `{$dbVendors}` ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $html = "<select name='$name'";
     if ($required)
     {
@@ -562,7 +562,7 @@ function sitetype_drop_down($name, $id)
     global $dbSiteTypes;
     $sql = "SELECT typeid, typename FROM `{$dbSiteTypes}` ORDER BY typename ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $html .= "<select name='$name'>\n";
     if ($id == 0)
     {
@@ -580,52 +580,6 @@ function sitetype_drop_down($name, $id)
         $html .= "value='{$obj->typeid}'>{$obj->typename}</option>\n";
     }
     $html .= "</select>";
-    return $html;
-}
-
-
-/**
- * Returns the HTML for a drop down list of upported products for the given contact and with the
- * given name and with the given product selected
- * @author Ivan Lucas
- * @todo FIXME this should use the contract and not the contact
- */
-function supported_product_drop_down($name, $contactid, $productid)
-{
-    global $CONFIG, $dbSupportContacts, $dbMaintenance, $dbProducts, $strXIncidentsLeft;
-
-    $sql = "SELECT *, p.id AS productid, p.name AS productname FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
-    $sql .= "WHERE sc.maintenanceid = m.id AND m.product = p.id ";
-    $sql .= "AND sc.contactid='$contactid'";
-
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if ($CONFIG['debug']) $html .= "<!-- Original product {$productid}-->";
-    $html .= "<select name=\"$name\">\n";
-    if ($productid == 0)
-    {
-        $html .= "<option selected='selected' value='0'>No Contract - Not Product Related</option>\n";
-    }
-
-    if ($productid == -1)
-    {
-        $html .= "<option selected='selected' value='0'></option>\n";
-    }
-
-    while ($products = mysql_fetch_objecy($result))
-    {
-        $remainingstring = sprintf($strXIncidentsLeft, incidents_remaining($products->incidentpoolid));
-        $html .= "<option ";
-        if ($productid == $products->productid)
-        {
-            $html .= "selected='selected' ";
-        }
-        $html .= "value='{$products->productid}'>";
-        $html .= get_sla_name($products->servicelevel)." ".$products->productname.", Exp:".date($CONFIG['dateformat_shortdate'], $products->expirydate).", $remainingstring";
-        $html .= "</option>\n";
-    }
-    $html .= "</select>\n";
     return $html;
 }
 
@@ -936,7 +890,7 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
     }
     else
     {
-        $html .= "<input type='hidden' name='$name' value='0' />{$GLOBALS['strNoneAvailable']}";
+        $html .= "<input type='hidden' name='{$name}' value='0' />{$GLOBALS['strNoneAvailable']}";
     }
     return ($html);
 }
@@ -1249,6 +1203,29 @@ function billing_matrix_selector($id, $selected='')
     }
 
     return $html;
+}
+
+
+/**
+ * Generates a drop down of the available charting libraries
+ * @author Paul Heaney
+ */
+function chart_selector($selected)
+{
+    global $CONFIG;
+    
+    $html = "<select id='default_chart' name='default_chart'>";
+    
+    foreach ($CONFIG['available_charts'] AS $c)
+    {
+        $html .= "<option value='{$c}' ";
+        if ($selected == $c) $html .= "selected='selected'";
+        $html .= ">{$c}</option>";
+    }
+    
+    $html .= "</select>";
+    
+    return  $html;
 }
 
 ?>

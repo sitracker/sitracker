@@ -130,7 +130,7 @@ if ($action == "edit")
         echo "<td>".array_drop_down($incident_pools, 'incident_poolid', $maint->incident_quantity, '', TRUE, FALSE)."</td></tr>";
 
         echo "<tr><th>{$strProductOnly}:</th>";
-        echo "<td><input name='productonly' type='checkbox' value='yes' onclick='set_terminated();' ";
+        echo "<td><input id='productonly' name='productonly' type='checkbox' value='yes' onclick='set_terminated();' ";
         if ($maint->productonly == "yes") echo " checked";
         echo " /></td></tr>\n";
 

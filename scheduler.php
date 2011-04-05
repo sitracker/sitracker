@@ -28,7 +28,7 @@ $title = $strScheduler;
 switch ($_REQUEST['mode'])
 {
     case 'edit':
-        $sql = "SELECT * FROM `{$dbScheduler}` WHERE id = $id LIMIT 1";
+        $sql = "SELECT * FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
@@ -326,7 +326,7 @@ switch ($_REQUEST['mode'])
                                         $nextrunmonth = date('m') + 1;
                                     }
                                     $h = substr($schedule->date_time, 0, 2);
-                                    $nextruntime = gmmktime($h,0,0,$nextrunmonth,$schedule->date_offset);
+                                    $nextruntime = gmmktime($h, 0, 0, $nextrunmonth, $schedule->date_offset);
                                 }
                             }
                             if ($schedule->date_type = 'year')
@@ -346,7 +346,7 @@ switch ($_REQUEST['mode'])
                                         $nextrunyear = date('y') + 1;
                                     }
                                     $h = substr($schedule->date_time, 0, 2);
-                                    $nextruntime = gmmktime($h,0,0,1,$schedule->date_offset,$nextrunyear);
+                                    $nextruntime = gmmktime($h, 0, 0, 1, $schedule->date_offset, $nextrunyear);
                                 }
                             }
                         }
@@ -377,7 +377,7 @@ switch ($_REQUEST['mode'])
                                         $nextrunmonth = date('m') + 1;
                                     }
                                     $h = substr($schedule->date_time, 0, 2);
-                                    $nextruntime = gmmktime($h,0,0,$nextrunmonth,$schedule->date_offset);
+                                    $nextruntime = gmmktime($h, 0, 0, $nextrunmonth, $schedule->date_offset);
                                 }
                             }
                             if ($schedule->date_type = 'year')
@@ -397,7 +397,7 @@ switch ($_REQUEST['mode'])
                                         $nextrunyear = date('y') + 1;
                                     }
                                     $h = substr($schedule->date_time, 0, 2);
-                                    $nextruntime = gmmktime($h,0,0,1,$schedule->date_offset,$nextrunyear);
+                                    $nextruntime = gmmktime($h, 0, 0, 1, $schedule->date_offset, $nextrunyear);
                                 }
                             }
                         }
@@ -428,6 +428,7 @@ switch ($_REQUEST['mode'])
                 echo "<td class='critical'>{$strFailed}</td>";
                 echo "</tr></table>";
             }
+
             // Debug time issues
             // Temporary debugging output, doesn't need i18n
             if ($CONFIG['debug'])

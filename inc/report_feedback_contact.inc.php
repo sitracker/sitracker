@@ -24,15 +24,6 @@ $maxscore = $CONFIG['feedback_max_score'];
 $formid = $CONFIG['feedback_form'];
 $now = time();
 
-echo "<script type='text/javascript'>\n//<![CDATA[\n";
-echo "
-function incident_details_window(incidentid,win)
-{
-    URL = '../incident_details.php?id=' + incidentid;
-    window.open(URL, 'sit_popup', 'toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600');
-}
-";
-echo "\n//]]>\n</script>";
 echo "<div style='margin: 20px'>";
 echo "<h2><a href='{$CONFIG['application_webpath']}report_feedback.php'>{$strFeedback}</a> {$strScores}: {$strByContact}</h2>";
 echo feedback_between_dates();
@@ -43,7 +34,7 @@ $qresult = mysql_query($qsql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 while ($qrow = mysql_fetch_object($qresult))
 {
-    $q[$qrow->taborder]=$qrow;
+    $q[$qrow->taborder] = $qrow;
 }
 
 
@@ -82,7 +73,7 @@ if (!empty($enddate))
     }
 }
 
-if (!empty($id)) $msql .= "AND i.contact='$id' \n";
+if (!empty($id)) $msql .= "AND i.contact='{$id}' \n";
 else $msql .= "ORDER BY c.surname ASC, c.forenames ASC, i.contact ASC , i.id ASC \n";
 $mresult = mysql_query($msql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -100,32 +91,32 @@ if (mysql_num_rows($mresult) >= 1)
     debug_log("Feedback report sql: ".$msql, TRUE);
 
 
-    $firstrun=0;
+    $firstrun = 0;
     while ($mrow = mysql_fetch_object($mresult))
     {
         // Only print if we have a value ({$prevcontactid} / {$mrow->contactid})
-        if ($prevcontactid!=$mrow->contactid AND $firstrun!=0)
+        if ($prevcontactid != $mrow->contactid AND $firstrun != 0)
         {
-            $numones=count($storeone);
-            if ($numones>0)
+            $numones = count($storeone);
+            if ($numones > 0)
             {
-                for($c=1;$c<=$numones;$c++)
+                for($c = 1; $c <= $numones; $c++)
                 {
-                    if ($storeone[$c]>0) $qr=number_format($storeone[$c]/$storetwo[$c],2);
+                    if ($storeone[$c] > 0) $qr = number_format($storeone[$c] / $storetwo[$c], 2);
                     else $qr=0;
-                    if ($storeone[$c]>0) $qp=number_format((($qr -1) * (100 / ($maxscore -1))), 0);
-                    else $qp=0;
+                    if ($storeone[$c] > 0) $qp = number_format((($qr -1) * (100 / ($maxscore - 1))), 0);
+                    else $qp = 0;
                     $html .= "Q$c: {$q[$c]->question} {$qr} <strong>({$qp}%)</strong><br />";
-                    $gtotal+=$qr;
+                    $gtotal += $qr;
                 }
                 if ($c>0) $c--;
-                $total_average=number_format($gtotal/$c,2);
+                $total_average = number_format($gtotal / $c,2);
                 // $total_percent=number_format((($gtotal / ($maxscore * $c)) * 100), 0);
-                $total_percent=number_format((($total_average -1) * (100 / ($maxscore -1))), 0);
-                if ($total_percent < 0) $total_percent=0;
+                $total_percent = number_format((($total_average -1) * (100 / ($maxscore -1))), 0);
+                if ($total_percent < 0) $total_percent = 0;
 
                 $html .= "<p>{$strPositivity}: {$total_average} <strong>({$total_percent}%)</strong>, ".sprintf($strAfterXSurveys,$surveys)."</p>";
-                if ($surveys<>1) $html.='s';
+                if ($surveys<>1) $html .= 's';
                 $html .= "</p><br /><br />";
             }
             else $html = '';
@@ -148,8 +139,8 @@ if (mysql_num_rows($mresult) >= 1)
         $firstrun=1;
 
         // Loop through reports
-        $totalresult=0;
-        $numquestions=0;
+        $totalresult = 0;
+        $numquestions = 0;
         $surveys++;
         $html = "<h4 style='text-align: left;'><a href='../contact_details.php?id={$mrow->contactid}' title='Jump to Contact'>{$mrow->forenames} {$mrow->surname}</a>, <a href='../site_details.php?id={$mrow->siteid}&action=show' title='Jump to site'>{$mrow->sitename}</a></h4>";
         $csql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='text' ORDER BY id DESC";
@@ -174,8 +165,6 @@ if (mysql_num_rows($mresult) >= 1)
             {
                 $csql .= "AND i.closed >= '{$startdate}' ";
             }
-
-            //echo "DATES {$dates}";
         }
 
         if (!empty($enddate))
@@ -198,7 +187,7 @@ if (mysql_num_rows($mresult) >= 1)
         {
             if ($crow->result != '')
             {
-                $html.= "<p>{$crow->result}<br /><em><a href=\"javascript:incident_details_window(\'{$crow->incidentid}\',\'incident35393\')\">{$crow->incidentid}</a> {$crow->title}</em></p>";
+                $html.= "<p>{$crow->result}<br /><em><a href=\"javascript:incident_details_window(\'{$crow->incidentid}\','sit_popup', false)\">{$crow->incidentid}</a> {$crow->title}</em></p>";
             }
         }
 
@@ -225,8 +214,6 @@ if (mysql_num_rows($mresult) >= 1)
                 {
                     $sql .= "AND i.closed >= '{$startdate}' ";
                 }
-
-                //echo "DATES {$dates}";
             }
 
             if (!empty($enddate))
@@ -244,59 +231,57 @@ if (mysql_num_rows($mresult) >= 1)
             $sql .= "ORDER BY i.contact, i.id";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $numresults=0;
-            $cumul=0;
-            $percent=0;
-            $average=0;
-            $answercount=mysql_num_rows($result);
+            $numresults = 0;
+            $cumul = 0;
+            $percent = 0;
+            $average = 0;
+            $answercount = mysql_num_rows($result);
 
-            if ($answercount>0)
+            if ($answercount > 0)
             {
                 while ($row = mysql_fetch_object($result))
                 {
                     // Loop through the results
                     if (!empty($row->result))
                     {
-                        $cumul+=$row->result;
+                        $cumul += $row->result;
                         $numresults++;
-                        $storeone[$qrow->taborder]+=$row->result;
+                        $storeone[$qrow->taborder] += $row->result;
                         $storetwo[$qrow->taborder]++;
                         $storethree[$qrow->taborder]=$qrow->id;
                     }
                 }
             }
 
-            if ($numresults>0) $average=number_format(($cumul/$numresults), 2);
-            $percent =number_format((($average / $maxscore ) * 100), 0);
-            $totalresult+=$average;
+            if ($numresults > 0) $average = number_format(($cumul / $numresults), 2);
+            $percent = number_format((($average / $maxscore ) * 100), 0);
+            $totalresult += $average;
 
-            $qanswer[$qrow->taborder]+=$average;
-            $qavgavg=$qanswer[$qrow->taborder];
+            $qanswer[$qrow->taborder] += $average;
+            $qavgavg = $qanswer[$qrow->taborder];
         }
 
-        $prevcontactid=$mrow->contactid;
+        $prevcontactid = $mrow->contactid;
     }
     echo "<h2>{$strSummary}</h2><p>{$strShowPositivityGraph}:</p>";
 
-
-    $adjust=13;
-    $min=4;
-    for ($i = 0; $i <= 10; $i++) {
-      if ($countcontacts > 0) $weighted = number_format((($counter[$i] / $countcontacts) * 100), 0);
-      else $weighted = 0;
-      echo "<div style='background: #B";
-      echo dechex(floor($i*1.5));
-      echo "0; color: #FFF; float:left; width: ".($min + ($weighted * $adjust))."px;'>&nbsp;</div>&nbsp; ";
-      echo ($i*10);
-      if ($i < 10)
-      {
+    $adjust = 13;
+    $min = 4;
+    for ($i = 0; $i <= 10; $i++)
+    {
+        if ($countcontacts > 0) $weighted = number_format((($counter[$i] / $countcontacts) * 100), 0);
+        else $weighted = 0;
+        echo "<div style='background: #B";
+        echo dechex(floor($i*1.5));
+        echo "0; color: #FFF; float:left; width: ".($min + ($weighted * $adjust))."px;'>&nbsp;</div>&nbsp; ";
+        echo ($i * 10);
+        if ($i < 10)
+        {
             echo " - ";
             echo ($i*10) + 9;
-      }
-      echo "% ({$weighted}%)<br />";
+        }
+        echo "% ({$weighted}%)<br />";
     }
-
-
 }
 else
 {

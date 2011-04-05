@@ -654,4 +654,19 @@ function is_active_status($status, $states)
 }
 
 
+/**
+ * Returns the number of SLAs defined within SiT!
+ * @return int number of SLAs defined
+ * @author Paul Heaney
+ */
+function number_of_slas()
+{
+    global $dbServiceLevels;
+    $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    
+    return mysql_num_rows($result);
+}
+
 ?>

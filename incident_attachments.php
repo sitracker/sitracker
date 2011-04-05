@@ -67,12 +67,10 @@ if ($_FILES['attachment']['name'] != '')
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         $updateid = mysql_insert_id();
 
-        $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid
-                                    . $fsdelim;
+        $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
         // make incident attachment dir if it doesn't exist
-        $newfilename = $incident_attachment_fspath . $fileid .
-            "-".$_FILES['attachment']['name'];
+        $newfilename = $incident_attachment_fspath . $fileid . "-".$_FILES['attachment']['name'];
         $umask = umask(0000);
         $mk = TRUE;
         if (!file_exists($incident_attachment_fspath))
@@ -185,13 +183,13 @@ function encode_binary($string)
 /**
     * @author Ivan Lucas
 */
-function draw_file_row($file, $fsdelim, $incidentid, $path)
+function draw_file_row($file, $incidentid, $path)
 {
     global $CONFIG;
-    $filepathparts = explode($fsdelim, $file);
+    $filepathparts = explode(DIRECTORY_SEPARATOR, $file);
     $parts = count($filepathparts);
-    $filename = $filepathparts[$parts-1];
-    $filedir = $filepathparts[$parts-2];
+    $filename = $filepathparts[$parts - 1];
+    $filedir = $filepathparts[$parts - 2];
     $preview = ''; // reset the preview
     $filenameparts = explode("-", $filename);
     $newfilename = cleanvar($filenameparts[1]);
@@ -199,14 +197,12 @@ function draw_file_row($file, $fsdelim, $incidentid, $path)
     if ($filedir != $incidentid)
     {
         // files are in a subdirectory
-        //$url="attachments/$id/".substr($filesarray[$c],strrpos($directory,$delim)+1,strlen($filesarray[$c])-strlen(urlencode($filename)).urlencode(filename));
         $url = "{$CONFIG['attachment_webpath']}{$incidentid}/{$filedir}/".str_replace('+','%20',urlencode($filename));
     }
     else
     {
         // files are in the root of the incident attachment directory
-        // $url="attachments/".substr($filesarray[$c],strrpos($directory,$delim)+1,strlen($filesarray[$c])-strlen(urlencode($filename)).urlencode(filename));
-        $url="{$CONFIG['attachment_webpath']}{$incidentid}/".str_replace('+','%20',urlencode($filename));
+        $url = "{$CONFIG['attachment_webpath']}{$incidentid}/".str_replace('+','%20',urlencode($filename));
     }
     $filesize = filesize($file);
     $file_size = readable_file_size($filesize);
@@ -215,7 +211,7 @@ function draw_file_row($file, $fsdelim, $incidentid, $path)
 
     $updateid = str_replace("u", "", $filedir);
     $sql = "SELECT f.id FROM `{$GLOBALS['dbLinks']}`, `{$GLOBALS['dbFiles']}` AS f  ";
-    $sql .= "WHERE linktype = '5' AND origcolref='$updateid' ";
+    $sql .= "WHERE linktype = '5' AND origcolref='{$updateid}' ";
     $sql .= "AND f.id = linkcolref ";
     $result = mysql_query($sql);
     $fileobj = mysql_fetch_object($result);
@@ -238,9 +234,9 @@ function draw_file_row($file, $fsdelim, $incidentid, $path)
 
     $html = "<tr>";
     $html .= "<td align='right' width='5%'>";
-    $html .= "<a href=\"$url\"><img src='".getattachmenticon($filename)."' alt='Icon' title='{$filename} ({$file_size})' /></a>";
+    $html .= "<a href=\"{$url}\"><img src='".getattachmenticon($filename)."' alt='Icon' title='{$filename} ({$file_size})' /></a>";
     $html .= "&nbsp;</td>";
-    $html .= "<td width='30%'><a href='$url'";
+    $html .= "<td width='30%'><a href='{$url}'";
     if (mb_substr($mime_type, 0, 4) == 'text' AND $filesize < 512000)
     {
         // The file is text, extract some of the contents of the file into a string for a preview
@@ -253,8 +249,8 @@ function draw_file_row($file, $fsdelim, $incidentid, $path)
     }
     else $html .= ">$filename</a>";
     $html .= "</td>";
-    $html .= "<td width='20%'>$file_size</td>";
-    $html .= "<td width='20%'>$mime_type</td>";
+    $html .= "<td width='20%'>{$file_size}</td>";
+    $html .= "<td width='20%'>{$mime_type}</td>";
     $html .= "<td width='20%'>".ldate($CONFIG['dateformat_filedatetime'],filemtime($file))."</td>";
     //$html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
     $html .= "</tr>\n";
@@ -299,7 +295,7 @@ if (file_exists($incident_attachment_fspath))
             echo "<table>\n";
             foreach ($rfilearray AS $rfile)
             {
-                echo draw_file_row($rfile, $fsdelim, $incidentid, $incident_attachment_fspath);
+                echo draw_file_row($rfile, $incidentid, $incident_attachment_fspath);
             }
             echo "</table>\n";
             echo "</div>";
@@ -307,8 +303,8 @@ if (file_exists($incident_attachment_fspath))
 
         foreach ($dirarray AS $dir)
         {
-            $directory = mb_substr($dir,0,strrpos($dir,$fsdelim));
-            $dirname = mb_substr($dir,strrpos($dir,$fsdelim)+1,strlen($dir));
+            $directory = mb_substr($dir, 0, strrpos($dir, DIRECTORY_SEPARATOR));
+            $dirname = mb_substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, strlen($dir));
             if (is_number($dirname) &&
                 $dirname != $id &&
                 strlen($dirname) == 10)
@@ -342,10 +338,10 @@ if (file_exists($incident_attachment_fspath))
             {
                 echo $headhtml;  // print the directory header bar that we drew above
                 echo "<div class='detailentry'>\n";
-                if (in_array("{$dir}{$fsdelim}mail.eml", $tempfarray))
+                if (in_array("{$dir}" . DIRECTORY_SEPARATOR . "mail.eml", $tempfarray))
                 {
                     $updatelink = readlink($dir);
-                    $updateid = mb_substr($updatelink,strrpos($updatelink,$fsdelim)+1,strlen($updatelink));
+                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,strlen($updatelink));
                     echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#$updateid'>{$strJumpToEntryLog}</a></p>";
                 }
                 foreach ($tempfarray as $fvalue)
@@ -358,7 +354,7 @@ if (file_exists($incident_attachment_fspath))
                 echo "<table>\n";
                 foreach ($filearray AS $file)
                 {
-                    echo draw_file_row($file, $fsdelim, $incidentid, $dirname);
+                    echo draw_file_row($file, DIRECTORY_SEPARATOR, $incidentid, $dirname);
                 }
 
                 if (!empty($updatetext) AND

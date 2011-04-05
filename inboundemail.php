@@ -27,7 +27,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 else
 {
     global $CONFIG, $dbFiles, $dbUpdates, $dbTempIncoming, $dbIncidents, $now;
-    $fsdelim = DIRECTORY_SEPARATOR;
 }
 
 //hack as we have no session
@@ -184,7 +183,7 @@ if ($emails > 0)
         $sql .= "WHERE email = '{$from_email}'";
         if ($result = mysql_query($sql))
         {
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             $row = mysql_fetch_object($result);
             $contactid = $row->id;
         }
@@ -272,7 +271,7 @@ if ($emails > 0)
                 }
                 else
                 {
-                    $message = strip_tags(html_entity_decode($results['Data'],ENT_QUOTES, 'UTF-8'));
+                    $message = strip_tags(html_entity_decode($results['Data'], ENT_QUOTES, 'UTF-8'));
                 }
                 break;
 
@@ -306,16 +305,16 @@ if ($emails > 0)
         //process attachments
         if (!empty($incidentid) AND $incident_open)
         {
-            $fa_dir = $CONFIG['attachment_fspath'] . $incidentid . $fsdelim;
+            $fa_dir = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
         }
         else
         {
-            $fa_dir = $CONFIG['attachment_fspath'] . "updates{$fsdelim}";
+            $fa_dir = $CONFIG['attachment_fspath'] . "updates" . DIRECTORY_SEPARATOR;
         }
 
         if (!file_exists($fa_dir))
         {
-            if (!mkdir($fa_dir, 0775, TRUE)) trigger_error("Failed to create incident update attachment directory $fa_dir",E_USER_WARNING);
+            if (!mkdir($fa_dir, 0775, TRUE)) trigger_error("Failed to create incident update attachment directory $fa_dir", E_USER_WARNING);
         }
         $attachments = array();
         if (is_array($results['Attachments']) OR is_array($results['Related']))
@@ -347,7 +346,7 @@ if ($emails > 0)
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 $fileid = mysql_insert_id();
                 $attachments[] = array('filename' => $filename, 'fileid' => $fileid);
                 $filename = $fileid."-".$filename;
@@ -366,7 +365,7 @@ if ($emails > 0)
                 $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` (`linktype`, `origcolref`, `linkcolref`, `direction`, `userid`) ";
                 $sql .= "VALUES('5', '{$updateid}', '{$fileid}', 'left', '0') ";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             }
         }
 
@@ -429,7 +428,7 @@ if ($emails > 0)
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
             $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $updateid = mysql_insert_id();
 
             //new call TODO: We need to find a better solution here for letting plugins change the reason
@@ -558,7 +557,7 @@ if ($emails > 0)
                 $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
                 $sql .= "AND linktype = 5 ";
                 mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error() ,E_USER_WARNING);
+                if (mysql_error()) trigger_error(mysql_error() , E_USER_WARNING);
                 debug_log("Creating a link between $updateid and file {$att['fileid']}");
             }
         }

@@ -44,7 +44,7 @@ function incident_details_window(incidentid, win, rtn)
  */
 function wt_winpopup(url, mini)
 {
-    if (mini=='mini')
+    if (mini == 'mini')
     {
         window.open(url, "sit_minipopup", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
     }
@@ -71,18 +71,6 @@ function confirm_action(msg, del)
 
 
 /**
- * Open a popup window showing help
- * @author Ivan Lucas
- * @param int helpid. The help ID to display
- */
-function help_window(helpid)
-{
-    URL = application_webpath + "help.php?id=" + helpid;
-    window.open(URL, "help_window", "toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=500");
-}
-
-
-/**
  * @author Tom Gerrard
  * @param int id
  * @note Related to the calendar
@@ -90,17 +78,17 @@ function help_window(helpid)
 function appointment(id)
 {
 
-    if ($(id).style.visibility=='visible')
+    if ($(id).style.visibility == 'visible')
     {
-        $(id).style.visibility='hidden';
-        $(id).style.display='none';
+        $(id).style.visibility = 'hidden';
+        $(id).style.display = 'none';
     }
     else
     {
         var parent = $(id).ancestors();
         parent[0].makePositioned();
-        $(id).style.visibility='visible';
-        $(id).style.display='block';
+        $(id).style.visibility = 'visible';
+        $(id).style.display = 'block';
     }
 }
 
@@ -115,7 +103,7 @@ function appointment(id)
 function get_and_display(page, component, update)
 {
     // Do certain special things for dashlets
-    if (component.substr(0,3) == 'win')
+    if (component.substr(0, 3) == 'win')
     {
         // Get the ID for the refresh icon so we can replace it, store the original first
         var refreshicon = component.replace(/win/, "refresh");
@@ -145,7 +133,7 @@ function get_and_display(page, component, update)
                 if (refreshicon != null) $(refreshicon).src = origicon;
             },
             onLoaded: function(){
-            if (refreshicon != null) $(refreshicon).src = origicon;
+                if (refreshicon != null) $(refreshicon).src = origicon;
             }
         });
     }
@@ -169,7 +157,7 @@ function get_and_display(page, component, update)
             onLoaded: function() {
                 if (refreshicon != null) $(refreshicon).src = origicon;
             }
-       });
+        });
     }
 }
 
@@ -195,7 +183,7 @@ function ajax_save(page, component)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function deleteOption(object,index)
+function deleteOption(object, index)
 {
     object.options[index] = null;
 }
@@ -208,7 +196,7 @@ function deleteOption(object,index)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function addOption(object,text,value)
+function addOption(object, text, value)
 {
     var defaultSelected = true;
     var selected = true;
@@ -224,16 +212,16 @@ function addOption(object,text,value)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function copySelected(fromObject,toObject)
+function copySelected(fromObject, toObject)
 {
-    for (var i=0, l=fromObject.options.length;i < l;i++)
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
         if (fromObject.options[i].selected)
         {
-            addOption(toObject,fromObject.options[i].text,fromObject.options[i].value);
+            addOption(toObject,fromObject.options[i].text, fromObject.options[i].value);
         }
     }
-    for (var i=fromObject.options.length-1;i >-1;i-- )
+    for (var i = fromObject.options.length - 1; i > -1; i--)
     {
         if (fromObject.options[i].selected) deleteOption(fromObject,i);
     }
@@ -247,15 +235,15 @@ function copySelected(fromObject,toObject)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function copyAll(fromObject,toObject)
+function copyAll(fromObject, toObject)
 {
-    for (var i=0, l=fromObject.options.length;i < l;i++)
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
-        addOption(toObject,fromObject.options[i].text,fromObject.options[i].value);
+        addOption(toObject, fromObject.options[i].text, fromObject.options[i].value);
     }
-    for (var i=fromObject.options.length-1;i > -1;i--)
+    for (var i = fromObject.options.length - 1; i > -1; i--)
     {
-        deleteOption(fromObject,i);
+        deleteOption(fromObject, i);
     }
 }
 
@@ -265,10 +253,10 @@ function copyAll(fromObject,toObject)
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
  */
-function populateHidden(fromObject,toObject)
+function populateHidden(fromObject, toObject)
 {
     var output = '';
-    for (var i=0, l=fromObject.options.length;i < l;i++)
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
         output += escape(fromObject.name) + '=' + escape(fromObject.options[i].value) + '&';
     }
@@ -286,61 +274,8 @@ function checkAll(formid, checkstatus)
     var form = $(formid);
     checkboxes = form.getInputs('checkbox');
     checkboxes.each(function(e) { e.checked = checkstatus});
-
 }
 
-
-var MIN_ROWS = 3 ;
-var MAX_ROWS = 10 ;
-var MIN_COLS = 40 ;
-var MAX_COLS = 80 ;
-
-
-/**
- * Change the length of a text area
- * @author Unknown ???
- */
-function changeTextAreaLength( e )
-{
-    var txtLength = e.value.length;
-    var numRows = 0 ;
-    var arrNewLines = e.value.split("\n");
-
-    for(var i=0; i<=arrNewLines.length-1; i++)
-    {
-        numRows++;
-        if (arrNewLines[i].length > MAX_COLS-5)
-        {
-            numRows += Math.floor(arrNewLines[i].length/MAX_COLS)
-        }
-    }
-
-    if (txtLength == 0)
-    {
-        e.cols = MIN_COLS ;
-        e.rows = MIN_ROWS ;
-    } else
-    {
-        if (numRows <= 1)
-        {
-            e.cols = (txtLength % MAX_COLS) + 1 >= MIN_COLS ? ((txtLength % MAX_COLS) + 1) : MIN_COLS ;
-        }
-        else
-        {
-            e.cols = MAX_COLS ;
-            e.rows = numRows > MAX_ROWS ? MAX_ROWS : numRows ;
-        }
-    }
-}
-
-/**
- * @author Unknown ???
- */
-function resetTextAreaLength ( e )
-{
-    e.cols = MIN_COLS ;
-    e.rows = MIN_ROWS ;
-}
 
 /**
  * Return a random number
@@ -349,7 +284,7 @@ function resetTextAreaLength ( e )
  */
 function get_random()
 {
-    var ranNum = Math.floor(Math.random()*1000000000000);
+    var ranNum = Math.floor(Math.random() * 1000000000000);
     return ranNum;
 }
 
@@ -420,7 +355,7 @@ function addcontract_sltimed(servicelevel)
 /**
  * @author Paul Heaney
  */
-function addservice_showbilling(form)
+function newservice_showbilling(form)
 {
     /*var a = $('billtype');
     alert("A: "+a.value);*/
@@ -460,8 +395,7 @@ function hidecontexthelp(event)
     {
         element.firstDescendant().style.display = 'none';
     }
-    //element.addClassName('active');
-    //   alert(element);
+
     element.stopObserving('blur', hidecontexthelp);
     element.stopObserving('click', hidecontexthelp);
 }
@@ -480,7 +414,7 @@ function findPos(obj) {
 
         } while (obj = obj.offsetParent);
     }
-    return [curleft,curtop];
+    return [curleft, curtop];
 }
 
 
@@ -544,7 +478,7 @@ function contexthelp(elem, context, auth)
  */
 function jumpto()
 {
-    incident_details_window(document.jumptoincident.incident.value, 'incident'+document.jumptoincident.incident.value);
+    incident_details_window($('incident').value, 'incident'+$('incident').value);
 }
 
 
@@ -569,21 +503,15 @@ function close_window(incidentid)
     window.open(URL, "email_window", "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=700,height=600");
 }
 
-function help_window(helpid)
-{
-    URL = application_webpath + "help.php?id=" + helpid;
-    window.open(URL, "help_window", "toolbar=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=500");
-}
-
 // INL - switch tab, see php function draw_tabs_submit()
 function gotab(tab) {
-    document.actiontabs.action.value=tab;
+    document.actiontabs.action.value = tab;
     document.actiontabs.submit();
 }
 
 function close_page_redirect(url)
 {
-    window.opener.location=url;
+    window.opener.location = url;
     window.close();
 }
 
@@ -593,7 +521,7 @@ function close_page_redirect(url)
  */
 function doSelect(select, element)
 {
-    var includes = document.getElementById(element);
+    var includes = $(element);
     for(i = 0; i < includes.length; i++)
     {
         includes[i].selected = select;
@@ -607,7 +535,7 @@ function groupMemberSelect(group, clear)
         doSelect(false, 'include');
     }
 
-    var includes = document.getElementById('include');
+    var includes = $('include');
     $a = $(group);
     for(i = 0; i < includes.length; i++)
     {
@@ -660,7 +588,6 @@ function kbSectionCollapse()
         }
         else
         {
-            //$(section).hide();
             if ($(section).display != 'none') Effect.BlindUp(section, { duration: 0.2 });
             $(span).innerHTML = '[+]';
         }
@@ -682,7 +609,7 @@ function insertBBCode(element, tag, endtag)
     {
         var start = $(element).selectionStart;
         var end = $(element).selectionEnd;
-        //             alert('start:' + start + '  end: ' + end + 'len: ' + $(element).textLength);
+
         if ($(element).readAttribute('readonly') != 'readonly')
         {
             $(element).value = $(element).value.substring(0, start) + tag + $(element).value.substring(start, end) + endtag + $(element).value.substring(end, $(element).textLength);
@@ -746,29 +673,15 @@ function toggleMenuPanel()
     }*/
 }
 
-function resizeTextarea(t)
-{
-    a = t.value.split('\n');
-    b = 1;
-    for (x = 0;x < a.length; x++)
-    {
-        if (a[x].length >= t.cols)
-        {
-            b += Math.floor(a[x].length/t.cols);
-        }
-    }
-    b += a.length;
-    if (b > t.rows) t.rows = b;
-}
 
 function enableBillingPeriod()
 {
-    if ($('timed').checked==true)
+    if ($('timed').checked == true)
     {
         $('engineerBillingPeriod').show();
         $('customerBillingPeriod').show();
         $('limit').show();
-        $('allow_reopen').checked=false;
+        $('allow_reopen').checked = false;
         $('allow_reopen').disable();
     }
     else
@@ -864,25 +777,25 @@ function toggle_multiselect(elem)
  */
 function trow(e)
 {
-  var e = e || window.event;
-  var t = e.target || e.srcElement;
-  // t is the element that was clicked on
+    var e = e || window.event;
+    var t = e.target || e.srcElement;
+    // t is the element that was clicked on
 
-  if ($(t).down(0) && $(t).down(0).type == 'checkbox')
-  {
-    if (t.down(0).disabled == false)
+    if ($(t).down(0) && $(t).down(0).type == 'checkbox')
     {
-        if (t.down(0).checked == true) t.down(0).checked = false;
-        else t.down(0).checked = true;
+        if (t.down(0).disabled == false)
+        {
+            if (t.down(0).checked == true) t.down(0).checked = false;
+            else t.down(0).checked = true;
+        }
     }
-  }
-  else
-  {
-    if (t.up(0).hasClassName('shade1') || t.up(0).hasClassName('shade2'))
+    else
     {
-        t.up(0).toggleClassName('notice');
+        if (t.up(0).hasClassName('shade1') || t.up(0).hasClassName('shade2'))
+        {
+            t.up(0).toggleClassName('notice');
+        }
     }
-  }
 }
 
 
@@ -909,6 +822,7 @@ function togglecontactaddress()
     $('postcode').disabled = setting;
 }
 
+
 function show_status_drop_down()
 {
     $('userstatus').hide();
@@ -916,11 +830,13 @@ function show_status_drop_down()
     $('userstatus_dropdown').focus();
 }
 
+
 function hide_status_drop_down()
 {
     $('userstatus').appear();
     $('status_drop_down').hide();
 }
+
 
 function set_user_status()
 {
@@ -949,6 +865,7 @@ function set_user_status()
             });
 }
 
+
 function attach_another_file(element)
 {
     var max = 0;
@@ -970,6 +887,7 @@ function attach_another_file(element)
     $(element).appendChild(br);
     $(element).appendChild(input);
 }
+
 
 function ignore_pending_reassignments(incidentid, originalowner)
 {
@@ -1003,26 +921,27 @@ function ignore_pending_reassignments(incidentid, originalowner)
             });
 }
 
+
 function submit_form(form)
 {
     $(form).submit();
 }
 
+
 function ldap_browse_window(base, field)
 {
-    // URL = "incident.php?popup=yes&id=" + incidentid;
-    // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
     URL = "ldap_browse.php?base=" + base + "&field=" + field;
     window.open(URL, 'ldap_browse', "toolbar=yes,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=300,height=400");
 }
 
+
 function ldap_browse_update_group(dn, fieldName)
 {
-    // parent = window.parent;
     field = window.opener.parent.document.getElementById(fieldName); 
     field.value = dn;
     window.close();
 }
+
 
 function ldap_browse_select_container(ldap_base, field)
 {
@@ -1083,17 +1002,17 @@ function ldap_browse_select_container(ldap_base, field)
                                 for (i = 1; i < data.length; i++)
                                 {
                                     html += '<tr>';		            		
-    
+
                                     if (data[i].type == 'container')
                                     {
                                         html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navdown+"</a></td>";
-                                        html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_kb+"</a></td>";
+                                        html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_ldap_container+"</a></td>";
                                         html += "<td><a onclick=\"ldap_browse_select_container('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
                                     }
                                     else if (data[i].type == 'group')
                                     {
                                         html += "<td></td>";
-                                        html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_site+"</a></td>";
+                                        html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_ldap_group+"</a></td>";
                                         html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
                                     }
     
@@ -1311,6 +1230,7 @@ function save_dashboard_layout(){
     $('savelayout').style.display='none';
 }
 
+
 //The target drop area contains a snippet of instructional
 //text that we want to remove when the first item
 //is dropped into it.
@@ -1350,7 +1270,7 @@ function get_checks()
 function switch_template()
 {
     get_checks();
-    //FIXME functionise the js here
+
     if ($('new_action').value == 'ACTION_NOTICE')
     {
         $('noticetemplatesbox').show();
@@ -1427,7 +1347,7 @@ function switch_template()
 
 function set_terminated()
 {
-    if (document.maintform.productonly.checked == true)
+    if ($('productonly').checked == true)
     {
         $('terminated').disabled = true;
         $('terminated').checked = true;
@@ -1451,16 +1371,9 @@ function validate_field(field, error)
 }
 
 
-function contact_products_window(contactid)
-{
-    URL = "contact_products.php?id=" + contactid;
-    window.open(URL, "contact_products_window", "toolbar=no,status=yes,menubar=no,scrollbars=yes,resizable=yes,width=520,height=240");
-}
-
-
 /**
  * 
- * @returns {Boolean}
+ * @returns Boolean
  * @author Paul Heaney
  */
 function process_billable_incidents_form()
@@ -1478,4 +1391,197 @@ function process_billable_incidents_form()
     }
 
     return toReturn;
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function recordFocusElement(element)
+{
+   $('focuselement').value = element.identify();
+   $('templatevariables').show();
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function clearFocusElement()
+{
+   $('focuselement').value = '';
+   $('templatevariables').hide();
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function insertTemplateVar(tvar)
+{
+   var element = $('focuselement').value;
+   if (element.length > 0)
+   {
+       var start = $(element).selectionStart;
+       var end = $(element).selectionEnd;
+       // alert('start:' + start + '  end: ' + end + 'len: ' + $(element).textLength);
+       if ($(element).readAttribute('readonly') != 'readonly')
+       {
+           $(element).value = $(element).value.substring(0, start) + tvar + $(element).value.substring(end, $(element).textLength);
+       }
+   }
+   else
+   {
+       alert(strSelectAFieldForTemplates);
+   }
+}
+
+
+function enablekb()
+{
+    var fields = ['kbtitle', 'incsymptoms', 'symptoms', 'inccause', 'cause', 'incquestion', 'question', 'incanswer', 'answer', 'incworkaround', 'workaround', 'incstatus', 'status', 'incadditional', 'additional', 'increferences', 'references'];
+    var rows = ['titlerow', 'distributionrow', 'symptomsrow', 'causerow', 'questionrow', 'answerrow', 'workaroundrow', 'statusrow', 'inforow', 'referencesrow'];
+    
+    if ($('kbtitle').disabled == true)
+    {
+        // Enable KB
+        for (i = 0; i < fields.length; i++)
+        {
+            $(fields[i]).disabled = false;
+        }
+        $('helptext').innerHTML = strSelectKBSections;
+        $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strKnowledgeBaseArticle + "</strong>:";
+
+        // Show the table rows for KB article
+        for (i = 0; i < rows.length; i++)
+        {
+            $(rows[i]).show();
+        }
+    }
+    else
+    {
+        // Disable KB
+        for (i = 0; i < fields.length; i++)
+        {
+            $(fields[i]).disabled = true;
+            
+            
+            if ($(fields[i]) instanceof HTMLInputElement)
+            {
+                $(fields[i]).checked = false;
+            }
+        }
+        
+        $('helptext').innerHTML = strEnterDetailsAboutIncidentToBeStoredInLog;
+        $('helptext').innerHTML = $('helptext').innerHTML + ' '  + strSummaryOfProblemAndResolution;
+        $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strFinalUpdate + "</strong>:";
+
+        // Hide the table rows for KB article
+        for (i = 0; i < rows.length; i++)
+        {
+            $(rows[i]).hide();
+        }
+    }
+}
+
+
+function revealTextAreaIncidentClose(checkbox, textarea)
+{
+    if ($(checkbox).checked)
+    {
+        $(textarea).disabled = false;
+        $(textarea).style.display = ''
+    }
+    else
+    {
+        $(textarea).disabled = true;
+        $(textarea).style.display = 'none'
+    }
+}
+
+
+function incident_update_sla_change(sla)
+{
+    if (sla == 'none')
+    {
+        incident_update_notarget();
+    }
+    else if (sla == 'initialresponse')
+    {
+        incident_update_initialresponse();
+    }
+    else if (sla == 'probdef')
+    {
+        incident_update_probdef();
+    }
+    else if (sla == 'actionplan')
+    {
+        incident_update_actionplan();
+    }
+    else if (sla == 'solution')
+    {
+        incident_update_reprioritise();
+    }
+}
+
+
+function incident_update_notarget()
+{
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = false;
+    $('updatetype').disabled = false;
+}
+
+
+function incident_update_initialresponse()
+{
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').disabled = false;
+}
+
+
+function incident_update_probdef()
+{
+    addOption($('updatetype'), strProblemDefinition, 'probdef');   
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').disabled = true;
+}
+
+
+function incident_update_actionplan()
+{
+    addOption($('updatetype'), strActionPlan, 'actionplan');
+    $('priority').value = $('storepriority').value;
+    $('priority').disabled = true;
+    $('updatetype').disabled = true;
+}
+
+
+function incident_update_reprioritise()
+{
+    addOption($('updatetype'), strResolutionReprioritisation, 'solution');
+    $('priority').disabled = false;
+    $('updatetype').disabled = true;
+}
+
+
+/**
+ * Sets visibility of an element
+ * 
+ * @param element String of the element to show/hide
+ * @param visibility boolean whether to show or hide
+ * @author Paul Heaney
+ */
+function set_object_visibility(element, visibility)
+{
+    if (visibility == true)
+    {
+        $(element).hide();
+    }
+    else
+    {
+        $(element).show();
+    }
 }

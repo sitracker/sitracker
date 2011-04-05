@@ -28,7 +28,7 @@ $user = mysql_fetch_object($result);
 if ($user->contact != $_SESSION['contactid']
     AND !in_array($user->maintenanceid, $_SESSION['contracts']))
 {
-    echo "<p class='warning'>$strNoPermission.</p>";
+    echo "<p class='warning'>{$strNoPermission}</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     exit;
 }
@@ -68,9 +68,9 @@ foreach ($keeptags AS $keeptag)
     if (substr($keeptag,0,1)=='&')
     {
         $origtag[] = $keeptag;
-        $temptag[] = "[[".substr($keeptag, 1, strlen($keeptag)-1)."]]";
+        $temptag[] = "[[".substr($keeptag, 1, strlen($keeptag) - 1)."]]";
         $origtag[] = strtoupper("$keeptag");
-        $temptag[] = "[[".strtoupper(substr($keeptag, 1, strlen($keeptag)-1))."]]";
+        $temptag[] = "[[".strtoupper(substr($keeptag, 1, strlen($keeptag) - 1))."]]";
     }
     else
     {
@@ -121,7 +121,6 @@ $filesql = "SELECT *, f.id AS fileid, u.id AS updateid, f.userid AS userid
 
 $fileresult = mysql_query($filesql);
 if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_WARNING);
-$delim = $fsdelim;
 
 while ($filerow = mysql_fetch_object($fileresult))
 {
@@ -158,7 +157,7 @@ while ($update = mysql_fetch_object($result))
     }
 
     $updateid = $update->id;
-    $updatebody=trim($update->bodytext);
+    $updatebody = trim($update->bodytext);
     $updatebody = preg_replace("/\[\[att=(.*?)\]\](.*?)\[\[\/att\]\]/s", "<a href='download.php?id=$1'>$2</a>\n", $updatebody);
 
 

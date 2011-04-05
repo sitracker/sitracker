@@ -25,15 +25,14 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $sites = array();
 
-$monthago = time()-(60 * 60 * 24 * 30.5);
+$monthago = time() - (60 * 60 * 24 * 30.5);
 
 echo "<h2>{$strRecentIncidents} (".sprintf($strSinceX, ldate($CONFIG['dateformat_date'], $monthago)).")</h2>";
 
-$sql  = "SELECT *,s.id AS siteid FROM `{$dbSites}` AS s, `{$dbMaintenance}` AS m, `{$dbSupportContacts}` AS sc, `{$dbIncidents}` AS i ";
-$sql .= "WHERE s.id = m.site ";
-$sql .= "AND ((m.id = sc.maintenanceid ";
-$sql .= "AND sc.contactid = i.contact) ";
-$sql .= "OR (m.allcontactssupported = 'yes' AND i.contact in (SELECT id FROM {$dbcontacts} WHERE siteid = s.id))) ";
+$sql  = "SELECT s.name, i.id, i.opened, m.product, s.id AS siteid FROM `{$dbSites}` AS s, `{$dbContacts}` as c, `{$dbMaintenance}` AS m, `{$dbIncidents}` AS i ";
+$sql .= "WHERE s.id = c.siteid ";
+$sql .= "AND m.id = i.maintenanceid ";
+$sql .= "AND i.contact = c.id ";
 $sql .= "AND i.opened > '{$monthago}' ";
 $sql .= "ORDER BY s.id, i.id";
 
@@ -47,7 +46,7 @@ if (mysql_num_rows($result) > 0)
     $prvincid = 0;
     while ($row = mysql_fetch_object($result))
     {
-        if ($prvincid!=$row->id)
+        if ($prvincid != $row->id)
         {
             echo "<strong>[{$row->siteid}] {$row->name}</strong> {$strIncident}: <a href=\"javascript:incident_details_window('{$row->id}', 'sit_popup')\">{$row->id}</a>  ";
             echo "{$strDate}: ".ldate('d M Y', $row->opened)." ";
@@ -58,7 +57,6 @@ if (mysql_num_rows($result) > 0)
             echo "<br />\n";
         }
         $prvincid = $row->id;
-        // print_r($row);
     }
 }
 else
@@ -68,20 +66,6 @@ else
 
 $sites = array_unique($sites);
 
-/*
-foreach ($sites AS $site => $val)
-{
-  $tot[$val] = $$val;
-}
-
-rsort($tot);
-
-foreach ($tot AS $total => $val)
-{
-  echo "total: $total   value: $val <br />";
-}
-*/
-
 $totals = array();
 
 foreach ($sites AS $site => $val)
@@ -90,16 +74,6 @@ foreach ($sites AS $site => $val)
     else array_unshift($totals, $val);
     $prev=$$val;
 }
-
-
-// was sites
-/*
-foreach ($totals AS $site => $val)
-{
-  echo "[{$val}] ".site_name($val);
-  echo "= {$$val} <br />";
-}
-*/
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

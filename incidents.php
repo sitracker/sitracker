@@ -46,18 +46,6 @@ if ($user == 'current' OR $user == $_SESSION['userid'])
     $rssfeedtitle = $strIncidents;
 }
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-?>
-<script type="text/javascript">
-//<![CDATA[
-function statusform_submit(user)
-{
-    URL = "incidents.php?status=" + window.document.statusform.status.options[window.document.statusform.status.selectedIndex].value + "&amp;user=" + user;
-    window.confirm(URL);
-    window.location.href = URL;
-}
-//]]>
-</script>
-<?php
 
 // Extract escalation paths
 $epsql = "SELECT id, name, track_url, home_url, url_title FROM `{$dbEscalationPaths}`";

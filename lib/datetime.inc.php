@@ -433,12 +433,9 @@ function exact_seconds($seconds)
     $minutes = floor($seconds / 60);
     $seconds -= $minutes * 60;
 
-    $string = "";
-    if ($days != 0) $string .= "{$days} {$GLOBALS['strDays']}, ";
-    if ($hours != 0) $string .= "{$hours} {$GLOBALS['strHours']}, ";
-    if ($minutes != 0) $string .= "{$minutes} {$GLOBALS['strMinutes']}, ";
-    $string .= "{$seconds} {$GLOBALS['strSeconds']}";
-
+    $string = str_pad($days, 2, '0', STR_PAD_LEFT) . ':' . str_pad($hours, 2, '0', STR_PAD_LEFT) . ':';
+    $string .= str_pad($minutes, 2, '0', STR_PAD_LEFT) . ':' . str_pad($seconds, 2, '0', STR_PAD_LEFT);
+    
     return $string;
 }
 

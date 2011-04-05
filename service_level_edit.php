@@ -50,12 +50,15 @@ if (empty($action) OR $action == "showform")
     echo "<td><input type='text' size='5' name='resolution_days' maxlength='3' value='{$sla->resolution_days}' /> {$strDays}</td></tr>";
     echo "<tr><th>{$strReview} ".icon('review', 16)."</th>";
     echo "<td><input type='text' size='5' name='review_days' maxlength='3' value='{$sla->review_days}' /> {$strDays}</td></tr>";
-    echo "<tr><th>{$strAllowIncidentReopen}</th><td>".html_checkbox('allow_reopen', $sla->allow_reopen)."</td></tr>\n";
+    $attributes = '';
+    if ($sla->timed == 'yes') $attributes = "disabled='disabled' ";
+    echo "<tr><th>{$strAllowIncidentReopen}</th><td>".html_checkbox('allow_reopen', $sla->allow_reopen, '', $attributes)."</td></tr>\n";
     echo "<tr><th>{$strTimed} <img src='{$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/timer.png' width='16' height='16' alt='' /></th><td>";
+    $timed_display = '';
     if ($sla->timed == 'yes')
     {
         echo "<input type='checkbox' name='timed' id='timed' onchange='enableBillingPeriod();' checked='checked' />";
-        $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE AND priority = {$priority} AND tag = '{$tag}'";
+        $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE priority = {$priority} AND tag = '{$tag}'";
         $billingResult = mysql_query($billingSQL);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $billing = mysql_fetch_object($billingResult);
@@ -70,14 +73,14 @@ if (empty($action) OR $action == "showform")
         // Set some defaults
         $customerPeriod = "120";
         $engineerPeriod = "60";
+        $timed_display = "style='display:none;'";
     }
     echo help_link('ServiceLevelTimed');
     echo "</td></tr>";
-    echo "<tr id='engineerBillingPeriod'><th>{$strBillingEngineerPeriod} ".help_link('ServiceLevelEngineerPeriod')."</th><td><input type='text' size='5' name='engineerPeriod' maxlength='5' value='{$engineerPeriod}' /> {$strMinutes}</td></tr>";
-    echo "<tr id='customerBillingPeriod'><th>{$strBillingCustomerPeriod} ".help_link('ServiceLevelCustomerPeriod')."</th><td><input type='text' size='5' name='customerPeriod' maxlength='5' value='{$customerPeriod}' /> {$strMinutes}</td></tr>";
-    echo "<tr id='limit'><th>{$strLimit} ".help_link('ServiceLevelLimit')."</th><td>{$CONFIG['currency_symbol']} <input type='text' size='5' name='limit' maxlength='5' value='{$limit}' /></td></tr>";
+    echo "<tr id='engineerBillingPeriod' {$timed_display}><th>{$strBillingEngineerPeriod} ".help_link('ServiceLevelEngineerPeriod')."</th><td><input type='text' size='5' name='engineerPeriod' maxlength='5' value='{$engineerPeriod}' /> {$strMinutes}</td></tr>";
+    echo "<tr id='customerBillingPeriod' {$timed_display}><th>{$strBillingCustomerPeriod} ".help_link('ServiceLevelCustomerPeriod')."</th><td><input type='text' size='5' name='customerPeriod' maxlength='5' value='{$customerPeriod}' /> {$strMinutes}</td></tr>";
+    echo "<tr id='limit' {$timed_display}><th>{$strLimit} ".help_link('ServiceLevelLimit')."</th><td>{$CONFIG['currency_symbol']} <input type='text' size='5' name='limit' maxlength='5' value='{$limit}' /></td></tr>";
     echo "</table>";
-    echo "<script type='text/javascript'>enableBillingPeriod();</script>";
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<input type='hidden' name='tag' value='{$tag}' />";
     echo "<input type='hidden' name='priority' value='{$priority}' />";

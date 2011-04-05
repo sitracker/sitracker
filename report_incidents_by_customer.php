@@ -87,7 +87,7 @@ if (empty($mode))
 
     echo "<tr><th>{$strExcludeSitesWith}".help_link('CTRLAddRemove')."</th><td>\n";
 
-    $sql = "SELECT DISTINCT id, tag FROM `{$dbServiceLevels}`";
+    $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -128,35 +128,6 @@ else
     if (empty($enddate)) $enddate = date('Y-m-d');
 
     $enddate = $enddate." 23:59:59";
-
-    // FIXME move this function out of line
-    function does_site_have_certain_sla_contract($siteid, $slas)
-    {
-        $toReturn = false;
-        global $CONFIG, $dbMaintenance, $dbServiceLevels;
-
-        if (!empty($slas))
-        {
-            $ssql = "SELECT id FROM `{$dbMaintenance}` WHERE site = '{$siteid}' AND ";
-
-            foreach ($slas AS $s)
-            {
-                if (!empty($qsql)) $qsql .= " OR ";
-                $qsql .= " servicelevel = {$s} ";
-            }
-
-            $ssql .= "({$qsql})";
-
-            $sresult = mysql_query($ssql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($sresult) > 0)
-            {
-                $toReturn = true;
-            }
-        }
-
-        return $toReturn;
-    }
 
     $sql = "SELECT DISTINCT s.id, s.name AS name, r.name AS resel, m.reseller, u.realname ";
     $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbResellers}` AS r, `{$dbSites}` AS s ";
