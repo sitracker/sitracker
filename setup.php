@@ -63,19 +63,22 @@ $systemhash = md5(date('Y-m-d') . $_SERVER['REMOTE_ADDR']
                 . $CONFIG['attachment_fspath'] . $_SERVER['SERVER_SIGNATURE'] );
 
 /**
-    * Array filter callback to check to see if a config file is a recognised file
-    * @author Ivan Lucas
-    * @param string $var. Filename to check
-    * @retval bool TRUE : recognised
-    * @retval bool FALSE : unrecognised
-*/
+ * Array filter callback to check to see if a config file is a recognised file
+ * @author Ivan Lucas
+ * @param string $var. Filename to check
+ * @retval bool TRUE : recognised
+ * @retval bool FALSE : unrecognised
+ */
 function filterconfigfiles($var)
 {
     $poss_config_files = array('config.inc.php', 'sit.conf');
     $recognised = FALSE;
     foreach ($poss_config_files AS $poss)
     {
-        if (mb_substr($var, mb_strlen($var)-mb_strlen($poss)) == $poss) $recognised = TRUE;
+        if (mb_substr($var, mb_strlen($var) - mb_strlen($poss)) == $poss)
+        {
+            $recognised = TRUE;
+        }
     }
     return $recognised;
 }
@@ -116,10 +119,10 @@ foreach ($configfiles AS $conf_filename)
 //}
 
 /**
-    * Setup configuration form
-    * @author Ivan Lucas
-    * @retval string HTML
-*/
+ * Setup configuration form
+ * @author Ivan Lucas
+ * @retval string HTML
+ */
 function setup_configure()
 {
     global $SETUP, $CFGVAR, $CONFIG, $configfiles, $config_filename, $cfg_file_exists;
@@ -280,11 +283,11 @@ function setup_configure()
 
 
 /**
-    * Execute a list of SQL queries
-    * @author Ivan Lucas
-    * @note Attempts to be clever and print helpful messages in the case
-    * of an error
-*/
+ * Execute a list of SQL queries
+ * @author Ivan Lucas
+ * @note Attempts to be clever and print helpful messages in the case
+ * of an error
+ */
 function setup_exec_sql($sqlquerylist)
 {
     global $CONFIG, $dbSystem, $installed_schema, $application_version;
@@ -297,7 +300,7 @@ function setup_exec_sql($sqlquerylist)
         foreach ($sqlquerylist AS $schemaversion => $queryelement)
         {
             if ($schemaversion != '0') $schemaversion = mb_substr($schemaversion, 1);
-//             echo "<p>Schema version $schemaversion, installed schema $installed_schema, query $queryelement</p>";
+
             if ($schemaversion == 0 OR $installed_schema < $schemaversion)
             {
                 $sqlqueries = explode( ';', $queryelement);
@@ -330,13 +333,6 @@ function setup_exec_sql($sqlquerylist)
                                     $errstr = "This looks suspiciously like a bug, if you think this is the case please report it.";
                                     break;
 
-//                                 case 1054:
-//                                     if (preg_match("/ALTER TABLE/", $sql) >= 1)
-//                                     {
-//                                         $severity = 'info';
-//                                         $errstr = "This could be because this part of the database schema is already up to date.";
-//                                     }
-//                                 break;
                                 case 1051:
                                 case 1091:
                                     if (preg_match("/DROP/", $sql) >= 1)
@@ -357,7 +353,7 @@ function setup_exec_sql($sqlquerylist)
                                     $severity = 'error';
                                     $errstr = "You may have found a bug, if you think this is the case please report it.";
                             }
-                            $html .= "<p class='$severity'>";
+                            $html .= "<p class='{$severity}'>";
                             if ($severity == 'info')
                             {
                                 $html .= "<strong>Information:</strong>";
@@ -382,11 +378,11 @@ function setup_exec_sql($sqlquerylist)
 
 
 /**
-    * Create a blank SiT database
-    * @author Ivan Lucas
-    * @retval bool TRUE database created OK
-    * @retval bool FALSE database not created, error.
-*/
+ * Create a blank SiT database
+ * @author Ivan Lucas
+ * @retval bool TRUE database created OK
+ * @retval bool FALSE database not created, error.
+ */
 function setup_createdb()
 {
     global $CONFIG;
@@ -431,11 +427,11 @@ function setup_createdb()
 
 
 /**
-    * Check to see whether an admin user exists
-    * @author Ivan Lucas
-    * @retval bool TRUE : an admin account exists
-    * @retval bool FALSE : an admin account doesn't exist
-*/
+ * Check to see whether an admin user exists
+ * @author Ivan Lucas
+ * @retval bool TRUE : an admin account exists
+ * @retval bool FALSE : an admin account doesn't exist
+ */
 function setup_check_adminuser()
 {
     global $dbUsers;
@@ -447,14 +443,14 @@ function setup_check_adminuser()
 
 
 /**
-    * An HTML action button, i.e. a form with a single button
-    * @author Ivan Lucas
-    * @param string $action.    Value for the hidden 'action' field
-    * @param string $label.     Label for the submit button
-    * @param string $extrahtml. Extra HTML to display on the form
-    * @returns A form with a button
-    * @retval string HTML form
-*/
+ * An HTML action button, i.e. a form with a single button
+ * @author Ivan Lucas
+ * @param string $action.    Value for the hidden 'action' field
+ * @param string $label.     Label for the submit button
+ * @param string $extrahtml. Extra HTML to display on the form
+ * @return A form with a button
+ * @retval string HTML form
+ */
 function setup_button($action, $label, $extrahtml='')
 {
     $html = "\n<form action='{$_SERVER['PHP_SELF']}' method='post'>";
