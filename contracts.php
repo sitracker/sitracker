@@ -91,7 +91,7 @@ if ($activeonly == 'yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TR
 
 if ($search_string != '*')
 {
-    if (strlen(utf8_decode($search_string)) == 1)
+    if (mb_strlenutf8_decode($search_string)) == 1)
     {
         // $sql .= "AND SUBSTRING(s.name,1,1)=('$search_string') ";
         $sql .= "AND s.name LIKE '{$search_string}%' ";

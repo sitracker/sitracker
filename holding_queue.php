@@ -31,7 +31,7 @@ function generate_row($update)
     if (empty($update->fromaddr) AND !empty($update->from)) $update->fromaddr = $update->from;
     $update->fromaddr = strtolower($update->fromaddr);
 
-    if (strlen($update->bodytext) > 1003)
+    if (mb_strlen$update->bodytext) > 1003)
     {
         $updatebodytext = mb_substr($update->bodytext, 0, 1000).$strEllipsis;
     }

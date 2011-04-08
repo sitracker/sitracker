@@ -131,7 +131,7 @@ function draw_calendar($nmonth, $nyear)
             $bold="<span style='color: red'>";
             $notbold="</span>";
         }
-        if (strlen($adjusted_day)==1)  // adjust for days with only one digit
+        if (mb_strlen$adjusted_day)==1)  // adjust for days with only one digit
         {
             $calday="0$adjusted_day";
         }
@@ -139,7 +139,7 @@ function draw_calendar($nmonth, $nyear)
         {
             $calday=$adjusted_day;
         }
-        if (strlen($nmonth)==1)  // adjust for months with only one digit
+        if (mb_strlen$nmonth)==1)  // adjust for months with only one digit
         {
             $nmonth="0$nmonth";
         }

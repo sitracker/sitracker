@@ -172,7 +172,7 @@ class rfc822_addresses_class
         $encoding = $charset = null;
         $s = 0;
         $decoded = '';
-        $l = strlen($value);
+        $l = mb_strlen$value);
         while($s < $l)
         {
             if(GetType($q = strpos($value, '=?', $s)) != 'integer')
@@ -240,7 +240,7 @@ class rfc822_addresses_class
 
                 case 'b':
                     if($e <= $t
-                    || strlen($binary = base64_decode($data = substr($value, $t, $e - $t))) == 0
+                    || mb_strlen$binary = base64_decode($data = substr($value, $t, $e - $t))) == 0
                     || GetType($binary) != 'string')
                         return($this->SetPositionedWarning('invalid Q-encoding b encoded data', $p + $t));
                     $decoded .= $binary;
@@ -261,7 +261,7 @@ class rfc822_addresses_class
     {
         $c_text = null;
         $v = $this->v;
-        if($p<strlen($v)
+        if($p<mb_strlen$v)
         && GetType(strchr("\t\r\n ()\\\0", $c = $v[$p])) != 'string'
         && Ord($c)<128)
         {
@@ -275,7 +275,7 @@ class rfc822_addresses_class
     {
         $q_text = null;
         $v = $this->v;
-        if($p>strlen($v)
+        if($p>mb_strlen$v)
         || GetType(strchr("\t\r\n \"\\\0", $c = $v[$p])) == 'string')
             return(1);
         if(Ord($c) >= 128)
@@ -293,7 +293,7 @@ class rfc822_addresses_class
     {
         $quoted_pair = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         if($p+1 < $l
         && !strcmp($v[$p], '\\')
         && GetType(strchr("\r\n\0", $c = $v[$p + 1])) != 'string'
@@ -331,7 +331,7 @@ class rfc822_addresses_class
     Function SkipWhiteSpace(&$p)
     {
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         for(;$p<$l; ++$p)
         {
             switch($v[$p])
@@ -352,7 +352,7 @@ class rfc822_addresses_class
     {
         $comment = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $c = $p;
         if($c >= $l
         || strcmp($v[$c], '('))
@@ -381,7 +381,7 @@ class rfc822_addresses_class
     Function SkipCommentWhiteSpace(&$p)
     {
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         for(;$p<$l;)
         {
             switch($v[$p])
@@ -424,14 +424,14 @@ class rfc822_addresses_class
     {
         $atom = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $a = $p;
         if(!$this->SkipCommentWhiteSpace($a))
             return(0);
         for($s = $a;$a < $l;)
         {
             if(preg_match('/^([-'.($dot ? '.' : '').'A-Za-z0-9!#$&\'*+\\/=?^_{|}~]+)/', substr($this->v, $a), $m))
-                $a += strlen($m[1]);
+                $a += mb_strlen$m[1]);
             elseif(Ord($v[$a]) < 128)
                 break;
             elseif(!$this->SetPositionedWarning('it was used an unencoded 8 bit character', $a))
@@ -452,7 +452,7 @@ class rfc822_addresses_class
     {
         $quoted_string = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $s = $p;
         if(!$this->SkipCommentWhiteSpace($s))
             return(0);
@@ -505,7 +505,7 @@ class rfc822_addresses_class
     {
         $obs_phrase = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $ph = $p;
         if(!$this->ParseWord($ph, $word))
             return(0);
@@ -566,7 +566,7 @@ class rfc822_addresses_class
     {
         $addr_spec = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $a = $p;
         if(!$this->ParseQuotedString($a, $local_part))
             return(0);
@@ -593,7 +593,7 @@ class rfc822_addresses_class
     {
         $addr = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $a = $p;
         if(!$this->SkipCommentWhiteSpace($a))
             return(0);
@@ -712,7 +712,7 @@ class rfc822_addresses_class
     Function ParseMailboxGroup(&$p, &$mailbox_group)
     {
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $g = $p;
         if(!$this->ParseMailbox($g, $address))
             return(0);
@@ -739,7 +739,7 @@ class rfc822_addresses_class
     {
         $address = null;
         $v = $this->v;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $g = $p;
         if(!$this->ParsePhrase($g, $display_name))
             return(0);
@@ -847,7 +847,7 @@ class rfc822_addresses_class
         $this->warnings = array();
         $addresses = array();
         $this->v = $v = $value;
-        $l = strlen($v);
+        $l = mb_strlen$v);
         $p = 0;
         if(!$this->ParseAddress($p, $address))
             return(0);

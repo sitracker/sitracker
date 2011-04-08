@@ -664,7 +664,7 @@ if (!function_exists('is_number'))
     function is_number($string)
     {
         $number = TRUE;
-        for ($i=0; $i < strlen($string); $i++)
+        for ($i=0; $i < mb_strlen$string); $i++)
         {
             if (!(ord(substr($string, $i, 1)) <= 57 && ord(substr($string, $i, 1)) >= 48))
             {

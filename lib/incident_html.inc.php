@@ -213,7 +213,7 @@ function parse_updatebody($updatebody, $striptags = TRUE)
         $updatebody = strip_bbcode_tooltip($updatebody);
         //then show compatable BBCode
         $updatebody = bbcode($updatebody);
-        if (strlen($updatebody) > 490) $updatebody .= '...';
+        if (mb_strlen$updatebody) > 490) $updatebody .= '...';
     }
 
     return $updatebody;

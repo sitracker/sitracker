@@ -339,7 +339,7 @@ class mime_parser_class
 	Function SetPHPError($error, &$php_error_message)
 	{
 		if(IsSet($php_error_message)
-		&& strlen($php_error_message))
+		&& mb_strlen$php_error_message))
 			$error .= ': '.$php_error_message;
 		return($this->SetError($error));
 	}
@@ -372,7 +372,7 @@ class mime_parser_class
 			$separator=$string;
 			$string=$this->next_token;
 		}
-		for($character=0;$character<strlen($separator);$character++)
+		for($character=0;$character<mb_strlen$separator);$character++)
 		{
 			if(GetType($position=strpos($string,$separator[$character]))=='integer')
 				$found=(IsSet($found) ? min($found,$position) : $position);
@@ -394,7 +394,7 @@ class mime_parser_class
 		$type = strtolower(trim($this->Tokenize($value, ';')));
 		$p = trim($this->Tokenize(''));
 		$parameters = $character_sets = $languages = array();
-		while(strlen($p))
+		while(mb_strlen$p))
 		{
 			$parameter = trim(strtolower($this->Tokenize($p, '=')));
 			$remaining = trim($this->Tokenize(''));
@@ -403,7 +403,7 @@ class mime_parser_class
 			{
 				$value = substr($remaining, 1, $quote - 1);
 				$p = trim(substr($remaining, $quote + 1));
-				if(strlen($p) > 0
+				if(mb_strlen$p) > 0
 				&& !strcmp($p[0], ';'))
 					$p = substr($p, 1);
 			}
@@ -412,7 +412,7 @@ class mime_parser_class
 				$value = trim($this->Tokenize($remaining, ';'));
 				$p = trim($this->Tokenize(''));
 			}
-			if(($l=strlen($parameter))
+			if(($l=mb_strlen$parameter))
 			&& !strcmp($parameter[$l - 1],'*'))
 			{
 				$parameter=$this->Tokenize($parameter, '*');
@@ -467,7 +467,7 @@ class mime_parser_class
 					return(1);
 				}
 			}
-			if(($n = $line_break + 1) < strlen($this->buffer)
+			if(($n = $line_break + 1) < mb_strlen$this->buffer)
 			&& $this->buffer[$n]=="\n")
 				$break="\r\n";
 			return(1);
@@ -488,7 +488,7 @@ class mime_parser_class
 					return(1);
 				}
 			}
-			if(($n = $line_break + 1) < strlen($this->body_buffer)
+			if(($n = $line_break + 1) < mb_strlen$this->body_buffer)
 			&& $this->body_buffer[$n]=="\n")
 				$break="\r\n";
 			return(1);
@@ -498,21 +498,21 @@ class mime_parser_class
 
 	Function ParseHeaderString($body, &$position, &$headers)
 	{
-		$l = strlen($body);
+		$l = mb_strlen$body);
 		$headers = array();
 		for(;$position < $l;)
 		{
 			if($this->FindStringLineBreak($body, $position, $break, $line_break))
 			{
 				$line = substr($body, $position, $line_break - $position);
-				$position = $line_break + strlen($break);
+				$position = $line_break + mb_strlen$break);
 			}
 			else
 			{
 				$line = substr($body, $position);
 				$position = $l;
 			}
-			if(strlen($line)==0)
+			if(mb_strlen$line)==0)
 				break;
 			$h = strtolower(strtok($line,':'));
 			$headers[$h] = trim(strtok(''));
@@ -534,9 +534,9 @@ class mime_parser_class
 			case MIME_PARSER_HEADER:
 				if($this->FindLineBreak($this->buffer_position, $break, $line_break))
 				{
-					$next = $line_break + strlen($break);
+					$next = $line_break + mb_strlen$break);
 					if(!strcmp($break,"\r")
-					&& strlen($this->buffer) == $next
+					&& mb_strlen$this->buffer) == $next
 					&& !$end)
 					{
 						$need_more_data = 1;
@@ -586,9 +586,9 @@ class mime_parser_class
 				{
 					if($this->FindLineBreak($position, $break, $line_break))
 					{
-						$next = $line_break + strlen($break);
+						$next = $line_break + mb_strlen$break);
 						$line = substr($this->buffer, $position, $line_break - $position);
-						if(strlen($this->buffer) == $next)
+						if(mb_strlen$this->buffer) == $next)
 						{
 							if(!$end)
 							{
@@ -643,7 +643,7 @@ class mime_parser_class
 								'Value'=>$value,
 								'Position'=>$this->offset + $this->buffer_position
 							);
-							$this->buffer_position = strlen($this->buffer);
+							$this->buffer_position = mb_strlen$this->buffer);
 							$this->state = MIME_PARSER_END;
 							break;
 						}
@@ -657,9 +657,9 @@ class mime_parser_class
 					$append='';
 					if($this->FindLineBreak($this->buffer_position, $break, $line_break))
 					{
-						$next = $line_break + strlen($break);
-						$following = $next + strlen($break);
-						if($following >= strlen($this->buffer)
+						$next = $line_break + mb_strlen$break);
+						$following = $next + mb_strlen$break);
+						if($following >= mb_strlen$this->buffer)
 						|| GetType($line=strpos($this->buffer, $break, $following))!='integer')
 						{
 							if(!$end)
@@ -668,7 +668,7 @@ class mime_parser_class
 								break;
 							}
 						}
-						$start = strtolower(substr($this->buffer, $next, strlen($break.'from ')));
+						$start = strtolower(substr($this->buffer, $next, mb_strlen$break.'from ')));
 						if(!strcmp($break.'from ', $start))
 						{
 							if($line_break == $this->buffer_position)
@@ -682,12 +682,12 @@ class mime_parser_class
 								break;
 							}
 							else
-								$add = strlen($break);
+								$add = mb_strlen$break);
 							$next = $line_break;
 						}
 						else
 						{
-							$start = strtolower(substr($this->buffer, $next, strlen('>from ')));
+							$start = strtolower(substr($this->buffer, $next, mb_strlen'>from ')));
 							if(!strcmp('>from ', $start))
 							{
 								$part=array(
@@ -707,7 +707,7 @@ class mime_parser_class
 							$need_more_data = 1;
 							break;
 						}
-						$next = strlen($this->buffer);
+						$next = mb_strlen$this->buffer);
 						$append="\r\n";
 					}
 					if($next > $this->buffer_position)
@@ -730,9 +730,9 @@ class mime_parser_class
 				}
 				else
 				{
-					if(strlen($this->buffer)-$this->buffer_position)
+					if(mb_strlen$this->buffer)-$this->buffer_position)
 					{
-						$data=substr($this->buffer, $this->buffer_position, strlen($this->buffer) - $this->buffer_position);
+						$data=substr($this->buffer, $this->buffer_position, mb_strlen$this->buffer) - $this->buffer_position);
 						$end_line = (!strcmp(substr($data,-1),"\n") || !strcmp(substr($data,-1),"\r"));
 						if($end
 						&& !$end_line)
@@ -741,7 +741,7 @@ class mime_parser_class
 							$end_line = 1;
 						}
 						$offset = $this->offset + $this->buffer_position;
-						$this->buffer_position = strlen($this->buffer);
+						$this->buffer_position = mb_strlen$this->buffer);
 						$need_more_data = !$end;
 						if(!$end_line)
 						{
@@ -749,7 +749,7 @@ class mime_parser_class
 							|| GetType($line_break=strrpos($data, "\r"))=='integer')
 							{
 								$line_break++;
-								$this->buffer_position -= strlen($data) - $line_break;
+								$this->buffer_position -= mb_strlen$data) - $line_break;
 								$data = substr($data, 0, $line_break);
 							}
 						}
@@ -800,11 +800,11 @@ class mime_parser_class
 		$values = trim(strtok(''));
 		$parameters = array();
 		$return_value = '';
-		while(strlen($values))
+		while(mb_strlen$values))
 		{
 			$parameter = trim(strtolower(strtok($values, '=')));
 			$value = trim(strtok(';'));
-			$l = strlen($value);
+			$l = mb_strlen$value);
 			if($l > 1
 			&& !strcmp($value[0], '"')
 			&& !strcmp($value[$l - 1], '"'))
@@ -833,11 +833,11 @@ class mime_parser_class
 				{
 					$value = $part['Value'];
 					$error = '';
-					for($decoded_header = array(), $position = 0; $position<strlen($value); )
+					for($decoded_header = array(), $position = 0; $position<mb_strlen$value); )
 					{
 						if(GetType($encoded=strpos($value,'=?', $position))!='integer')
 						{
-							if($position<strlen($value))
+							if($position<mb_strlen$value))
 							{
 								if(count($decoded_header))
 									$decoded_header[count($decoded_header)-1]['Value'].=substr($value, $position);
@@ -950,7 +950,7 @@ class mime_parser_class
 								$decoded=base64_decode(substr($value, $start, $end - $start));
 								if($end <= $start
 								|| GetType($decoded) != 'string'
-								|| strlen($decoded) == 0)
+								|| mb_strlen$decoded) == 0)
 								{
 									$warning = 'the header specified an invalid base64 encoded text';
 									$warning_position = $part['Position'] + $start;
@@ -985,7 +985,7 @@ class mime_parser_class
 						}
 						$position = $end + 2;
 					}
-					if(strlen($error)==0
+					if(mb_strlen$error)==0
 					&& count($decoded_header))
 						$part['Decoded']=$decoded_header;
 				}
@@ -1005,7 +1005,7 @@ class mime_parser_class
 							if(!strcmp(strtok($type, '/'), 'multipart'))
 							{
 								$this->headers['Multipart'] = 1;
-								if(strlen($boundary))
+								if(mb_strlen$boundary))
 									$this->headers['Boundary'] = $boundary;
 								else
 									return($this->SetPositionedError('multipart content-type header does not specify the boundary parameter', $part['Position']));
@@ -1059,7 +1059,7 @@ class mime_parser_class
 			case 'BodyData':
 				if($this->decode_bodies)
 				{
-					if(strlen($this->body_buffer)==0)
+					if(mb_strlen$this->body_buffer)==0)
 					{
 						$this->body_buffer = $part['Data'];
 						$this->body_offset = $part['Position'];
@@ -1076,7 +1076,7 @@ class mime_parser_class
 								{
 									if(!$this->FindBodyLineBreak($position, $break, $line_break))
 										return(1);
-									$next = $line_break + strlen($break);
+									$next = $line_break + mb_strlen$break);
 									if(!strcmp(rtrim(substr($this->body_buffer, $position, $line_break - $position)), $boundary))
 									{
 										$part=array(
@@ -1116,7 +1116,7 @@ class mime_parser_class
 										$this->body_offset += $position;
 										return(1);
 									}
-									$next = $line_break + strlen($break);
+									$next = $line_break + mb_strlen$break);
 									$line = substr($this->body_buffer, $position, $line_break - $position);
 									if(!strcmp(rtrim($line), $boundary))
 									{
@@ -1175,7 +1175,7 @@ class mime_parser_class
 					}
 					elseif(IsSet($this->headers['QuotedPrintable']))
 					{
-						for($end = strlen($this->body_buffer), $decoded = '', $position = $this->body_buffer_position; $position < $end; )
+						for($end = mb_strlen$this->body_buffer), $decoded = '', $position = $this->body_buffer_position; $position < $end; )
 						{
 							if(GetType($equal = strpos($this->body_buffer, '=', $position))!='integer')
 							{
@@ -1203,7 +1203,7 @@ class mime_parser_class
 							|| !strcmp($this->body_buffer[$next], $break="\r"))
 							{
 								$decoded .= substr($this->body_buffer, $position, $equal - $position);
-								$position = $next + strlen($break);
+								$position = $next + mb_strlen$break);
 								continue;
 							}
 							$decoded .= substr($this->body_buffer, $position, $equal - $position);
@@ -1221,7 +1221,7 @@ class mime_parser_class
 								$position = $equal + 3;
 							}
 						}
-						if(strlen($decoded)==0)
+						if(mb_strlen$decoded)==0)
 						{
 							$this->body_buffer_position = $position;
 							return(1);
@@ -1234,7 +1234,7 @@ class mime_parser_class
 					elseif(IsSet($this->headers['Base64']))
 					{
 						$part['Data'] = base64_decode($this->body_buffer_position ? substr($this->body_buffer,$this->body_buffer_position) : $this->body_buffer);
-						$this->body_offset += strlen($this->body_buffer) - $this->body_buffer_position;
+						$this->body_offset += mb_strlen$this->body_buffer) - $this->body_buffer_position;
 						$this->body_buffer_position = 0;
 						$this->body_buffer = '';
 					}
@@ -1273,12 +1273,12 @@ class mime_parser_class
 				}
 				else
 				{
-					$end_of_data=($this->position>=strlen($parameters['Data']));
+					$end_of_data=($this->position>=mb_strlen$parameters['Data']));
 					if($end_of_data)
 						break;
 					$data = substr($parameters['Data'], $this->position, $this->message_buffer_length);
-					$this->position += strlen($data);
-					$end_of_data = ($this->position >= strlen($parameters['Data']));
+					$this->position += mb_strlen$data);
+					$end_of_data = ($this->position >= mb_strlen$parameters['Data']));
 				}
 				if(!$this->Parse($data, $end_of_data))
 					return(0);
@@ -1364,17 +1364,17 @@ class mime_parser_class
 									$filename='';
 									break;
 							}
-							if(strlen($filename))
+							if(mb_strlen$filename))
 							{
 								$this->ParseStructuredHeader($value, $type, $header_parameters, $character_sets, $languages);
 								if(IsSet($header_parameters[$filename]))
 								{
 									$decoded['FileName']=$header_parameters[$filename];
 									if(IsSet($character_sets[$filename])
-									&& strlen($character_sets[$filename]))
+									&& mb_strlen$character_sets[$filename]))
 										$decoded['FileNameCharacterSet']=$character_sets[$filename];
 									if(IsSet($character_sets['language'])
-									&& strlen($character_sets['language']))
+									&& mb_strlen$character_sets['language']))
 										$decoded['FileNameCharacterSet']=$character_sets[$filename];
 									if(!strcmp($header, 'content-disposition:'))
 										$decoded['FileDisposition']=$type;
@@ -1394,7 +1394,7 @@ class mime_parser_class
 								if(!IsSet($decoded['BodyFile']))
 								{
 									$directory_separator=(defined('DIRECTORY_SEPARATOR') ? DIRECTORY_SEPARATOR : '/');
-									$path = (strlen($parameters['SaveBody']) ? ($parameters['SaveBody'].(strcmp($parameters['SaveBody'][strlen($parameters['SaveBody'])-1], $directory_separator) ? $directory_separator : '')) : '').strval($this->body_part_number);
+									$path = (mb_strlen$parameters['SaveBody']) ? ($parameters['SaveBody'].(strcmp($parameters['SaveBody'][mb_strlen$parameters['SaveBody'])-1], $directory_separator) ? $directory_separator : '')) : '').strval($this->body_part_number);
 									if(!($this->body_file = fopen($path, 'wb')))
 										return($this->SetPHPError('could not create file '.$path.' to save the message body part', $php_errormsg));
 									$decoded['BodyFile'] = $path;
@@ -1402,7 +1402,7 @@ class mime_parser_class
 									$decoded['BodyLength'] = 0;
 									$this->body_part_number++;
 								}
-								if(strlen($part['Data'])
+								if(mb_strlen$part['Data'])
 								&& !fwrite($this->body_file, $part['Data']))
 								{
 									$this->SetPHPError('could not save the message body part to file '.$decoded['BodyFile'], $php_errormsg);
@@ -1432,7 +1432,7 @@ class mime_parser_class
 									$this->body_part_number++;
 								}
 							}
-							$decoded['BodyLength'] += strlen($part['Data']);
+							$decoded['BodyLength'] += mb_strlen$part['Data']);
 							continue 3;
 						case 'StartPart':
 							if(!$this->DecodeStream($parameters, $end_of_part, $decoded_part))
@@ -1466,7 +1466,7 @@ class mime_parser_class
 
 	Function Parse($data, $end)
 	{
-		if(strlen($this->error))
+		if(mb_strlen$this->error))
 			return(0);
 		if($this->state==MIME_PARSER_END)
 			return($this->SetError('the parser already reached the end'));
@@ -1496,7 +1496,7 @@ class mime_parser_class
 
 	Function ParseFile($file)
 	{
-		if(strlen($this->error))
+		if(mb_strlen$this->error))
 			return(0);
 		if(!($stream = @fopen($file, 'r')))
 			return($this->SetPHPError('Could not open the file '.$file, $php_errormsg));
@@ -1794,7 +1794,7 @@ class mime_parser_class
 		else
 			$addresses = $message['ExtractedAddresses'][$header];
 		if(count($addresses))
-			$results[ucfirst(substr($header, 0, strlen($header) -1))] = $addresses;
+			$results[ucfirst(substr($header, 0, mb_strlen$header) -1))] = $addresses;
 	}
 
 	Function ReadMessageBody($message, &$body, $prefix)
@@ -2033,7 +2033,7 @@ class mime_parser_class
 									}
 									if(!$this->ReadMessageBody($parts[0], $body, 'Data'))
 										return(0);
-									if(strlen($body))
+									if(mb_strlen$body))
 										$results['Response'] = $body;
 									break;
 							}
@@ -2151,7 +2151,7 @@ class mime_parser_class
 						$results['Description'] = 'Notification of the status of delivery of a message';
 						if(!$this->ReadMessageBody($message, $body, 'Body'))
 							return(0);
-						if(($l = strlen($body)))
+						if(($l = mb_strlen$body)))
 						{
 							$position = 0;
 							$this->ParseHeaderString($body, $position, $headers);
@@ -2239,7 +2239,7 @@ class mime_parser_class
 			if(IsSet($message['Headers']['content-id:']))
 			{
 				$content_id = trim($message['Headers']['content-id:']);
-				$l = strlen($content_id);
+				$l = mb_strlen$content_id);
 				if(!strcmp($content_id[0], '<')
 				&& !strcmp($content_id[$l - 1], '>'))
 					$results['ContentID'] = substr($content_id, 1, $l - 2);

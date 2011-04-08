@@ -214,7 +214,7 @@ function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $pas
             }
         }
     
-        if ( isset($user) && strlen($user) > 0 )
+        if ( isset($user) && mb_strlen$user) > 0 )
         {
             $r = @ldap_bind($ldap_conn, $user, $password);
             if ( ! $r )

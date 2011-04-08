@@ -258,7 +258,7 @@ function mysql2date($mysqldate, $utc = FALSE)
     $month = substr($mysqldate, 5, 2);
     $year = substr($mysqldate, 0, 4);
 
-    if (strlen($mysqldate) > 10)
+    if (mb_strlen$mysqldate) > 10)
     {
         $hour = substr($mysqldate, 11, 2);
         $minute = substr($mysqldate, 14, 2);
@@ -288,7 +288,7 @@ function mysqlts2date($mysqldate)
     if (empty($mysqldate)) return 0;
 
     // Takes a MYSQL date and converts it to a proper PHP date
-    if (strlen($mysqldate) == 14)
+    if (mb_strlen$mysqldate) == 14)
     {
         $day = substr($mysqldate, 6, 2);
         $month = substr($mysqldate, 4, 2);
@@ -297,7 +297,7 @@ function mysqlts2date($mysqldate)
         $minute = substr($mysqldate, 10, 2);
         $second = substr($mysqldate, 12, 2);
     }
-    elseif (strlen($mysqldate) > 14)
+    elseif (mb_strlen$mysqldate) > 14)
     {
         $day = substr($mysqldate, 8, 2);
         $month = substr($mysqldate, 5, 2);

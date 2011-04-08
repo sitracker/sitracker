@@ -93,7 +93,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     if (!empty($siteobj->websiteurl))
     {
         if (preg_match('/^http|^https/', $siteobj->websiteurl)) $prefix = '';
-        else $prefix = 'http://'; 
+        else $prefix = 'http://';
         echo "<a href=\"{$prefix}{$siteobj->websiteurl}\">{$siteobj->websiteurl}</a>";
     }
 
@@ -232,7 +232,7 @@ if ($countcontacts > 0)
         }
 
         echo "</td>";
-        echo "<td>".nl2br(substr($contactobj->notes, 0, 500))."</td>";
+        echo "<td>".nl2br(mb_substr($contactobj->notes, 0, 500))."</td>";
         echo "</tr>";
         if ($shade == 'shade1') $shade = 'shade2';
         else $shade = 'shade1';

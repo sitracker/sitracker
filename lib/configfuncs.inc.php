@@ -233,7 +233,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
             break;
         case 'text':
         default:
-            if (strlen($CONFIG[$setupvar]) < 65)
+            if (mb_strlen$CONFIG[$setupvar]) < 65)
             {
                 $html .= "<input type='text' name='{$setupvar}' id='{$setupvar}'  size='60' value=\"{$value}\" />";
             }

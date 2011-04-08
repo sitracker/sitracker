@@ -276,8 +276,8 @@ else
                 if ($shade == "shade1") $shade = "shade2";
                 else $shade = "shade1";
 
-                $clgth = strlen($coords)-2;
-                $coords = substr($coords, 0, $clgth);
+                $clgth = mb_strlen($coords)-2;
+                $coords = mb_substr($coords, 0, $clgth);
             }
 
             $grandsum = 0;
@@ -304,8 +304,8 @@ else
 
         if (extension_loaded('gd'))
         {
-            $data = substr($data, 0, strlen($data)-1);
-            $legend = substr($legend, 0, strlen($legend)-1);
+            $data = mb_substr($data, 0, mb_strlen($data)-1);
+            $legend = mb_substr($legend, 0, mb_strlen($legend)-1);
             $title = urlencode($strIncidentsBySkill);
             echo "\n<br /><p><div style='text-align:center;'>";
             echo "\n<img src='chart.php?type=pie&data={$data}&legends={$legend}&title={$title}' />";

@@ -64,20 +64,20 @@ function search_highlight($x,$var)
     $pos1 = stripos($x, $var);
     if ($pos1 === FALSE) $pos1 = 0;
     if ($pos1 > 30) $pos1 -= 25;
-    $pos2 = strlen($var) + 70;
-    $x = substr($x, $pos1, $pos2);
+    $pos2 = mb_strlen$var) + 70;
+    $x = mb_substr($x, $pos1, $pos2);
 
     if ($var != '')
     {
         $xtemp = '';
         $i = 0;
 
-        while ($i < strlen($x))
+        while ($i < mb_strlen($x))
         {
-            if ((($i + strlen($var)) <= strlen($x)) && (strcasecmp($var, substr($x, $i, strlen($var))) == 0))
+            if ((($i + mb_strlen($var)) <= mb_strlen($x)) && (strcasecmp($var, mb_substr($x, $i, mb_strlen($var))) == 0))
             {
-                $xtemp .= "<span class='search_highlight'>" . substr($x, $i , strlen($var)) . "</span>";
-                $i += strlen($var);
+                $xtemp .= "<span class='search_highlight'>" . mb_substr($x, $i , mb_strlen($var)) . "</span>";
+                $i += mb_strlen($var);
             }
             else
             {
@@ -109,25 +109,25 @@ if (!isNaN(id))
             $result = mysql_query($sql);
             if (mysql_num_rows($result) > 0)
             {
-            	if ($_SESSION['userconfig']['incident_popup_onewindow'])
-            	{?>
-            		window.location = 'incident_details.php?id=' + id;
-            	<?php
-            	}
-            	else
-            	{
-	            ?>
-	                window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
-	                if (!empty($_SERVER['HTTP_REFERER']))
-	                {
-	                    echo $_SERVER['HTTP_REFERER'];
-	                }
-	                else
-	                {
-	                    echo $_CONFIG['application_webpath'];
-	                }
-	                ?>';
-	            <?php
+                if ($_SESSION['userconfig']['incident_popup_onewindow'])
+                {?>
+                    window.location = 'incident_details.php?id=' + id;
+                <?php
+                }
+                else
+                {
+                ?>
+                    window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
+                    if (!empty($_SERVER['HTTP_REFERER']))
+                    {
+                        echo $_SERVER['HTTP_REFERER'];
+                    }
+                    else
+                    {
+                        echo $_CONFIG['application_webpath'];
+                    }
+                    ?>';
+                <?php
                 }
             }
     }?>
@@ -148,7 +148,7 @@ if (!empty($q))
     //INCIDENT RESULTS
     // MySQL doesn't normally do fulltext index for words 3 characters or shorter
     // See the MySQL option ft_min_word_len
-    if (strlen($search > 3))
+    if (mb_strlen$search > 3))
     {
     $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
     $incidentsql .= "MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE) AS score ";
@@ -727,7 +727,7 @@ if (!empty($q))
         echo  "</p>";
     }
 }
-if (!empty($q) AND strlen($q) < 3)
+if (!empty($q) AND mb_strlen$q) < 3)
 {
     echo "<p class='info'>{$strSearchTooShort}</p>";
 }

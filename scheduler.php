@@ -131,7 +131,7 @@ switch ($_REQUEST['mode'])
                                 13 => "1:00 PM", 14 => "2:00 PM", 15 => "3:00 PM",
                                 16 => "4:00 PM", 17 => "5:00 PM", 18 => "6:00 PM", 19 => "7:00 PM", 20 => "8:00 PM",
                                 21 => "9:00 PM", 22 => "10:00 PM", 23 => "11:00 PM",);
-            $selected = substr($saction->date_time, 0, 2);
+            $selected = mb_substr($saction->date_time, 0, 2);
             if ($selected[0] == '0') $selected = $selected[1];
             echo array_drop_down($dates, 'date_time', $selected, '', TRUE);
 
@@ -325,7 +325,7 @@ switch ($_REQUEST['mode'])
                                     {
                                         $nextrunmonth = date('m') + 1;
                                     }
-                                    $h = substr($schedule->date_time, 0, 2);
+                                    $h = mb_substr($schedule->date_time, 0, 2);
                                     $nextruntime = gmmktime($h, 0, 0, $nextrunmonth, $schedule->date_offset);
                                 }
                             }
@@ -345,7 +345,7 @@ switch ($_REQUEST['mode'])
                                     {
                                         $nextrunyear = date('y') + 1;
                                     }
-                                    $h = substr($schedule->date_time, 0, 2);
+                                    $h = mb_substr($schedule->date_time, 0, 2);
                                     $nextruntime = gmmktime($h, 0, 0, 1, $schedule->date_offset, $nextrunyear);
                                 }
                             }
@@ -376,7 +376,7 @@ switch ($_REQUEST['mode'])
                                     {
                                         $nextrunmonth = date('m') + 1;
                                     }
-                                    $h = substr($schedule->date_time, 0, 2);
+                                    $h = mb_substr($schedule->date_time, 0, 2);
                                     $nextruntime = gmmktime($h, 0, 0, $nextrunmonth, $schedule->date_offset);
                                 }
                             }
@@ -396,7 +396,7 @@ switch ($_REQUEST['mode'])
                                     {
                                         $nextrunyear = date('y') + 1;
                                     }
-                                    $h = substr($schedule->date_time, 0, 2);
+                                    $h = mb_substr($schedule->date_time, 0, 2);
                                     $nextruntime = gmmktime($h, 0, 0, 1, $schedule->date_offset, $nextrunyear);
                                 }
                             }

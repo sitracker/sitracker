@@ -30,7 +30,7 @@ if ($submit_value == 'go')
 {
     // build SQL
     $sql  = "SELECT * FROM `{$dbContacts}` ";
-    $search_string_len = strlen(utf8_decode($search_string));
+    $search_string_len = mb_strlenutf8_decode($search_string));
     if ($search_string != '*')
     {
         $sql .= "WHERE ";
@@ -118,7 +118,7 @@ else
             // build SQL
             $sql  = "SELECT c.* FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
             $sql .= "WHERE c.siteid = s.id ";
-            $search_string_len=strlen(utf8_decode($search_string));
+            $search_string_len=mb_strlenutf8_decode($search_string));
             if ($search_string != '*')
             {
                 $sql .= " AND (";

@@ -515,9 +515,9 @@ else
         if (mb_substr($keeptag,0,1) == '&')
         {
             $origtag[] = "$keeptag";
-            $temptag[] = "[[".mb_substr($keeptag, 1, strlen($keeptag)-1)."]]";
+            $temptag[] = "[[".mb_substr($keeptag, 1, mb_strlen$keeptag)-1)."]]";
             $origtag[] = strtoupper("$keeptag");
-            $temptag[] = "[[".strtoupper(mb_substr($keeptag, 1, strlen($keeptag)-1))."]]";
+            $temptag[] = "[[".strtoupper(mb_substr($keeptag, 1, mb_strlen$keeptag)-1))."]]";
         }
         else
         {
@@ -588,7 +588,7 @@ else
 
         $updateid = $update->id;
         $updatebody = trim($update->bodytext);
-        $updatebodylen = strlen($updatebody);
+        $updatebodylen = mb_strlen$updatebody);
         $updatebody = str_replace($origtag, $temptag, $updatebody);
         $updatebody = str_replace($temptag, $origtag, $updatebody);
 
@@ -705,7 +705,7 @@ else
 
         $updatebody = preg_replace("/href=\"(?!http[s]?:\/\/)/", "href=\"http://", $updatebody);
         $updatebody = bbcode($updatebody);
-        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(strlen('\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
+        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen'\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
 
         // Make KB article references into a hyperlink
         $updatebody = preg_replace("/\b{$CONFIG['kb_id_prefix']}([0-9]{3,4})\b/", "<a href=\"kb_view_article.php?id=$1\" title=\"View KB Article $1\">$0</a>", $updatebody);

@@ -341,7 +341,7 @@ if ($emails > 0)
                     if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
                     $part++;
                 }
-                $filesize = strlen($data);
+                $filesize = mb_strlen$data);
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";

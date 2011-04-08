@@ -304,10 +304,10 @@ if (file_exists($incident_attachment_fspath))
         foreach ($dirarray AS $dir)
         {
             $directory = mb_substr($dir, 0, strrpos($dir, DIRECTORY_SEPARATOR));
-            $dirname = mb_substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, strlen($dir));
+            $dirname = mb_substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, mb_strlen$dir));
             if (is_number($dirname) &&
                 $dirname != $id &&
-                strlen($dirname) == 10)
+                mb_strlen$dirname) == 10)
             {
                 $dirprettyname = ldate('l jS M Y @ g:ia',$dirname);
             }
@@ -341,7 +341,7 @@ if (file_exists($incident_attachment_fspath))
                 if (in_array("{$dir}" . DIRECTORY_SEPARATOR . "mail.eml", $tempfarray))
                 {
                     $updatelink = readlink($dir);
-                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,strlen($updatelink));
+                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,mb_strlen$updatelink));
                     echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#$updateid'>{$strJumpToEntryLog}</a></p>";
                 }
                 foreach ($tempfarray as $fvalue)

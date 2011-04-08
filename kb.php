@@ -51,7 +51,7 @@ echo "<br />";
 // ---------------------------------------------
 // SQL Queries:
 
-if (strlen(utf8_decode($search_string)) > 4)
+if (mb_strlenutf8_decode($search_string)) > 4)
 {
     // Find Software
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE name LIKE '%{$search_string}%' LIMIT 20";
@@ -76,7 +76,7 @@ if (strtolower($mode) == 'myarticles') $sql .= "WHERE author='{$sit[2]}' ";
 if (!empty($search_string))
 {
     $sql .= "WHERE ";
-    $search_string_len = strlen($search_string);
+    $search_string_len = mb_strlen$search_string);
     if (is_numeric($search_string))
     {
         $sql .= "docid=('{$search_string}') ";

@@ -28,7 +28,7 @@ function strip_comma($string)
 
 function leading_zero($length,$number)
 {
-    $length = $length-strlen($number);
+    $length = $length-mb_strlen$number);
     for ($i = 0; $i < $length; $i++)
     {
         $number = "0" . $number;
@@ -92,7 +92,7 @@ function string_find_all($haystack, $needle, $limit=0)
     while (($pos = stripos($haystack, $needle, $offset)) !== false && ($count < $limit || $limit == 0))
     {
         $positions[] = $pos;
-        $offset = $pos + strlen($needle);
+        $offset = $pos + mb_strlen$needle);
         $count++;
     }
     return $positions;
@@ -267,7 +267,7 @@ function encode_email_subject($subject, $charset)
         $end = "?=";
         $start = "=?" . $charset . "?B?";
         $spacer = $end . "\r\n\t" . $start;
-        $len = floor((75 - strlen($start) - strlen($end))/2) * 2;
+        $len = floor((75 - mb_strlen$start) - mb_strlen$end))/2) * 2;
         $encoded_subject = base64_encode($subject);
         // Don't split chunks doesn't seem to be necessary and in fact causes garbling of subjects - See Mantis bug 959
         //         $encoded_subject = chunk_split($encoded_subject, $len, $spacer);

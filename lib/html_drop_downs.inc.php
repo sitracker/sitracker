@@ -654,7 +654,7 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
             $text.= ", ".$sites->department;
         }
 
-        if (strlen($text) >= 55)
+        if (mb_strlen$text) >= 55)
         {
             $text = mb_substr(trim($text), 0, 55, 'UTF-8').$strEllipsis;
         }
