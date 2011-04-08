@@ -873,7 +873,7 @@ function generate_password($length=8)
                 // not using 1's 0's etc. to save confusion
                 // '-=!&';
     $str = '';
-    while (mb_strlen$str) < $length)
+    while (mb_strlen($str) < $length)
     {
         $str .= mb_substr($possible, (rand() % mb_strlen($possible)),1);
     }

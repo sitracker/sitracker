@@ -192,7 +192,7 @@ class OriginalChart extends Chart{
             if (mb_strlenurldecode($this->legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
 
             $ll = "{$l} ({$this->data[$i]})";
-            if (mb_strlen$ll) > 27)
+            if (mb_strlen($ll) > 27)
             {
                 $ll = "{$l}\n({$this->data[$i]})";
                 $wrapped = true;

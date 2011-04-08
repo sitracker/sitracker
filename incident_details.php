@@ -515,9 +515,9 @@ else
         if (mb_substr($keeptag,0,1) == '&')
         {
             $origtag[] = "$keeptag";
-            $temptag[] = "[[".mb_substr($keeptag, 1, mb_strlen$keeptag)-1)."]]";
+            $temptag[] = "[[".mb_substr($keeptag, 1, mb_strlen($keeptag)-1)."]]";
             $origtag[] = strtoupper("$keeptag");
-            $temptag[] = "[[".strtoupper(mb_substr($keeptag, 1, mb_strlen$keeptag)-1))."]]";
+            $temptag[] = "[[".strtoupper(mb_substr($keeptag, 1, mb_strlen($keeptag)-1))."]]";
         }
         else
         {
@@ -588,7 +588,7 @@ else
 
         $updateid = $update->id;
         $updatebody = trim($update->bodytext);
-        $updatebodylen = mb_strlen$updatebody);
+        $updatebodylen = mb_strlen($updatebody);
         $updatebody = str_replace($origtag, $temptag, $updatebody);
         $updatebody = str_replace($temptag, $origtag, $updatebody);
 

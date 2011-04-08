@@ -23,7 +23,7 @@ if (!function_exists('list_dir'))
         // try to figure out what delimeter is being used (for windows or unix)...
         $delim = (strstr($dirname,"/")) ? "/" : "\\";
 
-        if ($dirname[mb_strlen$dirname)-1] != $delim)
+        if ($dirname[mb_strlen($dirname)-1] != $delim)
         {
             $dirname .= $delim;
         }
@@ -241,7 +241,7 @@ function upload_file($file, $incidentid, $updateid, $type='public')
 function return_bytes($val)
 {
     $val = trim($val);
-    $last = strtolower($val{mb_strlen$val)-1});
+    $last = strtolower($val{mb_strlen($val)-1});
     switch ($last)
     {
         // The 'G' modifier is available since PHP 5.1.0

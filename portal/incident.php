@@ -126,7 +126,7 @@ while ($filerow = mysql_fetch_object($fileresult))
 {
     $fileid = intval($filerow->fileid);
     $filename = cleanvar($filerow->filename);
-    if (mb_strlen$filename) > 30)
+    if (mb_strlen($filename) > 30)
     {
         $filename = mb_substr($filename, 0, 30)."...";
     }
@@ -164,7 +164,7 @@ while ($update = mysql_fetch_object($result))
     //remove empty updates
     if (!empty($updatebody) AND $updatebody != "<hr>")
     {
-        $updatebodylen = mb_strlen$updatebody);
+        $updatebodylen = mb_strlen($updatebody);
 
         $updatebody = str_replace($origtag, $temptag, $updatebody);
         // $updatebody = htmlspecialchars($updatebody);

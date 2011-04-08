@@ -255,7 +255,7 @@ function setup_configure()
                     break;
                 case 'text':
                 default:
-                    if (mb_strlen$CONFIG[$setupvar]) < 65)
+                    if (mb_strlen($CONFIG[$setupvar]) < 65)
                     {
                         $html .= "<input type='text' name='$setupvar' size='60' value=\"{$value}\" />";
                     }

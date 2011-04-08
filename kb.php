@@ -76,7 +76,7 @@ if (strtolower($mode) == 'myarticles') $sql .= "WHERE author='{$sit[2]}' ";
 if (!empty($search_string))
 {
     $sql .= "WHERE ";
-    $search_string_len = mb_strlen$search_string);
+    $search_string_len = mb_strlen($search_string);
     if (is_numeric($search_string))
     {
         $sql .= "docid=('{$search_string}') ";

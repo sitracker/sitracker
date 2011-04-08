@@ -250,7 +250,7 @@ else
                 $holidaylist .= holiday_type($holiday->type)."\n";
             }
 
-            if (mb_strlen$memo) > 3)
+            if (mb_strlen($memo) > 3)
             {
                 $holidaylist .= "\n{$SYSLANG['strCommentsSentWithRequest']}:\n\n";
                 $holidaylist .= "---\n{$memo}\n---\n\n";

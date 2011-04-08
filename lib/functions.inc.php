@@ -664,7 +664,7 @@ if (!function_exists('is_number'))
     function is_number($string)
     {
         $number = TRUE;
-        for ($i=0; $i < mb_strlen$string); $i++)
+        for ($i=0; $i < mb_strlen($string); $i++)
         {
             if (!(ord(substr($string, $i, 1)) <= 57 && ord(substr($string, $i, 1)) >= 48))
             {
@@ -1146,7 +1146,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
 /**
  * Function to add a additional charting library to SiT!
- * Please use this function rather than manually adjusting the array, prevents 
+ * Please use this function rather than manually adjusting the array, prevents
  * plugins accidentally corrupting the array
  * @param String $library The library to add
  * @author Paul Heaney
@@ -1154,7 +1154,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 function add_charting_library($library)
 {
     global $CONFIG;
-    
+
     $CONFIG['available_charts'][] = $library;
 }
 
@@ -1235,11 +1235,11 @@ function plugin_do($context, $optparams = FALSE)
 
     // Make global variables available to plugins, careful not overwrite vars
     // used in plugin_do function scope (Mantis 1433)
-    foreach ($GLOBALS as $key => $val) 
-    { 
+    foreach ($GLOBALS as $key => $val)
+    {
         if ($key != 'context' AND $key != 'optparams' AND $key != 'PLUGINACTIONS')
         {
-            global $$key; 
+            global $$key;
         }
     }
     $rtnvalue = '';

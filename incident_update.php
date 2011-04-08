@@ -379,7 +379,7 @@ else
         html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
         exit;
     }
-    elseif ((mb_strlen$bodytext) < 4) OR !preg_match('/[\p{L}\p{N}]+/u', $bodytext))
+    elseif ((mb_strlen($bodytext) < 4) OR !preg_match('/[\p{L}\p{N}]+/u', $bodytext))
     {
         $_SESSION['formerrors']['update'][] = sprintf(strMustContainFourCharacters, $strUpdate);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);

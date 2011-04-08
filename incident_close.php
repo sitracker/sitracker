@@ -268,7 +268,7 @@ else
                 list($currentowner, $currentstatus) = mysql_fetch_row($result);
             }
 
-            if (mb_strlen$_REQUEST['summary']) > 3)
+            if (mb_strlen($_REQUEST['summary']) > 3)
             {
                 // Problem Definition
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
@@ -277,7 +277,7 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            if (mb_strlen$_REQUEST['solution']) > 3)
+            if (mb_strlen($_REQUEST['solution']) > 3)
             {
                 // Final Solution
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";

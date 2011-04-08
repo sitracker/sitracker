@@ -64,7 +64,7 @@ function search_highlight($x,$var)
     $pos1 = stripos($x, $var);
     if ($pos1 === FALSE) $pos1 = 0;
     if ($pos1 > 30) $pos1 -= 25;
-    $pos2 = mb_strlen$var) + 70;
+    $pos2 = mb_strlen($var) + 70;
     $x = mb_substr($x, $pos1, $pos2);
 
     if ($var != '')
@@ -148,7 +148,7 @@ if (!empty($q))
     //INCIDENT RESULTS
     // MySQL doesn't normally do fulltext index for words 3 characters or shorter
     // See the MySQL option ft_min_word_len
-    if (mb_strlen$search > 3))
+    if (mb_strlen($search > 3))
     {
     $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
     $incidentsql .= "MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE) AS score ";
@@ -727,7 +727,7 @@ if (!empty($q))
         echo  "</p>";
     }
 }
-if (!empty($q) AND mb_strlen$q) < 3)
+if (!empty($q) AND mb_strlen($q) < 3)
 {
     echo "<p class='info'>{$strSearchTooShort}</p>";
 }

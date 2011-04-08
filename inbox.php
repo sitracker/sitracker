@@ -208,7 +208,7 @@ if (empty($displayid))
             echo "</td>";
             // Size
             echo "<td style='white-space:nowrap;'>";
-            echo readable_file_size(mb_strlen$update->bodytext));
+            echo readable_file_size(mb_strlen($update->bodytext));
             echo "</td>";
             echo "</tr>";
             if ($shade == 'shade1') $shade = 'shade2';

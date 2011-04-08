@@ -440,7 +440,7 @@ switch ($step)
             foreach ($_FILES AS $file)
             {
                 // move attachment to a safe place for processing later
-                if ($file['name'] != '' AND mb_strlen$file['name']) > 3)
+                if ($file['name'] != '' AND mb_strlen($file['name']) > 3)
                 {
                     $umask = umask(0000);
                     $mk = TRUE;
