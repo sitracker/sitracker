@@ -28,18 +28,16 @@ $DEFAULTS = $CONFIG;
 
 // Load config file with customisations
 // @include ("config.inc-dist.php");
-if (file_exists(APPLICATION_FSPATH . "config.inc.php")
-    AND !include (APPLICATION_FSPATH . "config.inc.php"))
-    {
-        die('Could not read config file config.inc.php');
-    }
+if (file_exists(APPLICATION_FSPATH . "config.inc.php") AND !include (APPLICATION_FSPATH . "config.inc.php"))
+{
+    die('Could not read config file config.inc.php');
+}
 // Server Configuration
 
-if (file_exists('/etc/sit.conf')
-    AND !include ('/etc/sit.conf'))
-    {
-        die('Cound not read config file sit.conf');
-    }
+if (file_exists('/etc/sit.conf') AND !include ('/etc/sit.conf'))
+{
+    die('Cound not read config file sit.conf');
+}
 
 // // Some actions require authentication
 // if ($_REQUEST['action'] == 'reconfigure')
