@@ -3,6 +3,7 @@
 
 $languagestring = ' (ar)';
 $i18ncharset = 'UTF-8';
+$i18ndirection = 'rtl';
 
 // list of strings (Alphabetical by key)
 $str0MeansUnlimited = '0 يعني غير محدود';
@@ -19,7 +20,7 @@ $str1Year = 'سنه واحده';
 $str3rd = 'الثالث';
 
 $strAbout = 'عن';
-$strAboutPerson = 'عن %s';
+$strAboutPerson = 'غن s%';
 $strAboutXMinutesAgo = 'من %d دقائق';
 $strAboveMustBeCompletedToAllowDeductions = 'السابق يجب ان يكتمل قبل السماح بالخصم';
 $strAbsentSick = 'غائب مريض';
