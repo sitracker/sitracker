@@ -189,7 +189,7 @@ class OriginalChart extends Chart{
             }
     
             $l = mb_substr(urldecode($this->legends[$i]), 0, 27, 'UTF-8');
-            if (mb_strlenurldecode($this->legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
+            if (mb_strlen(urldecode($this->legends[$i])) > 27) $l .= $GLOBALS['strEllipsis'];
 
             $ll = "{$l} ({$this->data[$i]})";
             if (mb_strlen($ll) > 27)

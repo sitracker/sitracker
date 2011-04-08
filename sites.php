@@ -40,7 +40,7 @@ if ($submit_value == "go")
     elseif ($search_string != '*')
     {
         $sql .= "WHERE ";
-        if (mb_strlenutf8_decode($search_string)) == 1)
+        if (mb_strlen(utf8_decode($search_string)) == 1)
         {
             if ($search_string == '0')
             {
@@ -150,7 +150,7 @@ if ($errors == 0)
         elseif ($search_string != '*')
         {
             $sql .= "WHERE ";
-            if (mb_strlenutf8_decode($search_string)) == 1)
+            if (mb_strlen(utf8_decode($search_string)) == 1)
             {
                 if ($search_string == '0')
                 {
