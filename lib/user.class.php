@@ -193,7 +193,7 @@ class User extends Person{
         global $now;
         $toReturn = false;
 
-        if (!empty($this->id) AND is_number($this>id))
+        if (!empty($this->id) AND is_numeric($this>id))
         {
             $sql = "SELECT username, status, accepting FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id}";
             $result = mysql_query($sql);

@@ -1556,7 +1556,7 @@ function kb_article($id, $mode='internal')
 {
     global $CONFIG, $iconset;
     $id = intval($id);
-    if (!is_number($id) OR $id == 0)
+    if (!is_numeric($id) OR $id == 0)
     {
         trigger_error("Incorrect KB ID", E_USER_ERROR);
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

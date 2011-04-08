@@ -36,7 +36,7 @@ function dashboard_user_incidents_display($dashletid)
     // If you alter this SQL also update the function user_activeincidents($id)
     if ($user == 'current') $user = $sit[2];
     // If the user is passed as a username lookup the userid
-    if (!is_number($user) AND $user != 'current' AND $user != 'all')
+    if (!is_numeric($user) AND $user != 'current' AND $user != 'all')
     {
         $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
         $uresult = mysql_query($usql);

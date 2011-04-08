@@ -655,27 +655,6 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 }
 
 
-/**
- * @deprecated DEPRECATED - INL 12 Feb 2011
- * @see PHP function is_numeric()
- */
-if (!function_exists('is_number'))
-{
-    function is_number($string)
-    {
-        $number = TRUE;
-        for ($i=0; $i < mb_strlen($string); $i++)
-        {
-            if (!(ord(substr($string, $i, 1)) <= 57 && ord(substr($string, $i, 1)) >= 48))
-            {
-                $number = FALSE;
-            }
-        }
-        return $number;
-    }
-}
-
-
 function global_signature()
 {
     $sql = "SELECT signature FROM `{$GLOBALS['dbEmailSig']}` ORDER BY RAND() LIMIT 1";
