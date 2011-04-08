@@ -54,7 +54,9 @@ $items = array();
 while ($incident = mysql_fetch_object($result))
 {
     // Get Last Update
-    list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incident->id);
+    list($update_userid, $update_type, $update_currentowner, 
+        $update_currentstatus, $update_body, $update_timestamp, 
+        $update_nextaction, $update_id) = incident_lastupdate($incident->id);
 
     if ($count == 0) $update_timestamp;
 

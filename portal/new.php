@@ -162,7 +162,7 @@ else //submit
 
     foreach ($_POST AS $key => $value)
     {
-        if (substr($key, 0, 5) == 'pinfo' AND empty($value))
+        if (mb_substr($key, 0, 5) == 'pinfo' AND empty($value))
         {
             $id = intval(str_replace("pinfo", "", $key));
             $sql = "SELECT information FROM `{$dbProductInfo}` ";

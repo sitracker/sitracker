@@ -156,7 +156,7 @@ elseif ($action == 'findcontact')
 
     $search_string = mysql_real_escape_string(urldecode($_REQUEST['search_string']));
     // check for blank or very short search field - otherwise this would find too many results
-    if (empty($contactid) && strlen($search_string) < 2)
+    if (empty($contactid) && mb_strlen($search_string) < 2)
     {
         header("Location: {$_SERVER['PHP_SELF']}");
         exit;
@@ -1007,7 +1007,10 @@ elseif ($action == 'reassign')
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
     $userphone = user_phone($userid);
-    if ($userphone != '') echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
+    if ($userphone != '') 
+    {
+        echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
+    }
     $sql = "UPDATE `{$dbIncidents}` SET owner='{$uid}', lastupdated='{$now}' WHERE id='{$incidentid}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

@@ -131,8 +131,8 @@ function user_realname($id, $allowhtml = FALSE)
         preg_match('/From:[ A-Za-z@\.]*/', $update_body, $from);
         if (!empty($from))
         {
-            $frommail = strtolower(substr(strstr($from[0], '@'), 1));
-            $customerdomain = strtolower(substr(strstr($incidents->email, '@'), 1));
+            $frommail = mb_strtolower(mb_substr(mb_strstr($from[0], '@'), 1));
+            $customerdomain = mb_strtolower(mb_substr(mb_strstr($incidents->email, '@'), 1));
 
             if ($frommail == $customerdomain) return $GLOBALS['strCustomer'];
 
@@ -840,9 +840,9 @@ function valid_username($username)
     $valid = TRUE;
 
     if (!empty($username))
-    {   
+    {
         $tables = array('dbUsers', 'dbContacts');
-    
+
         foreach ($tables AS $table)
         {
             $sql = "SELECT username FROM `{$GLOBALS[$table]}` WHERE username='{$username}'";
@@ -873,9 +873,9 @@ function generate_password($length=8)
                 // not using 1's 0's etc. to save confusion
                 // '-=!&';
     $str = '';
-    while (strlen($str) < $length)
+    while (mb_strlen($str) < $length)
     {
-        $str .= substr($possible, (rand() % strlen($possible)),1);
+        $str .= mb_substr($possible, (rand() % mb_strlen($possible)),1);
     }
     return $str;
 }

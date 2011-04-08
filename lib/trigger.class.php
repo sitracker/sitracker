@@ -498,7 +498,7 @@ class Trigger extends SitEntity {
         {
             $notice = mysql_fetch_object($query);
 
-            if (substr($notice->text, 0, 3) == 'str')
+            if (mb_substr($notice->text, 0, 3) == 'str')
             {
                 $notice_text = $GLOBALS[$notice->text];
             }
@@ -507,7 +507,7 @@ class Trigger extends SitEntity {
                 $notice_text = $notice->text;
             }
 
-            if (substr($notice->linktext, 0, 3) == 'str')
+            if (mb_substr($notice->linktext, 0, 3) == 'str')
             {
                 $noticelinktext = $GLOBALS[$notice->linktext];
             }

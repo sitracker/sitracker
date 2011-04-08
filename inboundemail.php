@@ -69,12 +69,12 @@ function populate_syslang2()
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
             $values = trim(str_replace($badchars, '', $values));
-            if (substr($values, 0, 3) == "str")
+            if (mb_substr($values, 0, 3) == "str")
             {
                 $vars = explode("=", $values);
                 $vars[0] = trim($vars[0]);
-                $vars[1] = trim(substr_replace($vars[1], "",-2));
-                $vars[1] = substr_replace($vars[1], "",0, 1);
+                $vars[1] = trim(mb_substr_replace($vars[1], "",-2));
+                $vars[1] = mb_substr_replace($vars[1], "",0, 1);
                 $SYSLANG[$vars[0]] = $vars[1];
             }
         }
@@ -341,7 +341,7 @@ if ($emails > 0)
                     if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
                     $part++;
                 }
-                $filesize = strlen($data);
+                $filesize = mb_strlen($data);
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";

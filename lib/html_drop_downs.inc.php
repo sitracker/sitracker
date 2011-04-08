@@ -35,7 +35,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function array_drop_down($array, $name, $setting='', $attributes='', $usekey = NULL, $multi = FALSE, $showall = FALSE)
 {
-    if ($multi AND substr($name, -2) != '[]') $name .= '[]';
+    if ($multi AND mb_substr($name, -2) != '[]') $name .= '[]';
     $html = "<select name='{$name}' id='{$name}' ";
     if (!empty($attributes))
     {
@@ -654,7 +654,7 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
             $text.= ", ".$sites->department;
         }
 
-        if (strlen($text) >= 55)
+        if (mb_strlen($text) >= 55)
         {
             $text = mb_substr(trim($text), 0, 55, 'UTF-8').$strEllipsis;
         }
@@ -1157,7 +1157,7 @@ function country_drop_down($name, $country, $extraattributes='')
 
 /**
  * Generates a drop down of all configured billing multipliers
- * 
+ *
  * @author Paul Heaney
  * @param String $name  The name and id of the <select> element
  * @param float $selected  If multiplier to select
@@ -1167,9 +1167,9 @@ function billing_multiplier_dropdown($name, $selected='')
 {
     global $CONFIG;
     $html = "<select id='{$name}' name='{$name}'>\n";
-    
+
     if (empty($selected)) $selected = $CONFIG['billing_default_multiplier'];
-   
+
     foreach ($CONFIG['billing_matrix_multipliers'] AS $multiplier)
     {
         $html .= "<option value='{$multiplier}'";
@@ -1201,7 +1201,7 @@ function billing_matrix_selector($id, $selected='')
     {
         $html = "{$GLOBALS['strNoBillingMatrixDefined']}";
     }
-    
+
     return $html;
 }
 

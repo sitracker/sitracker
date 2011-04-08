@@ -65,12 +65,12 @@ if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_
 $keeptags = array('b','i','u','hr','&lt;', '&gt;');
 foreach ($keeptags AS $keeptag)
 {
-    if (substr($keeptag,0,1)=='&')
+    if (mb_substr($keeptag,0,1)=='&')
     {
         $origtag[] = $keeptag;
-        $temptag[] = "[[".substr($keeptag, 1, strlen($keeptag) - 1)."]]";
-        $origtag[] = strtoupper("$keeptag");
-        $temptag[] = "[[".strtoupper(substr($keeptag, 1, strlen($keeptag) - 1))."]]";
+        $temptag[] = "[[".mb_substr($keeptag, 1, mb_strlen($keeptag) - 1)."]]";
+        $origtag[] = mb_strtoupper("$keeptag");
+        $temptag[] = "[[".mb_strtoupper(mb_substr($keeptag, 1, mb_strlen($keeptag) - 1))."]]";
     }
     else
     {
@@ -126,9 +126,9 @@ while ($filerow = mysql_fetch_object($fileresult))
 {
     $fileid = intval($filerow->fileid);
     $filename = cleanvar($filerow->filename);
-    if (strlen($filename) > 30)
+    if (mb_strlen($filename) > 30)
     {
-        $filename = substr($filename, 0, 30)."...";
+        $filename = mb_substr($filename, 0, 30)."...";
     }
     $icon = getattachmenticon($filename);
     echo "<div class='portalfileicon'><img src='{$icon}' /></div>";
@@ -164,7 +164,7 @@ while ($update = mysql_fetch_object($result))
     //remove empty updates
     if (!empty($updatebody) AND $updatebody != "<hr>")
     {
-        $updatebodylen = strlen($updatebody);
+        $updatebodylen = mb_strlen($updatebody);
 
         $updatebody = str_replace($origtag, $temptag, $updatebody);
         // $updatebody = htmlspecialchars($updatebody);
@@ -213,7 +213,7 @@ while ($update = mysql_fetch_object($result))
 
         //"!(http:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#]*)!e"
         // [\n\t ]+
-        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(strlen('\\2')>=70 ? substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
+        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen('\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
 
 
         // Lookup some extra data

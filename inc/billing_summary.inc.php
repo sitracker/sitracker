@@ -54,7 +54,7 @@ $sql .= "ORDER BY site.name, s.enddate";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-if (mysql_numrows($result) > 0)
+if (mysql_num_rows($result) > 0)
 {
     if ($display == 'html')
     {

@@ -39,17 +39,17 @@ function getplugininfo($string)
 
 function getplugininfovalue($string)
 {
-    return trim(substr($string, strpos($string, '=', 12)+1)," \t\n\r\0\x0B;\'\"");
+    return trim(mb_substr($string, mb_strpos($string, '=', 12)+1)," \t\n\r\0\x0B;\'\"");
 }
 
 
 function gethtmlstring($body, $prefix, $suffix, $offset=0)
 {
-    $begin = @strpos($body, $prefix, $offset);
-    $begin += strlen($prefix);
-    $end = strpos($body, $suffix, $begin);
+    $begin = @mb_strpos($body, $prefix, $offset);
+    $begin += mb_strlen($prefix);
+    $end = mb_strpos($body, $suffix, $begin);
     $length = $end - $begin;
-    $htmlstring = substr($body, $begin, $length);
+    $htmlstring = mb_substr($body, $begin, $length);
 
     return $htmlstring;
 }
@@ -183,9 +183,9 @@ switch ($seltab)
             // !beginsWith($file, "dashboard_") &&
             if (endsWith($file, ".php"))
             {
-                if (empty($dashboard[substr($file, 10, strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
+                if (empty($dashboard[mb_substr($file, 10, mb_strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
                 {
-                    $ondisk_pluginname = substr($file, 0, strpos($file, '.php'));
+                    $ondisk_pluginname = mb_substr($file, 0, mb_strpos($file, '.php'));
                     //$ondisk_plugins[$ondisk_pluginname] = 1;
                     $content = file(APPLICATION_PLUGINPATH. $file);
                     $content = array_filter($content, 'getplugininfo');

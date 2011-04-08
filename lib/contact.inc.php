@@ -588,7 +588,7 @@ function process_new_contact($mode = 'internal')
 
         // generate username and password
 
-        $username = strtolower(mb_substr($surname, 0, strcspn($surname, " "), 'UTF-8'));
+        $username = mb_strtolower(mb_substr($surname, 0, strcspn($surname, " "), 'UTF-8'));
         $prepassword = generate_password();
 
         $password = md5($prepassword);

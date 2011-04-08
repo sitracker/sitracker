@@ -51,7 +51,7 @@ if ($obj->path == '')
 }
 else
 {
-    $ftp_path = $CONFIG['ftp_path'].substr($obj->path,1).'/';
+    $ftp_path = $CONFIG['ftp_path'].mb_substr($obj->path,1).'/';
 }
 
 echo "<tr><th>Location:</th><td><a href='ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$obj->filename}'><code>'ftp://{$CONFIG['ftp_hostname']}{$ftp_path}{$obj->filename}</code></a></td></tr>";

@@ -51,7 +51,7 @@ echo "<br />";
 // ---------------------------------------------
 // SQL Queries:
 
-if (strlen(utf8_decode($search_string)) > 4)
+if (mb_strlen(utf8_decode($search_string)) > 4)
 {
     // Find Software
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE name LIKE '%{$search_string}%' LIMIT 20";
@@ -76,14 +76,14 @@ if (strtolower($mode) == 'myarticles') $sql .= "WHERE author='{$sit[2]}' ";
 if (!empty($search_string))
 {
     $sql .= "WHERE ";
-    $search_string_len = strlen($search_string);
+    $search_string_len = mb_strlen($search_string);
     if (is_numeric($search_string))
     {
         $sql .= "docid=('{$search_string}') ";
     }
-    elseif (strtoupper(substr($search_string,0,strlen($CONFIG['kb_id_prefix']))) == strtoupper($CONFIG['kb_id_prefix']))
+    elseif (mb_strtoupper(mb_substr($search_string, 0, mb_strlen($CONFIG['kb_id_prefix']))) == mb_strtoupper($CONFIG['kb_id_prefix']))
     {
-        $sql .= "docid='".substr($search_string,strlen($CONFIG['kb_id_prefix']))."' ";
+        $sql .= "docid='" . mb_substr($search_string, mb_strlen($CONFIG['kb_id_prefix']))."' ";
     }
     else if ($search_string_len<=2)
     {

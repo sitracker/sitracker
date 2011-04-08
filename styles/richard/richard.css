@@ -1,8 +1,6 @@
 /* Webtrack Style: Richard */
 /* by Ivan Lucas, ivan.lucas@salfordsoftware.co.uk - August 2001 */
 
-@import url("/styles/webtrack.css");
-
 body        { background-color: #7190E0; color: #000000; font-family: Tahoma, Helvetica, sans serif; }
 p,table,td    { font-size: small; color: #000000; }
 a       { font-family: Tahoma, Helvetica, sans serif; font-size: small; color: #3366CC; font-weight: bold; text-decoration: none; }

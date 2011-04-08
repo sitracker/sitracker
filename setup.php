@@ -77,7 +77,7 @@ function filterconfigfiles($var)
     $recognised = FALSE;
     foreach ($poss_config_files AS $poss)
     {
-        if (substr($var, strlen($var)-strlen($poss)) == $poss) $recognised = TRUE;
+        if (mb_substr($var, mb_strlen($var)-mb_strlen($poss)) == $poss) $recognised = TRUE;
     }
     return $recognised;
 }
@@ -255,7 +255,7 @@ function setup_configure()
                     break;
                 case 'text':
                 default:
-                    if (strlen($CONFIG[$setupvar]) < 65)
+                    if (mb_strlen($CONFIG[$setupvar]) < 65)
                     {
                         $html .= "<input type='text' name='$setupvar' size='60' value=\"{$value}\" />";
                     }
@@ -298,7 +298,7 @@ function setup_exec_sql($sqlquerylist)
         // Loop around the queries
         foreach ($sqlquerylist AS $schemaversion => $queryelement)
         {
-            if ($schemaversion != '0') $schemaversion = substr($schemaversion, 1);
+            if ($schemaversion != '0') $schemaversion = mb_substr($schemaversion, 1);
 //             echo "<p>Schema version $schemaversion, installed schema $installed_schema, query $queryelement</p>";
             if ($schemaversion == 0 OR $installed_schema < $schemaversion)
             {
@@ -679,7 +679,7 @@ switch ($_REQUEST['action'])
                 {
                     $newcfgfile .= $setupval == TRUE ? "TRUE" : "FALSE";
                 }
-                elseif (substr($setupval, 0, 6) == 'array(')
+                elseif (mb_substr($setupval, 0, 6) == 'array(')
                 {
                     $newcfgfile .= stripslashes("{$setupval}");
                 }
@@ -895,7 +895,7 @@ switch ($_REQUEST['action'])
             echo "<p class='error'>Sorry, the attachment directory could not be created for you.</p>"; // FIXME more help
             echo "<p>Please manually create a directory named <code>{$CONFIG['attachment_fspath']}</code></p>";
 
-            if (substr($CONFIG['attachment_fspath'], 0, 14) == './attachments-')
+            if (mb_substr($CONFIG['attachment_fspath'], 0, 14) == './attachments-')
             {
                 echo "<p class='info'>Setup has chosen this random looking directory name on purpose, ";
                 echo "please create the directory named exactly as shown above.</p>";
@@ -1376,7 +1376,7 @@ switch ($_REQUEST['action'])
                         echo "</p>";
 
                         // Display SQL schema changes for svn versions
-                        if (substr($application_revision, 0, 3) == 'svn')
+                        if (mb_substr($application_revision, 0, 3) == 'svn')
                         {
                             echo "<p>You are running an <a href='http://sitracker.org/wiki/Development/Unreleased_Versions'>SVN version</a>, you should check that you have all of these schema changes: (some may have been added recently)</p>";
                             echo "<div style='border: 1px solid red;padding:10px; background: #FFFFC0; font-family:monospace; font-size: 80%; height:200px; overflow:scroll;'>";
@@ -1388,7 +1388,7 @@ switch ($_REQUEST['action'])
                         {
                             foreach ($upgrade_schema[$installed_version*100] AS $possible_schema_updates => $nothing)
                             {
-                                $possible_schema_updates = substr($possible_schema_updates, 1);
+                                $possible_schema_updates = mb_substr($possible_schema_updates, 1);
                                 if ($possible_schema_updates > $installed_schema) $schemaupgradeneeded = TRUE;
                                 else $schemaupgradeneeded = FALSE;
                             }

@@ -96,14 +96,14 @@ if (mysql_num_rows($result) > 0)
         {
             $file_fspath = $old_style;
         }
-    
+
         if (file_exists($file_fspath))
         {
             $file_size = filesize($file_fspath);
             $fp = fopen($file_fspath, 'r');
             if ($fp && ($file_size !=-1))
             {
-                $ext = substr($filename, strrpos($filename, '.') + 1);
+                $ext = mb_substr($filename, strrpos($filename, '.') + 1);
                 if (in_array($ext, $inlinefiles)) $inline = TRUE;
                 else $inline = FALSE;
                 if ($inline) header("Content-Type: " . mime_type($file_fspath));
@@ -117,7 +117,7 @@ if (mysql_num_rows($result) > 0)
                     header('Cache-Control: private');
                     header('Pragma: private');
                 }
-    
+
                 $buffer = '';
                 while (!feof($fp))
                 {
@@ -136,7 +136,7 @@ if (mysql_num_rows($result) > 0)
                 echo "<h3>403 Forbidden</h3>";
                 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
                 exit;
-    
+
             }
         }
         else

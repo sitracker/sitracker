@@ -23,7 +23,7 @@ if (!function_exists('list_dir'))
         // try to figure out what delimeter is being used (for windows or unix)...
         $delim = (strstr($dirname,"/")) ? "/" : "\\";
 
-        if ($dirname[strlen($dirname)-1] != $delim)
+        if ($dirname[mb_strlen($dirname)-1] != $delim)
         {
             $dirname .= $delim;
         }
@@ -95,9 +95,9 @@ function rec_copy($from_path, $to_path)
 
                 if (is_file($file))
                 {
-                    if (!(substr(rtrim($file),strlen(rtrim($file))-8, 4) == 'mail'
-                        || substr(rtrim($file),strlen(rtrim($file))-10, 5) == 'part1'
-                        || substr(rtrim($file),strlen(rtrim($file))-8, 4) == '.vcf'))
+                    if (!(mb_substr(rtrim($file),mb_strlen(rtrim($file))-8, 4) == 'mail'
+                        || mb_substr(rtrim($file),mb_strlen(rtrim($file))-10, 5) == 'part1'
+                        || mb_substr(rtrim($file),mb_strlen(rtrim($file))-8, 4) == '.vcf'))
                     {
                         copy($from_path.$file, $to_path.$file);
                     }
@@ -241,7 +241,7 @@ function upload_file($file, $incidentid, $updateid, $type='public')
 function return_bytes($val)
 {
     $val = trim($val);
-    $last = strtolower($val{strlen($val)-1});
+    $last = strtolower($val{mb_strlen($val)-1});
     switch ($last)
     {
         // The 'G' modifier is available since PHP 5.1.0

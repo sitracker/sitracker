@@ -150,7 +150,7 @@ switch ($action)
                 $str .= "[\"".$obj->name."\"],";
             }
         }
-        echo "[".substr($str,0,-1)."]";
+        echo "[".mb_substr($str,0,-1)."]";
         break;
     case 'tags':
         $sql = "SELECT DISTINCT t.name FROM `{$dbSetTags}` AS st, `{$dbTags}` AS t WHERE st.tagid = t.tagid GROUP BY t.name";
@@ -163,7 +163,7 @@ switch ($action)
                 $str .= "[".$obj->name."],";
             }
         }
-        echo "[".substr($str,0,-1)."]";
+        echo "[".mb_substr($str,0,-1)."]";
         break;
     case 'contact' :
         $s = clean_dbstring($_REQUEST['s']);
@@ -178,7 +178,7 @@ switch ($action)
                 $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
             }
         }
-        echo "[".substr($str,0,-1)."]";
+        echo "[".mb_substr($str,0,-1)."]";
         break;
     case 'sites':
         $s = clean_dbstring($_REQUEST['s']);
@@ -193,7 +193,7 @@ switch ($action)
                 $str .= "[\"".$obj->name."\"],";
             }
         }
-        echo "[".substr($str,0,-1)."]";
+        echo "[".mb_substr($str,0,-1)."]";
         break;
     case 'slas':
         $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";

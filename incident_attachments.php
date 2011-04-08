@@ -206,7 +206,7 @@ function draw_file_row($file, $incidentid, $path)
     }
     $filesize = filesize($file);
     $file_size = readable_file_size($filesize);
-    
+
     $mime_type = mime_type($file);
 
     $updateid = str_replace("u", "", $filedir);
@@ -237,7 +237,7 @@ function draw_file_row($file, $incidentid, $path)
     $html .= "<a href=\"{$url}\"><img src='".getattachmenticon($filename)."' alt='Icon' title='{$filename} ({$file_size})' /></a>";
     $html .= "&nbsp;</td>";
     $html .= "<td width='30%'><a href='{$url}'";
-    if (substr($mime_type, 0, 4)=='text' AND $filesize < 512000)
+    if (mb_substr($mime_type, 0, 4) == 'text' AND $filesize < 512000)
     {
         // The file is text, extract some of the contents of the file into a string for a preview
         $handle = fopen($file, "r");
@@ -278,7 +278,7 @@ if (file_exists($incident_attachment_fspath))
         foreach ($temparray as $value)
         {
             if (is_dir($value)) $dirarray[] = $value;
-            elseif (is_file($value) AND substr($value,-1) != '.' AND substr($value,-8) != 'mail.eml')
+            elseif (is_file($value) AND mb_substr($value,-1) != '.' AND mb_substr($value,-8) != 'mail.eml')
             {
                 $rfilearray[] = $value;
             }
@@ -303,17 +303,17 @@ if (file_exists($incident_attachment_fspath))
 
         foreach ($dirarray AS $dir)
         {
-            $directory = substr($dir, 0, strrpos($dir, DIRECTORY_SEPARATOR));
-            $dirname = substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, strlen($dir));
+            $directory = mb_substr($dir, 0, strrpos($dir, DIRECTORY_SEPARATOR));
+            $dirname = mb_substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, mb_strlen($dir));
             if (is_number($dirname) &&
                 $dirname != $id &&
-                strlen($dirname) == 10)
+                mb_strlen($dirname) == 10)
             {
                 $dirprettyname = ldate('l jS M Y @ g:ia',$dirname);
             }
             elseif ($dirname[0] == 'u')
             {
-                $updateid = substr($dirname, 1);
+                $updateid = mb_substr($dirname, 1);
                 $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = $updateid";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -330,7 +330,7 @@ if (file_exists($incident_attachment_fspath))
             $headhtml .= icon('folder', 16, $id, $dir)." {$dirprettyname}";
             $headhtml .= "</div>\n";
             $tempfarray = list_dir($dir, 1);
-            if (count($tempfarray) == 1 AND (substr($tempfarray[0],-8) == 'mail.eml'))
+            if (count($tempfarray) == 1 AND (mb_substr($tempfarray[0],-8) == 'mail.eml'))
             {
                 // do nothing if theres only an email in the dir, don't even list the directory
             }
@@ -341,12 +341,12 @@ if (file_exists($incident_attachment_fspath))
                 if (in_array("{$dir}" . DIRECTORY_SEPARATOR . "mail.eml", $tempfarray))
                 {
                     $updatelink = readlink($dir);
-                    $updateid = substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,strlen($updatelink));
+                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,mb_strlen($updatelink));
                     echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#$updateid'>{$strJumpToEntryLog}</a></p>";
                 }
                 foreach ($tempfarray as $fvalue)
                 {
-                    if (is_file($fvalue) AND substr($fvalue,-8) != 'mail.eml')
+                    if (is_file($fvalue) AND mb_substr($fvalue,-8) != 'mail.eml')
                     {
                         $filearray[] = $fvalue;
                     }
@@ -361,7 +361,7 @@ if (file_exists($incident_attachment_fspath))
                     $updatetype == 'email' OR
                     $updatetype == 'webupdate')
                 {
-                    $updatetext = substr($updatetext, 0, 80)."...";
+                    $updatetext = mb_substr($updatetext, 0, 80)."...";
                     echo "<span style='font-size:400%';>“</span>";
                     echo bbcode($updatetext);
                     echo "<span style='font-size:400%';>„</span>";

@@ -146,9 +146,9 @@ $ldap_conn = "";
  **/
 
 // Clean PHP_SELF server variable to avoid potential XSS security issue
-$_SERVER['PHP_SELF'] = substr($_SERVER['PHP_SELF'], 0,
-                            (strlen($_SERVER['PHP_SELF'])
-                            - @strlen($_SERVER['PATH_INFO'])));
+$_SERVER['PHP_SELF'] = mb_substr($_SERVER['PHP_SELF'], 0,
+                            (mb_strlen($_SERVER['PHP_SELF'])
+                            - @mb_strlen($_SERVER['PATH_INFO'])));
 
 // Report all PHP errors
 error_reporting(E_ALL);

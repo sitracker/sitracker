@@ -80,7 +80,7 @@ if (!file_exists($file_fspath) AND !file_exists($file_fspath2) AND !file_exists(
 elseif ($access == TRUE)
 {
     if (file_exists($file_fspath))
-    {  
+    {
         //do nothing
     }
     elseif (file_exists($file_fspath2))
@@ -98,7 +98,7 @@ elseif ($access == TRUE)
         $fp = fopen($file_fspath, 'r');
         if ($fp && ($file_size !=-1))
         {
-           $ext = substr($filename, strrpos($filename, '.') + 1);
+           $ext = mb_substr($filename, strrpos($filename, '.') + 1);
             if (in_array($ext, $inlinefiles)) $inline = TRUE;
             else $inline = FALSE;
             if ($inline) header("Content-Type: ".mime_type($file_fspath));
