@@ -687,7 +687,7 @@ class mime_parser_class
 						}
 						else
 						{
-							$start = strtolower(substr($this->buffer, $next, mb_strlen'>from ')));
+							$start = strtolower(substr($this->buffer, $next, mb_strlen('>from ')));
 							if(!strcmp('>from ', $start))
 							{
 								$part=array(
