@@ -37,27 +37,6 @@ function filterconfigfiles($var)
 }
 
 
-$configfiles = array_filter($configfiles, 'filterconfigfiles');
-$configfiles = array_values($configfiles);
-$numconfigfiles = count($configfiles);
-if ($numconfigfiles == 1)
-{
-    $config_filename = $configfiles[0];
-}
-elseif ($numconfigfiles < 1)
-{
-    $configfiles[] = './config.inc.php';
-}
-
-$cfg_file_exists = FALSE;
-$cfg_file_writable = FALSE;
-foreach ($configfiles AS $conf_filename)
-{
-    if (file_exists($conf_filename)) $cfg_file_exists = TRUE;
-    if (is_writable($conf_filename)) $cfg_file_writable = TRUE;
-}
-
-
 /**
  * Setup configuration form
  * @author Ivan Lucas

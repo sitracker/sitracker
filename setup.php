@@ -63,6 +63,25 @@ $systemhash = md5(date('Y-m-d') . $_SERVER['REMOTE_ADDR']
                 . $_SERVER['SCRIPT_FILENAME'] . $_SERVER['HTTP_USER_AGENT']
                 . $CONFIG['attachment_fspath'] . $_SERVER['SERVER_SIGNATURE'] );
 
+$configfiles = array_filter($configfiles, 'filterconfigfiles');
+$configfiles = array_values($configfiles);
+$numconfigfiles = count($configfiles);
+if ($numconfigfiles == 1)
+{
+    $config_filename = $configfiles[0];
+}
+elseif ($numconfigfiles < 1)
+{
+    $configfiles[] = './config.inc.php';
+}
+
+$cfg_file_exists = FALSE;
+$cfg_file_writable = FALSE;
+foreach ($configfiles AS $conf_filename)
+{
+    if (file_exists($conf_filename)) $cfg_file_exists = TRUE;
+    if (is_writable($conf_filename)) $cfg_file_writable = TRUE;
+}
 
 session_name($CONFIG['session_name']);
 session_start();
