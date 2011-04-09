@@ -58,19 +58,6 @@ foreach ($configfiles AS $conf_filename)
 }
 
 
-// Detect whether an array is associative
-// From http://uk.php.net/manual/en/function.is-array.php#77744
-//function is_assoc($array)
-//{
-//    return is_array($array) && count($array) !== array_reduce(array_keys($array), 'is_assoc_callback', 0);
-//}
-
-
-//function is_assoc_callback($a, $b)
-//{
-//    return $a === $b ? $a + 1 : 0;
-//}
-
 /**
  * Setup configuration form
  * @author Ivan Lucas
