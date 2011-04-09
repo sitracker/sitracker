@@ -117,8 +117,6 @@ if (file_exists('/etc/webtrack.conf'))
     echo "<p class='warning'>Warning: You have a legacy config file at /etc/webtrack.conf, as of SiT! 4.0 this file is no longer read, please use /etc/sit.conf instead</p>";
 }
 
-echo "\n\n<!-- A:".strip_tags($_REQUEST['action'])." -->\n\n";
-
 switch ($_REQUEST['action'])
 {
     case 'save_config':
