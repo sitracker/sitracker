@@ -349,7 +349,7 @@ else
                     //dont care if I'm related to myself
                     if ($relatedid != $id)
                     {
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner,currentstatus, bodytext, timestamp) ";
+                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
                         $sql .= "VALUES ('$relatedid', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', 'New Status: [b]Active[/b]<hr>\nRelated incident [{$id}] has been closed', '{$now}')";
                         $result = mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

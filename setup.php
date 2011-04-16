@@ -39,15 +39,6 @@ if (file_exists('/etc/sit.conf') AND !include ('/etc/sit.conf'))
     die('Cound not read config file sit.conf');
 }
 
-// // Some actions require authentication
-// if ($_REQUEST['action'] == 'reconfigure')
-// {
-//     $permission = 22;
-//     $_REQUEST['config'] = 'advanced'; // set advanced mode
-//     require (APPLICATION_LIBPATH . 'functions.inc.php');
-//     require (APPLICATION_LIBPATH . 'auth.inc.php');
-// }
-
 // These are the required variables we want to configure during installation
 $SETUP = array('db_hostname','db_database','db_username','db_password', 'db_tableprefix','application_webpath');
 
@@ -424,7 +415,6 @@ switch ($_REQUEST['action'])
         else
         {
             // Connected to database
-            // Select database
             mysql_select_db($CONFIG['db_database'], $db);
             if (mysql_error())
             {
