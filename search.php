@@ -93,50 +93,39 @@ function search_highlight($x,$var)
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-?>
-<script type='text/javascript'>
-//<![CDATA[
-var id = <?php
-    if (!empty($q)) echo "\"{$q}\"";
-    else echo '""';
-    ?>;
-if (!isNaN(id))
+
+if (is_numeric($q))
 {
-    <?php
-        if (FALSE !== incident_status($q))
+    if (FALSE !== incident_status($q))
+    {
+        $js = '';
+        $sql = "SELECT id FROM `{$dbIncidents}` WHERE id='{$q}'";
+        $result = mysql_query($sql);
+        if (mysql_num_rows($result) > 0)
         {
-            $sql = "SELECT id FROM `{$dbIncidents}` WHERE id='{$q}'";
-            $result = mysql_query($sql);
-            if (mysql_num_rows($result) > 0)
+            echo "<script type='text/javascript'>//<![CDATA[\n";
+            if ($_SESSION['userconfig']['incident_popup_onewindow'])
             {
-                if ($_SESSION['userconfig']['incident_popup_onewindow'])
-                {?>
-                    window.location = 'incident_details.php?id=' + id;
-                <?php
+                echo "window.location = 'incident_details.php?id={$q};";
+            }
+            else
+            {
+                echo "window.location = 'incident_details.php?id={$q}&win=jump&return=";
+                if (!empty($_SERVER['HTTP_REFERER']))
+                {
+                    echo $_SERVER['HTTP_REFERER'];
                 }
                 else
                 {
-                ?>
-                    window.location = 'incident_details.php?id=' + id + '&win=jump&return=<?php
-                    if (!empty($_SERVER['HTTP_REFERER']))
-                    {
-                        echo $_SERVER['HTTP_REFERER'];
-                    }
-                    else
-                    {
-                        echo $_CONFIG['application_webpath'];
-                    }
-                    ?>';
-                <?php
+                    echo $_CONFIG['application_webpath'];
                 }
             }
-    }?>
-
+            
+            echo "';\n";
+            echo "//]]></script>";
+        }
+    }
 }
-//]]>
-</script>
-<?php
-
 
 echo "<h2>".icon('search', 32)." {$strSearch} {$CONFIG['application_shortname']}</h2>";
 

@@ -51,7 +51,6 @@ if ($type < HOL_PUBLIC)
         echo "</table>";
     }
     mysql_free_result($result);
-
 }
 else
 {
@@ -88,13 +87,13 @@ if (!empty($selectedday))
         {
             // FIXME i18n ALL these
             case 'am':
-                echo "You can make it <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=pm'>the afternoon instead</a>, or select the <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=day'>full day</a>. ";
+                echo "You can make it <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=pm'>the afternoon instead</a>, or select the <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=day'>full day</a>. ";
                 break;
             case 'pm':
-                echo "You can make it <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=am'>the morning</a> instead, or select the <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=day'>full day</a>. ";
+                echo "You can make it <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=am'>the morning</a> instead, or select the <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=day'>full day</a>. ";
                 break;
             case 'day':
-                echo "You can make it <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=am'>the morning</a>, or <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=pm'>the afternoon</a> instead. ";
+                echo "You can make it <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=am'>the morning</a>, or <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=pm'>the afternoon</a> instead. ";
         }
         if ($length != '0')
         {
@@ -104,7 +103,7 @@ if (!empty($selectedday))
     }
     elseif ($approved == 1)
     {
-        list($xtype, $xlength, $xapproved, $xapprovedby)=user_holiday($user, $type, $selectedyear, $selectedmonth, $selectedday, FALSE);
+        list($xtype, $xlength, $xapproved, $xapprovedby) = user_holiday($user, $type, $selectedyear, $selectedmonth, $selectedday, FALSE);
         echo "Approved by ".user_realname($xapprovedby).".";
         if ($length!='0' && $approver == TRUE && $sit[2] == $xapprovedby)
         {

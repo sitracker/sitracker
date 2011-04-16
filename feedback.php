@@ -394,7 +394,7 @@ switch ($_REQUEST['action'])
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     while ($question = mysql_fetch_object($qresult))
                     {
-                        if (mb_strlentrim($question->sectiontext)) > 3)
+                        if (mb_strlen(trim($question->sectiontext)) > 3)
                         {
                             echo "<hr />{$question->sectiontext}\n";
                         }
