@@ -312,7 +312,7 @@ function dashboard_rss_edit($dashletid)
                 echo "<p align='center'>{$GLOBALS['strNoFeedsCurrentlyPresent']}</p>";
             }
 
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strNew'], 'edit', array('editaction'=>'add'))."</p>";
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strNew'], 'edit', array('editaction'=>'new'))."</p>";
             break;
     }
 

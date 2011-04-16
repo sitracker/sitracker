@@ -203,10 +203,10 @@ switch ($seltab)
         }
 
         closedir($dir_handle);
-        ksort($ondisk_plugins);
 
         if (is_array($ondisk_plugins))
         {
+            ksort($ondisk_plugins);
             echo "<table align='center'>";
             echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
             $shade = 'shade1';
