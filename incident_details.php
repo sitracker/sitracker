@@ -621,12 +621,12 @@ else
         {
             $updateheadertext = str_replace('updatereview', $strPeriodStarted, $updateheadertext);
         }
-        elseif ($update->type == 'reviewmet' AND $update->sla == '')
+        elseif ($update->type == 'reviewmet' AND empty($update->sla))
         {
             $updateheadertext = str_replace('updatereview', $strCompleted, $updateheadertext);
         }
 
-        if ($update->type == 'slamet')
+        if (!empty($update->sla))
         {
             $updateheadertext = str_replace('updatesla', $slatypes[$update->sla]['text'], $updateheadertext);
         }
@@ -762,7 +762,7 @@ else
                 $showhide = $strMakeVisibleInPortal;
             }
 
-            if (!empty($update->sla) AND $update->type == 'slamet')
+            if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $showhide);
             }
