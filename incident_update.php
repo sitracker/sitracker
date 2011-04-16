@@ -581,7 +581,7 @@ else
         trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
-    $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', priority='$newpriority', lastupdated='{$now}', timeofnextaction='$timeofnextaction' WHERE id='{$id}'";
+    $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', priority='{$newpriority}', lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -639,7 +639,7 @@ else
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
-        journal(CFG_LOGGING_MAX,'Incident Updated', "Incident $id Updated", CFG_JOURNAL_SUPPORT, $id);
+        journal(CFG_LOGGING_MAX,'Incident Updated', "Incident {$id} Updated", CFG_JOURNAL_SUPPORT, $id);
         html_redirect("incident_details.php?id={$id}");
     }
 }
