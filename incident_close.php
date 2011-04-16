@@ -288,7 +288,6 @@ else
 
             // Meet service level 'solution'
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            // $sql .= "VALUES ('$id', '{$sit[2]}', '{$now}', '{$currentstatus}', 'slamet', '$now', '{$sit[2]}', 'show', 'solution')";
             $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$currentowner}', '{$currentstatus}', 'show', 'solution', '')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
