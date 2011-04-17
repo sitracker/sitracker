@@ -16,8 +16,6 @@
 // to existing databases in $upgrade_schema[] at the bottom of the file
 // *AND* you must also change $schema[] for new installations (at the top of the file)
 
-// TODO we need to clean this schema up to make it confirmed compatible with mysql4
-
 //the list of default triggers so we can drop all and recreate when we need to update the built-in ones
 $default_triggers = "
 INSERT INTO `{$dbTriggers}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`) VALUES('TRIGGER_INCIDENT_CREATED', 0, 'ACTION_JOURNAL', 0, '', '');
@@ -82,10 +80,10 @@ INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fr
 ('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
-('Default', 6, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 3, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 4, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 5, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 6, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 7, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 8, 1, 1, 1, 1, 1, 1.5, 2, 2),
 ('Default', 9, 1, 1, 1, 1, 1, 1.5, 2, 2),
