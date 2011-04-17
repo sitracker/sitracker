@@ -1210,7 +1210,7 @@ function incident_get_next_target($incidentid)
 {
     global $now;
     // Find the most recent SLA target that was met
-    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND type='slamet' ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
