@@ -226,7 +226,7 @@ while ($update = mysql_fetch_object($result))
         //show update type icon
         if (array_key_exists($update->type, $updatetypes))
         {
-            if (!empty($update->sla) AND $update->type == 'slamet')
+            if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
             }
@@ -241,7 +241,7 @@ while ($update = mysql_fetch_object($result))
             }
         }
         echo " {$updatetime}</div>";
-        if ($updatebody!='')
+        if ($updatebody != '')
         {
             if ($update->customervisibility == 'show')
             {
