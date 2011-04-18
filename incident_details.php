@@ -599,9 +599,9 @@ else
         }
 
         // Lookup some extra data
-        $updateuser = user_realname($update->userid,TRUE);
+        $updateuser = user_realname($update->userid, TRUE);
         $updatetime = readable_date($update->timestamp);
-        $currentowner = user_realname($update->currentowner,TRUE);
+        $currentowner = user_realname($update->currentowner, TRUE);
         $currentstatus = incident_status($update->currentstatus);
 
         $updateheadertext = $updatetypes[$update->type]['text'];
