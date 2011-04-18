@@ -1178,10 +1178,8 @@ function save_draft(incidentid, type){
                         var response = transport.responseText || "no response text";
                         if (response != '')
                         {
-                            alert ('response '+response);
                             if (draftid == -1)
                             {
-                                alert ('moo');
                                 draftid = response;
                             }
                             var currentTime = new Date();
