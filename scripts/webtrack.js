@@ -1176,11 +1176,13 @@ function save_draft(incidentid, type){
                     onSuccess: function(transport)
                     {
                         var response = transport.responseText || "no response text";
-                        if (response.responseText != '')
+                        if (response != '')
                         {
+                            alert ('response '+response);
                             if (draftid == -1)
                             {
-                                draftid = response.responseText;
+                                alert ('moo');
+                                draftid = response;
                             }
                             var currentTime = new Date();
                             var hours = currentTime.getHours();
@@ -1255,9 +1257,9 @@ function get_checks()
                 onSuccess: function(transport)
                 {
                     var response = transport.responseText || "no response text";
-                    if (response.responseText != '')
+                    if (response != '')
                     {
-                        $("checkshtml").update(response.responseText);
+                        $("checkshtml").update(response);
                     }
                 }
             });
@@ -1284,9 +1286,9 @@ function switch_template()
                     onSuccess: function(transport)
                     {
                         var response = transport.responseText || "no response text";
-                        if (response.responseText != '')
+                        if (response != '')
                         {
-                            $(response.responseText).selected = true;
+                            $(response).selected = true;
                         }
                     }
                 });
@@ -1312,9 +1314,9 @@ function switch_template()
                     onSuccess: function(transport)
                     {
                         var response = transport.responseText || "no response text";
-                        if (response.responseText != '')
+                        if (response != '')
                         {
-                            $(response.responseText).selected = true;
+                            $(response).selected = true;
                         }
                     }
                 });
