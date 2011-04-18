@@ -97,17 +97,10 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
 
     //add the updates and SLA etc
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
-    $sql .= "currentstatus, customervisibility, nextaction) ";
+    $sql .= "currentstatus, customervisibility, nextaction, sla) ";
     $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
-    $sql .= "'1', '{$customervisibility}', '{$nextaction}')";
+    $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    // Insert the first SLA update, this indicates the start of an incident
-    // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'slamet', '{$now}', '{$sit[2]}', '1', 'show', 'opened','{$_SESSION['syslang']['strIncidentIsOpen']}.')";
-    mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
     // Insert the first Review update, this indicates the review period of an incident has started
@@ -129,8 +122,7 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
  */
 function create_incident_from_incoming($incomingid)
 {
-    global $dbTempIncoming, $dbMaintenance, $dbServiceLevels,
-        $dbSoftwareProducts, $CONFIG;
+    global $dbTempIncoming, $dbMaintenance, $dbServiceLevels, $dbSoftwareProducts, $CONFIG;
     $rtn = TRUE;
 
     $incomingid = intval($incomingid);
@@ -471,7 +463,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     $sql .= "timestamp, currentowner, currentstatus, customervisibility, ";
     $sql .= "sla, bodytext) ";
     $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', ";
-    $sql .= STATUS_ACTIVE.", 'show', 'opened','{$GLOBALS['strIncidentIsOpen']}')";
+    $sql .= STATUS_ACTIVE.", 'show', 'opened', '{$GLOBALS['strIncidentIsOpen']}')";
     mysql_query($sql);
     if (mysql_error())
     {

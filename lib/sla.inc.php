@@ -63,6 +63,7 @@ function incident_sla_history($incidentid)
             default:
                 $slahistory[$idx]['targettime'] = 0;
         }
+
         if ($prevtime > 0)
         {
             $slahistory[$idx]['actualtime'] = calculate_incident_working_time($incidentid, $prevtime, $history->timestamp);
@@ -633,7 +634,7 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
         $laststatus = $update->currentstatus;
     }
     mysql_free_result($result);
-
+    
     // Calculate remainder
     if (is_active_status($laststatus, $states) AND ($t2 >= $update->timestamp))
     {

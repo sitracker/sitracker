@@ -286,26 +286,20 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            // Meet service level 'solution'
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$currentowner}', '{$currentstatus}', 'show', 'solution', '')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             //
             if ($wait == 'yes')
             {
                 // Update - mark for closure
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}')";
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
             else
             {
                 // Update - close immediately
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}')";
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
