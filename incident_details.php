@@ -626,11 +626,18 @@ else
             $updateheadertext = str_replace('updatereview', $strCompleted, $updateheadertext);
         }
 
-        if (!empty($update->sla))
+        if (!empty($update->sla) AND ($update->type == 'slamet' OR $update->type == 'reviewmet'))
         {
             $updateheadertext = str_replace('updatesla', $slatypes[$update->sla]['text'], $updateheadertext);
+            
         }
-
+        elseif (!empty($update->sla))
+        {
+            //$updateheadertext = "{$strSLA}: ";
+            if ($update->sla != 'opened') $updateheadertext = "{$strSLA}: {$slatypes[$update->sla]['text']} - {$updateheadertext}";
+            else $updateheadertext = "{$strSLA}: {$updateheadertext}";
+        }
+        
         echo "<a name='update{$count}'></a>";
 
         // Print a header row for the update
@@ -765,8 +772,15 @@ else
             if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $showhide);
+
             }
             echo icon($updatetypes[$update->type]['icon'], 16, $showhide);
+
+            if (!empty($update->sla) AND $update->type != 'slamet')
+            {
+                // Don't show icon twice for old incidents
+                echo icon($updatetypes['slamet']['icon'], 16, $showhide);
+            }
 
             echo "</a> {$updateheadertext}";
         }
@@ -782,9 +796,14 @@ else
                 echo "<span>{$strMakeVisibleInPortal}</span>";
             }
 
-            if ($update->sla != '')
+            if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
+                if ($update->type != 'slamet')
+                {
+                    // Don't show icon twice for old incidents
+                    echo icon($updatetypes['slamet']['icon'], 16, $showhide);
+                }
             }
             echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
         }
