@@ -26,6 +26,8 @@ $incidentid = $id;
 $draftid = clean_int($_REQUEST['draftid']);
 if (empty($draftid)) $draftid = -1;
 
+debug_log(print_r($_REQUEST, TRUE));
+
 $title = $strEmail;
 
 if (empty($step))
@@ -611,7 +613,7 @@ switch ($step)
                     $updatebody = mysql_real_escape_string($updatebody);
 
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
-                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}'. {$sla})";
+                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
@@ -627,7 +629,7 @@ switch ($step)
                     $updatebody = mysql_real_escape_string($updatebody);
 
 					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
-                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}'. {$sla})";
+                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
