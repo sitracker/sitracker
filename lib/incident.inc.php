@@ -1704,20 +1704,20 @@ function incident_sla($incident_id, $type)
         {
             case 'prob_determ':
                 $sla = $sla_obj->prob_determ_mins;
-            break;
+                break;
 
             case 'action_plan':
                 $sla = $sla_obj->action_plan_mins;
-            break;
+                break;
 
             case 'resolution':
                 $sla = $sla_obj->resolution_days * 480;
-            break;
+                break;
     
             case 'initial_response':
             default:
                 $sla = $sla_obj->initial_response_mins;
-            break;
+                break;
 
         }
         return format_workday_minutes($sla);
