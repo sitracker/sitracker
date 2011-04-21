@@ -37,7 +37,7 @@ switch ($action)
         $name = cleanvar($_REQUEST['name']);
         $description = cleanvar($_REQUEST['description']);
         $priority = clean_int($_REQUEST['priority']);
-        
+
         if (!empty($_REQUEST['duedate']))
         {
             $duedate = strtotime(cleanvar($_REQUEST['duedate']) . ' ' . $due_time_picker_hour . ':' . $due_time_picker_minute);
@@ -68,7 +68,7 @@ switch ($action)
         {
             $enddate = '';
         }
-        
+
         if ($completion == 100 AND $enddate == '') $enddate = $now;
         $value = cleanvar($_REQUEST['value']);
         $owner = clean_int($_REQUEST['owner']);
@@ -138,13 +138,13 @@ switch ($action)
                 $bodytext .= "{$SYSLANG['strPriority']}: ".priority_name($old_priority)." -&gt; [b]".priority_name($priority)."[/b]\n";
             }
 
-            $old_startdate = substr($old_startdate, 0, 16);
+            $old_startdate = mb_substr($old_startdate, 0, 16);
             if ($startdate != $old_startdate AND ($startdate != '' AND $old_startdate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strStartDate']}: {$old_startdate} -&gt; [b]{$startdate}[/b]\n";
             }
 
-            $old_duedate = substr($old_duedate, 0, 16);
+            $old_duedate = mb_substr($old_duedate, 0, 16);
             if ($duedate != $old_duedate AND ($duedate != '0000-00-00' AND $old_duedate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_duedate} -&gt; [b]{$duedate}[/b]\n";
@@ -155,7 +155,7 @@ switch ($action)
                 $bodytext .= "{$SYSLANG['strCompletion']}: {$old_completion}% -&gt; [b]{$completion}%[/b]\n";
             }
 
-            $old_enddate = substr($old_enddate, 0, 16);
+            $old_enddate = mb_substr($old_enddate, 0, 16);
             if ($enddate != $old_enddate AND ($enddate != '0000-00-00 00:00:00' AND $old_enddate != '0000-00-00 00:00'))
             {
                 $bodytext .= "{$SYSLANG['strDueDate']}: {$old_enddate} -&gt; [b]{$enddate}[/b]\n";

@@ -259,7 +259,7 @@ switch ($_REQUEST['action'])
             $fieldname = "Q{$question->id}";
 
             // Check required fields are filled
-            if ($question->required == 'true' AND (strlen($_POST[$fieldname]) < 1 OR
+            if ($question->required == 'true' AND (mb_strlen($_POST[$fieldname]) < 1 OR
                     isset($_POST[$fieldname]) == FALSE))
                     {
                         $errorfields[] = "{$question->id}";
@@ -268,7 +268,7 @@ switch ($_REQUEST['action'])
             // Store text responses in the appropriate field
             if ($question->type == 'text')
             {
-                if (strlen($_POST[$fieldname]) < 255 AND $option_list[1] < 2)
+                if (mb_strlen($_POST[$fieldname]) < 255 AND $option_list[1] < 2)
                 {
                     // If we've got just one row and less than 255 characters store it in the result field
                     $qresult = $_POST[$fieldname];
@@ -394,7 +394,7 @@ switch ($_REQUEST['action'])
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     while ($question = mysql_fetch_object($qresult))
                     {
-                        if (strlen(trim($question->sectiontext)) > 3)
+                        if (mb_strlen(trim($question->sectiontext)) > 3)
                         {
                             echo "<hr />{$question->sectiontext}\n";
                         }

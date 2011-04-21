@@ -8,7 +8,12 @@ session_name($CONFIG['session_name']);
 session_start();
 plugin_do('before_page');
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-echo "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xml:lang=\"{$_SESSION['lang']}\" lang=\"{$_SESSION['lang']}\">\n<head><title>";
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xml:lang=\"{$_SESSION['lang']}\" lang=\"{$_SESSION['lang']}\"";
+if (isset($i18ndirection) AND !empty($i18ndirection))
+{
+    echo " dir=\"{$i18ndirection}\"";
+}
+echo ">\n<head><title>";
 if (!empty($incidentid)) echo "{$incidentid} - ";
 if (isset($title))
 {

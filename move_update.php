@@ -53,7 +53,7 @@ if ($incidentid == '')
     }
     echo "</div>";
 
-    $sql  = "SELECT * FROM `{$dbUpdates}` WHERE id='$updateid' ";
+    $sql  = "SELECT * FROM `{$dbUpdates}` WHERE id='{$updateid}' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -214,7 +214,7 @@ else
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-            journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update $update moved to incident $incidentid", CFG_JOURNAL_INCIDENTS, $incidentid);
+            journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update {$update} moved to incident {$incidentid}", CFG_JOURNAL_INCIDENTS, $incidentid);
 
             html_redirect("incident_details.php?id={$incidentid}");
         }

@@ -71,9 +71,9 @@ switch ($_REQUEST['action'])
         {
             if (beginsWith($file, "dashboard_") AND endsWith($file, ".php"))
             {
-                if (empty($dashboard[substr($file, 10, strlen($file) - 14)]))  //this is 14 due to .php =4 and dashboard_ = 10
+                if (empty($dashboard[mb_substr($file, 10, mb_strlen($file) - 14)]))  //this is 14 due to .php =4 and dashboard_ = 10
                 {
-                    $html .= "<option value='".substr($file, 10, strlen($file) - 14)."'>".substr($file, 10, strlen($file) - 14)." ({$file})</option>";
+                    $html .= "<option value='".mb_substr($file, 10, mb_strlen($file) - 14)."'>".mb_substr($file, 10, mb_strlen($file) - 14)." ({$file})</option>";
                 }
             }
         }
@@ -112,7 +112,7 @@ switch ($_REQUEST['action'])
             {
                 $sql .= "('{$dashboardcomponents[$i]}', 'true'), ";
             }
-            $result = mysql_query(substr($sql, 0, strlen($sql)-2));
+            $result = mysql_query(mb_substr($sql, 0, mb_strlen($sql)-2));
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
             if (!$result)

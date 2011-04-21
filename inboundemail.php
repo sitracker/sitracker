@@ -341,7 +341,7 @@ if ($emails > 0)
                     if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
                     $part++;
                 }
-                $filesize = strlen($data);
+                $filesize = mb_strlen($data);
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
@@ -485,6 +485,7 @@ if ($emails > 0)
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $updateid = mysql_insert_id();
+                plugin_do('inboundemail_customer_visibility_update', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
 
                 if ($incident_open) // Do not translate/i18n fixed string
                 {

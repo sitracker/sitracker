@@ -26,6 +26,8 @@ $incidentid = $id;
 $draftid = clean_int($_REQUEST['draftid']);
 if (empty($draftid)) $draftid = -1;
 
+debug_log(print_r($_REQUEST, TRUE));
+
 $title = $strEmail;
 
 if (empty($step))
@@ -440,7 +442,7 @@ switch ($step)
             foreach ($_FILES AS $file)
             {
                 // move attachment to a safe place for processing later
-                if ($file['name'] != '' AND strlen($file['name']) > 3)
+                if ($file['name'] != '' AND mb_strlen($file['name']) > 3)
                 {
                     $umask = umask(0000);
                     $mk = TRUE;
@@ -577,6 +579,9 @@ switch ($step)
                     //$bodytext = $timetext.$bodytext;
                 }
 
+                if ($target == 'none') $sla = "Null";
+                else $sla = "'{$target}'";
+
                 if ($storeinlog == 'Yes')
                 {
 					// add update
@@ -607,8 +612,8 @@ switch ($step)
                     $updatebody = $timetext . $updateheader . $bodytext;
                     $updatebody = mysql_real_escape_string($updatebody);
 
-                    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
-                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
+                    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
+                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
@@ -623,8 +628,8 @@ switch ($step)
                     $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updatebody = mysql_real_escape_string($updatebody);
 
-					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility) ";
-                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}')";
+					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
+                    $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
@@ -639,37 +644,6 @@ switch ($step)
 				}
 
                 $owner = incident_owner($id);
-
-                // Handle meeting of service level targets
-                switch ($target)
-                {
-                    case 'none':
-                        // do nothing
-                        $sql = '';
-                        break;
-                    case 'initialresponse':
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'initialresponse','{$SYSLANG['strInitialResponseHasBeenMade']}')";
-                        break;
-                    case 'probdef':
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']}')";
-                        break;
-                    case 'actionplan':
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']}')";
-                        break;
-                    case 'solution':
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newincidentstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']}')";
-                        break;
-                }
-
-                if (!empty($sql))
-                {
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                }
 
                 if ($target != 'none')
                 {

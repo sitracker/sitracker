@@ -268,7 +268,7 @@ else
                 list($currentowner, $currentstatus) = mysql_fetch_row($result);
             }
 
-            if (strlen($_REQUEST['summary']) > 3)
+            if (mb_strlen($_REQUEST['summary']) > 3)
             {
                 // Problem Definition
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
@@ -277,7 +277,7 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            if (strlen($_REQUEST['solution']) > 3)
+            if (mb_strlen($_REQUEST['solution']) > 3)
             {
                 // Final Solution
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
@@ -286,27 +286,20 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            // Meet service level 'solution'
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            // $sql .= "VALUES ('$id', '{$sit[2]}', '{$now}', '{$currentstatus}', 'slamet', '$now', '{$sit[2]}', 'show', 'solution')";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$currentowner}', '{$currentstatus}', 'show', 'solution', '')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             //
             if ($wait == 'yes')
             {
                 // Update - mark for closure
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}')";
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
             else
             {
                 // Update - close immediately
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}')";
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -349,7 +342,7 @@ else
                     //dont care if I'm related to myself
                     if ($relatedid != $id)
                     {
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner,currentstatus, bodytext, timestamp) ";
+                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
                         $sql .= "VALUES ('$relatedid', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', 'New Status: [b]Active[/b]<hr>\nRelated incident [{$id}] has been closed', '{$now}')";
                         $result = mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

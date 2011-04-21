@@ -260,7 +260,7 @@ function draw_file_row($file, $incidentid, $path)
 
 if (file_exists($incident_attachment_fspath))
 {
-    $dirarray=array();
+    $dirarray = array();
     echo "<form name='filelistform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit=\"return confirm_action('{$strAreYouSure}'\">";
     //echo "<input type='submit' name='test' value='List' />";
     echo "<input type='hidden' name='id' value='{$incidentid}' />";
@@ -304,10 +304,8 @@ if (file_exists($incident_attachment_fspath))
         foreach ($dirarray AS $dir)
         {
             $directory = mb_substr($dir, 0, strrpos($dir, DIRECTORY_SEPARATOR));
-            $dirname = mb_substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, strlen($dir));
-            if (is_number($dirname) &&
-                $dirname != $id &&
-                strlen($dirname) == 10)
+            $dirname = mb_substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1, mb_strlen($dir));
+            if (is_numeric($dirname) AND $dirname != $id AND mb_strlen($dirname) == 10)
             {
                 $dirprettyname = ldate('l jS M Y @ g:ia',$dirname);
             }
@@ -341,9 +339,10 @@ if (file_exists($incident_attachment_fspath))
                 if (in_array("{$dir}" . DIRECTORY_SEPARATOR . "mail.eml", $tempfarray))
                 {
                     $updatelink = readlink($dir);
-                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,strlen($updatelink));
+                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,mb_strlen($updatelink));
                     echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#$updateid'>{$strJumpToEntryLog}</a></p>";
                 }
+
                 foreach ($tempfarray as $fvalue)
                 {
                     if (is_file($fvalue) AND mb_substr($fvalue,-8) != 'mail.eml')
@@ -357,9 +356,7 @@ if (file_exists($incident_attachment_fspath))
                     echo draw_file_row($file, DIRECTORY_SEPARATOR, $incidentid, $dirname);
                 }
 
-                if (!empty($updatetext) AND
-                    $updatetype == 'email' OR
-                    $updatetype == 'webupdate')
+                if (!empty($updatetext) AND $updatetype == 'email' OR $updatetype == 'webupdate')
                 {
                     $updatetext = mb_substr($updatetext, 0, 80)."...";
                     echo "<span style='font-size:400%';>“</span>";

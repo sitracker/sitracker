@@ -95,22 +95,22 @@ elseif ($_REQUEST['mode'] == "show")
             $vars[0] = trim($vars[0]);
             $vars[1] = trim($vars[1]);
 
-            if (substr($vars[0], 0, 3) == "str")
+            if (mb_substr($vars[0], 0, 3) == "str")
             {
                 //remove leading and trailing quotation marks
                 $vars[1] = substr_replace($vars[1], "",-2);
                 $vars[1] = substr_replace($vars[1], "",0, 1);
                 $fromvalues[$vars[0]] = $vars[1];
             }
-            elseif (substr($vars[0], 0, 2) == "# ")
+            elseif (mb_substr($vars[0], 0, 2) == "# ")
             {
-                $comments[$lastkey] = substr($vars[0], 2, 1024);
+                $comments[$lastkey] = mb_substr($vars[0], 2, 1024);
             }
             else
             {
-                if (substr($values, 0, 4) == "lang")
+                if (mb_substr($values, 0, 4) == "lang")
                     $languagestring=$values;
-                if (substr($values, 0, 8) == "i18nchar")
+                if (mb_substr($values, 0, 8) == "i18nchar")
                     $i18ncharset=$values;
             }
             $lastkey = $vars[0];
@@ -141,9 +141,9 @@ elseif ($_REQUEST['mode'] == "show")
             //print_r($lines);
             foreach ($lines AS $introcomment)
             {
-                if (substr($introcomment, 0, 2) == "//")
+                if (mb_substr($introcomment, 0, 2) == "//")
                 {
-                    $meta[] = substr($introcomment, 3);
+                    $meta[] = mb_substr($introcomment, 3);
                 }
                 if (trim($introcomment) == '') break;
             }
@@ -153,7 +153,7 @@ elseif ($_REQUEST['mode'] == "show")
             {
                 $badchars = array("$", "\"", "\\", "<?php", "?>");
                 $values = trim(str_replace($badchars, '', $values));
-                if (substr($values, 0, 3) == "str")
+                if (mb_substr($values, 0, 3) == "str")
                 {
                     $vars = explode("=", $values);
                     $vars[0] = trim($vars[0]);
@@ -161,7 +161,7 @@ elseif ($_REQUEST['mode'] == "show")
                     $vars[1] = substr_replace($vars[1], "",0, 1);
                     $foreignvalues[$vars[0]] = $vars[1];
                 }
-                elseif (substr($values, 0, 12) == "i18nAlphabet")
+                elseif (mb_substr($values, 0, 12) == "i18nAlphabet")
                 {
                     $values = explode('=',$values);
                     $delims = array("'", ';');
@@ -279,17 +279,17 @@ elseif ($_REQUEST['mode'] == "save")
     $translatedcount = 0;
     foreach (array_keys($_SESSION['translation_fromvalues']) as $key)
     {
-        if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
+        if (!empty($_POST[$key]) AND mb_substr($key, 0, 3) == "str")
         {
-            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
+            if ($lastchar!='' AND mb_substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
             $i18nfile .= "\${$key} = '".addslashes($_POST[$key])."';\n";
-            $lastchar = substr($key, 3, 1);
+            $lastchar = mb_substr($key, 3, 1);
             $translatedcount++;
         }
         elseif (!empty($_SESSION['translation_foreignvalues'][$key]))
         {
             $i18nfile .= "\${$key} = '".addslashes($_SESSION['translation_foreignvalues'][$key])."';\n";
-            $lastchar = substr($key, 3, 1);
+            $lastchar = mb_substr($key, 3, 1);
             $translatedcount++;
         }
     }

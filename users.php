@@ -136,17 +136,17 @@ while ($users = mysql_fetch_object($result))
     {
         echo "{$strGroup}: ".db_read_column("name", $GLOBALS['dbGroups'], $users->groupid)."<br />";
     }
-    if (strlen($users->aim) > 3)
+    if (mb_strlen($users->aim) > 3)
     {
         echo icon('aim', 16, $users->aim);
         echo " <strong>AIM</strong>: {$users->aim}<br />";
     }
-    if (strlen($users->icq) > 3)
+    if (mb_strlen($users->icq) > 3)
     {
         echo icon('icq', 16, $users->icq);
         echo " <strong>ICQ</strong>: {$users->icq}<br />";
     }
-    if (strlen($users->msn) > 3)
+    if (mb_strlen($users->msn) > 3)
     {
         echo icon('msn', 16, $users->msn);
         echo " <strong>MSN</strong>: {$users->msn}<br />";

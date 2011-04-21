@@ -51,7 +51,7 @@ echo "<br />";
 // ---------------------------------------------
 // SQL Queries:
 
-if (strlen(utf8_decode($search_string)) > 4)
+if (mb_strlen(utf8_decode($search_string)) > 4)
 {
     // Find Software
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE name LIKE '%{$search_string}%' LIMIT 20";
@@ -76,7 +76,7 @@ if (strtolower($mode) == 'myarticles') $sql .= "WHERE author='{$sit[2]}' ";
 if (!empty($search_string))
 {
     $sql .= "WHERE ";
-    $search_string_len = strlen($search_string);
+    $search_string_len = mb_strlen($search_string);
     if (is_numeric($search_string))
     {
         $sql .= "docid=('{$search_string}') ";
@@ -117,8 +117,14 @@ if (mysql_num_rows($result) >= 1)
     {
         if (empty($kbarticle->title)) $kbarticle->title = $strUntitled;
         else $kbarticle->title = $kbarticle->title;
-        if (is_number($kbarticle->author)) $kbarticle->author = user_realname($kbarticle->author);
-        else $kbarticle->author = $kbarticle->author;
+        if (is_numeric($kbarticle->author))
+        {
+            $kbarticle->author = user_realname($kbarticle->author);
+        }
+        else
+        {
+            $kbarticle->author = $kbarticle->author;
+        }
         echo "<tr class='{$shade}'>";
         echo "<td>".icon('kb', 16)." {$CONFIG['kb_id_prefix']}".leading_zero(4,$kbarticle->docid)."</td>";
         echo "<td>";
