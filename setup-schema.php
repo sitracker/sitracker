@@ -212,6 +212,7 @@ CREATE TABLE `{$dbDrafts}` (
   `meta` text NOT NULL,
   `lastupdate` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
+  KEY `incidentid` (`incidentid`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -1687,6 +1688,7 @@ ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET 
 
 UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 
+ALTER TABLE `{$dbDrafts}` ADD INDEX ( `incidentid` ) ;
 ";
 
 // ********************************************************************
