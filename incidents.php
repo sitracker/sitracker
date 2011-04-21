@@ -69,6 +69,7 @@ $selectsql .= "servicelevel, softwareid, lastupdated, timeofnextaction, ";
 $selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
 $selectsql .= "({$now} - lastupdated) AS timesincelastupdate ";
 $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS pr, `{$dbSites}` AS s ";
+$selectsql .= "WHERE contact = c.id AND i.priority = pr.id AND c.siteid = s.id ";
 
 echo "<div id='incidentqueues'>";
 
@@ -88,8 +89,7 @@ switch ($type)
             else $user = $sit[2]; // force to current user if username not found
         }
         
-        $sql = $selectsql . "WHERE contact = c.id AND i.priority = pr.id AND c.siteid = s.id ";
-        $sql .= "AND i.owner > 0 ";  // We always need to have an owner which is not sit
+        $sql = "{$selectsql} AND i.owner > 0 ";  // We always need to have an owner which is not sit
         if ($user != 'all') $sql .= "AND (i.owner='{$user}' OR i.towner='{$user}') ";
         if (!empty($softwareid)) $sql .= "AND softwareid='{$softwareid}' ";
 
@@ -272,8 +272,7 @@ switch ($type)
             $incsql .= ")";
 
             // Create SQL for chosen queue
-            $sql = $selectsql . "WHERE contact=c.id AND i.priority=pr.id ";
-            $sql .= "AND i.owner!='{$user}' AND towner!='{$user}' AND i.owner > 0 ";
+            $sql = "{$selectsql} AND i.owner!='{$user}' AND towner!='{$user}' AND i.owner > 0 ";
             $sql .= "AND $incsql ";
 
             switch ($queue)
@@ -343,6 +342,7 @@ switch ($type)
                     $sql .= " ORDER BY priority DESC, lastupdated ASC";
                     break;
             }
+            
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             $rowcount = mysql_num_rows($result);
