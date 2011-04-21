@@ -1603,9 +1603,10 @@ function num_unread_emails()
  * Return the number of incidents ever logged against a site
  * @author Kieran
  * @param int $id. Site ID
+ * @param boolean $open. Include only open incidents (FALSE includes all)
  * @return int.
  */
-function site_count_incidents($id)
+function site_count_incidents($id, $open=FALSE)
 {
     global $dbIncidents, $dbContacts;
     $id = intval($id);
@@ -1613,7 +1614,8 @@ function site_count_incidents($id)
 
     $sql = "SELECT COUNT(i.id) FROM `{$dbIncidents}` AS i, `{$dbContacts}` as c ";
     $sql .= "WHERE i.contact = c.id ";
-    $sql .= "AND c.siteid='{$id}'";
+    $sql .= "AND c.siteid='{$id}' ";
+    if ($open) $sql .= "AND i.status != ".STATUS_CLOSED;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
