@@ -113,6 +113,20 @@ define ("LICENCE_PER_SERVER", 3);
 define ("LICENCE_SITE", 4);
 define ("LICENCE_EVALUATION", 5);
 
+// Install Settings
+define ("MIN_PHP_VERSION", 5.1);
+define ("MIN_MYSQL_VERSION", 4.1);
+define ('INSTALL_INFO', 0);
+define ('INSTALL_OK', 1);
+define ('INSTALL_WARN', 2);
+define ('INSTALL_FATAL', 3);
+
+// Queue
+define ('QUEUE_ACTION_NEEDED', 1);
+define ('QUEUE_WAITING', 2);
+define ('QUEUE_ALL_OPEN', 3);
+define ('QUEUE_ALL_CLOSED', 4);
+
 /**
  * Begin global variable definitions
  **/

@@ -108,7 +108,7 @@ switch ($type)
 
         switch ($queue)
         {
-            case 1: // Action Needed
+            case QUEUE_ACTION_NEEDED:
                 echo "<span class='actionqueue'>{$strActionNeeded}</span>";
                 $sql .= "AND (status!='2') ";  // not closed
                 // the "1=2" obviously false else expression is to prevent records from showing unless the IF condition is true
@@ -118,15 +118,15 @@ switch ($type)
                 $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
                 $sql .= ") AND timeofnextaction < {$now} ) ";
                 break;
-            case 2: // Waiting
+            case QUEUE_WAITING:
                 echo "<span class='waitingqueue'>{$strWaiting}</span>";
                 $sql .= "AND ((status >= 4 AND status <= 8) OR (timeofnextaction > 0 AND timeofnextaction > {$now})) ";
                 break;
-            case 3: // All Open
+            case QUEUE_ALL_OPEN:
                 echo "<span class='openqueue'>{$strAllOpen}</span>";
                 $sql .= "AND status!='2' ";
                 break;
-            case 4: // All Closed
+            case QUEUE_ALL_CLOSED:
                 echo "<span class='closedqueue'>{$strAllClosed}</span>";
                 $sql .= "AND status='2' ";
                 if ($CONFIG['hide_closed_incidents_older_than'] > -1 AND $_GET['show'] != 'all')
@@ -138,13 +138,14 @@ switch ($type)
             default:
                 trigger_error("Invalid queue ($queue) on query string", E_USER_NOTICE);
                 break;
-        }        // Create SQL for Sorting
-
+        }        
+        
         echo "</h2>\n";
         if (!empty($sort))
         {
             if ($order == 'a' OR $order == 'ASC') $sortorder = "ASC";
             else $sortorder = "DESC";
+
             switch ($sort)
             {
                 case 'id':
@@ -198,32 +199,32 @@ switch ($type)
         echo "<form action='{$_SERVER['PHP_SELF']}'>";
         echo "{$strQueue}: <select class='dropdown' name='queue' onchange='window.location.href=this.options[this.selectedIndex].value'>\n";
         echo "<option ";
-        if ($queue == 1) echo "selected='selected' ";
-        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=1'>{$strActionNeeded}</option>\n";
+        if ($queue == QUEUE_ACTION_NEEDED) echo "selected='selected' ";
+        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=".QUEUE_ACTION_NEEDED."'>{$strActionNeeded}</option>\n";
         echo "<option ";
-        if ($queue == 2) echo "selected='selected' ";
-        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=2'>{$strWaiting}</option>\n";
+        if ($queue == QUEUE_WAITING) echo "selected='selected' ";
+        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=".QUEUE_WAITING."'>{$strWaiting}</option>\n";
         echo "<option ";
-        if ($queue == 3) echo "selected='selected' ";
-        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=3'>{$strAllOpen}</option>\n";
+        if ($queue == QUEUE_ALL_OPEN) echo "selected='selected' ";
+        echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=".QUEUE_ALL_OPEN."'>{$strAllOpen}</option>\n";
         if ($user != 'all')
         {
             echo "<option ";
-            if ($queue == 4) echo "selected='selected' ";
-            echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=4'>{$strAllClosed}</option>\n";
+            if ($queue == QUEUE_ALL_CLOSED) echo "selected='selected' ";
+            echo "value='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=".QUEUE_ALL_CLOSED."'>{$strAllClosed}</option>\n";
         }
         echo "</select>\n";
         echo "</form>";
 
-        if ($queue == 4 AND $CONFIG['hide_closed_incidents_older_than'] != -1 AND $_GET['show'] != 'all')
+        if ($queue == QUEUE_ALL_CLOSED AND $CONFIG['hide_closed_incidents_older_than'] != -1 AND $_GET['show'] != 'all')
         {
             echo "<p class='info'>".sprintf($strHidingIncidentsOlderThan, $CONFIG['hide_closed_incidents_older_than']);
             echo " - <a href='{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}&show=all'>{$strShowAll}</a></p>";
         }
-        elseif ($queue == 4 AND $CONFIG['hide_closed_incidents_older_than'] != -1)
+        elseif ($queue == QUEUE_ALL_CLOSED AND $CONFIG['hide_closed_incidents_older_than'] != -1)
         {
             echo "<p class='info'>{$strShowingAllClosedIncidents} - ";
-            echo "<a href='{$_SERVER['PHP_SELF']}?user=$user&amp;type=$type&amp;queue=4'>";
+            echo "<a href='{$_SERVER['PHP_SELF']}?user={$user}&amp;type={$type}&amp;queue=".QUEUE_ALL_CLOSED."'>";
             echo sprintf($strOnlyShowNewerThan, $CONFIG['hide_closed_incidents_older_than'])."</a></p>";
         }
 
@@ -256,7 +257,7 @@ switch ($type)
 
         switch ($queue)
         {
-            case 1: // Action Needed
+            case QUEUE_ACTION_NEEDED:
                 echo "<h2>{$strOtherIncidents}: <span class='actionqueue'>{$strActionNeeded}</span>".help_link("OtherIncidents")."</h2>\n";
                 $sql .= "AND (status!='2') ";  // not closed
                 // the "1=2" obviously false else expression is to prevent records from showing unless the IF condition is true
@@ -266,16 +267,16 @@ switch ($type)
                 $sql .= ") AND timeofnextaction < {$now} ) ";
                 // outstanding
                 break;
-            case 2: // Waiting
+            case QUEUE_WAITING:
                 echo "<h2>{$strOtherIncidents}: <span class='waitingqueue'>{$strWaiting}</span></h2>\n";
                 $sql .= "AND ((status >= 4 AND status <= 8) OR (timeofnextaction > 0 AND timeofnextaction > {$now})) ";
                 break;
-            case 3: // All Open
+            case QUEUE_ALL_OPEN:
                 echo "<h2>{$strOtherIncidents}: <span class='openqueue'>{$strAllOpen}</span></h2>\n";
                 echo "</h2><hr /><br />";
                 $sql .= "AND status!='2' ";
               break;
-            case 4: // All Closed
+            case QUEUE_ALL_CLOSED:
                 echo "<h2>{$strOtherIncidents}: <span class='closedqueue'>{$strAllClosed}</span></h2>\n";
                 echo "</h2><hr /><br />";
                 $sql .= "AND status='2' ";
