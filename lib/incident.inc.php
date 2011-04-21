@@ -1613,7 +1613,7 @@ function site_count_incidents($id)
 
     $sql = "SELECT COUNT(i.id) FROM `{$dbIncidents}` AS i, `{$dbContacts}` as c ";
     $sql .= "WHERE i.contact = c.id ";
-    $sql .= "AND c.siteid='$id'";
+    $sql .= "AND c.siteid='{$id}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
