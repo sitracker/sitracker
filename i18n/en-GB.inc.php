@@ -608,6 +608,12 @@ $strEnterTheCallID = 'Enter the incident number';
 $strEntitlement = 'Entitlement';
 #computer environment
 $strEnvironment = 'Environment';
+# Text which is printed when fatal errors found on checking the environment
+$strEnvironmentCheckedFatal = 'Checked. Some fatal errors, SiT is unlikly to work properly';
+# Text which is printed on successful checking of the environment
+$strEnvironmentCheckedOK = 'Environment Checked. All OK';
+# Text which is printed when warnings found on checking the environment
+$strEnvironmentCheckedWarnings = 'Checked. Some warnings though SiT will work';
 # Acronym for end of life
 $strEOL = 'EOL';
 $strError = 'Error';
@@ -1198,6 +1204,7 @@ $strNotifyContactOnClose = 'Whether the user requested to send a closing email (
 $strNotifyExternalEngineerOnClose = 'Whether the user requested to send a closing email to the external engineer (true or false)';
 $strNotifyWhen = 'Notify When';
 $strNotEscalated = 'Not Escalated';
+$strNotInstalled = 'Not Installed';
 $strNoServiceWithIDXFound = 'No service with ID %s found';
 $strNoPermission = 'You do not have permission to view this page';
 $strNoPost = 'No Post';
@@ -1497,6 +1504,7 @@ $strRequestSendComments = 'Send comments with your request: (or leave blank)';
 $strRequestSent = 'Request Sent';
 $strRequestSentToX = 'Request sent to %s';
 $strRequired = 'Required';
+$strRequirement = 'Requirement';
 $strRequiredDataMissing = 'Required data missing';
 $strResearchedby = 'Researched by %s';
 $strResearching = 'Researching';
@@ -2024,6 +2032,7 @@ $strWatchIncidentsAdded = 'Watch Incidents added';
 $strWatchIncidentsRemovalSucceded = 'Watch incidents removal succeded';
 $strWebupdate = 'Web update';
 $strWebupdateBy = 'Web update by %s';
+$strWebserver = 'Webserver';
 # Short for 'Wednesday'
 $strWed = 'Wed';
 $strWednesday = 'Wednesday';

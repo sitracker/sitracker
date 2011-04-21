@@ -16,16 +16,23 @@ $permission = 0; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
+$title = $strStatus;
+
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$status = html_install_status();
+echo "<h2>{$CONFIG['application_name']} {$title}</h2>";
+
+// $status = html_install_status();
+
+$s = check_install_status();
+echo html_install_status($s);
 
 echo "<p align='center'>";
 
-switch ($status)
+switch ($s->get_status())
 {
     case INSTALL_OK:
         echo $strEnvironmentCheckedOK;
@@ -33,7 +40,7 @@ switch ($status)
     case INSTALL_WARN:
         echo $strEnvironmentCheckedWarnings;
         break;
-    case INSTALL_OK:
+    case INSTALL_FATAL:
         echo $strEnvironmentCheckedFatal;
         break;
 }
