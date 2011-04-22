@@ -139,7 +139,6 @@ $ldap_vars = array("SURNAME", "FORENAMES", "REALNAME", "JOBTITLE", "EMAIL", "MOB
                     "ADDRESS1", "CITY", "COUNTY", "POSTCODE", "COURTESYTITLE", "LOGINDISABLEDATTRIBUTE",
                     "LOGINDISABLEDVALUE");
 
-
 if ($CONFIG['use_ldap'])
 {
     $CONFIG['ldap_type'] = strtoupper($CONFIG['ldap_type']);
