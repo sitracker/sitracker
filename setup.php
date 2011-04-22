@@ -203,10 +203,7 @@ switch ($_REQUEST['action'])
             $newcfgfile .= "# Nothing configured. This will mean the defaults are used.\n\n";
         }
 
-        // INL if we leave off the php closing tag it saves people having trouble
-        // with whitespace
-        //$newcfgfile .= "?";
-        //$newcfgfile .= ">";
+        // INL if we leave off the php closing tag it saves people having trouble with whitespace
 
         $fp = @fopen($config_filename, 'w');
         if (!$fp)
@@ -316,15 +313,6 @@ switch ($_REQUEST['action'])
     
                     }
     
-                    // FIXME INL temp removed
-    //                 else
-    //                 {
-    //                     echo "<p class='help'>If this is the first time you have used SiT! you may need to create the database, ";
-    //                     echo "if you have the necessary MySQL permissions you can create the database automatically.<br />";
-    //                     echo "Alternatively you can create it manually by executing the SQL statement <br /><code>{$sql};</code></p";
-    //                     echo "<p><a href='setup.php?action=createdatabase' class='button'>Create Database</a></p>";
-    //                 }
-    //                 //echo "<p>After creating the database run <a href='setup.php' class='button'>setup</a> again to create the database schema</p>";
                     if (empty($CONFIG['db_database']) OR empty($CONFIG['db_username']))
                     {
                         echo "<p>You need to configure SiT to be able access the MySQL database.</p>";
@@ -462,15 +450,6 @@ switch ($_REQUEST['action'])
     
                     }
     
-                    // FIMXE INL temp removed
-    //                 else
-    //                 {
-    //                     echo "<p class='help'>If this is the first time you have used SiT! you may need to create the database, ";
-    //                     echo "if you have the necessary MySQL permissions you can create the database automatically.<br />";
-    //                     echo "Alternatively you can create it manually by executing the SQL statement <br /><code>{$sql};</code></p";
-    //                     echo "<p><a href='setup.php?action=createdatabase' class='button'>Create Database</a></p>";
-    //                 }
-    //                 //echo "<p>After creating the database run <a href='setup.php' class='button'>setup</a> again to create the database schema</p>";
                     if (empty($CONFIG['db_database']) OR empty($CONFIG['db_username']))
                     {
                         echo "<p>You need to configure SiT to be able access the MySQL database.</p>";
@@ -497,9 +476,8 @@ switch ($_REQUEST['action'])
                     if (mysql_num_rows($result) < 1)
                     {
                         echo "<h2>Creating new database schema...</h2>";
+
                         // No users table or empty users table, proceed to install
-    //                         $installed_schema = 0;
-    //                     $installed_schema = substr(end(array_keys($upgrade_schema[$application_version*100])),1);
                         $errors = setup_exec_sql($schema);
                         if ($_SESSION['sampledata'] == TRUE)
                         {
@@ -535,10 +513,7 @@ switch ($_REQUEST['action'])
                             $html .= "please resolve the problems reported and then try running setup again.</p>";
                         }
                         echo $html;
-    /*                    // Set the system version number
-                        $sql = "REPLACE INTO `{$dbSystem}` ( id, version) VALUES (0, $application_version)";
-                        mysql_query($sql);
-                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);*/
+
                         $installed_version = $application_version;
                         echo "<h2>Database schema created</h2>";
                         if ($errors > 0)
@@ -572,26 +547,6 @@ switch ($_REQUEST['action'])
                             $result = mysql_query($sql);
                             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                             list($installed_version) = mysql_fetch_row($result);
-    
-    /*                        if ($installed_version >= 3.35)
-                            {
-                                $sql = "SELECT `schemaversion` FROM `{$dbSystem}` WHERE id = 0";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                                list($installed_schema) = mysql_fetch_row($result);
-                            }
-                            else
-                            {
-                                $installed_schema = 334;
-                                $sql = "SHOW COLUMNS FROM `{$dbSystem}` WHERE Field='schema'";
-                                $result = mysql_query($sql);
-                                if (mysql_num_rows($result) < 1)
-                                {
-                                    $sql = "ALTER TABLE `{$dbSystem}` ADD `schemaversion` BIGINT UNSIGNED NOT NULL COMMENT 'DateTime in YYYYMMDDHHMM format'";
-                                    $result = mysql_query($sql);
-                                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                                }
-                            }*/
                         }
     
                         if (empty($installed_version))
