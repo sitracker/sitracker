@@ -144,7 +144,7 @@ $now = time();
 // next 16 hours, based on reminders being run at midnight this is today
 $today = $now + (16 * 3600);
 $lastweek = $now - (7 * 86400); // the previous seven days
-$todayrecent = $now -(16 * 3600);  // past 16 hours
+$todayrecent = $now - (16 * 3600);  // past 16 hours
 $startofsession = $now - ini_get("session.gc_maxlifetime");
 
 $CONFIG['upload_max_filesize'] = return_bytes($CONFIG['upload_max_filesize']);
