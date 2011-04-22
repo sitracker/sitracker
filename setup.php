@@ -26,7 +26,7 @@ define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARAT
 // Keep the defaults as a seperate array
 $DEFAULTS = $CONFIG;
 
-include (APPLICATION_LIBPATH . 'functions.inc.php');
+require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // Load config file with customisations
 // @include ("config.inc-dist.php");
@@ -421,8 +421,6 @@ switch ($_REQUEST['action'])
             
             if ($status->get_status() != INSTALL_FATAL)
             {
-            
-                // Connected to database
                 mysql_select_db($CONFIG['db_database'], $db);
                 if (mysql_error())
                 {
@@ -442,7 +440,6 @@ switch ($_REQUEST['action'])
                         echo setup_button('reconfigure', 'Reconfigure SiT!');
                         echo "<p>or</p>";
                         echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' value='yes' checked='checked' /> With sample data</label>");
-                        //echo "<p><a href='{$_SERVER['PHP_SELF']}?action=reconfigure'>Reconfigure</a> SiT!</p>";
                     }
                     else
                     {
@@ -458,8 +455,6 @@ switch ($_REQUEST['action'])
                 }
                 else
                 {
-                    require (APPLICATION_LIBPATH . 'functions.inc.php');
-    
                     // Load the empty schema
                     require ('setup-schema.php');
     
@@ -496,7 +491,7 @@ switch ($_REQUEST['action'])
                         // Update the system version
                         if ($errors < 1)
                         {
-                            $vsql = "REPLACE INTO `{$dbSystem}` ( `id`, `version`) VALUES (0, $application_version)";
+                            $vsql = "REPLACE INTO `{$dbSystem}` ( `id`, `version`) VALUES (0, {$application_version})";
                             mysql_query($vsql);
                             if (mysql_error())
                             {
@@ -678,10 +673,13 @@ switch ($_REQUEST['action'])
                                     if (mysql_error())
                                     {
                                         trigger_error(mysql_error(), E_USER_WARNING);
-                                        echo "<p><strong>FAILED:</strong> $sql</p>";
+                                        echo "<p><strong>FAILED:</strong> {$sql}</p>";
                                         $upgradeok = FALSE;
                                     }
-                                    else echo "<p><strong>OK:</strong> $sql</p>";
+                                    else
+                                    {
+                                        echo "<p><strong>OK:</strong> {$sql}</p>";
+                                    }
                                 }
                                 echo "<p>".mysql_num_rows($result)." incidents upgraded</p>";
                             }
@@ -891,7 +889,7 @@ switch ($_REQUEST['action'])
                                 $password = md5($password);
                                 $email = mysql_real_escape_string($_POST['email']);
                                 $sql = "INSERT INTO `{$dbUsers}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `var_style`, `lastseen`) ";
-                                $sql .= "VALUES (1, 'admin', '$password', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '$email', '1', '8', NOW());";
+                                $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', '8', NOW());";
                                 mysql_query($sql);
                                 if (mysql_error())
                                 {
