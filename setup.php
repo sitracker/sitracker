@@ -545,7 +545,7 @@ switch ($_REQUEST['action'])
                         {
                             $sql = "SELECT `version` FROM `{$dbSystem}` WHERE id = 0";
                             $result = mysql_query($sql);
-                            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                             list($installed_version) = mysql_fetch_row($result);
                         }
     
@@ -613,7 +613,7 @@ switch ($_REQUEST['action'])
                                         $asql .= "AND linkcolref = {$obj->id} ";
                                         $asql .= "AND direction = 'left'";
                                         $aresult = mysql_query($asql);
-                                        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                                        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     
                                         if (mysql_num_rows($aresult) == 0)
                                         {
@@ -677,7 +677,7 @@ switch ($_REQUEST['action'])
                                     mysql_query($sql);
                                     if (mysql_error())
                                     {
-                                        trigger_error(mysql_error(),E_USER_WARNING);
+                                        trigger_error(mysql_error(), E_USER_WARNING);
                                         echo "<p><strong>FAILED:</strong> $sql</p>";
                                         $upgradeok = FALSE;
                                     }
@@ -695,7 +695,7 @@ switch ($_REQUEST['action'])
                                     mysql_query($sql);
                                     if (mysql_error())
                                     {
-                                        trigger_error(mysql_error(),E_USER_WARNING);
+                                        trigger_error(mysql_error(), E_USER_WARNING);
                                         echo "<p><strong>FAILED:</strong> $sql</p>";
                                         $upgradeok = FALSE;
                                     }
@@ -722,7 +722,7 @@ switch ($_REQUEST['action'])
                                         $sql = "INSERT INTO `{$dbTriggers}`(triggerid, userid, action, template, checks) ";
                                         $sql .= "VALUES('TRIGGER_INCIDENT_ASSIGNED', '$assign_user', 'ACTION_EMAIL', 'EMAIL_INCIDENT_REASSIGNED_USER_NOTIFY', '{userstatus} ==  {$assign_user}')";
                                         mysql_query($sql);
-                                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                                     }
                                 }
     
@@ -734,7 +734,7 @@ switch ($_REQUEST['action'])
                                         $articleID = intval($article);
                                         $sql = "UPDATE `{$dbKBArticles}` SET visibility='private' WHERE id='{$articleID}'";
                                         mysql_query($sql);
-                                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                                     }
                                 }
     
@@ -745,7 +745,7 @@ switch ($_REQUEST['action'])
                                         $articleID = intval($article);
                                         $sql = "UPDATE `{$dbKBArticles}` SET visibility='restricted' WHERE id='{$articleID}'";
                                         mysql_query($sql);
-                                        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                                     }
                                 }
     
@@ -768,7 +768,7 @@ switch ($_REQUEST['action'])
                                 $sql = "UPDATE `triggers` SET `checks` = REPLACE(`checks`, '(', ''); ";
                                 $sql .= "UPDATE `triggers` SET `checks` = REPLACE(`checks`, ')', '')";
                                 mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                             }
     
                             if ($installed_version == $application_version)
@@ -789,7 +789,7 @@ switch ($_REQUEST['action'])
     
                                 $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled = 'true'";
                                 $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     
                                 //echo "<h2>Dashboard</h2>";
                                 while ($dashboardnames = mysql_fetch_object($result))
@@ -819,7 +819,7 @@ switch ($_REQUEST['action'])
     
                                             $upgrade_sql = "UPDATE `{$dbDashboard}` SET version = '{$version}' WHERE id = {$dashboardnames->id}";
                                             mysql_query($upgrade_sql);
-                                            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                                            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     
                                             echo "<p>{$dashboardnames->name} upgraded</p>";
                                         }
@@ -836,7 +836,7 @@ switch ($_REQUEST['action'])
                                 // Update the system version number
                                 $sql = "REPLACE INTO `{$dbSystem}` ( id, version) VALUES (0, $application_version)";
                                 mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                                 $installed_version = $application_version;
                                 echo "<h2>Upgrade complete</h2>";
                                 echo "<p>Upgraded to v{$application_version}</p>";
@@ -895,7 +895,7 @@ switch ($_REQUEST['action'])
                                 mysql_query($sql);
                                 if (mysql_error())
                                 {
-                                   trigger_error(mysql_error(),E_USER_WARNING);
+                                   trigger_error(mysql_error(), E_USER_WARNING);
                                    echo "<p><strong>FAILED:</strong> $sql</p>";
                                 }
                             }
