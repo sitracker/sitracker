@@ -329,7 +329,8 @@ switch ($action)
             echo "<tr><td colspan='2'><br />{$strReassignText}</td></tr>\n";
             echo "<tr><th>{$strUpdate}:</th>";
             echo "<td>";
-            echo "<textarea name='bodytext' wrap='soft' rows='10' cols='65'>";  // FIXME wrap isn't valid XHTML
+
+            echo "<textarea name='bodytext' rows='10' cols='65' style='white-space:nowrap;'>";
             if (!empty($reason)) echo $reason;
             echo "</textarea>";
             echo "</td></tr>\n";
