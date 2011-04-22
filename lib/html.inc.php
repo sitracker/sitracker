@@ -2069,7 +2069,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result)>0)
+        if (mysql_num_rows($result) > 0)
         {
             $html .= "<table align='center' class='vertical'>";
             $html .= "<tr>";
@@ -2300,6 +2300,28 @@ function html_install_status($status)
     $html .= "</table>";
     
     return $html;
+}
+
+
+/**
+ * Checks to see if a dashlet is installed
+ * @author Paul Heaney
+ * @param String $dashlet The name of the dashlet
+ * @return boolean True if installed, false otherwise
+ */
+function is_dashlet_installed($dashlet)
+{
+    $sql = "SELECT id FROM `{$GLOBALS['dbDashboard']}` WHERE name = '{$dashlet}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) == 1)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
 }
 
 ?>
