@@ -510,7 +510,8 @@ CREATE TABLE `{$dbIncidents}` (
   KEY `title` (`title`),
   KEY `opened` (`opened`),
   KEY `closed` (`closed`),
-  KEY `servicelevel` (`servicelevel`)
+  KEY `servicelevel` (`servicelevel`),
+  KEY `lastupdated` (`lastupdated`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -1689,6 +1690,8 @@ ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET 
 UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 
 ALTER TABLE `{$dbDrafts}` ADD INDEX ( `incidentid` ) ;
+
+ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
 ";
 
 // ********************************************************************
