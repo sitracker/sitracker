@@ -133,8 +133,6 @@ define ('LDAP_CUSTOM_POSTCODE', 'postalCode'); // NOT PRESENT all in one attribu
 define ('LDAP_CUSTOM_COURTESYTITLE', 'personalTitle');
  */
 
-$CONFIG['ldap_type'] = strtoupper($CONFIG['ldap_type']);
-
 $ldap_vars = array("SURNAME", "FORENAMES", "REALNAME", "JOBTITLE", "EMAIL", "MOBILE",
                     "TELEPHONE", "FAX", "DESCRIPTION", "GRPONUSER", "GRPFULLDN", "USERATTRIBUTE",
                     "USEROBJECTTYPE", "GRPOBJECTTYPE", "GRPATTRIBUTEUSER", "GRPATTRIBUTEGRP", 
@@ -143,7 +141,9 @@ $ldap_vars = array("SURNAME", "FORENAMES", "REALNAME", "JOBTITLE", "EMAIL", "MOB
 
 
 if ($CONFIG['use_ldap'])
-{   
+{
+    $CONFIG['ldap_type'] = strtoupper($CONFIG['ldap_type']);
+
     foreach ($ldap_vars AS $var)
     {
     	if (defined ("LDAP_{$CONFIG['ldap_type']}_{$var}"))
