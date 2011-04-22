@@ -149,6 +149,7 @@ $startofsession = $now - ini_get("session.gc_maxlifetime");
 
 $CONFIG['upload_max_filesize'] = return_bytes($CONFIG['upload_max_filesize']);
 
+$iconset = $CONFIG['default_iconset'];
 
 // Set a string to be the full version number and revision of the application
 $application_version_string = trim("v{$application_version} {$application_revision}");
