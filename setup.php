@@ -489,29 +489,19 @@ switch ($_REQUEST['action'])
                         $dashlets = install_dashboard_components(); 
                         if (count($dashlets) > 0)
                         {
-                            $html .= "<p class='error'>The following dashlets failed to install ".explode(',', $dashlets)."</p>";
+                            echo "<p class='error'>The following dashlets failed to install ".explode(',', $dashlets)."</p>";
                         }
                         
                         // Update the system version
                         if ($errors < 1)
                         {
-                            $vsql = "REPLACE INTO `{$dbSystem}` ( `id`, `version`) VALUES (0, {$application_version})";
-                            mysql_query($vsql);
-                            if (mysql_error())
-                            {
-                                $html .= "<p class='error'>Could not store new schema version number '{$application_version}'. ".mysql_error()."</p>";
-                            }
-                            else
-                            {
-                                $html .= "<p>Schema successfully created as version {$application_version}</p>";
-                            }
+                            echo update_sit_version_number($application_version);
                         }
                         else
                         {
-                            $html .= "<p class='error'><strong>Summary</strong>: {$errors} Error(s) occurred while creating the schema, ";
-                            $html .= "please resolve the problems reported and then try running setup again.</p>";
+                            echo "<p class='error'><strong>Summary</strong>: {$errors} Error(s) occurred while creating the schema, ";
+                            echo "please resolve the problems reported and then try running setup again.</p>";
                         }
-                        echo $html;
 
                         $installed_version = $application_version;
                         echo "<h2>Database schema created</h2>";

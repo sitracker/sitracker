@@ -494,16 +494,7 @@ function upgrade_schema($installed_version)
             // Update the system version
             if ($errors < 1)
             {
-                $vsql = "REPLACE INTO `{$GLOBALS['dbSystem']}` ( `id`, `version`) VALUES (0, {$newversion})";
-                mysql_query($vsql);
-                if (mysql_error())
-                {
-                    $html .= "<p class='error'>Could not store new schema version number '{$newversion}'. ".mysql_error()."</p>";
-                }
-                else
-                {
-                    $html .= "<p>Schema successfully updated to version {$newversion}.</p>";
-                }
+                $html .= update_sit_version_number($newversion);
                 $installed_version = $newversion;
             }
             else
@@ -519,6 +510,13 @@ function upgrade_schema($installed_version)
 }
 
 
+/**
+ * Create the admin user
+ * @author Ivan Lucas
+ * @param String $password  The admin users password - in plain text
+ * @param String $email The admin users email address
+ * @return String HTML if an error occurs
+ */
 function create_admin_user($password, $email)
 {
     $html = '';
@@ -530,6 +528,30 @@ function create_admin_user($password, $email)
     {
        trigger_error(mysql_error(), E_USER_WARNING);
        $html .= "<p><strong>FAILED:</strong> {$sql}</p>";
+    }
+    
+    return $html;
+}
+
+
+/**
+ * Updates the version number in the systems table
+ * @author Ivan Lucas
+ * @param String $version The version to set as running
+ * @return String HTML
+ */
+function update_sit_version_number($version)
+{
+    $html = '';
+    $sql = "REPLACE INTO `{$GLOBALS['dbSystem']}` ( `id`, `version`) VALUES (0, {$version})";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+        $html .= "<p class='error'>Could not store new schema version number '{$version}'. ".mysql_error()."</p>";
+    }
+    else
+    {
+        $html .= "<p>Schema successfully updated to version {$version}.</p>";
     }
     
     return $html;
