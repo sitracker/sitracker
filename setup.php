@@ -583,10 +583,7 @@ switch ($_REQUEST['action'])
     
                             if ($upgradeok)
                             {
-                                // Update the system version number
-                                $sql = "REPLACE INTO `{$dbSystem}` ( id, version) VALUES (0, $application_version)";
-                                mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                                update_sit_version_number($application_version);
                                 $installed_version = $application_version;
                                 echo "<h2>Upgrade complete</h2>";
                                 echo "<p>Upgraded to v{$application_version}</p>";
