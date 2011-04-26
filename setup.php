@@ -682,10 +682,6 @@ switch ($_REQUEST['action'])
                                 echo "</form>\n";
                             }
                         }
-                        elseif (!isset($_REQUEST))
-                        {
-                            echo "<p class='error'>SiT! requires PHP 5.0.0 or later</p>";
-                        }
                         elseif (@ini_get('register_globals') == 1 OR strtolower(@ini_get('register_globals')) == 'on')
                         {
                             echo "<p class='error'>SiT! strongly recommends that you change your php.ini setting <code>register_globals</code> to OFF.</p>";
