@@ -556,3 +556,23 @@ function update_sit_version_number($version)
     
     return $html;
 }
+
+
+/**
+ * Gets the currently running schema version
+ * @author Ivan Lucas
+ * @return float The running version, 0 if no details can be found
+ */
+function current_schema_version()
+{
+    $$installed_version = 0;
+    $sql = "SELECT `version` FROM `{$dbSystem}` WHERE id = 0";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        list($installed_version) = mysql_fetch_row($result);
+    }
+    
+    return $installed_version;
+}

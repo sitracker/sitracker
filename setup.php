@@ -398,7 +398,7 @@ switch ($_REQUEST['action'])
         }
         else
         {
-            echo "<p class='error'>Sorry, the attachment directory could not be created for you.</p>"; // FIXME more help
+            echo "<p class='error'>Sorry, the attachment directory could not be created for you.</p>";
             echo "<p>Please manually create a directory named <code>{$CONFIG['attachment_fspath']}</code></p>";
 
             if (mb_substr($CONFIG['attachment_fspath'], 0, 14) == './attachments-')
@@ -480,19 +480,16 @@ switch ($_REQUEST['action'])
                         $errors = setup_exec_sql($schema);
                         if ($_SESSION['sampledata'] == TRUE)
                         {
-                            // Install sample data
                             echo "<p>Installing sample data...</p>";
                             $errors = $errors + setup_exec_sql($sampledata_sql);
                         }
-                        
-                        
+
                         $dashlets = install_dashboard_components(); 
                         if (count($dashlets) > 0)
                         {
                             echo "<p class='error'>The following dashlets failed to install ".explode(',', $dashlets)."</p>";
                         }
                         
-                        // Update the system version
                         if ($errors < 1)
                         {
                             echo update_sit_version_number($application_version);
@@ -521,26 +518,22 @@ switch ($_REQUEST['action'])
                     {
                         // users table exists and has at least one record, must be already installed
                         // Do upgrade
-    
-                        // Have a look what version is installed
-                        // First look to see if the system table exists
-                        $exists = mysql_query("SELECT 1 FROM `{$dbSystem}` LIMIT 0");
-                        if (!$exists)
+
+                        $installed_version = current_schema_version();
+                        if ($installed_version === 0)
                         {
-                            echo "<p class='error'>Could not find a 'system' table which probably means you have a version prior to v3.21</p>";
-                            $installed_version = 3.00;
+                            echo "<p class='error'>Could not find a 'system' table which probably means you have a version prior to v3.21, we only support upgrades from v3.50 or higher</p>";
+                            exit;  // We don't support upgrades from such an old version
                         }
-                        else
+                        elseif ($installed_version < 3.50)
                         {
-                            $sql = "SELECT `version` FROM `{$dbSystem}` WHERE id = 0";
-                            $result = mysql_query($sql);
-                            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                            list($installed_version) = mysql_fetch_row($result);
+                            echo "<p class='error'>You are running version {$installed_version}, only v3.50 or higher are able to be upgraded, please upgrade to the latest 3.6x release before upgrading</p>";
+                            exit;  // We don't support upgrades from such an old version
                         }
-    
+
                         if (empty($installed_version))
                         {
-                            echo "<p class='error'>Fatal setup error - Could not determine version of installed software.  Try wiping your installation and installing from clean. (sorry)</p>";
+                            echo "<p class='error'>Fatal setup error - Could not determine version of installed software.  Try wiping your installation and installing from clean. (sorry).  This should not happen, if it does please contact the developers</p>";
                             echo setup_button('', 'Restart setup');
                             exit;
                         }
@@ -576,7 +569,6 @@ switch ($_REQUEST['action'])
                             {
                                 $upgradeok = TRUE;
                                 echo "<p>See the <code>doc/UPGRADE</code> file for further upgrade instructions and help.<br />";
-    
                             }
     
                             echo upgrade_dashlets();
@@ -597,7 +589,6 @@ switch ($_REQUEST['action'])
                         }
                         else
                         {
-    
                             echo "<p>Your database schema is v".number_format($installed_version, 2);
                             if ($installed_version < $application_version)
                             {
