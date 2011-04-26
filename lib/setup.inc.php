@@ -415,3 +415,122 @@ function install_dashboard_components()
     
     return $errors;
 }
+
+
+/**
+ * Upgrades all installed dashlets to the current version
+ * @author Paul Heaney
+ * @return String HTML status of the upgrade
+ */
+function upgrade_dashlets()
+{
+    $sql = "SELECT * FROM `{$GLOBALS['dbDashboard']}` WHERE enabled = 'true'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+    $html = '';
+    
+    while ($dashboardnames = mysql_fetch_object($result))
+    {
+        $version = 1;
+        include (dirname( __FILE__ ).DIRECTORY_SEPARATOR."plugins/dashboard_{$dashboardnames->name}.php");
+        $func = "dashboard_{$dashboardnames->name}_get_version";
+
+        if (function_exists($func))
+        {
+            $version = $func();
+        }
+
+        if ($version > $dashboardnames->version)
+        {
+            $html .= "<p>Upgrading {$dashboardnames->name} dashlet to v{$version}...</p>";
+            // apply all upgrades since running version
+            $upgrade_func = "dashboard_{$dashboardnames->name}_upgrade";
+
+            if (function_exists($upgrade_func))
+            {
+                $dashboard_schema = $upgrade_func();
+                for ($i = $dashboardnames->version; $i <= $version; $i++)
+                {
+                    setup_exec_sql($dashboard_schema[$i]);
+                }
+
+                $upgrade_sql = "UPDATE `{$GLOBALS['dbDashboard']}` SET version = '{$version}' WHERE id = {$dashboardnames->id}";
+                mysql_query($upgrade_sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+
+                $html .= "<p>{$dashboardnames->name} upgraded</p>";
+            }
+            else
+            {
+                $html .= "<p>No upgrade function for {$dashboardnames->name}</p>";
+            }
+        }
+    }
+
+    return $html;
+}
+
+
+/**
+ * Upgrades the schema from one version to the current
+ * Prints upgrade status as it goes
+ * @author Ivan Lucas
+ * @param int $installed_version The currently installed version
+ * @return int The version of the schema which is installed following the upgrade 
+ */
+function upgrade_schema($installed_version)
+{
+    global $application_version;
+    
+    for ($v = (($installed_version * 100) + 1); $v <= ($application_version * 100); $v++)
+    {
+        $html = '';
+        if (!empty($upgrade_schema[$v]))
+        {
+            $newversion = number_format(($v / 100), 2);
+            echo "<p>Updating schema from {$installed_version} to v{$newversion}&hellip;</p>";
+            $errors = setup_exec_sql($upgrade_schema[$v]);
+            // Update the system version
+            if ($errors < 1)
+            {
+                $vsql = "REPLACE INTO `{$GLOBALS['dbSystem']}` ( `id`, `version`) VALUES (0, {$newversion})";
+                mysql_query($vsql);
+                if (mysql_error())
+                {
+                    $html .= "<p class='error'>Could not store new schema version number '{$newversion}'. ".mysql_error()."</p>";
+                }
+                else
+                {
+                    $html .= "<p>Schema successfully updated to version {$newversion}.</p>";
+                }
+                $installed_version = $newversion;
+            }
+            else
+            {
+                $html .= "<p class='error'><strong>Summary</strong>: {$errors} Error(s) occurred while updating the schema, ";
+                $html .= "please resolve the problems reported and then try running setup again.</p>";
+            }
+            echo $html;
+        }
+    }
+    
+    return $installed_version;
+}
+
+
+function create_admin_user($password, $email)
+{
+    $html = '';
+    $password = md5($password);
+    $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `var_style`, `lastseen`) ";
+    $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', '8', NOW());";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+       trigger_error(mysql_error(), E_USER_WARNING);
+       $html .= "<p><strong>FAILED:</strong> {$sql}</p>";
+    }
+    
+    return $html;
+}
