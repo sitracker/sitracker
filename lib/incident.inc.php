@@ -388,10 +388,6 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     global $dbIncidents, $dbUpdates, $now, $sit;
     $rtn = TRUE;
 
-    if ($nextaction != '') {
-        $incident->nextaction = $nextaction;
-    }
-
     if ($type == 'temp')
     {
         $sql = "UPDATE `{$dbIncidents} SET towner = '{$tuser}'";
@@ -410,9 +406,8 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     }
 
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
-    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$incident->nextaction}')";
+    $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$nextaction}')";
     $result = mysql_query($sql);
-    mysql_query($sql);
     if (mysql_error())
     {
         trigger_error(mysql_error(), E_USER_WARNING);
