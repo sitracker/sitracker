@@ -148,8 +148,8 @@ echo "</div>";
 
 
 /**
-    * Convert a binary string into something viewable in a web browser
-*/
+ * Convert a binary string into something viewable in a web browser
+ */
 function encode_binary($string)
 {
     $chars = array();
@@ -181,8 +181,8 @@ function encode_binary($string)
 
 
 /**
-    * @author Ivan Lucas
-*/
+ * @author Ivan Lucas
+ */
 function draw_file_row($file, $incidentid, $path)
 {
     global $CONFIG;
