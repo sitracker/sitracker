@@ -252,7 +252,7 @@ function draw_file_row($file, $incidentid, $path)
     $html .= "<td width='20%'>{$file_size}</td>";
     $html .= "<td width='20%'>{$mime_type}</td>";
     $html .= "<td width='20%'>".ldate($CONFIG['dateformat_filedatetime'],filemtime($file))."</td>";
-    //$html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
+    // $html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
     $html .= "</tr>\n";
     return $html;
 }
@@ -278,7 +278,7 @@ if (file_exists($incident_attachment_fspath))
         foreach ($temparray as $value)
         {
             if (is_dir($value)) $dirarray[] = $value;
-            elseif (is_file($value) AND mb_substr($value,-1) != '.' AND mb_substr($value,-8) != 'mail.eml')
+            elseif (is_file($value) AND mb_substr($value, -1) != '.' AND mb_substr($value, -8) != 'mail.eml')
             {
                 $rfilearray[] = $value;
             }
