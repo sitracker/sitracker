@@ -358,7 +358,7 @@ if (file_exists($incident_attachment_fspath))
 
                 if (!empty($updatetext) AND $updatetype == 'email' OR $updatetype == 'webupdate')
                 {
-                    $updatetext = mb_substr($updatetext, 0, 80)."...";
+                    $updatetext = mb_substr($updatetext, 0, 80) . $strEllipsis;
                     echo "<span style='font-size:400%';>“</span>";
                     echo bbcode($updatetext);
                     echo "<span style='font-size:400%';>„</span>";
