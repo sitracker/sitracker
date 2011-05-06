@@ -1593,9 +1593,7 @@ UPDATE `{$dbEmailTemplates}` SET type = 'user' WHERE name IN ('EMAIL_INCIDENT_OU
 $upgrade_schema[360] = "
 -- INL 2010-03-20
 ALTER TABLE `{$dbFiles}` CHANGE `category` `category` ENUM( 'public', 'private', 'protected', 'ftp' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public'
-";
 
-$update_schema[361] = "
 -- KMH 2010-04-08
 UPDATE `{$dbTriggers}` SET `checks` = '{emaildetails} == 1'  WHERE `id` =28
 ";

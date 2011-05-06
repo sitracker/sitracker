@@ -481,7 +481,7 @@ function upgrade_dashlets()
  */
 function upgrade_schema($installed_version)
 {
-    global $application_version;
+    global $application_version, $upgrade_schema;
     
     for ($v = (($installed_version * 100) + 1); $v <= ($application_version * 100); $v++)
     {
@@ -491,6 +491,7 @@ function upgrade_schema($installed_version)
             $newversion = number_format(($v / 100), 2);
             echo "<p>Updating schema from {$installed_version} to v{$newversion}&hellip;</p>";
             $errors = setup_exec_sql($upgrade_schema[$v]);
+
             // Update the system version
             if ($errors < 1)
             {
