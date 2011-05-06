@@ -433,7 +433,7 @@ function upgrade_dashlets()
     while ($dashboardnames = mysql_fetch_object($result))
     {
         $version = 1;
-        include (dirname( __FILE__ ).DIRECTORY_SEPARATOR."plugins/dashboard_{$dashboardnames->name}.php");
+        include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
         $func = "dashboard_{$dashboardnames->name}_get_version";
 
         if (function_exists($func))
@@ -566,13 +566,14 @@ function update_sit_version_number($version)
 function current_schema_version()
 {
     $$installed_version = 0;
-    $sql = "SELECT `version` FROM `{$dbSystem}` WHERE id = 0";
+    $sql = "SELECT `version` FROM `{$GLOBALS['dbSystem']}` WHERE id = 0";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         list($installed_version) = mysql_fetch_row($result);
     }
+    
     
     return $installed_version;
 }
