@@ -211,7 +211,7 @@ CREATE TABLE `{$dbDrafts}` (
   `content` text NOT NULL,
   `meta` text NOT NULL,
   `lastupdate` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
   KEY `incidentid` (`incidentid`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
@@ -1583,7 +1583,32 @@ INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence
 
 ";
 
-// Upgrading from versions prior to 3.90 won't be possible via setup.php
+// Upgrading from versions prior to 3.50 won't be possible via setup.php
+$upgrade_schema[351] = "
+-- PH 2010-01-09
+UPDATE `{$dbEmailTemplates}` SET type = 'user' WHERE name IN ('EMAIL_INCIDENT_OUT_OF_SLA','EMAIL_INCIDENT_OUT_OF_REVIEW','EMAIL_INCIDENT_CREATED_USER','EMAIL_INCIDENT_REASSIGNED_USER_NOTIFY','EMAIL_INCIDENT_NEARING_SLA','EMAIL_INCIDENT_REVIEW_DUE','EMAIL_KB_ARTICLE_CREATED','EMAIL_HELD_EMAIL_RECEIVED','EMAIL_HELD_EMAIL_MINS','EMAIL_USER_CHANGED_STATUS','EMAIL_SIT_UPGRADED','EMAIL_INCIDENT_CLOSED_USER','EMAIL_CONTRACT_ADDED','EMAIL_USER_CREATED','EMAIL_SITE_CREATED');
+
+";
+
+$upgrade_schema[360] = "
+-- INL 2010-03-20
+ALTER TABLE `{$dbFiles}` CHANGE `category` `category` ENUM( 'public', 'private', 'protected', 'ftp' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public'
+";
+
+$update_schema[361] = "
+-- KMH 2010-04-08
+UPDATE `{$dbTriggers}` SET `checks` = '{emaildetails} == 1'  WHERE `id` =28
+";
+
+$upgrade_schema[361] = "
+-- PH 2010-06-03
+UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?id={kbid}' WHERE `{$dbNoticeTemplates}`.`id` = 7 LIMIT 1 ;
+
+-- PH 2010-02-08
+ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
+";
+
+
 $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;
 ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
 UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
