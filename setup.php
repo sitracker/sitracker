@@ -562,12 +562,12 @@ switch ($_REQUEST['action'])
    
                             if ($installed_version == $application_version)
                             {
+                                $upgradeok = TRUE;
                                 echo "<p>Everything is up to date</p>";
                                 echo "<p>See the <code>doc/UPGRADE</code> file for further upgrade notes.<br />";
                             }
                             else
                             {
-                                $upgradeok = TRUE;
                                 echo "<p>See the <code>doc/UPGRADE</code> file for further upgrade instructions and help.<br />";
                             }
     
