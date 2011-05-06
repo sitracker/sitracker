@@ -337,8 +337,8 @@ if (file_exists($incident_attachment_fspath))
                 if (in_array("{$dir}" . DIRECTORY_SEPARATOR . "mail.eml", $tempfarray))
                 {
                     $updatelink = readlink($dir);
-                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,mb_strlen($updatelink));
-                    echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#$updateid'>{$strJumpToEntryLog}</a></p>";
+                    $updateid = mb_substr($updatelink, strrpos($updatelink, DIRECTORY_SEPARATOR) + 1, mb_strlen($updatelink));
+                    echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#{$updateid}'>{$strJumpToEntryLog}</a></p>";
                 }
 
                 foreach ($tempfarray as $fvalue)
