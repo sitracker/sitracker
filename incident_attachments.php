@@ -312,7 +312,7 @@ if (file_exists($incident_attachment_fspath))
             elseif ($dirname[0] == 'u')
             {
                 $updateid = mb_substr($dirname, 1);
-                $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = $updateid";
+                $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = {$updateid}";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                 $update = mysql_fetch_object($result);
