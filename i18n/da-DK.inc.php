@@ -9,6 +9,7 @@ $i18nAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
 
 // list of strings (Alphabetical by key)
 $str0MeansUnlimited = '0 Betyder Uendeligt';
+
 $str1Day = '1 Dag';
 $str1Minute = '1 Minut';
 $str1Month = '1 Måned';
@@ -17,7 +18,9 @@ $str1IncidentsLoggedViaPortal = '1 Hændelse logget via portalen';
 $str1Second = '1 Sekund';
 $str1st = '1.';
 $str1Year = '1 År';
+
 $str3rd = '3.';
+
 $strAbout = 'Om';
 $strAboutPerson = 'Om %s';
 $strAboutXMinutesAgo = 'For %d min. siden';
@@ -173,6 +176,7 @@ $strAwaitingColleagueResponse = 'Afventer svar fra kollega';
 $strAwaitingCustomerAction = 'Afventer kunde afgørelse';
 $strAwaitingSupportResponse = 'Afventer svar fra supporten';
 $strAwaitingYourResponse = 'Afventer dit svar';
+
 $strBackToList = 'Tilbage til listen';
 $strBackToLoginPage = 'Tilbage til login siden';
 $strBackToSites = 'Tilbage til afdelinger';
@@ -207,7 +211,9 @@ $strBrowseJournal = 'Gennemse journal';
 $strBrowseKB = 'Gennemse vidensbase';
 $strBrowseSites = 'Gennemse afdelinger';
 $strBulkModify = 'Masse rediger';
+
 $strby = 'af';
+
 $strByContact = 'Af kontakt';
 $strByEngineer = 'Af tekniker';
 $strByEscalation = 'Af eskalering';
@@ -222,6 +228,7 @@ $strByDate = 'Af dato';
 $strBySLA = 'Af SLA';
 $strByVendor = 'Af sælger';
 $strByX = 'Af: %s';
+
 $strCalendar = 'Kalender';
 $strCalculateUnits = 'Beregn enheder';
 $strCalledAndLeftMessage = 'Ringet og efterladt besked';
@@ -356,6 +363,7 @@ $strCustomerReminderUpdate = 'Var dette en manager opfølgning?';
 $strCustomerRequestedClosure = 'Kunden anmodede om lukning af hændelse';
 $strCustomers = 'Kunder';
 $strCustomerVisible = 'Synlig for kunde';
+
 $strDailyRate = 'Daglig rate';
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard komponent %s eksisterer ikke';
@@ -371,10 +379,12 @@ $strDayOfMonth = 'dag %s af hver måned';
 $strDayOfYear = 'dag %s af hvert år';
 $strDays = 'Dage';
 $strDayView = 'Dags visning';
+
 $strdaysother = 'dage anden frihed';
 $strdayssick = 'dage syg';
 $strdaystraining = 'dage træning/kursus/seminar';
 $strdaysworkingaway = 'dage arbejder ude';
+
 $strDebit = 'Debet';
 $strDebug = 'Debug';
 $strDecAbbr = 'Dec';
@@ -436,6 +446,7 @@ $strDurability = 'Holdbarhed';
 $strDuration = 'Varighed';
 $strDurationMismatch = 'Varighed stemmer ikke';
 $strDurationUpdated = 'Varighed opdateret';
+
 $strEarliestExpiry = 'Udløber tidligst:';
 $strEdit = 'Rediger';
 $strEditContact = 'Rediger kontakt';
@@ -581,6 +592,7 @@ $strExternalEngineerCallDistribution = 'Ekstern tekniker opkalds distribution';
 $strExternalID = 'Ekstern ID';
 $strExternalInfo = 'Ekstern information';
 $strExternalInfoAddedBy = 'Ekstern information tilføjet af %s';
+
 $strFailed = 'Mislykket';
 $strFailedOnPass2 = 'fejlede på 2. kørsel';
 $strFailedtoApproveTransactID = 'Fejlede ved godkendelsen af transaktions ID';
@@ -668,6 +680,7 @@ $strFTPPublish = 'FTP udgivelse';
 $strFullDay = 'Hele dagen';
 $strFullDetails = 'Alle oplysninger';
 $strFullNameCurrentUser = 'Fulde navn af aktuelle bruger';
+
 $strGBytes = 'GBytes';
 $strGeneral = 'Generel';
 $strGetHelp = 'Få hjælp';
@@ -681,6 +694,7 @@ $strGrandTotal = 'Grand total';
 $strGroup = 'Gruppe';
 $strGroupMembersAway = 'Gruppe medlemmer ikke tilstede';
 $strGroupMembership = 'Gruppe medlemsskab';
+
 $strHandled = 'Håndteret';
 $strHasBeenAutoMovedToX = '%s er automatisk flyttet til %s\'s %s kø';
 $strHasBeenMovedToX = '%s er flyttet til %s\'s %s kø';
@@ -723,6 +737,7 @@ $strHolidayUsage = 'Ferie forbrug';
 $strHomeURL = 'Hjemme URL';
 $strHour = 'Time';
 $strHours = 'Timer';
+
 $strID = 'ID';
 $strIconSet = 'Ikon sæt';
 $strIfYourBrowserNotReload = 'Hvis din browser ikke fører dig videre inden for nogle sekunder';
@@ -830,6 +845,7 @@ $strInventoryDesc = 'Beholdning er et katalog over afdelings objekter så som ar
 $strInventoryItems = 'Fjernsupport udstyr';
 $strIgnore = 'Ignorer';
 $strIgnoreThisAndDelete = 'Ignorer denne opgave og slet denne besked';
+
 $strJanAbbr = 'Jan';
 $strJanuary = 'Januar';
 $strJobTitle = 'Jobtitel';
@@ -842,6 +858,7 @@ $strJumpToIncident = 'Hop til hændelse';
 $strJunAbbr = 'Jun';
 $strJune = 'Juni';
 $strJustNow = 'Lige nu';
+
 $strKBabbr = 'KB';
 $strKBArticle = 'KB artikel';
 $strKBytes = 'KBytes';
@@ -853,6 +870,7 @@ $strKnowledgeBase = 'Vidensbase';
 $strKnowledgeBaseArticle = 'Vidensbase artikel';
 $strKnowledgeBaseArticleCreated = 'Vidensbase artikel oprettet';
 $strKnowledgeBaseArticles = 'Vidensbase artikler';
+
 $strLanguage = 'Sprog';
 $strLatestExpiry = 'Udløber senest:';
 $strLastBilled = 'Sidst faktureret';
@@ -911,6 +929,7 @@ $strLogout = 'Log af';
 $strLogTriggerInJournal = 'log triggeren i system journalen';
 $strLow = 'Lav';
 $strLowPriority = 'Lav Prioritet';
+
 $strMakeVisibleInPortal = 'Vis i portalen';
 $strMap = 'Kort';
 $strManageDashboardComponents = 'Håndter Dashboard komponenter';
@@ -918,7 +937,7 @@ $strManageEmailTemplates = 'Håndter Email skabeloner';
 $strManageEscalationPaths = 'Håndter eskalerings stier';
 $strManageFTPFiles = 'Håndter FTP filer';
 $strManageHolidays = 'Administrer ferie';
-$strManagePlugins = 'Administrer plugins';
+$strManagePlugins = 'Administrer tilføjelses programmer';
 $strManageSystemTriggers = 'Administrer system notifikationer';
 $strManageUsers = 'Håndter brugere';
 $strManageUsersSkills = 'Administrer brugeres færdigheder';
@@ -979,9 +998,12 @@ $strMySettings = 'Mine indstillinger';
 $strMySkills = 'Mine færdigheder';
 $strMySubstitutes = 'Mine afløsere';
 $strMyTriggers = 'Mine triggers';
+
 $strName = 'Navn';
 $strNamedContacts = 'Navngivne kontakter';
+
 $strnd = '.';
+
 $strNeedsSubstitueEngineers = '%s mangler definition af afløsere';
 $strNegative = 'Negative';
 $strNever = 'Aldrig';
@@ -1041,7 +1063,9 @@ $strNoAvailablePlugins = 'Ingen tilføjelses programmer tilgængelige';
 $strNoBillingMatrixDefined = 'Ingen fakturerings matriks er fefineret';
 $strNoEngineersForReassignment = 'Ingen teknikere eksisterer for omdirigering af hændelse';
 $strNoFiles = 'Ingen filer';
+
 $strnoFileUploaded = 'Ingen fil er uploaded';
+
 $strNoneAvailable = 'Ingen tilgængelige';
 $strNonTerminatedContractsExpiredXdaysAgo = 'Ikke opsagte kontrakter der udløb for op til %s dage siden';
 $strNoBillingMatrixFound = 'Ingen fakturerings matriks fundet';
@@ -1171,6 +1195,7 @@ $strNumOfIncidents = 'Der er %s hændelser på denne liste';
 $strNumOfIncidentsLoggedByX = 'Hændelser logget af %s';
 $strNumOfCalls = '# af opkald';
 $strNumOpenIncidents = '%s åben';
+
 $strOccurance = 'Forekomst';
 $strOctAbbr = 'Okt';
 $strOctober = 'Oktober';
@@ -1212,6 +1237,7 @@ $strOwnerXAcctingAgain = 'Ejer %s accepterer igen';
 $strOwnerXAndNotAccepting = 'Ejer %s &amp; accepterer ikke';
 $strOverview = 'Oversigt';
 $strOverXHoursAgo = 'Over %x timer siden';
+
 $strParameters = 'Parametre';
 $strPassword = 'Adgangskode';
 $strPasswordHasBeenReset = 'Din adgangskode er blevet nulstillet, du kan nu logge på med de nye oplysninger';
@@ -1252,7 +1278,7 @@ $strPlaceIncidentInWaitingQueue = 'Placer hændelsen i vente køen?';
 $strPleaseCheckData = 'Kontroller venligst de instastede data';
 $strPleaseConfirmUsername = 'Bekræft venligst dit brugernavn';
 $strPleaseWaitRedirect = 'Vent venligst mens du bliver omdirigeret';
-$strPlugins = 'Plugins';
+$strPlugins = 'Tilføjelses programmer';
 $strPopularity = 'Popularitet';
 $strPortal = 'Portal';
 $strPortalIncidentCreated = 'Portal hændelse oprettet';
@@ -1289,6 +1315,7 @@ $strPublish = 'Udgiv';
 $strPublished = 'Udgivet';
 $strPublishedToday = 'Udgivet i dag';
 $strPublishedOnX = 'Udgivet den %s';
+
 $strQualifications = 'Kvalifikationer';
 $strQueryByExample = 'Forespørgsel pr eksempel';
 $strQuestion = 'Spørgsmål';
@@ -1297,9 +1324,12 @@ $strQuestionText = 'Spørgsmåls tekst';
 $strQuestionRequired = 'Spørgsmål markeret med dette symbol er påkrævede, og skal besvares inden du fortsætter';
 $strQuestionXNeedsAnsweringBeforeContinuing = 'Sprøgsmål %s kræver et svar før du fortsætter.';
 $strQueue = 'Kø';
+
 $strRandomTip = 'Tilfældigt tip';
 $strRating = 'Klassificering';
+
 $strrd = '.';
+
 $strRealName = 'Fulde navn';
 $strReassign = 'Redeleger';
 $strReassignIncident = 'Redeleger hændelse';
@@ -1353,7 +1383,7 @@ $strReportedBug = 'Rapporterede fejl';
 $strReportIncidentsBySiteDesc = 'Total hændelser logget: %s, logget externt: %s (%s%%)';
 $strReportListsIncidentsLoggedThatEachSiteLoggedOverPastXMonths = 'Denne rapport viser hændelserne som hvert afdeling har logget over de sidste %s måneder';
 $strReports = 'Rapporter';
-$strRepository = 'Lager';
+$strRepository = 'Tilgængelige';
 $strRequested = 'Anmodet';
 $strRequestClosure = 'Anmod om lukning';
 $strRequestNoUsersToApprovePermissions = 'Der er ingen brugere der kan godkende anmodningen, kun brugere med de rigtige rettigheder kan godkende ferie/fridage anmodninger og du kan ikke godkende dine egne anmodninger.';
@@ -1409,6 +1439,7 @@ $strRunningOn = 'Kører på %s kl. %s';
 $strRunManagementReports = 'Kør ledelses rapporter';
 $strRunReport = 'Kør rapport';
 $strRunReports = 'Kør rapporter';
+
 $strSalesperson = 'Sælger';
 $strSalespersonSite = 'Afdelingens salgs person';
 $strSalespersonAssignedToContactsSiteEmail = 'Email adressen på sælgeren der er knyttet til kontakt afdelingen';
@@ -1474,8 +1505,8 @@ $strServiceID = 'Service ID';
 $strServiceIDXLastInvoiceUptoX = 'Service ID: %s sidste faktura time op til %s';
 $strServiceLevel = 'Service level';
 $strServiceLevelPreventsReopen = 'Service levelen af denne hændelse forhindrer den i at blive genåbnet';
-$strServiceLevels = 'Service Levels';
-$strServicePacksApplied = 'Service Packs lagt på';
+$strServiceLevels = 'Service levels';
+$strServicePacksApplied = 'Installerede service packs';
 $strServicePeriod = 'Service periode';
 $strSession = 'Sæssion';
 $strSessionExpired = 'Din sæssion er udløbet, eller du har endnu ikke logget på';
@@ -1487,7 +1518,7 @@ $strSetPermissions = 'Rediger rettigheder';
 $strSetPermissionsForRoleX = 'Rediger rettigheder for rolle: %s';
 $strSetPermissionsForUserX = 'Rediger rettigheder for bruger: %s';
 $strSetPublicHolidays = 'Opret helligdage';
-$strSetRolePermissions = 'Sæt rolle rettighed';
+$strSetRolePermissions = 'Sæt rolle rettigheder';
 $strSettings = 'Indstillinger';
 $strSetYourStatus = 'Sæt din status';
 $strShowActiveOnly = 'Vis kun aktive';
@@ -1506,7 +1537,7 @@ $strShowingOnlyRelevantArticles = 'Viser kun relevante artikler';
 $strShowFreeOfCharge = 'Vis gratis';
 $strShowFreeOfChargeAsZero = 'Vis gratis som nul';
 $strShowIncidentDetails = 'Vis hændelse detaljer';
-$strShowMine = 'Vis mine';
+$strShowMine = 'Vis egne';
 $strShowOnlyRelevant = 'Vis kun relevante';
 $strShowOpenIncidents = 'Vis åbne hændelser';
 $strShowOrphandedContacts = 'Vis herreløse kontakter (ingen kunde)';
@@ -1580,7 +1611,9 @@ $strSourceFailCannotBeFoundX = 'Filen kan ikke findes %s';
 $strSpamEmail = 'Spam Email';
 $strSpamEmails = 'Spam emails';
 $strSpecifyAddress = 'Angiv en adresse for kontakten der er forskellig fra afdelingen';
+
 $strst = '.';
+
 $strStartDate = 'Start dato';
 $strStartNewActivity = 'Start ny aktivitet';
 $strStatsFromDayStatistics = 'Statistikker fra %s';
@@ -1617,13 +1650,16 @@ $strSystem = 'System';
 $strSystemActions = 'System hændelser';
 $strSystemPath = 'System base sti';
 $strSystemUrl = 'System URL';
+
 $strTable = 'Tabel';
 $strTag = 'Tag';
 $strTagCloud = 'Tag Cloud';
 $strTags = 'Tags';
 $strTagsMulti = '%d Tags';
+
 $strtaken = 'taget';
 $strtakennextperiod = 'taget i næste periode';
+
 $strTarget = 'Mål';
 $strTask = 'Opgave';
 $strTaskDue = 'Opgave forfalder';
@@ -1649,7 +1685,9 @@ $strTerminated = 'Opsagt';
 $strTerminatedContractsExpiredXdaysAgo = 'Opsagte kontrakter der udløb for op til %s dage siden';
 $strTestTriggers = 'Test triggers';
 $strText = 'Tekst';
+
 $strth = '.';
+
 $strThankYou = 'Tak';
 $strThankYouCompleteForm = 'Tak for at du brugte din tid til at udfylde denne form';
 $strTheFollowingVariables = 'Følgende variabler kan brugers:';
@@ -1731,6 +1769,7 @@ $strTue = 'Tirs';
 $strTuesday = 'Tirsdag';
 $strTuesdayAbbr = 'Ti';
 $strType = 'Type';
+
 $strURLTitle = 'URL Titel';
 $strUp = 'Op';
 $strUpgrade = 'Opgradering';
@@ -1800,6 +1839,7 @@ $strUsersNoGroup = 'Brugere der ikke er tilknyttet en gruppe';
 $strUsersBoldSkills = 'Brugere vist med fed skrift er kendte for at have relevante færdigheder';
 $strUseThisInFuture = 'Brug dette fremover';
 $strUTCOffset = 'UTC Offset (Tidszone)';
+
 $strValid = 'Valid';
 $strValue = 'Værdi';
 $strVariable = 'Variabel';
@@ -1839,6 +1879,7 @@ $strViewYourCalendar = 'Vis din kalender';
 $strViewYourTasks = 'Vis dine opgaver';
 $strVisibleToCustomer = 'Synlig for kunde';
 $strVisibility = 'Synlighed';
+
 $strWaiting = 'Venter';
 $strWaitingForCustomer = 'Venter på kunde';
 $strWaitingForSupport = 'Venter på support';
@@ -1871,6 +1912,7 @@ $strWorkingFromHome = 'Arbejder hjemme';
 $strWorkStatus = 'Arbejds status';
 $strWebsite = 'Website';
 $strWithheld = 'Tilbageholdt';
+
 $strXDays = '%s dage';
 $strXIncidentsLoggedViaPortal = '%s hændelser logget via portalen';
 $strXIncidentsLeft = '%s hændelser tilbage';
@@ -1891,6 +1933,7 @@ $strXsTasks = '%s\'s opgaver';
 $strXWorkingDay = '%s arbejdsdag';
 $strXWorkingDays = '%s arbejdsdage';
 $strXYears = '%s år';
+
 $strYear = 'År';
 $strYearly = 'Årlig';
 $strYearView = 'Årlig visning';
@@ -1914,5 +1957,6 @@ $strYourSitesClosedIncidents = 'Din afdelings andre lukkede hændelser';
 $strYourSitesIncidents = 'Din afdelings andre hændelser';
 $strYouHaveAction = 'Du har handling';
 $strYourSupportEntitlement = 'Din support berettigelse';
+
 $strZeroRemaining = 'Ingen tilbage';
 ?>
