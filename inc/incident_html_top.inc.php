@@ -183,7 +183,7 @@ else
 }
 
 // Color the title bar according to the SLA and priority
-$class = '';
+$class = 'normal';
 if ($slaremain != 0 AND $incident->status != STATUS_CLOSED)
 {
     if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';

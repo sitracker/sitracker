@@ -320,6 +320,7 @@ tr.notice:hover { background-color: #F2F2F2; }
 .urgent { background-color: #f08080; color: black; } /* #E8B7DD; */
 .notice { color: black; background-color: #FFFFBC; } /* yellow -- was #ffbbaa; mild red */
 h1.notice { background-image: url('../images/top_yellow.png'); }
+h1.normal { background-color: #203894; }
 .critical { background-color: #ff4500; } /* fire-engine red */
 h1.critical { background-image: url('../images/top_red.png'); }
 .expired { background-color: #D6D6D6; } /* grey */
@@ -731,7 +732,7 @@ div.detailfoot
 
 #row, #relationshiprow
 {
-    display: table-row;	
+    display: table-row;
 }
 
 #left, #right, #relationshipleft
