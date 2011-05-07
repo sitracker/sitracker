@@ -68,24 +68,22 @@ if (isset($_POST['submit']))
             {
                 $mk = mkdir($kb_attachment_fspath, 0770, TRUE);
                 if (!$mk)
-            {
-                trigger_error('Failed creating kb attachment directory: '.$kb_attachment_fspath, E_USER_WARNING);
+                {
+                    trigger_error('Failed creating kb attachment directory: '.$kb_attachment_fspath, E_USER_WARNING);
+                }
             }
-        }
-        // Move the uploaded file from the temp directory into the incidents attachment dir
-        $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
-        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+            // Move the uploaded file from the temp directory into the incidents attachment dir
+            $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+            if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
 
-        //create link
-        $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
-        $sql .= "VALUES (7, '{$kbid}', '{$fileid}', 'left', '{$sit[2]}')";
-        mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        }
-
-
+            //create link
+            $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+            $sql .= "VALUES (7, '{$kbid}', '{$fileid}', 'left', '{$sit[2]}')";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            }
         }
     }
 
@@ -103,7 +101,7 @@ if (isset($_POST['submit']))
         $errors++;
     }
 
-
+    $sql = array();
     if (empty($kbid))
     {
         // If the KB ID is blank, we assume we're creating a new article
