@@ -33,9 +33,7 @@ include (APPLICATION_LIBPATH.'defaults.inc.php');
 // Load config file with customisations
 @include (APPLICATION_FSPATH . "config.inc.php");
 
-// TODO determine which language to use, for now we're hardcoded to English (British)
-// i18n
-@include (APPLICATION_I18NPATH . 'en-gb.inc.php');
+@include (APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php");
 
 if (!function_exists("getmicrotime"))
 {

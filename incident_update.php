@@ -381,7 +381,7 @@ else
     }
     elseif ((mb_strlen($bodytext) < 4) OR !preg_match('/[\p{L}\p{N}]+/u', $bodytext))
     {
-        $_SESSION['formerrors']['update'][] = sprintf(strMustContainFourCharacters, $strUpdate);
+        $_SESSION['formerrors']['update'][] = sprintf($strMustContainFourCharacters, $strUpdate);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
         exit;
     }
@@ -470,13 +470,10 @@ else
         }
     }
 
-    // was '$attachment'
     if ($_FILES['attachment']['name'] != '' && isset($_FILES['attachment']['name']) == TRUE)
     {
-        $bodytext = "{$SYSLANG['strAttachment']}: [[att=$fileid]]{$_FILES['attachment']['name']}[[/att]]\n\n".$bodytext;
+        $bodytext = "{$SYSLANG['strAttachment']}: [[att={$fileid}]]{$_FILES['attachment']['name']}[[/att]]\n\n{$bodytext}";
     }
-    // Debug
-    ## if ($target!='') $bodytext = "Target: $target\n".$bodytext;
 
     // Check the updatetype field, if it's blank look at the target
     
@@ -504,18 +501,22 @@ else
 
     $owner = incident_owner($id);
 
+    if ($target == 'none') $sla = "Null";
+    else $sla = "'{$target}'";
+    
     // visible update
     if ($cust_vis == "yes")
     {
-        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, customervisibility, nextaction) ";
-        $sql .= "VALUES ('{$id}', '{$sit[2]}', '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', 'show' , '{$nextaction}')";
+        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, customervisibility, nextaction, sla) ";
+        $sql .= "VALUES ('{$id}', '{$sit[2]}', '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', 'show' , '{$nextaction}', {$sla})";
     }
     else
     {
         // invisible update
-        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, nextaction) ";
-        $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', '{$nextaction}')";
+        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus, nextaction, sla) ";
+        $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', '{$nextaction}', {$sla})";
     }
+
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     $updateid = mysql_insert_id();
@@ -581,40 +582,9 @@ else
         trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
-    $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', priority='$newpriority', lastupdated='{$now}', timeofnextaction='$timeofnextaction' WHERE id='{$id}'";
+    $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', priority='{$newpriority}', lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    // Handle meeting of service level targets
-    switch ($target)
-    {
-        case 'none':
-            // do nothing
-            $sql = '';
-            break;
-        case 'initialresponse':
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'initialresponse','{$SYSLANG['strInitialResponseHasBeenMade']}')";
-            break;
-        case 'probdef':
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'probdef','{$SYSLANG['strProblemHasBeenDefined']}')";
-            break;
-        case 'actionplan':
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'actionplan','{$SYSLANG['strActionPlanHasBeenMade']}')";
-            break;
-        case 'solution':
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', '{$newstatus}', 'show', 'solution','{$SYSLANG['strIncidentResolved']}')";
-            break;
-    }
-
-    if (!empty($sql))
-    {
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    }
 
     if ($target != 'none')
     {
@@ -639,7 +609,7 @@ else
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
-        journal(CFG_LOGGING_MAX,'Incident Updated', "Incident $id Updated", CFG_JOURNAL_SUPPORT, $id);
+        journal(CFG_LOGGING_MAX,'Incident Updated', "Incident {$id} Updated", CFG_JOURNAL_SUPPORT, $id);
         html_redirect("incident_details.php?id={$id}");
     }
 }

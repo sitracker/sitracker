@@ -22,7 +22,6 @@ $str1st = '1st';
 $str1Year = '1 year';
 # e.g 3rd day of month
 $str3rd = '3rd';
-
 # e.g. About this site, i.e. more information
 $strAbout = 'About';
 # e.g. About John Smith
@@ -196,7 +195,6 @@ $strAwaitingColleagueResponse = 'Awaiting Colleague Response';
 $strAwaitingCustomerAction = 'Awaiting Customer Action';
 $strAwaitingSupportResponse = 'Awaiting Support Response';
 $strAwaitingYourResponse = 'Awaiting Your Response';
-
 $strBackToList = 'Back To List';
 $strBackToLoginPage = 'Back to login page';
 $strBackToSites = 'Back to sites';
@@ -251,7 +249,6 @@ $strBySLA = 'By SLA';
 $strByVendor = 'By Vendor';
 # e.g. By: Joe Bloggs
 $strByX = 'By: %s';
-
 $strCalendar = 'Calendar';
 # verb: Calculate, plural noun: Units
 $strCalculateUnits = 'Calculate Units';
@@ -401,7 +398,6 @@ $strCustomerRequestedClosure = 'Customer Requested Incident Closure';
 $strCustomers = 'Customers';
 # Visible for customers
 $strCustomerVisible = 'Customer visible';
-
 $strDailyRate = 'Daily Rate';
 # i.e. place for widgets
 $strDashboard = 'Dashboard';
@@ -491,7 +487,6 @@ $strDuration = 'Duration';
 # When the passed duration is not the same as the entry in the database
 $strDurationMismatch = 'Duration mismatch';
 $strDurationUpdated = 'Duration updated';
-
 $strEarliestExpiry = 'Earliest Expiry:';
 # verb, i.e. to change
 $strEdit = 'Edit';
@@ -608,6 +603,12 @@ $strEnterTheCallID = 'Enter the incident number';
 $strEntitlement = 'Entitlement';
 #computer environment
 $strEnvironment = 'Environment';
+# Text which is printed when fatal errors found on checking the environment
+$strEnvironmentCheckedFatal = 'Checked. Some fatal errors, SiT is unlikly to work properly';
+# Text which is printed on successful checking of the environment
+$strEnvironmentCheckedOK = 'Environment Checked. All OK';
+# Text which is printed when warnings found on checking the environment
+$strEnvironmentCheckedWarnings = 'Checked. Some warnings though SiT will work';
 # Acronym for end of life
 $strEOL = 'EOL';
 $strError = 'Error';
@@ -640,7 +641,6 @@ $strExternalEngineerCallDistribution = 'External Engineer Call Distribution';
 $strExternalID = 'External ID';
 $strExternalInfo = 'External Information';
 $strExternalInfoAddedBy = 'External Information added by %s';
-
 $strFailed = 'Failed';
 $strFailedOnPass2 = 'failed on pass 2';
 $strFailedtoApproveTransactID = 'Failed to approve transaction ID';
@@ -740,7 +740,6 @@ $strFTPPublish = 'FTP Publish';
 $strFullDay = 'Full Day';
 $strFullDetails = 'Full Details';
 $strFullNameCurrentUser = 'Full name of current user';
-
 $strGBytes = 'GBytes';
 $strGeneral = 'General';
 $strGetHelp = 'Get Help';
@@ -770,6 +769,7 @@ $strHelpChar = '?';
 $strHelpContents = 'Help Contents';
 $strHelpToTranslate = 'This page is to help translators translate SiT!';
 $strHide = 'Hide';
+$strHideCompleted = 'Hide Completed';
 $strHideInPortal = 'Hide from portal';
 $strHidingIncidentsOlderThan = 'Hiding incidents older than %s days';
 $strHigh = 'High';
@@ -799,7 +799,6 @@ $strHolidayUsage = 'Holiday Usage';
 $strHomeURL = 'Home URL';
 $strHour = 'Hour';
 $strHours = 'Hours';
-
 # i.e. short for identification; unique number
 $strID = 'ID';
 $strIconSet = 'Icon Set';
@@ -912,7 +911,6 @@ $strInventoryDesc = 'The inventory is a catalogue of site objects such as workst
 $strInventoryItems = 'Inventory Items';
 $strIgnore = 'Ignore';
 $strIgnoreThisAndDelete ='Ignore this reassignment and delete this notice';
-
 # short for January
 $strJanAbbr = 'Jan';
 # Month number 1: January
@@ -932,7 +930,6 @@ $strJunAbbr = 'Jun';
 $strJune = 'June';
 # i.e. A moment ago
 $strJustNow = 'Just Now';
-
 # Abbreviation for Knowledge base
 $strKBabbr = 'KB';
 $strKBArticle = 'KB article';
@@ -946,7 +943,6 @@ $strKnowledgeBase = 'Knowledge Base';
 $strKnowledgeBaseArticle = 'Knowledge Base Article';
 $strKnowledgeBaseArticleCreated = 'Knowledge Base Article Created';
 $strKnowledgeBaseArticles = 'Knowledge Base Articles';
-
 $strLanguage = 'Language';
 $strLatestExpiry = 'Latest Expiry:';
 # Last date a bill was generated
@@ -1091,7 +1087,6 @@ $strMySettings = 'My Settings';
 $strMySkills = 'My Skills';
 $strMySubstitutes = 'My Substitutes';
 $strMyTriggers = 'My Triggers';
-
 $strName = 'Name';
 $strNamedContacts = 'Named Contacts';
 #English suffix for second - 2nd
@@ -1198,6 +1193,7 @@ $strNotifyContactOnClose = 'Whether the user requested to send a closing email (
 $strNotifyExternalEngineerOnClose = 'Whether the user requested to send a closing email to the external engineer (true or false)';
 $strNotifyWhen = 'Notify When';
 $strNotEscalated = 'Not Escalated';
+$strNotInstalled = 'Not Installed';
 $strNoServiceWithIDXFound = 'No service with ID %s found';
 $strNoPermission = 'You do not have permission to view this page';
 $strNoPost = 'No Post';
@@ -1291,7 +1287,6 @@ $strNumOfIncidents = 'There are %s incidents in this list';
 $strNumOfIncidentsLoggedByX = 'Number of incidents logged by %s';
 $strNumOfCalls = '# of calls';
 $strNumOpenIncidents = '%s open';
-
 $strOccurance = 'Occurance';
 # Short for October
 $strOctAbbr = 'Oct';
@@ -1336,7 +1331,6 @@ $strOwnerXAcctingAgain = 'Owner %s accepting again';
 $strOwnerXAndNotAccepting = 'Owner %s &amp; not accepting';
 $strOverview = 'Overview';
 $strOverXHoursAgo = 'Over %x hours ago';
-
 $strParameters = 'Parameters';
 $strPassword = 'Password';
 $strPasswordHasBeenReset = 'Your password has been reset, you can now login using the new details.';
@@ -1403,7 +1397,6 @@ $strProblemDefinitionSLA = 'Problem Definition SLA';
 $strProblemDescription = 'Problem Description';
 $strProblemDescriptionCustomerText = 'As much information as possible about the problem, enough for an engineer to begin researching the issue without having to contact you.';
 $strProblemHasBeenDefined = 'The problem has been defined';
-
 $strProblemReproduction = 'Problem Reproduction';
 $strProblemReproductionCustomerText = 'Does the problem exist with more than one machine? What steps will an engineer need to take to reproduce this issue?';
 $strProduct = 'Product';
@@ -1418,7 +1411,6 @@ $strPublish = 'Publish';
 $strPublished = 'Published';
 $strPublishedToday = 'Published Today';
 $strPublishedOnX = 'Published on %s';
-
 $strQualifications = 'Qualifications';
 $strQueryByExample = 'Query By Example';
 $strQuestion = 'Question';
@@ -1427,7 +1419,6 @@ $strQuestionText = 'Question Text';
 $strQuestionRequired = 'Questions marked with this symbol are required and must be answered before continuing';
 $strQuestionXNeedsAnsweringBeforeContinuing = 'Question %s requires an answer before continuing.';
 $strQueue = 'Queue';
-
 $strRandomTip = 'Random Tip';
 $strRating = 'Rating';
 #English suffix for third - 3rd
@@ -1497,6 +1488,7 @@ $strRequestSendComments = 'Send comments with your request: (or leave blank)';
 $strRequestSent = 'Request Sent';
 $strRequestSentToX = 'Request sent to %s';
 $strRequired = 'Required';
+$strRequirement = 'Requirement';
 $strRequiredDataMissing = 'Required data missing';
 $strResearchedby = 'Researched by %s';
 $strResearching = 'Researching';
@@ -1545,7 +1537,6 @@ $strRunningOn = 'running on %s at %s';
 $strRunManagementReports = 'Run Management Reports';
 $strRunReport = 'Run Report';
 $strRunReports = 'Run Reports';
-
 $strSalesperson = 'Salesperson';
 $strSalespersonSite = 'The site\'s salesperson';
 $strSalespersonAssignedToContactsSiteEmail = 'The email address of the salesperson attached to the contacts site';
@@ -1769,7 +1760,6 @@ $strSystem = 'System';
 $strSystemActions = 'System Actions';
 $strSystemPath = 'System base path';
 $strSystemUrl = 'System URL';
-
 $strTable = 'Table';
 $strTag = 'Tag';
 $strTagCloud = 'Tag Cloud';
@@ -1897,7 +1887,6 @@ $strTuesday = 'Tuesday';
 # Two character (Maximum) abbreviation for 'Tuesday'
 $strTuesdayAbbr = 'Tu';
 $strType = 'Type';
-
 $strURLTitle = 'URL Title';
 $strUp = 'Up';
 $strUpgrade = 'Upgrade';
@@ -1969,7 +1958,6 @@ $strUsersBoldSkills = 'Users shows in bold typeface are known to have relevant s
 $strUseThisInFuture = 'Use this in future';
 # Offset from Coordinated Universal Time / Temps Universel Coordonné
 $strUTCOffset = 'UTC Offset (Timezone)';
-
 $strValid = 'Valid';
 $strValue = 'Value';
 $strVariable = 'Variable';
@@ -2010,7 +1998,6 @@ $strViewYourCalendar = 'View Your Calendar';
 $strViewYourTasks = 'View Your Tasks';
 $strVisibleToCustomer = 'Visible To Customer';
 $strVisibility = 'Visibility';
-
 $strWaiting = 'Waiting';
 $strWaitingForCustomer = 'Waiting for customer';
 $strWaitingForSupport = 'Waiting for support';
@@ -2024,6 +2011,7 @@ $strWatchIncidentsAdded = 'Watch Incidents added';
 $strWatchIncidentsRemovalSucceded = 'Watch incidents removal succeded';
 $strWebupdate = 'Web update';
 $strWebupdateBy = 'Web update by %s';
+$strWebserver = 'Webserver';
 # Short for 'Wednesday'
 $strWed = 'Wed';
 $strWednesday = 'Wednesday';
@@ -2071,7 +2059,6 @@ $strXsTasks = '%s\'s Tasks';
 $strXWorkingDay = '%s working day';
 $strXWorkingDays = '%s working days';
 $strXYears = '%s years';
-
 $strYear = 'Year';
 $strYearly = 'Yearly';
 $strYearView = 'Year View';
@@ -2096,6 +2083,5 @@ $strYourSitesClosedIncidents = 'Your site\'s other closed incidents';
 $strYourSitesIncidents = 'Your site\'s other incidents';
 $strYouHaveAction = 'You have action';
 $strYourSupportEntitlement = 'Your support entitlement';
-
 $strZeroRemaining = 'Zero remaining';
 ?>

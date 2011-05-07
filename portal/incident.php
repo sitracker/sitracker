@@ -24,7 +24,6 @@ $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 $user = mysql_fetch_object($result);
 
-// FIXME check if this user owns the incident
 if ($user->contact != $_SESSION['contactid']
     AND !in_array($user->maintenanceid, $_SESSION['contracts']))
 {
@@ -39,7 +38,7 @@ echo "<br /><strong>{$strOpened}</strong>: ".date("jS M Y", $user->opened)."</p>
 
 $records = strtolower(cleanvar($_REQUEST['records']));
 
-if ($incidentid=='' OR $incidentid < 1)
+if ($incidentid == '' OR $incidentid < 1)
 {
     trigger_error("Incident ID cannot be zero or blank", E_USER_ERROR);
 }
@@ -65,7 +64,7 @@ if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_
 $keeptags = array('b','i','u','hr','&lt;', '&gt;');
 foreach ($keeptags AS $keeptag)
 {
-    if (mb_substr($keeptag,0,1)=='&')
+    if (mb_substr($keeptag,0,1) == '&')
     {
         $origtag[] = $keeptag;
         $temptag[] = "[[".mb_substr($keeptag, 1, mb_strlen($keeptag) - 1)."]]";
@@ -226,7 +225,7 @@ while ($update = mysql_fetch_object($result))
         //show update type icon
         if (array_key_exists($update->type, $updatetypes))
         {
-            if (!empty($update->sla) AND $update->type == 'slamet')
+            if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
             }
@@ -241,7 +240,7 @@ while ($update = mysql_fetch_object($result))
             }
         }
         echo " {$updatetime}</div>";
-        if ($updatebody!='')
+        if ($updatebody != '')
         {
             if ($update->customervisibility == 'show')
             {

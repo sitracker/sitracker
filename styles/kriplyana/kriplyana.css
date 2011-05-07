@@ -1,4 +1,6 @@
 /* Kriplyana (Inuit word): snow that looks blue in the early morning  */
+/* main colour = #4B5C94 */
+
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
 #masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; }
@@ -97,6 +99,31 @@ a.info:hover span
   -moz-opacity:0.85;
 }
 
+/* Hyperlinks */
+
+a
+{
+  font-weight: bold;
+  text-decoration: none;
+  color: #4B5C94;
+}
+
+
+a:hover
+{
+  font-weight: bold;
+  text-decoration: underline;
+  color: #4B5C94;
+}
+
+a:active
+{
+  font-weight: bold;
+  text-decoration: underline;
+  color: #4B5C94;
+}
+a em { font-style: normal; text-decoration: underline; color: #224488; }
+
 a.info:hover span strong { color: #FFF;}
 
 input.required, select.required{
@@ -112,7 +139,24 @@ span.helplink a { color: #109810;}
     text-decoration: none; color: #109810;
 }
 
+#kbarticle h1,#kbarticle h3,#kbarticle h4, #kbarticle h5,#kbarticle h6
+{
+  text-align: left; background: transparent; color: #4B5C94;
+  width: 100%;
+  border-bottom: 1px #203894 solid;
+}
+
 .droptarget { border: 1px dashed #FFC0FF;}
+
+div.detaildate
+{
+    float: right;
+    color: #4B5C94;
+    padding-left: 1em;
+    position: relative;
+    top: 3px;
+}
+div.detaildate input[type=text] { color: #06377F; border: 1px dotted #06377F; background: transparent; }
 
 div#statusbar { background-color: #4B5C94; }
 div#statusbar img { vertical-align: text-bottom; }
@@ -125,6 +169,17 @@ div#statusbar strong { color:#fff;}
 #userstatus_dropdown option.enable { color: #00C000; }
 #userstatus_dropdown option.disable { color: #C00000; }
 #userstatus_dropdown option.seperator { border-top: 1px solid #8F9DC5; }
+
+#navmenu
+{
+    color: white;
+    background: #4B5C94;
+    padding-left: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-align: center;
+}
+
 
 input[type=submit], input[type=button], input[type=reset]
 {
@@ -160,4 +215,10 @@ input[type=submit], input[type=button], input[type=reset]
     background: #EEF6FF;
     -moz-border-radius-topright: 5px; -webkit-border-top-right-radius: 5px; border-top-right-radius: 5px;
     -moz-border-radius-topleft: 5px; -webkit-border-top-left-radius: 5px; border-top-left-radius: 5px;
+}
+
+
+h1.normal
+{
+    background-image: url(../kriplyana/top_purple.png);
 }

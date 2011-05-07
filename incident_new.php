@@ -769,7 +769,7 @@ elseif ($action == 'assign')
             if (!empty($updateid))
             {
                 // Assign existing update to new incident if we have one
-                $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}' WHERE id='{$updateid}'";
+                $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', sla='opened' WHERE id='{$updateid}'";
 
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -817,9 +817,9 @@ elseif ($action == 'assign')
             {
                 // Create a new update from details entered
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
-                $sql .= "currentstatus, customervisibility, nextaction) ";
+                $sql .= "currentstatus, customervisibility, nextaction, sla) ";
                 $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
-                $sql .= "'1', '{$customervisibility}', '{$nextaction}')";
+                $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -832,17 +832,10 @@ elseif ($action == 'assign')
             $targetval = $level->initial_response_mins * 60;
             $initialresponse = $now + $targetval;
 
-            // Insert the first SLA update, this indicates the start of an incident
-            // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'slamet', '{$now}', '{$sit[2]}', '1', 'show', 'opened','{$_SESSION['syslang']['strIncidentIsOpen']}.')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             // Insert the first Review update, this indicates the review period of an incident has started
             // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', 'opened','')";
+            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', '')";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

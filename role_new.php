@@ -71,7 +71,7 @@ else
     if (mysql_num_rows($result) > 0)
     {
         $errors++;
-        $_SESSION['formerrors']['role_new']['duplicaterole']= "{$strADuplicateAlreadyExists}</p>\n";
+        $_SESSION['formerrors']['role_new']['duplicaterole'] = "{$strADuplicateAlreadyExists}</p>\n";
     }
 
     if ($errors == 0)
