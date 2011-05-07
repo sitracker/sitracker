@@ -1661,6 +1661,24 @@ function kb_article($id, $mode='internal')
         $html .= ldate($CONFIG['dateformat_date'],$pubdate)."<br />";
     }
 
+    $sqlf = "SELECT f.filename, f.id, f.filedate FROM `{$GLOBALS['dbFiles']}` ";
+    $sqlf .= "AS f INNER JOIN `{$GLOBALS['dbLinks']}` as l ON l.linkcolref = f.id ";
+    $sqlf .= "WHERE l.linktype = 7 AND l.origcolref = '{$id}'";
+    $fileresult = mysql_query($sqlf);
+    if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
+    if (mysql_num_rows($fileresult) > 0)
+    {
+        $html .= "<h3>{$GLOBALS['strFiles']}</h3>";
+        $html .= "<br /><table><th>{$GLOBALS['strFilename']}</th><th>{$GLOBALS['strDate']}</th>";
+        while ($filename = mysql_fetch_object($fileresult))
+        {
+            $html .= "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$id}'>$filename->filename</a></td>";
+            $html .= "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";
+        }
+        $html .= "</table>";
+    }
+
+
     if ($mode == 'internal')
     {
         if (is_array($author))

@@ -32,12 +32,62 @@ $sections = array('Summary', 'Symptoms', 'Cause', 'Question', 'Answer',
                   'Solution', 'Workaround', 'Status', 'Additional Information',
                   'References');
 
+$att_max_filesize = return_bytes($CONFIG['upload_max_filesize']);
+
 if (isset($_POST['submit']))
 {
     $kbtitle = cleanvar($_POST['title']);
     $keywords = cleanvar($_POST['keywords']);
     $distribution = cleanvar($_POST['distribution']);
     $sql = array();
+
+    if (isset($_FILES['attachment']) AND ($_FILES['attachment']['name'] != ''))
+    {
+        // Check if we had an error whilst uploading
+        if ($_FILES['attachment']['error'] != '' AND $_FILES['attachment']['error'] != UPLOAD_ERR_OK)
+        {
+            echo get_file_upload_error_message($_FILES['attachment']['error'], $_FILES['attachment']['name']);
+        }
+        else
+        {
+            // OK to proceed
+            // Create an entry in the files table
+            $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
+            $sql .= "VALUES ('public', '{$_FILES['attachment']['name']}', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
+            mysql_query($sql);
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $fileid =  mysql_insert_id();
+
+            $kb_attachment_fspath = $CONFIG['attachment_fspath'] . DIRECTORY_SEPARATOR . "kb" . DIRECTORY_SEPARATOR . $kbid . DIRECTORY_SEPARATOR;
+
+            // make incident attachment dir if it doesn't exist
+            $newfilename = $kb_attachment_fspath . $fileid . "-".$_FILES['attachment']['name'];
+            $umask = umask(0000);
+            $mk = TRUE;
+            if (!file_exists($kb_attachment_fspath))
+            {
+                $mk = mkdir($kb_attachment_fspath, 0770, TRUE);
+                if (!$mk)
+            {
+                trigger_error('Failed creating kb attachment directory: '.$kb_attachment_fspath, E_USER_WARNING);
+            }
+        }
+        // Move the uploaded file from the temp directory into the incidents attachment dir
+        $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+
+        //create link
+        $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+        $sql .= "VALUES (7, '{$kbid}', '{$fileid}', 'left', '{$sit[2]}')";
+        mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        }
+
+
+        }
+    }
 
     $_SESSION['formdata']['kb_new_article'] = cleanvar($_POST, TRUE, FALSE, FALSE);
 
@@ -158,7 +208,7 @@ else
     }
 
     echo "<div id='kbarticle'>";
-    echo "<form action='{$_SERVER['PHP_SELF']}?id={$kbid}' method='post'>";
+    echo "<form enctype='multipart/form-data' action='{$_SERVER['PHP_SELF']}?id={$kbid}' method='post'>";
 
     echo "<h3>{$strEnvironment}</h3>";
     echo "<p style='text-align:left'>{$strSelectSkillsApplyToArticle}:</p>";
@@ -324,6 +374,32 @@ else
     echo "onchange='kbSectionCollapse();'>{$sections['References']}";
     echo "</textarea>";
     echo "</div>";
+
+    echo "<h3>{$strAttachFile}</h3>";
+    echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$att_max_filesize}'>";
+    echo "<input type='file' name='attachment'>";
+    if ($mode == 'edit')
+    {
+        $sqlf = "SELECT f.filename, f.id, f.filedate
+                FROM `{$dbFiles}` AS f
+                INNER JOIN `{$dbLinks}` as l
+                ON l.linkcolref = f.id
+                WHERE l.linktype = 7
+                AND l.origcolref = '{$kbid}'";
+        $fileresult = mysql_query($sqlf);
+        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
+        if (mysql_num_rows($fileresult) > 0)
+        {
+            echo "<br /><table><th>{$strFilename}</th><th>{$strDate}</th>";
+            while ($filename = mysql_fetch_object($fileresult))
+            {
+                echo "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$kbid}'>$filename->filename</a></td>";
+                echo "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";
+            }
+            echo "</table>";
+        }
+
+    }
 
     echo "<h3>{$strDisclaimer}</h3>";
     echo $CONFIG['kb_disclaimer_html'];
