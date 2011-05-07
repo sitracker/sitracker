@@ -661,7 +661,7 @@ VALUES (1,'Task','Subtask','Parent Task','tasks','id','tasks','id','name','','vi
 (3,'Site','Site','Site Task','tasks','id','sites','id','name','','site_details.php?id=%id%'),
 (4,'Incident','Incident','Task','incidents','id','tasks','id','title','','incident_details.php?id=%id%'),
 (5,'Attachments', 'Update', 'File', 'updates', 'id', 'files', 'id', 'filename', '', 'incident_details.php?updateid=%id%&tab=files'),
-(6, 'Incident', 'Transaction', 'Incidents', 'transactions', 'transactionid', 'incidents', 'id', '', '', '');
+(6, 'Incident', 'Transaction', 'Incidents', 'transactions', 'transactionid', 'incidents', 'id', '', '', '')
 (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
 
@@ -1716,6 +1716,8 @@ UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 ALTER TABLE `{$dbDrafts}` ADD INDEX ( `incidentid` ) ;
 
 ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
+
+INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 ";
 
 // ********************************************************************
