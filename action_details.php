@@ -41,7 +41,6 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 if (isset($_GET['id']))
 {
-    //FIXME 4.0
     $id = clean_int($_GET['id']);
     $mode = 'edit';
     $trigger = Trigger::fromID($id);
