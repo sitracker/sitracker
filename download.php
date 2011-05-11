@@ -46,7 +46,10 @@ $sqlapp = "SELECT f.id, f.filename, f.category
         LIMIT 1";
 
 $result = mysql_query($sql);
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 $resultapp = mysql_query($sqlapp);
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
 if ((mysql_num_rows($result) > 0) OR (mysql_num_rows($resultapp) > 0))
 {
     if (mysql_num_rows($result) > 0)
