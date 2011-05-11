@@ -388,10 +388,6 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     global $dbIncidents, $dbUpdates, $now, $sit;
     $rtn = TRUE;
 
-    if ($nextaction != '') {
-        $incident->nextaction = $nextaction;
-    }
-
     if ($type == 'temp')
     {
         $sql = "UPDATE `{$dbIncidents} SET towner = '{$tuser}'";
@@ -410,9 +406,8 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     }
 
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
-    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$incident->nextaction}')";
+    $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$nextaction}')";
     $result = mysql_query($sql);
-    mysql_query($sql);
     if (mysql_error())
     {
         trigger_error(mysql_error(), E_USER_WARNING);
@@ -1603,9 +1598,10 @@ function num_unread_emails()
  * Return the number of incidents ever logged against a site
  * @author Kieran
  * @param int $id. Site ID
+ * @param boolean $open. Include only open incidents (FALSE includes all)
  * @return int.
  */
-function site_count_incidents($id)
+function site_count_incidents($id, $open=FALSE)
 {
     global $dbIncidents, $dbContacts;
     $id = intval($id);
@@ -1613,7 +1609,8 @@ function site_count_incidents($id)
 
     $sql = "SELECT COUNT(i.id) FROM `{$dbIncidents}` AS i, `{$dbContacts}` as c ";
     $sql .= "WHERE i.contact = c.id ";
-    $sql .= "AND c.siteid='$id'";
+    $sql .= "AND c.siteid='{$id}' ";
+    if ($open) $sql .= "AND i.status != ".STATUS_CLOSED;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
@@ -1704,20 +1701,20 @@ function incident_sla($incident_id, $type)
         {
             case 'prob_determ':
                 $sla = $sla_obj->prob_determ_mins;
-            break;
+                break;
 
             case 'action_plan':
                 $sla = $sla_obj->action_plan_mins;
-            break;
+                break;
 
             case 'resolution':
                 $sla = $sla_obj->resolution_days * 480;
-            break;
+                break;
     
             case 'initial_response':
             default:
                 $sla = $sla_obj->initial_response_mins;
-            break;
+                break;
 
         }
         return format_workday_minutes($sla);

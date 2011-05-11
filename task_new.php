@@ -236,7 +236,6 @@ else
                 echo icon('private', 16, $strPrivate, "{$strPublic}/{$strPrivate}");
                 echo "</label></td></tr>";
             }
-
             else
             {
                 echo "<label><input type='radio' name='distribution' value='public' /> {$strPublic}</label><br />";

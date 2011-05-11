@@ -146,7 +146,7 @@ else
     if ($incident->externalid != '' OR $incident->escalationpath > 0)
     {
         echo "{$strEscalated}: ";
-        echo format_external_id($incident->externalid,$incident->escalationpath)."<br />\n";
+        echo format_external_id($incident->externalid, $incident->escalationpath)."<br />\n";
     }
     if ($incident->externalengineer != '')
     {
@@ -185,12 +185,12 @@ else
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
     {
-        echo "{$strOwner}: <strong>".user_realname($incident->owner,TRUE)."</strong> ";
+        echo "{$strOwner}: <strong>".user_realname($incident->owner, TRUE)."</strong> ";
         $incidentowner_phone = user_phone($incident->owner);
         if ($incidentowner_phone != '') echo "({$strTel}: {$incidentowner_phone}) ";
         if ($incident->towner > 0 AND $incident->towner != $incident->owner)
         {
-           echo "({$strTemp}: ".user_realname($incident->towner,TRUE).")";
+           echo "({$strTemp}: ".user_realname($incident->towner, TRUE).")";
         }
         echo "<br />";
     }
@@ -200,7 +200,7 @@ else
         if ($incident->productversion != '' OR $incident->productservicepacks != '')
         {
             echo " (".$incident->productversion;
-            if ($incident->productservicepacks!='') echo $incident->productservicepacks;
+            if ($incident->productservicepacks != '') echo $incident->productservicepacks;
             echo ")";
         }
         echo "<br />\n";

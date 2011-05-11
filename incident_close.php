@@ -355,7 +355,7 @@ else
                 }
             }
             //tidy up temp reassigns
-            $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid = '$id'";
+            $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid = '{$id}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
@@ -427,10 +427,10 @@ else
 
 
                 // Get softwareid from Incident record
-                $sql = "SELECT softwareid FROM `{$dbIncidents}` WHERE id='$id'";
-                $result=mysql_query($sql);
+                $sql = "SELECT softwareid FROM `{$dbIncidents}` WHERE id='{$id}'";
+                $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                list($softwareid)=mysql_fetch_row($result);
+                list($softwareid) = mysql_fetch_row($result);
 
                 if (!empty($_POST['summary'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'Summary', '1', '{$summary}', 'public') ";
                 if (!empty($_POST['symptoms'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'Symptoms', '1', '{$symptoms}', 'public') ";

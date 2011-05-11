@@ -24,7 +24,6 @@ $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 $user = mysql_fetch_object($result);
 
-// FIXME check if this user owns the incident
 if ($user->contact != $_SESSION['contactid']
     AND !in_array($user->maintenanceid, $_SESSION['contracts']))
 {
@@ -39,7 +38,7 @@ echo "<br /><strong>{$strOpened}</strong>: ".date("jS M Y", $user->opened)."</p>
 
 $records = strtolower(cleanvar($_REQUEST['records']));
 
-if ($incidentid=='' OR $incidentid < 1)
+if ($incidentid == '' OR $incidentid < 1)
 {
     trigger_error("Incident ID cannot be zero or blank", E_USER_ERROR);
 }
@@ -65,7 +64,7 @@ if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_
 $keeptags = array('b','i','u','hr','&lt;', '&gt;');
 foreach ($keeptags AS $keeptag)
 {
-    if (mb_substr($keeptag,0,1)=='&')
+    if (mb_substr($keeptag,0,1) == '&')
     {
         $origtag[] = $keeptag;
         $temptag[] = "[[".mb_substr($keeptag, 1, mb_strlen($keeptag) - 1)."]]";

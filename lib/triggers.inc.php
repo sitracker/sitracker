@@ -1162,11 +1162,11 @@ function trigger_to_array($trigger)
 {
     $array['trigger_type'] = $trigger->getTrigger_type();
     $array['param_array'] = $trigger->getParam_array();
-    $array['user_id'] =$trigger->getUser_id();
-    $array['template'] =$trigger->getTemplate();
-    $array['action'] =$trigger->getAction();
-    $array['checks'] =$trigger->getChecks();
-    $array['parameters'] =$trigger->getParameters();
+    $array['user_id'] = $trigger->getUser_id();
+    $array['template'] = $trigger->getTemplate();
+    $array['action'] = $trigger->getAction();
+    $array['checks'] = $trigger->getChecks();
+    $array['parameters'] = $trigger->getParameters();
 
     return $array;
 }

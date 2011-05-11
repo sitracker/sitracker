@@ -30,6 +30,7 @@ include (APPLICATION_LIBPATH . 'group.class.php');
 include (APPLICATION_LIBPATH . 'user.class.php');
 include (APPLICATION_LIBPATH . 'contact.class.php');
 include (APPLICATION_LIBPATH . 'incident.class.php');
+include (APPLICATION_LIBPATH . 'status.class.php');
 
 include_once (APPLICATION_LIBPATH . 'file.inc.php');
 include (APPLICATION_LIBPATH . 'ldap.inc.php');
@@ -1135,6 +1136,27 @@ function add_charting_library($library)
     global $CONFIG;
 
     $CONFIG['available_charts'][] = $library;
+}
+
+
+/**
+ * Checks the environment for SiT requirements
+ * @author Paul Heaney
+ * @return Status The status of SiT
+ */
+function check_install_status()
+{
+    $s = new Status();
+    $s->mysql_check();
+    $s->add_extension_check('mysql', 'PHP MySQL Driver', INSTALL_FATAL);
+    $s->add_extension_check('mbstring', 'PHP Multibyte', INSTALL_FATAL);
+    $s->add_extension_check('ldap', 'PHP LDAP', INSTALL_WARN);
+    $s->add_extension_check('imap', 'PHP IMAP', INSTALL_WARN);
+    $s->add_extension_check('zlib', 'PHP Zlib Compression', INSTALL_FATAL);
+    $s->add_extension_check('session', 'PHP Session', INSTALL_FATAL);
+    $s->add_extension_check('pcre', 'PHP Regular Expression', INSTALL_FATAL);
+    
+    return $s;
 }
 
 // -------------------------- // -------------------------- // --------------------------

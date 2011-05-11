@@ -415,3 +415,166 @@ function install_dashboard_components()
     
     return $errors;
 }
+
+
+/**
+ * Upgrades all installed dashlets to the current version
+ * @author Paul Heaney
+ * @return String HTML status of the upgrade
+ */
+function upgrade_dashlets()
+{
+    $sql = "SELECT * FROM `{$GLOBALS['dbDashboard']}` WHERE enabled = 'true'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+    $html = '';
+    
+    while ($dashboardnames = mysql_fetch_object($result))
+    {
+        $version = 1;
+        include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
+        $func = "dashboard_{$dashboardnames->name}_get_version";
+
+        if (function_exists($func))
+        {
+            $version = $func();
+        }
+
+        if ($version > $dashboardnames->version)
+        {
+            $html .= "<p>Upgrading {$dashboardnames->name} dashlet to v{$version}...</p>";
+            // apply all upgrades since running version
+            $upgrade_func = "dashboard_{$dashboardnames->name}_upgrade";
+
+            if (function_exists($upgrade_func))
+            {
+                $dashboard_schema = $upgrade_func();
+                for ($i = $dashboardnames->version; $i <= $version; $i++)
+                {
+                    setup_exec_sql($dashboard_schema[$i]);
+                }
+
+                $upgrade_sql = "UPDATE `{$GLOBALS['dbDashboard']}` SET version = '{$version}' WHERE id = {$dashboardnames->id}";
+                mysql_query($upgrade_sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+
+                $html .= "<p>{$dashboardnames->name} upgraded</p>";
+            }
+            else
+            {
+                $html .= "<p>No upgrade function for {$dashboardnames->name}</p>";
+            }
+        }
+    }
+
+    return $html;
+}
+
+
+/**
+ * Upgrades the schema from one version to the current
+ * Prints upgrade status as it goes
+ * @author Ivan Lucas
+ * @param int $installed_version The currently installed version
+ * @return int The version of the schema which is installed following the upgrade 
+ */
+function upgrade_schema($installed_version)
+{
+    global $application_version, $upgrade_schema;
+    
+    for ($v = (($installed_version * 100) + 1); $v <= ($application_version * 100); $v++)
+    {
+        $html = '';
+        if (!empty($upgrade_schema[$v]))
+        {
+            $newversion = number_format(($v / 100), 2);
+            echo "<p>Updating schema from {$installed_version} to v{$newversion}&hellip;</p>";
+            $errors = setup_exec_sql($upgrade_schema[$v]);
+
+            // Update the system version
+            if ($errors < 1)
+            {
+                $html .= update_sit_version_number($newversion);
+                $installed_version = $newversion;
+            }
+            else
+            {
+                $html .= "<p class='error'><strong>Summary</strong>: {$errors} Error(s) occurred while updating the schema, ";
+                $html .= "please resolve the problems reported and then try running setup again.</p>";
+            }
+            echo $html;
+        }
+    }
+    
+    return $installed_version;
+}
+
+
+/**
+ * Create the admin user
+ * @author Ivan Lucas
+ * @param String $password  The admin users password - in plain text
+ * @param String $email The admin users email address
+ * @return String HTML if an error occurs
+ */
+function create_admin_user($password, $email)
+{
+    $html = '';
+    $password = md5($password);
+    $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `var_style`, `lastseen`) ";
+    $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', '8', NOW());";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+       trigger_error(mysql_error(), E_USER_WARNING);
+       $html .= "<p><strong>FAILED:</strong> {$sql}</p>";
+    }
+    
+    return $html;
+}
+
+
+/**
+ * Updates the version number in the systems table
+ * @author Ivan Lucas
+ * @param String $version The version to set as running
+ * @return String HTML
+ */
+function update_sit_version_number($version)
+{
+    $html = '';
+    $sql = "REPLACE INTO `{$GLOBALS['dbSystem']}` ( `id`, `version`) VALUES (0, {$version})";
+    mysql_query($sql);
+    if (mysql_error())
+    {
+        $html .= "<p class='error'>Could not store new schema version number '{$version}'. ".mysql_error()."</p>";
+    }
+    else
+    {
+        $html .= "<p>Schema successfully updated to version {$version}.</p>";
+    }
+    
+    return $html;
+}
+
+
+/**
+ * Gets the currently running schema version
+ * @author Ivan Lucas
+ * @return float The running version, 0 if no details can be found
+ */
+function current_schema_version()
+{
+    $$installed_version = 0;
+    $sql = "SELECT `version` FROM `{$GLOBALS['dbSystem']}` WHERE id = 0";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        list($installed_version) = mysql_fetch_row($result);
+    }
+    
+    
+    return $installed_version;
+}

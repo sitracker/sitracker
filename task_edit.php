@@ -246,7 +246,7 @@ switch ($action)
             //delete all the notes
             $sql = "DELETE FROM `{$dbNotes}` WHERE refid='{$id}'";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
             $enddate = $now;
             $duration = ceil(($enddate - $startdate) / 60);

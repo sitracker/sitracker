@@ -139,12 +139,12 @@ if (!empty($q))
     // See the MySQL option ft_min_word_len
     if (mb_strlen($search > 3))
     {
-    $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
-    $incidentsql .= "MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE) AS score ";
-    $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
-    $incidentsql .= "WHERE (MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE)) ";
-    $incidentsql .= "AND u.incidentid=i.id ";
-    $incidentsql .= "GROUP BY u.incidentid ";
+        $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
+        $incidentsql .= "MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE) AS score ";
+        $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
+        $incidentsql .= "WHERE (MATCH (bodytext) AGAINST ('{$search}' IN BOOLEAN MODE)) ";
+        $incidentsql .= "AND u.incidentid=i.id ";
+        $incidentsql .= "GROUP BY u.incidentid ";
     }
     else
     {
