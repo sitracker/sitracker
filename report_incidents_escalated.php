@@ -97,6 +97,12 @@ $sql = "SELECT id, name FROM `{$dbEscalationPaths}`";
 $escs = mysql_query($sql);
 while ($escalations = mysql_fetch_object($escs))
 {
+    $c['4'] = 0;
+    $c['3'] = 0;
+    $c['2'] = 0;
+    $c['1'] = 0;
+    $total = 0;
+
     $html .= "<h3>{$escalations->name}</h3>";
 
     $sql = "SELECT i.*, sw.name, c.forenames, c.surname, s.name AS siteName ";
