@@ -434,8 +434,8 @@ if ($emails > 0)
             //new call TODO: We need to find a better solution here for letting plugins change the reason
             if (!$GLOBALS['plugin_reason']) $reason = $SYSLANG['strPossibleNewIncident'];
             else $reason = $GLOBALS['plugin_reason'];
-            $sql = "INSERT INTO `{$dbTempIncoming}` (updateid, incidentid, `from`, emailfrom, subject, reason, contactid) ";
-            $sql.= "VALUES ('{$updateid}', '0', '".mysql_real_escape_string($from_email)."', ";
+            $sql = "INSERT INTO `{$dbTempIncoming}` (`arrived`, `updateid`, `incidentid`, `from`, `emailfrom`, `subject`, `reason`, `contactid`) ";
+            $sql.= "VALUES (FROM_UNIXTIME({$now}), '{$updateid}', '0', '".mysql_real_escape_string($from_email)."', ";
             $sql .= "'".mysql_real_escape_string($from_name)."', ";
             $sql .= "'".mysql_real_escape_string($subject)."', ";
             $sql .= "'{$reason}', '{$contactid}' )";

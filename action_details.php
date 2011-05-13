@@ -2,13 +2,13 @@
 // action_details.php - Page for setting user trigger preferences
 //
 // SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// FIXME i18n whole page
 
 $permission = 71;
 require ('core.php');
@@ -35,7 +35,7 @@ else
 {
     $user_id = $sit[2];
 }
-$title = 'New Triggers Interface';
+$title = $strNewTriggerInterface;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -79,10 +79,10 @@ else
     if ($trigger_mode == 'system')
     {
 	    echo "<h3>{$strUser}</h3>";
-        echo "Which action will the action apply to: 'all' will add an entry for ALL users, 'system' will add an action without a user, useful for e.g. automateid emails to customers.</p>";
+        echo "<p>{$strWhichAction}</p>";
     }
     echo "<h3>{$strAction}</h3>";
-    echo "<p style='text-align:left'>Choose which action you would like to be notified about</p>";
+    echo "<p style='text-align:left'>{$strChooseWhichActionNotify}</p>";
     echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
     foreach ($trigger_types as $name => $trigger)
     {
@@ -95,7 +95,7 @@ else
     echo "</select>";
 
     echo "<h3>{$strNotificationMethod}</h3>";
-    echo "<p style='text-align:left'>Choose which method of notification</p>";
+    echo "<p style='text-align:left'>$strChooseWhichMethodNotification</p>";
     echo "<select id='new_action' name='new_action' onchange='switch_template()' onkeyup='switch_template()'>";
     echo "<option/>";
     foreach ($actionarray as $name => $action)
@@ -111,20 +111,20 @@ else
     echo "<div id='emailtemplatesbox' style='display:none'>";
     echo "<h3>{$strEmailTemplate}</h3> ";
 
-    echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You shoud only change this if you would like to use a template you have created yourself</p>";
+    echo "<p style='text-align:left'>$strChooseWhichTemplate</p>";
     echo email_templates('emailtemplate', $trigger_mode)."</div>";
 
     echo "<div id='noticetemplatesbox' style='display:none'>";
 
     echo "<h3>{$strNoticeTemplate}</h3> ";
-    echo "<p style='text-align:left'>Choose which template you would like to use. If this is already filled in, a sensible default has been chosen for you. You should only change this if you would like to use a template you have created yourself</p>";
+    echo "<p style='text-align:left'>{$strChooseWhichTemplate}</p>";
     echo notice_templates('noticetemplate')."</div>";
     echo '<div id="checksbox" style="display:none">';
 
     echo "<h3>{$strConditions}</h3>";
-    echo "<p style='text-align:left'>Some actions have option conditions under which you can choose to be notified.</p>";
-    echo "<p style='text-align:left'>Example: 'When an incident is assigned to a user' would notify you for every incident. ";
-    echo "Adding a condition of 'Incident owner is Joe Bloggs' would only notify you when Joe Bloggs gets assigned an incident.</p>" ;
+    echo "<p style='text-align:left'>{$strSomeActionsOptionalConditions}</p>";
+    echo "<p style='text-align:left'>{$strExampleWhenIncidentAssigned} ";
+    echo "{$strAddingACondition}</p>" ;
     echo "<div id='checkshtml'></div></div>";
     echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strNew}' /></p></form>";
 

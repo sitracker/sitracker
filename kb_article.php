@@ -80,10 +80,7 @@ if (isset($_POST['submit']))
             $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
             $sql .= "VALUES (7, '{$kbid}', '{$fileid}', 'left', '{$sit[2]}')";
             mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            }
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
     }
 
@@ -182,6 +179,7 @@ else
         echo "<h2>".icon('kb', 32)." {$strEditKBArticle}: {$kbid}</h2>";
         $sql = "SELECT * FROM `{$dbKBArticles}` WHERE docid='{$kbid}'";
         $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $kbobj = mysql_fetch_object($result);
 
         foreach ($sections AS $section)
@@ -374,8 +372,8 @@ else
     echo "</div>";
 
     echo "<h3>{$strAttachFile}</h3>";
-    echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$att_max_filesize}'>";
-    echo "<input type='file' name='attachment'>";
+    echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$att_max_filesize}' />";
+    echo "<input type='file' name='attachment' />";
     if ($mode == 'edit')
     {
         $sqlf = "SELECT f.filename, f.id, f.filedate
