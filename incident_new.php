@@ -163,8 +163,12 @@ elseif ($action == 'findcontact')
     }
     // Filter by contact
     $contactsql .= "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
-    $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(' ', c.forenames, c.surname)) ";
-    $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(', ', c.surname, c.forenames)) ";
+    // Use SOUNDEX if the system is set to use English (See Mantis 879)
+    if (strtolower(substr($CONFIG['default_i18n'], 0 ,2)) == 'en')
+    {
+        $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(' ', c.forenames, c.surname)) ";
+        $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(', ', c.surname, c.forenames)) ";
+    }
     $contactsql .= "OR s.name LIKE '%{$search_string}%') ";
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
@@ -1000,7 +1004,7 @@ elseif ($action == 'reassign')
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
     $userphone = user_phone($userid);
-    if ($userphone != '') 
+    if ($userphone != '')
     {
         echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
     }
