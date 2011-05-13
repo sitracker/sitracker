@@ -172,7 +172,7 @@ function saction_TimeCalc()
         $newSlaTime = -1;
 
         $sql = "SELECT id, type, sla, timestamp, currentstatus FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
-        $sql .=" AND type = 'slamet' ORDER BY id DESC LIMIT 1";
+        $sql .=" AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
         $update_result = mysql_query($sql);
         if (mysql_error())
         {

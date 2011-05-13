@@ -1,0 +1,94 @@
+<ul>
+    <li><a href='#about'>Om Support Incident Tracker</a></li>
+    <li>Support
+    <ul>
+        <li><a href='#incidents'>Hændelser</a></li>
+        <li><a href='#addincident'>Tilføj en hændelse</a></li>
+        <li><a href='#incidentqueues'>Hændelses køer</a></li>
+        <li><a href='#updateincident'>Opdater hændelse</a></li>
+        <li><a href='#closeincident'>Lukning af en hændelse</a></li>
+        <li><a href='#knowledgebase'>Vidensbase</a></li>
+    </ul>
+    </li>
+    <li><a href='#morehelp'>Mere hjælp</a></li>
+</ul>
+
+
+<h3><a name='about'>Om Support Incident Tracker</a></h3>
+Support Incident Tracker (eller SiT!) er en Free Software/Open Source (GPL) web baseret applikation der bruger PHP og MySQL til at holde styr på tekniske support opkald/emails. Håndter kontakter, kunder, teknisk support kontrakter og support hændelser i eet sted. Send emails direkte fra SiT!, tilføj filer, og log enhver kommunikation i hændelses-loggen. SiT benytter sig af Service Level Aftaler (SLA) og hændelser bliver markeret hvis de ikke er inkluderet under denne. </p>
+
+
+<h3><a name='incidents'>Hændelser</a></h3>
+<p>Som navnet siger Support <em>Incident</em> tracker (Support hændelses tracker), hændelser er en vigtig del af SiT!, 'Hændelse'
+er det navn vi bruger som også kan refereres til et 'support opkald'. 'service forespørgsel' eller 'helpdesk id'.</p>
+<p>Hændelser er typisk refereret til deres reference id, hvad vi kalder 'Hændelses nummer'.  Hændelser har en titel,
+et associeret produkt, kontrakt og kontakt og muligt også andre informationer.</p>
+<p>After an incident is added it is always 'owned' by a SiT! user although the user can reassign this ownership while the
+incident is open.</p>
+<p>Each incident has a current status which may be one of the following:</p>
+<ul>
+<li>Active</li>
+<li>Closed</li>
+<li>Researching</li>
+<li>Called And Left Message</li>
+<li>Internal Escalation</li>
+<li>External Escalation</li>
+<li>Awaiting Closure</li>
+<li>Awaiting Your Response</li>
+<li>Unsupported</li>
+</ul>
+
+<p>Closed incidents have an additional closing status:</p>
+<ul>
+<li>Sent Information</li>
+<li>Solved Problem</li>
+<li>Reported Bug</li>
+<li>Action Taken</li>
+<li>Duplicate</li>
+<li>No Longer Relevant</li>
+<li>Unsupported</li>
+<li>Support Expired</li>
+<li>Unsolved</li>
+<li>Escalated</li>
+</ul>
+
+<p>Each incident has an 'updates log' which shows everything that has happened during the lifetime of the incident,
+a complete record of all contact with the customer, with colleagues and with external engineers.</p>
+<p>Incidents can also have files attached.</p>
+
+<h3><a name='addincident'>Adding an Incident</a></h3>
+<p>Before you can add an incident, you must already have a contract that entitles you to support.</p>
+<p>Adding an incident is a simple process that goes like this:</p>
+<ol>
+<li>Select the area the incident is related to (e.g. SUSE Linux, Apache)</li>
+<li>Enter a brief title for the incident (This can be a brief summary of the incident)</li>
+<li>Enter the definition of the problem, please provide as much detail as possible to aid resolving your incident</li>
+<li>Click <strong>Add Incident</strong> and the incident is created</li>
+</ol>
+
+<h3><a name='incidentqueues'>Incident Queue</a></h3>
+
+<p>The portal has two incident queues one for your open incidents another for your closed incidents.</p>
+
+<p>Depending on the configuration you could also have two additional queues for all open incidents fo your site and all recently 
+closed incidents for your site</p>
+
+<h3><a name='updateincident'>Update Incident</a></h3>
+
+<p>When you select an incident it is possble to update the incident by clicking update incident, this will update the incident and 
+set the call to active so the assigned engineer is able to view he call</p> 
+
+<h3><a name='closeincident'>Closing an Incident</a></h3>
+<p>You can request the closure of an incident by selecting the incident then request closure, you are prompted for 
+a brief description of why the incident is closed <strong>Submit</strong> will mark the incident as requesting closure and the 
+engineer can then close it</p>
+
+<h3><a name='knowledgebase'>Knowledgebase</a></h3>
+
+<p>The knowledgebase allows you to browse articles which have been published which may aid in resolving your problem.</p>
+
+<hr />
+
+<h3><a name='morehelp'>More Help</a></h3>
+
+<p>See the <a href="http://sitracker.org/wiki/Documentation">Documentation</a> section of the SiT website for a list of Frequently Asked Questions (FAQ) and more help.</p>

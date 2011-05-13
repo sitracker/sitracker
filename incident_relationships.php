@@ -59,15 +59,15 @@ switch ($action)
                         $onwer = incident_owner($id);
                         $status = incident_status($id);
                         // Insert an entry into the update log for this incident
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '','Added relationship with Incident {$relatedid}')"; //FIXME use $SYSLANG
+                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', 'Added relationship with Incident {$relatedid}')"; //FIXME use $SYSLANG
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
                         $status = incident_status($relatedid);
                         // Insert an entry into the update log for the related incident
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-                        $sql .= "VALUES ('{$relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '','Added relationship with Incident {$id}')"; //FIXME use $SYSLANG
+                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+                        $sql .= "VALUES ('{$relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', 'Added relationship with Incident {$id}')"; //FIXME use $SYSLANG
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                         break;
@@ -99,14 +99,14 @@ switch ($action)
         $onwer = incident_owner($id);
         $status = incident_status($id);
         // Insert an entry into the update log for this incident
-        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-        $sql .= "VALUES ('{$relation->incidentid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '','Removed relationship with Incident {$relation->relatedid}')";
+        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+        $sql .= "VALUES ('{$relation->incidentid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', 'Removed relationship with Incident {$relation->relatedid}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
         // Insert an entry into the update log for the related incident
-        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-        $sql .= "VALUES ('{$relation->relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '','Removed relationship with Incident {$relation->incidentid}')";
+        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+        $sql .= "VALUES ('{$relation->relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', 'Removed relationship with Incident {$relation->incidentid}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -118,7 +118,7 @@ switch ($action)
 
 echo "<h2>{$strRelatedIncidents}</h2>";
 // Incident relationships
-$rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='$id' OR relatedid='$id'";
+$rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
 $rresult = mysql_query($rsql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 if (mysql_num_rows($rresult) >= 1)

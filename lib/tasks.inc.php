@@ -51,7 +51,7 @@ function mark_task_completed($taskid, $incident)
         $sql .= "(userid, bodytext, link, refid) ";
         $sql .= "VALUES ('0', '{$bodytext}', '10', '{$taskid}')";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
 
     $enddate = date('Y-m-d H:i:s');
@@ -59,7 +59,7 @@ function mark_task_completed($taskid, $incident)
     $sql .= "SET completion='100', enddate='$enddate' ";
     $sql .= "WHERE id='$taskid' LIMIT 1";
     mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 }
 
 
@@ -80,7 +80,7 @@ function open_activities_for_incident($incientid)
     $sql .= "AND linkcolref={$incientid} ";
     $sql .= "AND direction='left'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -143,7 +143,6 @@ function open_activities_for_site($siteid)
 
     return $openactivites;
 }
-
 
 
 ?>

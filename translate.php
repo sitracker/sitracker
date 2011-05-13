@@ -51,7 +51,7 @@ if (!$_REQUEST['mode'])
     echo "</select>";
     echo "<br /><br />";
     echo "<label><input type='radio' name='showtranslated' value='showtranslated' checked='checked' /> {$strShowAll}</label> ";
-    echo "<label><input type='radio' name='showtranslated' value='' /> {$strHide} {$strCompleted}</label>";
+    echo "<label><input type='radio' name='showtranslated' value='' /> {$strHideCompleted}</label>";
     echo "<br /><br />";
     echo "<input type='submit' value='$strTranslate' />";
     echo "</form></div>\n";

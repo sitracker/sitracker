@@ -97,17 +97,10 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
 
     //add the updates and SLA etc
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
-    $sql .= "currentstatus, customervisibility, nextaction) ";
+    $sql .= "currentstatus, customervisibility, nextaction, sla) ";
     $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
-    $sql .= "'1', '{$customervisibility}', '{$nextaction}')";
+    $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    // Insert the first SLA update, this indicates the start of an incident
-    // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'slamet', '{$now}', '{$sit[2]}', '1', 'show', 'opened','{$_SESSION['syslang']['strIncidentIsOpen']}.')";
-    mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
     // Insert the first Review update, this indicates the review period of an incident has started
@@ -129,8 +122,7 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
  */
 function create_incident_from_incoming($incomingid)
 {
-    global $dbTempIncoming, $dbMaintenance, $dbServiceLevels,
-        $dbSoftwareProducts, $CONFIG;
+    global $dbTempIncoming, $dbMaintenance, $dbServiceLevels, $dbSoftwareProducts, $CONFIG;
     $rtn = TRUE;
 
     $incomingid = intval($incomingid);
@@ -396,10 +388,6 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     global $dbIncidents, $dbUpdates, $now, $sit;
     $rtn = TRUE;
 
-    if ($nextaction != '') {
-        $incident->nextaction = $nextaction;
-    }
-
     if ($type == 'temp')
     {
         $sql = "UPDATE `{$dbIncidents} SET towner = '{$tuser}'";
@@ -418,9 +406,8 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
     }
 
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
-    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$incident->nextaction}')";
+    $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$nextaction}')";
     $result = mysql_query($sql);
-    mysql_query($sql);
     if (mysql_error())
     {
         trigger_error(mysql_error(), E_USER_WARNING);
@@ -471,7 +458,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     $sql .= "timestamp, currentowner, currentstatus, customervisibility, ";
     $sql .= "sla, bodytext) ";
     $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', ";
-    $sql .= STATUS_ACTIVE.", 'show', 'opened','{$GLOBALS['strIncidentIsOpen']}')";
+    $sql .= STATUS_ACTIVE.", 'show', 'opened', '{$GLOBALS['strIncidentIsOpen']}')";
     mysql_query($sql);
     if (mysql_error())
     {
@@ -1210,7 +1197,7 @@ function incident_get_next_target($incidentid)
 {
     global $now;
     // Find the most recent SLA target that was met
-    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND type='slamet' ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -1611,9 +1598,10 @@ function num_unread_emails()
  * Return the number of incidents ever logged against a site
  * @author Kieran
  * @param int $id. Site ID
+ * @param boolean $open. Include only open incidents (FALSE includes all)
  * @return int.
  */
-function site_count_incidents($id)
+function site_count_incidents($id, $open=FALSE)
 {
     global $dbIncidents, $dbContacts;
     $id = intval($id);
@@ -1621,7 +1609,8 @@ function site_count_incidents($id)
 
     $sql = "SELECT COUNT(i.id) FROM `{$dbIncidents}` AS i, `{$dbContacts}` as c ";
     $sql .= "WHERE i.contact = c.id ";
-    $sql .= "AND c.siteid='$id'";
+    $sql .= "AND c.siteid='{$id}' ";
+    if ($open) $sql .= "AND i.status != ".STATUS_CLOSED;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     else list($count) = mysql_fetch_row($result);
@@ -1712,20 +1701,20 @@ function incident_sla($incident_id, $type)
         {
             case 'prob_determ':
                 $sla = $sla_obj->prob_determ_mins;
-            break;
+                break;
 
             case 'action_plan':
                 $sla = $sla_obj->action_plan_mins;
-            break;
+                break;
 
             case 'resolution':
                 $sla = $sla_obj->resolution_days * 480;
-            break;
+                break;
     
             case 'initial_response':
             default:
                 $sla = $sla_obj->initial_response_mins;
-            break;
+                break;
 
         }
         return format_workday_minutes($sla);

@@ -96,6 +96,7 @@ switch ($_REQUEST['action'])
                 $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&contactid={$row->id}&hash={$hash}";
                 $t = new TriggerEvent('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
                 echo "<h3>{$strInformationSent}</h3>";
+                echo "<div align='center'>";
                 echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
                 if (empty($email) AND !empty($contactid))
                 {
@@ -111,6 +112,7 @@ switch ($_REQUEST['action'])
                 echo "<h3>{$strInvalidEmailAddress}</h3>";
                 echo "<p>".sprintf($strForFurtherAssistance, $CONFIG['support_email'])."</p>";
                 echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "</div>";
             }
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

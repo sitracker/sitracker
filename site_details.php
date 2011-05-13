@@ -101,7 +101,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strNotes}:</th><td>".nl2br($siteobj->notes)."</td></tr>";
     echo "<tr><td colspan='2'>&nbsp;</td></tr>";
     echo "<tr><th>{$strIncidents}:</th>";
-    echo "<td>".site_count_incidents($id)." <a href=\"contact_support.php?id={$siteobj->id}&amp;mode=site\">{$strSeeHere}</a></td></tr>";
+    echo "<td>".site_count_incidents($id)." <a href=\"contact_support.php?id={$siteobj->id}&amp;mode=site\">{$strSeeHere}</a> (".site_count_incidents($id, TRUE)." <a href=\"contact_support.php?id={$siteobj->id}&amp;mode=site&amp;status=open\">{$strOpen})</a></td></tr>";
     echo "<tr><th>{$strBillableIncidents}:</th><td><a href='transactions.php?site={$siteobj->id}'>{$strSeeHere}</a></td></tr>";
 
     $balance = $awaiting = $reserved = 0;
