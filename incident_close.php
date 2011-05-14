@@ -419,7 +419,7 @@ else
                 $docid = mysql_insert_id();
 
                 // Update the incident to say that a KB article was created, with the KB Article number
-                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid);
+                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid)."</b>";
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'default', '{$update}', '{$now}')";
                 $result = mysql_query($sql);
