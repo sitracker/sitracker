@@ -60,14 +60,14 @@ switch ($action)
                         $status = incident_status($id);
                         // Insert an entry into the update log for this incident
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
-                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', 'Added relationship with Incident {$relatedid}')"; //FIXME use $SYSLANG
+                        $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '" . sprintf($SYSLANG['strAddedRelationshipIncidentX'], $relatedid) . "')";
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
                         $status = incident_status($relatedid);
                         // Insert an entry into the update log for the related incident
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
-                        $sql .= "VALUES ('{$relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', 'Added relationship with Incident {$id}')"; //FIXME use $SYSLANG
+                        $sql .= "VALUES ('{$relatedid}', '{$sit[2]}', 'editing', '{$now}', '{$owner}', '{$status}', 'hide', '" . sprintf($SYSLANG['strAddedRelationshipIncidentX'], $id) . "')";
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                         break;

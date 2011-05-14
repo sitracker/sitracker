@@ -65,6 +65,7 @@ $strAdd = 'Add';
 $strAddContract = 'Add New Contracts';
 $strAddContractConfirm = 'Are you sure you want to add this contact?';
 $strAdded = 'Added';
+$strAddedRelationshipIncidentX = 'Added relationship with incident %s';
 $strAddEmailConfirm = 'Are you sure you want to add this email type?';
 $strAddFeedbackForms = 'Add New Feedback Forms';
 $strAddIncidents = 'Add New Incidents';
