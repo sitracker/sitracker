@@ -80,6 +80,7 @@ div#tail
     border-top: 5px solid #BCBBBB;
     background: #D9D8D8;
     margin: 0px 20px;
+    color: #4B5C94;
 }
 div#tail strong { color: #A12607; }
 a.info span { display: none; z-index: 100; overflow: hidden; }
