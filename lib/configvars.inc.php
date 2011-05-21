@@ -20,7 +20,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
 $CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
-$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap');
+$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap', 'users');
 $TABI18n['plugins'] = $strPlugins;
 
 $TABI18n['application'] = $strApplication;
@@ -135,6 +135,9 @@ $CFGCAT['ldap'] = array('use_ldap',
 $CFGCAT['soap'] = array('soap_enabled',
                          'soap_portal_enabled');
 
+$CFGCAT['users'] = array('user_config_defaults');
+
+
 $CFGCAT['kb'] = array('kb_enabled',
                       'kb_disclaimer_html',
                       'kb_id_prefix');
@@ -162,6 +165,7 @@ $CATI18N['appmain'] = $strGeneral;
 $CATI18N['theming'] = $strTheme;
 $CATI18N['ldap'] = $strLDAP;
 $CATI18N['soap'] = $strSOAP;
+$CATI18N['users'] = $strUsers;
 $CATI18N['other'] = $strOther;
 $CATI18N['inboundemail'] = $strInbound;
 $CATI18N['outboundemail'] = $strOutbound;
@@ -623,6 +627,11 @@ $CFGVAR['upload_max_filesize']['unit'] = $strBytes;
 $CFGVAR['use_ldap']['title'] = 'Enable LDAP authentication';
 $CFGVAR['use_ldap']['help'] = "Enable this if you would like to authenticate logins against an LDAP directory";
 $CFGVAR['use_ldap']['type'] = 'checkbox';
+
+$CFGVAR['user_config_defaults']['title'] = "User configuration defaults";
+$CFGVAR['user_config_defaults']['help'] = "You can set configuration defaults here for users that have not personalised their settings. Enter config one per line, format: variable=>setting";
+$CFGVAR['user_config_defaults']['type'] = '2darray';
+
 
 $CFGVAR['urgent_threshold']['title'] = 'Urgent Threshold';
 $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this percentage complete.';

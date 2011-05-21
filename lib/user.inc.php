@@ -919,6 +919,7 @@ function software_backup_userid($userid, $softwareid)
     return ($backupid);
 }
 
+
 /**
  *
  * @author Ivan Lucas
@@ -986,6 +987,7 @@ function set_user_status($newstatus)
     return userstatus_summaryline($newstatus, $accepting);
 }
 
+
 /**
  * Return the current users status and accepting incidents statuses
  * for use in the header bar
@@ -1014,14 +1016,24 @@ function userstatus_summaryline($userstatus = '', $accepting = '')
     return $html;
 }
 
+
 /**
- * Gets the list of user vars
+ * Gets the list of user vars with values
  * @param int $userid - User  ID
  * @return array The user's config vars
 */
 function get_user_config_vars($userid)
 {
-    global $dbUserConfig;
+    global $dbUserConfig, $CONFIG;
+
+    // Load user config defaults from global config
+    debug_log(print_r($CONFIG['user_config_defaults'], true),true);
+    if (is_array($CONFIG['user_config_defaults']))
+    {
+        $userconfig = $CONFIG['user_config_defaults'];
+    }
+
+    // Load user configuration, overriding any defaults
     $sql = "SELECT * FROM `{$dbUserConfig}` WHERE userid = {$userid}";
     $result = @mysql_query($sql);
     if ($result AND mysql_num_rows($result) > 0)
@@ -1038,6 +1050,7 @@ function get_user_config_vars($userid)
             $userconfig[$conf->config] = $conf->value;
         }
     }
+    debug_log('userconfig'.print_r($userconfig,true),true);
     return $userconfig;
 }
 

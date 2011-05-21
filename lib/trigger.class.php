@@ -24,7 +24,6 @@ class TriggerEvent {
     function TriggerEvent($trigger_type, $param_array = '')
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
-
         $trigger_type = cleanvar($trigger_type);
         // Check that this is a defined trigger
         if (!array_key_exists($trigger_type, $trigger_types))
@@ -214,7 +213,8 @@ class Trigger extends SitEntity {
         $this->checks = $checks;
         $this->parameters = $parameters;
         $this->id = cleanvar($id);
-        debug_log("Trigger {$trigger_type} created. Options:\n" .
+
+        debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
             print_r($param_array, TRUE));
     }
 
@@ -245,12 +245,12 @@ class Trigger extends SitEntity {
     }
 
     /**
- * "Fires" the current trigger object, this means it has occurred
- * @author Kieran Hogg
- * @param $trigger_type string The name of the trigger to fire
- * @param $param_array array Extra parameters to pass the trigger
- * @return bool TRUE if the trigger created successfully, FALSE if not
- */
+     * "Fires" the current trigger object, this means it has occurred
+     * @author Kieran Hogg
+     * @param $trigger_type string The name of the trigger to fire
+     * @param $param_array array Extra parameters to pass the trigger
+     * @return bool TRUE if the trigger created successfully, FALSE if not
+     */
     function fire()
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
@@ -270,11 +270,11 @@ class Trigger extends SitEntity {
             $this->param_array['checks'] = '';
         }
 
-        if (!isset($this->param_array['userid'])) 
+        if (!isset($this->param_array['userid']))
         {
             $this->param_array['userid']= $sit[2];
         }
-        
+
         //if we have any params from the actual trigger, append to user params
         if (!empty($this->parameters))
         {
@@ -311,7 +311,6 @@ class Trigger extends SitEntity {
                 return;
             }
         }
-
         $return = $this->trigger_action($this->action,
                                         $this->template);
 
@@ -320,59 +319,61 @@ class Trigger extends SitEntity {
 
 
     /**
-        * Do the specific action for the specific user for a trigger
-        * @author Kieran Hogg
-        * @param $action string The type of action to perform
-        * @param $template
-        * @return boolean. TRUE if the user has the permission, otherwise FALSE
- */
+     * Do the specific action for the specific user for a trigger
+     * @author Kieran Hogg
+     * @param $action string The type of action to perform
+     * @param $template
+     * @return boolean. TRUE if the user has the permission, otherwise FALSE
+     */
     private function trigger_action($action, $template)
     {
         global $CONFIG, $dbg, $dbTriggers;
+
         $user_prefs = get_user_config_vars($this->user_id);
         $user_status =  user_status($this->user_id);
         $out_of_office_pref = $user_prefs['notifications_away'];
         if ($user_status != USERSTATUS_ACCOUNT_DISABLED)
         {
+            debug_log("Trigger action {$action} with template {$template}", true);
             switch ($action)
             {
                 case "ACTION_EMAIL":
                     if (empty($out_of_office_pref) OR
                        (($user_status == USERSTATUS_NOT_IN_OFFICE OR
-                         $user_status == USERSTATUS_ON_HOLIDAY OR 
-                         $user_status == USERSTATUS_ABSENT_SICK OR 
+                         $user_status == USERSTATUS_ON_HOLIDAY OR
+                         $user_status == USERSTATUS_ABSENT_SICK OR
                          $user_status == USERSTATUS_WORKING_AWAY) AND
                          ($out_of_office_pref == 'emails' OR $out_of_office_pref == 'all')) OR
                          ($user_status != USERSTATUS_NOT_IN_OFFICE AND
-                          $user_status != USERSTATUS_ON_HOLIDAY AND 
-                          $user_status != USERSTATUS_ABSENT_SICK AND 
+                          $user_status != USERSTATUS_ON_HOLIDAY AND
+                          $user_status != USERSTATUS_ABSENT_SICK AND
                           $user_status != USERSTATUS_WORKING_AWAY))
                     {
                         debug_log("send_trigger_email($template) called", TRUE);
                         $rtnvalue = $this->send_trigger_email($template);
                     }
-                    else 
+                    else
                     {
                         return true;
-                    } 
+                    }
                     break;
 
                 case "ACTION_NOTICE":
                     if (empty($out_of_office_pref) OR
                        (($user_status == USERSTATUS_NOT_IN_OFFICE OR
-                         $user_status == USERSTATUS_ON_HOLIDAY OR 
-                         $user_status == USERSTATUS_ABSENT_SICK OR 
+                         $user_status == USERSTATUS_ON_HOLIDAY OR
+                         $user_status == USERSTATUS_ABSENT_SICK OR
                          $user_status == USERSTATUS_WORKING_AWAY) AND
                          ($out_of_office_pref == 'notices' OR $out_of_office_pref == 'all')) OR
                          ($user_status != USERSTATUS_NOT_IN_OFFICE AND
-                          $user_status != USERSTATUS_ON_HOLIDAY AND 
-                          $user_status != USERSTATUS_ABSENT_SICK AND 
+                          $user_status != USERSTATUS_ON_HOLIDAY AND
+                          $user_status != USERSTATUS_ABSENT_SICK AND
                           $user_status != USERSTATUS_WORKING_AWAY))
                     {
                         debug_log("create_trigger_notice($template) called", TRUE);
                         $rtnvalue = $this->create_trigger_notice($template);
                     }
-                    else 
+                    else
                     {
                         return true;
                     }
@@ -410,10 +411,11 @@ class Trigger extends SitEntity {
                     break;
             }
         }
-        else 
+        else
         {
+            debug_log("Trigger action {$action} with template {$template} not run because user account '{$this->user_id}' was disabled.", TRUE);
             return true;
-        } 
+        }
         return $rtnvalue;
     }
 
@@ -423,11 +425,11 @@ class Trigger extends SitEntity {
 
 
     /**
-        * Sends an email for a trigger
-        * @author Kieran Hogg
-        * @param $template string. The name of the email template to use
-        * trigger
- */
+     * Sends an email for a trigger
+     * @author Kieran Hogg
+     * @param $template string. The name of the email template to use
+     * trigger
+     */
     private function send_trigger_email($template)
     {
         global $CONFIG, $dbg, $dbEmailTemplates;
@@ -483,10 +485,10 @@ class Trigger extends SitEntity {
 
 
     /**
-        * Creates a trigger notice
-        * @author Kieran Hogg
-        * @param $template string. The name of the email template to use
- */
+     * Creates a trigger notice
+     * @author Kieran Hogg
+     * @param $template string. The name of the email template to use
+     */
     private function create_trigger_notice($template)
     {
         global $CONFIG, $dbg, $dbNotices, $dbNoticeTemplates;
@@ -582,13 +584,13 @@ class Trigger extends SitEntity {
 
 
     /**
- * Checks is a specified trigger already exists
- * @author Kieran Hogg
- * @param $action enum 'ACTION_NONE', 'ACTION_JOURNAL', 'ACTION_EMAIL', 'ACTION_NOTICE', 'ACTION_CREATE_INCIDENT'
- * @param $templateid int ID of the template
- * @param $rules string The trigger rules
- * @param $parameters string The trigger parameters
- */
+     * Checks is a specified trigger already exists
+     * @author Kieran Hogg
+     * @param $action enum 'ACTION_NONE', 'ACTION_JOURNAL', 'ACTION_EMAIL', 'ACTION_NOTICE', 'ACTION_CREATE_INCIDENT'
+     * @param $templateid int ID of the template
+     * @param $rules string The trigger rules
+     * @param $parameters string The trigger parameters
+     */
     private function check_exists($action, $templateid, $rules, $parameters)
     {
         global $dbTriggers;
