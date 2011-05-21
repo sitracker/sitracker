@@ -987,6 +987,10 @@ span.quote4 { color: #FF9933; }
 span.sig { color: red; }
 .on {background-color:#84C1DF;}
 .off {background-color:white;}
+span.z {font-size:.001px;
+color:transparent;
+display:inline-block;
+width:0px;color:red;}
 
 #navmenu
 {
