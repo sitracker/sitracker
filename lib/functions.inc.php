@@ -512,7 +512,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
                 || $errno == E_COMPILE_ERROR
                 || $errno == E_COMPILE_WARNING)
             {
-                $logentry .= "Context: \n[CONTEXT-BEGIN]\n".print_r($errcontext, TRUE)."\n[CONTEXT-END]\n----------\n\n";
+                $logentry .= "\n[CONTEXT-BEGIN]\n".print_r($errcontext, TRUE)."\n[CONTEXT-END]\n----------\n\n";
                 $siterrors++;
             }
 
