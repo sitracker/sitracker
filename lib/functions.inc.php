@@ -558,34 +558,46 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
  * @param string $logentry. A line, or lines to write to the log file
  * (with newlines \n)
  * @param bool $debugmodeonly. Only write an entry if debug mode is TRUE
- * @return bool TRUE log entry written, FALSE log entry not written
+ * @retval bool TRUE log entry written
+ * @retval bool FALSE log entry not written
  */
 function debug_log($logentry, $debugmodeonly = FALSE)
 {
     global $CONFIG;
-
-    if ($debugmodeonly == FALSE
-        OR ($debugmodeonly == TRUE AND $CONFIG['debug_mode'] == TRUE))
+    if ($debugmodeonly === FALSE
+        OR ($debugmodeonly === TRUE AND $CONFIG['debug'] == TRUE))
     {
         $logentry = $_SERVER["SCRIPT_NAME"] . ' ' .$logentry;
 
-        if (mb_substr($logentry, -1) != "\n") $logentry .= "\n";
+        if (substr($logentry, -1) != "\n") $logentry .= "\n";
         if (!empty($CONFIG['error_logfile']))
         {
-            if (is_writable($CONFIG['error_logfile']))
+            if (file_exists($CONFIG['error_logfile']))
             {
-                $fp = fopen($CONFIG['error_logfile'], 'a+');
-                if ($fp)
+                if (is_writable($CONFIG['error_logfile']))
                 {
-                    fwrite($fp, date('c').' '.strip_tags($logentry));
-                    fclose($fp);
+                    $fp = fopen($CONFIG['error_logfile'], 'a+');
+                    if ($fp)
+                    {
+                        fwrite($fp, date('c').' '.$logentry);
+                        fclose($fp);
+                    }
+                    else
+                    {
+                        echo "<p class='error'>Could not log message to error_logfile</p>";
+                        trigger_error("Could not log message to error_logfile", E_USER_NOTICE);
+                        return FALSE;
+                    }
+                    return TRUE;
                 }
                 else
                 {
-                    echo "<p class='error'>Could not log message to error_logfile</p>";
-                    return FALSE;
+                    trigger_error("Debug log file (error_logfile) [{$CONFIG['error_logfile']}] not writable", E_USER_WARNING);
                 }
-                return TRUE;
+            }
+            else
+            {
+                trigger_error("Debug log file (error_logfile) [{$CONFIG['error_logfile']}] not found", E_USER_WARNING);
             }
         }
         else
@@ -595,7 +607,6 @@ function debug_log($logentry, $debugmodeonly = FALSE)
     }
     else return TRUE;
 }
-
 
 
 /**
@@ -1155,7 +1166,7 @@ function check_install_status()
     $s->add_extension_check('zlib', 'PHP Zlib Compression', INSTALL_FATAL);
     $s->add_extension_check('session', 'PHP Session', INSTALL_FATAL);
     $s->add_extension_check('pcre', 'PHP Regular Expression', INSTALL_FATAL);
-    
+
     return $s;
 }
 
