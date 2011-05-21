@@ -47,7 +47,6 @@ div.windowbox
     background: #FBFCFD;
     border: 1px solid #7F8394;
     padding:0px;
-    overflow: hidden;
     -moz-border-radius: 4px;
     -khtml-border-radius: 4px;  border-radius: 4px;
 }
@@ -59,7 +58,8 @@ div.windowtitle
   border-bottom: 1px solid #C3C3C3;
   width: 100%;
 }
-.windowtitle a { color: white; font-weight: normal;}
+.windowtitle a, .windowtitle a:hover { color: white; font-weight: normal;}
+
 div.windowtitle img { vertical-align: -30%; }
 div.window
 {
@@ -83,7 +83,7 @@ div#tail
     color: #4B5C94;
 }
 div#tail strong { color: #A12607; }
-a.info span { display: none; z-index: 100; overflow: hidden; }
+a.info span { display: none; z-index: 100; }
 a.info:hover span
 {
   background: #4470A1;
