@@ -1027,7 +1027,7 @@ function get_user_config_vars($userid)
     global $dbUserConfig, $CONFIG;
 
     // Load user config defaults from global config
-    debug_log(print_r($CONFIG['user_config_defaults'], true),true);
+    debug_log(print_r($CONFIG['user_config_defaults'], true), true);
     if (is_array($CONFIG['user_config_defaults']))
     {
         $userconfig = $CONFIG['user_config_defaults'];
@@ -1050,7 +1050,7 @@ function get_user_config_vars($userid)
             $userconfig[$conf->config] = $conf->value;
         }
     }
-    debug_log('userconfig'.print_r($userconfig,true),true);
+    debug_log('userconfig'.print_r($userconfig,true), true);
     return $userconfig;
 }
 
