@@ -28,7 +28,7 @@ if ($CONFIG['portal'] == FALSE)
     $page = $_SERVER['PHP_SELF'];
     if (!empty($_SERVER['QUERY_STRING'])) $page .= '?'.$_SERVER['QUERY_STRING'];
     $page = urlencode($page);
-    header("Location: {$CONFIG['application_webpath']}index.php?id=2&page=$page");
+    header("Location: {$CONFIG['application_webpath']}index.php?id=2&page={$page}");
     exit;
 }
 else
@@ -56,7 +56,7 @@ else
         $page = $_SERVER['PHP_SELF'];
         if (!empty($_SERVER['QUERY_STRING'])) $page .= '?'.$_SERVER['QUERY_STRING'];
         $page = urlencode($page);
-        header("Location: {$CONFIG['application_webpath']}index.php?id=2&page=$page");
+        header("Location: {$CONFIG['application_webpath']}index.php?id=2&page={$page}");
         exit;
     }
     else
@@ -68,4 +68,5 @@ else
 }
 
 require_once (APPLICATION_LIBPATH . 'trigger.class.php');
+
 ?>
