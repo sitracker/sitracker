@@ -47,6 +47,21 @@ else
 }
 
 echo "</title>\n";
+
+if ($_SESSION['portalauth'] == TRUE)
+{
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
+}
+else
+{
+    $theme = $CONFIG['portal_interface_style'];
+    $iconset = $CONFIG['portal_iconset'];
+}
+
+if (empty($theme)) $theme = $CONFIG['portal_interface_style']; 
+if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
+
 //some css for the KB
 echo "<style type='text/css'>
     .kbprivate
@@ -84,19 +99,6 @@ echo "<style type='text/css'>
 
 echo "<link rel='SHORTCUT ICON' href='{$CONFIG['application_webpath']}images/sit_favicon.png' />\n";
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
-if ($_SESSION['portalauth'] == TRUE)
-{
-    $theme = $_SESSION['userconfig']['theme'];
-    $iconset = $_SESSION['userconfig']['iconset'];
-}
-else
-{
-    $theme = $CONFIG['portal_interface_style'];
-    $iconset = $CONFIG['portal_iconset'];
-}
-
-if (empty($theme)) $theme = $CONFIG['portal_interface_style']; 
-if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
