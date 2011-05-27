@@ -236,6 +236,7 @@ $CONFIG['feedback_enabled'] = TRUE;
 
 $CONFIG['portal_site_incidents'] = TRUE; //users in the portal can view site incidents based on the contract options
 $CONFIG['portal_usernames_can_be_changed'] = TRUE; //portal usernames can be changed by the users
+$CONFIG['portal_iconset'] = 'kriplyana';
 
 // The interface style to use for the portal
 $CONFIG['portal_interface_style'] = 8;
