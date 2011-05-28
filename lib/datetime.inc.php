@@ -517,7 +517,7 @@ function ldate($format, $date = '', $utc = FALSE)
     // Internationalise full day names
     if (strpos($format, 'l') !== FALSE)
     {
-        $days = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday');
+        $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $i18ndays = array($GLOBALS['strMonday'], $GLOBALS['strTuesday'], $GLOBALS['strWednesday'],
                         $GLOBALS['strThursday'], $GLOBALS['strFriday'], $GLOBALS['strSaturday'], $GLOBALS['strSunday']);
         $datestring = str_replace($days, $i18ndays, $datestring);
@@ -526,7 +526,7 @@ function ldate($format, $date = '', $utc = FALSE)
     // Internationalise abbreviated day names
     if (strpos($format, 'D') !== FALSE)
     {
-        $days = array('Mon','Tue','Wed','Thu','Fri','Sat','Sun');
+        $days = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
         $i18ndays = array($GLOBALS['strMon'], $GLOBALS['strTue'], $GLOBALS['strWed'],
                         $GLOBALS['strThu'], $GLOBALS['strFri'], $GLOBALS['strSat'], $GLOBALS['strSun']);
         $datestring = str_replace($days, $i18ndays, $datestring);
@@ -535,7 +535,7 @@ function ldate($format, $date = '', $utc = FALSE)
     // Internationalise full month names
     if (strpos($format, 'F') !== FALSE)
     {
-        $months = array('January','February','March','April','May','June','July','August','September','October','November','December');
+        $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
         $i18nmonths = array($GLOBALS['strJanuary'], $GLOBALS['strFebruary'], $GLOBALS['strMarch'],
                         $GLOBALS['strApril'], $GLOBALS['strMay'], $GLOBALS['strJune'], $GLOBALS['strJuly'],
                         $GLOBALS['strAugust'], $GLOBALS['strSeptember'], $GLOBALS['strOctober'],
@@ -546,7 +546,7 @@ function ldate($format, $date = '', $utc = FALSE)
     // Internationalise short month names
     if (strpos($format, 'M') !== FALSE)
     {
-        $months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+        $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
         $i18nmonths = array($GLOBALS['strJanAbbr'], $GLOBALS['strFebAbbr'], $GLOBALS['strMarAbbr'],
                         $GLOBALS['strAprAbbr'], $GLOBALS['strMayAbbr'], $GLOBALS['strJunAbbr'], $GLOBALS['strJulAbbr'],
                         $GLOBALS['strAugAbbr'], $GLOBALS['strSepAbbr'], $GLOBALS['strOctAbbr'],
