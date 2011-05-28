@@ -1204,18 +1204,18 @@ CREATE TABLE `{$dbSiteContacts}` (
 CREATE TABLE `{$dbSites}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `department` varchar(255) NOT NULL default '',
-  `address1` varchar(255) NOT NULL default '',
-  `address2` varchar(255) NOT NULL default '',
-  `city` varchar(255) NOT NULL default '',
-  `county` varchar(255) NOT NULL default '',
-  `country` varchar(255) NOT NULL default '',
-  `postcode` varchar(255) NOT NULL default '',
-  `telephone` varchar(255) NOT NULL default '',
-  `fax` varchar(255) NOT NULL default '',
-  `email` varchar(255) NOT NULL default '',
-  `websiteurl` varchar(255) default NULL,
-  `notes` blob NOT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `address1` varchar(255) DEFAULT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
+  `telephone` varchar(255) DEFAULT NULL,
+  `fax` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `websiteurl` varchar(255) DEFAULT NULL,
+  `notes` blob,
   `typeid` int(5) NOT NULL default '1',
   `freesupport` int(5) NOT NULL default '0',
   `licenserx` int(5) NOT NULL default '0',
@@ -1718,6 +1718,9 @@ ALTER TABLE `{$dbDrafts}` ADD INDEX ( `incidentid` ) ;
 ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
 
 INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
+
+
+ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address2` `address2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 ";
 
 // ********************************************************************
