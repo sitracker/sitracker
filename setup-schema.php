@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
 ) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE IF NOT EXISTS `contacts` (
+CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `notify_contactid` int(11) NOT NULL DEFAULT '0',
   `username` varchar(50) DEFAULT NULL,
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `jobtitle` varchar(255) NOT NULL DEFAULT '',
   `courtesytitle` varchar(50) NOT NULL DEFAULT '',
   `siteid` int(11) NOT NULL DEFAULT '0',
-  `email` varchar(100) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
   `phone` varchar(50) DEFAULT NULL,
   `mobile` varchar(50) DEFAULT NULL,
   `fax` varchar(50) DEFAULT NULL,
@@ -1205,7 +1205,7 @@ CREATE TABLE `{$dbSites}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `department` varchar(255) DEFAULT NULL,
-  `address1` varchar(255) DEFAULT NULL,
+  `address1` varchar(255) NOT NULL,
   `address2` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
   `county` varchar(255) DEFAULT NULL,
@@ -1720,7 +1720,7 @@ ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
 INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
 
-ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address2` `address2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `address2` `address2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
 ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
