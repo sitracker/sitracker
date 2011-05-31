@@ -263,7 +263,7 @@ elseif ($_REQUEST['mode'] == "save")
         $i18nfile .= "// $meta\n";
     }
     $i18nfile .= "\n";
-    $i18nfile .= "\$languagestring = '{$languages[$lang]} ($lang)';\n";
+    $i18nfile .= "\$languagestring = '{$i18n_codes[$lang]} ($lang)';\n";
     $i18nfile .= "\$i18ncharset = 'UTF-8';\n\n";
 
     if (!empty($i18nalphabet))
