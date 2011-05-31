@@ -133,8 +133,8 @@ define ('QUEUE_ALL_CLOSED', 4);
 // Version number of the application, (numbers only)
 $application_version = '3.90';
 
-// Revision string, e.g. 'beta2' or 'svn' or ''
-$application_revision = 'svn';
+// Revision string, e.g. 'beta2' or 'git' or ''
+$application_revision = 'git';
 
 // The number of errors that have occurred
 $siterrors = 0;

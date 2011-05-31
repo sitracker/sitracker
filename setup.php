@@ -596,10 +596,10 @@ switch ($_REQUEST['action'])
                             }
                             echo "</p>";
 
-                            // Display SQL schema changes for svn versions
-                            if (mb_substr($application_revision, 0, 3) == 'svn')
+                            // Display SQL schema changes for git versions
+                            if (mb_substr($application_revision, 0, 3) == 'git')
                             {
-                                echo "<p>You are running an <a href='http://sitracker.org/wiki/Development/Unreleased_Versions'>SVN version</a>, you should check that you have all of these schema changes: (some may have been added recently)</p>";
+                                echo "<p>You are running a <a target='_blank' href='http://sitracker.org/wiki/Development/Unreleased_Versions'>GIT version</a>, you should check that you have all of these schema changes: (some may have been added recently)</p>";
                                 echo "<div style='border: 1px solid red;padding:10px; background: #FFFFC0; font-family:monospace; font-size: 80%; height:200px; overflow:scroll;'>";
                                 echo nl2br($upgrade_schema[$installed_version * 100]);
                                 echo "</div>";
