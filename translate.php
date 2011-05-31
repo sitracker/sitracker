@@ -139,17 +139,21 @@ elseif ($_REQUEST['mode'] == "show")
             $lines = explode("\n", $theData);
             unset($theData);
             //print_r($lines);
+            $stringcheck = false;
+            $stringcount = 0;
             foreach ($lines AS $introcomment)
             {
                 if (mb_substr($introcomment, 0, 2) == "//")
                 {
                     $meta[] = mb_substr($introcomment, 3);
+                    $stringcheck = true;
                 }
-                else
+                elseif (($stringcount > 0) AND ($stringcount < 3) AND ($stringcheck == false))
                 {
                     $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
                 }
                 if (trim($introcomment) == '') break;
+                $stringcount++;
             }
             foreach ($lines as $values)
             {
