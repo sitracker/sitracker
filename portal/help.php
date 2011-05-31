@@ -25,7 +25,8 @@ echo "{$strHelp}</h2>";
 echo "<div id='help'>";
 
 $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}".DIRECTORY_SEPARATOR."portal_help.html";
-if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}".DIRECTORY_SEPARATOR ."en-GB/portal_help.html";
+if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "{$CONFIG['default_i18n']}".DIRECTORY_SEPARATOR ."/portal_help.html";
+if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "en-GB".DIRECTORY_SEPARATOR ."/portal_help.html";
 if (file_exists($helpfile))
 {
     $helptext = file_get_contents($helpfile);

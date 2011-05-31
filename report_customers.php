@@ -23,20 +23,6 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strCustomerExport;
 
-// Temporary: put in place so that this 3.07 feature can be used under 3.06
-if (!function_exists('strip_comma'))
-{
-    function strip_comma($string)
-    {
-        // also strips Tabs, CR's and LF's
-        $string=str_replace(",", " ", $string);
-        $string=str_replace("\r", " ", $string);
-        $string=str_replace("\n", " ", $string);
-        $string=str_replace("\t", " ", $string);
-        return $string;
-    }
-}
-
 if (empty($_REQUEST['mode']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -165,7 +151,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $psql = "SELECT * FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p WHERE ";
         $psql .= "sc.maintenanceid = m.id AND ";
         $psql .= "m.product = p.id ";
-        $psql .= "AND sc.contactid = '$row->contactid' ";
+        $psql .= "AND sc.contactid = '{$row->contactid}' ";
         $html .= "<td>";
 
         $csv .= "\"".strip_comma($row->forenames).'","'  . strip_comma($row->surname).'","';
@@ -179,7 +165,7 @@ elseif ($_REQUEST['mode'] == 'report')
             . strip_comma($row->postcode).'","'
             . strip_comma($row->country).'","';
 
-        if ($row->dataprotection_phone!='Yes') $csv .= strip_comma(strtolower($row->phone)).'","';
+        if ($row->dataprotection_phone != 'Yes') $csv .= strip_comma(strtolower($row->phone)).'","';
         else $csv .= '","';
 
         $csv .= strip_comma($row->site).'","';
@@ -198,14 +184,12 @@ elseif ($_REQUEST['mode'] == 'report')
         }
 
         $html .= "</td>";
-        // $html .= "<td>{$row->name}</td></tr>\n";
         $csv .= strip_comma($row->name) ."\"\r\n";
 
         $rowcount++;
     }
     $html .= "</table>";
     $html .= "<p align='center'>".sprintf($strXRecords, $rowcount)."</p>";
-    // $html .= "<p align='center'>SQL Query used to produce this report:<br /><code>$sql</code></p>\n";
 
     if ($_POST['output'] == 'screen')
     {

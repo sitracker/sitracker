@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// NOTE: we only support upgrades to 4.x from 3.50 or HIGHER 
+// NOTE: we only support upgrades to 4.x from 3.50 or HIGHER
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //         Paul Heaney <paul[at]sitracker.org>
@@ -276,7 +276,7 @@ switch ($_REQUEST['action'])
             $status = check_install_status();
 
             echo html_install_status($status);
-            
+
             if ($status->get_status() != INSTALL_FATAL)
             {
                 mysql_select_db($CONFIG['db_database'], $db);
@@ -313,9 +313,9 @@ switch ($_REQUEST['action'])
                     else
                     {
                         // Username and Password are set, but the db could not be selected
-    
+
                     }
-    
+
                     if (empty($CONFIG['db_database']) OR empty($CONFIG['db_username']))
                     {
                         echo "<p>You need to configure SiT to be able access the MySQL database.</p>";
@@ -421,7 +421,7 @@ switch ($_REQUEST['action'])
             $status = check_install_status();
 
             echo html_install_status($status);
-            
+
             if ($status->get_status() != INSTALL_FATAL)
             {
                 mysql_select_db($CONFIG['db_database'], $db);
@@ -447,9 +447,9 @@ switch ($_REQUEST['action'])
                     else
                     {
                         // Username and Password are set, but the db could not be selected
-    
+
                     }
-    
+
                     if (empty($CONFIG['db_database']) OR empty($CONFIG['db_username']))
                     {
                         echo "<p>You need to configure SiT to be able access the MySQL database.</p>";
@@ -460,9 +460,9 @@ switch ($_REQUEST['action'])
                 {
                     // Load the empty schema
                     require ('setup-schema.php');
-    
+
                     // Connected to database and db selected
-                    echo "<p>Connected to database - ok</p>";
+                    echo "<p class='info'>Connected to database - ok</p>";
                     // Check to see if we're already installed
                     $sql = "SHOW TABLES LIKE '{$dbUsers}'";
                     $result = mysql_query($sql);
@@ -484,12 +484,12 @@ switch ($_REQUEST['action'])
                             $errors = $errors + setup_exec_sql($sampledata_sql);
                         }
 
-                        $dashlets = install_dashboard_components(); 
+                        $dashlets = install_dashboard_components();
                         if (count($dashlets) > 0)
                         {
                             echo "<p class='error'>The following dashlets failed to install ".explode(',', $dashlets)."</p>";
                         }
-                        
+
                         if ($errors < 1)
                         {
                             echo update_sit_version_number($application_version);
@@ -537,29 +537,29 @@ switch ($_REQUEST['action'])
                             echo setup_button('', 'Restart setup');
                             exit;
                         }
-    
+
                         echo "<h2>Installed OK</h2>";
-    
+
                         if ($_REQUEST['action'] == 'upgrade')
                         {
 							/*****************************
                              * NOTE: we only support upgrades to 4.x from 3.50 or HIGHER *
                              *****************************/
-                            
+
                             /*****************************
                              * Do pre-upgrade tasks here *
                              *****************************/
-       
+
                             /*****************************
                              * UPGRADE THE SCHEMA        *
                              *****************************/
                             $installed_version = upgrade_schema($installed_version);
-    
+
                             /******************************
                              * Do Post-upgrade tasks here *
                              ******************************/
-    
-   
+
+
                             if ($installed_version == $application_version)
                             {
                                 $upgradeok = TRUE;
@@ -570,9 +570,9 @@ switch ($_REQUEST['action'])
                             {
                                 echo "<p>See the <code>doc/UPGRADE</code> file for further upgrade instructions and help.<br />";
                             }
-    
+
                             echo upgrade_dashlets();
-    
+
                             if ($upgradeok)
                             {
                                 update_sit_version_number($application_version);
@@ -595,16 +595,16 @@ switch ($_REQUEST['action'])
                                 echo ", after making a backup you should upgrade your schema to v{$application_version}";
                             }
                             echo "</p>";
-    
-                            // Display SQL schema changes for svn versions
-                            if (mb_substr($application_revision, 0, 3) == 'svn')
+
+                            // Display SQL schema changes for git versions
+                            if (mb_substr($application_revision, 0, 3) == 'git')
                             {
-                                echo "<p>You are running an <a href='http://sitracker.org/wiki/Development/Unreleased_Versions'>SVN version</a>, you should check that you have all of these schema changes: (some may have been added recently)</p>";
+                                echo "<p>You are running a <a target='_blank' href='http://sitracker.org/wiki/Development/Unreleased_Versions'>GIT version</a>, you should check that you have all of these schema changes: (some may have been added recently)</p>";
                                 echo "<div style='border: 1px solid red;padding:10px; background: #FFFFC0; font-family:monospace; font-size: 80%; height:200px; overflow:scroll;'>";
                                 echo nl2br($upgrade_schema[$installed_version * 100]);
                                 echo "</div>";
                             }
-    
+
                             if (is_array($upgrade_schema[$installed_version * 100]))
                             {
                                 foreach ($upgrade_schema[$installed_version*100] AS $possible_schema_updates => $nothing)
@@ -619,7 +619,7 @@ switch ($_REQUEST['action'])
                                 echo setup_button('upgrade', 'Upgrade Schema');
                             }
                         }
-    
+
                         if ($_REQUEST['action'] == 'createadminuser' AND setup_check_adminuser() == FALSE)
                         {
                             $password = mysql_real_escape_string($_POST['newpassword']);
@@ -692,20 +692,20 @@ switch ($_REQUEST['action'])
                             echo "<form action='index.php' method='get'>";
                             echo "<input type='submit' value=\"Run SiT!\" />";
                             echo "</form>\n";
-    
+
                             if ($_SESSION['userid'] == 1)
                             {
                                 echo "<br /><p>As administrator you can <a href='config.php'>reconfigure</a> SiT!</p>";
                             }
                         }
                     }
-                }               
+                }
             }
             else
             {
                 echo "<p class='error'>Fatal errors exist in your environment, please fix and rerun the setup</p>";
             }
-            
+
         }
 }
 

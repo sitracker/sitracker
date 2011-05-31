@@ -44,7 +44,7 @@ if (empty($action) OR $action == "showform")
     {
         echo "<tr><th>{$strContract} ".icon('contract', 16)."</th>";
         echo "<td>";
-        maintenance_drop_down("maintid", 0);
+        echo maintenance_drop_down("maintid", 0, NULL, true);
         echo "</td></tr>";
     }
     else

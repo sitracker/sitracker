@@ -106,7 +106,7 @@ else
 
     echo "<div id='row'>\n";
     echo "<div id='left'>\n";
-    
+
     // First column: Contact Details
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
@@ -178,10 +178,10 @@ else
 
     $tags = list_tags($id, TAG_INCIDENT, TRUE);
     if (!empty($tags)) echo "{$tags}\n";
-    
+
     echo "</div>\n";
     echo "<div id='right'>";
-    
+
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
     {
@@ -355,7 +355,7 @@ else
 
     echo "</div>\n";
     echo "</div>\n";
-        
+
     // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
@@ -383,7 +383,7 @@ else
             echo " &nbsp;";
         }
         echo "</div>\n";
-        
+
         echo "</div>\n";
 
     }
@@ -629,7 +629,7 @@ else
         if (!empty($update->sla) AND ($update->type == 'slamet' OR $update->type == 'reviewmet'))
         {
             $updateheadertext = str_replace('updatesla', $slatypes[$update->sla]['text'], $updateheadertext);
-            
+
         }
         elseif (!empty($update->sla))
         {
@@ -637,7 +637,7 @@ else
             if ($update->sla != 'opened') $updateheadertext = "{$strSLA}: {$slatypes[$update->sla]['text']} - {$updateheadertext}";
             else $updateheadertext = "{$strSLA}: {$updateheadertext}";
         }
-        
+
         echo "<a name='update{$count}'></a>";
 
         // Print a header row for the update
@@ -712,7 +712,7 @@ else
 
         $updatebody = preg_replace("/href=\"(?!http[s]?:\/\/)/", "href=\"http://", $updatebody);
         $updatebody = bbcode($updatebody);
-        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen('\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
+        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen('\\2')>=70 ? mb_substr('\\2',0,70).'<span class=\'z\'>'.mb_substr('\\2',71).\"</span> $strEllipsis\":'\\2').'</a>'", $updatebody);
 
         // Make KB article references into a hyperlink
         $updatebody = preg_replace("/\b{$CONFIG['kb_id_prefix']}([0-9]{3,4})\b/", "<a href=\"kb_view_article.php?id=$1\" title=\"View KB Article $1\">$0</a>", $updatebody);
@@ -866,7 +866,7 @@ else
     {
         echo log_nav_bar();
     }
-    
+
 //    if (!$_GET['win'])
 //    {
 //        echo "</div><!-- AA -->";

@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $id = cleanvar($_REQUEST['id']);
-$incidentid=$id;
+$incidentid = $id;
 
 $title = $strFiles;
 include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
@@ -30,8 +30,117 @@ include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 // append incident number to attachment path to show this users attachments
 $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $id;
 
-
 if (empty($incidentid)) $incidentid = mysql_real_escape_string($_REQUEST['id']);
+
+/**
+ * Convert a binary string into something viewable in a web browser
+ */
+function encode_binary($string)
+{
+    $chars = array();
+    $ent = null;
+    $chars = preg_split("//", $string, -1, PREG_SPLIT_NO_EMPTY);
+    for ($i = 0; $i < count($chars); $i++ )
+    {
+        if ( preg_match("/^(\w| )$/",$chars[$i]))
+        {
+            $ent[$i] =  $chars[$i];
+        }
+        elseif ( ord($chars[$i]) < 32)
+        {
+            $ent[$i]=".";
+        }
+        else
+        {
+            $ent[$i] = "&#" . ord($chars[$i]) . ";";
+        }
+    }
+
+    if ( sizeof($ent) < 1)
+    {
+      return "";
+    }
+
+    return implode("",$ent);
+}
+
+
+/**
+ * @author Ivan Lucas
+ */
+function draw_file_row($file, $incidentid, $path)
+{
+    global $CONFIG;
+    $filepathparts = explode(DIRECTORY_SEPARATOR, $file);
+    $parts = count($filepathparts);
+    $filename = $filepathparts[$parts - 1];
+    $filedir = $filepathparts[$parts - 2];
+    $preview = ''; // reset the preview
+    $filenameparts = explode("-", $filename);
+    $newfilename = cleanvar($filenameparts[1]);
+
+    if ($filedir != $incidentid)
+    {
+        // files are in a subdirectory
+        $url = "{$CONFIG['attachment_webpath']}{$incidentid}/{$filedir}/".str_replace('+','%20',urlencode($filename));
+    }
+    else
+    {
+        // files are in the root of the incident attachment directory
+        $url = "{$CONFIG['attachment_webpath']}{$incidentid}/".str_replace('+','%20',urlencode($filename));
+    }
+    $filesize = filesize($file);
+    $file_size = readable_file_size($filesize);
+
+    $mime_type = mime_type($file);
+
+    $updateid = str_replace("u", "", $filedir);
+    $sql = "SELECT f.id FROM `{$GLOBALS['dbLinks']}`, `{$GLOBALS['dbFiles']}` AS f  ";
+    $sql .= "WHERE linktype = '5' AND origcolref='{$updateid}' ";
+    $sql .= "AND f.id = linkcolref ";
+    $result = mysql_query($sql);
+    $fileobj = mysql_fetch_object($result);
+    $fileid = $fileobj->id;
+
+    //new-style, can assume the filename is fileid-filename.ext
+    if (is_numeric($filenameparts[0]))
+    {
+        $sql = "SELECT *, f.id AS fileid FROM `{$GLOBALS['dbLinks']}` AS l, ";
+        $sql .= "`{$GLOBALS['dbFiles']}` as f, ";
+        $sql .= "`{$GLOBALS['dbUpdates']}` as u ";
+        $sql .= "WHERE f.id = '{$filenameparts[0]}' ";
+        $sql .= "AND l.origcolref = u.id ";
+        $sql .= "AND l.linkcolref = f.id";
+        $result = mysql_query($sql);
+        $row = mysql_fetch_object($result);
+        $url = "download.php?id={$row->fileid}";
+        $filename = $row->filename;
+    }
+
+    $html = "<tr>";
+    $html .= "<td align='right' width='5%'>";
+    $html .= "<a href=\"{$url}\"><img src='".getattachmenticon($filename)."' alt='Icon' title='{$filename} ({$file_size})' /></a>";
+    $html .= "&nbsp;</td>";
+    $html .= "<td width='30%'><a href='{$url}'";
+    if (mb_substr($mime_type, 0, 4) == 'text' AND $filesize < 512000)
+    {
+        // The file is text, extract some of the contents of the file into a string for a preview
+        $handle = fopen($file, "r");
+        $preview = fread($handle, 512); // only read this much, we can't preview the whole thing, not enough space
+        fclose($handle);
+        // Make the preview safe to display
+        $preview = nl2br(encode_binary(strip_tags($preview)));
+        $html .= " class='info'><span>{$preview}</span>$filename</a>";
+    }
+    else $html .= ">$filename</a>";
+    $html .= "</td>";
+    $html .= "<td width='20%'>{$file_size}</td>";
+    $html .= "<td width='20%'>{$mime_type}</td>";
+    $html .= "<td width='20%'>".ldate($CONFIG['dateformat_filedatetime'],filemtime($file))."</td>";
+    // $html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
+    $html .= "</tr>\n";
+    return $html;
+}
 
 // append incident number to attachment path to show this users attachments
 $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid;
@@ -147,117 +256,6 @@ echo "</form>";
 echo "</div>";
 
 
-/**
-    * Convert a binary string into something viewable in a web browser
-*/
-function encode_binary($string)
-{
-    $chars = array();
-    $ent = null;
-    $chars = preg_split("//", $string, -1, PREG_SPLIT_NO_EMPTY);
-    for ($i = 0; $i < count($chars); $i++ )
-    {
-        if ( preg_match("/^(\w| )$/",$chars[$i]))
-        {
-            $ent[$i] =  $chars[$i];
-        }
-        elseif ( ord($chars[$i]) < 32)
-        {
-            $ent[$i]=".";
-        }
-        else
-        {
-            $ent[$i] = "&#" . ord($chars[$i]) . ";";
-        }
-    }
-
-    if ( sizeof($ent) < 1)
-    {
-      return "";
-    }
-
-    return implode("",$ent);
-}
-
-
-/**
-    * @author Ivan Lucas
-*/
-function draw_file_row($file, $incidentid, $path)
-{
-    global $CONFIG;
-    $filepathparts = explode(DIRECTORY_SEPARATOR, $file);
-    $parts = count($filepathparts);
-    $filename = $filepathparts[$parts - 1];
-    $filedir = $filepathparts[$parts - 2];
-    $preview = ''; // reset the preview
-    $filenameparts = explode("-", $filename);
-    $newfilename = cleanvar($filenameparts[1]);
-
-    if ($filedir != $incidentid)
-    {
-        // files are in a subdirectory
-        $url = "{$CONFIG['attachment_webpath']}{$incidentid}/{$filedir}/".str_replace('+','%20',urlencode($filename));
-    }
-    else
-    {
-        // files are in the root of the incident attachment directory
-        $url = "{$CONFIG['attachment_webpath']}{$incidentid}/".str_replace('+','%20',urlencode($filename));
-    }
-    $filesize = filesize($file);
-    $file_size = readable_file_size($filesize);
-
-    $mime_type = mime_type($file);
-
-    $updateid = str_replace("u", "", $filedir);
-    $sql = "SELECT f.id FROM `{$GLOBALS['dbLinks']}`, `{$GLOBALS['dbFiles']}` AS f  ";
-    $sql .= "WHERE linktype = '5' AND origcolref='{$updateid}' ";
-    $sql .= "AND f.id = linkcolref ";
-    $result = mysql_query($sql);
-    $fileobj = mysql_fetch_object($result);
-    $fileid = $fileobj->id;
-
-    //new-style, can assume the filename is fileid-filename.ext
-    if (is_numeric($filenameparts[0]))
-    {
-        $sql = "SELECT *, f.id AS fileid FROM `{$GLOBALS['dbLinks']}` AS l, ";
-        $sql .= "`{$GLOBALS['dbFiles']}` as f, ";
-        $sql .= "`{$GLOBALS['dbUpdates']}` as u ";
-        $sql .= "WHERE f.id = '{$filenameparts[0]}' ";
-        $sql .= "AND l.origcolref = u.id ";
-        $sql .= "AND l.linkcolref = f.id";
-        $result = mysql_query($sql);
-        $row = mysql_fetch_object($result);
-        $url = "download.php?id={$row->fileid}";
-        $filename = $row->filename;
-    }
-
-    $html = "<tr>";
-    $html .= "<td align='right' width='5%'>";
-    $html .= "<a href=\"{$url}\"><img src='".getattachmenticon($filename)."' alt='Icon' title='{$filename} ({$file_size})' /></a>";
-    $html .= "&nbsp;</td>";
-    $html .= "<td width='30%'><a href='{$url}'";
-    if (mb_substr($mime_type, 0, 4) == 'text' AND $filesize < 512000)
-    {
-        // The file is text, extract some of the contents of the file into a string for a preview
-        $handle = fopen($file, "r");
-        $preview = fread($handle, 512); // only read this much, we can't preview the whole thing, not enough space
-        fclose($handle);
-        // Make the preview safe to display
-        $preview = nl2br(encode_binary(strip_tags($preview)));
-        $html .= " class='info'><span>{$preview}</span>$filename</a>";
-    }
-    else $html .= ">$filename</a>";
-    $html .= "</td>";
-    $html .= "<td width='20%'>{$file_size}</td>";
-    $html .= "<td width='20%'>{$mime_type}</td>";
-    $html .= "<td width='20%'>".ldate($CONFIG['dateformat_filedatetime'],filemtime($file))."</td>";
-    //$html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
-    $html .= "</tr>\n";
-    return $html;
-}
-
-
 if (file_exists($incident_attachment_fspath))
 {
     $dirarray = array();
@@ -278,7 +276,7 @@ if (file_exists($incident_attachment_fspath))
         foreach ($temparray as $value)
         {
             if (is_dir($value)) $dirarray[] = $value;
-            elseif (is_file($value) AND mb_substr($value,-1) != '.' AND mb_substr($value,-8) != 'mail.eml')
+            elseif (is_file($value) AND mb_substr($value, -1) != '.' AND mb_substr($value, -8) != 'mail.eml')
             {
                 $rfilearray[] = $value;
             }
@@ -312,7 +310,7 @@ if (file_exists($incident_attachment_fspath))
             elseif ($dirname[0] == 'u')
             {
                 $updateid = mb_substr($dirname, 1);
-                $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = $updateid";
+                $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = {$updateid}";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                 $update = mysql_fetch_object($result);
@@ -339,8 +337,8 @@ if (file_exists($incident_attachment_fspath))
                 if (in_array("{$dir}" . DIRECTORY_SEPARATOR . "mail.eml", $tempfarray))
                 {
                     $updatelink = readlink($dir);
-                    $updateid = mb_substr($updatelink,strrpos($updatelink, DIRECTORY_SEPARATOR)+1,mb_strlen($updatelink));
-                    echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#$updateid'>{$strJumpToEntryLog}</a></p>";
+                    $updateid = mb_substr($updatelink, strrpos($updatelink, DIRECTORY_SEPARATOR) + 1, mb_strlen($updatelink));
+                    echo "<p>{$strTheseFilesArrivedBy} <a href='{$CONFIG['attachment_webpath']}{$incidentid}/{$dirname}/mail.eml'>{$strEmail}</a>, <a href='incident_details.php?id={$incidentid}#{$updateid}'>{$strJumpToEntryLog}</a></p>";
                 }
 
                 foreach ($tempfarray as $fvalue)
@@ -358,7 +356,7 @@ if (file_exists($incident_attachment_fspath))
 
                 if (!empty($updatetext) AND $updatetype == 'email' OR $updatetype == 'webupdate')
                 {
-                    $updatetext = mb_substr($updatetext, 0, 80)."...";
+                    $updatetext = mb_substr($updatetext, 0, 80) . $strEllipsis;
                     echo "<span style='font-size:400%';>“</span>";
                     echo bbcode($updatetext);
                     echo "<span style='font-size:400%';>„</span>";

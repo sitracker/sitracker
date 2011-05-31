@@ -1130,7 +1130,7 @@ function contract_details($id, $mode='internal')
             }
             if ($mode == 'external')
             {
-                $html .= "<p align='center'><a href='addcontact.php'>";
+                $html .= "<p align='center'><a href='newcontact.php'>";
                 $html .= "{$GLOBALS['strNewSiteContact']}</a></p>";
             }
         }

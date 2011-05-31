@@ -204,7 +204,13 @@ if (empty($displayid))
             // echo "<td><pre>".print_r($incoming,true)."</pre><hr /></td>";
             // Date
             echo "<td>";
-            if (!empty($update->timestamp)) echo date($CONFIG['dateformat_datetime'], $update->timestamp);
+            $arrived = mysql2date($incoming->arrived);
+            // If there's no arrival time on the email we use the update timestamp
+            if ($arrived == 0)
+            {
+                $arrived = $update->timestamp;
+            }
+            if (!empty($update->timestamp)) echo date($CONFIG['dateformat_datetime'], $arrived);
             echo "</td>";
             // Size
             echo "<td style='white-space:nowrap;'>";
