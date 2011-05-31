@@ -145,10 +145,12 @@ elseif ($_REQUEST['mode'] == "show")
                 {
                     $meta[] = mb_substr($introcomment, 3);
                 }
+                else
+                {
+                    $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
+                }
                 if (trim($introcomment) == '') break;
             }
-
-
             foreach ($lines as $values)
             {
                 $badchars = array("$", "\"", "\\", "<?php", "?>");
@@ -173,7 +175,12 @@ elseif ($_REQUEST['mode'] == "show")
         }
         else
         {
-            $meta[] = "SiT! Language File - {$languages[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
+
+            if (!is_array($meta))
+            {
+                $meta = array();
+            }
+            $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
         }
     }
     else
@@ -257,10 +264,14 @@ elseif ($_REQUEST['mode'] == "save")
     echo "<p>".sprintf($strSendTranslation, "<code>{$filename}</code>", "<code>".APPLICATION_I18NPATH."</code>", "<a href='mailto:sitracker-devel-discuss@lists.sourceforge.net'>sitracker-devel-discuss@lists.sourceforge.net</a>")." </p>";
     $i18nfile = '';
     $i18nfile .= "<?php\n";
-    foreach ($_REQUEST['meta'] AS $meta)
+
+    if (is_array($meta))
     {
-        $meta = cleanvar($meta);
-        $i18nfile .= "// $meta\n";
+        foreach ($_REQUEST['meta'] AS $meta)
+        {
+            $meta = cleanvar($meta);
+            $i18nfile .= "// $meta\n";
+        }
     }
     $i18nfile .= "\n";
     $i18nfile .= "\$languagestring = '{$i18n_codes[$lang]} ($lang)';\n";
