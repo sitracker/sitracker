@@ -32,7 +32,7 @@ if (empty($action) OR $action == "showform")
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strContract}:</th><td>";
-    echo maintenance_drop_down("maintid", 0);
+    echo maintenance_drop_down("maintid", 0, NULL, true);
     echo "</td></tr>\n";
     echo "</table>\n";
     echo "<p align='center'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
