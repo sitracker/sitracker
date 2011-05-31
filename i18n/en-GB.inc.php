@@ -1562,7 +1562,8 @@ $strSavePublish = 'Save and Publish';
 $strScheduledTask = 'Name of the scheduler task';
 $strScheduler = 'Scheduler';
 $strSchedulerActionFailed = 'Scheduler Action Failed';
-$strSchedulerNotRunning = 'The Scheduler does not appear to be running. You might want to check out <a href="http://sitracker.org/wiki/Scheduler">the documentation</a>';
+# The Scheduler does not appear to be running. You might want to check out <link to documentation>
+$strSchedulerNotRunning = 'The Scheduler does not appear to be running. You might want to check out';
 # Database structure version
 $strSchemaVersion = 'Schema Version';
 $strScore = 'Score';
@@ -1808,6 +1809,7 @@ $strText = 'Text';
 $strth = 'th';
 $strThankYou = 'Thank You';
 $strThankYouCompleteForm = 'Thank you for taking the time to complete this form.';
+$strTheDocumentation = 'The Documentation';
 $strTheFollowingVariables = 'The following variables may be used:';
 $strThereAreXcontractsAssignedToThisPerson = 'There are %s contracts assigned to this contact';
 $strThereAreXIncidentsAssignedToThisContact = 'There are %s incidents assigned to this contact';

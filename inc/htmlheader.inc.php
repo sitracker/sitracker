@@ -65,7 +65,7 @@ else
     $iconset = $CONFIG['default_iconset'];
 }
 
-if (empty($theme)) $theme = $CONFIG['default_interface_style']; 
+if (empty($theme)) $theme = $CONFIG['default_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['default_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
@@ -332,7 +332,7 @@ if ($sit[0] != '')
         $num = $num / 2;
         if ($failure > $num)
         {
-            echo user_alert(sprintf("{$strSchedulerNotRunning}"), E_USER_ERROR);
+            echo user_alert(sprintf("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>"), E_USER_ERROR);
         }
     }
 

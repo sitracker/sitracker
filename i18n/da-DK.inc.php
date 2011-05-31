@@ -9,7 +9,6 @@ $i18nAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
 
 // list of strings (Alphabetical by key)
 $str0MeansUnlimited = '0 Betyder Uendeligt';
-
 $str1Day = '1 Dag';
 $str1Minute = '1 Minut';
 $str1Month = '1 Måned';
@@ -18,9 +17,7 @@ $str1IncidentsLoggedViaPortal = '1 Hændelse logget via portalen';
 $str1Second = '1 Sekund';
 $str1st = '1.';
 $str1Year = '1 År';
-
 $str3rd = '3.';
-
 $strAbout = 'Om';
 $strAboutPerson = 'Om %s';
 $strAboutXMinutesAgo = 'For %d min. siden';
@@ -60,9 +57,11 @@ $strAdd = 'Tilføj';
 $strAddContract = 'Tilføj kontrakt';
 $strAddContractConfirm = 'Er du sikker på at tilføje denne kontrakt?';
 $strAdded = 'Tilføjet';
+$strAddedRelationshipIncidentX = 'Tilføjet forhold til hændelse %s';
 $strAddEmailConfirm = 'Er du sikker på at tilføje denne email type?';
 $strAddFeedbackForms = 'Tilføj nye feedback formular';
 $strAddIncidents = 'Tilføj nye hændelser';
+$strAddingACondition = 'Tilføjer en betingselse af \'hændelses ejer er Joe Bloggs\' vil kun meddele dig når Joe Bloggs får tildelt en hændelse';
 $strAdditional = 'Ekstra';
 $strAdditionalInfo = 'Ekstra information';
 $strAddNewSiteContact = 'Tilføj ny afdelings kontakt';
@@ -176,7 +175,6 @@ $strAwaitingColleagueResponse = 'Afventer svar fra kollega';
 $strAwaitingCustomerAction = 'Afventer kunde afgørelse';
 $strAwaitingSupportResponse = 'Afventer svar fra supporten';
 $strAwaitingYourResponse = 'Afventer dit svar';
-
 $strBackToList = 'Tilbage til listen';
 $strBackToLoginPage = 'Tilbage til login siden';
 $strBackToSites = 'Tilbage til afdelinger';
@@ -211,9 +209,7 @@ $strBrowseJournal = 'Gennemse journal';
 $strBrowseKB = 'Gennemse vidensbase';
 $strBrowseSites = 'Gennemse afdelinger';
 $strBulkModify = 'Masse rediger';
-
 $strby = 'af';
-
 $strByContact = 'Af kontakt';
 $strByEngineer = 'Af tekniker';
 $strByEscalation = 'Af eskalering';
@@ -228,7 +224,6 @@ $strByDate = 'Af dato';
 $strBySLA = 'Af SLA';
 $strByVendor = 'Af sælger';
 $strByX = 'Af: %s';
-
 $strCalendar = 'Kalender';
 $strCalculateUnits = 'Beregn enheder';
 $strCalledAndLeftMessage = 'Ringet og efterladt besked';
@@ -262,6 +257,9 @@ $strCheckUserGroupMembership = 'kontroller bruger/gruppe medlemskab';
 $strCheckWhoHasPermission = 'Kontroller hvem der har denne rettighed';
 $strCheckingDetails = 'Kontrollerer indstillinger';
 $strChooseLanguage = 'Vælg venligst dit sprog';
+$strChooseWhichActionNotify = 'Vælg hvilken handling du vil blive meddelt om.';
+$strChooseWhichMethodNotification = 'Vælg hvilken metode af notificering';
+$strChooseWhichTemplate = 'Vælg hvilken skabelon du vil bruge. Hvis den allerede er udfyldt, er en meningsfuld allerede valgt for dig. Du burde kun ændre denne hvis du har en skabelon du selv har oprettet';
 $strCity = 'By';
 $strClearFilter = 'Fjern filter';
 $strClickOnDayToSelect = 'Klik på en dag for at vælge';
@@ -363,7 +361,6 @@ $strCustomerReminderUpdate = 'Var dette en manager opfølgning?';
 $strCustomerRequestedClosure = 'Kunden anmodede om lukning af hændelse';
 $strCustomers = 'Kunder';
 $strCustomerVisible = 'Synlig for kunde';
-
 $strDailyRate = 'Daglig rate';
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard komponent %s eksisterer ikke';
@@ -379,12 +376,10 @@ $strDayOfMonth = 'dag %s af hver måned';
 $strDayOfYear = 'dag %s af hvert år';
 $strDays = 'Dage';
 $strDayView = 'Dags visning';
-
 $strdaysother = 'dage anden frihed';
 $strdayssick = 'dage syg';
 $strdaystraining = 'dage træning/kursus/seminar';
 $strdaysworkingaway = 'dage arbejder ude';
-
 $strDebit = 'Debet';
 $strDebug = 'Debug';
 $strDecAbbr = 'Dec';
@@ -446,7 +441,6 @@ $strDurability = 'Holdbarhed';
 $strDuration = 'Varighed';
 $strDurationMismatch = 'Varighed stemmer ikke';
 $strDurationUpdated = 'Varighed opdateret';
-
 $strEarliestExpiry = 'Udløber tidligst:';
 $strEdit = 'Rediger';
 $strEditContact = 'Rediger kontakt';
@@ -575,6 +569,7 @@ $strEscalation = 'Eskalering';
 $strEscalationPaths = 'Eskalerings sti';
 $strEvent = 'Begivenhed';
 $strEverybodysTasks = 'Alle\'s opgaver';
+$strExampleWhenIncidentAssigned = 'Eksempel: \'Når en hændelse er tildelt til en bruger\' ville meddele dig for hver hændelse.';
 $strExceeded = 'Overskride';
 $strExclude = 'Ekskluder';
 $strExcludeSitesWith = 'Ekskluder afdelinger med';
@@ -592,7 +587,6 @@ $strExternalEngineerCallDistribution = 'Ekstern tekniker opkalds distribution';
 $strExternalID = 'Ekstern ID';
 $strExternalInfo = 'Ekstern information';
 $strExternalInfoAddedBy = 'Ekstern information tilføjet af %s';
-
 $strFailed = 'Mislykket';
 $strFailedOnPass2 = 'fejlede på 2. kørsel';
 $strFailedtoApproveTransactID = 'Fejlede ved godkendelsen af transaktions ID';
@@ -680,7 +674,6 @@ $strFTPPublish = 'FTP udgivelse';
 $strFullDay = 'Hele dagen';
 $strFullDetails = 'Alle oplysninger';
 $strFullNameCurrentUser = 'Fulde navn af aktuelle bruger';
-
 $strGBytes = 'GBytes';
 $strGeneral = 'Generel';
 $strGetHelp = 'Få hjælp';
@@ -694,7 +687,6 @@ $strGrandTotal = 'Grand total';
 $strGroup = 'Gruppe';
 $strGroupMembersAway = 'Gruppe medlemmer ikke tilstede';
 $strGroupMembership = 'Gruppe medlemsskab';
-
 $strHandled = 'Håndteret';
 $strHasBeenAutoMovedToX = '%s er automatisk flyttet til %s\'s %s kø';
 $strHasBeenMovedToX = '%s er flyttet til %s\'s %s kø';
@@ -737,7 +729,6 @@ $strHolidayUsage = 'Ferie forbrug';
 $strHomeURL = 'Hjemme URL';
 $strHour = 'Time';
 $strHours = 'Timer';
-
 $strID = 'ID';
 $strIconSet = 'Ikon sæt';
 $strIfYourBrowserNotReload = 'Hvis din browser ikke fører dig videre inden for nogle sekunder';
@@ -845,7 +836,6 @@ $strInventoryDesc = 'Beholdning er et katalog over afdelings objekter så som ar
 $strInventoryItems = 'Fjernsupport udstyr';
 $strIgnore = 'Ignorer';
 $strIgnoreThisAndDelete = 'Ignorer denne opgave og slet denne besked';
-
 $strJanAbbr = 'Jan';
 $strJanuary = 'Januar';
 $strJobTitle = 'Jobtitel';
@@ -858,7 +848,6 @@ $strJumpToIncident = 'Hop til hændelse';
 $strJunAbbr = 'Jun';
 $strJune = 'Juni';
 $strJustNow = 'Lige nu';
-
 $strKBabbr = 'KB';
 $strKBArticle = 'KB artikel';
 $strKBytes = 'KBytes';
@@ -870,7 +859,6 @@ $strKnowledgeBase = 'Vidensbase';
 $strKnowledgeBaseArticle = 'Vidensbase artikel';
 $strKnowledgeBaseArticleCreated = 'Vidensbase artikel oprettet';
 $strKnowledgeBaseArticles = 'Vidensbase artikler';
-
 $strLanguage = 'Sprog';
 $strLatestExpiry = 'Udløber senest:';
 $strLastBilled = 'Sidst faktureret';
@@ -929,7 +917,6 @@ $strLogout = 'Log af';
 $strLogTriggerInJournal = 'log triggeren i system journalen';
 $strLow = 'Lav';
 $strLowPriority = 'Lav Prioritet';
-
 $strMakeVisibleInPortal = 'Vis i portalen';
 $strMap = 'Kort';
 $strManageDashboardComponents = 'Håndter Dashboard komponenter';
@@ -998,12 +985,9 @@ $strMySettings = 'Mine indstillinger';
 $strMySkills = 'Mine færdigheder';
 $strMySubstitutes = 'Mine afløsere';
 $strMyTriggers = 'Mine triggers';
-
 $strName = 'Navn';
 $strNamedContacts = 'Navngivne kontakter';
-
 $strnd = '.';
-
 $strNeedsSubstitueEngineers = '%s mangler definition af afløsere';
 $strNegative = 'Negative';
 $strNever = 'Aldrig';
@@ -1049,6 +1033,7 @@ $strNewStatus = 'Ny status';
 $strNewSupportedContact = 'Ny supporteret kontakt';
 $strNewTask = 'Ny opgave';
 $strNewTemplate = 'Ny email skabelon';
+$strNewTriggerInterface = 'Nyt trigger interface';
 $strNewUser = 'Ny bruger';
 $strNewVendor = 'Ny producent';
 $strNext = 'Næste';
@@ -1063,9 +1048,7 @@ $strNoAvailablePlugins = 'Ingen tilføjelses programmer tilgængelige';
 $strNoBillingMatrixDefined = 'Ingen fakturerings matriks er fefineret';
 $strNoEngineersForReassignment = 'Ingen teknikere eksisterer for omdirigering af hændelse';
 $strNoFiles = 'Ingen filer';
-
 $strnoFileUploaded = 'Ingen fil er uploaded';
-
 $strNoneAvailable = 'Ingen tilgængelige';
 $strNonTerminatedContractsExpiredXdaysAgo = 'Ikke opsagte kontrakter der udløb for op til %s dage siden';
 $strNoBillingMatrixFound = 'Ingen fakturerings matriks fundet';
@@ -1195,7 +1178,6 @@ $strNumOfIncidents = 'Der er %s hændelser på denne liste';
 $strNumOfIncidentsLoggedByX = 'Hændelser logget af %s';
 $strNumOfCalls = '# af opkald';
 $strNumOpenIncidents = '%s åben';
-
 $strOccurance = 'Forekomst';
 $strOctAbbr = 'Okt';
 $strOctober = 'Oktober';
@@ -1237,7 +1219,6 @@ $strOwnerXAcctingAgain = 'Ejer %s accepterer igen';
 $strOwnerXAndNotAccepting = 'Ejer %s &amp; accepterer ikke';
 $strOverview = 'Oversigt';
 $strOverXHoursAgo = 'Over %x timer siden';
-
 $strParameters = 'Parametre';
 $strPassword = 'Adgangskode';
 $strPasswordHasBeenReset = 'Din adgangskode er blevet nulstillet, du kan nu logge på med de nye oplysninger';
@@ -1315,21 +1296,17 @@ $strPublish = 'Udgiv';
 $strPublished = 'Udgivet';
 $strPublishedToday = 'Udgivet i dag';
 $strPublishedOnX = 'Udgivet den %s';
-
 $strQualifications = 'Kvalifikationer';
 $strQueryByExample = 'Forespørgsel pr eksempel';
 $strQuestion = 'Spørgsmål';
 $strQuestions = 'Spørgsmål';
 $strQuestionText = 'Spørgsmåls tekst';
 $strQuestionRequired = 'Spørgsmål markeret med dette symbol er påkrævede, og skal besvares inden du fortsætter';
-$strQuestionXNeedsAnsweringBeforeContinuing = 'Sprøgsmål %s kræver et svar før du fortsætter.';
+$strQuestionXNeedsAnsweringBeforeContinuing = 'Spørgsmål %s kræver et svar før du fortsætter.';
 $strQueue = 'Kø';
-
 $strRandomTip = 'Tilfældigt tip';
 $strRating = 'Klassificering';
-
 $strrd = '.';
-
 $strRealName = 'Fulde navn';
 $strReassign = 'Redeleger';
 $strReassignIncident = 'Redeleger hændelse';
@@ -1439,7 +1416,6 @@ $strRunningOn = 'Kører på %s kl. %s';
 $strRunManagementReports = 'Kør ledelses rapporter';
 $strRunReport = 'Kør rapport';
 $strRunReports = 'Kør rapporter';
-
 $strSalesperson = 'Sælger';
 $strSalespersonSite = 'Afdelingens salgs person';
 $strSalespersonAssignedToContactsSiteEmail = 'Email adressen på sælgeren der er knyttet til kontakt afdelingen';
@@ -1456,7 +1432,7 @@ $strSavePublish = 'Gem og udgiv';
 $strScheduledTask = 'Navnet på planlægnings opgaven';
 $strScheduler = 'Planlægnings agent';
 $strSchedulerActionFailed = 'Planlægnings agenten fejlede at køre en opgave';
-$strSchedulerNotRunning = 'Planlægnings agenten ser ikke ud til at køre. Du kan evt kigge på <a href="http://sitracker.org/wiki/Scheduler">dokumentationen</a>';
+$strSchedulerNotRunning = 'Planlægnings agenten ser ikke ud til at køre. Du kan eventuelt kigge i';
 $strSchemaVersion = 'Schema version';
 $strScore = 'Score';
 $strScores = 'Score';
@@ -1597,6 +1573,7 @@ $strSoftware = 'Software';
 $strSoftwareVersion = 'Software version';
 $strSolution = 'Løsning';
 $strSolvedProblem = 'Løst problem';
+$strSomeActionsOptionalConditions = 'Nogle handlinger har valgfrie betingelser, hvilke du kan vælge at blive meddelt om.';
 $strSomeOfTheseIdentifiers = 'Nogle af disse identifikatorer vil måske ikke være tilgængelige når du først tilføjer en trigger';
 $strSorryNoPermissionToAreas = 'Desværre, du har ikke rettigheder til de følgende områder';
 $strSorryNoRecordsMatchingX = 'Desværre, kunne ikke finde nogen poster søgt på %s';
@@ -1611,9 +1588,7 @@ $strSourceFailCannotBeFoundX = 'Filen kan ikke findes %s';
 $strSpamEmail = 'Spam Email';
 $strSpamEmails = 'Spam emails';
 $strSpecifyAddress = 'Angiv en adresse for kontakten der er forskellig fra afdelingen';
-
 $strst = '.';
-
 $strStartDate = 'Start dato';
 $strStartNewActivity = 'Start ny aktivitet';
 $strStatsFromDayStatistics = 'Statistikker fra %s';
@@ -1650,16 +1625,13 @@ $strSystem = 'System';
 $strSystemActions = 'System hændelser';
 $strSystemPath = 'System base sti';
 $strSystemUrl = 'System URL';
-
 $strTable = 'Tabel';
 $strTag = 'Tag';
 $strTagCloud = 'Tag Cloud';
 $strTags = 'Tags';
 $strTagsMulti = '%d Tags';
-
 $strtaken = 'taget';
 $strtakennextperiod = 'taget i næste periode';
-
 $strTarget = 'Mål';
 $strTask = 'Opgave';
 $strTaskDue = 'Opgave forfalder';
@@ -1685,11 +1657,10 @@ $strTerminated = 'Opsagt';
 $strTerminatedContractsExpiredXdaysAgo = 'Opsagte kontrakter der udløb for op til %s dage siden';
 $strTestTriggers = 'Test triggers';
 $strText = 'Tekst';
-
 $strth = '.';
-
 $strThankYou = 'Tak';
 $strThankYouCompleteForm = 'Tak for at du brugte din tid til at udfylde denne form';
+$strTheDocumentation = 'dokumentationen';
 $strTheFollowingVariables = 'Følgende variabler kan brugers:';
 $strThereAreXcontractsAssignedToThisPerson = 'Der er % kontrakter tildelt denne kontakt';
 $strThereAreXIncidentsAssignedToThisContact = 'Der er % hændelser tildelt denne kontakt';
@@ -1769,7 +1740,6 @@ $strTue = 'Tirs';
 $strTuesday = 'Tirsdag';
 $strTuesdayAbbr = 'Ti';
 $strType = 'Type';
-
 $strURLTitle = 'URL Titel';
 $strUp = 'Op';
 $strUpgrade = 'Opgradering';
@@ -1839,7 +1809,6 @@ $strUsersNoGroup = 'Brugere der ikke er tilknyttet en gruppe';
 $strUsersBoldSkills = 'Brugere vist med fed skrift er kendte for at have relevante færdigheder';
 $strUseThisInFuture = 'Brug dette fremover';
 $strUTCOffset = 'UTC Offset (Tidszone)';
-
 $strValid = 'Valid';
 $strValue = 'Værdi';
 $strVariable = 'Variabel';
@@ -1879,7 +1848,6 @@ $strViewYourCalendar = 'Vis din kalender';
 $strViewYourTasks = 'Vis dine opgaver';
 $strVisibleToCustomer = 'Synlig for kunde';
 $strVisibility = 'Synlighed';
-
 $strWaiting = 'Venter';
 $strWaitingForCustomer = 'Venter på kunde';
 $strWaitingForSupport = 'Venter på support';
@@ -1902,6 +1870,7 @@ $strWelcome = 'Velkommen';
 $strWeekView = 'Ugentlig visning';
 $strWhatsNew = 'Hvad er nyt?';
 $strWhen = 'Når';
+$strWhichAction = 'Hvilken handling vil handlingen virke på: \'alle\' vil oprette en til alle brugere, \'system\' vil oprette en uden en bruger, brugbart til fx automatiske emails til kontakter';
 $strWhosAwayToday = 'Hvem er væk i dag?';
 $strWordList = 'Ordliste';
 $strWorkaround = 'Midlertidig løsning';
@@ -1912,7 +1881,6 @@ $strWorkingFromHome = 'Arbejder hjemme';
 $strWorkStatus = 'Arbejds status';
 $strWebsite = 'Website';
 $strWithheld = 'Tilbageholdt';
-
 $strXDays = '%s dage';
 $strXIncidentsLoggedViaPortal = '%s hændelser logget via portalen';
 $strXIncidentsLeft = '%s hændelser tilbage';
@@ -1933,7 +1901,6 @@ $strXsTasks = '%s\'s opgaver';
 $strXWorkingDay = '%s arbejdsdag';
 $strXWorkingDays = '%s arbejdsdage';
 $strXYears = '%s år';
-
 $strYear = 'År';
 $strYearly = 'Årlig';
 $strYearView = 'Årlig visning';
@@ -1957,6 +1924,5 @@ $strYourSitesClosedIncidents = 'Din afdelings andre lukkede hændelser';
 $strYourSitesIncidents = 'Din afdelings andre hændelser';
 $strYouHaveAction = 'Du har handling';
 $strYourSupportEntitlement = 'Din support berettigelse';
-
 $strZeroRemaining = 'Ingen tilbage';
 ?>
