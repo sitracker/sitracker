@@ -1,4 +1,6 @@
 <?php
+// Translation to Danish by Carsten Jensen aka Tomse
+// Translation started 14. Oct. 2008
 
 $languagestring = 'Dansk (da-DK)';
 $i18ncharset = 'UTF-8';
