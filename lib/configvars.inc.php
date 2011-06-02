@@ -105,7 +105,11 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'spam_email_subject'
                                 );
 
-$CFGCAT['outboundemail'] = array('support_email');
+$CFGCAT['outboundemail'] = array('outbound_email_disable',
+                                 'support_email',
+                                 'outbound_email_encoding',
+                                 'outbound_email_linefeed'
+                                );
 
 
 $CFGCAT['feedback'] = array('feedback_enabled',
@@ -527,6 +531,20 @@ $CFGVAR['no_feedback_contracts']['type'] = '1darray';
 $CFGVAR['notice_threshold']['title'] = 'Notice Threshold';
 $CFGVAR['notice_threshold']['help'] = 'Flag items as notice when they are this percentage complete.';
 $CFGVAR['notice_threshold']['type'] = 'percent';
+
+$CFGVAR['outbound_email_disable']['title'] = 'Disable Outbound Email';
+$CFGVAR['outbound_email_disable']['help'] = "You can disable outbound email here so SiT won't send emails";
+$CFGVAR['outbound_email_disable']['type'] = 'checkbox';
+
+$CFGVAR['outbound_email_encoding']['title'] = 'Change Outbound Encoding';
+$CFGVAR['outbound_email_encoding']['help'] = "Change the outbound mail encoding if you experience mails looking weird i.e. if you send mails through GroupWise and each line is broken by a '='";
+$CFGVAR['outbound_email_encoding']['type'] = 'select';
+$CFGVAR['outbound_email_encoding']['options'] = 'quoted-printable|base64';
+
+$CFGVAR['outbound_email_linefeed']['title'] = 'Choose linefeed';
+$CFGVAR['outbound_email_linefeed']['help'] = "Change the linefeed if outbound emails doesn't break the lines or looks weird.";
+$CFGVAR['outbound_email_linefeed']['type'] = 'select';
+$CFGVAR['outbound_email_linefeed']['options'] = 'LF|CRLF';
 
 $CFGVAR['plugins']['title'] = "Load Plugins";
 $CFGVAR['plugins']['help'] = "Comma separated list of plugins to load. e.g. 'magic_plugin,lookup_plugin'";

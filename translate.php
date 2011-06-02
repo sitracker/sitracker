@@ -265,7 +265,7 @@ elseif ($_REQUEST['mode'] == "save")
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
 
     $filename = "{$lang}.inc.php";
-    echo "<p>".sprintf($strSendTranslation, "<code>{$filename}</code>", "<code>".APPLICATION_I18NPATH."</code>", "<a href='mailto:sitracker-devel-discuss@lists.sourceforge.net'>sitracker-devel-discuss@lists.sourceforge.net</a>")." </p>";
+
     $i18nfile = '';
     $i18nfile .= "<?php\n";
 
@@ -309,14 +309,18 @@ elseif ($_REQUEST['mode'] == "save")
         }
     }
     $percent = number_format($translatedcount / $origcount * 100,2);
-    echo "<p>{$strTranslation}: <strong>{$translatedcount}</strong>/{$origcount} = {$percent}% {$strComplete}.</p>";
+
     $i18nfile .= "?>\n";
+
+    // CJ 02 Jun 11 - Unfortunately mailto has a restriction for attaching body text, so we cannot do that here
+    echo "<p>".sprintf($strSendTranslation, "<code>{$filename}</code>", "<code>".APPLICATION_I18NPATH."</code>", "<a href='mailto:sit-translators@lists.sitracker.org?subject={$lang} translation&body={$percent} Percent Complete %0A%0A'>sitracker-devel-discuss@lists.sourceforge.net</a>")." </p>";
+    echo "<p>{$strTranslation}: <strong>{$translatedcount}</strong>/{$origcount} = {$percent}% {$strComplete}.</p>";
 
     $myFile = APPLICATION_I18NPATH."{$filename}";
     $fp = @fopen($myFile, 'w');
     if (!$fp)
     {
-        echo "<p class='warn'>".sprintf($strCannotWriteFile, "<code>{$myFile}</code>")."</p>";
+        echo "<p class='warning'>".sprintf($strCannotWriteFile, "<code>{$myFile}</code>")."</p>";
     }
     else
     {
