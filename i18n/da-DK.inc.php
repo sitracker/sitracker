@@ -1,6 +1,4 @@
 <?php
-// Translation to Danish by Carsten Jensen aka Tomse
-// Translation started 14. Oct. 2008
 
 $languagestring = 'Dansk (da-DK)';
 $i18ncharset = 'UTF-8';
@@ -36,10 +34,10 @@ $strAccepting = 'Accepterer';
 $strAccessDetails = 'Tilgå oplysninger';
 $strAction = 'Handling';
 $strActions = 'Handlinger';
-$strActionNeeded = 'Handling mangler';
+$strActionNeeded = 'Mangler handling';
 $strActionPlan = 'Handlingsplan';
 $strActionPlanBy = 'Handlingsplan af %s';
-$strActionPlanSLA = 'Handlingsplan SLA';
+$strActionPlanSLA = 'SLA handlingsplan';
 $strActionPlanHasBeenMade = 'En handlingsplan er oprettet';
 $strActionTaken = 'Der er taget handling';
 $strActive = 'Aktiv';
