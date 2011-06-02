@@ -105,7 +105,10 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'spam_email_subject'
                                 );
 
-$CFGCAT['outboundemail'] = array('support_email');
+$CFGCAT['outboundemail'] = array('support_email',
+                                 'outbound_email_encoding',
+                                 'outbound_email_disable'
+                                );
 
 
 $CFGCAT['feedback'] = array('feedback_enabled',
@@ -527,6 +530,15 @@ $CFGVAR['no_feedback_contracts']['type'] = '1darray';
 $CFGVAR['notice_threshold']['title'] = 'Notice Threshold';
 $CFGVAR['notice_threshold']['help'] = 'Flag items as notice when they are this percentage complete.';
 $CFGVAR['notice_threshold']['type'] = 'percent';
+
+$CFGVAR['outbound_email_encoding']['title'] = 'Change Outbound Encoding';
+$CFGVAR['outbound_email_encoding']['help'] = "Change the Outbound encoding if you experience mails looking weird i.e. if you send mails through GroupWise";
+$CFGVAR['outbound_email_encoding']['type'] = 'select';
+$CFGVAR['outbound_email_encoding']['options'] = 'quoted-printable|base64';
+
+$CFGVAR['outbound_email_disable']['title'] = 'Disable Outbound Email';
+$CFGVAR['outbound_email_disable']['help'] = "You can disable outbound email here so SiT won't send emails";
+$CFGVAR['outbound_email_disable']['type'] = 'checkbox';
 
 $CFGVAR['plugins']['title'] = "Load Plugins";
 $CFGVAR['plugins']['help'] = "Comma separated list of plugins to load. e.g. 'magic_plugin,lookup_plugin'";

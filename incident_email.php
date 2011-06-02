@@ -437,7 +437,8 @@ switch ($step)
 
             $mime = new MIME_mail($fromfield, $tofield, html_entity_decode($subjectfield), '', $extra_headers, $mailerror);
             // INL 5 Aug 09, quoted-printable seems to split lines in unexpected places, base64 seems to work ok
-            $mime -> attach($bodytext, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+            // CJ 2 Jun 11 Config created for switching between quoted-printable and base64 - Groupwise doesn't like QP
+            $mime -> attach($bodytext, '', "text/plain; charset={$GLOBALS['i18ncharset']}", $CONFIG['outbound_email_encoding'], 'inline');
 
             foreach ($_FILES AS $file)
             {
