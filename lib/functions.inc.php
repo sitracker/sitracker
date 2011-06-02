@@ -625,7 +625,14 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 {
     global $CONFIG, $application_version_string;
 
-    $crlf = "\n";
+    if ($CONFIG['outbound_email_newline'] == 'CRLF')
+    {
+        $crlf = "\r\n";
+    }
+    else
+    {
+        $crlf = "\n";
+    }
 
     if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
