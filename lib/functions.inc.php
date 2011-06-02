@@ -658,6 +658,11 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     {
         $rtnvalue = TRUE;
     }
+    elseif ($CONFIG['outbound_email_disable'] == true)
+    {
+        $rtnvalue = TRUE;
+        debug_log("Outoing email disabled, no mail is sent");
+    }
     else
     {
         // $rtnvalue = mail($to, $subject, $body, $extra_headers);
