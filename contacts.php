@@ -62,7 +62,17 @@ if ($submit_value == 'go')
 $pagescripts = array('AutoComplete.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if ($search_string == '') $search_string='a';
+if ($search_string == '')
+{
+    if (!empty($i18nAlphabet))
+    {
+        $search_string = mb_substr($i18nAlphabet, 0 , 1);
+    }
+    else
+    {
+        $search_string = '%';
+    }
+}
 
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
@@ -146,16 +156,25 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         }
 
+        if ($search_string == '%')
+        {
+            $search_term = $strAll;
+        }
+        else
+        {
+            $search_term = $search_string;
+        }
+
         if (mysql_num_rows($result) == 0)
         {
             echo "<p align='center'>";
             if (empty($search_string)) echo $strNoRecords;
-            else printf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>");
+            else printf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>");
             echo "</p>\n";        }
         else
         {
 
-            echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_string}</em>")."</p>";
+            echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_term}</em>")."</p>";
 
             echo "<table align='center'>
             <tr>
