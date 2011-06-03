@@ -181,6 +181,7 @@ if (!empty($_SESSION['lang'])
     include (APPLICATION_I18NPATH . "{$_SESSION['lang']}.inc.php");
 }
 ini_set('default_charset', $i18ncharset);
+mb_internal_encoding($i18ncharset);
 
 
 //**** Begin functions ****//
