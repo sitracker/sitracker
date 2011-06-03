@@ -60,7 +60,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
         $savevar = array();
         foreach ($CFGCAT[$selcat] AS $catvar)
         {
-            $value = cleanvar($_REQUEST[$catvar]);
+            $value = $_REQUEST[$catvar]; // NOTE: we don't clean here we do this after we've manipulated the value but before insert
             // Type conversions
             switch ($CFGVAR[$catvar]['type'])
             {
@@ -130,7 +130,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                     $value = intval($value);
                     break;
             }
-            $savevar[$catvar] = mysql_real_escape_string($value);
+            // $savevar[$catvar] = mysql_real_escape_string($value);
             if (mb_substr($value, 0, 6) == 'array(')
             {
                 eval("\$val = $value;");
