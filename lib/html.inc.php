@@ -344,7 +344,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
 
     $file = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/{$iconset}";
     $file .= "/{$size}x{$size}/{$filename}.png";
-    
+
     $urlpath = "{$CONFIG['application_webpath']}images/icons/{$iconset}";
     $urlpath .= "/{$size}x{$size}/{$filename}.png";
 
@@ -2269,7 +2269,7 @@ function html_status_row($statusentry)
     }
 
     $html .= "</td><td>{$statusentry->checkname}</td><td>{$statusentry->minimum}</td><td>{$statusentry->found}</td>";
-    
+
     $html .= "</tr>";
     return $html;
 }
@@ -2295,7 +2295,7 @@ function html_check_extension($extension, $text, $min_status)
         $toreturn = $min_status;
     }
     echo html_status_row($toreturn, $text, $GLOBALS['strInstalled'], $str);
-    
+
     return $toreturn;
 }
 
@@ -2309,14 +2309,14 @@ function html_check_extension($extension, $text, $min_status)
 function html_install_status($status)
 {
     $html = "<table align='center'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
-    
+
     foreach ($status->statusentries AS $entry)
     {
         $html .= html_status_row($entry);
     }
-    
+
     $html .= "</table>";
-    
+
     return $html;
 }
 
