@@ -16,7 +16,7 @@ require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
-require (APPLICATION_LIBPATH . 'auth.inc.php');
+// require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $id = cleanvar($_REQUEST['id']);
@@ -88,7 +88,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
         echo "<td><a href='{$editurl}'>{$template['name']}</a>";
         if (!empty($template['desc']))
         {
-            if (mb_substr_compare($template['desc'], 'str', 0, 3) === 0)
+            if (substr_compare($template['desc'], 'str', 0, 3) === 0)
             {
                 echo "<br />{$GLOBALS[$template['desc']]}";
                 $system = TRUE;
