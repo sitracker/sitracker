@@ -89,11 +89,10 @@ else
     echo "'>{$strShowAll}</a>";
     $inactivestring="displayinactive=false";
 }
-echo "</td></tr><tr><td valign='middle'>";
+echo "</td></tr><tr><td class='alphamenu'>";
 
-echo "<a href='contact_new.php'>{$strNew}</a> | ";
-echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
-echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>";
+echo "<a href='contact_new.php'>{$strNew}</a>";
+echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=", $inactivestring);
 echo "</td></tr></table>";
 
 if (empty($search_string))
