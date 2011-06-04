@@ -164,6 +164,8 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         echo "<li><a href='entitlement.php'>{$strEntitlement}</a></li>";
     }
+
+    // Only display the KB when it's populated
     $sql = "SELECT COUNT(docid) FROM `{$dbKBArticles}`";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -172,6 +174,25 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         echo "<li><a href='kb.php'>{$strKnowledgeBase}</a></li>";
     }
+
+    $sql = "SELECT formid, incidentid FROM `{$dbFeedbackRespondents}` ";
+    $sql .= "WHERE contactid = '{$_SESSION['contactid']}' ";
+    $sql .= "AND completed = 'no'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $countfeedback = mysql_num_rows($result);
+    if ($CONFIG['feedback_enabled'] != FALSE AND $CONFIG['portal_feedback_enabled'] != FALSE AND $countfeedback > 0)
+    {
+        echo "<li><a href='feedback.php'>{$strFeedbackForms} ({$countfeedback})</a> ";
+        echo "<ul>";
+        while ($row = mysql_fetch_object($result))
+        {
+            $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid);
+            echo "<li><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strIncident} : {$row->incidentid}</li>";
+        }
+        echo "</ul></li>";
+    }
+
 
     if ($_SESSION['usertype'] == 'admin')
     {
