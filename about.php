@@ -104,6 +104,9 @@ Copyright &copy;  2006-2007 Everaldo Coelho. Licensed under the LGPLv2</p>
 <p align='center'>Icons from the <a href='http://www.oxygen-icons.org/'>Oxygen Project</a><br />
 Copyright &copy; 2008 The Oxygen Project. Licensed under the LGPLv2</p>
 
+<p align='center'>MIME parser class 1.80 by <a href='http://www.phpclasses.org/package/3169-PHP-Decode-MIME-e-mail-messages.html'>Manuel Lemos</a><br />
+Copyright &copy; 2006-2008 Manuel Lemos. Licensed under the BSD License</p>
+
 <?php
 echo "</td></tr>";
 echo "<tr><td class='shade1' colspan='2'>{$strLicense}:</td></tr>";
