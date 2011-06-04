@@ -22,7 +22,15 @@ $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
 
 
-$refresh = $_SESSION['userconfig']['incident_refresh'];
+if (empty($displayid))
+{
+    $refresh = $_SESSION['userconfig']['incident_refresh'];
+}
+else
+{
+    $refresh = 0;
+}
+
 $title = $strInbox;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -77,7 +85,7 @@ function contact_info($contactid, $email, $name, $subject)
     {
         $info .= "<span>";
         $info .= gravatar($email, 50, FALSE);
-        $info .= "<div style='float:right'>";
+        $info .= "<div class='popupcontactinfo' style='float:right'>";
         if (!empty($contactid))
         {
             $info .= contact_realname($contactid) . '<br />';
@@ -101,12 +109,58 @@ function contact_info($contactid, $email, $name, $subject)
     return $info;
 }
 
+// Perform action on selected items
+if (!empty($_REQUEST['action']))
+{
+    // FIXME BUGBUG remove for release. temporary message
+    echo "<p>Action: {$_REQUEST['action']}</p>";
+    if (!is_array($_REQUEST['selected']))
+    {
+        $_REQUEST['selected'] = array($_REQUEST['selected']);
+    }
+    foreach ($_REQUEST['selected'] AS $item => $selected)
+    {
+        $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
+        $tresult = mysql_query($tsql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        if ($tresult AND mysql_num_rows($tresult) > 0)
+        {
+            $temp = mysql_fetch_object($tresult);
+            if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
 
+            switch ($_REQUEST['action'])
+            {
+                case 'delete':
+                    // FIXME TODO don't run action on items locked by other people
+                    $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
+                    mysql_query($dsql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
+                    mysql_query($dsql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    break;
+                case 'lock':
+                    $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
+                    $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
+                    $sql .= "WHERE id='{$selected}' AND (locked = 0 OR locked IS NULL)";
+                    $result = mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    break;
+                case 'unlock':
+                    $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
+                    $sql .= "WHERE id='{$selected}' AND locked = '{$sit[2]}'";
+                    $result = mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                default:
+                    trigger_error('Unrecognised form action', E_USER_ERROR);
+            }
+        }
+    }
+}
 
 
 if (empty($displayid))
 {
-
     if ($CONFIG['enable_inbound_mail'] == 'disabled')
     {
         echo "<p class='warning'>{$strInboundEmailIsDisabled}</p>";
@@ -116,52 +170,6 @@ if (empty($displayid))
         echo "<h2>".icon('email', 32)." {$CONFIG['email_address']}: {$strInbox}</h2>";
         echo "<p align='center'>{$strIncomingEmailText}.  <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></p>";
     }
-
-    // Perform action on selected items
-    if (!empty($_REQUEST['action']))
-    {
-        // FIXME BUGBUG remove for release. temporary message
-        echo "<p>Action: {$_REQUEST['action']}</p>";
-        if (!is_array($_REQUEST['selected']))
-        {
-            $_REQUEST['selected'] = array($_REQUEST['selected']);
-        }
-        foreach ($_REQUEST['selected'] AS $item => $selected)
-        {
-            $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
-            $tresult = mysql_query($tsql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if ($tresult AND mysql_num_rows($tresult) > 0)
-            {
-                $temp = mysql_fetch_object($tresult);
-                if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
-
-                // TODO don't run actions on items locked by other people
-
-                switch ($_REQUEST['action'])
-                {
-                    case 'delete':
-                        $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
-                        mysql_query($dsql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                        $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
-                        mysql_query($dsql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                        break;
-                    case 'lock':
-                        $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
-                        $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
-                        $sql .= "WHERE id='{$lock}' AND (locked = 0 OR locked IS NULL)";
-                        $result = mysql_query($sql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                        break;
-                    default:
-                        trigger_error('Unrecognised form action', E_USER_ERROR);
-                }
-            }
-        }
-    }
-
 
     // Show list of items in inbox
     $sql = "SELECT * FROM `{$dbTempIncoming}` ";
@@ -234,6 +242,10 @@ if (empty($displayid))
             }
             else
             {
+                if ($incoming->locked > 0)
+                {
+                    echo icon('locked', 16) . ' ';
+                }
                 // TODO option for popup or not (Mantis 619)
                 // $url = "javascript:incident_details_window('{$incoming->id}','incomingview');";
                 // $url = "incident_details.php?id={$incoming->id}&amp;win=incomingview";
@@ -310,7 +322,16 @@ else
         if (!empty($update->timestamp)) echo date($CONFIG['dateformat_datetime'], $update->timestamp);
         echo "</div>";
         echo icon('email',16);
+        if (!empty($_REQUEST['reply']))
+        {
+            echo " <strong>{$strReplyTo}:</strong> ";
+        }
         echo " {$incoming->subject}";
+        if (!empty($_REQUEST['reply']))
+        {
+            echo " &mdash; ";
+            echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}'>{$strView}</a>";
+        }
 
         // Inbox item locking
         $lockedbyyou = false;
@@ -347,8 +368,14 @@ else
             echo " &mdash; ";
             echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>";
             echo " | <a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; // FIXME
-            echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}'>{$strLock}</a>"; // FIXME
-            echo " | <a href='{$_SERVER['PHP_SELF']}?action=lock&amp;selected={$displayid}'>{$strUnlock}</a>"; // FIXME
+            if (!$incoming->locked)
+            {
+                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=lock&amp;selected={$displayid}'>{$strLock}</a>"; // FIXME
+            }
+            elseif ($lockedbyyou)
+            {
+                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=unlock&amp;selected={$displayid}'>{$strUnlock}</a>"; // FIXME
+            }
             echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}' title=\"{$strCreateAnIncident}\">{$strCreate}</a>"; // FIXME
             echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}' title=\"{$strCreateAnIncident}\">{$strAssign}</a>"; // FIXME needs help
 
