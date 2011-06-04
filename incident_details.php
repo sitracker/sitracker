@@ -640,6 +640,13 @@ else
 
         echo "<a name='update{$count}'></a>";
 
+        if (($update->type == 'opening' AND ($update->sla == 'opened')) OR ($update->type == 'solution' AND ($update->sla == 'solution')))
+        {
+            $bodypriorityfrom = array('New Priority', 'Priority', 'Low', 'Medium', 'High', 'Critical');
+            $bodypriorityto = array($strNewPriority, $strPriority, $strLow, $strMedium, $strHigh, $strCritical);
+            $updatebody = str_replace($bodypriorityfrom, $bodypriorityto, $updatebody);
+        }
+
         // Print a header row for the update
         if ($updatebody == '' AND $update->customervisibility == 'show')
         {
