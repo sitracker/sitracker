@@ -329,12 +329,22 @@ class Trigger extends SitEntity {
     {
         global $CONFIG, $dbg, $dbTriggers;
 
-        $user_prefs = get_user_config_vars($this->user_id);
-        $user_status =  user_status($this->user_id);
-        $out_of_office_pref = $user_prefs['notifications_away'];
-        if ($user_status != USERSTATUS_ACCOUNT_DISABLED)
+        if ($this->user-id > 0)
         {
-            debug_log("Trigger action {$action} with template {$template}", true);
+            $user_prefs = get_user_config_vars($this->user_id);
+            $user_status =  user_status($this->user_id);
+            $out_of_office_pref = $user_prefs['notifications_away'];
+        }
+        else
+        {
+            // Force system triggers to fire
+            $out_of_office_pref = array();
+        }
+
+        if ($this->user_id == 0 OR
+           ($this->user_id > 0 AND $user_status != USERSTATUS_ACCOUNT_DISABLED))
+        {
+            debug_log("Trigger action {$action} with template {$template} for user ID {$this->user_id}", true);
             switch ($action)
             {
                 case "ACTION_EMAIL":
@@ -465,6 +475,7 @@ class Trigger extends SitEntity {
         $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
+            debug_log("$toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail", TRUE); // FIXME remove before release
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);
             if ($mailok == FALSE)
             {
