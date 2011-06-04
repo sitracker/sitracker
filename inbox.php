@@ -290,8 +290,9 @@ if (empty($displayid))
         echo "<select name='action'>";
         echo "<option value='' selected='selected'></option>";
         echo "<option value='lock'>{$strLock}</option>";
+        echo "<option value='unlock'>{$strUnlock}</option>";
         echo "<option value='delete'>{$strDelete}</option>";
-        echo "<option value='assign'>{$strAssign}</option>";
+//         echo "<option value='assign'>{$strAssign}</option>";
         echo "</select>";
         echo "<input type='submit' value=\"{$strGo}\" />";
         echo "</td>";
