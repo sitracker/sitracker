@@ -616,6 +616,7 @@ $strFeedbackBeforeX = 'Feedback før d. %s';
 $strFeedbackBetweenXandY = 'Feedback mellem d. %s og %s';
 $strFeedbackForm = 'Feedback form';
 $strFeedbackFormAlreadyCompleted = 'Feedback formular er allerede færdiggjort';
+$strFeedbackFormForIncidentX = 'Feedback formular for hændelse';
 $strFeedbackForms = 'Feedback forms';
 $strFeedbackReport = 'Feedback rapport';
 $strFeedbackFormsRequested = 'Der er %s feedback forms der allerede er returneret';
@@ -1071,6 +1072,7 @@ $strNoActionSpecified = 'Ingen hændelse specificeret';
 $strNoAvailablePlugins = 'Ingen tilføjelses programmer tilgængelige';
 $strNoBillingMatrixDefined = 'Ingen fakturerings matriks er fefineret';
 $strNoEngineersForReassignment = 'Ingen teknikere eksisterer for omdirigering af hændelse';
+$strNoFeedbackFormsAvailable = 'Der er ingen feedback formularer tilgængelige';
 $strNoFiles = 'Ingen filer';
 
 $strnoFileUploaded = 'Ingen fil er uploaded';
