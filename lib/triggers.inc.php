@@ -444,7 +444,7 @@ array('show' => FALSE,
 $ttvararray['{feedbackurl}'] =
 array('description' => $strFeedbackURL,
       'requires' => 'incidentid',
-      'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_owner($param_array[\'incidentid\'])).\'&&\'.urlencode($param_array[\'incidentid\']))))));'
+      'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_contact($param_array[\'incidentid\'])).\'&&\'.urlencode($param_array[\'incidentid\']))))));'
       );
 
 $ttvararray['{formattedtime}'][] =
