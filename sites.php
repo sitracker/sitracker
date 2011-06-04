@@ -29,6 +29,18 @@ if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 
     $displayinactive = "false";
 }
 
+if ($search_string == '')
+{
+    if (!empty($i18nAlphabet))
+    {
+        $search_string = mb_substr($i18nAlphabet, 0 , 1);
+    }
+    else
+    {
+        $search_string = '*';
+    }
+}
+
 if ($submit_value == "go")
 {
     // build SQL

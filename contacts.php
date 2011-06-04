@@ -26,6 +26,18 @@ $submit_value = cleanvar($_REQUEST['submit']);
 $displayinactive = cleanvar($_REQUEST['displayinactive']);
 if (empty($displayinactive)) $displayinactive = "false";
 
+if ($search_string == '')
+{
+    if (!empty($i18nAlphabet))
+    {
+        $search_string = mb_substr($i18nAlphabet, 0 , 1);
+    }
+    else
+    {
+        $search_string = '*';
+    }
+}
+
 if ($submit_value == 'go')
 {
     // build SQL
@@ -61,18 +73,6 @@ if ($submit_value == 'go')
 }
 $pagescripts = array('AutoComplete.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
-if ($search_string == '')
-{
-    if (!empty($i18nAlphabet))
-    {
-        $search_string = mb_substr($i18nAlphabet, 0 , 1);
-    }
-    else
-    {
-        $search_string = '%';
-    }
-}
 
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
@@ -156,7 +156,7 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         }
 
-        if ($search_string == '%')
+        if ($search_string == '*')
         {
             $search_term = $strAll;
         }
