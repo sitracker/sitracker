@@ -70,7 +70,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<input maxlength='100' name='department' size='40' value='{$contactobj->department}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strEmail}: <sup class='red'>*</sup></th><td>";
-        echo "<input maxlength='100' name='email' size='40' value='{$contactobj->email}' />";
+        echo "<input maxlength='100' name='email' size='40' value='".htmlspecialchars($contactobj->email, ENT_QUOTES)."' />";
         echo "<label>";
         echo html_checkbox('dataprotection_email', $contactobj->dataprotection_email);
         echo "{$strEmail} {$strDataProtection}</label>";
