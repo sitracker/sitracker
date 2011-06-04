@@ -7,12 +7,6 @@
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
-//
-// Authors: Tom Gerrard, Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-//                       Paul Heaney <paulheaney[at]users.sourceforge.net>
-
-// This Page Is Valid XHTML 1.0 Transitional! 31Oct05
-
 
 $permission = 42;
 require ('core.php');
@@ -28,7 +22,7 @@ $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
 
 
-$refresh = 60;
+$refresh = $_SESSION['userconfig']['incident_refresh'];
 $title = $strInbox;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
