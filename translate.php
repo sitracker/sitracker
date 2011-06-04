@@ -281,12 +281,10 @@ elseif ($_REQUEST['mode'] == "save")
     $i18nfile .= "\$languagestring = '{$i18n_codes[$lang]} ($lang)';\n";
     $i18nfile .= "\$i18ncharset = 'UTF-8';\n\n";
 
-    if (!empty($i18nalphabet))
-    {
-        $i18nfile .= "// List of letters of the alphabet for this language\n";
-        $i18nfile .= "// in standard alphabetical order (upper case, where applicable)\n";
-        $i18nfile .= "\$i18nAlphabet = '{$i18nalphabet}';\n\n";
-    }
+    $i18nfile .= "// List of letters of the alphabet for this language\n";
+    $i18nfile .= "// in standard alphabetical order (upper case, where applicable). Leave blank to disable alphabetical indexing.\n";
+    $i18nfile .= "\$i18nAlphabet = '{$i18nalphabet}';\n\n";
+
 
     $i18nfile .= "// list of strings (Alphabetical by key)\n";
 

@@ -344,7 +344,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
 
     $file = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/{$iconset}";
     $file .= "/{$size}x{$size}/{$filename}.png";
-    
+
     $urlpath = "{$CONFIG['application_webpath']}images/icons/{$iconset}";
     $urlpath .= "/{$size}x{$size}/{$filename}.png";
 
@@ -1323,23 +1323,34 @@ function emoticons($text)
  * HTML for an alphabetical index of links
  * @author Ivan Lucas
  * @param string $baseurl start of a URL, the letter will be appended to this
+ * @param bool $displayinactive
  * @return HTML
  */
-function alpha_index($baseurl = '#')
+function alpha_index($baseurl = '#', $displayinactive = FALSE)
 {
-    global $i18nAlphabet;
+    global $i18nAlphabet, $strAll;
+
+    if ($displayinactive === TRUE OR $displayinactive === 'true')
+    {
+        $inactivestring="displayinactive=true";
+    }
+    else
+    {
+        $inactivestring="displayinactive=false";
+    }
 
     $html = '';
     if (!empty($i18nAlphabet))
     {
+        $html .= ' | ';
         $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
             $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
             $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
-
         }
+        $html .= "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
     }
     return $html;
 }
@@ -2269,7 +2280,7 @@ function html_status_row($statusentry)
     }
 
     $html .= "</td><td>{$statusentry->checkname}</td><td>{$statusentry->minimum}</td><td>{$statusentry->found}</td>";
-    
+
     $html .= "</tr>";
     return $html;
 }
@@ -2295,7 +2306,7 @@ function html_check_extension($extension, $text, $min_status)
         $toreturn = $min_status;
     }
     echo html_status_row($toreturn, $text, $GLOBALS['strInstalled'], $str);
-    
+
     return $toreturn;
 }
 
@@ -2309,14 +2320,14 @@ function html_check_extension($extension, $text, $min_status)
 function html_install_status($status)
 {
     $html = "<table align='center'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
-    
+
     foreach ($status->statusentries AS $entry)
     {
         $html .= html_status_row($entry);
     }
-    
+
     $html .= "</table>";
-    
+
     return $html;
 }
 
