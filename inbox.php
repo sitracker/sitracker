@@ -28,29 +28,67 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 if (empty($sort)) $sort='date';
 
-function contact_info($contactid, $email, $name)
+function contact_info($contactid, $email, $name, $subject)
 {
-    global $strUnknown;
-    //$info .= "<span style='float:right;'>".gravatar($email, 16) . '</span>';
+    global $strUnknown, $strIncidentsMulti, $strOpen;
+
+    $linktext = $strUnknown;
+    $contactname = '';
+
     if (!empty($contactid))
     {
         $info .= "<a href='contact_details.php?id={$contactid}'>";
         $info .= icon('contact', 16);
         $info .= "</a>";
+        $contactname = contact_realname($contactid);
     }
     else
     {
         $info .= icon('email', 16);
     }
     $info .= ' ';
-    if (!empty($email)) $info .= "<a href=\"mailto:{$email}\" class='info'>";
-    if (!empty($name)) $info .= "{$name}";
-    elseif (!empty($email)) $info .= "{$email}";
-    else $info .= "{$strUnknown}";
+
+    if (!empty($contactname) AND $contactname != $strUnknown)
+    {
+        $linktext = $contactname;
+    }
+    elseif (!empty($name))
+    {
+        $linktext = "{$name}";
+    }
+    elseif (!empty($email))
+    {
+        $linktext = "{$email}";
+    }
+    else $linktext .= "{$strUnknown}";
+
     if (!empty($email))
     {
-        $info .= "<span>".gravatar($email, 50, FALSE);
+        $mailto = "mailto:{$email}";
+        if (!empty($subject))
+        {
+            $mailto .= "?subject=".urlencode($subject);
+        }
+        $info .= "<a href=\"{$mailto}\" class='info'>";
+    }
+    $info .= $linktext;
+
+    if (!empty($email))
+    {
+        $info .= "<span>";
+        $info .= gravatar($email, 50, FALSE);
+        $info .= "<div style='float:right'>";
+        if (!empty($contactid))
+        {
+            $info .= contact_realname($contactid) . '<br />';
+            $openincidents = contact_count_open_incidents($contactid);
+            if ($openincidents > 0)
+            {
+                $info .= "<strong>{$strOpen}</strong>: " . sprintf($strIncidentsMulti, $openincidents) . '<br />';
+            }
+        }
         $info .= "{$email}";
+        $info .= "</div>";
         $info .= "</span>";
         $info .= "</a>";
     }
@@ -171,7 +209,7 @@ if (empty($displayid))
             echo "<tr class='{$shade}' onclick='trow(event);'>";
             echo "<td>".html_checkbox('selected[]', FALSE, $incoming->id);
             echo "</td>";
-            echo "<td>".contact_info($incoming->contactid, $incoming->from, $incoming->emailfrom)."</td>";
+            echo "<td>".contact_info($incoming->contactid, $incoming->from, $incoming->emailfrom, $incoming->subject)."</td>";
             echo "</td>";
             // Subject
             echo "<td>";
