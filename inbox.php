@@ -122,28 +122,41 @@ if (empty($displayid))
     {
         // FIXME BUGBUG remove for release. temporary message
         echo "<p>Action: {$_REQUEST['action']}</p>";
-        if (is_array($_REQUEST['selected']))
+        if (!is_array($_REQUEST['selected']))
         {
-            foreach ($_REQUEST['selected'] AS $item => $selected)
+            $_REQUEST['selected'] = array($_REQUEST['selected']);
+        }
+        foreach ($_REQUEST['selected'] AS $item => $selected)
+        {
+            $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
+            $tresult = mysql_query($tsql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            if ($tresult AND mysql_num_rows($tresult) > 0)
             {
-                $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
-                $tresult = mysql_query($tsql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                if ($tresult AND mysql_num_rows($tresult) > 0)
+                $temp = mysql_fetch_object($tresult);
+                if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
+
+                // TODO don't run actions on items locked by other people
+
+                switch ($_REQUEST['action'])
                 {
-                    $temp = mysql_fetch_object($tresult);
-                    if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
-                    switch ($_REQUEST['action'])
-                    {
-                        case 'deleteselected':
-                            $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
-                            mysql_query($dsql);
-                            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                            $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
-                            mysql_query($dsql);
-                            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                            break;
-                    }
+                    case 'delete':
+                        $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        break;
+                    case 'lock':
+                        $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
+                        $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
+                        $sql .= "WHERE id='{$lock}' AND (locked = 0 OR locked IS NULL)";
+                        $result = mysql_query($sql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        break;
+                    default:
+                        trigger_error('Unrecognised form action', E_USER_ERROR);
                 }
             }
         }
@@ -215,7 +228,9 @@ if (empty($displayid))
             echo "<td>";
             if (($incoming->locked != $sit[2]) AND ($incoming->locked > 0))
             {
-                echo sprintf($strLockedByX, user_realname($update->locked,TRUE));
+                echo icon('locked', 16) . ' ';
+                echo sprintf($strLockedByX, user_realname($incoming->locked,TRUE));
+                echo ' ('.htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']) . ')';
             }
             else
             {
@@ -260,9 +275,9 @@ if (empty($displayid))
         echo "<td colspan='*'>";
         echo "<select name='action'>";
         echo "<option value='' selected='selected'></option>";
-        echo "<option value='lockselected'>{$strLock}</option>";
-        echo "<option value='deleteselected'>{$strDelete}</option>";
-        echo "<option value='assignselected'>{$strAssign}</option>";
+        echo "<option value='lock'>{$strLock}</option>";
+        echo "<option value='delete'>{$strDelete}</option>";
+        echo "<option value='assign'>{$strAssign}</option>";
         echo "</select>";
         echo "<input type='submit' value=\"{$strGo}\" />";
         echo "</td>";
@@ -296,7 +311,61 @@ else
         echo "</div>";
         echo icon('email',16);
         echo " {$incoming->subject}";
-        if (empty($_REQUEST['reply'])) echo " &mdash; <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>";
+
+        // Inbox item locking
+        $lockedbyyou = false;
+
+        if (!$incoming->locked)
+        {
+            //it's not locked, lock for this user
+            $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
+            $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' WHERE id='{$displayid}' AND (locked = 0 OR locked IS NULL)";
+            $result = mysql_query($sql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $lockedbyname = $strYou;
+            $lockedbyyou = true;
+        }
+        elseif ($incoming->locked != $sit[2])
+        {
+            $lockedby = $incoming->locked;
+            $lockedbysql = "SELECT realname FROM `{$dbUsers}` WHERE id={$lockedby}";
+            $lockedbyresult = mysql_query($lockedbysql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            while ($row = mysql_fetch_object($lockedbyresult))
+            {
+                $lockedbyname = $row->realname;
+            }
+        }
+        else
+        {
+            $lockedbyname = $strYou;
+            $lockedbyyou = true;
+        }
+
+        if (empty($_REQUEST['reply']))
+        {
+            echo " &mdash; ";
+            echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>";
+            echo " | <a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; // FIXME
+            echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}'>{$strLock}</a>"; // FIXME
+            echo " | <a href='{$_SERVER['PHP_SELF']}?action=lock&amp;selected={$displayid}'>{$strUnlock}</a>"; // FIXME
+            echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}' title=\"{$strCreateAnIncident}\">{$strCreate}</a>"; // FIXME
+            echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}' title=\"{$strCreateAnIncident}\">{$strAssign}</a>"; // FIXME needs help
+
+            if ($lockedbyyou)
+            {
+                echo "<div class='detaildate'>";
+                echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$displayid}&win=incomingview&action=updatereason'>";
+                echo "{$strMessage}: <input name='newreason' type='text' value=\"{$incoming->reason}\" size='25' maxlength='100' />";
+                echo "<input type='submit' value='{$strSave}' />";
+                echo "</form>";
+                echo "</div>";
+            }
+            else
+            {
+                echo "<div class='detaildate'>{$incoming->reason}</div>";
+            }
+        }
         echo "</div>";
         echo "<div class='detailentry'>\n";
         if (!empty($_REQUEST['reply']))
