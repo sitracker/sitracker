@@ -74,6 +74,7 @@ $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv
 
 $CFGCAT['portal'] = array('portal',
                           'portal_kb_enabled',
+                          'portal_feedback_enabled',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
@@ -553,6 +554,10 @@ $CFGVAR['plugins']['type'] = '1darray';
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
 $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
+
+$CFGVAR['portal_feedback_enabled']['title'] = "Enable Feedback in the portal";
+$CFGVAR['portal_feedback_enabled']['help'] = "This enables/disables feedback from the portal, if main feedback is disabled this has no effect";
+$CFGVAR['portal_feedback_enabled']['type'] = 'checkbox';
 
 $CFGVAR['portal_interface_style']['title'] = "Portal interface style";
 $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
