@@ -664,6 +664,8 @@ $strFeedbackBeforeX = 'Feedback before %s';
 $strFeedbackBetweenXandY = 'Feedback between %1$s and %2$s';
 $strFeedbackForm = 'Feedback Form';
 $strFeedbackFormAlreadyCompleted = 'Feedback form already completed';
+# Feedback form for incident X
+$strFeedbackFormForIncidentX = 'Feedback form for incident';
 $strFeedbackForms = 'Feedback Forms';
 $strFeedbackReport = 'Feedback Report';
 $strFeedbackFormsRequested = 'There are %s feedback forms that have been returned already';
@@ -1158,6 +1160,7 @@ $strNoActionSpecified = 'No action specified';
 $strNoAvailablePlugins = 'No Available Plugins';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
 $strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
+$strNoFeedbackFormsAvailable = 'No Feedback Forms Available';
 $strNoFiles = 'No Files';
 $strnoFileUploaded = 'No File Uploaded';
 $strNoneAvailable = 'None Available';
