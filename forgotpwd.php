@@ -106,6 +106,7 @@ switch ($_REQUEST['action'])
                 {
                     echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
+                echo "</div>";
             }
             else
             {
