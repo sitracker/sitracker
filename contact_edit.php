@@ -219,7 +219,7 @@ else if ($action == "update")
         $sql .= "country='{$country}', dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
         $sql .= "notes='{$notes}', dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
         $sql .= "notify_contactid='{$notify_contactid}', ";
-        $sql .= "active = '{$activeStr}}', ";
+        $sql .= "active = '{$activeStr}', ";
         $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
