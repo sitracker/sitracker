@@ -117,8 +117,8 @@ if (!empty($_SESSION))
     if (!is_array($hmenu[20])) $hmenu[20] = array();
     $hmenu[20] = $hmenu[20] +
                     array (10=> array ( 'perm'=> 0, 'name'=> $strSites, 'url'=>"{$CONFIG['application_webpath']}sites.php", 'submenu'=>"2010"),
-                           20=> array ( 'perm'=> 0, 'name'=> $strContacts, 'url'=>"{$CONFIG['application_webpath']}contacts.php?search_string=A", 'submenu'=>"2020"),
-                           35=> array ( 'perm'=> 0, 'name'=> $strContracts, 'url'=>"{$CONFIG['application_webpath']}contracts.php?search_string=A", 'submenu'=>"2030"),
+                           20=> array ( 'perm'=> 0, 'name'=> $strContacts, 'url'=>"{$CONFIG['application_webpath']}contacts.php", 'submenu'=>"2020"),
+                           35=> array ( 'perm'=> 0, 'name'=> $strContracts, 'url'=>"{$CONFIG['application_webpath']}contracts.php", 'submenu'=>"2030"),
                            30=> array ( 'perm'=> 0, 'name'=> $strInventory, 'url'=>"{$CONFIG['application_webpath']}inventory.php", 'enablevar' => 'inventory_enabled'),
                            40=> array ( 'perm'=> 0, 'name'=> $strBrowseFeedback, 'url'=>"{$CONFIG['application_webpath']}feedback_browse.php", 'enablevar' => 'feedback_enabled')
     );
@@ -131,13 +131,13 @@ if (!empty($_SESSION))
     // Customers: Contacts submenu
     if (!is_array($hmenu[2020])) $hmenu[2020] = array();
     $hmenu[2020] = $hmenu[2020] +
-                    array (10=> array ( 'perm'=> 11, 'name'=> $strBrowse, 'url'=>"{$CONFIG['application_webpath']}contacts.php?search_string=A"),
+                    array (10=> array ( 'perm'=> 11, 'name'=> $strBrowse, 'url'=>"{$CONFIG['application_webpath']}contacts.php"),
                            20=> array ( 'perm'=> 1, 'name'=> $strNewContact, 'url'=>"{$CONFIG['application_webpath']}contact_new.php?action=showform")
     );
     // Customers: Maintenance submenu
     if (!is_array($hmenu[2030])) $hmenu[2030] = array();
     $hmenu[2030] = $hmenu[2030] +
-                    array (10=> array ( 'perm'=> 19, 'name'=> $strBrowse, 'url'=>"{$CONFIG['application_webpath']}contracts.php?search_string=A"),
+                    array (10=> array ( 'perm'=> 19, 'name'=> $strBrowse, 'url'=>"{$CONFIG['application_webpath']}contracts.php"),
                            20=> array ( 'perm'=> 39, 'name'=> $strNewContract, 'url'=>"{$CONFIG['application_webpath']}contract_new.php?action=showform"),
                            30=> array ( 'perm'=> 21, 'name'=> $strEditContract, 'url'=>"{$CONFIG['application_webpath']}contract_edit.php?action=showform"),
                            40=> array ( 'perm'=> 2,  'name'=> $strNewReseller, 'url'=>"{$CONFIG['application_webpath']}reseller_new.php"),
@@ -159,7 +159,7 @@ if (!empty($_SESSION))
                            60=> array ( 'perm'=> 25, 'name'=> $strAddProductInformation, 'url'=>"{$CONFIG['application_webpath']}product_info_new.php"),
                            70=> array ('perm'=> 56,  'name'=> $strEditVendor, 'url'=>"{$CONFIG['application_webpath']}vendor_edit.php")
     );
-    
+
     // //need to call directly as we don't have functions yet
     $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
     $result = mysql_query($sql);
@@ -169,9 +169,9 @@ if (!empty($_SESSION))
         $inbox_count = " <strong>(".$inbox_count.")</strong>";
     }
     else $inbox_count = '';
-    
-    
-    
+
+
+
     // Support menu
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] = $hmenu[30] +
@@ -181,21 +181,21 @@ if (!empty($_SESSION))
                        40=> array ( 'perm'=> 42, 'name'=> $strInbox.$inbox_count, 'url'=>"{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
                        50=> array ( 'perm'=> 42, 'name'=> $strHoldingQueue, 'url'=>"{$CONFIG['application_webpath']}holding_queue.php")
     );
-    
+
     // Tasks menu
     if (!is_array($hmenu[40])) $hmenu[40] = array();
     $hmenu[40] = $hmenu[40] +
                 array (10=> array ( 'perm'=> 70, 'name'=> $strNewTask, 'url'=>"{$CONFIG['application_webpath']}task_new.php"),
                        20=> array ( 'perm'=> 69, 'name'=> $strViewTasks, 'url'=>"{$CONFIG['application_webpath']}tasks.php")
     );
-    
+
     // Knowledge Base menu
     if (!is_array($hmenu[50])) $hmenu[50] = array();
     $hmenu[50] = $hmenu[50] +
                 array (10=> array ( 'perm'=> 54, 'name'=> $strNewKBArticle, 'url'=>"{$CONFIG['application_webpath']}kb_article.php"),
                        20=> array ( 'perm'=> 54, 'name'=> $strBrowse, 'url'=>"{$CONFIG['application_webpath']}kb.php")
     );
-    
+
     // Reports menu
     if (!is_array($hmenu[60])) $hmenu[60] = array();
     $hmenu[60] = $hmenu[60] +
@@ -237,9 +237,9 @@ if (!empty($_SESSION))
                        40=> array ( 'perm'=> 0, 'name'=> "{$strReleaseNotes}", 'url'=>"{$CONFIG['application_webpath']}releasenotes.php"),
                        50=> array ( 'perm'=> 41, 'name'=> $strHelpAbout, 'url'=>"{$CONFIG['application_webpath']}about.php")
     );
-    
+
     if ($_SESSION['auth'] == TRUE AND function_exists('plugin_do')) plugin_do('define_menu');
-    
+
     // Sort the top level menu, so that plugin menus appear in the right place
     ksort($hmenu[0], SORT_NUMERIC);
 }

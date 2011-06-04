@@ -4,6 +4,8 @@
 $languagestring = ' (ja-JP)';
 $i18ncharset = 'UTF-8';
 
+$i18nAlphabet = '';
+
 // list of strings (Alphabetical by key)
 $str1Day = '一日間';
 $str1Minute = '一分間';

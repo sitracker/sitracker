@@ -1323,23 +1323,34 @@ function emoticons($text)
  * HTML for an alphabetical index of links
  * @author Ivan Lucas
  * @param string $baseurl start of a URL, the letter will be appended to this
+ * @param bool $displayinactive
  * @return HTML
  */
-function alpha_index($baseurl = '#')
+function alpha_index($baseurl = '#', $displayinactive = FALSE)
 {
-    global $i18nAlphabet;
+    global $i18nAlphabet, $strAll;
+
+    if ($displayinactive === TRUE OR $displayinactive === 'true')
+    {
+        $inactivestring="displayinactive=true";
+    }
+    else
+    {
+        $inactivestring="displayinactive=false";
+    }
 
     $html = '';
     if (!empty($i18nAlphabet))
     {
+        $html .= ' | ';
         $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
             $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
             $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
-
         }
+        $html .= "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
     }
     return $html;
 }
