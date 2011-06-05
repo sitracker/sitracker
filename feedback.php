@@ -188,7 +188,7 @@ switch ($_REQUEST['action'])
                     {
                         echo "<p style='color: red'>{$strErrorRequiredQuestionsNotCompleted}</p>";
                     }
-                    echo nl2br($form->introduction);
+                    echo "<div align='center'>" . nl2br($form->introduction) . "</div>";
 
                     $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
                     $qsql .= "WHERE formid='{$form->id}' ";
@@ -197,14 +197,14 @@ switch ($_REQUEST['action'])
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
 
-                    echo "<table align='center' class='feedback'>\n";
+                    echo "<table align='center' class='feedback'>";
 
                     $shade = 'shade1';
                     while ($question = mysql_fetch_object($qresult))
                     {
                         if (mb_strlen(trim($question->sectiontext)) > 3)
                         {
-                            echo "<tr><table border='1' width='100%'><hr /><td>{$question->sectiontext}\n</td></table></tr>";
+                            echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
                         }
                         echo "<tr class='{$shade}'>";
                         echo "<td><h4>{$strQ}{$question->taborder}: {$question->question}";
