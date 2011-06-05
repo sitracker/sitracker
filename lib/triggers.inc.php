@@ -7,7 +7,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-/** 
+/**
  * Trigger action definitions
  * These are the avilable actions to be taken if a trigger is fired
  * To extend these, implement a plugin which attaches to the trigger_actions hook
@@ -39,7 +39,7 @@ array('name' => 'Journal',
 
 plugin_do('trigger_actions');
 
-/** 
+/**
  * Trigger type definitions
  * These are the avilable triggers that can be fired
  * To extend these, implement a plugin which attaches to the trigger_types hook
@@ -788,10 +788,22 @@ array('description' => $strResolutionReprioritisationSLA,
       'requires' => 'incidentid'
       );
 
-$ttvararray['{supportemail}'] =
-array('description' => $strSupportEmailAddress,
-      'replacement' => '$CONFIG[\'support_email\'];'
-      );
+if ($CONFIG['support_email_tags'] === TRUE)
+{
+    $ttvararray['{supportemail}'] =
+    array('description' => $strSupportEmailAddress,
+        'replacement' => 'tag_email_address($CONFIG[\'support_email\'], $param_array[\'incidentid\']);',
+        'requires' => 'incidentid'
+        );
+}
+else
+{
+    $ttvararray['{supportemail}'] =
+    array('description' => $strSupportEmailAddress,
+        'replacement' => '$CONFIG[\'support_email\'];'
+        );
+}
+
 
 $ttvararray['{supportmanageremail}'] =
 array('description' => $strSupportManagersEmailAddress,
@@ -1352,7 +1364,7 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     $param_count = sizeof($param);
 
     for ($i = 0; $i < $param_count; $i++)
-    {   
+    {
         if ($enabled[$i] == 'on')
         {
             $checks[$i] = "{".$param[$i]."}";

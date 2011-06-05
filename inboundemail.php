@@ -289,12 +289,20 @@ if ($emails > 0)
         }
 
         // Extract Incident ID
-        if (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+        if ($CONFIG['support_email_tags'] === TRUE AND preg_match('/?:[a-z][a-z]+.*?(\\d+)@?:[a-z][a-z\\.\\d\\-]+)\\.(?:[a-z][a-z\\-]+))(?![\\w\\./', $to, $m))
         {
             if (FALSE !== incident_status($m[1]))
             {
                 $incidentid = $m[1];
-                debug_log("Incident ID found in email: '{$incidentid}'");
+                debug_log("Incident ID found in email TO address tag: '{$incidentid}'");
+            }
+        }
+        elseif (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+        {
+            if (FALSE !== incident_status($m[1]))
+            {
+                $incidentid = $m[1];
+                debug_log("Incident ID found in email subject: '{$incidentid}'");
             }
         }
 
