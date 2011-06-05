@@ -92,16 +92,19 @@ switch ($_REQUEST['action'])
         echo "<td>";
         echo "<p>{$strSaveTheMainFormFirst}</p>";
         echo "</td></tr>\n";
-        echo "<tr>";
-        echo "<td><input type='hidden' name='formid' value='{$formid}' />";
-        echo "<input type='hidden' name='isnew' value='yes' />";
-        echo "<input type='hidden' name='action' value='save' /></td>";
-        echo "<td><input type='submit' value='{$strSave}' /></td>";
-        echo "</tr>";
         echo "</table>";
+        echo "<p class='formbuttons'>";
+        echo "<input type='hidden' name='formid' value='{$formid}' />";
+        echo "<input type='hidden' name='isnew' value='yes' />";
+        echo "<input type='hidden' name='action' value='save' />";
+        echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+        echo "<input type='submit' value='{$strSave}' /></p>";
+        echo "<p><a href=\"feedback_form_list.php\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>";
+
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
+
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}` WHERE id='{$formid}'";
         $result = mysql_query($sql);
