@@ -114,7 +114,8 @@ if (empty($action) OR $action == "showform")
     echo "</table>";
 
     echo "<input type='hidden' name='action' value='edit' />";
-    echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' />  ";
+    echo "<input type='submit' value='{$strSave}' /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
@@ -248,7 +249,7 @@ elseif ($action == "edit")
 
         clear_form_data("new_servicelevel");
         clear_form_errors("new_servicelevel");
-        
+
         for ($i = 1; $i <= 4; $i++)
         {
             $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod, `limit`) ";

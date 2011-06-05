@@ -102,7 +102,7 @@ if (empty($submit))
     echo "<input type='hidden' name='choices' id='choices' />";
     echo "<input type='hidden' name='ns' id='ns' />";
 
-    echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -115,7 +115,7 @@ else
 
     $ns = urldecode($_POST['ns']);
     parse_str($ns);
-    
+
     // NOTE: it is NOT necessary to get expertise OR noskills from the $_POST as this is passed encoded in and handled above
     // See Mantis 1239 for more details, PH 2010-04-06
 

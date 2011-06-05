@@ -78,7 +78,7 @@ else
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     if ($trigger_mode == 'system')
     {
-	    echo "<h3>{$strUser}</h3>";
+        echo "<h3>{$strUser}</h3>";
         echo "<p>{$strWhichAction}</p>";
     }
     echo "<h3>{$strAction}</h3>";

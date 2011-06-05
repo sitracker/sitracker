@@ -133,7 +133,8 @@ elseif (!empty($action))
             echo "<td class='shade1'><textarea name='signature' rows='15' cols='65'></textarea></td>";
             echo "</tr>";
             echo "</table>";
-            echo "<p align='center'><input name='submit' type='submit' value=\"{$strNew}\" /></p>";
+            echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value=\"{$strSave}\" /></p>";
+            echo "<p><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
             echo "</form>\n";
             break;
 
@@ -156,7 +157,8 @@ elseif (!empty($action))
             echo "</tr>";
             echo "</table>";
 
-            echo "<p align='center'><input name='submit' type='submit' value=\"{$strSave}\" /></p>";
+            echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value=\"{$strSave}\" /></p>";
+            echo "<p><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
             echo "</form>\n";
             break;
     }

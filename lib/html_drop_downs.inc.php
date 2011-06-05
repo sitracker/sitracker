@@ -1177,7 +1177,7 @@ function billing_multiplier_dropdown($name, $selected='')
     {
         $html .= "<option value='{$multiplier}'";
         if ($multiplier == $selected) $html .= " selected='selected' ";
-        $html .= ">x{$multiplier}</option>\n";
+        $html .= ">&#215;{$multiplier}</option>\n";
     }
     $html .= "</select>\n";
     return $html;

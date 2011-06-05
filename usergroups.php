@@ -112,7 +112,10 @@ switch ($action)
             }
             echo "</table>\n";
 
-            echo "<p><input type='hidden' name='action' value='savemembers' /><input type='submit' value='{$strSave}' /></p>";
+            echo "<p class='formbuttoms'>";
+            echo "<input type='hidden' name='action' value='savemembers' />";
+            echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+            echo "<input type='submit' value='{$strSave}' /></p>";
             echo "</form>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

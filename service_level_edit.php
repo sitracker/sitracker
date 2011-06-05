@@ -40,20 +40,20 @@ if (empty($action) OR $action == "showform")
 
     echo "<form name='edit_servicelevel' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical'>";
-    echo "<tr><th>{$strInitialResponse} ".icon('initialresponse', 16)."</th>";
+    echo "<tr><th>".icon('initialresponse', 16)." {$strInitialResponse}</th>";
     echo "<td><input type='text' size='5' name='initial_response_mins' maxlength='5' value='{$sla->initial_response_mins}' /> {$strMinutes}</td></tr>";
-    echo "<tr><th>{$strProblemDefinition} ".icon('probdef', 16)."</th>";
+    echo "<tr><th>".icon('probdef', 16)." {$strProblemDefinition}</th>";
     echo "<td><input type='text' size='5' name='prob_determ_mins' maxlength='5' value='{$sla->prob_determ_mins}' /> {$strMinutes}</td></tr>";
-    echo "<tr><th>{$strActionPlan} ".icon('actionplan', 16)."</th>";
+    echo "<tr><th>".icon('actionplan', 16)." {$strActionPlan}</th>";
     echo "<td><input type='text' size='5' name='action_plan_mins' maxlength='5' value='{$sla->action_plan_mins}' /> {$strMinutes}</td></tr>";
-    echo "<tr><th>{$strResolutionReprioritisation} ".icon('solution', 16)."</th>";
+    echo "<tr><th>".icon('solution', 16)." {$strResolutionReprioritisation}</th>";
     echo "<td><input type='text' size='5' name='resolution_days' maxlength='3' value='{$sla->resolution_days}' /> {$strDays}</td></tr>";
-    echo "<tr><th>{$strReview} ".icon('review', 16)."</th>";
+    echo "<tr><th>".icon('review', 16)." {$strReview} </th>";
     echo "<td><input type='text' size='5' name='review_days' maxlength='3' value='{$sla->review_days}' /> {$strDays}</td></tr>";
     $attributes = '';
     if ($sla->timed == 'yes') $attributes = "disabled='disabled' ";
     echo "<tr><th>{$strAllowIncidentReopen}</th><td>".html_checkbox('allow_reopen', $sla->allow_reopen, '', $attributes)."</td></tr>\n";
-    echo "<tr><th>{$strTimed} <img src='{$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/timer.png' width='16' height='16' alt='' /></th><td>";
+    echo "<tr><th>".icon('timer', 16)." {$strTimed}</th><td>";
     $timed_display = '';
     if ($sla->timed == 'yes')
     {
@@ -84,7 +84,7 @@ if (empty($action) OR $action == "showform")
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<input type='hidden' name='tag' value='{$tag}' />";
     echo "<input type='hidden' name='priority' value='{$priority}' />";
-    echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input type='submit' value='{$strSave}' /></p>";
     echo "<p align='center'><a href='service_levels.php'>{$strBackToList}</a></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
