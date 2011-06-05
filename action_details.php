@@ -126,7 +126,7 @@ else
     echo "<p style='text-align:left'>{$strExampleWhenIncidentAssigned} ";
     echo "{$strAddingACondition}</p>" ;
     echo "<div id='checkshtml'></div></div>";
-    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strNew}' /></p></form>";
+    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strSave}' /></p></form>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {
