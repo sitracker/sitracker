@@ -141,6 +141,7 @@ elseif ($_REQUEST['mode'] == "show")
             //print_r($lines);
             $stringcheck = false;
             $stringcount = 0;
+            $meta = array();
             foreach ($lines AS $introcomment)
             {
                 if (mb_substr($introcomment, 0, 2) == "//")
@@ -263,6 +264,7 @@ elseif ($_REQUEST['mode'] == "save")
     $lang = str_replace($badchars, '', $tolang);
     $origcount = clean_int($_REQUEST['origcount']);
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
+    $meta = cleanvar($_REQUEST['meta'], TRUE, FALSE);
 
     $filename = "{$lang}.inc.php";
 
