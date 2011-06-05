@@ -36,7 +36,8 @@ if ($action == 'new')
     echo "<tr><th><label for='type'>{$strType}:</label></th>";
     echo "<td><select name='type'><option value='".NORMAL_NOTICE_TYPE."'>{$strInfo}</option><option value='".WARNING_NOTICE_TYPE."'>{$strWarning}</option></select></td></tr>";
     echo "</table>";
-    echo "<input type='submit' value='{$strSave}' />";
+    echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input type='submit' value='{$strSave}' /></p>";
     echo "</form></div>";
     echo "<p align='center'><a href='notices.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
