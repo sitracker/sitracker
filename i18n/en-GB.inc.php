@@ -1427,8 +1427,6 @@ $strPublish = 'Publish';
 $strPublished = 'Published';
 $strPublishedToday = 'Published Today';
 $strPublishedOnX = 'Published on %s';
-# Abbrev for question
-$strQ = 'Q';
 $strQualifications = 'Qualifications';
 $strQueryByExample = 'Query By Example';
 $strQuestion = 'Question';
