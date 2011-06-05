@@ -132,7 +132,10 @@ elseif ($action == "edit" && isset($contact))
 
         echo "<input name='contact' type='hidden' value='{$contact}' />";
 
-        echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+
+        echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>\n";
     }
 }
