@@ -62,7 +62,7 @@ if (empty($action) || $action == "showform")
     }
     else
     {
-        echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>$contactid - ".contact_realname($contactid).", ".site_name(contact_site($contactid));
+        echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>$contactid - ".contact_realname($contactid).", ".site_name(contact_siteid($contactid));
         echo "<input name='contactid' type='hidden' value='{$contactid}' />";
         echo "</td></tr>";
     }
