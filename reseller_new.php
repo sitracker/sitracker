@@ -79,7 +79,8 @@ switch ($action)
         echo "<table align='center' class='vertical'>";
         echo "<tr><th>{$strName}</th><td><input type='text' name='reseller_name' class='required' /> <span class='required'>{$strRequired}</span></td></tr>";
         echo "</table>";
-        echo "<p align='center'><input name='submit' type='submit' value='{$strNewReseller}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;

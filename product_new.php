@@ -60,7 +60,8 @@ if (empty($submit))
     echo "</textarea>";
     echo "</td></tr>";
     echo "</table>\n";
-    echo "<p><input name='submit' type='submit' value='{$strNewProduct}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
     echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";

@@ -2008,7 +2008,8 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
-    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strSave']}\" /></p>";
+    $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
+    $html .= "<input name='submit' type='submit' value=\"{$GLOBALS['strSave']}\" /></p>";
     $html .= "</form>\n";
 
     //cleanup form vars
