@@ -188,21 +188,26 @@ switch ($_REQUEST['action'])
                     {
                         echo "<p style='color: red'>{$strErrorRequiredQuestionsNotCompleted}</p>";
                     }
-                    echo nl2br($form->introduction);
+                    echo "<div align='center'>" . nl2br($form->introduction) . "</div>";
 
                     $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
                     $qsql .= "WHERE formid='{$form->id}' ";
                     $qsql .= "ORDER BY taborder ASC";
                     $qresult = mysql_query($qsql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+
+                    echo "<table align='center' class='feedback'>";
+
+                    $shade = 'shade1';
                     while ($question = mysql_fetch_object($qresult))
                     {
                         if (mb_strlen(trim($question->sectiontext)) > 3)
                         {
-                            echo "<hr />{$question->sectiontext}\n";
+                            echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
                         }
-
-                        echo "<h4>Q{$question->taborder}: {$question->question}";
+                        echo "<tr class='{$shade}'>";
+                        echo "<td><h4>{$strQ}{$question->taborder}: {$question->question}";
                         if ($question->required == 'true')
                         {
                             echo "<sup style='color: red; font-size: 120%;'>*</sup>";
@@ -222,24 +227,32 @@ switch ($_REQUEST['action'])
                         {
                             $answer = '';
                         }
-
-                        echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
+                        echo "</td><td>";
+                        echo feedback_html_question($question->type, "{$strQ}{$question->id}", $question->required, $question->options, $answer);
                         if (in_array($question->id, $errorfields))
                         {
                             echo "<p style='color: red'>".sprintf($strQuestionXNeedsAnsweringBeforeContinuing, $question->taborder)."</p>";
                         }
-                        echo "<br />";
+                        echo "</td><br />";
+                        if ($shade == 'shade1')
+                        {
+                            $shade = 'shade2';
+                        }
+                        else
+                        {
+                            $shade = 'shade1';
+                        }
                     }
-
-                    echo nl2br($form->thanks);
+                    echo "</table>\n";
+                    echo "<p align='center'>" . nl2br($form->thanks) . "</p>" ;
 
                     echo "<br /><input type='hidden' name='action' value='save' />\n";
                     echo "<input type='hidden' name='ax' value='".strip_tags($_REQUEST['ax'])."' />\n";
-                    echo "<input type='submit' value='Submit' />\n";
+                    echo "<div align='center'><input type='submit' value='Submit' /></div>\n";
                     echo "</form>\n";
                     if ($reqd >= 1)
                     {
-                        echo "<p><sup style='color: red; font-size: 120%;'>*</sup> {$strQuestionRequired}</p>";
+                        echo "<p align='center'><sup style='color: red; font-size: 120%;'>*</sup> {$strQuestionRequired}</p>";
                     }
                 }
             }
