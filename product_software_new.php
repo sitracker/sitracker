@@ -74,7 +74,7 @@ if (empty($action) OR $action == "showform")
     echo "<p align='center'><a href='products.php?productid={$productid}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($action == "add")
+elseif ($action == "new")
 {
     $errors = 0;
     // check for blank
