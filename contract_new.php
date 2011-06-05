@@ -196,7 +196,7 @@ if ($action == "showform" OR $action == '')
     if ($timed) $timed = 'yes';
     else $timed = 'no';
     echo "<input type='hidden' id='timed' name='timed' value='{$timed}' />";
-    echo "<p align='center'><input name='submit' type='submit' value=\"{$strNewContract}\" /></p>";
+    echo "<p align='center'><input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
