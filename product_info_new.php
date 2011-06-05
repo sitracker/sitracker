@@ -47,7 +47,8 @@ if (empty($_REQUEST['submit']))
     echo "<tr><th>{$strQuestion}</th><td><input name='information' size='30' class='required' value='{$_SESSION['formdata']['product_info_new']['information']}' /> <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strAdditionalInfo}</th><td><input name='moreinformation' size='30' value='{$_SESSION['formdata']['product_info_new']['moreinformation']}' /></td></tr>";
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strNew}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     clear_form_data('product_info_new');
