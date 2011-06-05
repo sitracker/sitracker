@@ -35,10 +35,11 @@ if (empty($submit))
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strVendorName}</th><td><input maxlength='50' name='name' size='30' class='required'> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p align='center'><a href='vendor_edit.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
@@ -70,7 +71,7 @@ else
         {
             $id=mysql_insert_id();
             journal(CFG_LOGGING_DEBUG, 'Vendor Added', "Vendor {$id} was added", CFG_JOURNAL_DEBUG, $id);
-            html_redirect("products.php");
+            html_redirect("vendor_edit.php");
         }
         clear_form_data('new_vendor');
         clear_form_errors('new_vendor');

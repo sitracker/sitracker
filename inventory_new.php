@@ -121,8 +121,9 @@ else
     echo "{$strNone}<br />";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
-    echo "<input name='submit' type='submit' value='{$strNew}' /></p>";
+    echo "<p class='formbuttons'>";
+    echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
     echo "<p align='center'>";
 
@@ -133,7 +134,7 @@ else
     }
     else
     {
-        echo "<a href='inventory_site.php?id={$siteid}'>{$strBackToList}</a>";
+        echo "<a href='inventory_site.php?id={$siteid}'>{$strReturnWithoutSaving}</a>";
     }
     echo "</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
