@@ -106,7 +106,7 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'spam_email_subject'
                                 );
 
-$CFGCAT['outboundemail'] = array('outbound_email_disable',
+$CFGCAT['outboundemail'] = array('enable_outbound_email',
                                  'support_email',
                                  'support_email_tags',
                                  'outbound_email_encoding',
@@ -534,9 +534,9 @@ $CFGVAR['notice_threshold']['title'] = 'Notice Threshold';
 $CFGVAR['notice_threshold']['help'] = 'Flag items as notice when they are this percentage complete.';
 $CFGVAR['notice_threshold']['type'] = 'percent';
 
-$CFGVAR['outbound_email_disable']['title'] = 'Disable Outbound Email';
-$CFGVAR['outbound_email_disable']['help'] = "You can disable outbound email here so SiT won't send emails";
-$CFGVAR['outbound_email_disable']['type'] = 'checkbox';
+$CFGVAR['enable_outbound_email']['title'] = 'Enable Outbound Email';
+$CFGVAR['enable_outbound_email']['help'] = "You can disable outbound email here so SiT won't send emails";
+$CFGVAR['enable_outbound_email']['type'] = 'checkbox';
 
 $CFGVAR['outbound_email_encoding']['title'] = 'Change Outbound Encoding';
 $CFGVAR['outbound_email_encoding']['help'] = "Change the outbound mail encoding if you experience mails looking weird i.e. if you send mails through GroupWise and each line is broken by a '='";
