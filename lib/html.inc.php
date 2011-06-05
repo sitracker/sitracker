@@ -1836,7 +1836,12 @@ function show_edit_site($site, $mode='internal')
         plugin_do('edit_site_form');
         $html .= "</table>\n";
         $html .= "<input name='site' type='hidden' value='$site' />";
-        $html .= "<p><input name='submit' type='submit' value='{$GLOBALS['strSave']}' /></p>";
+        $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
+        $html .= "<input name='submit' type='submit' value='{$GLOBALS['strSave']}' /></p>";
+        if ($mode == 'internal')
+        {
+            $html .= "<p><a href=\"site_details.php?id={$site}\">{$GLOBALS['strReturnWithoutSaving']}</a></p>";
+        }
         $html .= "</form>";
     }
     return $html;
