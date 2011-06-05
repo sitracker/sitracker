@@ -78,7 +78,7 @@ else
     echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
     if ($trigger_mode == 'system')
     {
-	    echo "<h3>{$strUser}</h3>";
+        echo "<h3>{$strUser}</h3>";
         echo "<p>{$strWhichAction}</p>";
     }
     echo "<h3>{$strAction}</h3>";
@@ -126,7 +126,7 @@ else
     echo "<p style='text-align:left'>{$strExampleWhenIncidentAssigned} ";
     echo "{$strAddingACondition}</p>" ;
     echo "<div id='checkshtml'></div></div>";
-    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strNew}' /></p></form>";
+    echo "<br /><p style='text-align:left'><input type='submit' name='submit' value='{$strSave}' /></p></form>";
 
 //     foreach ($ttvararray as $trigger => $data)
 //     {

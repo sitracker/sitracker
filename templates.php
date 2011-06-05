@@ -282,11 +282,12 @@ elseif ($action == "edit")
         }
         echo "</table>\n";
 
-        echo "<p>";
+        echo "<p class='formbuttoms'>";
         echo "<input name='type' type='hidden' value='{$template->type}' />";
         echo "<input name='template' type='hidden' value='{$templatetype}' />";
         echo "<input name='focuselement' id='focuselement' type='hidden' value='' />";
         echo "<input name='id' type='hidden' value='{$id}' />";
+        echo "<input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value=\"{$strSave}\" />";
         echo "</p>\n";
         // FIXME when to allow deletion?

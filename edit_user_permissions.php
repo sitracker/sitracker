@@ -105,7 +105,7 @@ if (empty($action) OR $action == "showform")
         if (mysql_num_rows($presult) < 1) echo "<p>{$strNothingToDisplay}</p>";
 
         echo "</fieldset>";
-        echo "<p><input name='reset' type='reset' value='{$strReset}' />";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />";
         echo "<input type='hidden' name='action' value='update' />";
         echo "<input type='hidden' name='role' value='{$role}' />";
         echo "<input type='hidden' name='tab' value='{$seltab}' />";

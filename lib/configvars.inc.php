@@ -108,6 +108,7 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
 
 $CFGCAT['outboundemail'] = array('outbound_email_disable',
                                  'support_email',
+                                 'support_email_tags',
                                  'outbound_email_encoding',
                                  'outbound_email_linefeed'
                                 );
@@ -618,6 +619,10 @@ $CFGVAR['start_working_day']['type'] = 'timeselector';
 
 $CFGVAR['support_email']['title'] = 'From address for support emails';
 $CFGVAR['support_email']['help'] = 'Email sent by SiT that uses the template variable <code>{supportemail}</code> will come from this address';
+
+$CFGVAR['support_email_tags']['title'] = 'Use address tags / sub addressing on the support email address';
+$CFGVAR['support_email_tags']['help'] = 'Incident number tags will be added to the From address for support emails which will help SiT! track emails for (e.g. support+10234@example.net) - Not all mail servers support this.';
+$CFGVAR['support_email_tags']['type'] = 'checkbox';
 
 $CFGVAR['support_manager']['title'] = 'Support Manager';
 $CFGVAR['support_manager']['help'] = 'The person who is in charge of your support service. Used in email templates etc.';

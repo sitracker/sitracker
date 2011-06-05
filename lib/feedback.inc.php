@@ -105,10 +105,10 @@ function feedback_html_rating($name, $required, $options, $answer='')
 
     $colwidth = round(100/$score_max);
 
-    $html = "<table class='feedback'>\n";
+    $html = "<table>\n";
     if (empty($promptleft) == FALSE OR empty($promptright) == FALSE)
     {
-        $html .= "<tr>";
+        $html .= "<tr width='25%'>";
         $html .= "<th colspan='{$score_max}' style='text-align: left;'>";
         $html .= "<div style='float: right;'>{$promptright}</div><div>{$promptleft}</div></th>";
         if ($required != 'true')

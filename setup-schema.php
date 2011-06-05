@@ -142,6 +142,15 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
 ) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
 
 
+CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  KEY `contactid` (`contactid`)
+) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
+
+
 CREATE TABLE `{$dbContacts}` (
 `id` int(11) NOT NULL auto_increment,
   `notify_contactid` int(11) NOT NULL default '0',
@@ -1192,6 +1201,15 @@ CREATE TABLE `{$dbSetTags}` (
 `tagid` INT NOT NULL ,
 PRIMARY KEY ( `id` , `type` , `tagid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
+
+
+CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  KEY siteid (`siteid`)
+) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbSiteContacts}` (

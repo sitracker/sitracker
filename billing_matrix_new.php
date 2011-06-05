@@ -64,7 +64,9 @@ if (empty($action) OR $action == "showform")
     echo "</table>";
 
     echo "<input type='hidden' name='action' value='new' />";
-    echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+    echo "<input type='submit' value='{$strSave}' /></p>";
+    echo "<p><a href=\"billing_matrix.php\">{$strReturnWithoutSaving}</a></p>";
 
     echo "</form>";
 
