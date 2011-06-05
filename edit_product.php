@@ -84,7 +84,8 @@ else
     echo "</table>";
     echo "<input type='hidden' name='productid' value='{$id}' />";
     echo "<input type='hidden' name='action' value='save' />";
-    echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input type='submit' value='{$strSave}' /></p>";
     echo "</form>";
 
     echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
