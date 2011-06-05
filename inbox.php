@@ -238,7 +238,9 @@ if (empty($displayid))
             {
                 echo icon('locked', 16) . ' ';
                 echo sprintf($strLockedByX, user_realname($incoming->locked,TRUE));
-                echo ' ('.htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']) . ')';
+                echo " ({$incoming->reason})";
+                echo " &mdash; <a name='locked' class='info'>";
+                echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);
             }
             else
             {
@@ -254,10 +256,10 @@ if (empty($displayid))
                 echo " title='{$strViewAndLockHeldEmail}'>";
                 if (!empty($incoming->incident_id)) echo icon('support',16) . ' ';
                 echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);
-                if (!empty($update->bodytext)) echo '<span>'.parse_updatebody(truncate_string($update->bodytext, 1024)).'</span>';
-                echo "</a>";
-                if ($num_attachments > 0) echo ' '.icon('attach', 16, '', "{$strAttachments}: {$num_attachments}");
             }
+            if (!empty($update->bodytext)) echo '<span>'.parse_updatebody(truncate_string($update->bodytext, 1024)).'</span>';
+            echo "</a>";
+            if ($num_attachments > 0) echo ' '.icon('attach', 16, '', "{$strAttachments}: {$num_attachments}");
 
             echo "</td>";
             // echo "<td><pre>".print_r($incoming,true)."</pre><hr /></td>";
@@ -288,8 +290,9 @@ if (empty($displayid))
         echo "<select name='action'>";
         echo "<option value='' selected='selected'></option>";
         echo "<option value='lock'>{$strLock}</option>";
+        echo "<option value='unlock'>{$strUnlock}</option>";
         echo "<option value='delete'>{$strDelete}</option>";
-        echo "<option value='assign'>{$strAssign}</option>";
+//         echo "<option value='assign'>{$strAssign}</option>";
         echo "</select>";
         echo "<input type='submit' value=\"{$strGo}\" />";
         echo "</td>";
@@ -376,8 +379,11 @@ else
             {
                 echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=unlock&amp;selected={$displayid}'>{$strUnlock}</a>"; // FIXME
             }
-            echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}' title=\"{$strCreateAnIncident}\">{$strCreate}</a>"; // FIXME
-            echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}' title=\"{$strCreateAnIncident}\">{$strAssign}</a>"; // FIXME needs help
+            echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string=".urlencode("{$incoming->forenames} {$incoming->surname}")."&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>"; // FIXME
+            echo " | <a href=\"move_update.php?id={$displayid}&amp;updateid={$incoming->updateid}&amp;contactid={$incoming->contactid}&amp;win=incomingview\" title=\"{$strUpdateIncident}\">";
+            echo "{$strMoveToIncident}</a>"; // FIXME needs help
+
+
 
             if ($lockedbyyou)
             {

@@ -359,6 +359,8 @@ $strCreateANotice = 'create a notice based on';
 $strCreateEditYourTasks = 'Create/Edit your Tasks';
 $strCreatedBy = 'Created by';
 $strCreateNewForm = 'Create New Form';
+# Create (verb)
+$strCreateNewIncident = 'Create new incident';
 $strCredit = 'Credit';
 # e.g. Amount paid into an account
 $strCreditAmount = 'Credit Amount';
@@ -1079,7 +1081,10 @@ $strMonthView = 'Month View';
 $strMore = 'More';
 $strMoreContactsThanContractSupports = 'There are more contacts linked than this contract should support';
 $strMorning = 'Morning';
+# Move (verb) Update (noun)
 $strMoveUpdate = 'Move Update';
+# Move (verb) to incident (noun)
+$strMoveToIncident = 'Move to existing incident';
 $strMovedFromXtoXbyX = 'Moved from %1$s -&gt; %2$s by %3$s';
 $strMultipleActivitiesRunning = 'Multiple Activities Running';
 $strMultipleOptions = 'Multiple Options';
@@ -1151,6 +1156,7 @@ $strNewVendor = 'New Vendor';
 $strNext = 'Next';
 $strNextAction = 'Next Action';
 $strNextSLATarget = 'The next SLA target';
+# Update (noun)
 $strNextUpdate = 'Next Update';
 # No being the opposite of Yes
 $strNo = 'No';
@@ -1910,6 +1916,7 @@ $strUpdatedAutomaticallyBy = 'Updated automatically by %s';
 $strUpdatedby = 'Updated by %s';
 $strUpdatedFromTask = 'Updated From Task';
 $strUpdatedXbyX = 'Updated %1$s by %2$s';
+# Update (verb) Incident (noun)
 $strUpdateIncident = 'Update Incident';
 $strUpdateIncidents = 'Update Incidents';
 $strUpdateIncidentFailed = 'Incident Update failed';

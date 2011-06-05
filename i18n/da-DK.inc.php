@@ -6,7 +6,7 @@ $languagestring = 'Dansk (da-DK)';
 $i18ncharset = 'UTF-8';
 
 // List of letters of the alphabet for this language
-// in standard alphabetical order (upper case, where applicable)
+// in standard alphabetical order (upper case, where applicable). Leave blank to disable alphabetical indexing.
 $i18nAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ';
 
 // list of strings (Alphabetical by key)
@@ -331,6 +331,7 @@ $strCreateANotice = 'Opret en besked baseret på %s';
 $strCreateEditYourTasks = 'Opret/rediger dine opgaver';
 $strCreatedBy = 'Oprettet af';
 $strCreateNewForm = 'Opret ny form';
+$strCreateNewIncident = 'Opret ny hændelse';
 $strCredit = 'Kredit';
 $strCreditAmount = 'Kredit mængde';
 $strCredits = 'Credits';
@@ -992,6 +993,7 @@ $strMore = 'Mere...';
 $strMoreContactsThanContractSupports = 'Der er flere kontakter forbundet end denne kontrakt burde have';
 $strMorning = 'Morgen';
 $strMoveUpdate = 'Flyt opdatering';
+$strMoveToIncident = 'Flyt til eksisterende hændelse';
 $strMovedFromXtoXbyX = 'Flyttet fra %s -&gt; %s af %s';
 $strMultipleActivitiesRunning = 'Flerer aktiviteter kører';
 $strMultipleOptions = 'Adskillelige optioner';

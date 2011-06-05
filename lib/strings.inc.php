@@ -161,24 +161,26 @@ if (!empty($_SESSION))
     );
 
     // //need to call directly as we don't have functions yet
-    $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
-    $result = mysql_query($sql);
-    list($inbox_count) = mysql_fetch_row($result);
-    if ($inbox_count > 0)
+    if ($CONFIG['enable_inbound_mail'] == TRUE)
     {
-        $inbox_count = " <strong>(".$inbox_count.")</strong>";
+        $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
+        $result = mysql_query($sql);
+        list($inbox_count) = mysql_fetch_row($result);
+        if ($inbox_count > 0)
+        {
+            $inbox_count = " <strong>(".$inbox_count.")</strong>";
+        }
+        else $inbox_count = '';
     }
-    else $inbox_count = '';
-
 
 
     // Support menu
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] = $hmenu[30] +
-                array (10=> array ( 'perm'=> 5,  'name'=> $strNewIncident, 'url'=>"{$CONFIG['application_webpath']}incident_new.php"),
-                       20=> array ( 'perm'=> 0,  'name'=> $strMyIncidents, 'url'=>"{$CONFIG['application_webpath']}incidents.php"),
-                       30=> array ( 'perm'=> 0,  'name'=> $strAllIncidents, 'url'=>"{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
-                       40=> array ( 'perm'=> 42, 'name'=> $strInbox.$inbox_count, 'url'=>"{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
+                array (10=> array ( 'perm'=> 42, 'name'=> $strInbox.$inbox_count, 'url'=>"{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
+                       20=> array ( 'perm'=> 5,  'name'=> $strNewIncident, 'url'=>"{$CONFIG['application_webpath']}incident_new.php"),
+                       30=> array ( 'perm'=> 0,  'name'=> $strMyIncidents, 'url'=>"{$CONFIG['application_webpath']}incidents.php"),
+                       40=> array ( 'perm'=> 0,  'name'=> $strAllIncidents, 'url'=>"{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
                        50=> array ( 'perm'=> 42, 'name'=> $strHoldingQueue, 'url'=>"{$CONFIG['application_webpath']}holding_queue.php")
     );
 
