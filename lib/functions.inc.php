@@ -1170,6 +1170,20 @@ function check_install_status()
     return $s;
 }
 
+
+/**
+ * Makes a string suitable for database insertion where NUll is possible.
+ * It checks to see if the string is empty if so returns Null else the string enclosed in quotes 
+ * @author Paul Heaney
+ * @param String $string the string to be checked
+ * @return String either "Null" or "'$string'"
+ */
+function convert_string_null_safe($string)
+{
+    if ($string == '') return 'Null';
+    else return "'{$string}'";
+}
+
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
 
