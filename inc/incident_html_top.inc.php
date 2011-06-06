@@ -239,7 +239,7 @@ if ($menu != 'hide')
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_edit.php?id={$id}&amp;popup={$popup}' accesskey='T'>{$strEdit}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_service_levels.php?id={$id}&amp;popup={$popup}' accesskey='S'>{$strService}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_relationships.php?id={$id}&amp;tab=relationships' accesskey='L'>{$strRelations}</a> | ";
-        if ($CONFIG['enable_outgoing_email'] === TRUE)
+        if ($CONFIG['enable_outbound_email'] == TRUE)
         {
             echo "<a class='barlink' href='javascript:email_window({$id})' accesskey='E'>{$strEmail}</a> | ";
         }
