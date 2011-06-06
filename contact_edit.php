@@ -145,16 +145,16 @@ else if ($action == "update")
     $forenames = clean_dbstring($_POST['forenames']);
     $siteid = clean_int($_POST['siteid']);
     $email = strtolower(clean_dbstring($_POST['email']));
-    $phone = clean_dbstring($_POST['phone']);
-    $mobile = clean_dbstring($_POST['mobile']);
-    $fax = clean_dbstring($_POST['fax']);
-    $address1 = clean_dbstring($_POST['address1']);
-    $address2 = clean_dbstring($_POST['address2']);
-    $city = clean_dbstring($_POST['city']);
-    $county = clean_dbstring($_POST['county']);
-    $postcode = clean_dbstring($_POST['postcode']);
-    $country = clean_dbstring($_POST['country']);
-    $notes = clean_dbstring($_POST['notes']);
+    $phone = convert_string_null_safe(clean_dbstring($_POST['phone']));
+    $mobile = convert_string_null_safe(clean_dbstring($_POST['mobile']));
+    $fax = convert_string_null_safe(clean_dbstring($_POST['fax']));
+    $address1 = convert_string_null_safe(clean_dbstring($_POST['address1']));
+    $address2 = convert_string_null_safe(clean_dbstring($_POST['address2']));
+    $city = convert_string_null_safe(clean_dbstring($_POST['city']));
+    $county = convert_string_null_safe(clean_dbstring($_POST['county']));
+    $postcode = convert_string_null_safe(clean_dbstring($_POST['postcode']));
+    $country = convert_string_null_safe(clean_dbstring($_POST['country']));
+    $notes = convert_string_null_safe(clean_dbstring($_POST['notes']));
     $dataprotection_email = clean_dbstring($_POST['dataprotection_email']);
     $dataprotection_address = clean_dbstring($_POST['dataprotection_address']);
     $dataprotection_phone = clean_dbstring($_POST['dataprotection_phone']);
@@ -214,13 +214,14 @@ else if ($action == "update")
         */
         replace_tags(1, $contact, $tags);
 
-        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='{$courtesytitle}', surname='{$surname}', forenames='{$forenames}', siteid='{$siteid}', email='{$email}', phone='{$phone}', mobile='{$mobile}', fax='{$fax}', ";
-        $sql .= "address1='{$address1}', address2='{$address2}', city='{$city}', county='{$county}', postcode='{$postcode}', ";
-        $sql .= "country='{$country}', dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
-        $sql .= "notes='{$notes}', dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
+        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='{$courtesytitle}', surname='{$surname}', forenames='{$forenames}', siteid='{$siteid}', email='{$email}', phone={$phone}, mobile={$mobile}, fax={$fax}, ";
+        $sql .= "address1={$address1}, address2={$address2}, city={$city}, county={$county}, postcode={$postcode}, ";
+        $sql .= "country={$country}, dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
+        $sql .= "notes={$notes}, dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
         $sql .= "notify_contactid='{$notify_contactid}', ";
         $sql .= "active = '{$activeStr}}', ";
         $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
+
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

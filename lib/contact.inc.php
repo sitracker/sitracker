@@ -501,24 +501,24 @@ function process_new_contact($mode = 'internal')
     $forenames = cleanvar($_REQUEST['forenames']);
     $surname = cleanvar($_REQUEST['surname']);
     $jobtitle = cleanvar($_REQUEST['jobtitle']);
-    $address1 = cleanvar($_REQUEST['address1']);
-    $address2 = cleanvar($_REQUEST['address2']);
-    $city = cleanvar($_REQUEST['city']);
-    $county = cleanvar($_REQUEST['county']);
+    $address1 = convert_string_null_safe(cleanvar($_REQUEST['address1']));
+    $address2 = convert_string_null_safe(cleanvar($_REQUEST['address2']));
+    $city = convert_string_null_safe(cleanvar($_REQUEST['city']));
+    $county = convert_string_null_safe(cleanvar($_REQUEST['county']));
     if (!empty($address1))
     {
-        $country = cleanvar($_REQUEST['country']);
+        $country = convert_string_null_safe(cleanvar($_REQUEST['country']));
     }
     else
     {
-        $country = '';
+        $country = 'Null';
     }
-    $postcode = cleanvar($_REQUEST['postcode']);
-    $phone = cleanvar($_REQUEST['phone']);
-    $mobile = cleanvar($_REQUEST['mobile']);
-    $fax = cleanvar($_REQUEST['fax']);
-    $department = cleanvar($_REQUEST['department']);
-    $notes = cleanvar($_REQUEST['notes']);
+    $postcode = convert_string_null_safe(cleanvar($_REQUEST['postcode']));
+    $phone = convert_string_null_safe(cleanvar($_REQUEST['phone']));
+    $mobile = convert_string_null_safe(cleanvar($_REQUEST['mobile']));
+    $fax = convert_string_null_safe(cleanvar($_REQUEST['fax']));
+    $department = convert_string_null_safe(cleanvar($_REQUEST['department']));
+    $notes = convert_string_null_safe(cleanvar($_REQUEST['notes']));
     $returnpage = cleanvar($_REQUEST['return']);
     $_SESSION['formdata']['new_contact'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
@@ -596,11 +596,11 @@ function process_new_contact($mode = 'internal')
         $sql  = "INSERT INTO `{$dbContacts}` (username, password, courtesytitle, forenames, surname, jobtitle, ";
         $sql .= "siteid, address1, address2, city, county, country, postcode, email, phone, mobile, fax, ";
         $sql .= "department, notes, dataprotection_email, dataprotection_phone, dataprotection_address, ";
-        $sql .= "timestamp_added, timestamp_modified) ";
+        $sql .= "timestamp_added, timestamp_modified, created, createdby) ";
         $sql .= "VALUES ('{$username}', '{$password}', '{$courtesytitle}', '{$forenames}', '{$surname}', '{$jobtitle}', ";
-        $sql .= "'{$siteid}', '{$address1}', '{$address2}', '{$city}', '{$county}', '{$country}', '{$postcode}', '{$email}', ";
-        $sql .= "'{$phone}', '{$mobile}', '{$fax}', '{$department}', '{$notes}', '{$dataprotection_email}', ";
-        $sql .= "'{$dataprotection_phone}', '{$dataprotection_address}', '{$now}', '{$now}')";
+        $sql .= "'{$siteid}', {$address1}, {$address2}, {$city}, {$county}, {$country}, {$postcode}, '{$email}', ";
+        $sql .= "{$phone}, {$mobile}, {$fax}, {$department}, {$notes}, '{$dataprotection_email}', ";
+        $sql .= "'{$dataprotection_phone}', '{$dataprotection_address}', '{$now}', '{$now}', now(), '{$sit[2]}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
