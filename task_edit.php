@@ -379,7 +379,8 @@ switch ($action)
                 if ($task->distribution == 'private') echo "checked='checked' ";
                 echo "value='private' /> {$strPrivate} ".icon('private', 16, $strPrivate)."</td></tr>";
                 echo "</table>";
-                echo "<p><input name='submit' type='submit' value='{$strSave}' /></p>";
+                echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+                echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
                 echo "<input type='hidden' name='action' value='edittask' />";
                 echo "<input type='hidden' name='id' value='{$id}' />";
                 // Send copy of existing data so we can see when it is changed
@@ -401,7 +402,7 @@ switch ($action)
             echo "<p class='error'>{$strNoMatchingTaskFound}</p>";
         }
 
-        echo "<p align='center'><a href='tasks.php'>{$strTaskList}</a></p>";
+        echo "<p align='center'><a href='view_task.php?id={$id}'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 

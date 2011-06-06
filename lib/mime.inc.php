@@ -10,6 +10,14 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 
+if ($CONFIG['outbound_email_newline'] == 'CRLF')
+{
+    $varcrlf = "\r\n";
+}
+else
+{
+    $varcrlf = "\n";
+}
 
 
 /**
@@ -27,7 +35,7 @@ define ('TEXT', 'text/plain');
 define ('HTML', 'text/html');
 define ('JPEG', 'image/jpg');
 define ('GIF', 'image/gif');
-define ('CRLF', "\n");   // was \r\n
+define ('CRLF', "$varcrlf");   // was \r\n
 //define ('CHARSET', 'us-ascii');
 define ('CHARSET', 'UTF-8');
 define ('INLINE', 'inline');

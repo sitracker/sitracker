@@ -27,9 +27,11 @@ $send_email = cleanvar($_REQUEST['send_email']);
 if ($incidentid == '')
 {
     $title = $strMoveUpdate;
-    include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     $incidentid = cleanvar($_REQUEST['incidentid']); // Need to do this here again as incident_html_top changes this to $id which we need above so the menu works
     echo "<h2>{$title}</h2>";
+    echo "<h3>{$strMoveToIncident}</h3>";
+
     if ($error == '1')
     {
         echo "<p class='error'>{$strErrorAssigningUpdate}</p>";
@@ -59,7 +61,7 @@ if ($incidentid == '')
 
     while ($updates = mysql_fetch_object($result))
     {
-        $update_timestamp_string = ldate($CONFIG['dateformat_datetime'], $updates["timestamp"]);
+        $update_timestamp_string = ldate($CONFIG['dateformat_datetime'], $updates->timestamp);
         echo "<br />";
         echo "<table align='center' width='95%'>";
         echo "<tr><th>";
@@ -133,6 +135,8 @@ if ($incidentid == '')
 
         echo "</td></tr>";
         echo "</table>";
+
+        echo "<p><a href=\"inbox.php?id={$id}\">$strReturnToPreviousPage</a></p>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
@@ -216,7 +220,7 @@ else
 
             journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update {$update} moved to incident {$incidentid}", CFG_JOURNAL_INCIDENTS, $incidentid);
 
-            html_redirect("incident_details.php?id={$incidentid}");
+            html_redirect("inbox.php");
         }
     }
     else

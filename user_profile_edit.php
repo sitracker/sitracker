@@ -39,16 +39,6 @@ if (empty($mode))
     $title = $strEditProfile;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    /*
-    $sql = "SELECT u.*, r.rolename FROM `{$dbUsers}` AS u, `{$dbRoles}` AS r  ";
-    $sql .= "WHERE u.id='{$edituserid}' AND u.roleid = r.id LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) < 1) trigger_error("$sql No such user ".strip_tags($edituserid),E_USER_WARNING);
-    $user = mysql_fetch_object($result);
-    */
-
     $user = new User($edituserid);
 
     echo "<h2>".icon('user', 32)." ";
@@ -240,7 +230,7 @@ if (empty($mode))
     echo "</table>\n";
     echo "<input type='hidden' name='userid' value='{$edituserid}' />";
     echo "<input type='hidden' name='mode' value='save' />";
-    echo "<p><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -355,7 +345,7 @@ elseif ($mode == 'save')
         else
         {
             $errors++;
-        	$error_string .= $result;
+            $error_string .= $result;
         }
     }
 

@@ -59,6 +59,7 @@ $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
 // Don't send email when approving 'all' to avoid an error message
+// FIXME this needs i18n - CJ
 if ($user != 'all')
 {
     $bodytext = "Message from {$CONFIG['application_shortname']}: ".user_realname($sit[2])." has ";

@@ -142,6 +142,14 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
 ) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
 
 
+CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  KEY `contactid` (`contactid`)
+) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
+
 CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `notify_contactid` int(11) NOT NULL DEFAULT '0',
@@ -661,7 +669,7 @@ VALUES (1,'Task','Subtask','Parent Task','tasks','id','tasks','id','name','','vi
 (3,'Site','Site','Site Task','tasks','id','sites','id','name','','site_details.php?id=%id%'),
 (4,'Incident','Incident','Task','incidents','id','tasks','id','title','','incident_details.php?id=%id%'),
 (5,'Attachments', 'Update', 'File', 'updates', 'id', 'files', 'id', 'filename', '', 'incident_details.php?updateid=%id%&tab=files'),
-(6, 'Incident', 'Transaction', 'Incidents', 'transactions', 'transactionid', 'incidents', 'id', '', '', '')
+(6, 'Incident', 'Transaction', 'Incidents', 'transactions', 'transactionid', 'incidents', 'id', '', '', ''),
 (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
 
@@ -1192,6 +1200,15 @@ CREATE TABLE `{$dbSetTags}` (
 `tagid` INT NOT NULL ,
 PRIMARY KEY ( `id` , `type` , `tagid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
+
+
+CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  KEY siteid (`siteid`)
+) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbSiteContacts}` (

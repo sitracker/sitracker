@@ -359,6 +359,8 @@ $strCreateANotice = 'create a notice based on';
 $strCreateEditYourTasks = 'Create/Edit your Tasks';
 $strCreatedBy = 'Created by';
 $strCreateNewForm = 'Create New Form';
+# Create (verb)
+$strCreateNewIncident = 'Create new incident';
 $strCredit = 'Credit';
 # e.g. Amount paid into an account
 $strCreditAmount = 'Credit Amount';
@@ -664,6 +666,8 @@ $strFeedbackBeforeX = 'Feedback before %s';
 $strFeedbackBetweenXandY = 'Feedback between %1$s and %2$s';
 $strFeedbackForm = 'Feedback Form';
 $strFeedbackFormAlreadyCompleted = 'Feedback form already completed';
+# Feedback form for incident X
+$strFeedbackFormForIncidentX = 'Feedback form for incident';
 $strFeedbackForms = 'Feedback Forms';
 $strFeedbackReport = 'Feedback Report';
 $strFeedbackFormsRequested = 'There are %s feedback forms that have been returned already';
@@ -1077,7 +1081,10 @@ $strMonthView = 'Month View';
 $strMore = 'More';
 $strMoreContactsThanContractSupports = 'There are more contacts linked than this contract should support';
 $strMorning = 'Morning';
+# Move (verb) Update (noun)
 $strMoveUpdate = 'Move Update';
+# Move (verb) to incident (noun)
+$strMoveToIncident = 'Move to existing incident';
 $strMovedFromXtoXbyX = 'Moved from %1$s -&gt; %2$s by %3$s';
 $strMultipleActivitiesRunning = 'Multiple Activities Running';
 $strMultipleOptions = 'Multiple Options';
@@ -1095,7 +1102,7 @@ $strMySubstitutes = 'My Substitutes';
 $strMyTriggers = 'My Triggers';
 $strName = 'Name';
 $strNamedContacts = 'Named Contacts';
-#English suffix for second - 2nd
+# English suffix for second - 2nd
 $strnd = 'nd';
 $strNeedsSubstitueEngineers = '%s need substitute engineers to be defined';
 $strNegative = 'Negative';
@@ -1149,6 +1156,7 @@ $strNewVendor = 'New Vendor';
 $strNext = 'Next';
 $strNextAction = 'Next Action';
 $strNextSLATarget = 'The next SLA target';
+# Update (noun)
 $strNextUpdate = 'Next Update';
 # No being the opposite of Yes
 $strNo = 'No';
@@ -1158,6 +1166,7 @@ $strNoActionSpecified = 'No action specified';
 $strNoAvailablePlugins = 'No Available Plugins';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
 $strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
+$strNoFeedbackFormsAvailable = 'No Feedback Forms Available';
 $strNoFiles = 'No Files';
 $strnoFileUploaded = 'No File Uploaded';
 $strNoneAvailable = 'None Available';
@@ -1290,10 +1299,13 @@ $strNovember = 'November';
 $strNow = 'Now';
 $strNumContactsAssignedToSite = 'There are %s contacts assigned to this site';
 $strNumContractsAssignedToSite = 'There are %s contracts assigned to this site';
+$strNumIncidents = '# Incidents';
 $strNumOfIncidents = 'There are %s incidents in this list';
 $strNumOfIncidentsLoggedByX = 'Number of incidents logged by %s';
 $strNumOfCalls = '# of calls';
 $strNumOpenIncidents = '%s open';
+$strNumOfUpdates = '# of Updates';
+$strNumOfUpdatesPerIncident = '# Updates per incident';
 $strOccurance = 'Occurance';
 # Short for October
 $strOctAbbr = 'Oct';
@@ -1447,7 +1459,7 @@ $strReducedPrioritySLA = 'Reduced from %s according to SLA';
 $strRefX = 'Ref: %s';
 $strReferences = 'References';
 $strRefresh = 'Refresh';
-#Abbreviation for Reference ID
+# Abbreviation for Reference ID
 $strRefID = 'Ref ID';
 $strRegister = 'Register';
 $strRelated = 'Related';
@@ -1562,7 +1574,8 @@ $strSavePublish = 'Save and Publish';
 $strScheduledTask = 'Name of the scheduler task';
 $strScheduler = 'Scheduler';
 $strSchedulerActionFailed = 'Scheduler Action Failed';
-$strSchedulerNotRunning = 'The Scheduler does not appear to be running. You might want to check out <a href="http://sitracker.org/wiki/Scheduler">the documentation</a>';
+# The Scheduler does not appear to be running. You might want to check out <link to documentation>
+$strSchedulerNotRunning = 'The Scheduler does not appear to be running. You might want to check out';
 # Database structure version
 $strSchemaVersion = 'Schema Version';
 $strScore = 'Score';
@@ -1698,9 +1711,9 @@ $strSLAApproaching = 'SLA approaching';
 $strSLAby = 'SLA: %1$s by %2$s';
 $strSLADue = 'SLA due';
 $strSLAXDueNow = '%s due now';
-#E.g. Initial Response in 3 hours
+# E.g. Initial Response in 3 hours
 $strSLAInX = '%1$s in %2$s';
-#E.g. Initial Response 3 hours late
+# E.g. Initial Response 3 hours late
 $strSLAXLate = '%1$s %2$s late';
 $strSLAMissed = 'SLA missed';
 $strSLAPerformance = 'SLA Performance';
@@ -1727,7 +1740,7 @@ $strSpamEmail = 'Spam Email';
 # Plural of strSpamEmail
 $strSpamEmails = 'Spam Emails';
 $strSpecifyAddress = 'Specify an address for this contact that is different to the site';
-#English suffix for first - 1st
+# English suffix for first - 1st
 $strst = 'st';
 $strStartDate = 'Start Date';
 $strStartNewActivity = 'Start New Activity';
@@ -1808,6 +1821,7 @@ $strText = 'Text';
 $strth = 'th';
 $strThankYou = 'Thank You';
 $strThankYouCompleteForm = 'Thank you for taking the time to complete this form.';
+$strTheDocumentation = 'The Documentation';
 $strTheFollowingVariables = 'The following variables may be used:';
 $strThereAreXcontractsAssignedToThisPerson = 'There are %s contracts assigned to this contact';
 $strThereAreXIncidentsAssignedToThisContact = 'There are %s incidents assigned to this contact';
@@ -1848,6 +1862,7 @@ $strTOTALS = 'TOTALS';
 $strTotalBillableUnits = 'Total Billable Units';
 $strTotalCredit = 'Total Credit';
 $strTotalDebit = 'Total Debit';
+$strTotalDuration = 'Total Duration';
 $strTotalMinutes = 'Total Minutes';
 $strTotalOpen = 'Total Open';
 $strTotalUnits = 'Total Units';
@@ -1905,6 +1920,7 @@ $strUpdatedAutomaticallyBy = 'Updated automatically by %s';
 $strUpdatedby = 'Updated by %s';
 $strUpdatedFromTask = 'Updated From Task';
 $strUpdatedXbyX = 'Updated %1$s by %2$s';
+# Update (verb) Incident (noun)
 $strUpdateIncident = 'Update Incident';
 $strUpdateIncidents = 'Update Incidents';
 $strUpdateIncidentFailed = 'Incident Update failed';
@@ -1945,6 +1961,7 @@ $strUsed = 'Used';
 $strUsedNofN = 'Used %1$s of %2$s';
 $strUsedNofNDaysEntitlement = 'Used %1$s of %2$s days entitlement';
 $strUser = 'User';
+$strUsers = 'Users';
 $strUserGroups = 'User Groups';
 $strUsername = 'Username';
 $strUsernameNotUnique = 'Username must be unique';

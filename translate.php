@@ -139,16 +139,23 @@ elseif ($_REQUEST['mode'] == "show")
             $lines = explode("\n", $theData);
             unset($theData);
             //print_r($lines);
+            $stringcheck = false;
+            $stringcount = 0;
+            $meta = array();
             foreach ($lines AS $introcomment)
             {
                 if (mb_substr($introcomment, 0, 2) == "//")
                 {
                     $meta[] = mb_substr($introcomment, 3);
+                    $stringcheck = true;
+                }
+                elseif (($stringcount > 0) AND ($stringcount < 3) AND ($stringcheck == false))
+                {
+                    $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
                 }
                 if (trim($introcomment) == '') break;
+                $stringcount++;
             }
-
-
             foreach ($lines as $values)
             {
                 $badchars = array("$", "\"", "\\", "<?php", "?>");
@@ -173,7 +180,12 @@ elseif ($_REQUEST['mode'] == "show")
         }
         else
         {
-            $meta[] = "SiT! Language File - {$languages[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
+
+            if (!is_array($meta))
+            {
+                $meta = array();
+            }
+            $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
         }
     }
     else
@@ -252,26 +264,29 @@ elseif ($_REQUEST['mode'] == "save")
     $lang = str_replace($badchars, '', $tolang);
     $origcount = clean_int($_REQUEST['origcount']);
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
+    $meta = cleanvar($_REQUEST['meta'], TRUE, FALSE);
 
     $filename = "{$lang}.inc.php";
-    echo "<p>".sprintf($strSendTranslation, "<code>{$filename}</code>", "<code>".APPLICATION_I18NPATH."</code>", "<a href='mailto:sitracker-devel-discuss@lists.sourceforge.net'>sitracker-devel-discuss@lists.sourceforge.net</a>")." </p>";
+
     $i18nfile = '';
     $i18nfile .= "<?php\n";
-    foreach ($_REQUEST['meta'] AS $meta)
+
+    if (is_array($meta))
     {
-        $meta = cleanvar($meta);
-        $i18nfile .= "// $meta\n";
+        foreach ($_REQUEST['meta'] AS $meta)
+        {
+            $meta = cleanvar($meta);
+            $i18nfile .= "// $meta\n";
+        }
     }
     $i18nfile .= "\n";
-    $i18nfile .= "\$languagestring = '{$languages[$lang]} ($lang)';\n";
+    $i18nfile .= "\$languagestring = '{$i18n_codes[$lang]} ($lang)';\n";
     $i18nfile .= "\$i18ncharset = 'UTF-8';\n\n";
 
-    if (!empty($i18nalphabet))
-    {
-        $i18nfile .= "// List of letters of the alphabet for this language\n";
-        $i18nfile .= "// in standard alphabetical order (upper case, where applicable)\n";
-        $i18nfile .= "\$i18nAlphabet = '{$i18nalphabet}';\n\n";
-    }
+    $i18nfile .= "// List of letters of the alphabet for this language\n";
+    $i18nfile .= "// in standard alphabetical order (upper case, where applicable). Leave blank to disable alphabetical indexing.\n";
+    $i18nfile .= "\$i18nAlphabet = '{$i18nalphabet}';\n\n";
+
 
     $i18nfile .= "// list of strings (Alphabetical by key)\n";
 
@@ -279,29 +294,34 @@ elseif ($_REQUEST['mode'] == "save")
     $translatedcount = 0;
     foreach (array_keys($_SESSION['translation_fromvalues']) as $key)
     {
-        if (!empty($_POST[$key]) AND mb_substr($key, 0, 3) == "str")
+        if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
         {
-            if ($lastchar!='' AND mb_substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
             $i18nfile .= "\${$key} = '".addslashes($_POST[$key])."';\n";
-            $lastchar = mb_substr($key, 3, 1);
+            $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
         elseif (!empty($_SESSION['translation_foreignvalues'][$key]))
         {
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
             $i18nfile .= "\${$key} = '".addslashes($_SESSION['translation_foreignvalues'][$key])."';\n";
-            $lastchar = mb_substr($key, 3, 1);
+            $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
     }
     $percent = number_format($translatedcount / $origcount * 100,2);
-    echo "<p>{$strTranslation}: <strong>{$translatedcount}</strong>/{$origcount} = {$percent}% {$strComplete}.</p>";
+
     $i18nfile .= "?>\n";
+
+    // CJ 02 Jun 11 - Unfortunately mailto has a restriction for attaching body text, so we cannot do that here
+    echo "<p>".sprintf($strSendTranslation, "<code>{$filename}</code>", "<code>".APPLICATION_I18NPATH."</code>", "<a href='mailto:sit-translators@lists.sitracker.org?subject={$lang} translation&body={$percent} Percent Complete %0A%0A'>sitracker-devel-discuss@lists.sourceforge.net</a>")." </p>";
+    echo "<p>{$strTranslation}: <strong>{$translatedcount}</strong>/{$origcount} = {$percent}% {$strComplete}.</p>";
 
     $myFile = APPLICATION_I18NPATH."{$filename}";
     $fp = @fopen($myFile, 'w');
     if (!$fp)
     {
-        echo "<p class='warn'>".sprintf($strCannotWriteFile, "<code>{$myFile}</code>")."</p>";
+        echo "<p class='warning'>".sprintf($strCannotWriteFile, "<code>{$myFile}</code>")."</p>";
     }
     else
     {

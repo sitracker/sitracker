@@ -39,10 +39,10 @@ echo "<table summary='alphamenu' align='center'>";
 echo "<tr><td align='center''>";
 echo "<input type='text' name='search_string' /><input type='submit' value=\"{$strGo}\" />";
 echo "</td></tr>";
-echo "<tr><td valign='middle'>";
-echo "<a href='{$_SERVER['PHP_SELF']}?mode=RECENT'>{$strRecent}</a> | ";
+echo "<tr><td class='alphamenu'>";
+echo "<a href='{$_SERVER['PHP_SELF']}?mode=RECENT'>{$strRecent}</a>";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
-echo "<a href='kb_article.php'>{$strNew}</a>";
+echo " | <a href='kb_article.php'>{$strNew}</a>";
 echo "</tr>";
 echo "</table>";
 echo "</form>";
@@ -73,7 +73,7 @@ if (mb_strlen(utf8_decode($search_string)) > 4)
 // Find Articles
 $sql = "SELECT * FROM `{$dbKBArticles}` ";
 if (strtolower($mode) == 'myarticles') $sql .= "WHERE author='{$sit[2]}' ";
-if (!empty($search_string))
+if (!empty($search_string) AND $search_string != '*')
 {
     $sql .= "WHERE ";
     $search_string_len = mb_strlen($search_string);
@@ -85,7 +85,7 @@ if (!empty($search_string))
     {
         $sql .= "docid='" . mb_substr($search_string, mb_strlen($CONFIG['kb_id_prefix']))."' ";
     }
-    else if ($search_string_len<=2)
+    elseif ($search_string_len<=2)
     {
         $sql .= "SUBSTRING(title,1,$search_string_len)=('{$search_string}') ";
     }

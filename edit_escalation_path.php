@@ -46,7 +46,9 @@ if (empty($_REQUEST['mode']))
         echo "</table>";
         echo "<input type='hidden' value='{$id}' name='id' />";
         echo "<input type='hidden' value='edit' name='mode' />";
-        echo "<p align='center'><input type='submit' name='submit' value=\"{$strSave}\" /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+        echo "<input type='submit' name='submit' value=\"{$strSave}\" /></p>";
+        echo "<p><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
 
         echo "</form>";
     }

@@ -625,7 +625,14 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 {
     global $CONFIG, $application_version_string;
 
-    $crlf = "\n";
+    if ($CONFIG['outbound_email_newline'] == 'CRLF')
+    {
+        $crlf = "\r\n";
+    }
+    else
+    {
+        $crlf = "\n";
+    }
 
     if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
@@ -651,12 +658,17 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     {
         $rtnvalue = TRUE;
     }
+    elseif ($CONFIG['enable_outbound_email'] == false)
+    {
+        $rtnvalue = TRUE;
+        debug_log("Outoing email disabled, no mail is sent");
+    }
     else
     {
         // $rtnvalue = mail($to, $subject, $body, $extra_headers);
 
         $mime = new MIME_mail($from, $to, html_entity_decode($subject), '', $extra_headers, $mailerror);
-        $mime -> attach($body, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+        $mime -> attach($body, '', "text/plain; charset={$GLOBALS['i18ncharset']}", $CONFIG['outbound_email_encoding'], 'inline');
 
         // actually send the email
         $rtnvalue = $mime -> send_mail();

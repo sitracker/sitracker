@@ -26,6 +26,18 @@ $submit_value = cleanvar($_REQUEST['submit']);
 $displayinactive = cleanvar($_REQUEST['displayinactive']);
 if (empty($displayinactive)) $displayinactive = "false";
 
+if ($search_string == '')
+{
+    if (!empty($i18nAlphabet))
+    {
+        $search_string = mb_substr($i18nAlphabet, 0 , 1);
+    }
+    else
+    {
+        $search_string = '*';
+    }
+}
+
 if ($submit_value == 'go')
 {
     // build SQL
@@ -62,8 +74,6 @@ if ($submit_value == 'go')
 $pagescripts = array('AutoComplete.js');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if ($search_string == '') $search_string='a';
-
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
 echo "<table summary='alphamenu' align='center'>";
@@ -89,11 +99,10 @@ else
     echo "'>{$strShowAll}</a>";
     $inactivestring="displayinactive=false";
 }
-echo "</td></tr><tr><td valign='middle'>";
+echo "</td></tr><tr><td class='alphamenu'>";
 
-echo "<a href='contact_new.php'>{$strNew}</a> | ";
-echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
-echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>";
+echo "<a href='contact_new.php'>{$strNew}</a>";
+echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=", $inactivestring);
 echo "</td></tr></table>";
 
 if (empty($search_string))
@@ -147,16 +156,25 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         }
 
+        if ($search_string == '*')
+        {
+            $search_term = $strAll;
+        }
+        else
+        {
+            $search_term = $search_string;
+        }
+
         if (mysql_num_rows($result) == 0)
         {
             echo "<p align='center'>";
             if (empty($search_string)) echo $strNoRecords;
-            else printf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>");
+            else printf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>");
             echo "</p>\n";        }
         else
         {
 
-            echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_string}</em>")."</p>";
+            echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_term}</em>")."</p>";
 
             echo "<table align='center'>
             <tr>

@@ -532,7 +532,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
 
     // Removed $mailerror as MIME_mail expects 5 args and not 6 of which is it not expect errors
     $mime = new MIME_mail($from, $toemail, html_entity_decode($subject), '', $extra_headers);
-    $mime -> attach($body, '', "text-plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable');
+    $mime -> attach($body, '', "text-plain; charset={$GLOBALS['i18ncharset']}", $CONFIG['outbound_email_encoding']);
 
     if (!empty($attach))
     {

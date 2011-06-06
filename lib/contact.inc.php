@@ -491,8 +491,8 @@ function process_new_contact($mode = 'internal')
     global $now, $CONFIG, $dbContacts, $sit;
     // Add new contact
     // External variables
-    $siteid = mysql_real_escape_string($_REQUEST['siteid']);
-    $email = strtolower(cleanvar($_REQUEST['email']));
+    $siteid = clean_int($_REQUEST['siteid']);
+    $email = strtolower(clean_dbstring($_REQUEST['email']));
     $dataprotection_email = mysql_real_escape_string($_REQUEST['dataprotection_email']);
     $dataprotection_phone = mysql_real_escape_string($_REQUEST['dataprotection_phone']);
     $dataprotection_address = mysql_real_escape_string($_REQUEST['dataprotection_address']);

@@ -223,7 +223,7 @@ if (!empty($userid))
 echo "<input type='hidden' name='action' value='save' />";
 if ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 {
-    echo "<p><input type='reset' value=\"{$strReset}\" /> ";
+    echo "<p class='formbuttons'><input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strSave}\" />";
     echo "</p>";
 }

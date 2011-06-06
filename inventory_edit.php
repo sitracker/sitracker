@@ -108,7 +108,7 @@ else
 
     echo "<table class='vertical' align='center'>";
     echo "<tr><th>{$strName}</th>";
-    echo "<td><input class='required' name='name' value='{$row->name}' />";
+    echo "<td><input class='required' name='name' value='{$row->name}' /> ";
     echo "<span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strType}</th>";
     echo "<td>".array_drop_down($CONFIG['inventory_types'], 'type', $row->type, '', TRUE)."</td></tr>";
@@ -183,15 +183,16 @@ else
 
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
-    echo "<input name='submit' type='submit' value='{$strUpdate}' /></p>";
+    echo "<p class='formbuttons'>";
+    echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
     echo "<p align='center'>";
 
-    echo "<a href='inventory_site.php?id={$row->siteid}'>{$strBackToList}</a>";
+    echo "<a href='inventory_site.php?id={$row->siteid}'>{$strReturnWithoutSaving}</a>";
 
     echo "</p>";
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 
