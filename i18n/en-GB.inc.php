@@ -1102,7 +1102,7 @@ $strMySubstitutes = 'My Substitutes';
 $strMyTriggers = 'My Triggers';
 $strName = 'Name';
 $strNamedContacts = 'Named Contacts';
-#English suffix for second - 2nd
+# English suffix for second - 2nd
 $strnd = 'nd';
 $strNeedsSubstitueEngineers = '%s need substitute engineers to be defined';
 $strNegative = 'Negative';
@@ -1459,7 +1459,7 @@ $strReducedPrioritySLA = 'Reduced from %s according to SLA';
 $strRefX = 'Ref: %s';
 $strReferences = 'References';
 $strRefresh = 'Refresh';
-#Abbreviation for Reference ID
+# Abbreviation for Reference ID
 $strRefID = 'Ref ID';
 $strRegister = 'Register';
 $strRelated = 'Related';
@@ -1711,9 +1711,9 @@ $strSLAApproaching = 'SLA approaching';
 $strSLAby = 'SLA: %1$s by %2$s';
 $strSLADue = 'SLA due';
 $strSLAXDueNow = '%s due now';
-#E.g. Initial Response in 3 hours
+# E.g. Initial Response in 3 hours
 $strSLAInX = '%1$s in %2$s';
-#E.g. Initial Response 3 hours late
+# E.g. Initial Response 3 hours late
 $strSLAXLate = '%1$s %2$s late';
 $strSLAMissed = 'SLA missed';
 $strSLAPerformance = 'SLA Performance';
@@ -1740,7 +1740,7 @@ $strSpamEmail = 'Spam Email';
 # Plural of strSpamEmail
 $strSpamEmails = 'Spam Emails';
 $strSpecifyAddress = 'Specify an address for this contact that is different to the site';
-#English suffix for first - 1st
+# English suffix for first - 1st
 $strst = 'st';
 $strStartDate = 'Start Date';
 $strStartNewActivity = 'Start New Activity';
