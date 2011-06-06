@@ -62,7 +62,13 @@ switch ($_REQUEST['action'])
             $fieldname = "Q{$question->id}";
 
             // Check required fields are filled
-            if ($question->required == 'true' AND (mb_strlen($_POST[$fieldname]) < 1 OR
+            if (is_array($_POST[$fieldname]))
+            {
+                // make sure there aren't any commas in the list and convert array to comma separated list
+                $_POST[$fieldname] = str_replace(',', '_', $_POST[$fieldname]);
+                $_POST[$fieldname] = implode(",", $_POST[$fieldname]);
+            } 
+            if ($question->required == 'true' AND (count($_POST[$fieldname]) < 1 OR
                     isset($_POST[$fieldname]) == FALSE))
                     {
                         $errorfields[] = "{$question->id}";
@@ -207,7 +213,7 @@ switch ($_REQUEST['action'])
                             echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
                         }
                         echo "<tr class='{$shade}'>";
-                        echo "<td><h4>{$strQ}{$question->taborder}: {$question->question}";
+                        echo "<td><h4>Q{$question->taborder}: {$question->question}";
                         if ($question->required == 'true')
                         {
                             echo "<sup style='color: red; font-size: 120%;'>*</sup>";
@@ -228,7 +234,7 @@ switch ($_REQUEST['action'])
                             $answer = '';
                         }
                         echo "</td><td>";
-                        echo feedback_html_question($question->type, "{$strQ}{$question->id}", $question->required, $question->options, $answer);
+                        echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
                         if (in_array($question->id, $errorfields))
                         {
                             echo "<p style='color: red'>".sprintf($strQuestionXNeedsAnsweringBeforeContinuing, $question->taborder)."</p>";

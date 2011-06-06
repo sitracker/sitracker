@@ -1328,7 +1328,6 @@ $strPublish = 'Udgiv';
 $strPublished = 'Udgivet';
 $strPublishedToday = 'Udgivet i dag';
 $strPublishedOnX = 'Udgivet den %s';
-$strQ = 'Sp ';
 $strQualifications = 'Kvalifikationer';
 $strQueryByExample = 'Forespørgsel pr eksempel';
 $strQuestion = 'Spørgsmål';

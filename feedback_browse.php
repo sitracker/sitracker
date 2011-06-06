@@ -24,7 +24,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // External variables
 $formid = cleanvar($_REQUEST['id']);
-$responseid = cleanvar($_REQUEST['responseid']);
+$responseid = clean_int($_REQUEST['responseid']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
 $mode = cleanvar($_REQUEST['mode']);
@@ -38,17 +38,27 @@ switch ($mode)
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $response = mysql_fetch_object($result);
+        if ($response->completed == 'yes')
+        {
+            $responsecompleted = $strYes;
+        }
+        else
+        {
+            $responsecompleted = $strNo;
+        }
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
         echo "<tr><th>{$strIncident}</th><td>".html_incident_popup_link($response->incidentid, "{$response->incidentid} - ".incident_title($response->incidentid))."</td>\n";
         echo "<tr><th>{$strForm}</th><td>{$response->formid}</td>\n";
         echo "<tr><th>{$strDate}</th><td>{$response->created}</td>\n";
-        echo "<tr><th>{$strCompleted}</th><td>{$response->completed}</td>\n";
+        echo "<tr><th>{$strCompleted}</th><td>{$responsecompleted}</td>\n";
         echo "</table>\n";
 
         echo "<h3>{$strResponsesToFeedbackForm}</h3>";
         $totalresult=0;
         $numquestions=0;
+
+        // Return Ratings
         $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='rating' ORDER BY taborder";
         $qresult = mysql_query($qsql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -60,7 +70,7 @@ switch ($mode)
             {
                 $numquestions++;
                 $html .= "<tr><th>Q{$qrow->taborder}: {$qrow->question}</th>";
-                $sql = "SELECT * FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                $sql = "SELECT f.*, r.* FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                 $sql .= "WHERE f.incidentid=i.id ";
                 $sql .= "AND i.owner=u.id ";
                 $sql .= "AND f.id=r.respondentid ";
@@ -92,7 +102,8 @@ switch ($mode)
             $total_average = number_format($totalresult/$numquestions,2);
             $total_percent = number_format((($total_average-1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
 
-            $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' ORDER BY taborder";
+            // Return text/options/multioptions fields
+            $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
             $qresult = mysql_query($qsql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -101,7 +112,7 @@ switch ($mode)
                 while ($qrow = mysql_fetch_object($qresult))
                 {
 
-                    $sql = "SELECT * FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                    $sql = "SELECT f.*, r.* FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                     $sql .= "WHERE f.incidentid = i.id ";
                     $sql .= "AND i.owner = u.id ";
                     $sql .= "AND f.id = r.respondentid ";
