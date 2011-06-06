@@ -116,7 +116,7 @@ if ($action == "showform" OR $action == '')
     echo "</tbody>";
     echo "</table>\n";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
-    echo "<input name='submit' type='submit' value='{$strNewSite}' /></p>";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>\n";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
