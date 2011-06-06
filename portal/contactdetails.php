@@ -120,13 +120,13 @@ if (cleanvar($_REQUEST['action']) == 'update')
         {
             $updatesql .= "username='{$username}', ";
         }
-        $updatesql .= " forenames='$forenames', surname='$surname', ";
-        $updatesql .= "department='$department', address1=$address1, address2=$address2, ";
-        $updatesql .= "county=$county, country=$country, postcode=$postcode, ";
-        $updatesql .= "phone=$phone, mobile=$mobile, fax=$fax, email='$email'";
+        $updatesql .= " forenames='{$forenames}', surname='{$surname}', ";
+        $updatesql .= "department='{$department}', address1={$address1}, address2={$address2}, ";
+        $updatesql .= "county={$county}, country={$country}, postcode={$postcode}, ";
+        $updatesql .= "phone={$phone}, mobile={$mobile}, fax={$fax}, email='{$email}'";
         if ($newpass != '')
         {
-            $updatesql .= ", password=MD5('$newpass') ";
+            $updatesql .= ", password=MD5('{$newpass}') ";
         }
         $updatesql .= "WHERE id='{$id}'";
         mysql_query($updatesql);
@@ -256,7 +256,7 @@ else
     echo "<tr><th>{$strEmail}</th><td>";
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_email']))
     {
-        echo "<input type='hidden' name='email' value='{$user->email}' />$user->email";
+        echo "<input type='hidden' name='email' value='{$user->email}' />{$user->email}";
     }
     else
     {
