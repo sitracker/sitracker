@@ -40,7 +40,7 @@ if (empty($step))
         {
             $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
         html_redirect("incident_email.php?id={$id}");
         exit;
@@ -48,7 +48,7 @@ if (empty($step))
 
     $sql = "SELECT * FROM `{$dbDrafts}` WHERE type = 'email' AND userid = '{$sit[2]}' AND incidentid = '{$id}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -207,7 +207,7 @@ switch ($step)
         {
             $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
             $draftresult = mysql_query($draftsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $draftobj = mysql_fetch_object($draftresult);
 
             $metadata = explode("|",$draftobj->meta);
@@ -272,7 +272,7 @@ switch ($step)
             // Grab the template
             $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$emailtype} LIMIT 1";
             $tresult = mysql_query($tsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
             $paramarray = array('incidentid' => $id, 'triggeruserid' => $sit[2]);
             $from = replace_specials($template->fromfield, $paramarray);
@@ -682,7 +682,7 @@ switch ($step)
                 {
                     $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
                     mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 }
 
                 journal(CFG_LOGGING_FULL, $SYSLANG['strEmailSent'], "{$SYSLANG['strSubject']}: $subjectfield, {$SYSLANG['strIncident']}: $id", CFG_JOURNAL_INCIDENTS, $id);
