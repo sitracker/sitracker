@@ -66,14 +66,14 @@ if (cleanvar($_REQUEST['action']) == 'update')
     $forenames = cleanvar($_REQUEST['forenames']);
     $surname = cleanvar($_REQUEST['surname']);
     $department = cleanvar($_REQUEST['department']);
-    $address1 = cleanvar($_REQUEST['address1']);
-    $address2 = cleanvar($_REQUEST['address2']);
-    $county = cleanvar($_REQUEST['county']);
-    $country = cleanvar($_REQUEST['country']);
-    $postcode = cleanvar($_REQUEST['postcode']);
-    $phone = cleanvar($_REQUEST['phone']);
-    $mobile = cleanvar($_REQUEST['mobile']);
-    $fax = cleanvar($_REQUEST['fax']);
+    $address1 = convert_string_null_safe(cleanvar($_REQUEST['address1']));
+    $address2 = convert_string_null_safe(cleanvar($_REQUEST['address2']));
+    $county = convert_string_null_safe(cleanvar($_REQUEST['county']));
+    $country = convert_string_null_safe(cleanvar($_REQUEST['country']));
+    $postcode = convert_string_null_safe(cleanvar($_REQUEST['postcode']));
+    $phone = convert_string_null_safe(cleanvar($_REQUEST['phone']));
+    $mobile = convert_string_null_safe(cleanvar($_REQUEST['mobile']));
+    $fax = convert_string_null_safe(cleanvar($_REQUEST['fax']));
     $email = cleanvar($_REQUEST['email']);
     $newpass = cleanvar($_REQUEST['newpassword']);
     $newpass2 = cleanvar($_REQUEST['newpassword2']);
@@ -121,9 +121,9 @@ if (cleanvar($_REQUEST['action']) == 'update')
             $updatesql .= "username='{$username}', ";
         }
         $updatesql .= " forenames='$forenames', surname='$surname', ";
-        $updatesql .= "department='$department', address1='$address1', address2='$address2', ";
-        $updatesql .= "county='$county', country='$country', postcode='$postcode', ";
-        $updatesql .= "phone='$phone', mobile='$mobile', fax='$fax', email='$email'";
+        $updatesql .= "department='$department', address1=$address1, address2=$address2, ";
+        $updatesql .= "county=$county, country=$country, postcode=$postcode, ";
+        $updatesql .= "phone=$phone, mobile=$mobile, fax=$fax, email='$email'";
         if ($newpass != '')
         {
             $updatesql .= ", password=MD5('$newpass') ";
