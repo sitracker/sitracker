@@ -62,15 +62,15 @@ switch ($_REQUEST['action'])
             $hash = md5($userdetails->username.'.'.$userdetails->password);
             $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&userid={$userdetails->id}&hash={$hash}";
             $t = new TriggerEvent('TRIGGER_USER_RESET_PASSWORD', array('userid' => $userdetails->id, 'passwordreseturl' => $reseturl));
-            echo "<h3>{$strInformationSent}</h3>";
-            echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
+            echo "<h3 align='center'>{$strInformationSent}</h3>";
+            echo "<p align='center'>{$strInformationSentRegardingSettingPassword}</p>";
             if ($_REQUEST['action'] == 'forgotpwd')
             {
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
             else
             {
-                echo "<p><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+                echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
             }
 
         }

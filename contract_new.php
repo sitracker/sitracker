@@ -36,7 +36,6 @@ if ($action == "showform" OR $action == '')
     echo "{$strNewContract}</h2>";
     echo "<form id='new_contract' name='new_contract' action='{$_SERVER['PHP_SELF']}?action=new' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table align='center' class='vertical'>";
-    echo "<thead>";
     echo "<tr><th>{$strSite}</th><td>";
     if ($_SESSION['formdata']['new_contract']['site'] != '')
     {
@@ -113,7 +112,6 @@ if ($action == "showform" OR $action == '')
 
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
     echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
-    echo "</thead>";
 
     echo "<tbody id='hiddentimed'";
     if (!$timed) echo " style='display:none'";
