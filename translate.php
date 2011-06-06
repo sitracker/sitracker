@@ -294,17 +294,18 @@ elseif ($_REQUEST['mode'] == "save")
     $translatedcount = 0;
     foreach (array_keys($_SESSION['translation_fromvalues']) as $key)
     {
-        if (!empty($_POST[$key]) AND mb_substr($key, 0, 3) == "str")
+        if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
         {
-            if ($lastchar!='' AND mb_substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
             $i18nfile .= "\${$key} = '".addslashes($_POST[$key])."';\n";
-            $lastchar = mb_substr($key, 3, 1);
+            $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
         elseif (!empty($_SESSION['translation_foreignvalues'][$key]))
         {
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
             $i18nfile .= "\${$key} = '".addslashes($_SESSION['translation_foreignvalues'][$key])."';\n";
-            $lastchar = mb_substr($key, 3, 1);
+            $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
     }
