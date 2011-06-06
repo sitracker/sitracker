@@ -24,6 +24,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  *               before redirection.
  *               This parameter is optional and only required if the default
  *               success/failure will not suffice
+ * @param
  * @return string HTML page with redirect
  * @note Replaces confirmation_page() from versions prior to 3.35
  *       If a header HTML has already been displayed a continue link is printed
@@ -33,7 +34,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @note The recommended way to use this function is to call it without headers/footers
  *       already displayed.
  */
-function html_redirect($url, $success = TRUE, $message='')
+function html_redirect($url, $success = TRUE, $message='', $close=FALSE)
 {
     global $CONFIG, $headerdisplayed, $siterrors;
 
@@ -61,7 +62,10 @@ function html_redirect($url, $success = TRUE, $message='')
         $refreshtime = 10;
     }
 
-    $refresh = "{$refreshtime}; url={$url}";
+    if (!$close)
+    {
+        $refresh = "{$refreshtime}; url={$url}";
+    }
 
     $title = $GLOBALS['strPleaseWaitRedirect'];
     if (!$headerdisplayed)
@@ -74,10 +78,6 @@ function html_redirect($url, $success = TRUE, $message='')
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         }
-    }
-    else
-    {
-        echo "<meta http-equiv=\"refresh\" content=\"$refreshtime; url=$url\" />\n";
     }
 
     echo "<h3>";
@@ -104,6 +104,42 @@ function html_redirect($url, $success = TRUE, $message='')
             echo "<p align='center'><a href=\"{$url}\">{$GLOBALS['strContinue']}</a></p>";
         }
     }
+    
+    if ($close)
+    {
+        if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE')
+        {
+            ?>
+            <script type='text/javascript'>
+            //<![CDATA[
+            
+            if (window.confirm(strEmailSentSuccessfullyConfirmWindowClosure))
+            {
+                close_page_redirect('<?php echo $url; ?>');
+            }
+          
+            //]]>
+            </script>
+            <?php
+        }
+        else
+        {
+            // We  use a PeriodicalExecutor as we don't want to close the window instantly, we want users to be able to read the message
+            ?>
+            <script type='text/javascript'>
+            //<![CDATA[
+            
+            new PeriodicalExecuter(function(pe) {
+                                            window.close();
+                                        },
+                                        <?php echo $refreshtime ?>);
+          
+            //]]>
+            </script>
+            <?php
+        }
+    }
+    
     // TODO 3.35 Add a link to refresh the dashlet if this is run inside a dashlet
 
     if ($headerdisplayed)

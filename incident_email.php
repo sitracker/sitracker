@@ -686,25 +686,10 @@ switch ($step)
                 }
 
                 journal(CFG_LOGGING_FULL, $SYSLANG['strEmailSent'], "{$SYSLANG['strSubject']}: $subjectfield, {$SYSLANG['strIncident']}: $id", CFG_JOURNAL_INCIDENTS, $id);
-                // FIXME i18n, maybe have a function that prints a dialog and then closes the window?
-                echo "<html>";
-                echo "<head>";
-                ?>
-                <script type="text/javascript">
-                function confirm_close_window()
-                {
-                    if (window.confirm('The email was sent successfully, click OK to close this window'))
-                    {
-                        window.opener.location = 'incident_details.php?id=<?php echo $id; ?>';
-                        window.close();
-                    }
-                }
-                </script>
-                <?php
-                echo "</head>";
-                echo "<body onload=\"confirm_close_window();\">";
-                echo "</body>";
-                echo "</html>";
+
+                $menu = 'hide';
+
+                html_redirect("incident_details.php?id={$id}", TRUE, "The email was sent successfully, click OK to close this window", TRUE);               
             }
             else
             {

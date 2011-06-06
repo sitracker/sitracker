@@ -590,6 +590,7 @@ $strEmailHolidaysRequestedDesc = 'Notifies a user that they need to approve holi
 $strEmailServiceLevelDesc = 'Notifies the site\'s salesperson when the value drops below a certain limit';
 $strEmailIncidentUpdatedCustomerDesc = 'Sent to a customer when an engineer updated an incident';
 $strEmailSupportEmailDesc = 'Used by default when you send an email from an incident';
+$strEmailSentSuccessfullyConfirmWindowClosure = 'The email was sent successfully, click OK to close this window';
 $strEnable = 'Enable';
 $strEnableCondition = 'Enable condition';
 $strEnabled = 'Enabled';
