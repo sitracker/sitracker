@@ -317,7 +317,7 @@ switch ($action)
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('task', 32)." ";
-        echo "$title</h2>";
+        echo "{$title}</h2>";
         $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
