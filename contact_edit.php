@@ -56,8 +56,8 @@ elseif ($action == "edit" && isset($contact))
         echo "<table align='center' class='vertical'>";
         echo "<tr><th>{$strName}: <sup class='red'>*</sup><br />{$strTitle}, {$strForenames}, {$strSurname}</th>";
         echo "<td><input maxlength='50' name='courtesytitle' title='Courtesy Title (Mr, Mrs, Miss, Dr. etc.)' size='7' value='{$contactobj->courtesytitle}' />\n"; // i18n courtesy title
-        echo "<input maxlength='100' name='forenames' size='15' title='Firstnames (or initials)' value='{$contactobj->forenames}' />\n";
-        echo "<input maxlength='100' name='surname' size='20' title='{$strSurname}' value='{$contactobj->surname}' />";
+        echo "<input maxlength='100' name='forenames' size='15' title='Firstnames (or initials)' value='".htmlspecialchars($contactobj->forenames, ENT_QUOTES)."' />\n";
+        echo "<input maxlength='100' name='surname' size='20' title='$strSurname' value='".htmlspecialchars($contactobj->surname, ENT_QUOTES)."' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strTags}:</th><td><textarea rows='2' cols='60' name='tags'>";
         echo list_tags($contact, TAG_CONTACT, false)."</textarea></td></tr>\n";
