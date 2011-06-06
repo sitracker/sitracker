@@ -363,4 +363,7 @@ $CONFIG['default_chart'] = 'OriginalChart';
 
 // Associative array of user config variables and their settings
 $CONFIG['user_config_defaults'] = array('show_emoticons' => TRUE, 'incident_refresh' => 60, 'incident_log_order' => 'desc', 'show_table_legends' => TRUE);
+
+// Allow outbound email
+$CONFIG['enable_outbound_email'] = TRUE;
 ?>
