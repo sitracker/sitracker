@@ -61,6 +61,8 @@ $CONFIG['support_manager'] = 1;
 // 1 = incremental, 2 = YYMMDD + incremental incidents per day
 $CONFIG['incident_number_type'] = 1;
 
+$CONFIG['enable_outbound_mail'] = TRUE;
+
 // These are the settings for the account to download incoming mail from, settings POP/IMAP or MTA (for piping message in)
 $CONFIG['enable_inbound_mail'] = 'disabled';
 $CONFIG['email_username'] = '';
@@ -233,6 +235,7 @@ $CONFIG['tasks_enabled'] = TRUE;
 $CONFIG['calendar_enabled'] = TRUE;
 $CONFIG['holidays_enabled'] = TRUE;
 $CONFIG['feedback_enabled'] = TRUE;
+$CONFIG['portal_feedback_enabled'] = TRUE;
 
 $CONFIG['portal_site_incidents'] = TRUE; //users in the portal can view site incidents based on the contract options
 $CONFIG['portal_usernames_can_be_changed'] = TRUE; //portal usernames can be changed by the users
@@ -360,4 +363,7 @@ $CONFIG['default_chart'] = 'OriginalChart';
 
 // Associative array of user config variables and their settings
 $CONFIG['user_config_defaults'] = array('show_emoticons' => TRUE, 'incident_refresh' => 60, 'incident_log_order' => 'desc', 'show_table_legends' => TRUE);
+
+// Allow outbound email
+$CONFIG['enable_outbound_email'] = TRUE;
 ?>

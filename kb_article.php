@@ -399,16 +399,8 @@ else
 
     echo "<h3>{$strDisclaimer}</h3>";
     echo $CONFIG['kb_disclaimer_html'];
-    echo "<p align='center'><input type='submit' name='submit' value='";
-    if ($mode == 'edit')
-    {
-        echo $strSave;
-    }
-    else
-    {
-        echo $strNew;
-    }
-    echo "' /></p>";
+    echo "<p align='center'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
     echo $sectionstore;
     echo "</form></div>";
     echo "<p align='center'><a href='kb_view_article.php?id=$kbid'>{$strReturnWithoutSaving}</a></p>";

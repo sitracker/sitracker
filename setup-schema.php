@@ -142,46 +142,54 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
 ) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbContacts}` (
-`id` int(11) NOT NULL auto_increment,
-  `notify_contactid` int(11) NOT NULL default '0',
-  `username` varchar(50) default NULL,
-  `password` varchar(50) default NULL,
-  `forenames` varchar(100) NOT NULL default '',
-  `surname` varchar(100) NOT NULL default '',
-  `jobtitle` varchar(255) NOT NULL default '',
-  `courtesytitle` varchar(50) NOT NULL default '',
-  `siteid` int(11) NOT NULL default '0',
-  `email` varchar(100) default NULL,
-  `phone` varchar(50) default NULL,
-  `mobile` varchar(50) NOT NULL default '',
-  `fax` varchar(50) default NULL,
-  `department` varchar(255) default NULL,
-  `address1` varchar(255) default NULL,
-  `address2` varchar(255) NOT NULL default '',
-  `city` varchar(255) NOT NULL default '',
-  `county` varchar(255) NOT NULL default '',
-  `country` varchar(255) NOT NULL default '',
-  `postcode` varchar(255) NOT NULL default '',
-  `dataprotection_email` enum('No','Yes') default 'No',
-  `dataprotection_phone` enum('No','Yes') default 'No',
-  `dataprotection_address` enum('No','Yes') default 'No',
-  `timestamp_added` int(11) default NULL,
-  `timestamp_modified` int(11) default NULL,
-  `notes` blob NOT NULL,
-  `active` enum('true','false') NOT NULL default 'true',
-  `created` datetime default NULL,
-  `createdby` smallint(6) default NULL,
-  `modified` datetime default NULL,
-  `modifiedby` smallint(6) default NULL,
-  `contact_source` varchar(32) NOT NULL default 'sit',
-  PRIMARY KEY  (`id`),
+CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  KEY `contactid` (`contactid`)
+) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notify_contactid` int(11) NOT NULL DEFAULT '0',
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `forenames` varchar(100) NOT NULL DEFAULT '',
+  `surname` varchar(100) NOT NULL DEFAULT '',
+  `jobtitle` varchar(255) NOT NULL DEFAULT '',
+  `courtesytitle` varchar(50) NOT NULL DEFAULT '',
+  `siteid` int(11) NOT NULL DEFAULT '0',
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `fax` varchar(50) DEFAULT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `address1` varchar(255) DEFAULT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
+  `dataprotection_email` enum('No','Yes') DEFAULT 'No',
+  `dataprotection_phone` enum('No','Yes') DEFAULT 'No',
+  `dataprotection_address` enum('No','Yes') DEFAULT 'No',
+  `timestamp_added` int(11) DEFAULT NULL,
+  `timestamp_modified` int(11) DEFAULT NULL,
+  `notes` blob,
+  `active` enum('true','false') NOT NULL DEFAULT 'true',
+  `created` datetime DEFAULT NULL,
+  `createdby` smallint(6) DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `modifiedby` smallint(6) DEFAULT NULL,
+  `contact_source` varchar(32) NOT NULL DEFAULT 'sit',
+  PRIMARY KEY (`id`),
   KEY `siteid` (`siteid`),
   KEY `username` (`username`),
   KEY `forenames` (`forenames`),
   KEY `surname` (`surname`),
   KEY `notify_contactid` (`notify_contactid`)
-) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
+) ENGINE=MyISAM  DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbDashboard}` (
@@ -1194,6 +1202,15 @@ PRIMARY KEY ( `id` , `type` , `tagid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
+CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  KEY siteid (`siteid`)
+) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
+
+
 CREATE TABLE `{$dbSiteContacts}` (
   `siteid` int(11) NOT NULL default '0',
   `contactid` int(11) NOT NULL default '0',
@@ -1204,18 +1221,18 @@ CREATE TABLE `{$dbSiteContacts}` (
 CREATE TABLE `{$dbSites}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `department` varchar(255) NOT NULL default '',
-  `address1` varchar(255) NOT NULL default '',
-  `address2` varchar(255) NOT NULL default '',
-  `city` varchar(255) NOT NULL default '',
-  `county` varchar(255) NOT NULL default '',
-  `country` varchar(255) NOT NULL default '',
-  `postcode` varchar(255) NOT NULL default '',
-  `telephone` varchar(255) NOT NULL default '',
-  `fax` varchar(255) NOT NULL default '',
-  `email` varchar(255) NOT NULL default '',
-  `websiteurl` varchar(255) default NULL,
-  `notes` blob NOT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `address1` varchar(255) NOT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
+  `telephone` varchar(255) DEFAULT NULL,
+  `fax` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `websiteurl` varchar(255) DEFAULT NULL,
+  `notes` blob,
   `typeid` int(5) NOT NULL default '1',
   `freesupport` int(5) NOT NULL default '0',
   `licenserx` int(5) NOT NULL default '0',
@@ -1718,6 +1735,12 @@ ALTER TABLE `{$dbDrafts}` ADD INDEX ( `incidentid` ) ;
 ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
 
 INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
+
+
+ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `address2` `address2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+
+ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+
 ";
 
 // ********************************************************************

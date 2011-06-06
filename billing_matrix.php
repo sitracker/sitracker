@@ -46,9 +46,9 @@ if (mysql_num_rows($result) >= 1)
 
         while ($obj = mysql_fetch_object($matrixresult))
         {
-            echo "<tr><td>{$obj->hour}</td><td>{$obj->mon}</td><td>{$obj->tue}</td>";
-            echo "<td>{$obj->wed}</td><td>{$obj->thu}</td><td>{$obj->fri}</td>";
-            echo "<td>{$obj->sat}</td><td>{$obj->sun}</td><td>{$obj->holiday}</td></tr>\n";
+            echo "<tr><td>{$obj->hour}</td><td>&#215;{$obj->mon}</td><td>&#215;{$obj->tue}</td>";
+            echo "<td>&#215;{$obj->wed}</td><td>&#215;{$obj->thu}</td><td>&#215;{$obj->fri}</td>";
+            echo "<td>&#215;{$obj->sat}</td><td>&#215;{$obj->sun}</td><td>&#215;{$obj->holiday}</td></tr>\n";
         }
         echo "</table>";
     }

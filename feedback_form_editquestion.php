@@ -105,15 +105,17 @@ switch ($action)
             {
                 echo "<input type='checkbox' name='required' value='true' />";
             }
-            echo "</td></tr>\n<tr>";
-
-            echo "<td><input type='hidden' name='qid' value='{$qid}' />";
-            echo "<input type='hidden' name='fid' value='{$fid}' />";
-            echo "<input type='hidden' name='action' value='save' /></td>";
-            echo "<td><input type='submit' value='{$strSave}' /></td>";
-            echo "</tr>";
+            echo "</td></tr>\n";
             echo "</table>";
+            echo "<p class='formbuttons'><input type='hidden' name='qid' value='{$qid}' />";
+            echo "<input type='hidden' name='fid' value='{$fid}' />";
+            echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+            echo "<input type='hidden' name='action' value='save' />";
+            echo "<td><input type='submit' value='{$strSave}' />";
+            echo "</p>";
+
             echo "<p><a href='feedback_form_edit.php?id={$fid}'>{$strReturnToPreviousPage}</a></p>";
+            echo "</form>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;

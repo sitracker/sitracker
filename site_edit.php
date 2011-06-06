@@ -53,18 +53,18 @@ elseif ($action == "update")
     // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
     $incident_quantity = clean_int($_POST['incident_pool']);
     $name = clean_dbstring($_POST['name']);
-    $department = clean_dbstring($_POST['department']);
+    $department = convert_string_null_safe(clean_dbstring($_POST['department']));
     $address1 = clean_dbstring($_POST['address1']);
-    $address2 = clean_dbstring($_POST['address2']);
-    $city = clean_dbstring($_POST['city']);
-    $county = clean_dbstring($_POST['county']);
-    $postcode = clean_dbstring($_POST['postcode']);
-    $country = clean_dbstring($_POST['country']);
-    $telephone = clean_dbstring($_POST['telephone']);
-    $fax = clean_dbstring($_POST['fax']);
-    $email = clean_dbstring($_POST['email']);
-    $websiteurl = clean_dbstring($_POST['websiteurl']);
-    $notes = clean_dbstring($_POST['notes']);
+    $address2 = convert_string_null_safe(clean_dbstring($_POST['address2']));
+    $city = convert_string_null_safe(clean_dbstring($_POST['city']));
+    $county = convert_string_null_safe(clean_dbstring($_POST['county']));
+    $postcode = convert_string_null_safe(clean_dbstring($_POST['postcode']));
+    $country = convert_string_null_safe(clean_dbstring($_POST['country']));
+    $telephone = convert_string_null_safe(clean_dbstring($_POST['telephone']));
+    $fax = convert_string_null_safe(clean_dbstring($_POST['fax']));
+    $email = convert_string_null_safe(clean_dbstring($_POST['email']));
+    $websiteurl = convert_string_null_safe(clean_dbstring($_POST['websiteurl']));
+    $notes = convert_string_null_safe(clean_dbstring($_POST['notes']));
     $typeid = clean_int($_POST['typeid']);
     $owner = clean_int($_POST['owner']);
     $site = clean_int($_POST['site']);
@@ -100,9 +100,9 @@ elseif ($action == "update")
             $activeStr = 'false';
         }
 
-        $sql = "UPDATE `{$dbSites}` SET name='{$name}', department='{$department}', address1='{$address1}', address2='{$address2}', city='{$city}', ";
-        $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
-        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
+        $sql = "UPDATE `{$dbSites}` SET name='{$name}', department={$department}, address1='{$address1}', address2={$address2}, city={$city}, ";
+        $sql .= "county={$county}, postcode={$postcode}, country={$country}, telephone={$telephone}, fax={$fax}, email={$email}, ";
+        $sql .= "websiteurl={$websiteurl}, notes={$notes}, typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

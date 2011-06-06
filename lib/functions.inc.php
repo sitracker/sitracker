@@ -658,7 +658,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     {
         $rtnvalue = TRUE;
     }
-    elseif ($CONFIG['outbound_email_disable'] == true)
+    elseif ($CONFIG['enable_outbound_email'] == false)
     {
         $rtnvalue = TRUE;
         debug_log("Outgoing email disabled, no mail is sent");
@@ -1180,6 +1180,20 @@ function check_install_status()
     $s->add_extension_check('pcre', 'PHP Regular Expression', INSTALL_FATAL);
 
     return $s;
+}
+
+
+/**
+ * Makes a string suitable for database insertion where NUll is possible.
+ * It checks to see if the string is empty if so returns Null else the string enclosed in quotes 
+ * @author Paul Heaney
+ * @param String $string the string to be checked
+ * @return String either "Null" or "'$string'"
+ */
+function convert_string_null_safe($string)
+{
+    if ($string == '') return 'Null';
+    else return "'{$string}'";
 }
 
 // -------------------------- // -------------------------- // --------------------------

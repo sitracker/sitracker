@@ -24,6 +24,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  *               before redirection.
  *               This parameter is optional and only required if the default
  *               success/failure will not suffice
+ * @param
  * @return string HTML page with redirect
  * @note Replaces confirmation_page() from versions prior to 3.35
  *       If a header HTML has already been displayed a continue link is printed
@@ -33,7 +34,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @note The recommended way to use this function is to call it without headers/footers
  *       already displayed.
  */
-function html_redirect($url, $success = TRUE, $message='')
+function html_redirect($url, $success = TRUE, $message='', $close=FALSE)
 {
     global $CONFIG, $headerdisplayed, $siterrors;
 
@@ -61,7 +62,10 @@ function html_redirect($url, $success = TRUE, $message='')
         $refreshtime = 10;
     }
 
-    $refresh = "{$refreshtime}; url={$url}";
+    if (!$close)
+    {
+        $refresh = "{$refreshtime}; url={$url}";
+    }
 
     $title = $GLOBALS['strPleaseWaitRedirect'];
     if (!$headerdisplayed)
@@ -74,10 +78,6 @@ function html_redirect($url, $success = TRUE, $message='')
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         }
-    }
-    else
-    {
-        echo "<meta http-equiv=\"refresh\" content=\"$refreshtime; url=$url\" />\n";
     }
 
     echo "<h3>";
@@ -104,6 +104,42 @@ function html_redirect($url, $success = TRUE, $message='')
             echo "<p align='center'><a href=\"{$url}\">{$GLOBALS['strContinue']}</a></p>";
         }
     }
+    
+    if ($close)
+    {
+        if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE')
+        {
+            ?>
+            <script type='text/javascript'>
+            //<![CDATA[
+            
+            if (window.confirm(strEmailSentSuccessfullyConfirmWindowClosure))
+            {
+                close_page_redirect('<?php echo $url; ?>');
+            }
+          
+            //]]>
+            </script>
+            <?php
+        }
+        else
+        {
+            // We  use a PeriodicalExecutor as we don't want to close the window instantly, we want users to be able to read the message
+            ?>
+            <script type='text/javascript'>
+            //<![CDATA[
+            
+            new PeriodicalExecuter(function(pe) {
+                                            window.close();
+                                        },
+                                        <?php echo $refreshtime ?>);
+          
+            //]]>
+            </script>
+            <?php
+        }
+    }
+    
     // TODO 3.35 Add a link to refresh the dashlet if this is run inside a dashlet
 
     if ($headerdisplayed)
@@ -344,7 +380,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
 
     $file = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/{$iconset}";
     $file .= "/{$size}x{$size}/{$filename}.png";
-    
+
     $urlpath = "{$CONFIG['application_webpath']}images/icons/{$iconset}";
     $urlpath .= "/{$size}x{$size}/{$filename}.png";
 
@@ -1323,23 +1359,34 @@ function emoticons($text)
  * HTML for an alphabetical index of links
  * @author Ivan Lucas
  * @param string $baseurl start of a URL, the letter will be appended to this
+ * @param bool $displayinactive
  * @return HTML
  */
-function alpha_index($baseurl = '#')
+function alpha_index($baseurl = '#', $displayinactive = FALSE)
 {
-    global $i18nAlphabet;
+    global $i18nAlphabet, $strAll;
+
+    if ($displayinactive === TRUE OR $displayinactive === 'true')
+    {
+        $inactivestring="displayinactive=true";
+    }
+    else
+    {
+        $inactivestring="displayinactive=false";
+    }
 
     $html = '';
     if (!empty($i18nAlphabet))
     {
+        $html .= ' | ';
         $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
             $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
             $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
-
         }
+        $html .= "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
     }
     return $html;
 }
@@ -1825,7 +1872,12 @@ function show_edit_site($site, $mode='internal')
         plugin_do('edit_site_form');
         $html .= "</table>\n";
         $html .= "<input name='site' type='hidden' value='$site' />";
-        $html .= "<p><input name='submit' type='submit' value='{$GLOBALS['strSave']}' /></p>";
+        $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
+        $html .= "<input name='submit' type='submit' value='{$GLOBALS['strSave']}' /></p>";
+        if ($mode == 'internal')
+        {
+            $html .= "<p><a href=\"site_details.php?id={$site}\">{$GLOBALS['strReturnWithoutSaving']}</a></p>";
+        }
         $html .= "</form>";
     }
     return $html;
@@ -1992,7 +2044,8 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
-    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strNewContact']}\" /></p>";
+    $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
+    $html .= "<input name='submit' type='submit' value=\"{$GLOBALS['strSave']}\" /></p>";
     $html .= "</form>\n";
 
     //cleanup form vars
@@ -2269,7 +2322,7 @@ function html_status_row($statusentry)
     }
 
     $html .= "</td><td>{$statusentry->checkname}</td><td>{$statusentry->minimum}</td><td>{$statusentry->found}</td>";
-    
+
     $html .= "</tr>";
     return $html;
 }
@@ -2295,7 +2348,7 @@ function html_check_extension($extension, $text, $min_status)
         $toreturn = $min_status;
     }
     echo html_status_row($toreturn, $text, $GLOBALS['strInstalled'], $str);
-    
+
     return $toreturn;
 }
 
@@ -2309,14 +2362,14 @@ function html_check_extension($extension, $text, $min_status)
 function html_install_status($status)
 {
     $html = "<table align='center'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
-    
+
     foreach ($status->statusentries AS $entry)
     {
         $html .= html_status_row($entry);
     }
-    
+
     $html .= "</table>";
-    
+
     return $html;
 }
 

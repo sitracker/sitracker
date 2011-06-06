@@ -102,13 +102,14 @@ switch ($_REQUEST['action'])
             //echo "<td style='text-align: right;'>{$users->holiday_resetdate}</td>";
             //echo "<td style='text-align: right;'><input type='text' size='4' maxlength='5' value='{$newentitlement}' /></td>";
             echo "</tr>";
-            
+
             if ($shade == 'shade1') $shade = "shade2";
             else $shade = "shade1";
         }
         echo "</table>";
-        echo "<p>";
+        echo "<p class='formbuttoms'>";
         echo "<input type='hidden' name='action' value='save' />";
+        echo "<input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
         echo "</form>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

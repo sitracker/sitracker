@@ -1018,6 +1018,7 @@ width:0px;color:red;}
 }
 
 table#cols { height: 350px; }
+td.alphamenu { text-align: center; vertical-align: middle; }
 
 #trigger_list {
 margin: 0 auto;

@@ -36,6 +36,7 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
                                'external_links_newwindow',
                                'show_confirmation_caution',
                                'show_confirmation_delete',
+								'show_confirmation_close_window',
                                'show_inactive_data'
                                );
 
@@ -97,6 +98,9 @@ $CFGVAR['show_confirmation_caution']['type'] = 'checkbox';
 // TODO
 $CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages ("Are you sure?") on delete';
 $CFGVAR['show_confirmation_delete']['type'] = 'checkbox';
+
+$CFGVAR['show_confirmation_close_window']['title'] = 'Show confirmation before closing a Window';
+$CFGVAR['show_confirmation_close_window']['type'] = 'checkbox';
 
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
 $CFGVAR['show_emoticons']['type'] = 'checkbox';

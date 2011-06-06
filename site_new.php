@@ -115,7 +115,8 @@ if ($action == "showform" OR $action == '')
     echo "</textarea></td></tr>\n";
     echo "</tbody>";
     echo "</table>\n";
-    echo "<p><input name='submit' type='submit' value='{$strNewSite}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>\n";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -125,18 +126,18 @@ if ($action == "showform" OR $action == '')
 elseif ($action == "new")
 {
     $name = cleanvar($_POST['name']);
-    $department = cleanvar($_POST['department']);
+    $department = convert_string_null_safe(cleanvar($_POST['department']));
     $address1 = cleanvar($_POST['address1']);
-    $address2 = cleanvar($_POST['address2']);
-    $city = cleanvar($_POST['city']);
-    $county = cleanvar($_POST['county']);
-    $country = cleanvar($_POST['country']);
-    $postcode = cleanvar($_POST['postcode']);
-    $telephone = cleanvar($_POST['telephone']);
-    $fax = cleanvar($_POST['fax']);
-    $email = cleanvar($_POST['email']);
-    $websiteurl = cleanvar($_POST['websiteurl']);
-    $notes = cleanvar($_POST['notes']);
+    $address2 = convert_string_null_safe(cleanvar($_POST['address2']));
+    $city = convert_string_null_safe(cleanvar($_POST['city']));
+    $county = convert_string_null_safe(cleanvar($_POST['county']));
+    $country = convert_string_null_safe(cleanvar($_POST['country']));
+    $postcode = convert_string_null_safe(cleanvar($_POST['postcode']));
+    $telephone = convert_string_null_safe(cleanvar($_POST['telephone']));
+    $fax = convert_string_null_safe(cleanvar($_POST['fax']));
+    $email = convert_string_null_safe(cleanvar($_POST['email']));
+    $websiteurl = convert_string_null_safe(cleanvar($_POST['websiteurl']));
+    $notes = convert_string_null_safe(cleanvar($_POST['notes']));
     $typeid = clean_int($_POST['typeid']);
     $owner = clean_int($_POST['owner']);
 
@@ -161,8 +162,8 @@ elseif ($action == "new")
     {
         if ($owner == '') $owner = 0;
         $sql  = "INSERT INTO `{$dbSites}` (name, department, address1, address2, city, county, country, postcode, telephone, fax, email, websiteurl, notes, typeid, owner) ";
-        $sql .= "VALUES ('{$name}', '{$department}','{$address1}', '{$address2}', '{$city}', '{$county}', '{$country}', '{$postcode}', ";
-        $sql .= "'{$telephone}', '{$fax}', '{$email}', '{$websiteurl}', '{$notes}', '{$typeid}', '{$owner}')";
+        $sql .= "VALUES ('{$name}', {$department}, '{$address1}', {$address2}, {$city}, {$county}, {$country}, {$postcode}, ";
+        $sql .= "{$telephone}, {$fax}, {$email}, {$websiteurl}, {$notes}, '{$typeid}', '{$owner}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $id = mysql_insert_id();

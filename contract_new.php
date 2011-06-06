@@ -36,7 +36,6 @@ if ($action == "showform" OR $action == '')
     echo "{$strNewContract}</h2>";
     echo "<form id='new_contract' name='new_contract' action='{$_SERVER['PHP_SELF']}?action=new' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table align='center' class='vertical'>";
-    echo "<thead>";
     echo "<tr><th>{$strSite}</th><td>";
     if ($_SESSION['formdata']['new_contract']['site'] != '')
     {
@@ -113,7 +112,6 @@ if ($action == "showform" OR $action == '')
 
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
     echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
-    echo "</thead>";
 
     echo "<tbody id='hiddentimed'";
     if (!$timed) echo " style='display:none'";
@@ -196,7 +194,8 @@ if ($action == "showform" OR $action == '')
     if ($timed) $timed = 'yes';
     else $timed = 'no';
     echo "<input type='hidden' id='timed' name='timed' value='{$timed}' />";
-    echo "<p align='center'><input name='submit' type='submit' value=\"{$strNewContract}\" /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

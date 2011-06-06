@@ -141,6 +141,7 @@ elseif ($_REQUEST['mode'] == "show")
             //print_r($lines);
             $stringcheck = false;
             $stringcount = 0;
+            $meta = array();
             foreach ($lines AS $introcomment)
             {
                 if (mb_substr($introcomment, 0, 2) == "//")
@@ -263,6 +264,7 @@ elseif ($_REQUEST['mode'] == "save")
     $lang = str_replace($badchars, '', $tolang);
     $origcount = clean_int($_REQUEST['origcount']);
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
+    $meta = cleanvar($_REQUEST['meta'], TRUE, FALSE);
 
     $filename = "{$lang}.inc.php";
 
@@ -281,12 +283,10 @@ elseif ($_REQUEST['mode'] == "save")
     $i18nfile .= "\$languagestring = '{$i18n_codes[$lang]} ($lang)';\n";
     $i18nfile .= "\$i18ncharset = 'UTF-8';\n\n";
 
-    if (!empty($i18nalphabet))
-    {
-        $i18nfile .= "// List of letters of the alphabet for this language\n";
-        $i18nfile .= "// in standard alphabetical order (upper case, where applicable)\n";
-        $i18nfile .= "\$i18nAlphabet = '{$i18nalphabet}';\n\n";
-    }
+    $i18nfile .= "// List of letters of the alphabet for this language\n";
+    $i18nfile .= "// in standard alphabetical order (upper case, where applicable). Leave blank to disable alphabetical indexing.\n";
+    $i18nfile .= "\$i18nAlphabet = '{$i18nalphabet}';\n\n";
+
 
     $i18nfile .= "// list of strings (Alphabetical by key)\n";
 
@@ -294,17 +294,18 @@ elseif ($_REQUEST['mode'] == "save")
     $translatedcount = 0;
     foreach (array_keys($_SESSION['translation_fromvalues']) as $key)
     {
-        if (!empty($_POST[$key]) AND mb_substr($key, 0, 3) == "str")
+        if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
         {
-            if ($lastchar!='' AND mb_substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
             $i18nfile .= "\${$key} = '".addslashes($_POST[$key])."';\n";
-            $lastchar = mb_substr($key, 3, 1);
+            $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
         elseif (!empty($_SESSION['translation_foreignvalues'][$key]))
         {
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
             $i18nfile .= "\${$key} = '".addslashes($_SESSION['translation_foreignvalues'][$key])."';\n";
-            $lastchar = mb_substr($key, 3, 1);
+            $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
     }

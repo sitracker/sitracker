@@ -137,7 +137,8 @@ if ($action == "edit")
         echo "</tbody>";
         echo "</table>\n";
         echo "<input name='maintid' type='hidden' value='{$maintid}' />";
-        echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>\n";
 
         echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";

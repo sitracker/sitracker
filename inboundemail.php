@@ -178,15 +178,20 @@ if ($emails > 0)
         // Attempt to recognise contact from the email address
         $from_email = strtolower($decoded[0]['ExtractedAddresses']['from:'][0]['address']);
         // Work-around for a problem where email addresses with extra characters (such as apostophe) stop the email address being extracted
-        if (empty($from_email) AND !empty($decoded[0]['Headers']['from:'])) $from_email = strtolower($decoded[0]['Headers']['from:']);
+        if (empty($from_email) AND !empty($decoded[0]['Headers']['from:']))
+        {
+            $parsed_from = imap_rfc822_parse_adrlist($decoded[0]['Headers']['from:'], 'example.com');
+            $from_email = strtolower($parsed_from[0]->mailbox . '@' . $parsed_from[0]->host);
+        }
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` ";
-        $sql .= "WHERE email = '{$from_email}'";
+        $sql .= "WHERE email = '".mysql_real_escape_string($from_email)."'";
         if ($result = mysql_query($sql))
         {
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             $row = mysql_fetch_object($result);
             $contactid = $row->id;
         }
+        debug_log($sql);
 
         $from_name = $decoded[0]['ExtractedAddresses']['from:'][0]['name'];
         // Convert the from encoding to UTF-8 if it isn't already
@@ -284,12 +289,20 @@ if ($emails > 0)
         }
 
         // Extract Incident ID
-        if (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+        if ($CONFIG['support_email_tags'] === TRUE AND preg_match('/?:[a-z][a-z]+.*?(\\d+)@?:[a-z][a-z\\.\\d\\-]+)\\.(?:[a-z][a-z\\-]+))(?![\\w\\./', $to, $m))
         {
             if (FALSE !== incident_status($m[1]))
             {
                 $incidentid = $m[1];
-                debug_log("Incident ID found in email: '{$incidentid}'");
+                debug_log("Incident ID found in email TO address tag: '{$incidentid}'");
+            }
+        }
+        elseif (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+        {
+            if (FALSE !== incident_status($m[1]))
+            {
+                $incidentid = $m[1];
+                debug_log("Incident ID found in email subject: '{$incidentid}'");
             }
         }
 

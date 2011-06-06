@@ -74,6 +74,7 @@ $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv
 
 $CFGCAT['portal'] = array('portal',
                           'portal_kb_enabled',
+                          'portal_feedback_enabled',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
@@ -105,8 +106,9 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'spam_email_subject'
                                 );
 
-$CFGCAT['outboundemail'] = array('outbound_email_disable',
+$CFGCAT['outboundemail'] = array('enable_outbound_email',
                                  'support_email',
+                                 'support_email_tags',
                                  'outbound_email_encoding',
                                  'outbound_email_linefeed'
                                 );
@@ -532,9 +534,9 @@ $CFGVAR['notice_threshold']['title'] = 'Notice Threshold';
 $CFGVAR['notice_threshold']['help'] = 'Flag items as notice when they are this percentage complete.';
 $CFGVAR['notice_threshold']['type'] = 'percent';
 
-$CFGVAR['outbound_email_disable']['title'] = 'Disable Outbound Email';
-$CFGVAR['outbound_email_disable']['help'] = "You can disable outbound email here so SiT won't send emails";
-$CFGVAR['outbound_email_disable']['type'] = 'checkbox';
+$CFGVAR['enable_outbound_email']['title'] = 'Enable Outbound Email';
+$CFGVAR['enable_outbound_email']['help'] = "You can disable outbound email here so SiT won't send emails";
+$CFGVAR['enable_outbound_email']['type'] = 'checkbox';
 
 $CFGVAR['outbound_email_encoding']['title'] = 'Change Outbound Encoding';
 $CFGVAR['outbound_email_encoding']['help'] = "Change the outbound mail encoding if you experience mails looking weird i.e. if you send mails through GroupWise and each line is broken by a '='";
@@ -553,6 +555,10 @@ $CFGVAR['plugins']['type'] = '1darray';
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
 $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
+
+$CFGVAR['portal_feedback_enabled']['title'] = "Enable Feedback in the portal";
+$CFGVAR['portal_feedback_enabled']['help'] = "This enables/disables feedback from the portal, if main feedback is disabled this has no effect";
+$CFGVAR['portal_feedback_enabled']['type'] = 'checkbox';
 
 $CFGVAR['portal_interface_style']['title'] = "Portal interface style";
 $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
@@ -613,6 +619,10 @@ $CFGVAR['start_working_day']['type'] = 'timeselector';
 
 $CFGVAR['support_email']['title'] = 'From address for support emails';
 $CFGVAR['support_email']['help'] = 'Email sent by SiT that uses the template variable <code>{supportemail}</code> will come from this address';
+
+$CFGVAR['support_email_tags']['title'] = 'Use address tags / sub addressing on the support email address';
+$CFGVAR['support_email_tags']['help'] = 'Incident number tags will be added to the From address for support emails which will help SiT! track emails for (e.g. support+10234@example.net) - Not all mail servers support this.';
+$CFGVAR['support_email_tags']['type'] = 'checkbox';
 
 $CFGVAR['support_manager']['title'] = 'Support Manager';
 $CFGVAR['support_manager']['help'] = 'The person who is in charge of your support service. Used in email templates etc.';

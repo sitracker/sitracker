@@ -94,6 +94,7 @@ var strSelectKBSections = \"{$strSelectKBSections}\";
 var strSummaryOfProblemAndResolution = \"{$strSummaryOfProblemAndResolution}\";
 var strUp = \"{$strUp}\";
 var strYouMustEnterIncidentTitle = \"{$strYouMustEnterIncidentTitle}\";
+var strEmailSentSuccessfullyConfirmWindowClosure = \"{$strEmailSentSuccessfullyConfirmWindowClosure}\";
 
 /* CONSTANTS */
 

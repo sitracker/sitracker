@@ -97,10 +97,10 @@ while ($site = mysql_fetch_object($result))
             echo "<th style='text-align: left;'>{$strLicense}</th>";
             echo "<th style='text-align: left;'>{$strExpiryDate}</th>";
             echo "<th style='text-align: left;'>{$strAllContacts}</th>";
-            echo "<th style='text-align: left;'>{$strEngineer} 1</th>";
-            echo "<th style='text-align: left;'>{$strEngineer} 2</th>";
-            echo "<th style='text-align: left;'>{$strEngineer} 3</th>";
-            echo "<th style='text-align: left;'>{$strEngineer} 4</th></tr>\n";
+            echo "<th style='text-align: left;'>{$strContact} 1</th>";
+            echo "<th style='text-align: left;'>{$strContact} 2</th>";
+            echo "<th style='text-align: left;'>{$strContact} 3</th>";
+            echo "<th style='text-align: left;'>{$strContact} 4</th></tr>\n";
             while ($maint = mysql_fetch_object($mresult))
             {
                 if ($maint->expirydate > $now AND $maint->term != 'yes')

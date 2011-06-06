@@ -56,8 +56,8 @@ elseif ($action == "edit" && isset($contact))
         echo "<table align='center' class='vertical'>";
         echo "<tr><th>{$strName}: <sup class='red'>*</sup><br />{$strTitle}, {$strForenames}, {$strSurname}</th>";
         echo "<td><input maxlength='50' name='courtesytitle' title='Courtesy Title (Mr, Mrs, Miss, Dr. etc.)' size='7' value='{$contactobj->courtesytitle}' />\n"; // i18n courtesy title
-        echo "<input maxlength='100' name='forenames' size='15' title='Firstnames (or initials)' value='{$contactobj->forenames}' />\n";
-        echo "<input maxlength='100' name='surname' size='20' title='{$strSurname}' value='{$contactobj->surname}' />";
+        echo "<input maxlength='100' name='forenames' size='15' title='Firstnames (or initials)' value='".htmlspecialchars($contactobj->forenames, ENT_QUOTES)."' />\n";
+        echo "<input maxlength='100' name='surname' size='20' title='$strSurname' value='".htmlspecialchars($contactobj->surname, ENT_QUOTES)."' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strTags}:</th><td><textarea rows='2' cols='60' name='tags'>";
         echo list_tags($contact, TAG_CONTACT, false)."</textarea></td></tr>\n";
@@ -70,7 +70,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<input maxlength='100' name='department' size='40' value='{$contactobj->department}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strEmail}: <sup class='red'>*</sup></th><td>";
-        echo "<input maxlength='100' name='email' size='40' value='{$contactobj->email}' />";
+        echo "<input maxlength='100' name='email' size='40' value='".htmlspecialchars($contactobj->email, ENT_QUOTES)."' />";
         echo "<label>";
         echo html_checkbox('dataprotection_email', $contactobj->dataprotection_email);
         echo "{$strEmail} {$strDataProtection}</label>";
@@ -132,7 +132,10 @@ elseif ($action == "edit" && isset($contact))
 
         echo "<input name='contact' type='hidden' value='{$contact}' />";
 
-        echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+
+        echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>\n";
     }
 }
@@ -145,16 +148,16 @@ else if ($action == "update")
     $forenames = clean_dbstring($_POST['forenames']);
     $siteid = clean_int($_POST['siteid']);
     $email = strtolower(clean_dbstring($_POST['email']));
-    $phone = clean_dbstring($_POST['phone']);
-    $mobile = clean_dbstring($_POST['mobile']);
-    $fax = clean_dbstring($_POST['fax']);
-    $address1 = clean_dbstring($_POST['address1']);
-    $address2 = clean_dbstring($_POST['address2']);
-    $city = clean_dbstring($_POST['city']);
-    $county = clean_dbstring($_POST['county']);
-    $postcode = clean_dbstring($_POST['postcode']);
-    $country = clean_dbstring($_POST['country']);
-    $notes = clean_dbstring($_POST['notes']);
+    $phone = convert_string_null_safe(clean_dbstring($_POST['phone']));
+    $mobile = convert_string_null_safe(clean_dbstring($_POST['mobile']));
+    $fax = convert_string_null_safe(clean_dbstring($_POST['fax']));
+    $address1 = convert_string_null_safe(clean_dbstring($_POST['address1']));
+    $address2 = convert_string_null_safe(clean_dbstring($_POST['address2']));
+    $city = convert_string_null_safe(clean_dbstring($_POST['city']));
+    $county = convert_string_null_safe(clean_dbstring($_POST['county']));
+    $postcode = convert_string_null_safe(clean_dbstring($_POST['postcode']));
+    $country = convert_string_null_safe(clean_dbstring($_POST['country']));
+    $notes = convert_string_null_safe(clean_dbstring($_POST['notes']));
     $dataprotection_email = clean_dbstring($_POST['dataprotection_email']);
     $dataprotection_address = clean_dbstring($_POST['dataprotection_address']);
     $dataprotection_phone = clean_dbstring($_POST['dataprotection_phone']);
@@ -214,13 +217,14 @@ else if ($action == "update")
         */
         replace_tags(1, $contact, $tags);
 
-        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='{$courtesytitle}', surname='{$surname}', forenames='{$forenames}', siteid='{$siteid}', email='{$email}', phone='{$phone}', mobile='{$mobile}', fax='{$fax}', ";
-        $sql .= "address1='{$address1}', address2='{$address2}', city='{$city}', county='{$county}', postcode='{$postcode}', ";
-        $sql .= "country='{$country}', dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
-        $sql .= "notes='{$notes}', dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
+        $sql = "UPDATE `{$dbContacts}` SET courtesytitle='{$courtesytitle}', surname='{$surname}', forenames='{$forenames}', siteid='{$siteid}', email='{$email}', phone={$phone}, mobile={$mobile}, fax={$fax}, ";
+        $sql .= "address1={$address1}, address2={$address2}, city={$city}, county={$county}, postcode={$postcode}, ";
+        $sql .= "country={$country}, dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
+        $sql .= "notes={$notes}, dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
         $sql .= "notify_contactid='{$notify_contactid}', ";
-        $sql .= "active = '{$activeStr}}', ";
+        $sql .= "active = '{$activeStr}', ";
         $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
+
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
