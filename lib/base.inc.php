@@ -113,14 +113,28 @@ define ("LICENCE_PER_SERVER", 3);
 define ("LICENCE_SITE", 4);
 define ("LICENCE_EVALUATION", 5);
 
+// Install Settings
+define ("MIN_PHP_VERSION", 5.1);
+define ("MIN_MYSQL_VERSION", 4.1);
+define ('INSTALL_INFO', 0);
+define ('INSTALL_OK', 1);
+define ('INSTALL_WARN', 2);
+define ('INSTALL_FATAL', 3);
+
+// Queue
+define ('QUEUE_ACTION_NEEDED', 1);
+define ('QUEUE_WAITING', 2);
+define ('QUEUE_ALL_OPEN', 3);
+define ('QUEUE_ALL_CLOSED', 4);
+
 /**
  * Begin global variable definitions
  **/
 // Version number of the application, (numbers only)
 $application_version = '3.90';
 
-// Revision string, e.g. 'beta2' or 'svn' or ''
-$application_revision = 'svn';
+// Revision string, e.g. 'beta2' or 'git' or ''
+$application_revision = 'git';
 
 // The number of errors that have occurred
 $siterrors = 0;
@@ -130,11 +144,12 @@ $now = time();
 // next 16 hours, based on reminders being run at midnight this is today
 $today = $now + (16 * 3600);
 $lastweek = $now - (7 * 86400); // the previous seven days
-$todayrecent = $now -(16 * 3600);  // past 16 hours
+$todayrecent = $now - (16 * 3600);  // past 16 hours
 $startofsession = $now - ini_get("session.gc_maxlifetime");
 
 $CONFIG['upload_max_filesize'] = return_bytes($CONFIG['upload_max_filesize']);
 
+$iconset = $CONFIG['default_iconset'];
 
 // Set a string to be the full version number and revision of the application
 $application_version_string = trim("v{$application_version} {$application_revision}");
@@ -166,6 +181,7 @@ if (!empty($_SESSION['lang'])
     include (APPLICATION_I18NPATH . "{$_SESSION['lang']}.inc.php");
 }
 ini_set('default_charset', $i18ncharset);
+mb_internal_encoding($i18ncharset);
 
 
 //**** Begin functions ****//

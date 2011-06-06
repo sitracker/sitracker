@@ -27,203 +27,6 @@ $contactid = mysql_real_escape_string($hashvars['1']);
 $incidentid = urldecode(mysql_real_escape_string($hashvars['2']));
 unset($errorfields);
 
-/**
- * @author Ivan Lucas
- * @param string $name. Field name
- * @param string $required. 'true' or 'false' is the field mandatory?
- * @param string $options. delimited list of options
- * @param string $answer (optional).
- * @returns string HTML
- */
-function feedback_html_rating($name, $required, $options, $answer='')
-{
-    global $CONFIG;
-    // Rate things out of 'score_max' number
-    $score_max = $CONFIG['feedback_max_score'];
-
-    $option_list = explode('{@}', $options);
-    $promptleft = $option_list[0];
-    $promptright = $option_list[1];
-
-    $colwidth = round(100/$score_max);
-
-    $html = "<table class='feedback'>\n";
-    if (empty($promptleft) == FALSE OR empty($promptright) == FALSE)
-    {
-        $html .= "<tr>";
-        $html .= "<th colspan='{$score_max}' style='text-align: left;'>";
-        $html .= "<div style='float: right;'>{$promptright}</div><div>{$promptleft}</div></th>";
-        if ($required != 'true')
-        {
-            $html .= "<th>&nbsp;</th>";
-        }
-        $html .= "</tr>\n";
-    }
-
-    $html .= "<tr>\n";
-    for ($c = 1; $c <= $score_max; $c++)
-    {
-        $html .= "<td width='{$colwidth}%' style='text-align: center;'><input type='radio' name='{$name}' value='{$c}' ";
-        if ($answer == $c)
-        {
-            $html .= "checked='checked'";
-        }
-        $html .= " />$c</td>\n";
-    }
-
-    if ($required != 'true')
-    {
-        $html .= "<td><input type='radio' name='{$name}' value='0' ";
-        if ($answer == 0)
-        {
-            $html .= "checked='checked'";
-        }
-        $html .= "/>{$strNotApplicableAbbrev}</td>";
-    }
-    $html .= "</tr>\n";
-    $html .= "</table>\n";
-
-    return $html;
-}
-
-
-/**
- * @author Ivan Lucas
- * @param string $name. Field name
- * @param string $required. 'true' or 'false' is the field mandatory?
- * @param string $options. delimited list of options
- * @param string $answer (optional).
- */
-function feedback_html_options($name, $required, $options, $answer='')
-{
-    $option_list = explode('{@}', $options);
-    $option_count = count($option_list);
-    if ($option_count > 3)
-    {
-        $html .= "<select name='{$name}'>\n";
-        foreach ($option_list AS $key=>$option)
-        {
-            $value = strtolower(trim(str_replace(' ', '_', $option)));
-            $html .= "<option value='{$value}'";
-            if ($answer == $value)
-            {
-                $html .= " selected='selected'";
-            }
-            $html .= ">".trim($option)."</option>\n";
-        }
-        $html .= "</select>\n";
-    }
-    else
-    {
-        foreach ($option_list AS $key=>$option)
-        {
-            $value = strtolower(trim(str_replace(' ', '_', $option)));
-            $html .= "<input type='radio' name='{$name}' value='{$value}'";
-            if ($answer == $value)
-            {
-                $html .= " selected='selected'";
-            }
-            $html .= " />".trim($option)." &nbsp; \n";
-        }
-    }
-    return $html;
-}
-
-
-/**
- * @author Ivan Lucas
- * @param string $name. Field name
- * @param string $required. 'true' or 'false' is the field mandatory?
- * @param string $options. delimited list of options
- */
-function feedback_html_multioptions($name, $required, $options)
-{
-    $option_list = explode('{@}', $options);
-    $option_count = count($option_list);
-    if ($option_count > 3)
-    {
-        $html .= "<select name='{$name}[]' multiple='multiple'>\n";
-        foreach ($option_list AS $key=>$option)
-        {
-            $value = strtolower(trim(str_replace(' ', '_', $option)));
-            $html .= "<option value='{$value}'>".trim($option)."</option>\n";
-        }
-        $html .= "</select>\n";
-    }
-    else
-    {
-        foreach ($option_list AS $key=>$option)
-        {
-            $value = strtolower(trim(str_replace(' ', '_', $option)));
-            $html .= "<input type='checkbox' name='{$name}' value='{$value}' />".trim($option)." &nbsp; \n";
-        }
-    }
-    return $html;
-}
-
-
-/**
- * @author Ivan Lucas
- * @param string $name. Field name
- * @param string $required. 'true' or 'false' is the field mandatory?
- * @param string $options. delimited list of options
- * @param string $answer (optional).
- */
-function feedback_html_text($name, $required, $options, $answer='')
-{
-    $option_list = explode('{@}', $options);
-    $cols = $option_list[0] ? $option_list[0] : 60;
-    $rows = $option_list[1] ? $option_list[1] : 5;
-
-    if ($rows == 1)
-    {
-        $html .= "<input type='text' name='{$name}' size='{$cols}' value='{$answer}' />\n";
-    }
-    else
-    {
-        $html .= "<textarea name ='{$name}' rows='{$rows}' cols='{$cols}' >{$answer}</textarea>\n";
-    }
-
-    return $html;
-}
-
-
-/**
- * @author Ivan Lucas
- * @param string $name. Field name
- * @param string $required. 'true' or 'false' is the field mandatory?
- * @param string $options. delimited list of options
- * @param string $answer (optional).
- */
-function feedback_html_question($type, $name, $required, $options, $answer='')
-{
-    $options = nl2br(trim($options));
-    $options = str_replace('<br>', '{@}', $options);
-    $options = str_replace('<br />', '{@}', $options);
-    $options = str_replace('<br/>', '{@}', $options);
-    switch ($type)
-    {
-        case 'rating':
-            $html = feedback_html_rating($name, $required, $options, $answer);
-            break;
-        case 'options':
-            $html = feedback_html_options($name, $required, $options, $answer);
-            break;
-        case 'multioptions':
-            $html = feedback_html_multioptions($name, $required, $options, $answer);
-            break;
-        case 'text':
-            $html = feedback_html_text($name, $required, $options, $answer);
-            break;
-        default:
-            $html = sprintf($GLOBALS['strErrorNoHandlerDefinedForQuestionTypeX'], $type);
-            break;
-  }
-  return $html;
-}
-
-
-
 switch ($_REQUEST['action'])
 {
     case 'save':
@@ -259,7 +62,13 @@ switch ($_REQUEST['action'])
             $fieldname = "Q{$question->id}";
 
             // Check required fields are filled
-            if ($question->required == 'true' AND (mb_strlen($_POST[$fieldname]) < 1 OR
+            if (is_array($_POST[$fieldname]))
+            {
+                // make sure there aren't any commas in the list and convert array to comma separated list
+                $_POST[$fieldname] = str_replace(',', '_', $_POST[$fieldname]);
+                $_POST[$fieldname] = implode(",", $_POST[$fieldname]);
+            } 
+            if ($question->required == 'true' AND (count($_POST[$fieldname]) < 1 OR
                     isset($_POST[$fieldname]) == FALSE))
                     {
                         $errorfields[] = "{$question->id}";
@@ -385,21 +194,26 @@ switch ($_REQUEST['action'])
                     {
                         echo "<p style='color: red'>{$strErrorRequiredQuestionsNotCompleted}</p>";
                     }
-                    echo nl2br($form->introduction);
+                    echo "<div align='center'>" . nl2br($form->introduction) . "</div>";
 
                     $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
                     $qsql .= "WHERE formid='{$form->id}' ";
                     $qsql .= "ORDER BY taborder ASC";
                     $qresult = mysql_query($qsql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+
+                    echo "<table align='center' class='feedback'>";
+
+                    $shade = 'shade1';
                     while ($question = mysql_fetch_object($qresult))
                     {
                         if (mb_strlen(trim($question->sectiontext)) > 3)
                         {
-                            echo "<hr />{$question->sectiontext}\n";
+                            echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
                         }
-
-                        echo "<h4>Q{$question->taborder}: {$question->question}";
+                        echo "<tr class='{$shade}'>";
+                        echo "<td><h4>Q{$question->taborder}: {$question->question}";
                         if ($question->required == 'true')
                         {
                             echo "<sup style='color: red; font-size: 120%;'>*</sup>";
@@ -419,24 +233,32 @@ switch ($_REQUEST['action'])
                         {
                             $answer = '';
                         }
-
+                        echo "</td><td>";
                         echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
                         if (in_array($question->id, $errorfields))
                         {
                             echo "<p style='color: red'>".sprintf($strQuestionXNeedsAnsweringBeforeContinuing, $question->taborder)."</p>";
                         }
-                        echo "<br />";
+                        echo "</td><br />";
+                        if ($shade == 'shade1')
+                        {
+                            $shade = 'shade2';
+                        }
+                        else
+                        {
+                            $shade = 'shade1';
+                        }
                     }
-
-                    echo nl2br($form->thanks);
+                    echo "</table>\n";
+                    echo "<p align='center'>" . nl2br($form->thanks) . "</p>" ;
 
                     echo "<br /><input type='hidden' name='action' value='save' />\n";
                     echo "<input type='hidden' name='ax' value='".strip_tags($_REQUEST['ax'])."' />\n";
-                    echo "<input type='submit' value='Submit' />\n";
+                    echo "<div align='center'><input type='submit' value='Submit' /></div>\n";
                     echo "</form>\n";
                     if ($reqd >= 1)
                     {
-                        echo "<p><sup style='color: red; font-size: 120%;'>*</sup> {$strQuestionRequired}</p>";
+                        echo "<p align='center'><sup style='color: red; font-size: 120%;'>*</sup> {$strQuestionRequired}</p>";
                     }
                 }
             }

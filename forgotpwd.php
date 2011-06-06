@@ -62,15 +62,15 @@ switch ($_REQUEST['action'])
             $hash = md5($userdetails->username.'.'.$userdetails->password);
             $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&userid={$userdetails->id}&hash={$hash}";
             $t = new TriggerEvent('TRIGGER_USER_RESET_PASSWORD', array('userid' => $userdetails->id, 'passwordreseturl' => $reseturl));
-            echo "<h3>{$strInformationSent}</h3>";
-            echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
+            echo "<h3 align='center'>{$strInformationSent}</h3>";
+            echo "<p align='center'>{$strInformationSentRegardingSettingPassword}</p>";
             if ($_REQUEST['action'] == 'forgotpwd')
             {
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
             else
             {
-                echo "<p><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+                echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
             }
 
         }
@@ -96,6 +96,7 @@ switch ($_REQUEST['action'])
                 $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&contactid={$row->id}&hash={$hash}";
                 $t = new TriggerEvent('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
                 echo "<h3>{$strInformationSent}</h3>";
+                echo "<div align='center'>";
                 echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
                 if (empty($email) AND !empty($contactid))
                 {
@@ -105,12 +106,14 @@ switch ($_REQUEST['action'])
                 {
                     echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
+                echo "</div>";
             }
             else
             {
                 echo "<h3>{$strInvalidEmailAddress}</h3>";
                 echo "<p>".sprintf($strForFurtherAssistance, $CONFIG['support_email'])."</p>";
                 echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "</div>";
             }
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

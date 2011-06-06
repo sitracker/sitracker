@@ -38,7 +38,7 @@ else
 
 
 // External variables
-$user = clean_int($_REQUEST['user']);
+$user = cleanvar($_REQUEST['user']);
 $show = cleanvar($_REQUEST['show']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);

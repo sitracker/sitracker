@@ -31,7 +31,7 @@ if (empty($submit))
     echo "<form method='post' action='{$_SERVER['PHP_SELF']}'>";
     echo "<table class='vertical'>";
     echo "<tr><th>{$strName}</th>";
-    echo "<td><input class='required' size='30' name='rolename' /><span class='required'>{$strRequired}</span></td></tr>";
+    echo "<td><input class='required' size='30' name='rolename' /> <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strDescription}</th><td><textarea name='description' id='description' rows='5' cols='30'>{$_SESSION['formdata']['role_new']['description']}</textarea></td></tr>";
     echo "<tr><th>{$strCopyFrom}</th><td>";
     if ($_SESSION['formdata']['role_new']['roleid'] != '')
@@ -45,7 +45,7 @@ if (empty($submit))
     echo "</td></tr>";
 
     echo "</table>";
-    echo "<p><input name='submit' type='submit' value='{$strNewRole}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     clear_form_data('role_new');
@@ -71,7 +71,7 @@ else
     if (mysql_num_rows($result) > 0)
     {
         $errors++;
-        $_SESSION['formerrors']['role_new']['duplicaterole']= "{$strADuplicateAlreadyExists}</p>\n";
+        $_SESSION['formerrors']['role_new']['duplicaterole'] = "{$strADuplicateAlreadyExists}</p>\n";
     }
 
     if ($errors == 0)

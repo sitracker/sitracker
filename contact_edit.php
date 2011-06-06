@@ -70,7 +70,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<input maxlength='100' name='department' size='40' value='{$contactobj->department}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strEmail}: <sup class='red'>*</sup></th><td>";
-        echo "<input maxlength='100' name='email' size='40' value='{$contactobj->email}' />";
+        echo "<input maxlength='100' name='email' size='40' value='".htmlspecialchars($contactobj->email, ENT_QUOTES)."' />";
         echo "<label>";
         echo html_checkbox('dataprotection_email', $contactobj->dataprotection_email);
         echo "{$strEmail} {$strDataProtection}</label>";
@@ -132,7 +132,10 @@ elseif ($action == "edit" && isset($contact))
 
         echo "<input name='contact' type='hidden' value='{$contact}' />";
 
-        echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+
+        echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>\n";
     }
 }
@@ -219,7 +222,7 @@ else if ($action == "update")
         $sql .= "country='{$country}', dataprotection_email='{$dataprotection_email}', dataprotection_phone='{$dataprotection_phone}', ";
         $sql .= "notes='{$notes}', dataprotection_address='{$dataprotection_address}', department='{$department}', jobtitle='{$jobtitle}', ";
         $sql .= "notify_contactid='{$notify_contactid}', ";
-        $sql .= "active = '{$activeStr}}', ";
+        $sql .= "active = '{$activeStr}', ";
         $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

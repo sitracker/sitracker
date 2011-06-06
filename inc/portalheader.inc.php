@@ -47,6 +47,21 @@ else
 }
 
 echo "</title>\n";
+
+if ($_SESSION['portalauth'] == TRUE)
+{
+    $theme = $_SESSION['userconfig']['theme'];
+    $iconset = $_SESSION['userconfig']['iconset'];
+}
+else
+{
+    $theme = $CONFIG['portal_interface_style'];
+    $iconset = $CONFIG['portal_iconset'];
+}
+
+if (empty($theme)) $theme = $CONFIG['portal_interface_style']; 
+if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
+
 //some css for the KB
 echo "<style type='text/css'>
     .kbprivate
@@ -84,19 +99,6 @@ echo "<style type='text/css'>
 
 echo "<link rel='SHORTCUT ICON' href='{$CONFIG['application_webpath']}images/sit_favicon.png' />\n";
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
-if ($_SESSION['portalauth'] == TRUE)
-{
-    $theme = $_SESSION['userconfig']['theme'];
-    $iconset = $_SESSION['userconfig']['iconset'];
-}
-else
-{
-    $theme = $CONFIG['portal_interface_style'];
-    $iconset = $CONFIG['portal_iconset'];
-}
-
-if (empty($theme)) $theme = $CONFIG['portal_interface_style']; 
-if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
@@ -162,6 +164,8 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         echo "<li><a href='entitlement.php'>{$strEntitlement}</a></li>";
     }
+
+    // Only display the KB when it's populated
     $sql = "SELECT COUNT(docid) FROM `{$dbKBArticles}`";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -170,6 +174,25 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     {
         echo "<li><a href='kb.php'>{$strKnowledgeBase}</a></li>";
     }
+
+    $sql = "SELECT formid, incidentid FROM `{$dbFeedbackRespondents}` ";
+    $sql .= "WHERE contactid = '{$_SESSION['contactid']}' ";
+    $sql .= "AND completed = 'no'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $countfeedback = mysql_num_rows($result);
+    if ($CONFIG['feedback_enabled'] != FALSE AND $CONFIG['portal_feedback_enabled'] != FALSE AND $countfeedback > 0)
+    {
+        echo "<li><a href='feedback.php'>{$strFeedbackForms} ({$countfeedback})</a> ";
+        echo "<ul>";
+        while ($row = mysql_fetch_object($result))
+        {
+            $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid);
+            echo "<li><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strIncident} : {$row->incidentid}</li>";
+        }
+        echo "</ul></li>";
+    }
+
 
     if ($_SESSION['usertype'] == 'admin')
     {

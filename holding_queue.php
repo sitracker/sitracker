@@ -293,60 +293,8 @@ if (mysql_num_rows($resultnew) >= 1)
     }
 }
 
-$realemails = $countresults - $spamcount;
-//$totalheld = $countresults + mysql_num_rows($resultnew) - $spamcount;
 
-/**
- * Incoming Email queue
- * This special queue shows a list of email received by the Inbound Email script
- */
-if (is_array($queuerows))
-{
-    echo "<h2>".icon('email', 32)." {$strIncomingEmail}</h2>";
-
-    echo "<p align='center'>{$strIncomingEmailText}</p>";
-    echo "<form action='{$_SERVER['PHP_SELF']}' id='held_emails' name='held_emails'  method='post'>";
-    echo "<table align='center' style='width: 95%'>";
-    echo "<tr>";
-    echo "<th>";
-    if ($realemails > 0)
-    {
-        echo "<input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll(held_emails, this.checked);\" />";
-    }
-
-    echo "</th>";
-    echo "<th>{$strDate}</th>";
-    echo "<th>{$strFrom}</th>";
-    echo "<th>{$strSubject}</th>";
-    echo "<th>{$strMessage}</th>";
-    echo "<th>{$strOperation}</th>";
-    echo "</tr>";
-    sort($queuerows);
-    foreach ($queuerows AS $row)
-    {
-        echo $row;
-    }
-
-    if ($realemails > 0)
-    {
-        echo "<tr><td>";
-        echo "<a href=\"javascript: submit_form('held_emails')\" onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">{$strDelete}</a>";
-        echo "</td></tr>";
-    }
-    echo "</table>\n";
-    echo "</form>";
-
-    echo "<table class='incidentkey'><tr>";
-    echo "<td class='idle'>{$strContact}</td>";
-    echo "<td class='notice'>{$strUser}</td>";
-    echo "<td class='shade1'>{$strUnknown}</td>";
-    echo "</tr></table>";
-}
-else if ($spamcount == 0)
-{
-    echo "<h2>".icon('support', 32)." {$strHoldingQueue}</h2>";
-    echo "<p align='center'>{$strNoRecords}</p>";
-}
+echo "<h2>".icon('support', 32)." {$strUnassignedIncidents}</h2>";
 
 
 /**
@@ -359,7 +307,7 @@ if (is_array($incidentqueuerows))
 {
     if (sizeof($incidentqueuerows) > 0)
     {
-        echo "<h2>".icon('support', 32)." {$strUnassignedIncidents}</h2>";
+
 
         echo "<table align='center' style='width: 95%'>";
         echo "<tr>";
@@ -466,6 +414,7 @@ if (mysql_num_rows($resultchase) >= 1)
         }
     }
 }
+else echo "<p>{$strNoRecords}</p>";
 
 if (!empty($html_chase))
 {
@@ -473,6 +422,9 @@ if (!empty($html_chase))
     echo "</table>";
 }
 
+
+echo "<h2>".icon('reassign', 32, $strPendingReassignments);
+echo " {$strPendingReassignments}</h2>";
 $sql = "SELECT * FROM `{$dbTempAssigns}` AS t, `{$dbIncidents}` AS i ";
 $sql .= "WHERE t.incidentid = i.id AND assigned='no' ";
 $result = mysql_query($sql);
@@ -482,8 +434,6 @@ if (mysql_num_rows($result) >= 1)
     $show = FALSE;
     $rhtml = "<br />\n";
 
-    $rhtml .= "<h2>".icon('reassign', 32, $strPendingReassignments);
-    $rhtml .= " {$strPendingReassignments}</h2>";
     $rhtml .= "<p align='center'>{$strAutoReassignmentsThatCouldntBeMade}</p>";
     $rhtml .= "<table id='pendingreassignments' align='center' style='width: 95%;'>";
     $rhtml .= "<tr><th title='{$strLastUpdated}'>{$strDate}</th><th title='{$strCurrentOwner}'>{$strFrom}</th>";
@@ -542,6 +492,7 @@ if (mysql_num_rows($result) >= 1)
     }
     $rhtml .= "</table>\n";
 }
+else echo "<p>{$strNoRecords}</p>";
 
 if ($show)
 {

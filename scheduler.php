@@ -86,12 +86,12 @@ switch ($_REQUEST['mode'])
 
             if ($saction->type == 'interval')
             {
-            	$interval = "checked='checked'";
+                $interval = "checked='checked'";
                 $visibilitydate = "style='display:none'";
             }
             elseif ($saction->type == 'date')
             {
-            	$date = "checked='checked'";
+                $date = "checked='checked'";
                 $visibilityinterval = "style='display:none'";
             }
 
@@ -285,7 +285,7 @@ switch ($_REQUEST['mode'])
                 }
                 echo "<td>";
                 if (mysql2date($schedule->end) > 0) echo "{$schedule->end}";
-                else echo "-";
+                else echo "∞";
                 echo "</td>";
                 echo "<td>";
                 $lastruntime = mysql2date($schedule->lastran);

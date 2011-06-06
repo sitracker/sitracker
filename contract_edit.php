@@ -32,7 +32,7 @@ if (empty($action) OR $action == "showform")
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strContract}:</th><td>";
-    maintenance_drop_down("maintid", 0);
+    echo maintenance_drop_down("maintid", 0, NULL, true);
     echo "</td></tr>\n";
     echo "</table>\n";
     echo "<p align='center'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
@@ -137,7 +137,8 @@ if ($action == "edit")
         echo "</tbody>";
         echo "</table>\n";
         echo "<input name='maintid' type='hidden' value='{$maintid}' />";
-        echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>\n";
 
         echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";

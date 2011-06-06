@@ -23,6 +23,8 @@ $inlinefiles = array('jpg','jpeg','png','gif','txt','htm','html');
 
 // External variables
 $id = clean_int($_GET['id']);
+$app = clean_int($_GET['app']);
+$appid = clean_int($_GET['appid']);
 
 $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         FROM `{$dbFiles}` AS f, `{$dbLinks}` AS l, `{$dbUpdates}` AS u
@@ -32,15 +34,40 @@ $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         AND l.direction='left'
         AND l.linkcolref=f.id
         ORDER BY f.filedate DESC";
+
+// Added new SQL for not to break anything. files are not only for Updates anymore -- CJ 07 May 2011
+$sqlapp = "SELECT f.id, f.filename, f.category
+        FROM `{$dbFiles}` AS f
+        INNER JOIN `{$dbLinks}` AS l
+        ON l.linkcolref = f.id
+        WHERE l.linktype='{$app}'
+        AND l.linkcolref='{$id}'
+        AND l.origcolref='{$appid}'
+        LIMIT 1";
+
 $result = mysql_query($sql);
-if (mysql_num_rows($result) > 0)
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+$resultapp = mysql_query($sqlapp);
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+if ((mysql_num_rows($result) > 0) OR (mysql_num_rows($resultapp) > 0))
 {
-    $fileobj = mysql_fetch_object($result);
-    $incidentid = clean_int($fileobj->incidentid);
-    $updateid = clean_int($fileobj->updateid);
-    $filename = cleanvar($fileobj->filename);
-    $visibility = $fileobj->category;
-    $fileid = $fileobj->fileid;
+    if (mysql_num_rows($result) > 0)
+    {
+        $fileobj = mysql_fetch_object($result);
+        $incidentid = clean_int($fileobj->incidentid);
+        $updateid = clean_int($fileobj->updateid);
+        $filename = cleanvar($fileobj->filename);
+        $visibility = $fileobj->category;
+        $fileid = $fileobj->fileid;
+    }
+    else
+    {
+        $fileobj = mysql_fetch_object($resultapp);
+        $filename = cleanvar($fileobj->filename);
+        $visibility = cleanvar($fileobj->category);
+        $fileid = clean_int($fileobj->id);
+    }
 
     $access = FALSE;
     if ($visibility == 'public' AND (isset($sit[2]) OR isset($_SESSION['contactid'])))
@@ -56,7 +83,22 @@ if (mysql_num_rows($result) > 0)
         $access = FALSE;
     }
 
-    if (empty($incidentid))
+    if (!empty($app) AND (!empty($appid)))
+    {
+        $sql = "SELECT origtab FROM `$dbLinkTypes` WHERE id = '{$app}' LIMIT 1";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
+        if (mysql_num_rows($result) > 0)
+        {
+            while ($apptype = mysql_fetch_object($result))
+            {
+                $appname = cleanvar($apptype->origtab);
+                $file_fspath2 = "{$CONFIG['attachment_fspath']}{$appname}" . DIRECTORY_SEPARATOR . $appid . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
+            }
+
+        }
+    }
+    elseif (empty($incidentid))
     {
         $file_fspath = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$fileid}";
         $file_fspath2 = "{$CONFIG['attachment_fspath']}updates" . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";
@@ -75,6 +117,7 @@ if (mysql_num_rows($result) > 0)
         // header('HTTP/1.1 404 Not Found');
         // header('Status: 404 Not Found',1,404);
         echo "<h3>404 File Not Found</h3>";
+        echo "<h3>404 File Not Found :  $file_fspath2</h3>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         if ($CONFIG['debug'] === TRUE)
         {

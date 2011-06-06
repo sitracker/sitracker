@@ -1,5 +1,5 @@
 <?php
-// contract_add_contact.php - Associates a contact with a contract
+// contract_new_contact.php - Associates a contact with a contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External Variables
 $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
-$context = clean_int($_REQUEST['context']);
+$context = cleanvar($_REQUEST['context']);
 $action = $_REQUEST['action'];
 $title = ("$strContract - $strNewContact");
 
@@ -62,7 +62,7 @@ if (empty($action) || $action == "showform")
     }
     else
     {
-        echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>$contactid - ".contact_realname($contactid).", ".site_name(contact_site($contactid));
+        echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>$contactid - ".contact_realname($contactid).", ".site_name(contact_siteid($contactid));
         echo "<input name='contactid' type='hidden' value='{$contactid}' />";
         echo "</td></tr>";
     }
@@ -72,7 +72,7 @@ if (empty($action) || $action == "showform")
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-else if ($action == "add")
+else if ($action == "new")
 {
     $errors = 0;
 

@@ -16,8 +16,6 @@
 // to existing databases in $upgrade_schema[] at the bottom of the file
 // *AND* you must also change $schema[] for new installations (at the top of the file)
 
-// TODO we need to clean this schema up to make it confirmed compatible with mysql4
-
 //the list of default triggers so we can drop all and recreate when we need to update the built-in ones
 $default_triggers = "
 INSERT INTO `{$dbTriggers}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`) VALUES('TRIGGER_INCIDENT_CREATED', 0, 'ACTION_JOURNAL', 0, '', '');
@@ -82,10 +80,10 @@ INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fr
 ('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
-('Default', 6, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 3, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 4, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 5, 2, 2, 2, 2, 2, 2, 2, 2),
+('Default', 6, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 7, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 8, 1, 1, 1, 1, 1, 1.5, 2, 2),
 ('Default', 9, 1, 1, 1, 1, 1, 1.5, 2, 2),
@@ -142,6 +140,15 @@ CREATE TABLE IF NOT EXISTS `{$dbConfig}` (
   `value` text,
   PRIMARY KEY  (`config`)
 ) ENGINE=MyISAM COMMENT='SiT configuration' DEFAULT CHARACTER SET = utf8;
+
+
+CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  KEY `contactid` (`contactid`)
+) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
 
 
 CREATE TABLE `{$dbContacts}` (
@@ -213,7 +220,8 @@ CREATE TABLE `{$dbDrafts}` (
   `content` text NOT NULL,
   `meta` text NOT NULL,
   `lastupdate` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `incidentid` (`incidentid`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -511,7 +519,8 @@ CREATE TABLE `{$dbIncidents}` (
   KEY `title` (`title`),
   KEY `opened` (`opened`),
   KEY `closed` (`closed`),
-  KEY `servicelevel` (`servicelevel`)
+  KEY `servicelevel` (`servicelevel`),
+  KEY `lastupdated` (`lastupdated`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
@@ -661,7 +670,8 @@ VALUES (1,'Task','Subtask','Parent Task','tasks','id','tasks','id','name','','vi
 (3,'Site','Site','Site Task','tasks','id','sites','id','name','','site_details.php?id=%id%'),
 (4,'Incident','Incident','Task','incidents','id','tasks','id','title','','incident_details.php?id=%id%'),
 (5,'Attachments', 'Update', 'File', 'updates', 'id', 'files', 'id', 'filename', '', 'incident_details.php?updateid=%id%&tab=files'),
-(6, 'Incident', 'Transaction', 'Incidents', 'transactions', 'transactionid', 'incidents', 'id', '', '', '');
+(6, 'Incident', 'Transaction', 'Incidents', 'transactions', 'transactionid', 'incidents', 'id', '', '', ''),
+(7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
 
 CREATE TABLE `{$dbMaintenance}` (
@@ -1193,6 +1203,15 @@ PRIMARY KEY ( `id` , `type` , `tagid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
+CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  KEY siteid (`siteid`)
+) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
+
+
 CREATE TABLE `{$dbSiteContacts}` (
   `siteid` int(11) NOT NULL default '0',
   `contactid` int(11) NOT NULL default '0',
@@ -1583,7 +1602,30 @@ INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence
 
 ";
 
-// Upgrading from versions prior to 3.90 won't be possible via setup.php
+// Upgrading from versions prior to 3.50 won't be possible via setup.php
+$upgrade_schema[351] = "
+-- PH 2010-01-09
+UPDATE `{$dbEmailTemplates}` SET type = 'user' WHERE name IN ('EMAIL_INCIDENT_OUT_OF_SLA','EMAIL_INCIDENT_OUT_OF_REVIEW','EMAIL_INCIDENT_CREATED_USER','EMAIL_INCIDENT_REASSIGNED_USER_NOTIFY','EMAIL_INCIDENT_NEARING_SLA','EMAIL_INCIDENT_REVIEW_DUE','EMAIL_KB_ARTICLE_CREATED','EMAIL_HELD_EMAIL_RECEIVED','EMAIL_HELD_EMAIL_MINS','EMAIL_USER_CHANGED_STATUS','EMAIL_SIT_UPGRADED','EMAIL_INCIDENT_CLOSED_USER','EMAIL_CONTRACT_ADDED','EMAIL_USER_CREATED','EMAIL_SITE_CREATED');
+
+";
+
+$upgrade_schema[360] = "
+-- INL 2010-03-20
+ALTER TABLE `{$dbFiles}` CHANGE `category` `category` ENUM( 'public', 'private', 'protected', 'ftp' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'public'
+
+-- KMH 2010-04-08
+UPDATE `{$dbTriggers}` SET `checks` = '{emaildetails} == 1'  WHERE `id` =28
+";
+
+$upgrade_schema[361] = "
+-- PH 2010-06-03
+UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?id={kbid}' WHERE `{$dbNoticeTemplates}`.`id` = 7 LIMIT 1 ;
+
+-- PH 2010-02-08
+ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
+";
+
+
 $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;
 ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
 UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
@@ -1687,7 +1729,13 @@ ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET 
 ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
 ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
 
+UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 
+ALTER TABLE `{$dbDrafts}` ADD INDEX ( `incidentid` ) ;
+
+ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
+
+INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 ";
 
 // ********************************************************************

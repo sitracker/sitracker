@@ -30,6 +30,7 @@ include (APPLICATION_LIBPATH . 'group.class.php');
 include (APPLICATION_LIBPATH . 'user.class.php');
 include (APPLICATION_LIBPATH . 'contact.class.php');
 include (APPLICATION_LIBPATH . 'incident.class.php');
+include (APPLICATION_LIBPATH . 'status.class.php');
 
 include_once (APPLICATION_LIBPATH . 'file.inc.php');
 include (APPLICATION_LIBPATH . 'ldap.inc.php');
@@ -511,7 +512,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
                 || $errno == E_COMPILE_ERROR
                 || $errno == E_COMPILE_WARNING)
             {
-                $logentry .= "Context: [CONTEXT-BEGIN]\n".print_r($errcontext, TRUE)."\n[CONTEXT-END]\n----------\n\n";
+                $logentry .= "\n[CONTEXT-BEGIN]\n".print_r($errcontext, TRUE)."\n[CONTEXT-END]\n----------\n\n";
                 $siterrors++;
             }
 
@@ -557,34 +558,46 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
  * @param string $logentry. A line, or lines to write to the log file
  * (with newlines \n)
  * @param bool $debugmodeonly. Only write an entry if debug mode is TRUE
- * @return bool TRUE log entry written, FALSE log entry not written
+ * @retval bool TRUE log entry written
+ * @retval bool FALSE log entry not written
  */
 function debug_log($logentry, $debugmodeonly = FALSE)
 {
     global $CONFIG;
-
-    if ($debugmodeonly == FALSE
-        OR ($debugmodeonly == TRUE AND $CONFIG['debug_mode'] == TRUE))
+    if ($debugmodeonly === FALSE
+        OR ($debugmodeonly === TRUE AND $CONFIG['debug'] == TRUE))
     {
         $logentry = $_SERVER["SCRIPT_NAME"] . ' ' .$logentry;
 
-        if (mb_substr($logentry, -1) != "\n") $logentry .= "\n";
+        if (substr($logentry, -1) != "\n") $logentry .= "\n";
         if (!empty($CONFIG['error_logfile']))
         {
-            if (is_writable($CONFIG['error_logfile']))
+            if (file_exists($CONFIG['error_logfile']))
             {
-                $fp = fopen($CONFIG['error_logfile'], 'a+');
-                if ($fp)
+                if (is_writable($CONFIG['error_logfile']))
                 {
-                    fwrite($fp, date('c').' '.strip_tags($logentry));
-                    fclose($fp);
+                    $fp = fopen($CONFIG['error_logfile'], 'a+');
+                    if ($fp)
+                    {
+                        fwrite($fp, date('c').' '.$logentry);
+                        fclose($fp);
+                    }
+                    else
+                    {
+                        echo "<p class='error'>Could not log message to error_logfile</p>";
+                        trigger_error("Could not log message to error_logfile", E_USER_NOTICE);
+                        return FALSE;
+                    }
+                    return TRUE;
                 }
                 else
                 {
-                    echo "<p class='error'>Could not log message to error_logfile</p>";
-                    return FALSE;
+                    trigger_error("Debug log file (error_logfile) [{$CONFIG['error_logfile']}] not writable", E_USER_WARNING);
                 }
-                return TRUE;
+            }
+            else
+            {
+                trigger_error("Debug log file (error_logfile) [{$CONFIG['error_logfile']}] not found", E_USER_WARNING);
             }
         }
         else
@@ -594,7 +607,6 @@ function debug_log($logentry, $debugmodeonly = FALSE)
     }
     else return TRUE;
 }
-
 
 
 /**
@@ -613,7 +625,14 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 {
     global $CONFIG, $application_version_string;
 
-    $crlf = "\n";
+    if ($CONFIG['outbound_email_newline'] == 'CRLF')
+    {
+        $crlf = "\r\n";
+    }
+    else
+    {
+        $crlf = "\n";
+    }
 
     if (empty($to)) trigger_error('Empty TO address in email', E_USER_WARNING);
 
@@ -639,12 +658,17 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
     {
         $rtnvalue = TRUE;
     }
+    elseif ($CONFIG['enable_outbound_email'] == false)
+    {
+        $rtnvalue = TRUE;
+        debug_log("Outoing email disabled, no mail is sent");
+    }
     else
     {
         // $rtnvalue = mail($to, $subject, $body, $extra_headers);
 
         $mime = new MIME_mail($from, $to, html_entity_decode($subject), '', $extra_headers, $mailerror);
-        $mime -> attach($body, '', "text/plain; charset={$GLOBALS['i18ncharset']}", 'quoted-printable', 'inline');
+        $mime -> attach($body, '', "text/plain; charset={$GLOBALS['i18ncharset']}", $CONFIG['outbound_email_encoding'], 'inline');
 
         // actually send the email
         $rtnvalue = $mime -> send_mail();
@@ -1135,6 +1159,27 @@ function add_charting_library($library)
     global $CONFIG;
 
     $CONFIG['available_charts'][] = $library;
+}
+
+
+/**
+ * Checks the environment for SiT requirements
+ * @author Paul Heaney
+ * @return Status The status of SiT
+ */
+function check_install_status()
+{
+    $s = new Status();
+    $s->mysql_check();
+    $s->add_extension_check('mysql', 'PHP MySQL Driver', INSTALL_FATAL);
+    $s->add_extension_check('mbstring', 'PHP Multibyte', INSTALL_FATAL);
+    $s->add_extension_check('ldap', 'PHP LDAP', INSTALL_WARN);
+    $s->add_extension_check('imap', 'PHP IMAP', INSTALL_WARN);
+    $s->add_extension_check('zlib', 'PHP Zlib Compression', INSTALL_FATAL);
+    $s->add_extension_check('session', 'PHP Session', INSTALL_FATAL);
+    $s->add_extension_check('pcre', 'PHP Regular Expression', INSTALL_FATAL);
+
+    return $s;
 }
 
 // -------------------------- // -------------------------- // --------------------------

@@ -32,15 +32,15 @@ if (empty($_REQUEST['mode']))
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strFilter}: {$strTag}</th><td><input type='text' ";
     echo "name='filtertags' value='' size='15' /></td></tr>";
-    echo "<tr><th>{$strInclude}: {$strProducts}".help_link('CTRLAddRemove')."</th>";
+    echo "<tr><th>{$strInclude}: {$strProducts}" . help_link('CTRLAddRemove') . "</th>";
     echo "<td>";
-    $sql   = "SELECT * FROM `{$dbProducts}` ORDER BY name";
+    $sql = "SELECT * FROM `{$dbProducts}` ORDER BY name";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     echo "<select name='inc[]' multiple='multiple' size='6'>";
     while ($product = mysql_fetch_object($result))
     {
-        echo "<option value='{$product->id}'>$product->name</option>\n";
+        echo "<option value='{$product->id}'>{$product->name}</option>\n";
     }
     echo "</select>";
     echo "</td></tr>\n";
@@ -49,7 +49,7 @@ if (empty($_REQUEST['mode']))
     echo "<td>";
     $sql = "SELECT * FROM `{$dbProducts}` ORDER BY name";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     echo "<select name='exc[]' multiple='multiple' size='6'>";
     while ($product = mysql_fetch_object($result))
     {
@@ -60,14 +60,14 @@ if (empty($_REQUEST['mode']))
 
     $sql = "SELECT * FROM `{$dbSiteTypes}`";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     if (mysql_num_rows($result) > 0)
     {
-        echo "<tr><th>{$strSiteType}".help_link('CTRLAddRemove')."</th><td>";
+        echo "<tr><th>{$strSiteType}" . help_link('CTRLAddRemove') . "</th><td>";
         echo "<select name='sitetype[]' multiple='multiple' size='6'>";
         while ($obj = mysql_fetch_object($result))
         {
-            echo "<option value='{$obj->typeid}'>$obj->typename</option>\n";
+            echo "<option value='{$obj->typeid}'>{$obj->typename}</option>\n";
         }
         echo "</select>";
         echo "</td></tr>\n";
@@ -164,7 +164,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if ($_REQUEST['activeonly'] == 'yes')
     {
         if (!empty($filtertype)) $sql .= "AND ";
-        $sql .= "m.term!='yes' AND m.expirydate > '$now' ";
+        $sql .= "m.term != 'yes' AND m.expirydate > '{$now}' ";
     }
     if (!empty($incsql))
     {
@@ -173,8 +173,7 @@ elseif ($_REQUEST['mode'] == 'report')
     }
     if (!empty($excsql))
     {
-        if (!empty($filtertype) OR $_REQUEST['activeonly'] == 'yes' OR
-        !empty($incsql)) $sql .= "AND ";
+        if (!empty($filtertype) OR $_REQUEST['activeonly'] == 'yes' OR !empty($incsql)) $sql .= "AND ";
         $sql .= "$excsql";
     }
 
@@ -196,7 +195,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $sql .= " ORDER BY c.email ASC ";
 
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $numrows = mysql_num_rows($result);
 
     // FIXME strip slashes from output
@@ -301,7 +300,7 @@ elseif ($_REQUEST['mode'] == 'report')
             }
 
             $presult = mysql_query($psql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $numproducts=mysql_num_rows($presult);
             $productcount=1;
 
@@ -324,7 +323,6 @@ elseif ($_REQUEST['mode'] == 'report')
     }
     $html .= "</table>";
     $html .= "<p align='center'>".sprintf($strShowingXofX, $rowcount, $numrows)."</p>";
-    //$html .= "<p align='center'>SQL Query used to produce this report:<br /><code>$sql</code></p>\n";
 
     if ($_REQUEST['output'] == 'screen')
     {

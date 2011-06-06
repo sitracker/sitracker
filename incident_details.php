@@ -106,7 +106,7 @@ else
 
     echo "<div id='row'>\n";
     echo "<div id='left'>\n";
-    
+
     // First column: Contact Details
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
@@ -146,7 +146,7 @@ else
     if ($incident->externalid != '' OR $incident->escalationpath > 0)
     {
         echo "{$strEscalated}: ";
-        echo format_external_id($incident->externalid,$incident->escalationpath)."<br />\n";
+        echo format_external_id($incident->externalid, $incident->escalationpath)."<br />\n";
     }
     if ($incident->externalengineer != '')
     {
@@ -178,19 +178,19 @@ else
 
     $tags = list_tags($id, TAG_INCIDENT, TRUE);
     if (!empty($tags)) echo "{$tags}\n";
-    
+
     echo "</div>\n";
     echo "<div id='right'>";
-    
+
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
     {
-        echo "{$strOwner}: <strong>".user_realname($incident->owner,TRUE)."</strong> ";
+        echo "{$strOwner}: <strong>".user_realname($incident->owner, TRUE)."</strong> ";
         $incidentowner_phone = user_phone($incident->owner);
         if ($incidentowner_phone != '') echo "({$strTel}: {$incidentowner_phone}) ";
         if ($incident->towner > 0 AND $incident->towner != $incident->owner)
         {
-           echo "({$strTemp}: ".user_realname($incident->towner,TRUE).")";
+           echo "({$strTemp}: ".user_realname($incident->towner, TRUE).")";
         }
         echo "<br />";
     }
@@ -200,7 +200,7 @@ else
         if ($incident->productversion != '' OR $incident->productservicepacks != '')
         {
             echo " (".$incident->productversion;
-            if ($incident->productservicepacks!='') echo $incident->productservicepacks;
+            if ($incident->productservicepacks != '') echo $incident->productservicepacks;
             echo ")";
         }
         echo "<br />\n";
@@ -355,7 +355,7 @@ else
 
     echo "</div>\n";
     echo "</div>\n";
-        
+
     // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
     $rresult = mysql_query($rsql);
@@ -383,7 +383,7 @@ else
             echo " &nbsp;";
         }
         echo "</div>\n";
-        
+
         echo "</div>\n";
 
     }
@@ -599,9 +599,9 @@ else
         }
 
         // Lookup some extra data
-        $updateuser = user_realname($update->userid,TRUE);
+        $updateuser = user_realname($update->userid, TRUE);
         $updatetime = readable_date($update->timestamp);
-        $currentowner = user_realname($update->currentowner,TRUE);
+        $currentowner = user_realname($update->currentowner, TRUE);
         $currentstatus = incident_status($update->currentstatus);
 
         $updateheadertext = $updatetypes[$update->type]['text'];
@@ -621,17 +621,31 @@ else
         {
             $updateheadertext = str_replace('updatereview', $strPeriodStarted, $updateheadertext);
         }
-        elseif ($update->type == 'reviewmet' AND $update->sla == '')
+        elseif ($update->type == 'reviewmet' AND empty($update->sla))
         {
             $updateheadertext = str_replace('updatereview', $strCompleted, $updateheadertext);
         }
 
-        if ($update->type == 'slamet')
+        if (!empty($update->sla) AND ($update->type == 'slamet' OR $update->type == 'reviewmet'))
         {
             $updateheadertext = str_replace('updatesla', $slatypes[$update->sla]['text'], $updateheadertext);
+
+        }
+        elseif (!empty($update->sla))
+        {
+            //$updateheadertext = "{$strSLA}: ";
+            if ($update->sla != 'opened') $updateheadertext = "{$strSLA}: {$slatypes[$update->sla]['text']} - {$updateheadertext}";
+            else $updateheadertext = "{$strSLA}: {$updateheadertext}";
         }
 
         echo "<a name='update{$count}'></a>";
+
+        if (($update->type == 'opening' AND ($update->sla == 'opened')) OR ($update->type == 'solution' AND ($update->sla == 'solution')))
+        {
+            $bodypriorityfrom = array('New Priority', 'Priority', 'Low', 'Medium', 'High', 'Critical');
+            $bodypriorityto = array($strNewPriority, $strPriority, $strLow, $strMedium, $strHigh, $strCritical);
+            $updatebody = str_replace($bodypriorityfrom, $bodypriorityto, $updatebody);
+        }
 
         // Print a header row for the update
         if ($updatebody == '' AND $update->customervisibility == 'show')
@@ -705,7 +719,7 @@ else
 
         $updatebody = preg_replace("/href=\"(?!http[s]?:\/\/)/", "href=\"http://", $updatebody);
         $updatebody = bbcode($updatebody);
-        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen'\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
+        $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen('\\2')>=70 ? mb_substr('\\2',0,70).'<span class=\'z\'>'.mb_substr('\\2',71).\"</span> $strEllipsis\":'\\2').'</a>'", $updatebody);
 
         // Make KB article references into a hyperlink
         $updatebody = preg_replace("/\b{$CONFIG['kb_id_prefix']}([0-9]{3,4})\b/", "<a href=\"kb_view_article.php?id=$1\" title=\"View KB Article $1\">$0</a>", $updatebody);
@@ -762,11 +776,18 @@ else
                 $showhide = $strMakeVisibleInPortal;
             }
 
-            if (!empty($update->sla) AND $update->type == 'slamet')
+            if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $showhide);
+
             }
             echo icon($updatetypes[$update->type]['icon'], 16, $showhide);
+
+            if (!empty($update->sla) AND $update->type != 'slamet')
+            {
+                // Don't show icon twice for old incidents
+                echo icon($updatetypes['slamet']['icon'], 16, $showhide);
+            }
 
             echo "</a> {$updateheadertext}";
         }
@@ -782,9 +803,14 @@ else
                 echo "<span>{$strMakeVisibleInPortal}</span>";
             }
 
-            if ($update->sla != '')
+            if (!empty($update->sla))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
+                if ($update->type != 'slamet')
+                {
+                    // Don't show icon twice for old incidents
+                    echo icon($updatetypes['slamet']['icon'], 16, $showhide);
+                }
             }
             echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
         }
@@ -847,7 +873,7 @@ else
     {
         echo log_nav_bar();
     }
-    
+
 //    if (!$_GET['win'])
 //    {
 //        echo "</div><!-- AA -->";

@@ -22,7 +22,12 @@ else $lang = $CONFIG['default_i18n'];
 plugin_do('before_page');
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n";
 echo "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang}\" lang=\"{$lang}\">\n";
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang}\" lang=\"{$lang}\"";
+if (isset($i18ndirection) AND !empty($i18ndirection))
+{
+    echo " dir=\"{$i18ndirection}\"";
+}
+echo ">\n";
 echo "<head>\n";
 echo "<!-- SiT (Support Incident Tracker) - Support call tracking system\n";
 echo "     Copyright (C) 2010-2011 The Support Incident Tracker Project\n";
@@ -60,7 +65,7 @@ else
     $iconset = $CONFIG['default_iconset'];
 }
 
-if (empty($theme)) $theme = $CONFIG['default_interface_style']; 
+if (empty($theme)) $theme = $CONFIG['default_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['default_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
@@ -327,7 +332,7 @@ if ($sit[0] != '')
         $num = $num / 2;
         if ($failure > $num)
         {
-            echo user_alert(sprintf("{$strSchedulerNotRunning}"), E_USER_ERROR);
+            echo user_alert(sprintf("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>"), E_USER_ERROR);
         }
     }
 

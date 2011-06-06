@@ -64,7 +64,8 @@ if (empty($submit))
     echo "<tr><th>{$strTags}</th>";
     echo "<td><textarea rows='2' cols='30' name='tags'></textarea></td></tr>\n";
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strNewSkill}' /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
     echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";

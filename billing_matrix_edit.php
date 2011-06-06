@@ -32,23 +32,23 @@ if (!empty($tag) AND empty($action))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('billing', 32)." {$title}</h2>";
-        
+
         echo "<p align='center'>{$tag}</p>";
-        
+
         echo "<form name='billing_matrix_edit' action='{$_SERVER['PHP_SELF']}' method='post'>";
-        
+
         echo "<table align='center'>";
-    
+
         echo "<tr><th>{$strHour}</th><th>{$strMonday}</th><th>{$strTuesday}</th>";
         echo "<th>{$strWednesday}</th><th>{$strThursday}</th><th>{$strFriday}</th>";
         echo "<th>{$strSaturday}</th><th>{$strSunday}</th><th>{$strPublicHoliday}</th></tr>\n";
-        
+
         $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
-        
+
         while ($obj = mysql_fetch_object($result))
         {
             echo "<tr>";
-            echo "<td>{$obj->hour}</td>";
+            echo "<th>{$obj->hour}</th>";
             foreach ($days AS $day)
             {
                 $id = "{$day}_{$obj->hour}";
@@ -56,15 +56,17 @@ if (!empty($tag) AND empty($action))
             }
             echo "</tr>";
         }
-        
+
         echo "</table>";
         echo "<input type='hidden' name='tag' value='{$tag}' />";
         echo "<input type='hidden' name='action' value='edit' />";
-        echo "<p align='center'><input type='submit' value='{$strSave}' /></p>";
-    
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+        echo "<input type='submit' value='{$strSave}' /></p>";
+        echo "<p><a href=\"billing_matrix.php\">{$strReturnWithoutSaving}</a></p>";
+
         echo "</form>";
-        
-        
+
+
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
@@ -75,17 +77,17 @@ if (!empty($tag) AND empty($action))
 else if(!empty($tag) AND $action == "edit")
 {
     $tag = clean_dbstring($_REQUEST['tag']);
-    
+
     $values = array();
-        
+
     $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
 
     $hour = 0;
-    
+
     while ($hour < 24)
     {
         $values[$hour] = array();
-        
+
         $mon = clean_float($_REQUEST["mon_{$hour}"]);
         $tue = clean_float($_REQUEST["tue_{$hour}"]);
         $wed = clean_float($_REQUEST["wed_{$hour}"]);
@@ -94,7 +96,7 @@ else if(!empty($tag) AND $action == "edit")
         $sat = clean_float($_REQUEST["sat_{$hour}"]);
         $sun = clean_float($_REQUEST["sun_{$hour}"]);
         $holiday = clean_float($_REQUEST["holiday_{$hour}"]);
-        
+
         $sql = "UPDATE `{$dbBillingMatrix}` SET mon = {$mon}, tue = {$tue}, wed = {$wed}, thu = {$thu}, ";
         $sql .= "fri = {$fri}, sat = {$sat}, sun = {$sun}, holiday = {$holiday} WHERE tag = '{$tag}' AND hour = {$hour}";
         $result = mysql_query($sql);
@@ -104,10 +106,10 @@ else if(!empty($tag) AND $action == "edit")
             trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             break; // Dont try and add any more
         }
-        
+
         $hour++;
     }
-    
+
     if ($errors >= 1)
     {
         html_redirect("billing_matrix.php", FALSE, $strBillingMatrixEditFailed);

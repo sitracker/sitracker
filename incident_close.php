@@ -286,27 +286,20 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            // Meet service level 'solution'
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            // $sql .= "VALUES ('$id', '{$sit[2]}', '{$now}', '{$currentstatus}', 'slamet', '$now', '{$sit[2]}', 'show', 'solution')";
-            $sql .= "VALUES ('{$id}', '{$sit[2]}', 'slamet', '{$now}', '{$currentowner}', '{$currentstatus}', 'show', 'solution', '')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             //
             if ($wait == 'yes')
             {
                 // Update - mark for closure
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}')";
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
             else
             {
                 // Update - close immediately
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}')";
+                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -349,7 +342,7 @@ else
                     //dont care if I'm related to myself
                     if ($relatedid != $id)
                     {
-                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner,currentstatus, bodytext, timestamp) ";
+                        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
                         $sql .= "VALUES ('$relatedid', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', 'New Status: [b]Active[/b]<hr>\nRelated incident [{$id}] has been closed', '{$now}')";
                         $result = mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -362,7 +355,7 @@ else
                 }
             }
             //tidy up temp reassigns
-            $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid = '$id'";
+            $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid = '{$id}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
@@ -426,7 +419,7 @@ else
                 $docid = mysql_insert_id();
 
                 // Update the incident to say that a KB article was created, with the KB Article number
-                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid);
+                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid)."</b>";
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'default', '{$update}', '{$now}')";
                 $result = mysql_query($sql);
@@ -434,10 +427,10 @@ else
 
 
                 // Get softwareid from Incident record
-                $sql = "SELECT softwareid FROM `{$dbIncidents}` WHERE id='$id'";
-                $result=mysql_query($sql);
+                $sql = "SELECT softwareid FROM `{$dbIncidents}` WHERE id='{$id}'";
+                $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                list($softwareid)=mysql_fetch_row($result);
+                list($softwareid) = mysql_fetch_row($result);
 
                 if (!empty($_POST['summary'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'Summary', '1', '{$summary}', 'public') ";
                 if (!empty($_POST['symptoms'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'Symptoms', '1', '{$symptoms}', 'public') ";

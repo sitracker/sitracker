@@ -1,4 +1,4 @@
-<u>No-one</u>
+<u>Nobody</u>
 Only contract admins can view site incidents in their 'site incidents' queue.
 
 <u>Named contacts</u>

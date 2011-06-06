@@ -476,19 +476,22 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
         }
         $html .= ">";
 
-        if ($visibility == 'internal' AND $id == 0)
+        if ($numrows > 1)
         {
-            $html .= "<option selected='selected' value='0'></option>\n";
-        }
-        elseif ($visiblity = 'external' AND $id == 0)
-        {
-            $html .= "<option selected='selected' value=''>{$GLOBALS['strUnknown']}</option>\n";
+            if ($visibility == 'internal' AND $id == 0)
+            {
+                $html .= "<option selected='selected' value='0'></option>\n";
+            }
+            elseif ($visiblity = 'external' AND $id == 0)
+            {
+                $html .= "<option selected='selected' value=''>{$GLOBALS['strUnknown']}</option>\n";
+            }
         }
 
         while ($software = mysql_fetch_object($result))
         {
             $html .= "<option";
-            if ($software->id == $id)
+            if ($software->id == $id OR $numrows == 1)
             {
                 $html .= " selected='selected'";
             }
@@ -1174,7 +1177,7 @@ function billing_multiplier_dropdown($name, $selected='')
     {
         $html .= "<option value='{$multiplier}'";
         if ($multiplier == $selected) $html .= " selected='selected' ";
-        $html .= ">x{$multiplier}</option>\n";
+        $html .= ">&#215;{$multiplier}</option>\n";
     }
     $html .= "</select>\n";
     return $html;
@@ -1213,18 +1216,18 @@ function billing_matrix_selector($id, $selected='')
 function chart_selector($selected)
 {
     global $CONFIG;
-    
+
     $html = "<select id='default_chart' name='default_chart'>";
-    
+
     foreach ($CONFIG['available_charts'] AS $c)
     {
         $html .= "<option value='{$c}' ";
         if ($selected == $c) $html .= "selected='selected'";
         $html .= ">{$c}</option>";
     }
-    
+
     $html .= "</select>";
-    
+
     return  $html;
 }
 

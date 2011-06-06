@@ -54,12 +54,22 @@ echo "</form>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
-echo "<td valign='middle'>";
+echo "<td class='alphamenu'>";
 
-echo "<a href='contract_new.php'>{$strNewContract}</a> | ";
+if ($search_string == '')
+{
+    if (!empty($i18nAlphabet))
+    {
+        $search_string = mb_substr($i18nAlphabet, 0 , 1);
+    }
+    else
+    {
+        $search_string = '*';
+    }
+}
+
+echo "<a href='contract_new.php'>{$strNewContract}</a>";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
-echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*'>{$strAll}</a>";
-
 echo "</td>";
 echo "</tr>";
 echo "</table>";

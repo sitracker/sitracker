@@ -8,7 +8,12 @@ session_name($CONFIG['session_name']);
 session_start();
 plugin_do('before_page');
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-echo "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xml:lang=\"{$_SESSION['lang']}\" lang=\"{$_SESSION['lang']}\">\n<head><title>";
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xml:lang=\"{$_SESSION['lang']}\" lang=\"{$_SESSION['lang']}\"";
+if (isset($i18ndirection) AND !empty($i18ndirection))
+{
+    echo " dir=\"{$i18ndirection}\"";
+}
+echo ">\n<head><title>";
 if (!empty($incidentid)) echo "{$incidentid} - ";
 if (isset($title))
 {
@@ -178,7 +183,7 @@ else
 }
 
 // Color the title bar according to the SLA and priority
-$class = '';
+$class = 'normal';
 if ($slaremain != 0 AND $incident->status != STATUS_CLOSED)
 {
     if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
@@ -234,7 +239,10 @@ if ($menu != 'hide')
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_edit.php?id={$id}&amp;popup={$popup}' accesskey='T'>{$strEdit}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_service_levels.php?id={$id}&amp;popup={$popup}' accesskey='S'>{$strService}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_relationships.php?id={$id}&amp;tab=relationships' accesskey='L'>{$strRelations}</a> | ";
-        echo "<a class='barlink' href='javascript:email_window({$id})' accesskey='E'>{$strEmail}</a> | ";
+        if ($CONFIG['enable_outgoing_email'] === TRUE)
+        {
+            echo "<a class='barlink' href='javascript:email_window({$id})' accesskey='E'>{$strEmail}</a> | ";
+        }
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_attachments.php?id={$id}&amp;popup={$popup}' accesskey='F'>{$strFiles}</a> | ";
         if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";

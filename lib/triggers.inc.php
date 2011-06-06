@@ -2,12 +2,13 @@
 // triggers.inc.php - Trigger definitions and helper functions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
+// Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-/** 
+/**
  * Trigger action definitions
  * These are the avilable actions to be taken if a trigger is fired
  * To extend these, implement a plugin which attaches to the trigger_actions hook
@@ -39,7 +40,7 @@ array('name' => 'Journal',
 
 plugin_do('trigger_actions');
 
-/** 
+/**
  * Trigger type definitions
  * These are the avilable triggers that can be fired
  * To extend these, implement a plugin which attaches to the trigger_types hook
@@ -444,7 +445,7 @@ array('show' => FALSE,
 $ttvararray['{feedbackurl}'] =
 array('description' => $strFeedbackURL,
       'requires' => 'incidentid',
-      'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_owner($param_array[\'incidentid\'])).\'&&\'.urlencode($param_array[\'incidentid\']))))));'
+      'replacement' => 'application_url().\'feedback.php?ax=\'.urlencode(trim(base64_encode(gzcompress(str_rot13(urlencode($CONFIG[\'feedback_form\']).\'&&\'.urlencode(incident_contact($param_array[\'incidentid\'])).\'&&\'.urlencode($param_array[\'incidentid\']))))));'
       );
 
 $ttvararray['{formattedtime}'][] =
@@ -788,10 +789,22 @@ array('description' => $strResolutionReprioritisationSLA,
       'requires' => 'incidentid'
       );
 
-$ttvararray['{supportemail}'] =
-array('description' => $strSupportEmailAddress,
-      'replacement' => '$CONFIG[\'support_email\'];'
-      );
+if ($CONFIG['support_email_tags'] === TRUE)
+{
+    $ttvararray['{supportemail}'] =
+    array('description' => $strSupportEmailAddress,
+        'replacement' => 'tag_email_address($CONFIG[\'support_email\'], $param_array[\'incidentid\']);',
+        'requires' => 'incidentid'
+        );
+}
+else
+{
+    $ttvararray['{supportemail}'] =
+    array('description' => $strSupportEmailAddress,
+        'replacement' => '$CONFIG[\'support_email\'];'
+        );
+}
+
 
 $ttvararray['{supportmanageremail}'] =
 array('description' => $strSupportManagersEmailAddress,
@@ -1162,11 +1175,11 @@ function trigger_to_array($trigger)
 {
     $array['trigger_type'] = $trigger->getTrigger_type();
     $array['param_array'] = $trigger->getParam_array();
-    $array['user_id'] =$trigger->getUser_id();
-    $array['template'] =$trigger->getTemplate();
-    $array['action'] =$trigger->getAction();
-    $array['checks'] =$trigger->getChecks();
-    $array['parameters'] =$trigger->getParameters();
+    $array['user_id'] = $trigger->getUser_id();
+    $array['template'] = $trigger->getTemplate();
+    $array['action'] = $trigger->getAction();
+    $array['checks'] = $trigger->getChecks();
+    $array['parameters'] = $trigger->getParameters();
 
     return $array;
 }
@@ -1352,7 +1365,7 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     $param_count = sizeof($param);
 
     for ($i = 0; $i < $param_count; $i++)
-    {   
+    {
         if ($enabled[$i] == 'on')
         {
             $checks[$i] = "{".$param[$i]."}";

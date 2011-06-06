@@ -163,8 +163,12 @@ elseif ($action == 'findcontact')
     }
     // Filter by contact
     $contactsql .= "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
-    $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(' ', c.forenames, c.surname)) ";
-    $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(', ', c.surname, c.forenames)) ";
+    // Use SOUNDEX if the system is set to use English (See Mantis 879)
+    if (strtolower(substr($CONFIG['default_i18n'], 0 ,2)) == 'en')
+    {
+        $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(' ', c.forenames, c.surname)) ";
+        $contactsql .= "OR SOUNDEX('{$search_string}') = SOUNDEX(CONCAT_WS(', ', c.surname, c.forenames)) ";
+    }
     $contactsql .= "OR s.name LIKE '%{$search_string}%') ";
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
@@ -769,7 +773,7 @@ elseif ($action == 'assign')
             if (!empty($updateid))
             {
                 // Assign existing update to new incident if we have one
-                $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}' WHERE id='{$updateid}'";
+                $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', sla='opened' WHERE id='{$updateid}'";
 
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -817,9 +821,9 @@ elseif ($action == 'assign')
             {
                 // Create a new update from details entered
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
-                $sql .= "currentstatus, customervisibility, nextaction) ";
+                $sql .= "currentstatus, customervisibility, nextaction, sla) ";
                 $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
-                $sql .= "'1', '{$customervisibility}', '{$nextaction}')";
+                $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -832,17 +836,10 @@ elseif ($action == 'assign')
             $targetval = $level->initial_response_mins * 60;
             $initialresponse = $now + $targetval;
 
-            // Insert the first SLA update, this indicates the start of an incident
-            // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'slamet', '{$now}', '{$sit[2]}', '1', 'show', 'opened','{$_SESSION['syslang']['strIncidentIsOpen']}.')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             // Insert the first Review update, this indicates the review period of an incident has started
             // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', 'opened','')";
+            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', '')";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -1007,7 +1004,7 @@ elseif ($action == 'reassign')
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
     $userphone = user_phone($userid);
-    if ($userphone != '') 
+    if ($userphone != '')
     {
         echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
     }

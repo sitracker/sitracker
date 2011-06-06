@@ -317,4 +317,17 @@ if (!function_exists("mb_substr_replace")){
     }
 }
 
+
+/**
+ * Add an address tag for sub addressing (plus addressing) to an email address
+ * @author Ivan Lucas
+ * @param string $email. Email address
+ * @param string $tag. String to use as a tag
+ * @return string. Email address with sub addressing tag
+ */
+function tag_email_address($email, $tag)
+{
+    return str_replace('@', "+{$tag}@", $email);
+}
+
 ?>

@@ -26,41 +26,32 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $id = clean_int($_REQUEST['id']);
 $mode = $_REQUEST['mode'];
 if (!empty($_REQUEST['start'])) $start = strtotime($_REQUEST['start']);
-else $start=0;
+else $start = 0;
 if (!empty($_REQUEST['end'])) $end = strtotime($_REQUEST['end']);
 else $end = 0;
 $status = $_REQUEST['status'];
+
+function context_menu()
+{
+    global $id, $mode;
+
+    $menu = "<p class='contextmenu' align='center'>{$GLOBALS['strDisplay']}: ";
+    $menu .= "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=open\">{$GLOBALS['strShowOpenIncidents']}</a> | ";
+    $menu .= "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=closed\">{$GLOBALS['strShowClosedIncidents']}</a> | ";
+    $menu .= "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}\">{$GLOBALS['strAll']}</a>";
+    $menu .= "</p>";
+    
+    return $menu;
+}
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 if ($mode == 'site') echo "<h2>".site_name($id)."</h2>";
 else echo "<h2>".contact_realname($id)."</h2>";
 
-if ($mode == 'site')
-{
-    $sql = "SELECT *, (closed - opened) AS duration_closed, i.id AS incidentid ";
-    $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
-    $sql .= "WHERE i.contact = c.id ";
-    if (!empty($id) AND $id != 'all') $sql .= "AND c.siteid = '$id' ";
-    if ($status == 'open') $sql .= "AND i.status != 2 ";
-    elseif ($status == 'closed') $sql .= "AND i.status = 2 ";
-    if ($start > 0) $sql .= "AND opened >= $start ";
-    if ($end > 0) $sql .= "AND opened <= $end ";
-    $sql .= "ORDER BY opened DESC";
-}
-else
-{
-    $sql = "SELECT *, (closed - opened) AS duration_closed, i.id AS incidentid ";
-    $sql .= "FROM `{$dbIncidents}` AS i WHERE ";
-    $sql .= "contact='$id' ";
-    if ($status == 'open') $sql .= "AND i.status!=2 ";
-    elseif ($status == 'closed') $sql .= "AND i.status=2 ";
-    $sql .= "ORDER BY opened DESC";
-}
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
 echo "<h3>{$strAllIncidents}</h3>";
+
+echo context_menu();
 
 echo "<table align='center'>";
 echo "<tr>";
@@ -84,18 +75,46 @@ $countslaexceeded = 0;
 $productlist = array();
 $softwarelist = array();
 if ($mode == 'site') $contactlist = array();
+
+if ($mode == 'site')
+{
+    $sql = "SELECT *, (closed - opened) AS duration_closed, i.id AS incidentid ";
+    $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
+    $sql .= "WHERE i.contact = c.id ";
+    if (!empty($id) AND $id != 'all') $sql .= "AND c.siteid = {$id} ";
+    if ($status == 'open') $sql .= "AND i.status != 2 ";
+    elseif ($status == 'closed') $sql .= "AND i.status = 2 ";
+    if ($start > 0) $sql .= "AND opened >= {$start} ";
+    if ($end > 0) $sql .= "AND opened <= {$end} ";
+    $sql .= "ORDER BY opened DESC";
+}
+else
+{
+    $sql = "SELECT *, (closed - opened) AS duration_closed, i.id AS incidentid ";
+    $sql .= "FROM `{$dbIncidents}` AS i WHERE ";
+    $sql .= "contact='$id' ";
+    if ($status == 'open') $sql .= "AND i.status!=2 ";
+    elseif ($status == 'closed') $sql .= "AND i.status=2 ";
+    $sql .= "ORDER BY opened DESC";
+}
+$result = mysql_query($sql);
+if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
 while ($row = mysql_fetch_object($result))
 {
     $targetmet = TRUE;
     if ($row->status == 2) $shade = 'expired';
     else $shade = 'shade1';
-    echo "<tr class='$shade'>";
+    echo "<tr class='{$shade}'>";
     echo "<td>".$row->incidentid."</td>";
     // title
     echo "<td>";
-    if (trim($row->title) !='') $linktext = $row->title; else $linktext = $strUntitled;;
+    if (trim($row->title) != '') $linktext = $row->title;
+    else $linktext = $strUntitled;
+
     if (trim($row->title) !='') echo $row->title;
     else echo $strUntitled;;
+
     echo "</td>";
     if ($mode == 'site')
     {
@@ -104,7 +123,7 @@ while ($row = mysql_fetch_object($result))
         if ($mode == 'site')
         {
             if (!array_key_exists($contactrealname, $contactlist)) $contactlist[$contactrealname] = 1;
-            else { $contactlist[$contactrealname]++; }
+            else $contactlist[$contactrealname]++;
         }
     }
     echo "<td>".product_name($row->product)."</td>";
@@ -144,28 +163,29 @@ while ($row = mysql_fetch_object($result))
     echo "</td>";
 
     if (!array_key_exists($row->product, $productlist)) $productlist[$row->product] = 1;
-    else { $productlist[$row->product]++; }
+    else $productlist[$row->product]++;
+
     if (!array_key_exists($row->softwareid, $softwarelist)) $softwarelist[$row->softwareid] = 1;
-    else { $softwarelist[$row->softwareid]++; }
+    else $softwarelist[$row->softwareid]++;
+
     $countincidents++;
     if (!empty($row->externalid)) $countextincidents++;
     if ($row->duration_closed >= 1)
     {
-        $totalduration=$totalduration+$row->duration_closed;
+        $totalduration = $totalduration + $row->duration_closed;
         $countclosed++;
     }
     echo "</tr>\n";
 }
+
 echo "</table>\n";
+
 if (mysql_num_rows($result) >= 1 && $countclosed >= 1)
 {
     echo "<p align='center'>{$strAverageIncidentDuration}: ".format_seconds($totalduration/$countclosed)."</p>";
 }
-echo "<p class='contextmenu' align='center'>{$strDisplay}: ";
-echo "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=open\">{$strShowOpenIncidents}</a> | ";
-echo "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=closed\">{$strShowClosedIncidents}</a> | ";
-echo "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}\">{$strAll}</a>";
-echo "</p>";
+
+echo context_menu();
 
 $countproducts = array_sum($productlist);
 if ($mode == 'site') $countcontacts = array_sum($contactlist);
@@ -225,7 +245,7 @@ if ($countproducts >= 1 OR $contactcontacts >= 1)
             $title = urlencode("{$strIncidents}: {$strByContact}");
             //$data="1,2,3";
             echo "<div style='text-align:center;'>";
-            echo "<img src='chart.php?type=pie&data=$data&legends=$legends&title=$title' />";
+            echo "<img src='chart.php?type=pie&data={$data}&legends={$legends}&title={$title}' />";
             echo "</div>";
         }
 

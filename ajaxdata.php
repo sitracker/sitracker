@@ -107,23 +107,27 @@ switch ($action)
         break;
     case 'dashboard_display':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
-        $dashboard = cleanvar($_REQUEST['dashboard']);
+        $dashboard = clean_dbstring($_REQUEST['dashboard']);
         $dashletid = 'win'.cleanvar($_REQUEST['did']);
-        // FIXME need some sanitation here
-        include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
-        $dashfn = "dashboard_{$dashboard}_display";
-        echo $dashfn($dashletid);
+        if (is_dashlet_installed($dashboard))
+        {
+            include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
+            $dashfn = "dashboard_{$dashboard}_display";
+            echo $dashfn($dashletid);
+        }
         break;
     case 'dashboard_save':
     case 'dashboard_edit':
         require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-        $dashboard = cleanvar($_REQUEST['dashboard']);
+        $dashboard = clean_dbstring($_REQUEST['dashboard']);
         $dashletid = 'win'.cleanvar($_REQUEST['did']);
-        // FIXME need some sanitation here
-        include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
-        $dashfn = "dashboard_{$dashboard}_edit";
-        echo $dashfn($dashletid);
+        if (is_dashlet_installed($dashboard))
+        {
+            include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard}.php");
+            $dashfn = "dashboard_{$dashboard}_edit";
+            echo $dashfn($dashletid);
+        }
         break;
     case 'autocomplete_sitecontact':
         $s = clean_dbstring($_REQUEST['s']);

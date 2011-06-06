@@ -105,16 +105,16 @@ elseif (authenticate($username, $_REQUEST['password']))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     //check if the session lang is different the their profiles
-    if ($_SESSION['lang'] != '' AND !empty($SESSION['userconfig']['language']) AND
-        $_SESSION['lang'] != $SESSION['userconfig']['language'])
+    if ($_SESSION['lang'] != '' AND !empty($_SESSION['userconfig']['language']) AND
+        $_SESSION['lang'] != $_SESSION['userconfig']['language'])
     {
-        $t = new triggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $SESSION['userconfig']['language'],
+        $t = new triggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $_SESSION['userconfig']['language'],
                     'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
     }
 
-    if ($SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
+    if ($_SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
     {
-        $_SESSION['lang'] = is_null($SESSION['userconfig']['language']) ? '' : $SESSION['userconfig']['language'];
+        $_SESSION['lang'] = is_null($_SESSION['userconfig']['language']) ? '' : $_SESSION['userconfig']['language'];
     }
 
     // Make an array full of users permissions

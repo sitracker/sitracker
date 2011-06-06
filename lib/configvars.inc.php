@@ -20,7 +20,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
 $CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
-$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap');
+$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap', 'users');
 $TABI18n['plugins'] = $strPlugins;
 
 $TABI18n['application'] = $strApplication;
@@ -74,6 +74,7 @@ $CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv
 
 $CFGCAT['portal'] = array('portal',
                           'portal_kb_enabled',
+                          'portal_feedback_enabled',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
@@ -105,7 +106,12 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'spam_email_subject'
                                 );
 
-$CFGCAT['outboundemail'] = array('support_email');
+$CFGCAT['outboundemail'] = array('enable_outbound_email',
+                                 'support_email',
+                                 'support_email_tags',
+                                 'outbound_email_encoding',
+                                 'outbound_email_linefeed'
+                                );
 
 
 $CFGCAT['feedback'] = array('feedback_enabled',
@@ -135,6 +141,9 @@ $CFGCAT['ldap'] = array('use_ldap',
 $CFGCAT['soap'] = array('soap_enabled',
                          'soap_portal_enabled');
 
+$CFGCAT['users'] = array('user_config_defaults');
+
+
 $CFGCAT['kb'] = array('kb_enabled',
                       'kb_disclaimer_html',
                       'kb_id_prefix');
@@ -162,6 +171,7 @@ $CATI18N['appmain'] = $strGeneral;
 $CATI18N['theming'] = $strTheme;
 $CATI18N['ldap'] = $strLDAP;
 $CATI18N['soap'] = $strSOAP;
+$CATI18N['users'] = $strUsers;
 $CATI18N['other'] = $strOther;
 $CATI18N['inboundemail'] = $strInbound;
 $CATI18N['outboundemail'] = $strOutbound;
@@ -524,6 +534,20 @@ $CFGVAR['notice_threshold']['title'] = 'Notice Threshold';
 $CFGVAR['notice_threshold']['help'] = 'Flag items as notice when they are this percentage complete.';
 $CFGVAR['notice_threshold']['type'] = 'percent';
 
+$CFGVAR['enable_outbound_email']['title'] = 'Enable Outbound Email';
+$CFGVAR['enable_outbound_email']['help'] = "You can disable outbound email here so SiT won't send emails";
+$CFGVAR['enable_outbound_email']['type'] = 'checkbox';
+
+$CFGVAR['outbound_email_encoding']['title'] = 'Change Outbound Encoding';
+$CFGVAR['outbound_email_encoding']['help'] = "Change the outbound mail encoding if you experience mails looking weird i.e. if you send mails through GroupWise and each line is broken by a '='";
+$CFGVAR['outbound_email_encoding']['type'] = 'select';
+$CFGVAR['outbound_email_encoding']['options'] = 'quoted-printable|base64';
+
+$CFGVAR['outbound_email_linefeed']['title'] = 'Choose linefeed';
+$CFGVAR['outbound_email_linefeed']['help'] = "Change the linefeed if outbound emails doesn't break the lines or looks weird.";
+$CFGVAR['outbound_email_linefeed']['type'] = 'select';
+$CFGVAR['outbound_email_linefeed']['options'] = 'LF|CRLF';
+
 $CFGVAR['plugins']['title'] = "Load Plugins";
 $CFGVAR['plugins']['help'] = "Comma separated list of plugins to load. e.g. 'magic_plugin,lookup_plugin'";
 $CFGVAR['plugins']['type'] = '1darray';
@@ -531,6 +555,10 @@ $CFGVAR['plugins']['type'] = '1darray';
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
 $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
+
+$CFGVAR['portal_feedback_enabled']['title'] = "Enable Feedback in the portal";
+$CFGVAR['portal_feedback_enabled']['help'] = "This enables/disables feedback from the portal, if main feedback is disabled this has no effect";
+$CFGVAR['portal_feedback_enabled']['type'] = 'checkbox';
 
 $CFGVAR['portal_interface_style']['title'] = "Portal interface style";
 $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
@@ -592,6 +620,10 @@ $CFGVAR['start_working_day']['type'] = 'timeselector';
 $CFGVAR['support_email']['title'] = 'From address for support emails';
 $CFGVAR['support_email']['help'] = 'Email sent by SiT that uses the template variable <code>{supportemail}</code> will come from this address';
 
+$CFGVAR['support_email_tags']['title'] = 'Use address tags / sub addressing on the support email address';
+$CFGVAR['support_email_tags']['help'] = 'Incident number tags will be added to the From address for support emails which will help SiT! track emails for (e.g. support+10234@example.net) - Not all mail servers support this.';
+$CFGVAR['support_email_tags']['type'] = 'checkbox';
+
 $CFGVAR['support_manager']['title'] = 'Support Manager';
 $CFGVAR['support_manager']['help'] = 'The person who is in charge of your support service. Used in email templates etc.';
 $CFGVAR['support_manager']['type'] = 'userselect';
@@ -623,6 +655,11 @@ $CFGVAR['upload_max_filesize']['unit'] = $strBytes;
 $CFGVAR['use_ldap']['title'] = 'Enable LDAP authentication';
 $CFGVAR['use_ldap']['help'] = "Enable this if you would like to authenticate logins against an LDAP directory";
 $CFGVAR['use_ldap']['type'] = 'checkbox';
+
+$CFGVAR['user_config_defaults']['title'] = "User configuration defaults";
+$CFGVAR['user_config_defaults']['help'] = "You can set configuration defaults here for users that have not personalised their settings. Enter config one per line, format: variable=>setting";
+$CFGVAR['user_config_defaults']['type'] = '2darray';
+
 
 $CFGVAR['urgent_threshold']['title'] = 'Urgent Threshold';
 $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this percentage complete.';

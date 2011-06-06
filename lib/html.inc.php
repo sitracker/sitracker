@@ -344,7 +344,7 @@ function icon($filename, $size='', $alt='', $title='', $id='')
 
     $file = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."images/icons/{$iconset}";
     $file .= "/{$size}x{$size}/{$filename}.png";
-    
+
     $urlpath = "{$CONFIG['application_webpath']}images/icons/{$iconset}";
     $urlpath .= "/{$size}x{$size}/{$filename}.png";
 
@@ -1130,7 +1130,7 @@ function contract_details($id, $mode='internal')
             }
             if ($mode == 'external')
             {
-                $html .= "<p align='center'><a href='addcontact.php'>";
+                $html .= "<p align='center'><a href='newcontact.php'>";
                 $html .= "{$GLOBALS['strNewSiteContact']}</a></p>";
             }
         }
@@ -1323,23 +1323,34 @@ function emoticons($text)
  * HTML for an alphabetical index of links
  * @author Ivan Lucas
  * @param string $baseurl start of a URL, the letter will be appended to this
+ * @param bool $displayinactive
  * @return HTML
  */
-function alpha_index($baseurl = '#')
+function alpha_index($baseurl = '#', $displayinactive = FALSE)
 {
-    global $i18nAlphabet;
+    global $i18nAlphabet, $strAll;
+
+    if ($displayinactive === TRUE OR $displayinactive === 'true')
+    {
+        $inactivestring="displayinactive=true";
+    }
+    else
+    {
+        $inactivestring="displayinactive=false";
+    }
 
     $html = '';
     if (!empty($i18nAlphabet))
     {
+        $html .= ' | ';
         $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
             $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
             $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
-
         }
+        $html .= "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
     }
     return $html;
 }
@@ -1661,6 +1672,24 @@ function kb_article($id, $mode='internal')
         $html .= ldate($CONFIG['dateformat_date'],$pubdate)."<br />";
     }
 
+    $sqlf = "SELECT f.filename, f.id, f.filedate FROM `{$GLOBALS['dbFiles']}` ";
+    $sqlf .= "AS f INNER JOIN `{$GLOBALS['dbLinks']}` as l ON l.linkcolref = f.id ";
+    $sqlf .= "WHERE l.linktype = 7 AND l.origcolref = '{$id}'";
+    $fileresult = mysql_query($sqlf);
+    if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
+    if (mysql_num_rows($fileresult) > 0)
+    {
+        $html .= "<h3>{$GLOBALS['strFiles']}</h3>";
+        $html .= "<br /><table><th>{$GLOBALS['strFilename']}</th><th>{$GLOBALS['strDate']}</th>";
+        while ($filename = mysql_fetch_object($fileresult))
+        {
+            $html .= "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$id}'>$filename->filename</a></td>";
+            $html .= "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";
+        }
+        $html .= "</table>";
+    }
+
+
     if ($mode == 'internal')
     {
         if (is_array($author))
@@ -1974,7 +2003,8 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
-    $html .= "<p><input name='submit' type='submit' value=\"{$GLOBALS['strNewContact']}\" /></p>";
+    $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
+    $html .= "<input name='submit' type='submit' value=\"{$GLOBALS['strSave']}\" /></p>";
     $html .= "</form>\n";
 
     //cleanup form vars
@@ -2069,7 +2099,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result)>0)
+        if (mysql_num_rows($result) > 0)
         {
             $html .= "<table align='center' class='vertical'>";
             $html .= "<tr>";
@@ -2225,5 +2255,103 @@ function html_incident_popup_link($incidentid, $linktext, $tooltip = NULL)
     return $html;
 }
 
+
+/**
+ * Generates a HTML for a status table.
+ * @author Paul Heaney
+ * @param StatusEntry $statusentry The entry to represent as a table row
+ * @return String the HTML row
+ */
+function html_status_row($statusentry)
+{
+    $html = "<tr><td>";
+    switch ($statusentry->status)
+    {
+        case INSTALL_OK:
+            $html .= icon('solution', 16, $GLOBALS['strSuccess']);
+            break;
+        case INSTALL_WARN:
+            $html .= icon('warning', 16, $GLOBALS['strWarning']);
+            break;
+        case INSTALL_FATAL:
+            $html .= icon('error', 16, $GLOBALS['strError']);
+            break;
+        case INSTALL_INFO:
+            $html .= icon('info', 16, $GLOBALS['strInfo']);
+    }
+
+    $html .= "</td><td>{$statusentry->checkname}</td><td>{$statusentry->minimum}</td><td>{$statusentry->found}</td>";
+
+    $html .= "</tr>";
+    return $html;
+}
+
+/**
+ * Checked to see if a PHP extention is installed and prints the corresponding row
+ * @author Paul Heaney
+ * @param String $extension The extension to check is installed
+ * @param String $text The text to print describing this extension
+ * @param int $min_status The minimum accepted status e.g. INSTALL_FATAL if we require this, INSTALL_WARN if its optional
+ * @return int either INSTALL_OK or the $min_status
+ */
+function html_check_extension($extension, $text, $min_status)
+{
+    if (extension_loaded($extension))
+    {
+        $str = $GLOBALS['strInstalled'];
+        $toreturn = INSTALL_OK;
+    }
+    else
+    {
+        $str = $GLOBALS['strNotInstalled'];
+        $toreturn = $min_status;
+    }
+    echo html_status_row($toreturn, $text, $GLOBALS['strInstalled'], $str);
+
+    return $toreturn;
+}
+
+
+/**
+ * Function to generate and display a HTML table of the staus of the sit install
+ * @param Status $status The status object to print as a table
+ * @author Paul Heaney
+ * @return String HTML of the table
+ */
+function html_install_status($status)
+{
+    $html = "<table align='center'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
+
+    foreach ($status->statusentries AS $entry)
+    {
+        $html .= html_status_row($entry);
+    }
+
+    $html .= "</table>";
+
+    return $html;
+}
+
+
+/**
+ * Checks to see if a dashlet is installed
+ * @author Paul Heaney
+ * @param String $dashlet The name of the dashlet
+ * @return boolean True if installed, false otherwise
+ */
+function is_dashlet_installed($dashlet)
+{
+    $sql = "SELECT id FROM `{$GLOBALS['dbDashboard']}` WHERE name = '{$dashlet}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) == 1)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
 
 ?>

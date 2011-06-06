@@ -236,7 +236,6 @@ else
                 echo icon('private', 16, $strPrivate, "{$strPublic}/{$strPrivate}");
                 echo "</label></td></tr>";
             }
-
             else
             {
                 echo "<label><input type='radio' name='distribution' value='public' /> {$strPublic}</label><br />";
@@ -245,7 +244,8 @@ else
                 echo "</label></td></tr>";
             }
             echo "</table>";
-            echo "<p><input name='submit' type='submit' value='{$strNewTask}' /></p>";
+            echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+            echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
             echo "<input type='hidden' name='action' value='newtask' />";
             echo "</form>";
 
