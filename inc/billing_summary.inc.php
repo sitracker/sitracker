@@ -25,7 +25,7 @@ $expiredaszero = cleanvar($_REQUEST['expiredaszero']);
 
 if (empty($display)) $display = 'html';
 
-$sql = "SELECT DISTINCT(CONCAT(m.id,sl.id)), m.site, m.product, m.expirydate AS maintexpiry, s.* ";
+$sql = "SELECT DISTINCT(CONCAT(m.id,sl.tag)), m.site, m.product, m.expirydate AS maintexpiry, s.* ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbService}` AS s, `{$dbSites}` AS site ";
 $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
 
