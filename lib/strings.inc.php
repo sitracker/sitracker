@@ -210,7 +210,7 @@ if (!empty($_SESSION))
                        65=> array ( 'perm'=> 37, 'name'=> "{$strCountContractsByProduct}", 'url'=>"{$CONFIG['application_webpath']}report_contracts_by_product.php"),
                        70=> array ( 'perm'=> 37, 'name'=> "{$strSiteContracts}", 'url'=>"{$CONFIG['application_webpath']}report_customer_contracts.php"),
                        80=> array ( 'perm'=> 37, 'name'=> "{$strCustomerFeedback}", 'url'=>"{$CONFIG['application_webpath']}report_feedback.php", 'enablevar' => 'feedback_enabled'),
-                       90=> array ( 'perm'=> 11, 'name'=> "{$strShowOrphandedContacts}", 'url'=>"{$CONFIG['application_webpath']}report_orphans_contacts.php"),
+                       90=> array ( 'perm'=> 11, 'name'=> "{$strShowOrphanedContacts}", 'url'=>"{$CONFIG['application_webpath']}report_orphans_contacts.php"),
                        180=> array ( 'perm'=> 37, 'name'=> "{$strEngineerMonthlyActivityTotals}",'url'=>"{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php",
     ));
     // Reports: Incidents submenu
