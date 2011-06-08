@@ -29,7 +29,8 @@ h2 { color: #555; }
 tr.shade1, td.shade1 { background: #FFF;  }
 tr.shade1 td, tr.shade2 td { border-bottom: 1px solid #C3C3C3; }
 tr.shade2, td.shade2, fieldset { background: #EAF4F9;  }
-tr.critical { background: #FFC4E0; }
+tr.urgent, td.urgent { background: #FABBBB; }
+tr.critical, td.critical { background: #FB164C; }
 
 th { border: 1px solid #EEEEEE; background: white; color: #555; letter-spacing: 0.05em;}
 
