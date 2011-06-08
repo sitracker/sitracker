@@ -689,7 +689,10 @@ switch ($step)
 
                 $menu = 'hide';
 
-                html_redirect("incident_details.php?id={$id}", TRUE, "The email was sent successfully, click OK to close this window", TRUE);               
+                $text = $strEmailSentSuccessfullyAutoClose;
+                if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully; 
+                
+                html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);               
             }
             else
             {
