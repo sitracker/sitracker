@@ -171,6 +171,9 @@ $CONFIG['urgent_threshold'] = 90;
 // Urgent Threshold, flag items as 'critical' when they are this percentage complete.
 $CONFIG['critical_threshold'] = 95;
 
+// Force critical priority incidents to flag as critical
+// When set all critical priority incidents will be forcibly marked as if past the critical threshold.
+$CONFIG['force_critical_flag'] = FALSE;
 
 // Run in demo mode, some features are disabled or replaced with mock-ups
 $CONFIG['demo'] = FALSE;
