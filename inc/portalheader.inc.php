@@ -183,7 +183,7 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     $countfeedback = mysql_num_rows($result);
     if ($CONFIG['feedback_enabled'] != FALSE AND $CONFIG['portal_feedback_enabled'] != FALSE AND $countfeedback > 0)
     {
-        echo "<li><a href='feedback.php'>{$strFeedbackForms} ({$countfeedback})</a> ";
+        echo "<li><a href='feedback.php'>{$strFeedback} ({$countfeedback})</a> ";
         echo "<ul>";
         while ($row = mysql_fetch_object($result))
         {
