@@ -1960,6 +1960,8 @@ $strUnsupported = 'Unsupported';
 $strUntilSpecificDateAndTime = 'Until specific date and time';
 $strUntilX = 'Until %s';
 $strUntitled = 'Untitled';
+# Requiring immediate action or attention
+$strUrgent = 'Urgent';
 $strUsed = 'Used';
 $strUsedNofN = 'Used %1$s of %2$s';
 $strUsedNofNDaysEntitlement = 'Used %1$s of %2$s days entitlement';

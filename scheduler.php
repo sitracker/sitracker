@@ -421,7 +421,7 @@ switch ($_REQUEST['mode'])
             if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
             {
                 echo "<br />";
-                echo "<table class='incidentkey'><tr>";
+                echo "<table class='legend'><tr>";
                 echo "<td class='shade1'>{$strOK}</td>";
                 echo "<td class='notice'>{$strDueNow}</td>";
                 echo "<td class='expired'>{$strDisabled}</td>";

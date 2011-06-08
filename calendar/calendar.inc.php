@@ -642,7 +642,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     // Legend
     if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
     {
-        $html .= "<table align='center'><tr><td><strong>{$GLOBALS['strKey']}</strong>:</td>";
+        $html .= "<table class='legend'><tr><td><strong>{$GLOBALS['strKey']}</strong>:</td>";
         foreach ($GLOBALS['holidaytype'] AS $htype)
         {
             $html .= "<td>".mb_substr($htype,0,1)." = {$htype}</td>";
