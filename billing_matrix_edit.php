@@ -60,7 +60,7 @@ if (!empty($tag) AND empty($action))
         echo "</table>";
         echo "<input type='hidden' name='tag' value='{$tag}' />";
         echo "<input type='hidden' name='action' value='edit' />";
-        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input type='submit' value='{$strSave}' /></p>";
         echo "<p><a href=\"billing_matrix.php\">{$strReturnWithoutSaving}</a></p>";
 

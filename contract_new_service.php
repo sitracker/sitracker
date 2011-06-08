@@ -150,7 +150,8 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 
     echo "</table>\n\n";
     echo "<input type='hidden' name='contractid' value='{$contractid}' />";
-    echo "<p><input name='submit' type='submit' value=\"{$strNew}\" /></p>";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>\n";
 
     echo "<p align='center'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";

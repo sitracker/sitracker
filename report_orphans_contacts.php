@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$title = $strShowOrphandedContacts;
+$title = $strShowOrphanedContacts;
 
 $sql = "SELECT * FROM `{$dbContacts}` WHERE siteid = 0";
 $result = mysql_query($sql);
@@ -44,7 +44,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo $strNoOrphandedContacts;
+    echo $strNoOrphanedContacts;
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

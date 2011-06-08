@@ -491,7 +491,7 @@ switch ($step)
                     if (preg_match("!/x\-.+!i", $file['type'])) $type = OCTET;
                     else $type = str_replace("\n","", $file['type']);
                     $disp = "attachment; filename=\"{$name}\"; name=\"{$name}\";";
-                    $mime -> fattach($filename, "Attachment for incident {$id}", $type, 'base64', $disp);
+                    $mime->fattach($filename, "Attachment for incident {$id}", $type, 'base64', $disp);
                 }
             }
 
@@ -499,14 +499,14 @@ switch ($step)
             $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id='{$emailtype}' ";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) < 1) trigger_error("Email template '{$meailtype}' not found", E_USER_WARNING);
+            if (mysql_num_rows($result) < 1) trigger_error("Email template '{$emailtype}' not found", E_USER_WARNING);
             $emailtype = mysql_fetch_object($result);
             $storeinlog = $emailtype->storeinlog;
             $templatename = $emailtype->name;
             $templatedescription = $emailtype->description;
 
             // actually send the email
-            $mailok = $mime -> send_mail();
+            $mailok = $mime->send_mail();
 
             if ($mailok == FALSE)
             {
