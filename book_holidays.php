@@ -58,7 +58,7 @@ if (empty($step))
     echo date_picker('date.end');
     echo "</td></tr>\n";
     echo "</table>\n";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<input type='hidden' name='step' value='1' />";
     echo "<input type='submit' value=\"{$strBookHoliday}\" /></p>";
@@ -277,13 +277,12 @@ elseif ($step == '1')
 
     if ($options > 0)
     {
-        echo "<p align='center'>";
-        echo "<input type='submit' value='{$strSelect}' />";
+        echo "<p class='formbuttons'>";
+        echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+        echo "<input type='submit' value='{$strSave}' />";
         echo "</p>";
     }
     echo "</form>";
-
-    echo "<br />";
 
     echo "<p align='center'><a href='book_holidays.php?user={$user}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

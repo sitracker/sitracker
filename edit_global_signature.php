@@ -121,7 +121,7 @@ elseif (!empty($action))
         case 'new':
             echo "<h2>".icon('edit', 32)." {$strGlobalSignature}: {$strNew}</h2>";
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-            echo "<input type='hidden' name='formaction' value='add' />";
+            echo "<input type='hidden' name='formaction' value='new' />";
             echo "<table class='vertical' width='50%'>";
             echo "<tr>";
 

@@ -151,6 +151,7 @@ if (empty($submit))
     plugin_do('new_user_form');
     echo "</table>\n";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<p align='center'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
