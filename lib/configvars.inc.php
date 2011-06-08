@@ -668,7 +668,6 @@ $CFGVAR['user_config_defaults']['type'] = '2darray';
 
 $CFGVAR['urgent_threshold']['title'] = 'Urgent Threshold';
 $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this percentage complete.';
-
 $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';
