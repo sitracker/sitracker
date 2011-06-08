@@ -248,7 +248,7 @@ else
             echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
             echo "<input type='hidden' name='action' value='newtask' />";
             echo "</form>";
-
+            echo "<p align='center'><a href='tasks.php'>{$strReturnWithoutSaving}</a></p>";
             //cleanup form vars
             clear_form_data('new_task');
             clear_form_errors('new_site');
