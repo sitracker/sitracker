@@ -18,7 +18,7 @@ Further instructions and notes about specific upgrades follow, if you
 upgrading and skipping several versions listed below you should read
 everything carefully to make sure you've met all the requirements:
 
-Upgrading to 4.00
+Upgrading to 3.90
 -----------------
 The experimental Timesheet feature has been removed.  We hope to make a
 similar feature available as a plugin in future.
@@ -32,8 +32,21 @@ $CONFIG['default_css_url'] will be ignored.  See Themes documentation
 for help with customising how SiT! looks.
 
 String replacement placeholders in the language files are now numbered, this
-will only effect you if you plan to translate SiT! or update a translation
+will only affect you if you plan to translate SiT! or update a translation
 from an earlier version of SiT!  See http://sitracker.org/wiki/Translation
+
+Users can now configure their own settings (for example to enable or disable
+"are you sure?" type confirmation messages) by going to SiT! -> My Details ->
+My Settings. Administrators can control defaults for new users by going to
+SiT! -> Control Panel -> Configure -> System -> Users.  To find a variable
+name for a user setting; first turn on debug mode, then navigate to your own
+'My Settings' page.
+
+Previous version of SiT! automatically displayed critical priority incidents
+in the same colour as if they had passed the critical threshold. This is now
+disabled by default and can be re-enabled via a setting in SiT! -> Control
+Panel -> Configure -> Features -> Service Levels - "Force critical priority
+incidents to flag as critical"
 
 
 Upgrading to 3.60
