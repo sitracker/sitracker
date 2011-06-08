@@ -55,7 +55,6 @@ switch ($mode)
         echo "</table>\n";
 
         echo "<h3>{$strResponsesToFeedbackForm}</h3>";
-        $totalresult=0;
         $numquestions=0;
 
         // Return Ratings
@@ -66,11 +65,17 @@ switch ($mode)
         if (mysql_num_rows($qresult) >= 1)
         {
             $html .= "<table align='center' class='vertical'>";
+
+            $numresults = 0;
+            $cumul = 0;
+            $numquestions++;
+            $average = 0;
+            $statquestions = 0;
+
             while ($qrow = mysql_fetch_object($qresult))
             {
-                $numquestions++;
                 $html .= "<tr><th>Q{$qrow->taborder}: {$qrow->question}</th>";
-                $sql = "SELECT f.*, r.* FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                 $sql .= "WHERE f.incidentid=i.id ";
                 $sql .= "AND i.owner=u.id ";
                 $sql .= "AND f.id=r.respondentid ";
@@ -80,27 +85,37 @@ switch ($mode)
                 $sql .= "ORDER BY i.owner, i.id";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                $numresults = 0;
-                $cumul = 0;
-                $percent = 0;
-                $average = 0;
                 while ($row = mysql_fetch_object($result))
                 {
-                    if (!empty($row->result))
+                    $numresults++;
+                    if (!empty($row->result) OR ($row->result == 0))
                     {
-                        $cumul+=$row->result;
-                        $numresults++;
+                       
+                        if ($row->result != 0)
+                        {
+                            $cumul += $row->result;
+                            $html .= "<td>" . $row->result . "</td></tr>";
+                            $statquestions++;
+                        }
+                        else
+                        {
+                             $html .= "<td>{$strNoAnswerGiven}</td></tr>";
+                        }
                     }
                 }
-                if ($numresults>0) $average=number_format(($cumul/$numresults), 2);
-                $percent =number_format((($average-1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
-                $totalresult += $average;
-                $html .= "<td>{$average}</td></tr>";
-                // <strong>({$percent}%)</strong><br />";
+
+                $calcnumber = (100 / ($CONFIG['feedback_max_score'] - 1));
+
+                if ($statquestions>0)
+                {
+                    $average = number_format(($cumul / $statquestions), 2);
+                    $percent = number_format((($calcnumber * ($cumul-$statquestions)) / $statquestions), 2);
+                }
+
             }
             $html .= "</table>\n";
-            $total_average = number_format($totalresult/$numquestions,2);
-            $total_percent = number_format((($total_average-1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
+            $html .= "<p align='center'>{$strPositivity}: {$average} <strong>({$percent}%)</strong></p>";
+            $html .= "<p align='center'>{$strAnswered}: <strong>{$statquestions}</strong>/{$numresults}</p>";
 
             // Return text/options/multioptions fields
             $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
@@ -112,7 +127,7 @@ switch ($mode)
                 while ($qrow = mysql_fetch_object($qresult))
                 {
 
-                    $sql = "SELECT f.*, r.* FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                    $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                     $sql .= "WHERE f.incidentid = i.id ";
                     $sql .= "AND i.owner = u.id ";
                     $sql .= "AND f.id = r.respondentid ";
@@ -137,7 +152,6 @@ switch ($mode)
                 }
             }
 
-            $html .= "<p align='center'>{$strPositivity}: {$total_average} <strong>({$total_percent}%)</strong></p>";
             $surveys += $numresults;
 
             //if ($total_average>0)

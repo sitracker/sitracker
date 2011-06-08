@@ -117,6 +117,7 @@ $strAmount = 'Antal';
 $strAmountToEditBy = 'Mængde der skal redigeres +ve/-ve';
 $strAM = 'am';
 $strAnswer = 'Svar';
+$strAnswered = 'Besvarede';
 $strAnyConditionMet = 'Eventuelle betingelser opfyldt';
 $strAnUnknownErrorOccured = 'En ukendt fejl er opstået';
 $strApplication = 'Applikation';
