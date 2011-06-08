@@ -20,7 +20,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
 $CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
-$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap', 'users');
+$CFGTAB['system'] = array('paths', 'locale', 'journal', 'users');  // soap
 $TABI18n['plugins'] = $strPlugins;
 
 $TABI18n['application'] = $strApplication;
