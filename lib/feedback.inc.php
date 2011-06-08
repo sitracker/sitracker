@@ -113,8 +113,9 @@ function feedback_html_rating($name, $required, $options, $answer='')
         $html .= "<div style='float: right;'>{$promptright}</div><div>{$promptleft}</div></th>";
         if ($required != 'true')
         {
-            $html .= "<th>&nbsp;</th>";
+            $html .= "<th>{$GLOBALS['strNotApplicableAbbrev']}</th>";
         }
+
         $html .= "</tr>\n";
     }
 
@@ -136,8 +137,16 @@ function feedback_html_rating($name, $required, $options, $answer='')
         {
             $html .= "checked='checked'";
         }
-        $html .= "/>{$strNotApplicableAbbrev}</td>";
+        else
+        {
+            $html .= "<td width='{$colwidth}'";
+        }
+        
+
+
+        $html .= "/></td>";
     }
+
     $html .= "</tr>\n";
     $html .= "</table>\n";
 

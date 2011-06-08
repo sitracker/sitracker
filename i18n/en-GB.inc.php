@@ -125,6 +125,7 @@ $strAmountToEditBy = 'Amount to edit by +ve/-ve';
 # i.e. before noon
 $strAM = 'am';
 $strAnswer = 'Answer';
+$strAnswered = 'Answered';
 $strAnyConditionMet = 'Any Condition Met';
 $strAnUnknownErrorOccured = ' An unknown error occured';
 # e.g. SiT is an application
