@@ -640,19 +640,21 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     $html .= "</table>\n\n";
 
     // Legend
-    $html .= "<table align='center'><tr><td><strong>{$GLOBALS['strKey']}</strong>:</td>";
-    foreach ($GLOBALS['holidaytype'] AS $htype)
+    if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
     {
-        $html .= "<td>".mb_substr($htype,0,1)." = {$htype}</td>";
+        $html .= "<table align='center'><tr><td><strong>{$GLOBALS['strKey']}</strong>:</td>";
+        foreach ($GLOBALS['holidaytype'] AS $htype)
+        {
+            $html .= "<td>".mb_substr($htype,0,1)." = {$htype}</td>";
+        }
+        $html .= "<td>PH = {$GLOBALS['strPublicHoliday']}</td>";
+        $html .= "</tr>";
+        $html .= "<tr><td></td><td class='urgent'>{$GLOBALS['strDeclined']}</td>";
+        $html .= "<td class='review'>{$GLOBALS['strNotApproved']}</td>";
+        $html .= "<td class='idle'>{$GLOBALS['strApproved']}</td>";
+        $html .= "<td class='notice'>{$GLOBALS['strApprovedFree']}</td></tr>";
+        $html .= "</table>\n\n";
     }
-    $html .= "<td>PH = {$GLOBALS['strPublicHoliday']}</td>";
-    $html .= "</tr>";
-    $html .= "<tr><td></td><td class='urgent'>{$GLOBALS['strDeclined']}</td>";
-    $html .= "<td class='review'>{$GLOBALS['strNotApproved']}</td>";
-    $html .= "<td class='idle'>{$GLOBALS['strApproved']}</td>";
-    $html .= "<td class='notice'>{$GLOBALS['strApprovedFree']}</td></tr>";
-    $html .= "</table>\n\n";
-
     return $html;
 }
 

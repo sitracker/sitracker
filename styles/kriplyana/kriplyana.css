@@ -197,6 +197,12 @@ input[type=submit], input[type=button], input[type=reset]
     border-radius: 3px;
 }
 
+p.error, span.error, p.error a, error.a:link
+{
+    background-color: #F02311; color: white;
+}
+
+
 .tabcontainer ul li
 {
     display: block;
