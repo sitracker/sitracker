@@ -187,7 +187,7 @@ if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
         echo "<ul>";
         while ($row = mysql_fetch_object($result))
         {
-            $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid);
+            $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid, contact_email($_SESSION['contactid']));
             echo "<li><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strIncident} : {$row->incidentid}</li>";
         }
         echo "</ul></li>";
