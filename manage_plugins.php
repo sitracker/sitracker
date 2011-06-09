@@ -62,13 +62,8 @@ if ($_REQUEST['action'] != 'checkforupdates')
 {
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=checkforupdates'>{$strCheckForUpdatesOnline}</a></p>";
 }
-$tabs[$strInstalled] = "{$_SERVER['PHP_SELF']}?tab=installed";
-if (is_array($_SESSION['available_plugins']))
-{
-    $tabs[$strRepository] = "{$_SERVER['PHP_SELF']}?tab=repository";
-}
-echo draw_tabs($tabs, $seltab);
 
+// Actions
 if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
 {
     $actionplugin = cleanvar($_REQUEST['plugin']);
@@ -139,6 +134,13 @@ if ($_REQUEST['action'] == 'checkforupdates')
 }
 
 
+$tabs[$strInstalled] = "{$_SERVER['PHP_SELF']}?tab=installed";
+if (is_array($_SESSION['available_plugins']))
+{
+    $tabs[$strRepository] = "{$_SERVER['PHP_SELF']}?tab=repository";
+}
+echo draw_tabs($tabs, $seltab);
+
 switch ($seltab)
 {
     case 'repository':
@@ -152,8 +154,9 @@ switch ($seltab)
                 $operation = '';
                 if (!empty($avail_plugin_details['url']))
                 {
-                    $operation .= "<a href='{$avail_plugin_details['url']}'>{$strVisitHomepage}</a>";
+                    $operation .= "<a href=\"{$avail_plugin_details['url']}\">{$strVisitHomepage}</a>";
                 }
+//                 $operation .= "<a href=\"{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)."\">{$strInstall}</a>";
                 if (!in_array($avail_plugin, $ondisk_plugins))
                 {
                     echo "<tr class='{$shade}'>";
