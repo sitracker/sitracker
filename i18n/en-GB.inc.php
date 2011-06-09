@@ -2029,6 +2029,7 @@ $strViewYourCalendar = 'View Your Calendar';
 $strViewYourTasks = 'View Your Tasks';
 $strVisibleToCustomer = 'Visible To Customer';
 $strVisibility = 'Visibility';
+$strVisitHomepage = 'Visit Homepage';
 $strWaiting = 'Waiting';
 $strWaitingForCustomer = 'Waiting for customer';
 $strWaitingForSupport = 'Waiting for support';
