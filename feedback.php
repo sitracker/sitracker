@@ -214,7 +214,7 @@ switch ($_REQUEST['action'])
                         $qresult = mysql_query($qsql);
                         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-                        echo "<table align='center' class='feedback'>";
+                        echo "<table align='center' class='vertical'>";
 
                         $shade = 'shade1';
                         while ($question = mysql_fetch_object($qresult))
