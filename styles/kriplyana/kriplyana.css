@@ -30,8 +30,13 @@ h2 { color: #555; }
 tr.shade1, td.shade1 { background: #FFF;  }
 tr.shade1 td, tr.shade2 td { border-bottom: 1px solid #C3C3C3; }
 tr.shade2, td.shade2, fieldset { background: #EAF4F9;  }
-tr.critical, strong.critical {/* background: #FFC4E0; pink*/ background-color: #DE3232;}
-strong.critical { text-decoration: none; border-radius:10px; color: white; }
+tr.notice, .notice { background-color: #FFFFBC; }
+tr.notice:hover, td.notice:hover {background-color: #D7D7E9; }
+tr.urgent, .urgent { background-color: #FFF183; }
+tr.urgent:hover, td.urgent:hover { background-color: #C9C9E9; }
+tr.critical, .critical {/* background: #FFC4E0; pink*/ background-color: #FFE500; }
+tr.critical:hover, td.critical:hover { background-color: #AFAFE9; }
+strong.critical { background-color: #FF0000; /*#4b5c94;*/ color: white; text-decoration: none; border-radius:10px; }
 
 th { border: 1px solid #EEEEEE; background: white; color: #555; letter-spacing: 0.05em;}
 
