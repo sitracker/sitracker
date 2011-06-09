@@ -38,21 +38,17 @@ if (empty($sort)) $sort='date';
 
 function contact_info($contactid, $email, $name, $subject)
 {
-    global $strUnknown, $strIncidentsMulti, $strOpen;
+    global $strUnknown, $strIncidentsMulti, $strOpen, $strContact, $strEmail;
 
     $linktext = $strUnknown;
     $contactname = '';
-
+    $info .= icon('email', 16, $strEmail, $strEmail);
     if (!empty($contactid))
     {
-        $info .= "<a href='contact_details.php?id={$contactid}'>";
-        $info .= icon('contact', 16);
+        $info .= " <a href='contact_details.php?id={$contactid}'>";
+        $info .= icon('contact', 16, $strContact, $strContact);
         $info .= "</a>";
         $contactname = contact_realname($contactid);
-    }
-    else
-    {
-        $info .= icon('email', 16);
     }
     $info .= ' ';
 
@@ -271,7 +267,7 @@ if (empty($displayid))
             {
                 $arrived = $update->timestamp;
             }
-            if (!empty($update->timestamp)) echo date($CONFIG['dateformat_datetime'], $arrived);
+            if (!empty($update->timestamp)) echo ldate($CONFIG['dateformat_datetime'], $arrived);
             echo "</td>";
             // Size
             echo "<td style='white-space:nowrap;'>";
