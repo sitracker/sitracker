@@ -301,6 +301,12 @@ function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
             case NAMESPACE_USER:
                 $sql = "REPLACE INTO `{$dbUserConfig}` (`userid`, `config`, `value`) VALUES ('{$id}', '{$key}', '{$value}')";
                 break;
+            case NAMESPACE_CONTACT:
+                $sql = "REPLACE INTO `{$dbContactConfig}` (`userid`, `config`, `value`) VALUES ('{$id}', '{$key}', '{$value}')";
+                break;
+            case NAMESPACE_SITE:
+                $sql = "REPLACE INTO `{$dbSiteConfig}` (`userid`, `config`, `value`) VALUES ('{$id}', '{$key}', '{$value}')";
+                break;
             default:
                 $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
         }
