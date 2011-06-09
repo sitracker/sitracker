@@ -1786,6 +1786,7 @@ $strTuesdayAbbr = 'Ti';
 $strType = 'Type';
 
 $strURLTitle = 'URL Titel';
+$strUgent = 'Haster';
 $strUp = 'Op';
 $strUpgrade = 'Opgradering';
 $strUpdate = 'Opdatering';

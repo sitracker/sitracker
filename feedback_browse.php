@@ -237,7 +237,7 @@ switch ($mode)
                     $respondentarr = explode('-', $resp->respondent);
                     $responserefarr = explode('-', $resp->responseref);
 
-                    $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid);
+                    $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid, contact_email($resp->contactid));
                     echo "<tr class='{$shade}'>";
                     echo "<td>".ldate($CONFIG['dateformat_datetime'],mysqlts2date($resp->created))."</td>";
                     echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a></td>";
