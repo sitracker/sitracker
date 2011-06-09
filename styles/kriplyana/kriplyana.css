@@ -170,6 +170,7 @@ div.detaildate
     top: 3px;
 }
 div.detaildate input[type=text] { color: #06377F; border: 1px dotted #06377F; background: transparent; }
+.detaildate form { position: relative; top: -5px; }
 
 div#statusbar { background-color: #4B5C94; }
 div#statusbar img { vertical-align: text-bottom; }

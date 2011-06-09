@@ -127,6 +127,14 @@ define ('QUEUE_WAITING', 2);
 define ('QUEUE_ALL_OPEN', 3);
 define ('QUEUE_ALL_CLOSED', 4);
 
+// Namespaces
+define ('NAMESPACE_SIT', 1);
+define ('NAMESPACE_INCIDENT', 2);
+define ('NAMESPACE_USER', 3);
+define ('NAMESPACE_CONTACT', 4);
+define ('NAMESPACE_SITE', 5);
+
+
 /**
  * Begin global variable definitions
  **/

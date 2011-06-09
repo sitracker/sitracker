@@ -170,7 +170,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
                 $tz = $tz . '  ('.date('H:i',utc_time($now) + ($offset*60)).')';
                 $availtz[$offset] = $tz;
             }
-            $html .= array_drop_down($availtz, 'utcoffset', $value, '', TRUE);
+            $html .= array_drop_down($availtz, $setupvar, $value, '', TRUE);
             break;
         case 'timezoneselect':
             if ($value == '') $value = 0;
@@ -223,7 +223,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         case 'weekdayselector':
             $replace = array('array(', ')', "'");
             $value = str_replace($replace, '',  $value);
-            $days = array('0' => 'Sunday', '1' => 'Monday', '2' => 'Tuesday', '3' => 'Wednesday', 
+            $days = array('0' => 'Sunday', '1' => 'Monday', '2' => 'Tuesday', '3' => 'Wednesday',
                             '4' => 'Thursday', '5' => 'Friday', '6' => 'Saturday');
             $value = explode(',', $value);
             $html .= array_drop_down($days, $setupvar, $value, '', TRUE, TRUE, TRUE);
@@ -278,27 +278,31 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 /**
  * Save configuration
  * @param array $setupvars. An array of setup variables $setupvars['setting'] = 'foo';
- * @param int $userid. If set saves to the user configuration, otherwise saves
-                        to system configuration.
+ * @param int $namespace NAMESPACE_SIT, NAMESPACE_USER, NAMESPACE_CONTACT, OR NAMESPACE_SITE
+ * @param int $id. Namespace reference (e.g. User ID)
  * @todo  TODO, need to make setup.php use this  INL 5Dec08
  * @author Ivan Lucas
  */
-function cfgSave($setupvars, $userid = 0)
+function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
 {
     global $dbConfig, $dbUserConfig;
-    if ($userid == 'current')
+
+    if ($namespace == NAMESPACE_USER)
     {
-        $userid = $_SESSION['userid'];
+        if ($id == 'current')
+        {
+            $id = $_SESSION['userid'];
+        }
     }
     foreach ($setupvars AS $key => $value)
     {
-        if ($userid < 1)
+        switch ($namespace)
         {
-            $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
-        }
-        else
-        {
-            $sql = "REPLACE INTO `{$dbUserConfig}` (`userid`, `config`, `value`) VALUES ('{$userid}', '{$key}', '{$value}')";
+            case NAMESPACE_USER:
+                $sql = "REPLACE INTO `{$dbUserConfig}` (`userid`, `config`, `value`) VALUES ('{$id}', '{$key}', '{$value}')";
+                break;
+            default:
+                $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
         }
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
