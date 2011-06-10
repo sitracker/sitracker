@@ -291,6 +291,7 @@ $slatypes['closed'] = array('icon' => 'close', 'text' => $strClosed);
 // these languages to use, make sure you have a file in your i18n dir and
 // go to the sit configuration page
 $i18n_codes = array(
+                    'af' => 'Afrikaans',
                     'ar' => 'العربية',
                     'bg-BG' => 'български',
                     'bn-IN' => 'বাংলা',
