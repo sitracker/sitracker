@@ -56,6 +56,7 @@ function gethtmlstring($body, $prefix, $suffix, $offset=0)
 
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+if (!is_array($CONFIG['plugins'])) $CONFIG['plugins'] = array();
 
 echo "<h2>".icon('settings', 32, $title)." {$title}</h2>";
 if ($_REQUEST['action'] != 'checkforupdates')
@@ -88,7 +89,14 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
             }
         }
         $CONFIG['plugins'] = $newsetting['plugins'];
-        $savecfg['plugins'] = 'array(' . implode(',', $newsetting['plugins']) . ')';
+        if (!is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0) 
+        {
+            $savecfg['plugins'] = 'array(' . implode(',', $newsetting['plugins']) . ')';
+        }
+        else 
+        {
+            $savecfg['plugins'] = '';
+        }
         cfgSave($savecfg);
     }
     else
@@ -218,9 +226,9 @@ switch ($seltab)
             foreach($ondisk_plugins AS $ondisk_plugin => $ondisk_plugin_details)
             {
                 $operation = '';
+                if (!is_array($CONFIG['plugins'])) $CONFIG['plugins'] = array();
                 if (in_array($ondisk_plugin, $CONFIG['plugins']))
                 {
-
                     $installed = TRUE;
                     $shade = 'idle';
                 }
