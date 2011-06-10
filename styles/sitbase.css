@@ -792,7 +792,7 @@ div.taglist
     clear: none;
 }
 
-.incidentkey
+table.legend
 {
     text-align: center;
     margin: 0 auto;
@@ -801,7 +801,7 @@ div.taglist
     font-weight: bold;
 }
 
-.incidentkey td
+.legend td
 {
     width: 25%;
 }

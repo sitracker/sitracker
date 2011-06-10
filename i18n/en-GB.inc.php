@@ -125,6 +125,7 @@ $strAmountToEditBy = 'Amount to edit by +ve/-ve';
 # i.e. before noon
 $strAM = 'am';
 $strAnswer = 'Answer';
+$strAnswered = 'Answered';
 $strAnyConditionMet = 'Any Condition Met';
 $strAnUnknownErrorOccured = ' An unknown error occured';
 # e.g. SiT is an application
@@ -1960,6 +1961,8 @@ $strUnsupported = 'Unsupported';
 $strUntilSpecificDateAndTime = 'Until specific date and time';
 $strUntilX = 'Until %s';
 $strUntitled = 'Untitled';
+# Requiring immediate action or attention
+$strUrgent = 'Urgent';
 $strUsed = 'Used';
 $strUsedNofN = 'Used %1$s of %2$s';
 $strUsedNofNDaysEntitlement = 'Used %1$s of %2$s days entitlement';
@@ -2026,6 +2029,7 @@ $strViewYourCalendar = 'View Your Calendar';
 $strViewYourTasks = 'View Your Tasks';
 $strVisibleToCustomer = 'Visible To Customer';
 $strVisibility = 'Visibility';
+$strVisitHomepage = 'Visit Homepage';
 $strWaiting = 'Waiting';
 $strWaitingForCustomer = 'Waiting for customer';
 $strWaitingForSupport = 'Waiting for support';

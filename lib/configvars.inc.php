@@ -20,7 +20,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
 $CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
-$CFGTAB['system'] = array('paths', 'locale', 'journal', 'soap', 'users');
+$CFGTAB['system'] = array('paths', 'locale', 'journal', 'users');  // soap
 $TABI18n['plugins'] = $strPlugins;
 
 $TABI18n['application'] = $strApplication;
@@ -62,7 +62,8 @@ $CFGCAT['sla'] = array('default_service_level',
                        'critical_threshold',
                        'urgent_threshold',
                        'notice_threshold',
-                       'regular_contact_days'
+                       'regular_contact_days',
+                       'force_critical_flag'
                        );
 
 $CFGCAT['billing'] = array('billing_matrix_multipliers',
@@ -409,6 +410,11 @@ $CFGVAR['ftp_username']['title'] = 'FTP username';
 $CFGVAR['font_file']['title'] = 'Font File location';
 $CFGVAR['font_file']['help'] = 'Location of the font file to use on graphs, leaving blank will default to the internal GD font';
 
+$CFGVAR['force_critical_flag']['title'] = 'Force critical priority incidents to flag as critical';
+$CFGVAR['force_critical_flag']['help'] = 'When set all critical priority incidents will be forcibly marked as if past the critical threshold.';
+$CFGVAR['force_critical_flag']['type'] = 'checkbox';
+
+
 $CFGVAR['hide_closed_incidents_older_than']['help'] = "Incidents closed more than this number of days ago aren't show in the incident queue, -1 means disabled";
 $CFGVAR['hide_closed_incidents_older_than']['title'] = 'Hide closed incidents older than';
 $CFGVAR['hide_closed_incidents_older_than']['type'] = 'number';
@@ -660,10 +666,8 @@ $CFGVAR['user_config_defaults']['title'] = "User configuration defaults";
 $CFGVAR['user_config_defaults']['help'] = "You can set configuration defaults here for users that have not personalised their settings. Enter config one per line, format: variable=>setting";
 $CFGVAR['user_config_defaults']['type'] = '2darray';
 
-
 $CFGVAR['urgent_threshold']['title'] = 'Urgent Threshold';
 $CFGVAR['urgent_threshold']['help'] = 'Flag items as urgent when they are this percentage complete.';
-
 $CFGVAR['urgent_threshold']['type'] = 'percent';
 
 $CFGVAR['working_days']['title'] = 'Working Days';

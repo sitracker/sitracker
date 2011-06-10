@@ -25,6 +25,7 @@ $hashvars = explode('&&',$decodehash);
 $formid = mysql_real_escape_string($hashvars['0']);
 $contactid = mysql_real_escape_string($hashvars['1']);
 $incidentid = urldecode(mysql_real_escape_string($hashvars['2']));
+$contactemail = urldecode(mysql_real_escape_string($hashvars['3']));
 unset($errorfields);
 
 switch ($_REQUEST['action'])
@@ -151,119 +152,135 @@ switch ($_REQUEST['action'])
         $errorfields = explode(",", urldecode($_REQUEST['error']));
         $fielddata = unserialize(base64_decode($errorfields[0]));
 
-        // Have a look to see if this person has a form waiting to be filled
-        $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` ";
-        $rsql .= "WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' AND completed = 'no'";
+        // check if contact is the right person
+        $csql = "SELECT id from `$dbContacts` ";
+        $csql .= "WHERE id='$contactid' AND email='$contactemail'";
 
-        $rresult = mysql_query($rsql);
+        $cresult = mysql_query($csql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-        $waitingforms = mysql_num_rows($rresult);
-        $waitingform = mysql_fetch_object($rresult);
+        $contactexists = mysql_num_rows($cresult);
 
-        if ($waitingforms < 1)
+        if ($contactexists > 0)
         {
-            echo "<h3><span class='failure'>{$strError}</span></h3>";
-            echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
-            debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n", TRUE);
-        }
-        else
-        {
-            $sql = "SELECT * FROM `{$dbFeedbackForms}` WHERE id='{$formid}'";
-            $result = mysql_query($sql);
+            // Have a look to see if this person has a form waiting to be filled
+            $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` ";
+            $rsql .= "WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' AND completed = 'no'";
+
+            $rresult = mysql_query($rsql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) < 1)
+
+            $waitingforms = mysql_num_rows($rresult);
+            $waitingform = mysql_fetch_object($rresult);
+    
+            if ($waitingforms < 1)
             {
-                echo "<h2>{$strError}</h2>";
-                echo "<p>{$strNoFeedBackFormToCompleteHere}</p>";
-                debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode -->\n\n", TRUE);
+                echo "<h3><span class='failure'>{$strError}</span></h3>";
+                echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
+                debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode ce:$contactemail -->\n\n", TRUE);
             }
             else
             {
-                $reqd = 0;
-                while ($form = mysql_fetch_object($result))
+                $sql = "SELECT * FROM `{$dbFeedbackForms}` WHERE id='{$formid}'";
+                $result = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                if (mysql_num_rows($result) < 1)
                 {
-                    echo "<form action='feedback.php' method='post'>\n";
-                    echo "<h2>{$form->name}</h2>\n";
-                    echo "<p>{$strRelatingToIncident} <strong>#{$incidentid}</strong> &mdash; <strong>".incident_title($incidentid)."</strong><br />";
-                    echo sprintf($strOpenedbyXonY, contact_realname(incident_contact($incidentid)), ldate($CONFIG['dateformat_date'],db_read_column('opened', $dbIncidents, $incidentid)));
-                    echo ' &nbsp; ';
-                    echo sprintf($strClosedOnX, ldate($CONFIG['dateformat_date'],db_read_column('closed', $dbIncidents, $incidentid))).".</p>";
-
-                    if (!empty($_REQUEST['error']))
+                    echo "<h2>{$strError}</h2>";
+                    echo "<p>{$strNoFeedBackFormToCompleteHere}</p>";
+                    debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode ce:$contactemail -->\n\n", TRUE);
+                }
+                else
+                {
+                    $reqd = 0;
+                    while ($form = mysql_fetch_object($result))
                     {
-                        echo "<p style='color: red'>{$strErrorRequiredQuestionsNotCompleted}</p>";
-                    }
-                    echo "<div align='center'>" . nl2br($form->introduction) . "</div>";
+                        echo "<form action='feedback.php' method='post'>\n";
+                        echo "<h2>{$form->name}</h2>\n";
+                        echo "<p>{$strRelatingToIncident} <strong>#{$incidentid}</strong> &mdash; <strong>".incident_title($incidentid)."</strong><br />";
+                        echo sprintf($strOpenedbyXonY, contact_realname(incident_contact($incidentid)), ldate($CONFIG['dateformat_date'],db_read_column('opened', $dbIncidents, $incidentid)));
+                        echo ' &nbsp; ';
+                        echo sprintf($strClosedOnX, ldate($CONFIG['dateformat_date'],db_read_column('closed', $dbIncidents, $incidentid))).".</p>";
 
-                    $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
-                    $qsql .= "WHERE formid='{$form->id}' ";
-                    $qsql .= "ORDER BY taborder ASC";
-                    $qresult = mysql_query($qsql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-
-
-                    echo "<table align='center' class='feedback'>";
-
-                    $shade = 'shade1';
-                    while ($question = mysql_fetch_object($qresult))
-                    {
-                        if (mb_strlen(trim($question->sectiontext)) > 3)
+                        if (!empty($_REQUEST['error']))
                         {
-                            echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
+                            echo "<p style='color: red'>{$strErrorRequiredQuestionsNotCompleted}</p>";
                         }
-                        echo "<tr class='{$shade}'>";
-                        echo "<td><h4>Q{$question->taborder}: {$question->question}";
-                        if ($question->required == 'true')
-                        {
-                            echo "<sup style='color: red; font-size: 120%;'>*</sup>";
-                            $reqd++;
-                        }
-                        echo "</h4>";
+                        echo "<div align='center'>" . nl2br($form->introduction) . "</div>";
 
-                        if (!empty($question->questiontext))
+                        $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
+                        $qsql .= "WHERE formid='{$form->id}' ";
+                        $qsql .= "ORDER BY taborder ASC";
+                        $qresult = mysql_query($qsql);
+                        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+                        echo "<table align='center' class='vertical'>";
+
+                        $shade = 'shade1';
+                        while ($question = mysql_fetch_object($qresult))
                         {
-                            echo "<p>{$question->questiontext}</p>";
-                        }
-                        if (!empty($fielddata[$question->id]))
-                        {
+                            if (mb_strlen(trim($question->sectiontext)) > 3)
+                            {
+                                echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
+                            }
+                            echo "<tr class='{$shade}'>";
+                            echo "<td><h4>Q{$question->taborder}: {$question->question}";
+                            if ($question->required == 'true')
+                            {
+                                echo "<sup style='color: red; font-size: 120%;'>*</sup>";
+                                $reqd++;
+                            }
+                            echo "</h4>";
+
+                            if (!empty($question->questiontext))
+                            {
+                                echo "<p>{$question->questiontext}</p>";
+                            }
+                            if (!empty($fielddata[$question->id]))
+                            {
                             $answer = $fielddata[$question->id];
+                            }
+                            else
+                            {
+                                $answer = '';
+                            }
+                            echo "</td><td>";
+                            echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
+                            if (in_array($question->id, $errorfields))
+                            {
+                                echo "<p style='color: red'>".sprintf($strQuestionXNeedsAnsweringBeforeContinuing, $question->taborder)."</p>";
+                            }
+                            echo "</td><br />";
+                            if ($shade == 'shade1')
+                            {
+                                $shade = 'shade2';
+                            }
+                            else
+                            {
+                                $shade = 'shade1';
+                            }
                         }
-                        else
-                        {
-                            $answer = '';
-                        }
-                        echo "</td><td>";
-                        echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
-                        if (in_array($question->id, $errorfields))
-                        {
-                            echo "<p style='color: red'>".sprintf($strQuestionXNeedsAnsweringBeforeContinuing, $question->taborder)."</p>";
-                        }
-                        echo "</td><br />";
-                        if ($shade == 'shade1')
-                        {
-                            $shade = 'shade2';
-                        }
-                        else
-                        {
-                            $shade = 'shade1';
-                        }
-                    }
-                    echo "</table>\n";
-                    echo "<p align='center'>" . nl2br($form->thanks) . "</p>" ;
+                        echo "</table>\n";
+                        echo "<p align='center'>" . nl2br($form->thanks) . "</p>" ;
 
-                    echo "<br /><input type='hidden' name='action' value='save' />\n";
-                    echo "<input type='hidden' name='ax' value='".strip_tags($_REQUEST['ax'])."' />\n";
-                    echo "<div align='center'><input type='submit' value='Submit' /></div>\n";
-                    echo "</form>\n";
-                    if ($reqd >= 1)
-                    {
-                        echo "<p align='center'><sup style='color: red; font-size: 120%;'>*</sup> {$strQuestionRequired}</p>";
+                        echo "<br /><input type='hidden' name='action' value='save' />\n";
+                        echo "<input type='hidden' name='ax' value='".strip_tags($_REQUEST['ax'])."' />\n";
+                        echo "<div align='center'><input type='submit' value='Submit' /></div>\n";
+                        echo "</form>\n";
+                        if ($reqd >= 1)
+                        {
+                            echo "<p align='center'><sup style='color: red; font-size: 120%;'>*</sup> {$strQuestionRequired}</p>";
+                        }
                     }
                 }
             }
         }
-
+        else
+        {
+            echo "<h3><span class='failure'>{$strError}</span></h3>";
+            echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
+            debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode ce:$contactemail -->\n\n", TRUE);
+        }
         if ($_REQUEST['mode'] != 'bare')
         {
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

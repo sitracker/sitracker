@@ -36,7 +36,7 @@ $CFGCAT['displayprefs'] = array('incident_refresh',
                                'external_links_newwindow',
                                'show_confirmation_caution',
                                'show_confirmation_delete',
-								'show_confirmation_close_window',
+                               'show_confirmation_close_window',
                                'show_inactive_data'
                                );
 

@@ -16,11 +16,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$seltab = clean_fixed_list($_REQUEST['seltab'], array('installed', 'repository'));
+$seltab = clean_fixed_list($_REQUEST['tab'], array('installed', 'repository'));
 
 // Make sure right array key is used, we use the translated string as the key
-if ($seltab == 'installed') $seltab = $strInstalled;
-elseif ($seltab == 'repository') $seltab = $strRepository;
+// if ($seltab == 'installed') $seltab = $strInstalled;
+// elseif ($seltab == 'repository') $seltab = $strRepository;
 
 $title = $strManagePlugins;
 
@@ -63,8 +63,7 @@ if ($_REQUEST['action'] != 'checkforupdates')
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=checkforupdates'>{$strCheckForUpdatesOnline}</a></p>";
 }
 
-echo draw_tabs(array($strInstalled => "{$_SERVER['PHP_SELF']}?tab=installed", $strRepository => "{$_SERVER['PHP_SELF']}?tab=repository"), $seltab);
-
+// Actions
 if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
 {
     $actionplugin = cleanvar($_REQUEST['plugin']);
@@ -123,35 +122,41 @@ if ($_REQUEST['action'] == 'checkforupdates')
         $sitmaxversion = trim(strip_tags($out[5][$i]));
         if (!empty($name) ) // AND $sitminversion <= $application_version AND $sitmaxversion >= $application_version
         {
-            $available_plugins[$name]['desc'] = trim(strip_tags($out[2][$i]));
-            $available_plugins[$name]['version'] = trim(strip_tags($out[3][$i]));
-            $available_plugins[$name]['sitminversion'] = $sitminversion;
-            $available_plugins[$name]['sitmaxversion'] = $sitmaxversion;
-            $available_plugins[$name]['author'] = trim(strip_tags($out[6][$i]));
-            if (!empty($url[1])) $available_plugins[$name]['url'] = "http://sitracker.org" . $url[1];
+            $_SESSION['available_plugins'][$name]['desc'] = trim(strip_tags($out[2][$i]));
+            $_SESSION['available_plugins'][$name]['version'] = trim(strip_tags($out[3][$i]));
+            $_SESSION['available_plugins'][$name]['sitminversion'] = $sitminversion;
+            $_SESSION['available_plugins'][$name]['sitmaxversion'] = $sitmaxversion;
+            $_SESSION['available_plugins'][$name]['author'] = trim(strip_tags($out[6][$i]));
+            if (!empty($url[1])) $_SESSION['available_plugins'][$name]['url'] = "http://sitracker.org" . $url[1];
         }
     }
-    ksort($available_plugins);
+    ksort($_SESSION['available_plugins']);
 }
 
 
+$tabs[$strInstalled] = "{$_SERVER['PHP_SELF']}?tab=installed";
+if (is_array($_SESSION['available_plugins']))
+{
+    $tabs[$strRepository] = "{$_SERVER['PHP_SELF']}?tab=repository";
+}
+echo draw_tabs($tabs, $seltab);
+
 switch ($seltab)
 {
-    case $strRepository:
-        if (is_array($available_plugins))
+    case 'repository':
+        if (is_array($_SESSION['available_plugins']))
         {
-            echo "<h2>{$strAvailablePlugins}</h2>";
-
             echo "<table align='center'>";
             echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
             $shade = 'shade1';
-            foreach($available_plugins AS $avail_plugin => $avail_plugin_details)
+            foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
             {
                 $operation = '';
                 if (!empty($avail_plugin_details['url']))
                 {
-                    $operation .= "<a href='{$avail_plugin_details['url']}'>{$strVisitHomepage}</a>";
+                    $operation .= "<a href=\"{$avail_plugin_details['url']}\">{$strVisitHomepage}</a>";
                 }
+//                 $operation .= "<a href=\"{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)."\">{$strInstall}</a>";
                 if (!in_array($avail_plugin, $ondisk_plugins))
                 {
                     echo "<tr class='{$shade}'>";
@@ -237,9 +242,9 @@ switch ($seltab)
                 {
                     echo "<p class='warning'>This plugin was designed for {$CONFIG['application_name']} version {$ondisk_plugin_details['sitmaxversion']} or earlier</strong></p>";
                 }
-                if ($available_plugins[$ondisk_plugin]['version'] > $ondisk_plugin_details['version'])
+                if ($_SESSION['available_plugins'][$ondisk_plugin]['version'] > $ondisk_plugin_details['version'])
                 {
-                    echo "<p class='info'>A newer version is available: v{$available_plugins[$ondisk_plugin]['version']}</p>";
+                    echo "<p class='info'>A newer version is available: v{$_SESSION['available_plugins'][$ondisk_plugin]['version']}</p>";
                 }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";
@@ -270,8 +275,8 @@ switch ($seltab)
         }
         break;
 }
-// echo "<pre>AVAIL:".print_r($available_plugins,true)."</pre>";
-// echo "<pre>".print_r($ondisk_plugins,true)."</pre>";
+$dbg .= "<pre>AVAIL:".print_r($_SESSION['available_plugins'],true)."</pre>";
+$dbg .= "<pre>".print_r($ondisk_plugins,true)."</pre>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

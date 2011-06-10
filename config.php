@@ -152,7 +152,14 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             }
         }
         if ($CONFIG['debug']) $dbg .= "<pre>".print_r($savevar,true)."</pre>";
-        cfgSave($savevar, $userid);
+        if (empty($userid))
+        {
+            cfgSave($savevar, NAMESPACE_USER, $userid);
+        }
+        else
+        {
+            cfgSave($savevar, NAMESPACE_SIT);
+        }
     }
 }
 

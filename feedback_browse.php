@@ -49,13 +49,12 @@ switch ($mode)
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
         echo "<tr><th>{$strIncident}</th><td>".html_incident_popup_link($response->incidentid, "{$response->incidentid} - ".incident_title($response->incidentid))."</td>\n";
-        echo "<tr><th>{$strForm}</th><td>{$response->formid}</td>\n";
+        echo "<tr><th>{$strForm}</th><td>{$response->formid} - ".db_read_column('name', $dbFeedbackForms, $response->formid)." </td>\n";
         echo "<tr><th>{$strDate}</th><td>{$response->created}</td>\n";
         echo "<tr><th>{$strCompleted}</th><td>{$responsecompleted}</td>\n";
         echo "</table>\n";
 
         echo "<h3>{$strResponsesToFeedbackForm}</h3>";
-        $totalresult=0;
         $numquestions=0;
 
         // Return Ratings
@@ -66,11 +65,17 @@ switch ($mode)
         if (mysql_num_rows($qresult) >= 1)
         {
             $html .= "<table align='center' class='vertical'>";
+
+            $numresults = 0;
+            $cumul = 0;
+            $numquestions++;
+            $average = 0;
+            $statquestions = 0;
+
             while ($qrow = mysql_fetch_object($qresult))
             {
-                $numquestions++;
                 $html .= "<tr><th>Q{$qrow->taborder}: {$qrow->question}</th>";
-                $sql = "SELECT f.*, r.* FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                 $sql .= "WHERE f.incidentid=i.id ";
                 $sql .= "AND i.owner=u.id ";
                 $sql .= "AND f.id=r.respondentid ";
@@ -80,27 +85,37 @@ switch ($mode)
                 $sql .= "ORDER BY i.owner, i.id";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                $numresults = 0;
-                $cumul = 0;
-                $percent = 0;
-                $average = 0;
                 while ($row = mysql_fetch_object($result))
                 {
-                    if (!empty($row->result))
+                    $numresults++;
+                    if (!empty($row->result) OR ($row->result == 0))
                     {
-                        $cumul+=$row->result;
-                        $numresults++;
+                       
+                        if ($row->result != 0)
+                        {
+                            $cumul += $row->result;
+                            $html .= "<td>" . $row->result . "</td></tr>";
+                            $statquestions++;
+                        }
+                        else
+                        {
+                             $html .= "<td>{$strNoAnswerGiven}</td></tr>";
+                        }
                     }
                 }
-                if ($numresults>0) $average=number_format(($cumul/$numresults), 2);
-                $percent =number_format((($average-1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
-                $totalresult += $average;
-                $html .= "<td>{$average}</td></tr>";
-                // <strong>({$percent}%)</strong><br />";
+
+                $calcnumber = (100 / ($CONFIG['feedback_max_score'] - 1));
+
+                if ($statquestions>0)
+                {
+                    $average = number_format(($cumul / $statquestions), 2);
+                    $percent = number_format((($calcnumber * ($cumul-$statquestions)) / $statquestions), 2);
+                }
+
             }
             $html .= "</table>\n";
-            $total_average = number_format($totalresult/$numquestions,2);
-            $total_percent = number_format((($total_average-1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
+            $html .= "<p align='center'>{$strPositivity}: {$average} <strong>({$percent}%)</strong></p>";
+            $html .= "<p align='center'>{$strAnswered}: <strong>{$statquestions}</strong>/{$numresults}</p>";
 
             // Return text/options/multioptions fields
             $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
@@ -112,7 +127,7 @@ switch ($mode)
                 while ($qrow = mysql_fetch_object($qresult))
                 {
 
-                    $sql = "SELECT f.*, r.* FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                    $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                     $sql .= "WHERE f.incidentid = i.id ";
                     $sql .= "AND i.owner = u.id ";
                     $sql .= "AND f.id = r.respondentid ";
@@ -137,7 +152,6 @@ switch ($mode)
                 }
             }
 
-            $html .= "<p align='center'>{$strPositivity}: {$total_average} <strong>({$total_percent}%)</strong></p>";
             $surveys += $numresults;
 
             //if ($total_average>0)
@@ -155,6 +169,7 @@ switch ($mode)
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $fresult = mysql_fetch_object($result);
 
         if (mysql_num_rows($result) == 0)
         {
@@ -168,7 +183,7 @@ switch ($mode)
             if (empty($formid) AND !empty($CONFIG['feedback_form'])) $formid = $CONFIG['feedback_form'];
             else $formid = 1;
 
-            $sql  = "SELECT *, fr.id AS respid FROM `{$dbFeedbackRespondents}` AS fr, `{$dbFeedbackForms}` AS ff ";
+            $sql  = "SELECT *, fr.created as respcreated, fr.id AS respid FROM `{$dbFeedbackRespondents}` AS fr, `{$dbFeedbackForms}` AS ff ";
             $sql .= "WHERE fr.formid = ff.id ";
             if ($completed == 'no') $sql .= "AND completed='no' ";
             else $sql .= "AND completed='yes' ";
@@ -199,8 +214,8 @@ switch ($mode)
 
             if (!empty($formid))
             {
-                if ($completed == 'no') echo "<h3>{$strFeedbackRequested}: {$formid}</h3>";
-                else echo "<h3>{$strResponsesToFeedbackForm}: {$formid}</h3>";
+                if ($completed == 'no') echo "<h3>{$strFeedbackRequested}: {$formid} </h3>";
+                else echo "<h3>{$strResponsesToFeedbackForm}: {$formid} - {$fresult->name}</h3>";
                 echo "<p align='center'><a href='feedback_form_edit.php?formid={$formid}'>{$strEdit}</a></p>";
             }
             else
@@ -223,10 +238,10 @@ switch ($mode)
                     $respondentarr = explode('-', $resp->respondent);
                     $responserefarr = explode('-', $resp->responseref);
 
-                    $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid);
+                    $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid, contact_email($resp->contactid));
                     echo "<tr class='{$shade}'>";
-                    echo "<td>".ldate($CONFIG['dateformat_datetime'],mysqlts2date($resp->created))."</td>";
-                    echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a></td>";
+                    echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($resp->respcreated))."</td>";
+                    echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a> {$strFrom} <a href='site_details.php?id=".contact_siteid($resp->contactid)."'>".contact_site($resp->contactid)."</a> </td>";
                     echo "<td>".html_incident_popup_link($resp->incidentid, "{$strIncident} [{$resp->incidentid}]")." - ";
                     echo incident_title($resp->incidentid)."</td>";
                     $url = "feedback.php?ax={$hashcode}";

@@ -181,7 +181,7 @@ while ($incidents = mysql_fetch_object($result))
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-                if ($incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
+                if ($CONFIG['force_critical_flag'] AND $incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
             }
             elseif ($slaremain < 0)
             {
@@ -200,6 +200,23 @@ while ($incidents = mysql_fetch_object($result))
             break;
         case 3: // All Open
             $class = 'shade2';
+            $explain = '';
+            if ($slaremain >= 1)
+            {
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
+                if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
+                if ($incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
+            }
+            elseif ($slaremain < 0)
+            {
+                $class = 'critical';
+            }
+            else
+            {
+                $class = 'shade1';
+                $explain = '';  // No&nbsp;Target
+            }
             $explain = 'No Action Set';
             break;
         case 4: // All Closed
@@ -229,7 +246,7 @@ while ($incidents = mysql_fetch_object($result))
         $externalid = format_external_id($incidents->externalid);
     }
 
-    echo "<tr class='{$class}'>";
+    echo "<tr class='{$class}' title ='{$rowtitle}'>";
     echo "<td align='center'>";
 
     echo "<a href='incident_details.php?id={$incidents->id}' class='direct'>{$incidents->id}</a>";
@@ -280,7 +297,7 @@ while ($incidents = mysql_fetch_object($result))
 
     echo "<td align='center'>";
 
-    // Only display th eSLA name if more than one SLA defined   
+    // Only display th eSLA name if more than one SLA defined
     if ($number_of_slas > 1)
     {
         // Service Level / Priority
@@ -297,8 +314,9 @@ while ($incidents = mysql_fetch_object($result))
             echo "{$strUnknownServiceLevel}<br />";
         }
     }
-    $blinktime = (time() - ($servicelevel->initial_response_mins * 60));
-    if ($incidents->priority == 4 AND $incidents->lastupdated <= $blinktime)
+//     $blinktime = (time() - ($servicelevel->initial_response_mins * 60));
+    //  AND $incidents->lastupdated <= $blinktime
+    if ($CONFIG['force_critical_flag'] == FALSE AND $incidents->priority == 4)
     {
         echo "<strong class='critical'>".priority_name($incidents->priority)."</strong>";
     }
@@ -416,11 +434,11 @@ echo "</table><br />\n";
 
 if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
 {
-    echo "<br />\n<table class='incidentkey'><tr>";
-    echo "<td class='shade1'>{$strOpen}</td>";
-    echo "<td class='notice'>{$strSLAApproaching}</td>";
-    echo "<td class='urgent'>{$strSLADue}</td>";
-    echo "<td class='critical'>{$strSLAMissed}</td>";
+    echo "<br />\n<table class='legend'><tr>";
+    echo "<td class='shade2'>{$strSLA}: {$strOK}</td>";
+    echo "<td class='notice'>{$strSLA}: {$strNotice}</td>";
+    echo "<td class='urgent'>{$strSLA}: {$strUrgent}</td>";
+    echo "<td class='critical'>{$strSLA}: {$strCritical}</td>";
     echo "</tr></table>";
 }
 

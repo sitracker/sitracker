@@ -26,18 +26,26 @@ h1 { background-image: none; font-weight: lighter; padding-top: 11px; text-align
 #mainframe { background: transparent;}
 h1 { color: #fff; text-align: center; margin-left: 0em; }
 h2 { color: #555; }
+/* Table shading and statuses */
 tr.shade1, td.shade1 { background: #FFF;  }
 tr.shade1 td, tr.shade2 td { border-bottom: 1px solid #C3C3C3; }
 tr.shade2, td.shade2, fieldset { background: #EAF4F9;  }
-tr.urgent, td.urgent { background: #FABBBB; }
-tr.critical, td.critical { background: #FB164C; }
+tr.notice, .notice { background-color: #FFFFBC; }
+tr.notice:hover, td.notice:hover {background-color: #D7D7E9; }
+tr.urgent, .urgent { background-color: #FFF183; }
+tr.urgent:hover, td.urgent:hover { background-color: #C9C9E9; }
+tr.critical, .critical {/* background: #FFC4E0; pink*/ background-color: #FFE500; }
+tr.critical:hover, td.critical:hover { background-color: #AFAFE9; }
+strong.critical { background-color: #FF0000; /*#4b5c94;*/ color: white; text-decoration: none; border-radius:10px; }
 
 th { border: 1px solid #EEEEEE; background: white; color: #555; letter-spacing: 0.05em;}
-
 
 table.vertical { border:0px;}
 table.vertical tbody th { background: white; text-align: left; }
 table.vertical tbody td { background: white;}
+
+table.legend { border: 1px solid #EEE; width: 50%;  font-weight: normal; }
+.legend td { color: #555; font-size: 80%; }
 
 input, textarea, select { border: 1px solid #ccc; -moz-border-radius: 3px;
   -khtml-border-radius: 3px;  border-radius: 3px;}
@@ -162,6 +170,7 @@ div.detaildate
     top: 3px;
 }
 div.detaildate input[type=text] { color: #06377F; border: 1px dotted #06377F; background: transparent; }
+.detaildate form { position: relative; top: -5px; }
 
 div#statusbar { background-color: #4B5C94; }
 div#statusbar img { vertical-align: text-bottom; }
@@ -200,7 +209,9 @@ input[type=submit], input[type=button], input[type=reset]
 
 p.error, span.error, p.error a, error.a:link
 {
-    background-color: #F02311; color: white;
+    /*background-color: #F02311; color: white;*/
+    background-color: #E61B1A; color: white;
+    font-size: 105%;
 }
 
 

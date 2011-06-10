@@ -125,7 +125,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strActivities}:</th><td>".open_activities_for_site($siteobj->id)." <a href='tasks.php?siteid={$siteobj->id}'>{$strSeeHere}</a></td></tr>";
     echo "<tr><th>{$strInventory}:</th>";
     echo "<td>".site_count_inventory_items($id);
-    echo " <a href='inventory.php?site={$id}'>{$strSeeHere}</a></td></tr>";
+    echo " <a href='inventory_site.php?id={$id}'>{$strSeeHere}</a></td></tr>";
     $billableunits = billable_units_site($siteobj->id, $now - 2678400); // Last 31 days
     if ($billableunits > 0)
     {

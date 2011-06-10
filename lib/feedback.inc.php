@@ -72,11 +72,12 @@ function create_incident_feedback($formid, $incidentid)
  * @param $formid int ID of the form to use
  * @param $contactid int ID of the contact to send it to
  * @param $incidentid int ID of the incident the feedback is about
+ * @param $contactemail string email of contact
  * @return string the hash
  */
-function feedback_hash($formid, $contactid, $incidentid)
+function feedback_hash($formid, $contactid, $incidentid, $contactemail)
 {
-    $hashtext = urlencode($formid)."&&".urlencode($contactid)."&&".urlencode($incidentid);
+    $hashtext = urlencode($formid)."&&".urlencode($contactid)."&&".urlencode($incidentid)."&&".urlencode($contactemail);
     $hashcode4 = str_rot13($hashtext);
     $hashcode3 = gzcompress($hashcode4);
     $hashcode2 = base64_encode($hashcode3);
@@ -113,8 +114,9 @@ function feedback_html_rating($name, $required, $options, $answer='')
         $html .= "<div style='float: right;'>{$promptright}</div><div>{$promptleft}</div></th>";
         if ($required != 'true')
         {
-            $html .= "<th>&nbsp;</th>";
+            $html .= "<th>{$GLOBALS['strNotApplicableAbbrev']}</th>";
         }
+
         $html .= "</tr>\n";
     }
 
@@ -136,8 +138,16 @@ function feedback_html_rating($name, $required, $options, $answer='')
         {
             $html .= "checked='checked'";
         }
-        $html .= "/>{$strNotApplicableAbbrev}</td>";
+        else
+        {
+            $html .= "<td width='{$colwidth}'";
+        }
+        
+
+
+        $html .= "/></td>";
     }
+
     $html .= "</tr>\n";
     $html .= "</table>\n";
 
