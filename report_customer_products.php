@@ -80,7 +80,6 @@ elseif ($_REQUEST['mode'] == 'report')
     $rowcount = 0;
     while ($row = mysql_fetch_object($result))
     {
-        // FIXME strip slashes
         $product = '';
         $nicedate = ldate('d/m/Y', $row->opened);
         $html .= "<tr class='shade2'><td>{$row->name}</td>";
@@ -106,11 +105,8 @@ elseif ($_REQUEST['mode'] == 'report')
         $html .= "</tr>";
         $csv .= "'{$row->name}', '{$row->address1}','{$row->address2}','{$row->city}','{$row->county}','{$row->country}','{$row->postcode}',";
         $csv .= str_replace("\n", ",", $product)."\n";
-        // flush();
     }
     $html .= "</table>";
-
-    //  $html .= "<p align='center'>SQL Query used to produce this report:<br /><code>$sql</code></p>\n";
 
     if ($_POST['output'] == 'screen')
     {
