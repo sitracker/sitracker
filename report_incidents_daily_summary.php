@@ -45,7 +45,9 @@ if (empty($submit))
     echo date_picker('incidentsbysoftware.enddate');
     echo "</td></tr>\n";
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strRunReport}' /></p>";
+    echo "<p class='formbuttons'>";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
+    echo "<input name='submit' type='submit' value='{$strRunReport}' /></p>";
     echo "</form>";
 }
 else

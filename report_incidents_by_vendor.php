@@ -38,8 +38,9 @@ if (empty($_REQUEST['mode']))
     echo date_picker('incidentsbyvendor.enddate');
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>";
