@@ -84,34 +84,23 @@ switch ($step)
         echo "<option value='none'>{$strNo}</option>\n";
         switch ($target->type)
         {
-            //FIXME can this be put into the style sheets?
             case 'initialresponse':
-                echo "<option value='initialresponse' class='initialresponse' >"; 
-                echo "{$strInitialResponse}</option>\n";
-                echo "<option value='probdef' class='problemdef'>";
-                echo "{$strProblemDefinition}</option>\n";
-                echo "<option value='actionplan' class='actionplan'>";
-                echo "{$strActionPlan}</option>\n";
-                echo "<option value='solution' class='solution'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='initialresponse' class='initialresponse' >{$strInitialResponse}</option>\n";
+                echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
+                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'probdef':
-                echo "<option value='probdef' class='problemdef'>";
-                echo "{$strProblemDefinition}</option>\n";
-                echo "<option value='actionplan' class='actionplan'>";
-                echo "{$strActionPlan}</option>\n";
-                echo "<option value='solution' class='solution'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
+                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'actionplan':
-                echo "<option value='actionplan' class='actionplan'>";
-                echo "{$strActionPlan}</option>\n";
-                echo "<option value='solution' class='solution'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'solution':
-                echo "<option value='solution' class='solution'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
         }
         echo "</select>\n</td></tr>";
