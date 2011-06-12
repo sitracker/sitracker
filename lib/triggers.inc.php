@@ -1192,9 +1192,9 @@ function triggers_to_html($user_id, $trigger_id = '')
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
-    $html = "<table class='vertical' id='trigger_list'>";
+    $html = "<table id='trigger_list'>";
     $html .= "<tr><th>{$strTrigger}</th><th>{$strActions}</th></tr>";
-    $i = 1;
+    $i = 0;
     foreach ($trigger_types AS $trigger => $description)
     {
         $trigger_html = trigger_to_html($trigger, $user_id);
@@ -1205,6 +1205,7 @@ function triggers_to_html($user_id, $trigger_id = '')
             $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
             $html .= $trigger_html;
             $html .= "</div></td></tr>";
+            $i++;
         }
     }
     $html .= "</table>";
