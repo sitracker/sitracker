@@ -82,7 +82,7 @@ elseif ($_REQUEST['mode'] == 'report')
     {
         // FIXME strip slashes
         $product= '';
-        $nicedate = ldate('d/m/Y',$row->opened);
+        $nicedate = ldate('d/m/Y', $row->opened);
         $html .= "<tr class='shade2'><td>{$row->name}</td>";
         $html .= "<td>{$row->address1}</td><td>{$row->address2}</td>";
         $html .= "<td>{$row->city}</td><td>{$row->county}</td>";
@@ -103,8 +103,8 @@ elseif ($_REQUEST['mode'] == 'report')
         }
         $html .= nl2br($product)."</td>";
         $html .= "</tr>";
-        $csv .="'{$row->name}', '{$row->address1}','{$row->address2}','{$row->city}','{$row->county}','{$row->country}','{$row->postcode}',";
-        $csv .= ''.str_replace("\n", ",", $product)."\n";
+        $csv .= "'{$row->name}', '{$row->address1}','{$row->address2}','{$row->city}','{$row->county}','{$row->country}','{$row->postcode}',";
+        $csv .= str_replace("\n", ",", $product)."\n";
         // flush();
     }
     $html .= "</table>";
