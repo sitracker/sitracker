@@ -91,8 +91,9 @@ elseif ($_REQUEST['mode'] == 'report')
         $psql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, ";
         $psql .= "m.admincontact AS admincontact, ";
         $psql .= "r.name AS reseller, licence_quantity, lt.name AS licence_type, expirydate, admincontact, c.forenames AS admincontactsforenames, c.surname AS admincontactssurname, m.notes AS maintnotes ";
-        $psql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbLicenceTypes}` AS lt, `{$dbResellers}` AS r ";
-        $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND licence_type = lt.id AND admincontact = c.id ";
+        $psql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbResellers}` AS r ";
+        $psql .= "LEFT JOIN `{$dbLicenceTypes}` AS lt ON  licence_type = lt.id ";
+        $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND admincontact = c.id ";
         $psql .= "AND m.site = '{$row->id}' ";
         $psql .= "ORDER BY p.name ASC";
         $presult = mysql_query($psql);
@@ -114,6 +115,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if ($_POST['output'] == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        echo "<h2>".icon('reports', 32)." {$title}</h2>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
