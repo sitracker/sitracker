@@ -81,7 +81,7 @@ elseif ($_REQUEST['mode'] == 'report')
     while ($row = mysql_fetch_object($result))
     {
         // FIXME strip slashes
-        $product= '';
+        $product = '';
         $nicedate = ldate('d/m/Y', $row->opened);
         $html .= "<tr class='shade2'><td>{$row->name}</td>";
         $html .= "<td>{$row->address1}</td><td>{$row->address2}</td>";
