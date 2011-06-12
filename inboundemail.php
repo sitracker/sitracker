@@ -297,11 +297,10 @@ if ($emails > 0)
                 debug_log("Incident ID found in email TO address tag: '{$incidentid}'");
             }
         }
-        elseif (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+        elseif ($incidentid = incident_id_from_subject($subject, $from))
         {
-            if (FALSE !== incident_status($m[1]))
+            if (FALSE !== incident_status($incidentid))
             {
-                $incidentid = $m[1];
                 debug_log("Incident ID found in email subject: '{$incidentid}'");
             }
         }
