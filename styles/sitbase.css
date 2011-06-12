@@ -1,3 +1,5 @@
+@import 'sit.css.php';
+
 /* Base styles*/
 body {
   font-family: Tahoma, Helvetica, Arial, 'sans serif';
@@ -1043,3 +1045,9 @@ margin: 0 auto;
 
 }
 
+select .initialresponse, .problemdef, .actionplan, .solution 
+{
+	text-indent: 15px;
+    height: 17px;
+    background-repeat: no-repeat;
+}
