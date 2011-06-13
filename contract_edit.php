@@ -73,7 +73,7 @@ if ($action == "edit")
         {
             if ($changeproduct == 'yes')
             {
-                echo product_drop_down("product", $maint->product);
+                echo product_drop_down("product", $maint->product, TRUE);
             }
             else
             {
@@ -84,7 +84,7 @@ if ($action == "edit")
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
         echo "<tr><th>{$strExpiryDate}: </th>";
-        echo "<td><input name='expirydate' size='10' value='";
+        echo "<td><input class='required' name='expirydate' size='10' value='";
         if ($maint->expirydate > 0) echo ldate('Y-m-d', $maint->expirydate);
         echo "' /> ".date_picker('maintform.expirydate');
         if ($maint->expirydate == '-1')
@@ -100,7 +100,7 @@ if ($action == "edit")
         echo servicelevel_drop_down('servicelevel',$maint->servicelevel, TRUE);
         echo "</td></tr>\n";
         echo "<tr><th>{$strAdminContact}: </th><td>";
-        echo contact_drop_down("admincontact", $maint->admincontact, true);
+        echo contact_drop_down("admincontact", $maint->admincontact, TRUE, TRUE);
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strNotes}:</th><td><textarea cols='40' name='notes' rows='5'>";
         echo $maint->notes;
