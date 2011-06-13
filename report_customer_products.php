@@ -90,8 +90,8 @@ elseif ($_REQUEST['mode'] == 'report')
         $psql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, ";
         $psql .= "m.admincontact AS admincontact, ";
         $psql .= "r.name AS reseller, licence_quantity, lt.name AS licence_type, expirydate, admincontact, c.forenames AS admincontactsforenames, c.surname AS admincontactssurname, m.notes AS maintnotes ";
-        $psql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbResellers}` AS r ";
-        $psql .= "LEFT JOIN `{$dbLicenceTypes}` AS lt ON  licence_type = lt.id ";
+        $psql .= "FROM `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbResellers}` AS r, `{$dbMaintenance}` AS m ";
+        $psql .= "LEFT JOIN `{$dbLicenceTypes}` AS lt ON  m.licence_type = lt.id ";
         $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND admincontact = c.id ";
         $psql .= "AND m.site = '{$row->id}' ";
         $psql .= "ORDER BY p.name ASC";
