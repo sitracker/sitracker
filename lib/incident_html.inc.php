@@ -30,7 +30,7 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbIncidentStatus}` WHERE id<>2 AND id<>7 AND id<>10 ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
     {
         trigger_error("Zero rows returned", E_USER_WARNING);
@@ -73,7 +73,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbClosingStatus}` ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $html = "<select name='{$name}'";
     if ($required)
     {
@@ -124,7 +124,7 @@ function incident_productinfo_html($incidentid)
     $sql  = "SELECT *, TRIM(incidentproductinfo.information) AS info FROM `{$dbProductInfo}` AS p, {$dbIncidentProductInfo}` ipi ";
     $sql .= "WHERE incidentid = $incidentid AND productinfoid = p.id AND TRIM(p.information) !='' ";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) == 0)
     {
@@ -166,7 +166,7 @@ function incident_drop_down($name, $id, $contactid = 0)
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED . " ";
     if ($contactid > 0) $sql .= "AND contact = {$contactid}";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
