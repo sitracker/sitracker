@@ -213,21 +213,21 @@ function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required 
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/low_priority.gif); background-repeat:no-repeat;' value='1'";
+    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/low_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_LOW."'";
     if ($id == 1)
     {
         $html .= " selected='selected'";
     }
 
     $html .= ">{$GLOBALS['strLow']}</option>\n";
-    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/med_priority.gif); background-repeat:no-repeat;' value='2'";
+    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/med_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_MEDIUM."'";
     if ($id == 2)
     {
         $html .= " selected='selected'";
     }
 
     $html .= ">{$GLOBALS['strMedium']}</option>\n";
-    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/high_priority.gif); background-repeat:no-repeat;' value='3'";
+    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/high_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_HIGH."'";
     if ($id==3)
     {
         $html .= " selected='selected'";
@@ -236,7 +236,7 @@ function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required 
     $html .= ">{$GLOBALS['strHigh']}</option>\n";
     if ($max >= 4)
     {
-        $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/crit_priority.gif); background-repeat:no-repeat;' value='4'";
+        $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/crit_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_CRITICAL."'";
         if ($id==4)
         {
             $html .= " selected='selected'";

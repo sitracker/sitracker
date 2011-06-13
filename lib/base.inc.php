@@ -134,6 +134,11 @@ define ('NAMESPACE_USER', 3);
 define ('NAMESPACE_CONTACT', 4);
 define ('NAMESPACE_SITE', 5);
 
+// PRIORITIES
+define ('PRIORITY_LOW', 1);
+define ('PRIORITY_MEDIUM', 1);
+define ('PRIORITY_HIGH', 1);
+define ('PRIORITY_CRITICAL', 4);
 
 /**
  * Begin global variable definitions
