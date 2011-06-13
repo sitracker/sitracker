@@ -36,13 +36,12 @@ if (empty($action) OR $action == 'edit')
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     while ($software = mysql_fetch_object($result))
     {
-        echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
         echo "<form name='editsoftware' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
         echo "<table class='vertical'>";
         echo "<tr><th>{$strVendor}:</th><td>".vendor_drop_down('vendor', $software->vendorid)."</td></tr>\n";
-        echo "<tr><th>{$strSkill}: <sup class='red'>*</sup></th><td><input maxlength='50' name='name' size='30' value='{$software->name}' /></td></tr>";
+        echo "<tr><th>{$strSkill}:</th><td><input class='required' maxlength='50' name='name' size='30' value='{$software->name}' /> <span class='required'>{$strRequired}</span></td></tr>";
         echo "<tr><th>{$strLifetime}:</th><td>";
-        echo "<input type='text' name='lifetime_start' id='lifetime_start' size='10' value='";
+        echo "{$strFrom} <input type='text' name='lifetime_start' id='lifetime_start' size='10' value='";
         if ($software->lifetime_start > 1)
         {
             echo date('Y-m-d', mysql2date($software->lifetime_start));
