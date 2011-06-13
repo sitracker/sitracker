@@ -69,11 +69,11 @@ else
 
     echo "<tr><th>{$strVendor}:</th>";
     echo "<td>";
-    echo vendor_drop_down('vendor', $row->vendorid);
+    echo vendor_drop_down('vendor', $row->vendorid, TRUE);
     echo " <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strName}:</th>";
     echo "<td>";
-    echo "<input class='textbox' maxlength='255' name='name' size='40' value='{$row->name}' />";
+    echo "<input maxlength='50' name='name' size='40' value='{$row->name}'  class='required' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strDescription}:</th>";
     echo "<td>";
