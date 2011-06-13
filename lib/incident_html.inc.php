@@ -110,44 +110,6 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
 
 
 /**
- * Returns a string of HTML nicely formatted for the incident details page containing any additional
- * product info for the given incident.
- * @author Ivan Lucas
- * @param int $incidentid The incident ID
- * @return string HTML
- */
-function incident_productinfo_html($incidentid)
-{
-    global $dbProductInfo, $dbIncidentProductInfo, $strNoProductInfo;
-
-    // TODO extract appropriate product info rather than *
-    $sql  = "SELECT *, TRIM(incidentproductinfo.information) AS info FROM `{$dbProductInfo}` AS p, {$dbIncidentProductInfo}` ipi ";
-    $sql .= "WHERE incidentid = $incidentid AND productinfoid = p.id AND TRIM(p.information) !='' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 0)
-    {
-        return ('<tr><td>{$strNoProductInfo}</td><td>{$strNoProductInfo}</td></tr>');
-    }
-    else
-    {
-        // generate HTML
-        while ($productinfo = mysql_fetch_object($result))
-        {
-            if (!empty($productinfo->info))
-            {
-                $html = "<tr><th>{$productinfo->moreinformation}:</th><td>";
-                $html .= urlencode($productinfo->info);
-                $html .= "</td></tr>\n";
-            }
-        }
-        echo $html;
-    }
-}
-
-
-/**
  * A drop down to select from a list of open incidents
  * optionally filtered by contactid
  * @author Ivan Lucas
