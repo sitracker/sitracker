@@ -141,7 +141,6 @@ elseif ($action == "edit")
     if (mysql_num_rows($result) > 0)
     {
         echo "<h2>{$title}</h2>";
-        echo "<p align='center'>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</p>";
         echo "<div style='width: 48%; float: left;'>";
         echo "<form name='edittemplate' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
         echo "<table class='vertical' width='100%'>";
@@ -164,8 +163,8 @@ elseif ($action == "edit")
         if (empty($template->type)) $template->type = $triggerarray[$trigaction->triggerid]['type'];
 
 
-        echo "<tr><th>{$strID}: <sup class='red'>*</sup></th><td>";
-        echo "<input maxlength='50' name='name' size='5' value='{$template->id} 'readonly='readonly' disabled='disabled' /></td></tr>\n";
+        echo "<tr><th>{$strID}:</th><td>";
+        echo "<input maxlength='50' name='name' size='5' value='{$template->id} 'readonly='readonly' disabled='disabled' /> <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strTemplateType}:</th><td>";
         if ($templatetype == 'notice')
         {
@@ -191,26 +190,26 @@ elseif ($action == "edit")
         }
         echo "</td><tr>";
 
-        echo "<tr><th>{$strTemplate}: <sup class='red'>*</sup></th><td><input maxlength='100' name='name' size='40' value=\"{$template->name}\" /></td></tr>\n";
-        echo "<tr><th>{$strDescription}: <sup class='red'>*</sup></th>";
-        echo "<td><textarea name='description' cols='50' rows='5' onfocus=\"clearFocusElement(this);\"";
+        echo "<tr><th>{$strTemplate}:</th><td><input class='required' maxlength='100' name='name' size='40' value=\"{$template->name}\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
+        echo "<tr><th>{$strDescription}:</th>";
+        echo "<td><textarea class='required' name='description' cols='50' rows='5' onfocus=\"clearFocusElement(this);\"";
         if (mb_strlen($template->description) > 3 AND substr_compare($template->description, 'str', 0, 3) === 0)
         {
              echo " readonly='readonly' ";
              $template->description = ${$template->description};
          }
-        echo ">{$template->description}</textarea></td></tr>\n";
+        echo ">{$template->description}</textarea> <span class='required'>{$strRequired}</span></td></tr>\n";
         switch ($templatetype)
         {
             case 'email':
                 echo "<tr><th colspan='2'>{$strEmail}</th></tr>";
                 echo "<tr><td colspan='2'>{$strTemplatesShouldNotBeginWith}</td></tr>";
-                echo "<tr><th>{$strTo} <sup class='red'>*</sup></th>";
-                echo "<td><input id='tofield' maxlength='100' name='tofield' size='40' value=\"{$template->tofield}\" onfocus=\"recordFocusElement(this);\" /></td></tr>\n";
-                echo "<tr><th>{$strFrom} <sup class='red'>*</sup></th>";
-                echo "<td><input id='fromfield' maxlength='100' name='fromfield' size='40' value=\"{$template->fromfield}\" onfocus=\"recordFocusElement(this);\" /></td></tr>\n";
-                echo "<tr><th>{$strReplyTo} <sup class='red'>*</sup></th>";
-                echo "<td><input id='replytofield' maxlength='100' name='replytofield' size='40' value=\"{$template->replytofield}\" onfocus=\"recordFocusElement(this);\" /></td></tr>\n";
+                echo "<tr><th>{$strTo}</th>";
+                echo "<td><input class='required' id='tofield' maxlength='100' name='tofield' size='40' value=\"{$template->tofield}\" onfocus=\"recordFocusElement(this);\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
+                echo "<tr><th>{$strFrom}</th>";
+                echo "<td><input class='required' id='fromfield' maxlength='100' name='fromfield' size='40' value=\"{$template->fromfield}\" onfocus=\"recordFocusElement(this);\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
+                echo "<tr><th>{$strReplyTo}</th>";
+                echo "<td><input class='required' id='replytofield' maxlength='100' name='replytofield' size='40' value=\"{$template->replytofield}\" onfocus=\"recordFocusElement(this);\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
                 echo "<tr><th>{$strCC}</th>";
                 echo "<td><input id='ccfield' maxlength='100' name='ccfield' size='40' value=\"{$template->ccfield}\" onfocus=\"recordFocusElement(this);\" /></td></tr>\n";
                 echo "<tr><th>{$strBCC}</th>";
