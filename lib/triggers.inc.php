@@ -1087,50 +1087,50 @@ function replace_specials($string, $param_array)
     return  preg_replace($trigger_regex, $trigger_replace, $string);
 }
 
-    /**
-        * Replaces template variables with their values
-        * @author Kieran Hogg, Ivan Lucas
-        * @param $string_array string The string containing the variables
-        * @return string The string with variables replaced
+/**
+ * Replaces template variables with their values
+ * @author Kieran Hogg, Ivan Lucas
+ * @param $string_array string The string containing the variables
+ * @return string The string with variables replaced
  */
-    function trigger_replace_specials($trigger_type, $string_array, $param_array)
+function trigger_replace_specials($trigger_type, $string_array, $param_array)
+{
+    global $CONFIG, $application_version, $application_version_string, $dbg;
+    global $dbIncidents;
+    global $trigger_types, $ttvararray;
+
+    //this loops through each variable and creates an array of useable varaibles' regexs
+    foreach ($ttvararray AS $identifier => $ttvar)
     {
-        global $CONFIG, $application_version, $application_version_string, $dbg;
-        global $dbIncidents;
-        global $trigger_types, $ttvararray;
-
-        //this loops through each variable and creates an array of useable varaibles' regexs
-        foreach ($ttvararray AS $identifier => $ttvar)
+        $multiple = FALSE;
+        foreach ($ttvar AS $key => $value)
         {
-            $multiple = FALSE;
-            foreach ($ttvar AS $key => $value)
+            //this checks if it's a multiply-defined variable
+            if (is_numeric($key))
             {
-                //this checks if it's a multiply-defined variable
-                if (is_numeric($key))
-                {
-                    $trigger_replaces = replace_vars($trigger_type, $ttvar[$key], $identifier, $param_array);
-                    if (!empty($trigger_replaces))
-                    {
-                        $trigger_regex[] = $trigger_replaces['trigger_regex'];
-                        $trigger_replace[] = $trigger_replaces ['trigger_replace'];
-                    }
-                    $multiple = TRUE;
-                }
-            }
-            if ($multiple == FALSE)
-            {
-                $trigger_replaces = replace_vars($trigger_type, $ttvar, $identifier, $param_array);
-
+                $trigger_replaces = replace_vars($trigger_type, $ttvar[$key], $identifier, $param_array);
                 if (!empty($trigger_replaces))
                 {
                     $trigger_regex[] = $trigger_replaces['trigger_regex'];
-                    $trigger_replace[] = $trigger_replaces['trigger_replace'];
+                    $trigger_replace[] = $trigger_replaces ['trigger_replace'];
                 }
+                $multiple = TRUE;
             }
         }
-        $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
-        return $string;
+        if ($multiple == FALSE)
+        {
+            $trigger_replaces = replace_vars($trigger_type, $ttvar, $identifier, $param_array);
+
+            if (!empty($trigger_replaces))
+            {
+                $trigger_regex[] = $trigger_replaces['trigger_regex'];
+                $trigger_replace[] = $trigger_replaces['trigger_replace'];
+            }
+        }
     }
+    $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
+    return $string;
+}
 
 
 /**
