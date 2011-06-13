@@ -1018,7 +1018,7 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
     //if we're able to use this variable
     if ($usetvar)
     {
-        //debug_log("Using $identifier");
+        // debug_log("Using $identifier");
         $trigger_regex = "/{$identifier}/s";
         if (!empty($ttvar['replacement']))
         {
@@ -1032,12 +1032,12 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
 
                 debug_log("replacement: {$ttvar[replacement]}", TRUE);
             }
-    }
-
-    $trigger_replace = $res;
-    unset($res);
-    return array('trigger_replace' => $trigger_replace,
-            'trigger_regex' => $trigger_regex);
+        }
+    
+        $trigger_replace = $res;
+        unset($res);
+        return array('trigger_replace' => $trigger_replace,
+                'trigger_regex' => $trigger_regex);
     }
 }
 
@@ -1065,7 +1065,8 @@ function replace_specials($string, $param_array)
             //this checks if it's a multiply-defined variable
             if (is_numeric($key))
             {
-                $trigger_replaces = replace_vars($ttvar[$key], $triggerid, $identifier, $param_array, $required);
+                $trigger_replaces = replace_vars($triggerid, $ttvar[$key], $identifier, $param_array, $required);
+
                 if (!empty($trigger_replaces))
                 {
                     $trigger_regex[] = $trigger_replaces['trigger_regex'];
@@ -1076,7 +1077,7 @@ function replace_specials($string, $param_array)
         }
         if ($multiple == FALSE)
         {
-            $trigger_replaces = replace_vars($ttvar, $triggerid, $identifier, $param_array, $required);
+            $trigger_replaces = replace_vars($triggerid, $ttvar, $identifier, $param_array, $required);
             if (!empty($trigger_replaces))
             {
                 $trigger_regex[] = $trigger_replaces['trigger_regex'];
@@ -1084,7 +1085,8 @@ function replace_specials($string, $param_array)
             }
         }
     }
-    return  preg_replace($trigger_regex, $trigger_replace, $string);
+    
+    return preg_replace($trigger_regex, $trigger_replace, $string);
 }
 
 /**
