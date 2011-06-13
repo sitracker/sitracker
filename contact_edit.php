@@ -70,12 +70,12 @@ elseif ($action == "edit" && isset($contact))
         echo "<input maxlength='255' name='jobtitle' size='40' value='{$contactobj->jobtitle}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strSite}: </th><td>";
-        echo site_drop_down('siteid', $contactobj->siteid)."<span class='required'>{$strRequired}</span></td></tr>\n";
+        echo site_drop_down('siteid', $contactobj->siteid, TRUE)."<span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strDepartment}:</th><td>";
         echo "<input maxlength='100' name='department' size='40' value='{$contactobj->department}' />";
         echo "</td></tr>\n";
         echo "<tr><th>{$strEmail}:</th><td>";
-        echo "<input maxlength='100' name='email' size='40' value='".htmlspecialchars($contactobj->email, ENT_QUOTES)."' /> ";
+        echo "<input class='required' maxlength='100' name='email' size='40' value='".htmlspecialchars($contactobj->email, ENT_QUOTES)."' /> ";
         echo "<span class='required'>{$strRequired}</span>";
         echo "<label>";
         echo html_checkbox('dataprotection_email', $contactobj->dataprotection_email);
