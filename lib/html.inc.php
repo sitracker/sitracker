@@ -34,7 +34,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @note The recommended way to use this function is to call it without headers/footers
  *       already displayed.
  */
-function html_redirect($url, $success = TRUE, $message='', $close = FALSE)
+function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
 {
     global $CONFIG, $headerdisplayed, $siterrors;
 
@@ -62,7 +62,7 @@ function html_redirect($url, $success = TRUE, $message='', $close = FALSE)
         $refreshtime = 10;
     }
 
-    if (!$close)
+    if ($close === FALSE)
     {
         $refresh = "{$refreshtime}; url={$url}";
     }
