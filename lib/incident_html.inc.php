@@ -30,7 +30,7 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbIncidentStatus}` WHERE id<>2 AND id<>7 AND id<>10 ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
     {
         trigger_error("Zero rows returned", E_USER_WARNING);
@@ -73,7 +73,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbClosingStatus}` ORDER BY name ASC";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $html = "<select name='{$name}'";
     if ($required)
     {
@@ -110,44 +110,6 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
 
 
 /**
- * Returns a string of HTML nicely formatted for the incident details page containing any additional
- * product info for the given incident.
- * @author Ivan Lucas
- * @param int $incidentid The incident ID
- * @return string HTML
- */
-function incident_productinfo_html($incidentid)
-{
-    global $dbProductInfo, $dbIncidentProductInfo, $strNoProductInfo;
-
-    // TODO extract appropriate product info rather than *
-    $sql  = "SELECT *, TRIM(incidentproductinfo.information) AS info FROM `{$dbProductInfo}` AS p, {$dbIncidentProductInfo}` ipi ";
-    $sql .= "WHERE incidentid = $incidentid AND productinfoid = p.id AND TRIM(p.information) !='' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 0)
-    {
-        return ('<tr><td>{$strNoProductInfo}</td><td>{$strNoProductInfo}</td></tr>');
-    }
-    else
-    {
-        // generate HTML
-        while ($productinfo = mysql_fetch_object($result))
-        {
-            if (!empty($productinfo->info))
-            {
-                $html = "<tr><th>{$productinfo->moreinformation}:</th><td>";
-                $html .= urlencode($productinfo->info);
-                $html .= "</td></tr>\n";
-            }
-        }
-        echo $html;
-    }
-}
-
-
-/**
  * A drop down to select from a list of open incidents
  * optionally filtered by contactid
  * @author Ivan Lucas
@@ -166,7 +128,7 @@ function incident_drop_down($name, $id, $contactid = 0)
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED . " ";
     if ($contactid > 0) $sql .= "AND contact = {$contactid}";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
@@ -251,21 +213,21 @@ function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required 
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/low_priority.gif); background-repeat:no-repeat;' value='1'";
+    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/low_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_LOW."'";
     if ($id == 1)
     {
         $html .= " selected='selected'";
     }
 
     $html .= ">{$GLOBALS['strLow']}</option>\n";
-    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/med_priority.gif); background-repeat:no-repeat;' value='2'";
+    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/med_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_MEDIUM."'";
     if ($id == 2)
     {
         $html .= " selected='selected'";
     }
 
     $html .= ">{$GLOBALS['strMedium']}</option>\n";
-    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/high_priority.gif); background-repeat:no-repeat;' value='3'";
+    $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/high_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_HIGH."'";
     if ($id==3)
     {
         $html .= " selected='selected'";
@@ -274,7 +236,7 @@ function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required 
     $html .= ">{$GLOBALS['strHigh']}</option>\n";
     if ($max >= 4)
     {
-        $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/crit_priority.gif); background-repeat:no-repeat;' value='4'";
+        $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/crit_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_CRITICAL."'";
         if ($id==4)
         {
             $html .= " selected='selected'";

@@ -1341,15 +1341,14 @@ function template_description($name, $type)
  * Provides a drop down list of matching functions
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
- * @todo FIXME 3.90 i18n
  */
 function check_match_drop_down($id = '')
 {
     $html = "<select id='{$id}' name='{$id}'>";
-    $html .= "<option>is</option>";
-    $html .= "<option>is not</option>";
-    $html .= "<option>contains</option>";
-    $html .= "<option>does not contain</option>";
+    $html .= "<option value='is'>{$GLOBALS['strIs']}</option>";
+    $html .= "<option value='is not'>{$GLOBALS['strIsNot']}</option>";
+    $html .= "<option value='contains'>{$GLOBALS['strContains']}</option>";
+    $html .= "<option value='does not contain'>{$GLOBALS['strDoesNotContain']}</option>";
     $html .= "</select>";
 
     return $html;
@@ -1361,8 +1360,8 @@ function check_match_drop_down($id = '')
  * @param array $value the values of the parameters
  * @param array $join the 'is', 'is not' selection
  * @param array $enabled the status of the checkbox
-* @param array $conditions whether to use 'all' or 'any' of the conditions
-*/
+ * @param array $conditions whether to use 'all' or 'any' of the conditions
+ */
 function create_check_string($param, $value, $join, $enabled, $conditions)
 {
     $param_count = sizeof($param);
@@ -1381,21 +1380,24 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     }
 
     $check_count = sizeof($checks);
-    foreach ($checks as $key => $value)
+    if ($check_count > 0)
     {
-        $final_check .= $checks[$key];
-        if ($check_count != 1)
+        foreach ($checks as $key => $value)
         {
-            if ($conditions == 'all')
+            $final_check .= $checks[$key];
+            if ($check_count != 1)
             {
-                $final_check .= " AND ";
+                if ($conditions == 'all')
+                {
+                    $final_check .= " AND ";
+                }
+                else
+                {
+                    $final_check .= " OR ";
+                }
             }
-            else
-            {
-                $final_check .= " OR ";
-            }
+            $check_count --;
         }
-        $check_count --;
     }
 
     return $final_check;
