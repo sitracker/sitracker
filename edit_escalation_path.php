@@ -81,7 +81,7 @@ else
 
         if (!$result)
         {
-            echo "<p class='error'>{$strEditEscalationPathFailed}</p>";
+            html_redirect("escalation_paths.php", FALSE, $strEditEscalationPathFailed);
         }
         else
         {
