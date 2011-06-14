@@ -1361,8 +1361,8 @@ function check_match_drop_down($id = '')
  * @param array $value the values of the parameters
  * @param array $join the 'is', 'is not' selection
  * @param array $enabled the status of the checkbox
-* @param array $conditions whether to use 'all' or 'any' of the conditions
-*/
+ * @param array $conditions whether to use 'all' or 'any' of the conditions
+ */
 function create_check_string($param, $value, $join, $enabled, $conditions)
 {
     $param_count = sizeof($param);
