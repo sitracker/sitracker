@@ -16,8 +16,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'admin';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
-
 
 $id = clean_int($_GET['id']);
 $contactid = clean_int($_GET['contactid']);
@@ -41,7 +39,7 @@ if ($id != 0 AND $contactid != 0 AND $action == 'remove')
     }
     else
     {
-        echo "<p class='error'>{$strPermissionDenied}</p>";
+        html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE, $strPermissionDenied);
     }
 }
 elseif ($id != 0 AND $action == 'add' AND intval($_POST['contactid'] != 0))
@@ -58,6 +56,8 @@ elseif ($id != 0 AND $action == 'add' AND intval($_POST['contactid'] != 0))
         exit;
     }
 }
+
+include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 echo "<h2>".icon('contract', 32)." {$GLOBALS['strContract']}</h2>";
 
