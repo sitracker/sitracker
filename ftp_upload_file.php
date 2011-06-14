@@ -196,8 +196,7 @@ else
 
             journal(CFG_LOGGING_NORMAL, 'FTP File Uploaded', sprintf($strFTPFileXUploaded, $filename), CFG_JOURNAL_OTHER, 0);
 
-            html_redirect('ftp_upload_file.php');
-            echo "<code>{$ftp_url}</code>";
+            html_redirect('ftp_upload_file.php', TRUE, "<code>{$ftp_url}</code>");
         }
     }
 

@@ -16,13 +16,12 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'admin';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 $site = intval($_SESSION['siteid']);
 
 if (isset($_POST['submit']))
 {
-	// External Variables
+    // External Variables
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
     $incident_quantity = $incident_pools[$_POST['incident_poolid']];
     $name = cleanvar($_POST['name']);
@@ -106,13 +105,13 @@ if (isset($_POST['submit']))
     }
     else
     {
-        echo $errors_string;
+        html_redirect($_SERVER['PHP_SELF'], FALSE, $errors_string);
     }
 }
 
+include (APPLICATION_INCPATH . 'portalheader.inc.php');
+
 echo show_edit_site($site, 'external');
-
-
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

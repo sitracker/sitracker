@@ -14,15 +14,13 @@ require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$title = "$strInventory - $strView";
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
-
 if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
 }
+
+$title = "$strInventory - $strView";
 
 if (is_numeric($_GET['id']))
 {
@@ -43,6 +41,7 @@ if (is_numeric($_GET['id']))
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
+    
     if (mysql_num_rows($result) > 0)
     {
         $row = mysql_fetch_object($result);
@@ -53,6 +52,7 @@ if (is_numeric($_GET['id']))
             exit;
         }
 
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
 
         echo "<div id='container' style='width: 40%'>";
@@ -111,12 +111,14 @@ if (is_numeric($_GET['id']))
 
         echo "<p align='center'><a href='inventory_site.php?id={$row->siteid}'>";
         echo "{$strBackToList}</a></p>";
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
     {
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
         echo "<p class='info'>{$strNoRecords}</p>";
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
-    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 ?>

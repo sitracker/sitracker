@@ -270,7 +270,7 @@ else
 
         if (!$result)
         {
-            echo "<p class='error'>{$strAdditionFail}</p>\n";
+            html_redirect("manage_users.php", FAIL, $strAdditionFail);
         }
         else
         {

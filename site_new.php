@@ -143,8 +143,6 @@ elseif ($action == "new")
 
     $_SESSION['formdata']['new_site'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
-    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
     $errors = 0;
 
     if ($name == '')

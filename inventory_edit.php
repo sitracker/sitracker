@@ -14,15 +14,14 @@ require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$title = "$strInventory - $strEdit";
-
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
 }
+
+$title = "$strInventory - $strEdit";
+
 
 $id = clean_int($_GET['id']);
 $siteid = clean_int($_REQUEST['site']);
@@ -102,6 +101,7 @@ else
         html_redirect('inventory.php', FALSE);
         exit;
     }
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('edit', 32)." {$strEdit}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";

@@ -16,7 +16,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'any';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 // External vars
 $id = intval($_REQUEST['id']);
@@ -32,6 +31,7 @@ if ($incidentcontact == $_SESSION['contactid'])
     
     if (empty($_REQUEST['reason']))
     {
+        include (APPLICATION_INCPATH . 'portalheader.inc.php');
         echo "<h2>".icon('close', 32, $strClosureRequestForIncident);
         echo " {$strClosureRequestForIncident} {$id}</h2>";
         echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?page=close&amp;id={$id}' method='post'>";
@@ -67,6 +67,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 }
 else
 {
+    include (APPLICATION_INCPATH . 'portalheader.inc.php');
     echo "<p class='warning'>$strNoPermission.</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     exit;

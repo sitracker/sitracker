@@ -49,7 +49,6 @@ if (empty($_REQUEST['mode']))
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
         echo "<input type='submit' name='submit' value=\"{$strSave}\" /></p>";
         echo "<p><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
-
         echo "</form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -81,7 +80,7 @@ else
 
         if (!$result)
         {
-            echo "<p class='error'>{$strEditEscalationPathFailed}</p>";
+            html_redirect("escalation_paths.php", FALSE, $strEditEscalationPathFailed);
         }
         else
         {

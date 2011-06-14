@@ -25,11 +25,11 @@ $title = $strEditContact;
 $contact = clean_int($_REQUEST['contact']);
 $action = cleanvar($_REQUEST['action']);
 
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // User has access
 if (empty($action) OR $action == "showform" OR empty($contact))
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     // Show select contact form
     echo "<h2>".icon('contact', 32)." {$strEditContact}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
@@ -38,9 +38,11 @@ if (empty($action) OR $action == "showform" OR empty($contact))
     echo "</table>";
     echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>\n";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "edit" && isset($contact))
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     // FIMXE i18n
     // Show edit contact form
     $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
@@ -144,6 +146,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>\n";
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else if ($action == "update")
 {
@@ -248,5 +251,5 @@ else if ($action == "update")
         }
     }
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 ?>

@@ -14,15 +14,13 @@ require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$title = "$strInventory - $strNew";
-
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
 }
+
+$title = "$strInventory - $strNew";
 
 if (!empty($_GET['site']))
 {
@@ -50,6 +48,7 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 }
 else
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($_POST['submit']) AND empty($_POST['name']))
     {
         echo "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strName)."</p>";
