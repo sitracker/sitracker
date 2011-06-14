@@ -285,7 +285,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
  */
 function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
 {
-    global $dbConfig, $dbUserConfig;
+    global $dbConfig, $dbUserConfig, $dbContactConfig, $dbSiteConfig;
 
     if ($namespace == NAMESPACE_USER)
     {
