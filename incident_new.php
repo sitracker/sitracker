@@ -105,7 +105,10 @@ $productid = clean_int($_REQUEST['productid']);
 $producttext = cleanvar($_REQUEST['producttext']);
 $win = cleanvar($_REQUEST['win']);
 
-if (!empty($incomingid) AND empty($updateid)) $updateid = db_read_column('updateid', $dbTempIncoming, $incomingid);
+if (!empty($incomingid) AND empty($updateid))
+{
+    $updateid = db_read_column('updateid', $dbTempIncoming, $incomingid);
+}
 
 if (empty($action) OR $action == 'showform')
 {

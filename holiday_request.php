@@ -106,6 +106,7 @@ function display_holiday_table($result)
 }
 
 if (empty($user)) $user = $sit[2];
+
 if (!$sent)
 {
     // check to see if this user has approve permission

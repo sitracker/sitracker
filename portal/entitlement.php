@@ -90,7 +90,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
         }
         else
         {
-             echo "<a href='add.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strNewIncident}</a>";
+             echo "<a href='new.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strNewIncident}</a>";
         }
         echo "</td></tr>\n";
         if ($shade == 'shade1') $shade = 'shade2';

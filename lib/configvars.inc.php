@@ -20,7 +20,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
 $CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
-$CFGTAB['system'] = array('paths', 'locale', 'journal', 'users');  // soap
+$CFGTAB['system'] = array('paths', 'locale', 'journal', 'users', 'contacts', 'sites');  // soap
 $TABI18n['plugins'] = $strPlugins;
 
 $TABI18n['application'] = $strApplication;
@@ -144,6 +144,10 @@ $CFGCAT['soap'] = array('soap_enabled',
 
 $CFGCAT['users'] = array('user_config_defaults');
 
+$CFGCAT['contacts'] = array('contact_config_defaults');
+
+$CFGCAT['sites'] = array('site_config_defaults');
+
 
 $CFGCAT['kb'] = array('kb_enabled',
                       'kb_disclaimer_html',
@@ -167,28 +171,31 @@ $CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
 
 
 
-// i18n keys for categories
+// i18n keys for categories alphabetically
 $CATI18N['appmain'] = $strGeneral;
-$CATI18N['theming'] = $strTheme;
-$CATI18N['ldap'] = $strLDAP;
-$CATI18N['soap'] = $strSOAP;
-$CATI18N['users'] = $strUsers;
-$CATI18N['other'] = $strOther;
-$CATI18N['inboundemail'] = $strInbound;
-$CATI18N['outboundemail'] = $strOutbound;
-$CATI18N['incidents'] = $strIncidents;
-$CATI18N['portal'] = $strPortal;
-$CATI18N['ftp'] = $strFTP;
-$CATI18N['kb'] = $strKnowledgeBase;
-$CATI18N['sla'] = $strServiceLevels;
 $CATI18N['billing'] = $strBilling;
-$CATI18N['holidays'] = $strHolidays;
+$CATI18N['contacts'] = $strContacts;
 $CATI18N['feedback'] = $strFeedback;
-$CATI18N['paths'] = $strPaths;
-$CATI18N['locale'] = $strLocale;
-$CATI18N['journal'] = $strJournal;
+$CATI18N['ftp'] = $strFTP;
+$CATI18N['holidays'] = $strHolidays;
+$CATI18N['inboundemail'] = $strInbound;
+$CATI18N['incidents'] = $strIncidents;
 $CATI18N['inventory'] = $strInventory;
+$CATI18N['journal'] = $strJournal;
+$CATI18N['kb'] = $strKnowledgeBase;
+$CATI18N['ldap'] = $strLDAP;
+$CATI18N['locale'] = $strLocale;
+$CATI18N['other'] = $strOther;
 $CATI18N['otherfeatures'] = $strOther;
+$CATI18N['outboundemail'] = $strOutbound;
+$CATI18N['paths'] = $strPaths;
+$CATI18N['portal'] = $strPortal;
+$CATI18N['sites'] = $strSites;
+$CATI18N['sla'] = $strServiceLevels;
+$CATI18N['soap'] = $strSOAP;
+$CATI18N['theming'] = $strTheme;
+$CATI18N['users'] = $strUsers;
+
 
 // Text to introduce a configuration category, may contain HTML
 $CATINTRO['sla'] = "This section allows you to configure how service levels are used, configure the <abbr title='Service Level Agreements'>SLA</abbr>'s themselves on the <a href='service_levels.php'>Service Levels</a> page.";
@@ -253,6 +260,10 @@ $CFGVAR['calendar_enabled']['type'] = 'checkbox';
 
 $CFGVAR['changelogfile']['title'] = 'Path to the Changelog file';
 $CFGVAR['changelogfile']['help'] = 'The filesystem path and filename of the SiT! Changelog file, this can be specified relative to the SiT directory.';
+
+$CFGVAR['contact_config_defaults']['title'] = "Contact configuration defaults";
+$CFGVAR['contact_config_defaults']['help'] = "You can set configuration defaults here for contacts that have not personalised their settings. Enter config one per line, format: variable=>setting";
+$CFGVAR['contact_config_defaults']['type'] = '2darray';
 
 $CFGVAR['creditsfile']['title'] = 'Path to the Credits file';
 $CFGVAR['creditsfile']['help'] = 'The filesystem path and filename of the SiT! CREDITS file, this can be specified relative to the SiT directory.';
@@ -607,6 +618,10 @@ $CFGVAR['regular_contact_days']['unit'] = $strDays;
 
 $CFGVAR['session_name']['title'] = 'Session Name';
 $CFGVAR['session_name']['help'] = 'The session name for use in cookies and URLs, Must contain alphanumeric characters only';
+
+$CFGVAR['site_config_defaults']['title'] = "Site configuration defaults";
+$CFGVAR['site_config_defaults']['help'] = "You can set configuration defaults here for sites that have not personalised their settings. Enter config one per line, format: variable=>setting";
+$CFGVAR['site_config_defaults']['type'] = '2darray';
 
 $CFGVAR['soap_enabled']['title'] = 'Enable SOAP';
 $CFGVAR['soap_enabled']['help'] = 'Enable SOAP (Simple Object Access Protocol) for SiT! users (<em>Experimental feature</em>)';

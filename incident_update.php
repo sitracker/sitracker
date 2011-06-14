@@ -609,7 +609,7 @@ else
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         }
-        journal(CFG_LOGGING_MAX,'Incident Updated', "Incident {$id} Updated", CFG_JOURNAL_SUPPORT, $id);
+        journal(CFG_LOGGING_MAX, 'Incident Updated', "Incident {$id} Updated", CFG_JOURNAL_SUPPORT, $id);
         html_redirect("incident_details.php?id={$id}");
     }
 }

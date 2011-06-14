@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $mode = cleanvar($_REQUEST['mode']);
-$edituserpermission = user_permission($sit[2],23); // edit user
+$edituserpermission = user_permission($sit[2], 23); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {
@@ -146,7 +146,7 @@ if (empty($mode))
     echo "</td></tr>";
     echo "<tr><th colspan='2'>{$strWorkStatus}</th></tr>";
 
-    if ($edituserpermission AND $edituserid != $sit[2] AND $user->user_source == 'sit')
+    if ($edituserpermission AND $edituserid != $sit[2] AND $user->source == 'sit')
     {
         $userdisable = TRUE;
     }

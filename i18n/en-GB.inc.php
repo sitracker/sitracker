@@ -324,6 +324,7 @@ $strConfirmNewPassword = 'Confirm New Password';
 $strContact = 'Contact';
 $strContactAddedSuccessfully = 'Contact Added Successfully';
 $strContactID = 'Contact\'s ID';
+$strContains = 'Contains';
 $strContinue = 'Continue';
 $strContactDetails = 'Contact Details';
 $strContactRecordExists = 'A contact record already exists with that Surname and Email address';
@@ -478,6 +479,7 @@ $strDisplayPreferences = 'Display Preferences';
 $strDistribution = 'Distribution';
 $strDocumentIDX = 'Document ID %1$s %2$s';
 $strDoesNOTApply = 'Does NOT apply';
+$strDoesNotContain = 'Does Not Contain';
 $strDoesThisUpdateMeetSLA = 'Does this update meet an SLA target?';
 $strDoNothing = 'do nothing';
 $strDraftChoose = 'Multiple drafts exist please select one';
@@ -905,6 +907,10 @@ $strInMeeting = 'In Meeting';
 $strInMinutes = 'in minutes';
 $strInOffice = 'In Office';
 $strInOrderToDelete = 'In order to delete this record you must select another to receive the related objects';
+# e.g. Used when checking if something is the same as something else
+$strIs = 'is';
+# e.g. Used when checking if something is not the same as something else
+$strIsNot = 'is not';
 $strInstall = 'Install';
 $strInstallDashboardComponents = 'Install new dashboard component';
 $strInstalled = 'Installed';

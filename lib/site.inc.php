@@ -39,7 +39,7 @@ function site_count_inventory_items($id)
  * Returns yes/no if site wants to receive feedback
  * @author Carsten Jensen
  * @param int $id the id of the site
- * @return string yes/no or FALSE when error
+ * @return bool true/false, true if contact enabled feedback
  */
 function site_feedback($id)
 {
