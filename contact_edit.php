@@ -43,7 +43,7 @@ if (empty($action) OR $action == "showform" OR empty($contact))
 elseif ($action == "edit" && isset($contact))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    // FIMXE i18n
+    // FIXME i18n
     // Show edit contact form
     $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
     $contactresult = mysql_query($sql);
