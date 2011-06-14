@@ -1381,21 +1381,24 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     }
 
     $check_count = sizeof($checks);
-    foreach ($checks as $key => $value)
+    if ($check_count > 0)
     {
-        $final_check .= $checks[$key];
-        if ($check_count != 1)
+        foreach ($checks as $key => $value)
         {
-            if ($conditions == 'all')
+            $final_check .= $checks[$key];
+            if ($check_count != 1)
             {
-                $final_check .= " AND ";
+                if ($conditions == 'all')
+                {
+                    $final_check .= " AND ";
+                }
+                else
+                {
+                    $final_check .= " OR ";
+                }
             }
-            else
-            {
-                $final_check .= " OR ";
-            }
+            $check_count --;
         }
-        $check_count --;
     }
 
     return $final_check;
