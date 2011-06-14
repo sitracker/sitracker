@@ -78,7 +78,6 @@ else
     }
     else
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 }
