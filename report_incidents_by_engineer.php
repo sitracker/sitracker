@@ -70,6 +70,7 @@ if (empty($_REQUEST['mode']))
     echo "</select>";
     echo "</td>";
     echo "</tr>\n";
+    echo "<tr><th align='right' width='200'>{$strOptions}</th><td><label><input type='checkbox' name='statistics' /> {$strStatisticsOnly}</label></td></tr>";
     echo "<tr><th align='right' width='200'>{$strOutput}:</th>";
     echo "<td width='400'>";
     echo "<select name='output'>";
@@ -77,11 +78,11 @@ if (empty($_REQUEST['mode']))
     echo "<option value='csv'>{$strCSVfile}</option>";
     echo "</select>";
     echo "</td></tr>";
-    echo "<tr><th align='right' width='200'>{$strStatisticsOnly}</th><td><input type='checkbox' name='statistics' /></td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='table1' value='{$_POST['table1']}' />";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>";
@@ -256,10 +257,10 @@ elseif ($_REQUEST['statistics'] == 'on')
             $html .= "<td {$class}>{$escalated}</td>";
             if (empty($engineer['closed'])) $closed = 0;
             else $closed = $engineer['closed'];
-            
+
             if ($open === 0) $openForDiv = 1;
             else $openForDiv = $open;
-            
+
             $html .= "<td {$class}>{$closed}</td>";
             $html .= "<td {$class}>".round($open / 12, 2)."</td>"; //The average over a 12mnth period
             $html .= "<td {$class}>".round($escalated / 12, 2)."</td>"; //The average over a 12mnth period

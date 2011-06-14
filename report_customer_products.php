@@ -40,9 +40,10 @@ if (empty($_REQUEST['mode']))
     echo "</select>";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='table1' value='{$_POST['table1']}' />";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>";

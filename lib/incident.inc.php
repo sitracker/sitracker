@@ -168,12 +168,12 @@ function create_incident_from_incoming($incomingid)
     {
         $rtn = FALSE;
     }
-    else 
+    else
     {
         $sql = "DELETE FROM `$dbTempIncoming` WHERE id = '{$incomingid}'";
         $result = mysql_query($sql);
     }
-    
+
 
     if ($CONFIG['auto_assign_incidents'])
     {
@@ -578,18 +578,18 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
 
 /**
  * Gets the incident ID for an email based on its subject
- * @author Kierna Hogg
+ * @author Kieran Hogg
  * @param string $subject The email subject
  * @param string $from The email address it was sent from
  * @return int ID of the incident, 0 if none
  */
 function incident_id_from_subject($subject, $from)
 {
-    $incident_id = 0;
+    $incident_id = FALSE;
     $from_parts = explode($from, "@");
     $domain = $from_parts[2];
 
-    if (preg_match('/\[(\d{1,5})\]/', $subject, $m))
+    if (preg_match('/\[(\d+)\]/', $subject, $m))
     {
         $incident_id = $m[1];
     }
@@ -611,8 +611,8 @@ function incident_id_from_subject($subject, $from)
             }
         }
     }
-
 }
+
 
 /**
  * @author Ivan Lucas
@@ -1710,7 +1710,7 @@ function incident_sla($incident_id, $type)
             case 'resolution':
                 $sla = $sla_obj->resolution_days * 480;
                 break;
-    
+
             case 'initial_response':
             default:
                 $sla = $sla_obj->initial_response_mins;

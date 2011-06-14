@@ -73,7 +73,7 @@ if (empty($_REQUEST['mode']))
         echo "</td></tr>\n";
     }
 
-    echo "<tr><td  colspan='2'><label><input type='checkbox' name='activeonly'";
+    echo "<tr><th>{$strOptions}</th><td><label><input type='checkbox' name='activeonly'";
     echo " value='yes' /> {$strShowActiveOnly}</label></td></tr>";
 
     echo "<tr><td colspan='2'>{$strOutput}: <select name='output'>";
@@ -83,7 +83,7 @@ if (empty($_REQUEST['mode']))
     echo "</select>";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='table1' value='{$_POST['table1']}' />";
     echo "<input type='hidden' name='mode' value='report' />";
     echo "<input type='reset' value=\"{$strReset}\" /> ";

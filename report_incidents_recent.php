@@ -36,8 +36,6 @@ $sql .= "AND i.contact = c.id ";
 $sql .= "AND i.opened > '{$monthago}' ";
 $sql .= "ORDER BY s.id, i.id";
 
-echo $sql."<br />";
-
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error: ".mysql_error(), E_USER_WARNING);
 
