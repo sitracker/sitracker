@@ -72,7 +72,6 @@ $strAddIncidents = 'Add New Incidents';
 $strAddingACondition = 'Adding a condition of \'Incident owner is Joe Bloggs\' would only notify you when Joe Bloggs gets assigned an incident.';
 $strAdditional = 'Additional';
 $strAdditionalInfo = 'Additional Information';
-$strAddRSSAtomFeed = 'Add RSS/Atom feed';
 $strAddNewSiteContact = 'Add New Site Contact';
 $strAddNewSites = 'Add New Sites';
 $strAddProduct = 'Add New Product';
@@ -81,6 +80,7 @@ $strAddReseller = 'Add New Reseller';
 $strAddress = 'Address';
 $strAddress1 = 'Address1';
 $strAddress2 = 'Address2';
+$strAddRSSAtomFeed = 'Add RSS/Atom feed';
 $strAddService = 'Add Service';
 # i.e. Physical site
 $strAddSoftware = 'Add Software';
