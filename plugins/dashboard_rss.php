@@ -143,7 +143,7 @@ function dashboard_rss_edit($dashletid)
     switch ($action)
     {
         case 'new':
-            echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strNewRSSAtomFeed']}</h2>";
+            echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strAddRSSAtomFeed']}</h2>";
             echo "<form id='dashrssaddform' action='{$_SERVER['PHP_SELF']}?action=do_new' method='post'>";
             echo "<table class='vertical'>";
             echo "<tr><td><label>".icon('feed-icon', 12, $GLOBALS['strFeedIcon'])." ";
@@ -151,7 +151,7 @@ function dashboard_rss_edit($dashletid)
             echo "<tr><td><label>{$GLOBALS['strDisplay']}: <input type='text' name='items' size='3' value='0' /></label> ({$GLOBALS['str0MeansUnlimited']})</td></tr>";
             echo "</table>";
             // <input name='submit' type='submit' value='{$GLOBALS['strNew']}' />
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strNew'], 'save', array('editaction'=>'do_new'), false, 'dashrssaddform')."</p>";
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'save', array('editaction'=>'do_new'), false, 'dashrssaddform')."</p>";
             echo "</form>";
             break;
         case 'do_new':
@@ -312,7 +312,7 @@ function dashboard_rss_edit($dashletid)
                 echo "<p align='center'>{$GLOBALS['strNoFeedsCurrentlyPresent']}</p>";
             }
 
-            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strNew'], 'edit', array('editaction'=>'new'))."</p>";
+            echo "<p align='center'>".dashlet_link('rss', $dashletid, $GLOBALS['strAdd'], 'edit', array('editaction'=>'new'))."</p>";
             break;
     }
 
