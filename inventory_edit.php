@@ -16,13 +16,13 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = "$strInventory - $strEdit";
 
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
     exit;
 }
+
+include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $id = clean_int($_GET['id']);
 $siteid = clean_int($_REQUEST['site']);
