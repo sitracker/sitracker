@@ -153,22 +153,22 @@ function display_update_page($draftid=-1)
     switch ($target->type)
     {
         case 'initialresponse':
-            echo "<option value='initialresponse' {$targetInitialresponse} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/initialresponse.png); background-repeat: no-repeat;'>{$GLOBALS['strInitialResponse']}</option>\n";
-            echo "<option value='probdef' {$targetProbdef} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/probdef.png); background-repeat: no-repeat;'>{$GLOBALS['strProblemDefinition']}</option>\n";
-            echo "<option value='actionplan' {$targetActionplan} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/actionplan.png); background-repeat: no-repeat;'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            echo "<option value='initialresponse' {$targetInitialresponse} class='initialresponse'>{$GLOBALS['strInitialResponse']}</option>\n";
+            echo "<option value='probdef' {$targetProbdef} class='problemdef'>{$GLOBALS['strProblemDefinition']}</option>\n";
+            echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
+            echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'probdef':
-            echo "<option value='probdef' {$targetProbdef} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/probdef.png); background-repeat: no-repeat;'>{$GLOBALS['strProblemDefinition']}</option>\n";
-            echo "<option value='actionplan' {$targetActionplan} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/actionplan.png); background-repeat: no-repeat;'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            echo "<option value='probdef' {$targetProbdef} class='problemdef'>{$GLOBALS['strProblemDefinition']}</option>\n";
+            echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
+            echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'actionplan':
-            echo "<option value='actionplan' {$targetActionplan} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/actionplan.png); background-repeat: no-repeat;'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
+            echo "<option value='solution' {$targetSolution} class='solution.png'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'solution':
-            echo "<option value='solution' {$targetSolution} style='text-indent: 15px; height: 17px; background-image: url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/solution.png); background-repeat: no-repeat;'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            echo "<option value='solution' {$targetSolution} class='solution.png'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
     }
     echo "</select>\n";

@@ -173,13 +173,13 @@ function readable_file_size($filesize)
  * @param mixed $file file to upload
  * @param int $incidentd
  * @return string path of file
- * @todo FIXME this function doesn't seem to make use of $updateid and is never called, is it still used?'
+ * @todo Use within sit
  */
-function upload_file($file, $incidentid, $updateid, $type='public')
+function upload_file($file, $incidentid, $type='public')
 {
     global $CONFIG, $now;
     $att_max_filesize = return_bytes($CONFIG['upload_max_filesize']);
-    $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $id; //FIXME $id never declared
+    $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid;
     if ($file['name'] != '')
     {
         // try to figure out what delimeter is being used (for windows or unix)...
@@ -188,15 +188,15 @@ function upload_file($file, $incidentid, $updateid, $type='public')
 
         // make incident attachment dir if it doesn't exist
         $umask = umask(0000);
-        if (!file_exists($CONFIG['attachment_fspath'] . "$id"))
+        if (!file_exists("{$CONFIG['attachment_fspath']}{$incidentid}"))
         {
-            $mk = @mkdir($CONFIG['attachment_fspath'] ."$id", 0770);
-            if (!$mk) trigger_error("Failed creating incident attachment directory: {$incident_attachment_fspath }{$id}", E_USER_WARNING);
+            $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}", 0770);
+            if (!$mk) trigger_error("Failed creating incident attachment directory: {$incident_attachment_fspath }{$incidentid}", E_USER_WARNING);
         }
-        $mk = @mkdir($CONFIG['attachment_fspath'] .$id . "{$delim}{$now}", 0770);
-        if (!$mk) trigger_error("Failed creating incident attachment (timestamp) directory: {$incident_attachment_fspath} {$id} {$delim}{$now}", E_USER_WARNING);
+        $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}{$delim}{$now}", 0770);
+        if (!$mk) trigger_error("Failed creating incident attachment (timestamp) directory: {$incident_attachment_fspath} {$incidentid} {$delim}{$now}", E_USER_WARNING);
         umask($umask);
-        $returnpath = $id.$delim.$now.$delim.$file['name'];
+        $returnpath = $incidentid.$delim.$now.$delim.$file['name'];
         $filepath = $incident_attachment_fspath.$delim.$now.$delim;
         $newfilename = $filepath.$file['name'];
 
@@ -227,7 +227,7 @@ function upload_file($file, $incidentid, $updateid, $type='public')
             $sql = "INSERT INFO `{$GLOBALS['dbFiles']}`
                     (category, filename, size, userid, usertype, path, filedate, refid)
                     VALUES
-                    ('{$type}', '{$file['name']}', '{$file['size']}', '{$userid}', '{$usertype}', '{$filepath}', '{$now}', '{$id}')";
+                    ('{$type}', '{$file['name']}', '{$file['size']}', '{$userid}', '{$usertype}', '{$filepath}', '{$now}', '{$incidentid}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -241,7 +241,7 @@ function upload_file($file, $incidentid, $updateid, $type='public')
 function return_bytes($val)
 {
     $val = trim($val);
-    $last = strtolower($val{mb_strlen($val)-1});
+    $last = strtolower($val{mb_strlen($val) - 1});
     switch ($last)
     {
         // The 'G' modifier is available since PHP 5.1.0

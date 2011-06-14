@@ -25,7 +25,7 @@ echo "<div id='pageintro'>";
  
 echo "<p align='center'>{$strNotificationDescription}";
 echo "<br /><br /><a href='action_details.php'>";
-echo icon('add', 16). " {$strNewNotification}</a></p>";
+echo icon('new', 16). " {$strNewNotification}</a></p>";
 echo "</div><br />";
 
 echo triggers_to_html(1);

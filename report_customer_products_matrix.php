@@ -62,8 +62,6 @@ switch ($_POST['action'])
         $sql .= "AND reseller = r.id AND licence_type = l.id AND admincontact = c.id) AND ";
         $sql .= "expirydate <= $max_expiry AND expirydate >= $min_expiry AND m.term != 'yes' GROUP BY s.id ORDER BY expirydate ASC";
 
-// echo $sql;
-
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 

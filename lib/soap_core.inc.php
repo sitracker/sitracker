@@ -61,37 +61,14 @@ function login($username, $password, $applicationname='noname')
         $_SESSION['username'] = $user->username;
         $_SESSION['realname'] = $user->realname;
         $_SESSION['email'] = $user->email;
-        // FIXME 4.0 these user preferences need upgrading for new user config Mantis 863
-        $_SESSION['style'] = $user->var_style;
-        $_SESSION['incident_refresh'] = $user->var_incident_refresh;
-        $_SESSION['update_order'] = $user->var_update_order;
-        $_SESSION['num_update_view'] = $user->var_num_updates_view;
         $_SESSION['groupid'] = is_null($user->groupid) ? 0 : $user->groupid;
-        $_SESSION['utcoffset'] = is_null($user->var_utc_offset) ? 0 : $user->var_utc_offset;
         $_SESSION['portalauth'] = FALSE;
         $_SESSION['soapmode'] = TRUE;
-        $_SESSION['applicationame'] = $applicationname;
+        $_SESSION['user_source'] = $user->user_source;
         if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
-
-
-        // Read user config from database
-        $sql = "SELECT * FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$user->id}";
-        $result = @mysql_query($sql);
-        if ($result AND mysql_num_rows($result) > 0)
-        {
-            while ($conf = mysql_fetch_object($result))
-            {
-                if ($conf->value==='TRUE') $conf->value = TRUE;
-                if ($conf->value==='FALSE') $conf->value = FALSE;
-                if (substr($conf->value, 0, 6)=='array(')
-                {
-                        eval("\$val = {$conf->value};");
-                        $conf->value = $val;
-                }
-                $_SESSION['userconfig'][$conf->config] = $conf->value;
-            }
-        }
-
+        
+        $_SESSION['userconfig'] = get_user_config_vars($user->id);
+        $_SESSION['applicationame'] = $applicationname;
 
         if ($user->var_i18n != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
         {

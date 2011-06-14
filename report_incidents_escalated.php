@@ -143,8 +143,8 @@ while ($escalations = mysql_fetch_object($escs))
         $esc[$name]['name'] = $name;
         $esc[$name]['count']++;
         $esc[$name][$obj->priority]++;
-        $str = "<span><strong>".$obj->forenames." ".$obj->surname."</strong><br />".$obj->siteName."</span>";
-        $esc[$name]['calls'][$i]['text'] = "<a href=\"javascript:incident_details_window('{$obj->id}', 'sit_popup')\"  title=\"{$obj->title}\" class='info'>[".$obj->id."]{$str}</a> #".$obj->externalid." ".$obj->title;
+        $str = "<span><strong>".$obj->forenames." ".$obj->surname."</strong><br />{$obj->siteName}</span>";
+        $esc[$name]['calls'][$i]['text'] = "<a href=\"javascript:incident_details_window('{$obj->id}', 'sit_popup')\"  title=\"{$obj->title}\" class='info'>[{$obj->id}]{$str}</a> #{$obj->externalid} {$obj->title}";
         $esc[$name]['calls'][$i]['text'] .= "<br />".contact_realname($obj->contact).', '.contact_site($obj->contact);
         $esc[$name]['calls'][$i]['software'] = $obj->name;
         $esc[$name]['calls'][$i]['status'] = $obj->status;

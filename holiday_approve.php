@@ -42,24 +42,24 @@ switch (strtolower($approve))
         break;
 }
 
-$sql .= "WHERE approvedby='$sit[2]' AND approved=".HOL_APPROVAL_NONE." ";
+$sql .= "WHERE approvedby='{$sit[2]}' AND approved=".HOL_APPROVAL_NONE." ";
 
 if ($user != 'all')
 {
-    $sql .= "AND userid='$user' ";
+    $sql .= "AND userid='{$user}' ";
 }
 
 if ($startdate != 'all')
 {
-    $sql.="AND `date` = '$startdate' AND type='$type' AND length='$length'";
+    $sql.="AND `date` = '{$startdate}' AND type='{$type}' AND length='{$length}'";
 }
 
 $result = mysql_query($sql);
-//  echo $sql;
-if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+
+if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
 // Don't send email when approving 'all' to avoid an error message
-// FIXME this needs i18n - CJ
+// TODO this needs moving into a trigger - logged as Mantis 1567 PH
 if ($user != 'all')
 {
     $bodytext = "Message from {$CONFIG['application_shortname']}: ".user_realname($sit[2])." has ";
@@ -79,14 +79,11 @@ if ($user != 'all')
     $email_to = user_email($user);
     $email_subject = "Re: {$CONFIG['application_shortname']}: Holiday Approval Request";
     $rtnvalue = send_email($email_to, $email_from, $email_subject, $bodytext);
-    // FIXME this should use triggers
 }
-//if ($rtnvalue===TRUE) echo "<p align='center'>".user_realname($user)." has been notified of your decision</p>";
-//else echo "<p class='error'>There was a problem sending your notification</p>";
 
 plugin_do('holiday_ack');
 
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-header("Location: holiday_request.php?user=$view&mode=approval");
+header("Location: holiday_request.php?user={$view}&mode=approval");
 exit;
 ?>

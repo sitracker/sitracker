@@ -2244,7 +2244,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
     {
         $html .= "<option value='{$i}'";
         if ($i == $hour) $html .= " selected='selected'";
-        $html .= ">{$i}</option>\n";
+        $html .= ">".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>\n";
     }
     $html .= "</select>\n";
 
@@ -2255,7 +2255,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
     {
         $html .= "<option value='{$i}'";
         if ($i == $minute) $html .= " selected='selected'";
-        $html .= ">{$i}</option>\n";
+        $html .= ">".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>\n";
     }
     $html .= "</select>\n";
 

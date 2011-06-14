@@ -84,74 +84,23 @@ switch ($step)
         echo "<option value='none'>{$strNo}</option>\n";
         switch ($target->type)
         {
-            //FIXME can this be put into the style sheets?
             case 'initialresponse':
-                echo "<option value='initialresponse' style='text-indent: 15px;";
-                echo " height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/initialresponse.png); background-repeat:";
-                echo " no-repeat;' >";
-                echo "{$strInitialResponse}</option>\n";
-                echo "<option value='probdef' style='text-indent: 15px; height:";
-                echo " 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/probdef.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strProblemDefinition}</option>\n";
-                echo "<option value='actionplan' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/actionplan.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strActionPlan}</option>\n";
-                echo "<option value='solution' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/solution.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='initialresponse' class='initialresponse' >{$strInitialResponse}</option>\n";
+                echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
+                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'probdef':
-                echo "<option value='probdef' style='text-indent: 15px; height:";
-                echo " 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/probdef.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strProblemDefinition}</option>\n";
-                echo "<option value='actionplan' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/actionplan.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strActionPlan}</option>\n";
-                echo "<option value='solution' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/solution.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
+                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'actionplan':
-                echo "<option value='actionplan' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/actionplan.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strActionPlan}</option>\n";
-                echo "<option value='solution' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/solution.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'solution':
-                echo "<option value='solution' style='text-indent: 15px; ";
-                echo "height: 17px; background-image: ";
-                echo "url({$CONFIG['application_webpath']}/images/icons/";
-                echo "{$iconset}/16x16/solution.png); background-repeat: ";
-                echo "no-repeat;'>";
-                echo "{$strResolutionReprioritisation}</option>\n";
+                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
         }
         echo "</select>\n</td></tr>";
