@@ -48,7 +48,7 @@ if ($_SESSION['auth'] != TRUE)
 
     if ($id == 2)
     {
-        echo user_alert($strSessionExpired, E_USER_ERROR);
+        echo user_alert($strSessionExpired, E_USER_WARNING);
     }
 
     if ($id == 3)
