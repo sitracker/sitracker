@@ -347,7 +347,8 @@ function user_alert($message, $severity, $helpcontext = '')
     }
     $html = "<p class='{$class}'>";
     if (!empty($helpcontext)) $html .= help_link($helpcontext);
-    $html .= "<strong>{$info}</strong>: {$message}";
+    //<strong>{$info}</strong>: 
+    $html .= "{$message}";
     $html .= "</p>";
 
     return $html;
