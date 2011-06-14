@@ -111,7 +111,6 @@ else
     }
     else
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         html_redirect("product_new.php", FALSE);
     }
 }
