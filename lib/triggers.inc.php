@@ -1341,15 +1341,14 @@ function template_description($name, $type)
  * Provides a drop down list of matching functions
  * @param $id string the ID to give the <select>
  * @param $name string the name to give the <select>
- * @todo FIXME 3.90 i18n
  */
 function check_match_drop_down($id = '')
 {
     $html = "<select id='{$id}' name='{$id}'>";
-    $html .= "<option>is</option>";
-    $html .= "<option>is not</option>";
-    $html .= "<option>contains</option>";
-    $html .= "<option>does not contain</option>";
+    $html .= "<option value='is'>{$GLOBALS['strIs']}</option>";
+    $html .= "<option value='is not'>{$GLOBALS['strIsNot']}</option>";
+    $html .= "<option value='contains'>{$GLOBALS['strContains']}</option>";
+    $html .= "<option value='does not contain'>{$GLOBALS['strDoesNotContain']}</option>";
     $html .= "</select>";
 
     return $html;
