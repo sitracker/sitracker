@@ -298,13 +298,23 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
   * @param mixed $string variable to make safe
   * @returns int - safe variable
 */
-function clean_int($string)
+function clean_int($vars)
 {
-    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    if (is_array($vars))
+    {
+        foreach ($vars as $key => $singlevar)
+        {
+            $var[$key] = clean_int($singlevar);
+        }
+    }
+    elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
     }
-    $var = intval($string);
+    else
+    {
+        $var = intval($vars);
+    }
 
     return $var;
 }
@@ -316,13 +326,23 @@ function clean_int($string)
   * @param mixed $string variable to make safe
   * @returns int - safe variable
 */
-function clean_float($string)
+function clean_float($vars)
 {
-    if (!is_null($string) AND $string != '' AND !is_numeric($string))
+    if (is_array($vars))
+    {
+        foreach ($vars as $key => $singlevar)
+        {
+            $var[$key] = clean_float($singlevar);
+        }
+    }
+    elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
     }
-    $var = floatval($string);
+    else
+    {
+        $var = floatval($vars);
+    }
 
     return $var;
 }
