@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $mode = cleanvar($_REQUEST['mode']);
-$edituserpermission = user_permission($sit[2],23); // edit user
+$edituserpermission = user_permission($sit[2], 23); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {

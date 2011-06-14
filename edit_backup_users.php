@@ -104,7 +104,7 @@ if (empty($save))
 else
 {
     // External variables
-    $softlist=explode(',',$_REQUEST['softlist']);
+    $softlist = explode(',',$_REQUEST['softlist']);
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
     foreach ($backup AS $key=>$backupid)
