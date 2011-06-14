@@ -48,7 +48,9 @@ if (empty($mode))
 
     echo "</table>";
 
-    echo "<p align='center'><input type='submit' name='runreport' value='{$strRunReport}' /></p>";
+    echo "<p class='formbuttons'>";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
+    echo "<input type='submit' name='runreport' value='{$strRunReport}' /></p>";
     echo "<input type='hidden' name='mode' id='mode' value='report' />";
     echo "</form>";
 

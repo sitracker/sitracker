@@ -51,9 +51,9 @@ if (empty($_REQUEST['mode']))
     echo "</td></tr>\n";
     */
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='mode' value='selectfields' />";
-    echo "<input type='submit' value='{$strRunReport}' />";
+    echo "<input type='submit' value='{$strContinue}' />";
     echo "</p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -126,9 +126,10 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "</select>";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='table1' value='".cleanvar($_POST['table1'])."' />";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value='{$strRunReport}' />";
     echo "</p>";
     echo "</form>";
@@ -145,7 +146,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $sortorder = cleanvar($_POST['sortorder']);
     $limit = clean_int($_POST['limit']);
     $columns = count($_POST[fields]);
-    
+
     switch ($criteriaop)
     {
     	case 'eq': $criteriaop = "=";
@@ -153,9 +154,9 @@ elseif ($_REQUEST['mode'] == 'report')
         case 'lt': $criteriaop = "<";
             break;
         case 'gt' : $criteriaop = ">";
-            break;    
+            break;
     }
-    
+
     if ($columns >= 1)
     {
         $htmlfieldheaders = "<tr>";

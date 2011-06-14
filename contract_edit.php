@@ -55,12 +55,11 @@ if ($action == "edit")
 
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
-        echo "<h5>".sprintf($strMandatoryMarked,"<sup class='red'>*</sup>")."</h5>";
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
         echo "<table align='center' class='vertical'>\n";
-        echo "<thead>\n";
-        echo "<tr><th>{$strSite}: <sup class='red'>*</sup></th><td>";
-        echo site_name($maint->site). "</td></tr>";
+        echo "<tbody>\n";
+        echo "<tr><th>{$strSite}:</th><td>";
+        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable 
         echo "<tr><th>{$strContacts}:</th><td>";
         echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
         echo "{$strLimitTo} <input size='2' value='{$maint->supportedcontacts}' name='amount' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
@@ -68,13 +67,13 @@ if ($action == "edit")
         if ($maint->allcontactssupported == 'yes')
         echo "checked='checked'";
         echo " />{$strAllSiteContactsSupported}</td></tr>";
-        echo "<tr><th>{$strProduct}: <sup class='red'>*</sup></th><td>";
+        echo "<tr><th>{$strProduct}: </th><td>";
         $productname = product_name($maint->product);
         if (user_permission($sit[2], 22))
         {
             if ($changeproduct == 'yes')
             {
-                echo product_drop_down("product", $maint->product);
+                echo product_drop_down("product", $maint->product, TRUE);
             }
             else
             {
@@ -82,10 +81,10 @@ if ($action == "edit")
             }
         }
         else echo "{$productname}";
-        echo "</td></tr>\n";
+        echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
-        echo "<tr><th>{$strExpiryDate}: <sup class='red'>*</sup></th>";
-        echo "<td><input name='expirydate' size='10' value='";
+        echo "<tr><th>{$strExpiryDate}: </th>";
+        echo "<td><input class='required' name='expirydate' size='10' value='";
         if ($maint->expirydate > 0) echo ldate('Y-m-d', $maint->expirydate);
         echo "' /> ".date_picker('maintform.expirydate');
         if ($maint->expirydate == '-1')
@@ -96,13 +95,13 @@ if ($action == "edit")
         {
             echo "<input type='checkbox' name='noexpiry' /> {$strUnlimited}";
         }
-        echo "</td></tr>\n";
+        echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strServiceLevel}:</th><td>";
         echo servicelevel_drop_down('servicelevel',$maint->servicelevel, TRUE);
         echo "</td></tr>\n";
-        echo "<tr><th>{$strAdminContact}: <sup class='red'>*</sup></th><td>";
-        echo contact_drop_down("admincontact", $maint->admincontact, true);
-        echo "</td></tr>\n";
+        echo "<tr><th>{$strAdminContact}: </th><td>";
+        echo contact_drop_down("admincontact", $maint->admincontact, TRUE, TRUE);
+        echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strNotes}:</th><td><textarea cols='40' name='notes' rows='5'>";
         echo $maint->notes;
         echo "</textarea></td></tr>\n";
@@ -112,7 +111,7 @@ if ($action == "edit")
 
 
         echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strAdvanced}</a></td></tr>";
-        echo "</thead>\n";
+        echo "</tbody>\n";
         echo "<tbody id='hidden' style='display:none'>";
 
         echo "<tr><th>{$strReseller}:</th><td>";

@@ -83,8 +83,6 @@ if (empty($mode))
     echo "<input name='end' size='10' />\n";
     echo date_picker('date.end');
     echo "</td></tr>\n";
-    echo "<tr><th>{$strShowSitesThatHaveLoggedNoIncidents}</th><td><input type='checkbox' name='zerologged' id='zerologged' /></td></tr>\n";
-
     echo "<tr><th>{$strExcludeSitesWith}".help_link('CTRLAddRemove')."</th><td>\n";
 
     $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
@@ -92,22 +90,25 @@ if (empty($mode))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
+        echo "<label>{$strServiceLevel}:<br />";
         echo "<select name='slas[]' multiple='multiple' size='5'>\n";
         while ($obj = mysql_fetch_object($result))
         {
             echo "<option value='{$obj->tag}'>{$obj->tag}</option>\n";
         }
-        echo "</select>\n";
+        echo "</select></label>\n";
     }
-
     echo "</td></tr>\n";
-
-    echo "<tr><th>{$strShowSitesWhichHaveLoggedLessThanCalls}</th><td>\n";
-    echo "<input type='checkbox' name='showsitesloggedfewerthanxcalls' id='showsitesloggedfewerthanxcalls' onclick=\"toggleLessThanX();\" />\n";
-    echo "<input type='text' name='numberofcalls' id='numberofcalls' style='display:none'/><label id='labelforxcalls' for='showsitesloggedfewerthanxcalls' style='display:none'>{$strIncidents}</label></td></tr>\n";
-    echo "<tr><th>{$strShowIncidentDetails}</th><td><input type='checkbox' name='showincidentdetails' id='showincidentdetails' /></td></tr>\n";
-    echo "<tr><th>{$strOnlyShowSitesWithActiveContracts}</th><td><input type='checkbox' name='onlyshowactivesites' id='onlyshowactivesites' /></td></tr>\n";
-    echo "<tr><th>{$strShowProducts}</th><td><input type='checkbox' name='showproducts' id='showproducts' /></td></tr>";
+    echo "<tr><th>$strOptions</th>";
+    echo "<td>";
+    echo "<label><input type='checkbox' name='zerologged' id='zerologged' /> {$strShowSitesThatHaveLoggedNoIncidents}</label><br />";
+    echo "<input type='checkbox' name='showsitesloggedfewerthanxcalls' id='showsitesloggedfewerthanxcalls' onclick=\"toggleLessThanX();\" /> {$strShowSitesWhichHaveLoggedLessThanCalls}\n";
+    echo "<input type='text' name='numberofcalls' size='3' id='numberofcalls' style='display:none'/><label id='labelforxcalls' for='showsitesloggedfewerthanxcalls' style='display:none'> {$strIncidents}</label>";
+    echo "<br />";
+    echo "<label><input type='checkbox' name='showincidentdetails' id='showincidentdetails' /> {$strShowIncidentDetails}</label><br />";
+    echo "<label><input type='checkbox' name='onlyshowactivesites' id='onlyshowactivesites' /> {$strOnlyShowSitesWithActiveContracts}</label><br />\n";
+    echo "<label><input type='checkbox' name='showproducts' id='showproducts' /> {$strShowProducts}</label>";
+    echo "</td></tr>\n";
     echo "<tr><th>{$strOutput}</th>\n";
     echo "<td><select name='output' id='output'><option value='screen' onclick='toggleDisableIncidents();'>{$strScreen}</option>\n";
     echo "<option value='csv' onclick='toggleDisableIncidents();'>{$strCSVfile}</option></select></td></tr>\n";
@@ -115,6 +116,7 @@ if (empty($mode))
     echo "<p align='center'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<input type='hidden' name='step' value='1' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" /></p>";
     echo "</form>";
 

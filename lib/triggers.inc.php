@@ -1018,7 +1018,7 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
     //if we're able to use this variable
     if ($usetvar)
     {
-        //debug_log("Using $identifier");
+        // debug_log("Using $identifier");
         $trigger_regex = "/{$identifier}/s";
         if (!empty($ttvar['replacement']))
         {
@@ -1032,12 +1032,12 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
 
                 debug_log("replacement: {$ttvar[replacement]}", TRUE);
             }
-    }
-
-    $trigger_replace = $res;
-    unset($res);
-    return array('trigger_replace' => $trigger_replace,
-            'trigger_regex' => $trigger_regex);
+        }
+    
+        $trigger_replace = $res;
+        unset($res);
+        return array('trigger_replace' => $trigger_replace,
+                'trigger_regex' => $trigger_regex);
     }
 }
 
@@ -1065,7 +1065,8 @@ function replace_specials($string, $param_array)
             //this checks if it's a multiply-defined variable
             if (is_numeric($key))
             {
-                $trigger_replaces = replace_vars($ttvar[$key], $triggerid, $identifier, $param_array, $required);
+                $trigger_replaces = replace_vars($triggerid, $ttvar[$key], $identifier, $param_array, $required);
+
                 if (!empty($trigger_replaces))
                 {
                     $trigger_regex[] = $trigger_replaces['trigger_regex'];
@@ -1076,7 +1077,7 @@ function replace_specials($string, $param_array)
         }
         if ($multiple == FALSE)
         {
-            $trigger_replaces = replace_vars($ttvar, $triggerid, $identifier, $param_array, $required);
+            $trigger_replaces = replace_vars($triggerid, $ttvar, $identifier, $param_array, $required);
             if (!empty($trigger_replaces))
             {
                 $trigger_regex[] = $trigger_replaces['trigger_regex'];
@@ -1084,53 +1085,54 @@ function replace_specials($string, $param_array)
             }
         }
     }
-    return  preg_replace($trigger_regex, $trigger_replace, $string);
+    
+    return preg_replace($trigger_regex, $trigger_replace, $string);
 }
 
-    /**
-        * Replaces template variables with their values
-        * @author Kieran Hogg, Ivan Lucas
-        * @param $string_array string The string containing the variables
-        * @return string The string with variables replaced
+/**
+ * Replaces template variables with their values
+ * @author Kieran Hogg, Ivan Lucas
+ * @param $string_array string The string containing the variables
+ * @return string The string with variables replaced
  */
-    function trigger_replace_specials($trigger_type, $string_array, $param_array)
+function trigger_replace_specials($trigger_type, $string_array, $param_array)
+{
+    global $CONFIG, $application_version, $application_version_string, $dbg;
+    global $dbIncidents;
+    global $trigger_types, $ttvararray;
+
+    //this loops through each variable and creates an array of useable varaibles' regexs
+    foreach ($ttvararray AS $identifier => $ttvar)
     {
-        global $CONFIG, $application_version, $application_version_string, $dbg;
-        global $dbIncidents;
-        global $trigger_types, $ttvararray;
-
-        //this loops through each variable and creates an array of useable varaibles' regexs
-        foreach ($ttvararray AS $identifier => $ttvar)
+        $multiple = FALSE;
+        foreach ($ttvar AS $key => $value)
         {
-            $multiple = FALSE;
-            foreach ($ttvar AS $key => $value)
+            //this checks if it's a multiply-defined variable
+            if (is_numeric($key))
             {
-                //this checks if it's a multiply-defined variable
-                if (is_numeric($key))
-                {
-                    $trigger_replaces = replace_vars($trigger_type, $ttvar[$key], $identifier, $param_array);
-                    if (!empty($trigger_replaces))
-                    {
-                        $trigger_regex[] = $trigger_replaces['trigger_regex'];
-                        $trigger_replace[] = $trigger_replaces ['trigger_replace'];
-                    }
-                    $multiple = TRUE;
-                }
-            }
-            if ($multiple == FALSE)
-            {
-                $trigger_replaces = replace_vars($trigger_type, $ttvar, $identifier, $param_array);
-
+                $trigger_replaces = replace_vars($trigger_type, $ttvar[$key], $identifier, $param_array);
                 if (!empty($trigger_replaces))
                 {
                     $trigger_regex[] = $trigger_replaces['trigger_regex'];
-                    $trigger_replace[] = $trigger_replaces['trigger_replace'];
+                    $trigger_replace[] = $trigger_replaces ['trigger_replace'];
                 }
+                $multiple = TRUE;
             }
         }
-        $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
-        return $string;
+        if ($multiple == FALSE)
+        {
+            $trigger_replaces = replace_vars($trigger_type, $ttvar, $identifier, $param_array);
+
+            if (!empty($trigger_replaces))
+            {
+                $trigger_regex[] = $trigger_replaces['trigger_regex'];
+                $trigger_replace[] = $trigger_replaces['trigger_replace'];
+            }
+        }
     }
+    $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
+    return $string;
+}
 
 
 /**
@@ -1192,9 +1194,9 @@ function triggers_to_html($user_id, $trigger_id = '')
     if ($user_id == '') $user_id = $sit[2];
     $trigger_id = cleanvar($trigger_id);
 
-    $html = "<table class='vertical' id='trigger_list'>";
+    $html = "<table id='trigger_list'>";
     $html .= "<tr><th>{$strTrigger}</th><th>{$strActions}</th></tr>";
-    $i = 1;
+    $i = 0;
     foreach ($trigger_types AS $trigger => $description)
     {
         $trigger_html = trigger_to_html($trigger, $user_id);
@@ -1205,6 +1207,7 @@ function triggers_to_html($user_id, $trigger_id = '')
             $html .= " ".$description['description']."</td><td><div class='triggeraction'>";
             $html .= $trigger_html;
             $html .= "</div></td></tr>";
+            $i++;
         }
     }
     $html .= "</table>";

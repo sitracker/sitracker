@@ -40,9 +40,10 @@ if (empty($_REQUEST['mode']))
     echo "</select>";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='table1' value='{$_POST['table1']}' />";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>";
@@ -79,9 +80,8 @@ elseif ($_REQUEST['mode'] == 'report')
     $rowcount = 0;
     while ($row = mysql_fetch_object($result))
     {
-        // FIXME strip slashes
-        $product= '';
-        $nicedate = ldate('d/m/Y',$row->opened);
+        $product = '';
+        $nicedate = ldate('d/m/Y', $row->opened);
         $html .= "<tr class='shade2'><td>{$row->name}</td>";
         $html .= "<td>{$row->address1}</td><td>{$row->address2}</td>";
         $html .= "<td>{$row->city}</td><td>{$row->county}</td>";
@@ -90,8 +90,9 @@ elseif ($_REQUEST['mode'] == 'report')
         $psql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, ";
         $psql .= "m.admincontact AS admincontact, ";
         $psql .= "r.name AS reseller, licence_quantity, lt.name AS licence_type, expirydate, admincontact, c.forenames AS admincontactsforenames, c.surname AS admincontactssurname, m.notes AS maintnotes ";
-        $psql .= "FROM `{$dbMaintenance}` AS m, `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbLicenceTypes}` AS lt, `{$dbResellers}` AS r ";
-        $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND licence_type = lt.id AND admincontact = c.id ";
+        $psql .= "FROM `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbResellers}` AS r, `{$dbMaintenance}` AS m ";
+        $psql .= "LEFT JOIN `{$dbLicenceTypes}` AS lt ON  m.licence_type = lt.id ";
+        $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND admincontact = c.id ";
         $psql .= "AND m.site = '{$row->id}' ";
         $psql .= "ORDER BY p.name ASC";
         $presult = mysql_query($psql);
@@ -102,17 +103,15 @@ elseif ($_REQUEST['mode'] == 'report')
         }
         $html .= nl2br($product)."</td>";
         $html .= "</tr>";
-        $csv .="'{$row->name}', '{$row->address1}','{$row->address2}','{$row->city}','{$row->county}','{$row->country}','{$row->postcode}',";
-        $csv .= ''.str_replace("\n", ",", $product)."\n";
-        // flush();
+        $csv .= "'{$row->name}', '{$row->address1}','{$row->address2}','{$row->city}','{$row->county}','{$row->country}','{$row->postcode}',";
+        $csv .= str_replace("\n", ",", $product)."\n";
     }
     $html .= "</table>";
-
-    //  $html .= "<p align='center'>SQL Query used to produce this report:<br /><code>$sql</code></p>\n";
 
     if ($_POST['output'] == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        echo "<h2>".icon('reports', 32)." {$title}</h2>";
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }

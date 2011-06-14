@@ -24,7 +24,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  *               before redirection.
  *               This parameter is optional and only required if the default
  *               success/failure will not suffice
- * @param
+ * @param bool $close. Will close a window with javascript when TRUE
  * @return string HTML page with redirect
  * @note Replaces confirmation_page() from versions prior to 3.35
  *       If a header HTML has already been displayed a continue link is printed
@@ -34,7 +34,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @note The recommended way to use this function is to call it without headers/footers
  *       already displayed.
  */
-function html_redirect($url, $success = TRUE, $message='', $close=FALSE)
+function html_redirect($url, $success = TRUE, $message='', $close = FALSE)
 {
     global $CONFIG, $headerdisplayed, $siterrors;
 
@@ -2244,7 +2244,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
     {
         $html .= "<option value='{$i}'";
         if ($i == $hour) $html .= " selected='selected'";
-        $html .= ">{$i}</option>\n";
+        $html .= ">".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>\n";
     }
     $html .= "</select>\n";
 
@@ -2255,7 +2255,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
     {
         $html .= "<option value='{$i}'";
         if ($i == $minute) $html .= " selected='selected'";
-        $html .= ">{$i}</option>\n";
+        $html .= ">".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>\n";
     }
     $html .= "</select>\n";
 

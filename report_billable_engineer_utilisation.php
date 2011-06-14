@@ -38,14 +38,15 @@ if (empty($mode) OR $mode == 'showform')
     echo date_picker('report.enddate');
     echo "</td></tr>\n";
 
-    echo "<tr><th>{$strCalculateUnits}</th><td>";
-    echo "<input type='checkbox' name='calcote' value='yes' />\n";
+    echo "<tr><th>{$strOptions}</th><td>";
+    echo "<label><input type='checkbox' name='calcote' value='yes' /> {$strCalculateUnits}</label>\n";
     echo "</td></tr>";
 
     echo "</table>";
 
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "<input type='hidden' id='mode' name='mode' value='runreport' />";
@@ -106,7 +107,7 @@ elseif ($mode == 'runreport')
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     echo "<h2>".icon('reports', 32)." {$strMonthlyActivityTotals}</h2>";
-    
+
     if (count($util) > 0)
     {
         foreach ($util AS $u)
@@ -117,50 +118,50 @@ elseif ($mode == 'runreport')
                 echo "<p><table class='vertical' align='center'>";
                 echo "<tr><th colspan='3'>{$month['name']} {$u['name']}</th></tr>";
                 echo "<tr><th>{$strEngineer}</th><th>{$strPositive}</th><th>{$strNegative}</th></tr>";
-    
+
                 $totalpos = 0;
                 $totalneg = 0;
-    
+
                 $shade = 'shade1';
                 foreach ($month['users'] AS $user)
                 {
-    
+
                     $minspos = 0;
                     $minsneg = 0;
-    
+
                     if (!empty($user['valuepos']))
                     {
                         $minspos = ceil($user['valuepos']);
                         $totalpos += $minspos;
                     }
-    
+
                     if (!empty($user['valueneg']))
                     {
                         $minsneg = ceil($user['valueneg']);
                         $totalneg += $minsneg;
                     }
-    
+
                     echo "<tr class='{$shade}'><td>".user_realname($user['userid'])."</td><td>".sprintf($strXMinutes, $minspos)."</td><td>".sprintf($strXMinutes, $minsneg)."</td></tr>";
-    
+
                     $grandtotals[$user['userid']]['userid'] = $user['userid'];
                     $grandtotals[$user['userid']]['totalpos'] += $minspos;
                     $grandtotals[$user['userid']]['totalneg'] += $minsneg;
-    
+
                     if ($shade == 'shade1') $shade = 'shade2';
                     else $shade = 'shade1';
                 }
-    
+
                 echo "<tr><td>{$strTotal}</td><td>". sprintf($strXMinutes, $totalpos)."</td><td>". sprintf($strXMinutes, $totalneg)."</td></tr>";
-    
+
                 echo "</table></p>";
             }
         }
-    
+
         echo "<p align='center'><h3>{$strGrandTotal}</h3></p>";
-    
+
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strEngineer}</th><th>{$strPositive}</th><th>{$strNegative}</th></tr>";
-    
+
         $shade = 'shade1';
         foreach ($grandtotals AS $gt)
         {
@@ -168,14 +169,14 @@ elseif ($mode == 'runreport')
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-    
+
         echo "</table>";
     }
     else
     {
         echo "<p align='center'>{$strNoBillableIncidents}</p>";
     }
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 

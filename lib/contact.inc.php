@@ -145,6 +145,31 @@ function contact_fax($id)
 
 
 /**
+ * Returns yes/no if contact wants to receive feedback
+ * @author Carsten Jensen
+ * @param int $id the id of the contact
+ * @return string yes/no
+ */
+function contact_feedback($id)
+{
+    $sql = "SELECT `value` FROM `{$dbContactConfig}` WHERE id = '$id' AND config = 'feedback_enable' LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) == 0)
+    {
+        $answer = FALSE;
+    }
+    else
+    {
+        while ($row = mysql_fetch_object($result));
+        {
+            $answer = $row->enable_feedback;
+        }
+    }
+    return $answer;
+}
+
+/**
  * Return the number of incidents ever logged against a contact
  * @author Ivan Lucas
  * @param int $id. Contact ID

@@ -43,7 +43,9 @@ echo "</td></tr>";
 
 echo "</table>";
 
-echo "<p><input type='submit' name='runreport' value=\"{$strRunReport}\" /></p>";
+echo "<p class='formbuttons'>";
+echo "<input type='reset' value=\"{$strReset}\" /> ";
+echo "<input type='submit' name='runreport' value=\"{$strRunReport}\" /></p>";
 echo "</form>";
 
 ?>

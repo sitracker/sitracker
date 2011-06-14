@@ -42,11 +42,12 @@ if (empty($_REQUEST['mode']))
     echo "<td><input type='text' name='enddate' id='enddate' size='10' /> ";
     echo date_picker('incidentsbysoftware.enddate');
     echo "</td></tr>\n";
-    echo "<tr><th>{$strMonthBreakdown}</th><td><input type='checkbox' name='monthbreakdown' /></td></tr>\n";
     echo "<tr><th>{$strSkill}</th><td>".skill_drop_down('software', 0)."</td></tr>\n";
+    echo "<tr><th>{$strOptions}</th><td><label><input type='checkbox' name='monthbreakdown' /> {$strMonthBreakdown}</label></td></tr>\n";
     echo "</table>\n";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='mode' value='report' />";
+    echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>\n";
