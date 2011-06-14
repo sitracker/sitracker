@@ -88,6 +88,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                     break;
 
                 case '2darray':
+                    $value = cleanvar($value);
                     $value = str_replace('\n', ',', $value);
                     $value = str_replace('\r', '', $value);
                     $value = str_replace("\r", '', $value);
