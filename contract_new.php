@@ -390,7 +390,6 @@ elseif ($action == 'new')
     else
     {
         // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         html_redirect("contract_new.php", FALSE);
     }
 }

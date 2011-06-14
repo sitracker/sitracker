@@ -30,7 +30,6 @@ else
 }
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 
 if ($_SESSION['usertype'] == 'admin')
@@ -172,6 +171,7 @@ else
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $user = mysql_fetch_object($query);
 
+    include (APPLICATION_INCPATH . 'portalheader.inc.php');
     if ($user->siteid != $_SESSION['siteid'])
     {
         echo "<p class='error'>{$strPermissionDenied}</p>";

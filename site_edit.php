@@ -23,12 +23,11 @@ $action = $_REQUEST['action'];
 $site = clean_int($_REQUEST['site']);
 
 $title = $strEditSite;
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 
 // Show select site form
 if (empty($action) OR $action == "showform" OR empty($site))
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h3>{$title}</h3>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
     echo "<table class='vertical'>";
@@ -36,9 +35,11 @@ if (empty($action) OR $action == "showform" OR empty($site))
     echo "</table>\n";
     echo "<p><input name='submit' type='submit' value=\"{$strContinue}\" /></p>\n";
     echo "</form>\n";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "edit")
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if ($site == 0)
     {
         user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSite}'"), E_USER_ERROR);
@@ -47,6 +48,7 @@ elseif ($action == "edit")
     {
         echo show_edit_site($site);
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "update")
 {
@@ -116,8 +118,7 @@ elseif ($action == "update")
     }
     else
     {
-        echo $errors_string;
+        html_redirect("site_details.php?id={$site}", FALSE, $errors_string);
     }
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

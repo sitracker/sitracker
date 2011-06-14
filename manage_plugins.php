@@ -97,7 +97,7 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
         {
             $savecfg['plugins'] = '';
         }
-        cfgSave($savecfg);
+        cfgSave($savecfg, NAMESPACE_SIT);
     }
     else
     {

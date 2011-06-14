@@ -16,12 +16,11 @@ $permission = 78;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 
 $action = cleanvar($_REQUEST['action']);
 if ($action == 'new')
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
     echo "<p align='center'>{$strNoticesBlurb}</p>";
     echo "<div align='center'><form action='{$_SERVER[PHP_SELF]}?action=post' method='post'>";
@@ -97,6 +96,7 @@ elseif ($action == 'delete')
 }
 else
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
 
     //get all notices

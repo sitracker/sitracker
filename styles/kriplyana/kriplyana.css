@@ -213,7 +213,8 @@ p.error, span.error, p.error a, error.a:link
     background-color: #E61B1A; color: white;
     font-size: 105%;
 }
-
+p.alert { color: #A12607; background-color: #FFEDED; border: 1px solid #A12607; }
+p.alert a { color: #A12607; background-color: transparent; }
 
 .tabcontainer ul li
 {

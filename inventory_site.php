@@ -16,8 +16,6 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = "$strInventory - $strSite";
 
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 if(!$CONFIG['inventory_enabled'])
 {
     html_redirect('index.php', FALSE);
@@ -34,6 +32,7 @@ if (is_numeric($_GET['id']))
         $filter = cleanvar($_REQUEST['filter']);
     }
 
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('site', 32)." ".site_name($siteid)."</h2>";
     echo "<p align='center'>";
     echo "<a href='inventory_new.php?site={$siteid}'>";

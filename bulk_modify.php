@@ -20,13 +20,12 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strBulkModify;
 
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 $action = cleanvar($_REQUEST['action']);
 
 switch ($action)
 {
     case 'external_esc': //show external escalation modification page
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('edit', 32)." {$strBulkModify}: {$strExternalEngineersName}</h2>";
         $sql = "SELECT DISTINCT(externalemail), externalengineer ";
         $sql .= "FROM `{$dbIncidents}` WHERE closed = '0' AND externalemail!=''";
@@ -61,6 +60,7 @@ switch ($action)
         {
             echo "<p align='center'>{$strCurrentlyNoOpenEscalatedIncidentsToModify}</p>";
         }
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
     case 'change_external_esc': //omdify the extenal escalation info
         /*
@@ -96,10 +96,8 @@ switch ($action)
         html_redirect("main.php");
         break;
     default:
-        echo '<h1>{$strNoActionSpecified}</h1>';
+        html_redirect("main.php", FALSE, $strNoActionSpecified);
         break;
 }
-
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
 ?>

@@ -80,6 +80,7 @@ $strAddReseller = 'Add New Reseller';
 $strAddress = 'Address';
 $strAddress1 = 'Address1';
 $strAddress2 = 'Address2';
+$strAddRSSAtomFeed = 'Add RSS/Atom feed';
 $strAddService = 'Add Service';
 # i.e. Physical site
 $strAddSoftware = 'Add Software';
@@ -1138,7 +1139,6 @@ $strNewProduct = 'New Product';
 $strNewProductInformation = 'New Product Information';
 $strNewReseller = 'New Reseller';
 $strNewRole = 'New Role';
-$strNewRSSAtomFeed = 'New RSS/Atom feed';
 $strNewPriority = 'New Priority';
 $strNewProduct = 'New Product';
 $strNewPriorityQuestion = 'New Product Question';

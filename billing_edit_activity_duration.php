@@ -53,27 +53,27 @@ switch ($mode)
                 // Some error checking
                 if (mysql_affected_rows() < 1)
                 {
-                	html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strFailed);
+                    html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strFailed);
                 }
                 else
                 {
-                	html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", TRUE, $strDurationUpdated);
+                    html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", TRUE, $strDurationUpdated);
                 }
             }
             else
             {
-            	// The value we've been passed isn't whats in the DB
+                // The value we've been passed isn't whats in the DB
                 html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strDurationMismatch);
             }
         }
         else
         {
-        	// No matching incident found (updateID and a duration with a value)
+            // No matching incident found (updateID and a duration with a value)
             html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strNoDurationOnActivity);
         }
 
         break;
-	case 'showform':
+    case 'showform':
     default:
         $sql = "SELECT duration FROM `{$dbUpdates}` WHERE id = {$updateid} AND duration IS NOT NULL AND duration != 0";
         $result = mysql_query($sql);
@@ -105,7 +105,7 @@ switch ($mode)
         }
         else
         {
-        	html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strNoDurationOnActivity);
+            html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strNoDurationOnActivity);
         }
 }
 
