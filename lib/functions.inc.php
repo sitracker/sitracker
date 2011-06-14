@@ -1,4 +1,5 @@
 <?php
+// 
 // functions.inc.php - Function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system

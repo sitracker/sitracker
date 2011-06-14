@@ -367,6 +367,13 @@ $CONFIG['default_chart'] = 'OriginalChart';
 // Associative array of user config variables and their settings
 $CONFIG['user_config_defaults'] = array('show_emoticons' => TRUE, 'incident_refresh' => 60, 'incident_log_order' => 'desc', 'show_table_legends' => TRUE);
 
+// Associative array of contact config variables and their settings
+$CONFIG['contact_config_defaults'] = array('feedback_enabled' => TRUE);
+
+// Associative array of site config variables and their settings
+$CONFIG['site_config_defaults'] = array('feedback_enabled' => TRUE);
+
+
 // Allow outbound email
 $CONFIG['enable_outbound_email'] = TRUE;
 ?>

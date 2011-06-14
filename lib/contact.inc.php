@@ -112,7 +112,7 @@ function contact_siteid($id)
  * Return a contacts email address
  * @author Ivan Lucas
  * @param int $id. Contact ID
- * @return string. Email address
+ * @return string Email address
  */
 function contact_email($id)
 {
@@ -148,7 +148,9 @@ function contact_fax($id)
  * Returns yes/no if contact wants to receive feedback
  * @author Carsten Jensen
  * @param int $id the id of the contact
- * @return string yes/no
+ * @return true/false, true if contact enabled feedback
+ * @retval bool true if contact wants to receive feedback 
+ * @retval bool false if contact doesn't want to receive feedback
  */
 function contact_feedback($id)
 {
@@ -439,6 +441,7 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
 /**
  * Return the email address of the notify contact of the given contact
  * @author Ivan Lucas
+ * @param int $contactid Contact ID
  * @return string. email address.
  */
 function contact_notify_email($contactid)
