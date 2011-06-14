@@ -146,7 +146,7 @@ if (empty($mode))
     echo "</td></tr>";
     echo "<tr><th colspan='2'>{$strWorkStatus}</th></tr>";
 
-    if ($edituserpermission AND $edituserid != $sit[2] AND $user->user_source == 'sit')
+    if ($edituserpermission AND $edituserid != $sit[2] AND $user->source == 'sit')
     {
         $userdisable = TRUE;
     }
