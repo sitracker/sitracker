@@ -22,7 +22,6 @@ if(!$CONFIG['inventory_enabled'])
     exit;
 }
 
-
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
