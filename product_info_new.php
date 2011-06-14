@@ -91,11 +91,9 @@ else
             clear_form_data('product_info_new');
             exit;
         }
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         html_redirect("product_info_new.php", FALSE);
     }
 }
