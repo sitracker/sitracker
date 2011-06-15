@@ -16,7 +16,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'admin';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 if ($_POST['submit'])
 {
@@ -70,7 +69,7 @@ if ($_POST['submit'])
         exit;
     }
 }
-
+include (APPLICATION_INCPATH . 'portalheader.inc.php');
 echo "<h2>".icon('settings', 32, $strAdmin)." ";
 echo $strAdmin."</h2>";
 
