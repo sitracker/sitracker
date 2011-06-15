@@ -1,5 +1,5 @@
 <?php
-// portal/addcontact.php - Add a site contact
+// portal/newcontact.php - Add a site contact
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -16,14 +16,16 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'admin';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 if (isset($_POST['submit']))
 {
     echo process_new_contact('external');
 }
+else 
+{
+    include (APPLICATION_INCPATH . 'portalheader.inc.php');
+    echo show_new_contact($_SESSION['siteid'], 'external');
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');    
+}
 
-echo show_new_contact($_SESSION['siteid'], 'external');
-
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

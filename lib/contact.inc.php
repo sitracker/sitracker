@@ -648,7 +648,7 @@ function process_new_contact($mode = 'internal')
             }
             else
             {
-                html_redirect("addcontact.php", FALSE);
+                html_redirect("newcontact.php", FALSE);
             }
         }
         else
@@ -696,7 +696,7 @@ function process_new_contact($mode = 'internal')
         }
         else
         {
-            html_redirect('addcontact.php', FALSE);
+            html_redirect('newcontact.php', FALSE);
         }
     }
 }
