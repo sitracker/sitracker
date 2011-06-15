@@ -89,9 +89,9 @@ if ($_SESSION['auth'] != TRUE)
     echo "{$strLogin}</div>\n";
     echo "<div class='window'>\n";
     echo "<form id='loginform' action='login.php' method='post'>";
-    echo "<label for='username'>{$strUsername}:<br /><input id='username' ";
+    echo "<label>{$strUsername}:<br /><input id='username' ";
     echo "name='username' size='28' type='text' /></label><br />";
-    echo "<label for='password'>{$strPassword}:<br /><input id='password' ";
+    echo "<label>{$strPassword}:<br /><input id='password' ";
     echo "name='password' size='28' type='password' /></label><br />";
     echo "<input type='hidden' name='page' value='$page' />";
     echo "<input type='submit' value='{$strLogIn}' /><br />";
