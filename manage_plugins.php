@@ -89,7 +89,7 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
             }
         }
         $CONFIG['plugins'] = $newsetting['plugins'];
-        if (!is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0) 
+        if (is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0) 
         {
             $savecfg['plugins'] = 'array(' . implode(',', $newsetting['plugins']) . ')';
         }
