@@ -52,7 +52,7 @@ else
 
 if (!empty($oucode))
 {
-    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
     if (!empty($ouemail))
     {
         if ($ouemail == (contact_email($contactid)))
@@ -67,6 +67,7 @@ if (!empty($oucode))
             }
             else
             {
+                include (APPLICATION_INCPATH . 'htmlheader.inc.php');
                 echo "<h3><div id='pagecontent'><span class=\"success\">{$strThankYou}<span></h3>";
                 echo "<h4 align='center'>{$strReceiveFeedbackAgain}</h4><br /><br />";
                 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -82,6 +83,7 @@ if (!empty($oucode))
     }
     else
     {
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3><div id='pagecontent'><span class=\"success\">{$strConfirmOptOut}<span></h3><br />";
         echo "<br />";
         echo "<div align='center'><form action='$PHP_SELF?ou={$oucode}' method='post'>\n";
