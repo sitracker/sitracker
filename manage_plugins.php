@@ -191,26 +191,25 @@ switch ($seltab)
         $path = APPLICATION_PLUGINPATH;
         $dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
 
-        while ($file = readdir($dir_handle))
+        while ($name = readdir($dir_handle))
         {
             // !beginsWith($file, "dashboard_") &&
-            if (endsWith($file, ".php"))
+            if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
             {
-                if (empty($dashboard[mb_substr($file, 10, mb_strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
+//                 if (empty($dashboard[mb_substr($name, 10, mb_strlen($name)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
+                $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
+                $dbg .= "[$ondisk_pluginname]";
+                //$ondisk_plugins[$ondisk_pluginname] = 1;
+                $content = file($ondisk_pluginname);
+                $content = array_filter($content, 'getplugininfo');
+                foreach ($content AS $key => $value)
                 {
-                    $ondisk_pluginname = mb_substr($file, 0, mb_strpos($file, '.php'));
-                    //$ondisk_plugins[$ondisk_pluginname] = 1;
-                    $content = file(APPLICATION_PLUGINPATH. $file);
-                    $content = array_filter($content, 'getplugininfo');
-                    foreach ($content AS $key => $value)
-                    {
-                        if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['version'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['desc'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['author'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['legal'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['sitminversion'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['sitmaxversion'] = getplugininfovalue($value);
-                    }
+                    if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
                 }
             }
         }

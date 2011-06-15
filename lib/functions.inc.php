@@ -1205,18 +1205,19 @@ if (is_array($CONFIG['plugins']))
 {
     foreach ($CONFIG['plugins'] AS $plugin)
     {
-        $pllugin = trim($plugin);
+        $plugin = trim($plugin);
         // Remove any dots
         $plugin = str_replace('.','',$plugin);
         // Remove any slashes
         $plugin = str_replace('/','',$plugin);
 
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
+        $pluginfilename = APPLICATION_PLUGINPATH . $plugin . DIRECTORY_SEPARATOR . "{$plugin}.php";
         if ($plugin != '')
         {
-            if (file_exists(APPLICATION_PLUGINPATH . "{$plugin}.php"))
+            if (file_exists($pluginfilename))
             {
-                include (APPLICATION_PLUGINPATH . "{$plugin}.php");
+                include ($pluginfilename);
                 // Load i18n if it exists
                 if (file_exists($plugini18npath))
                 {
