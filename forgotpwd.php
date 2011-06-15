@@ -104,15 +104,15 @@ switch ($_REQUEST['action'])
                 }
                 else
                 {
-                    echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                    echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
                 echo "</div>";
             }
             else
             {
                 echo "<h3>{$strInvalidEmailAddress}</h3>";
-                echo "<p>".sprintf($strForFurtherAssistance, $CONFIG['support_email'])."</p>";
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'>".sprintf($strForFurtherAssistance, $CONFIG['support_email'])."</p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 echo "</div>";
             }
         }
@@ -164,15 +164,15 @@ switch ($_REQUEST['action'])
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p>{$strDidYouPasteFullURL}</p>";
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'>{$strDidYouPasteFullURL}</p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
         else
         {
             echo "<h3>{$strError}</h3>";
-            echo "<p>{$strDidYouPasteFullURL}</p>";
-            echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+            echo "<p align='center'>{$strDidYouPasteFullURL}</p>";
+            echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
@@ -220,20 +220,20 @@ switch ($_REQUEST['action'])
                 echo "<input type='hidden' name='action' value='savepassword' />";
                 echo "<p><input type='submit' value='{$strSetPassword}' />";
                 echo "</form>";
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p>{$strHaveForgottenUsername}</p>";
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'> align='center'{$strHaveForgottenUsername}</p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
         else
         {
             echo "<h3>{$strError}</h3>";
-            echo "<p>{$strInvalidUserID}</p>";
-            echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+            echo "<p align='center'>{$strInvalidUserID}</p>";
+            echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
@@ -272,28 +272,28 @@ switch ($_REQUEST['action'])
                     }
                     mysql_query($usql);
                     echo "<h3>{$strPasswordReset}</h3>";
-                    echo "<p>{$strPasswordHasBeenReset}</p>";
-                    echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                    echo "<p align='center'>{$strPasswordHasBeenReset}</p>";
+                    echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
                 else
                 {
                     echo "<h3>{$strError}</h3>";
-                    echo "<p>{$strPasswordsDoNotMatch}</p>";
-                    echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                    echo "<p align='center'>{$strPasswordsDoNotMatch}</p>";
+                    echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
             }
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p>{$strInvalidDetails}</p>";
-                echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p align='center'>{$strInvalidDetails}</p>";
+                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
         else
         {
             echo "<h3>{$strError}</h3>";
-            echo "<p>{$strInvalidUserID}</p>";
-            echo "<p><a href='index.php'>{$strBackToLoginPage}</a></p>";
+            echo "<p align='center'>{$strInvalidUserID}</p>";
+            echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
