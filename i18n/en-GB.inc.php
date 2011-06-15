@@ -484,6 +484,7 @@ $strDoesNOTApply = 'Does NOT apply';
 $strDoesNotContain = 'Does Not Contain';
 $strDoesThisUpdateMeetSLA = 'Does this update meet an SLA target?';
 $strDoNothing = 'do nothing';
+$strDoubletNameFound = 'Doublet Name Found: %s';
 $strDraftChoose = 'Multiple drafts exist please select one';
 $strDraftDelete = 'Delete Draft';
 $strDraftEdit = 'Edit Draft';
