@@ -75,8 +75,12 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<select name='fields[]' multiple='multiple'>";
     for ($i = 0; $i < $columns; $i++)
     {
-        $fieldname=mysql_field_name($result, $i);
-        echo "<option value='$fieldname'>$fieldname</option>\n";
+        $fieldname = mysql_field_name($result, $i);
+        // We explicity filter out password columns (see Mantis 1565)
+        if ($fieldname != 'password')
+        {
+            echo "<option value='$fieldname'>$fieldname</option>\n";
+        }
     }
     echo "</select>";
     echo "</td></tr>\n";
@@ -163,7 +167,10 @@ elseif ($_REQUEST['mode'] == 'report')
         for ($i = 0; $i < $columns; $i++)
         {
             $fieldname = cleanvar($_POST[fields][$i]);
-            $fieldlist .= $fieldname;
+            if ($fieldname != 'password')
+            {
+                $fieldlist .= $fieldname;
+            }
             if ($i < ($columns-1)) $fieldlist .= "`,`";
             $htmlfieldheaders .= "<th>{$fieldname}</th>";
             $csvfieldheaders .= $fieldname;
