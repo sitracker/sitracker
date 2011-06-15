@@ -72,6 +72,7 @@ $strAddIncidents = 'Add New Incidents';
 $strAddingACondition = 'Adding a condition of \'Incident owner is Joe Bloggs\' would only notify you when Joe Bloggs gets assigned an incident.';
 $strAdditional = 'Additional';
 $strAdditionalInfo = 'Additional Information';
+$strAddNewBillingMatrix = 'Add New Billing Matrix';
 $strAddNewSiteContact = 'Add New Site Contact';
 $strAddNewSites = 'Add New Sites';
 $strAddProduct = 'Add New Product';

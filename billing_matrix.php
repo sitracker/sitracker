@@ -24,7 +24,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('billing', 32)." {$title}</h2>";
 
-echo "<p align='center'><a href='billing_matrix_new.php'>Add new Billing Matrix</a></p>";
+echo "<p align='center'><a href='billing_matrix_new.php'>$strAddNewBillingMatrix</a></p>";
 
 $sql = "SELECT DISTINCT tag FROM `{$dbBillingMatrix}";
 $result = mysql_query($sql);
