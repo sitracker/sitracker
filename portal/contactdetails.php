@@ -268,7 +268,7 @@ else
     if ( $_SESSION['contact_source'] == 'sit' )
     {
         echo "<tr><th>{$strNewPassword}</th><td><input name='newpassword' value='' type='password' /></td></tr>\n";
-        echo "<tr><th>{$strRepeat}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
+        echo "<tr><th>{$strConfirmNewPassword}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
     }
     echo "</table>";
     echo "<p align='center'>";
