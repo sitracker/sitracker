@@ -40,6 +40,7 @@ if (!empty($hashcode))
 elseif (!empty($oucode))
 {
     $decodehash = str_rot13(@gzuncompress(base64_decode(urldecode($oucode))));
+    $hashvars = explode('&&',$decodehash);
     $contactid = mysql_real_escape_string($hashvars['0']);
     $contactemail = urldecode(mysql_real_escape_string($hashvars['1']));
 }
@@ -67,7 +68,7 @@ if (!empty($oucode))
             else
             {
                 echo "<h3><div id='pagecontent'><span class=\"success\">{$strThankYou}<span></h3>";
-                echo "<h4 align='center'>{$strReceiveFeedbackAgain}</h4>";
+                echo "<h4 align='center'>{$strReceiveFeedbackAgain}</h4><br /><br />";
                 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             }
             
