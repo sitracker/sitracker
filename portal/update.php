@@ -169,7 +169,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 
         //set incident back to active
         $id = clean_int($_REQUEST['id']);
-        $sql = "UPDATE `{$dbIncidents}` SET status=1, lastupdated='{$now}' WHERE id='{$id}'";
+        $sql = "UPDATE `{$dbIncidents}` SET status=" . STATUS_ACTIVE. ", lastupdated='{$now}' WHERE id='{$id}'";
         mysql_query($sql);
         if (mysql_error())
         {
