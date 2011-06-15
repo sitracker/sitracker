@@ -1,5 +1,4 @@
 <?php
-
 // portal/new.inc.php - Add an incident in the portal
 //
 // SiT (Support Incident Tracker) - Support call tracking system
@@ -147,7 +146,6 @@ else //submit
     $productid = clean_int($_REQUEST['productid']);
 
     $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
-
     $errors = 0;
     if (empty($incidenttitle))
     {
