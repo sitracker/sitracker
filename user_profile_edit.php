@@ -327,7 +327,7 @@ elseif ($mode == 'save')
         if ($result === FALSE)
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            trigger_error("!Error while updating users table", E_USER_WARNING);
+            trigger_error("!Error while updating users table", E_USER_ERROR);
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             exit;
         }
