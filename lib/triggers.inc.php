@@ -448,6 +448,13 @@ array('description' => $strFeedbackURL,
       'replacement' => 'application_url().\'feedback.php?ax=\'. feedback_hash($CONFIG[\'feedback_form\'], incident_contact($param_array[\'incidentid\']), $param_array[\'incidentid\'], contact_email(incident_contact($param_array[\'incidentid\'])));'
       );
 
+$ttvararray['{feedbackoptout}'] =
+array('description' => $strFeedbackOptOutURL,
+      'requires' => 'incidentid',
+      'replacement' => 'application_url().\'feedback.php?ou=\'. feedback_opt_out_hash(incident_contact($param_array[\'incidentid\']), contact_email(incident_contact($param_array[\'incidentid\'])));'
+      );
+
+
 $ttvararray['{formattedtime}'][] =
 array('description' => 'Outputs a formatted time, e.g. 2 minutes, 1 hour etc.',
       'replacement' => 'format_seconds($param_array[holdingmins] * 60);',

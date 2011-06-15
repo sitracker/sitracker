@@ -72,6 +72,7 @@ $strAddIncidents = 'Add New Incidents';
 $strAddingACondition = 'Adding a condition of \'Incident owner is Joe Bloggs\' would only notify you when Joe Bloggs gets assigned an incident.';
 $strAdditional = 'Additional';
 $strAdditionalInfo = 'Additional Information';
+$strAddNewBillingMatrix = 'Add New Billing Matrix';
 $strAddNewSiteContact = 'Add New Site Contact';
 $strAddNewSites = 'Add New Sites';
 $strAddProduct = 'Add New Product';
@@ -320,6 +321,7 @@ $strConditions = 'Conditions';
 $strConfiguration = 'Configuration';
 $strConfigure = 'Configure';
 $strConfirmNewPassword = 'Confirm New Password';
+$strConfirmOptOut = 'Confirm not to receive feedback';
 # noun, he is a contact
 $strContact = 'Contact';
 $strContactAddedSuccessfully = 'Contact Added Successfully';
@@ -612,6 +614,7 @@ $strEnterCredentials = 'Enter your credentials to login to %s';
 $strEnterDetailsAboutIncidentToBeStoredInLog = 'Enter some details about the incident to be stored in the incident log for future use.';
 $strEnterNumericValue = 'You must enter a numeric value';
 $strEnterNumberOfDays = 'You must enter a number of days';
+$strEnterSubscribedEmail = 'Enter your email to no longer receive feedback forms';
 $strEnterTheIncidentID = 'Enter the Incident ID';
 $strEnterTheCallID = 'Enter the incident number';
 $strEntitlement = 'Entitlement';
@@ -676,6 +679,7 @@ $strFeedbackFormAlreadyCompleted = 'Feedback form already completed';
 # Feedback form for incident X
 $strFeedbackFormForIncidentX = 'Feedback form for incident';
 $strFeedbackForms = 'Feedback Forms';
+$strFeedbackOptOutURL = 'Feedback Opt Out URL';
 $strFeedbackReport = 'Feedback Report';
 $strFeedbackFormsRequested = 'There are %s feedback forms that have been returned already';
 $strFeedbackFormsWaiting = 'There are %s feedback forms that have not been returned yet';
@@ -1303,6 +1307,7 @@ $strNotUpdated = 'Not Updated';
 $strNoUpgradesForDashboardComponent = 'No upgrades for %1$s dashboard component';
 # Short for November
 $strNovAbbr = 'Nov';
+$strNoValidEmailEntered = 'No valid email address entered or wrong email address';
 $strNoVendorsDefined = 'No Vendors Defined';
 # Month number 11: November
 $strNovember = 'November';
@@ -1462,6 +1467,7 @@ $strReassignTo = 'Reassign to';
 $strReassignedToBy = 'Reassigned to %1$s by %2$s';
 $strReassignText = 'Explain in detail why you are reassigning this incident and include instructions to the new owner as to what action should be taken next.  Please be as detailed as possible and include full descriptions of any work you have performed.';
 $strReceivedByEmail = 'This information was received in the email.  It is not editable.';
+$strReceiveFeedbackAgain = 'You can enable to receive feedback again in your portal settings';
 $strRecent = 'Recent';
 $strRecentIncidents = 'Recent Incidents';
 $strReducedPrioritySLA = 'Reduced from %s according to SLA';
