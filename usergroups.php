@@ -45,6 +45,14 @@ switch ($action)
             html_redirect("usergroups.php", FALSE, sprintf($strFieldMustNotBeBlank, "'{$strName}'"));
             exit;
         }
+        $dsql = "SELECT name from `{$dbGroups}` WHERE name = '{$group}'";
+        $dresult = mysql_query($dsql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_num_rows($dresult) > 0)
+        {
+            html_redirect("usergroups.php", FALSE, sprintf($strDoubletNameFound, "'{$group}'"));
+            exit;
+        }
         $sql = "INSERT INTO `{$dbGroups}` (name) VALUES ('{$group}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
