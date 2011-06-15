@@ -1717,7 +1717,7 @@ function kb_article($id, $mode='internal')
     if (mysql_num_rows($fileresult) > 0)
     {
         $html .= "<h3>{$GLOBALS['strFiles']}</h3>";
-        $html .= "<br /><table><th>{$GLOBALS['strFilename']}</th><th>{$GLOBALS['strDate']}</th>";
+        $html .= "<table class='attachments'><th>{$GLOBALS['strFilename']}</th><th>{$GLOBALS['strDate']}</th>";
         while ($filename = mysql_fetch_object($fileresult))
         {
             $html .= "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$id}'>$filename->filename</a></td>";
@@ -1731,6 +1731,7 @@ function kb_article($id, $mode='internal')
     {
         if (is_array($author))
         {
+            $html .= "<p>";
             $author = array_unique($author);
             $countauthors = count($author);
             $count = 1;
@@ -1749,10 +1750,10 @@ function kb_article($id, $mode='internal')
                 if ($count < $countauthors) $html .= ", " ;
                 $count++;
             }
+            $html .= "</p>";
         }
     }
 
-    $html .= "<br />";
     if (!empty($kbarticle->keywords))
     {
         $html .= "<strong>{$GLOBALS['strKeywords']}</strong>: ";
