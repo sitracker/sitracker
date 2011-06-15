@@ -551,6 +551,11 @@ function process_new_contact($mode = 'internal')
 
     $errors = 0;
     // check for blank name
+    if ($forenames == '')
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_contact']['forenames'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strForenames']);
+    }
     if ($surname == '')
     {
         $errors++;
