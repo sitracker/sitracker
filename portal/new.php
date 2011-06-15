@@ -18,20 +18,21 @@ require (APPLICATION_LIBPATH . 'triggers.inc.php');
 $accesslevel = 'any';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 $contractid = clean_int($_REQUEST['contractid']);
 $productid = clean_int($_REQUEST['product']);
 
-if (!empty($_SESSION['formerrors']['portaladdincident']))
-{
-    echo $_SESSION['formerrors']['portaladdincident'];
-    $_SESSION['formerrors']['portaladdincident'] = NULL;
-}
-
 if (!$_REQUEST['action'])
 {
+    include (APPLICATION_INCPATH . 'portalheader.inc.php');
+    if (!empty($_SESSION['formerrors']['portaladdincident']))
+    {
+        echo $_SESSION['formerrors']['portaladdincident'];
+        $_SESSION['formerrors']['portaladdincident'] = NULL;
+    }
+
     echo "<h2>".icon('new', 32, $strNewIncident)." {$strNewIncident}</h2>";
+
     if ($CONFIG['portal_creates_incidents'])
     {
         //check we are allowed to log against this contract
@@ -117,7 +118,7 @@ if (!$_REQUEST['action'])
     echo "<tr><th width='20%'>{$strProblemDescription}:</th><td class='shade1'>";
     echo $strTheMoreInformation;
     echo " <span class='required'>{$strRequired}</span>" . "<br />";
-    echo "<textarea name='probdesc' rows='20' cols='60'>";
+    echo "<textarea name='probdesc' rows='20' cols='60' class='required'>";
     if (!empty($_SESSION['formdata']['portaladdincident']['probdesc']))
     {
         echo $_SESSION['formdata']['portaladdincident']['probdesc'];
