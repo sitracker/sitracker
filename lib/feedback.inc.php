@@ -299,7 +299,7 @@ function feedback_html_question($type, $name, $required, $options, $answer='')
  */
 function feedback_opt_out_hash($contactid, $contactemail)
 {
-    $hashtext = urlencode(urlencode($contactid).urlencode($contactemail));
+    $hashtext = urlencode(urlencode($contactid)."&&".urlencode($contactemail));
     $hashcode4 = str_rot13($hashtext);
     $hashcode3 = gzcompress($hashcode4);
     $hashcode2 = base64_encode($hashcode3);

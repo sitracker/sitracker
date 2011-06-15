@@ -39,11 +39,12 @@ function site_count_inventory_items($id)
  * Returns yes/no if site wants to receive feedback
  * @author Carsten Jensen
  * @param int $id the id of the site
- * @return bool true/false, true if contact enabled feedback
+ * @return string yes/no, yes if site has feedback enabled
  */
 function site_feedback($id)
 {
-    $sql = "SELECT `value` FROM `{$dbSiteConfig}` WHERE id = '$id' AND config = 'feedback_enable' LIMIT 1";
+    global $dbSiteConfig;
+    $sql = "SELECT value FROM `{$dbSiteConfig}` WHERE siteid = '$id' AND config = 'feedback_enable' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
@@ -54,7 +55,7 @@ function site_feedback($id)
     {
         while ($row = mysql_fetch_object($result));
         {
-            $answer = $row->enable_feedback;
+            $answer = strtolower($row->value);
         }
     }
     return $answer;

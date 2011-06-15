@@ -148,24 +148,25 @@ function contact_fax($id)
  * Returns yes/no if contact wants to receive feedback
  * @author Carsten Jensen
  * @param int $id the id of the contact
- * @return true/false, true if contact enabled feedback
- * @retval bool true if contact wants to receive feedback 
- * @retval bool false if contact doesn't want to receive feedback
+ * @return yes/no or FALSE if no results
+ * @retval string yes if contact wants to receive feedback
+ * @retval string no if contact doesn't want to receive feedback
  */
 function contact_feedback($id)
 {
-    $sql = "SELECT `value` FROM `{$dbContactConfig}` WHERE id = '$id' AND config = 'feedback_enable' LIMIT 1";
+    global $dbContactConfig;
+    $sql = "SELECT `value` FROM `{$dbContactConfig}` WHERE contactid = '$id' AND config = 'feedback_enable' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
-        $answer = FALSE;
+        $answer = "notnull";
     }
     else
     {
         while ($row = mysql_fetch_object($result));
         {
-            $answer = $row->enable_feedback;
+            $answer = $row->value;
         }
     }
     return $answer;
