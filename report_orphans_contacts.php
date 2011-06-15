@@ -44,7 +44,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo $strNoOrphanedContacts;
+    echo "<p align='center'>{$strNoOrphanedContacts}</p>";
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
