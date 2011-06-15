@@ -136,8 +136,8 @@ define ('NAMESPACE_SITE', 5);
 
 // PRIORITIES
 define ('PRIORITY_LOW', 1);
-define ('PRIORITY_MEDIUM', 1);
-define ('PRIORITY_HIGH', 1);
+define ('PRIORITY_MEDIUM', 2);
+define ('PRIORITY_HIGH', 3);
 define ('PRIORITY_CRITICAL', 4);
 
 /**

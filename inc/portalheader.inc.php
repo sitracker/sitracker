@@ -96,7 +96,10 @@ echo "<style type='text/css'>
     }
 
     </style>";
-
+if (isset($refresh) && $refresh != 0)
+{
+   echo "<meta http-equiv='refresh' content='{$refresh}' />\n";
+}
 echo "<link rel='SHORTCUT ICON' href='{$CONFIG['application_webpath']}images/sit_favicon.png' />\n";
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";

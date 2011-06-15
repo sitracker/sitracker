@@ -557,7 +557,7 @@ span.required
   color: red;
 }
 
-input.required, select.required{
+input.required, select.required, textarea.required {
   background-color: #FFD8DE;
 }
 

@@ -139,7 +139,7 @@ a em { font-style: normal; text-decoration: underline; color: #224488; }
 
 a.info:hover span strong { color: #FFF;}
 
-input.required, select.required{
+input.required, select.required, textarea.required {
   background-color: #FFEDED;
 }
 span.required { color: #A12607; }
