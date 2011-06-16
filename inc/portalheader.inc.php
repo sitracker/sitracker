@@ -120,6 +120,7 @@ if (is_array($pagescripts))
 plugin_do('html_head');
 echo "</head>\n";
 echo "<body>\n";
+plugin_do('page_start');
 echo "<div id='masthead'><h1 id='apptitle'>{$CONFIG['application_name']}</h1></div>\n";
 if (!empty($_SESSION['lang']) AND $_SESSION['lang'] != $CONFIG['default_i18n'])
 {
