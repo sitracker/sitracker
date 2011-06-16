@@ -1502,6 +1502,7 @@ CREATE TABLE `{$dbUsers}` (
   `icq` varchar(15) NOT NULL default '',
   `aim` varchar(25) NOT NULL default '',
   `msn` varchar(70) NOT NULL default '',
+  `skype` varchar(70) NOT NULL default '',
   `phone` varchar(50) default NULL,
   `mobile` varchar(50) NOT NULL default '',
   `fax` varchar(50) default NULL,
@@ -1743,6 +1744,10 @@ ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET
 
 -- CJ 2011-06-15
 UPDATE `{$dbTriggers}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `name` = 'EMAIL_SEND_FEEDBACK' ;
+
+-- CJ 2011-06-15
+ALTER TABLE `{$dbUsers}` ADD `skype` varchar(70) NOT NULL default '' AFTER `msn` ;
+
 ";
 
 // ********************************************************************
