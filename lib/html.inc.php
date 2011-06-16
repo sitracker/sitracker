@@ -1379,13 +1379,13 @@ function alpha_index($baseurl = '#', $displayinactive = FALSE)
     $html = '';
     if (!empty($i18nAlphabet))
     {
-        $html .= ' | ';
+        $html .= "<span class='separator'> | </span>";
         $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
             $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
-            $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
+            $html .= mb_substr($i18nAlphabet, $i, 1)."</a><span class='separator'> | </span> \n";
         }
         $html .= "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
     }
