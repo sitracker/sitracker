@@ -161,6 +161,7 @@ while ($name = readdir($dir_handle))
             if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
             $ondisk_plugins[$name]['filepath'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
         }
     }
@@ -274,6 +275,10 @@ switch ($seltab)
                 if (file_exists($ondisk_plugin_details['path'] . 'README'))
                 {
                    $operations[$strHelp] = "{$CONFIG['application_webpath']}plugins/{$ondisk_plugin}/README";
+                }
+                if (!empty($ondisk_plugin_details['url']))
+                {
+                   $operations[$strVisitHomepage] = "{$ondisk_plugin_details['url']}";
                 }
                 echo "<td>".html_action_links($operations)."</td>";
                 echo "</tr>";
