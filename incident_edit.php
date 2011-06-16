@@ -42,7 +42,8 @@ if (empty($submit))
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post' name='editform'>";
         echo "<table class='vertical'>";
-        echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"{$incident->title}\" /></td></tr>\n";
+        echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"{$incident->title}\" class='required' /> ";
+        echo "<span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strTags}</th><td><textarea rows='2' cols='40' name='tags'>".list_tags($id, 2, false)."</textarea></td></tr>\n";
         echo "<tr><th>{$strImportant}</th>";
         echo "<td>{$strChangingContact}. ";
