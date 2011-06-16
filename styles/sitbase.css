@@ -434,6 +434,8 @@ strong.info,em.info,u.info,span.info
 
 p.alert { border-style: inset; }
 
+div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
+
 p.trigger
 {
   background-image: url('../images/icons/oxygen/16x16/trigger.png');

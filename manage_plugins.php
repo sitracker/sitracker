@@ -162,7 +162,7 @@ while ($name = readdir($dir_handle))
             if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
             if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
-            $ondisk_plugins[$name]['filepath'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
+            $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
         }
     }
 }
@@ -255,6 +255,13 @@ switch ($seltab)
                 {
                     echo "<p class='info'>A newer version is available: v{$_SESSION['available_plugins'][$ondisk_plugin]['version']}</p>";
                 }
+                if ($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin)
+                {
+                    echo "<br /><strong>{$strHelp}:</strong><br />";
+                    echo "<div class='scrollbox'>";
+                    echo file_get_contents("{$ondisk_plugin_details['path']}README");
+                    echo "</dvi>";
+                }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";
                 $operations = array();
@@ -273,9 +280,9 @@ switch ($seltab)
                 {
                     $operations[$strManageDashlet] = "{$CONFIG['application_webpath']}manage_dashboard.php";
                 }
-                if (file_exists($ondisk_plugin_details['path'] . 'README'))
+                if (!($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin) AND file_exists($ondisk_plugin_details['filepath'] . 'README'))
                 {
-                   $operations[$strHelp] = "{$CONFIG['application_webpath']}plugins/{$ondisk_plugin}/README";
+                   $operations[$strHelp] = "{$_SERVER['PHP_SELF']}?action=readme&amp;plugin={$ondisk_plugin}";
                 }
                 if (!empty($ondisk_plugin_details['url']))
                 {
