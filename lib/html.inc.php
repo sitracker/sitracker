@@ -1228,7 +1228,7 @@ function contract_details($id, $mode='internal')
  * @return table row of format <tr><th /><td /></tr>
  * @author Paul Heaney
  */
-function group_user_selector($title, $level="engineer", $groupid, $type='radio')
+function group_user_selector($title, $level = 'engineer', $groupid = '', $type='radio')
 {
     global $dbUsers, $dbGroups;
 
