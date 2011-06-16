@@ -188,7 +188,7 @@ function userstatus_bardrop_down($name, $id)
             $html .= "{$GLOBALS[$statuses->name]}</option>\n";
         }
     }
-    $html .= "<option value='Yes' class='enable seperator'>";
+    $html .= "<option value='Yes' class='enable separator'>";
     $html .= "{$GLOBALS['strAccepting']}</option>\n";
     $html .= "<option value='No' class='disable'>{$GLOBALS['strNotAccepting']}";
     $html .= "</option></select>\n";

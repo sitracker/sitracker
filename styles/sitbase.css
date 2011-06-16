@@ -372,7 +372,9 @@ div.window table { width: 100%; }
 em.important, strong.important { color: red; }
 option.disable { color: red; }
 option.enable { color: #00AA00; }
-option.seperator { border-top: 1px solid black; }
+option.separator { border-top: 1px solid black; }
+
+span.separator { color: #999; }
 
 /* Information and Errors */
 h2.error,h3.error,h4.error,h5.error,p.error { color: red; }

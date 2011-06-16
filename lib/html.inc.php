@@ -2377,24 +2377,28 @@ function html_install_status($status)
 
 
 /**
- * Checks to see if a dashlet is installed
- * @author Paul Heaney
- * @param String $dashlet The name of the dashlet
- * @return boolean True if installed, false otherwise
+ * Creates HTML horizontal list of actions from an array of URL's
+ * @author Ivan Lucas
+ * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
+ * @return string HTML.
  */
-function is_dashlet_installed($dashlet)
+function html_action_links($actions)
 {
-    $sql = "SELECT id FROM `{$GLOBALS['dbDashboard']}` WHERE name = '{$dashlet}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 1)
+    $html .= "<span class='actionlinks'>";
+    $actionscount = count($actions);
+    $count = 1;
+    foreach ($actions AS $label => $URL)
     {
-        return TRUE;
+        $html .= "<a href=\"{$URL}\">{$label}</a>";
+        $count++;
+        if ($count <= $actionscount)
+        {
+            $html .= "<span class='separator'> | </span>";
+        }
     }
-    else
-    {
-        return FALSE;
-    }
+    $html .= "</span>";
+    return $html;
 }
+
 
 ?>

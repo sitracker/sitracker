@@ -108,9 +108,9 @@ function replace_tags($type, $id, $tagstring)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-    // Change seperators to spaces
-    $seperators = array(', ',';',',');
-    $tags = str_replace($seperators, ' ', trim($tagstring));
+    // Change separators to spaces
+    $separators = array(', ',';',',');
+    $tags = str_replace($separators, ' ', trim($tagstring));
     $tag_array = explode(" ", $tags);
     foreach ($tag_array AS $tag)
     {

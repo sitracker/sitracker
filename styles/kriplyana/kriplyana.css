@@ -182,7 +182,7 @@ div#statusbar strong { color:#fff;}
 #userstatus_dropdown option { color: #8F9DC5;}
 #userstatus_dropdown option.enable { color: #00C000; }
 #userstatus_dropdown option.disable { color: #C00000; }
-#userstatus_dropdown option.seperator { border-top: 1px solid #8F9DC5; }
+#userstatus_dropdown option.separator { border-top: 1px solid #8F9DC5; }
 
 #navmenu
 {
