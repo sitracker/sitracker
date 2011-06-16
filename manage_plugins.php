@@ -183,7 +183,7 @@ switch ($seltab)
         if (is_array($_SESSION['available_plugins']))
         {
             echo "<table align='center'>";
-            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
             $shade = 'shade1';
             foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
             {
@@ -220,7 +220,7 @@ switch ($seltab)
         {
             ksort($ondisk_plugins);
             echo "<table align='center'>";
-            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
             $shade = 'shade1';
             foreach($ondisk_plugins AS $ondisk_plugin => $ondisk_plugin_details)
             {
@@ -257,6 +257,7 @@ switch ($seltab)
                 }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";
+                $operations = array();
                 if (!beginsWith($ondisk_plugin, 'dashboard_'))
                 {
                     if ($installed)
