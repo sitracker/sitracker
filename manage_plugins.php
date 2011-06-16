@@ -161,6 +161,8 @@ while ($name = readdir($dir_handle))
             if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
+            $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
         }
     }
 }
@@ -181,16 +183,16 @@ switch ($seltab)
         if (is_array($_SESSION['available_plugins']))
         {
             echo "<table align='center'>";
-            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
             $shade = 'shade1';
             foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
             {
-                $operation = '';
+                $operations = array();
                 if (!empty($avail_plugin_details['url']))
                 {
-                    $operation .= "<a href=\"{$avail_plugin_details['url']}\">{$strVisitHomepage}</a>";
+                    $operations[$strVisitHomepage] = "{$avail_plugin_details['url']}";
                 }
-//                 $operation .= "<a href=\"{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)."\">{$strInstall}</a>";
+//                 $operations[$strInstall] = "{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)";
                 if (!in_array($avail_plugin, $ondisk_plugins))
                 {
                     echo "<tr class='{$shade}'>";
@@ -198,7 +200,7 @@ switch ($seltab)
                     echo "<td>{$avail_plugin_details['version']}</td>";
                     echo "<td>{$avail_plugin_details['desc']}</td>";
                     echo "<td>{$avail_plugin_details['author']}</td>";
-                    echo "<td>{$operation}</td>";
+                    echo "<td>".html_action_links($operations)."</td>";
                     echo "</tr>";
                     if ($shade == 'shade2') $shade = 'shade1';
                     else $shade = 'shade2';
@@ -218,7 +220,7 @@ switch ($seltab)
         {
             ksort($ondisk_plugins);
             echo "<table align='center'>";
-            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
             $shade = 'shade1';
             foreach($ondisk_plugins AS $ondisk_plugin => $ondisk_plugin_details)
             {
@@ -238,7 +240,9 @@ switch ($seltab)
                 echo "<tr class='{$shade}'>";
                 echo "<td>{$ondisk_plugin}</td>";
                 echo "<td>{$ondisk_plugin_details['version']}</td>";
-                echo "<td>{$ondisk_plugin_details['desc']}";
+                echo "<td>";
+                echo "<em>{$ondisk_plugin_details['desc']}</em><br />";
+                echo "<strong>{$strLicense}:</strong> {$ondisk_plugin_details['legal']}";
                 if ($ondisk_plugin_details['sitminversion'] > $application_version)
                 {
                     echo "<p class='warning'>This plugin was designed for {$CONFIG['application_name']} version {$ondisk_plugin_details['sitminversion']} or later</strong></p>";
@@ -251,25 +255,40 @@ switch ($seltab)
                 {
                     echo "<p class='info'>A newer version is available: v{$_SESSION['available_plugins'][$ondisk_plugin]['version']}</p>";
                 }
+                if ($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin)
+                {
+                    echo "<br /><strong>{$strHelp}:</strong><br />";
+                    echo "<div class='scrollbox'>";
+                    echo file_get_contents("{$ondisk_plugin_details['path']}README");
+                    echo "</dvi>";
+                }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";
+                $operations = array();
                 if (!beginsWith($ondisk_plugin, 'dashboard_'))
                 {
                     if ($installed)
                     {
-                        $operation = "<a href='{$_SERVER['PHP_SELF']}?action=disable&amp;plugin={$ondisk_plugin}'>{$strDisable}</a>";
+                        $operations[$strDisable] = "{$_SERVER['PHP_SELF']}?action=disable&amp;plugin={$ondisk_plugin}";
                     }
                     else
                     {
-                        $operation = "<a href='{$_SERVER['PHP_SELF']}?action=enable&amp;plugin={$ondisk_plugin}'>{$strEnable}</a>";
+                        $operations[$strEnable] = "{$_SERVER['PHP_SELF']}?action=enable&amp;plugin={$ondisk_plugin}";
                     }
                 }
                 else
                 {
-                    $operation = "<a href='{$CONFIG['application_webpath']}manage_dashboard.php'>{$strManageDashlet}</a>";
+                    $operations[$strManageDashlet] = "{$CONFIG['application_webpath']}manage_dashboard.php";
                 }
-
-                echo "<td>{$operation}</td>";
+                if (!($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin) AND file_exists($ondisk_plugin_details['filepath'] . 'README'))
+                {
+                   $operations[$strHelp] = "{$_SERVER['PHP_SELF']}?action=readme&amp;plugin={$ondisk_plugin}";
+                }
+                if (!empty($ondisk_plugin_details['url']))
+                {
+                   $operations[$strVisitHomepage] = "{$ondisk_plugin_details['url']}";
+                }
+                echo "<td>".html_action_links($operations)."</td>";
                 echo "</tr>";
             }
             echo "</table>";

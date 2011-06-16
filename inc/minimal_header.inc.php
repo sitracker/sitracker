@@ -43,5 +43,6 @@ echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='te
 
 echo "</head>";
 echo "<body onload=\"self.focus()\">";
+plugin_do('page_start');
 
 ?>

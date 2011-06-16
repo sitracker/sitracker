@@ -35,9 +35,20 @@ if (mysql_num_rows($result) > 0)
     echo "<div><table class='vertical'>";
     echo "<tr><th>{$strSiteName}</th></tr>";
 
+    $shade = "shade1";
+
     while ($contact = mysql_fetch_object($result))
     {
-        echo "<tr><td>{$contact->forenames} {$contact->surname}</td></tr>";
+        echo "<tr class='$shade'><td>{$contact->forenames} {$contact->surname}</td></tr>";
+
+        if ($shade == 'shade1')
+        {
+            $shade = 'shade2';
+        }
+        else
+        {
+            $shade = 'shade1';
+        }
     }
 
     echo "</table></div>";

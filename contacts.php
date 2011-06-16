@@ -202,8 +202,11 @@ else
                 if ($results->fax == '') echo "<em>{$strNone}</em>";
                 else echo $results->fax;
                 echo "</td>";
-                echo "<td><a href='incident_new.php?action=findcontact&amp;contactid={$results->id}'>{$strNewIncident}</a> | ";
-                echo "<a href='contact_edit.php?action=edit&amp;contact={$results->id}'>{$strEditContact}</a>";
+                echo "<td>";
+                $operations = array();
+                $operations[$strNewIncident] = "incident_new.php?action=findcontact&amp;contactid={$results->id}";
+                $operations[$strEditContact] = "contact_edit.php?action=edit&amp;contact={$results->id}";
+                echo html_action_links($operations);
                 echo "</td></tr>";
 
                 // invert shade

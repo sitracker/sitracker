@@ -1074,13 +1074,17 @@ function contract_details($id, $mode='internal')
 
     if ($mode == 'internal')
     {
-        $html .= "<p align='center'>";
-        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
+        $operations = array();
+        $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
+        
+        
         if ($maint->term != 'yes')
         {
-            $html .= " | <a href='contract_new_service.php?contractid={$id}'>{$GLOBALS['strNewService']}</a></p>";
+            $operations[$GLOBALS['strNewService']] = "contract_new_service.php?contractid={$id}";
         }
+        $html .= "<p align='center'>".html_action_links($operations)."</p>";
     }
+
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
 
     if (mysql_num_rows($maintresult) > 0)
@@ -1379,13 +1383,13 @@ function alpha_index($baseurl = '#', $displayinactive = FALSE)
     $html = '';
     if (!empty($i18nAlphabet))
     {
-        $html .= ' | ';
+        $html .= "<span class='separator'> | </span>";
         $len = mb_strlen($i18nAlphabet);
         for ($i = 0; $i < $len; $i++)
         {
             $html .= "<a href=\"{$baseurl}";
             $html .= urlencode(mb_substr($i18nAlphabet, $i, 1))."\">";
-            $html .= mb_substr($i18nAlphabet, $i, 1)."</a> | \n";
+            $html .= mb_substr($i18nAlphabet, $i, 1)."</a><span class='separator'> | </span> \n";
         }
         $html .= "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
     }
@@ -2377,24 +2381,28 @@ function html_install_status($status)
 
 
 /**
- * Checks to see if a dashlet is installed
- * @author Paul Heaney
- * @param String $dashlet The name of the dashlet
- * @return boolean True if installed, false otherwise
+ * Creates HTML horizontal list of actions from an array of URL's
+ * @author Ivan Lucas
+ * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
+ * @return string HTML.
  */
-function is_dashlet_installed($dashlet)
+function html_action_links($actions)
 {
-    $sql = "SELECT id FROM `{$GLOBALS['dbDashboard']}` WHERE name = '{$dashlet}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 1)
+    $html .= "<span class='actionlinks'>";
+    $actionscount = count($actions);
+    $count = 1;
+    foreach ($actions AS $label => $URL)
     {
-        return TRUE;
+        $html .= "<a href=\"{$URL}\">{$label}</a>";
+        $count++;
+        if ($count <= $actionscount)
+        {
+            $html .= "<span class='separator'> | </span>";
+        }
     }
-    else
-    {
-        return FALSE;
-    }
+    $html .= "</span>";
+    return $html;
 }
+
 
 ?>

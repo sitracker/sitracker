@@ -1407,6 +1407,7 @@ $strPlaceIncidentInWaitingQueue = 'Place incident in the waiting queue?';
 $strPleaseCheckData = 'Please check the data you entered';
 $strPleaseConfirmUsername = 'Please confirm your username';
 $strPleaseWaitRedirect = 'Please wait while you are redirected';
+$strPlugin = 'Plugin';
 $strPlugins = 'Plugins';
 $strPopularity = 'Popularity';
 $strPortal = 'Portal';

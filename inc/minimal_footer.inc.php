@@ -16,6 +16,7 @@ if ($CONFIG['debug'] == TRUE)
 }
 
 echo "<div id='incidentfooter'></div>\n";
+plugin_do('page_end');
 echo "</body>\n";
 echo "</html>\n";
 ?>

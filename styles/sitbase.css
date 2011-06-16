@@ -372,7 +372,9 @@ div.window table { width: 100%; }
 em.important, strong.important { color: red; }
 option.disable { color: red; }
 option.enable { color: #00AA00; }
-option.seperator { border-top: 1px solid black; }
+option.separator { border-top: 1px solid black; }
+
+span.separator { color: #999; }
 
 /* Information and Errors */
 h2.error,h3.error,h4.error,h5.error,p.error { color: red; }
@@ -431,6 +433,8 @@ strong.info,em.info,u.info,span.info
 }
 
 p.alert { border-style: inset; }
+
+div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
 
 p.trigger
 {
