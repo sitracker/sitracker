@@ -58,7 +58,7 @@ if (empty($action) || $action == "showform")
     if (empty($contactid))
     {
         echo "<tr><th>{$strContact} ".icon('contact', 16)."</th>";
-        echo "<td>".contact_drop_down("contactid", 0, TRUE)."</td></tr>";
+        echo "<td>".contact_drop_down("contactid", 0, TRUE, TRUE)." <span class='required'>{$strRequired}</span></td></tr>";
     }
     else
     {
