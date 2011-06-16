@@ -113,6 +113,15 @@ else
     if (!empty($_REQUEST['lifetime_end'])) $lifetime_end = date('Y-m-d', strtotime($_REQUEST['lifetime_end']));
     else $lifetime_end = '';
 
+    // Make sure lifetime start and end are the right way around in case of user error
+    if ($lifetime_end < $lifetime_start)
+    {
+        $s = $lifetime_start;
+        $lifetime_start = $lifetime_end;
+        $lifetime_end = $s;
+        unset($s);
+    }
+
     $errors = 0;
 
     if ($name == '')
