@@ -213,6 +213,9 @@ if (empty($mode))
     echo "<td><input maxlength=\"50\" name=\"icq\" size=\"30\" type=\"text\" value=\"".strip_tags($user->icq)."\" /></td></tr>";
     echo "<tr><th>MSN ".icon('msn', 16, 'MSN')."</th>";
     echo "<td><input maxlength=\"50\" name=\"msn\" size=\"30\" type=\"text\" value=\"".strip_tags($user->msn)."\" /></td></tr>";
+    echo "<tr><th>Skype ".icon('skype', 16, 'SKYPE')."</th>";
+    echo "<td><input maxlength=\"50\" name=\"skype\" size=\"30\" type=\"text\" value=\"".strip_tags($user->skype)."\" /></td></tr>";
+
 
     plugin_do('edit_profile_form');
     // Do not allow password change if using LDAP
@@ -254,6 +257,7 @@ elseif ($mode == 'save')
     $user->aim = cleanvar($_POST['aim']);
     $user->icq = cleanvar($_POST['icq']);
     $user->msn = cleanvar($_POST['msn']);
+    $user->skype = cleanvar($_POST['skype']);
     $user->fax = cleanvar($_POST['fax']);
     $user->signature = cleanvar($_POST['signature']);
     $user->status = cleanvar($_POST['status']);

@@ -48,9 +48,10 @@ disabled by default and can be re-enabled via a setting in SiT! -> Control
 Panel -> Configure -> Features -> Service Levels - "Force critical priority
 incidents to flag as critical"
 
-Feedback system have had alittle adjustment, it is now possible for a contact
+Feedback system have had some rework, it is now possible for a contact
 to access feedback from the portal. Feedback from portal is configurable so
-it can be turned on and off.
+it can be turned on and off. A contact can choose not to receive feedback, by
+opting out by email.
 
 Upgrading to 3.60
 -----------------

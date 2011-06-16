@@ -50,6 +50,7 @@ class User extends Person{
     var $icq;
     var $aim;
     var $msn;
+    var $skype;
 
     function User($id=0)
     {
@@ -85,6 +86,7 @@ class User extends Person{
             $this->icq = $obj->icq;
             $this->aim = $obj->aim;
             $this->msn = $obj->msn;
+            $this->skype = $obj->skype;
             $this->phone = $obj->phone;
             $this->mobile = $obj->mobile;
             $this->fax = $obj->fax;
@@ -263,6 +265,7 @@ class User extends Person{
                 if (!empty($this->icq)) $s[] = "icq = '".cleanvar($this->icq)."'";
                 if (!empty($this->aim)) $s[] = "aim = '".cleanvar($this->aim)."'";
                 if (!empty($this->msn)) $s[] = "msn = '".cleanvar($this->msn)."'";
+                if (!empty($this->skype)) $s[] = "skype = '".cleanvar($this->skype)."'";
 
                 if ($errors == 0)
                 {
