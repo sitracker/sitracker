@@ -10,8 +10,6 @@
 //
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 
-
-
 if (!@include ('core.php'))
 {
     $msg = urlencode(base64_encode("Could not find database connection/config information (core.php)"));
