@@ -1074,13 +1074,17 @@ function contract_details($id, $mode='internal')
 
     if ($mode == 'internal')
     {
-        $html .= "<p align='center'>";
-        $html .= "<a href=\"contract_edit.php?action=edit&amp;maintid=$id\">{$GLOBALS['strEditContract']}</a>";
+        $operations = array();
+        $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
+        
+        
         if ($maint->term != 'yes')
         {
-            $html .= " | <a href='contract_new_service.php?contractid={$id}'>{$GLOBALS['strNewService']}</a></p>";
+            $operations[$GLOBALS['strNewService']] = "contract_new_service.php?contractid={$id}";
         }
+        $html .= "<p align='center'>".html_action_links($operations)."</p>";
     }
+
     $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
 
     if (mysql_num_rows($maintresult) > 0)
