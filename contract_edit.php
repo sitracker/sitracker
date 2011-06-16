@@ -87,6 +87,7 @@ if ($action == "edit")
         echo "<td><input class='required' name='expirydate' size='10' value='";
         if ($maint->expirydate > 0) echo ldate('Y-m-d', $maint->expirydate);
         echo "' /> ".date_picker('maintform.expirydate');
+        echo "<label>";
         if ($maint->expirydate == '-1')
         {
             echo "<input type='checkbox' checked='checked' name='noexpiry' /> {$strUnlimited}";
@@ -95,6 +96,7 @@ if ($action == "edit")
         {
             echo "<input type='checkbox' name='noexpiry' /> {$strUnlimited}";
         }
+        echo "</label>";
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strServiceLevel}:</th><td>";
         echo servicelevel_drop_down('servicelevel',$maint->servicelevel, TRUE);
