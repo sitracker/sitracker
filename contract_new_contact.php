@@ -67,8 +67,11 @@ if (empty($action) || $action == "showform")
         echo "</td></tr>";
     }
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
+    echo "<p align='center'>";
+    echo "<input name='submit' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
+    echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -123,7 +126,7 @@ else if ($action == "new")
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo $errors_string;
 
-        echo "<p align='center'><a href='contract_details.php?id={$maintid}'>Return</a></p>";
+        echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
