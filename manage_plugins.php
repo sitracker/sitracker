@@ -161,6 +161,7 @@ while ($name = readdir($dir_handle))
             if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
             if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
+            $ondisk_plugins[$name]['filepath'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
         }
     }
 }
@@ -238,7 +239,9 @@ switch ($seltab)
                 echo "<tr class='{$shade}'>";
                 echo "<td>{$ondisk_plugin}</td>";
                 echo "<td>{$ondisk_plugin_details['version']}</td>";
-                echo "<td>{$ondisk_plugin_details['desc']}";
+                echo "<td>";
+                echo "<em>{$ondisk_plugin_details['desc']}</em><br />";
+                echo "<strong>{$strLicense}:</strong> {$ondisk_plugin_details['legal']}";
                 if ($ondisk_plugin_details['sitminversion'] > $application_version)
                 {
                     echo "<p class='warning'>This plugin was designed for {$CONFIG['application_name']} version {$ondisk_plugin_details['sitminversion']} or later</strong></p>";
@@ -257,19 +260,22 @@ switch ($seltab)
                 {
                     if ($installed)
                     {
-                        $operation = "<a href='{$_SERVER['PHP_SELF']}?action=disable&amp;plugin={$ondisk_plugin}'>{$strDisable}</a>";
+                        $operations[$strDisable] = "{$_SERVER['PHP_SELF']}?action=disable&amp;plugin={$ondisk_plugin}";
                     }
                     else
                     {
-                        $operation = "<a href='{$_SERVER['PHP_SELF']}?action=enable&amp;plugin={$ondisk_plugin}'>{$strEnable}</a>";
+                        $operations[$strEnable] = "{$_SERVER['PHP_SELF']}?action=enable&amp;plugin={$ondisk_plugin}";
                     }
                 }
                 else
                 {
-                    $operation = "<a href='{$CONFIG['application_webpath']}manage_dashboard.php'>{$strManageDashlet}</a>";
+                    $operations[$strManageDashlet] = "{$CONFIG['application_webpath']}manage_dashboard.php";
                 }
-
-                echo "<td>{$operation}</td>";
+                if (file_exists($ondisk_plugin_details['path'] . 'README'))
+                {
+                   $operations[$strHelp] = "{$CONFIG['application_webpath']}plugins/{$ondisk_plugin}/README";
+                }
+                echo "<td>".html_action_links($operations)."</td>";
                 echo "</tr>";
             }
             echo "</table>";
