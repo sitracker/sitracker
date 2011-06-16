@@ -30,8 +30,8 @@ switch ($action)
         // check for blank name
         if ($vendorname == '')
         {
-            $errors = 1;
-            $errors_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strVendorName)."</p>\n";
+            $errors++;
+            $_SESSION['formerrors']['edit_vendor']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
         }
 
         if ($errors == 0)
@@ -43,19 +43,20 @@ switch ($action)
         }
         else
         {
-            include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            echo $errors_string;
-            include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+            html_redirect($_SERVER['PHP_SELF'] ."?action=edit&vendorid={$vendorid}", FALSE);
         }
         break;
     case 'edit':
         $vendorid = clean_int($_REQUEST['vendorid']);
         $vendorname = clean_dbstring($_REQUEST['vendorname']);
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        echo show_form_errors('edit_vendor');
+        clear_form_errors('edit_vendor');
         echo "<h2>".icon('edituser', 32)." {$strEditVendor}: {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";
         echo "<table align='center'>";
-        echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}'/></td></tr>";
+        echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}' class='required' /> ";
+        echo "<span class='required'>{$strRequired}</span></td></tr>";
         echo "</table>";
         echo "<input type='hidden' name='action' value='save' />";
         echo "<input type='hidden' name='vendorid' value='{$vendorid}' />";
