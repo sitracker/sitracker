@@ -33,21 +33,39 @@ if ($action == 'save')
     $productid = clean_int($_POST['productid']);
     $tags = clean_dbstring($_POST['tags']);
 
-    replace_tags(TAG_PRODUCT, $productid, $tags);
-
-    // update database
-    $sql = "UPDATE `{$dbProducts}` SET vendorid='{$vendor}', name='{$name}', description='{$description}' WHERE id='{$productid}' LIMIT 1 ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    if (!$result)
+    if ($vendor == '' OR $vendor == "0")
     {
-         trigger_error("Update of product failed: {$sql}", E_USER_WARNING);
+        $errors++;
+        $_SESSION['formerrors']['edit_product']['vendor'] = sprintf($strFieldMustNotBeBlank, $strVendor);
     }
-    else
+    // check for blank name
+    if ($name == '')
     {
-        journal(CFG_LOGGING_NORMAL, 'Product Edited', "Product {$productid} was edited", CFG_JOURNAL_PRODUCTS, $productid);
-        html_redirect("products.php");
+        $errors++;
+        $_SESSION['formerrors']['edit_product']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
+    }
+    if ($errors > 0)
+    {
+        html_redirect("edit_product.php?id={$productid}", FALSE);
+    }
+    else 
+    {
+        replace_tags(TAG_PRODUCT, $productid, $tags);
+
+        // update database
+        $sql = "UPDATE `{$dbProducts}` SET vendorid='{$vendor}', name='{$name}', description='{$description}' WHERE id='{$productid}' LIMIT 1 ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        if (!$result)
+        {
+            trigger_error("Update of product failed: {$sql}", E_USER_WARNING);
+        }
+        else
+        {
+            journal(CFG_LOGGING_NORMAL, 'Product Edited', "Product {$productid} was edited", CFG_JOURNAL_PRODUCTS, $productid);
+            html_redirect("products.php");
+        }
     }
 }
 else
@@ -55,6 +73,8 @@ else
     $title = $strEditProduct;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
+    echo show_form_errors('edit_product');
+    clear_form_errors('edit_product');
     echo "<h2>".icon('product', 32)." ";
     echo "$title</h2>\n";
 
