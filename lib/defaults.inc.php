@@ -52,7 +52,7 @@ $CONFIG['db_tableprefix'] = '';
 $CONFIG['home_country'] = 'UNITED KINGDOM';
 
 $CONFIG['support_email'] = 'support@localhost';
-// support_manager_email is obsolete as of v3.45, use support_manager instead
+// DEPRECATED support_manager_email is obsolete as of v3.45, use support_manager instead
 $CONFIG['support_manager_email'] = 'support_manager@localhost';
 // The user ID of the person who is in charge of your support service
 $CONFIG['support_manager'] = 1;
