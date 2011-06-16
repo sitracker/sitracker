@@ -686,10 +686,12 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
  * @param int $id. the contract id to preselect
  * @param int $siteid. Show records from this SiteID only, blank for all sites
  * @param array $excludes. Hide contracts with ID's in this array
- * @param bool $return. Whether to return to HTML or echo
+ * @param bool $required. Whether the field is required or not.
  * @param bool $showonlyactive. True show only active (with a future expiry date), false shows all
+ * @note in versions prior to 3.90 the fifth paramater of this function was "bool $return. Whether to return to HTML or echo" since then it always
+ returns HTML.
  */
-function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $return = TRUE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
+function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $required = FALSE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
 {
     global $GLOBALS, $now;
     // TODO make maintenance_drop_down a hierarchical selection box sites/contracts
@@ -718,7 +720,12 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
     $result = mysql_query($sql);
     $results = 0;
     // print HTML
-    $html .= "<select name='{$name}'>";
+    $html .= "<select name='{$name}'";
+    if ($required)
+    {
+        $html .= " class='required'";
+    }
+    $html .= ">";
     if ($id == 0 AND $results > 0)
     {
         $html .= "<option selected='selected' value='0'></option>\n";
@@ -752,14 +759,7 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
     }
     $html .= "</select>";
 
-    if ($return)
-    {
-        return $html;
-    }
-    else
-    {
-        echo $html;
-    }
+    return $html;
 }
 
 

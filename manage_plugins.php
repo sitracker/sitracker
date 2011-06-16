@@ -187,12 +187,12 @@ switch ($seltab)
             $shade = 'shade1';
             foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
             {
-                $operation = '';
+                $operations = array();
                 if (!empty($avail_plugin_details['url']))
                 {
-                    $operation .= "<a href=\"{$avail_plugin_details['url']}\">{$strVisitHomepage}</a>";
+                    $operations[$strVisitHomepage] = "{$avail_plugin_details['url']}";
                 }
-//                 $operation .= "<a href=\"{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)."\">{$strInstall}</a>";
+//                 $operations[$strInstall] = "{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)";
                 if (!in_array($avail_plugin, $ondisk_plugins))
                 {
                     echo "<tr class='{$shade}'>";
@@ -200,7 +200,7 @@ switch ($seltab)
                     echo "<td>{$avail_plugin_details['version']}</td>";
                     echo "<td>{$avail_plugin_details['desc']}</td>";
                     echo "<td>{$avail_plugin_details['author']}</td>";
-                    echo "<td>{$operation}</td>";
+                    echo "<td>".html_action_links($operations)."</td>";
                     echo "</tr>";
                     if ($shade == 'shade2') $shade = 'shade1';
                     else $shade = 'shade2';

@@ -40,7 +40,7 @@ if (empty($action) || $action == "showform")
     {
         echo "<tr><th>{$strContract} ".icon('contract', 16)."</th>";
         echo "<td width='400'>";
-        maintenance_drop_down("maintid", 0, '', '', FALSE, TRUE);
+        echo maintenance_drop_down("maintid", 0, '', '', TRUE, TRUE)." <span class='required'>{$strRequired}</span>";
         echo "</td></tr>";
     }
     else
