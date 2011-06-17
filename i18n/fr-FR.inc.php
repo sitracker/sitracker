@@ -1109,7 +1109,6 @@ $strNovember = 'Novembre';
 $strNow = 'Actuellement';
 $strNumContactsAssignedToSite = 'Il y a %s contacts assignés à cette société';
 $strNumContractsAssignedToSite = 'Il y a %s contrats assignés à cette société';
-$strNumOfIncidents = 'Il y a %s Tickets dans cette liste';
 $strNumOfIncidentsLoggedByX = 'Nbre d\'incidents loggés par %s';
 $strNumOfCalls = '# d\'appels';
 $strNumOpenIncidents = '%s ouvert';

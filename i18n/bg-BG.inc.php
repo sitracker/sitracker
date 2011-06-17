@@ -1069,7 +1069,6 @@ $strNovember = 'Ноември';
 $strNow = 'Сега';
 $strNumContactsAssignedToSite = 'Има %s контакта, присвоени на този сайт';
 $strNumContractsAssignedToSite = 'Има %s договора, присвоени на този сайт';
-$strNumOfIncidents = 'Има %s инцидента в този списък';
 $strNumOfIncidentsLoggedByX = 'Брой инциденти записани от %s';
 $strNumOfCalls = '# обаждания';
 $strNumOpenIncidents = '%s отворен';
