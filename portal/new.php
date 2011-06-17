@@ -75,7 +75,7 @@ if (!$_REQUEST['action'])
 
         if ($availablecontract == 0)
         {
-            echo "<p class='error'>{$strNoContractsFound}</p>";
+            echo user_alert($strNoContractsFound);
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             exit;
         }

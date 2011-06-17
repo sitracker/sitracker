@@ -193,13 +193,13 @@ if (!$sent)
             }
             else
             {
-                echo "<p class='error'>{$strRequestNoUsersToApprovePermissions}</p>";
+                echo user_alert($strRequestNoUsersToApprovePermissions, E_USER_WARNING);
             }
         }
     }
     else
     {
-        echo "<p class='info'>{$strRequestNoHolidaysAwaitingYourApproval}</p>";
+        echo user_alert($strRequestNoHolidaysAwaitingYourApproval, E_USER_NOTICE);
     }
 
 
@@ -272,7 +272,7 @@ else
         }
         else
         {
-            echo "<p class='error'>{$strThereWasAProblemSendingYourRequest}</p>";
+            echo user_alert($strThereWasAProblemSendingYourRequest, E_USER_ERROR);
         }
     }
     echo "<p align='center'><a href='holidays.php?user={$user}'>{$strMyHolidays}</p></p>";

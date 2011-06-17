@@ -74,7 +74,7 @@ if (empty($submit))
     }
     else
     {
-        echo "<p class='error'>{$strNoSkillsDefined}</p>";
+        echo user_alert($strNoSkillsDefined, E_USER_NOTICE);
     }
 
     echo "</td>";

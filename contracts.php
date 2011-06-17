@@ -74,14 +74,6 @@ echo "</td>";
 echo "</tr>";
 echo "</table>";
 
-// check input
-/*
-if (empty($search_string) && empty($productid))
-{
-    $errors = 1;
-    echo "<p class='error'>You must enter a search string</p>\n";
-}
-*/
 // search for criteria
 $sql  = "SELECT DISTINCT  m.id AS maintid, s.name AS site, p.name AS product, ";
 $sql .= "r.name AS reseller, licence_quantity, ";

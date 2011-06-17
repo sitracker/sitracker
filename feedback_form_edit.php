@@ -186,7 +186,7 @@ switch ($_REQUEST['action'])
                 echo "</form>";
             }
         }
-        else echo "<p class='error'>{$strNoRecords}</p>";
+        else echo user_alert($strNoRecords, E_USER_NOTICE);
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
 }

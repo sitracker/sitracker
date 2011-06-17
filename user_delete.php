@@ -79,10 +79,8 @@ if (!empty($userid))
     }
     else
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<p class='error'>{$strCannotDeleteUser}</p>";
-        echo "<p align='center'><a href='users.php#{$userid}'>{$strBackToList}</a></p>";
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect("users.php#{$userid}", FALSE, $strCannotDeleteUser);
+        exit;
     }
 }
 else
