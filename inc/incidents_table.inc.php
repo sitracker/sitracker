@@ -442,13 +442,16 @@ if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
     echo "</tr></table>";
 }
 
-if ($rowcount != 1)
+if ($user != 'all')
 {
-    echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>{$rowcount}</strong>")."</p>";
-}
-else
-{
-    echo "<p align='center'>".sprintf($strSingleIncident, "<strong>{$rowcount}</strong>")."</p>";
+    if ($rowcount != 1)
+    {
+        echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>{$rowcount}</strong>")."</p>";
+    }
+    else
+    {
+        echo "<p align='center'>".sprintf($strSingleIncident, "<strong>{$rowcount}</strong>")."</p>";
+    }
 }
 
 if ($CONFIG['debug']) echo "<!-- End of Support Incidents Table -->\n";
