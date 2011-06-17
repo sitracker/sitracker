@@ -63,6 +63,7 @@ class User extends Person{
 
     function retrieveDetails()
     {
+        // FIXME looks to me that we can remove the trigger_error - trigger also invalid as it needs a second parameter - CJ
         trigger_error("User.retrieveDetails() not yet implemented");
         $sql = "SELECT u.*, r.rolename ";
         $sql .= "FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRoles']}` AS r ";
