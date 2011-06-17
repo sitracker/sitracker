@@ -90,7 +90,7 @@ switch ($mode)
                     $numresults++;
                     if (!empty($row->result) OR ($row->result == 0))
                     {
-                       
+
                         if ($row->result != 0)
                         {
                             $cumul += $row->result;
@@ -160,7 +160,7 @@ switch ($mode)
         }
         else
         {
-            echo "<p class='error'>{$strNoResponseFound}</p>";
+            echo user_alert($strNoResponseFound, E_USER_NOTICE);
         }
         plugin_do('feedback_browse_viewresponse');
         echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
@@ -175,7 +175,7 @@ switch ($mode)
         {
             // no feedback forms
             echo "<h3>{$title}</h3>";
-            echo "<p class='error' align='center'>{$strNoFeedbackFormsDefined}</p>";
+            echo user_alert($strNoFeedbackFormsDefined, E_USER_NOTICE);
             echo "<p align='center'><a href='feedback_form_edit.php?action=new'>{$strCreateNewForm}</a></p>";
         }
         else
@@ -274,7 +274,7 @@ switch ($mode)
             }
             else
             {
-                echo "<p class='error' align='center'>{$strNoResponseFound}</p>";
+                echo user_alert($strNoResponseFound, E_USER_NOTICE);
             }
             if ($completed == 'no')
             {

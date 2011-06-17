@@ -76,13 +76,14 @@ switch ($action)
             }
             else
             {
-                echo "<br /><p class='error' align='center'>";
-                echo "{$strADuplicateAlreadyExists}</p>";
+                echo "<br />";
+                echo user_alert($strADuplicateAlreadyExists);
             }
         }
         else
         {
-            echo "<br /><p class='error' align='center'>".sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid))."</p>";
+            echo "<br />";
+            echo user_alert(sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid), E_USER_NOTICE));
         }
         break;
     case 'delete':
