@@ -1316,7 +1316,6 @@ $strNow = 'Now';
 $strNumContactsAssignedToSite = 'There are %s contacts assigned to this site';
 $strNumContractsAssignedToSite = 'There are %s contracts assigned to this site';
 $strNumIncidents = '# Incidents';
-$strNumOfIncidents = 'There are %s incidents in this list';
 $strNumOfIncidentsLoggedByX = 'Number of incidents logged by %s';
 $strNumOfCalls = '# of calls';
 $strNumOpenIncidents = '%s open';

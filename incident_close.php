@@ -363,7 +363,7 @@ else
 
         if ($addition_errors == 0)
         {   //maintenceid
-            if ((contact_feedback(incident_contact($id)) == 'yes')) // FIXME Add the followin when siteconfig runs : AND (site_feedback(contact_siteid(incident_contact($id)))) == "yes" )
+            if ((contact_feedback(incident_contact($id)) == 'yes') AND (site_feedback(contact_siteid(incident_contact($id)))) == 'yes' )
             {
                 $send_feedback = send_feedback(db_read_column('maintenanceid', $dbIncidents, $id));
                 if ($CONFIG['feedback_form'] != '' AND $CONFIG['feedback_form'] > 0 AND $send_feedback == TRUE)

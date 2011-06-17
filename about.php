@@ -78,9 +78,6 @@ Licensed under the GNU General Public License.<br /></p>
 
 <p align='center'>Incorporating:</p>
 
-<p align='center'>KDEClassic Icon theme<br />
-Completely free for commercial and non-commercial use.</p>
-
 <p align='center'>whatever:hover (csshover.htc) 1.41 by <a href='http://www.xs4all.nl/~peterned/'>Peter Nederlof</a><br />
 &copy; 2005 - Peter Nederlof.  Licensed under the LGPLv2.</p>
 
