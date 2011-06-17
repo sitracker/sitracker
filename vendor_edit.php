@@ -74,11 +74,17 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            echo "<table class='vertical' align='center'>";
+            echo "<table align='center'>";
+            echo "<tr><th>{$strVendor}</th><th>{$strOperation}</th></tr>";
             $shade='shade1';
             while ($row = mysql_fetch_object($result))
             {
-                echo "<tr class='{$shade}'><td><a href=\"{$_SERVER['PHP_SELF']}?action=edit&amp;vendorid={$row->id}&amp;vendorname=".urlencode($row->name)."\">{$row->name}</a></td></tr>\n";
+                echo "<tr class='{$shade}'><td>{$row->name}</td>";
+                echo "<td>";
+                $operations = array();
+                $operations[$strEdit] = "{$_SERVER['PHP_SELF']}?action=edit&amp;vendorid={$row->id}&amp;vendorname=".urlencode($row->name);
+                echo html_action_links($operations);
+                echo "</td>";
 
                 if ($shade == 'shade1') $shade = 'shade2';
                 else $shade = 'shade1';
