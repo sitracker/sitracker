@@ -64,6 +64,34 @@ if ($_REQUEST['action'] != 'checkforupdates')
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=checkforupdates'>{$strCheckForUpdatesOnline}</a></p>";
 }
 
+// Evaluate plugins on disk
+$path = APPLICATION_PLUGINPATH;
+$dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
+
+while ($name = readdir($dir_handle))
+{
+    if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
+    {
+        $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
+        //$ondisk_plugins[$ondisk_pluginname] = 1;
+        $content = file($ondisk_pluginname);
+        $content = array_filter($content, 'getplugininfo');
+        foreach ($content AS $key => $value)
+        {
+            if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
+            $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
+        }
+    }
+}
+
+closedir($dir_handle);
+
 // Actions
 if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
 {
@@ -84,16 +112,19 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
             {
                 foreach($CONFIG['plugins'] AS $confplugin)
                 {
-                    if ($confplugin != $actionplugin) $newsetting['plugins'][] = $confplugin;
+                    if ($confplugin != $actionplugin AND file_exists(APPLICATION_PLUGINPATH . $confplugin))
+                    {
+                        $newsetting['plugins'][] = $confplugin;
+                    }
                 }
             }
         }
         $CONFIG['plugins'] = $newsetting['plugins'];
-        if (is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0) 
+        if (is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0)
         {
             $savecfg['plugins'] = 'array(' . implode(',', $newsetting['plugins']) . ')';
         }
-        else 
+        else
         {
             $savecfg['plugins'] = '';
         }
@@ -140,35 +171,6 @@ if ($_REQUEST['action'] == 'checkforupdates')
     }
     ksort($_SESSION['available_plugins']);
 }
-
-// Evaluate plugins on disk
-$path = APPLICATION_PLUGINPATH;
-$dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
-
-while ($name = readdir($dir_handle))
-{
-    if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
-    {
-        $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
-        //$ondisk_plugins[$ondisk_pluginname] = 1;
-        $content = file($ondisk_pluginname);
-        $content = array_filter($content, 'getplugininfo');
-        foreach ($content AS $key => $value)
-        {
-            if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
-            $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
-        }
-    }
-}
-
-closedir($dir_handle);
-
 
 $tabs[$strInstalled] = "{$_SERVER['PHP_SELF']}?tab=installed";
 if (is_array($_SESSION['available_plugins']))
