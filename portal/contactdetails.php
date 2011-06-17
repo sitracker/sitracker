@@ -178,7 +178,7 @@ else
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         exit;
     }
-    echo "<h2>".icon('contact', 32)." {$user->forenames} {$user->surname}";
+    echo "<h2>".icon('contact', 32, $strContact)." {$user->forenames} {$user->surname}";
     echo ' '.gravatar($user->email, 32);
     echo "</h2>";
 

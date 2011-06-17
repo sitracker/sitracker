@@ -40,7 +40,6 @@ if ($incidentcontact == $_SESSION['contactid'])
         echo "<p>{$strReason} <span class='required'>{$strRequired}</span> </p><textarea class='required' name='reason' cols='50' rows='10'></textarea><br />";
         echo "<input type='hidden' name='fail' value='1' />";
         echo "<p><input type='submit' value=\"{$strRequestClosure}\" /></p></form></div>";
-
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
@@ -50,8 +49,8 @@ if ($incidentcontact == $_SESSION['contactid'])
         $user = mysql_fetch_object($result);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        // FIXME i18n ? In db ?
-        $reason = "Incident closure requested via the portal by [b]{$user->forenames} {$user->surname}[/b]\n\n";
+        // FIXME i18n ? In db ? - CJ added syslang here - syslang isn't saved for some reason bug 1618
+        $reason = "{$SYSLANG['strRequestClosureViaThePortalBy']} [b]{$user->forenames} {$user->surname}[/b]\n\n";
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
         $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";

@@ -32,7 +32,7 @@ if ($CONFIG['portal_kb_enabled'] !== 'Disabled')
 
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
-echo "<h2>".icon('kb', 32)." {$strKnowledgeBase}</h2>";
+echo "<h2>".icon('kb', 32, $strKnowledgeBase)." {$strKnowledgeBase}</h2>";
 $perpage = 20;
 $order = cleanvar($_GET['order']);
 $sort = cleanvar($_GET['sort']);
