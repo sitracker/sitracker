@@ -38,6 +38,7 @@ $siteid = clean_int($_REQUEST['site']);
 
 if (isset($_POST['submit']))
 {
+    $errors = 0;
     $post = cleanvar($_POST);
 
     if ($post['active'] == 'on')
@@ -47,6 +48,23 @@ if (isset($_POST['submit']))
     elseif (isset($post['active']))
     {
         $post['active'] = 0;
+    }
+
+    if (empty($post['name']))
+    {
+        $errors++;
+        $_SESSION['formerrors']['inventory_edit']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName));
+    }
+    if (empty($post['site']))
+    {
+        $errors++;
+        $_SESSION['formerrors']['inventory_edit']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
+    }
+
+    if ($errors > 0)
+    {
+        html_redirect("inventory_edit.php?id={$siteid}", FALSE);
+        exit;
     }
 
     $sql = "UPDATE `{$dbInventory}` ";
@@ -102,6 +120,8 @@ else
         exit;
     }
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo show_form_errors('inventory_edit');
+    clear_form_errors('inventory_edit');
     echo "<h2>".icon('edit', 32)." {$strEdit}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
