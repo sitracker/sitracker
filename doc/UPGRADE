@@ -53,6 +53,10 @@ to access feedback from the portal. Feedback from portal is configurable so
 it can be turned on and off. A contact can choose not to receive feedback, by
 opting out by email.
 
+Plugins can now be enabled/disabled via the new plugin manager which is available
+via SiT! -> Control Panel -> Plugin Manager.  The configuration page no longer
+has a setting for enabling/disabling plugins.
+
 Upgrading to 3.60
 -----------------
 3.60 only shows incidents in the queues which are assigned to an engineer

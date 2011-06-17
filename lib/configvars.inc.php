@@ -37,8 +37,7 @@ $CFGCAT['paths'] = array('application_webpath',
 $CFGCAT['appmain'] = array('application_name',
                                'application_shortname',
                                'application_uriprefix',
-                               'logout_url',
-                               'plugins'
+                               'logout_url'
                                );
 
 $CFGCAT['locale'] = array('home_country',
@@ -564,10 +563,6 @@ $CFGVAR['outbound_email_linefeed']['title'] = 'Choose linefeed';
 $CFGVAR['outbound_email_linefeed']['help'] = "Change the linefeed if outbound emails doesn't break the lines or looks weird.";
 $CFGVAR['outbound_email_linefeed']['type'] = 'select';
 $CFGVAR['outbound_email_linefeed']['options'] = 'LF|CRLF';
-
-$CFGVAR['plugins']['title'] = "Load Plugins";
-$CFGVAR['plugins']['help'] = "Comma separated list of plugins to load. e.g. 'magic_plugin,lookup_plugin'";
-$CFGVAR['plugins']['type'] = '1darray';
 
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
