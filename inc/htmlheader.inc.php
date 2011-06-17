@@ -157,10 +157,6 @@ if ($sit[0] != '')
         trigger_error("Menu array not defined", E_USER_ERROR);
     }
 
-//     if ($CONFIG['debug'])
-//     {
-//         $dbg .= 'permissions'.print_r($_SESSION['permissions'],true);
-//     }
     echo "<div id='menu'>\n";
     echo "<ul id='menuList'>\n";
     foreach ($hmenu[0] as $top => $topvalue)
