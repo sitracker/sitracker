@@ -301,8 +301,8 @@ switch ($seltab)
         }
         break;
 }
-$dbg .= "<pre>AVAIL:".print_r($_SESSION['available_plugins'],true)."</pre>";
-$dbg .= "<pre>".print_r($ondisk_plugins,true)."</pre>";
+// $dbg .= "<pre>AVAIL:".print_r($_SESSION['available_plugins'],true)."</pre>";
+// $dbg .= "<pre>".print_r($ondisk_plugins,true)."</pre>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>
