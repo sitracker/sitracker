@@ -3,7 +3,7 @@
 
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
-#masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; }
+#masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; min-height: 50px; }
 #masthead a { color: #EAF4F9;}
 #masthead a:hover {color: white; }
 #masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
