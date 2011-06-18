@@ -176,7 +176,7 @@ else
 
     if ($mode == 'edit')
     {
-        echo "<h2>".icon('kb', 32)." {$strEditKBArticle}: {$kbid}</h2>";
+        echo "<h2>".icon('kb', 32, $strEditKBArticle)." {$strEditKBArticle}: {$kbid}</h2>";
         $sql = "SELECT * FROM `{$dbKBArticles}` WHERE docid='{$kbid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -200,7 +200,7 @@ else
     }
     else
     {
-        echo "<h2>".icon('kb', 32)." {$strNewKBArticle}</h2>";
+        echo "<h2>".icon('kb', 32, $strNewKBArticle)." {$strNewKBArticle}</h2>";
     }
 
     echo "<div id='kbarticle'>";
