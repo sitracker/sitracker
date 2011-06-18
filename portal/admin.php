@@ -177,7 +177,7 @@ if ($result = mysql_query($sql))
     while ($row = mysql_fetch_object($result))
     {
         echo "<tr class='{$shade}'><td>{$row->forenames} {$row->surname}</td>";
-        echo "<td><a href='contactdetails.php?id={$row->id}'>{$strView}</a> </td></tr>";
+        echo "<td><a href='contactdetails.php?id={$row->id}'>{$strView}/{$strEdit}</a> </td></tr>";
 
         if ($shade == 'shade1')
         {
