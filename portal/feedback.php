@@ -35,7 +35,7 @@ else
     while ($row = mysql_fetch_object($result))
     {
         $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid);
-        $html .= "<tr><td><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strFeedbackFormForIncidentX} : {$row->incidentid}</a></td></tr><br />";
+        $html .= "<tr><td><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strFeedbackFormForIncidentX} : {$row->incidentid}</a></td></tr>";
     }
     $html .= "</table>";
 }
