@@ -2215,4 +2215,135 @@ function html_action_links($actions)
 }
 
 
+/**
+ * Creates HTML for horizontal hierarchical menu
+ * @author Ivan Lucas
+ * @param array $hmenu - Hierarchical menu structure
+ * @return string HTML.
+ */
+function html_hmenu($hmenu)
+{
+    global $CONFIG;
+    $html = "<div id='menu'>\n";
+    $html .= "<ul id='menuList'>\n";
+    foreach ($hmenu[0] as $top => $topvalue)
+    {
+        if ((!empty($topvalue['enablevar']) AND $CONFIG[$topvalue['enablevar']] === TRUE
+            AND $CONFIG[$topvalue['enablevar']] !== 'disabled')
+            OR empty($topvalue['enablevar']))
+        {
+            $html .= "<li class='menuitem'>";
+            // Permission Required: ".permission_name($topvalue['perm'])."
+            if ($topvalue['perm'] >=1 AND !in_array($topvalue['perm'], $_SESSION['permissions']))
+            {
+                $html .= "<a href='javascript:void(0);' class='greyed'>{$topvalue['name']}</a>";
+            }
+            else
+            {
+                $html .= "<a href='{$topvalue['url']}'>{$topvalue['name']}</a>";
+            }
+
+            if ($topvalue['submenu'] > 0 AND in_array($topvalue['perm'], $_SESSION['permissions']))
+            {
+                $html .= "\n<ul>"; //  id='menuSub'
+                foreach ($hmenu[$topvalue['submenu']] as $sub => $subvalue)
+                {
+                    if ((!empty($subvalue['enablevar']) AND $CONFIG[$subvalue['enablevar']] == TRUE
+                        AND $CONFIG[$subvalue['enablevar']] !== 'disabled')
+                        OR empty($subvalue['enablevar']))
+                    {
+                        if (array_key_exists('submenu', $subvalue) AND $subvalue['submenu'] > 0)
+                        {
+                            $html .= "<li class='submenu'>";
+                        }
+                        else
+                        {
+                            $html .= "<li>";
+                        }
+
+                        if ($subvalue['perm'] >=1 AND !in_array($subvalue['perm'], $_SESSION['permissions']))
+                        {
+                            $html .= "<a href='javascript:void(0);' class='greyed'>{$subvalue['name']}</a>";
+                        }
+                        else
+                        {
+                            $html .= "<a href=\"{$subvalue['url']}\">{$subvalue['name']}</a>";
+                        }
+
+                        if (array_key_exists('submenu', $subvalue) AND $subvalue['submenu'] > 0 AND in_array($subvalue['perm'], $_SESSION['permissions']))
+                        {
+                            $html .= "<ul>"; // id ='menuSubSub'
+                            foreach ($hmenu[$subvalue['submenu']] as $subsub => $subsubvalue)
+                            {
+                                if ((!empty($subsubvalue['enablevar']) AND $CONFIG[$subsubvalue['enablevar']] == TRUE
+                                    AND $CONFIG[$subsubvalue['enablevar']] !== 'disabled')
+                                    OR empty($subsubvalue['enablevar']))
+                                {
+                                    if (array_key_exists('submenu', $subsubvalue) AND $subsubvalue['submenu'] > 0)
+                                    {
+                                        $html .= "<li class='submenu'>";
+                                    }
+                                    else
+                                    {
+                                        $html .= "<li>";
+                                    }
+
+                                    if ($subsubvalue['perm'] >=1 AND !in_array($subsubvalue['perm'], $_SESSION['permissions']))
+                                    {
+                                        $html .= "<a href=\"javascript:void(0);\" class='greyed'>{$subsubvalue['name']}</a>";
+                                    }
+                                    else
+                                    {
+                                        $html .= "<a href='{$subsubvalue['url']}'>{$subsubvalue['name']}</a>";
+                                    }
+
+                                    if (array_key_exists('submenu', $subsubvalue) AND $subsubvalue['submenu'] > 0 AND in_array($subsubvalue['perm'], $_SESSION['permissions']))
+                                    {
+                                        $html .= "<ul>"; // id ='menuSubSubSub'
+                                        foreach ($hmenu[$subsubvalue['submenu']] as $subsubsub => $subsubsubvalue)
+                                        {
+                                             if ((!empty($subsubsubvalue['enablevar']) AND $CONFIG[$subsubsubvalue['enablevar']])
+                                                OR empty($subsubsubvalue['enablevar']))
+                                            {
+                                                if ($subsubsubvalue['submenu'] > 0)
+                                                {
+                                                    $html .= "<li class='submenu'>";
+                                                }
+                                                else
+                                                {
+                                                    $html .= "<li>";
+                                                }
+
+                                                if ($subsubsubvalue['perm'] >=1 AND !in_array($subsubsubvalue['perm'], $_SESSION['permissions']))
+                                                {
+                                                    $html .= "<a href='javascript:void(0);' class='greyed'>{$subsubsubvalue['name']}</a>";
+                                                }
+                                                else
+                                                {
+                                                    $html .= "<a href='{$subsubsubvalue['url']}'>{$subsubsubvalue['name']}</a>";
+                                                }
+                                                $html .= "</li>\n";
+                                            }
+                                        }
+                                        $html .= "</ul>\n";
+                                    }
+                                    $html .= "</li>\n";
+                                }
+                            }
+                            $html .= "</ul>\n";
+                        }
+                        $html .= "</li>\n";
+                    }
+                }
+               $html .= "</ul>\n";
+            }
+            $html .= "</li>\n";
+        }
+    }
+    $html .= "</ul>\n\n";
+    $html .= "</div>\n";
+
+    return $html;
+}
+
 ?>
