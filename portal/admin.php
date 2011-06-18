@@ -22,7 +22,7 @@ if ($_POST['submit'])
     $errors = 0;
     foreach (array_keys($_POST['visibility']) as $id)
     {
-    	$id = clean_int($id);
+        $id = clean_int($id);
 
         if ($id != 0)
         {
@@ -79,14 +79,15 @@ if ($CONFIG['portal_site_incidents'])
 
     echo "<p align='center'>{$strAdminContactForContracts}</p>";
 
+    echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center' width='60%'><tr>";
     //echo colheader('id', $strID);
     echo colheader('product', $strContract);
     echo colheader('expiry', $strExpiryDate);
     echo colheader('visbility', $strVisibility);
     echo colheader('actions', $strActions);
-
-    echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
+    echo "</tr>";
+    $shade = 'shade1';
     foreach ($contracts as $contract)
     {
         $sql = "SELECT *, m.id AS id ";
@@ -97,8 +98,6 @@ if ($CONFIG['portal_site_incidents'])
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-        $shade = 'shade1';
         if ($row = mysql_fetch_object($result))
         {
             if ($row->expirydate == -1)
@@ -150,11 +149,11 @@ if ($CONFIG['portal_site_incidents'])
 
         if ($shade == 'shade1')
         {
-        	$shade = 'shade2';
+            $shade = 'shade2';
         }
         else
         {
-        	$shade = 'shade1';
+            $shade = 'shade1';
         }
     }
     echo "</table>";
