@@ -281,7 +281,8 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
     if (!is_array($hmenu[40])) $hmenu[40] = array();
     $hmenu[40] + $hmenu[40] =
                 array (10 => array ('name' => $strContractDetails, 'url' => 'admin.php'),
-                       20 => array ('name' => $strNewSiteContact, 'url' => 'newcontact.php'));
+                       20 => array ('name' => $strSiteDetails, 'url' => 'sitedetails.php'),
+                       30 => array ('name' => $strNewSiteContact, 'url' => 'newcontact.php'));
 
     // Help
     if (!is_array($hmenu[50])) $hmenu[50] = array();
