@@ -59,7 +59,7 @@ else
     $iconset = $CONFIG['portal_iconset'];
 }
 
-if (empty($theme)) $theme = $CONFIG['portal_interface_style']; 
+if (empty($theme)) $theme = $CONFIG['portal_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
 
 //some css for the KB

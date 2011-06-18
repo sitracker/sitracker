@@ -57,6 +57,10 @@ Plugins can now be enabled/disabled via the new plugin manager which is availabl
 via SiT! -> Control Panel -> Plugin Manager.  The configuration page no longer
 has a setting for enabling/disabling plugins.
 
+A priority column has been added to the incidents list in the portal, this makes
+it easier for contacts to see the current priority of an incident.
+
+
 Upgrading to 3.60
 -----------------
 3.60 only shows incidents in the queues which are assigned to an engineer
