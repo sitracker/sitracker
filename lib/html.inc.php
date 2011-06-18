@@ -1085,7 +1085,7 @@ function contract_details($id, $mode='internal')
         $html .= "<p align='center'>".html_action_links($operations)."</p>";
     }
 
-    $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
+    $html .= "<h3>{$GLOBALS['strNamedContacts']}</h3>";
 
     if (mysql_num_rows($maintresult) > 0)
     {
