@@ -1724,7 +1724,15 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     $html = show_form_errors('new_contact');
     clear_form_errors('new_contact');
     $html .= "<h2>".icon('contact', 32)." ";
-    $html .= "{$GLOBALS['strNewContact']}</h2>";
+    if ($mode == 'external')
+    {
+        $html .= "{$GLOBALS['strNewSiteContact']}";
+    }
+    else
+    {
+        $html .= "{$GLOBALS['strNewContact']}";
+    }
+    $html .= "</h2>";
 
     if ($mode == 'internal')
     {
