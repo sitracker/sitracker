@@ -260,7 +260,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
     // Portal
     if (!is_array($hmenu[10])) $hmenu[10] = array();
     $hmenu[10] + $hmenu[10] =
-                array (
+                array (10 => array ('name' => $strMyDetails, 'url' => 'contactdetails.php'),
                        20 => array ('name' => $strLogout, 'url' => '../logout.php'));
 
     // Incidents
