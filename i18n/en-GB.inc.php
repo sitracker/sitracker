@@ -1170,6 +1170,7 @@ $strNewUser = 'New User';
 $strNewVendor = 'New Vendor';
 $strNext = 'Next';
 $strNextAction = 'Next Action';
+$strNextRun = 'Next Run';
 $strNextSLATarget = 'The next SLA target';
 # Update (noun)
 $strNextUpdate = 'Next Update';
