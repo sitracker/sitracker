@@ -184,6 +184,10 @@ if ($CONFIG['portal_kb_enabled'] !== 'Disabled')
     {
         echo "<p align='center'>{$strNoRecords}</p>";
     }
+    if ($CONFIG['portal_kb_enabled'] == 'Public' AND $_SESSION['portalauth'] != TRUE)
+    {
+        echo "<p align='center'><a href=\"../index.php\">{$strBackToLoginPage}</a></p>";
+    }
 }
 else
 {
