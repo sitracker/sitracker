@@ -2234,7 +2234,7 @@ function html_hmenu($hmenu)
         {
             $html .= "<li class='menuitem'>";
             // Permission Required: ".permission_name($topvalue['perm'])."
-            if ($topvalue['perm'] >=1 AND !in_array($topvalue['perm'], $_SESSION['permissions']))
+            if ($topvalue['perm'] > 0 AND !in_array($topvalue['perm'], $_SESSION['permissions']))
             {
                 $html .= "<a href='javascript:void(0);' class='greyed'>{$topvalue['name']}</a>";
             }
@@ -2243,7 +2243,7 @@ function html_hmenu($hmenu)
                 $html .= "<a href='{$topvalue['url']}'>{$topvalue['name']}</a>";
             }
 
-            if ($topvalue['submenu'] > 0 AND in_array($topvalue['perm'], $_SESSION['permissions']))
+            if ($topvalue['submenu'] > 0 AND ($topvalue['perm'] == '' OR in_array($topvalue['perm'], $_SESSION['permissions'])))
             {
                 $html .= "\n<ul>"; //  id='menuSub'
                 foreach ($hmenu[$topvalue['submenu']] as $sub => $subvalue)
@@ -2261,7 +2261,7 @@ function html_hmenu($hmenu)
                             $html .= "<li>";
                         }
 
-                        if ($subvalue['perm'] >=1 AND !in_array($subvalue['perm'], $_SESSION['permissions']))
+                        if ($subvalue['perm'] > 0 AND !in_array($subvalue['perm'], $_SESSION['permissions']))
                         {
                             $html .= "<a href='javascript:void(0);' class='greyed'>{$subvalue['name']}</a>";
                         }
