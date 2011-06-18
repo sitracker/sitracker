@@ -152,15 +152,18 @@ if ($CONFIG['portal_kb_enabled'] !== 'Disabled')
             $shade = 'shade1';
             while($row = mysql_fetch_object($result))
             {
+                $url = "kbarticle.php?id={$row->docid}";
+                // Tell the article page that we're in the portal so it can show menu etc.
+                if ($_SESSION['portalauth'])
+                {
+                    $url .= "&amp;p=1";
+                }
                 echo "<tr class='{$shade}'>";
-                echo "<td><a href='kbarticle.php?id={$row->docid}'>";
+                echo "<td><a href=\"$url\">";
                 echo icon('kb', 16, $strID);
                 echo " {$CONFIG['kb_id_prefix']}{$row->docid}</a></td>";
                 echo "<td>{$row->name}<br />";
-                echo "<a href='kbarticle.php?id={$row->docid}";
-                // Tell the article page that we're in the portal so it can show menu etc.
-                if ($_SESSION['portalauth']) echo "&amp;p=1";
-                echo "'>{$row->title}</a></td>";
+                echo "<a href=\"$url\">{$row->title}</a></td>";
                 echo "<td>";
                 echo ldate($CONFIG['dateformat_date'], mysql2date($row->published));
                 echo "</td>";
