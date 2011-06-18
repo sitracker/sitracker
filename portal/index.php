@@ -36,7 +36,7 @@ function portal_incident_table($sql)
         $html .=  "<tr>";
         $html .=  colheader('id', $GLOBALS['strID']);
         $html .=  colheader('title', $GLOBALS['strTitle']);
-        $html .=  colheader('owner', $GLOBALS['strOwner']);
+        $html .=  colheader('owner', $GLOBALS['strEngineer']);
         $html .=  colheader('lastupdated', $GLOBALS['strLastUpdated']);
         $html .=  colheader('contact', $GLOBALS['strContact']);
         $html .=  colheader('status', $GLOBALS['strStatus']);
