@@ -116,9 +116,9 @@ if ($CONFIG['portal_site_incidents'])
 
             if ($row->allcontactssupported == 'yes')
             {
-            	echo "<select disabled='disabled'>";
-            	echo "<option>{$strAllSiteContactsSupported}</option>";
-            	echo "</select>";
+                echo "<select disabled='disabled'>";
+                echo "<option>{$strAllSiteContactsSupported}</option>";
+                echo "</select>";
                 echo "</td>";
             }
             else
