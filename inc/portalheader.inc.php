@@ -117,11 +117,6 @@ if (is_array($pagescripts))
     unset($pagescripts, $pscript);
 }
 
-plugin_do('html_head');
-echo "</head>\n";
-echo "<body>\n";
-plugin_do('page_start');
-echo "<div id='masthead'><h1 id='apptitle'>{$CONFIG['application_name']}</h1></div>\n";
 if (!empty($_SESSION['lang']) AND $_SESSION['lang'] != $CONFIG['default_i18n'])
 {
     include (APPLICATION_I18NPATH . "{$_SESSION['lang']}.inc.php");
@@ -147,75 +142,90 @@ $filter = array('page' => $page);
 //if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 //$numcontracts = mysql_num_rows($contractresult);
 
+plugin_do('html_head');
+echo "</head>\n";
+echo "<body>\n";
+plugin_do('page_start');
+echo "<div id='masthead'><div id='masterheadcontent'>";
+echo "<div id='personaloptions'><a href='contactdetails.php'>";
+echo contact_realname($_SESSION['contactid']);
+echo ", ".contact_site($_SESSION['contactid']);
+echo "</a></div>";
+echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
+echo "</div>";
+echo "</div>\n";
+
 if ($_SESSION['portalauth'] == TRUE OR ($_SERVER['PHP_SELF'] != 'kb.php'
     AND $CONFIG['portal_kb_enabled'] != 'Public'))
 {
-    echo "<div id='menu'>\n";
-    echo "<ul id='menuList'>\n";
-    echo "<li><a href='index.php'>{$strIncidents}</a></li>";
-    if (sizeof($_SESSION['entitlement']) == 1 OR !$CONFIG['portal_creates_incidents'])
-    {
-        // This is needed so the code will unserialize
-        $contractid = unserialize($_SESSION['entitlement'][0])->id;
-        echo "<li><a href='new.php";
-        if ($CONFIG['portal_creates_incidents'])
-        {
-            echo "?contractid={$contractid}";
-        }
-        echo "'>{$strNewIncident}</a></li>";
-    }
-    else
-    {
-        echo "<li><a href='entitlement.php'>{$strEntitlement}</a></li>";
-    }
-
-    // Only display the KB when it's populated
-    $sql = "SELECT COUNT(docid) FROM `{$dbKBArticles}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($countkb) = mysql_fetch_row($result);
-    if ($CONFIG['kb_enabled'] != FALSE AND $CONFIG['portal_kb_enabled'] !== 'Disabled' AND $countkb > 0)
-    {
-        echo "<li><a href='kb.php'>{$strKnowledgeBase}</a></li>";
-    }
-
-    $sql = "SELECT formid, incidentid FROM `{$dbFeedbackRespondents}` ";
-    $sql .= "WHERE contactid = '{$_SESSION['contactid']}' ";
-    $sql .= "AND completed = 'no'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $countfeedback = mysql_num_rows($result);
-    if ($CONFIG['feedback_enabled'] != FALSE AND $CONFIG['portal_feedback_enabled'] != FALSE AND $countfeedback > 0)
-    {
-        echo "<li><a href='feedback.php'>{$strFeedback} ({$countfeedback})</a> ";
-        echo "<ul>";
-        while ($row = mysql_fetch_object($result))
-        {
-            $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid, contact_email($_SESSION['contactid']));
-            echo "<li><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strIncident} : {$row->incidentid}</li>";
-        }
-        echo "</ul></li>";
-    }
-
-
-    if ($_SESSION['usertype'] == 'admin')
-    {
-        echo "<li><a href='admin.php'>{$strAdmin}</a></li>";
-    }
-
-    plugin_do('portal_header_menu');
-
-    echo "<li><a href='help.php'>{$strHelp}</a></li>";
-
-    echo "<li><a href='../logout.php'>{$strLogout}</a></li>";
-    echo "</ul>";
-
-    echo "<div id='portaluser'><a href='contactdetails.php'>";
-    echo contact_realname($_SESSION['contactid']);
-    echo ", ".contact_site($_SESSION['contactid']);
-    echo "</a>";
-    echo "</div>";
-    echo "</div>";
+//     $dbg .= "<pre>".print_r($hmenu,true)."</pre>";;
+    echo html_hmenu($hmenu);
+//     echo "<div id='menu'>\n";
+//     echo "<ul id='menuList'>\n";
+//     echo "<li><a href='index.php'>{$strIncidents}</a></li>";
+//     if (sizeof($_SESSION['entitlement']) == 1 OR !$CONFIG['portal_creates_incidents'])
+//     {
+//         // This is needed so the code will unserialize
+//         $contractid = unserialize($_SESSION['entitlement'][0])->id;
+//         echo "<li><a href='new.php";
+//         if ($CONFIG['portal_creates_incidents'])
+//         {
+//             echo "?contractid={$contractid}";
+//         }
+//         echo "'>{$strNewIncident}</a></li>";
+//     }
+//     else
+//     {
+//         echo "<li><a href='entitlement.php'>{$strEntitlement}</a></li>";
+//     }
+//
+//     // Only display the KB when it's populated
+//     $sql = "SELECT COUNT(docid) FROM `{$dbKBArticles}`";
+//     $result = mysql_query($sql);
+//     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+//     list($countkb) = mysql_fetch_row($result);
+//     if ($CONFIG['kb_enabled'] != FALSE AND $CONFIG['portal_kb_enabled'] !== 'Disabled' AND $countkb > 0)
+//     {
+//         echo "<li><a href='kb.php'>{$strKnowledgeBase}</a></li>";
+//     }
+//
+//     $sql = "SELECT formid, incidentid FROM `{$dbFeedbackRespondents}` ";
+//     $sql .= "WHERE contactid = '{$_SESSION['contactid']}' ";
+//     $sql .= "AND completed = 'no'";
+//     $result = mysql_query($sql);
+//     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+//     $countfeedback = mysql_num_rows($result);
+//     if ($CONFIG['feedback_enabled'] != FALSE AND $CONFIG['portal_feedback_enabled'] != FALSE AND $countfeedback > 0)
+//     {
+//         echo "<li><a href='feedback.php'>{$strFeedback} ({$countfeedback})</a> ";
+//         echo "<ul>";
+//         while ($row = mysql_fetch_object($result))
+//         {
+//             $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid, contact_email($_SESSION['contactid']));
+//             echo "<li><a target='_blank' href='" . application_url() . "feedback.php?ax={$hashcode}'>{$strIncident} : {$row->incidentid}</li>";
+//         }
+//         echo "</ul></li>";
+//     }
+//
+//
+//     if ($_SESSION['usertype'] == 'admin')
+//     {
+//         echo "<li><a href='admin.php'>{$strAdmin}</a></li>";
+//     }
+//
+//     plugin_do('portal_header_menu');
+//
+//     echo "<li><a href='help.php'>{$strHelp}</a></li>";
+//
+//     echo "<li><a href='../logout.php'>{$strLogout}</a></li>";
+//     echo "</ul>";
+//
+//     echo "<div id='portaluser'><a href='contactdetails.php'>";
+//     echo contact_realname($_SESSION['contactid']);
+//     echo ", ".contact_site($_SESSION['contactid']);
+//     echo "</a>";
+//     echo "</div>";
+//     echo "</div>";
     echo "<div id='mainframe'>";
 }
 
