@@ -161,7 +161,7 @@ if ($CONFIG['portal_site_incidents'])
 
 }
 echo "<br />";
-echo "<h2>".icon('contact', 32)." {$strContacts}</h2>";
+echo "<h2>".icon('contact', 32)." {$strContacts}: ".site_name($_SESSION['siteid'])."</h2>";
 echo "<table width='30%' align='center'><tr>";
 echo colheader('name', $strName);
 echo colheader('action', $strAction, FALSE, FALSE, FALSE, FALSE, 10);
@@ -181,7 +181,7 @@ if ($result = mysql_query($sql))
 
         if ($shade == 'shade1')
         {
-            $shade == 'shade2';
+            $shade = 'shade2';
         }
         else
         {
