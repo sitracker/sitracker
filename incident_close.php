@@ -113,7 +113,7 @@ if (empty($_REQUEST['process']))
     echo "<br /><span class='required'>{$strRequired}</span><br />";
     echo "<input type='checkbox' name='incsolution' onclick=\"revealTextAreaIncidentClose('incsolution', 'solution')\" checked='checked' disabled='disabled' /></th>";
 
-    echo "<td><textarea id='solution' name='solution' cols='40' rows='8' >";
+    echo "<td><textarea class='required' id='solution' name='solution' cols='40' rows='8' >";
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND (type='solution' OR type='actionplan') ORDER BY timestamp DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
