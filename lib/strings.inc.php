@@ -252,7 +252,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
     $hmenu[0] = $hmenu[0] +
                 array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
                        20 => array ('name' => $strSupport, 'url' => 'index.php', 'submenu' => 20),
-                       30 => array ('name' => $strKnowledgeBase, 'url' => 'kb.php', 'submenu' => 30),
+                       30 => array ('name' => $strKnowledgeBase, 'url' => 'kb.php', 'submenu' => 30, 'enablevar' => 'kb_enabled'),
                        40 => array ('name' => $strAdmin, 'url' => 'admin.php', 'submenu' => 40),
                        50 => array ('name' => $strHelp, 'url' => 'help.php', 'submenu' => 50)
                        );
@@ -275,7 +275,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
     // KB
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] + $hmenu[30] =
-                array (10 => array ('name' => $strViewKnowledgebaseArticles, 'url' => 'kb.php'));
+                array (10 => array ('name' => $strViewKnowledgebaseArticles, 'url' => 'kb.php', 'enablevar' => 'kb_enabled'));
 
     // Admin
     if (!is_array($hmenu[40])) $hmenu[40] = array();

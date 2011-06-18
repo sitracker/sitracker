@@ -27,7 +27,7 @@ else
 {
     $view = 'all';
 }
-if ($CONFIG['portal_kb_enabled'] !== 'Disabled')
+if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
 {
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
@@ -188,11 +188,12 @@ if ($CONFIG['portal_kb_enabled'] !== 'Disabled')
     {
         echo "<p align='center'><a href=\"../index.php\">{$strBackToLoginPage}</a></p>";
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
-    include (APPLICATION_LIBPATH . 'portalauth.inc.php');
+    html_redirect('../index.php', FALSE, $strDisabled); // KB Disabled
+    exit;
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
 ?>
