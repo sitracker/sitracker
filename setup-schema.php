@@ -1748,6 +1748,18 @@ UPDATE `{$dbTriggers}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very
 -- CJ 2011-06-15
 ALTER TABLE `{$dbUsers}` ADD `skype` varchar(70) NOT NULL default '' AFTER `msn` ;
 
+-- CJ 2011-06-18
+UPDATE `$dbKBContent` SET header = 'strSummary' WHERE header = 'Summary' ;
+UPDATE `$dbKBContent` SET header = 'strSymptoms' WHERE header = 'Symptoms' ;
+UPDATE `$dbKBContent` SET header = 'strCause' WHERE header = 'Cause' ;
+UPDATE `$dbKBContent` SET header = 'strQuestion' WHERE header = 'Question' ;
+UPDATE `$dbKBContent` SET header = 'strAnswer' WHERE header = 'Answer' ;
+UPDATE `$dbKBContent` SET header = 'strSolution' WHERE header = 'Solution' ;
+UPDATE `$dbKBContent` SET header = 'strWorkaround' WHERE header = 'Workaround' ;
+UPDATE `$dbKBContent` SET header = 'strStatus' WHERE header = 'Status' ;
+UPDATE `$dbKBContent` SET header = 'strAdditionalInfo' WHERE header = 'Additional Information' ;
+UPDATE `$dbKBContent` SET header = 'strReferences' WHERE header = 'References' ;
+
 ";
 
 // ********************************************************************
