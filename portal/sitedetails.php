@@ -49,19 +49,13 @@ if (isset($_POST['submit']))
     if ($name == '')
     {
         $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);;
+        $_SESSION['formerrors']['site_edit']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);;
     }
 
-    if ($email == '')
-    {
-    	$errors = 1;
-    	$errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
-    }
-
-    if ($telephone == '')
+    if ($address1 == '')
     {
         $errors = 1;
-    	$errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strTelephone}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['site_edit']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
     }
 
     // edit site if no errors
@@ -106,6 +100,7 @@ if (isset($_POST['submit']))
     else
     {
         html_redirect($_SERVER['PHP_SELF'], FALSE, $errors_string);
+        exit;
     }
 }
 
