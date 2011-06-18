@@ -195,8 +195,6 @@ else
 
     }
     echo "<tr><th>{$strForenames}</th><td>";
-
-
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_forenames']))
     {
         echo "<input type='hidden' name='forenames' value='{$user->forenames}' />".$user->forenames;
@@ -205,6 +203,7 @@ else
     {
         echo "<input class='required' name='forenames' value='{$user->forenames}' />";
     }
+    echo " <span class='required'>{$strRequired}</span>\n";
     echo "</td></tr>\n";
     echo "<tr><th>{$strSurname}</th><td>";
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_surname']))
@@ -230,7 +229,7 @@ else
     }
     else
     {
-        echo "<input class='required' name='phone' value='{$user->phone}' />";
+        echo "<input name='phone' value='{$user->phone}' />";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strMobile}</th><td>";
@@ -271,9 +270,10 @@ else
         echo "<tr><th>{$strConfirmNewPassword}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
     }
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttoms'>";
     echo "<input type='hidden' name='id' value='{$id}' />";
-    echo "<input type='submit' value='{$strUpdate}' /></p></form>";
+    echo "<input type='reset' value='{$strReset}' /> ";
+    echo "<input type='submit' value='{$strSave}' /></p></form>";
 
     echo "<br />".contracts_for_contacts_table($id, 'external');
 
