@@ -31,7 +31,7 @@ $hmenu[1031] = array (10=> array ( 'perm'=> 0, 'name'=> "Option1", 'url'=>""),
 );
  */
 
-if (!empty($_SESSION))
+if (!empty($_SESSION) AND $_SESSION['auth'] === TRUE)
 {
     //
     // Main Menu
@@ -172,7 +172,6 @@ if (!empty($_SESSION))
         }
         else $inbox_count = '';
     }
-
 
     // Support menu
     if (!is_array($hmenu[30])) $hmenu[30] = array();
