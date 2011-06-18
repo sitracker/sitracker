@@ -147,10 +147,13 @@ echo "</head>\n";
 echo "<body>\n";
 plugin_do('page_start');
 echo "<div id='masthead'><div id='masterheadcontent'>";
-echo "<div id='personaloptions'><a href='contactdetails.php'>";
-echo contact_realname($_SESSION['contactid']);
-echo ", ".contact_site($_SESSION['contactid']);
-echo "</a></div>";
+if (!empty($_SESSION['contactid']))
+{
+    echo "<div id='personaloptions'><a href='contactdetails.php'>";
+    echo contact_realname($_SESSION['contactid']);
+    echo ", ".contact_site($_SESSION['contactid']);
+    echo "</a></div>";
+}
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
 echo "</div>";
 echo "</div>\n";
