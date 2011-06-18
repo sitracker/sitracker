@@ -31,7 +31,7 @@ $hmenu[1031] = array (10=> array ( 'perm'=> 0, 'name'=> "Option1", 'url'=>""),
 );
  */
 
-if (!empty($_SESSION) AND $_SESSION['auth'] === TRUE)
+if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
 {
     //
     // Main Menu
