@@ -104,7 +104,7 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
             echo "<p align='center'><a href=\"{$url}\">{$GLOBALS['strContinue']}</a></p>";
         }
     }
-    
+
     if ($close)
     {
         if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE')
@@ -112,12 +112,12 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
             ?>
             <script type='text/javascript'>
             //<![CDATA[
-            
+
             if (window.confirm(strEmailSentSuccessfullyConfirmWindowClosure))
             {
                 close_page_redirect('<?php echo $url; ?>');
             }
-          
+
             //]]>
             </script>
             <?php
@@ -128,18 +128,18 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
             ?>
             <script type='text/javascript'>
             //<![CDATA[
-            
+
             new PeriodicalExecuter(function(pe) {
                                             window.close();
                                         },
                                         <?php echo $refreshtime ?>);
-          
+
             //]]>
             </script>
             <?php
         }
     }
-    
+
     // TODO 3.35 Add a link to refresh the dashlet if this is run inside a dashlet
 
     if ($headerdisplayed)
@@ -250,7 +250,7 @@ function percent_bar($percent)
  * @author Ivan Lucas
  * @param string $colname. Column name
  * @param string $coltitle. Column title (to display in the table header)
- * @param bool $sort Whether to sort the column
+ * @param string $sort Sorts this column when set to the name of the column.
  * @param string $order ASC or DESC
  * @param array $filter assoc. array of variables to pass on the link url
  * @param string $defaultorder The order to display by default (a = ASC, d = DESC)
@@ -282,7 +282,7 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
         $qsappend='';
     }
 
-    if ($sort==$colname)
+    if ($sort == $colname)
     {
         //if ($order=='') $order=$defaultorder;
         if ($order=='a')
@@ -347,7 +347,7 @@ function user_alert($message, $severity, $helpcontext = '')
     }
     $html = "<p class='{$class}'>";
     if (!empty($helpcontext)) $html .= help_link($helpcontext);
-    //<strong>{$info}</strong>: 
+    //<strong>{$info}</strong>:
     $html .= "{$message}";
     $html .= "</p>";
 
@@ -1076,8 +1076,8 @@ function contract_details($id, $mode='internal')
     {
         $operations = array();
         $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
-        
-        
+
+
         if ($maint->term != 'yes')
         {
             $operations[$GLOBALS['strNewService']] = "contract_new_service.php?contractid={$id}";
