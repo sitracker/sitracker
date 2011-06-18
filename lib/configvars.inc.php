@@ -274,7 +274,7 @@ $CFGVAR['critical_threshold']['type'] = 'percent';
 $CFGVAR['currency_symbol']['title'] = 'Currency Symbol';
 $CFGVAR['currency_symbol']['help'] = 'Currency symbol to use when displaying monetary amounts.';
 
-$CFGVAR['dateformat_datetime']['help'] = "See <a href='http://www.php.net/manual/en/function.date.php'>http://www.php.net/manual/en/function.date.php</a> for help with date formats";
+$CFGVAR['dateformat_datetime']['help'] = "See <a href='http://www.php.net/manual/en/function.date.php'>http://www.php.net/manual/en/function.date.php</a> for help with date and time formats";
 $CFGVAR['dateformat_datetime']['title'] = 'Date and Time format';
 
 $CFGVAR['dateformat_date']['title'] = 'Normal date format';
