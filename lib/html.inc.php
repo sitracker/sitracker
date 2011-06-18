@@ -1154,11 +1154,11 @@ function contract_details($id, $mode='internal')
             if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0 AND $mode == 'internal')
             {
                 $html .= "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
-                $html .= "{$GLOBALS['strNewContact']}</a></p>";
+                $html .= "{$GLOBALS['strNewNamedContact']}</a></p>";
             }
             else
             {
-                $html .= "<h3>{$GLOBALS['strNewContact']}</h3>";
+                $html .= "<h3>{$GLOBALS['strNewNamedContact']}</h3>";
                 $html .= "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
                 $html .= "add' method='post' >";
                 $html .= "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";

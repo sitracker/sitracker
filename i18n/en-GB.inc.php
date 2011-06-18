@@ -1142,6 +1142,7 @@ $strNewIncident = 'New Incident';
 $strNewIncidentStatus = 'New Incident Status';
 $strNewKBArticle = 'New Article';
 $strNewLink = 'New Link';
+$strNewNamedContact = 'New Named Contact';
 $strNewNote = 'New Note';
 $strNewNoteByX = 'New Note by %s';
 $strNewNotification = 'New Notification';
@@ -1701,6 +1702,7 @@ $strSiteAreYouSure = 'This incident will be logged against the customers SITE an
 # Break down the report by site
 $strSiteBreakDown = 'Site Breakdown';
 $strSiteContracts = 'Site Contracts';
+$strSiteDetails = 'Site Details';
 $strSiteEdited = 'Site Edited';
 $strSiteHasBillableContract = 'Site has billable contract';
 $strSiteIncidents = 'Site Incidents';
