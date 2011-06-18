@@ -167,7 +167,7 @@ if ($CONFIG['portal_kb_enabled'] !== 'Disabled')
                 echo "<td>";
                 echo ldate($CONFIG['dateformat_date'], mysql2date($row->published));
                 echo "</td>";
-                echo "<td>".user_realname($row->author)."</td>";
+                echo "<td>{$row->author}</td>";
                 echo "<td>{$row->keywords}</td></tr>";
 
                 if ($shade == 'shade1') $shade = 'shade2';
