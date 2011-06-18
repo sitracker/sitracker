@@ -283,7 +283,7 @@ else
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
         echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, FALSE, $sit[2])."<br />";
-        echo "<input type='submit' name='add' value='{$strNew}' /></p></form>";
+        echo "<input type='submit' name='add' value='{$strSave}' /></p></form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
