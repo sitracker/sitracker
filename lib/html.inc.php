@@ -1958,7 +1958,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            $html .= "<table align='center' class='vertical'>";
+            $html .= "<table align='center'>";
             $html .= "<tr>";
             $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
             $html .= "</tr>\n";
