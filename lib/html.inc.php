@@ -1606,10 +1606,12 @@ function show_create_links($table, $ref)
  */
 function show_edit_site($site, $mode='internal')
 {
-    global $CONFIG;
+    global $CONFIG, $strRequired;
     $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='$site' ";
     $siteresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    echo show_form_errors('site_edit');
+    clear_form_errors('site_edit');
     while ($obj = mysql_fetch_object($siteresult))
     {
         if ($mode == 'internal')
@@ -1638,8 +1640,8 @@ function show_edit_site($site, $mode='internal')
         $html .= "<td><input maxlength='50' name='department' size='40' value='{$obj->department}' />";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strAddress1']}:</th>";
-        $html .= "<td><input maxlength='50' name='address1'";
-        $html .= "size='40' value='{$obj->address1}' />";
+        $html .= "<td><input maxlength='50' name='address1' class='required' ";
+        $html .= "size='40' value='{$obj->address1}' /> <span class='required'>{$strRequired}</span>";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strAddress2']}: </th><td><input maxlength='50' name='address2' size='40' value='{$obj->address2}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strCity']}:</th><td><input maxlength='255' name='city' size='40' value='{$obj->city}' /></td></tr>\n";
