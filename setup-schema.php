@@ -538,7 +538,7 @@ INSERT INTO `{$dbIncidentStatus}` VALUES (4, 'strCalledAndLeftMessage', 'strCall
 INSERT INTO `{$dbIncidentStatus}` VALUES (5, 'strAwaitingColleagueResponse', 'strInternalEscalation');
 INSERT INTO `{$dbIncidentStatus}` VALUES (6, 'strAwaitingSupportResponse', 'strExternalEscalation');
 INSERT INTO `{$dbIncidentStatus}` VALUES (7, 'strAwaitingClosure', 'strAwaitingClosure');
-INSERT INTO `{$dbIncidentStatus}` VALUES (8, 'strAwaitingCustomerAction', 'strCustomerHasAction');
+INSERT INTO `{$dbIncidentStatus}` VALUES (8, 'strAwaitingCustomerAction', 'strAwaitingCustomerAction');
 INSERT INTO `{$dbIncidentStatus}` VALUES (9, 'strUnsupported', 'strUnsupported');
 INSERT INTO `{$dbIncidentStatus}` VALUES (10, 'strActiveUnassigned', 'strActive');
 
@@ -1760,6 +1760,8 @@ UPDATE `$dbKBContent` SET header = 'strStatus' WHERE header = 'Status' ;
 UPDATE `$dbKBContent` SET header = 'strAdditionalInfo' WHERE header = 'Additional Information' ;
 UPDATE `$dbKBContent` SET header = 'strReferences' WHERE header = 'References' ;
 
+-- INL 2011-06-19
+UPDATE `$dbIncidentStatus` SET `ext_name` = 'strAwaitingCustomerAction' WHERE `id` = 8;
 ";
 
 // ********************************************************************
