@@ -2238,7 +2238,7 @@ function html_hmenu($hmenu)
     $html .= "<ul id='menuList'>\n";
     foreach ($hmenu[0] as $top => $topvalue)
     {
-        if ((!empty($topvalue['enablevar']) AND $CONFIG[$topvalue['enablevar']] === TRUE
+        if ((!empty($topvalue['enablevar']) AND $CONFIG[$topvalue['enablevar']] !== FALSE
             AND $CONFIG[$topvalue['enablevar']] !== 'disabled')
             OR empty($topvalue['enablevar']))
         {
