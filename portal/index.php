@@ -19,7 +19,7 @@ include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 // External variables
-$showclosed = clean_fixed_list($_REQUEST['showclosed'], array('true', 'false'));
+$showclosed = clean_fixed_list($_REQUEST['showclosed'], array('false','true'));
 $site = clean_int($_REQUEST['site']);
 $sort = cleanvar($_REQUEST['sort']);
 $order = clean_fixed_list($_REQUEST['order'], array('a','d'));
