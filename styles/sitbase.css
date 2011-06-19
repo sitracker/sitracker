@@ -131,10 +131,13 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 #aboutsit
 {
+/*   border: 1px solid #ccc; */
+  width: 900px;
+  margin: auto;
   text-align: center;
 }
 #aboutsit img { margin-left: auto; margin-right: auto; }
-
+#aboutbox { border-width: 0px 1px 1px 1px; border-style: solid; border-color: #185594; /*position: relative; top: -16px;*/ padding-top: 16px; padding-bottom: 26px; }
 
 #mainframe { margin: 0px 1em; }
 

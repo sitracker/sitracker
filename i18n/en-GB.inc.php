@@ -1840,6 +1840,7 @@ $strTestTriggers = 'Test Triggers';
 $strText = 'Text';
 #English suffix for most numbers - 5th, 6th, 7th
 $strth = 'th';
+$strThanksTo = 'Thanks To';
 $strThankYou = 'Thank You';
 $strThankYouCompleteForm = 'Thank you for taking the time to complete this form.';
 $strTheDocumentation = 'The Documentation';
