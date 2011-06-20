@@ -162,6 +162,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             cfgSave($savevar, NAMESPACE_SIT);
         }
     }
+    plugin_do('config_after_save');
 }
 
 $pagescripts = array('FormProtector.js');
