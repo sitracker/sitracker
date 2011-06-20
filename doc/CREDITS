@@ -1,52 +1,71 @@
-# Many thanks to everybody that has offered comments, ideas, suggestions,
-# bug reports and helped with testing or has contributed code.
+# Many thanks to everybody that has contributed to the Support Incident Tracker 
+# Project.
+#
+# If you feel you should be on this list, please contact a developer.
+#
+# Thanks to: (in alphabetical order):
 
-# In particular, thanks to (in alphabetical order):
 
+# Developers
+# ----------
+Rob Beckett <subwolf[at]users.sourceforge.net> -- Developer
+Rick Bonkestoter <rbonkestoter[at]users.sourceforge.net> -- Developer
+Nicolaas du Toit <nicdev007[at]users.sourceforge.net> -- Developer
+Tom Gerrard <tomgerrard[at]users.sourceforge.net> -- Developer
+Paul Heaney <paul[at]sitracker.org> -- Developer
+Kieran Hogg <kieran[at]sitracker.org> -- Developer
+Carsten Jensen <tomse[at]tomse.dk> -- Developer
+Ivan Lucas <ivan[at]sitracker.org> -- Maintainer
+
+
+# Contributors
+# ------------
 Alex Albers <alex.albers[at]matchminds.nl> -- Forum moderator
 Lea Anthony <stonk[at]users.sourceforge.net> -- Code Patch
 Peter Atkins -- Ideas & Testing
-Luca Bartolini <luca[at]bitcon.it> -- Translation (Italian)
-Rob Beckett <subwolf[at]users.sourceforge.net> -- Code & Testing
-Hendrie Bosch <systeembeheer[at]soneurope.eu> -- Translation (Dutch)
-Silvio Bogetto <silvio[at]sb-informatica.it> -- Translation (Italian)
-Rick Bonkestoter <rbonkestoter[at]users.sourceforge.net> -- Code
-George Bredberg <joje47[at]yahoo.se> -- Translation (Swedish)
 Micky Campbell -- Ideas & Testing
-Hamada Caspy <alton_055[at]hotmail.com> -- Translation (Arabic)
-Guillaume Clement <guillaume.clement[at]atika.fr > -- Translation (French)
 Martin Cosgrave <martin.cosgrave[at]aptosolutions.co.uk> -- Code Patches
-Adrian Cristinici <racristi[at]gmail.com> -- Translation (Romanian)
-Mario Dejo <mdejo[at]yahoo.com> -- Translation (Spanish)
-Nicolaas du Toit <nicdev007[at]users.sourceforge.net> -- Code Patch
 Felix Enescu <fenescu[at]users.sourceforge.net> -- Code Patch
 Matt Feider <mfeider[at]bigfoot.com> -- Code Patch
+Paul Harrison -- Suggestions, Bug Reports and CSS Theme
+Martin Kilkoyne -- v2 Code
+Paul Lees -- Design & Testing
+Jenny Lucas -- Testing
+Geoffrey Mosini <geoffrey.mosini[at]free.fr> -- Code Patch
+Valdemaras Pipiras <valdemaras[at]users.sourceforge.net> -- Code patches, Translation (Lithuanian)
+Salford Software -- Sponsor, Design, Testing
+Kevin Shrimpton -- v1 Code
+Andy Smith -- Code & Testing
+David Steward <mail[at]davidsteward.co.uk> -- Code Patches
+
+
+# Translations
+# ------------
+Luca Bartolini <luca[at]bitcon.it> -- Translation (Italian)
+Hendrie Bosch <systeembeheer[at]soneurope.eu> -- Translation (Dutch)
+Silvio Bogetto <silvio[at]sb-informatica.it> -- Translation (Italian)
+George Bredberg <joje47[at]yahoo.se> -- Translation (Swedish)
+Hamada Caspy <alton_055[at]hotmail.com> -- Translation (Arabic)
+Guillaume Clement <guillaume.clement[at]atika.fr > -- Translation (French)
+Adrian Cristinici <racristi[at]gmail.com> -- Translation (Romanian)
+Mario Dejo <mdejo[at]yahoo.com> -- Translation (Spanish)
 Eliza Galang <ehly25[at]gmail.com> -- Translation (Japanese)
-Tom Gerrard <tomgerrard[at]users.sourceforge.net> -- Code & Design
 Yassen Gorbounov <gorbounov[at]gmail.com> -- Translation (Bulgarian)
 Gilles Grenier <gilles.grenier[at]polypus.fr> -- Translation (French)
 Alen Grižonič <grizonic[at]gmail.com> -- Translation (Slovenian)
 Anton Gultyaev <Sancho78rus[at]mail.ru> -- Translation (Russian)
-Paul Harrison -- Suggestions, Bug Reports and CSS Theme
-Paul Heaney <paul[at]sitracker.org> -- Code
-Pauline du Toit <pauline177[at]hotmail.com> -- Translation (French)
+Pauline du Toit -- Translation (French)
 Peter Hughes -- Translation (Welsh)
-Kieran Hogg <kieran[at]sitracker.org> -- Code
-Carsten Jensen <tomse[at]tomse.dk> -- Translation (Danish), Hacker, GFX
+Carsten Jensen <tomse[at]tomse.dk> -- Translation (Danish)
 Gu Jun <ossplus[at]users.sourceforge.net> -- Translation (Chinese Simplified)
 Vasilios Karageorgis aka salaxi54 <salaxi54[at]yahoo.gr> -- Tranlation (Greek)
-Martin Kilkoyne -- v2 Code
 Ed Kolman <e.kolman[at]risa-it.nl> -- Translation (Dutch)
 Arko Kroonen <a.kroonen[at]live.nl> -- Translation (Dutch)
-Paul Lees -- Design & Testing
 Patrick Liebhardt <liebhardt.patrick[at]gmx.net> -- Translation (German)
-Ivan Lucas <ivanlucas[at]users.sourceforge.net> -- Current Maintainer, Code & Design
-Jenny Lucas -- Testing
 Raffael Luthiger <modir[at]huanga.com> -- Translation (German)
-Geoffrey Mosini <geoffrey.mosini[at]free.fr> -- Code Patch
 Nikolay Parukhin <parukhin@gmail.com> -- Translation (Russian)
 Carlos Perez <cphuelva[at]gmail.com> -- Translation (Spanish)
-Valdemaras Pipiras <valdemaras[at]users.sourceforge.net> -- Code, Translation (Lithuanian)
+Valdemaras Pipiras <valdemaras[at]users.sourceforge.net> -- Translation (Lithuanian)
 Bruno Renan <xanymorex[at]gmail.com> -- Translation (Brazilian Portuguese)
 Josías Galván Reyes <josiasgr[at]gmail.com> -- Translation (Mexican Spanish)
 Gabriel Riam <GRIAM[at]ville-francois.fr> -- Translation (French)
@@ -57,12 +76,7 @@ Josías Galván Reyes <josiasgr[at]gmail.com> -- Translation (Mexican Spanish)
 Fernando Suzarte Schiavon <suzartes[at]gmail.com> -- Translation (Brazilian Portuguese)
 Yves-Pierre Senn <y.senn[at]sekoia.ch> -- Translation (French)
 Sancho78rus <Sancho78rus[at]mail.ru> -- Translation (Russian)
-Salford Software -- Sponsor, Design, Testing
-Kevin Shrimpton -- v1 Code
-Andy Smith -- Code & Testing
-David Steward <mail[at]davidsteward.co.uk> -- Code Patches
 Jeff Stone <stonej[at]hope.ac.uk> -- Translation (Welsh, Norwegian, Catalan)
 José Tomás <jose.tomas[at]chico.mine.nu> -- Translation (Portuguese)
 Jordi Rosquillas Tovilla <rosquillas[at]users.sourceforge.net> -- Translation (Mexican Spanish)
-
 

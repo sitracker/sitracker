@@ -898,6 +898,8 @@ $strIncoming = 'Incoming';
 $strIncomingEmail = 'Incoming Email';
 $strIncomingEmailSpam = 'Incoming email that is suspected to be spam';
 $strIncomingEmailText = 'Incoming email that could not be handled automatically';
+# Including
+$strIncorporating = 'Incorporating';
 $strInfo = 'Info';
 $strInformationSent = 'Information Sent';
 $strInformationSentRegardingSettingPassword = 'We have sent instructions for setting a new password to the email address provided.';

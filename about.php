@@ -23,55 +23,69 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strAbout;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
+$about_tabs = array('about', 'thanks', 'licence');
+
 // External variables
-$seltab = clean_fixed_list($_REQUEST['tab'], array('about', 'authors', 'thanks'));
+$seltab = clean_fixed_list($_REQUEST['tab'], $about_tabs);
 
 echo "<div id='aboutsit'>";
 echo "<img src='images/sitlogo_270x100.png' width='270' height='100' alt='SiT! Support Incident Tracker' />";
+echo "<br />";
+echo "<br />";
+$TABI18n['about'] = $strAbout;
+$TABI18n['thanks'] = $strThanksTo;
+$TABI18n['licence'] = $strLicense;
 
-$tabs['about'] = "{$_SERVER['PHP_SELF']}?tab=about";
-$tabs['authors'] = "{$_SERVER['PHP_SELF']}?tab=authors";
-$tabs['thanks'] = "{$_SERVER['PHP_SELF']}?tab=thanks";
+foreach ($about_tabs AS $tab)
+{
+    $tabs[$TABI18n[$tab]] = "{$_SERVER['PHP_SELF']}?tab={$tab}";
+}
 
 echo draw_tabs($tabs, $seltab);
 echo "<div id='aboutbox'>";
 switch ($seltab)
 {
-    case 'authors':
-        echo "<h2>{$strAuthors}</h2>";
-        break;
+    // TODO in future we could list current authors separately
+    //     case 'authors':
+    //         echo "<h2>{$strAuthors}</h2>";
+    //         break;
 
     case 'thanks':
         echo "<h2>{$strThanksTo}</h2>";
 
-$fp = fopen($CONFIG['creditsfile'], "r");
+        $fp = fopen($CONFIG['creditsfile'], "r");
+        while (!feof($fp))
+        {
+            $line = trim(fgets($fp, 4096));
+            if (mb_substr($line, 0, 1) != '#' AND mb_substr($line, 0, 1) != ' ' AND mb_substr($line, 0, 1) != '') $creditlines[] = $line;
+        }
+        fclose($fp);
+        $creditcount = count($creditlines);
+        // shuffle($creditlines);
+        $count = 0;
+        $creditperson = array();
+        foreach ($creditlines AS $creditline)
+        {
+            // works preg_match("/(.*)\\s+--\\s+(.*)/i", $creditline, $matches); //<(.*)>\\s+--\\s+(*.)
+            preg_match("/(.*)\\s+--\\s+(.*)/i", $creditline, $matches); //<(.*)>\\s+--\\s+(*.)
+            preg_match("/<(.*\[at\].*)>/i", $creditline, $mailmatch); //<(.*)>\\s+--\\s+(*.)
+            $credit[$count]['name'] = htmlentities(strip_tags($matches[1]), ENT_COMPAT, $i18ncharset);
+            $credit[$count]['workedon'] = htmlentities($matches[2], ENT_COMPAT, $i18ncharset);
+            if (!empty($mailmatch[1])) $credit[$count]['email'] = preg_replace("/\[at\]/", "@", $mailmatch[1]);;
+            $count++;
+        //     echo "<pre>".print_r($matches,true)."</pre>";;
+        }
 
-while (!feof($fp))
-{
-    $line = trim(fgets($fp, 4096));
-    if (mb_substr($line, 0, 1) != '#' AND mb_substr($line, 0, 1) != ' ' AND mb_substr($line, 0, 1) != '') $creditlines[] = $line;
-}
-fclose($fp);
-$creditcount = count($creditlines);
-shuffle($creditlines);
-$count = 0;
-// TODO would be nice to scroll these credits using Javascript (degrading nicely)
-$creditperson = array();
-// echo "<tr><td class='shade2' colspan='2'><p align='center'>{$strManyThanks}</p><h4>";
-foreach ($creditlines AS $creditline)
-{
-    // works preg_match("/(.*)\\s+--\\s+(.*)/i", $creditline, $matches); //<(.*)>\\s+--\\s+(*.)
-    preg_match("/(.*)\\s+--\\s+(.*)/i", $creditline, $matches); //<(.*)>\\s+--\\s+(*.)
-    preg_match("/<(.*\[at\].*)>/i", $creditline, $mailmatch); //<(.*)>\\s+--\\s+(*.)
-    $credit[$count]['name'] = htmlentities(strip_tags($matches[1]), ENT_COMPAT, $i18ncharset);
-    $credit[$count]['workedon'] = htmlentities($matches[2], ENT_COMPAT, $i18ncharset);
-    if (!empty($mailmatch[1])) $credit[$count]['email'] = preg_replace("/\[at\]/", "@", $mailmatch[1]);;
-    $count++;
-//     echo "<pre>".print_r($matches,true)."</pre>";;
-}
+        echo "<div id='creditcontent'>";
+        // echo print_r($credit,true);
+        echo "<p>";
+        foreach ($credit AS $c)
+        {
+            echo "<strong>{$c['name']}</strong> &mdash; {$c['workedon']}<br />";
+        }
+        echo "</p>";
 
-
-        echo "<p align='center'>Incorporating:</p>
+        echo "<h4>$strIncorporating:</h4>
             <p align='center'>whatever:hover (csshover.htc) 1.41 by <a href='http://www.xs4all.nl/~peterned/'>Peter Nederlof</a><br />
             &copy; 2005 - Peter Nederlof.  Licensed under the LGPLv2.</p>
 
@@ -97,7 +111,15 @@ foreach ($creditlines AS $creditline)
 
             <p align='center'>MIME parser class 1.80 by <a href='http://www.phpclasses.org/package/3169-PHP-Decode-MIME-e-mail-messages.html'>Manuel Lemos</a><br />
             Copyright &copy; 2006-2008 Manuel Lemos. Licensed under the BSD License</p>";
+        break;
 
+    case 'licence':
+        $fp = fopen($CONFIG['licensefile'], "r");
+        $contents = htmlentities(fread($fp, filesize($CONFIG['licensefile'])), ENT_COMPAT, $i18ncharset);
+        fclose($fp);
+        echo "<h2>{$strLicense}</h2><div style='background: transparent; text-align: left; width: 50%; font-family: monospaced; margin: auto; white-space: pre;'>";
+        echo $contents;
+        echo "</div>";
         break;
 
     case 'about':
@@ -126,112 +148,8 @@ foreach ($creditlines AS $creditline)
             }
         }
 }
-
-
 echo "</div>";
-
-echo "<br /><br /><br /><br />";
-
-
-
-
-
-
-// echo "<table summary='by Ivan Lucas' align='center' width='65%'>\n";
-// echo "<tr><td class='shade1' colspan='2'>{$strAbout} {$CONFIG['application_shortname']}&hellip;</td></tr>\n";
-// echo "<tr><td class='shade2' colspan='2' style='text-align:center; padding-top: 10px;' >";
-//background-image: url(images/sitting_man_logo64x64.png); ";
-//echo "background-repeat: no-repeat; background-position: 1% bottom;'>";
-
-//echo "<h2>{$CONFIG['application_name']}</h2>";
-// Reenable when we have schema versions once again
-// echo "{$strSchemaVersion}: ".database_schema_version()."</p><br />";
-// echo "</td></tr>\n";
-// echo "<tr><td class='shade1' colspan='2'>{$strCredits}:</td></tr>\n";
-
-echo "<div id='creditcontent'>";
-// echo print_r($credit,true);
-foreach ($credit AS $c)
-{
-    echo "<h4>{$c['name']}</h4>";
-    echo "<p>{$c['workedon']}</p>";
-}
-// echo "<pre>".print_r($credits,true)."</pre>";
-
-?>
-<h4>SiT! Support Incident Tracker</h4>
-<p align='center'>
-Copyright &copy; 2010-2011 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />
-Copyright &copy; 2000-2009 Salford Software Ltd. and Contributors<br />
-Licensed under the GNU General Public License.<br /></p>
-
 echo "</div>";
-
-<?php
-echo "</td></tr>";
-echo "<tr><td class='shade1' colspan='2'>{$strLicense}:</td></tr>";
-echo "<tr><td class='shade2' colspan='2'>";
-echo "<textarea cols='100%' rows='10' readonly='readonly' style='background: transparent;'>";
-$fp = fopen($CONFIG['licensefile'], "r");
-$contents = htmlentities(fread($fp, filesize($CONFIG['licensefile'])), ENT_COMPAT, $i18ncharset);
-fclose($fp);
-echo $contents;
-echo "</textarea></td></tr>\n";
-echo "<tr><td class='shade1' colspan='2'>{$strReleaseNotes}:</td></tr>";
-echo "<tr><td class='shade2' colspan='2'><p align='center'><a href='releasenotes.php'>{$strReleaseNotes}</a></p></td></tr>\n";
-echo "<tr><td class='shade1' colspan='2'>{$strPlugins}:</td></tr>";
-echo "<tr><td class='shade2' colspan='2'>";
-if (is_array($CONFIG['plugins']) AND $CONFIG['plugins'][0] != '' AND count($CONFIG['plugins']) > 0)
-{
-    foreach ($CONFIG['plugins'] AS $plugin)
-    {
-        $plugin = trim($plugin);
-        echo "<p><strong>{$plugin}</strong>";
-        if ($PLUGININFO[$plugin]['version'] != '') echo " version ".number_format($PLUGININFO[$plugin]['version'], 2)."<br />";
-        else echo "- <span class='error'>{$strFailed}</span><br />";
-
-        if ($PLUGININFO[$plugin]['description'] != '') echo "{$PLUGININFO[$plugin]['description']}<br />";
-        if ($PLUGININFO[$plugin]['author'] != '') echo "{$strAuthor}: {$PLUGININFO[$plugin]['author']}<br />";
-        if ($PLUGININFO[$plugin]['legal'] != '') echo "{$PLUGININFO[$plugin]['legal']}<br />";
-
-        if ($PLUGININFO[$plugin]['sitminversion'] > $application_version)
-        {
-            echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitminversion']} or later</strong><br />";
-        }
-
-        if (!empty($PLUGININFO[$plugin]['sitmaxversion']) AND $PLUGININFO[$plugin]['sitmaxversion'] < $application_version)
-        {
-            echo "<strong class='error'>This plugin was designed for {$CONFIG['application_name']} version {$PLUGININFO[$plugin]['sitmaxversion']} or earlier</strong><br />";
-        }
-        echo "</p>";
-    }
-}
-else
-{
-    echo "<p>{$strNone}</p>";
-}
-echo "</td></tr>";
-if ($CONFIG['kb_enabled'] == FALSE OR
-    $CONFIG['portal_kb_enabled'] == FALSE OR
-    $CONFIG['tasks_enabled'] == FALSE OR
-    $CONFIG['calendar_enabled'] == FALSE OR
-    $CONFIG['holidays_enabled'] == FALSE OR
-    $CONFIG['feedback_enabled'] == FALSE OR
-    $CONFIG['portal'] == FALSE)
-{
-    echo "<tr><td class='shade1' colspan='2'>{$strAdditionalInfo}:</td></tr>";
-    echo "<tr><td class='shade2' colspan='2'>";
-    if ($CONFIG['portal'] == FALSE) echo "<p>{$strPortal} - {$strDisabled}</p>";
-    if ($CONFIG['kb_enabled'] == FALSE) echo "<p>{$strKnowledgeBase} - {$strDisabled}</p>";
-    if ($CONFIG['portal'] == TRUE AND $CONFIG['portal_kb_enabled'] == FALSE) echo "<p>{$strKnowledgeBase} ({$strPortal}) - {$strDisabled}</p>";
-    if ($CONFIG['tasks_enabled'] == FALSE) echo "<p>{$strTasks} - {$strDisabled}</p>";
-    if ($CONFIG['calendar_enabled'] == FALSE) echo "<p>{$strCalendar} - {$strDisabled}</p>";
-    if ($CONFIG['holidays_enabled'] == FALSE) echo "<p>{$strHolidays} - {$strDisabled}</p>";
-    if ($CONFIG['feedback_enabled'] == FALSE) echo "<p>{$strFeedback} - {$strDisabled}</p>";
-    echo "</td></tr>";
-
-}
-echo "</table>\n";
 
 plugin_do('about');
 
