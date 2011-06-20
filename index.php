@@ -94,7 +94,7 @@ if ($_SESSION['auth'] != TRUE)
     echo "<input type='hidden' name='page' value='$page' />";
     echo "<input type='submit' value='{$strLogIn}' /><br />";
     echo "<br /><a href='forgotpwd.php'>{$strForgottenDetails}</a>";
-    if ($CONFIG['portal'] AND $CONFIG['portal_kb_enabled'] == 'Public')
+    if ($CONFIG['kb_enabled'] AND $CONFIG['portal'] AND $CONFIG['portal_kb_enabled'] == 'Public')
     {
         echo "<br /><a href='portal/kb.php'>{$strKnowledgeBase}</a>";
     }

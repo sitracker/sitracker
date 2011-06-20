@@ -17,14 +17,20 @@ $accesslevel = 'any';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
-$showclosed = cleanvar($_REQUEST['showclosed']);
+
+// External variables
+$showclosed = clean_fixed_list($_REQUEST['showclosed'], array('false','true'));
 $site = clean_int($_REQUEST['site']);
+$sort = cleanvar($_REQUEST['sort']);
+$order = clean_fixed_list($_REQUEST['order'], array('a','d'));
+$filter = array('showclosed' => $showclosed);
+
 
 if ($CONFIG['debug']) $dbg .= "Sess: ".print_r($_SESSION,true);
 
 function portal_incident_table($sql)
 {
-    global $CONFIG, $showclosed;
+    global $CONFIG, $showclosed, $sort, $order, $filter;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     $numincidents = mysql_num_rows($result);
@@ -34,12 +40,13 @@ function portal_incident_table($sql)
         $shade = 'shade1';
         $html .=  "<table align='center' width='70%'>";
         $html .=  "<tr>";
-        $html .=  colheader('id', $GLOBALS['strID']);
-        $html .=  colheader('title', $GLOBALS['strTitle']);
-        $html .=  colheader('owner', $GLOBALS['strOwner']);
-        $html .=  colheader('lastupdated', $GLOBALS['strLastUpdated']);
-        $html .=  colheader('contact', $GLOBALS['strContact']);
-        $html .=  colheader('status', $GLOBALS['strStatus']);
+        $html .=  colheader('id', $GLOBALS['strID'], $sort, $order, $filter, 'd');
+        $html .=  colheader('title', $GLOBALS['strTitle'], $sort, $order, $filter);
+        $html .=  colheader('owner', $GLOBALS['strEngineer'], $sort, $order, $filter);
+        $html .=  colheader('lastupdated', $GLOBALS['strLastUpdated'], $sort, $order, $filter);
+        $html .=  colheader('contact', $GLOBALS['strContact'], $sort, $order, $filter);
+        $html .=  colheader('priority', $GLOBALS['strPriority'], $sort, $order, $filter);
+        $html .=  colheader('status', $GLOBALS['strStatus'], $sort, $order, $filter);
         if ($showclosed != "true")
         {
             $html .=  colheader('actions', $GLOBALS['strOperation']);
@@ -57,11 +64,12 @@ function portal_incident_table($sql)
             }
 
             $html .= "<strong><a href='incident.php?id={$incident->id}'>{$incident->title}</a></strong></td>";
-            $html .= "<td align='center'>".user_realname($incident->owner)."</td>";
-            $html .= "<td align='center'>".ldate($CONFIG['dateformat_datetime'], $incident->lastupdated)."</td>";
-            $html .= "<td align='center'><a href='contactdetails.php?id={$incident->contactid}'>";
+            $html .= "<td>".user_realname($incident->owner)."</td>";
+            $html .= "<td>".ldate($CONFIG['dateformat_datetime'], $incident->lastupdated)."</td>";
+            $html .= "<td><a href='contactdetails.php?id={$incident->contactid}'>";
             $html .= "{$incident->forenames} {$incident->surname}</a></td>";
-            $html .= "<td align='center'>".incidentstatus_name($incident->status, 'external')."</td>";
+            $html .= "<td>".priority_icon($incident->priority).' '.priority_name($incident->priority)."</td>";
+            $html .= "<td>".incidentstatus_name($incident->status, 'external')."</td>";
             if ($showclosed != "true")
             {
                 $html .=  "<td align='center'><a href='update.php?id={$incident->id}'>{$GLOBALS['strUpdate']}</a> | ";
@@ -111,7 +119,6 @@ if ($showclosed == "true")
     $sql .= "`{$dbContacts}` AS c ";
     $sql .= "WHERE status = 2 AND c.id = i.contact ";
     $sql .= "AND contact = '{$_SESSION['contactid']}' ";
-    $sql .= "ORDER BY closed DESC";
 }
 else
 {
@@ -124,9 +131,46 @@ else
     $sql = "SELECT i.*, c.id AS contactid, c.forenames, c.surname FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c WHERE status != 2 ";
     $sql .= "AND c.id = i.contact ";
     $sql .= "AND i.contact = '{$_SESSION['contactid']}' ";
-    $sql .= "ORDER by i.id DESC";
 }
+if (!empty($sort))
+    {
+        if ($order == 'a' OR $order == 'ASC') $sortorder = "ASC";
+        else $sortorder = "DESC";
 
+        switch ($sort)
+        {
+            case 'lastupdated':
+                $sql .= " ORDER BY lastupdated {$sortorder}";
+                break;
+            case 'id':
+                $sql .= " ORDER BY id {$sortorder}";
+                break;
+            case 'title':
+                $sql .= " ORDER BY title {$sortorder}";
+                break;
+            case 'contact':
+                $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
+                break;
+            case 'priority':
+                $sql .=  " ORDER BY priority {$sortorder}, lastupdated ASC";
+                break;
+            case 'owner':
+                $sql .=  " ORDER BY owner {$sortorder}, lastupdated ASC";
+                break;
+            case 'status':
+                $sql .= " ORDER BY status {$sortorder}, lastupdated ASC";
+                break;
+            default:
+                if ($showclosed == "true")
+                {
+                    $sql .= "ORDER BY closed DESC";
+                }
+                else
+                {
+                    $sql .= "ORDER by i.id DESC";
+                }
+        }
+    }
 
 echo portal_incident_table($sql);
 echo "<p align='center'>";

@@ -31,7 +31,7 @@ $hmenu[1031] = array (10=> array ( 'perm'=> 0, 'name'=> "Option1", 'url'=>""),
 );
  */
 
-if (!empty($_SESSION))
+if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
 {
     //
     // Main Menu
@@ -173,7 +173,6 @@ if (!empty($_SESSION))
         else $inbox_count = '';
     }
 
-
     // Support menu
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] = $hmenu[30] +
@@ -231,7 +230,7 @@ if (!empty($_SESSION))
     // Help menu
     if (!is_array($hmenu[70])) $hmenu[70] = array();
     $hmenu[70] + $hmenu[70] =
-                array (10=> array ( 'perm'=> 0, 'name'=> "{$strHelpContents}...", 'url'=>"{$CONFIG['application_webpath']}help.php"),
+                array (10=> array ( 'perm'=> 0, 'name'=> "{$strHelpContents}{$strEllipsis}", 'url'=>"{$CONFIG['application_webpath']}help.php"),
                        15=> array ( 'perm'=> 0, 'name'=> "{$strGetHelpOnline}", 'url'=>"http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
                        20=> array ( 'perm'=> 0, 'name'=> "{$strTranslate}", 'url'=>"{$CONFIG['application_webpath']}translate.php"),
                        25=> array ( 'perm'=> 0, 'name'=> "{$strStatus}", 'url'=>"{$CONFIG['application_webpath']}status.php"),
@@ -245,6 +244,62 @@ if (!empty($_SESSION))
     // Sort the top level menu, so that plugin menus appear in the right place
     ksort($hmenu[0], SORT_NUMERIC);
 }
+
+// Portal menu
+
+// Force KB disabled if it's globally disabled
+if ($CONFIG['kb_enabled'] != TRUE) $CONFIG['portal_kb_enabled'] = 'disabled';
+
+if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
+{
+    if (!is_array($hmenu[0])) $hmenu[0] = array();
+    $hmenu[0] = $hmenu[0] +
+                array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
+                       20 => array ('name' => $strSupport, 'url' => 'index.php', 'submenu' => 20),
+                       30 => array ('name' => $strKnowledgeBase, 'url' => 'kb.php', 'submenu' => 30, 'enablevar' => 'portal_kb_enabled'),
+                       40 => array ('name' => $strAdmin, 'url' => 'admin.php', 'submenu' => 40),
+                       50 => array ('name' => $strHelp, 'url' => 'help.php', 'submenu' => 50)
+                       );
+
+    // Portal
+    if (!is_array($hmenu[10])) $hmenu[10] = array();
+    $hmenu[10] + $hmenu[10] =
+                array (10 => array ('name' => $strMyDetails, 'url' => 'contactdetails.php'),
+                       20 => array ('name' => $strLogout, 'url' => '../logout.php'));
+
+    // Incidents
+    if (!is_array($hmenu[20])) $hmenu[20] = array();
+    $hmenu[20] + $hmenu[20] =
+                array (10 => array ('name' => $strEntitlement, 'url' => 'entitlement.php'),
+                       20 => array ('name' => $strNewIncident, 'url' => 'new.php'),
+                       30 => array ('name' => $strViewIncidents, 'url' => 'index.php'),
+                       40 => array ('name' => $strFeedback, 'url' => 'feedback.php')
+                       );
+
+    // KB
+    if (!is_array($hmenu[30])) $hmenu[30] = array();
+    $hmenu[30] + $hmenu[30] =
+                array (10 => array ('name' => $strViewKnowledgebaseArticles, 'url' => 'kb.php', 'enablevar' => 'kb_enabled'));
+
+    // Admin
+    if (!is_array($hmenu[40])) $hmenu[40] = array();
+    $hmenu[40] + $hmenu[40] =
+                array (10 => array ('name' => $strContractDetails, 'url' => 'admin.php'),
+                       20 => array ('name' => $strSiteDetails, 'url' => 'sitedetails.php'),
+                       30 => array ('name' => $strNewSiteContact, 'url' => 'newcontact.php'));
+
+    // Help
+    if (!is_array($hmenu[50])) $hmenu[50] = array();
+    $hmenu[50] + $hmenu[50] =
+                array (10 => array ('name' => $strHelpContents.$strEllipsis, 'url' => 'help.php'),
+                       20 => array ('name'=> $strGetHelpOnline, 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
+                       30 => array ('name'=> $strHelpAbout, 'url'=> 'about.php')
+                       ); // FIXME add help about for portal
+
+
+    ksort($hmenu[0], SORT_NUMERIC);
+}
+
 
 //
 // Non specific update types

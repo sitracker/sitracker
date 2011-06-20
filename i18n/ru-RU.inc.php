@@ -1111,7 +1111,6 @@ $strNovember = 'Ноябрь';
 $strNow = 'Сейчас';
 $strNumContactsAssignedToSite = 'Есть %s контактов, назначенных этому сайту';
 $strNumContractsAssignedToSite = 'Есть %s контрактов, назначенных этому сайту';
-$strNumOfIncidents = 'В этом списке %s инцидентов';
 $strNumOfIncidentsLoggedByX = 'Число инцидентов зарегистрированных %s';
 $strNumOfCalls = 'число звонков';
 $strNumOpenIncidents = '%s открыт';

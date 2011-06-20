@@ -1,5 +1,5 @@
 <?php
-// 
+//
 // functions.inc.php - Function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
@@ -1053,7 +1053,7 @@ function database_schema_version()
  * Populates $_SESSION['syslang], system language strings
  *
  * @author Kieran Hogg
- * @note See also populate_syslang2() which is a copy of this function
+ * @sa See also populate_syslang2() which is a copy of this function
  */
 function populate_syslang()
 {
@@ -1077,14 +1077,27 @@ function populate_syslang()
             $fh = fopen($file, "r");
             $theData = fread($fh, filesize($file));
             fclose($fh);
-            $lines = $nativelines += explode("\n", $theData);
+            $lines = explode("\n", $theData);
         }
         else
         {
-            trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+            trigger_error("Language file specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
             $lines = $nativelines;
         }
 
+       foreach ($nativelines as $values)
+        {
+            $badchars = array("$", "\"", "\\", "<?php", "?>");
+            $values = trim(str_replace($badchars, '', $values));
+            if (mb_substr($values, 0, 3) == "str")
+            {
+                $vars = explode("=", $values);
+                $vars[0] = trim($vars[0]);
+                $vars[1] = trim(substr_replace($vars[1], "",-2));
+                $vars[1] = substr_replace($vars[1], "",0, 1);
+                $SYSLANG[$vars[0]] = $vars[1];
+            }
+        }
         foreach ($lines as $values)
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
@@ -1098,6 +1111,7 @@ function populate_syslang()
                 $SYSLANG[$vars[0]] = $vars[1];
             }
         }
+
         $_SESSION['syslang'] = $SYSLANG;
     }
     else

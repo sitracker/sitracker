@@ -249,7 +249,6 @@ if ($menu != 'hide')
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
 
         echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
-        if (!empty($_REQUEST['popup'])) echo " | <a class=barlink href='javascript:window.close();'>{$strCloseWindow}</a>";
     }
     else
     {
@@ -260,8 +259,9 @@ if ($menu != 'hide')
         if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
         echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
-        if (!empty($_REQUEST['popup'])) echo " | <a class='barlink' href='javascript:window.close();'>{$strCloseWindow}</a>";
     }
+    plugin_do('incident_details_menu');
+    if (!empty($_REQUEST['popup']) OR $_REQUEST['win'] == 'sit_popup') echo " | <a class='barlink' href='javascript:window.close();'>{$strCloseWindow}</a>";
 }
 else
 {

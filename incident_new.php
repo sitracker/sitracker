@@ -263,7 +263,7 @@ elseif ($action == 'findcontact')
 
         if (empty($str_prefered) AND empty($str_alternative))
         {
-            echo "<p class='error'>{$strNothingToDisplay}</p>";
+            echo user_alert($strNothingToDisplay, E_USER_WARNING);
         }
 
         // Select the contact from the list of contacts as well

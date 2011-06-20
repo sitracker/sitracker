@@ -131,10 +131,13 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 #aboutsit
 {
+/*   border: 1px solid #ccc; */
+  width: 900px;
+  margin: auto;
   text-align: center;
 }
 #aboutsit img { margin-left: auto; margin-right: auto; }
-
+#aboutbox { border-width: 0px 1px 1px 1px; border-style: solid; border-color: #185594; /*position: relative; top: -16px;*/ padding-top: 16px; padding-bottom: 26px; }
 
 #mainframe { margin: 0px 1em; }
 
@@ -806,12 +809,6 @@ table.legend
     font-weight: bold;
 }
 
-.legend td
-{
-    width: 25%;
-}
-
-
 .percentcontainer {
     width: 100px; border: 1px solid #ccc; background-color: white; height: 12px;
 }
@@ -1048,7 +1045,7 @@ margin: 0 auto;
 
 }
 
-select .initialresponse, .problemdef, .actionplan, .solution 
+select .initialresponse, .problemdef, .actionplan, .solution
 {
 	text-indent: 15px;
     height: 17px;

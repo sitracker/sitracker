@@ -650,7 +650,6 @@ $strNovAbbr = 'Nov';
 $strNoVendorsDefined = 'Sem Vendedores Definidos';
 $strNovember = 'Novembro';
 $strNow = 'Agora';
-$strNumOfIncidents = 'Existem %s incidentes nesta lista';
 $strNumOfIncidentsLoggedByX = 'Número de ocorrências registradas por %s';
 $strNumOpenIncidents = '%s aberto';
 

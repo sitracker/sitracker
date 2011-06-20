@@ -79,10 +79,7 @@ elseif ($action == 'delete')
     list($countincidents) = mysql_fetch_row($result);
     if ($countincidents >=1)
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<p class='error'>{$strCannotDeleteSkill}</p>";
-        echo "<p align='center'><a href='products.php?display=skills'>{$strReturnToProductList}</a></p>";
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect('products.php?display=skills', FALSE, $strCannotDeleteSkill);
     }
     else
     {

@@ -22,7 +22,7 @@ if ($_POST['submit'])
     $errors = 0;
     foreach (array_keys($_POST['visibility']) as $id)
     {
-    	$id = clean_int($id);
+        $id = clean_int($id);
 
         if ($id != 0)
         {
@@ -79,14 +79,15 @@ if ($CONFIG['portal_site_incidents'])
 
     echo "<p align='center'>{$strAdminContactForContracts}</p>";
 
+    echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table align='center' width='60%'><tr>";
     //echo colheader('id', $strID);
     echo colheader('product', $strContract);
     echo colheader('expiry', $strExpiryDate);
     echo colheader('visbility', $strVisibility);
     echo colheader('actions', $strActions);
-
-    echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
+    echo "</tr>";
+    $shade = 'shade1';
     foreach ($contracts as $contract)
     {
         $sql = "SELECT *, m.id AS id ";
@@ -97,8 +98,6 @@ if ($CONFIG['portal_site_incidents'])
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-        $shade = 'shade1';
         if ($row = mysql_fetch_object($result))
         {
             if ($row->expirydate == -1)
@@ -116,9 +115,9 @@ if ($CONFIG['portal_site_incidents'])
 
             if ($row->allcontactssupported == 'yes')
             {
-            	echo "<select disabled='disabled'>";
-            	echo "<option>{$strAllSiteContactsSupported}</option>";
-            	echo "</select>";
+                echo "<select disabled='disabled'>";
+                echo "<option>{$strAllSiteContactsSupported}</option>";
+                echo "</select>";
                 echo "</td>";
             }
             else
@@ -150,11 +149,11 @@ if ($CONFIG['portal_site_incidents'])
 
         if ($shade == 'shade1')
         {
-        	$shade = 'shade2';
+            $shade = 'shade2';
         }
         else
         {
-        	$shade = 'shade1';
+            $shade = 'shade1';
         }
     }
     echo "</table>";
@@ -162,7 +161,7 @@ if ($CONFIG['portal_site_incidents'])
 
 }
 echo "<br />";
-echo "<h2>".icon('contact', 32)." {$strContacts}</h2>";
+echo "<h2>".icon('contact', 32)." {$strContacts}: ".site_name($_SESSION['siteid'])."</h2>";
 echo "<table width='30%' align='center'><tr>";
 echo colheader('name', $strName);
 echo colheader('action', $strAction, FALSE, FALSE, FALSE, FALSE, 10);
@@ -178,11 +177,11 @@ if ($result = mysql_query($sql))
     while ($row = mysql_fetch_object($result))
     {
         echo "<tr class='{$shade}'><td>{$row->forenames} {$row->surname}</td>";
-        echo "<td><a href='contactdetails.php?id={$row->id}'>{$strView}</a> </td></tr>";
+        echo "<td><a href='contactdetails.php?id={$row->id}'>{$strView}/{$strEdit}</a> </td></tr>";
 
         if ($shade == 'shade1')
         {
-            $shade == 'shade2';
+            $shade = 'shade2';
         }
         else
         {

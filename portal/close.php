@@ -19,6 +19,7 @@ include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 
 // External vars
 $id = intval($_REQUEST['id']);
+$fail = clean_int($_POST['fail']);
 
 // First check the portal user is allowed to access this incident
 $sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = $id LIMIT 1";
@@ -32,12 +33,13 @@ if ($incidentcontact == $_SESSION['contactid'])
     if (empty($_REQUEST['reason']))
     {
         include (APPLICATION_INCPATH . 'portalheader.inc.php');
+        if (!empty($fail)) echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strReason}'"), E_USER_ERROR);
         echo "<h2>".icon('close', 32, $strClosureRequestForIncident);
-        echo " {$strClosureRequestForIncident} {$id}</h2>";
+        echo " {$strClosureRequestForIncident} {$id} - " . incident_title($id) . "</h2>";
         echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?page=close&amp;id={$id}' method='post'>";
-        echo "<p>{$strReason}:</p><textarea name='reason' cols='50' rows='10'></textarea><br />";
+        echo "<p>{$strReason} <span class='required'>{$strRequired}</span> </p><textarea class='required' name='reason' cols='50' rows='10'></textarea><br />";
+        echo "<input type='hidden' name='fail' value='1' />";
         echo "<p><input type='submit' value=\"{$strRequestClosure}\" /></p></form></div>";
-
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
@@ -47,8 +49,8 @@ if ($incidentcontact == $_SESSION['contactid'])
         $user = mysql_fetch_object($result);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        // FIXME i18n ? In db ?
-        $reason = "Incident closure requested via the portal by [b]{$user->forenames} {$user->surname}[/b]\n\n";
+        // FIXME i18n ? In db ? - CJ added syslang here - syslang isn't saved for some reason bug 1618
+        $reason = "{$SYSLANG['strRequestClosureViaThePortalBy']} [b]{$user->forenames} {$user->surname}[/b]\n\n";
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
         $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";

@@ -28,9 +28,9 @@ if (!empty($_REQUEST['id']))
 }
 
 // Array of available sections, in order they are to appear
-$sections = array('Summary', 'Symptoms', 'Cause', 'Question', 'Answer',
-                  'Solution', 'Workaround', 'Status', 'Additional Information',
-                  'References');
+$sections = array('strSummary', 'strSymptoms', 'strCause', 'strQuestion', 'strAnswer',
+                  'strSolution', 'strWorkaround', 'strStatus', 'strAdditionalInfo',
+                  'strReferences');
 
 $att_max_filesize = return_bytes($CONFIG['upload_max_filesize']);
 
@@ -120,6 +120,7 @@ if (isset($_POST['submit']))
 
     foreach ($sections AS $section)
     {
+        
         $sectionvar = strtolower($section);
         $sectionvar = str_replace(" ", "", $sectionvar);
         $sectionid = $_POST["{$sectionvar}id"];
@@ -176,7 +177,7 @@ else
 
     if ($mode == 'edit')
     {
-        echo "<h2>".icon('kb', 32)." {$strEditKBArticle}: {$kbid}</h2>";
+        echo "<h2>".icon('kb', 32, $strEditKBArticle)." {$strEditKBArticle}: {$kbid}</h2>";
         $sql = "SELECT * FROM `{$dbKBArticles}` WHERE docid='{$kbid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -200,7 +201,7 @@ else
     }
     else
     {
-        echo "<h2>".icon('kb', 32)." {$strNewKBArticle}</h2>";
+        echo "<h2>".icon('kb', 32, $strNewKBArticle)." {$strNewKBArticle}</h2>";
     }
 
     echo "<div id='kbarticle'>";
