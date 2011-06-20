@@ -973,7 +973,6 @@ $strNovAbbr = 'strNovAbbr';
 $strNoVendorsDefined = 'strNoVendorsDefined';
 $strNovember = 'strNovember';
 $strNow = 'strNow';
-$strNumOfIncidents = 'strNumOfIncidents';
 $strNumOfIncidentsLoggedByX = 'strNumOfIncidentsLoggedByX';
 $strNumOfCalls = 'strNumOfCalls';
 $strNumOpenIncidents = 'strNumOpenIncidents';

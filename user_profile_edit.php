@@ -207,14 +207,14 @@ if (empty($mode))
         echo "<input maxlength='50' name='mobile' size='30' type='text' value='{$user->mobile}' />";
     }
     echo "</td></tr>";
-    echo "<tr><th>AIM ".icon('aim', 16, 'AIM')."</th>";
-    echo "<td><input maxlength=\"50\" name=\"aim\" size=\"30\" type=\"text\" value=\"".strip_tags($user->aim)."\" /></td></tr>";
-    echo "<tr><th>ICQ ".icon('icq', 16, 'ICQ')."</th>";
-    echo "<td><input maxlength=\"50\" name=\"icq\" size=\"30\" type=\"text\" value=\"".strip_tags($user->icq)."\" /></td></tr>";
-    echo "<tr><th>MSN ".icon('msn', 16, 'MSN')."</th>";
-    echo "<td><input maxlength=\"50\" name=\"msn\" size=\"30\" type=\"text\" value=\"".strip_tags($user->msn)."\" /></td></tr>";
-    echo "<tr><th>Skype ".icon('skype', 16, 'SKYPE')."</th>";
-    echo "<td><input maxlength=\"50\" name=\"skype\" size=\"30\" type=\"text\" value=\"".strip_tags($user->skype)."\" /></td></tr>";
+    echo "<tr><th>".icon('aim', 16, 'AIM')." AIM</th>";
+    echo "<td><input maxlength='50' name='aim' size='30' type='text' value='".strip_tags($user->aim)."' /></td></tr>";
+    echo "<tr><th>".icon('icq', 16, 'ICQ')." ICQ</th>";
+    echo "<td><input maxlength='50' name='icq' size='30' type='text' value='".strip_tags($user->icq)."' /></td></tr>";
+    echo "<tr><th>".icon('msn', 16, 'MSN')." MSN</th>";
+    echo "<td><input maxlength='50' name='msn' size='30' type='text' value='".strip_tags($user->msn)."' /></td></tr>";
+    echo "<tr><th>".icon('skype', 16, 'SKYPE')." Skype</th>";
+    echo "<td><input maxlength='50' name='skype' size='30' type='text' value='".strip_tags($user->skype)."' /></td></tr>";
 
 
     plugin_do('edit_profile_form');
@@ -328,8 +328,11 @@ elseif ($mode == 'save')
             $_SESSION['utcoffset'] = $user->utc_offset;
         }
 
+    
         if ($result === FALSE)
         {
+
+            // FIXME we might want a html_redirect() or something else here.. CJ
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
             trigger_error("!Error while updating users table", E_USER_ERROR);
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

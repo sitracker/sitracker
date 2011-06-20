@@ -53,7 +53,7 @@ else
     if ($name == '')
     {
         $errors++;
-        $_SESSION['formerrors']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_vendor']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
     }
 
     // add product if no errors
@@ -65,11 +65,12 @@ else
 
         if (!$result)
         {
-            echo "<p class='error'>{$strAdditionFail}</p>\n";
+            html_redirect('vendor_edit.php', FAIL, $strAdditionFail);
+            exit;
         }
         else
         {
-            $id=mysql_insert_id();
+            $id = mysql_insert_id();
             journal(CFG_LOGGING_DEBUG, 'Vendor Added', "Vendor {$id} was added", CFG_JOURNAL_DEBUG, $id);
             html_redirect("vendor_edit.php");
         }

@@ -18,7 +18,7 @@ $accesslevel = 'any';
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
-$incidentid = cleanvar($_REQUEST['id']);
+$incidentid = clean_int($_REQUEST['id']);
 $sql = "SELECT title, contact, status, opened, maintenanceid FROM `{$dbIncidents}` WHERE id={$incidentid}";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -242,6 +242,10 @@ while ($update = mysql_fetch_object($result))
         echo " {$updatetime}</div>";
         if ($updatebody != '')
         {
+            $bodypriorityfrom = array('New Priority', 'Priority', 'Low', 'Medium', 'High', 'Critical');
+            $bodypriorityto = array($strNewPriority, $strPriority, $strLow, $strMedium, $strHigh, $strCritical);
+            $updatebody = str_replace($bodypriorityfrom, $bodypriorityto, $updatebody);
+
             if ($update->customervisibility == 'show')
             {
                 echo "<div class='detailentry'>\n";

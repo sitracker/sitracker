@@ -75,8 +75,12 @@ if (empty($productid) AND $display!='skills')
                         echo $countcontracts;
                     }
                     echo "</td>";
-                    echo "<td><a href='edit_product.php?id={$product->id}'>{$strEdit}</a> | <a href='product_delete.php?id={$product->id}'>{$strDelete}</a></td>";
-                    echo "</tr>\n";
+                    echo "<td>";
+                    $operations = array();
+                    $operations[$strEdit] = "edit_product.php?id={$product->id}";
+                    $operations[$strDelete] = "product_delete.php?id={$product->id}";
+                    echo html_action_links($operations);
+                    echo "</td></tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
                     else $shade = 'shade1';
                 }
@@ -140,9 +144,12 @@ if (empty($productid) AND $display!='skills')
             echo "</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
+            echo "<td>";
+            $operations = array();
+            $operations[$strLink] = "product_software_new.php?softwareid={$software->id}";
+            $operations[$strEdit] = "edit_software.php?id={$software->id}";
+            $operations[$strDelete] = "edit_software.php?id={$software->id}&amp;action=delete";
+            echo html_action_links($operations);
             echo "</td>";
             echo "</tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
@@ -391,17 +398,22 @@ else
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
 }
 
-echo "<p align='center'><a href='vendor_new.php'>{$strNewVendor}</a> | <a href='product_new.php'>{$strNewProduct}</a> | <a href='software_new.php'>{$strNewSkill}</a>";
+echo "<p align='center'>";
+$operations = array();
+$operations[$strNewVendor] = 'vendor_new.php';
+$operations[$strNewProduct] = 'product_new.php';
+$operations[$strNewSkill] = 'software_new.php';
+
 
 if ($display == 'skills' OR $display == 'software')
 {
-    echo " | <a href='products.php'>{$strListProducts}</a>";
+    $operations[$strListProducts] = 'products.php';
 }
 else
 {
-    echo " | <a href='products.php?display=skills'>{$strListSkills}</a>";
+    $operations[$strListSkills] = 'products.php?display=skills';
 }
-
+echo html_action_links($operations);
 echo "</p>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

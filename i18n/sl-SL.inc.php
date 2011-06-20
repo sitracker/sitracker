@@ -588,7 +588,6 @@ $strNovember = 'November';
 $strNow = 'Sedaj';
 $strNumContactsAssignedToSite = 'Stranki je bilo dodeljenih %s kontaktov';
 $strNumContractsAssignedToSite = 'S stranko je bilo sklenjenih %s pogodb';
-$strNumOfIncidents = 'Na seznamu je %s incidentov';
 $strNumOfIncidentsLoggedByX = 'Število incidentov vpisanih s strani %s';
 $strNumOfCalls = '# klicev';
 $strNumOpenIncidents = '%s odprt';

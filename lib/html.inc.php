@@ -104,7 +104,7 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
             echo "<p align='center'><a href=\"{$url}\">{$GLOBALS['strContinue']}</a></p>";
         }
     }
-    
+
     if ($close)
     {
         if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE')
@@ -112,12 +112,12 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
             ?>
             <script type='text/javascript'>
             //<![CDATA[
-            
+
             if (window.confirm(strEmailSentSuccessfullyConfirmWindowClosure))
             {
                 close_page_redirect('<?php echo $url; ?>');
             }
-          
+
             //]]>
             </script>
             <?php
@@ -128,18 +128,18 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
             ?>
             <script type='text/javascript'>
             //<![CDATA[
-            
+
             new PeriodicalExecuter(function(pe) {
                                             window.close();
                                         },
                                         <?php echo $refreshtime ?>);
-          
+
             //]]>
             </script>
             <?php
         }
     }
-    
+
     // TODO 3.35 Add a link to refresh the dashlet if this is run inside a dashlet
 
     if ($headerdisplayed)
@@ -250,7 +250,7 @@ function percent_bar($percent)
  * @author Ivan Lucas
  * @param string $colname. Column name
  * @param string $coltitle. Column title (to display in the table header)
- * @param bool $sort Whether to sort the column
+ * @param string $sort Sorts this column when set to the name of the column.
  * @param string $order ASC or DESC
  * @param array $filter assoc. array of variables to pass on the link url
  * @param string $defaultorder The order to display by default (a = ASC, d = DESC)
@@ -282,7 +282,7 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
         $qsappend='';
     }
 
-    if ($sort==$colname)
+    if ($sort == $colname)
     {
         //if ($order=='') $order=$defaultorder;
         if ($order=='a')
@@ -347,7 +347,7 @@ function user_alert($message, $severity, $helpcontext = '')
     }
     $html = "<p class='{$class}'>";
     if (!empty($helpcontext)) $html .= help_link($helpcontext);
-    //<strong>{$info}</strong>: 
+    //<strong>{$info}</strong>:
     $html .= "{$message}";
     $html .= "</p>";
 
@@ -1076,8 +1076,8 @@ function contract_details($id, $mode='internal')
     {
         $operations = array();
         $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
-        
-        
+
+
         if ($maint->term != 'yes')
         {
             $operations[$GLOBALS['strNewService']] = "contract_new_service.php?contractid={$id}";
@@ -1085,7 +1085,7 @@ function contract_details($id, $mode='internal')
         $html .= "<p align='center'>".html_action_links($operations)."</p>";
     }
 
-    $html .= "<h3>{$GLOBALS['strContacts']}</h3>";
+    $html .= "<h3>{$GLOBALS['strNamedContacts']}</h3>";
 
     if (mysql_num_rows($maintresult) > 0)
     {
@@ -1154,11 +1154,11 @@ function contract_details($id, $mode='internal')
             if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0 AND $mode == 'internal')
             {
                 $html .= "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
-                $html .= "{$GLOBALS['strNewContact']}</a></p>";
+                $html .= "{$GLOBALS['strNewNamedContact']}</a></p>";
             }
             else
             {
-                $html .= "<h3>{$GLOBALS['strNewContact']}</h3>";
+                $html .= "<h3>{$GLOBALS['strNewNamedContact']}</h3>";
                 $html .= "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
                 $html .= "add' method='post' >";
                 $html .= "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
@@ -1228,7 +1228,7 @@ function contract_details($id, $mode='internal')
  * @return table row of format <tr><th /><td /></tr>
  * @author Paul Heaney
  */
-function group_user_selector($title, $level="engineer", $groupid, $type='radio')
+function group_user_selector($title, $level = 'engineer', $groupid = '', $type='radio')
 {
     global $dbUsers, $dbGroups;
 
@@ -1597,196 +1597,6 @@ function show_create_links($table, $ref)
 
 
 /**
- * Output the html for a KB article
- *
- * @param int $id ID of the KB article
- * @param string $mode whether this is internal or external facing, defaults to internal
- * @return string $html kb article html
- * @author Kieran Hogg
- */
-function kb_article($id, $mode='internal')
-{
-    global $CONFIG, $iconset;
-    $id = intval($id);
-    if (!is_numeric($id) OR $id == 0)
-    {
-        trigger_error("Incorrect KB ID", E_USER_ERROR);
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-        exit;
-    }
-
-    $sql = "SELECT * FROM `{$GLOBALS['dbKBArticles']}` WHERE docid='{$id}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $kbarticle = mysql_fetch_object($result);
-
-    if (empty($kbarticle->title))
-    {
-        $kbarticle->title = $GLOBALS['strUntitled'];
-    }
-    $html .= "<div id='kbarticle'";
-    if ($kbarticle->distribution == 'private') $html .= " class='expired'";
-    if ($kbarticle->distribution == 'restricted') $html .= " class='urgent'";
-    $html .= ">";
-    $html .= "<h2 class='kbtitle'>{$kbarticle->title}</h2>";
-
-    if (!empty($kbarticle->distribution) AND $kbarticle->distribution != 'public')
-    {
-        $html .= "<h2 class='kbdistribution'>{$GLOBALS['strDistribution']}: ".ucfirst($kbarticle->distribution)."</h2>";
-    }
-
-    // Lookup what software this applies to
-    $ssql = "SELECT * FROM `{$GLOBALS['dbKBSoftware']}` AS kbs, `{$GLOBALS['dbSoftware']}` AS s ";
-    $ssql .= "WHERE kbs.softwareid = s.id AND kbs.docid = '{$id}' ";
-    $ssql .= "ORDER BY s.name";
-    $sresult = mysql_query($ssql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($sresult) >= 1)
-    {
-        $html .= "<h3>{$GLOBALS['strEnvironment']}</h3>";
-        $html .= "<p>{$GLOBALS['strTheInfoInThisArticle']}:</p>\n";
-        $html .= "<ul>\n";
-        while ($kbsoftware = mysql_fetch_object($sresult))
-        {
-            $html .= "<li>{$kbsoftware->name}</li>\n";
-        }
-        $html .= "</ul>\n";
-    }
-
-    $csql = "SELECT * FROM `{$GLOBALS['dbKBContent']}` WHERE docid='{$id}' ";
-    $cresult = mysql_query($csql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $restrictedcontent = 0;
-    while ($kbcontent = mysql_fetch_object($cresult))
-    {
-        switch ($kbcontent->distribution)
-        {
-            case 'private':
-                if ($mode != 'internal')
-                {
-                    echo "<p class='error'>{$GLOBALS['strPermissionDenied']}</p>";
-                    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-                    exit;
-                }
-                $html .= "<div class='kbprivate'><h3>{$kbcontent->header} (private)</h3>";
-                $restrictedcontent++;
-                break;
-            case 'restricted':
-                if ($mode != 'internal')
-                {
-                    echo "<p class='error'>{$GLOBALS['strPermissionDenied']}</p>";
-                    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-                    exit;
-                }
-                $html .= "<div class='kbrestricted'><h3>{$kbcontent->header}</h3>";
-                $restrictedcontent++;
-                break;
-            default:
-                $html .= "<div><h3>{$kbcontent->header}</h3>";
-        }
-        //$html .= "<{$kbcontent->headerstyle}>{$kbcontent->header}</{$kbcontent->headerstyle}>\n";
-        $html .= '';
-        $kbcontent->content=nl2br($kbcontent->content);
-        $search = array("/(?<!quot;|[=\"]|:\/{2})\b((\w+:\/{2}|www\.).+?)"."(?=\W*([<>\s]|$))/i", "/(([\w\.]+))(@)([\w\.]+)\b/i");
-        $replace = array("<a href=\"$1\">$1</a>", "<a href=\"mailto:$0\">$0</a>");
-        $kbcontent->content = preg_replace("/href=\"www/i", "href=\"http://www", preg_replace ($search, $replace, $kbcontent->content));
-        $html .= bbcode($kbcontent->content);
-        $author[]=$kbcontent->ownerid;
-        $html .= "</div>\n";
-    }
-
-    if ($restrictedcontent > 0)
-    {
-        $html .= "<h3>{$GLOBALS['strKey']}</h3>";
-        $html .= "<p><span class='keykbprivate'>{$GLOBALS['strPrivate']}</span>".help_link('KBPrivate')." &nbsp; ";
-        $html .= "<span class='keykbrestricted'>{$GLOBALS['strRestricted']}</span>".help_link('KBRestricted')."</p>";
-    }
-
-
-    $html .= "<h3>{$GLOBALS['strArticle']}</h3>";
-    //$html .= "<strong>{$GLOBALS['strDocumentID']}</strong>: ";
-    $html .= "<p><strong>{$CONFIG['kb_id_prefix']}".leading_zero(4,$kbarticle->docid)."</strong> ";
-    $pubdate = mysql2date($kbarticle->published);
-    if ($pubdate > 0)
-    {
-        $html .= "{$GLOBALS['strPublished']} ";
-        $html .= ldate($CONFIG['dateformat_date'],$pubdate)."<br />";
-    }
-
-    $sqlf = "SELECT f.filename, f.id, f.filedate FROM `{$GLOBALS['dbFiles']}` ";
-    $sqlf .= "AS f INNER JOIN `{$GLOBALS['dbLinks']}` as l ON l.linkcolref = f.id ";
-    $sqlf .= "WHERE l.linktype = 7 AND l.origcolref = '{$id}'";
-    $fileresult = mysql_query($sqlf);
-    if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
-    if (mysql_num_rows($fileresult) > 0)
-    {
-        $html .= "<h3>{$GLOBALS['strFiles']}</h3>";
-        $html .= "<table class='attachments'><th>{$GLOBALS['strFilename']}</th><th>{$GLOBALS['strDate']}</th>";
-        while ($filename = mysql_fetch_object($fileresult))
-        {
-            $html .= "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$id}'>$filename->filename</a></td>";
-            $html .= "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";
-        }
-        $html .= "</table>";
-    }
-
-
-    if ($mode == 'internal')
-    {
-        if (is_array($author))
-        {
-            $html .= "<p>";
-            $author = array_unique($author);
-            $countauthors = count($author);
-            $count = 1;
-            if ($countauthors > 1)
-            {
-                $html .= "<strong>{$GLOBALS['strAuthors']}</strong>:<br />";
-            }
-            else
-            {
-                $html .= "<strong>{$GLOBALS['strAuthor']}:</strong> ";
-            }
-
-            foreach ($author AS $authorid)
-            {
-                $html .= user_realname($authorid,TRUE);
-                if ($count < $countauthors) $html .= ", " ;
-                $count++;
-            }
-            $html .= "</p>";
-        }
-    }
-
-    if (!empty($kbarticle->keywords))
-    {
-        $html .= "<strong>{$GLOBALS['strKeywords']}</strong>: ";
-        if ($mode == 'internal')
-        {
-            $html .= preg_replace("/\[([0-9]+)\]/", "<a href=\"incident_details.php?id=$1\" target=\"_blank\">$0</a>", $kbarticle->keywords);
-        }
-        else
-        {
-            $html .= $kbarticle->keywords;
-        }
-        $html .= "<br />";
-    }
-
-    //$html .= "<h3>{$GLOBALS['strDisclaimer']}</h3>";
-    $html .= "</p><hr />";
-    $html .= $CONFIG['kb_disclaimer_html'];
-    $html .= "</div>";
-
-    if ($mode == 'internal')
-    {
-        $html .= "<p align='center'>";
-        $html .= "<a href='kb.php'>{$GLOBALS['strBackToList']}</a> | ";
-        $html .= "<a href='kb_article.php?id={$kbarticle->docid}'>{$GLOBALS['strEdit']}</a></p>";
-    }
-    return $html;
-}
-
-/**
  * Output the html for the edit site form
  *
  * @param int $site ID of the site
@@ -1796,10 +1606,12 @@ function kb_article($id, $mode='internal')
  */
 function show_edit_site($site, $mode='internal')
 {
-    global $CONFIG;
+    global $CONFIG, $strRequired;
     $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='$site' ";
     $siteresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    echo show_form_errors('site_edit');
+    clear_form_errors('site_edit');
     while ($obj = mysql_fetch_object($siteresult))
     {
         if ($mode == 'internal')
@@ -1828,8 +1640,8 @@ function show_edit_site($site, $mode='internal')
         $html .= "<td><input maxlength='50' name='department' size='40' value='{$obj->department}' />";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strAddress1']}:</th>";
-        $html .= "<td><input maxlength='50' name='address1'";
-        $html .= "size='40' value='{$obj->address1}' />";
+        $html .= "<td><input maxlength='50' name='address1' class='required' ";
+        $html .= "size='40' value='{$obj->address1}' /> <span class='required'>{$strRequired}</span>";
         $html .= "</td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strAddress2']}: </th><td><input maxlength='50' name='address2' size='40' value='{$obj->address2}' /></td></tr>\n";
         $html .= "<tr><th>{$GLOBALS['strCity']}:</th><td><input maxlength='255' name='city' size='40' value='{$obj->city}' /></td></tr>\n";
@@ -1912,7 +1724,15 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     $html = show_form_errors('new_contact');
     clear_form_errors('new_contact');
     $html .= "<h2>".icon('contact', 32)." ";
-    $html .= "{$GLOBALS['strNewContact']}</h2>";
+    if ($mode == 'external')
+    {
+        $html .= "{$GLOBALS['strNewSiteContact']}";
+    }
+    else
+    {
+        $html .= "{$GLOBALS['strNewContact']}";
+    }
+    $html .= "</h2>";
 
     if ($mode == 'internal')
     {
@@ -2148,7 +1968,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            $html .= "<table align='center' class='vertical'>";
+            $html .= "<table align='center'>";
             $html .= "<tr>";
             $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
             $html .= "</tr>\n";
@@ -2404,5 +2224,136 @@ function html_action_links($actions)
     return $html;
 }
 
+
+/**
+ * Creates HTML for horizontal hierarchical menu
+ * @author Ivan Lucas
+ * @param array $hmenu - Hierarchical menu structure
+ * @return string HTML.
+ */
+function html_hmenu($hmenu)
+{
+    global $CONFIG;
+    $html = "<div id='menu'>\n";
+    $html .= "<ul id='menuList'>\n";
+    foreach ($hmenu[0] as $top => $topvalue)
+    {
+        if ((!empty($topvalue['enablevar']) AND $CONFIG[$topvalue['enablevar']] !== FALSE
+            AND $CONFIG[$topvalue['enablevar']] !== 'disabled')
+            OR empty($topvalue['enablevar']))
+        {
+            $html .= "<li class='menuitem'>";
+            // Permission Required: ".permission_name($topvalue['perm'])."
+            if ($topvalue['perm'] > 0 AND !in_array($topvalue['perm'], $_SESSION['permissions']))
+            {
+                $html .= "<a href='javascript:void(0);' class='greyed'>{$topvalue['name']}</a>";
+            }
+            else
+            {
+                $html .= "<a href='{$topvalue['url']}'>{$topvalue['name']}</a>";
+            }
+
+            if ($topvalue['submenu'] > 0 AND ($topvalue['perm'] == '' OR in_array($topvalue['perm'], $_SESSION['permissions'])))
+            {
+                $html .= "\n<ul>"; //  id='menuSub'
+                foreach ($hmenu[$topvalue['submenu']] as $sub => $subvalue)
+                {
+                    if ((!empty($subvalue['enablevar']) AND $CONFIG[$subvalue['enablevar']] == TRUE
+                        AND $CONFIG[$subvalue['enablevar']] !== 'disabled')
+                        OR empty($subvalue['enablevar']))
+                    {
+                        if (array_key_exists('submenu', $subvalue) AND $subvalue['submenu'] > 0)
+                        {
+                            $html .= "<li class='submenu'>";
+                        }
+                        else
+                        {
+                            $html .= "<li>";
+                        }
+
+                        if ($subvalue['perm'] > 0 AND !in_array($subvalue['perm'], $_SESSION['permissions']))
+                        {
+                            $html .= "<a href='javascript:void(0);' class='greyed'>{$subvalue['name']}</a>";
+                        }
+                        else
+                        {
+                            $html .= "<a href=\"{$subvalue['url']}\">{$subvalue['name']}</a>";
+                        }
+
+                        if (array_key_exists('submenu', $subvalue) AND $subvalue['submenu'] > 0 AND in_array($subvalue['perm'], $_SESSION['permissions']))
+                        {
+                            $html .= "<ul>"; // id ='menuSubSub'
+                            foreach ($hmenu[$subvalue['submenu']] as $subsub => $subsubvalue)
+                            {
+                                if ((!empty($subsubvalue['enablevar']) AND $CONFIG[$subsubvalue['enablevar']] == TRUE
+                                    AND $CONFIG[$subsubvalue['enablevar']] !== 'disabled')
+                                    OR empty($subsubvalue['enablevar']))
+                                {
+                                    if (array_key_exists('submenu', $subsubvalue) AND $subsubvalue['submenu'] > 0)
+                                    {
+                                        $html .= "<li class='submenu'>";
+                                    }
+                                    else
+                                    {
+                                        $html .= "<li>";
+                                    }
+
+                                    if ($subsubvalue['perm'] >=1 AND !in_array($subsubvalue['perm'], $_SESSION['permissions']))
+                                    {
+                                        $html .= "<a href=\"javascript:void(0);\" class='greyed'>{$subsubvalue['name']}</a>";
+                                    }
+                                    else
+                                    {
+                                        $html .= "<a href='{$subsubvalue['url']}'>{$subsubvalue['name']}</a>";
+                                    }
+
+                                    if (array_key_exists('submenu', $subsubvalue) AND $subsubvalue['submenu'] > 0 AND in_array($subsubvalue['perm'], $_SESSION['permissions']))
+                                    {
+                                        $html .= "<ul>"; // id ='menuSubSubSub'
+                                        foreach ($hmenu[$subsubvalue['submenu']] as $subsubsub => $subsubsubvalue)
+                                        {
+                                             if ((!empty($subsubsubvalue['enablevar']) AND $CONFIG[$subsubsubvalue['enablevar']])
+                                                OR empty($subsubsubvalue['enablevar']))
+                                            {
+                                                if ($subsubsubvalue['submenu'] > 0)
+                                                {
+                                                    $html .= "<li class='submenu'>";
+                                                }
+                                                else
+                                                {
+                                                    $html .= "<li>";
+                                                }
+
+                                                if ($subsubsubvalue['perm'] >=1 AND !in_array($subsubsubvalue['perm'], $_SESSION['permissions']))
+                                                {
+                                                    $html .= "<a href='javascript:void(0);' class='greyed'>{$subsubsubvalue['name']}</a>";
+                                                }
+                                                else
+                                                {
+                                                    $html .= "<a href='{$subsubsubvalue['url']}'>{$subsubsubvalue['name']}</a>";
+                                                }
+                                                $html .= "</li>\n";
+                                            }
+                                        }
+                                        $html .= "</ul>\n";
+                                    }
+                                    $html .= "</li>\n";
+                                }
+                            }
+                            $html .= "</ul>\n";
+                        }
+                        $html .= "</li>\n";
+                    }
+                }
+               $html .= "</ul>\n";
+            }
+            $html .= "</li>\n";
+        }
+    }
+    $html .= "</ul>\n\n";
+    $html .= "</div>\n";
+
+    return $html;
+}
 
 ?>

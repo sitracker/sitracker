@@ -629,7 +629,6 @@ $strNovAbbr = '十二月';
 $strNoVendorsDefined = '未定义供应商';
 $strNovember = '十二月';
 $strNow = '现在';
-$strNumOfIncidents = '列表中有%s个事件';
 $strNumOfCalls = '#个电话';
 $strNumOpenIncidents = '%s open';
 

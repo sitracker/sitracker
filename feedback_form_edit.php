@@ -133,8 +133,8 @@ switch ($_REQUEST['action'])
                 echo "<td><input type='text' name='name' size='35' maxlength='255' value=\"{$form->name}\" /></td>";
                 echo "</tr>\n<tr>";
 
-                echo "<th>{$strDescription}:<br />({$strInternalUseNotDisplayed})</th>";
-                echo "<td><textarea name='description' cols='80' rows='6'>";
+                echo "<th>{$strDescription}:</th>";
+                echo "<td>{$strInternalUseNotDisplayed}<textarea name='description' cols='80' rows='6'>";
                 echo "{$form->description}</textarea></td>";
                 echo "</tr>\n<tr>";
 
@@ -186,7 +186,7 @@ switch ($_REQUEST['action'])
                 echo "</form>";
             }
         }
-        else echo "<p class='error'>{$strNoRecords}</p>";
+        else echo user_alert($strNoRecords, E_USER_NOTICE);
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
 }

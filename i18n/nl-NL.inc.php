@@ -1100,7 +1100,6 @@ $strNovember = 'November';
 $strNow = 'Nu';
 $strNumContactsAssignedToSite = 'Er zijn %s contacten gekoppeld aan deze klant';
 $strNumContractsAssignedToSite = 'Er zijn %s contracten gekoppeld aan deze klant';
-$strNumOfIncidents = 'Er zijn %s incidenten in dit overzicht';
 $strNumOfIncidentsLoggedByX = 'Aantal incidenten aangemeld door %s';
 $strNumOfCalls = 'Aantal oproepen';
 $strNumOpenIncidents = '%s open';

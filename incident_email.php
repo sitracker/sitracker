@@ -617,6 +617,7 @@ switch ($step)
 
                 if (!empty($chase_manager))
                 {
+                    // FIXME SYSLANG for DB field
                     $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
                     $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_manager', '{$owner}', '{$newincidentstatus}', 'Manager has been called to chase','{$now}','hide')";
                     mysql_query($sql_insert);

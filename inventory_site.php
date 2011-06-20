@@ -101,18 +101,20 @@ if (is_numeric($_GET['id']))
             }
             echo "</td><td>".user_realname($row->createdby)."</td><td>";
             echo contact_realname($row->contactid)."</td><td>";
-
+            $operations = array();
             if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
                  $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
             {
                 echo "{$strView}</a> &nbsp; ";
-                echo "{$strEdit}</td></tr>";
+                echo "{$strEdit}";
             }
             else
             {
-                echo "<a href='inventory_view.php?id={$row->id}'>{$strView}</a> &nbsp; ";
-                echo "<a href='inventory_edit.php?id={$row->id}'>{$strEdit}</a></td></tr>";
+                $operations[$strView] = "inventory_view.php?id={$row->id}";
+                $operations[$strEdit] = "inventory_edit.php?id={$row->id}";
+                echo html_action_links($operations);
             }
+            echo "</td></tr>";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }

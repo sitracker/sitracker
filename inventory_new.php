@@ -51,11 +51,11 @@ else
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($_POST['submit']) AND empty($_POST['name']))
     {
-        echo "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strName)."</p>";
+        echo user_alert(sprintf($strFieldMustNotBeBlank, $strName));
     }
     elseif (!empty($_POST['submit']) AND $_POST['site'] == 0)
     {
-        echo "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strSite)."</p>";
+        echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
 

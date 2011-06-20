@@ -536,7 +536,6 @@ $strNoticesBlurb = 'Esta página le permite publicar un aviso global. Se permite
 $strNotInOffice = 'No en la oficina';
 $strNotSet = 'No configurado';
 $strNow = 'Ahora';
-$strNumOfIncidents = 'Hay %s incidentes en esta lista';
 $strNumOfCalls = '# de llamadas';
 $strNumOpenIncidents = '%s abiertos';
 
