@@ -273,7 +273,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
                 array (10 => array ('name' => $strEntitlement, 'url' => 'entitlement.php'),
                        20 => array ('name' => $strNewIncident, 'url' => 'new.php'),
                        30 => array ('name' => $strViewIncidents, 'url' => 'index.php'),
-                       40 => array ('name' => $strFeedback, 'url' => 'feedback.php')
+                       40 => array ('name' => $strFeedback, 'url' => 'feedback.php', 'enablevar' => 'portal_feedback_enabled')
                        );
 
     // KB
