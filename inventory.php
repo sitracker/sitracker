@@ -34,13 +34,19 @@ $result = mysql_query($sql);
 
 if (mysql_num_rows($result) > 0)
 {
-    echo "<table class='vertical' align='center'>";
-    echo "<tr><th>{$strSite}</th><th>{$strCount}</th></tr>";
+    echo "<table align='center'>";
+    echo "<tr><th>{$strSite}</th><th>{$strCount}</th><th>{$strActions}</th></tr>";
+    $shade = 'shade1';
     while ($row = mysql_fetch_object($result))
     {
-        echo "<tr><td>".icon('site', 16);
-        echo " <a href='inventory_site.php?id={$row->id}'>{$row->name}</a></td>";
-        echo "<td>{$row->count}</td></tr>";
+        echo "<tr class='{$shade}'><td>".icon('site', 16, $strSite);
+        echo " {$row->name}</td>";
+        echo "<td>{$row->count}</td>";
+        $operations[$strView] = "inventory_site.php?id={$row->id}";
+        echo "<td>".html_action_links($operations)."</td>";
+        echo "</tr>";
+        if ($shade == 'shade1') $shade = 'shade2';
+        else $shade = 'shade1';
     }
     echo "</table>";
 }
@@ -52,7 +58,5 @@ else
 echo "<p align='center'><a href='inventory_new.php?newsite=1'>";
 echo "{$strSiteNotListed}</a></p>";
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-
-
 
 ?>
