@@ -57,6 +57,7 @@ define ('HOL_TRAINING', 4);
 define ('HOL_FREE', 5); // Compassionate/Maternity/Paterity/etc/free
 // The holiday archiving assumes standard holidays are < 10
 define ('HOL_PUBLIC', 10);  // Public Holiday (eg. Bank Holiday)
+define ('HOL_NORMAL', 13);  // Normal day, work hours
 
 define ('HOL_APPROVAL_NONE', 0); // Not granted or denied
 define ('HOL_APPROVAL_GRANTED', 1);

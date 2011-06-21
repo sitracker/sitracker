@@ -94,7 +94,16 @@ else
                 $dlength=$length;
             }
         }
-        else
+        elseif ($type == 13)
+        {
+            // there is no holiday on this day, so make one
+            $sql = "DELETE FROM `{$dbHolidays}` ";
+            $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}'";
+            $result = mysql_query($sql);
+            $dlength = $length;
+            $approved = 0;
+        }
+        else 
         {
             // there is no holiday on this day, so make one
             $sql = "INSERT INTO `{$dbHolidays}` ";
