@@ -91,7 +91,7 @@ if (mysql_numrows($result) > 0)
     while (list($id, $filename, $size, $userid, $shortdescription, $path, $downloads, $filedate, $fileversion,
                 $expiry, $published) = mysql_fetch_row($result))
     {
-        $pretty_file_size = readable_file_size($size);
+        $pretty_file_size = readable_bytes_size($size);
 
         if ($published == 'no') echo "<tr class='urgent'>";
         else echo "<tr>";

@@ -261,7 +261,7 @@ switch ($step)
         echo "<tr><th>{$strSubject}</th><td><input maxlength='255' ";
         echo "name='subjectfield' id='subjectfield' size='40' value=\"{$subject}\" /></td></tr>\n";
         echo "<tr><th>{$strAttachment}";
-        $file_size = readable_file_size($CONFIG['upload_max_filesize']);
+        $file_size = readable_bytes_size($CONFIG['upload_max_filesize']);
         echo "(&lt; $file_size)";
         echo "</th><td>";
         echo "<input type='hidden' name='kb	' value='{$CONFIG['upload_max_filesize']}' />";

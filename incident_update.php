@@ -220,7 +220,7 @@ function display_update_page($draftid=-1)
     echo "<label><input type='checkbox' name='cust_vis' id='cust_vis' ";
     echo "{$checkbox} value='yes' /> {$GLOBALS['strMakeVisibleInPortal']}</label><br />";
     echo bbcode_toolbar('updatelog');
-    echo "<textarea name='bodytext' id='updatelog' rows='13' cols='50'>";
+    echo "<textarea name='bodytext' id='updatelog' rows='13' cols='50' class='required'>";
     if ($draftid != -1) echo $draftobj->content;
     echo "</textarea>";
     echo "<div id='updatestr'><a href=\"javascript:save_draft('{$id}', 'update');\">".icon('save', 16, $GLOBALS['strSaveDraft'])."</a></div>";
@@ -288,7 +288,7 @@ function display_update_page($draftid=-1)
     echo "</td></tr>";
     echo "<tr>";
     // calculate upload filesize
-    $att_file_size = readable_file_size($CONFIG['upload_max_filesize']);
+    $att_file_size = readable_bytes_size($CONFIG['upload_max_filesize']);
     echo "<th align='right'>{$GLOBALS['strAttachFile']}";
     echo " (&lt;{$att_file_size})</th>";
 

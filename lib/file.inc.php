@@ -146,24 +146,37 @@ function file_permissions_info($perms)
 
 
 /**
- * Function to produce a user readable file size i.e 2048 bytes 1KB etc
+ * Function to produce a user readable memory/file size i.e 2048 bytes 1KB etc
  * @author Paul Heaney
- * @param filesize - filesize in bytes
- * @return String filesize in readable format
+ * @param int $size - size in bytes
+ * @return String size in readable format (e.g. 4.5 Mbytes)
  */
-function readable_file_size($filesize)
+function readable_bytes_size($size)
 {
     global $strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes;
     $j = 0;
 
     $ext = array($strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes);
-    while ($filesize >= pow(1024, $j))
+    while ($size >= pow(1024, $j))
     {
         ++$j;
     }
-    $filemax = round($filesize / pow(1024,$j-1) * 100) / 100 . ' ' . $ext[$j-1];
+    $readable_size = round($size / pow(1024,$j-1) * 100) / 100 . ' ' . $ext[$j-1];
 
-    return $filemax;
+    return $readable_size;
+}
+
+
+/**
+ * Function to produce a user readable file size i.e 2048 bytes 1KB etc
+ * @author Paul Heaney
+ * @param filesize - filesize in bytes
+ * @return String filesize in readable format
+ * @deprecated DEPRECATED Function renamed to readable_bytes_size() for v3.90, INL 21 June 2011
+ */
+function readable_file_size($filesize)
+{
+    return readable_bytes_size($filesize);
 }
 
 

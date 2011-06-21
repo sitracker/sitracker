@@ -273,7 +273,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
                 array (10 => array ('name' => $strEntitlement, 'url' => 'entitlement.php'),
                        20 => array ('name' => $strNewIncident, 'url' => 'new.php'),
                        30 => array ('name' => $strViewIncidents, 'url' => 'index.php'),
-                       40 => array ('name' => $strFeedback, 'url' => 'feedback.php')
+                       40 => array ('name' => $strFeedback, 'url' => 'feedback.php', 'enablevar' => 'portal_feedback_enabled')
                        );
 
     // KB
@@ -299,8 +299,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
 
     ksort($hmenu[0], SORT_NUMERIC);
 }
-
-
+if ($CONFIG['debug']) $dbg .= print_r($hmenu,true);  // FIXME remove before release
 //
 // Non specific update types
 //
