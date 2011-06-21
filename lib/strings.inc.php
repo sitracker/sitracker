@@ -299,7 +299,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
 
     ksort($hmenu[0], SORT_NUMERIC);
 }
-
+$dbg .= print_r($hmenu,true);
 
 //
 // Non specific update types

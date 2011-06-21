@@ -34,7 +34,7 @@ $randomdir = dechex(crc32($randvala.$randvalb));
 
 $filesize = filesize($source_file);
 
-$pretty_file_size = readable_file_size($filesize);
+$pretty_file_size = readable_bytes_size($filesize);
 
 // FIXME This temp variable name can't be right can it?  INL
 if (!isset($temp_directory))

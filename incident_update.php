@@ -288,7 +288,7 @@ function display_update_page($draftid=-1)
     echo "</td></tr>";
     echo "<tr>";
     // calculate upload filesize
-    $att_file_size = readable_file_size($CONFIG['upload_max_filesize']);
+    $att_file_size = readable_bytes_size($CONFIG['upload_max_filesize']);
     echo "<th align='right'>{$GLOBALS['strAttachFile']}";
     echo " (&lt;{$att_file_size})</th>";
 
