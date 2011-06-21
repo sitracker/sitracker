@@ -127,7 +127,6 @@ if (isset($_POST['submit']))
         $content = cleanvar($_POST[$sectionvar], FALSE, TRUE);
         if ($_POST["{$sectionvar}id"] > 0)
         {
-            debug_log("KB: $sectionvar, $sectionid, $content[0]", true);
             if (!empty($content))
             {
                 $sql[] = "UPDATE `{$dbKBContent}` SET content='{$content}', headerstyle='h1', distribution='public' WHERE id='{$sectionid}' AND docid='{$kbid}' ";
