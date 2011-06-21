@@ -94,9 +94,9 @@ else
                 $dlength=$length;
             }
         }
-        elseif ($type == 13)
+        elseif ($type == HOL_NORMAL)
         {
-            // there is no holiday on this day, so make one
+            // If there is a holiday here, remove it on request
             $sql = "DELETE FROM `{$dbHolidays}` ";
             $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}'";
             $result = mysql_query($sql);

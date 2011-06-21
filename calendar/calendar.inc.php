@@ -243,7 +243,7 @@ function draw_calendar($nmonth, $nyear)
                 elseif ($dtype==10)
                 {
                     echo "<td class=\"$shade\" style=\"width: 15px; $style\">";
-                    echo "<a href=\"holiday_new.php?type=13&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
+                    echo "<a href=\"holiday_new.php?type=0&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
                 }
                 else
                 {
