@@ -17,7 +17,7 @@
 //  Counts activate calls within the specified period (i.e. those with a lastupdate time > timespecified)
 
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

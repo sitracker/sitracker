@@ -15,7 +15,7 @@
 // heavily based on the Salford Report by Paul Heaney
 
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 include (APPLICATION_LIBPATH . 'functions.inc.php');

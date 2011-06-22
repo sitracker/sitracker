@@ -21,7 +21,7 @@
 // Requested by Rob Shepley, 3 Oct 05
 
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
