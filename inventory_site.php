@@ -103,7 +103,7 @@ if (is_numeric($_GET['id']))
             echo contact_realname($row->contactid)."</td><td>";
             $operations = array();
             if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-                 $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+                 $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
             {
                 echo "{$strView}</a> &nbsp; ";
                 echo "{$strEdit}";

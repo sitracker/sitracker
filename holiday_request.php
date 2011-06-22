@@ -110,7 +110,7 @@ if (empty($user)) $user = $sit[2];
 if (!$sent)
 {
     // check to see if this user has approve permission
-    $approver = user_permission($sit[2], 50);
+    $approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE);
 
     $waiting = FALSE;
     echo "<h2>".icon('holiday', 32)." ";

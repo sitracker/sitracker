@@ -177,7 +177,7 @@ define ('PERM_HELP_VIEW', 26);
 define ('PERM_CALENDAR_VIEW', 27);
 define ('PERM_PRODUCT_VIEW', 28); // Also software/skills
 define ('PERM_PRODUCT_EDIT', 29);
-define ('PERM_SUPPORTED_PRODUCT_VIEW', 30);  // FIXME permission unused?
+define ('PERM_SUPPORTED_PRODUCT_VIEW', 30);
 // perm 31 unused/reserved
 define ('PERM_SUPPORTED_PRODUCT_EDIT', 32);
 define ('PERM_EMAIL_SEND', 33);

@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $mode = cleanvar($_REQUEST['mode']);
-$edituserpermission = user_permission($sit[2], 23); // edit user
+$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {
@@ -281,7 +281,7 @@ elseif ($mode == 'save')
     if (empty($user->emoticons)) $user->emoticons = 'false';
 
     // Some extra checking here so that users can't edit other peoples profiles
-    $edituserpermission = user_permission($sit[2], 23); // edit user
+    $edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
     if ($edituserid != $sit[2] AND $edituserpermission == FALSE)
     {
         trigger_error('Error: No permission to edit this users profile', E_USER_ERROR);

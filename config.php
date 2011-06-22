@@ -34,7 +34,7 @@ $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 $userid = cleanvar($_REQUEST['userid']);
 
-$edituserpermission = user_permission($sit[2], 23); // edit user
+$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
 
 if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
 {

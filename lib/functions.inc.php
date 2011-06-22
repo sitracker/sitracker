@@ -528,7 +528,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
                     preg_match("/Table '(.*)' doesn't exist/", $errstr))
                 {
                     echo "<p class='tip'>The SiT schema may need updating to fix this problem.";
-                    if (user_permission($sit[2], 22)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
+                    if (user_permission($sit[2], PERM_ADMIN)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
                     echo "</p>";
                 }
 

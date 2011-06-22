@@ -178,7 +178,7 @@ if ($sit[0] != '')
     if ($dbversion < $application_version)
     {
         $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
-        if (user_permission($sit[2], 22))
+        if (user_permission($sit[2], PERM_ADMIN))
         {
             $msg .= " from v{$dbversion} to v{$application_version}</p>";
             $msg2 = "Visit <a href='setup.php'>Setup</a> to update the schema.";
@@ -187,7 +187,7 @@ if ($sit[0] != '')
         echo usert_alert($msg2, E_USER_NOTICE);
     }
 
-    if (user_permission($sit[2], 22))
+    if (user_permission($sit[2], PERM_ADMIN))
     {
         // Check if scheduler is running (bug 108)
         $failure = 0;

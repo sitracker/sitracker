@@ -247,7 +247,7 @@ echo "<p align='center'><a href='contact_new.php?siteid={$id}'>{$strNewContact}<
 
 
 // Valid user, check perms
-if (user_permission($sit[2],19)) // View contracts
+if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
 {
     echo "<h3>{$strContracts}<a id='contracts'></a></h3>";
 

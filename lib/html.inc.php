@@ -1943,7 +1943,7 @@ function format_external_id($externalid, $escalationpath='')
 function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
-    if ((!empty($sit[2]) AND user_permission($sit[2], 30)
+    if ((!empty($sit[2]) AND user_permission($sit[2], PERM_SUPPORTED_PRODUCT_VIEW)
         OR ($_SESSION['usertype'] == 'admin'))) // view supported products
     {
         $html .= "<h4>".icon('contract', 16)." {$GLOBALS['strContracts']}:</h4>";

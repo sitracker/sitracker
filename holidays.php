@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$approver = user_permission($sit[2], 50); // Approve holidays
+$approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE); // Approve holidays
 
 if (!empty($_REQUEST['user']))
 {

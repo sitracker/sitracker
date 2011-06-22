@@ -927,7 +927,7 @@ elseif ($action == 'assign')
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strAssignTo}</a></td>";
                 }
-                elseif (user_permission($sit[2], 40) OR $userobj->id == $sit[2])
+                elseif (user_permission($sit[2], PERM_INCIDENT_FORCE_ASSIGN) OR $userobj->id == $sit[2])
                 {
                     echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";

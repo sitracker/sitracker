@@ -64,7 +64,7 @@ $trigger_types['TRIGGER_HOLIDAY_REQUESTED'] =
 array('name' => $strHolidayRequested,
       'description' => $strTriggerHolidayRequestedDesc,
       'required' => array('userid', 'approvaluseremail', 'listofholidays'),
-      'permission' => 'user_permission($_SESSION[\'userid\'], 50);',
+      'permission' => 'user_permission($_SESSION[\'userid\'], PERM_HOLIDAY_APPROVE);',
       'type' => 'system'
       );
 

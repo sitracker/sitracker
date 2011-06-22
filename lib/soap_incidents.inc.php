@@ -76,7 +76,7 @@ function list_incidents($sessionid, $owner=0, $status=1)
 
     if (!empty($sessionid) AND validate_session($sessionid))
     {
-        if (user_permission($sit[2], 6))
+        if (user_permission($sit[2], PERM_INCIDENT_LIST))
         {         
             /*
              * SELECT i.*, uTOwner.realname AS townerName FROM `users` AS uo, `incidents` AS i  LEFT JOIN `users` AS uTOwner ON uTOwner.id = i.towner WHERE i.owner = uo.id

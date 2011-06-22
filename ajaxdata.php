@@ -366,7 +366,7 @@ switch ($action)
         }
         break;
     case 'delete_temp_assign':
-        if (user_permission($sit[2], 42))
+        if (user_permission($sit[2], PERM_UPDATE_DELETE))
         {
             $incidentid = clean_int($_REQUEST['incidentid']);
             $originalowner = clean_int($_REQUEST['originalowner']);

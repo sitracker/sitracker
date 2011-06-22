@@ -24,7 +24,7 @@ $title = $strBookHoliday;
 // External variables
 $step = $_REQUEST['step'];
 $date = cleanvar($_REQUEST['date']);
-if (!empty($_REQUEST['user']) AND user_permission($sit[2], 68))
+if (!empty($_REQUEST['user']) AND user_permission($sit[2], PERM_HOLIDAY_MANAGE))
 {
     $user = clean_int($_REQUEST['user']); // Manage holidays
 }

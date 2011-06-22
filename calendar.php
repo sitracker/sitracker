@@ -45,7 +45,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 if (empty($user) || $user == 'current') $user = $sit[2];
 elseif ($user == 'all') $user = '';
 if (empty($type)) $type = HOL_HOLIDAY;
-if (user_permission($sit[2], 50)) $approver = TRUE;
+if (user_permission($sit[2], PERM_HOLIDAY_APPROVE)) $approver = TRUE;
 else $approver = FALSE;
 
 // Force user to 0 (SiT) when setting public holidays

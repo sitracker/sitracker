@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$forcepermission = user_permission($sit[2],40);
+$forcepermission = user_permission($sit[2], PERM_INCIDENT_FORCE_ASSIGN);
 
 // External variables
 $bodytext = cleanvar($_REQUEST['bodytext']);

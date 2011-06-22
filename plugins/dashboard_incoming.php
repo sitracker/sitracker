@@ -39,7 +39,7 @@ function dashboard_incoming_display($dashletid)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     
-    if (user_permission($sit[2], 42))
+    if (user_permission($sit[2], PERM_UPDATE_DELETE))
     {
         //echo "<div class='window'>";
 

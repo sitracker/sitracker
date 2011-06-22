@@ -114,7 +114,7 @@ else
     $row = mysql_fetch_object($result);
 
     if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-            $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+            $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
     {
         html_redirect('inventory.php', FALSE);
         exit;
@@ -146,7 +146,7 @@ else
     echo "<td><input name='address' value='{$row->address}' /></td></tr>";
 
     if (!is_numeric($id)
-        OR (($row->privacy == 'adminonly' AND user_permission($sit[2], 22))
+        OR (($row->privacy == 'adminonly' AND user_permission($sit[2], PERM_ADMIN))
             OR ($row->privacy == 'private' AND ($row->createdby == $sit[2])) OR $row->privacy == 'none'))
     {
         echo "<tr><th>{$strUsername}</th>";
@@ -160,7 +160,7 @@ else
     echo bbcode_toolbar('inventorynotes');
     echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>{$row->notes}</textarea></td></tr>";
 
-    if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
+    if (($row->privacy == 'adminonly' AND user_permission($sit[2], PERM_ADMIN)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
         $row->privacy == 'none')
     {
