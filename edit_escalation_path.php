@@ -29,7 +29,8 @@ if (empty($_REQUEST['mode']))
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
+    echo show_form_errors('edit_escalation_path');
+    clear_form_errors('edit_escalation_path');
     echo "<h2>{$title}</h2>";
 
     while ($details = mysql_fetch_object($result))
@@ -68,7 +69,7 @@ else
     if (empty($name))
     {
         $errors++;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_escalation_path']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
     }
 
     if ($errors == 0)
@@ -87,6 +88,10 @@ else
         {
             html_redirect("escalation_paths.php");
         }
+    }
+    else
+    {
+        html_redirect("edit_escalation_path.php?id={$id}", FALSE);
     }
 }
 
