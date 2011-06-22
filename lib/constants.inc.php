@@ -147,7 +147,86 @@ define ('PRIORITY_CRITICAL', 4);
 // (Number, not constant name stored in the SiT! database). - INL 2011-06-22
 // If you change the number you'll grant or deny user permissions on a system
 // you can't control.
-define ('PERM_ADD_CONTACT', 1);
-
+define ('PERM_CONTACT_ADD', 1);
+define ('PERM_SITE_ADD', 2);
+define ('PERM_SITE_EDIT', 3);
+define ('PERM_MYPROFILE_EDIT', 4);
+define ('PERM_INCIDENT_ADD', 5);
+define ('PERM_INCIDENT_LIST', 6);
+define ('PERM_INCIDENT_EDIT', 7);
+define ('PERM_UPDATE_ADD', 8);
+define ('PERM_USER_PERMISSIONS_EDIT', 9);
+define ('PERM_CONTACT_EDIT', 10);
+define ('PERM_SITE_VIEW', 11);
+define ('PERM_CONTACT_VIEW', 12);
+define ('PERM_INCIDENT_REASSIGN', 13);
+define ('PERM_USER_VIEW', 14);
+define ('PERM_SUPPORTED_PRODUCT_ADD', 15);
+define ('PERM_TEMPLATE_ADD', 16);
+define ('PERM_TEMPLATE_EDIT', 17);
+define ('PERM_INCIDENT_CLOSE', 18);
+define ('PERM_CONTRACT_VIEW', 19);
+define ('PERM_USER_ADD', 20);
+define ('PERM_CONTRACT_EDIT', 21);
+define ('PERM_ADMIN', 22);
+define ('PERM_USER_EDIT', 23);
+define ('PERM_PRODUCT_ADD', 24);
+define ('PERM_PRODUCTINFO_ADD', 25);
+define ('PERM_HELP_VIEW', 26);
+define ('PERM_MYCALENDAR_VIEW', 27);
+define ('PERM_PRODUCT_VIEW', 28); // Also software/skills
+define ('PERM_PRODUCT_EDIT', 29);
+define ('PERM_SUPPORTED_PRODUCT_VIEW', 30);
+// perm 31 unused/reserved
+define ('PERM_SUPPORTED_PRODUCT_EDIT', 32);
+define ('PERM_EMAIL_SEND', 33);
+define ('PERM_INCIDENT_REOPEN', 34);
+define ('PERM_MYSTATUS_SET', 35);
+define ('PERM_CONTACT_FLAGS_SET', 36); // is this used?
+define ('PERM_REPORT_RUN', 37);
+define ('PERM_INCIDENT_SALES_EDIT', 38); // legacy sales incidents, is this used?
+define ('PERM_CONTRACT_ADD', 39);
+define ('PERM_INCIDENT_FORCE_ASSIGN', 40);
+define ('PERM_STATUS_VIEW', 41); // view system status
+define ('PERM_UPDATE_DELETE', 42); // Review/Delete Incident updates
+define ('PERM_GLOBALSIG_EDIT', 43);
+define ('PERM_FILE_PUBLISH', 44); // Publish files to FTP site
+// perm 45 unused (View Mailing List Subscriptions)
+// perm 46 unused (Edit Mailing List Subscriptions)
+// perm 47 unused (Administrate Mailing Lists)
+define ('PERM_FEEDBACK_FORM_ADD', 48);
+define ('PERM_FEEDBACK_FORM_EDIT', 49);
+define ('PERM_HOLIDAY_APPROVE', 50);
+define ('PERM_FEEDBACK_VIEW', 51);
+define ('PERM_UPDATE_VIEW_HIDDEN', 52);
+define ('PERM_SLA_EDIT', 53);
+define ('PERM_KB_VIEW', 54);
+define ('PERM_SITE_DELETE', 55); // Also contacts delete at the moment (2011-06-22)
+define ('PERM_SKILL_ADD', 56); // Was, add software
+define ('PERM_USER_DISABLE', 57);
+define ('PERM_MYSKILLS_SET', 58);
+define ('PERM_USER_SKILLS_SET', 59); // Set other users skills
+define ('PERM_SEARCH', 60);
+define ('PERM_INCIDENT_VIEW', 61);
+define ('PERM_INCIDENT_VIEW_ATTACHMENT', 62);
+define ('PERM_RESELLER_ADD', 63);
+define ('PERM_ESCALATION_MANAGE', 64);
+define ('PERM_PRODUCT_DELETE', 65);
+define ('PERM_DASHLET_INSTALL', 66);
+define ('PERM_MANAGEMENT_REPORT_RUN', 67);
+define ('PERM_HOLIDAY_MANAGE', 68);
+define ('PERM_TASK_VIEW', 69); // just my tasks or all tasks?
+define ('PERM_TASK_EDIT', 70);
+define ('PERM_MYTRIGGERS_MANAGE', 71);
+define ('PERM_TRIGGERS_MANAGE', 72); // system triggers
+define ('PERM_INCIDENT_BILLING_APPROVE', 73);
+define ('PERM_BILLING_DURATION_SET', 74); // Set duration without activity (for billable incidents) 
+define ('PERM_BILLING_DURATION_NEGATIVE', 75); // Set negative time for duration on incidents (for billable incidents - refunds
+define ('PERM_BILLING_TRANSACTION_VIEW', 76);
+define ('PERM_BILLING_VIEW', 77);
+define ('PERM_NOTICE_POST', 78);
+define ('PERM_SERVICE_BALANCE_EDIT', 79); // Edit service balances
+define ('PERM_SERVICE_EDIT', 80);
+define ('PERM_BILLING_DURATION_EDIT', 81); //Adjust durations on activities 
 
 ?>
