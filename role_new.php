@@ -46,8 +46,8 @@ if (empty($submit))
 
     echo "</table>";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
-    echo "<p align='center'><a href='edit_user_permissions.php'>{$strReturnWithoutSaving}</a></p>";
     echo "</form>";
+    echo "<p align='center'><a href='edit_user_permissions.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     clear_form_data('role_new');
 }

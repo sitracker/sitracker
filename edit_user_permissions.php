@@ -80,13 +80,13 @@ if (empty($action) OR $action == "showform")
         echo "<th>{$GLOBALS[$pcat->category]} {$strPermissions}</th>";
         while ($rolerow = mysql_fetch_object($result))
         {
-            echo "<th style='min-width: 40px;'><a href='role.php?roleid={$rolerow->id}'>{$rolerow->rolename}</a></th>";
+            echo "<th style='min-width: 40px;'><a href='role.php?roleid={$rolerow->id}' title='{$strViewRole}'>{$rolerow->rolename}</a></th>";
         }
         echo "</tr>\n";
         while ($perm = mysql_fetch_object($presult))
         {
             echo "<tr class='$class' onclick='trow(event);'>";
-            echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasThisPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
+            echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
             mysql_data_seek($result, 0);
             while ($rolerow = mysql_fetch_object($result))
             {
