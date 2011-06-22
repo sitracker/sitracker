@@ -26,9 +26,6 @@ if ($CONFIG['demo'] AND $_SESSION['userid'] != 1)
     html_redirect("manage_users.php", FALSE, $strCannotPerformOperationInDemo);
 }
 
-$pagescripts = array('FormProtector.js');
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 // External variables
 $user = clean_int($_REQUEST['user']);
 $role = clean_int($_REQUEST['role']);
@@ -39,6 +36,9 @@ $seltab = cleanvar($_REQUEST['tab']);
 
 if (empty($action) OR $action == "showform")
 {
+    $pagescripts = array('FormProtector.js');
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
     $sql = "SELECT * FROM `{$dbRoles}` ORDER BY id ASC";
     $result= mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -113,10 +113,12 @@ if (empty($action) OR $action == "showform")
         echo "</form>";
         echo protectform('permissionsform');
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "edit" && (!empty($user) OR !empty($role)))
 {
     // Show form
+     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($role) AND !empty($user))
     {
         trigger_error("{$strCannotEditUserAndRole}", E_USER_ERROR);
@@ -198,10 +200,11 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
         else $class = "shade2";
     }
     echo "</table>";
-    echo "<p><input name='user' type='hidden' value='{$user}' />";
+    echo "<p class='formbuttons'><input name='user' type='hidden' value='{$user}' />";
     echo "<input name='role' type='hidden' value='' />";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "update")
 {
@@ -327,6 +330,7 @@ elseif ($action == "update")
 }
 elseif ($action == "check")
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('trigger', 32)." {$strCheckUserAndRolePermissions}</h2>";
     if (!empty($permid))
     {
@@ -389,10 +393,11 @@ elseif ($action == "check")
     {
         echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strPermission}'"), E_USER_ERROR);
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
-    echo user_alert("{$strNoChangesToMake}", E_USER_WARNING);
+    echo html_redirect('manage_users.php', FALSE, "{$strNoChangesToMake}");
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 ?>
