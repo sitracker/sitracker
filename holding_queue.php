@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 
 
-$permission = 42;
+$permission = PERM_UPDATE_DELETE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

@@ -12,7 +12,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 49; // Edit Feedback Forms
+$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

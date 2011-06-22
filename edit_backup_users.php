@@ -21,11 +21,11 @@ if (empty($_REQUEST['user'])
     OR $_REQUEST['user'] == $_SESSION['userid']
     OR $_REQUEST['userid'] == $_SESSION['userid'])
 {
-    $permission = 58; // Edit your software skills
+    $permission = PERM_MYSKILLS_SET; // Edit your software skills
 }
 else
 {
-    $permission = 59; // Manage users software skills
+    $permission = PERM_USER_SKILLS_SET; // Manage users software skills
 }
 
 // This page requires authentication

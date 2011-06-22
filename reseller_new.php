@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 63;
+$permission = PERM_RESELLER_ADD;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

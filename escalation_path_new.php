@@ -13,7 +13,7 @@
 //// This Page Is Valid XHTML 1.0 Transitional!  (1 Oct 2006)
 
 
-$permission = 64; // Manage escalation paths
+$permission = PERM_ESCALATION_MANAGE; // Manage escalation paths
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -9,7 +9,7 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = 68; // Manage holidays
+$permission = PERM_HOLIDAY_MANAGE; // Manage holidays
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

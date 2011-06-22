@@ -11,7 +11,7 @@
 
 // Authors: Kieran Hogg <kieran[at]sitracker.org>
 
-$permission = 0; // Allow all auth users
+$permission = PERM_NOT_REQUIRED; // Allow all auth users
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

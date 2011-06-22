@@ -14,7 +14,7 @@
 // FIXME i18n Whole Page
 
 
-$permission = 48; // Add Feedback Forms
+$permission = PERM_FEEDBACK_FORM_ADD; // Add Feedback Forms
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

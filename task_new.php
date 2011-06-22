@@ -13,7 +13,7 @@
 //          Kieran Hogg <kieran[at]sitracker.org>
 
 
-$permission = 70;
+$permission = PERM_TASK_EDIT;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

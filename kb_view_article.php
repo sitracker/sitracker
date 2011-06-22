@@ -11,7 +11,7 @@
 
 // Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>, Tom Gerrard
 
-$permission = 54; // View KB
+$permission = PERM_KB_VIEW; // View KB
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -12,7 +12,7 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  1Nov05
 
-$permission = 54; // View KB
+$permission = PERM_KB_VIEW; // View KB
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

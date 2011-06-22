@@ -40,7 +40,7 @@ function delete_signature($sig_id)
     exit;
 }
 
-$permission = 43; // Edit global signature
+$permission = PERM_GLOBALSIG_EDIT; // Edit global signature
 
 
 require ('core.php');

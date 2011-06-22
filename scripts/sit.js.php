@@ -14,7 +14,7 @@
 //       to enable us to pass variables from PHP to Javascript.
 //
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required
 require ('..' . DIRECTORY_SEPARATOR . 'core.php');
 
 session_name($CONFIG['session_name']);

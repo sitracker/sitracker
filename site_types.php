@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paul[at]sitracker.org>
 //
 
-$permission = 56; // Add software
+$permission = PERM_SKILL_ADD; // Add software - FIXME most bizarro permission ever, why add software?
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

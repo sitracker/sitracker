@@ -12,7 +12,7 @@
 
 
 
-$permission = 78;
+$permission = PERM_NOTICE_POST;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');

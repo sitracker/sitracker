@@ -12,7 +12,7 @@
 // by Ivan Lucas <ivanlucas[at]users.sourceforge.net>, June 2004
 
 
-$permission = 51; // View Feedback
+$permission = PERM_FEEDBACK_VIEW; // View Feedback
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

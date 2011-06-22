@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = 61; // View Incident Details
+$permission = PERM_INCIDENT_VIEW; // View Incident Details
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

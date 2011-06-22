@@ -14,7 +14,7 @@
 //          Tom Gerrard <tomgerrard[at]users.sourceforge.net>
 
 
-$permission = 54; // view KB
+$permission = PERM_KB_VIEW; // view KB
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -10,7 +10,7 @@
 //
 
 
-$permission = 42; // Delete Incident Updates
+$permission = PERM_UPDATE_DELETE; // Delete Incident Updates
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

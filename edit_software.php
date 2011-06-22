@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 56; // Add Software
+$permission = PERM_SKILL_ADD; // Add Software
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
