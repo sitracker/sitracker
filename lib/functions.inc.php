@@ -350,12 +350,14 @@ function db_read_column($column, $table, $id)
 
 /**
  * @author Ivan Lucas
+ * @note: Requires permission names to be i18n strings in the database table
  */
 function permission_name($permissionid)
 {
     global $dbPermissions;
     $name = db_read_column('name', $dbPermissions, $permissionid);
     if (empty($name)) $name = $GLOBALS['strUnknown'];
+    else $name = $GLOBALS["{$name}"];
     return $name;
 }
 
