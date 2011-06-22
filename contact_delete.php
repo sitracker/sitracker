@@ -108,6 +108,7 @@ if (empty($process))
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>";
+            echo "<p align='center'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
         else
         {
@@ -117,10 +118,11 @@ if (empty($process))
             echo "<input type='hidden' name='newcontact' value='' />";  // empty
             echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<input type='hidden' name='process' value='true' />";
-            echo "<p align='center'>";
+            echo "<p class='formbuttons'>";
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>\n";
+            echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

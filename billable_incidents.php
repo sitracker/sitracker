@@ -57,7 +57,7 @@ if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>".icon('billing', 32)." {$strBilling}</h2>";
+    echo "<h2>".icon('billing', 32, $strBilling)." {$strBilling}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='billableincidents'>";
     echo "<table class='vertical'>";
@@ -154,7 +154,7 @@ elseif ($mode == 'approvalpage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>".icon('billing', 32)." {$strBillableIncidents} - {$strApprove}</h2>";
+        echo "<h2>".icon('billing', 32, $strBillableIncidents)." {$strBillableIncidents} - {$strApprove}</h2>";
 
         echo "<p align='center'>{$strThisReportShowsIncidentsClosedInThisPeriod} ";
         echo ldate($CONFIG['dateformat_date'], $startdate)." - ".ldate($CONFIG['dateformat_date'], $enddate)."</p>";
@@ -472,7 +472,7 @@ elseif ($mode == 'invoicepage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidentsInvoice}</h2>";
+        $str .= "<h2>".icon('billing', 32, $strBillableIncidentsInvoice)." {$strBillableIncidentsInvoice}</h2>";
 
         $resultsite = mysql_query($sitelistsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);

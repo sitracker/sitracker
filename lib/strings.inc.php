@@ -247,19 +247,35 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
 
 // Portal menu
 
-// Force KB disabled if it's globally disabled
-if ($CONFIG['kb_enabled'] != TRUE) $CONFIG['portal_kb_enabled'] = 'disabled';
-
 if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
 {
-    if (!is_array($hmenu[0])) $hmenu[0] = array();
-    $hmenu[0] = $hmenu[0] +
-                array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
-                       20 => array ('name' => $strSupport, 'url' => 'index.php', 'submenu' => 20),
-                       30 => array ('name' => $strKnowledgeBase, 'url' => 'kb.php', 'submenu' => 30, 'enablevar' => 'portal_kb_enabled'),
-                       40 => array ('name' => $strAdmin, 'url' => 'admin.php', 'submenu' => 40),
-                       50 => array ('name' => $strHelp, 'url' => 'help.php', 'submenu' => 50)
-                       );
+
+    // Force KB disabled if it's globally disabled
+    if (($CONFIG['kb_enabled'] == TRUE) AND ($CONFIG['portal_kb_enabled'] != 'Disabled'))
+    {
+        if (!is_array($hmenu[0])) $hmenu[0] = array();
+        $hmenu[0] = $hmenu[0] +
+                    array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
+                           20 => array ('name' => $strSupport, 'url' => 'index.php', 'submenu' => 20),
+                           30 => array ('name' => $strKnowledgeBase, 'url' => 'kb.php', 'submenu' => 30, 'enablevar' => 'portal_kb_enabled'),
+                           40 => array ('name' => $strAdmin, 'url' => 'admin.php', 'submenu' => 40),
+                           50 => array ('name' => $strHelp, 'url' => 'help.php', 'submenu' => 50)
+                           );
+
+    }
+    else
+    {
+
+        if (!is_array($hmenu[0])) $hmenu[0] = array();
+        $hmenu[0] = $hmenu[0] +
+                    array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
+                           20 => array ('name' => $strSupport, 'url' => 'index.php', 'submenu' => 20),
+                           40 => array ('name' => $strAdmin, 'url' => 'admin.php', 'submenu' => 40),
+                           50 => array ('name' => $strHelp, 'url' => 'help.php', 'submenu' => 50)
+                           );
+        
+    }
+    
 
     // Portal
     if (!is_array($hmenu[10])) $hmenu[10] = array();
