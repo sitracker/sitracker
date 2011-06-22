@@ -92,14 +92,14 @@ else
             $shade = 'shade1';
             while ($results = mysql_fetch_object($result))
             {
-                echo "<tr>";
-                echo "<td align='center' class='{$shade}' width='50'><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$results->maintid}</a></td>";
-                echo "<td align='center' class='{$shade}' width='100'>{$results->site}</td>";
-                echo "<td align='center' class='{$shade}' width='100'>{$results->product}</td>";
-                echo "<td align='center' class='{$shade}' width='100'>{$results->reseller}</td>";
-                echo "<td align='center' class='{$shade}' width='75'>{$results->licence_quantity} {$results->licence_type}</td>";
-                echo "<td align='center' class='{$shade}' width='100'>".ldate($CONFIG['dateformat_date'], $results->expirydate)."</td>";
-                echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: contact_details_window('contact_details.php?id={$results->admincontact}')\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
+                echo "<tr class='{$shade}'>";
+                echo "<td align='center' width='50'><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$results->maintid}</a></td>";
+                echo "<td align='center' width='100'>{$results->site}</td>";
+                echo "<td align='center' width='100'>{$results->product}</td>";
+                echo "<td align='center' width='100'>{$results->reseller}</td>";
+                echo "<td align='center' width='75'>{$results->licence_quantity} {$results->licence_type}</td>";
+                echo "<td align='center' width='100'>".ldate($CONFIG['dateformat_date'], $results->expirydate)."</td>";
+                echo "<td align='center' width='100'><a href=\"javascript: contact_details_window('contact_details.php?id={$results->admincontact}')\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
                 if ($results->notes == '')
                 {
                     $notes = "&nbsp;";
@@ -108,7 +108,7 @@ else
                 {
                     $notes = nl2br($results->notes);
                 }
-                echo "<td align='center' class='{$shade}' width='150'>{$notes}</td>";
+                echo "<td align='center'  width='150'>{$notes}</td>";
                 echo "</tr>";
                 
                 if ($shade == 'shade1') $shade = "shade2";
