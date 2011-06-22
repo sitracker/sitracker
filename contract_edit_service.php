@@ -46,7 +46,7 @@ switch ($mode)
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             $title = ("$strContract - $strEditService");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            if (mysql_numrows($result) != 1)
+            if (mysql_num_rows($result) != 1)
             {
                 echo "<h2>".sprintf($strNoServiceWithIDXFound, $serviceid)."</h2>";
             }
