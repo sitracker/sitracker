@@ -13,7 +13,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
 
-$permission = 2; // Add new site
+$permission = PERM_SITE_ADD; // Add new site
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication

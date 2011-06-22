@@ -97,6 +97,7 @@ if (!empty($roleid))
             }
             echo "</table>";
         }
+        echo "<p align='center'><a href='edit_user_permissions.php'>{$strReturnToPreviousPage}</a></p>";
     }
     else
     {
