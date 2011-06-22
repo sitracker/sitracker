@@ -12,7 +12,7 @@
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections
+$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

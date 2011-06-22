@@ -414,7 +414,7 @@ if (mysql_num_rows($resultchase) >= 1)
         }
     }
 }
-else echo "<p>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 if (!empty($html_chase))
 {
@@ -492,7 +492,7 @@ if (mysql_num_rows($result) >= 1)
     }
     $rhtml .= "</table>\n";
 }
-else echo "<p>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 if ($show)
 {

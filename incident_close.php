@@ -10,7 +10,7 @@
 //
 
 
-$permission = 18; //  Close Incidents
+$permission = PERM_INCIDENT_CLOSE; //  Close Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

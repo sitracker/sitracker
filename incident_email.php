@@ -10,7 +10,7 @@
 //
 
 
-$permission = 33; // Send Emails
+$permission = PERM_EMAIL_SEND; // Send Emails
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // include ('mime.inc.php');

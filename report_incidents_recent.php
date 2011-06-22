@@ -59,7 +59,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo "<p class='warning'>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 $sites = array_unique($sites);

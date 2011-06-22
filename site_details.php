@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
 
-$permission = 11; // View Sites
+$permission = PERM_SITE_VIEW; // View Sites
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');

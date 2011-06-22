@@ -15,7 +15,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
 
-$permission = 19;  // view Maintenance contracts
+$permission = PERM_CONTRACT_VIEW;  // view Maintenance contracts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

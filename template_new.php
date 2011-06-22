@@ -9,7 +9,7 @@
 //
 
 
-$permission = 16; // Add Email Template
+$permission = PERM_TEMPLATE_ADD; // Add Email Template
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

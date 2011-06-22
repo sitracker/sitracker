@@ -649,15 +649,14 @@ if (mysql_num_rows($result) >=1 )
         }
         else
         {
-            echo "<p align='center'><strong>{$strNoRecords}</strong></p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
     }
 }
 else
 {
-    echo "<br /><p align='center'>";
-    echo "<strong>{$strNoRecords}</strong>";
-    echo "</p>";
+    echo "<br />";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 
     if ($mode == 'incident')
     {

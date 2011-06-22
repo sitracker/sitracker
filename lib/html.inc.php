@@ -720,7 +720,7 @@ function new_note_form($linkid, $refid)
  */
 function show_notes($linkid, $refid, $delete = TRUE)
 {
-    global $sit, $iconset, $dbNotes;
+    global $sit, $iconset, $dbNotes, $strDelete, $strAreYouSureDelete;
     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='{$linkid}' AND refid='{$refid}' ORDER BY timestamp DESC, id DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -734,8 +734,12 @@ function show_notes($linkid, $refid, $delete = TRUE)
             {
                 $html .= "<a href='note_delete.php?id={$note->id}&amp;rpath=";
                 $html .= "{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' ";
-                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">";
-                $html .= icon('delete', 16)."</a>";
+                if ($_SESSION['userconfig']['show_confirmation_delete'])
+                {
+                    $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\"";
+                }
+                $html .= ">";
+                $html .= icon('delete', 16, $strDelete)."</a>";
             }
             $html .= "</div>\n"; // /detaildate
             $html .= icon('note', 16)." ";
@@ -1139,7 +1143,7 @@ function contract_details($id, $mode='internal')
             }
             else
             {
-                $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
+                $html .= user_alert($strNoRecords, E_USER_NOTICE);
             }
         }
 
@@ -1211,7 +1215,7 @@ function contract_details($id, $mode='internal')
     }
     else
     {
-        $html = "<p align='center'>{$GLOBALS['strNothingToDisplay']}</p>";
+        $html = user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
     }
 
     return $html;

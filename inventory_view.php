@@ -117,7 +117,7 @@ if (is_numeric($_GET['id']))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }

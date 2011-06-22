@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 13; // Reassign Incident
+$permission = PERM_INCIDENT_REASSIGN; // Reassign Incident
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
@@ -178,7 +178,7 @@ switch ($action)
         if ($suggested === FALSE)
         {
             $suggested = 0;
-            $dbg .= "<p>No users suggested</p>";
+            if ($CONFIG['debug']) $dbg .= "<p>No users suggested</p>";
         }
 
         echo "<form name='assignform' action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";

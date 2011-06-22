@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 28; // View Products and Software
+$permission = PERM_PRODUCT_VIEW; // View Products and Software
 $title = 'Products List';
 
 require ('core.php');
@@ -235,7 +235,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
         }
         echo "</table>";
     }
-    else echo "<p class='warning'>{$strNothingToDisplay}</p>";
+    else echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
 }
 else

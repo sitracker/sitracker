@@ -215,6 +215,8 @@ p.error, span.error, p.error a, error.a:link
 }
 p.alert { color: #A12607; background-color: #FFEDED; border: 1px solid #A12607; }
 p.alert a { color: #A12607; background-color: transparent; }
+p.info { background-color: transparent; border:none; color: #4B5B94; }
+#noticearea p.info { border: 1px solid #4B5B94; background-color: #F6F8F9; }
 
 .tabcontainer ul li
 {

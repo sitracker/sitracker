@@ -306,7 +306,7 @@ function show_tag_cloud($orderby="name", $showcount = FALSE)
         }
         $html .= "</td></tr></table>";
     }
-    else $html .= "<p align='center'>{$GLOBALS['strNothingToDisplay']}</p>";
+    else $html .= user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
     return $html;
 }
 

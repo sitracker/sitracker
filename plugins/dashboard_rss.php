@@ -78,7 +78,7 @@ function dashboard_rss_display($dashletid)
             $url = $row[0];
             if ($rss = fetch_rss( $url ))
             {
-    //              if ($CONFIG['debug']) echo "<pre>".print_r($rss,true)."</pre>";
+                // if ($CONFIG['debug']) echo "<pre>".print_r($rss,true)."</pre>";
                 echo "<table>";
                 echo "<tr><th><span style='float: right;'><a href='".htmlspecialchars($url)."'>";
                 echo "<img src='{$CONFIG['application_webpath']}images/icons/{$iconset}/12x12/feed-icon.png' alt='Feed Icon' />";
@@ -93,28 +93,49 @@ function dashboard_rss_display($dashletid)
                 }
                 echo "</a>";
                 echo "</th></tr>\n";
-                $counter=0;
+                $counter = 0;
                 foreach ($rss->items as $item)
                 {
-                    //echo "<pre>".print_r($item,true)."</pre>";
+                    // echo "<pre>".print_r($item,true)."</pre>";
                     echo "<tr><td>";
                     echo "<a href='{$item['link']}' class='info'>{$item['title']}";
                     if ($rss->feed_type == 'RSS')
                     {
-                        if (!empty($item['pubdate'])) $itemdate = strtotime($item['pubdate']);
-                        elseif (!empty($item['dc']['date'])) $itemdate = strtotime($item['dc']['date']);
-                        else $itemdate = '';
+                        if (!empty($item['pubdate'])) 
+                        {
+                            $itemdate = strtotime($item['pubdate']);
+                        }
+                        elseif (!empty($item['dc']['date'])) 
+                        {
+                            $itemdate = strtotime($item['dc']['date']);
+                        }
+                        else 
+                        {
+                            $itemdate = '';
+                        }
                         $d = strip_tags($item['description'],$feedallowedtags);
                     }
                     elseif ($rss->feed_type == 'Atom')
                     {
-                        if (!empty($item['issued'])) $itemdate = strtotime($item['issued']);
-                        elseif (!empty($item['published'])) $itemdate = strtotime($item['published']);
+                        if (!empty($item['issued'])) 
+                        {
+                            $itemdate = strtotime($item['issued']);
+                        }
+                        elseif (!empty($item['published'])) 
+                        {
+                            $itemdate = strtotime($item['published']);
+                        }
                         $d = strip_tags($item['atom_content'],$feedallowedtags);
                     }
-                    if ($itemdate > 10000) $itemdate = ldate($CONFIG['dateformat_datetime'], $itemdate);
+                    if ($itemdate > 10000) 
+                    {
+                        $itemdate = ldate($CONFIG['dateformat_datetime'], $itemdate);
+                    }
                     echo "<span>";
-                    if (!empty($itemdate)) echo "<strong>{$itemdate}</strong><br />";
+                    if (!empty($itemdate)) 
+                    {
+                        echo "<strong>{$itemdate}</strong><br />";
+                    }
                     echo "{$d}</span></a></td></tr>\n";
                     $counter++;
                     if (($row[1] > 0) AND $counter > $row[1]) break;
@@ -129,7 +150,7 @@ function dashboard_rss_display($dashletid)
     }
     else
     {
-        echo "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+        echo user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
     }
 }
 
@@ -199,7 +220,7 @@ function dashboard_rss_edit($dashletid)
             }
             else
             {
-                echo "<p class='error'>{$GLOBALS['strNoRecords']}</p>";
+                echo user_alert($strNoRecords, E_USER_NOTICE);
             }
             break;
         case 'do_edit':

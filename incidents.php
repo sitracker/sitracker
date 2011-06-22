@@ -13,7 +13,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!   31Oct05
 
 
-$permission = 6; // View Incidents
+$permission = PERM_INCIDENT_LIST; // View Incidents
 
 
 require ('core.php');

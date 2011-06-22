@@ -12,7 +12,7 @@
 //          Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 22; // Admin
+$permission = PERM_ADMIN; // Admin
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -239,7 +239,7 @@ function dashboard_watch_incidents_display($dashletid)
     }
     else
     {
-        $html .= "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+        $html .= user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
     }
 
     return $html;

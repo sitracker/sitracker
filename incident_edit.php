@@ -12,7 +12,7 @@
 // Soon to be replaced
 // See incident/edit.inc.php
 
-$permission = 7; // Edit Incidents
+$permission = PERM_INCIDENT_EDIT; // Edit Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

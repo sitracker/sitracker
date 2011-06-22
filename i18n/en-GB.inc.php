@@ -2033,6 +2033,7 @@ $strViewIncidentDetails = 'View Incident Details';
 $strViewIncidents = 'View Incidents';
 $strViewKnowledgebaseArticles = 'View Knowledgebase Articles';
 $strViewResponse = 'View Response';
+$strViewRole = 'View Role';
 # Legacy though we still have a permission for this
 $strViewSalesIncidents = 'View Sales Incidents';
 $strViewSite = 'View Site';

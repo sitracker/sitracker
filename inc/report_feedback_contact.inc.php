@@ -130,7 +130,6 @@ if (mysql_num_rows($mresult) >= 1)
             }
             unset($qavgavg);
             unset($qanswer);
-            unset($dbg);
             unset($storeone);
             unset($storetwo);
             unset($gtotal);

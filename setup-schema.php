@@ -768,8 +768,8 @@ CREATE TABLE IF NOT EXISTS `{$dbPermissions}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-INSERT INTO `{$dbPermissions}` VALUES(1, 2, 'strAddNewSiteContact');
-INSERT INTO `{$dbPermissions}` VALUES(2, 2, 'strAddNewSites');
+INSERT INTO `{$dbPermissions}` VALUES(" . PERM_CONTACT_ADD . ", 2, 'strAddNewSiteContact');
+INSERT INTO `{$dbPermissions}` VALUES(" . PERM_SITE_ADD . ", 2, 'strAddNewSites');
 INSERT INTO `{$dbPermissions}` VALUES(3, 2, 'strEditExistingSiteDetails');
 INSERT INTO `{$dbPermissions}` VALUES(4, 7, 'strEditProfile');
 INSERT INTO `{$dbPermissions}` VALUES(5, 1, 'strAddIncidents');

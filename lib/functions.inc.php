@@ -350,12 +350,14 @@ function db_read_column($column, $table, $id)
 
 /**
  * @author Ivan Lucas
+ * @note: Requires permission names to be i18n strings in the database table
  */
 function permission_name($permissionid)
 {
     global $dbPermissions;
     $name = db_read_column('name', $dbPermissions, $permissionid);
     if (empty($name)) $name = $GLOBALS['strUnknown'];
+    else $name = $GLOBALS["{$name}"];
     return $name;
 }
 
@@ -1145,7 +1147,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
         if (sizeof($data) == 1)
         {
-            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
+            $html .= "<tr><td rowspan='{$rows}'>" . user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE) . "</td></tr>";
         }
         else
         {

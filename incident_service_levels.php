@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 6; // View Incidents
+$permission = PERM_INCIDENT_LIST; // View Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -103,7 +103,7 @@ if (count($slahistory) >= 1)
 }
 else
 {
-    echo "<p align='center'>{$strNothingToDisplay}.<p>";
+    echo user_alert($strNothingToDisplay, E_USER_NOTICE);
 }
 
 //start status summary

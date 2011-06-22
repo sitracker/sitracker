@@ -10,7 +10,7 @@
 //
 
 
-$permission = 8; // Update Incident
+$permission = PERM_UPDATE_ADD; // Update Incident
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

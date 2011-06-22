@@ -71,7 +71,7 @@ function dashboard_incoming_display($dashletid)
         }
         else
         {
-            echo "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+            echo user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
         }
     }
     else

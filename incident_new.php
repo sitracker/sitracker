@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>, Tom Gerrard
 // 7Oct02 INL  Added support for maintenanceid to be put into incidents table
 
-$permission = 5;
+$permission = PERM_INCIDENT_ADD;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -263,7 +263,7 @@ elseif ($action == 'findcontact')
 
         if (empty($str_prefered) AND empty($str_alternative))
         {
-            echo user_alert($strNothingToDisplay, E_USER_WARNING);
+            echo user_alert($strNothingToDisplay, E_USER_NOTICE);
         }
 
         // Select the contact from the list of contacts as well

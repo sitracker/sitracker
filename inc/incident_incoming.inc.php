@@ -102,7 +102,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo user_alert($strNoRecords, E_USER_WARNING);
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 unset($result);

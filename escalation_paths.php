@@ -54,7 +54,7 @@ if (mysql_num_rows($result) >= 1)
     }
     echo "</table>";
 }
-else echo "<p align='center'>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 echo "<p align='center'><a href='escalation_path_new.php'>{$strNew}</a></p>";
 

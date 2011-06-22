@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!  11Oct06
 
 
-$permission = 24;  // Add Product
+$permission = PERM_PRODUCT_ADD;  // Add Product
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = 8; // Update Incidents
+$permission = PERM_UPDATE_ADD; // FIXME needs move update permission
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
