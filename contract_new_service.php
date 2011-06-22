@@ -58,7 +58,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     echo "<table align='center' class='vertical'>";
     if ($timed) echo "<thead>\n";
     echo "<tr><th>{$strStartDate}</th>";
-    echo "<td><input class='required' type='text' name='startdate' id='startdate' size='10' ";
+    echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
     if ($_SESSION['formdata']['new_service']['startdate'] != '')
     {
         echo "value='{$_SESSION['formdata']['new_service']['startdate']}'";
@@ -69,17 +69,17 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     }
     echo "/> ";
     echo date_picker('serviceform.startdate');
-    echo " <span class='required'>{$strRequired}</span></td></tr>";
+    echo "</td></tr>";
 
     echo "<tr><th>{$strEndDate}</th>";
-    echo "<td><input class='required' type='text' name='enddate' id='enddate' size='10'";
+    echo "<td><input type='text' name='enddate' id='enddate' size='10'";
     if ($_SESSION['formdata']['new_service']['enddate'] != '')
     {
         echo "value='{$_SESSION['formdata']['new_service']['enddate']}'";
     }
     echo "/> ";
     echo date_picker('serviceform.enddate');
-    echo " <span class='required'>{$strRequired}</span></td></tr>";
+    echo "</td></tr>";
 
     echo "<tr><th>{$strTitle}</th><td>";
     echo "<input type='text' id='title' name='title' /></td></tr>";
