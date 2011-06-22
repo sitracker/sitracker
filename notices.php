@@ -111,7 +111,8 @@ else
         echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strOperation}</th></tr>\n";
         while ($notice = mysql_fetch_object($result))
         {
-            echo "<tr class='$shade'><td>{$notice->id}</td><td>{$notice->timestamp}</td>";
+            echo "<tr class='$shade'><td>{$notice->id}</td>";
+            echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($notice->timestamp))."</td>";
             echo "<td>".bbcode($notice->text)."</td>";
             echo "<td>";
             echo "<a href='{$_SERVER[PHP_SELF]}?action=delete&amp;id=";

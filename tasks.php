@@ -100,7 +100,7 @@ if (!empty($incident))
 
     if ($mode == 'incident')
     {
-        echo "<h2>".icon('activities', 32)." ";
+        echo "<h2>".icon('activities', 32, $strActivities)." ";
         echo "{$strActivities}</h2>";
     }
     echo "<p align='center'>{$strIncidentActivitiesIntro}</p>";
