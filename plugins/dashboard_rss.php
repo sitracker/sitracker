@@ -150,7 +150,7 @@ function dashboard_rss_display($dashletid)
     }
     else
     {
-        echo user_alert($GLOBALS['strNoRecords'], E_USER_INFO);
+        echo user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
     }
 }
 
