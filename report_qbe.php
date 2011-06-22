@@ -72,7 +72,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<td width='400' class='shade2'>";
     $result = mysql_list_fields($CONFIG['db_database'],$table1);
     $columns = mysql_num_fields($result);
-    echo "<select name='fields[]' multiple='multiple'>";
+    echo "<select name='fields[]' multiple='multiple' size='10'>";
     for ($i = 0; $i < $columns; $i++)
     {
         $fieldname = mysql_field_name($result, $i);
@@ -89,7 +89,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<select name='sortby'>";
     for ($i = 0; $i < $columns; $i++)
     {
-        $fieldname=mysql_field_name($result, $i);
+        $fieldname = mysql_field_name($result, $i);
         echo "<option value='$fieldname'>$fieldname</option>\n";
     }
     echo "</select>";
@@ -105,7 +105,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<select name='criteriafield'>";
     for ($i = 0; $i < $columns; $i++)
     {
-        $fieldname=mysql_field_name($result, $i);
+        $fieldname = mysql_field_name($result, $i);
         echo "<option value='$fieldname'>$fieldname</option>\n";
     }
     echo "</select>";
