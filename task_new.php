@@ -48,7 +48,7 @@ if ($incident)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-    if (($obj = mysql_fetch_object(($result))) AND $obj->status != 1 AND $obj->status != 3)
+    if (($obj = mysql_fetch_object(($result))) AND $obj->status != STATUS_ACTIVE AND $obj->status != STATUS_RESEARCH)
     {
     	$sql = "UPDATE `{$dbIncidents}` SET status = " . STATUS_ACTIVE. ", lastupdated = {$now} WHERE id = {$incident}";
         mysql_query($sql);
