@@ -125,7 +125,7 @@ function dashboard_user_incidents_display($dashletid)
         {
             list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($obj->id);
             $update_body = parse_updatebody($update_body);
-            echo "<tr><td class='{$shade}'>";
+            echo "<tr class='{$shade}'><td>";
             if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
             {
                 $windowname = "incident{$obj->id}";
