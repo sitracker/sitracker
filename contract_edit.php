@@ -10,7 +10,7 @@
 //
 
 
-$permission = 21; // Edit Contracts
+$permission = PERM_CONTRACT_EDIT; // Edit Contracts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

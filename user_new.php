@@ -10,7 +10,7 @@
 //
 
 
-$permission = 20; // Add Users
+$permission = PERM_USER_ADD; // Add Users
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

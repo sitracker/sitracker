@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>, Tom Gerrard
 // 7Oct02 INL  Added support for maintenanceid to be put into incidents table
 
-$permission = 5;
+$permission = PERM_INCIDENT_ADD;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

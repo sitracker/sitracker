@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!   - INL 6Apr06
 
 
-$permission = 6;  // view incidents
+$permission = PERM_INCIDENT_LIST;  // view incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

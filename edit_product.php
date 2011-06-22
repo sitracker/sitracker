@@ -12,7 +12,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 29; // Edit products
+$permission = PERM_PRODUCT_EDIT; // Edit products
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

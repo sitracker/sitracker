@@ -11,7 +11,7 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
 
-$permission = 21; // FIXME need a permission for add service
+$permission = PERM_CONTRACT_EDIT; // FIXME need a permission for add service
 
 require ('core.php');
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');

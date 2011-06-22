@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 22; // Administrate
+$permission = PERM_ADMIN; // Administrate, FIXME need a permission for Add SLA
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 19; // View Maintenance Contracts
+$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
 
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');

@@ -15,7 +15,7 @@
 // Not sure why - Ivan 6Sep06
 
 
-$permission = 14; // View Users
+$permission = PERM_USER_VIEW; // View Users
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

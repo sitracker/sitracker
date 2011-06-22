@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 7; // Edit Incidents
+$permission = PERM_INCIDENT_EDIT; // Edit Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

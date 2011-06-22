@@ -10,7 +10,7 @@
 //
 
 
-$permission = 17; // Edit Template
+$permission = PERM_TEMPLATE_EDIT; // Edit Template
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

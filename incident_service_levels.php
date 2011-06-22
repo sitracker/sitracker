@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 6; // View Incidents
+$permission = PERM_INCIDENT_LIST; // View Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

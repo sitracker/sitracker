@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 12; // View Contacts
+$permission = PERM_CONTACT_VIEW; // View Contacts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

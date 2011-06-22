@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 28; // View Products and Software
+$permission = PERM_PRODUCT_VIEW; // View Products and Software
 $title = 'Products List';
 
 require ('core.php');

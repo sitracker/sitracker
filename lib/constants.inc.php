@@ -161,7 +161,7 @@ define ('PERM_SITE_VIEW', 11);
 define ('PERM_CONTACT_VIEW', 12);
 define ('PERM_INCIDENT_REASSIGN', 13);
 define ('PERM_USER_VIEW', 14);
-define ('PERM_SUPPORTED_PRODUCT_ADD', 15);
+define ('PERM_SUPPORTED_PRODUCT_ADD', 15);  // used??
 define ('PERM_TEMPLATE_ADD', 16);
 define ('PERM_TEMPLATE_EDIT', 17);
 define ('PERM_INCIDENT_CLOSE', 18);
@@ -176,7 +176,7 @@ define ('PERM_HELP_VIEW', 26);
 define ('PERM_MYCALENDAR_VIEW', 27);
 define ('PERM_PRODUCT_VIEW', 28); // Also software/skills
 define ('PERM_PRODUCT_EDIT', 29);
-define ('PERM_SUPPORTED_PRODUCT_VIEW', 30);
+define ('PERM_SUPPORTED_PRODUCT_VIEW', 30);  // FIXME permission unused?
 // perm 31 unused/reserved
 define ('PERM_SUPPORTED_PRODUCT_EDIT', 32);
 define ('PERM_EMAIL_SEND', 33);

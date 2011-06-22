@@ -16,11 +16,11 @@
 
 if (empty($_REQUEST['userid']))
 {
-    $permission = 22; // Administrate
+    $permission = PERM_ADMIN; // Administrate
 }
 else
 {
-    $permision = 4; // Edit your profile
+    $permision = PERM_MYPROFILE_EDIT; // Edit your profile, FIXME need a permission for user settings
 }
 
 require ('core.php');

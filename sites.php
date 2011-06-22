@@ -10,7 +10,7 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 11; // View Sites
+$permission = PERM_SITE_VIEW; // View Sites
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication

@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 9; // Edit User Permissions
+$permission = PERM_USER_PERMISSIONS_EDIT; // Edit User Permissions
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
