@@ -29,7 +29,7 @@ switch ($action)
         $errors = 0;
         if (empty($name))
         {
-            $_SESSION['formerrors']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
+            $_SESSION['formerrors']['new_reseller']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_ERROR);
             $errors++;
         }
 
