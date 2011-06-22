@@ -29,8 +29,8 @@ if (empty($_REQUEST['mode']))
 
     echo "<tr><th>{$strSiteType}:</td>";
     echo "<td>";
-    echo sitetype_drop_down('type', 0);
-    echo "</td></tr>";
+    echo sitetype_drop_down('type', 0, TRUE);
+    echo " <span class='required'>{$strRequired}</span></td></tr>";
 
     echo "<tr><th>{$strOutput}:</th>";
     echo "<td>";
