@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = array(22, 67); // Administrate / Run Reports
+$permission = array(PERM_ADMIN, PERM_REPORT_RUN); // Administrate / Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

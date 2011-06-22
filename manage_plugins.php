@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = array(22,66); // Configure & Install dashboard components
+$permission = array(PERM_ADMIN, PERM_DASHLET_INSTALL); // Configure & Install dashboard components
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
