@@ -1263,6 +1263,13 @@ if (is_array($CONFIG['plugins']))
                     {
                         @include ("{$plugini18npath}{$_SESSION['lang']}.inc.php");
                     }
+
+                    // TODO We should parse the folder for other languages rather than just include
+                    // If syslang and user lang isn't found we fall back to en-GB
+                    if (!file_exists("{$plugini18npath}{$CONFIG['default_i18n']}.inc.php") AND (!file_exists("{$plugini18npath}{$_SESSION['lang']}.inc.php")))
+                    {
+                        @include ("{$plugini18npath}en-GB.inc.php");
+                    }
                 }
             }
             else
