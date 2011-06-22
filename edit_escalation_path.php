@@ -36,7 +36,8 @@ if (empty($_REQUEST['mode']))
     {
         echo "<form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
         echo "<table class='vertical'>";
-        echo "<tr><th>{$strName}:</th><td><input name='name' value='{$details->name}'/></td></tr>";
+        echo "<tr><th>{$strName}:</th><td><input name='name' value='{$details->name}' class='required' />";
+        echo "<span class='required'>{$strRequired}</span></td></tr>";
         echo "<tr><th>{$strTrackURL}:</th><td><input name='trackurl' value='{$details->track_url}' />";
         echo "<br />{$strNoteInsertExternalID}</td></tr>";
         echo "<tr><th>{$strHomeURL}:</th><td><input name='homeurl' value='{$details->home_url}' /></td></tr>";
