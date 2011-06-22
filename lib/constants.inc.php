@@ -147,6 +147,7 @@ define ('PRIORITY_CRITICAL', 4);
 // (Number, not constant name stored in the SiT! database). - INL 2011-06-22
 // If you change the number you'll grant or deny user permissions on a system
 // you can't control.
+define ('PERM_NOT_REQUIRED', 0); // No permission required, allow all access
 define ('PERM_CONTACT_ADD', 1);
 define ('PERM_SITE_ADD', 2);
 define ('PERM_SITE_EDIT', 3);
