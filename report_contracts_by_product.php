@@ -57,7 +57,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo "<p>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

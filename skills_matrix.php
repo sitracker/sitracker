@@ -196,7 +196,7 @@ if ($countskills > 0 AND $countusers > 0)
 }
 else
 {
-    echo "<p align='center'>{$strNothingToDisplay}</p>";
+    echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

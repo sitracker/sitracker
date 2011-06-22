@@ -148,7 +148,7 @@ function dashboard_user_incidents_display($dashletid)
     }
     else
     {
-        echo "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 
 }

@@ -49,7 +49,7 @@ if (!empty($roleid))
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) == 0)
         {
-            echo "<p align='center'>{$strNoRecords}</p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
         else
         {
@@ -73,7 +73,7 @@ if (!empty($roleid))
 
         if (mysql_num_rows($result) == 0)
         {
-            echo "<p align='center'>{$strNoRecords}</p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
         else
         {
@@ -92,7 +92,7 @@ if (!empty($roleid))
     }
     else
     {
-        echo "<p class='error'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 else

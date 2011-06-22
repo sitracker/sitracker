@@ -103,7 +103,7 @@ if (count($slahistory) >= 1)
 }
 else
 {
-    echo "<p align='center'>{$strNothingToDisplay}.<p>";
+    echo user_alert($strNothingToDisplay, E_USER_NOTICE);
 }
 
 //start status summary

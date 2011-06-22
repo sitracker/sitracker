@@ -69,7 +69,7 @@ if (mysql_num_rows($tresult) >= 1)
 }
 else
 {
-    echo "<p class='error'>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

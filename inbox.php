@@ -299,7 +299,7 @@ if (empty($displayid))
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 else
@@ -413,7 +413,7 @@ else
     }
     else
     {
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 

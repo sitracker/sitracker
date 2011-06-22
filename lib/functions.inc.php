@@ -1145,7 +1145,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
         if (sizeof($data) == 1)
         {
-            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
+            $html .= "<tr><td rowspan='{$rows}'>" . user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE) . "</td></tr>";
         }
         else
         {

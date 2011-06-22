@@ -51,7 +51,7 @@ if (empty($submit))
     }
     else
     {
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

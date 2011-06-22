@@ -125,7 +125,7 @@ if (is_numeric($_GET['id']))
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

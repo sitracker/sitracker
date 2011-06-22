@@ -102,7 +102,7 @@ if (empty($action) OR $action == "showform")
             else $class = "shade2";
         }
         echo "</table>";
-        if (mysql_num_rows($presult) < 1) echo "<p>{$strNothingToDisplay}</p>";
+        if (mysql_num_rows($presult) < 1) echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
         echo "</fieldset>";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />";

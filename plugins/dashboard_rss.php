@@ -220,7 +220,7 @@ function dashboard_rss_edit($dashletid)
             }
             else
             {
-                echo "<p class='error'>{$GLOBALS['strNoRecords']}</p>";
+                echo user_alert($strNoRecords, E_USER_NOTICE);
             }
             break;
         case 'do_edit':

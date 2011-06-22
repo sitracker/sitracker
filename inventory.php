@@ -52,7 +52,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo "<p class='info'>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 echo "<p align='center'><a href='inventory_new.php?newsite=1'>";

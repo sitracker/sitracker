@@ -89,7 +89,7 @@ switch ($action)
                 echo "<input type='hidden' name='redirect' value='{$_SERVER['HTTP_REFERER']}' />";
                 echo "</form>";
             }
-            else echo "<p class='error'>{$strNothingToLink}</p>";
+            else echo user_alert($strNothingToLink, E_USER_WARNING);
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

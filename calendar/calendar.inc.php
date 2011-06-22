@@ -639,8 +639,8 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     }
     else
     {
-        if ($numgroups < 1) $html .= "<p class='info'>{$GLOBALS['strNothingToDisplay']}</p>";
-        else $html .= "<p class='info'>{$GLOBALS['strNothingToDisplay']}, {$strCheckUserGroupMembership}.</p>";
+        if ($numgroups < 1) $html .= user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
+        else $html .= user_alert("{$GLOBALS['strNothingToDisplay']}, {$strCheckUserGroupMembership}", E_USER_NOTICE);
     }
     $html .= "</table>\n\n";
 

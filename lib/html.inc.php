@@ -1139,7 +1139,7 @@ function contract_details($id, $mode='internal')
             }
             else
             {
-                $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
+                $html .= user_alert($strNoRecords, E_USER_NOTICE);
             }
         }
 
@@ -1211,7 +1211,7 @@ function contract_details($id, $mode='internal')
     }
     else
     {
-        $html = "<p align='center'>{$GLOBALS['strNothingToDisplay']}</p>";
+        $html = user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
     }
 
     return $html;

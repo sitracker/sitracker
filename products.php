@@ -235,7 +235,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
         }
         echo "</table>";
     }
-    else echo "<p class='warning'>{$strNothingToDisplay}</p>";
+    else echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
 }
 else
