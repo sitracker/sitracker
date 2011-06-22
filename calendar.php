@@ -13,7 +13,7 @@
 //         Tom Gerrard <tom.gerrard[at]salfordsoftware.co.uk>
 
 
-$permission = PERM_MYCALENDAR_VIEW; // View your calendar
+$permission = PERM_CALENDAR_VIEW; // View your calendar
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

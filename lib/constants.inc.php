@@ -174,7 +174,7 @@ define ('PERM_USER_EDIT', 23);
 define ('PERM_PRODUCT_ADD', 24);
 define ('PERM_PRODUCTINFO_ADD', 25);
 define ('PERM_HELP_VIEW', 26);
-define ('PERM_MYCALENDAR_VIEW', 27);
+define ('PERM_CALENDAR_VIEW', 27);
 define ('PERM_PRODUCT_VIEW', 28); // Also software/skills
 define ('PERM_PRODUCT_EDIT', 29);
 define ('PERM_SUPPORTED_PRODUCT_VIEW', 30);  // FIXME permission unused?
@@ -216,7 +216,7 @@ define ('PERM_PRODUCT_DELETE', 65);
 define ('PERM_DASHLET_INSTALL', 66);
 define ('PERM_MANAGEMENT_REPORT_RUN', 67);
 define ('PERM_HOLIDAY_MANAGE', 68);
-define ('PERM_TASK_VIEW', 69); // just my tasks or all tasks?
+define ('PERM_TASK_VIEW', 69); 
 define ('PERM_TASK_EDIT', 70);
 define ('PERM_MYTRIGGERS_MANAGE', 71);
 define ('PERM_TRIGGERS_MANAGE', 72); // system triggers
