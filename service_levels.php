@@ -23,7 +23,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $title = $strServiceLevels;
 
-echo "<h2>".icon('sla', 32)." {$title}</h2>";
+echo "<h2>".icon('sla', 32, $strServiceLevels)." {$title}</h2>";
 
 echo "<p align='center'><a href='service_level_new.php'>{$strNewServiceLevel}</a></p>";
 
