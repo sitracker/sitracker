@@ -142,13 +142,13 @@ else
     if ($contact == 0)
     {
         $errors += 1;
-        $error_string .= "<p class='error'>You must select a contact</p>\n";
+        $error_string .= user_alert(sprintf($strFieldMustNotBeBlank, $strContact), E_USER_ERROR);
     }
     // check for blank title
     if ($title == '')
     {
         $errors += 1;
-        $error_string .= "<p class='error'>You must enter a title</p>\n";
+        $error_string .= user_alert(sprintf($strFieldMustNotBeBlank, $strTitle), E_USER_ERROR);
     }
 
     if ($errors > 0)

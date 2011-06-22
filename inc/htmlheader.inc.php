@@ -177,13 +177,14 @@ if ($sit[0] != '')
     list($dbversion) = mysql_fetch_row($versionresult);
     if ($dbversion < $application_version)
     {
-        echo "<p class='error'><strong>IMPORTANT</strong> The SiT database schema needs to be updated";
+        $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
         if (user_permission($sit[2], 22))
         {
-            echo " from v{$dbversion} to v{$application_version}</p>";
-            echo "<p class='tip'>Visit <a href='setup.php'>Setup</a> to update the schema";
+            $msg .= " from v{$dbversion} to v{$application_version}</p>";
+            $msg2 = "Visit <a href='setup.php'>Setup</a> to update the schema.";
         }
-        echo "</p>";
+        echo user_alert($msg, E_USER_ERROR);
+        echo usert_alert($msg2, E_USER_NOTICE);
     }
 
     if (user_permission($sit[2], 22))

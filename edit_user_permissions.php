@@ -109,6 +109,7 @@ if (empty($action) OR $action == "showform")
         echo "<input type='hidden' name='action' value='update' />";
         echo "<input type='hidden' name='role' value='{$role}' />";
         echo "<input type='hidden' name='tab' value='{$seltab}' />";
+        echo "<input name='reset' type='submit' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
         echo protectform('permissionsform');
@@ -202,8 +203,10 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     echo "</table>";
     echo "<p class='formbuttons'><input name='user' type='hidden' value='{$user}' />";
     echo "<input name='role' type='hidden' value='' />";
+    echo "<input name='reset' type='submit' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
+    echo "<p align='center'><a href=\"manage_users.php\">{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "update")
