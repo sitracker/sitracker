@@ -21,7 +21,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @param int $permission or array. The permission id to check, or an array of id's to check
  * @return boolean. TRUE if the user has the permission (or all the permissions in the array), otherwise FALSE
  */
-function user_permission($userid,$permission)
+function user_permission($userid, $permission)
 {
     // Default is no access
     $accessgranted = FALSE;
