@@ -298,6 +298,7 @@ div#menu li:hover li ul,
     background-position: 100% 5px;
 }
 
+.actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
 
 th:hover { background: #E9E9E9; }
 
