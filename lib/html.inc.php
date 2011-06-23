@@ -2208,16 +2208,38 @@ function html_install_status($status)
  * Creates HTML horizontal list of actions from an array of URL's
  * @author Ivan Lucas
  * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
+                format example: $actions['Label'] = 'http://example.com/page.html'
+                alternative format example: $actions['Label'] = array('url => 'http://example.com/page.html', perm = PERM_FOO);
  * @return string HTML.
  */
 function html_action_links($actions)
 {
+    $access = TRUE;
     $html .= "<span class='actionlinks'>";
     $actionscount = count($actions);
     $count = 1;
-    foreach ($actions AS $label => $URL)
+    foreach ($actions AS $label => $action)
     {
-        $html .= "<a href=\"{$URL}\">{$label}</a>";
+        if (is_array($action))
+        {
+            $url = $action['url'];
+            if (!user_permission($_SESSION['userid'], $action['perm']))
+            {
+                $url = "{$CONFIG['application_webpath']}noaccess.php?id={$action['perm']}";
+                $access = FALSE;
+            }
+        }
+        else
+        {
+            $url = $action;
+            $access = TRUE;
+        }
+        $html .= "<a href=\"{$url}\"";
+        if (!$access)
+        {
+            $html .= " class='greyed' title=\"{$GLOBALS['strNoPermission']}\"";
+        }
+        $html .= ">{$label}</a>";
         $count++;
         if ($count <= $actionscount)
         {
