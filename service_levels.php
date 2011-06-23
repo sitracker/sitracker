@@ -25,7 +25,10 @@ $title = $strServiceLevels;
 
 echo "<h2>".icon('sla', 32, $strServiceLevels)." {$title}</h2>";
 
-echo "<p align='center'><a href='service_level_new.php'>{$strNewServiceLevel}</a></p>";
+$operations = array();
+$operations[$strNewServiceLevel] = array('url' => 'service_level_new.php');
+echo "<p align='center'>" . html_action_links($operations) . "</p>";
+
 
 $tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag";
 $tresult = mysql_query($tsql);
@@ -61,7 +64,9 @@ if (mysql_num_rows($tresult) >= 1)
                 echo "<td>{$strYes}</td>";
             }
             else echo "<td>{$strNo}</td>";
-            echo "<td><a href='service_level_edit.php?tag={$sla->tag}&amp;priority={$sla->priority}'>{$strEdit}</a></td>";
+            $operations = array();
+            $operations[$strEdit] = array('url' => "service_level_edit.php?tag={$sla->tag}&amp;priority={$sla->priority}");
+            echo "<td>" . html_action_links($operations) . "</td>";
             echo "</tr>\n";
         }
     }
