@@ -226,9 +226,11 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
             echo "<td>{$countlinked}</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_skill_new.php?softwareid={$software->id}'>{$strLink}</a> ";
-            echo "| <a href='edit_skill.php?id={$software->id}'>{$strEdit}</a> ";
-            echo "| <a href='edit_skill.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
+            echo "<td>";
+            $operations[$strLink] = array('url' => "product_skill_new.php?softwareid={$software->id}", 'perm' => PERM_PRODUCT_ADD);
+            $operations[$strEdit] = array('url' => "edit_skill.php?id={$software->id}", 'perm' => PERM_SKILL_ADD);
+            $operations[$strDelete] = array('url' => "edit_skill.php?id={$software->id}&amp;action=delete", 'perm' => PERM_SKILL_ADD);
+            echo html_action_links($operations);
             echo "</td>";
             echo "</tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
