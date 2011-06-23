@@ -262,11 +262,11 @@ elseif ($action == "update")
          // Back to role permissions page after saving changes.
         if ($errors == 0)
         {
-            html_redirect("edit_user_permissions.php");
+            html_redirect("edit_user_permissions.php?tab={$seltab}");
         }
         else
         {
-                html_redirect("edit_user_permissions.php", FALSE);
+                html_redirect("edit_user_permissions.php?tab={$seltab}", FALSE);
         }
         exit;
     }
