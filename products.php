@@ -146,9 +146,9 @@ if (empty($productid) AND $display!='skills')
             echo "<td>{$countincidents}</td>";
             echo "<td>";
             $operations = array();
-            $operations[$strLink] = "product_software_new.php?softwareid={$software->id}";
-            $operations[$strEdit] = "edit_software.php?id={$software->id}";
-            $operations[$strDelete] = "edit_software.php?id={$software->id}&amp;action=delete";
+            $operations[$strLink] = "product_skill_new.php?softwareid={$software->id}";
+            $operations[$strEdit] = "edit_skill.php?id={$software->id}";
+            $operations[$strDelete] = "edit_skill.php?id={$software->id}&amp;action=delete";
             echo html_action_links($operations);
             echo "</td>";
             echo "</tr>\n";
@@ -225,9 +225,9 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
             echo "<td>{$countlinked}</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
+            echo "<td><a href='product_skill_new.php?softwareid={$software->id}'>{$strLink}</a> ";
+            echo "| <a href='edit_skill.php?id={$software->id}'>{$strEdit}</a> ";
+            echo "| <a href='edit_skill.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
             echo "</td>";
             echo "</tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
@@ -303,9 +303,9 @@ else
                     echo "</td>";
                     echo "<td>{$countengineers}</td>";
                     echo "<td>{$countincidents}</td>";
-                    echo "<td><a href='delete_product_software.php?productid={$product->id}&amp;softwareid={$software->softwareid}'>{$strUnlink}</a> ";
-                    echo "| <a href='edit_software.php?id={$software->softwareid}'>{$strEdit}</a> ";
-                    echo "| <a href='edit_software.php?id={$software->softwareid}&amp;action=delete'>{$strDelete}</a>";
+                    echo "<td><a href='delete_product_skill.php?productid={$product->id}&amp;softwareid={$software->softwareid}'>{$strUnlink}</a> ";
+                    echo "| <a href='edit_skill.php?id={$software->softwareid}'>{$strEdit}</a> ";
+                    echo "| <a href='edit_skill.php?id={$software->softwareid}&amp;action=delete'>{$strDelete}</a>";
                     echo "</td>";
                     echo "</tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
@@ -317,7 +317,7 @@ else
                 echo "<tr><td>&nbsp;</td><td><em>{$strNoSkillsLinkedToProduct}</em></td><td>&nbsp;</td></tr>\n";
             }
             echo "</table>\n";
-            echo "<p align='center'><a href='product_software_new.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
+            echo "<p align='center'><a href='product_skill_new.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
 
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$product->id}'";
             $result = mysql_query($sql);
@@ -402,7 +402,7 @@ echo "<p align='center'>";
 $operations = array();
 $operations[$strNewVendor] = 'vendor_new.php';
 $operations[$strNewProduct] = 'product_new.php';
-$operations[$strNewSkill] = 'software_new.php';
+$operations[$strNewSkill] = 'skill_new.php';
 
 
 if ($display == 'skills' OR $display == 'software')

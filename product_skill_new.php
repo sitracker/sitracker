@@ -1,5 +1,5 @@
 <?php
-// product_software_new.php - Associates software with a product
+// product_skill_new.php - Associates skill with a product
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -99,7 +99,7 @@ elseif ($action == "new")
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            html_redirect("product_software_new.php?productid={$productid}&return={$return}", FALSE, $strAvoidDupes);
+            html_redirect("product_skill_new.php?productid={$productid}&return={$return}", FALSE, $strAvoidDupes);
             // TODO $strAvoidDupes isn't the perfect string to use here, replace with something better when
             // we have a message about duplicates.
             exit;
@@ -120,7 +120,7 @@ elseif ($action == "new")
         else
         {
             journal(CFG_LOGGING_NORMAL, 'Product Added', "Skill $softwareid was added to product $productid", CFG_JOURNAL_PRODUCTS, $productid);
-            if ($return == 'true') html_redirect("product_software_new.php?productid={$productid}&return=true");
+            if ($return == 'true') html_redirect("product_skill_new.php?productid={$productid}&return=true");
             else html_redirect("products.php?productid={$productid}");
         }
     }

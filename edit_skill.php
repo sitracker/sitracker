@@ -1,5 +1,5 @@
 <?php
-// edit_software.php - Form for editing software
+// edit_skill.php - Form for editing skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project

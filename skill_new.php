@@ -1,5 +1,5 @@
 <?php
-// software_new.php - Form for adding software
+// skill_new.php - Form for adding skills (skills were called software in earlier versions of SiT)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project

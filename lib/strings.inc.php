@@ -173,8 +173,8 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            20 => array ( 'perm' => PERM_PRODUCT_ADD, 'name' => $strNewProduct, 'url' => "{$CONFIG['application_webpath']}product_new.php"),
                            30 => array ( 'perm' => PERM_PRODUCT_VIEW, 'name' => $strListProducts, 'url' => "{$CONFIG['application_webpath']}products.php"),
                            40 => array ( 'perm' => PERM_PRODUCT_VIEW, 'name' => $strListSkills, 'url' => "{$CONFIG['application_webpath']}products.php?display=skills"),
-                           50 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strNewSkill, 'url' => "{$CONFIG['application_webpath']}software_new.php"),
-                           60 => array ( 'perm' => PERM_PRODUCT_ADD, 'name' => $strLinkProducts, 'url' => "{$CONFIG['application_webpath']}product_software_new.php"),
+                           50 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strNewSkill, 'url' => "{$CONFIG['application_webpath']}skill_new.php"),
+                           60 => array ( 'perm' => PERM_PRODUCT_ADD, 'name' => $strLinkProducts, 'url' => "{$CONFIG['application_webpath']}product_skill_new.php"),
                            70 => array ( 'perm' => PERM_PRODUCTINFO_ADD, 'name' => $strAddProductInformation, 'url' => "{$CONFIG['application_webpath']}product_info_new.php"),
                            80 => array ('perm' => PERM_SKILL_ADD, 'name' => $strEditVendor, 'url' => "{$CONFIG['application_webpath']}vendors.php")
     );
