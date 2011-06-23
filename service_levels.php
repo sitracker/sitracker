@@ -33,7 +33,7 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($tresult) >= 1)
 {
     $minsinday = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
-    
+
     echo "<table align='center'>";
     while ($tag = mysql_fetch_object($tresult))
     {
@@ -44,7 +44,7 @@ if (mysql_num_rows($tresult) >= 1)
 
         echo "<tr><th colspan='2'>{$strPriority}</th><th>{$strInitialResponse}</th>";
         echo "<th>{$strProblemDefinition}</th><th>{$strActionPlan}</th><th>{$strResolutionReprioritisation}</th>";
-        echo "<th>{$strReview}</th><th>{$strTimed}</th><th>{$strOperation}</th></tr>";
+        echo "<th>{$strReview}</th><th>{$strTimed}</th><th>{$strActions}</th></tr>";
         while ($sla = mysql_fetch_object($result))
         {
             echo "<tr>";

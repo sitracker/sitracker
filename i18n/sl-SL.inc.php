@@ -609,7 +609,6 @@ $strOpenedby = 'Odprl %s';
 $strOpenedbyXonY = 'Odprl %s dne %s';
 $strOpenedViaThePortalByX = 'Preko portala odprl %s';
 $strOpenForX = 'Odprto za %s';
-$strOperation = 'Operacija';
 $strOptions = 'Možnosti';
 $strOptionsOnePerLine = 'Možnosti (ena na vrstico)';
 $strOriginalMessageReceivedAt = 'Prvotno sporočilo prejeto %s';

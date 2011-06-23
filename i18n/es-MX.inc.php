@@ -907,7 +907,6 @@ $strOpenedby = 'Abierto por %s';
 $strOpenedbyXonY = 'Abierto por %s en %s';
 $strOpenedViaThePortalByX = 'Abierto desde el portal por %s';
 $strOpenForX = 'Abierto por %s';
-$strOperation = 'Operación';
 $strOriginalMessageReceivedAt = 'El mensaje original se recibió en: %s';
 $strOrphanedSites = 'Sitios huérfanos';
 $strOther = 'Otros';

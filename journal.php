@@ -106,7 +106,7 @@ if ($journal_count >= 1)
     echo colheader('userid', $strUser, $sort, $order, $filter);
     echo colheader('timestamp',"{$strTime}/{$strDate}", $sort, $order, $filter);
     echo colheader('event', $strEvent);
-    echo colheader('action', $strOperation);
+    echo colheader('action', $strActions);
     echo colheader('type', $strType);
     echo "</tr>\n";
     $shade = 'shade1';
@@ -147,13 +147,13 @@ if ($journal_count >= 1)
 
     if ($page > 3 AND $pages > 10) $minpage = $page - 3;
     else $minpage = ($page - 2);
-    
+
     if ($minpage < 1) $minpage = 1;
-    
+
     $maxpage = $minpage + $numpagelinks;
-    
+
     if ($maxpage > $pages + 1) $maxpage = $pages + 1;
-    
+
     if ($minpage >= ($maxpage - $numpagelinks)) $minpage = $maxpage - $numpagelinks;
 
     $prev = $page - 1;

@@ -1096,7 +1096,6 @@ $strOpenedby = 'Отворен от %s';
 $strOpenedbyXonY = 'Отворен от %s в %s';
 $strOpenedViaThePortalByX = 'Отворен през портала от %s';
 $strOpenForX = 'Отворен за %s';
-$strOperation = 'Действие';
 $strOptions = 'Опции';
 $strOptionsOnePerLine = 'Опции (по една на ред)';
 $strOriginalMessageReceivedAt = 'Оригиналното съобщение е получено в: %s';

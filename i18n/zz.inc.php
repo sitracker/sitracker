@@ -1000,7 +1000,6 @@ $strOpenedby = 'strOpenedby';
 $strOpenedbyXonY = 'strOpenedbyXonY';
 $strOpenedViaThePortalByX = 'strOpenedViaThePortalByX';
 $strOpenForX = 'strOpenForX';
-$strOperation = 'strOperation';
 $strOriginalMessageReceivedAt = 'strOriginalMessageReceivedAt';
 $strOrphanedSites = 'strOrphanedSites';
 $strOther = 'strOther';

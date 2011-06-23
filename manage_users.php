@@ -57,7 +57,7 @@ if ($CONFIG['use_ldap'])
 {
     echo "<th>{$strSource}".help_link('UserSource')."</th>";
 }
-echo "<th>{$strOperation}</th>";
+echo "<th>{$strActions}</th>";
 
 echo "</tr>\n";
 

@@ -1125,7 +1125,7 @@ function contract_service_table($contractid, $billing)
         {
             $html .= "<th>{$GLOBALS['strAvailableBalance']}</th>";
         }
-        $html .= "<th>{$GLOBALS['strOperation']}</th>";
+        $html .= "<th>{$GLOBALS['strActions']}</th>";
         $html .= "</tr>\n";
         while ($service = mysql_fetch_object($result))
         {
@@ -1177,7 +1177,7 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
                 }
-                
+
                 $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
 
                 if ($balance != $service->balance)
@@ -1583,7 +1583,7 @@ function get_incident_billable_breakdown_array($incidentid)
     $billable = make_incident_billing_array($incidentid, FALSE);
 
     $billingmatrix = '';
-    
+
     $serviceid = get_serviceid(incident_maintid($incidentid));
     $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbService']}` WHERE serviceid = {$serviceid}";
     $result = mysql_query($sql);
@@ -1592,7 +1592,7 @@ function get_incident_billable_breakdown_array($incidentid)
         trigger_error("Unable to get billing matrix for service {$serviceid} ".mysql_error(),E_USER_WARNING);
     }
     list($billingmatrix) = mysql_fetch_row($result);
-    
+
     //echo "<pre>";
     //print_r($billable);
     //echo "</pre>";

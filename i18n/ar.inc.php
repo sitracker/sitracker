@@ -359,7 +359,6 @@ $strNow = 'الان';
 $strOccurance = 'ظهور';
 $strOctober = 'تشرين الاول';
 $strOldPassword = 'كلمة مرور قديمه';
-$strOperation = 'عمليه';
 $strOptions = 'خيارات';
 $strOutbound = 'صادر';
 $strOwner = 'مالك';

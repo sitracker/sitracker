@@ -39,7 +39,7 @@ if (mysql_num_rows($result) >= 1)
     echo colheader('home_url', $strHomeURL);
     echo colheader('url_title', $strURLTitle);
     echo colheader('email_domain', $strEmailDomain);
-    echo colheader('edit', $strOperation);
+    echo colheader('edit', $strActions);
     echo "</tr>";
     while ($path = mysql_fetch_object($result))
     {

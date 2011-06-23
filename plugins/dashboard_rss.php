@@ -101,15 +101,15 @@ function dashboard_rss_display($dashletid)
                     echo "<a href='{$item['link']}' class='info'>{$item['title']}";
                     if ($rss->feed_type == 'RSS')
                     {
-                        if (!empty($item['pubdate'])) 
+                        if (!empty($item['pubdate']))
                         {
                             $itemdate = strtotime($item['pubdate']);
                         }
-                        elseif (!empty($item['dc']['date'])) 
+                        elseif (!empty($item['dc']['date']))
                         {
                             $itemdate = strtotime($item['dc']['date']);
                         }
-                        else 
+                        else
                         {
                             $itemdate = '';
                         }
@@ -117,22 +117,22 @@ function dashboard_rss_display($dashletid)
                     }
                     elseif ($rss->feed_type == 'Atom')
                     {
-                        if (!empty($item['issued'])) 
+                        if (!empty($item['issued']))
                         {
                             $itemdate = strtotime($item['issued']);
                         }
-                        elseif (!empty($item['published'])) 
+                        elseif (!empty($item['published']))
                         {
                             $itemdate = strtotime($item['published']);
                         }
                         $d = strip_tags($item['atom_content'],$feedallowedtags);
                     }
-                    if ($itemdate > 10000) 
+                    if ($itemdate > 10000)
                     {
                         $itemdate = ldate($CONFIG['dateformat_datetime'], $itemdate);
                     }
                     echo "<span>";
-                    if (!empty($itemdate)) 
+                    if (!empty($itemdate))
                     {
                         echo "<strong>{$itemdate}</strong><br />";
                     }
@@ -286,7 +286,7 @@ function dashboard_rss_edit($dashletid)
             if (mysql_num_rows($result) > 0)
             {
                 echo "<table align='center'>\n";
-                echo "<tr><th>URL</th><th>{$GLOBALS['strDisplay']}</th><th>{$GLOBALS['strEnabled']}</th><th>{$GLOBALS['strOperation']}</th></tr>\n";
+                echo "<tr><th>URL</th><th>{$GLOBALS['strDisplay']}</th><th>{$GLOBALS['strEnabled']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
                 $shade = 'shade1';
                 while ($obj = mysql_fetch_object($result))
                 {

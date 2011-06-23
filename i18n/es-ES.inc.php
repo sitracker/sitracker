@@ -760,7 +760,6 @@ $strOpenActivities = 'Actividades abiertas';
 $strOpenedby = 'Abierto por %s';
 $strOpenedbyXonY = 'Abierto por %s en %s';
 $strOpenedViaThePortalByX = 'Abierto desde el portal por %s';
-$strOperation = 'Operación';
 $strOrphanedSites = 'Sitios huérfanos';
 $strOther = 'Otros';
 $strOtherIncidents = 'Otros incidentes';

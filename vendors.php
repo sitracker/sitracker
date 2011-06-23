@@ -75,7 +75,7 @@ switch ($action)
         if (mysql_num_rows($result) > 0)
         {
             echo "<table align='center'>";
-            echo "<tr><th>{$strVendor}</th><th>{$strOperation}</th></tr>";
+            echo "<tr><th>{$strVendor}</th><th>{$strActions}</th></tr>";
             $shade='shade1';
             while ($row = mysql_fetch_object($result))
             {

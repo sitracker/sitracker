@@ -230,7 +230,7 @@ switch ($mode)
                 echo colheader('created', $strDate, $sort, $order, $filter);
                 echo colheader('contactid', $strContact,$sort, $order, $filter);
                 echo colheader('incidentid', $strIncident,$sort, $order, $filter);
-                echo "<th>{$strOperation}</th>";
+                echo "<th>{$strActions}</th>";
                 echo "</tr>\n";
                 $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))

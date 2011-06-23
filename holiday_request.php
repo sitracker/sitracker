@@ -43,7 +43,7 @@ function display_holiday_table($result)
     echo "<th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strLength']}</th><th>{$GLOBALS['strType']}</th>";
     if ($approver AND $mode == 'approval')
     {
-        echo "<th>{$GLOBALS['strOperation']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
+        echo "<th>{$GLOBALS['strActions']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
     }
 
     echo "</tr>";

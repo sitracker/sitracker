@@ -1251,7 +1251,6 @@ $strOpenedby = 'Åbnet af %s';
 $strOpenedbyXonY = 'Åbnet af %1s den %2s';
 $strOpenedViaThePortalByX = 'Åbnet via portalen af %s';
 $strOpenForX = 'Åben i %s';
-$strOperation = 'Operation';
 $strOptions = 'Optioner';
 $strOptionsOnePerLine = 'Optioner (én pr linie)';
 $strOriginalMessageReceivedAt = 'Oprindelig besked modtaget: %s';

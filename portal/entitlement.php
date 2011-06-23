@@ -30,7 +30,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
     echo colheader('availableincidents',$strIncidentsAvailable);
     echo colheader('usedincidents',$strIncidentsUsed);
     echo colheader('expirydate', $strExpiryDate);
-    echo colheader('actions', $strOperation);
+    echo colheader('actions', $strActions);
     echo "</tr>";
     $shade = 'shade1';
 

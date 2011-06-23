@@ -45,7 +45,7 @@ if (empty($productid) AND $display!='skills')
             {
                 echo "<table summary='{$strListProducts}' align='center' width='95%'>";
                 echo "<tr><th width='20%'>{$strProduct}</th><th width='52%'>{$strDescription}</th><th width='10%'>{$strLinkedSkills}</th>";
-                echo "<th width='10%'>{$strActiveContracts}</th><th width='8%'>{$strOperation}</th></tr>\n";
+                echo "<th width='10%'>{$strActiveContracts}</th><th width='8%'>{$strActions}</th></tr>\n";
                 $shade = 'shade1';
                 while ($product = mysql_fetch_object($presult))
                 {
@@ -108,7 +108,7 @@ if (empty($productid) AND $display!='skills')
         echo "<p align='center'>These skills are not linked to any product</p>";
         echo "<table summary='' align='center' width='55%'>";
         echo "<tr><th>{$strSkill}</th><th>{$strLifetime}</th>";
-        echo "<th>Engineers</th><th>{$strIncidents}</th><th>{$strOperation}</th></tr>";
+        echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strActions}</th></tr>";
         while ($software = mysql_fetch_object($result))
         {
             $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid = '{$software->id}'";
@@ -170,7 +170,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
         echo "<table align='center'>";
         echo "<tr><th>{$strSkill}</th><th>{$strVendor}</th>";
         echo "<th>{$strLifetime}</th><th>{$strLinkedToNumProducts}</th>";
-        echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strOperation}</th></tr>";
+        echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($software = mysql_fetch_object($result))
         {

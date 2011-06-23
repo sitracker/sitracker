@@ -48,7 +48,7 @@ if (empty($submit))
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit=\"populateHidden(document.softwareform.elements['expertise[]'], document.softwareform.choices); populateHidden(document.softwareform.elements['noskills[]'], document.softwareform.ns)\">";
     echo "<table align='center'>";
-    echo "<tr><th>{$strNOSkills}</th><th>&nbsp;{$strOperation}&nbsp;</th><th>{$strHAVESkills}</th></tr>";
+    echo "<tr><th>{$strNOSkills}</th><th>&nbsp;{$strActions}&nbsp;</th><th>{$strHAVESkills}</th></tr>";
     echo "<tr><td align='center' class='shade1'>";
     echo "\n<select name='noskills[]' multiple='multiple' size='20' style='width: 100%; min-width: 300px; min-height: 200px;'>";
     $sql = "SELECT * FROM `{$dbSoftware}` ORDER BY name";

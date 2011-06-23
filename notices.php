@@ -108,7 +108,7 @@ else
     if (mysql_num_rows($result) > 0)
     {
         echo "<table align='center'>";
-        echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strOperation}</th></tr>\n";
+        echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strActions}</th></tr>\n";
         while ($notice = mysql_fetch_object($result))
         {
             echo "<tr class='$shade'><td>{$notice->id}</td>";

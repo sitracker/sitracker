@@ -35,7 +35,7 @@ if (empty($mode))
     if (mysql_num_rows($result) > 0)
     {
         echo "<table align='center'>";
-        echo "<tr><th>{$strSiteType}</th><th>{$strOperation}</th></tr>";
+        echo "<tr><th>{$strSiteType}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($obj = mysql_fetch_object($result))
         {

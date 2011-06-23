@@ -997,7 +997,6 @@ $strOpenedby = 'Aperta da %s';
 $strOpenedbyXonY = 'Aperta da %s su %s';
 $strOpenedViaThePortalByX = 'Aperta tramite il portale da %s';
 $strOpenForX = 'Aperta per %s';
-$strOperation = 'Operazione';
 $strOriginalMessageReceivedAt = 'Messaggio originale ricevuto a: %s';
 $strOrphanedSites = 'Siti Orfani';
 $strOther = 'Altro';

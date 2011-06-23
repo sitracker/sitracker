@@ -1127,7 +1127,6 @@ $strOpenedby = 'Geopend door %s';
 $strOpenedbyXonY = 'Geopend door %s op %s';
 $strOpenedViaThePortalByX = 'Geopend via het portaal door %s';
 $strOpenForX = 'Open voor %s';
-$strOperation = 'Operatie';
 $strOptions = 'Opties';
 $strOptionsOnePerLine = 'Opties (één per regel)';
 $strOriginalMessageReceivedAt = 'Origineel bericht ontvangen op: &s';

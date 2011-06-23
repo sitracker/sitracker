@@ -671,7 +671,6 @@ $strOpenedby = 'Aberto por %s';
 $strOpenedbyXonY = 'Aberto por %s em %s';
 $strOpenedViaThePortalByX = 'Aberto via Portal por %s';
 $strOpenForX = 'Aberto para %s';
-$strOperation = 'Operação';
 $strOriginalMessageReceivedAt = 'Mensagem original recebida em: %s';
 $strOther = 'Outro';
 $strOtherIncidents = 'Outros Incidentes';

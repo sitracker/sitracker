@@ -88,7 +88,7 @@ switch ($action)
 
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
         echo "<table summary=\"{$strUserGroups}\" align='center'>";
-        echo "<tr><th>{$strGroup}</th><th>{$strOperation}</th></tr>\n";
+        echo "<tr><th>{$strGroup}</th><th>{$strActions}</th></tr>\n";
         if ($numgroups > 0)
         {
             foreach ($grouparr AS $groupid => $groupname)
