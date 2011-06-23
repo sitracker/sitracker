@@ -17,7 +17,7 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-$title = $strEditVendor;
+$title = $strVendors;
 
 $action = cleanvar($_REQUEST['action']);
 
@@ -52,7 +52,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo show_form_errors('edit_vendor');
         clear_form_errors('edit_vendor');
-        echo "<h2>".icon('edituser', 32)." {$strEditVendor}: {$vendorname}</h2>";
+        echo "<h2>{$strEditVendor}: {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";
         echo "<table align='center'>";
         echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}' class='required' /> ";
@@ -68,7 +68,7 @@ switch ($action)
         break;
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>".icon('edituser', 32)." {$strEditVendor}</h2>";
+        echo "<h2>{$strVendors}</h2>";
         $sql = "SELECT * FROM `{$dbVendors}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
