@@ -83,7 +83,6 @@ $strAddress1 = 'Address1';
 $strAddress2 = 'Address2';
 $strAddRSSAtomFeed = 'Add RSS/Atom feed';
 $strAddService = 'Add Service';
-# i.e. Physical site
 $strAddSoftware = 'Add Software';
 # i.e. Addition of site failed
 $strAddXfailed = 'Addition of %s Failed';
