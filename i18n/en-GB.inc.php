@@ -231,7 +231,6 @@ $strBrowseContacts = 'Browse contacts';
 $strBrowseContracts = 'Browse contracts';
 $strBrowseContractsBySite = 'Browse Contracts by Site';
 $strBrowseFeedback = 'Browse feedback';
-$strBrowseFeedbackForms = 'Browse Feedback Forms';
 $strBrowseJournal = 'Browse Journal';
 $strBrowseKB = 'Browse Knowledge Base';
 $strBrowseSites = 'Browse sites';

@@ -65,7 +65,8 @@ if (empty($action) OR $action == "showform")
     echo "{$title}</h2>";
     echo "<form name='new_servicelevel' action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-    echo "<p align='center'>{$strTag}: <input type='text' name='tag' maxlength='32' value='{$_SESSION['formdata']['new_servicelevel']['tag']}' /></p>";
+    echo "<p align='center'>{$strTag}: <input type='text' name='tag' maxlength='32' value='{$_SESSION['formdata']['new_servicelevel']['tag']}' class='required' /> ";
+    echo "<span class='required'>{$strRequired}</p>";
 
     echo "<table align='center'>";
     echo "<tr><th>{$strTimed}</th><td class='shade1'><input type='checkbox' id='timed' name='timed' value='yes' onchange='enableBillingPeriod();' {$timedchecked} />".help_link('ServiceLevelTimed')."</td></tr>";
@@ -116,6 +117,7 @@ if (empty($action) OR $action == "showform")
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' />  ";
     echo "<input type='submit' value='{$strSave}' /></p>";
+    echo "<p><a href=\"service_levels.php\">{$strReturnWithoutSaving}</a></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

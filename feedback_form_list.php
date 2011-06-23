@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$title = $strBrowseFeedbackForms;
+$title = $strFeedbackForms;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('reports', 32)." {$title}</h2>";
