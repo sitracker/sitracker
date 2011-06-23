@@ -294,6 +294,17 @@ switch ($seltab)
                 echo "</tr>";
             }
             echo "</table>";
+
+           // Legend
+            if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+            {
+                echo "<br />";
+                echo "<table class='legend'><tr>";
+                echo "<td class='idle'>{$strEnabled}</td>";
+                echo "<td class='expired'>{$strDisabled}</td>";
+                echo "</tr></table>";
+            }
+
         }
         else
         {
