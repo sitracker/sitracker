@@ -414,6 +414,7 @@ else
 {
     $operations[$strListSkills] = 'products.php?display=skills';
 }
+$operations[$strNewProductQuestion] = "product_info_new.php?product={$productid}";
 echo html_action_links($operations);
 echo "</p>";
 

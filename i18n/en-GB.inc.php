@@ -1015,6 +1015,9 @@ $strListProducts = 'List Products';
 $strListShowsContacts = 'This list shows contacts that matched your search, if site-support is available you can add incidents for the site';
 $strListShowsContracts = 'This list shows contracts, i.e. supported contacts and the products they are supported for. Click on the appropriate \'%s\' link to begin adding the incident';
 $strListSkills = 'List Skills';
+# List skills that users have
+$strListUserSkills = 'List User Skills';
+$strListVendors = 'List Vendors';
 $strLinkSkillToX = 'Link skill to %s';
 $strLoading = 'Loading';
 # Parameters defining location, language and regional preferences
@@ -1154,7 +1157,7 @@ $strNewReseller = 'New Reseller';
 $strNewRole = 'New Role';
 $strNewPriority = 'New Priority';
 $strNewProduct = 'New Product';
-$strNewPriorityQuestion = 'New Product Question';
+$strNewProductQuestion = 'New Product Question';
 $strNewService = 'New Service';
 $strNewServiceLevel = 'New Service Level';
 $strNewSite = 'New Site';
@@ -1441,6 +1444,7 @@ $strProduct = 'Product';
 $strProductOnly = 'Product Only';
 $strProductQuestions = 'Product Questions';
 $strProducts = 'Products';
+$strProductsAndSkills = 'Products & Skills';
 $strPublic = 'Public';
 $strPublishFielsToFTPSite = 'Public Files to FTP site';
 $strPublicHoliday = 'Public Holiday';

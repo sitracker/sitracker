@@ -34,9 +34,9 @@ if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
  Example:
 
-    $hmenu[1040] = array (10 => array ( 'perm' => 0, 'name' => "Option1", 'url' => ""),
-                          20 => array ( 'perm' => 0, 'name' => "Option2", 'url' => "", enablevar => "example_config"),
-                          30 => array ( 'perm' => 0, 'name' => "Option3", 'url' => "", submenu => 104030 )
+    $hmenu[1040] = array (10 => array('perm' => 0, 'name' => "Option1", 'url' => ""),
+                          20 => array('perm' => 0, 'name' => "Option2", 'url' => "", enablevar => "example_config"),
+                          30 => array('perm' => 0, 'name' => "Option3", 'url' => "", submenu => 104030 )
 );
 */
 
@@ -61,72 +61,80 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[0])) $hmenu[0] = array();
     $hmenu[0] = $hmenu[0] +
-                    array (10 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $CONFIG['application_shortname'], 'url' => "{$CONFIG['application_webpath']}main.php", 'submenu' => 10),
-                           20 => array ( 'perm' => PERM_SITE_VIEW, 'name' => $strCustomers, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 20),
-                           30 => array ( 'perm' => PERM_INCIDENT_LIST, 'name' => $strSupport, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=current&amp;queue=1&amp;type=support", 'submenu' => 30),
-                           40 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php", 'submenu' => 40, 'enablevar' => 'tasks_enabled'),
-                           50 => array ( 'perm' => PERM_KB_VIEW, 'name' => $strKnowledgeBase, 'url' => "{$CONFIG['application_webpath']}kb.php", 'submenu' => 50, 'enablevar' => 'kb_enabled'),
-                           60 => array ( 'perm' => PERM_REPORT_RUN, 'name' => $strReports, 'url' => "", 'submenu' => 60),
-                           70 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strHelp, 'url' => "{$CONFIG['application_webpath']}help.php", 'submenu' => 70)
+                    array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $CONFIG['application_shortname'], 'url' => "{$CONFIG['application_webpath']}main.php", 'submenu' => 10),
+                           20 => array('perm' => PERM_SITE_VIEW, 'name' => $strCustomers, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 20),
+                           30 => array('perm' => PERM_INCIDENT_LIST, 'name' => $strSupport, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=current&amp;queue=1&amp;type=support", 'submenu' => 30),
+                           40 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php", 'submenu' => 40, 'enablevar' => 'tasks_enabled'),
+                           50 => array('perm' => PERM_KB_VIEW, 'name' => $strKnowledgeBase, 'url' => "{$CONFIG['application_webpath']}kb.php", 'submenu' => 50, 'enablevar' => 'kb_enabled'),
+                           60 => array('perm' => PERM_REPORT_RUN, 'name' => $strReports, 'url' => "", 'submenu' => 60),
+                           70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strHelp, 'url' => "{$CONFIG['application_webpath']}help.php", 'submenu' => 70)
     );
     // Second Level: SiT! submenu
     if (!is_array($hmenu[10])) $hmenu[10] = array();
     $hmenu[10] = $hmenu[10] +
-                    array (10 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strDashboard, 'url' => "{$CONFIG['application_webpath']}main.php"),
-                           20 => array ( 'perm' => PERM_SEARCH, 'name' => $strSearch, 'url' => "{$CONFIG['application_webpath']}search.php"),
-                           30 => array ( 'perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyDetails, 'url' => "{$CONFIG['application_webpath']}user_profile_edit.php", 'submenu' => 1030),
-                           40 => array ( 'perm' => PERM_MYPROFILE_EDIT, 'name' => $strControlPanel, 'url' => "{$CONFIG['application_webpath']}config.php", 'submenu' => 1040),
-                           50 => array ( 'perm' => PERM_USER_VIEW, 'name' => $strUsers, 'url' => "{$CONFIG['application_webpath']}users.php", 'submenu' => 1050),
-                           60 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strLogout, 'url' => "{$CONFIG['application_webpath']}logout.php")
+                    array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strDashboard, 'url' => "{$CONFIG['application_webpath']}main.php"),
+                           20 => array('perm' => PERM_SEARCH, 'name' => $strSearch, 'url' => "{$CONFIG['application_webpath']}search.php"),
+                           30 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyDetails, 'url' => "{$CONFIG['application_webpath']}user_profile_edit.php", 'submenu' => 1030),
+                           40 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strControlPanel, 'url' => "{$CONFIG['application_webpath']}config.php", 'submenu' => 1040),
+                           50 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strProductsAndSkills, 'url' => "products.php", 'submenu' => 1050),
+                           60 => array('perm' => PERM_USER_VIEW, 'name' => $strUsers, 'url' => "{$CONFIG['application_webpath']}users.php", 'submenu' => 1060),
+                           70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strLogout, 'url' => "{$CONFIG['application_webpath']}logout.php")
     );
     // Second Level: My Details submenu
     if (!is_array($hmenu[1030])) $hmenu[1030] = array();
     $hmenu[1030] = $hmenu[1030] +
-                    array (10 => array ( 'perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyProfile, 'url' => "{$CONFIG['application_webpath']}user_profile_edit.php"),
-                           20 => array ( 'perm' => PERM_MYPROFILE_EDIT, 'name' => $strMySettings, 'url' => "{$CONFIG['application_webpath']}config.php?userid=current"),
-                           30 => array ( 'perm' => PERM_MYSKILLS_SET, 'name' => $strMySkills, 'url' => "{$CONFIG['application_webpath']}edit_user_skills.php"),
-                           40 => array ( 'perm' => PERM_MYSKILLS_SET, 'name' => $strMySubstitutes, 'url' => "{$CONFIG['application_webpath']}edit_backup_users.php"),
-                           50 => array ( 'perm' => PERM_CALENDAR_VIEW, 'name' => $strMyHolidays, 'url' => "{$CONFIG['application_webpath']}holidays.php", 'enablevar' => 'holidays_enabled'),
-                           60 => array ( 'perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyDashboard, 'url' => "{$CONFIG['application_webpath']}manage_user_dashboard.php"),
-                           70 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strMyNotifications, 'url' => "{$CONFIG['application_webpath']}notifications.php")
+                    array (10 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyProfile, 'url' => "{$CONFIG['application_webpath']}user_profile_edit.php"),
+                           20 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMySettings, 'url' => "{$CONFIG['application_webpath']}config.php?userid=current"),
+                           30 => array('perm' => PERM_MYSKILLS_SET, 'name' => $strMySkills, 'url' => "{$CONFIG['application_webpath']}edit_user_skills.php"),
+                           40 => array('perm' => PERM_MYSKILLS_SET, 'name' => $strMySubstitutes, 'url' => "{$CONFIG['application_webpath']}edit_backup_users.php"),
+                           50 => array('perm' => PERM_CALENDAR_VIEW, 'name' => $strMyHolidays, 'url' => "{$CONFIG['application_webpath']}holidays.php", 'enablevar' => 'holidays_enabled'),
+                           60 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyDashboard, 'url' => "{$CONFIG['application_webpath']}manage_user_dashboard.php"),
+                           70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strMyNotifications, 'url' => "{$CONFIG['application_webpath']}notifications.php")
     );
     // Second Level: Control Panel submenu
     if (!is_array($hmenu[1040])) $hmenu[1040] = array();
     $hmenu[1040] = $hmenu[1040] +
-                    array (10 => array ( 'perm' => PERM_ADMIN, 'name' => $strConfigure, 'url' => "{$CONFIG['application_webpath']}config.php"),
-                           20 => array ( 'perm' => PERM_ADMIN, 'name' => $strUsers, 'url' => "{$CONFIG['application_webpath']}manage_users.php", 'submenu' => 104020),
-                           30 => array ( 'perm' => PERM_GLOBALSIG_EDIT, 'name' => $strGlobalSignature, 'url' => "{$CONFIG['application_webpath']}edit_global_signature.php"),
-                           40 => array ( 'perm' => PERM_ADMIN, 'name' => $strTemplates, 'url' => "{$CONFIG['application_webpath']}templates.php"),
-                           50 => array ( 'perm' => PERM_ADMIN, 'name' => $strSetPublicHolidays, 'url' => "{$CONFIG['application_webpath']}calendar.php?type=10&amp;display=year", 'enablevar' => 'holidays_enabled'),
-                           60 => array ( 'perm' => PERM_ADMIN, 'name' => $strFTPFilesDB, 'url' => "{$CONFIG['application_webpath']}ftp_list_files.php"),
-                           70 => array ( 'perm' => PERM_ADMIN, 'name' => $strServiceLevels, 'url' => "{$CONFIG['application_webpath']}service_levels.php"),
-                           80 => array ( 'perm' => PERM_BILLING_DURATION_EDIT, 'name' => $strBillingMatrix, 'url' => "{$CONFIG['application_webpath']}billing_matrix.php"),
-                           90 => array ( 'perm' => PERM_INCIDENT_EDIT, 'name' => $strBulkModify, 'url' => "{$CONFIG['application_webpath']}bulk_modify.php?action=external_esc"),
-                           100 => array ( 'perm' => PERM_ESCALATION_MANAGE, 'name' => $strEscalationPaths, 'url' => "{$CONFIG['application_webpath']}escalation_paths.php"),
-                           110 => array ( 'perm' => PERM_DASHLET_INSTALL, 'name' => $strManageDashboardComponents, 'url' => "{$CONFIG['application_webpath']}manage_dashboard.php"),
-                           120 => array ( 'perm' => PERM_ADMIN, 'name' => $strManagePlugins, 'url' => "{$CONFIG['application_webpath']}manage_plugins.php"),
-                           130 => array ( 'perm' => PERM_NOTICE_POST, 'name' => $strNotices, 'url' => "{$CONFIG['application_webpath']}notices.php"),
-                           140 => array ( 'perm' => PERM_ADMIN, 'name' => $strSystemActions, 'url' => "{$CONFIG['application_webpath']}system_actions.php"),
-                           150 => array ( 'perm' => PERM_ADMIN, 'name' => $strScheduler, 'url' => "{$CONFIG['application_webpath']}scheduler.php"),
-                           160 => array ( 'perm' => PERM_ADMIN, 'name' => $strJournal, 'url' => "{$CONFIG['application_webpath']}journal.php")
+                    array (10 => array('perm' => PERM_ADMIN, 'name' => $strConfigure, 'url' => "{$CONFIG['application_webpath']}config.php"),
+                           20 => array('perm' => PERM_ADMIN, 'name' => $strUsers, 'url' => "{$CONFIG['application_webpath']}manage_users.php", 'submenu' => 104020),
+                           30 => array('perm' => PERM_GLOBALSIG_EDIT, 'name' => $strGlobalSignature, 'url' => "{$CONFIG['application_webpath']}edit_global_signature.php"),
+                           40 => array('perm' => PERM_ADMIN, 'name' => $strTemplates, 'url' => "{$CONFIG['application_webpath']}templates.php"),
+                           50 => array('perm' => PERM_ADMIN, 'name' => $strSetPublicHolidays, 'url' => "{$CONFIG['application_webpath']}calendar.php?type=10&amp;display=year", 'enablevar' => 'holidays_enabled'),
+                           60 => array('perm' => PERM_ADMIN, 'name' => $strFTPFilesDB, 'url' => "{$CONFIG['application_webpath']}ftp_list_files.php"),
+                           70 => array('perm' => PERM_ADMIN, 'name' => $strServiceLevels, 'url' => "{$CONFIG['application_webpath']}service_levels.php"),
+                           80 => array('perm' => PERM_BILLING_DURATION_EDIT, 'name' => $strBillingMatrix, 'url' => "{$CONFIG['application_webpath']}billing_matrix.php"),
+                           90 => array('perm' => PERM_INCIDENT_EDIT, 'name' => $strBulkModify, 'url' => "{$CONFIG['application_webpath']}bulk_modify.php?action=external_esc"),
+                           100 => array('perm' => PERM_ESCALATION_MANAGE, 'name' => $strEscalationPaths, 'url' => "{$CONFIG['application_webpath']}escalation_paths.php"),
+                           110 => array('perm' => PERM_DASHLET_INSTALL, 'name' => $strManageDashboardComponents, 'url' => "{$CONFIG['application_webpath']}manage_dashboard.php"),
+                           120 => array('perm' => PERM_ADMIN, 'name' => $strManagePlugins, 'url' => "{$CONFIG['application_webpath']}manage_plugins.php"),
+                           130 => array('perm' => PERM_NOTICE_POST, 'name' => $strNotices, 'url' => "{$CONFIG['application_webpath']}notices.php"),
+                           140 => array('perm' => PERM_ADMIN, 'name' => $strSystemActions, 'url' => "{$CONFIG['application_webpath']}system_actions.php"),
+                           150 => array('perm' => PERM_ADMIN, 'name' => $strScheduler, 'url' => "{$CONFIG['application_webpath']}scheduler.php"),
+                           160 => array('perm' => PERM_ADMIN, 'name' => $strJournal, 'url' => "{$CONFIG['application_webpath']}journal.php")
     );
     // Third Level: Control Panel/Manage Users submenu
     if (!is_array($hmenu[104020])) $hmenu[104020] = array();
     $hmenu[104020] = $hmenu[104020] +
-                    array (10 => array ( 'perm' => PERM_ADMIN, 'name' => $strManageUsers, 'url' => "{$CONFIG['application_webpath']}manage_users.php"),
-                           20 => array ( 'perm' => PERM_USER_ADD, 'name' => $strNewUser, 'url' => "{$CONFIG['application_webpath']}user_new.php?action=showform"),
-                           30 => array ( 'perm' => PERM_USER_PERMISSIONS_EDIT, 'name' => $strRolePermissions, 'url' => "{$CONFIG['application_webpath']}edit_user_permissions.php"),
-                           40 => array ( 'perm' => PERM_USER_EDIT, 'name' => $strUserGroups, 'url' => "{$CONFIG['application_webpath']}usergroups.php"),
-                           50 => array ( 'perm' => PERM_ADMIN, 'name' => $strEditHolidayEntitlement, 'url' => "{$CONFIG['application_webpath']}edit_holidays.php", 'enablevar' => 'holidays_enabled')
+                    array (10 => array('perm' => PERM_ADMIN, 'name' => $strManageUsers, 'url' => "{$CONFIG['application_webpath']}manage_users.php"),
+                           20 => array('perm' => PERM_USER_ADD, 'name' => $strNewUser, 'url' => "{$CONFIG['application_webpath']}user_new.php?action=showform"),
+                           30 => array('perm' => PERM_USER_PERMISSIONS_EDIT, 'name' => $strRolePermissions, 'url' => "{$CONFIG['application_webpath']}edit_user_permissions.php"),
+                           40 => array('perm' => PERM_USER_EDIT, 'name' => $strUserGroups, 'url' => "{$CONFIG['application_webpath']}usergroups.php"),
+                           50 => array('perm' => PERM_ADMIN, 'name' => $strEditHolidayEntitlement, 'url' => "{$CONFIG['application_webpath']}edit_holidays.php", 'enablevar' => 'holidays_enabled')
     );
-    // Second Level: SiT/Users Submenu
+    // Second Level: SiT/Products & Skills Submenu
     if (!is_array($hmenu[1050])) $hmenu[1050] = array();
     $hmenu[1050] = $hmenu[1050] +
-                    array (10 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strViewUsers, 'url' => "{$CONFIG['application_webpath']}users.php"),
-                           20 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strListSkills, 'url' => "{$CONFIG['application_webpath']}user_skills.php"),
-                           30 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strSkillsMatrix, 'url' => "{$CONFIG['application_webpath']}skills_matrix.php"),
-                           40 => array ( 'perm' => PERM_CALENDAR_VIEW, 'name' => $strHolidayPlanner, 'url' => "{$CONFIG['application_webpath']}calendar.php?display=month", 'enablevar' => 'holidays_enabled'),
-                           50 => array ( 'perm' => PERM_HOLIDAY_APPROVE, 'name' => $strApproveHolidays, 'url' => "{$CONFIG['application_webpath']}holiday_request.php?user=all&amp;mode=approval", 'enablevar' => 'holidays_enabled')
+                    array (10 => array('perm' => PERM_PRODUCT_VIEW, 'name' => $strListProducts, 'url' => "{$CONFIG['application_webpath']}products.php"),
+                           20 => array('perm' => PERM_PRODUCT_VIEW, 'name' => $strListSkills, 'url' => "{$CONFIG['application_webpath']}products.php?display=skills"),
+                           30 => array('perm' => PERM_SKILL_ADD, 'name' => $strListVendors, 'url' => "{$CONFIG['application_webpath']}vendors.php")
+    );
+    // Second Level: SiT/Users Submenu
+    if (!is_array($hmenu[1060])) $hmenu[1060] = array();
+    $hmenu[1060] = $hmenu[1060] +
+                    array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strViewUsers, 'url' => "{$CONFIG['application_webpath']}users.php"),
+                           20 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strListUserSkills, 'url' => "{$CONFIG['application_webpath']}user_skills.php"),
+                           30 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strSkillsMatrix, 'url' => "{$CONFIG['application_webpath']}skills_matrix.php"),
+                           40 => array('perm' => PERM_CALENDAR_VIEW, 'name' => $strHolidayPlanner, 'url' => "{$CONFIG['application_webpath']}calendar.php?display=month", 'enablevar' => 'holidays_enabled'),
+                           50 => array('perm' => PERM_HOLIDAY_APPROVE, 'name' => $strApproveHolidays, 'url' => "{$CONFIG['application_webpath']}holiday_request.php?user=all&amp;mode=approval", 'enablevar' => 'holidays_enabled')
     );
 
 
@@ -135,55 +143,42 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[20])) $hmenu[20] = array();
     $hmenu[20] = $hmenu[20] +
-                    array (10 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strSites, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 2010),
-                           20 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strContacts, 'url' => "{$CONFIG['application_webpath']}contacts.php", 'submenu' => 2020),
-                           30 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strContracts, 'url' => "{$CONFIG['application_webpath']}contracts.php", 'submenu' => 2030),
-                           40 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strInventory, 'url' => "{$CONFIG['application_webpath']}inventory.php", 'enablevar' => 'inventory_enabled'),
-                           50 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strFeedback, 'url' => "{$CONFIG['application_webpath']}feedback_browse.php", 'submenu' => 2050 ,'enablevar' => 'feedback_enabled')
+                    array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strSites, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 2010),
+                           20 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strContacts, 'url' => "{$CONFIG['application_webpath']}contacts.php", 'submenu' => 2020),
+                           30 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strContracts, 'url' => "{$CONFIG['application_webpath']}contracts.php", 'submenu' => 2030),
+                           40 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strInventory, 'url' => "{$CONFIG['application_webpath']}inventory.php", 'enablevar' => 'inventory_enabled'),
+                           50 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strFeedback, 'url' => "{$CONFIG['application_webpath']}feedback_browse.php", 'submenu' => 2050 ,'enablevar' => 'feedback_enabled')
     );
     // Second Level: Customers/Sites submenu
     if (!is_array($hmenu[2010])) $hmenu[2010] = array();
     $hmenu[2010] = $hmenu[2010] +
-                    array (10 => array ( 'perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}sites.php"),
-                           20 => array ( 'perm' => PERM_SITE_ADD, 'name' => $strNewSite, 'url' => "{$CONFIG['application_webpath']}site_new.php?action=showform")
+                    array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}sites.php"),
+                           20 => array('perm' => PERM_SITE_ADD, 'name' => $strNewSite, 'url' => "{$CONFIG['application_webpath']}site_new.php?action=showform")
     );
     // Second Level: Customers/Contacts submenu
     if (!is_array($hmenu[2020])) $hmenu[2020] = array();
     $hmenu[2020] = $hmenu[2020] +
-                    array (10 => array ( 'perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contacts.php"),
-                           20 => array ( 'perm' => PERM_CONTACT_ADD, 'name' => $strNewContact, 'url' => "{$CONFIG['application_webpath']}contact_new.php?action=showform")
+                    array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contacts.php"),
+                           20 => array('perm' => PERM_CONTACT_ADD, 'name' => $strNewContact, 'url' => "{$CONFIG['application_webpath']}contact_new.php?action=showform")
     );
     // Second Level: Customers/Contracts submenu
     if (!is_array($hmenu[2030])) $hmenu[2030] = array();
     $hmenu[2030] = $hmenu[2030] +
-                    array (10 => array ( 'perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
-                           20 => array ( 'perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
-                           30 => array ( 'perm' => PERM_CONTRACT_EDIT, 'name' => $strEditContract, 'url' => "{$CONFIG['application_webpath']}contract_edit.php?action=showform"),
-                           40 => array ( 'perm' => PERM_RESELLER_ADD, 'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),
-                           50 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strSiteTypes, 'url' => "{$CONFIG['application_webpath']}site_types.php"),
-                           60 => array ( 'perm' => PERM_CONTRACT_VIEW, 'name' => $strShowRenewals, 'url' => "{$CONFIG['application_webpath']}search_renewals.php?action=showform"),
-                           70 => array ( 'perm' => PERM_CONTRACT_VIEW, 'name' => $strShowExpiredContracts, 'url' => "{$CONFIG['application_webpath']}search_expired.php?action=showform"),
-                           80 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strProducts} &amp; {$strSkills}", 'url' => "{$CONFIG['application_webpath']}products.php", 'submenu' => "203080"),
-                           90 => array ( 'perm' => PERM_REPORT_RUN, 'name' => $strBilling, 'url' => "{$CONFIG['application_webpath']}billable_incidents.php")
-    );
-    // Third Level: Customers/Contracts/Products & Skills submenu
-    if (!is_array($hmenu[203080])) $hmenu[203080] = array();
-    $hmenu[203080] = $hmenu[203080] +
-                    array (10 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strNewVendor, 'url' => "{$CONFIG['application_webpath']}vendor_new.php"),
-                           20 => array ( 'perm' => PERM_PRODUCT_ADD, 'name' => $strNewProduct, 'url' => "{$CONFIG['application_webpath']}product_new.php"),
-                           30 => array ( 'perm' => PERM_PRODUCT_VIEW, 'name' => $strListProducts, 'url' => "{$CONFIG['application_webpath']}products.php"),
-                           40 => array ( 'perm' => PERM_PRODUCT_VIEW, 'name' => $strListSkills, 'url' => "{$CONFIG['application_webpath']}products.php?display=skills"),
-                           50 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strNewSkill, 'url' => "{$CONFIG['application_webpath']}skill_new.php"),
-                           60 => array ( 'perm' => PERM_PRODUCT_ADD, 'name' => $strLinkProducts, 'url' => "{$CONFIG['application_webpath']}product_skill_new.php"),
-                           70 => array ( 'perm' => PERM_PRODUCTINFO_ADD, 'name' => $strAddProductInformation, 'url' => "{$CONFIG['application_webpath']}product_info_new.php"),
-                           80 => array ('perm' => PERM_SKILL_ADD, 'name' => $strEditVendor, 'url' => "{$CONFIG['application_webpath']}vendors.php")
+                    array (10 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
+                           20 => array('perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
+                           30 => array('perm' => PERM_CONTRACT_EDIT, 'name' => $strEditContract, 'url' => "{$CONFIG['application_webpath']}contract_edit.php?action=showform"),
+                           40 => array('perm' => PERM_RESELLER_ADD, 'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),
+                           50 => array('perm' => PERM_SKILL_ADD, 'name' => $strSiteTypes, 'url' => "{$CONFIG['application_webpath']}site_types.php"),
+                           60 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strShowRenewals, 'url' => "{$CONFIG['application_webpath']}search_renewals.php?action=showform"),
+                           70 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strShowExpiredContracts, 'url' => "{$CONFIG['application_webpath']}search_expired.php?action=showform"),
+                           80 => array('perm' => PERM_REPORT_RUN, 'name' => $strBilling, 'url' => "{$CONFIG['application_webpath']}billable_incidents.php")
     );
     // Second Level: Customers/Feedback  submenu
     if (!is_array($hmenu[2050])) $hmenu[2050] = array();
     $hmenu[2050] = $hmenu[2050] +
-                    array (10 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strBrowseFeedback, 'url' => "{$CONFIG['application_webpath']}feedback_browse.php", 'enablevar' => 'feedback_enabled'),
-                           20 => array ( 'perm' => PERM_FEEDBACK_FORM_EDIT, 'name' => $strFeedbackForms, 'url' => "{$CONFIG['application_webpath']}feedback_form_list.php", 'enablevar' => 'feedback_enabled'),
-                           30 => array ( 'perm' => PERM_FEEDBACK_FORM_EDIT, 'name' => $strNewFeedbackForm, 'url' => "{$CONFIG['application_webpath']}feedback_form_edit.php?action=new", 'enablevar' => 'feedback_enabled')
+                    array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strBrowseFeedback, 'url' => "{$CONFIG['application_webpath']}feedback_browse.php", 'enablevar' => 'feedback_enabled'),
+                           20 => array('perm' => PERM_FEEDBACK_FORM_EDIT, 'name' => $strFeedbackForms, 'url' => "{$CONFIG['application_webpath']}feedback_form_list.php", 'enablevar' => 'feedback_enabled'),
+                           30 => array('perm' => PERM_FEEDBACK_FORM_EDIT, 'name' => $strNewFeedbackForm, 'url' => "{$CONFIG['application_webpath']}feedback_form_edit.php?action=new", 'enablevar' => 'feedback_enabled')
     );
 
 
@@ -192,11 +187,11 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] = $hmenu[30] +
-                    array (10 => array ( 'perm' => PERM_UPDATE_DELETE, 'name' => $strInbox.$inbox_count, 'url' => "{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
-                           20 => array ( 'perm' => PERM_INCIDENT_ADD, 'name' => $strNewIncident, 'url' => "{$CONFIG['application_webpath']}incident_new.php"),
-                           30 => array ( 'perm' => PERM_INCIDENT_LIST, 'name' => $strMyIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php"),
-                           40 => array ( 'perm' => PERM_INCIDENT_LIST, 'name' => $strAllIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
-                           50 => array ( 'perm' => PERM_UPDATE_DELETE, 'name' => $strHoldingQueue, 'url' => "{$CONFIG['application_webpath']}holding_queue.php")
+                    array (10 => array('perm' => PERM_UPDATE_DELETE, 'name' => $strInbox.$inbox_count, 'url' => "{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
+                           20 => array('perm' => PERM_INCIDENT_ADD, 'name' => $strNewIncident, 'url' => "{$CONFIG['application_webpath']}incident_new.php"),
+                           30 => array('perm' => PERM_INCIDENT_LIST, 'name' => $strMyIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php"),
+                           40 => array('perm' => PERM_INCIDENT_LIST, 'name' => $strAllIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
+                           50 => array('perm' => PERM_UPDATE_DELETE, 'name' => $strHoldingQueue, 'url' => "{$CONFIG['application_webpath']}holding_queue.php")
     );
 
 
@@ -205,8 +200,8 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[40])) $hmenu[40] = array();
     $hmenu[40] = $hmenu[40] +
-                array (10 => array ( 'perm' => PERM_TASK_EDIT, 'name' => $strNewTask, 'url' => "{$CONFIG['application_webpath']}task_new.php"),
-                       20 => array ( 'perm' => PERM_TASK_VIEW, 'name' => $strViewTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php")
+                array (10 => array('perm' => PERM_TASK_EDIT, 'name' => $strNewTask, 'url' => "{$CONFIG['application_webpath']}task_new.php"),
+                       20 => array('perm' => PERM_TASK_VIEW, 'name' => $strViewTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php")
     );
 
 
@@ -215,8 +210,8 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[50])) $hmenu[50] = array();
     $hmenu[50] = $hmenu[50] +
-                array (10 => array ( 'perm' => PERM_KB_VIEW, 'name' => $strNewKBArticle, 'url' => "{$CONFIG['application_webpath']}kb_article.php"),
-                       20 => array ( 'perm' => PERM_KB_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}kb.php")
+                array (10 => array('perm' => PERM_KB_VIEW, 'name' => $strNewKBArticle, 'url' => "{$CONFIG['application_webpath']}kb_article.php"),
+                       20 => array('perm' => PERM_KB_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}kb.php")
     );
 
 
@@ -225,32 +220,32 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[60])) $hmenu[60] = array();
     $hmenu[60] = $hmenu[60] +
-                array (10 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strMarketingMailshot}", 'url' => "{$CONFIG['application_webpath']}report_marketing.php"),
-                       20 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerExport}", 'url' => "{$CONFIG['application_webpath']}report_customers.php"),
-                       30 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strQueryByExample}", 'url' => "{$CONFIG['application_webpath']}report_qbe.php"),
-                       40 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidents}", 'url' => "", 'submenu' => 6040),
-                       50 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProducts}", 'url' => "{$CONFIG['application_webpath']}report_customer_products.php"),
-                       60 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProductsMatrix}", 'url' => "{$CONFIG['application_webpath']}report_customer_products_matrix.php"),
-                       70 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strCountContractsByProduct}", 'url' => "{$CONFIG['application_webpath']}report_contracts_by_product.php"),
-                       80 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strSiteContracts}", 'url' => "{$CONFIG['application_webpath']}report_customer_contracts.php"),
-                       90 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerFeedback}", 'url' => "{$CONFIG['application_webpath']}report_feedback.php", 'enablevar' => 'feedback_enabled'),
-                       100 => array ( 'perm' => PERM_SITE_VIEW, 'name' => "{$strShowOrphanedContacts}", 'url' => "{$CONFIG['application_webpath']}report_orphans_contacts.php"),
-                       110 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strEngineerMonthlyActivityTotals}",'url' => "{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php",
+                array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strMarketingMailshot}", 'url' => "{$CONFIG['application_webpath']}report_marketing.php"),
+                       20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerExport}", 'url' => "{$CONFIG['application_webpath']}report_customers.php"),
+                       30 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strQueryByExample}", 'url' => "{$CONFIG['application_webpath']}report_qbe.php"),
+                       40 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidents}", 'url' => "", 'submenu' => 6040),
+                       50 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProducts}", 'url' => "{$CONFIG['application_webpath']}report_customer_products.php"),
+                       60 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProductsMatrix}", 'url' => "{$CONFIG['application_webpath']}report_customer_products_matrix.php"),
+                       70 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCountContractsByProduct}", 'url' => "{$CONFIG['application_webpath']}report_contracts_by_product.php"),
+                       80 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteContracts}", 'url' => "{$CONFIG['application_webpath']}report_customer_contracts.php"),
+                       90 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerFeedback}", 'url' => "{$CONFIG['application_webpath']}report_feedback.php", 'enablevar' => 'feedback_enabled'),
+                       100 => array('perm' => PERM_SITE_VIEW, 'name' => "{$strShowOrphanedContacts}", 'url' => "{$CONFIG['application_webpath']}report_orphans_contacts.php"),
+                       110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEngineerMonthlyActivityTotals}",'url' => "{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php",
     ));
     // Second Level: Reports/Incidents submenu
     if (!is_array($hmenu[6040])) $hmenu[6040] = array();
     $hmenu[6040] = $hmenu[6040] +
-                array (10 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySite}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_site.php"),
-                       20 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByEngineer}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_engineer.php"),
-                       30 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strSiteIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_customer.php"),
-                       40 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strRecentIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_recent.php"),
-                       50 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsLoggedOpenClosed}", 'url' => "{$CONFIG['application_webpath']}report_incidents_graph.php"),
-                       60 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strAverageIncidentDuration}", 'url' => "{$CONFIG['application_webpath']}report_incidents_average_duration.php"),
-                       70 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySkill}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_skill.php"),
-                       80 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByVendor}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_vendor.php"),
-                       90 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strEscalatedIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_escalated.php"),
-                       100 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strBillableIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_billable.php"),
-                       110 => array ( 'perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsDailySummary}",'url' => "{$CONFIG['application_webpath']}report_incidents_daily_summary.php")
+                array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySite}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_site.php"),
+                       20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByEngineer}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_engineer.php"),
+                       30 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_customer.php"),
+                       40 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strRecentIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_recent.php"),
+                       50 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsLoggedOpenClosed}", 'url' => "{$CONFIG['application_webpath']}report_incidents_graph.php"),
+                       60 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strAverageIncidentDuration}", 'url' => "{$CONFIG['application_webpath']}report_incidents_average_duration.php"),
+                       70 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySkill}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_skill.php"),
+                       80 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByVendor}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_vendor.php"),
+                       90 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEscalatedIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_escalated.php"),
+                       100 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strBillableIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_billable.php"),
+                       110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsDailySummary}",'url' => "{$CONFIG['application_webpath']}report_incidents_daily_summary.php")
     );
 
 
@@ -259,13 +254,13 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[70])) $hmenu[70] = array();
     $hmenu[70] + $hmenu[70] =
-                array (10 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strHelpContents}{$strEllipsis}", 'url' => "{$CONFIG['application_webpath']}help.php"),
-                       20 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strGetHelpOnline}", 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
-                       30 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strTranslate}", 'url' => "{$CONFIG['application_webpath']}translate.php"),
-                       40 => array ( 'perm' => PERM_STATUS_VIEW, 'name' => "{$strStatus}", 'url' => "{$CONFIG['application_webpath']}status.php"),
-                       50 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strReportBug}", 'url' =>$CONFIG['bugtracker_url']),
-                       60 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strReleaseNotes}", 'url' => "{$CONFIG['application_webpath']}releasenotes.php"),
-                       70 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => $strHelpAbout, 'url' => "{$CONFIG['application_webpath']}about.php")
+                array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strHelpContents}{$strEllipsis}", 'url' => "{$CONFIG['application_webpath']}help.php"),
+                       20 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strGetHelpOnline}", 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
+                       30 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strTranslate}", 'url' => "{$CONFIG['application_webpath']}translate.php"),
+                       40 => array('perm' => PERM_STATUS_VIEW, 'name' => "{$strStatus}", 'url' => "{$CONFIG['application_webpath']}status.php"),
+                       50 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strReportBug}", 'url' =>$CONFIG['bugtracker_url']),
+                       60 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strReleaseNotes}", 'url' => "{$CONFIG['application_webpath']}releasenotes.php"),
+                       70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strHelpAbout, 'url' => "{$CONFIG['application_webpath']}about.php")
     );
 
     if ($_SESSION['auth'] == TRUE AND function_exists('plugin_do')) plugin_do('define_menu');

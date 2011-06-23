@@ -26,7 +26,7 @@ $product = clean_int($_REQUEST['product']);
 $information = clean_dbstring($_POST['information']);
 $moreinformation = clean_dbstring($_POST['moreinformation']);
 
-$title = $strAddProductInformation;
+$title = $strNewProductQuestion;
 
 // Show add product information form
 if (empty($_REQUEST['submit']))
@@ -49,6 +49,15 @@ if (empty($_REQUEST['submit']))
     echo "</table>";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+    if (!empty($product))
+    {
+        echo "<p><a href=\"products.php?productid={$product}\">{$strReturnWithoutSaving}</a></p>";
+    }
+    else
+    {
+        echo "<p><a href=\"products.php\">{$strReturnWithoutSaving}</a></p>";
+    }
+
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     clear_form_data('product_info_new');
