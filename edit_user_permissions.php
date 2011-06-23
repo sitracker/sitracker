@@ -46,6 +46,8 @@ if (empty($action) OR $action == "showform")
     if (mysql_num_rows($result) >= 1)
     {
         echo "<h2>".icon('trigger', 32)." {$strRolePermissions}</h2>";
+        echo show_form_errors('role_permissions');
+        clear_form_errors('role_permissions');
 
         echo "<p align='center'><a href='role_new.php'>{$strNewRole}</a></p>";
 
@@ -221,11 +223,14 @@ elseif ($action == "update")
         {
             // First pass, set all access to false
             $sql = "UPDATE `{$dbRolePermissions}`, `{$dbPermissions}` SET granted='false' WHERE `{$dbPermissions}`.`id` = `{$dbRolePermissions}`.`permissionid` AND `categoryid` = {$seltab} AND roleid={$rolerow->id}";
-            $sql = "UPDATE `{$dbRolePermissions}` SET granted='false' WHERE roleid='{$rolerow->id}'";
             $aresult = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-            if (!$aresult) echo user_alert("{$strUpdateRolePermissionsFailed}", E_USER_WARNING);
+            if (!$aresult)
+            {
+                $errors++;
+                $_SESSION['formerrors']['role_permissions']['failure'] = user_alert("{$strUpdateRolePermissionsFailed}", E_USER_WARNING);
+            }
 
             // Second pass, loop through checkbox array setting access to true where boxes are checked
             if (is_array($_POST["{$rolerow->id}perm"]))
@@ -245,13 +250,24 @@ elseif ($action == "update")
                         $isql .= "VALUES ('{$rolerow->id}', '".clean_int($x[1])."', 'true')";
                         $iresult = mysql_query($isql);
                         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                        if (mysql_affected_rows() < 1) echo user_alert("{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}", E_USER_WARNING);
+                        if (mysql_affected_rows() < 1)
+                        {
+                           $errors++;
+                            $_SESSION['formerrors']['role_permissions']['failure'] = user_alert("{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}", E_USER_WARNING);
+                        }
                     }
                 }
             }
-
         }
-        html_redirect("manage_users.php");
+         // Back to role permissions page after saving changes.
+        if ($errors == 0)
+        {
+            html_redirect("edit_user_permissions.php");
+        }
+        else
+        {
+                html_redirect("edit_user_permissions.php", FALSE);
+        }
         exit;
     }
     journal(CFG_LOGGING_NORMAL, '{$strUserPermissionsEdited}', "{$strUserXPermissionsEdited}", CFG_JOURNAL_USERS, $user);
