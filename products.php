@@ -32,11 +32,12 @@ if (empty($productid) AND $display!='skills')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
+    echo "<h2>".icon('product', 32, $strProducts)." {$strProducts}</h2>";
     if (mysql_num_rows($result) >= 1)
     {
         while ($vendor = mysql_fetch_object($result))
         {
-            echo "<h2>{$vendor->name}</h2>";
+            echo "<h3>{$strVendor}: {$vendor->name}</h3>";
             $psql = "SELECT * FROM `{$dbProducts}` WHERE vendorid='{$vendor->id}' ORDER BY name";
             $presult = mysql_query($psql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -88,7 +89,7 @@ if (empty($productid) AND $display!='skills')
             }
             else
             {
-                echo "<p class='warning'>{$strNoProductsForThisVendor}</p>\n";
+                echo user_alert($strNoProductsForThisVendor, E_USER_NOTICE);
             }
         }
     }
