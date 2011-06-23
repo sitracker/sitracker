@@ -1186,6 +1186,8 @@ $strNoAnswerGiven = 'No Answer Given';
 $strNoActionSpecified = 'No action specified';
 $strNoAvailablePlugins = 'No Available Plugins';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
+# e.g. No engineers have this skill.
+$strNoEngineers = 'No Engineers';
 $strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
 $strNoFeedbackFormsAvailable = 'No Feedback Forms Available';
 $strNoFiles = 'No Files';
@@ -1983,6 +1985,8 @@ $strUnsupported = 'Unsupported';
 $strUntilSpecificDateAndTime = 'Until specific date and time';
 $strUntilX = 'Until %s';
 $strUntitled = 'Untitled';
+# Not used
+$strUnused = 'Unused';
 # Requiring immediate action or attention
 $strUrgent = 'Urgent';
 $strUsed = 'Used';

@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 $permission = PERM_PRODUCT_VIEW; // View Products and Software
-$title = 'Products List';
+$title = $strListProducts;
 
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
@@ -235,6 +235,18 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
             else $shade = 'shade1';
         }
         echo "</table>";
+
+        // Legend
+        if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+        {
+            echo "<br />";
+            echo "<table class='legend'><tr>";
+            echo "<td class='shade1'>{$strOK}</td>";
+            echo "<td class='expired'>{$strEndOfLife}</td>";
+            echo "<td class='notice'>{$strNoEngineers}</td>";
+            echo "<td class='urgent'>{$strUnused}</td>";
+            echo "</tr></table>";
+        }
     }
     else echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
