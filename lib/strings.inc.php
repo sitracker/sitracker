@@ -254,11 +254,11 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[70])) $hmenu[70] = array();
     $hmenu[70] + $hmenu[70] =
-                array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strHelpContents}{$strEllipsis}", 'url' => "{$CONFIG['application_webpath']}help.php"),
-                       20 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strGetHelpOnline}", 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
+                array (10 => array('perm' => PERM_HELP_VIEW, 'name' => "{$strHelpContents}{$strEllipsis}", 'url' => "{$CONFIG['application_webpath']}help.php"),
+                       20 => array('perm' => PERM_HELP_VIEW, 'name' => "{$strGetHelpOnline}", 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
                        30 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strTranslate}", 'url' => "{$CONFIG['application_webpath']}translate.php"),
                        40 => array('perm' => PERM_STATUS_VIEW, 'name' => "{$strStatus}", 'url' => "{$CONFIG['application_webpath']}status.php"),
-                       50 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strReportBug}", 'url' =>$CONFIG['bugtracker_url']),
+                       50 => array('perm' => PERM_HELP_VIEW, 'name' => "{$strReportBug}", 'url' =>$CONFIG['bugtracker_url']),
                        60 => array('perm' => PERM_NOT_REQUIRED, 'name' => "{$strReleaseNotes}", 'url' => "{$CONFIG['application_webpath']}releasenotes.php"),
                        70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strHelpAbout, 'url' => "{$CONFIG['application_webpath']}about.php")
     );
