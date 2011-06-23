@@ -278,13 +278,15 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
 
 if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
 {
-
     // Force KB disabled if it's globally disabled
     if (($CONFIG['kb_enabled'] != TRUE) OR ($CONFIG['portal_kb_enabled'] == 'Disabled'))
     {
         $CONFIG['portal_kb_enabled'] = FALSE;
     }
 
+    //
+    // Top Level Main Menu
+    //
     if (!is_array($hmenu[0])) $hmenu[0] = array();
     $hmenu[0] = $hmenu[0] +
                 array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
@@ -294,13 +296,18 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
                        50 => array ('name' => $strHelp, 'url' => 'help.php', 'submenu' => 50)
                        );
 
-    // Portal
+    //
+    // Top Level: Portal menu
+    //
     if (!is_array($hmenu[10])) $hmenu[10] = array();
     $hmenu[10] + $hmenu[10] =
                 array (10 => array ('name' => $strMyDetails, 'url' => 'contactdetails.php'),
                        20 => array ('name' => $strLogout, 'url' => '../logout.php'));
 
-    // Incidents
+
+    //
+    // Top Level: Incidents menu
+    //
     if (!is_array($hmenu[20])) $hmenu[20] = array();
     $hmenu[20] + $hmenu[20] =
                 array (10 => array ('name' => $strEntitlement, 'url' => 'entitlement.php'),
@@ -309,25 +316,31 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
                        40 => array ('name' => $strFeedback, 'url' => 'feedback.php', 'enablevar' => 'portal_feedback_enabled')
                        );
 
-    // KB
+    //
+    // Top Level: KB menu
+    //
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] + $hmenu[30] =
                 array (10 => array ('name' => $strViewKnowledgebaseArticles, 'url' => 'kb.php', 'enablevar' => 'kb_enabled'));
 
-    // Admin
+    //
+    // Top Level: Admin
+    //
     if (!is_array($hmenu[40])) $hmenu[40] = array();
     $hmenu[40] + $hmenu[40] =
                 array (10 => array ('name' => $strContractDetails, 'url' => 'admin.php'),
                        20 => array ('name' => $strSiteDetails, 'url' => 'sitedetails.php'),
                        30 => array ('name' => $strNewSiteContact, 'url' => 'newcontact.php'));
 
-    // Help
+    //
+    // Top Level: Help
+    //
     if (!is_array($hmenu[50])) $hmenu[50] = array();
     $hmenu[50] + $hmenu[50] =
                 array (10 => array ('name' => $strHelpContents.$strEllipsis, 'url' => 'help.php'),
                        20 => array ('name' => $strGetHelpOnline, 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
                        30 => array ('name' => $strHelpAbout, 'url' => 'about.php')
-                       ); // FIXME add help about for portal
+                       );
 
 
     ksort($hmenu[0], SORT_NUMERIC);
