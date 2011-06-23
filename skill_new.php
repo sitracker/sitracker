@@ -131,7 +131,7 @@ else
             replace_tags(TAG_SKILL, $id, $tags);
 
             journal(CFG_LOGGING_DEBUG, 'Skill Added', "Skill {$id} was added", CFG_JOURNAL_DEBUG, $id);
-            html_redirect("products.php");
+            html_redirect("products.php?display=skills");
             //clear form data
             $_SESSION['formdata']['new_software'] = NULL;
         }
