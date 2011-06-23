@@ -36,7 +36,7 @@ if (empty($productid) AND $display!='skills')
     {
         while ($vendor = mysql_fetch_object($result))
         {
-            echo "<h2>".icon('product', 32)." {$vendor->name}</h2>";
+            echo "<h2>{$vendor->name}</h2>";
             $psql = "SELECT * FROM `{$dbProducts}` WHERE vendorid='{$vendor->id}' ORDER BY name";
             $presult = mysql_query($psql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
