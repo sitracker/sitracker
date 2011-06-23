@@ -145,7 +145,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     if (!is_array($hmenu[2010])) $hmenu[2010] = array();
     $hmenu[2010] = $hmenu[2010] +
                     array (10 => array ( 'perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}sites.php"),
-                           20 => array ( 'perm' => PERM_SITE_ADD,  'name' => $strNewSite, 'url' => "{$CONFIG['application_webpath']}site_new.php?action=showform")
+                           20 => array ( 'perm' => PERM_SITE_ADD, 'name' => $strNewSite, 'url' => "{$CONFIG['application_webpath']}site_new.php?action=showform")
     );
     // Second Level: Customers/Contacts submenu
     if (!is_array($hmenu[2020])) $hmenu[2020] = array();
@@ -159,11 +159,11 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                     array (10 => array ( 'perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
                            20 => array ( 'perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
                            30 => array ( 'perm' => PERM_CONTRACT_EDIT, 'name' => $strEditContract, 'url' => "{$CONFIG['application_webpath']}contract_edit.php?action=showform"),
-                           40 => array ( 'perm' => PERM_RESELLER_ADD,  'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),
+                           40 => array ( 'perm' => PERM_RESELLER_ADD, 'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),
                            50 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strSiteTypes, 'url' => "{$CONFIG['application_webpath']}site_types.php"),
                            60 => array ( 'perm' => PERM_CONTRACT_VIEW, 'name' => $strShowRenewals, 'url' => "{$CONFIG['application_webpath']}search_renewals.php?action=showform"),
                            70 => array ( 'perm' => PERM_CONTRACT_VIEW, 'name' => $strShowExpiredContracts, 'url' => "{$CONFIG['application_webpath']}search_expired.php?action=showform"),
-                           80 => array ( 'perm' => PERM_NOT_REQUIRED,  'name' => "{$strProducts} &amp; {$strSkills}", 'url' => "{$CONFIG['application_webpath']}products.php", 'submenu' => "203080"),
+                           80 => array ( 'perm' => PERM_NOT_REQUIRED, 'name' => "{$strProducts} &amp; {$strSkills}", 'url' => "{$CONFIG['application_webpath']}products.php", 'submenu' => "203080"),
                            90 => array ( 'perm' => PERM_REPORT_RUN, 'name' => $strBilling, 'url' => "{$CONFIG['application_webpath']}billable_incidents.php")
     );
     // Third Level: Customers/Contracts/Products & Skills submenu
@@ -176,7 +176,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            50 => array ( 'perm' => PERM_SKILL_ADD, 'name' => $strNewSkill, 'url' => "{$CONFIG['application_webpath']}software_new.php"),
                            60 => array ( 'perm' => PERM_PRODUCT_ADD, 'name' => $strLinkProducts, 'url' => "{$CONFIG['application_webpath']}product_software_new.php"),
                            70 => array ( 'perm' => PERM_PRODUCTINFO_ADD, 'name' => $strAddProductInformation, 'url' => "{$CONFIG['application_webpath']}product_info_new.php"),
-                           80 => array ('perm' => PERM_SKILL_ADD,  'name' => $strEditVendor, 'url' => "{$CONFIG['application_webpath']}vendor_edit.php")
+                           80 => array ('perm' => PERM_SKILL_ADD, 'name' => $strEditVendor, 'url' => "{$CONFIG['application_webpath']}vendors.php")
     );
     // Second Level: Customers/Feedback  submenu
     if (!is_array($hmenu[2050])) $hmenu[2050] = array();
@@ -193,9 +193,9 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     if (!is_array($hmenu[30])) $hmenu[30] = array();
     $hmenu[30] = $hmenu[30] +
                     array (10 => array ( 'perm' => PERM_UPDATE_DELETE, 'name' => $strInbox.$inbox_count, 'url' => "{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
-                           20 => array ( 'perm' => PERM_INCIDENT_ADD,  'name' => $strNewIncident, 'url' => "{$CONFIG['application_webpath']}incident_new.php"),
-                           30 => array ( 'perm' => PERM_INCIDENT_LIST,  'name' => $strMyIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php"),
-                           40 => array ( 'perm' => PERM_INCIDENT_LIST,  'name' => $strAllIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
+                           20 => array ( 'perm' => PERM_INCIDENT_ADD, 'name' => $strNewIncident, 'url' => "{$CONFIG['application_webpath']}incident_new.php"),
+                           30 => array ( 'perm' => PERM_INCIDENT_LIST, 'name' => $strMyIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php"),
+                           40 => array ( 'perm' => PERM_INCIDENT_LIST, 'name' => $strAllIncidents, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=all&amp;queue=1&amp;type=support"),
                            50 => array ( 'perm' => PERM_UPDATE_DELETE, 'name' => $strHoldingQueue, 'url' => "{$CONFIG['application_webpath']}holding_queue.php")
     );
 

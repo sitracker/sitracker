@@ -39,7 +39,7 @@ if (empty($submit))
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='vendor_edit.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p align='center'><a href='vendors.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else

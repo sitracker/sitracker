@@ -2011,8 +2011,10 @@ $strUTCOffset = 'UTC Offset (Timezone)';
 $strValid = 'Valid';
 $strValue = 'Value';
 $strVariable = 'Variable';
+# The upstream provider of a product
 $strVendor = 'Vendor';
 $strVendorName = 'Vendor Name';
+$strVendors = 'Vendors';
 $strVersion = 'Version';
 $strView = 'View';
 $strViewAndLockHeldEmail = 'View and lock this held e-mail';
