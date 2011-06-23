@@ -481,7 +481,7 @@ p.trigger
 }
 
 #incidentqueues form { text-align: center; }
-
+#incidentqueues table { width: 95%; }
 
 .helplink { vertical-align: super; color: #555; margin-left: 2px; font-size: 10px; position: static;}
 .helplink a { text-decoration: none; cursor: help; position: relative; color: #CC0000; z-index: 100;}
