@@ -64,7 +64,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                     array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $CONFIG['application_shortname'], 'url' => "{$CONFIG['application_webpath']}main.php", 'submenu' => 10),
                            20 => array('perm' => PERM_SITE_VIEW, 'name' => $strCustomers, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 20),
                            30 => array('perm' => PERM_INCIDENT_LIST, 'name' => $strSupport, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=current&amp;queue=1&amp;type=support", 'submenu' => 30),
-                           40 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php", 'submenu' => 40, 'enablevar' => 'tasks_enabled'),
+                           40 => array('perm' => PERM_TASK_VIEW, 'name' => $strTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php", 'submenu' => 40, 'enablevar' => 'tasks_enabled'),
                            50 => array('perm' => PERM_KB_VIEW, 'name' => $strKnowledgeBase, 'url' => "{$CONFIG['application_webpath']}kb.php", 'submenu' => 50, 'enablevar' => 'kb_enabled'),
                            60 => array('perm' => PERM_REPORT_RUN, 'name' => $strReports, 'url' => "", 'submenu' => 60),
                            70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strHelp, 'url' => "{$CONFIG['application_webpath']}help.php", 'submenu' => 70)
