@@ -264,7 +264,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
     {
         $incident = mysql_fetch_object($result);
         // If this is a critical incident the user we're assigning to must be online
-        if ($incident->priority >= 4) $req_online = TRUE;
+        if ($incident->priority >= PRIORITY_CRITICAL) $req_online = TRUE;
         else $req_online = FALSE;
 
         // Find the users with this skill (or all users)
@@ -302,7 +302,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
             if (mysql2date($user->lastseen) > $startofsession) $ticket[] = $user->userid;
 
             // Get two tickets for being marked in-office or working at home
-            if ($user->status == 1 OR $user->status == 6)
+            if ($user->status == USERSTATUS_IN_OFFICE OR $user->status == USERSTATUS_WORKING_FROM_HOME)
             {
                 $ticket[] = $user->userid;
                 $ticket[] = $user->userid;
@@ -310,7 +310,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 
             // Get one ticket for being marked at lunch or in meeting
             // BUT ONLY if the incident isn't critical
-            if ($incident->priority < 4 AND ($user->status == 3 OR $user->status == 4))
+            if ($incident->priority < PRIORITY_CRITICAL AND ($user->status == USERSTATUS_IN_MEETING OR $user->status == USERSTATUS_AT_LUNCH))
             {
                 $ticket[] = $user->userid;
             }
