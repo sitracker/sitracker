@@ -89,8 +89,9 @@ class Trigger extends SitEntity {
         {
             return FALSE;
         }
-
     }
+
+
     function edit()
     {
         global $dbTriggers;
@@ -119,6 +120,7 @@ class Trigger extends SitEntity {
             return FALSE;
         }
     }
+
     function getSOAPArray(){}
 
     // Begin getters and setters
