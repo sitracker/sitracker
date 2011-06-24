@@ -79,7 +79,8 @@ class Trigger extends SitEntity {
             mysql_query($sql);
             if (mysql_error())
             {
-                $this->error_text .= trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $this->error_text .= "MySQL Query Error ".mysql_error();
                 return FALSE;
             }
             else return TRUE;
@@ -106,7 +107,8 @@ class Trigger extends SitEntity {
             mysql_query($sql);
             if (mysql_error())
             {
-                $this->error_text .= trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $this->error_text .= "MySQL Query Error ".mysql_error();
                 return FALSE;
             }
             else return TRUE;
