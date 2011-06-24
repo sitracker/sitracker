@@ -47,7 +47,10 @@ $operations = array();
 $operations[$strNewUser] = array('url' => 'user_new.php?action=showform', PERM_USER_ADD);
 $operations[$strRolePermissions] = array('url' => 'edit_user_permissions.php', 'perm' => PERM_USER_EDIT);
 $operations[$strUserGroups] = 'usergroups.php';
-$operations[$strEditHolidayEntitlement] = 'edit_holidays.php';
+if ($CONFIG['holidays_enabled'])
+{
+    $operations[$strEditHolidayEntitlement] = 'edit_holidays.php';
+}
 echo html_action_links($operations);
 echo "</p>";
 echo "<table align='center'>";
