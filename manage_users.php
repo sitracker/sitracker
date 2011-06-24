@@ -41,12 +41,13 @@ else if ($sort == "accepting") $sql .= " ORDER BY accepting ASC";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-echo "<h2>".icon('user', 32)." {$strManageUsers}</h2>";
+echo "<h2>".icon('user', 32, $strManageUsers)." {$strManageUsers}</h2>";
 echo "<p class='contextmenu' align='center'>";
 $operations = array();
-$operations[$strNewUser] = 'user_new.php?action=showform';
-$operations[$strRolePermissions] = 'edit_user_permissions.php';
+$operations[$strNewUser] = array('url' => 'user_new.php?action=showform', PERM_USER_ADD);
+$operations[$strRolePermissions] = array('url' => 'edit_user_permissions.php', 'perm' => PERM_USER_EDIT);
 $operations[$strUserGroups] = 'usergroups.php';
+$operations[$strEditHolidayEntitlement] = 'edit_holidays.php';
 echo html_action_links($operations);
 echo "</p>";
 echo "<table align='center'>";
@@ -112,7 +113,7 @@ while ($users = mysql_fetch_object($result))
     echo "</td>";
     echo "<td>";
     $operations = array();
-    $operations[$strEdit] = "user_profile_edit.php?userid={$users->userid}";
+    $operations[$strEdit] = array('url' => "user_profile_edit.php?userid={$users->userid}", 'perm' => PERM_USER_EDIT);
     if ($users->status > 0)
     {
         if ($users->userid > 1 AND $users->user_source == 'sit')
