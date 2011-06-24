@@ -328,8 +328,8 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
                 $queue_samecontact = FALSE;
                 while ($queue = mysql_fetch_object($qresult))
                 {
-                    if ($queue->priority == 3) $queued_high++;
-                    if ($queue->priority >= 4) $queued_critical++;
+                    if ($queue->priority == PRIORITY_HIGH) $queued_high++;
+                    if ($queue->priority >= PRIORITY_CRITICAL) $queued_critical++;
                     if ($queue->lastupdated > $queue_lastupdated) $queue_lastupdated = $queue->lastupdated;
                     if ($queue->contact == $incident->contact) $queue_samecontact = TRUE;
                 }
@@ -638,7 +638,7 @@ function average_incident_duration($start,$end,$states)
     global $dbIncidents;
     $sql = "SELECT opened, closed, (closed - opened) AS duration_closed, i.id AS incidentid ";
     $sql .= "FROM `{$dbIncidents}` AS i ";
-    $sql .= "WHERE status='2' ";
+    $sql .= "WHERE status = '" . STATUS_CLOSED . "' ";
     if ($start > 0) $sql .= "AND opened >= {$start} ";
     if ($end > 0) $sql .= "AND opened <= {$end} ";
 
@@ -939,19 +939,19 @@ function priority_name($id, $syslang = FALSE)
 {
     switch ($id)
     {
-        case 1:
+        case PRIORITY_LOW:
             if (!$syslang) $value = $GLOBALS['strLow'];
             else $value = $_SESSION['syslang']['strLow'];
             break;
-        case 2:
+        case PRIORITY_MEDIUM:
             if (!$syslang) $value = $GLOBALS['strMedium'];
             else $value = $_SESSION['syslang']['strMedium'];
             break;
-        case 3:
+        case PRIORITY_HIGH:
             if (!$syslang) $value = $GLOBALS['strHigh'];
             else $value = $_SESSION['syslang']['strHigh'];
             break;
-        case 4:
+        case PRIORITY_CRITICAL:
             if (!$syslang) $value = $GLOBALS['strCritical'];
             else $value = $_SESSION['syslang']['strCritical'];
             break;
