@@ -863,7 +863,7 @@ array('description' => 'By default, the text of the last update to an incident, 
 
 
 $ttvararray['{useraccepting}'] =
-array('description' => 'Whether the user is accepting or not',
+array('description' => $strAcceptingIncidents,
       'replacement' => 'user_accepting_status($param_array[\'userid\']);',
       'requires' => 'userid',
       'show' => FALSE
@@ -875,7 +875,7 @@ array('description' => $strCurrentUserEmailAddress,
       );
 
 $ttvararray['{userid}'][] =
-array('description' => 'The user',
+array('description' => $strUser,
       'replacement' => '$param_array[\'userid\'];',
       'checkreplace' => 'user_drop_down',
       'show' => FALSE
@@ -1351,9 +1351,12 @@ function trigger_action_to_html($trigger)
     }
 
     $html .=  "<div class='triggeractions'>";
-    //FIXME 3.90, add edit back in
-    //$html .= "<a href='action_details.php?id={$trigger->id}'>{$GLOBALS['strEdit']}</a> | ";
-    $html .= "<a href='action_details.php?action=delete&amp;id={$trigger->id}'>{$GLOBALS['strDelete']}</a></div><br />";
+    $operations = array();
+    // FIXME 3.90, add edit back in
+    // $operations[$GLOBALS['strEdit']] = "action_details.php?id={$trigger->id}";
+    $operations[$GLOBALS['strDelete']] = "action_details.php?action=delete&amp;id={$trigger->id}";
+    $html .= html_action_links($operations);
+    $html .= "</div><br />";
     return $html;
 }
 
