@@ -43,8 +43,11 @@ if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
 echo "<h2>".icon('user', 32)." {$strManageUsers}</h2>";
 echo "<p class='contextmenu' align='center'>";
-echo "<a href='user_new.php?action=showform'>{$strNewUser}</a> | ";
-echo "<a href='edit_user_permissions.php'>{$strRolePermissions}</a>";
+$operations = array();
+$operations[$strNewUser] = 'user_new.php?action=showform';
+$operations[$strRolePermissions] = 'edit_user_permissions.php';
+$operations[$strUserGroups] = 'usergroups.php';
+echo html_action_links($operations);
 echo "</p>";
 echo "<table align='center'>";
 echo "<tr>";
@@ -108,21 +111,22 @@ while ($users = mysql_fetch_object($result))
     }
     echo "</td>";
     echo "<td>";
-    echo "<a href='user_profile_edit.php?userid={$users->userid}'>{$strEdit}</a>";
+    $operations = array();
+    $operations[$strEdit] = "user_profile_edit.php?userid={$users->userid}";
     if ($users->status > 0)
     {
-        echo " | ";
         if ($users->userid > 1 AND $users->user_source == 'sit')
         {
-            echo "<a href='forgotpwd.php?action=sendpwd&amp;userid={$users->userid}'>{$strResetPassword}</a> | ";
+            $operations[$strResetPassword] = "forgotpwd.php?action=sendpwd&amp;userid={$users->userid}";
         }
-        echo "<a href='edit_user_skills.php?user={$users->userid}'>{$strSkills}</a>";
-        echo " | <a href='edit_backup_users.php?user={$users->userid}'>{$strSubstitutes}</a>";
+        $operations[$strSetSkills] = "edit_user_skills.php?user={$users->userid}";
+        $operations[$strSetSubstitutes] = "edit_backup_users.php?user={$users->userid}";
         if ($users->userid > 1)
         {
-            echo " | <a href='edit_user_permissions.php?action=edit&amp;user={$users->userid}'>{$strPermissions}</a>";
+            $operations[$strPermissions] = "edit_user_permissions.php?action=edit&amp;user={$users->userid}";
         }
     }
+    echo html_action_links($operations);
     echo "</td>";
 
     echo "</tr>\n";
