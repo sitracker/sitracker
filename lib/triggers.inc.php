@@ -901,15 +901,16 @@ array('description' => $strUserStatus,
 
 plugin_do('trigger_variables');
 
+
 /**
  * Displays a <select> with the list of email templates
  * @author Kieran Hogg, Ivan Lucas
- * @param $triggertype string. The type of trigger (incident, system...)
  * @param $name string. The name for the select
- * @param $selected string. The name of the selected item
+ * @param $triggertype string (optional). The type of trigger (incident, system...)
+ * @param $selected string (optional). The name of the selected item
  * @return string. HTML snippet
  */
-function email_templates($name, $triggertype='system', $selected = '')
+function email_templates($name, $triggertype = 'system', $selected = '')
 {
     global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults;
     $html .= "<select id='{$name}' name='{$name}'>";
@@ -951,8 +952,9 @@ function email_templates($name, $triggertype='system', $selected = '')
 /**
  * Displays a <select> with the list of notice templates
  * @author Kieran Hogg
- * @param $name string. The name for the select
- * @param $selected string. The name of the selected item
+ * @param string $name. The name for the select element
+ * @param string $selected (optional). The name of the selected item
+ * @returns string HTML
  */
 function notice_templates($name, $selected = '')
 {
@@ -969,17 +971,20 @@ function notice_templates($name, $selected = '')
             $user_header = true;
             $html .= "<option></option><option>=== {$strPersonalTemplates} ===</option>";
         }
-	    $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
+        $html .= "<option id='{$template->name}' value='{$template->name}'>{$GLOBALS[$template->description]} ({$template->name})</option>\n";
     }
     $html .= "</select>\n";
     return $html;
 }
 
+
 /**
  * Actually do the replacement, used so we can define variables more than once
  * @author Kieran Hogg
+ * @param string $trigger_type
  * @param array &$ttvar the array of the variable to replace
  * @param string &$identifier the {variable} name
+ * @param array $param_array
  * @param array &$required  optional array of required vars to pass, used if
  * we're not dealing with a trigger
  * @return mixed array if replacement found, NULL if not
@@ -1096,10 +1101,13 @@ function replace_specials($string, $param_array)
     return preg_replace($trigger_regex, $trigger_replace, $string);
 }
 
+
 /**
  * Replaces template variables with their values
  * @author Kieran Hogg, Ivan Lucas
- * @param $string_array string The string containing the variables
+ * @param string $trigger_type
+ * @param $string_array The string containing the variables
+ * @param $param_array
  * @return string The string with variables replaced
  */
 function trigger_replace_specials($trigger_type, $string_array, $param_array)
@@ -1167,7 +1175,10 @@ function trigger_replace_specials($trigger_type, $string_array, $param_array)
 //     return $html;
 // }
 
-
+/**
+ * @author Kieran Hogg
+ * @todo FIXME This is unused and does nothing. was it supposed to do something? INL 24 June 2011
+ */
 function trigger_types()
 {
     return $trigger_types;
@@ -1177,7 +1188,7 @@ function trigger_types()
 /**
  * Return as associative array with a trigger's properties
  * @author Kieran Hogg
- * @param $trigger Trigger a Trigger object
+ * @param object $trigger Trigger a Trigger object
  * @return array
  */
 function trigger_to_array($trigger)
@@ -1233,22 +1244,22 @@ function triggers_to_html($user_id, $trigger_id = '')
 /**
  * Return HTML to describe a trigger
  * @author Kieran Hogg
- * @param int $trigger - Trigger ID
+ * @param int $trigger_id - Trigger ID
  * @param int $user_id
  * @return string HTML
  */
-function trigger_to_html($trigger, $user_id)
+function trigger_to_html($trigger_id, $user_id)
 {
     global $dbTriggers;
     $html = '';
     $sql = "SELECT id FROM `{$dbTriggers}` ";
     $sql .= "WHERE userid = '{$user_id}' ";
-    $sql .= "AND triggerid = '{$trigger}'";
+    $sql .= "AND triggerid = '{$trigger_id}'";
     $result = mysql_query($sql);
     if (mysql_error())
     {
         trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        trigger_error("Problem getting trigger details for {$trigger}");
+        trigger_error("Problem getting trigger details for {$trigger_id}");
         return FALSE;
     }
     if (mysql_num_rows($result) >= 0)
@@ -1267,7 +1278,7 @@ function trigger_to_html($trigger, $user_id)
 /**
  * Return HTML to describe a trigger action
  * @author Kieran Hogg
- * @param int $trigger - Trigger ID
+ * @param object $trigger - Trigger Object
  * @return string HTML
  */
 function trigger_action_to_html($trigger)
@@ -1347,6 +1358,13 @@ function trigger_action_to_html($trigger)
 }
 
 
+/**
+ * Return HTML the description of a given template
+ * @author Kieran Hogg
+ * @param string $name - Template name
+ * @param $type - Template type
+ * @return string HTML
+ */
 function template_description($name, $type)
 {
     global $dbEmailTemplates, $dbNoticeTemplates;
@@ -1367,10 +1385,11 @@ function template_description($name, $type)
     return $desc;
 }
 
+
 /**
  * Provides a drop down list of matching functions
- * @param $id string the ID to give the <select>
- * @param $name string the name to give the <select>
+ * @param string $id the HTML ID attribute to give the <select>
+ * @param string $name the name attribute to give the <select>
  */
 function check_match_drop_down($id = '')
 {
@@ -1383,6 +1402,7 @@ function check_match_drop_down($id = '')
 
     return $html;
 }
+
 
 /**
  * Creates a trigger check string from an array of HTML elements
@@ -1433,7 +1453,14 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     return $final_check;
 }
 
-//FIXME 4.0
+
+/**
+ * Returns HTML human readable listing of trigger checks (rules)
+ * @author Kieran Hogg
+ * @param string $checks
+ * @returns string HTML
+ * @todo FIXME 4.0
+ */
 function checks_to_html($checks)
 {
     $checks = trim($checks);
@@ -1469,7 +1496,7 @@ function checks_to_html($checks)
             }
             else
             {
-                trigger_error('not yet supported');
+                trigger_error('not yet supported', E_USER_ERROR);
                 $html .= $original_check;
             }
 
@@ -1486,6 +1513,10 @@ function checks_to_html($checks)
     return $html;
 }
 
+/**
+ * @author Kieran Hogg
+ * @todo FIXME This is unused and does nothing. was it supposed to do something? INL 24 June 2011
+ */
 function freeform($name)
 {
     $html = "<input name='name' />";
@@ -1498,7 +1529,7 @@ function freeform($name)
  */
 function trigger($trigger_id, $param_array)
 {
-    trigger_error("trigger() is deprecated, please use the TriggerEvent class instead");
+    trigger_error("trigger() is deprecated, please use the TriggerEvent class instead", E_USER_DEPRECATED);
     new TriggerEvent($trigger_id, $param_array);
 }
 ?>
