@@ -1040,7 +1040,7 @@ function replace_vars($trigger_type, &$ttvar, &$identifier, $param_array, $requi
                 debug_log("replacement: {$ttvar[replacement]}", TRUE);
             }
         }
-    
+
         $trigger_replace = $res;
         unset($res);
         return array('trigger_replace' => $trigger_replace,
@@ -1092,7 +1092,7 @@ function replace_specials($string, $param_array)
             }
         }
     }
-    
+
     return preg_replace($trigger_regex, $trigger_replace, $string);
 }
 
@@ -1193,6 +1193,14 @@ function trigger_to_array($trigger)
     return $array;
 }
 
+
+/**
+ * Return HTML for a table listing triggers
+ * @author Kieran Hogg
+ * @param int $user_id
+ * @param int $trigger_id (optional)
+ * @return string HTML
+ */
 function triggers_to_html($user_id, $trigger_id = '')
 {
     global $dbTriggers, $sit, $trigger_types, $strTrigger, $strActions;
@@ -1221,6 +1229,14 @@ function triggers_to_html($user_id, $trigger_id = '')
     return $html;
 }
 
+
+/**
+ * Return HTML to describe a trigger
+ * @author Kieran Hogg
+ * @param int $trigger - Trigger ID
+ * @param int $user_id
+ * @return string HTML
+ */
 function trigger_to_html($trigger, $user_id)
 {
     global $dbTriggers;
@@ -1247,6 +1263,13 @@ function trigger_to_html($trigger, $user_id)
     return $html;
 }
 
+
+/**
+ * Return HTML to describe a trigger action
+ * @author Kieran Hogg
+ * @param int $trigger - Trigger ID
+ * @return string HTML
+ */
 function trigger_action_to_html($trigger)
 {
     global $trigger_types, $actionarray, $strChecks, $strParameters, $strMore, $strLess, $strEllipsis;
