@@ -375,6 +375,11 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 
         // Do the lottery - "Release the balls"
         $numtickets = count($ticket) - 1;
+        // Ensure we return a failure if we have a negative amount of tickets
+        if ($numtickets < 0)
+        {
+            return FALSE;
+        }
         $rand = mt_rand(0, $numtickets);
         $userid = $ticket[$rand];
     }
