@@ -156,10 +156,10 @@ while ($escalations = mysql_fetch_object($escs))
     {
         $html .= "<table align='center'>";
         $html .= "<tr><th>{$strExternalEngineersName}</th><th>{$strNumOfCalls}</th>";
-        $html .= "<th align='center'>".priority_icon(4)."</th>";
-        $html .= "<th align='center'>".priority_icon(3)."</th>";
-        $html .= "<th align='center'>".priority_icon(2)."</th>";
-        $html .= "<th align='center'>".priority_icon(1)."</th>";
+        $html .= "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+        $html .= "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+        $html .= "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+        $html .= "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
         $html .= "<td>";
         $html .= "<table width='100%'><tr><th width='50%'>{$strIncident}</th>";
         $html .= "<th width='12%'>{$strInternalEngineer}</th><th width='25%'>{$strSoftware}</th>";

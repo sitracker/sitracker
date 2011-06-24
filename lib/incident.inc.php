@@ -59,7 +59,7 @@ function incident($incident)
  * @author Kieran Hogg
  */
 function create_incident($title, $contact, $servicelevel, $contract, $product,
-                         $software, $priority = 1, $owner = 0, $status = 1,
+                         $software, $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
                          $productversion = '', $productservicepacks = '',
                          $opened = '', $lastupdated = '')
 {

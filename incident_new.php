@@ -572,7 +572,7 @@ elseif ($action == 'incidentform')
     echo help_link('VisibleToCustomer')."<br />";
     echo "<label><input name='send_email' type='checkbox' checked='checked' /> ";
     echo "{$strSendOpeningEmailDesc}</label><br />";
-    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", 1, $maxprority, FALSE)." </td></tr>";
+    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", PRIORITY_LOW, $maxprority, FALSE)." </td></tr>";
     echo "</table>\n";
     echo "<input type='hidden' name='win' value='{$win}' />";
     echo "<p align='center'><input name='submit' type='submit' value='{$strNewIncident}' /></p>";
@@ -650,7 +650,7 @@ elseif ($action == 'assign')
         // check for blank priority
         if ($priority == 0)
         {
-            $priority = 1;
+            $priority = PRIORITY_LOW;
         }
 
         // check for blank type
@@ -907,10 +907,10 @@ elseif ($action == 'assign')
             echo "<tr>
             <th colspan='5'></th>
             <th align='center'>{$strActionNeeded} / {$strOther}</th>";
-            echo "<th align='center'>".priority_icon(4)."</th>";
-            echo "<th align='center'>".priority_icon(3)."</th>";
-            echo "<th align='center'>".priority_icon(2)."</th>";
-            echo "<th align='center'>".priority_icon(1)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
 
             echo "<th></th>";
             echo "</tr>";
