@@ -41,16 +41,21 @@ if (mysql_num_rows($result) >= 1)
     echo colheader('email_domain', $strEmailDomain);
     echo colheader('edit', $strActions);
     echo "</tr>";
+    $shade = 'shade1';
     while ($path = mysql_fetch_object($result))
     {
-        echo "<tr>";
+        $operations = array();
+        $operations[$strEdit] = "edit_escalation_path.php?id={$path->id}";
+        echo "<tr  class='{$shade}'>";
         echo "<td>{$path->name}</td>";
         echo "<td>{$path->track_url}</td>";
         echo "<td>{$path->home_url}</td>";
         echo "<td>{$path->url_title}</td>";
         echo "<td>{$path->email_domain}</td>";
-        echo "<td><a href='edit_escalation_path.php?id={$path->id}'>{$strEdit}</a></td>";
+        echo "<td>" . html_action_links($operations). "</td>";
         echo "</tr>";
+        if ($shade == 'shade1') $shade = 'shade2';
+        else $shade = 'shade1';
     }
     echo "</table>";
 }
