@@ -9,21 +9,19 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
 $permission = PERM_MYTRIGGERS_MANAGE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php');
 //This page requires authentication
-$permission = PERM_TRIGGERS_MANAGE;     // FIXME this overwrites the previous permission setting above ^^
 
-require (APPLICATION_LIBPATH . 'auth.inc.php');
 $trigger_mode = 'user';
 if (isset($_GET['user']))
 {
     //FIXME perms
     if ($_GET['user'] == 'admin')
     {
+        $permission = PERM_TRIGGERS_MANAGE;     // this overwrites the previous permission setting above ^^
         $trigger_mode = 'system';
     }
     else
@@ -35,6 +33,9 @@ else
 {
     $user_id = $sit[2];
 }
+
+require (APPLICATION_LIBPATH . 'auth.inc.php');
+
 $title = $strNewTriggerInterface;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
