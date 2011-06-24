@@ -1188,7 +1188,7 @@ function trigger_types()
 /**
  * Return as associative array with a trigger's properties
  * @author Kieran Hogg
- * @param object $trigger Trigger a Trigger object
+ * @param object $trigger a Trigger object
  * @return array
  */
 function trigger_to_array($trigger)
