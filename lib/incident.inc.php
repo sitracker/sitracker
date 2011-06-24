@@ -252,6 +252,8 @@ function update($update)
 function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 {
     global $now, $dbUsers, $dbIncidents, $dbUserSoftware, $startofsession;
+    $ticket = array();
+
     $sql = "SELECT product, softwareid, priority, contact, owner FROM `{$dbIncidents}` WHERE id={$incidentid} LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -264,8 +266,14 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
     {
         $incident = mysql_fetch_object($result);
         // If this is a critical incident the user we're assigning to must be online
-        if ($incident->priority >= PRIORITY_CRITICAL) $req_online = TRUE;
-        else $req_online = FALSE;
+        if ($incident->priority >= PRIORITY_CRITICAL)
+        {
+            $req_online = TRUE;
+        }
+        else
+        {
+            $req_online = FALSE;
+        }
 
         // Find the users with this skill (or all users)
         if (!empty($incident->softwareid))
@@ -334,7 +342,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
                     if ($queue->contact == $incident->contact) $queue_samecontact = TRUE;
                 }
                 // Get one ticket for your queue being updated in the past 4 hours
-                if ($queue_lastupdated > ($now - 14400)) $user->userid;
+                if ($queue_lastupdated > ($now - 14400)) $ticket[] = $user->userid;
 
                 // Get two tickets for dealing with the same contact in your queue
                 if ($queue_samecontact == TRUE)
