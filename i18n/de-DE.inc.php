@@ -683,7 +683,6 @@ $strOpened = 'Ge&ouml;ffnet';
 $strOpenActivities = 'Offene Aktivit&auml;ten';
 $strOpenedby = 'Er&ouml;ffnet durch %s';
 $strOpenedbyXonY = 'Er&ouml;ffnet durch %s am %s';
-$strOperation = 'Operationen';
 $strOther = 'anderes';
 $strOtherIncidents = 'andere Auftr&auml;ge';
 $strOutput = 'Ausgabe';

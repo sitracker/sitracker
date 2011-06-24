@@ -15,7 +15,7 @@
 // 24Apr02 INL Fixed a divide by zero bug
 
 
-$permission = 6; // view incidents
+$permission = PERM_INCIDENT_LIST; // view incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

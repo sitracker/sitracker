@@ -13,7 +13,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 28Oct05
 
 
-$permission = 41; // View Status
+$permission = PERM_NOT_REQUIRED; 
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

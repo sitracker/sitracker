@@ -11,7 +11,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'triggers.inc.php');
@@ -366,7 +366,7 @@ switch ($action)
         }
         break;
     case 'delete_temp_assign':
-        if (user_permission($sit[2], 42))
+        if (user_permission($sit[2], PERM_UPDATE_DELETE))
         {
             $incidentid = clean_int($_REQUEST['incidentid']);
             $originalowner = clean_int($_REQUEST['originalowner']);

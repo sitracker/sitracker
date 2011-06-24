@@ -644,7 +644,6 @@ $strOnTrainingCourse = '在培訓課上';
 $strOpen = '打開';
 $strOpened = '已打開';
 $strOpenedby = '%s打開';
-$strOperation = '操作';
 $strOther = '其它';
 $strOtherIncidents = '其它事件';
 $strOtherLeave = '其它時間';

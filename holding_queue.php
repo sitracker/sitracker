@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 
 
-$permission = 42;
+$permission = PERM_UPDATE_DELETE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -315,7 +315,7 @@ if (is_array($incidentqueuerows))
         echo "<th>{$strFrom}</th>";
         echo "<th>{$strSubject}</th>";
         echo "<th>{$strMessage}</th>";
-        echo "<th>{$strOperation}</th>";
+        echo "<th>{$strActions}</th>";
         echo "</tr>";
         sort($incidentqueuerows);
         foreach ($incidentqueuerows AS $row)
@@ -345,7 +345,7 @@ if ($spamcount > 0)
     echo "<table align='center' style='width: 95%;'>";
     echo "<tr><th /><th>{$strDate}</th><th>{$strFrom}</th>";
     echo "<th>{$strSubject}</th><th>{$strMessage}</th>";
-    echo "<th>{$strOperation}</th></tr>\n";
+    echo "<th>{$strActions}</th></tr>\n";
 
     while ($updates = mysql_fetch_object($result))
     {
@@ -414,7 +414,7 @@ if (mysql_num_rows($resultchase) >= 1)
         }
     }
 }
-else echo "<p>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 if (!empty($html_chase))
 {
@@ -438,7 +438,7 @@ if (mysql_num_rows($result) >= 1)
     $rhtml .= "<table id='pendingreassignments' align='center' style='width: 95%;'>";
     $rhtml .= "<tr><th title='{$strLastUpdated}'>{$strDate}</th><th title='{$strCurrentOwner}'>{$strFrom}</th>";
     $rhtml .= "<th title='{$strIncidentTitle}'>{$strSubject}</th><th>{$strMessage}</th>";
-    $rhtml .= "<th>{$strOperation}</th></tr>\n";
+    $rhtml .= "<th>{$strActions}</th></tr>\n";
 
     while ($assign = mysql_fetch_object($result))
     {
@@ -492,7 +492,7 @@ if (mysql_num_rows($result) >= 1)
     }
     $rhtml .= "</table>\n";
 }
-else echo "<p>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 if ($show)
 {

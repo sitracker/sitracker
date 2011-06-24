@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
+$permission = PERM_NOT_REQUIRED;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -52,7 +52,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo "<p class='info'>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 echo "<p align='center'><a href='inventory_new.php?newsite=1'>";

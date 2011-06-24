@@ -557,16 +557,22 @@ function vendor_drop_down($name, $id, $required = FALSE)
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
  * @param int $id. Site Type ID to preselect
+ * @param bool $required. adds required field class when TRUE
  * @todo TODO i18n needed site types
  * @return HTML select
  */
-function sitetype_drop_down($name, $id)
+function sitetype_drop_down($name, $id, $required = FALSE)
 {
     global $dbSiteTypes;
     $sql = "SELECT typeid, typename FROM `{$dbSiteTypes}` ORDER BY typename ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $html .= "<select name='$name'>\n";
+    $html .= "<select name='$name'";
+    if ($required)
+    {
+        $html .= " class='required'";
+    }
+    $html .= ">\n";
     if ($id == 0)
     {
         $html .= "<option selected='selected' value='0'></option>\n";

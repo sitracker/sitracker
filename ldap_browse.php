@@ -11,7 +11,7 @@
 
 // Author: Paul Heaney <paul[at]sitracker.org>
 
-$permission = 22; // Administrate
+$permission = PERM_ADMIN; // Administrate
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

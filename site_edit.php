@@ -12,7 +12,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!  6Feb06
 
 
-$permission = 3; // Edit existing site details
+$permission = PERM_SITE_EDIT; // Edit existing site details
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

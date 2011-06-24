@@ -8,7 +8,7 @@
 
 // Author Kieran Hogg <kieran[at]sitracker.org>
 
-$permission = 71;
+$permission = PERM_MYTRIGGERS_MANAGE;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

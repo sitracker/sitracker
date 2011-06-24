@@ -13,7 +13,7 @@
 //          Kieran Hogg <kieran[at]sitracker.org>
 
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
 
 session_name($CONFIG['session_name']);

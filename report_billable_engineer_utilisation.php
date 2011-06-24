@@ -11,7 +11,7 @@
 //  Author:   Paul Heaney
 
 
-$permission = 37;  // Run Reports // TODO perhaps should have own permission
+$permission = PERM_REPORT_RUN;  // Run Reports // TODO perhaps should have own permission
 
 require ('core.php');
 include (APPLICATION_LIBPATH . 'functions.inc.php');

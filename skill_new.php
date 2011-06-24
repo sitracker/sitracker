@@ -1,5 +1,5 @@
 <?php
-// software_new.php - Form for adding software
+// skill_new.php - Form for adding skills (skills were called software in earlier versions of SiT)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 56; // Add Skills
+$permission = PERM_SKILL_ADD; // Add Skills
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -131,7 +131,7 @@ else
             replace_tags(TAG_SKILL, $id, $tags);
 
             journal(CFG_LOGGING_DEBUG, 'Skill Added', "Skill {$id} was added", CFG_JOURNAL_DEBUG, $id);
-            html_redirect("products.php");
+            html_redirect("products.php?display=skills");
             //clear form data
             $_SESSION['formdata']['new_software'] = NULL;
         }

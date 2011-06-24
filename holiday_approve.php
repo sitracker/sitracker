@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 50; // Approve Holiday
+$permission = PERM_HOLIDAY_APPROVE; // Approve Holiday
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = $strApproveHolidays;

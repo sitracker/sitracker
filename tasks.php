@@ -12,7 +12,7 @@
 // Author: Kieran Hogg <kieran[at]sitracker.org
 // This Page Is Valid XHTML 1.0 Transitional!
 
-$permission = 69;
+$permission = PERM_TASK_VIEW;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -649,15 +649,14 @@ if (mysql_num_rows($result) >=1 )
         }
         else
         {
-            echo "<p align='center'><strong>{$strNoRecords}</strong></p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
     }
 }
 else
 {
-    echo "<br /><p align='center'>";
-    echo "<strong>{$strNoRecords}</strong>";
-    echo "</p>";
+    echo "<br />";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 
     if ($mode == 'incident')
     {

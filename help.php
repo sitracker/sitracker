@@ -10,7 +10,7 @@
 //
 
 
-$permission = 26; // Help
+$permission = PERM_HELP_VIEW; // Help
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = "Help";

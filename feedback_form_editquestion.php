@@ -10,7 +10,7 @@
 //
 
 // by Ivan Lucas, June 2004
-$permission = 49; // Edit Feedback Forms
+$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
 
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');

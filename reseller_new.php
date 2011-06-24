@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 63;
+$permission = PERM_RESELLER_ADD;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -29,7 +29,7 @@ switch ($action)
         $errors = 0;
         if (empty($name))
         {
-            $_SESSION['formerrors']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
+            $_SESSION['formerrors']['new_reseller']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_ERROR);
             $errors++;
         }
 

@@ -83,7 +83,6 @@ $strAddress1 = 'Address1';
 $strAddress2 = 'Address2';
 $strAddRSSAtomFeed = 'Add RSS/Atom feed';
 $strAddService = 'Add Service';
-# i.e. Physical site
 $strAddSoftware = 'Add Software';
 # i.e. Addition of site failed
 $strAddXfailed = 'Addition of %s Failed';
@@ -231,7 +230,6 @@ $strBrowseContacts = 'Browse contacts';
 $strBrowseContracts = 'Browse contracts';
 $strBrowseContractsBySite = 'Browse Contracts by Site';
 $strBrowseFeedback = 'Browse feedback';
-$strBrowseFeedbackForms = 'Browse Feedback Forms';
 $strBrowseJournal = 'Browse Journal';
 $strBrowseKB = 'Browse Knowledge Base';
 $strBrowseSites = 'Browse sites';
@@ -1016,6 +1014,9 @@ $strListProducts = 'List Products';
 $strListShowsContacts = 'This list shows contacts that matched your search, if site-support is available you can add incidents for the site';
 $strListShowsContracts = 'This list shows contracts, i.e. supported contacts and the products they are supported for. Click on the appropriate \'%s\' link to begin adding the incident';
 $strListSkills = 'List Skills';
+# List skills that users have
+$strListUserSkills = 'List User Skills';
+$strListVendors = 'List Vendors';
 $strLinkSkillToX = 'Link skill to %s';
 $strLoading = 'Loading';
 # Parameters defining location, language and regional preferences
@@ -1155,7 +1156,7 @@ $strNewReseller = 'New Reseller';
 $strNewRole = 'New Role';
 $strNewPriority = 'New Priority';
 $strNewProduct = 'New Product';
-$strNewPriorityQuestion = 'New Product Question';
+$strNewProductQuestion = 'New Product Question';
 $strNewService = 'New Service';
 $strNewServiceLevel = 'New Service Level';
 $strNewSite = 'New Site';
@@ -1184,6 +1185,8 @@ $strNoAnswerGiven = 'No Answer Given';
 $strNoActionSpecified = 'No action specified';
 $strNoAvailablePlugins = 'No Available Plugins';
 $strNoBillingMatrixDefined = 'No Billing Matrix defined';
+# e.g. No engineers have this skill.
+$strNoEngineers = 'No Engineers';
 $strNoEngineersForReassignment = 'No Engineers exist for Incident Reassignment';
 $strNoFeedbackFormsAvailable = 'No Feedback Forms Available';
 $strNoFiles = 'No Files';
@@ -1352,7 +1355,6 @@ $strOpenedby = 'Opened by %s';
 $strOpenedbyXonY = 'Opened by %1$s on %2$s';
 $strOpenedViaThePortalByX = 'Opened via the portal by %s';
 $strOpenForX = 'Open for %s';
-$strOperation = 'Operation';
 $strOptions = 'Options';
 $strOptionsOnePerLine = 'Options (one per line)';
 $strOriginalMessageReceivedAt = 'Original message received at: %s';
@@ -1442,6 +1444,7 @@ $strProduct = 'Product';
 $strProductOnly = 'Product Only';
 $strProductQuestions = 'Product Questions';
 $strProducts = 'Products';
+$strProductsAndSkills = 'Products & Skills';
 $strPublic = 'Public';
 $strPublishFielsToFTPSite = 'Public Files to FTP site';
 $strPublicHoliday = 'Public Holiday';
@@ -1981,6 +1984,8 @@ $strUnsupported = 'Unsupported';
 $strUntilSpecificDateAndTime = 'Until specific date and time';
 $strUntilX = 'Until %s';
 $strUntitled = 'Untitled';
+# Not used
+$strUnused = 'Unused';
 # Requiring immediate action or attention
 $strUrgent = 'Urgent';
 $strUsed = 'Used';
@@ -2012,8 +2017,10 @@ $strUTCOffset = 'UTC Offset (Timezone)';
 $strValid = 'Valid';
 $strValue = 'Value';
 $strVariable = 'Variable';
+# The upstream provider of a product
 $strVendor = 'Vendor';
 $strVendorName = 'Vendor Name';
+$strVendors = 'Vendors';
 $strVersion = 'Version';
 $strView = 'View';
 $strViewAndLockHeldEmail = 'View and lock this held e-mail';
@@ -2033,6 +2040,7 @@ $strViewIncidentDetails = 'View Incident Details';
 $strViewIncidents = 'View Incidents';
 $strViewKnowledgebaseArticles = 'View Knowledgebase Articles';
 $strViewResponse = 'View Response';
+$strViewRole = 'View Role';
 # Legacy though we still have a permission for this
 $strViewSalesIncidents = 'View Sales Incidents';
 $strViewSite = 'View Site';

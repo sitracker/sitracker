@@ -12,7 +12,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 // This Page is Valid XHTML 1.0 Transitional!
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

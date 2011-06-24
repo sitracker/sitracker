@@ -46,7 +46,7 @@ switch ($mode)
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             $title = ("$strContract - $strEditService");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            if (mysql_numrows($result) != 1)
+            if (mysql_num_rows($result) != 1)
             {
                 echo "<h2>".sprintf($strNoServiceWithIDXFound, $serviceid)."</h2>";
             }
@@ -165,9 +165,9 @@ switch ($mode)
         break;
     case 'doupdate':
         $success = true;
-        if (user_permission($sit[2], 80) == FALSE)
+        if (user_permission($sit[2], PERM_SERVICE_EDIT) == FALSE)
         {
-            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=80");
+            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_EDIT);
             exit;
         }
         else
@@ -264,9 +264,9 @@ switch ($mode)
         break;
     case 'showform':
         // Will be passed a $sourceservice to modify
-        if (user_permission($sit[2], 79) == FALSE)
+        if (user_permission($sit[2], PERM_SERVICE_BALANCE_EDIT) == FALSE)
         {
-            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=79");
+            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_BALANCE_EDIT);
             exit;
         }
         else
@@ -329,9 +329,9 @@ switch ($mode)
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
     case 'edit':
-        if (user_permission($sit[2], 79) == FALSE)
+        if (user_permission($sit[2], PERM_SERVICE_BALANCE_EDIT) == FALSE)
         {
-            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=79");
+            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_BALANCE_EDIT);
             exit;
         }
         else
@@ -348,9 +348,9 @@ switch ($mode)
         }
         break;
     case 'transfer':
-        if (user_permission($sit[2], 79) == FALSE)
+        if (user_permission($sit[2], PERM_SERVICE_BALANCE_EDIT) == FALSE)
         {
-            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=79");
+            header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_BALANCE_EDIT);
             exit;
         }
         else

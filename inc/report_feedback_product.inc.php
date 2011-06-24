@@ -141,7 +141,6 @@ if (mysql_num_rows($mresult) >= 1)
             // if ($total_average>0) echo "<code>{$dbg}</code>";
             unset($qavgavg);
             unset($qanswer);
-            unset($dbg);
             unset($storeone);
             unset($storetwo);
             unset($gtotal);

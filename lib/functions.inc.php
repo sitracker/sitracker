@@ -350,12 +350,14 @@ function db_read_column($column, $table, $id)
 
 /**
  * @author Ivan Lucas
+ * @note: Requires permission names to be i18n strings in the database table
  */
 function permission_name($permissionid)
 {
     global $dbPermissions;
     $name = db_read_column('name', $dbPermissions, $permissionid);
     if (empty($name)) $name = $GLOBALS['strUnknown'];
+    else $name = $GLOBALS["{$name}"];
     return $name;
 }
 
@@ -526,7 +528,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
                     preg_match("/Table '(.*)' doesn't exist/", $errstr))
                 {
                     echo "<p class='tip'>The SiT schema may need updating to fix this problem.";
-                    if (user_permission($sit[2], 22)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
+                    if (user_permission($sit[2], PERM_ADMIN)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
                     echo "</p>";
                 }
 
@@ -1145,7 +1147,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
         if (sizeof($data) == 1)
         {
-            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
+            $html .= "<tr><td rowspan='{$rows}'>" . user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE) . "</td></tr>";
         }
         else
         {

@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 42;
+$permission = PERM_UPDATE_DELETE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -299,7 +299,7 @@ if (empty($displayid))
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 else
@@ -413,7 +413,7 @@ else
     }
     else
     {
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 

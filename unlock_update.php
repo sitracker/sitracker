@@ -11,7 +11,7 @@
 // This page is called from incident_html_top.inc.php
 
 
-$permission = 42;
+$permission = PERM_UPDATE_DELETE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

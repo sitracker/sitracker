@@ -49,7 +49,7 @@ function portal_incident_table($sql)
         $html .=  colheader('status', $GLOBALS['strStatus'], $sort, $order, $filter);
         if ($showclosed != "true")
         {
-            $html .=  colheader('actions', $GLOBALS['strOperation']);
+            $html .=  colheader('actions', $GLOBALS['strActions']);
         }
 
         $html .=  "</tr>\n";

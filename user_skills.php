@@ -12,7 +12,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!  31Oct05
 
 
-$permission = 14; // View Users
+$permission = PERM_USER_VIEW; // View Users
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

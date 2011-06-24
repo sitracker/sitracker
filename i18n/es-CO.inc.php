@@ -548,7 +548,6 @@ $strOnTrainingCourse = 'En curso de entrenamiento';
 $strOpen = 'Abrir';
 $strOpened = 'Abierto';
 $strOpenedby = 'Abierto por %s';
-$strOperation = 'Operación';
 $strOrphanedSites = 'Sitios Huérfanos';
 $strOther = 'Otro';
 $strOtherIncidents = 'Otros Incidentes';

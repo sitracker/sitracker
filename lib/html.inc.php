@@ -720,7 +720,7 @@ function new_note_form($linkid, $refid)
  */
 function show_notes($linkid, $refid, $delete = TRUE)
 {
-    global $sit, $iconset, $dbNotes;
+    global $sit, $iconset, $dbNotes, $strDelete, $strAreYouSureDelete;
     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='{$linkid}' AND refid='{$refid}' ORDER BY timestamp DESC, id DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -734,8 +734,12 @@ function show_notes($linkid, $refid, $delete = TRUE)
             {
                 $html .= "<a href='note_delete.php?id={$note->id}&amp;rpath=";
                 $html .= "{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' ";
-                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">";
-                $html .= icon('delete', 16)."</a>";
+                if ($_SESSION['userconfig']['show_confirmation_delete'])
+                {
+                    $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\"";
+                }
+                $html .= ">";
+                $html .= icon('delete', 16, $strDelete)."</a>";
             }
             $html .= "</div>\n"; // /detaildate
             $html .= icon('note', 16)." ";
@@ -1139,7 +1143,7 @@ function contract_details($id, $mode='internal')
             }
             else
             {
-                $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
+                $html .= user_alert($strNoRecords, E_USER_NOTICE);
             }
         }
 
@@ -1211,7 +1215,7 @@ function contract_details($id, $mode='internal')
     }
     else
     {
-        $html = "<p align='center'>{$GLOBALS['strNothingToDisplay']}</p>";
+        $html = user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
     }
 
     return $html;
@@ -1939,7 +1943,7 @@ function format_external_id($externalid, $escalationpath='')
 function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
-    if ((!empty($sit[2]) AND user_permission($sit[2], 30)
+    if ((!empty($sit[2]) AND user_permission($sit[2], PERM_SUPPORTED_PRODUCT_VIEW)
         OR ($_SESSION['usertype'] == 'admin'))) // view supported products
     {
         $html .= "<h4>".icon('contract', 16)." {$GLOBALS['strContracts']}:</h4>";
@@ -2204,16 +2208,38 @@ function html_install_status($status)
  * Creates HTML horizontal list of actions from an array of URL's
  * @author Ivan Lucas
  * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
+                format example: $actions['Label'] = 'http://example.com/page.html'
+                alternative format example: $actions['Label'] = array('url => 'http://example.com/page.html', perm = PERM_FOO);
  * @return string HTML.
  */
 function html_action_links($actions)
 {
+    $access = TRUE;
     $html .= "<span class='actionlinks'>";
     $actionscount = count($actions);
     $count = 1;
-    foreach ($actions AS $label => $URL)
+    foreach ($actions AS $label => $action)
     {
-        $html .= "<a href=\"{$URL}\">{$label}</a>";
+        if (is_array($action))
+        {
+            $url = $action['url'];
+            if (!user_permission($_SESSION['userid'], $action['perm']))
+            {
+                $url = "{$CONFIG['application_webpath']}noaccess.php?id={$action['perm']}";
+                $access = FALSE;
+            }
+        }
+        else
+        {
+            $url = $action;
+            $access = TRUE;
+        }
+        $html .= "<a href=\"{$url}\"";
+        if (!$access)
+        {
+            $html .= " class='greyed' title=\"{$GLOBALS['strNoPermission']}\"";
+        }
+        $html .= ">{$label}</a>";
         $count++;
         if ($count <= $actionscount)
         {

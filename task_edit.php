@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 70;
+$permission = PERM_TASK_EDIT;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
+$permission = PERM_NOT_REQUIRED;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -51,11 +51,11 @@ else
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($_POST['submit']) AND empty($_POST['name']))
     {
-        echo user_alert(sprintf($strFieldMustNotBeBlank, $strName));
+        echo user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_WARNING);
     }
     elseif (!empty($_POST['submit']) AND $_POST['site'] == 0)
     {
-        echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
+        echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite), E_USER_WARNING);
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
 

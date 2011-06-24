@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 62; // View incident attachments
+$permission = PERM_INCIDENT_VIEW_ATTACHMENT; // View incident attachments
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

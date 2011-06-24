@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paul[at]sitracker.org>
 //
 
-$permission = 56; // Add software
+$permission = PERM_SKILL_ADD; // Add software - FIXME most bizarro permission ever, why add software?
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -35,7 +35,7 @@ if (empty($mode))
     if (mysql_num_rows($result) > 0)
     {
         echo "<table align='center'>";
-        echo "<tr><th>{$strSiteType}</th><th>{$strOperation}</th></tr>";
+        echo "<tr><th>{$strSiteType}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($obj = mysql_fetch_object($result))
         {
@@ -49,7 +49,7 @@ if (empty($mode))
     }
     else
     {
-        echo "<p align='center'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?mode=new'>{$strNewSiteType}</a></p>";
 }

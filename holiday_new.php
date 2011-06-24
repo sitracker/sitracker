@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 27; // View your calendar
+$permission = PERM_CALENDAR_VIEW; // View your calendar
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
@@ -35,9 +35,9 @@ $startdate = mktime(0,0,0, $month, $day, $year);
 $enddate = mktime(23, 59, 59, $month, $day, $year);
 if ($length == '') $length = 'day';
 
-if (user_permission($sit[2],50)) $approver = TRUE;
+if (user_permission($sit[2], PERM_HOLIDAY_APPROVE)) $approver = TRUE;
 else $approver = FALSE;
-if (user_permission($sit[2],22)) $adminuser = TRUE;
+if (user_permission($sit[2], PERM_ADMIN)) $adminuser = TRUE;
 else $adminuser = FALSE;
 
 // Holiday types (for reference)

@@ -12,7 +12,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 44; // ftp publishing
+$permission = PERM_FILE_PUBLISH; // ftp publishing
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
 

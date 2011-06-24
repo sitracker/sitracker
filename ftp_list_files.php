@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!   1Nov05
 
 
-$permission = 44; // FTP Publishing
+$permission = PERM_FILE_PUBLISH; // FTP Publishing
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

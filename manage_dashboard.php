@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 66; // Install dashboard components
+$permission = PERM_DASHLET_INSTALL; // Install dashboard components
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

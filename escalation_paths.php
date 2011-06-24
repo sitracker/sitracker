@@ -14,7 +14,7 @@
 //// This Page Is Valid XHTML 1.0 Transitional!  (7 Oct 2006)
 
 
-$permission = 64; // Manage escalation paths
+$permission = PERM_ESCALATION_MANAGE; // Manage escalation paths
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -39,7 +39,7 @@ if (mysql_num_rows($result) >= 1)
     echo colheader('home_url', $strHomeURL);
     echo colheader('url_title', $strURLTitle);
     echo colheader('email_domain', $strEmailDomain);
-    echo colheader('edit', $strOperation);
+    echo colheader('edit', $strActions);
     echo "</tr>";
     while ($path = mysql_fetch_object($result))
     {
@@ -54,7 +54,7 @@ if (mysql_num_rows($result) >= 1)
     }
     echo "</table>";
 }
-else echo "<p align='center'>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 echo "<p align='center'><a href='escalation_path_new.php'>{$strNew}</a></p>";
 

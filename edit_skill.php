@@ -1,5 +1,5 @@
 <?php
-// edit_software.php - Form for editing software
+// edit_skill.php - Form for editing skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 56; // Add Software
+$permission = PERM_SKILL_ADD; // Add Software
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

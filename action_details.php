@@ -10,12 +10,12 @@
 //
 
 
-$permission = 71;
+$permission = PERM_MYTRIGGERS_MANAGE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php');
 //This page requires authentication
-$permission = 72;
+$permission = PERM_TRIGGERS_MANAGE;     // FIXME this overwrites the previous permission setting above ^^
 
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 $trigger_mode = 'user';

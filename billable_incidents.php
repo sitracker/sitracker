@@ -12,7 +12,7 @@
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections
+$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -66,13 +66,13 @@ if (empty($mode))
     echo "<label><input type='radio' name='mode' value='summarypage' id='summarypage' onclick=\"$('startdatesection').hide();" .
             " $('enddatesection').hide(); $('sitebreakdownsection').hide(); $('displaysection').show(); $('showfoc').show(); $('showfocaszero').show(); $('showexpiredaszero').show();\" checked='checked' />{$strSummary}</label> ";
 
-    if (user_permission($sit[2], 73) == TRUE)
+    if (user_permission($sit[2], PERM_INCIDENT_BILLING_APPROVE) == TRUE)
     {
         echo "<label><input type='radio' name='mode' value='approvalpage' id='approvalpage' onclick=\"$('startdatesection').show();" .
                 " $('enddatesection').show(); $('sitebreakdownsection').hide(); $('displaysection').hide(); $('showfoc').hide(); $('showfocaszero').hide(); $('showexpiredaszero').hide();\" />{$strApprove}</label> ";
     }
 
-    if (user_permission($sit[2], 76) == TRUE)
+    if (user_permission($sit[2], PERM_BILLING_TRANSACTION_VIEW) == TRUE)
     {
         echo "<label><input type='radio' name='mode' value='transactions' id='transactions' onclick=\"$('startdatesection').show(); " .
                 "$('enddatesection').show(); $('sitebreakdownsection').show(); $('displaysection').show(); $('showfoc').show(); $('showfocaszero').show(); $('showexpiredaszero').hide();\" />{$strTransactions}</label> ";
@@ -136,9 +136,9 @@ if (empty($mode))
 }
 elseif ($mode == 'approvalpage')
 {
-    if (user_permission($sit[2], 73) == FALSE)
+    if (user_permission($sit[2], PERM_INCIDENT_BILLING_APPROVE) == FALSE)
     {
-        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=73");
+        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=".PERM_INCIDENT_BILLING_APPROVE);
         exit;
     }
     // Loop around all active sites - those with contracts
@@ -549,9 +549,9 @@ elseif ($mode == 'summarypage')
 }
 elseif ($mode == 'transactions')
 {
-    if (user_permission($sit[2], 76) == FALSE)
+    if (user_permission($sit[2], PERM_BILLING_TRANSACTION_VIEW) == FALSE)
     {
-        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=76");
+        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=".PERM_BILLING_TRANSACTION_VIEW);
         exit;
     }
 
@@ -559,9 +559,9 @@ elseif ($mode == 'transactions')
 }
 elseif ($mode == 'approve')
 {
-    if (user_permission($sit[2], 73) == FALSE)
+    if (user_permission($sit[2], PERM_INCIDENT_BILLING_APPROVE) == FALSE)
     {
-        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=73");
+        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=".PERM_INCIDENT_BILLING_APPROVE);
         exit;
     }
 

@@ -16,11 +16,11 @@
 
 if (empty($_REQUEST['userid']))
 {
-    $permission = 22; // Administrate
+    $permission = PERM_ADMIN; // Administrate
 }
 else
 {
-    $permision = 4; // Edit your profile
+    $permision = PERM_MYPROFILE_EDIT; // Edit your profile, FIXME need a permission for user settings
 }
 
 require ('core.php');
@@ -34,7 +34,7 @@ $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 $userid = cleanvar($_REQUEST['userid']);
 
-$edituserpermission = user_permission($sit[2], 23); // edit user
+$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
 
 if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
 {

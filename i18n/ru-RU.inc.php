@@ -1138,7 +1138,6 @@ $strOpenedby = 'Открыт %s';
 $strOpenedbyXonY = 'Открыт %s на %s';
 $strOpenedViaThePortalByX = 'Открыт через портал %s';
 $strOpenForX = 'Открыт для %s';
-$strOperation = 'Действие';
 $strOptions = 'Параметры';
 $strOptionsOnePerLine = 'Параметры (один в строке)';
 $strOriginalMessageReceivedAt = 'Исходное сообщение получено: %s';

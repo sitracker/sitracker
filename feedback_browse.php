@@ -12,7 +12,7 @@
 // by Ivan Lucas <ivanlucas[at]users.sourceforge.net>, June 2004
 
 
-$permission = 51; // View Feedback
+$permission = PERM_FEEDBACK_VIEW; // View Feedback
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -230,7 +230,7 @@ switch ($mode)
                 echo colheader('created', $strDate, $sort, $order, $filter);
                 echo colheader('contactid', $strContact,$sort, $order, $filter);
                 echo colheader('incidentid', $strIncident,$sort, $order, $filter);
-                echo "<th>{$strOperation}</th>";
+                echo "<th>{$strActions}</th>";
                 echo "</tr>\n";
                 $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))
