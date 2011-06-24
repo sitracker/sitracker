@@ -74,7 +74,7 @@ switch ($action)
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-        echo "<h2>".icon('site', 32)." {$strUserGroups}</h2>";
+        echo "<h2>" . icon('site', 32) . " {$strUserGroups}</h2>";
 
         $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
         $gresult = mysql_query($gsql);
@@ -91,9 +91,12 @@ switch ($action)
         echo "<tr><th>{$strGroup}</th><th>{$strActions}</th></tr>\n";
         if ($numgroups > 0)
         {
+            $shade = 'shade1';
             foreach ($grouparr AS $groupid => $groupname)
             {
-                echo "<tr><td>$groupname</td><td><a href='usergroups.php?groupid={$groupid}&amp;action=deletegroup'>{$strDelete}</a></td></tr>\n";
+                echo "<tr class='{$shade}'><td>$groupname</td><td><a href='usergroups.php?groupid={$groupid}&amp;action=deletegroup'>{$strDelete}</a></td></tr>\n";
+                if ($shade == 'shade1') $shade = 'shade2';
+                else $shade = 'shade1';
             }
         }
         echo "<tr><td><input type='text' name='group' value='' size='10' maxlength='255' />";
@@ -113,10 +116,13 @@ switch ($action)
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table summary='{$strGroupMembership}' align='center'>";
             echo "<tr><th>{$strUser}</th><th>{$strGroup}</th></tr>";
+            $shade = 'shade1';
             while ($user = mysql_fetch_object($result))
             {
-                echo "<tr><td>{$user->realname} ({$user->username})</td>";
+                echo "<tr class='{$shade}'><td>{$user->realname} ({$user->username})</td>";
                 echo "<td>".group_drop_down("group{$user->id}",$user->groupid)."</td></tr>\n";
+                if ($shade == 'shade1') $shade = 'shade2';
+                else $shade = 'shade1';
             }
             echo "</table>\n";
 
