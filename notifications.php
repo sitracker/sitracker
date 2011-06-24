@@ -31,7 +31,7 @@ echo "<p align='center'>" . html_action_links($operations) . "</p>";
 
 echo "</div><br />";
 
-echo triggers_to_html(1);
+echo triggers_to_html($_SESSION['userid']);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
