@@ -73,7 +73,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo show_form_errors('new_reseller');
         clear_form_errors('formerrors');
-        echo "<h2>".icon('site', 32)." {$strNewReseller}</h2>";
+        echo "<h2>".icon('reseller', 32)." {$strNewReseller}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
         echo "onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
         echo "<table align='center' class='vertical'>";
