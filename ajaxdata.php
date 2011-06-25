@@ -344,7 +344,7 @@ switch ($action)
                     echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value['.$i.']')."</td>";
                     // put a hidden input so we can see unchecked boxes
                     echo "<td><input type='hidden' name='enabled[{$i}]' value='off' />";
-                    echo "<input type='checkbox' name='enabled[{$i}]' />{$strEnableCondition}</td></tr>";
+                    echo "<label><input type='checkbox' name='enabled[{$i}]' /> {$strEnableCondition}</label></td></tr>";
                     $i++;
                 }
             }

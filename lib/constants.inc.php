@@ -10,7 +10,7 @@
 // Author: Ivan Lucas, <ivan[at]sitracker[dot]org>
 
 
-// IMPORTANT: No functions or classes here, just defining constants, 
+// IMPORTANT: No functions or classes here, just defining constants,
 // this file is loaded early in the bootstrap and used by setup
 
 
@@ -216,18 +216,18 @@ define ('PERM_PRODUCT_DELETE', 65);
 define ('PERM_DASHLET_INSTALL', 66);
 define ('PERM_MANAGEMENT_REPORT_RUN', 67);
 define ('PERM_HOLIDAY_MANAGE', 68);
-define ('PERM_TASK_VIEW', 69); 
+define ('PERM_TASK_VIEW', 69);
 define ('PERM_TASK_EDIT', 70);
 define ('PERM_MYTRIGGERS_MANAGE', 71);
 define ('PERM_TRIGGERS_MANAGE', 72); // system triggers
 define ('PERM_INCIDENT_BILLING_APPROVE', 73);
-define ('PERM_BILLING_DURATION_SET', 74); // Set duration without activity (for billable incidents) 
+define ('PERM_BILLING_DURATION_SET', 74); // Set duration without activity (for billable incidents)
 define ('PERM_BILLING_DURATION_NEGATIVE', 75); // Set negative time for duration on incidents (for billable incidents - refunds
 define ('PERM_BILLING_TRANSACTION_VIEW', 76);
 define ('PERM_BILLING_VIEW', 77);
 define ('PERM_NOTICE_POST', 78);
 define ('PERM_SERVICE_BALANCE_EDIT', 79); // Edit service balances
 define ('PERM_SERVICE_EDIT', 80);
-define ('PERM_BILLING_DURATION_EDIT', 81); //Adjust durations on activities 
+define ('PERM_BILLING_DURATION_EDIT', 81); //Adjust durations on activities
 // Any new permissions please use a number higher than 99, INL 2011-06-22
 ?>

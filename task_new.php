@@ -155,7 +155,7 @@ else
             }
             else
             {
-                echo "<td>".priority_drop_down('priority',1)."</td></tr>";
+                echo "<td>".priority_drop_down('priority',PRIORITY_LOW)."</td></tr>";
             }
             echo "<tr><th>{$strStartDate}</th>";
             echo "<td><input type='text' name='startdate' id='startdate' size='10'";

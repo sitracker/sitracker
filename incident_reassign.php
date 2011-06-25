@@ -223,10 +223,10 @@ switch ($action)
                 <th>{$strName}</th>
                 <th>{$strStatus}</th>
                 <th align='center'>{$strActionNeeded} / {$strOther}</th>";
-            echo "<th align='center'>".priority_icon(4)."</th>";
-            echo "<th align='center'>".priority_icon(3)."</th>";
-            echo "<th align='center'>".priority_icon(2)."</th>";
-            echo "<th align='center'>".priority_icon(1)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
             echo "<th></th></tr>\n";
 
             if ($suggested > 0)

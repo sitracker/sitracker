@@ -39,7 +39,7 @@ function get_sql_statement($startdate,$enddate,$statementnumber,$count=TRUE)
     $sql[5] = "SELECT count(DISTINCT softwareid), count(DISTINCT owner) FROM `{$GLOBALS['dbIncidents']}` WHERE opened <= '{$enddate}' AND (closed >= '$startdate' OR closed = 0)";
     $sql[6] = "SELECT {$count} FROM `{$GLOBALS['dbUpdates']}` WHERE timestamp >= '$startdate' AND timestamp <= '$enddate' AND type='email'";
     $sql[7] = "SELECT {$count} FROM `{$dbUpdates}` WHERE timestamp >= '$startdate' AND timestamp <= '$enddate' AND type='emailin'";
-    $sql[8] = "SELECT {$count} FROM `{$dbIncidents}` WHERE opened <= '{$enddate}' AND (closed >= '$startdate' OR closed = 0) AND priority >= 3";
+    $sql[8] = "SELECT {$count} FROM `{$dbIncidents}` WHERE opened <= '{$enddate}' AND (closed >= '$startdate' OR closed = 0) AND priority >= " . PRIORITY_HIGH;
     return $sql[$statementnumber];
 }
 

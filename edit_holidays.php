@@ -15,6 +15,12 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
+if (!$CONFIG['holidays_enabled'])
+{
+    html_redirect('main.php', FALSE, $strDisabled);
+    exit;
+}
+
 $title = $strEditHolidayEntitlement;
 
 switch ($_REQUEST['action'])

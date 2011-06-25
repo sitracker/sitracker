@@ -7,7 +7,7 @@ To have your incidents temporarily assigned to substitute engineers when you set
 A site can have one or more contracts, each contract specifies the product that is supported, the number of incidents that can be logged and the contacts that are allowed to log incidents
 You can hover over the title of an incident in the incident queue to see a popup showing an extract from the latest update to the incident
 Incidents can be logged with varying priorities these relate to the impact the issue is having on the customer.  From <em>Low</em> which indicates little or no impact to <em>Critical</em> which indicates severe impact
-When you go away from the office, set your status using the drop-down box on the front page, this will automatically assign your incidents to your substitue engineer(s)
+When you go away from the office, set your status using the control at the top of the page, this will automatically assign your incidents to your substitute engineer(s)
 When you mark a Task as Private it is visible only to you, a useful feature for brief reminders
 Did you know that you can assign arbitary tags to incidents, tasks, contacts and other items
 Did you know you that can position this tips box and other dashboard items by dragging the title bar
