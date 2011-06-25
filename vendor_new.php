@@ -30,7 +30,7 @@ if (empty($submit))
 
     echo show_form_errors('new_vendor');
     clear_form_errors('new_vendor');
-    echo "<h2>".icon('newuser', 32)." {$strNewVendor}</h2>";
+    echo "<h2>" . icon('vendor', 32, $strVendors) . " {$strNewVendor}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strVendorName}</th><td><input maxlength='50' name='name' size='30' class='required'> <span class='required'>{$strRequired}</span></td></tr>\n";
