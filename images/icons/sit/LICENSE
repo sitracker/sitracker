@@ -91,6 +91,8 @@ ajax-loader.gif                           ajaxload.info
 16x16/unsaved.png                         Crystal Project
 16x16/ldap-directory.png		  Crystal Project
 16x16/ldap-group.png                      Crystal Project
+16x16/vendor.png                          Crystal Project
+16x16/reseller.png                        Crystal Project
 32x32/mimetypes/*                         Crystal Project
 32x32/addproduct.png                      Crystal Project
 32x32/attach.png                          Crystal Project
@@ -98,7 +100,7 @@ ajax-loader.gif                           ajaxload.info
 32x32/configure.png                       Crystal Project
 32x32/edit.png                            Crystal Project
 32x32/edituser.png                        Crystal Project
-32x32/escalation.png                        Crystal Project
+32x32/escalation.png                      Crystal Project
 32x32/whiteflag.png                       SiT
 32x32/yellowflag.png                      SiT
 32x32/greenflag.png                       SiT
@@ -140,6 +142,8 @@ ajax-loader.gif                           ajaxload.info
 32x32/reports.png                         Crystal Project
 32x32/ldap-directory.png		  Crystal Project
 32x32/ldap-group.png                      Crystal Project
+32x32/vendor.png                          Crystal Project
+32x32/reseller.png                        Crystal Project
 
 KDE Classic
 ===========
