@@ -11,9 +11,10 @@
 // Author: Paul Heaney <paul[at]sitracker.org>
 //
 
-$permission = PERM_SKILL_ADD; // Add software - FIXME most bizarro permission ever, why add software?
-
 require ('core.php');
+
+$permission = PERM_SKILL_ADD; // Add software - most bizarro permission ever, why add software? BUG Mantis 1629 TODO
+
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

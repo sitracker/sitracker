@@ -1465,6 +1465,7 @@ $strRandomTip = 'Random Tip';
 $strRating = 'Rating';
 #English suffix for third - 3rd
 $strrd = 'rd';
+$strReadWikiArticleHere = 'Read the full Wiki article here';
 $strRealName = 'Real Name';
 $strReassign = 'Reassign';
 $strReassignIncident = 'Reassign Incident';
