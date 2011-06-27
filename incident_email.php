@@ -10,7 +10,7 @@
 //
 
 
-$permission = 33; // Send Emails
+$permission = PERM_EMAIL_SEND; // Send Emails
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // include ('mime.inc.php');
@@ -171,7 +171,7 @@ switch ($step)
                                         setInterval("save_draft('"+<?php echo $id; ?>+"', 'email')")
                                     },
                                     10);
-        
+
         //]]>
         </script>
         <?php
@@ -261,7 +261,7 @@ switch ($step)
         echo "<tr><th>{$strSubject}</th><td><input maxlength='255' ";
         echo "name='subjectfield' id='subjectfield' size='40' value=\"{$subject}\" /></td></tr>\n";
         echo "<tr><th>{$strAttachment}";
-        $file_size = readable_file_size($CONFIG['upload_max_filesize']);
+        $file_size = readable_bytes_size($CONFIG['upload_max_filesize']);
         echo "(&lt; $file_size)";
         echo "</th><td>";
         echo "<input type='hidden' name='kb	' value='{$CONFIG['upload_max_filesize']}' />";
@@ -534,7 +534,7 @@ switch ($step)
 
                 if ($storeinlog == 'Yes')
                 {
-					// add update
+                    // add update
                     $bodytext = htmlentities($bodytext, ENT_COMPAT, 'UTF-8');
                     $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
@@ -572,26 +572,26 @@ switch ($step)
                 if ($storeinlog == 'No')
                 {
                     //Create a small note in the log to say the mail was sent but not logged (short )
-					$updatebody  = "{$SYSLANG['strUpdateNotLogged']} \n";
+                    $updatebody  = "{$SYSLANG['strUpdateNotLogged']} \n";
                     $updatebody .= "[b] {$SYSLANG['strTemplate']}: [/b]".$templatename."\n";
                     $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                     $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updatebody = mysql_real_escape_string($updatebody);
 
-					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
+                    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
-				}
+                }
 
-				foreach ($files AS $file)
-				{
-					$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+                foreach ($files AS $file)
+                {
+                    $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
                     $sql .= "VALUES (5, '{$updateid}', '{$file['fileid']}', 'left', '{$sit[2]}')";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-				}
+                }
 
                 $owner = incident_owner($id);
 
@@ -617,6 +617,7 @@ switch ($step)
 
                 if (!empty($chase_manager))
                 {
+                    // FIXME SYSLANG for DB field
                     $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
                     $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_manager', '{$owner}', '{$newincidentstatus}', 'Manager has been called to chase','{$now}','hide')";
                     mysql_query($sql_insert);
@@ -639,9 +640,9 @@ switch ($step)
                 $menu = 'hide';
 
                 $text = $strEmailSentSuccessfullyAutoClose;
-                if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully; 
-                
-                html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);               
+                if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully;
+
+                html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);
             }
             else
             {

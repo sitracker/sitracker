@@ -290,5 +290,22 @@ function feedback_html_question($type, $name, $required, $options, $answer='')
   return $html;
 }
 
+/**
+ * Generates a hash for opting out of receving feedback
+ * @author Kieran Hogg & Carsten Jensen
+ * @param $contactid int ID of the contact to send it to
+ * @param $contactemail string email of contact
+ * @return string of the hash
+ */
+function feedback_opt_out_hash($contactid, $contactemail)
+{
+    $hashtext = urlencode(urlencode($contactid)."&&".urlencode($contactemail));
+    $hashcode4 = str_rot13($hashtext);
+    $hashcode3 = gzcompress($hashcode4);
+    $hashcode2 = base64_encode($hashcode3);
+    $hashcode1 = trim($hashcode2);
+    $hashcode = urlencode($hashcode1);
+    return $hashcode;
+}
 
 ?>

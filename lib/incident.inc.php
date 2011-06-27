@@ -59,7 +59,7 @@ function incident($incident)
  * @author Kieran Hogg
  */
 function create_incident($title, $contact, $servicelevel, $contract, $product,
-                         $software, $priority = 1, $owner = 0, $status = 1,
+                         $software, $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
                          $productversion = '', $productservicepacks = '',
                          $opened = '', $lastupdated = '')
 {
@@ -252,6 +252,8 @@ function update($update)
 function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 {
     global $now, $dbUsers, $dbIncidents, $dbUserSoftware, $startofsession;
+    $ticket = array();
+
     $sql = "SELECT product, softwareid, priority, contact, owner FROM `{$dbIncidents}` WHERE id={$incidentid} LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -264,8 +266,14 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
     {
         $incident = mysql_fetch_object($result);
         // If this is a critical incident the user we're assigning to must be online
-        if ($incident->priority >= 4) $req_online = TRUE;
-        else $req_online = FALSE;
+        if ($incident->priority >= PRIORITY_CRITICAL)
+        {
+            $req_online = TRUE;
+        }
+        else
+        {
+            $req_online = FALSE;
+        }
 
         // Find the users with this skill (or all users)
         if (!empty($incident->softwareid))
@@ -302,7 +310,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
             if (mysql2date($user->lastseen) > $startofsession) $ticket[] = $user->userid;
 
             // Get two tickets for being marked in-office or working at home
-            if ($user->status == 1 OR $user->status == 6)
+            if ($user->status == USERSTATUS_IN_OFFICE OR $user->status == USERSTATUS_WORKING_FROM_HOME)
             {
                 $ticket[] = $user->userid;
                 $ticket[] = $user->userid;
@@ -310,7 +318,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 
             // Get one ticket for being marked at lunch or in meeting
             // BUT ONLY if the incident isn't critical
-            if ($incident->priority < 4 AND ($user->status == 3 OR $user->status == 4))
+            if ($incident->priority < PRIORITY_CRITICAL AND ($user->status == USERSTATUS_IN_MEETING OR $user->status == USERSTATUS_AT_LUNCH))
             {
                 $ticket[] = $user->userid;
             }
@@ -328,13 +336,13 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
                 $queue_samecontact = FALSE;
                 while ($queue = mysql_fetch_object($qresult))
                 {
-                    if ($queue->priority == 3) $queued_high++;
-                    if ($queue->priority >= 4) $queued_critical++;
+                    if ($queue->priority == PRIORITY_HIGH) $queued_high++;
+                    if ($queue->priority >= PRIORITY_CRITICAL) $queued_critical++;
                     if ($queue->lastupdated > $queue_lastupdated) $queue_lastupdated = $queue->lastupdated;
                     if ($queue->contact == $incident->contact) $queue_samecontact = TRUE;
                 }
                 // Get one ticket for your queue being updated in the past 4 hours
-                if ($queue_lastupdated > ($now - 14400)) $user->userid;
+                if ($queue_lastupdated > ($now - 14400)) $ticket[] = $user->userid;
 
                 // Get two tickets for dealing with the same contact in your queue
                 if ($queue_samecontact == TRUE)
@@ -367,6 +375,11 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 
         // Do the lottery - "Release the balls"
         $numtickets = count($ticket) - 1;
+        // Ensure we return a failure if we have a negative amount of tickets
+        if ($numtickets < 0)
+        {
+            return FALSE;
+        }
         $rand = mt_rand(0, $numtickets);
         $userid = $ticket[$rand];
     }
@@ -638,7 +651,7 @@ function average_incident_duration($start,$end,$states)
     global $dbIncidents;
     $sql = "SELECT opened, closed, (closed - opened) AS duration_closed, i.id AS incidentid ";
     $sql .= "FROM `{$dbIncidents}` AS i ";
-    $sql .= "WHERE status='2' ";
+    $sql .= "WHERE status = '" . STATUS_CLOSED . "' ";
     if ($start > 0) $sql .= "AND opened >= {$start} ";
     if ($end > 0) $sql .= "AND opened <= {$end} ";
 
@@ -939,19 +952,19 @@ function priority_name($id, $syslang = FALSE)
 {
     switch ($id)
     {
-        case 1:
+        case PRIORITY_LOW:
             if (!$syslang) $value = $GLOBALS['strLow'];
             else $value = $_SESSION['syslang']['strLow'];
             break;
-        case 2:
+        case PRIORITY_MEDIUM:
             if (!$syslang) $value = $GLOBALS['strMedium'];
             else $value = $_SESSION['syslang']['strMedium'];
             break;
-        case 3:
+        case PRIORITY_HIGH:
             if (!$syslang) $value = $GLOBALS['strHigh'];
             else $value = $_SESSION['syslang']['strHigh'];
             break;
-        case 4:
+        case PRIORITY_CRITICAL:
             if (!$syslang) $value = $GLOBALS['strCritical'];
             else $value = $_SESSION['syslang']['strCritical'];
             break;

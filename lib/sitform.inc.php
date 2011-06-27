@@ -46,7 +46,7 @@ class Form
 
     public function setReturnURLSuccess($returnURL)
     {
-    	$this->returnURLSuccess = $returnURL;
+        $this->returnURLSuccess = $returnURL;
     }
 
 
@@ -58,13 +58,13 @@ class Form
 
     public function setDebug($debug)
     {
-    	$this->debug = $debug;
+        $this->debug = $debug;
     }
 
 
     public function setKey($keyField, $keyValue)
     {
-    	$this->keyField = $keyField;
+        $this->keyField = $keyField;
         $this->keyValue = $keyValue;
     }
 
@@ -147,7 +147,7 @@ class Form
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         if (mysql_affected_rows() <= 0)
         {
-        	html_redirect($this->returnURLFailure, FALSE);
+            html_redirect($this->returnURLFailure, FALSE);
             exit;
         }
         else
@@ -186,7 +186,7 @@ abstract class Component
     abstract function getDB(); // Returns array
     function isMandatory($mandatory)
     {
-    	$this->mandatory = $mandatory; // Boolean
+        $this->mandatory = $mandatory; // Boolean
     }
 }
 
@@ -385,9 +385,9 @@ class HiddenEntry extends Component
      */
     public function getDB()
     {
-    	if (empty($this->dbFieldName))
+        if (empty($this->dbFieldName))
         {
-        	return array();
+            return array();
         }
         else
         {

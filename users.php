@@ -15,7 +15,7 @@
 // Not sure why - Ivan 6Sep06
 
 
-$permission = 14; // View Users
+$permission = PERM_USER_VIEW; // View Users
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -101,10 +101,10 @@ echo "<th>{$strJumpTo}</th>";
 echo "</tr><tr>";
 echo "<th></th>";
 echo "<th align='center'>{$strActionNeeded} / {$strWaiting}</th>";
-echo "<th align='center'>".priority_icon(4)."</th>";
-echo "<th align='center'>".priority_icon(3)."</th>";
-echo "<th align='center'>".priority_icon(2)."</th>";
-echo "<th align='center'>".priority_icon(1)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
 echo "<th colspan='8'></th>";
 echo "</tr>\n";
 
@@ -218,7 +218,7 @@ while ($users = mysql_fetch_object($result))
     }
     else
     {
-        echo "<span class='error'>{$strNo}</span>";
+        echo "<span class='negative'>{$strNo}</span>";
     }
     echo "</td><td>";
     echo "<a href='holidays.php?user={$users->id}' title='{$strHolidays}'>";

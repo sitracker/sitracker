@@ -15,6 +15,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
+plugin_do('page_start');
+
 if (!extension_loaded('gd')) trigger_error("{$CONFIG['application_name']} requires the gd module", E_USER_ERROR);
 
 // External variables
@@ -66,4 +68,5 @@ switch ($type)
         $chart->draw_error();
 }
 
+plugin_do('page_end');
 ?>

@@ -17,7 +17,7 @@
 //  Counts activate calls within the specified period (i.e. those with a lastupdate time > timespecified)
 
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -315,7 +315,7 @@ else
     }
     else
     {
-        echo "<p class='error'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

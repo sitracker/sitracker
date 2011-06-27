@@ -12,7 +12,7 @@
 
 
 
-$permission = 78;
+$permission = PERM_NOTICE_POST;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -108,10 +108,11 @@ else
     if (mysql_num_rows($result) > 0)
     {
         echo "<table align='center'>";
-        echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strOperation}</th></tr>\n";
+        echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strActions}</th></tr>\n";
         while ($notice = mysql_fetch_object($result))
         {
-            echo "<tr class='$shade'><td>{$notice->id}</td><td>{$notice->timestamp}</td>";
+            echo "<tr class='$shade'><td>{$notice->id}</td>";
+            echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($notice->timestamp))."</td>";
             echo "<td>".bbcode($notice->text)."</td>";
             echo "<td>";
             echo "<a href='{$_SERVER[PHP_SELF]}?action=delete&amp;id=";
@@ -124,7 +125,7 @@ else
     }
     else
     {
-        echo "<p align='center'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
 
     echo "<p align='center'><a href='{$_SERVER[PHP_SELF]}?action=new'>{$strPostNewNotice}</a></p>";

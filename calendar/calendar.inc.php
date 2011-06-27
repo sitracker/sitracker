@@ -240,6 +240,11 @@ function draw_calendar($nmonth, $nyear)
                     echo "<td class=\"$shade\" style=\"width: 15px; $style\">";
                     echo "<a href=\"holiday_new.php?type=$type&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
                 }
+                elseif ($dtype==10)
+                {
+                    echo "<td class=\"$shade\" style=\"width: 15px; $style\">";
+                    echo "<a href=\"holiday_new.php?type=0&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
+                }
                 else
                 {
                     echo "<td class=\"$shade\" style=\"width:15px; $style\">{$bold}{$adjusted_day}{$notbold}</td>";
@@ -634,8 +639,8 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     }
     else
     {
-        if ($numgroups < 1) $html .= "<p class='info'>{$GLOBALS['strNothingToDisplay']}</p>";
-        else $html .= "<p class='info'>{$GLOBALS['strNothingToDisplay']}, {$strCheckUserGroupMembership}.</p>";
+        if ($numgroups < 1) $html .= user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
+        else $html .= user_alert("{$GLOBALS['strNothingToDisplay']}, {$strCheckUserGroupMembership}", E_USER_NOTICE);
     }
     $html .= "</table>\n\n";
 

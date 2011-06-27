@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = 61; // View Incident Details
+$permission = PERM_INCIDENT_VIEW; // View Incident Details
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -848,7 +848,7 @@ else
                     echo  "{$strDuration}: {$inminutes} {$strMinutes}";
 
                     // Permision to adjust durations is 81
-                    if ($CONFIG['allow_duration_adjustment'] AND user_permission($sit[2], 81) AND !$billable_incident_approved)
+                    if ($CONFIG['allow_duration_adjustment'] AND user_permission($sit[2], PERM_BILLING_DURATION_EDIT) AND !$billable_incident_approved)
                     {
                         echo " <a href='billing_edit_activity_duration.php?mode=showform&amp;incidentid={$incidentid}&amp;updateid={$update->id}'>{$strEdit}</a>";
                     }

@@ -746,7 +746,8 @@ echo "{$strSearch}: ";
 echo "</th>";
 echo "<td>";
 echo "<input maxlength='100' name='q' size='35' type='text' value='".strip_tags(urldecode($q))."' /> ";
-echo "(<a href='search_incidents_advanced.php'>{$strAdvanced}</a> | <a href='view_tags.php'>{$strTagCloud}</a>)";
+echo html_action_links(array($strAdvanced => 'search_incidents_advanced.php',
+                             $strTagCloud => 'view_tags.php'));
 echo "</td>";
 echo "</tr>\n";
 echo "</table>\n";
@@ -761,6 +762,11 @@ else
 }
 
 echo "' /></p></form>";
+
+echo "<h3>".icon('help', 32, 'Help', 'Help', 'search_help')."   Search Help:</h3>";
+echo "<div class='help' id='help'>";
+echo file_get_help_textfile('SearchHelp');
+echo "<a class = 'helplink' href='http://sitracker.org/wiki/Search'>{$strReadWikiArticleHere} ..</a></div>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

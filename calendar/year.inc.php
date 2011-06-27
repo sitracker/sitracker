@@ -112,7 +112,7 @@ if (!empty($selectedday))
     }
     else
     {
-        echo "<span class='error'>Declined</span>.  You should <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=0'>deselect</a> it."; // FIXME i18n
+        echo "<span class='error'>{$strDeclined}</span>.  You should <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=0'>deselect</a> it."; // FIXME i18n
     }
 }
 else

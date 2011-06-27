@@ -12,7 +12,7 @@
 // by Ivan Lucas <ivanlucas[at]users.sourceforge.net>, June 2004
 
 
-$permission = 51; // View Feedback
+$permission = PERM_FEEDBACK_VIEW; // View Feedback
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -90,7 +90,7 @@ switch ($mode)
                     $numresults++;
                     if (!empty($row->result) OR ($row->result == 0))
                     {
-                       
+
                         if ($row->result != 0)
                         {
                             $cumul += $row->result;
@@ -160,7 +160,7 @@ switch ($mode)
         }
         else
         {
-            echo "<p class='error'>{$strNoResponseFound}</p>";
+            echo user_alert($strNoResponseFound, E_USER_NOTICE);
         }
         plugin_do('feedback_browse_viewresponse');
         echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
@@ -175,7 +175,7 @@ switch ($mode)
         {
             // no feedback forms
             echo "<h3>{$title}</h3>";
-            echo "<p class='error' align='center'>{$strNoFeedbackFormsDefined}</p>";
+            echo user_alert($strNoFeedbackFormsDefined, E_USER_NOTICE);
             echo "<p align='center'><a href='feedback_form_edit.php?action=new'>{$strCreateNewForm}</a></p>";
         }
         else
@@ -230,7 +230,7 @@ switch ($mode)
                 echo colheader('created', $strDate, $sort, $order, $filter);
                 echo colheader('contactid', $strContact,$sort, $order, $filter);
                 echo colheader('incidentid', $strIncident,$sort, $order, $filter);
-                echo "<th>{$strOperation}</th>";
+                echo "<th>{$strActions}</th>";
                 echo "</tr>\n";
                 $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))
@@ -274,7 +274,7 @@ switch ($mode)
             }
             else
             {
-                echo "<p class='error' align='center'>{$strNoResponseFound}</p>";
+                echo user_alert($strNoResponseFound, E_USER_NOTICE);
             }
             if ($completed == 'no')
             {

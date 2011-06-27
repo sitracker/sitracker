@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
+$permission = PERM_NOT_REQUIRED;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -101,18 +101,20 @@ if (is_numeric($_GET['id']))
             }
             echo "</td><td>".user_realname($row->createdby)."</td><td>";
             echo contact_realname($row->contactid)."</td><td>";
-
+            $operations = array();
             if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-                 $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+                 $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
             {
                 echo "{$strView}</a> &nbsp; ";
-                echo "{$strEdit}</td></tr>";
+                echo "{$strEdit}";
             }
             else
             {
-                echo "<a href='inventory_view.php?id={$row->id}'>{$strView}</a> &nbsp; ";
-                echo "<a href='inventory_edit.php?id={$row->id}'>{$strEdit}</a></td></tr>";
+                $operations[$strView] = "inventory_view.php?id={$row->id}";
+                $operations[$strEdit] = "inventory_edit.php?id={$row->id}";
+                echo html_action_links($operations);
             }
+            echo "</td></tr>";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
@@ -123,7 +125,7 @@ if (is_numeric($_GET['id']))
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

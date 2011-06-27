@@ -10,7 +10,7 @@
 //
 
 
-$permission = 21; // Edit Contracts
+$permission = PERM_CONTRACT_EDIT; // Edit Contracts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -69,7 +69,7 @@ if ($action == "edit")
         echo " />{$strAllSiteContactsSupported}</td></tr>";
         echo "<tr><th>{$strProduct}: </th><td>";
         $productname = product_name($maint->product);
-        if (user_permission($sit[2], 22))
+        if (user_permission($sit[2], PERM_ADMIN))
         {
             if ($changeproduct == 'yes')
             {
@@ -87,6 +87,7 @@ if ($action == "edit")
         echo "<td><input class='required' name='expirydate' size='10' value='";
         if ($maint->expirydate > 0) echo ldate('Y-m-d', $maint->expirydate);
         echo "' /> ".date_picker('maintform.expirydate');
+        echo "<label>";
         if ($maint->expirydate == '-1')
         {
             echo "<input type='checkbox' checked='checked' name='noexpiry' /> {$strUnlimited}";
@@ -95,6 +96,7 @@ if ($action == "edit")
         {
             echo "<input type='checkbox' name='noexpiry' /> {$strUnlimited}";
         }
+        echo "</label>";
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strServiceLevel}:</th><td>";
         echo servicelevel_drop_down('servicelevel',$maint->servicelevel, TRUE);
@@ -215,7 +217,7 @@ else if ($action == "update")
         $sql .= "incident_quantity='{$incident_quantity}', ";
         $sql .= "incidentpoolid='{$incidentpoolid}', productonly='{$productonly}', ";
         $sql .= "supportedcontacts='{$amount}', allcontactssupported='{$allcontacts}'";
-        if (!empty($product) AND user_permission($sit[2], 22)) $sql .= ", product='{$product}'";
+        if (!empty($product) AND user_permission($sit[2], PERM_ADMIN)) $sql .= ", product='{$product}'";
         $sql .= " WHERE id='{$maintid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);

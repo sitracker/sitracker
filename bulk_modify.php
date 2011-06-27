@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 7; // Edit Incidents
+$permission = PERM_INCIDENT_EDIT; // Edit Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -53,7 +53,10 @@ switch ($action)
             echo "<tr><th>{$strExternalEmail}:</th>";
             echo "<td><input maxlength='255' name='externalemail' size='30' type='text' value='' />";
             echo "</td></tr>";
-            echo "</table><p align='center'><input name='submit' type='submit' value='{$strSave}' />";
+            echo "</table>";
+            echo "<p class='formbuttons'>";
+            echo "<input name='reset' type='reset' value='{$strReset}' /> ";
+            echo "<input name='submit' type='submit' value='{$strSave}' />";
             echo "</p></form>";
         }
         else

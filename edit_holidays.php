@@ -9,11 +9,17 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = 22; // Administrate
+$permission = PERM_ADMIN; // Administrate
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
+
+if (!$CONFIG['holidays_enabled'])
+{
+    html_redirect('main.php', FALSE, $strDisabled);
+    exit;
+}
 
 $title = $strEditHolidayEntitlement;
 

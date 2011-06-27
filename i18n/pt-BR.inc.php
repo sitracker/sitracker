@@ -650,7 +650,6 @@ $strNovAbbr = 'Nov';
 $strNoVendorsDefined = 'Sem Vendedores Definidos';
 $strNovember = 'Novembro';
 $strNow = 'Agora';
-$strNumOfIncidents = 'Existem %s incidentes nesta lista';
 $strNumOfIncidentsLoggedByX = 'Número de ocorrências registradas por %s';
 $strNumOpenIncidents = '%s aberto';
 
@@ -672,7 +671,6 @@ $strOpenedby = 'Aberto por %s';
 $strOpenedbyXonY = 'Aberto por %s em %s';
 $strOpenedViaThePortalByX = 'Aberto via Portal por %s';
 $strOpenForX = 'Aberto para %s';
-$strOperation = 'Operação';
 $strOriginalMessageReceivedAt = 'Mensagem original recebida em: %s';
 $strOther = 'Outro';
 $strOtherIncidents = 'Outros Incidentes';

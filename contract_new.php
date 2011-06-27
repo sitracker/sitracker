@@ -12,7 +12,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
 
 
-$permission = 39; // Add Maintenance Contract
+$permission = PERM_CONTRACT_ADD; // Add Maintenance Contract
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -98,12 +98,12 @@ if ($action == "showform" OR $action == '')
         echo "value='{$_SESSION['formdata']['new_contract']['expiry']}'";
     }
     echo "/> ".date_picker('new_contract.expiry');
-    echo "<input type='checkbox' name='noexpiry' ";
+    echo "<label><input type='checkbox' name='noexpiry' ";
     if ($_SESSION['formdata']['new_contract']['noexpiry'] == "on")
     {
         echo "checked='checked' ";
     }
-    echo "onclick=\"this.form.expiry.value=''\" /> {$strUnlimited}";
+    echo "onclick=\"this.form.expiry.value=''\" /> {$strUnlimited}</label>";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strAdminContact}</th>";
@@ -272,14 +272,8 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['product'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strProduct}'"), E_USER_ERROR);
     }
-    // check for blank admin contact
-    if ($admincontact == 0)
-    {
-        $errors++;
-        $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
-    }
     // check for blank expiry day
-    if (!isset($expirydate))
+    if (empty($_REQUEST['expiry']) AND $expirydate != -1)
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['expirydate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strExpiryDate}'"), E_USER_ERROR);
@@ -288,6 +282,12 @@ elseif ($action == 'new')
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['expirydate2'] = "{$strExpiryDateCannotBeInThePast}\n";
+    }
+    // check for blank admin contact
+    if ($admincontact == 0)
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
     }
     // check timed sla data and store it
 

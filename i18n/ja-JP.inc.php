@@ -370,7 +370,6 @@ $strNotRequested = '要求されていません。';
 $strNovAbbr = '11月';
 $strNovember = '11月';
 $strNow = '今';
-$strNumOfIncidents = 'この一覧には %s インシデントがあります。';
 $strNumOpenIncidents = '%s オペン';
 
 $strOctAbbr = '10月';
@@ -383,7 +382,6 @@ $strOnline = 'オンライン';
 $strOnTrainingCourse = 'トレーニング中';
 $strOpen = 'オペン';
 $strOpened = '開いている';
-$strOperation = '運用';
 $strOther = 'その他';
 $strOtherIncidents = '他のインシデント';
 

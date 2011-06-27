@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 53; // Edit Service Levels
+$permission = PERM_SLA_EDIT; // Edit Service Levels
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

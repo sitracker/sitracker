@@ -12,7 +12,7 @@
 // Soon to be replaced
 // See incident/edit.inc.php
 
-$permission = 7; // Edit Incidents
+$permission = PERM_INCIDENT_EDIT; // Edit Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -40,9 +40,12 @@ if (empty($submit))
     // SUPPORT INCIDENT
     if ($incident->type == "Support")
     {
+        echo show_form_errors('edit_incident');
+        clear_form_errors('edit_incident');
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post' name='editform'>";
         echo "<table class='vertical'>";
-        echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"{$incident->title}\" /></td></tr>\n";
+        echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"{$incident->title}\" class='required' /> ";
+        echo "<span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strTags}</th><td><textarea rows='2' cols='40' name='tags'>".list_tags($id, 2, false)."</textarea></td></tr>\n";
         echo "<tr><th>{$strImportant}</th>";
         echo "<td>{$strChangingContact}. ";
@@ -55,7 +58,7 @@ if (empty($submit))
         echo "{$strToChangeContract}.";
         echo "</td></tr>\n";
         echo "<tr><th>{$strContract}</th></td><td>";
-        echo maintenance_drop_down('contract', $incident->maintenanceid, contact_siteid($incident->contact), '', TRUE, TRUE, '', $incident->servicelevel)."</td></tr>\n";
+        echo maintenance_drop_down('contract', $incident->maintenanceid, contact_siteid($incident->contact), '', FALSE, TRUE, '', $incident->servicelevel)."</td></tr>\n";
         echo "<tr><th>{$strContact}</th><td>";
         echo contact_drop_down("contact", $incident->contact, TRUE)."</td></tr>\n";
         flush();
@@ -141,18 +144,19 @@ else
     if ($contact == 0)
     {
         $errors += 1;
-        $error_string .= "<p class='error'>You must select a contact</p>\n";
+        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strContact), E_USER_ERROR);
     }
     // check for blank title
     if ($title == '')
     {
         $errors += 1;
-        $error_string .= "<p class='error'>You must enter a title</p>\n";
+        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strTitle), E_USER_ERROR);
     }
 
     if ($errors > 0)
     {
-        echo "<div>$bodytext</div>";
+        html_redirect("incident_edit.php?id={$id}", FALSE);
+        exit;
     }
 
     if ($errors == 0)

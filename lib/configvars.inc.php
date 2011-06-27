@@ -37,8 +37,7 @@ $CFGCAT['paths'] = array('application_webpath',
 $CFGCAT['appmain'] = array('application_name',
                                'application_shortname',
                                'application_uriprefix',
-                               'logout_url',
-                               'plugins'
+                               'logout_url'
                                );
 
 $CFGCAT['locale'] = array('home_country',
@@ -275,7 +274,7 @@ $CFGVAR['critical_threshold']['type'] = 'percent';
 $CFGVAR['currency_symbol']['title'] = 'Currency Symbol';
 $CFGVAR['currency_symbol']['help'] = 'Currency symbol to use when displaying monetary amounts.';
 
-$CFGVAR['dateformat_datetime']['help'] = "See <a href='http://www.php.net/manual/en/function.date.php'>http://www.php.net/manual/en/function.date.php</a> for help with date formats";
+$CFGVAR['dateformat_datetime']['help'] = "See <a href='http://www.php.net/manual/en/function.date.php'>http://www.php.net/manual/en/function.date.php</a> for help with date and time formats";
 $CFGVAR['dateformat_datetime']['title'] = 'Date and Time format';
 
 $CFGVAR['dateformat_date']['title'] = 'Normal date format';
@@ -564,10 +563,6 @@ $CFGVAR['outbound_email_linefeed']['title'] = 'Choose linefeed';
 $CFGVAR['outbound_email_linefeed']['help'] = "Change the linefeed if outbound emails doesn't break the lines or looks weird.";
 $CFGVAR['outbound_email_linefeed']['type'] = 'select';
 $CFGVAR['outbound_email_linefeed']['options'] = 'LF|CRLF';
-
-$CFGVAR['plugins']['title'] = "Load Plugins";
-$CFGVAR['plugins']['help'] = "Comma separated list of plugins to load. e.g. 'magic_plugin,lookup_plugin'";
-$CFGVAR['plugins']['type'] = '1darray';
 
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";

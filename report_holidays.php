@@ -9,7 +9,7 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = 68; // Manage holidays
+$permission = PERM_HOLIDAY_MANAGE; // Manage holidays
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -108,11 +108,9 @@ else
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     	echo "<h2>{$strHolidayUsage}<h2>";
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
-
-    
 }
 
 ?>

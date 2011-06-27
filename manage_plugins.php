@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = array(22,66); // Configure & Install dashboard components
+$permission = array(PERM_ADMIN, PERM_DASHLET_INSTALL); // Configure & Install dashboard components
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -64,6 +64,34 @@ if ($_REQUEST['action'] != 'checkforupdates')
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=checkforupdates'>{$strCheckForUpdatesOnline}</a></p>";
 }
 
+// Evaluate plugins on disk
+$path = APPLICATION_PLUGINPATH;
+$dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
+
+while ($name = readdir($dir_handle))
+{
+    if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
+    {
+        $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
+        //$ondisk_plugins[$ondisk_pluginname] = 1;
+        $content = file($ondisk_pluginname);
+        $content = array_filter($content, 'getplugininfo');
+        foreach ($content AS $key => $value)
+        {
+            if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
+            if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
+            $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
+        }
+    }
+}
+
+closedir($dir_handle);
+
 // Actions
 if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
 {
@@ -84,16 +112,19 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
             {
                 foreach($CONFIG['plugins'] AS $confplugin)
                 {
-                    if ($confplugin != $actionplugin) $newsetting['plugins'][] = $confplugin;
+                    if ($confplugin != $actionplugin AND file_exists(APPLICATION_PLUGINPATH . $confplugin))
+                    {
+                        $newsetting['plugins'][] = $confplugin;
+                    }
                 }
             }
         }
         $CONFIG['plugins'] = $newsetting['plugins'];
-        if (!is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0) 
+        if (is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0)
         {
             $savecfg['plugins'] = 'array(' . implode(',', $newsetting['plugins']) . ')';
         }
-        else 
+        else
         {
             $savecfg['plugins'] = '';
         }
@@ -141,7 +172,6 @@ if ($_REQUEST['action'] == 'checkforupdates')
     ksort($_SESSION['available_plugins']);
 }
 
-
 $tabs[$strInstalled] = "{$_SERVER['PHP_SELF']}?tab=installed";
 if (is_array($_SESSION['available_plugins']))
 {
@@ -155,16 +185,16 @@ switch ($seltab)
         if (is_array($_SESSION['available_plugins']))
         {
             echo "<table align='center'>";
-            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strActions}</tr>";
             $shade = 'shade1';
             foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
             {
-                $operation = '';
+                $operations = array();
                 if (!empty($avail_plugin_details['url']))
                 {
-                    $operation .= "<a href=\"{$avail_plugin_details['url']}\">{$strVisitHomepage}</a>";
+                    $operations[$strVisitHomepage] = "{$avail_plugin_details['url']}";
                 }
-//                 $operation .= "<a href=\"{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)."\">{$strInstall}</a>";
+//                 $operations[$strInstall] = "{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)";
                 if (!in_array($avail_plugin, $ondisk_plugins))
                 {
                     echo "<tr class='{$shade}'>";
@@ -172,7 +202,7 @@ switch ($seltab)
                     echo "<td>{$avail_plugin_details['version']}</td>";
                     echo "<td>{$avail_plugin_details['desc']}</td>";
                     echo "<td>{$avail_plugin_details['author']}</td>";
-                    echo "<td>{$operation}</td>";
+                    echo "<td>".html_action_links($operations)."</td>";
                     echo "</tr>";
                     if ($shade == 'shade2') $shade = 'shade1';
                     else $shade = 'shade2';
@@ -188,40 +218,11 @@ switch ($seltab)
 
     case $strInstalled:
     default:
-        $path = APPLICATION_PLUGINPATH;
-        $dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
-
-        while ($file = readdir($dir_handle))
-        {
-            // !beginsWith($file, "dashboard_") &&
-            if (endsWith($file, ".php"))
-            {
-                if (empty($dashboard[mb_substr($file, 10, mb_strlen($file)-14)]))  //this is 14 due to .php =4 and dashboard_ = 10
-                {
-                    $ondisk_pluginname = mb_substr($file, 0, mb_strpos($file, '.php'));
-                    //$ondisk_plugins[$ondisk_pluginname] = 1;
-                    $content = file(APPLICATION_PLUGINPATH. $file);
-                    $content = array_filter($content, 'getplugininfo');
-                    foreach ($content AS $key => $value)
-                    {
-                        if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['version'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['desc'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['author'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['legal'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['sitminversion'] = getplugininfovalue($value);
-                        if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$ondisk_pluginname]['sitmaxversion'] = getplugininfovalue($value);
-                    }
-                }
-            }
-        }
-
-        closedir($dir_handle);
-
         if (is_array($ondisk_plugins))
         {
             ksort($ondisk_plugins);
             echo "<table align='center'>";
-            echo "<tr><th>{$strPlugins}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strOperation}</tr>";
+            echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strActions}</tr>";
             $shade = 'shade1';
             foreach($ondisk_plugins AS $ondisk_plugin => $ondisk_plugin_details)
             {
@@ -241,7 +242,9 @@ switch ($seltab)
                 echo "<tr class='{$shade}'>";
                 echo "<td>{$ondisk_plugin}</td>";
                 echo "<td>{$ondisk_plugin_details['version']}</td>";
-                echo "<td>{$ondisk_plugin_details['desc']}";
+                echo "<td>";
+                echo "<em>{$ondisk_plugin_details['desc']}</em><br />";
+                echo "<strong>{$strLicense}:</strong> {$ondisk_plugin_details['legal']}";
                 if ($ondisk_plugin_details['sitminversion'] > $application_version)
                 {
                     echo "<p class='warning'>This plugin was designed for {$CONFIG['application_name']} version {$ondisk_plugin_details['sitminversion']} or later</strong></p>";
@@ -254,28 +257,54 @@ switch ($seltab)
                 {
                     echo "<p class='info'>A newer version is available: v{$_SESSION['available_plugins'][$ondisk_plugin]['version']}</p>";
                 }
+                if ($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin)
+                {
+                    echo "<br /><strong>{$strHelp}:</strong><br />";
+                    echo "<div class='scrollbox'>";
+                    echo file_get_contents("{$ondisk_plugin_details['path']}README");
+                    echo "</dvi>";
+                }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";
+                $operations = array();
                 if (!beginsWith($ondisk_plugin, 'dashboard_'))
                 {
                     if ($installed)
                     {
-                        $operation = "<a href='{$_SERVER['PHP_SELF']}?action=disable&amp;plugin={$ondisk_plugin}'>{$strDisable}</a>";
+                        $operations[$strDisable] = "{$_SERVER['PHP_SELF']}?action=disable&amp;plugin={$ondisk_plugin}";
                     }
                     else
                     {
-                        $operation = "<a href='{$_SERVER['PHP_SELF']}?action=enable&amp;plugin={$ondisk_plugin}'>{$strEnable}</a>";
+                        $operations[$strEnable] = "{$_SERVER['PHP_SELF']}?action=enable&amp;plugin={$ondisk_plugin}";
                     }
                 }
                 else
                 {
-                    $operation = "<a href='{$CONFIG['application_webpath']}manage_dashboard.php'>{$strManageDashlet}</a>";
+                    $operations[$strManageDashlet] = "{$CONFIG['application_webpath']}manage_dashboard.php";
                 }
-
-                echo "<td>{$operation}</td>";
+                if (!($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin) AND file_exists($ondisk_plugin_details['filepath'] . 'README'))
+                {
+                   $operations[$strHelp] = "{$_SERVER['PHP_SELF']}?action=readme&amp;plugin={$ondisk_plugin}";
+                }
+                if (!empty($ondisk_plugin_details['url']))
+                {
+                   $operations[$strVisitHomepage] = "{$ondisk_plugin_details['url']}";
+                }
+                echo "<td>".html_action_links($operations)."</td>";
                 echo "</tr>";
             }
             echo "</table>";
+
+           // Legend
+            if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+            {
+                echo "<br />";
+                echo "<table class='legend'><tr>";
+                echo "<td class='idle'>{$strEnabled}</td>";
+                echo "<td class='expired'>{$strDisabled}</td>";
+                echo "</tr></table>";
+            }
+
         }
         else
         {
@@ -283,8 +312,8 @@ switch ($seltab)
         }
         break;
 }
-$dbg .= "<pre>AVAIL:".print_r($_SESSION['available_plugins'],true)."</pre>";
-$dbg .= "<pre>".print_r($ondisk_plugins,true)."</pre>";
+// $dbg .= "<pre>AVAIL:".print_r($_SESSION['available_plugins'],true)."</pre>";
+// $dbg .= "<pre>".print_r($ondisk_plugins,true)."</pre>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

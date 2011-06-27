@@ -14,8 +14,8 @@
 
 if (empty($_REQUEST['user'])
     OR $_REQUEST['user'] == 'current'
-    OR $_REQUEST['userid'] == $_SESSION['userid']) $permission = 58; // Edit your software skills
-else $permission = 59; // Manage users software skills
+    OR $_REQUEST['userid'] == $_SESSION['userid']) $permission = PERM_MYSKILLS_SET; // Edit your software skills
+else $permission = PERM_USER_SKILLS_SET; // Manage users software skills
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -48,13 +48,15 @@ if (empty($submit))
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit=\"populateHidden(document.softwareform.elements['expertise[]'], document.softwareform.choices); populateHidden(document.softwareform.elements['noskills[]'], document.softwareform.ns)\">";
     echo "<table align='center'>";
-    echo "<tr><th>{$strNOSkills}</th><th>&nbsp;</th><th>{$strHAVESkills}</th></tr>";
-    echo "<tr><td align='center' width='300' class='shade1'>";
+    echo "<tr><th>{$strNOSkills}</th><th>&nbsp;{$strActions}&nbsp;</th><th>{$strHAVESkills}</th></tr>";
+    echo "<tr><td align='center' class='shade1'>";
+    echo "\n<select name='noskills[]' multiple='multiple' size='20' style='width: 100%; min-width: 300px; min-height: 200px;'>";
     $sql = "SELECT * FROM `{$dbSoftware}` ORDER BY name";
     $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1)
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $count = 0;
+    if (mysql_num_rows($result) > 0)
     {
-        echo "\n<select name='noskills[]' multiple='multiple' size='20' style='width: 100%; min-width: 200px;'>";
         while ($software = mysql_fetch_object($result))
         {
             if (is_array($expertise))
@@ -62,38 +64,45 @@ if (empty($submit))
                 if (!in_array($software->id,$expertise))
                 {
                     echo "<option value='{$software->id}'>{$software->name}</option>\n";
+                    $count++;
                 }
             }
             else
             {
                 echo "<option value='{$software->id}'>{$software->name}</option>\n";
+                $count++;
             }
         }
-        echo "<option value=''></option>"; // Always have at least one option
-        echo "</select>\n";
     }
-    else
+    if ($count < 1)
     {
-        echo "<p class='error'>{$strNoSkillsDefined}</p>";
+        echo "<option value=''>{$strNone}</option>"; // Always have at least one option for valid HTML
     }
-
+    echo "</select>\n";
     echo "</td>";
-    echo "<td class='shade2'>";
-    echo "<input type='button' value='&gt;' title='Add Selected' onclick=\"copySelected(this.form.elements['noskills[]'],this.form.elements['expertise[]'])\" /><br />";
-    echo "<input type='button' value='&lt;' title='Remove Selected' onclick=\"copySelected(this.form.elements['expertise[]'],this.form.elements['noskills[]'])\" /><br />";
-    echo "<input type='button' value='&gt;&gt;' title='Add All' onclick=\"copyAll(this.form.elements['noskills[]'],this.form.elements['expertise[]'])\" /><br />";
-    echo "<input type='button' value='&lt;&lt;' title='Remove All' onclick=\"copyAll(this.form.elements['expertise[]'],this.form.elements['noskills[]'])\" /><br />";
+    echo "<td class='shade2'  style='text-align:center;'>";
+    echo "<input type='button' value='&gt;' title='Add Selected' onclick=\"deleteBlankOption(this.form.elements['expertise[]']);copySelected(this.form.elements['noskills[]'],this.form.elements['expertise[]'])\" /><br />";
+    echo "<input type='button' value='&lt;' title='Remove Selected' onclick=\"deleteBlankOption(this.form.elements['noskills[]']);copySelected(this.form.elements['expertise[]'],this.form.elements['noskills[]'])\" /><br />";
+    echo "<input type='button' value='&gt;&gt;' title='Add All' onclick=\"deleteBlankOption(this.form.elements['expertise[]']);copyAll(this.form.elements['noskills[]'],this.form.elements['expertise[]'])\" /><br />";
+    echo "<input type='button' value='&lt;&lt;' title='Remove All' onclick=\"deleteBlankOption(this.form.elements['noskills[]']);copyAll(this.form.elements['expertise[]'],this.form.elements['noskills[]'])\" /><br />";
     echo "</td>";
-    echo "<td class='shade1'>";
+    echo "<td class='shade1' style='width: 300px;'>";
+    echo "<select name='expertise[]' multiple='multiple' size='20' style='width: 100%;  min-width: 300px; min-height: 200px;'>";
     $sql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s ";
     $sql .= "WHERE us.softwareid = s.id AND userid = '{$user}' ORDER BY name";
     $result = mysql_query($sql);
-    echo "<select name='expertise[]' multiple='multiple' size='20' style='width: 100%;  min-width: 200px;'>";
-    while ($software = mysql_fetch_object($result))
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
     {
-        echo "<option value='{$software->id}'>$software->name</option>\n";
+        while ($software = mysql_fetch_object($result))
+        {
+            echo "<option value='{$software->id}'>{$software->name}</option>\n";
+        }
     }
-    echo "<option value=''></option>"; // Always have at least one option
+    else
+    {
+        echo "<option value=''>{$strNone}</option>"; // Always have at least one option for valid HTML
+    }
     echo "</select>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "</td></tr>\n";
@@ -102,7 +111,9 @@ if (empty($submit))
     echo "<input type='hidden' name='choices' id='choices' />";
     echo "<input type='hidden' name='ns' id='ns' />";
 
-    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<p class='formbuttons'>";
+    echo "<input name='reset' type='reset' value='{$strReset}' />";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

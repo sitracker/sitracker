@@ -11,7 +11,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'triggers.inc.php');
@@ -344,7 +344,7 @@ switch ($action)
                     echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value['.$i.']')."</td>";
                     // put a hidden input so we can see unchecked boxes
                     echo "<td><input type='hidden' name='enabled[{$i}]' value='off' />";
-                    echo "<input type='checkbox' name='enabled[{$i}]' />{$strEnableCondition}</td></tr>";
+                    echo "<label><input type='checkbox' name='enabled[{$i}]' /> {$strEnableCondition}</label></td></tr>";
                     $i++;
                 }
             }
@@ -366,7 +366,7 @@ switch ($action)
         }
         break;
     case 'delete_temp_assign':
-        if (user_permission($sit[2], 42))
+        if (user_permission($sit[2], PERM_UPDATE_DELETE))
         {
             $incidentid = clean_int($_REQUEST['incidentid']);
             $originalowner = clean_int($_REQUEST['originalowner']);

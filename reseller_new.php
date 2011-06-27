@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 63;
+$permission = PERM_RESELLER_ADD;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -29,7 +29,7 @@ switch ($action)
         $errors = 0;
         if (empty($name))
         {
-            $_SESSION['formerrors']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
+            $_SESSION['formerrors']['new_reseller']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_ERROR);
             $errors++;
         }
 
@@ -73,7 +73,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo show_form_errors('new_reseller');
         clear_form_errors('formerrors');
-        echo "<h2>".icon('site', 32)." {$strNewReseller}</h2>";
+        echo "<h2>".icon('reseller', 32)." {$strNewReseller}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
         echo "onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
         echo "<table align='center' class='vertical'>";

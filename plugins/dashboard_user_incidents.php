@@ -9,15 +9,12 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$dashboard_user_incidents_version = 1;
+$dashboard_user_incidents_version = 1.01;
 
 function dashboard_user_incidents($dashletid)
 {
     $title = sprintf($GLOBALS['strUserIncidents'], user_realname($_SESSION['userid'], TRUE));
-    //"({$GLOBALS['strActionNeeded']})";
-
     echo dashlet('user_incidents', $dashletid, icon('support', 16), $title, 'incidents.php?user=current&amp;queue=1&amp;type=support', $content);
-
 }
 
 
@@ -50,11 +47,11 @@ function dashboard_user_incidents_display($dashletid)
 
     $queue = 1; //we still need this for the included page so the incidents are coloured correctly
     //the only case we're really interested in
-    $sql .= "AND (status!='2') ";  // not closed
+    $sql .= "AND (status != " . STATUS_CLOSED . ") ";  // not closed
     // the "1=2" obviously false else expression is to prevent records from showing unless the IF condition is true
     $sql .= "AND ((timeofnextaction > 0 AND timeofnextaction < $now) OR ";
-    $sql .= "(IF ((status >= 5 AND status <=8), ($now - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";  // awaiting
-    $sql .= "OR IF (status='1' OR status='3' OR status='4', 1=1 , 1=2) ";  // active, research, left message - show all
+    $sql .= "(IF ((status >= " .STATUS_COLLEAGUE . " AND status <= " . STATUS_CUSTOMER . "), ($now - lastupdated) > ({$CONFIG['regular_contact_days']} * 86400), 1=2 ) ";
+    $sql .= "OR IF (status = " . STATUS_ACTIVE . " OR status = " . STATUS_RESEARCH ." OR status = " . STATUS_LEFTMESSAGE .", 1=1 , 1=2) ";
     $sql .= ") AND timeofnextaction < {$now} ) ";
 
     $selectsql = "SELECT i.id, externalid, title, owner, towner, priority, status, siteid, forenames, surname, email, i.maintenanceid, ";
@@ -113,7 +110,7 @@ function dashboard_user_incidents_display($dashletid)
     if ($user == 'all')
     {
         //echo "<p align='center'>There are <strong>{$rowcount}</strong> incidents in this list.</p>";
-        echo "<p align='center'>".sprintf($strThereAreXIncidentsInThisList, $rowcount)."</p>";
+        echo "<p align='center'>".sprintf($strThereAreXIncidentsInThisList, $rowcount) . "</p>";
     }
     $mode = "min";
     // Print message if no incidents were listed
@@ -122,13 +119,13 @@ function dashboard_user_incidents_display($dashletid)
         // Incidents Table
         $incidents_minimal = true;
         //include ('incidents_table.inc.php');
-        $shade='shade1';
+        $shade = 'shade1';
         echo "<table summary=\"{$strIncidents}\">";
         while ($obj = mysql_fetch_object($result))
         {
             list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($obj->id);
             $update_body = parse_updatebody($update_body);
-            echo "<tr><td class='{$shade}'>";
+            echo "<tr class='{$shade}'><td>";
             if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
             {
                 $windowname = "incident{$obj->id}";
@@ -151,7 +148,7 @@ function dashboard_user_incidents_display($dashletid)
     }
     else
     {
-        echo "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+        echo user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
     }
 
 }

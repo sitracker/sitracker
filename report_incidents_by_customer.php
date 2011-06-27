@@ -11,7 +11,7 @@
 
 // Shows Incidents CLOSED between the dates
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional!
 
 
-$permission = 55; // Delete Sites/Contacts
+$permission = PERM_SITE_DELETE; // Delete Sites/Contacts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -90,7 +90,7 @@ else
             else
             {
                 // FIXME html headers need sorting here, we don't want the header before we do this
-                html_redirect("sites.php?search_string=A");
+                html_redirect("sites.php");
             }
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -114,7 +114,7 @@ else
 
         journal(CFG_LOGGING_NORMAL, 'Site Deleted', "Site {$id} was deleted", CFG_JOURNAL_SITES, $id);
 
-        html_redirect("sites.php?search_string=A");
+        html_redirect("sites.php");
     }
 }
 

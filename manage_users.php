@@ -12,7 +12,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 16Nov05
 
 
-$permission = 22; // Administrate
+$permission = PERM_ADMIN; // Administrate
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
@@ -41,10 +41,17 @@ else if ($sort == "accepting") $sql .= " ORDER BY accepting ASC";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
-echo "<h2>".icon('user', 32)." {$strManageUsers}</h2>";
+echo "<h2>".icon('user', 32, $strManageUsers)." {$strManageUsers}</h2>";
 echo "<p class='contextmenu' align='center'>";
-echo "<a href='user_new.php?action=showform'>{$strNewUser}</a> | ";
-echo "<a href='edit_user_permissions.php'>{$strRolePermissions}</a>";
+$operations = array();
+$operations[$strNewUser] = array('url' => 'user_new.php?action=showform', PERM_USER_ADD);
+$operations[$strRolePermissions] = array('url' => 'edit_user_permissions.php', 'perm' => PERM_USER_EDIT);
+$operations[$strUserGroups] = 'usergroups.php';
+if ($CONFIG['holidays_enabled'])
+{
+    $operations[$strEditHolidayEntitlement] = 'edit_holidays.php';
+}
+echo html_action_links($operations);
 echo "</p>";
 echo "<table align='center'>";
 echo "<tr>";
@@ -53,8 +60,11 @@ echo "(<a href='{$_SERVER['PHP_SELF']}?sort=username'>{$strUsername}</a>)</th>";
 echo "<th><a href='{$_SERVER['PHP_SELF']}?sort=email'>{$strEmail}</a></th>";
 echo "<th><a href='{$_SERVER['PHP_SELF']}?sort=role'>{$strRole}</a></th>";
 echo "<th>{$strStatus}</th>";
-echo "<th>{$strSource}".help_link('UserSource')."</th>";
-echo "<th>{$strOperation}</th>";
+if ($CONFIG['use_ldap'])
+{
+    echo "<th>{$strSource}".help_link('UserSource')."</th>";
+}
+echo "<th>{$strActions}</th>";
 
 echo "</tr>\n";
 
@@ -86,37 +96,41 @@ while ($users = mysql_fetch_object($result))
     }
     else echo "-";
 
-    echo "</td><td>";
-
-	if ($users->user_source == 'sit')
-	{
-		echo $CONFIG['application_shortname'];
-	}
-	elseif ($users->user_source == 'ldap')
-	{
-		echo $strLDAP;
-	}
-	else
-	{
-		echo $strUnknown;
-	}
-
-    echo "</td><td>";
-    echo "<a href='user_profile_edit.php?userid={$users->userid}'>{$strEdit}</a>";
-    if ($users->status > 0)
+    echo "</td>";
+    if ($CONFIG['use_ldap'])
     {
-        echo " | ";
-        if ($users->userid > 1 AND $users->user_source == 'sit')
+        echo "<td>";
+        if ($users->user_source == 'sit')
         {
-            echo "<a href='forgotpwd.php?action=sendpwd&amp;userid={$users->userid}'>{$strResetPassword}</a> | ";
+            echo $CONFIG['application_shortname'];
         }
-        echo "<a href='edit_user_skills.php?user={$users->userid}'>{$strSkills}</a>";
-        echo " | <a href='edit_backup_users.php?user={$users->userid}'>{$strSubstitutes}</a>";
-        if ($users->userid > 1)
+        elseif ($users->user_source == 'ldap')
         {
-            echo " | <a href='edit_user_permissions.php?action=edit&amp;user={$users->userid}'>{$strPermissions}</a>";
+            echo $strLDAP;
+        }
+        else
+        {
+            echo $strUnknown;
         }
     }
+    echo "</td>";
+    echo "<td>";
+    $operations = array();
+    $operations[$strEdit] = array('url' => "user_profile_edit.php?userid={$users->userid}", 'perm' => PERM_USER_EDIT);
+    if ($users->status > 0)
+    {
+        if ($users->userid > 1 AND $users->user_source == 'sit')
+        {
+            $operations[$strResetPassword] = "forgotpwd.php?action=sendpwd&amp;userid={$users->userid}";
+        }
+        $operations[$strSetSkills] = "edit_user_skills.php?user={$users->userid}";
+        $operations[$strSetSubstitutes] = "edit_backup_users.php?user={$users->userid}";
+        if ($users->userid > 1)
+        {
+            $operations[$strPermissions] = "edit_user_permissions.php?action=edit&amp;user={$users->userid}";
+        }
+    }
+    echo html_action_links($operations);
     echo "</td>";
 
     echo "</tr>\n";

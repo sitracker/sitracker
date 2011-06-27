@@ -146,24 +146,37 @@ function file_permissions_info($perms)
 
 
 /**
- * Function to produce a user readable file size i.e 2048 bytes 1KB etc
+ * Function to produce a user readable memory/file size i.e 2048 bytes 1KB etc
  * @author Paul Heaney
- * @param filesize - filesize in bytes
- * @return String filesize in readable format
+ * @param int $size - size in bytes
+ * @return String size in readable format (e.g. 4.5 Mbytes)
  */
-function readable_file_size($filesize)
+function readable_bytes_size($size)
 {
     global $strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes;
     $j = 0;
 
     $ext = array($strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes);
-    while ($filesize >= pow(1024, $j))
+    while ($size >= pow(1024, $j))
     {
         ++$j;
     }
-    $filemax = round($filesize / pow(1024,$j-1) * 100) / 100 . ' ' . $ext[$j-1];
+    $readable_size = round($size / pow(1024,$j-1) * 100) / 100 . ' ' . $ext[$j-1];
 
-    return $filemax;
+    return $readable_size;
+}
+
+
+/**
+ * Function to produce a user readable file size i.e 2048 bytes 1KB etc
+ * @author Paul Heaney
+ * @param filesize - filesize in bytes
+ * @return String filesize in readable format
+ * @deprecated DEPRECATED Function renamed to readable_bytes_size() for v3.90, INL 21 June 2011
+ */
+function readable_file_size($filesize)
+{
+    return readable_bytes_size($filesize);
 }
 
 
@@ -272,6 +285,32 @@ function mime_type($file)
     else
     {
         return 'application/octet-stream';
+    }
+}
+
+
+/**
+* Function that reads the contents(First 2048 bits) of a .txt file in /help/ and Outputs it.
+* @author Nico du Toit
+* @param $filename The name of the file (without the .txt extension)
+* @return Outputs the text file contents to HTML if it exists, or an error message 
+* if the file does not exist.
+*/
+function file_get_help_textfile($filename)
+{
+    $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}". DIRECTORY_SEPARATOR . "{$filename}.txt";
+    // Default back to english if language helpfile isn't found
+    if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "en-GB/{$filename}.txt";
+    if (file_exists($helpfile))
+    {
+        $fp = fopen($helpfile, 'r', TRUE);
+        $helptext = fread($fp, 2048);
+        fclose($fp);
+        echo nl2br($helptext);
+    }
+    else
+    {
+        echo "Error: Missing helpfile '{$_SESSION['lang']}/{$filename}.txt'";
     }
 }
 ?>

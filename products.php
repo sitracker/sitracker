@@ -11,8 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 28; // View Products and Software
-$title = 'Products List';
+$permission = PERM_PRODUCT_VIEW; // View Products and Software
+$title = $strListProducts;
 
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
@@ -32,11 +32,12 @@ if (empty($productid) AND $display!='skills')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
+    echo "<h2>".icon('product', 32, $strProducts)." {$strProducts}</h2>";
     if (mysql_num_rows($result) >= 1)
     {
         while ($vendor = mysql_fetch_object($result))
         {
-            echo "<h2>".icon('product', 32)." {$vendor->name}</h2>";
+            echo "<h3>{$strVendor}: {$vendor->name}</h3>";
             $psql = "SELECT * FROM `{$dbProducts}` WHERE vendorid='{$vendor->id}' ORDER BY name";
             $presult = mysql_query($psql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -44,7 +45,7 @@ if (empty($productid) AND $display!='skills')
             {
                 echo "<table summary='{$strListProducts}' align='center' width='95%'>";
                 echo "<tr><th width='20%'>{$strProduct}</th><th width='52%'>{$strDescription}</th><th width='10%'>{$strLinkedSkills}</th>";
-                echo "<th width='10%'>{$strActiveContracts}</th><th width='8%'>{$strOperation}</th></tr>\n";
+                echo "<th width='10%'>{$strActiveContracts}</th><th width='8%'>{$strActions}</th></tr>\n";
                 $shade = 'shade1';
                 while ($product = mysql_fetch_object($presult))
                 {
@@ -75,8 +76,12 @@ if (empty($productid) AND $display!='skills')
                         echo $countcontracts;
                     }
                     echo "</td>";
-                    echo "<td><a href='edit_product.php?id={$product->id}'>{$strEdit}</a> | <a href='product_delete.php?id={$product->id}'>{$strDelete}</a></td>";
-                    echo "</tr>\n";
+                    echo "<td>";
+                    $operations = array();
+                    $operations[$strEdit] = "edit_product.php?id={$product->id}";
+                    $operations[$strDelete] = "product_delete.php?id={$product->id}";
+                    echo html_action_links($operations);
+                    echo "</td></tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
                     else $shade = 'shade1';
                 }
@@ -84,7 +89,7 @@ if (empty($productid) AND $display!='skills')
             }
             else
             {
-                echo "<p class='warning'>{$strNoProductsForThisVendor}</p>\n";
+                echo user_alert($strNoProductsForThisVendor, E_USER_NOTICE);
             }
         }
     }
@@ -103,7 +108,7 @@ if (empty($productid) AND $display!='skills')
         echo "<p align='center'>These skills are not linked to any product</p>";
         echo "<table summary='' align='center' width='55%'>";
         echo "<tr><th>{$strSkill}</th><th>{$strLifetime}</th>";
-        echo "<th>Engineers</th><th>{$strIncidents}</th><th>{$strOperation}</th></tr>";
+        echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strActions}</th></tr>";
         while ($software = mysql_fetch_object($result))
         {
             $ssql = "SELECT COUNT(userid) FROM `{$dbUserSoftware}` AS us, `{$dbUsers}` AS u WHERE us.userid = u.id AND u.status!=0 AND us.softwareid = '{$software->id}'";
@@ -140,9 +145,12 @@ if (empty($productid) AND $display!='skills')
             echo "</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
+            echo "<td>";
+            $operations = array();
+            $operations[$strLink] = "product_skill_new.php?softwareid={$software->id}";
+            $operations[$strEdit] = "edit_skill.php?id={$software->id}";
+            $operations[$strDelete] = "edit_skill.php?id={$software->id}&amp;action=delete";
+            echo html_action_links($operations);
             echo "</td>";
             echo "</tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
@@ -162,7 +170,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
         echo "<table align='center'>";
         echo "<tr><th>{$strSkill}</th><th>{$strVendor}</th>";
         echo "<th>{$strLifetime}</th><th>{$strLinkedToNumProducts}</th>";
-        echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strOperation}</th></tr>";
+        echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($software = mysql_fetch_object($result))
         {
@@ -218,17 +226,32 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
             echo "<td>{$countlinked}</td>";
             echo "<td>{$countengineers}</td>";
             echo "<td>{$countincidents}</td>";
-            echo "<td><a href='product_software_new.php?softwareid={$software->id}'>{$strLink}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}'>{$strEdit}</a> ";
-            echo "| <a href='edit_software.php?id={$software->id}&amp;action=delete'>{$strDelete}</a>";
+            echo "<td>";
+            $operations = array();
+            $operations[$strLink] = array('url' => "product_skill_new.php?softwareid={$software->id}", 'perm' => PERM_PRODUCT_ADD);
+            $operations[$strEdit] = array('url' => "edit_skill.php?id={$software->id}", 'perm' => PERM_SKILL_ADD);
+            $operations[$strDelete] = array('url' => "edit_skill.php?id={$software->id}&amp;action=delete", 'perm' => PERM_SKILL_ADD);
+            echo html_action_links($operations);
             echo "</td>";
             echo "</tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
         echo "</table>";
+
+        // Legend
+        if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+        {
+            echo "<br />";
+            echo "<table class='legend'><tr>";
+            echo "<td class='shade1'>{$strOK}</td>";
+            echo "<td class='expired'>{$strEndOfLife}</td>";
+            echo "<td class='notice'>{$strNoEngineers}</td>";
+            echo "<td class='urgent'>{$strUnused}</td>";
+            echo "</tr></table>";
+        }
     }
-    else echo "<p class='warning'>{$strNothingToDisplay}</p>";
+    else echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
 }
 else
@@ -296,9 +319,9 @@ else
                     echo "</td>";
                     echo "<td>{$countengineers}</td>";
                     echo "<td>{$countincidents}</td>";
-                    echo "<td><a href='delete_product_software.php?productid={$product->id}&amp;softwareid={$software->softwareid}'>{$strUnlink}</a> ";
-                    echo "| <a href='edit_software.php?id={$software->softwareid}'>{$strEdit}</a> ";
-                    echo "| <a href='edit_software.php?id={$software->softwareid}&amp;action=delete'>{$strDelete}</a>";
+                    echo "<td><a href='delete_product_skill.php?productid={$product->id}&amp;softwareid={$software->softwareid}'>{$strUnlink}</a> ";
+                    echo "| <a href='edit_skill.php?id={$software->softwareid}'>{$strEdit}</a> ";
+                    echo "| <a href='edit_skill.php?id={$software->softwareid}&amp;action=delete'>{$strDelete}</a>";
                     echo "</td>";
                     echo "</tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
@@ -310,7 +333,7 @@ else
                 echo "<tr><td>&nbsp;</td><td><em>{$strNoSkillsLinkedToProduct}</em></td><td>&nbsp;</td></tr>\n";
             }
             echo "</table>\n";
-            echo "<p align='center'><a href='product_software_new.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
+            echo "<p align='center'><a href='product_skill_new.php?productid={$product->id}'>".sprintf($strLinkSkillToX, $product->name)."</a></p>\n";
 
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$product->id}'";
             $result = mysql_query($sql);
@@ -391,17 +414,23 @@ else
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
 }
 
-echo "<p align='center'><a href='vendor_new.php'>{$strNewVendor}</a> | <a href='product_new.php'>{$strNewProduct}</a> | <a href='software_new.php'>{$strNewSkill}</a>";
+echo "<p align='center'>";
+$operations = array();
+$operations[$strNewVendor] = 'vendor_new.php';
+$operations[$strNewProduct] = 'product_new.php';
+$operations[$strNewSkill] = 'skill_new.php';
+
 
 if ($display == 'skills' OR $display == 'software')
 {
-    echo " | <a href='products.php'>{$strListProducts}</a>";
+    $operations[$strListProducts] = 'products.php';
 }
 else
 {
-    echo " | <a href='products.php?display=skills'>{$strListSkills}</a>";
+    $operations[$strListSkills] = 'products.php?display=skills';
 }
-
+$operations[$strNewProductQuestion] = "product_info_new.php?product={$productid}";
+echo html_action_links($operations);
 echo "</p>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

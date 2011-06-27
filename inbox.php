@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 42;
+$permission = PERM_UPDATE_DELETE;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -271,7 +271,7 @@ if (empty($displayid))
             echo "</td>";
             // Size
             echo "<td style='white-space:nowrap;'>";
-            echo readable_file_size(mb_strlen($update->bodytext));
+            echo readable_bytes_size(mb_strlen($update->bodytext));
             echo "</td>";
             echo "</tr>";
             if ($shade == 'shade1') $shade = 'shade2';
@@ -299,7 +299,7 @@ if (empty($displayid))
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 else
@@ -413,7 +413,7 @@ else
     }
     else
     {
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 

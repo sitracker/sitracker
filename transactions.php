@@ -15,7 +15,7 @@
 
 // included by billable_incidents.php
 
-$permission = 76; // View Transactions
+$permission = PERM_BILLING_TRANSACTION_VIEW; // View Transactions
 
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {

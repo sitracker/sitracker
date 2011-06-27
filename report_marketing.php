@@ -14,7 +14,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -199,7 +199,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $numrows = mysql_num_rows($result);
 
     // FIXME strip slashes from output
-    $html .= "<table width='99%' align='center'>";
+    $html .= "<table align='center'>";
     $html .= "<tr><th>{$strForenames}</th><th>{$strSurname}</th><th>";
     $html .= "{$strEmail}</th><th>{$strSite}</th><th>{$strAddress1}</th>";
     $html .= "<th>{$strAddress2}</th><th>{$strCity}</th><th>{$strCounty}</th>";

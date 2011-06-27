@@ -14,7 +14,7 @@
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 37; // Run Reports
+$permission = PERM_REPORT_RUN; // Run Reports
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

@@ -14,7 +14,7 @@
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
 
-$permission = 11; // View Sites
+$permission = PERM_SITE_VIEW; // View Sites
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
@@ -247,7 +247,7 @@ echo "<p align='center'><a href='contact_new.php?siteid={$id}'>{$strNewContact}<
 
 
 // Valid user, check perms
-if (user_permission($sit[2],19)) // View contracts
+if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
 {
     echo "<h3>{$strContracts}<a id='contracts'></a></h3>";
 

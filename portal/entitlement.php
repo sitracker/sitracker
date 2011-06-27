@@ -30,7 +30,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
     echo colheader('availableincidents',$strIncidentsAvailable);
     echo colheader('usedincidents',$strIncidentsUsed);
     echo colheader('expirydate', $strExpiryDate);
-    echo colheader('actions', $strOperation);
+    echo colheader('actions', $strActions);
     echo "</tr>";
     $shade = 'shade1';
 
@@ -90,7 +90,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
         }
         else
         {
-             echo "<a href='add.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strNewIncident}</a>";
+             echo "<a href='new.php?contractid={$contract->id}&amp;product={$contract->product}'>{$strNewIncident}</a>";
         }
         echo "</td></tr>\n";
         if ($shade == 'shade1') $shade = 'shade2';

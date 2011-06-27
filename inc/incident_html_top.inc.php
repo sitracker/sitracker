@@ -68,6 +68,7 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 plugin_do('html_head');
 echo "</head>";
 echo "<body onload=\"self.focus()\">";
+plugin_do('page_start');
 
 $incidentid = $id;
 // Retrieve incident
@@ -189,7 +190,7 @@ if ($slaremain != 0 AND $incident->status != STATUS_CLOSED)
     if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
     if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
     if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-    if ($incidents["priority"] == 4) $class = 'critical';  // Force critical incidents to be critical always
+    if ($incidents["priority"] == PRIORITY_CRITICAL) $class = 'critical';  // Force critical incidents to be critical always
 }
 
 // Print a table showing summary details of the incident
@@ -248,7 +249,6 @@ if ($menu != 'hide')
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
 
         echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
-        if (!empty($_REQUEST['popup'])) echo " | <a class=barlink href='javascript:window.close();'>{$strCloseWindow}</a>";
     }
     else
     {
@@ -259,8 +259,9 @@ if ($menu != 'hide')
         if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
         echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
-        if (!empty($_REQUEST['popup'])) echo " | <a class='barlink' href='javascript:window.close();'>{$strCloseWindow}</a>";
     }
+    plugin_do('incident_details_menu');
+    if (!empty($_REQUEST['popup']) OR $_REQUEST['win'] == 'sit_popup') echo " | <a class='barlink' href='javascript:window.close();'>{$strCloseWindow}</a>";
 }
 else
 {

@@ -11,7 +11,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 27; /* View your calendar */
+$permission = PERM_CALENDAR_VIEW; /* View your calendar */
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = $strHolidayRequests;
@@ -43,7 +43,7 @@ function display_holiday_table($result)
     echo "<th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strLength']}</th><th>{$GLOBALS['strType']}</th>";
     if ($approver AND $mode == 'approval')
     {
-        echo "<th>{$GLOBALS['strOperation']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
+        echo "<th>{$GLOBALS['strActions']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
     }
 
     echo "</tr>";
@@ -110,7 +110,7 @@ if (empty($user)) $user = $sit[2];
 if (!$sent)
 {
     // check to see if this user has approve permission
-    $approver = user_permission($sit[2], 50);
+    $approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE);
 
     $waiting = FALSE;
     echo "<h2>".icon('holiday', 32)." ";
@@ -193,13 +193,13 @@ if (!$sent)
             }
             else
             {
-                echo "<p class='error'>{$strRequestNoUsersToApprovePermissions}</p>";
+                echo user_alert($strRequestNoUsersToApprovePermissions, E_USER_WARNING);
             }
         }
     }
     else
     {
-        echo "<p class='info'>{$strRequestNoHolidaysAwaitingYourApproval}</p>";
+        echo user_alert($strRequestNoHolidaysAwaitingYourApproval, E_USER_NOTICE);
     }
 
 
@@ -272,7 +272,7 @@ else
         }
         else
         {
-            echo "<p class='error'>{$strThereWasAProblemSendingYourRequest}</p>";
+            echo user_alert($strThereWasAProblemSendingYourRequest, E_USER_ERROR);
         }
     }
     echo "<p align='center'><a href='holidays.php?user={$user}'>{$strMyHolidays}</p></p>";

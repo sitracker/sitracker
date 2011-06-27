@@ -12,7 +12,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 44; // ftp publishing
+$permission = PERM_FILE_PUBLISH; // ftp publishing
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
@@ -35,7 +35,7 @@ if (empty($action))
     echo "<p align='center'>IMPORTANT: Files published here are <strong>public</strong> and available to all ftp users.</p>";
     echo "<form name='publishform' action='{$_SERVER['PHP_SELF']}' method='post' enctype='multipart/form-data'>";
     echo "<table class='vertical'>";
-    echo "<tr><th>File <small>(&lt;".readable_file_size($max_filesize).")</small>:</th>";
+    echo "<tr><th>File <small>(&lt;".readable_bytes_size($max_filesize).")</small>:</th>";
     echo "<td class='shade2'><input type='hidden' name='MAX_FILE_SIZE' value='{$max_filesize}' />";
     echo "<input type='file' name='file' size='40'' /></td></tr>";
 

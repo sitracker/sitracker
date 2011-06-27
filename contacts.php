@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 12; // View Contacts
+$permission = PERM_CONTACT_VIEW; // View Contacts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -167,10 +167,9 @@ else
 
         if (mysql_num_rows($result) == 0)
         {
-            echo "<p align='center'>";
-            if (empty($search_string)) echo $strNoRecords;
-            else printf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>");
-            echo "</p>\n";        }
+            if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
+            else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>", E_USER_NOTICE));
+        }
         else
         {
 
@@ -202,8 +201,11 @@ else
                 if ($results->fax == '') echo "<em>{$strNone}</em>";
                 else echo $results->fax;
                 echo "</td>";
-                echo "<td><a href='incident_new.php?action=findcontact&amp;contactid={$results->id}'>{$strNewIncident}</a> | ";
-                echo "<a href='contact_edit.php?action=edit&amp;contact={$results->id}'>{$strEditContact}</a>";
+                echo "<td>";
+                $operations = array();
+                $operations[$strNewIncident] = "incident_new.php?action=findcontact&amp;contactid={$results->id}";
+                $operations[$strEditContact] = "contact_edit.php?action=edit&amp;contact={$results->id}";
+                echo html_action_links($operations);
                 echo "</td></tr>";
 
                 // invert shade

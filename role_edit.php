@@ -11,7 +11,7 @@
 
 // Author: Paul Heaney <paul@sitracker.org>
 
-$permission = 9; // Edit User Permissions
+$permission = PERM_USER_PERMISSIONS_EDIT; // Edit User Permissions
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -42,16 +42,19 @@ if (empty($submit))
         echo "<form action'{$_SERVER['PHP_SELF']}' name='role_edit' method='post' >";
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strRole}</th><td>{$obj->id}</td></tr>";
-        echo "<tr><th>{$strName}</th><td><input type='text' name='rolename' id='rolename' value='{$obj->rolename}' /></td></tr>";
+        echo "<tr><th>{$strName}</th><td><input type='text' name='rolename' id='rolename' value='{$obj->rolename}' class='required' />";
+        echo " <span class='required'>{$strRequired}</span></td></tr>";
         echo "<tr><th>{$strDescription}</th><td><textarea name='description' id='description' rows='5' cols='30'>{$obj->description}</textarea></td></tr>";
         echo "</table>";
         echo "<input type='hidden' name='roleid' id='roleid' value='{$roleid}' />";
-        echo "<p><input name='submit' type='submit' value='{$strEditRole}' /></p>";
+        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+        echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
+        echo "<p align='center'><a href='role.php?roleid={$roleid}'>{$strReturnWithoutSaving}</a></p>";
     }
     else
     {
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

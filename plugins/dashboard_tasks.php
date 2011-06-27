@@ -73,7 +73,7 @@ function dashboard_tasks($dashletid)
         }
         else
         {
-            $content .= "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+            $content .= user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
         }
     }
     else

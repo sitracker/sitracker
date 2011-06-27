@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 19; // View Maintenance Contracts
+$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
 
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
@@ -74,14 +74,6 @@ echo "</td>";
 echo "</tr>";
 echo "</table>";
 
-// check input
-/*
-if (empty($search_string) && empty($productid))
-{
-    $errors = 1;
-    echo "<p class='error'>You must enter a search string</p>\n";
-}
-*/
 // search for criteria
 $sql  = "SELECT DISTINCT  m.id AS maintid, s.name AS site, p.name AS product, ";
 $sql .= "r.name AS reseller, licence_quantity, ";
@@ -136,16 +128,13 @@ if (!empty($sort))
     if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
     else $sql .= "DESC";
 }
-$dbg .= "<p>$sql</p>";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
 if (mysql_num_rows($result) == 0)
 {
-    echo "<p align='center'>";
-    if (empty($search_string)) echo $strNoRecords;
-    else printf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>");
-    echo "</p>\n";
+    if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
+    else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>", E_USER_NOTICE));
 }
 else
 {

@@ -8,7 +8,7 @@
 
 // Author Kieran Hogg <kieran[at]sitracker.org>
 
-$permission = 71;
+$permission = PERM_MYTRIGGERS_MANAGE;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -22,13 +22,16 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='pageintro'>";
- 
-echo "<p align='center'>{$strNotificationDescription}";
-echo "<br /><br /><a href='action_details.php'>";
-echo icon('new', 16). " {$strNewNotification}</a></p>";
+
+echo "<p align='center'>{$strNotificationDescription}</p>";
+
+$operations = array();
+$operations[$strNewNotification] = 'action_details.php';
+echo "<p align='center'>" . html_action_links($operations) . "</p>";
+
 echo "</div><br />";
 
-echo triggers_to_html(1);
+echo triggers_to_html($_SESSION['userid']);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

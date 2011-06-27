@@ -50,6 +50,7 @@ class User extends Person{
     var $icq;
     var $aim;
     var $msn;
+    var $skype;
 
     function User($id=0)
     {
@@ -62,6 +63,7 @@ class User extends Person{
 
     function retrieveDetails()
     {
+        // FIXME looks to me that we can remove the trigger_error - trigger also invalid as it needs a second parameter - CJ
         trigger_error("User.retrieveDetails() not yet implemented");
         $sql = "SELECT u.*, r.rolename ";
         $sql .= "FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRoles']}` AS r ";
@@ -85,6 +87,7 @@ class User extends Person{
             $this->icq = $obj->icq;
             $this->aim = $obj->aim;
             $this->msn = $obj->msn;
+            $this->skype = $obj->skype;
             $this->phone = $obj->phone;
             $this->mobile = $obj->mobile;
             $this->fax = $obj->fax;
@@ -193,7 +196,7 @@ class User extends Person{
         global $now;
         $toReturn = false;
 
-        if (!empty($this->id) AND is_numeric($this>id))
+        if (!empty($this->id)) //FIXME the following AND statement causes error and full MEM dump ->     AND (is_numeric($this>id)))
         {
             $sql = "SELECT username, status, accepting FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id}";
             $result = mysql_query($sql);
@@ -236,7 +239,7 @@ class User extends Person{
                     {
                         // reassign the users incidents if appropriate
                         if (empty($this->accepting)) $this->accepting = $oldUser->accepting; // Set accepting to the DB level if one isn't set'
-                        incident_backup_switchover($this->id, $ths->accepting);
+                        incident_backup_switchover($this->id, $this->accepting);
                     }
                     $s[] = "status = {$this->status}";
                 }
@@ -263,6 +266,7 @@ class User extends Person{
                 if (!empty($this->icq)) $s[] = "icq = '".cleanvar($this->icq)."'";
                 if (!empty($this->aim)) $s[] = "aim = '".cleanvar($this->aim)."'";
                 if (!empty($this->msn)) $s[] = "msn = '".cleanvar($this->msn)."'";
+                if (!empty($this->skype)) $s[] = "skype = '".cleanvar($this->skype)."'";
 
                 if ($errors == 0)
                 {

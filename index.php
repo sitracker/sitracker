@@ -10,8 +10,6 @@
 //
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 
-
-
 if (!@include ('core.php'))
 {
     $msg = urlencode(base64_encode("Could not find database connection/config information (core.php)"));
@@ -48,7 +46,7 @@ if ($_SESSION['auth'] != TRUE)
 
     if ($id == 2)
     {
-        echo user_alert($strSessionExpired, E_USER_ERROR);
+        echo user_alert($strSessionExpired, E_USER_WARNING);
     }
 
     if ($id == 3)
@@ -89,14 +87,14 @@ if ($_SESSION['auth'] != TRUE)
     echo "{$strLogin}</div>\n";
     echo "<div class='window'>\n";
     echo "<form id='loginform' action='login.php' method='post'>";
-    echo "<label for='username'>{$strUsername}:<br /><input id='username' ";
+    echo "<label>{$strUsername}:<br /><input id='username' ";
     echo "name='username' size='28' type='text' /></label><br />";
-    echo "<label for='password'>{$strPassword}:<br /><input id='password' ";
+    echo "<label>{$strPassword}:<br /><input id='password' ";
     echo "name='password' size='28' type='password' /></label><br />";
     echo "<input type='hidden' name='page' value='$page' />";
     echo "<input type='submit' value='{$strLogIn}' /><br />";
     echo "<br /><a href='forgotpwd.php'>{$strForgottenDetails}</a>";
-    if ($CONFIG['portal'] AND $CONFIG['portal_kb_enabled'] == 'Public')
+    if ($CONFIG['kb_enabled'] AND $CONFIG['portal'] AND $CONFIG['portal_kb_enabled'] == 'Public')
     {
         echo "<br /><a href='portal/kb.php'>{$strKnowledgeBase}</a>";
     }

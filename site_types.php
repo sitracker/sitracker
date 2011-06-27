@@ -11,9 +11,10 @@
 // Author: Paul Heaney <paul[at]sitracker.org>
 //
 
-$permission = 56; // Add software
-
 require ('core.php');
+
+$permission = PERM_SKILL_ADD; // Add software - most bizarro permission ever, why add software? BUG Mantis 1629 TODO
+
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -34,8 +35,8 @@ if (empty($mode))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        echo "<table class='vertical' align='center'>";
-        echo "<tr><th>{$strSiteType}</th><th>{$strOperation}</th></tr>";
+        echo "<table align='center'>";
+        echo "<tr><th>{$strSiteType}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
         while ($obj = mysql_fetch_object($result))
         {
@@ -49,7 +50,7 @@ if (empty($mode))
     }
     else
     {
-        echo "<p align='center'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?mode=new'>{$strNewSiteType}</a></p>";
 }
@@ -82,7 +83,7 @@ elseif ($mode == 'edit')
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        list($typename) = mysql_fetch_assoc($result);
+        list($typename) = mysql_fetch_row($result);
     }
     $form = new Form("sitetypes", $strEdit, $dbSiteTypes, "update", $strEditSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);

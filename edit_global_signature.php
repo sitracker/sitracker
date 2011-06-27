@@ -40,7 +40,7 @@ function delete_signature($sig_id)
     exit;
 }
 
-$permission = 43; // Edit global signature
+$permission = PERM_GLOBALSIG_EDIT; // Edit global signature
 
 
 require ('core.php');
@@ -99,7 +99,7 @@ elseif (empty($action))
     echo "<p align='center'><a href='edit_global_signature.php?action=new'>{$strNew}</a></p>";
 
     echo "<table align='center' width='60%'>";
-    echo "<tr><th>{$strGlobalSignature}</th><th>{$strOperation}</th></tr>";
+    echo "<tr><th>{$strGlobalSignature}</th><th>{$strActions}</th></tr>";
     while ($signature = mysql_fetch_object($result))
     {
         $id = $signature->id;

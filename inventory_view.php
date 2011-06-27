@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
+$permission = PERM_NOT_REQUIRED;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -46,7 +46,7 @@ if (is_numeric($_GET['id']))
     {
         $row = mysql_fetch_object($result);
         if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-             $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+             $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
         {
             html_redirect('inventory.php', FALSE);
             exit;
@@ -79,7 +79,7 @@ if (is_numeric($_GET['id']))
             echo contact_realname($row->contactid)."</a></p>";
         }
         echo "<p><strong>{$strUsername}:</strong> ";
-        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], 22)) OR
+        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN)) OR
             ($row->privacy == 'private' AND $row->createdby != $sit[2]))
         {
             echo "<strong>{$strWithheld}</strong>";
@@ -90,7 +90,7 @@ if (is_numeric($_GET['id']))
         }
         echo "</p>";
         echo "<p><strong>{$strPassword}:</strong> ";
-        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], 22)) OR
+        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN)) OR
             ($row->privacy == 'private' AND $row->createdby != $sit[2]))
         {
             echo "<strong>{$strWithheld}</strong>";
@@ -117,7 +117,7 @@ if (is_numeric($_GET['id']))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }

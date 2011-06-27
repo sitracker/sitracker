@@ -52,7 +52,7 @@ $CONFIG['db_tableprefix'] = '';
 $CONFIG['home_country'] = 'UNITED KINGDOM';
 
 $CONFIG['support_email'] = 'support@localhost';
-// support_manager_email is obsolete as of v3.45, use support_manager instead
+// DEPRECATED support_manager_email is obsolete as of v3.45, use support_manager instead
 $CONFIG['support_manager_email'] = 'support_manager@localhost';
 // The user ID of the person who is in charge of your support service
 $CONFIG['support_manager'] = 1;
@@ -368,10 +368,10 @@ $CONFIG['default_chart'] = 'OriginalChart';
 $CONFIG['user_config_defaults'] = array('show_emoticons' => TRUE, 'incident_refresh' => 60, 'incident_log_order' => 'desc', 'show_table_legends' => TRUE);
 
 // Associative array of contact config variables and their settings
-$CONFIG['contact_config_defaults'] = array('feedback_enabled' => TRUE);
+$CONFIG['contact_config_defaults'] = array('feedback_enabled' => 'yes');
 
 // Associative array of site config variables and their settings
-$CONFIG['site_config_defaults'] = array('feedback_enabled' => TRUE);
+$CONFIG['site_config_defaults'] = array('feedback_enabled' => 'yes');
 
 
 // Allow outbound email

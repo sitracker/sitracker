@@ -10,7 +10,7 @@
 //
 
 
-$permission = 34; // Reopen Incidents
+$permission = PERM_INCIDENT_REOPEN; // Reopen Incidents
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');

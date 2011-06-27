@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 44; // Publish Files to FTP site
+$permission = PERM_FILE_PUBLISH; // Publish Files to FTP site
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -34,7 +34,7 @@ $randomdir = dechex(crc32($randvala.$randvalb));
 
 $filesize = filesize($source_file);
 
-$pretty_file_size = readable_file_size($filesize);
+$pretty_file_size = readable_bytes_size($filesize);
 
 // FIXME This temp variable name can't be right can it?  INL
 if (!isset($temp_directory))

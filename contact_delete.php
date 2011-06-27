@@ -13,7 +13,7 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   31Oct05
 
-$permission = 55; // Delete Sites/Contacts
+$permission = PERM_SITE_DELETE; // Delete Sites/Contacts
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -108,6 +108,7 @@ if (empty($process))
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>";
+            echo "<p align='center'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
         else
         {
@@ -117,10 +118,11 @@ if (empty($process))
             echo "<input type='hidden' name='newcontact' value='' />";  // empty
             echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<input type='hidden' name='process' value='true' />";
-            echo "<p align='center'>";
+            echo "<p class='formbuttons'>";
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>\n";
+            echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

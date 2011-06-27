@@ -14,7 +14,7 @@
 
 
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required FIXME perhaps use search permission here?
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

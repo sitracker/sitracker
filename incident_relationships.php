@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 61; // View Incident Details
+$permission = PERM_INCIDENT_VIEW; // View Incident Details
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -76,13 +76,14 @@ switch ($action)
             }
             else
             {
-                echo "<br /><p class='error' align='center'>";
-                echo "{$strADuplicateAlreadyExists}</p>";
+                echo "<br />";
+                echo user_alert($strADuplicateAlreadyExists);
             }
         }
         else
         {
-            echo "<br /><p class='error' align='center'>".sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid))."</p>";
+            echo "<br />";
+            echo user_alert(sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid), E_USER_NOTICE));
         }
         break;
     case 'delete':
@@ -157,7 +158,8 @@ echo "<br /><hr/>";
 echo "\n<form action='incident_relationships.php' method='post'>";
 echo "<h2>".icon('new', 32)." {$strNew}</h2>";
 echo "<table summary='Add a relationship' class='vertical'>";
-echo "<tr><th>{$strIncidentID}</th><td><input type='text' name='relatedid' size='10' /></td></tr>\n";
+echo "<tr><th>{$strIncidentID}</th><td><input type='text' name='relatedid' size='10' class='required' /> ";
+echo "<span class='required'>{$strRequired}</span></td></tr>\n";
 // TODO v3.24 Child/Parent incident relationships
 // echo "<tr><th>Relationship to this incident</th><td>";
 // echo "<select name='relation'>";
@@ -170,7 +172,7 @@ echo "</table>\n";
 echo "<input type='hidden' name='action' value='add' />";
 echo "<input type='hidden' name='id' value='{$id}' />";
 echo "<input type='hidden' name='relation' value='sibling' />";
-echo "<p><input type='submit' value='{$strNew}' /></p>";
+echo "<p><input type='submit' value='{$strSave}' /></p>";
 echo "</form>";
 
 include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');

@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 62; // View incident attachments
+$permission = PERM_INCIDENT_VIEW_ATTACHMENT; // View incident attachments
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -90,7 +90,7 @@ function draw_file_row($file, $incidentid, $path)
         $url = "{$CONFIG['attachment_webpath']}{$incidentid}/".str_replace('+','%20',urlencode($filename));
     }
     $filesize = filesize($file);
-    $file_size = readable_file_size($filesize);
+    $file_size = readable_bytes_size($filesize);
 
     $mime_type = mime_type($file);
 
@@ -251,7 +251,7 @@ echo "<input type='hidden' name='action' value='{$selectedaction}' />";
 echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$att_max_filesize}' />";
 // maxfilesize='{$att_file_size}'
 echo "<input class='textbox' type='file' name='attachment' size='30' /> ";
-echo "<input type='submit' value=\"{$strAttachFile}\" /> (&lt;".readable_file_size($att_max_filesize).")";
+echo "<input type='submit' value=\"{$strAttachFile}\" /> (&lt;".readable_bytes_size($att_max_filesize).")";
 echo "</form>";
 echo "</div>";
 

@@ -11,7 +11,7 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
 
-$permission = 0; // not required
+$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -196,7 +196,7 @@ if ($countskills > 0 AND $countusers > 0)
 }
 else
 {
-    echo "<p align='center'>{$strNothingToDisplay}</p>";
+    echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

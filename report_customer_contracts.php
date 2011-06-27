@@ -14,7 +14,7 @@
 // Comments: List supported contacts by contract
 
 
-$permission = 19; /* View Maintenance Contracts */
+$permission = PERM_CONTRACT_VIEW; /* View Maintenance Contracts */
 $title = $strSupportedContactsbySite;
 
 require ('core.php');

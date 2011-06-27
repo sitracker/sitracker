@@ -34,7 +34,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result))
 {
     echo "<table align='center'>";
-    echo "<tr><th>{$GLOBALS['strType']}</th><th>{$GLOBALS['strUser']}</th><th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strStatus']}</th><th>{$GLOBALS['strOperation']}</th></tr>\n";
+    echo "<tr><th>{$GLOBALS['strType']}</th><th>{$GLOBALS['strUser']}</th><th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strStatus']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
     $shade = 'shade1';
     while ($dates = mysql_fetch_object($result))
     {

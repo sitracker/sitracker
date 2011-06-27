@@ -11,7 +11,7 @@
 
 // Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>, Tom Gerrard
 
-$permission = 54; // View KB
+$permission = PERM_KB_VIEW; // View KB
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -35,7 +35,7 @@ if (empty($id))
 }
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>".icon('kb', 32)." {$strKnowledgeBaseArticle}</h2>";
+echo "<h2>".icon('kb', 32, $strKnowledgeBaseArticle)." {$strKnowledgeBaseArticle}</h2>";
 echo kb_article($id);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

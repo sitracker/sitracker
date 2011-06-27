@@ -21,7 +21,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 if ($CONFIG['debug']) echo "<!-- Support Incidents Table -->";
 
-echo "<table align='center' style='width:95%;'>";
+echo "<table align='center'>";
 echo "<col width='7%'></col>";
 echo "<col width='22%'></col>";
 echo "<col width='17%'></col>";
@@ -181,7 +181,7 @@ while ($incidents = mysql_fetch_object($result))
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-                if ($CONFIG['force_critical_flag'] AND $incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
+                if ($CONFIG['force_critical_flag'] AND $incidents->priority == PRIORITY_CRITICAL) $class = 'critical';  // Force critical incidents to be critical always
             }
             elseif ($slaremain < 0)
             {
@@ -206,7 +206,7 @@ while ($incidents = mysql_fetch_object($result))
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-                if ($incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
+                if ($incidents->priority == PRIORITY_CRITICAL) $class = 'critical';  // Force critical incidents to be critical always
             }
             elseif ($slaremain < 0)
             {
@@ -216,6 +216,10 @@ while ($incidents = mysql_fetch_object($result))
             {
                 $class = 'shade1';
                 $explain = '';  // No&nbsp;Target
+            }
+            if ($incidents->status == STATUS_CLOSING OR $incidents->status == STATUS_CUSTOMER)
+            {
+                $class = 'idle';
             }
             $explain = 'No Action Set';
             break;
@@ -316,7 +320,7 @@ while ($incidents = mysql_fetch_object($result))
     }
 //     $blinktime = (time() - ($servicelevel->initial_response_mins * 60));
     //  AND $incidents->lastupdated <= $blinktime
-    if ($CONFIG['force_critical_flag'] == FALSE AND $incidents->priority == 4)
+    if ($CONFIG['force_critical_flag'] == FALSE AND $incidents->priority == PRIORITY_CRITICAL)
     {
         echo "<strong class='critical'>".priority_name($incidents->priority)."</strong>";
     }
@@ -327,7 +331,7 @@ while ($incidents = mysql_fetch_object($result))
     echo "</td>\n";
 
     echo "<td align='center'>";
-    if ($incidents->status == 5 AND $incidents->towner == $sit[2])
+    if ($incidents->status == STATUS_COLLEAGUE AND $incidents->towner == $sit[2])
     {
         echo "<strong>{$strAwaitingYourResponse}</strong>";
     }
@@ -336,7 +340,7 @@ while ($incidents = mysql_fetch_object($result))
         echo incidentstatus_name($incidents->status);
     }
 
-    if ($incidents->status == 2)
+    if ($incidents->status == STATUS_CLOSED)
     {
         echo "<br />".closingstatus_name($incidents->closingstatus);
     }
@@ -432,23 +436,32 @@ while ($incidents = mysql_fetch_object($result))
 }
 echo "</table><br />\n";
 
-if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
+// Show legend on action needed all open  queue and since they use multiple colours
+// the other queues use one colour
+if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE' AND ($queue == 1 OR $queue == 3))
 {
     echo "<br />\n<table class='legend'><tr>";
     echo "<td class='shade2'>{$strSLA}: {$strOK}</td>";
     echo "<td class='notice'>{$strSLA}: {$strNotice}</td>";
     echo "<td class='urgent'>{$strSLA}: {$strUrgent}</td>";
     echo "<td class='critical'>{$strSLA}: {$strCritical}</td>";
+    if ($queue == 3)
+    {
+        echo "<td class='idle'>{$strWaiting}</td>";
+    }
     echo "</tr></table>";
 }
 
-if ($rowcount != 1)
+if ($user != 'all')
 {
-    echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>{$rowcount}</strong>")."</p>";
-}
-else
-{
-    echo "<p align='center'>".sprintf($strSingleIncident, "<strong>{$rowcount}</strong>")."</p>";
+    if ($rowcount != 1)
+    {
+        echo "<p align='center'>".sprintf($strIncidentsMulti, "<strong>{$rowcount}</strong>")."</p>";
+    }
+    else
+    {
+        echo "<p align='center'>".sprintf($strSingleIncident, "<strong>{$rowcount}</strong>")."</p>";
+    }
 }
 
 if ($CONFIG['debug']) echo "<!-- End of Support Incidents Table -->\n";

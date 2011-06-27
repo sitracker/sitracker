@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>, Tom Gerrard
 // 7Oct02 INL  Added support for maintenanceid to be put into incidents table
 
-$permission = 5;
+$permission = PERM_INCIDENT_ADD;
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -263,7 +263,7 @@ elseif ($action == 'findcontact')
 
         if (empty($str_prefered) AND empty($str_alternative))
         {
-            echo "<p class='error'>{$strNothingToDisplay}</p>";
+            echo user_alert($strNothingToDisplay, E_USER_NOTICE);
         }
 
         // Select the contact from the list of contacts as well
@@ -572,7 +572,7 @@ elseif ($action == 'incidentform')
     echo help_link('VisibleToCustomer')."<br />";
     echo "<label><input name='send_email' type='checkbox' checked='checked' /> ";
     echo "{$strSendOpeningEmailDesc}</label><br />";
-    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", 1, $maxprority, FALSE)." </td></tr>";
+    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", PRIORITY_LOW, $maxprority, FALSE)." </td></tr>";
     echo "</table>\n";
     echo "<input type='hidden' name='win' value='{$win}' />";
     echo "<p align='center'><input name='submit' type='submit' value='{$strNewIncident}' /></p>";
@@ -650,7 +650,7 @@ elseif ($action == 'assign')
         // check for blank priority
         if ($priority == 0)
         {
-            $priority = 1;
+            $priority = PRIORITY_LOW;
         }
 
         // check for blank type
@@ -907,10 +907,10 @@ elseif ($action == 'assign')
             echo "<tr>
             <th colspan='5'></th>
             <th align='center'>{$strActionNeeded} / {$strOther}</th>";
-            echo "<th align='center'>".priority_icon(4)."</th>";
-            echo "<th align='center'>".priority_icon(3)."</th>";
-            echo "<th align='center'>".priority_icon(2)."</th>";
-            echo "<th align='center'>".priority_icon(1)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
 
             echo "<th></th>";
             echo "</tr>";
@@ -927,7 +927,7 @@ elseif ($action == 'assign')
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
                     echo ">{$strAssignTo}</a></td>";
                 }
-                elseif (user_permission($sit[2], 40) OR $userobj->id == $sit[2])
+                elseif (user_permission($sit[2], PERM_INCIDENT_FORCE_ASSIGN) OR $userobj->id == $sit[2])
                 {
                     echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
                     // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";

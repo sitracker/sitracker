@@ -8,7 +8,7 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
+$permission = PERM_NOT_REQUIRED;
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -38,6 +38,7 @@ $siteid = clean_int($_REQUEST['site']);
 
 if (isset($_POST['submit']))
 {
+    $errors = 0;
     $post = cleanvar($_POST);
 
     if ($post['active'] == 'on')
@@ -47,6 +48,23 @@ if (isset($_POST['submit']))
     elseif (isset($post['active']))
     {
         $post['active'] = 0;
+    }
+
+    if (empty($post['name']))
+    {
+        $errors++;
+        $_SESSION['formerrors']['inventory_edit']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName));
+    }
+    if (empty($post['site']))
+    {
+        $errors++;
+        $_SESSION['formerrors']['inventory_edit']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
+    }
+
+    if ($errors > 0)
+    {
+        html_redirect("inventory_edit.php?id={$siteid}", FALSE);
+        exit;
     }
 
     $sql = "UPDATE `{$dbInventory}` ";
@@ -96,12 +114,14 @@ else
     $row = mysql_fetch_object($result);
 
     if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-            $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+            $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
     {
         html_redirect('inventory.php', FALSE);
         exit;
     }
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo show_form_errors('inventory_edit');
+    clear_form_errors('inventory_edit');
     echo "<h2>".icon('edit', 32)." {$strEdit}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
@@ -126,7 +146,7 @@ else
     echo "<td><input name='address' value='{$row->address}' /></td></tr>";
 
     if (!is_numeric($id)
-        OR (($row->privacy == 'adminonly' AND user_permission($sit[2], 22))
+        OR (($row->privacy == 'adminonly' AND user_permission($sit[2], PERM_ADMIN))
             OR ($row->privacy == 'private' AND ($row->createdby == $sit[2])) OR $row->privacy == 'none'))
     {
         echo "<tr><th>{$strUsername}</th>";
@@ -140,7 +160,7 @@ else
     echo bbcode_toolbar('inventorynotes');
     echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>{$row->notes}</textarea></td></tr>";
 
-    if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
+    if (($row->privacy == 'adminonly' AND user_permission($sit[2], PERM_ADMIN)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
         $row->privacy == 'none')
     {

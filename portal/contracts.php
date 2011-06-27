@@ -59,7 +59,7 @@ elseif ($id != 0 AND $action == 'add' AND intval($_POST['contactid'] != 0))
 
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
-echo "<h2>".icon('contract', 32)." {$GLOBALS['strContract']}</h2>";
+echo "<h2>".icon('contract', 32, $strContract)." {$strContract}</h2>";
 
 echo contract_details($id, 'external');
 

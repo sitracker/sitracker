@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 24; // Add Product
+$permission = PERM_PRODUCT_ADD; // Add Product
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -80,16 +80,16 @@ else
     // Add New
     $errors = 0;
 
+    if ($vendor == '' OR $vendor == "0")
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_product']['vendor'] = sprintf($strFieldMustNotBeBlank, $strVendor);
+    }
     // check for blank name
     if ($name == '')
     {
         $errors++;
         $_SESSION['formerrors']['new_product']['name'] = sprintf($strFieldMustNotBeBlank, $strProduct);
-    }
-    if ($vendor == '' OR $vendor == "0")
-    {
-        $errors++;
-        $_SESSION['formerrors']['new_product']['vendor'] = sprintf($strFieldMustNotBeBlank, $strVendor);
     }
     // add product if no errors
     if ($errors == 0)

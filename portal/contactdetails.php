@@ -178,7 +178,7 @@ else
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         exit;
     }
-    echo "<h2>".icon('contact', 32)." {$user->forenames} {$user->surname}";
+    echo "<h2>".icon('contact', 32, $strContact)." {$user->forenames} {$user->surname}";
     echo ' '.gravatar($user->email, 32);
     echo "</h2>";
 
@@ -195,8 +195,6 @@ else
 
     }
     echo "<tr><th>{$strForenames}</th><td>";
-
-
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_forenames']))
     {
         echo "<input type='hidden' name='forenames' value='{$user->forenames}' />".$user->forenames;
@@ -205,6 +203,7 @@ else
     {
         echo "<input class='required' name='forenames' value='{$user->forenames}' />";
     }
+    echo " <span class='required'>{$strRequired}</span>\n";
     echo "</td></tr>\n";
     echo "<tr><th>{$strSurname}</th><td>";
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_surname']))
@@ -230,7 +229,7 @@ else
     }
     else
     {
-        echo "<input class='required' name='phone' value='{$user->phone}' />";
+        echo "<input name='phone' value='{$user->phone}' />";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strMobile}</th><td>";
@@ -268,12 +267,13 @@ else
     if ( $_SESSION['contact_source'] == 'sit' )
     {
         echo "<tr><th>{$strNewPassword}</th><td><input name='newpassword' value='' type='password' /></td></tr>\n";
-        echo "<tr><th>{$strRepeat}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
+        echo "<tr><th>{$strConfirmNewPassword}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
     }
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttoms'>";
     echo "<input type='hidden' name='id' value='{$id}' />";
-    echo "<input type='submit' value='{$strUpdate}' /></p></form>";
+    echo "<input type='reset' value='{$strReset}' /> ";
+    echo "<input type='submit' value='{$strSave}' /></p></form>";
 
     echo "<br />".contracts_for_contacts_table($id, 'external');
 
@@ -282,8 +282,8 @@ else
         echo "<h4>{$strAssociateContactWithContract}</h4>";
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
-        echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, TRUE, FALSE, $sit[2])."<br />";
-        echo "<input type='submit' name='add' value='{$strNew}' /></p></form>";
+        echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, FALSE, $sit[2])."<br />";
+        echo "<input type='submit' name='add' value='{$strSave}' /></p></form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

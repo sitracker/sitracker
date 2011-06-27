@@ -1,3 +1,4 @@
+/* SiT! users: if you want to change the look & feel of SiT! DON'T EDIT THIS FILE, instead read:   http://sitracker.org/wiki/Creating_Themes */
 @import 'sit.css.php';
 
 /* Base styles*/
@@ -131,10 +132,13 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 #aboutsit
 {
+/*   border: 1px solid #ccc; */
+  width: 900px;
+  margin: auto;
   text-align: center;
 }
 #aboutsit img { margin-left: auto; margin-right: auto; }
-
+#aboutbox { border-width: 0px 1px 1px 1px; border-style: solid; border-color: #185594; /*position: relative; top: -16px;*/ padding-top: 16px; padding-bottom: 26px; }
 
 #mainframe { margin: 0px 1em; }
 
@@ -295,6 +299,7 @@ div#menu li:hover li ul,
     background-position: 100% 5px;
 }
 
+.actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
 
 th:hover { background: #E9E9E9; }
 
@@ -372,7 +377,9 @@ div.window table { width: 100%; }
 em.important, strong.important { color: red; }
 option.disable { color: red; }
 option.enable { color: #00AA00; }
-option.seperator { border-top: 1px solid black; }
+option.separator { border-top: 1px solid black; }
+
+span.separator { color: #999; }
 
 /* Information and Errors */
 h2.error,h3.error,h4.error,h5.error,p.error { color: red; }
@@ -432,6 +439,8 @@ strong.info,em.info,u.info,span.info
 
 p.alert { border-style: inset; }
 
+div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
+
 p.trigger
 {
   background-image: url('../images/icons/oxygen/16x16/trigger.png');
@@ -472,7 +481,7 @@ p.trigger
 }
 
 #incidentqueues form { text-align: center; }
-
+#incidentqueues table { width: 95%; }
 
 .helplink { vertical-align: super; color: #555; margin-left: 2px; font-size: 10px; position: static;}
 .helplink a { text-decoration: none; cursor: help; position: relative; color: #CC0000; z-index: 100;}
@@ -557,7 +566,7 @@ span.required
   color: red;
 }
 
-input.required, select.required{
+input.required, select.required, textarea.required {
   background-color: #FFD8DE;
 }
 
@@ -802,12 +811,6 @@ table.legend
     font-weight: bold;
 }
 
-.legend td
-{
-    width: 25%;
-}
-
-
 .percentcontainer {
     width: 100px; border: 1px solid #ccc; background-color: white; height: 12px;
 }
@@ -1044,7 +1047,7 @@ margin: 0 auto;
 
 }
 
-select .initialresponse, .problemdef, .actionplan, .solution 
+select .initialresponse, .problemdef, .actionplan, .solution
 {
 	text-indent: 15px;
     height: 17px;

@@ -3,7 +3,7 @@
 
 
 body { background: url(../kriplyana/bg_shadow.jpg) no-repeat center 5px;}
-#masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; }
+#masthead { background-color: #4B5C94; background-image: none; color: #8F9DC5; min-height: 50px; }
 #masthead a { color: #EAF4F9;}
 #masthead a:hover {color: white; }
 #masthead {background-image: url(../kriplyana/sit4_swirl3.png); background-position: top left; background-repeat: no-repeat;}
@@ -139,7 +139,7 @@ a em { font-style: normal; text-decoration: underline; color: #224488; }
 
 a.info:hover span strong { color: #FFF;}
 
-input.required, select.required{
+input.required, select.required, textarea.required {
   background-color: #FFEDED;
 }
 span.required { color: #A12607; }
@@ -182,7 +182,7 @@ div#statusbar strong { color:#fff;}
 #userstatus_dropdown option { color: #8F9DC5;}
 #userstatus_dropdown option.enable { color: #00C000; }
 #userstatus_dropdown option.disable { color: #C00000; }
-#userstatus_dropdown option.seperator { border-top: 1px solid #8F9DC5; }
+#userstatus_dropdown option.separator { border-top: 1px solid #8F9DC5; }
 
 #navmenu
 {
@@ -215,6 +215,9 @@ p.error, span.error, p.error a, error.a:link
 }
 p.alert { color: #A12607; background-color: #FFEDED; border: 1px solid #A12607; }
 p.alert a { color: #A12607; background-color: transparent; }
+p.info { background-color: transparent; border:none; color: #4B5B94; }
+
+#noticearea p.info { border: 1px solid #4B5B94; background-color: #F6F8F9; }
 
 .tabcontainer ul li
 {

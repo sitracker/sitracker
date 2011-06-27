@@ -14,7 +14,7 @@
 // Removes a product
 
 
-$permission = 65;  // Delete products
+$permission = PERM_PRODUCT_DELETE;  // Delete products
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 

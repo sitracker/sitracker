@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 
-$permission = 32;  // Edit Supported Products
+$permission = PERM_SUPPORTED_PRODUCT_EDIT;  // Edit Supported Products
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
@@ -40,7 +40,7 @@ if (empty($action) || $action == "showform")
     {
         echo "<tr><th>{$strContract} ".icon('contract', 16)."</th>";
         echo "<td width='400'>";
-        maintenance_drop_down("maintid", 0, '', '', FALSE, TRUE);
+        echo maintenance_drop_down("maintid", 0, '', '', TRUE, TRUE)." <span class='required'>{$strRequired}</span>";
         echo "</td></tr>";
     }
     else
@@ -58,7 +58,7 @@ if (empty($action) || $action == "showform")
     if (empty($contactid))
     {
         echo "<tr><th>{$strContact} ".icon('contact', 16)."</th>";
-        echo "<td>".contact_drop_down("contactid", 0, TRUE)."</td></tr>";
+        echo "<td>".contact_drop_down("contactid", 0, TRUE, TRUE)." <span class='required'>{$strRequired}</span></td></tr>";
     }
     else
     {
@@ -67,8 +67,11 @@ if (empty($action) || $action == "showform")
         echo "</td></tr>";
     }
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
+    echo "<p align='center'>";
+    echo "<input name='submit' type='reset' value='{$strReset}' /> ";
+    echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
+    echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -123,7 +126,7 @@ else if ($action == "new")
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo $errors_string;
 
-        echo "<p align='center'><a href='contract_details.php?id={$maintid}'>Return</a></p>";
+        echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }

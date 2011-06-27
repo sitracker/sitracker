@@ -1,5 +1,5 @@
 <?php
-// 
+//
 // functions.inc.php - Function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
@@ -350,12 +350,14 @@ function db_read_column($column, $table, $id)
 
 /**
  * @author Ivan Lucas
+ * @note: Requires permission names to be i18n strings in the database table
  */
 function permission_name($permissionid)
 {
     global $dbPermissions;
     $name = db_read_column('name', $dbPermissions, $permissionid);
     if (empty($name)) $name = $GLOBALS['strUnknown'];
+    else $name = $GLOBALS["{$name}"];
     return $name;
 }
 
@@ -526,7 +528,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
                     preg_match("/Table '(.*)' doesn't exist/", $errstr))
                 {
                     echo "<p class='tip'>The SiT schema may need updating to fix this problem.";
-                    if (user_permission($sit[2], 22)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
+                    if (user_permission($sit[2], PERM_ADMIN)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
                     echo "</p>";
                 }
 
@@ -721,6 +723,28 @@ function show_dashboard_component($row, $dashboardid)
     {
         $obj = mysql_fetch_object($result);
         dashboard_do("dashboard_".$obj->name, 'db_'.$row, $dashboardid);
+    }
+}
+
+
+/**
+ * Checks to see if a dashlet is installed
+ * @author Paul Heaney
+ * @param String $dashlet The name of the dashlet
+ * @return boolean True if installed, false otherwise
+ */
+function is_dashlet_installed($dashlet)
+{
+    $sql = "SELECT id FROM `{$GLOBALS['dbDashboard']}` WHERE name = '{$dashlet}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) == 1)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
     }
 }
 
@@ -1031,7 +1055,7 @@ function database_schema_version()
  * Populates $_SESSION['syslang], system language strings
  *
  * @author Kieran Hogg
- * @note See also populate_syslang2() which is a copy of this function
+ * @sa See also populate_syslang2() which is a copy of this function
  */
 function populate_syslang()
 {
@@ -1055,14 +1079,27 @@ function populate_syslang()
             $fh = fopen($file, "r");
             $theData = fread($fh, filesize($file));
             fclose($fh);
-            $lines = $nativelines += explode("\n", $theData);
+            $lines = explode("\n", $theData);
         }
         else
         {
-            trigger_error("File specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
+            trigger_error("Language file specified in \$CONFIG['default_i18n'] can't be found", E_USER_ERROR);
             $lines = $nativelines;
         }
 
+       foreach ($nativelines as $values)
+        {
+            $badchars = array("$", "\"", "\\", "<?php", "?>");
+            $values = trim(str_replace($badchars, '', $values));
+            if (mb_substr($values, 0, 3) == "str")
+            {
+                $vars = explode("=", $values);
+                $vars[0] = trim($vars[0]);
+                $vars[1] = trim(substr_replace($vars[1], "",-2));
+                $vars[1] = substr_replace($vars[1], "",0, 1);
+                $SYSLANG[$vars[0]] = $vars[1];
+            }
+        }
         foreach ($lines as $values)
         {
             $badchars = array("$", "\"", "\\", "<?php", "?>");
@@ -1076,6 +1113,7 @@ function populate_syslang()
                 $SYSLANG[$vars[0]] = $vars[1];
             }
         }
+
         $_SESSION['syslang'] = $SYSLANG;
     }
     else
@@ -1109,7 +1147,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
         if (sizeof($data) == 1)
         {
-            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
+            $html .= "<tr><td rowspan='{$rows}'>" . user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE) . "</td></tr>";
         }
         else
         {
@@ -1205,18 +1243,19 @@ if (is_array($CONFIG['plugins']))
 {
     foreach ($CONFIG['plugins'] AS $plugin)
     {
-        $pllugin = trim($plugin);
+        $plugin = trim($plugin);
         // Remove any dots
         $plugin = str_replace('.','',$plugin);
         // Remove any slashes
         $plugin = str_replace('/','',$plugin);
 
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
+        $pluginfilename = APPLICATION_PLUGINPATH . $plugin . DIRECTORY_SEPARATOR . "{$plugin}.php";
         if ($plugin != '')
         {
-            if (file_exists(APPLICATION_PLUGINPATH . "{$plugin}.php"))
+            if (file_exists($pluginfilename))
             {
-                include (APPLICATION_PLUGINPATH . "{$plugin}.php");
+                include ($pluginfilename);
                 // Load i18n if it exists
                 if (file_exists($plugini18npath))
                 {
@@ -1225,6 +1264,13 @@ if (is_array($CONFIG['plugins']))
                         AND $_SESSION['lang'] != $CONFIG['default_i18n'])
                     {
                         @include ("{$plugini18npath}{$_SESSION['lang']}.inc.php");
+                    }
+
+                    // TODO We should parse the folder for other languages rather than just include
+                    // If syslang and user lang isn't found we fall back to en-GB
+                    if (!file_exists("{$plugini18npath}{$CONFIG['default_i18n']}.inc.php") AND (!file_exists("{$plugini18npath}{$_SESSION['lang']}.inc.php")))
+                    {
+                        @include ("{$plugini18npath}en-GB.inc.php");
                     }
                 }
             }

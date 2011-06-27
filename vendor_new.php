@@ -11,7 +11,7 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 56; // Add Software
+$permission = PERM_SKILL_ADD; // Add Software
 
 require ('core.php');
 require (APPLICATION_LIBPATH.'functions.inc.php');
@@ -30,7 +30,7 @@ if (empty($submit))
 
     echo show_form_errors('new_vendor');
     clear_form_errors('new_vendor');
-    echo "<h2>".icon('newuser', 32)." {$strNewVendor}</h2>";
+    echo "<h2>" . icon('vendor', 32, $strVendors) . " {$strNewVendor}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
     echo "<table align='center' class='vertical'>";
     echo "<tr><th>{$strVendorName}</th><td><input maxlength='50' name='name' size='30' class='required'> <span class='required'>{$strRequired}</span></td></tr>\n";
@@ -39,7 +39,7 @@ if (empty($submit))
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='vendor_edit.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p align='center'><a href='vendors.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
@@ -53,7 +53,7 @@ else
     if ($name == '')
     {
         $errors++;
-        $_SESSION['formerrors']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_vendor']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
     }
 
     // add product if no errors
@@ -65,11 +65,12 @@ else
 
         if (!$result)
         {
-            echo "<p class='error'>{$strAdditionFail}</p>\n";
+            html_redirect('vendor_edit.php', FAIL, $strAdditionFail);
+            exit;
         }
         else
         {
-            $id=mysql_insert_id();
+            $id = mysql_insert_id();
             journal(CFG_LOGGING_DEBUG, 'Vendor Added', "Vendor {$id} was added", CFG_JOURNAL_DEBUG, $id);
             html_redirect("vendor_edit.php");
         }

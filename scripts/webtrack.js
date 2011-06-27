@@ -216,14 +216,17 @@ function copySelected(fromObject, toObject)
 {
     for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
-        if (fromObject.options[i].selected)
+        if (fromObject.options[i].selected && fromObject.options[i].value != '')
         {
             addOption(toObject,fromObject.options[i].text, fromObject.options[i].value);
         }
     }
     for (var i = fromObject.options.length - 1; i > -1; i--)
     {
-        if (fromObject.options[i].selected) deleteOption(fromObject,i);
+        if (fromObject.options[i].selected) 
+        {
+            deleteOption(fromObject,i);
+        }
     }
 }
 
@@ -239,13 +242,37 @@ function copyAll(fromObject, toObject)
 {
     for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
-        addOption(toObject, fromObject.options[i].text, fromObject.options[i].value);
+        if ( fromObject.options[i].value != '')
+        {
+            addOption(toObject, fromObject.options[i].text, fromObject.options[i].value);
+        }
     }
     for (var i = fromObject.options.length - 1; i > -1; i--)
     {
-        deleteOption(fromObject, i);
+        if ( fromObject.options[i].value != '')
+        {
+            deleteOption(fromObject, i);
+        }
     }
 }
+
+
+/**
+ * Delete options with blank values from select tag
+ * @author Ivan Lucas
+ * @param object HTML select element
+ */
+function deleteBlankOption(fromObject)
+{
+    for (var i = 0, l = fromObject.options.length; i < l; i++)
+    {
+        if (fromObject.options[i].value == '')
+        {
+            deleteOption(fromObject,i);
+        }
+    }
+}
+
 
 /**
  * @author Unknown ???
