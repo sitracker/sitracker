@@ -1,0 +1,9 @@
+<strong>Search Examples</strong><dl> 
+<dt>debian linux</dt><dd>Find incidents that contain at least one of the two words.</dd>
+<dt>+debian +linux</dt><dd>Find incidents that contain both words.</dd>
+<dt>+apple macintosh</dt><dd>Find incidents that contain the word “apple”, but rank incidents higher if they also contain “macintosh”.</dd>
+<dt>+apple -macintosh</dt><dd>Find incidents that contain the word “apple” but not “macintosh”.</dd>
+<dt>+apple ~macintosh</dt><dd>Find incidents that contain the word “apple”, but if the incident also contains the word “macintosh”, rate it lower than if row does not. This is “softer” than a search for '+apple -macintosh', for which the presence of “macintosh” causes the row not to be returned at all.</dd>
+<dt>+linux +(&gt;debian &lt;suse)</dt><dd>Find incidents that contain the words “linux” and “debian”, or “linux” and “debian” (in any order), but rank “linux debian” higher than “linux suse”.</dd>
+<dt>apple*</dt><dd>Find incidents that contain words such as “apple”, “apples”, “applesauce”, or “applet”.</dd>
+<dt>”debian linux”</dt><dd>Find incidents that contain the exact phrase ”debian linux” (for example, incidents that contain ”debian linux is great” but not ”debian is a great linux”). Note that the ” characters that enclose the phrase are operator characters that delimit the phrase. They are not the quotes that enclose the search string itself.</dd></dl>
