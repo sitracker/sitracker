@@ -56,9 +56,9 @@ switch ($_REQUEST['action'])
     break;
 
     case 'new':
-        $title = (icon('reports', 32)." $strFeedbackForms - $strNew");
+        $title = "$strFeedbackForms - $strNew";
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h3>{$strNewFeedbackForm}</h3>";
+        echo "<h3>" . icon('reports', 32, $strNewFeedbackForm) . " {$strNewFeedbackForm}</h3>";
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
         echo "<table summary='Form' align='center' class='vertical'>";
         echo "<tr>";
