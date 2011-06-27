@@ -184,7 +184,7 @@ if ($sit[0] != '')
             $msg2 = "Visit <a href='setup.php'>Setup</a> to update the schema.";
         }
         echo user_alert($msg, E_USER_ERROR);
-        echo usert_alert($msg2, E_USER_NOTICE);
+        echo user_alert($msg2, E_USER_NOTICE);
     }
 
     if (user_permission($sit[2], PERM_ADMIN))
