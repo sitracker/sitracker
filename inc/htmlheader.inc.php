@@ -131,9 +131,9 @@ if ($sit[0] != '')
         echo icon('configure', 12, $strSetYourStatus)."</a></span>";
         echo "<span id='status_drop_down' style='display:none;'>";
         echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
-        echo "</span> | ";
+        echo "</span>";
     }
-    echo " <a href='logout.php'>{$strLogout}</a></div>";
+    echo " | <a href='logout.php'>{$strLogout}</a></div>";
 }
 
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
