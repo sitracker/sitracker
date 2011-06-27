@@ -1398,6 +1398,7 @@ $strPerUnit = 'Per Unit';
 $strPerUser = 'Per User';
 $strPreferred = 'Preferred';
 $strPreReleaseNotice = 'You are using a pre-release version of SiT - %s, Pre-release versions are for you to test, provide feedback and to help with further development and should never be used in a live production environment';
+$strPrevious = 'Previous';
 $strPreviousIncidentOwner = 'Previous Incident Owner';
 $strPreviousUpdate = 'Previous Update';
 $strPreviousXDays = 'Previous %s days';
