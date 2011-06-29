@@ -965,7 +965,7 @@ $strManageFTPFiles = 'Administrer FTP filer';
 $strManageHolidays = 'Administrer ferie';
 $strManagePlugins = 'Administrer tilføjelses programmer';
 $strManageSystemTriggers = 'Administrer system notifikationer';
-$strManageUsers = 'Administer brugere';
+$strManageUsers = 'Administrer brugere';
 $strManageUsersSkills = 'Administrer brugeres færdigheder';
 $strManageYourDashboard = 'Administrer dit Dashboard';
 $strManageYourTriggers = 'Administrer dine notifikationer';
@@ -1365,6 +1365,7 @@ $strRating = 'Klassificering';
 
 $strrd = '.';
 
+$strReadWikiArticleHere = 'Læs den fulde Wiki artikel her';
 $strRealName = 'Fulde navn';
 $strReassign = 'Redeleger';
 $strReassignIncident = 'Redeleger hændelse';
