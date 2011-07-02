@@ -113,27 +113,13 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 /* ID & Class Selectors */
 
-#aboutcreditcontent p { align: center; }
+#checksbox p { text-align: left; }
+#emailtemplatesbox p { text-align: left; }
+#noticetemplatesbox p { text-align: left; }
 
-#actiondetailscontainer p { text-align: left; }
-
-#aboutsit
-{
-/*   border: 1px solid #ccc; */
-  width: 900px;
-  margin: auto;
-  text-align: center;
-}
-#aboutsit img { margin-left: auto; margin-right: auto; }
-#aboutbox { border-width: 0px 1px 1px 1px; border-style: solid; border-color: #185594; /*position: relative; top: -16px;*/ padding-top: 16px; padding-bottom: 26px; }
-
-#apptitle { background: transparent; }
-
-#checksbox { display: none; }
-
-#emailtemplatesbox { display: none; }
-
-#mainframe { margin: 0px 1em; }
+#container p { text-align: left; }
+#actiondetails p { text-align: center; }
+#aboutcreditcontent p { text-align: center; }
 
 #masthead {
   background-image: url('../images/top2.png');
@@ -148,16 +134,26 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
   position: relative; top: 0px;
   position: relative;
 }
-
-#noticetemplatesbox { display: none; }
+#apptitle { background: transparent; }
 
 #personaloptions { float: right; margin-right: 10px; margin-top: 5px; }
+
+#aboutsit
+{
+/*   border: 1px solid #ccc; */
+  width: 900px;
+  margin: auto;
+  text-align: center;
+}
+#aboutsit img { margin-left: auto; margin-right: auto; }
+#aboutbox { border-width: 0px 1px 1px 1px; border-style: solid; border-color: #185594; /*position: relative; top: -16px;*/ padding-top: 16px; padding-bottom: 26px; }
+
+#mainframe { margin: 0px 1em; }
 
 #menumenu { background-color: #000; color: #BBB; text-align: center; padding: 2px 0px 2px 0px; margin-bottom: 5px;}
 #menumenu a { text-decoration: none; color: #FFF; }
 #menumenu a:hover { text-decoration: underline; }
 #menumenu a:active { text-decoration: underline; }
-
 #actionmenu { color: #aaa; margin-bottom: 5px; }
 #actionmenu a:link { color: #E76666; }
 #actionmenu a:hover { background: #203894; color: white; }
@@ -311,8 +307,6 @@ div#menu li:hover li ul,
     background-position: 100% 5px;
 }
 
-#
-
 .actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
 
 th:hover { background: #E9E9E9; }
@@ -355,7 +349,6 @@ h1.critical { background-image: url('../images/top_red.png'); }
 #statusbar a:active { text-decoration: underline; }
 
 
-.notification p { align: center; }
 
 /* Windows (Dashlets) */
 div.windowbox

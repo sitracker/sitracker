@@ -101,7 +101,7 @@ switch ($action)
 
     default:
         echo "<h2>{$strNewAction}</h2>";
-        echo "<div id='actiondetailscontainer'>";
+        echo "<div id='container'>";
         echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
         if ($trigger_mode == 'system')
         {
@@ -135,24 +135,24 @@ switch ($action)
         }
         echo "</select>";
 
-        echo "<div id='emailtemplatesbox'>";
+        echo "<div id='emailtemplatesbox' style='display:none'>";
         echo "<h3>{$strEmailTemplate}</h3> ";
 
         echo "<p>$strChooseWhichTemplate</p>";
         echo email_templates('emailtemplate', $trigger_mode)."</div>";
 
-        echo "<div id='noticetemplatesbox'>";
+        echo "<div id='noticetemplatesbox' style='display:none'>";
 
         echo "<h3>{$strNoticeTemplate}</h3> ";
         echo "<p>{$strChooseWhichTemplate}</p>";
         echo notice_templates('noticetemplate')."</div>";
-        echo "<div id='checksbox'>";
+        echo '<div id="checksbox" style="display:none">';
 
         echo "<h3>{$strConditions}</h3>";
         echo "<p>{$strSomeActionsOptionalConditions}</p>";
         echo "<p>{$strExampleWhenIncidentAssigned} ";
         echo "{$strAddingACondition}</p>" ;
-        echo "</div>";
+        echo "<div id='checkshtml'></div></div>";
         echo "<input type='hidden' name='action' value='save' />";
         echo "<br /><p class='formbuttons'><input type='reset' name='reset' value='{$strReset}' /> ";
         echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
@@ -166,7 +166,7 @@ switch ($action)
     //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
     //         }
     //     }
-        echo "<p class='notification'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p align='center'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 
