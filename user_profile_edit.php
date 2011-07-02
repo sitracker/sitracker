@@ -155,11 +155,30 @@ if (empty($mode))
         $userdisable = FALSE;
     }
 
+    if (user_permission($sit[2], PERM_MYSTATUS_SET)) // edit my status
+    {
+        $userstatus = userstatus_drop_down("status", $user->status, $userdisable);
+        $useraccepting = accepting_drop_down("accepting", $edituserid);
+    }
+    else
+    {
+        $sql = "SELECT us.name FROM `{$dbUserStatus}` AS us, `{$dbUsers}` AS u ";
+        $sql .= "WHERE u.status = us.id AND u.id = '$sit[2]' LIMIT 1";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+        list($userstatus) = mysql_fetch_row($result);
+        $userstatus = $GLOBALS[$userstatus];
+
+        $useraccepting = db_read_column('accepting', $dbUsers, $sit[2]);
+        $useraccepting = str_replace('Yes', $strYes, $useraccepting);
+    }
+
     echo "<tr><th>{$strStatus}</th><td>";
-    echo userstatus_drop_down("status", $user->status, $userdisable);
+    echo $userstatus;
     echo "</td></tr>\n";
     echo "<tr><th>{$strAccepting} {$strIncidents}</th><td>";
-    echo accepting_drop_down("accepting", $edituserid);
+    echo $useraccepting;
     echo "</td></tr>\n";
     echo "<tr><th>{$strMessage} ".help_link('MessageTip')."</th>";
     echo "<td><textarea name='message' rows='4' cols='40'>".strip_tags($user->message)."</textarea></td></tr>\n";

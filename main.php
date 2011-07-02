@@ -12,8 +12,10 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 // This Page is Valid XHTML 1.0 Transitional!
 
-$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
+
+$permission = PERM_NOT_REQUIRED; // not required
+
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

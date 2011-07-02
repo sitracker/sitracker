@@ -23,72 +23,71 @@ Support Incident Tracker (eller SiT!) er en Free Software/Open Source (GPL) web 
 er det navn vi bruger som også kan refereres til et 'support opkald'. 'service forespørgsel' eller 'helpdesk id'.</p>
 <p>Hændelser er typisk refereret til deres reference id, hvad vi kalder 'Hændelses nummer'.  Hændelser har en titel,
 et associeret produkt, kontrakt og kontakt og muligt også andre informationer.</p>
-<p>After an incident is added it is always 'owned' by a SiT! user although the user can reassign this ownership while the
-incident is open.</p>
+<p>Efter en hændelse er tilføjet, "ejes" det er altid af SiT!! brugeren selv, men brugeren kan tildele dette ejerskab mens hændelsen er åben.</p>
 <p>Each incident has a current status which may be one of the following:</p>
 <ul>
-<li>Active</li>
-<li>Closed</li>
+<li>Aktive</li>
+<li>Lukkede</li>
 <li>Researching</li>
-<li>Called And Left Message</li>
-<li>Internal Escalation</li>
-<li>External Escalation</li>
-<li>Awaiting Closure</li>
-<li>Awaiting Your Response</li>
-<li>Unsupported</li>
+<li>Ringet og efterladt besked</li>
+<li>Intern eskalering</li>
+<li>Ekstern eskalering</li>
+<li>Afventer lukning</li>
+<li>Afventer dit svar</li>
+<li>Usupporteret</li>
 </ul>
 
-<p>Closed incidents have an additional closing status:</p>
+<p>Lukkede hændelser har en tilføjer luknings status:</p>
 <ul>
-<li>Sent Information</li>
-<li>Solved Problem</li>
-<li>Reported Bug</li>
-<li>Action Taken</li>
-<li>Duplicate</li>
-<li>No Longer Relevant</li>
-<li>Unsupported</li>
-<li>Support Expired</li>
-<li>Unsolved</li>
-<li>Escalated</li>
+<li>Sendt information</li>
+<li>Løst problem</li>
+<li>Rapporterede fejl</li>
+<li>Der er taget handling</li>
+<li>Dublet</li>
+<li>Ikke længere relevant</li>
+<li>Usupporteret</li>
+<li>Support udløbet</li>
+<li>Uløst</li>
+<li>Eskaleret</li>
 </ul>
 
-<p>Each incident has an 'updates log' which shows everything that has happened during the lifetime of the incident,
-a complete record of all contact with the customer, with colleagues and with external engineers.</p>
-<p>Incidents can also have files attached.</p>
+<p> Hver hændelse har en "opdaterings log", som viser alt hvad der er sket i løbet af hændelsen,
+en komplet fortegnelse over al kontakt med kunden, med kolleger og med eksterne teknikere. </p>
+<p> Hændelser kan også have filer vedhæftet. </p>
 
-<h3><a name='addincident'>Adding an Incident</a></h3>
-<p>Before you can add an incident, you must already have a contract that entitles you to support.</p>
-<p>Adding an incident is a simple process that goes like this:</p>
+<h3><a name='addincident'>Tilføjelse af en hændelse</a></h3>
+<p> Før du kan tilføje en hændelse, skal du allerede have en kontrakt, der giver dig ret til support. </p>
+<p> Tilføjelse af en hændelse er en enkel proces, der går sådan her: </p>
 <ol>
-<li>Select the area the incident is related to (e.g. SUSE Linux, Apache)</li>
-<li>Enter a brief title for the incident (This can be a brief summary of the incident)</li>
-<li>Enter the definition of the problem, please provide as much detail as possible to aid resolving your incident</li>
-<li>Click <strong>Add Incident</strong> and the incident is created</li>
+<li>Vælg det område, hvor hændelsen er relateret til (e.g. SUSE Linux, Apache)</li>
+<li>Indtast en kort titel til hændelsen (Dette kan være et kort resumé af hændelsen)</li>
+<li>Indtast en beskrivelse af problemet, du bedes give så mange detaljer som muligt fot at hjælpe med at løse dit problem</li>
+<li>Klik <strong>Tilføj hændelse</strong> og hændelsen er oprettet</li>
 </ol>
 
-<h3><a name='incidentqueues'>Incident Queue</a></h3>
+<h3><a name='incidentqueues'>Hændelses køen</a></h3>
 
-<p>The portal has two incident queues one for your open incidents another for your closed incidents.</p>
+<p>Portalen har to hændelses køer, en for din åbne hændelser og en anden for dine lukkede hændelser.</p>
 
-<p>Depending on the configuration you could also have two additional queues for all open incidents fo your site and all recently 
-closed incidents for your site</p>
+<p>Afhængigt af konfigurationen, kan du også have to yderligere køer, alle åbne hændelser i din afdeling og alle for nyligt
+lukkede hændelser i din afdeling </p>
 
-<h3><a name='updateincident'>Update Incident</a></h3>
+<h3><a name='updateincident'>Opdater hændelser</a></h3>
 
-<p>When you select an incident it is possble to update the incident by clicking update incident, this will update the incident and 
-set the call to active so the assigned engineer is able to view he call</p> 
+<p> Når du vælger en hændelse er det muligt at opdatere denne ved at klikke opdater hændelse. Det vil opdatere hændelsen, og
+sætte kaldet som aktiv så teknikeren er i stand til at se opdateringen </p>
 
-<h3><a name='closeincident'>Closing an Incident</a></h3>
-<p>You can request the closure of an incident by selecting the incident then request closure, you are prompted for 
-a brief description of why the incident is closed <strong>Submit</strong> will mark the incident as requesting closure and the 
-engineer can then close it</p>
+<h3><a name='closeincident'>Lukning af en hændelse</a></h3>
+<p> Du kan anmode om lukningen af en hændelse ved at vælge hændelsen derefter anmode om lukning, du bliver bedt om
+en kort beskrivelse af, hvorfor hændelsen er lukket <strong> Send </ strong> vil markere hændelsen som anmod om lukningen og
+teknikeren kan derefter lukke den </p>
 
-<h3><a name='knowledgebase'>Knowledgebase</a></h3>
+<h3><a name='knowledgebase'>Vidensbase</a></h3>
 
-<p>The knowledgebase allows you to browse articles which have been published which may aid in resolving your problem.</p>
+<p>Vidensbasen giver dig mulighed for at gennemse artikler, som er blevet offentliggjort, som kan hjælpe med at løse dit problem.</p>
 
 <hr />
 
-<h3><a name='morehelp'>More Help</a></h3>
+<h3><a name='morehelp'>Mere hjælp</a></h3>
 
-<p>See the <a href="http://sitracker.org/wiki/Documentation">Documentation</a> section of the SiT website for a list of Frequently Asked Questions (FAQ) and more help.</p>
+<p>Se <a href="http://sitracker.org/wiki/Documentation/DA">Dokumentations</a> sektionen på SiT! hjemmeside for en liste over ofte stillede spørgsmål (<a href="http://sitracker.org/wiki/FAQ/DA">FAQ</a>) og mere hjælp.</p>
