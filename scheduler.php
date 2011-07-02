@@ -238,9 +238,9 @@ switch ($_REQUEST['mode'])
             echo "<table align='center'>";
             echo "<tr><th>{$strAction}</th><th>{$strStartDate}</th><th>{$strInterval}</th>";
             echo "<th>{$strEndDate}</th><th>{$strLastRan}</th><th>{$strNextRun}</th></tr>\n";
-            $shade = 'shade1';
             while ($schedule = mysql_fetch_object($result))
             {
+                $shade = 'shade1';
                 $lastruntime = mysql2date($schedule->lastran);
                 if ($schedule->success == 0)
                 {
@@ -412,8 +412,6 @@ switch ($_REQUEST['mode'])
 
                 echo "</td>";
                 echo "</tr>";
-                if ($shade == 'shade1') $shade = 'shade2';
-                else $shade = 'shade1';
             }
             echo "</table>\n";
 
