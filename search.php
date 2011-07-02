@@ -120,7 +120,7 @@ if (is_numeric($q))
                     echo $_CONFIG['application_webpath'];
                 }
             }
-            
+
             echo "';\n";
             echo "//]]></script>";
         }
@@ -458,7 +458,7 @@ if (!empty($q))
         echo colheader(email, $strEmail, $sort, $order, $filter);
         echo colheader(telephone, $strTelephone, $sort, $order, $filter);
         echo colheader(fax, $strFax, $sort, $order, $filter);
-        echo colheader(action, "", $sort, $order, $filter);
+        echo colheader(action, $strAction, $sort, $order, $filter);
         echo "</tr>";
 
         $shade = 'shade1';
