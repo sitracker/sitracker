@@ -35,7 +35,7 @@ if (!empty($roleid))
     if (mysql_num_rows($result) > 0)
     {
         $obj = mysql_fetch_object($result);
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strRole}</th><td>{$roleid}</td></tr>";
         echo "<tr><th>{$strName}</th><td>{$obj->rolename}</td></tr>";
         echo "<tr><th>{$strDescription}</th><td>{$obj->description}</td></tr>";
@@ -97,7 +97,7 @@ if (!empty($roleid))
             }
             echo "</table>";
         }
-        echo "<p align='center'><a href='edit_user_permissions.php'>{$strReturnToPreviousPage}</a></p>";
+        echo "<p clasS='return'><a href='edit_user_permissions.php'>{$strReturnToPreviousPage}</a></p>";
     }
     else
     {

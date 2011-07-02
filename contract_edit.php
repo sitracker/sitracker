@@ -35,7 +35,7 @@ if (empty($action) OR $action == "showform")
     echo maintenance_drop_down("maintid", 0, NULL, true);
     echo "</td></tr>\n";
     echo "</table>\n";
-    echo "<p align='center'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

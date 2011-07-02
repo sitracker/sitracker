@@ -60,7 +60,7 @@ switch ($_REQUEST['action'])
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3>" . icon('reports', 32, $strNewFeedbackForm) . " {$strNewFeedbackForm}</h3>";
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-        echo "<table summary='Form' align='center' class='vertical'>";
+        echo "<table summary='Form' class='vertical maintable'>";
         echo "<tr>";
 
         /*echo "<th>Form ID:</th>";
@@ -122,7 +122,7 @@ switch ($_REQUEST['action'])
             while ($form = mysql_fetch_object($result))
             {
                 echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-                echo "<table summary='Form' align='center'>";
+                echo "<table summary='Form' class='maintable'>";
                 echo "<tr>";
 
                 echo "<th>{$strID}:</th>";

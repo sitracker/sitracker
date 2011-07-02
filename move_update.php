@@ -37,7 +37,7 @@ if ($incidentid == '')
         echo "<p class='error'>{$strErrorAssigningUpdate}</p>";
     }
 
-    echo "<div align='center'>";
+    echo "<div class='formbuttons'>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<label>{$strToIncidentID}: ";
     if ($contactid > 0) echo incident_drop_down('incidentid', 0, $contactid);

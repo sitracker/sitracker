@@ -336,7 +336,7 @@ else
 
                             echo "<br /><input type='hidden' name='action' value='save' />\n";
                             echo "<input type='hidden' name='ax' value='".strip_tags($_REQUEST['ax'])."' />\n";
-                            echo "<div align='center'><input type='submit' value='Submit' /></div>\n";
+                            echo "<div class='formbuttons'><input type='submit' value='Submit' /></div>\n";
                             echo "</form>\n";
                             if ($reqd >= 1)
                             {

@@ -82,7 +82,7 @@ class Form
             echo $r->generateHTML();
         }
         echo "</table>";
-        echo "<p align='center'><input type='submit' id='{$this->name}submit' name='submit' value='{$this->submitLabel}' /></p>";
+        echo "<p class='formbuttons'><input type='submit' id='{$this->name}submit' name='submit' value='{$this->submitLabel}' /></p>";
         echo "</form>";
     }
 

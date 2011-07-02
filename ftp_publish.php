@@ -101,7 +101,7 @@ if (!isset($temp_directory))
     echo "</select>";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'><input type='submit' value='{$strPublish}' /></p>";
+    echo "<p class='formbuttons'><input type='submit' value='{$strPublish}' /></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

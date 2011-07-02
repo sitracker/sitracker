@@ -67,7 +67,7 @@ if (empty($action) || $action == "showform")
         echo "</td></tr>";
     }
     echo "</table>";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input name='submit' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";

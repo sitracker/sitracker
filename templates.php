@@ -350,7 +350,7 @@ elseif ($action == "edit")
         echo "</table>\n";
         echo "</div>";
 
-        echo "<p style='clear:both; margin-top: 2em;' align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>";
+        echo "<p style='clear:both; margin-top: 2em;' class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }

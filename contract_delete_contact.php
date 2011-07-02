@@ -66,7 +66,7 @@ if (empty($action) OR $action == "showform")
     }
 
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

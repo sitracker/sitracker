@@ -36,7 +36,7 @@ if (empty($action) OR $action == "showform" OR empty($contact))
     echo "<table class='maintable'>";
     echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("contact", 0)."</td></tr>";
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -57,12 +57,12 @@ elseif ($action == "edit" && isset($contact))
         echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strName}</th>\n";
         echo "<td>";
-        echo "\n<table><tr><td align='center'>{$strTitle}<br />";
+        echo "\n<table><tr><td class='tabletitle'>{$strTitle}<br />";
         echo "<input maxlength='50' name='courtesytitle' title=\"";
         echo "{$strCourtesyTitle}\" size='7' value='{$contactobj->courtesytitle}'/></td>\n";   
-        echo "<td align='center'>{$strForenames}<br />";
+        echo "<td class='tabletitle'>{$strForenames}<br />";
         echo "<input class='required' maxlength='100' name='forenames' value='".htmlspecialchars($contactobj->forenames, ENT_QUOTES)."' /></td>\n";
-        echo "<td align='center'>{$strSurname}<br />";
+        echo "<td class='tabletitle'>{$strSurname}<br />";
         echo "<input class='required' maxlength='100' name='surname' ";
         echo "size='20' title=\"{$strSurname}\" value='".htmlspecialchars($contactobj->surname, ENT_QUOTES)."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "</table>\n</td></tr>\n";

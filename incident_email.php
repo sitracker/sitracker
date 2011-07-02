@@ -144,7 +144,7 @@ switch ($step)
         echo "</td></tr>";
         plugin_do('incident_email_form1');
         echo "</table>";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input type='hidden' name='step' value='2' />";
         echo "<input type='hidden' name='menu' value='$menu' />";
         echo "<input name='submit1' type='submit' value='{$strContinue}' /></p>";
@@ -278,7 +278,7 @@ switch ($step)
         echo "</td></tr>";
         plugin_do('incident_email_form2');
         echo "</table>";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input name='newincidentstatus' id='newincidentstatus' type='hidden' value='{$newincidentstatus}' />";
         echo "<input name='timetonextaction' id='timetonextaction' type='hidden' value='{$timetonextaction}' />";
         echo "<input name='timetonextaction_none' id='timetonextaction_none' type='hidden' value='{$timetonextaction_none}' />";

@@ -94,7 +94,7 @@ switch ($_REQUEST['action'])
             echo "</select>\n";
             echo "</td></tr></table>\n";
             echo "<input type='hidden' name='action' value='installdashboard' />";
-            echo "<p align='center'><input type='submit' value='{$strInstall}' /></p>";
+            echo "<p class='formbuttons'><input type='submit' value='{$strInstall}' /></p>";
             echo "</form>\n";
         }
 

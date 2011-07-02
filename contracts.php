@@ -32,7 +32,7 @@ $activeonly = cleanvar($_REQUEST['activeonly']);
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('contract', 32)." ";
 echo "{$title}</h2>";
-echo "<table summary='alphamenu' align='center'><tr><td align='center'>";
+echo "<table summary='alphamenu' class='maintable'><tr><td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "{$strBrowseContractsBySite}:"; // <!--<input type="text" name="search_string" />-->
 echo "<input type='text' id='search_string' style='width: 300px;' name='search_string' />";
@@ -140,7 +140,7 @@ else
 {
     echo "<p align='center'>".sprintf($strResultsNum, mysql_num_rows($result))."</p>\n";
 
-    echo "<table align='center' style='width: 95%;'>";
+    echo "<table class='maintable' style='width: 95%;'>";
     echo "<tr>";
 
     $filter = array('search_string' => $search_string,

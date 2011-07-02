@@ -76,7 +76,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
-echo "<table summary='alphamenu' align='center'>";
+echo "<table summary='alphamenu' class='maintable'>";
 echo "<tr>";
 echo "<td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";

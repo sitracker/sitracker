@@ -318,6 +318,12 @@ div#menu li:hover li ul,
 
 .return, #container .return { text-align: center; }
 
+.daycalendarview { text-align: center; }
+
+.weekcalendarview { text-align: center; }
+
+.yearcalendarview { text-align: center; }
+
 .yearcalendar {
     border: 1px solid;
     padding: 5px;
@@ -328,9 +334,13 @@ div#menu li:hover li ul,
     text-align: center;
 }
 
+.setpublicholidays { text-align: center; }
+
 .actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
 
 .maintable {margin-left:auto; margin-right:auto;}
+
+.tabletitle { text-align: center; }
 
 th:hover { background: #E9E9E9; }
 
@@ -473,6 +483,8 @@ strong.info,em.info,u.info,span.info
 
 p.alert { border-style: inset; }
 
+p.forgotpwd { text-align: center; }
+
 div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
 
 .formbuttons, #container .formbuttons { text-align: center; }
@@ -504,7 +516,6 @@ p.trigger
   width:50%;
   margin:0 auto;
 }
-
 
 #topsearch { text-align: right; clear: both; top: -11px; position: relative; }
 #topsearch form {margin: 1px 7px 0px 0px; }
@@ -605,6 +616,8 @@ span.required
 input.required, select.required, textarea.required {
   background-color: #FFD8DE;
 }
+
+p.footer { text-align: center; }
 
 div#incidentfooter { border-top: 1px solid #203894; }
 

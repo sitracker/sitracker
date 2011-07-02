@@ -63,7 +63,7 @@ switch ($_REQUEST['action'])
         echo "<h2 align='center'>$title</h2>\n";
 
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-        echo "<table summary='Form' align='center'>";
+        echo "<table summary='Form' class='maintable'>";
         echo "<tr>";
 
         echo "<th>{$strSectionText}:<br /></th>";

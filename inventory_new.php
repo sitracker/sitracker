@@ -67,7 +67,7 @@ else
     }
 
     echo "<form action='{$url}' method='post'>";
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>";

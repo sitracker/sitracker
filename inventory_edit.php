@@ -126,7 +126,7 @@ else
 
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
 
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' value='{$row->name}' /> ";
     echo "<span class='required'>{$strRequired}</span></td></tr>";

@@ -400,7 +400,7 @@ else
 
     echo "<h3>{$strDisclaimer}</h3>";
     echo $CONFIG['kb_disclaimer_html'];
-    echo "<p align='center'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
     echo $sectionstore;
     echo "</form></div>";

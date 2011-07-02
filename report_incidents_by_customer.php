@@ -113,7 +113,7 @@ if (empty($mode))
     echo "<td><select name='output' id='output'><option value='screen' onclick='toggleDisableIncidents();'>{$strScreen}</option>\n";
     echo "<option value='csv' onclick='toggleDisableIncidents();'>{$strCSVfile}</option></select></td></tr>\n";
     echo "</table>\n";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<input type='hidden' name='step' value='1' />";
     echo "<input type='reset' value=\"{$strReset}\" /> ";

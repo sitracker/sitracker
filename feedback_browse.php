@@ -163,7 +163,7 @@ switch ($mode)
             echo user_alert($strNoResponseFound, E_USER_NOTICE);
         }
         plugin_do('feedback_browse_viewresponse');
-        echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
+        echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
         break;
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";

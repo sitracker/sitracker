@@ -58,7 +58,7 @@ else
     echo "<h2>{$strSetPublicHolidays}</h2>";
 }
 
-echo "<p align='center'>";
+echo "<p class='setpublicholidays'>";
 
 if (!empty($selectedday))
 {
@@ -125,7 +125,7 @@ echo "</p>\n";
 echo "<h2>{$strYearView}</h2>";
 $pdate = mktime(0, 0, 0, $month, $day, $year-1);
 $ndate = mktime(0, 0, 0 ,$month, $day, $year+1);
-echo "<p align='center'>";
+echo "<p class='yearcalendarview'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$pdate)."&amp;month=".date('m',$pdate)."&amp;day=".date('d',$pdate)."&amp;type={$type}'>&lt;</a> ";
 echo date('Y',mktime(0,0,0,$month,$day,$year));
 echo " <a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$ndate)."&amp;month=".date('m',$ndate)."&amp;day=".date('d',$ndate)."&amp;type={$type}'>&gt;</a>";

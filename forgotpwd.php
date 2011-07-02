@@ -62,15 +62,15 @@ switch ($_REQUEST['action'])
             $hash = md5($userdetails->username.'.'.$userdetails->password);
             $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&userid={$userdetails->id}&hash={$hash}";
             $t = new TriggerEvent('TRIGGER_USER_RESET_PASSWORD', array('userid' => $userdetails->id, 'passwordreseturl' => $reseturl));
-            echo "<h3 align='center'>{$strInformationSent}</h3>";
-            echo "<p align='center'>{$strInformationSentRegardingSettingPassword}</p>";
+            echo "<h3 class='forgotpwd'>{$strInformationSent}</h3>";
+            echo "<p class='forgotpwd'>{$strInformationSentRegardingSettingPassword}</p>";
             if ($_REQUEST['action'] == 'forgotpwd')
             {
-                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
             else
             {
-                echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+                echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
             }
 
         }
@@ -96,7 +96,7 @@ switch ($_REQUEST['action'])
                 $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&contactid={$row->id}&hash={$hash}";
                 $t = new TriggerEvent('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
                 echo "<h3>{$strInformationSent}</h3>";
-                echo "<div align='center'>";
+                echo "<div class='forgotpwd'>";
                 echo "<p>{$strInformationSentRegardingSettingPassword}</p>";
                 if (empty($email) AND !empty($contactid))
                 {
@@ -104,15 +104,15 @@ switch ($_REQUEST['action'])
                 }
                 else
                 {
-                    echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                    echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
                 echo "</div>";
             }
             else
             {
                 echo "<h3>{$strInvalidEmailAddress}</h3>";
-                echo "<p align='center'>".sprintf($strForFurtherAssistance, $CONFIG['support_email'])."</p>";
-                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p class='forgotpwd'>".sprintf($strForFurtherAssistance, $CONFIG['support_email'])."</p>";
+                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 echo "</div>";
             }
         }
@@ -140,7 +140,7 @@ switch ($_REQUEST['action'])
             if ($hash == $userhash)
             {
                 echo "<h2>{$strResetPassword}</h2>";
-                echo "<p align='center'>{$strPleaseConfirmUsername}</p>";
+                echo "<p class='forgotpwd'>{$strPleaseConfirmUsername}</p>";
                 echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
 
                 echo "<table class='vertical'>";
@@ -164,15 +164,15 @@ switch ($_REQUEST['action'])
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p align='center'>{$strDidYouPasteFullURL}</p>";
-                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p class='forgotpwd'>{$strDidYouPasteFullURL}</p>";
+                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
         else
         {
             echo "<h3>{$strError}</h3>";
-            echo "<p align='center'>{$strDidYouPasteFullURL}</p>";
-            echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+            echo "<p class='forgotpwd'>{$strDidYouPasteFullURL}</p>";
+            echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
@@ -220,20 +220,20 @@ switch ($_REQUEST['action'])
                 echo "<input type='hidden' name='action' value='savepassword' />";
                 echo "<p><input type='submit' value='{$strSetPassword}' />";
                 echo "</form>";
-                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p align='center'> align='center'{$strHaveForgottenUsername}</p>";
-                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p class='forgotpwd'>{$strHaveForgottenUsername}</p>";
+                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
         else
         {
             echo "<h3>{$strError}</h3>";
-            echo "<p align='center'>{$strInvalidUserID}</p>";
-            echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+            echo "<p class='forgotpwd'>{$strInvalidUserID}</p>";
+            echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
@@ -272,28 +272,28 @@ switch ($_REQUEST['action'])
                     }
                     mysql_query($usql);
                     echo "<h3>{$strPasswordReset}</h3>";
-                    echo "<p align='center'>{$strPasswordHasBeenReset}</p>";
-                    echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                    echo "<p class='forgotpwd'>{$strPasswordHasBeenReset}</p>";
+                    echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
                 else
                 {
                     echo "<h3>{$strError}</h3>";
-                    echo "<p align='center'>{$strPasswordsDoNotMatch}</p>";
-                    echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                    echo "<p class='forgotpwd'>{$strPasswordsDoNotMatch}</p>";
+                    echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
             }
             else
             {
                 echo "<h3>{$strError}</h3>";
-                echo "<p align='center'>{$strInvalidDetails}</p>";
-                echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+                echo "<p class='forgotpwd'>{$strInvalidDetails}</p>";
+                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
             }
         }
         else
         {
             echo "<h3>{$strError}</h3>";
-            echo "<p align='center'>{$strInvalidUserID}</p>";
-            echo "<p align='center'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+            echo "<p class='forgotpwd'>{$strInvalidUserID}</p>";
+            echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;
@@ -307,7 +307,7 @@ switch ($_REQUEST['action'])
         echo "<table class='vertical'>";
         echo "<tr><th>{$strEmailAddress}</th><td><input name='emailaddress' size='30' type='text' /></td></tr>";
         echo "</table>";
-        echo "<p><input type='submit' value='{$strContinue}' /></p>";
+        echo "<p class='formbuttons'><input type='submit' value='{$strContinue}' /></p>";
         echo "<input type='hidden' name='action' value='forgotpwd' />";
         echo "</form>";
 

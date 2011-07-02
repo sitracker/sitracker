@@ -156,7 +156,7 @@ if (empty($_REQUEST['process']))
     }
     plugin_do('incident_closing_form1');
     echo "</table>\n";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input name='type' type='hidden' value='Support' />";
     echo "<input name='id' type='hidden' value='{$id}' />";
     echo "<input type='hidden' name='process' value='closeincident' />";

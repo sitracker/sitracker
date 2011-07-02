@@ -411,7 +411,7 @@ else
         echo "<p class='error'>{$strNoMatchingProduct}</p>";
     }
 
-    echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
+    echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
 }
 
 echo "<p align='center'>";

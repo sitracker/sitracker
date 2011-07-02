@@ -85,7 +85,7 @@ switch ($mode)
         echo "</table>\n\n";
         echo "<input type='hidden' name='id' value='{$id}' />";
         echo "<input type='hidden' name='mode' value='save' />";
-        echo "<p align='center'><input type='submit' value='{$strSavePublish}' /></p>";
+        echo "<p class='formbuttons'><input type='submit' value='{$strSavePublish}' /></p>";
         echo "</form>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     break;

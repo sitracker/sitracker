@@ -124,7 +124,7 @@ $rresult = mysql_query($rsql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 if (mysql_num_rows($rresult) >= 1)
 {
-    echo "<table summary='Related Incidents' align='center'>";
+    echo "<table summary='Related Incidents' class='maintable'>";
     echo "<tr><th>{$strIncidentID}</th><th>{$strTitle}</th>";
     echo "<th>{$strRelationship}</th><th>{$strCreatedBy}</th>";
     echo "<th>{$strAction}</th></tr>\n";
