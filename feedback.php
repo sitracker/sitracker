@@ -63,7 +63,7 @@ if (!empty($oucode))
             $result = mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             }
             else
             {
