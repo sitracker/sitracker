@@ -168,7 +168,8 @@ elseif ($action == "new")
 
         if (!$result)
         {
-            echo "<p class='error'>{$strNewSiteFailed}</p>\n";
+            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            html_redirect(application_url() . 'site_new.php', FALSE, $strNewSiteFailed);
         }
         else
         {
