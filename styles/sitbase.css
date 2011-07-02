@@ -617,7 +617,7 @@ input.required, select.required, textarea.required {
   background-color: #FFD8DE;
 }
 
-p.footer { text-align: center; }
+p.sitversion { text-align: center; }
 
 div#incidentfooter { border-top: 1px solid #203894; }
 

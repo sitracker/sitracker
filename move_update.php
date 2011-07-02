@@ -37,13 +37,13 @@ if ($incidentid == '')
         echo "<p class='error'>{$strErrorAssigningUpdate}</p>";
     }
 
-    echo "<div class='formbuttons'>";
+    echo "<div align='center'>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<label>{$strToIncidentID}: ";
     if ($contactid > 0) echo incident_drop_down('incidentid', 0, $contactid);
     else echo "<input type='text' name='incidentid' value='{$incidentid}' size='10' maxlength='12' />";
     echo "</label>";
-    echo "<input type='submit' value='{$strMoveUpdate}' /><br />";
+    echo "<p class='formbuttons'><input type='submit' value='{$strMoveUpdate}' /></p><br />";
     echo "<input type='hidden' name='updateid' value='{$updateid}' />";
     echo "<input type='hidden' name='id' value='{$id}' />";
     echo "<input type='hidden' name='win' value='incomingview' />";

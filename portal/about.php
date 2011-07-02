@@ -19,7 +19,7 @@ include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 echo "<div id='aboutsit'>";
 echo "<img src='../images/sitlogo_270x100.png' width='270' height='100' alt='SiT! Support Incident Tracker' />";
-echo "<p class='footer'>{$strVersion}: {$application_version} {$application_revision}";
+echo "<p class='sitversion'>{$strVersion}: {$application_version} {$application_revision}";
 if ($CONFIG['debug'] == TRUE) echo " (debug mode)";
 echo "</p>";
 debug_log("{$strVersion}: {$application_version} {$application_revision}", TRUE);
