@@ -80,7 +80,7 @@ if (empty($submit))
 
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
-    echo "<p><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
 
     echo "</form>";
 

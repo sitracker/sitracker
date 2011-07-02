@@ -72,7 +72,7 @@ while ($contact = mysql_fetch_object($contactresult))
 
     echo "<h2>".icon('contact', 32)." {$strContactDetails}</h2>";
 
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th colspan='2'><h3>".gravatar($contact->email, 32)." {$contact->forenames} {$contact->surname}";
     echo "</h3></th></tr>\n";
     if ($contact->active == 'false')

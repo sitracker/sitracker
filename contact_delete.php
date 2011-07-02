@@ -33,7 +33,7 @@ if (empty($process))
     {
         echo "<h2>{$strDeleteContact}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("id", 0)."</td></tr>";
         echo "</table>";
         echo "<p><input name='submit1' type='submit' value=\"{$strDelete}\" /></p>";
@@ -47,7 +47,7 @@ if (empty($process))
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         while ($contactobj = mysql_fetch_object($contactresult))
         {
-            echo "<table align='center' class='vertical'>";
+            echo "<table class='maintable vertical'>";
             echo "<tr><th>{$strName}:</th><td><h3>{$contactobj->forenames} {$contactobj->surname}</h3></td></tr>";
             echo "<tr><th>{$strSite}:</th><td><a href='site_details.php?id={$contactobj->siteid}'>".site_name($contactobj->siteid)."</a></td></tr>";
             echo "<tr><th>{$strDepartment}:</th><td>{$contactobj->department}</td></tr>";
@@ -108,7 +108,7 @@ if (empty($process))
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>";
-            echo "<p align='center'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
         else
         {
@@ -122,7 +122,7 @@ if (empty($process))
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>\n";
-            echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

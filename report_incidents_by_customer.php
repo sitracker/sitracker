@@ -339,7 +339,7 @@ else
             echo "<h2>".icon('site', 32)." {$strSiteIncidents}</h2>";
             echo "<p align='center'>{$strStartDate}: {$startdate}. {$strEndDate}: {$enddate}</p>";
 
-            echo "<table align='center'>{$csv}</table>";
+            echo "<table class='maintable'>{$csv}</table>";
 
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }

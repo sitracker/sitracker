@@ -30,7 +30,7 @@ if (empty($action) OR $action == "showform")
     echo "<h2>".icon('contract', 32)." ";
     echo "{$strContract}:</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strContract}:</th><td>";
     echo maintenance_drop_down("maintid", 0, NULL, true);
     echo "</td></tr>\n";
@@ -56,7 +56,7 @@ if ($action == "edit")
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
-        echo "<table align='center' class='vertical'>\n";
+        echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
         echo "<tr><th>{$strSite}:</th><td>";
         echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable 
@@ -142,7 +142,7 @@ if ($action == "edit")
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>\n";
 
-        echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
         mysql_free_result($result);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

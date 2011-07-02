@@ -29,7 +29,7 @@ if (empty($_REQUEST['mode']))
     echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
     echo "<p align='center'>{$strMarketingMailshotDesc}</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strFilter}: {$strTag}</th><td><input type='text' ";
     echo "name='filtertags' value='' size='15' /></td></tr>";
     echo "<tr><th>{$strInclude}: {$strProducts}" . help_link('CTRLAddRemove') . "</th>";
@@ -199,7 +199,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $numrows = mysql_num_rows($result);
 
     // FIXME strip slashes from output
-    $html .= "<table align='center'>";
+    $html .= "<table class='maintable'>";
     $html .= "<tr><th>{$strForenames}</th><th>{$strSurname}</th><th>";
     $html .= "{$strEmail}</th><th>{$strSite}</th><th>{$strAddress1}</th>";
     $html .= "<th>{$strAddress2}</th><th>{$strCity}</th><th>{$strCounty}</th>";

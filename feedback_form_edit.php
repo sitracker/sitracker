@@ -99,7 +99,7 @@ switch ($_REQUEST['action'])
         echo "<input type='hidden' name='action' value='save' />";
         echo "<input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input type='submit' value='{$strSave}' /></p>";
-        echo "<p><a href=\"feedback_form_list.php\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"feedback_form_list.php\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

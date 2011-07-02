@@ -212,7 +212,7 @@ switch ($action)
         if ($countusers > 0 OR ($countusers == 0 AND $suggested > 0))
         {
             echo "<div id='reassignlist'>";
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             if ($countusers >= 1 AND $suggested > 0) echo "<thead>\n";
             echo "<tr>
                 <th colspan='2'>{$strReassignTo}:</th>

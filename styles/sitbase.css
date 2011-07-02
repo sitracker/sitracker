@@ -121,6 +121,14 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 #actiondetails p { text-align: center; }
 
 #aboutcreditcontent p { text-align: center; }
+#aboutcontent {
+background: transparent;
+text-align: left;
+width: 50%;
+font-family: monospaced;
+margin: auto;
+white-space: pre;
+}
 
 #masthead {
   background-image: url('../images/top2.png');
@@ -158,8 +166,6 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 #actionmenu { color: #aaa; margin-bottom: 5px; }
 #actionmenu a:link { color: #E76666; }
 #actionmenu a:hover { background: #203894; color: white; }
-
-
 
 #menu { border-bottom: 1px solid #203894; padding-bottom: 4px;}
 .menuitem li { padding-top: 3px; }
@@ -308,10 +314,23 @@ div#menu li:hover li ul,
     background-position: 100% 5px;
 }
 
+.tagname { text-align: center; }
 
 .return, #container .return { text-align: center; }
 
+.yearcalendar {
+    border: 1px solid;
+    padding: 5px;
+    border-collapse: collapse;
+    border-color: #AAA;
+    /* width: 80%; */
+    vertical-align: top;
+    text-align: center;
+}
+
 .actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
+
+.maintable {margin-left:auto; margin-right:auto;}
 
 th:hover { background: #E9E9E9; }
 
@@ -331,6 +350,9 @@ tr.critical strong.critical { color: #FFF; }
 tr.urgent:hover { background-color: #FFAAAB; }
 tr.expired:hover { background-color: #F2F2F2; }
 tr.notice:hover { background-color: #F2F2F2; }
+
+div#holiday { text-align: center }
+td.holidaydate { text-align: right }
 
 
 .mainshade { background-color: #FFF; } /* white - is this used? */

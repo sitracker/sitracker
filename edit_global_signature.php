@@ -134,7 +134,7 @@ elseif (!empty($action))
             echo "</tr>";
             echo "</table>";
             echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value=\"{$strSave}\" /></p>";
-            echo "<p><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
             echo "</form>\n";
             break;
 
@@ -158,7 +158,7 @@ elseif (!empty($action))
             echo "</table>";
 
             echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value=\"{$strSave}\" /></p>";
-            echo "<p><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
             echo "</form>\n";
             break;
     }

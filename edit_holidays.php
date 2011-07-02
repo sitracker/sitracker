@@ -82,7 +82,7 @@ switch ($_REQUEST['action'])
         echo date_picker('editholidays.archivedate');
         echo "</div>";
 
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th></th>";
         echo colheader('realname', $strName, FALSE);
         echo colheader('entitlement', $strEntitlement, FALSE);

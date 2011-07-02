@@ -244,7 +244,7 @@ elseif ($action == 'findcontact')
             {
                 echo "<h3>{$strPreferred}</h3>";
             }
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo $headers;
             echo $str_prefered;
             echo "</table>\n";
@@ -255,7 +255,7 @@ elseif ($action == 'findcontact')
         if (!empty($str_alternative))
         {
             if (!empty($str_prefered)) echo "<h3>{$strAlternative}</h3>";
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo $headers;
             echo $str_alternative;
             echo "</table>\n";
@@ -284,7 +284,7 @@ elseif ($action == 'findcontact')
             $html = "<h3>".icon('contact', 32, $strContact)." ";
             $html .= "{$strContacts}</h3>\n";
             $html .=  "<p align='center'>{$strListShowsContacts}.</p>";
-            $html .=  "<table align='center'>";
+            $html .=  "<table class='maintable'>";
             $html .=  "<tr>";
             $html .=  "<th>&nbsp;</th>";
             $html .=  "<th>{$strName}</th>";
@@ -360,7 +360,7 @@ elseif ($action == 'findcontact')
         {
             $html = "<h3>{$strCustomers}</h3>\n";
             $html .= "<p align='center'>{$strThisListShowsCustomers}</p>";
-            $html .= "<table align='center'>";
+            $html .= "<table class='maintable'>";
             $html .= "<tr>";
             $html .= "<th>&nbsp;</th>";
             $html .= "<th>{$strName}</th>";
@@ -894,7 +894,7 @@ elseif ($action == 'assign')
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             echo "<h3>{$strUsers}</h3>
-            <table align='center'>
+            <table class='maintable'>
             <tr>
                 <th>&nbsp;</th>
                 <th>{$strName}</th>

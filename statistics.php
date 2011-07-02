@@ -226,7 +226,7 @@ function give_overview()
 {
     global $todayrecent, $mode, $CONFIG;
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$GLOBALS['strPeriod']}</th>";
     echo "<th>{$GLOBALS['strOpened']}</th><th>{$GLOBALS['strUpdated']}</th>";
     echo "<th>{$GLOBALS['strClosed']}</th><th>{$GLOBALS['strHandled']}</th>";
@@ -464,7 +464,7 @@ function give_overview()
     if (mysql_num_rows($qresult) >= 1)
     {
         $string .= "<h2>{$GLOBALS['strCustomerFeedback']}</h2>";
-        $string .= "<table align='center' class='vertical'>";
+        $string .= "<table class='maintable vertical'>";
         while ($qrow = mysql_fetch_object($qresult))
         {
             $numquestions++;

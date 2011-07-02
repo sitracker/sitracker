@@ -35,7 +35,7 @@ if ($action == "showform" OR $action == '')
     echo "<h2>".icon('contract', 32)." ";
     echo "{$strNewContract}</h2>";
     echo "<form id='new_contract' name='new_contract' action='{$_SERVER['PHP_SELF']}?action=new' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strSite}</th><td>";
     if ($_SESSION['formdata']['new_contract']['site'] != '')
     {

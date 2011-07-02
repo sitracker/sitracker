@@ -228,7 +228,7 @@ if ($errors == 0)
 
         }
         echo "</p>";
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr>";
         echo "<th>{$strID}</th>";
         echo "<th>{$strSiteName}</th>";

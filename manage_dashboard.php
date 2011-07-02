@@ -88,7 +88,7 @@ switch ($_REQUEST['action'])
         else
         {
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>\n";
-            echo "<table align='center' class='vertical'><tr><td>\n";
+            echo "<table class='maintable vertical'><tr><td>\n";
             echo "<select name='comp[]' multiple='multiple' size='20'>\n";
             echo $html;
             echo "</select>\n";

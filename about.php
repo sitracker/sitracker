@@ -117,7 +117,7 @@ switch ($seltab)
         $fp = fopen($CONFIG['licensefile'], "r");
         $contents = htmlentities(fread($fp, filesize($CONFIG['licensefile'])), ENT_COMPAT, $i18ncharset);
         fclose($fp);
-        echo "<h2>{$strLicense}</h2><div style='background: transparent; text-align: left; width: 50%; font-family: monospaced; margin: auto; white-space: pre;'>";
+        echo "<h2>{$strLicense}</h2><div id='aboutcontent'>";
         echo $contents;
         echo "</div>";
         break;

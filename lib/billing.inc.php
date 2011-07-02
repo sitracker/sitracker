@@ -1117,7 +1117,7 @@ function contract_service_table($contractid, $billing)
     if (mysql_num_rows($result) > 0)
     {
         $shade = 'shade1';
-        $html = "\n<table align='center'>";
+        $html = "\n<table class='maintable'>";
         $html .= "<tr>";
         if ($billing) $html .= "<th></th>";
         $html .= "<th>{$GLOBALS['strStartDate']}</th><th>{$GLOBALS['strEndDate']}</th>";
@@ -1991,10 +1991,10 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 if (!empty($details))
                 {
                     // Dont need to worry about this in the above section as sitebreakdown and serviceid are multually exclusive
-                    $text .= "<div><table align='center'>{$details}</table></div>";
+                    $text .= "<div><table class='maintable'>{$details}</table></div>";
                 }
 
-                $text .= "<table align='center'>";
+                $text .= "<table class='maintable'>";
                 $text .= "<tr><th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strServiceID']}</th>";
                 $text .= "<th>{$GLOBALS['strSite']}</th>";
                 $text .= "<th>{$GLOBALS['strDescription']}</th><th>{$GLOBALS['strStatus']}</th><th>{$GLOBALS['strCredit']}</th><th>{$GLOBALS['strDebit']}</th></tr>";

@@ -175,7 +175,7 @@ else
 
             echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_term}</em>")."</p>";
 
-            echo "<table align='center'>
+            echo "<table class='maintable'>
             <tr>
             <th>{$strName}</th>
             <th>{$strSite}</th>

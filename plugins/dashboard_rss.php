@@ -285,7 +285,7 @@ function dashboard_rss_edit($dashletid)
 
             if (mysql_num_rows($result) > 0)
             {
-                echo "<table align='center'>\n";
+                echo "<table class='maintable'>\n";
                 echo "<tr><th>URL</th><th>{$GLOBALS['strDisplay']}</th><th>{$GLOBALS['strEnabled']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
                 $shade = 'shade1';
                 while ($obj = mysql_fetch_object($result))

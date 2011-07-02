@@ -740,7 +740,7 @@ $order = cleanvar($_REQUEST['order']);
 if (empty($order)) $order = 'd';
 
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
-echo "<table align='center'>";
+echo "<table class='maintable'>";
 echo "<tr><th>";
 echo "{$strSearch}: ";
 echo "</th>";

@@ -124,7 +124,7 @@ else
     echo "<input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
-    echo "<p align='center'>";
+    echo "<p class='return'>";
 
     if ($newsite)
     {

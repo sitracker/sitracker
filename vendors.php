@@ -54,7 +54,7 @@ switch ($action)
         clear_form_errors('edit_vendor');
         echo "<h2>" . icon('vendor', 32, $strVendors) . " {$strEditVendor}: {$vendorname}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}' name'editvendor'>";
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}' class='required' /> ";
         echo "<span class='required'>{$strRequired}</span></td></tr>";
         echo "</table>";
@@ -63,7 +63,7 @@ switch ($action)
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
-        echo "<p align='center'><a href='vendors.php'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='vendors.php'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
     default:
@@ -74,7 +74,7 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strVendor}</th><th>{$strActions}</th></tr>";
             $shade='shade1';
             while ($row = mysql_fetch_object($result))

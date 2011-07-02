@@ -49,7 +49,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
     }
     ksort($templates);
     $shade = 'shade1';
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strType}</th><th>{$strUsed}</th><th>{$strTemplate}</th><th>{$strActions}</th></tr>";
     foreach ($templates AS $template)
     {

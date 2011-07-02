@@ -58,7 +58,7 @@ else
     $num_tags = mysql_num_rows($result);
     if ($num_tags > 0)
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         while ($obj = mysql_fetch_object($result))
         {
             if ($col == 0) echo "<tr style='text-align: left;'>";

@@ -50,7 +50,7 @@ if (empty($submit))
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
-        echo "<p align='center'><a href='role.php?roleid={$roleid}'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='role.php?roleid={$roleid}'>{$strReturnWithoutSaving}</a></p>";
     }
     else
     {

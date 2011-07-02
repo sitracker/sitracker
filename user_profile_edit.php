@@ -44,7 +44,7 @@ if (empty($mode))
     echo "<h2>".icon('user', 32)." ";
     echo sprintf($strEditProfileFor, $user->realname).' '.gravatar($user->email)."</h2>";
     echo "<form id='edituser' action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<col width='250'></col><col width='*'></col>";
     echo "<tr><th colspan='2'>";
     if ($edituserid == $sit[2])

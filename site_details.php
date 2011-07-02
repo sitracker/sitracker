@@ -33,7 +33,7 @@ if ($id == '')
 }
 
 // Display site
-echo "<table align='center' class='vertical'>";
+echo "<table class='maintable vertical'>";
 $sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
 $siteresult = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -170,7 +170,7 @@ $countcontacts = mysql_num_rows($contactresult);
 if ($countcontacts > 0)
 {
     echo "<p align='center'>".sprintf($strContactsMulti, $countcontacts)."</p>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strName}</th><th>{$strJobTitle}</th>";
     echo "<th>{$strDepartment}</th><th>{$strTelephone}</th>";
     echo "<th>{$strEmail}</th><th>{$strAddress}</th>";
@@ -274,7 +274,7 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
     {
         echo "<p align='center'>";
         echo mysql_num_rows($result)." $strContracts</p>";
-        echo "<table align='center'>
+        echo "<table class='maintable'>
         <tr>
             <th>{$strContractID}</th>
             <th>{$strProduct}</th>

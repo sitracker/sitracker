@@ -24,7 +24,7 @@ if ($action == 'new')
     echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
     echo "<p align='center'>{$strNoticesBlurb}</p>";
     echo "<div align='center'><form action='{$_SERVER[PHP_SELF]}?action=post' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th><h3>{$strNotice}</h3></th>";
     echo "<td>";
     echo bbcode_toolbar('noticetext');
@@ -38,7 +38,7 @@ if ($action == 'new')
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' value='{$strSave}' /></p>";
     echo "</form></div>";
-    echo "<p align='center'><a href='notices.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='notices.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == 'post')
@@ -107,7 +107,7 @@ else
     $shade = 'shade1';
     if (mysql_num_rows($result) > 0)
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strActions}</th></tr>\n";
         while ($notice = mysql_fetch_object($result))
         {

@@ -200,7 +200,7 @@ switch ($_REQUEST['action'])
                 $newhash = md5($userdetails->username.'.ok.'.$userdetails->password);
                 echo "<h2>{$strSetPassword}</h2>";
                 echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-                echo "<table align='center' class='vertical'>";
+                echo "<table class='maintable vertical'>";
                 echo "<tr class='password'><th>{$strNewPassword}:</th>";
                 echo "<td><input maxlength='50' name='newpassword1' size='30' type='password' />";
                 echo "</td></tr>";

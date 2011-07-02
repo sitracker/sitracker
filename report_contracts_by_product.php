@@ -42,7 +42,7 @@ if (mysql_num_rows($result) > 0)
     }
     arsort($productlist, SORT_NUMERIC);
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>#</th><th>{$strProduct}</th><th>{$strContracts}</th></tr>\n";
     $count = 1;
     $shade = 'shade1';

@@ -214,7 +214,7 @@ else
 
         if ($monthbreakdownstatus === "on")
         {
-            echo "<p><table align='center'>";
+            echo "<p><table class='maintable'>";
             echo "<tr><th>{$strMonth}</th><th>{$strNumOfCalls}</th></tr>";
             $shade = 'shade1';
 
@@ -241,7 +241,7 @@ else
 
             $shade = "shade1";
 
-            echo "<p><table align='center'><tr><td></td>";
+            echo "<p><table class='maintable'><tr><td></td>";
             foreach ($months AS $m)
             {
                 echo "<th>{$m}</th>";

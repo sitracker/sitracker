@@ -37,7 +37,7 @@ if (mysql_num_rows($tresult) >= 1)
 {
     $minsinday = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     while ($tag = mysql_fetch_object($tresult))
     {
         echo "<thead><tr><th colspan='9'>{$tag->tag}</th></tr></thead>";

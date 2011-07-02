@@ -54,7 +54,7 @@ if (!empty($roleid))
         else
         {
             $class = 'shade1';
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr>";
             echo colheader('userid', $strID);
             echo colheader('name', $strName);
@@ -82,7 +82,7 @@ if (!empty($roleid))
         else
         {
             $class = 'shade1';
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr>";
             echo colheader('permissionid', $strID);
             echo colheader('permissionname', $strName);

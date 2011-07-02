@@ -51,11 +51,11 @@ if (empty($_REQUEST['submit']))
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     if (!empty($product))
     {
-        echo "<p><a href=\"products.php?productid={$product}\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"products.php?productid={$product}\">{$strReturnWithoutSaving}</a></p>";
     }
     else
     {
-        echo "<p><a href=\"products.php\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"products.php\">{$strReturnWithoutSaving}</a></p>";
     }
 
     echo "</form>";

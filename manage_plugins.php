@@ -184,7 +184,7 @@ switch ($seltab)
     case 'repository':
         if (is_array($_SESSION['available_plugins']))
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strActions}</tr>";
             $shade = 'shade1';
             foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
@@ -221,7 +221,7 @@ switch ($seltab)
         if (is_array($ondisk_plugins))
         {
             ksort($ondisk_plugins);
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strActions}</tr>";
             $shade = 'shade1';
             foreach($ondisk_plugins AS $ondisk_plugin => $ondisk_plugin_details)

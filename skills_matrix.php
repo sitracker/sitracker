@@ -140,7 +140,7 @@ if ($countskills > 0 AND $countusers > 0)
         }
     }
     mysql_data_seek($result, 0);
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     $shade = 'shade1';
     echo "<thead><tr><td>{$strSkill}</td>";
     foreach ($users AS $u)

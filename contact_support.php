@@ -53,7 +53,7 @@ echo "<h3>{$strAllIncidents}</h3>";
 
 echo context_menu();
 
-echo "<table align='center'>";
+echo "<table class='maintable'>";
 echo "<tr>";
 echo "<th>{$strIncidentID}</th>";
 echo "<th>{$strTitle}</th>";

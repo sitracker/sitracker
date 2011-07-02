@@ -48,7 +48,7 @@ if (empty($_REQUEST['mode']))
     echo "</p>";
     echo "</form>";
 
-    echo "<table align='center'><tr><td>";
+    echo "<table class='maintable'><tr><td>";
     echo "<h4>{$strCSVFileFormatAsFollows}:</h4>";
     echo "<strong>{$strField1}:</strong> {$strSite}<br />";
     echo "<strong>{$strField2}:</strong> {$strAddress1}<br />";

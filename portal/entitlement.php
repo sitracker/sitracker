@@ -23,7 +23,7 @@ echo " {$strYourSupportEntitlement}</h2>";
 
 if (sizeof($_SESSION['entitlement']) >= 1)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     echo colheader('id',$strContractID);
     echo colheader('name',$strProduct);

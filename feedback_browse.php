@@ -64,7 +64,7 @@ switch ($mode)
 
         if (mysql_num_rows($qresult) >= 1)
         {
-            $html .= "<table align='center' class='vertical'>";
+            $html .= "<table class='maintable vertical'>";
 
             $numresults = 0;
             $cumul = 0;

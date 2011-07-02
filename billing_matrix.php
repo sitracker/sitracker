@@ -38,7 +38,7 @@ if (mysql_num_rows($result) >= 1)
         $matrixresult = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<thead><tr><th colspan='9'>{$matrix->tag} <a href='billing_matrix_edit.php?tag={$matrix->tag}'>{$strEdit}</a></th></tr></thead>\n";
         echo "<tr><th>{$strHour}</th><th>{$strMonday}</th><th>{$strTuesday}</th>";
         echo "<th>{$strWednesday}</th><th>{$strThursday}</th><th>{$strFriday}</th>";

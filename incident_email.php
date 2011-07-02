@@ -76,7 +76,7 @@ switch ($step)
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
         echo "<h2>".icon('email', 32)." {$strSendEmail}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' name='updateform' method='post'>";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strTemplate}</th><td>".emailtemplate_drop_down("emailtype", 1, 'incident')."</td></tr>";
         echo "<tr><th>{$strDoesThisUpdateMeetSLA}:</th><td>";
         $target = incident_get_next_target($id);

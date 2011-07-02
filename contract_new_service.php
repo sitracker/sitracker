@@ -55,7 +55,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     $timed = is_contract_timed($contractid);
 
     echo "<form id='serviceform' name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     if ($timed) echo "<thead>\n";
     echo "<tr><th>{$strStartDate}</th>";
     echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
@@ -154,7 +154,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>\n";
 
-    echo "<p align='center'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
 
     //cleanup form vars
     clear_form_data('new_service');

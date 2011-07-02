@@ -59,7 +59,7 @@ if (empty($_REQUEST['mode']))
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>";
-    echo "<table align='center'><tr><td>";
+    echo "<table class='maintable'><tr><td>";
     echo "<h4>{$strCSVFileFormatAsFollows}:</h4>";
     echo "<strong>{$strField1}:</strong> {$strForenames}<br />";
     echo "<strong>{$strField2}:</strong> {$strSurname}<br />";

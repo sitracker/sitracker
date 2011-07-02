@@ -143,7 +143,7 @@ switch ($_REQUEST['mode'])
             echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<p><input type='reset' value=\"{$strReset}\" /> <input type='submit' value=\"{$strSave}\" /></p>";
             echo "</form>";
-            echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strReturnWithoutSaving}</a></p>";
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
         else
@@ -235,7 +235,7 @@ switch ($_REQUEST['mode'])
 
         if (mysql_num_rows($result) >= 1)
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strAction}</th><th>{$strStartDate}</th><th>{$strInterval}</th>";
             echo "<th>{$strEndDate}</th><th>{$strLastRan}</th><th>{$strNextRun}</th></tr>\n";
             while ($schedule = mysql_fetch_object($result))

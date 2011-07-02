@@ -33,7 +33,7 @@ if (empty($action) OR $action == "showform" OR empty($contact))
     // Show select contact form
     echo "<h2>".icon('contact', 32)." {$strEditContact}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("contact", 0)."</td></tr>";
     echo "</table>";
     echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
@@ -54,7 +54,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<h2>".icon('contact', 32)." ";
         echo "{$strEditContact}: {$contact}</h2>";
         echo "<form name='contactform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\");'>";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strName}</th>\n";
         echo "<td>";
         echo "\n<table><tr><td align='center'>{$strTitle}<br />";
@@ -143,7 +143,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
 
-        echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>\n";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

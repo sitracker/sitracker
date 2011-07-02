@@ -114,7 +114,7 @@ else
                     echo " {$strResults}</h3>";
                 }
 
-                echo "<table align='center'>
+                echo "<table class='maintable'>
                 <tr>
                 <th>{$strContract}</th>
                 <th>{$strSite}</th>

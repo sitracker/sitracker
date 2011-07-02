@@ -100,7 +100,7 @@ $journaltype[CFG_JOURNAL_TASKS] = $strTasks;
 $journal_count = mysql_num_rows($result);
 if ($journal_count >= 1)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     $filter = array('page' => $page);
     echo colheader('userid', $strUser, $sort, $order, $filter);

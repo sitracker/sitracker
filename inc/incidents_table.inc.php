@@ -21,7 +21,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 if ($CONFIG['debug']) echo "<!-- Support Incidents Table -->";
 
-echo "<table align='center'>";
+echo "<table class='maintable'>";
 echo "<col width='7%'></col>";
 echo "<col width='22%'></col>";
 echo "<col width='17%'></col>";

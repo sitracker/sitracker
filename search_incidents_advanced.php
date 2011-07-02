@@ -170,7 +170,7 @@ else
         else
         {
             echo "<h2>".sprintf($strResultsNum, $countresults)."</h2>";
-            echo "<table align='center'>
+            echo "<table class='maintable'>
             <tr>
             <th>{$strID} (Ext ID)</th>
             <th>{$strTitle}</th>
