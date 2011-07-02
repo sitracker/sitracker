@@ -412,8 +412,6 @@ switch ($_REQUEST['mode'])
 
                 echo "</td>";
                 echo "</tr>";
-                if ($shade == 'shade1') $shade = 'shade2';
-                else $shade = 'shade1';
             }
             echo "</table>\n";
 
