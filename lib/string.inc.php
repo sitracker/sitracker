@@ -192,7 +192,6 @@ function filter_css_filenames($var)
 /**
  * Array walk callback convert an css filename to a theme name
  * @author Ivan Lucas
- * @param string $filename. Filename of theme file (opt. with path)
  * @return nothing
  */
 function css_filename_to_themename(&$elem, $key)
@@ -229,6 +228,22 @@ function i18n_code_to_name($code)
         else return $code;
     }
 }
+
+
+/**
+ * Array walk callback to enclose each string element of an array with a given
+   string (single quote by default)
+ * @author Ivan Lucas
+ * @param string $elem Array element / value
+ * @param string $key Array key
+ * @param string $enclosestring The string place around the value
+ * @return nothing
+ */
+function enclose_array_values(&$elem, $key, $enclosestring = '\'')
+{
+    $elem = "{$enclosestring}{$elem}{$enclosestring}";
+}
+
 
 /**
  * Make a string quoted, that is prefix lines with >
