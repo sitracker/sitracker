@@ -113,12 +113,14 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 /* ID & Class Selectors */
 
+
+#container p { text-align: left; }
+#container .formbuttons, #container .return { text-align: center; }
 #checksbox p { text-align: left; }
 #emailtemplatesbox p { text-align: left; }
 #noticetemplatesbox p { text-align: left; }
-
-#container p { text-align: left; }
 #actiondetails p { text-align: center; }
+
 #aboutcreditcontent p { text-align: center; }
 
 #masthead {
@@ -307,6 +309,9 @@ div#menu li:hover li ul,
     background-position: 100% 5px;
 }
 
+
+.return { text-align: center; }
+
 .actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
 
 th:hover { background: #E9E9E9; }
@@ -449,7 +454,7 @@ p.alert { border-style: inset; }
 
 div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
 
-p.formbuttons { text-align: center; }
+.formbuttons { text-align: center; }
 
 p.trigger
 {

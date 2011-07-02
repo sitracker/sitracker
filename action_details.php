@@ -166,7 +166,7 @@ switch ($action)
     //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
     //         }
     //     }
-        echo "<p align='center'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p></div>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 
