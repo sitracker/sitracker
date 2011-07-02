@@ -649,7 +649,7 @@ $CFGVAR['tag_icons']['help'] = "You can specify icons to display next to certain
 $CFGVAR['tag_icons']['type'] = '2darray';
 
 $CFGVAR['default_chart']['title'] = "Default Chart";
-$CFGVAR['default_chart']['help'] = "The dedfault charting library to use.";
+$CFGVAR['default_chart']['help'] = "The default charting library to use.";
 $CFGVAR['default_chart']['type'] = 'chartselector';
 
 $CFGVAR['tasks_enabled']['title'] = "Enable Tasks";
