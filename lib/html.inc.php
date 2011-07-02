@@ -2382,4 +2382,20 @@ function html_hmenu($hmenu)
     return $html;
 }
 
+
+/**
+  * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
+  * @author Ivan Lucas
+  * @param string $address, address to search for
+  * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
+*/
+function map_link($address)
+{
+    $url = str_replace('{address}', urlencode($address), $GLOBALS['CONFIG']['map_url']);
+    $link = "<span class='maplink'><a target='_blank' href=\"{$url}\">{$GLOBALS['strMap']}</a></span>";
+
+    return $link;
+}
+
+
 ?>
