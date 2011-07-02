@@ -115,7 +115,6 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 
 #container p { text-align: left; }
-#container .formbuttons, #container .return { text-align: center; }
 #checksbox p { text-align: left; }
 #emailtemplatesbox p { text-align: left; }
 #noticetemplatesbox p { text-align: left; }
@@ -310,7 +309,7 @@ div#menu li:hover li ul,
 }
 
 
-.return { text-align: center; }
+.return, #container .return { text-align: center; }
 
 .actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
 
@@ -454,7 +453,7 @@ p.alert { border-style: inset; }
 
 div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
 
-.formbuttons { text-align: center; }
+.formbuttons, #container .formbuttons { text-align: center; }
 
 p.trigger
 {
