@@ -635,7 +635,17 @@ function process_new_contact($mode = 'internal')
         $sql .= "'{$dataprotection_phone}', '{$dataprotection_address}', '{$now}', '{$now}', now(), '{$sit[2]}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
+        if (!$result)
+        {
+            if ($mode == 'internal')
+            {
+                html_redirect("contact_new.php", FALSE);
+            }
+            else
+            {
+                html_redirect("newcontact.php", FALSE);
+            }
+        }
         // concatenate username with insert id to make unique
         $newid = mysql_insert_id();
         $username = $username . $newid;
