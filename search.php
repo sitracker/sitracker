@@ -763,7 +763,7 @@ else
 
 echo "' /></p></form>";
 
-echo "<h3>".icon('help', 32, 'Help', 'Help', 'search_help')."   Search Help:</h3>";
+echo "<h3>".icon('help', 32, $strHelp)."  {$strHelp}</h3>";
 echo "<div class='help' id='help'>";
 echo file_get_help_textfile('SearchHelp');
 echo "<a class = 'helplink' href='http://sitracker.org/wiki/Search'>{$strReadWikiArticleHere} ..</a></div>";
