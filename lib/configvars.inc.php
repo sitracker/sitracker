@@ -141,7 +141,7 @@ $CFGCAT['ldap'] = array('use_ldap',
 $CFGCAT['soap'] = array('soap_enabled',
                          'soap_portal_enabled');
 
-$CFGCAT['users'] = array('user_config_defaults');
+$CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
 $CFGCAT['contacts'] = array('contact_config_defaults');
 
@@ -163,7 +163,7 @@ $CFGCAT['other'] = array('debug', 'error_logfile',
                           'changelogfile','creditsfile',
                           'licensefile',
                           'session_name',
-                          'upload_max_filesize','default_roleid','trusted_server');
+                          'upload_max_filesize','trusted_server');
 
 $CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
 
