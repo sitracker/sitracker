@@ -908,7 +908,6 @@ $strInitialResponseAbv = 'IR';
 $strInitialResponseBy = 'Initial Response by %s';
 $strInitialResponseHasBeenMade = 'The Initial Response has been made';
 $strInitialResponseSLA = 'Initial Response SLA';
-$strInternet = 'Internet';
 $strInMeeting = 'In Meeting';
 $strInMinutes = 'in minutes';
 $strInOffice = 'In Office';
