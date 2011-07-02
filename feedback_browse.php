@@ -34,7 +34,7 @@ switch ($mode)
 {
     case 'viewresponse':
         echo "<h2>".icon('contract', 32)." {$strFeedback}</h2>";
-        $sql = "SELECT * FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
+        $sql = "SELECT contactid, completed, incidentid, formid, created FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $response = mysql_fetch_object($result);
@@ -58,7 +58,7 @@ switch ($mode)
         $numquestions=0;
 
         // Return Ratings
-        $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='rating' ORDER BY taborder";
+        $qsql = "SELECT id, taborder, question FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='rating' ORDER BY taborder";
         $qresult = mysql_query($qsql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -118,7 +118,7 @@ switch ($mode)
             $html .= "<p align='center'>{$strAnswered}: <strong>{$statquestions}</strong>/{$numresults}</p>";
 
             // Return text/options/multioptions fields
-            $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
+            $qsql = "SELECT id, taborder, question FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
             $qresult = mysql_query($qsql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -166,7 +166,7 @@ switch ($mode)
         echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>";
         break;
     default:
-        $sql = "SELECT * FROM `{$dbFeedbackForms}`";
+        $sql = "SELECT name FROM `{$dbFeedbackForms}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         $fresult = mysql_fetch_object($result);
@@ -183,7 +183,8 @@ switch ($mode)
             if (empty($formid) AND !empty($CONFIG['feedback_form'])) $formid = $CONFIG['feedback_form'];
             else $formid = 1;
 
-            $sql  = "SELECT *, fr.created as respcreated, fr.id AS respid FROM `{$dbFeedbackRespondents}` AS fr, `{$dbFeedbackForms}` AS ff ";
+            $sql  = "SELECT formid, contactid, incidentid, email, multi, completed, ";
+            $sql .= "fr.created as respcreated, fr.id AS respid FROM `{$dbFeedbackRespondents}` AS fr, `{$dbFeedbackForms}` AS ff ";
             $sql .= "WHERE fr.formid = ff.id ";
             if ($completed == 'no') $sql .= "AND completed='no' ";
             else $sql .= "AND completed='yes' ";
@@ -235,13 +236,12 @@ switch ($mode)
                 $shade = 'shade1';
                 while ($resp = mysql_fetch_object($result))
                 {
-                    $respondentarr = explode('-', $resp->respondent);
-                    $responserefarr = explode('-', $resp->responseref);
-
                     $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid, contact_email($resp->contactid));
                     echo "<tr class='{$shade}'>";
                     echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($resp->respcreated))."</td>";
-                    echo "<td><a href='contact_details.php?id={$resp->contactid}' title='{$resp->email}'>".contact_realname($resp->contactid)."</a> {$strFrom} <a href='site_details.php?id=".contact_siteid($resp->contactid)."'>".contact_site($resp->contactid)."</a> </td>";
+                    echo "<td><a href='contact_details.php?id={$resp->contactid}' ";
+                    echo "title='{$resp->email}'>".contact_realname($resp->contactid);
+                    echo "</a> {$strFrom} <a href='site_details.php?id=".contact_siteid($resp->contactid)."'>".contact_site($resp->contactid)."</a> </td>";
                     echo "<td>".html_incident_popup_link($resp->incidentid, "{$strIncident} [{$resp->incidentid}]")." - ";
                     echo incident_title($resp->incidentid)."</td>";
                     $url = "feedback.php?ax={$hashcode}";
@@ -250,7 +250,6 @@ switch ($mode)
                     echo "<td>";
                     if ($resp->completed == 'no') echo "<a href='{$url}' title='{$url}' target='_blank'>URL</a>";
                     $eurl = urlencode($url);
-                    $eref = urlencode($resp->responseref);
                     if ($resp->completed == 'no')
                     {
                         //if ($resp->remind<1) echo "<a href='formactions.php?action=remind&amp;id={$resp->respid}&amp;url={$eurl}&amp;ref={$eref}' title='Send a reminder by email'>Remind</a>";
