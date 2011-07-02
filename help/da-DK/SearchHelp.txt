@@ -1,0 +1,9 @@
+<strong>Søge eksempler</strong><dl>
+<dt>debian linux</dt><dd>Find hændelser der indeholder mindst en af de to ord.</dd>
+<dt>+debian +linux</dt><dd>Find hændelser der indeholde begge ord.</dd>
+<dt>+apple macintosh</dt><dd>Find hændelser der indeholder ordet "apple", men rang hændelser højere hvis de også indeholder “macintosh”.</dd>
+<dt>+apple -macintosh</dt><dd>Find hændelser der indeholder ordet “apple” men ikke “macintosh”.</dd>
+<dt>+apple ~macintosh</dt><dd>Find hændelser der indeholder ordet “apple”, men hvis hændelsen også indeholder ordet “macintosh” rang dem lavere hvis de ikke gør. Dette er mindre restriktivt end en søgning på '+apple -macintosh', for hvis ordet “macintosh” er tilstede vil resultatet ikke blive vist</dd>
+<dt>+linux +(&gt;debian &lt;suse)</dt><dd>Find hændelser der indeholder ordene  “linux” og “debian”, eller “linux” og “debian” (i hvilken somhelst orden), men rank “linux debian” højere end “linux suse”.</dd>
+<dt>apple*</dt><dd>Find hændelser der indeholder ordene så som “apple”, “apples”, “applesauce”, or “applet”.</dd>
+<dt>”debian linux”</dt><dd>Find hændelser der indeholder den nøjagtige frase ”debian linux” (for eksempel, hændelser der indeholder ”debian linux er godt” men ikke ”debian er et godt linux OS”). Bemærk at " tegn, der omslutter en sætning er operatør tegn, der afgrænser den sætning. De er ikke de " tegn, der omgiver søgestrengen selv.</dd></dl>
