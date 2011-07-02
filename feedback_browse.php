@@ -46,12 +46,12 @@ switch ($mode)
         {
             $responsecompleted = $strNo;
         }
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strContact}</th><td>{$response->contactid} - ".contact_realname($response->contactid)."</td></tr>\n";
-        echo "<tr><th>{$strIncident}</th><td>".html_incident_popup_link($response->incidentid, "{$response->incidentid} - ".incident_title($response->incidentid))."</td>\n";
-        echo "<tr><th>{$strForm}</th><td>{$response->formid} - ".db_read_column('name', $dbFeedbackForms, $response->formid)." </td>\n";
-        echo "<tr><th>{$strDate}</th><td>{$response->created}</td>\n";
-        echo "<tr><th>{$strCompleted}</th><td>{$responsecompleted}</td>\n";
+        echo "<tr><th>{$strIncident}</th><td>".html_incident_popup_link($response->incidentid, "{$response->incidentid} - ".incident_title($response->incidentid))."</td></tr>\n";
+        echo "<tr><th>{$strForm}</th><td>{$response->formid} - ".db_read_column('name', $dbFeedbackForms, $response->formid)." </td></tr>\n";
+        echo "<tr><th>{$strDate}</th><td>{$response->created}</td></tr>\n";
+        echo "<tr><th>{$strCompleted}</th><td>{$responsecompleted}</td></tr>\n";
         echo "</table>\n";
 
         echo "<h3>{$strResponsesToFeedbackForm}</h3>";
@@ -163,7 +163,7 @@ switch ($mode)
             echo user_alert($strNoResponseFound, E_USER_NOTICE);
         }
         plugin_do('feedback_browse_viewresponse');
-        echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</p>";
+        echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>";
         break;
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}`";
