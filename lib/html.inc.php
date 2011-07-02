@@ -1139,12 +1139,12 @@ function contract_details($id, $mode='internal')
                     }
                     $supportcount++;
                 }
-                $html .= "</table>";
             }
             else
             {
-                $html .= user_alert($strNoRecords, E_USER_NOTICE);
+                $html .= "<tr><td>".user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE)."</td></tr>";
             }
+            $html .= "</table>";
         }
 
         if ($maint->allcontactssupported != 'yes')
