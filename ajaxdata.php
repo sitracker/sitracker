@@ -355,7 +355,7 @@ switch ($action)
         break;
     case 'set_user_status':
         $userstatus = cleanvar($_REQUEST['userstatus']);
-        $result = set_user_status($userstatus);
+        $result = set_user_status($_SESSION['userid'], $userstatus);
         if ($result === FALSE)
         {
             echo 'FALSE';

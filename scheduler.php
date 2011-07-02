@@ -137,7 +137,7 @@ switch ($_REQUEST['mode'])
 
             echo "</td></tr>";
             echo "</tbody>";
-
+            echo "<tr><th>{$strOptions}</th><td><label><input name='reset_saction' type='checkbox' value='reset' /> {$strReset}</td></tr>";
             echo "</table>";
             echo "<input type='hidden' name='mode' value='save' />";
             echo "<input type='hidden' name='id' value='{$id}' />";
@@ -198,6 +198,10 @@ switch ($_REQUEST['mode'])
             $setsql = " `date_type` = '{$frequency}', `date_offset` = '{$date_offset}', ";
             $setsql .= "`date_time` = '{$date_time}', `type` = 'date' ";
         }
+        if (!empty($_REQUEST['reset_saction']))
+        {
+            $setsql .= ", `lastran` = NULL, `laststarted` = NULL, `success` = 1 ";
+        }
 
         $sql = "UPDATE `{$dbScheduler}` SET `status`='{$status}', `start`='{$start}', `end`='{$end}', {$setsql} ";
         if ($status = 'enabled')
@@ -228,7 +232,7 @@ switch ($_REQUEST['mode'])
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
         echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
-        echo "<h3>".ldate($CONFIG['dateformat_datetime'], $GLOBALS['now'], FALSE)."</h3>";
+        echo "<h3>".ldate($CONFIG['dateformat_datetime'], $GLOBALS['now'], FALSE)." - <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></h3>";
         $sql = "SELECT * FROM `{$dbScheduler}` ORDER BY action";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -242,16 +246,25 @@ switch ($_REQUEST['mode'])
             {
                 $shade = 'shade1';
                 $lastruntime = mysql2date($schedule->lastran);
+                $laststarted = mysql2date($schedule->laststarted);
                 if ($schedule->success == 0)
                 {
+                    // Failed
                     $shade = 'critical';
                 }
                 elseif ($schedule->status == 'disabled')
                 {
+                    // Disabled
                     $shade = 'expired';
+                }
+                elseif ($lastruntime > 0 AND $laststarted > $lastruntime)
+                {
+                    // Active / Running now
+                    $shade = 'shade2';
                 }
                 elseif ($lastruntime > 0 AND $lastruntime + $schedule->interval < $now)
                 {
+                    // Due Now
                     $shade = 'notice';
                 }
 
@@ -420,9 +433,10 @@ switch ($_REQUEST['mode'])
             {
                 echo "<br />";
                 echo "<table class='legend'><tr>";
-                echo "<td class='shade1'>{$strOK}</td>";
-                echo "<td class='notice'>{$strDueNow}</td>";
                 echo "<td class='expired'>{$strDisabled}</td>";
+                echo "<td class='shade1'>{$strOK}</td>";
+                echo "<td class='shade2'>{$strActive}</td>";
+                echo "<td class='notice'>{$strDueNow}</td>";
                 echo "<td class='critical'>{$strFailed}</td>";
                 echo "</tr></table>";
             }

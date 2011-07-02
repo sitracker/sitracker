@@ -340,7 +340,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
 
     ksort($hmenu[0], SORT_NUMERIC);
 }
-if ($CONFIG['debug']) $dbg .= print_r($hmenu,true);  // FIXME remove before release
+
 //
 // Non specific update types
 //

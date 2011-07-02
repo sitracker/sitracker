@@ -120,7 +120,7 @@ if (is_numeric($q))
                     echo $_CONFIG['application_webpath'];
                 }
             }
-            
+
             echo "';\n";
             echo "//]]></script>";
         }
@@ -458,7 +458,7 @@ if (!empty($q))
         echo colheader(email, $strEmail, $sort, $order, $filter);
         echo colheader(telephone, $strTelephone, $sort, $order, $filter);
         echo colheader(fax, $strFax, $sort, $order, $filter);
-        echo colheader(action, "", $sort, $order, $filter);
+        echo colheader(action, $strAction, $sort, $order, $filter);
         echo "</tr>";
 
         $shade = 'shade1';
@@ -763,7 +763,7 @@ else
 
 echo "' /></p></form>";
 
-echo "<h3>".icon('help', 32, 'Help', 'Help', 'search_help')."   Search Help:</h3>";
+echo "<h3>".icon('help', 32, $strHelp)."  {$strHelp}</h3>";
 echo "<div class='help' id='help'>";
 echo file_get_help_textfile('SearchHelp');
 echo "<a class = 'helplink' href='http://sitracker.org/wiki/Search'>{$strReadWikiArticleHere} ..</a></div>";
