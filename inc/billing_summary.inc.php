@@ -168,7 +168,7 @@ if (mysql_num_rows($result) > 0)
                 }
             }
 
-            $str .= "\"".ldate('Y-m-d', $obj->maintexpiry)."\",";
+            $str .= "\"".ldate($CONFIG['dateformat_date'], $obj->maintexpiry)."\",";
             $str .= "\"{$obj->cust_ref}\",\"{$obj->startdate}\",\"{$obj->enddate}\",";
             if ($obj->foc == 'yes') $str .= "\"{$strYes}\",";
             else $str .= "\"{$strNo}\",";
