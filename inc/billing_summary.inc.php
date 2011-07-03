@@ -58,7 +58,7 @@ if (mysql_num_rows($result) > 0)
 {
     if ($display == 'html')
     {
-        $str .= "<table class='maintable vertical'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
+        $str .= "<table class='maintable'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
         $str .= "<th>{$strExpiryDate}</th><th>{$strCustomerReference}</th><th>{$strStartDate}</th><th>{$strEndDate}</th>";
         $str .= "<th>{$strFreeOfCharge}</th><th>{$strCreditAmount}</th><th>{$strBalance}</th>";
         $str .= "<th>{$strAwaitingApproval}</th><th>{$strReserved}</th><th>{$strAvailableBalance}</th>";
