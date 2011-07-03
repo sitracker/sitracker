@@ -352,7 +352,7 @@ elseif ($mode == 'approvalpage')
                         }
                         elseif ($unapprovable)
                         {
-                        	$line .= $strUnapprovable;
+                            $line .= $strUnapprovable;
                         }
                         else
                         {
