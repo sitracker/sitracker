@@ -1143,7 +1143,7 @@ function contract_details($id, $mode='internal')
             }
             else
             {
-                $html .= user_alert($strNoRecords, E_USER_NOTICE);
+                $html .= user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
             }
         }
 
