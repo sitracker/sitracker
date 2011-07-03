@@ -1839,7 +1839,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 }
 
                 $str = "<tr class='$shade'>";
-                $str .= "<td>{$transaction->dateupdated}</td>";
+                $str .= "<td>" . date($CONFIG['dateformat_datetime'], mysql2date($transaction->dateupdated)) . "</td>";
                 $str .= "<td>{$transaction->transactionid}</td>";
                 $str .= "<td>{$transaction->serviceid}</td>";
                 $str .= "<td>".site_name($transaction->site)."</td>";
@@ -1881,7 +1881,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                     }
                 }
 
-                $str = "\"{$transaction->dateupdated}\",";
+                $str = "\"" . date($CONFIG['dateformat_datetime'], mysql2date($transaction->dateupdated)) . "\",";
                 $str .= "\"{$transaction->transactionid}\",";
                 $str .= "\"{$transaction->serviceid}\",\"";
                 $str .= site_name($transaction->site)."\",";
