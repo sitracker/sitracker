@@ -185,7 +185,6 @@ function is_contract_timed($contractid)
 }
 
 
-
 /**
  * Set the last billing time on a service
  * @param int $serviceid - service ID
@@ -218,6 +217,7 @@ function update_last_billed_time($serviceid, $date)
 
     return $rtnvalue;
 }
+
 
 /**
  * Find the billing multiple that should be applied given the day, time and matrix in use
