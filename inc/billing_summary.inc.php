@@ -80,8 +80,8 @@ if (mysql_num_rows($result) > 0)
     {
         if ($obj->foc == 'yes' AND !empty($focaszero))
         {
-			$obj->creditamount = 0;
-			$obj->balance = 0;
+            $obj->creditamount = 0;
+            $obj->balance = 0;
         }
 
         if (!empty($expiredaszero) AND strtotime($obj->enddate) < $now)
