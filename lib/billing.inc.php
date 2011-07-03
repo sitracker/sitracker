@@ -1953,6 +1953,8 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
             {
                 $table .= $str;
             }
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
 
         if ($sitebreakdown == TRUE)
@@ -2019,10 +2021,6 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $text .= "{$csv_currency}".number_format($totaldebit, 2)."\"\n";
             }
         }
-
-
-        if ($shade == 'shade1') $shade = 'shade2';
-        else $shade = 'shade1';
     }
     else
     {
