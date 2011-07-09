@@ -1142,11 +1142,7 @@ function contract_details($id, $mode='internal')
             }
             else
             {
-<<<<<<< HEAD
                 $html .= "<tr><td>".user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE)."</td></tr>";
-=======
-                $html .= user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
->>>>>>> sit/master
             }
             $html .= "</table>";
         }
