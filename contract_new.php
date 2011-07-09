@@ -127,8 +127,8 @@ if ($action == "showform" OR $action == '')
     echo "{$strPerIncident}</label>";
     echo "</td></tr>\n";
 
-    echo "<tr><th>{$strAmount}</th><td>{$CONFIG['currency_symbol']}";
-    echo "<input maxlength='7' name='amount' size='5'  ";
+    echo "<tr><th>{$strCreditAmount}</th><td>{$CONFIG['currency_symbol']}";
+    echo "<input maxlength='7' name='amount' size='5' class='required' ";
     if ($_SESSION['formdata']['new_contract']['amount'] != '')
     {
         echo "value='{$_SESSION['formdata']['new_contract']['amount']}'  ";
@@ -137,7 +137,7 @@ if ($action == "showform" OR $action == '')
     {
         echo "value='0' ";
     }
-    echo "/></td></tr>\n";
+    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
     echo "<input class='required' type='text' name='unitrate' size='5' ";
