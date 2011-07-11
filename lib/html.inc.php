@@ -1867,7 +1867,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<tr><th>{$GLOBALS['strEmailDetails']}</th>";
     // Check the box to send portal details, only if portal is enabled
-    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails'";
+    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails' value='on'";
     if ($CONFIG['portal'] == TRUE) $html .= " checked='checked'";
     else $html .= " disabled='disabled'";
     $html .= " />";
