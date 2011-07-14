@@ -64,6 +64,7 @@ if (!empty($selected))
 {
     foreach ($selected as $taskid)
     {
+        $taskid = clean_int($taskid);
         if ($_POST['action'] == 'markcomplete')
         {
             mark_task_completed($taskid, FALSE);
