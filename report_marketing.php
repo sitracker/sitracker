@@ -127,8 +127,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $incsql .= "(";
         for ($i = 0; $i < $includecount; $i++)
         {
-            // $html .= "{$_POST['inc'][$i]} <br />";
-            $incsql .= "product={$_POST['inc'][$i]}";
+            $incsql .= "product= ".clean_int($_POST['inc'][$i]);
             if ($i < ($includecount-1)) $incsql .= " OR ";
         }
         $incsql .= ")";
@@ -140,8 +139,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $excsql .= "(";
         for ($i = 0; $i < $excludecount; $i++)
         {
-            // $html .= "{$_POST['exc'][$i]} <br />";
-            $excsql .= "product!={$_POST['exc'][$i]}";
+            $excsql .= "product!=".clean_int($_POST['exc'][$i]);
             if ($i < ($excludecount-1)) $excsql .= " AND ";
         }
         $excsql .= ")";

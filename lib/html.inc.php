@@ -1139,12 +1139,12 @@ function contract_details($id, $mode='internal')
                     }
                     $supportcount++;
                 }
-                $html .= "</table>";
             }
             else
             {
-                $html .= user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
+                $html .= "<tr><td>".user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE)."</td></tr>";
             }
+            $html .= "</table>";
         }
 
         if ($maint->allcontactssupported != 'yes')
@@ -1867,7 +1867,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<tr><th>{$GLOBALS['strEmailDetails']}</th>";
     // Check the box to send portal details, only if portal is enabled
-    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails'";
+    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails' value='on'";
     if ($CONFIG['portal'] == TRUE) $html .= " checked='checked'";
     else $html .= " disabled='disabled'";
     $html .= " />";
