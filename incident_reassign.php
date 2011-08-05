@@ -42,11 +42,6 @@ switch ($action)
         $userid = clean_int($_REQUEST['userid']);
         $temporary = cleanvar($_REQUEST['temporary']);
         $id = clean_int($_REQUEST['id']);
-
-        echo "<pre>";
-        print_r ($_REQUEST);
-        echo "</pre>";
-        exit;
         
         if ($tempnewowner == 'yes') $temporary = 'yes';
 
@@ -100,6 +95,7 @@ switch ($action)
             $sql .= "owner='{$userid}', ";
             $triggeruserid = $userid;
         }
+        
         $sql .= "status='{$newstatus}', lastupdated='{$now}' WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
