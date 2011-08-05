@@ -463,7 +463,7 @@ elseif ($mode == 'approvalpage')
 
     if ($output == 'html')
     {
-        echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+        echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }

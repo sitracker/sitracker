@@ -186,7 +186,7 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
     }
     if ($CONFIG['portal_kb_enabled'] == 'Public' AND $_SESSION['portalauth'] != TRUE)
     {
-        echo "<p align='center'><a href=\"../index.php\">{$strBackToLoginPage}</a></p>";
+        echo "<p class='return'><a href=\"../index.php\">{$strBackToLoginPage}</a></p>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

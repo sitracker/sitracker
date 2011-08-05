@@ -400,11 +400,11 @@ else
 
     echo "<h3>{$strDisclaimer}</h3>";
     echo $CONFIG['kb_disclaimer_html'];
-    echo "<p align='center'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
     echo $sectionstore;
     echo "</form></div>";
-    echo "<p align='center'><a href='kb_view_article.php?id=$kbid'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='kb_view_article.php?id=$kbid'>{$strReturnWithoutSaving}</a></p>";
     echo "<script type='text/javascript'>\n//<![CDATA[\nkbSectionCollapse();\n//]]>\n</script>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

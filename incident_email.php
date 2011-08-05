@@ -76,7 +76,7 @@ switch ($step)
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
         echo "<h2>".icon('email', 32)." {$strSendEmail}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' name='updateform' method='post'>";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strTemplate}</th><td>".emailtemplate_drop_down("emailtype", 1, 'incident')."</td></tr>";
         echo "<tr><th>{$strDoesThisUpdateMeetSLA}:</th><td>";
         $target = incident_get_next_target($id);
@@ -144,7 +144,7 @@ switch ($step)
         echo "</td></tr>";
         plugin_do('incident_email_form1');
         echo "</table>";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input type='hidden' name='step' value='2' />";
         echo "<input type='hidden' name='menu' value='$menu' />";
         echo "<input name='submit1' type='submit' value='{$strContinue}' /></p>";
@@ -278,7 +278,7 @@ switch ($step)
         echo "</td></tr>";
         plugin_do('incident_email_form2');
         echo "</table>";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input name='newincidentstatus' id='newincidentstatus' type='hidden' value='{$newincidentstatus}' />";
         echo "<input name='timetonextaction' id='timetonextaction' type='hidden' value='{$timetonextaction}' />";
         echo "<input name='timetonextaction_none' id='timetonextaction_none' type='hidden' value='{$timetonextaction_none}' />";

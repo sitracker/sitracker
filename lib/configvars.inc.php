@@ -141,7 +141,7 @@ $CFGCAT['ldap'] = array('use_ldap',
 $CFGCAT['soap'] = array('soap_enabled',
                          'soap_portal_enabled');
 
-$CFGCAT['users'] = array('user_config_defaults');
+$CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
 $CFGCAT['contacts'] = array('contact_config_defaults');
 
@@ -162,12 +162,10 @@ $CFGCAT['other'] = array('debug', 'error_logfile',
                           'bugtracker_url',
                           'changelogfile','creditsfile',
                           'licensefile',
-                          'session_name',
-                          'upload_max_filesize','default_roleid','trusted_server');
+                          'session_name', 'map_url',
+                          'upload_max_filesize','trusted_server');
 
 $CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
-
-
 
 
 // i18n keys for categories alphabetically
@@ -198,7 +196,7 @@ $CATI18N['users'] = $strUsers;
 
 // Text to introduce a configuration category, may contain HTML
 $CATINTRO['sla'] = "This section allows you to configure how service levels are used, configure the <abbr title='Service Level Agreements'>SLA</abbr>'s themselves on the <a href='service_levels.php'>Service Levels</a> page.";
-$CATINFO['billing'] = "This section allows you to configure the system level billing options";
+$CATINTRO['billing'] = "This section allows you to configure the system level billing options";
 $CATINTRO['outboundemail'] = "SiT! uses the PHP mail() function to send outbound emails, you can configure this via your php.ini file, see your php documentation for more details.";
 $CATINTRO['inboundemail'] = "Before enabling inbound email with POP/IMAP you must also configure the Scheduler to run, see the <a href='http://sitracker.org/wiki/Scheduler'>documentation</a> for more details.";
 
@@ -538,6 +536,9 @@ $CFGVAR['licensefile']['title'] = 'Path to the License file';
 $CFGVAR['logout_url']['help'] = "The URL to redirect the user to after he/she logs out. When left blank this defaults to the SiT login page.";
 $CFGVAR['logout_url']['title'] = "Logout URL";
 
+$CFGVAR['map_url']['title'] = 'Map URL';
+$CFGVAR['map_url']['help'] = 'A URL linking to a web mapping service, use the variable {address} to pass a search address to the mapping service. e.g. <code>http://www.google.com/maps?q={address}</code>';
+
 $CFGVAR['max_incoming_email_perday']['title'] = 'Maximum number of incoming emails';
 $CFGVAR['max_incoming_email_perday']['help'] = 'The maximum number of incoming emails per incident, per day to allow before a mail-loop is detected';
 $CFGVAR['max_incoming_email_perday']['type'] = 'number';
@@ -649,7 +650,7 @@ $CFGVAR['tag_icons']['help'] = "You can specify icons to display next to certain
 $CFGVAR['tag_icons']['type'] = '2darray';
 
 $CFGVAR['default_chart']['title'] = "Default Chart";
-$CFGVAR['default_chart']['help'] = "The dedfault charting library to use.";
+$CFGVAR['default_chart']['help'] = "The default charting library to use.";
 $CFGVAR['default_chart']['type'] = 'chartselector';
 
 $CFGVAR['tasks_enabled']['title'] = "Enable Tasks";

@@ -226,7 +226,7 @@ function give_overview()
 {
     global $todayrecent, $mode, $CONFIG;
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$GLOBALS['strPeriod']}</th>";
     echo "<th>{$GLOBALS['strOpened']}</th><th>{$GLOBALS['strUpdated']}</th>";
     echo "<th>{$GLOBALS['strClosed']}</th><th>{$GLOBALS['strHandled']}</th>";
@@ -278,7 +278,7 @@ function give_overview()
     if (mysql_num_rows($result) > 1)
     {
         echo "<h2>{$GLOBALS['strByGroup']}</h2>";
-        echo "<table class='vertical' align='center'><tr>";
+        echo "<table class='vertical maintable'><tr>";
         while ($groups = mysql_fetch_object($result))
         {
             $sqlGroups = "SELECT COUNT(i.id) AS count, istatus.name ";
@@ -295,7 +295,7 @@ function give_overview()
             {
                 $openCallsGroup = 0;
                 echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$groups->name}</strong>";
-                echo "<table class='vertical' align='center'>";
+                echo "<table class='vertical maintable'>";
                 while ($rowGroup = mysql_fetch_object($resultGroups))
                 {
                     echo "<tr><th>{$GLOBALS[$rowGroup->name]}</th><td class='shade2' align='left'>";
@@ -332,7 +332,7 @@ function give_overview()
     if (mysql_num_rows($result) > 1)
     {
         echo "<h2>{$GLOBALS['strByVendor']}</h2>";
-        echo "<table class='vertical' align='center'><tr>";
+        echo "<table class='vertical maintable'><tr>";
         while ($vendors = mysql_fetch_object($result))
         {
             // This should use the software and relate to the product and then to the vendor
@@ -355,7 +355,7 @@ function give_overview()
             {
                 $openCallsVendor = 0;
                 echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendorsname}</strong>";
-                echo "<table class='vertical' align='center'>";
+                echo "<table class='vertical maintable'>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {
                     echo "<tr><th>{$GLOBALS[$rowVendor->name]}</th><td class='shade2' align='left'>";
@@ -464,7 +464,7 @@ function give_overview()
     if (mysql_num_rows($qresult) >= 1)
     {
         $string .= "<h2>{$GLOBALS['strCustomerFeedback']}</h2>";
-        $string .= "<table align='center' class='vertical'>";
+        $string .= "<table class='maintable vertical'>";
         while ($qrow = mysql_fetch_object($qresult))
         {
             $numquestions++;

@@ -37,7 +37,7 @@ if (!empty($tag) AND empty($action))
 
         echo "<form name='billing_matrix_edit' action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
 
         echo "<tr><th>{$strHour}</th><th>{$strMonday}</th><th>{$strTuesday}</th>";
         echo "<th>{$strWednesday}</th><th>{$strThursday}</th><th>{$strFriday}</th>";
@@ -62,7 +62,7 @@ if (!empty($tag) AND empty($action))
         echo "<input type='hidden' name='action' value='edit' />";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input type='submit' value='{$strSave}' /></p>";
-        echo "<p><a href=\"billing_matrix.php\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"billing_matrix.php\">{$strReturnWithoutSaving}</a></p>";
 
         echo "</form>";
 

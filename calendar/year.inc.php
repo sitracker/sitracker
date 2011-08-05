@@ -35,7 +35,7 @@ if ($type < HOL_PUBLIC)
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result))
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr class='shade2'><td><strong>{$strAwaitingApproval}</strong>:</td></tr>";
         echo "<tr class='shade1'><td>";
         while ($dates = mysql_fetch_object($result))
@@ -58,7 +58,7 @@ else
     echo "<h2>{$strSetPublicHolidays}</h2>";
 }
 
-echo "<p align='center'>";
+echo "<p class='setpublicholidays'>";
 
 if (!empty($selectedday))
 {
@@ -125,14 +125,14 @@ echo "</p>\n";
 echo "<h2>{$strYearView}</h2>";
 $pdate = mktime(0, 0, 0, $month, $day, $year-1);
 $ndate = mktime(0, 0, 0 ,$month, $day, $year+1);
-echo "<p align='center'>";
+echo "<p class='yearcalendarview'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$pdate)."&amp;month=".date('m',$pdate)."&amp;day=".date('d',$pdate)."&amp;type={$type}'>&lt;</a> ";
 echo date('Y',mktime(0,0,0,$month,$day,$year));
 echo " <a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$ndate)."&amp;month=".date('m',$ndate)."&amp;day=".date('d',$ndate)."&amp;type={$type}'>&gt;</a>";
 echo "</p>";
 
 
-echo "<table align='center' border='1' cellpadding='0' cellspacing='0' style='border-collapse:collapse; border-color: #AAA; width: 80%;'>";
+echo "<table class='maintable yearcalendar'>";
 $displaymonth = 1;
 $displayyear = $year;
 for ($r = 1; $r <= 3;$r ++)
@@ -140,7 +140,7 @@ for ($r = 1; $r <= 3;$r ++)
     echo "<tr>";
     for ($c = 1; $c <= 4;$c++)
     {
-        echo "<td valign='top' align='center' class='shade1'>";
+        echo "<td class='shade1 yearcalendar'>";
         draw_calendar($displaymonth,$displayyear);
         echo "</td>";
         if ($displaymonth == 12)

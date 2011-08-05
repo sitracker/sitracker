@@ -244,7 +244,7 @@ elseif ($_REQUEST['mode'] == "show")
     echo "</table>";
     echo "<input type='hidden' name='origcount' value='{$origcount}' />";
     echo "<input name='lang' value='{$tolang}' type='hidden' /><input name='mode' value='save' type='hidden' />";
-    echo "<div align='center'>";
+    echo "<div class='formbuttons'>";
     if (is_writable($myFile))
     {
         echo "<input type='submit' value='{$strSave}' />";

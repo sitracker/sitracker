@@ -184,7 +184,7 @@ else
 
 
     echo "<form action='{$_SERVER[PHP_SELF]}?action=update' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
 
     if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit')
     {

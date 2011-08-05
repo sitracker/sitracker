@@ -45,7 +45,7 @@ if (empty($submit))
     echo "{$strNewUser}</h2>";
     echo "<form id='adduser' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
-    echo "<table align='center' class='vertical'>\n";
+    echo "<table class='maintable vertical'>\n";
     echo "<tr><th>{$strRealName}</th>";
     echo "<td><input maxlength='50' name='realname' size='30' class='required' ";
     if ($_SESSION['formdata']['new_user']['realname'] != '')
@@ -151,7 +151,7 @@ if (empty($submit))
     plugin_do('new_user_form');
     echo "</table>\n";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
-    echo "<p align='center'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

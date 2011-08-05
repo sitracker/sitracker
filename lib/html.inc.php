@@ -959,7 +959,7 @@ function contract_details($id, $mode='internal')
 
     $maint = mysql_fetch_object($maintresult);
 
-    $html = "<table align='center' class='vertical'>";
+    $html = "<table class='maintable vertical'>";
     $html .= "<tr><th>{$GLOBALS['strContract']} {$GLOBALS['strID']}:</th>";
     $html .= "<td><h3>".icon('contract', 32)." ";
     $html .= "{$maint->id}</h3></td></tr>";
@@ -1109,7 +1109,7 @@ function contract_details($id, $mode='internal')
             {
                 $allowedcontacts = $GLOBALS['strUnlimited'];
             }
-            $html .= "<table align='center'>";
+            $html .= "<table class='maintable'>";
             $supportcount = 1;
 
             if ($numberofcontacts > 0)
@@ -1139,12 +1139,12 @@ function contract_details($id, $mode='internal')
                     }
                     $supportcount++;
                 }
-                $html .= "</table>";
             }
             else
             {
-                $html .= user_alert($strNoRecords, E_USER_NOTICE);
+                $html .= "<tr><td>".user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE)."</td></tr>";
             }
+            $html .= "</table>";
         }
 
         if ($maint->allcontactssupported != 'yes')
@@ -1190,7 +1190,7 @@ function contract_details($id, $mode='internal')
 
         if (mysql_num_rows($result)>0)
         {
-            $html .="<table align='center'>";
+            $html .="<table class='maintable'>";
             while ($software = mysql_fetch_object($result))
             {
                 $software->lifetime_end = mysql2date($software->lifetime_end);
@@ -1631,7 +1631,7 @@ function show_edit_site($site, $mode='internal')
         $html .= "<form name='edit_site' action='{$_SERVER['PHP_SELF']}";
         $html .= "?action=update' method='post' onsubmit='return ";
         $html .= "confirm_action(\"{$GLOBALS['strAreYouSureMakeTheseChanges']}\")'>";
-        $html .= "<table align='center' class='vertical'>";
+        $html .= "<table class='maintable vertical'>";
         $html .= "<tr><th>{$GLOBALS['strName']}:</th>";
         $html .= "<td><input class='required' maxlength='50' name='name' size='40' value='{$obj->name}' />";
         $html .= " <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
@@ -1744,7 +1744,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<form name='contactform' action='{$_SERVER['PHP_SELF']}' ";
     $html .= "method='post' onsubmit=\"return confirm_action('{$GLOBALS['strAreYouSureAdd']}')\">";
-    $html .= "<table align='center' class='vertical'>";
+    $html .= "<table class='maintable vertical'>";
     $html .= "<tr><th>{$GLOBALS['strName']}</th>\n";
 
     $html .= "<td>";
@@ -1867,7 +1867,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<tr><th>{$GLOBALS['strEmailDetails']}</th>";
     // Check the box to send portal details, only if portal is enabled
-    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails'";
+    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails' value='on'";
     if ($CONFIG['portal'] == TRUE) $html .= " checked='checked'";
     else $html .= " disabled='disabled'";
     $html .= " />";
@@ -1972,7 +1972,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            $html .= "<table align='center'>";
+            $html .= "<table class='maintable'>";
             $html .= "<tr>";
             $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
             $html .= "</tr>\n";
@@ -2191,7 +2191,7 @@ function html_check_extension($extension, $text, $min_status)
  */
 function html_install_status($status)
 {
-    $html = "<table align='center'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
+    $html = "<table class='maintable'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
 
     foreach ($status->statusentries AS $entry)
     {
@@ -2381,5 +2381,21 @@ function html_hmenu($hmenu)
 
     return $html;
 }
+
+
+/**
+  * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
+  * @author Ivan Lucas
+  * @param string $address, address to search for
+  * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
+*/
+function map_link($address)
+{
+    $url = str_replace('{address}', urlencode($address), $GLOBALS['CONFIG']['map_url']);
+    $link = "<span class='maplink'><a target='_blank' href=\"{$url}\">{$GLOBALS['strMap']}</a></span>";
+
+    return $link;
+}
+
 
 ?>

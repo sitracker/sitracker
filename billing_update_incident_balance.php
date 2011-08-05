@@ -43,7 +43,7 @@ if (empty($mode))
     echo "<input type='hidden' id='incidentid' name='incidentid' value='{$incidentid}' />";
     echo "<input type='hidden' id='mode' name='mode' value='update' />";
 
-    echo "<p align='center'><input type='submit' name='Sumbit' value='{$strUpdate}'  /></p>";
+    echo "<p class='formbuttons'><input type='submit' name='Sumbit' value='{$strUpdate}'  /></p>";
 
     echo "</form>";
 

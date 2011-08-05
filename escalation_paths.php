@@ -32,7 +32,7 @@ $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($result) >= 1)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     echo colheader('name', $strName);
     echo colheader('track_url', $strTrackURL);

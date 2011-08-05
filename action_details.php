@@ -109,7 +109,7 @@ switch ($action)
             echo "<p>{$strWhichAction}</p>";
         }
         echo "<h3>{$strAction}</h3>";
-        echo "<p style='text-align:left'>{$strChooseWhichActionNotify}</p>";
+        echo "<p>{$strChooseWhichActionNotify}</p>";
         echo "<select id='triggertype' name='triggertype' onchange='switch_template()' onkeyup='switch_template()'>";
         foreach ($trigger_types as $name => $trigger)
         {
@@ -122,7 +122,7 @@ switch ($action)
         echo "</select>";
 
         echo "<h3>{$strNotificationMethod}</h3>";
-        echo "<p style='text-align:left'>$strChooseWhichMethodNotification</p>";
+        echo "<p>$strChooseWhichMethodNotification</p>";
         echo "<select id='new_action' name='new_action' onchange='switch_template()' onkeyup='switch_template()'>";
         echo "<option/>";
         foreach ($actionarray as $name => $action)
@@ -138,19 +138,19 @@ switch ($action)
         echo "<div id='emailtemplatesbox' style='display:none'>";
         echo "<h3>{$strEmailTemplate}</h3> ";
 
-        echo "<p style='text-align:left'>$strChooseWhichTemplate</p>";
+        echo "<p>$strChooseWhichTemplate</p>";
         echo email_templates('emailtemplate', $trigger_mode)."</div>";
 
         echo "<div id='noticetemplatesbox' style='display:none'>";
 
         echo "<h3>{$strNoticeTemplate}</h3> ";
-        echo "<p style='text-align:left'>{$strChooseWhichTemplate}</p>";
+        echo "<p>{$strChooseWhichTemplate}</p>";
         echo notice_templates('noticetemplate')."</div>";
         echo '<div id="checksbox" style="display:none">';
 
         echo "<h3>{$strConditions}</h3>";
-        echo "<p style='text-align:left'>{$strSomeActionsOptionalConditions}</p>";
-        echo "<p style='text-align:left'>{$strExampleWhenIncidentAssigned} ";
+        echo "<p>{$strSomeActionsOptionalConditions}</p>";
+        echo "<p>{$strExampleWhenIncidentAssigned} ";
         echo "{$strAddingACondition}</p>" ;
         echo "<div id='checkshtml'></div></div>";
         echo "<input type='hidden' name='action' value='save' />";
@@ -166,7 +166,7 @@ switch ($action)
     //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
     //         }
     //     }
-        echo "<p align='center'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p></div>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 

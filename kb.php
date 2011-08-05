@@ -35,7 +35,7 @@ if (strtolower($mode) == 'recent') echo "<h4>{$strArticlesPublishedRecently}</h4
 elseif (strtolower($mode) == 'today') echo "<h4>{$strArticlesPublishedToday}</h4>";
 
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
-echo "<table summary='alphamenu' align='center'>";
+echo "<table summary='alphamenu' class='maintable'>";
 echo "<tr><td align='center''>";
 echo "<input type='text' name='search_string' /><input type='submit' value=\"{$strGo}\" />";
 echo "</td></tr>";

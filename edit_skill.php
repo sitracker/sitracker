@@ -66,7 +66,7 @@ if (empty($action) OR $action == 'edit')
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == 'delete')

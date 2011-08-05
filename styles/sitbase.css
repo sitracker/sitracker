@@ -113,6 +113,23 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 
 /* ID & Class Selectors */
 
+
+#container p { text-align: left; }
+#checksbox p { text-align: left; }
+#emailtemplatesbox p { text-align: left; }
+#noticetemplatesbox p { text-align: left; }
+#actiondetails p { text-align: center; }
+
+#aboutcreditcontent p { text-align: center; }
+#aboutcontent {
+background: transparent;
+text-align: left;
+width: 50%;
+font-family: monospaced;
+margin: auto;
+white-space: pre;
+}
+
 #masthead {
   background-image: url('../images/top2.png');
   background-position: top-left; background-repeat: x-repeat;
@@ -149,8 +166,6 @@ hr { height: 1px; background-color: #CDCDCD; color: #CDCDCD; margin:0px;padding:
 #actionmenu { color: #aaa; margin-bottom: 5px; }
 #actionmenu a:link { color: #E76666; }
 #actionmenu a:hover { background: #203894; color: white; }
-
-
 
 #menu { border-bottom: 1px solid #203894; padding-bottom: 4px;}
 .menuitem li { padding-top: 3px; }
@@ -299,7 +314,33 @@ div#menu li:hover li ul,
     background-position: 100% 5px;
 }
 
+.tagname { text-align: center; }
+
+.return, #container .return { text-align: center; }
+
+.daycalendarview { text-align: center; }
+
+.weekcalendarview { text-align: center; }
+
+.yearcalendarview { text-align: center; }
+
+.yearcalendar {
+    border: 1px solid;
+    padding: 5px;
+    border-collapse: collapse;
+    border-color: #AAA;
+    /* width: 80%; */
+    vertical-align: top;
+    text-align: center;
+}
+
+.setpublicholidays { text-align: center; }
+
 .actionlinks .greyed { text-decoration: line-through; color: #C6C3C6; }
+
+.maintable {margin-left:auto; margin-right:auto;}
+
+.tabletitle { text-align: center; }
 
 th:hover { background: #E9E9E9; }
 
@@ -319,6 +360,9 @@ tr.critical strong.critical { color: #FFF; }
 tr.urgent:hover { background-color: #FFAAAB; }
 tr.expired:hover { background-color: #F2F2F2; }
 tr.notice:hover { background-color: #F2F2F2; }
+
+div#holiday { text-align: center }
+td.holidaydate { text-align: right }
 
 
 .mainshade { background-color: #FFF; } /* white - is this used? */
@@ -439,7 +483,11 @@ strong.info,em.info,u.info,span.info
 
 p.alert { border-style: inset; }
 
+p.forgotpwd { text-align: center; }
+
 div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
+
+.formbuttons, #container .formbuttons { text-align: center; }
 
 p.trigger
 {
@@ -468,7 +516,6 @@ p.trigger
   width:50%;
   margin:0 auto;
 }
-
 
 #topsearch { text-align: right; clear: both; top: -11px; position: relative; }
 #topsearch form {margin: 1px 7px 0px 0px; }
@@ -569,6 +616,8 @@ span.required
 input.required, select.required, textarea.required {
   background-color: #FFD8DE;
 }
+
+p.sitversion { text-align: center; }
 
 div#incidentfooter { border-top: 1px solid #203894; }
 
@@ -1028,6 +1077,14 @@ td.alphamenu { text-align: center; vertical-align: middle; }
 margin: 0 auto;
 }
 
+table.calendar
+{
+/* align='center' border='1' cellpadding='0' cellspacing='0' style='border-collapse:collapse; border-color: #AAA; width: 99%;' */
+  width: 99%;
+  margin: auto;
+}
+.calnonworked { text-align: center; font-size: 80%; border-left: 1px solid black; }
+th.today, td.today { background-color: #FFFF00; }
 
 @media print
 {

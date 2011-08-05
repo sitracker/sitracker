@@ -52,7 +52,7 @@ if (empty($dashboardid))
 
     if (mysql_num_rows($result) > 0)
     {
-        echo "<table align='center'>\n";
+        echo "<table class='maintable'>\n";
         while ($obj = mysql_fetch_object($result))
         {
             if (empty($ondashboard[$obj->id]))

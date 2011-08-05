@@ -324,7 +324,7 @@ function dashboard_watch_incidents_edit($dashletid)
         default:
             echo "<h3>{$GLOBALS['strEditWatchedIncidents']}</h3>";
 
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             for($i = 0; $i < 4; $i++)
             {
                 $sql = "SELECT * FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE userid = {$sit[2]} AND type = {$i}";

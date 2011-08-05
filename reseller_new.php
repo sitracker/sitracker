@@ -76,7 +76,7 @@ switch ($action)
         echo "<h2>".icon('reseller', 32)." {$strNewReseller}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
         echo "onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strName}</th><td><input type='text' name='reseller_name' class='required' /> <span class='required'>{$strRequired}</span></td></tr>";
         echo "</table>";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";

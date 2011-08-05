@@ -125,7 +125,7 @@ elseif ($mode == 'report')
                 if ($output == 'html')
                 {
                     $datadisplayed = true;
-                    echo "<table align='center'>";
+                    echo "<table class='maintable'>";
                     echo "<tr><th colspan='3'>".site_name($objsite->site)."</th></tr>";
                     echo "<tr><th>{$strIncidentID}</th><th>{$strTitle}</th><th>{$strBillingCustomerPeriod}</th></tr>";
                     echo $str;

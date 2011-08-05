@@ -154,7 +154,7 @@ while ($escalations = mysql_fetch_object($escs))
     }
     if (!empty($esc))
     {
-        $html .= "<table align='center'>";
+        $html .= "<table class='maintable'>";
         $html .= "<tr><th>{$strExternalEngineersName}</th><th>{$strNumOfCalls}</th>";
         $html .= "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
         $html .= "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";

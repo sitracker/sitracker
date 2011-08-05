@@ -63,7 +63,7 @@ if (!empty($oucode))
             $result = mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             }
             else
             {
@@ -285,7 +285,7 @@ else
                             $qresult = mysql_query($qsql);
                             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-                            echo "<table align='center' class='vertical'>";
+                            echo "<table class='maintable vertical'>";
 
                             $shade = 'shade1';
                             while ($question = mysql_fetch_object($qresult))
@@ -336,7 +336,7 @@ else
 
                             echo "<br /><input type='hidden' name='action' value='save' />\n";
                             echo "<input type='hidden' name='ax' value='".strip_tags($_REQUEST['ax'])."' />\n";
-                            echo "<div align='center'><input type='submit' value='Submit' /></div>\n";
+                            echo "<div class='formbuttons'><input type='submit' value='Submit' /></div>\n";
                             echo "</form>\n";
                             if ($reqd >= 1)
                             {

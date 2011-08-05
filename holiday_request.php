@@ -34,7 +34,7 @@ function display_holiday_table($result)
 {
     global $CONFIG, $user, $approver, $mode, $sit;
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     if ($user == 'all' AND $approver == TRUE)
     {

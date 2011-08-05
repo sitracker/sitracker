@@ -53,7 +53,7 @@ if ($CONFIG['holidays_enabled'])
 }
 echo html_action_links($operations);
 echo "</p>";
-echo "<table align='center'>";
+echo "<table class='maintable'>";
 echo "<tr>";
 echo "<th><a href='{$_SERVER['PHP_SELF']}?sort=realname'>{$strName}</a> ";
 echo "(<a href='{$_SERVER['PHP_SELF']}?sort=username'>{$strUsername}</a>)</th>";

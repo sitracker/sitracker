@@ -58,7 +58,7 @@ switch ($mode)
                 echo "<h2>{$strEditService}</h2>";
 
                 echo "<form id='serviceform' name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
-                echo "<table align='center' class='vertical'>\n";
+                echo "<table class='maintable vertical'>\n";
                 if ($timed) echo "<thead>\n";
                 echo "<tr><th>{$strStartDate}</th>";
                 echo "<td><input class='required' type='text' name='startdate' id='startdate' size='10' ";
@@ -157,7 +157,7 @@ switch ($mode)
                 echo "<input type='hidden' name='mode' id='mode' value='doupdate' />";
                 echo "</form>\n";
 
-                echo "<p align='center'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
+                echo "<p class='return'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
             }
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
@@ -277,7 +277,7 @@ switch ($mode)
 
             echo "<form name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
 
-            echo "<table align='center' class='vertical'>";
+            echo "<table class='maintable vertical'>";
             echo "<tr><th>{$strEdit}</th><td>{$sourceservice}</td></tr>";
             echo "<tr><th></th><td>";
             echo "<input type='radio' name='mode' id='edit' value='edit' checked='checked' onclick=\"$('transfersection').hide(); $('transfersectionbtn').hide(); $('editsection').show(); \" /> {$strEdit} ";
@@ -318,8 +318,8 @@ switch ($mode)
             echo "<tr><th>{$strReason}</th><td><input type='text' name='reason' id='reason' /></td></tr>";
 
             echo "</table>";
-            echo "<p align='center'><input type='submit' style='display:none'  name='runreport' id='transfersectionbtn' value='{$strTransfer}' /></p>";
-            echo "<p align='center'><input type='submit' name='runreport' id='editsection' value='{$strEdit}' /></p>";
+            echo "<p class='formbuttons'><input type='submit' style='display:none'  name='runreport' id='transfersectionbtn' value='{$strTransfer}' /></p>";
+            echo "<p class='formbuttons'><input type='submit' name='runreport' id='editsection' value='{$strEdit}' /></p>";
 
             echo "<input type='hidden' name='sourceservice' value='{$sourceservice}' />";
             echo "<input type='hidden' name='contractid' value='{$contractid}' />";

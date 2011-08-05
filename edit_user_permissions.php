@@ -149,7 +149,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
         }
     }
     echo "<form action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
-    echo "<table align='center'>
+    echo "<table class='maintable'>
     <tr>
     <th>{$strID}</th>
     <th>{$strRolePermissions}</th>
@@ -207,7 +207,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     echo "<input name='reset' type='submit' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
-    echo "<p align='center'><a href=\"manage_users.php\">{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href=\"manage_users.php\">{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "update")
@@ -364,7 +364,7 @@ elseif ($action == "check")
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strUser}</th><th>{$strRole}</th></tr>";
             $shade = 'shade1';
             while ($user = mysql_fetch_object($result))
@@ -395,7 +395,7 @@ elseif ($action == "check")
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strUser}</th></tr>";
             $shade = 'shade1';
             while ($user = mysql_fetch_object($result))

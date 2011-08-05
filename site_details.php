@@ -33,7 +33,7 @@ if ($id == '')
 }
 
 // Display site
-echo "<table align='center' class='vertical'>";
+echo "<table class='maintable vertical'>";
 $sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
 $siteresult = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -61,29 +61,32 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
     if (!empty($siteobj->address1))
     {
-        //TODO make this support different links via config
-        echo "(<a target='_blank' href='http://www.google.com/maps?q={$siteobj->address1}";
+        $address = '';
+        if (!empty($siteobj->address1))
+        {
+            $address = "{$siteobj->address1}";
+        }
         if (!empty($siteobj->address2))
         {
-            echo ", {$siteobj->address2}";
+            $address .= ", {$siteobj->address2}";
         }
         if (!empty($siteobj->postcode))
         {
-            echo ", {$siteobj->postcode}";
+            $address .= ", {$siteobj->postcode}";
         }
         if (!empty($siteobj->city))
         {
-            echo ", {$siteobj->city}";
+            $address .= ", {$siteobj->city}";
         }
         if (!empty($siteobj->country))
         {
-            echo ", {$siteobj->country}";
+            $address .= ", {$siteobj->country}";
         }
         if (!empty($siteobj->county))
         {
-            echo ", {$siteobj->county}";
+            $address .= ", {$siteobj->county}";
         }
-        echo "'>{$strMap}</a>)";
+        echo "(".map_link($address).")";
     }
     echo "</td></tr>";
     echo "<tr><th>{$strTelephone}:</th><td>{$siteobj->telephone}</td></tr>";
@@ -170,7 +173,7 @@ $countcontacts = mysql_num_rows($contactresult);
 if ($countcontacts > 0)
 {
     echo "<p align='center'>".sprintf($strContactsMulti, $countcontacts)."</p>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strName}</th><th>{$strJobTitle}</th>";
     echo "<th>{$strDepartment}</th><th>{$strTelephone}</th>";
     echo "<th>{$strEmail}</th><th>{$strAddress}</th>";
@@ -274,7 +277,7 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
     {
         echo "<p align='center'>";
         echo mysql_num_rows($result)." $strContracts</p>";
-        echo "<table align='center'>
+        echo "<table class='maintable'>
         <tr>
             <th>{$strContractID}</th>
             <th>{$strProduct}</th>

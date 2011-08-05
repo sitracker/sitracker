@@ -65,13 +65,13 @@ if (empty($action) OR $action == "showform")
         echo skill_drop_down("softwareid", 0);
         echo "</p>\n";
     }
-    echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' />";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strSave}' />";
     echo "<input type='checkbox' name='return' value='true' ";
     if ($return == 'true') echo "checked='checked' ";
     echo "/> {$strReturnAfterSaving}</p>\n";
     echo "</form>";
 
-    echo "<p align='center'><a href='products.php?productid={$productid}'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php?productid={$productid}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "new")

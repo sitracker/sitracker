@@ -40,7 +40,7 @@ if (empty($submit))
     {
         $obj = mysql_fetch_object($result);
         echo "<form action'{$_SERVER['PHP_SELF']}' name='role_edit' method='post' >";
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strRole}</th><td>{$obj->id}</td></tr>";
         echo "<tr><th>{$strName}</th><td><input type='text' name='rolename' id='rolename' value='{$obj->rolename}' class='required' />";
         echo " <span class='required'>{$strRequired}</span></td></tr>";
@@ -50,7 +50,7 @@ if (empty($submit))
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>";
-        echo "<p align='center'><a href='role.php?roleid={$roleid}'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='role.php?roleid={$roleid}'>{$strReturnWithoutSaving}</a></p>";
     }
     else
     {

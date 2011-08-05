@@ -122,6 +122,7 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
         $CONFIG['plugins'] = $newsetting['plugins'];
         if (is_array($newsetting['plugins']) AND count($newsetting['plugins']) > 0)
         {
+            array_walk($newsetting['plugins'], 'enclose_array_values', "\'");
             $savecfg['plugins'] = 'array(' . implode(',', $newsetting['plugins']) . ')';
         }
         else
@@ -184,7 +185,7 @@ switch ($seltab)
     case 'repository':
         if (is_array($_SESSION['available_plugins']))
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strActions}</tr>";
             $shade = 'shade1';
             foreach($_SESSION['available_plugins'] AS $avail_plugin => $avail_plugin_details)
@@ -221,7 +222,7 @@ switch ($seltab)
         if (is_array($ondisk_plugins))
         {
             ksort($ondisk_plugins);
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strPlugin}</th><th>{$strVersion}</th><th>{$strDescription}</th><th>{$strAuthor}</th><th>{$strActions}</tr>";
             $shade = 'shade1';
             foreach($ondisk_plugins AS $ondisk_plugin => $ondisk_plugin_details)

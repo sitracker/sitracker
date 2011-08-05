@@ -76,7 +76,7 @@ switch ($seltab)
         //     echo "<pre>".print_r($matches,true)."</pre>";;
         }
 
-        echo "<div id='creditcontent'>";
+        echo "<div id='aboutcreditcontent'>";
         // echo print_r($credit,true);
         echo "<p>";
         foreach ($credit AS $c)
@@ -86,30 +86,30 @@ switch ($seltab)
         echo "</p>";
 
         echo "<h4>$strIncorporating:</h4>
-            <p align='center'>whatever:hover (csshover.htc) 1.41 by <a href='http://www.xs4all.nl/~peterned/'>Peter Nederlof</a><br />
+            <p>whatever:hover (csshover.htc) 1.41 by <a href='http://www.xs4all.nl/~peterned/'>Peter Nederlof</a><br />
             &copy; 2005 - Peter Nederlof.  Licensed under the LGPLv2.</p>
 
-            <p align='center'><a href='https://sourceforge.net/projects/nusoap/'>NuSOAP</a> 0.7.3 by <a href='http://www.nusphere.com/'>NuSphere Corporation</a><br />
+            <p><a href='https://sourceforge.net/projects/nusoap/'>NuSOAP</a> 0.7.3 by <a href='http://www.nusphere.com/'>NuSphere Corporation</a><br />
             Copyright &copy; 2002 NuSphere Corporation. Licensed under the LGPL v2.</p>
 
-            <p align='center'>MagpieRSS 0.72 by <a href='http://magpierss.sourceforge.net/'>Kellan Elliott-McCrea</a><br />
+            <p>MagpieRSS 0.72 by <a href='http://magpierss.sourceforge.net/'>Kellan Elliott-McCrea</a><br />
             Copyright &copy; Kellan Elliott-McCrea. Licensed under the GPL v2.</p>
 
-            <p align='center'>pChart 2.1.0 from the <a href='http://www.pchart.net'>pChart project</a>.   Licensed under GPLv3</p>
+            <p>pChart 2.1.0 from the <a href='http://www.pchart.net'>pChart project</a>.   Licensed under GPLv3</p>
 
-            <p align='center'>Prototype JavaScript framework 1.7 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
+            <p>Prototype JavaScript framework 1.7 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
             Copyright &copy; 2005-2010 Sam Stephenson. Licensed under an MIT style license.</p>
 
-            <p align='center'>script.aculo.us 1.9.0 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
+            <p>script.aculo.us 1.9.0 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
             Copyright &copy; 2005-2010 Thomas Fuchs. Licensed under an MIT style license.</p>
 
-            <p align='center'>Icons from the Crystal Project by <a href='http://www.everaldo.com/'>Everaldo Coelho</a><br />
+            <p>Icons from the Crystal Project by <a href='http://www.everaldo.com/'>Everaldo Coelho</a><br />
             Copyright &copy;  2006-2007 Everaldo Coelho. Licensed under the LGPLv2</p>
 
-            <p align='center'>Icons from the <a href='http://www.oxygen-icons.org/'>Oxygen Project</a><br />
+            <p>Icons from the <a href='http://www.oxygen-icons.org/'>Oxygen Project</a><br />
             Copyright &copy; 2008 The Oxygen Project. Licensed under the LGPLv2</p>
 
-            <p align='center'>MIME parser class 1.80 by <a href='http://www.phpclasses.org/package/3169-PHP-Decode-MIME-e-mail-messages.html'>Manuel Lemos</a><br />
+            <p>MIME parser class 1.80 by <a href='http://www.phpclasses.org/package/3169-PHP-Decode-MIME-e-mail-messages.html'>Manuel Lemos</a><br />
             Copyright &copy; 2006-2008 Manuel Lemos. Licensed under the BSD License</p>";
         break;
 
@@ -117,7 +117,7 @@ switch ($seltab)
         $fp = fopen($CONFIG['licensefile'], "r");
         $contents = htmlentities(fread($fp, filesize($CONFIG['licensefile'])), ENT_COMPAT, $i18ncharset);
         fclose($fp);
-        echo "<h2>{$strLicense}</h2><div style='background: transparent; text-align: left; width: 50%; font-family: monospaced; margin: auto; white-space: pre;'>";
+        echo "<h2>{$strLicense}</h2><div id='aboutcontent'>";
         echo $contents;
         echo "</div>";
         break;
@@ -126,12 +126,12 @@ switch ($seltab)
     default:
         echo "<h2>SiT! Support Incident Tracker</h2>";
 
-        echo "<p align='center'>{$strVersion}: {$application_version} {$application_revision}";
+        echo "<p class='sitversion'>{$strVersion}: {$application_version} {$application_revision}";
         if ($CONFIG['debug'] == TRUE) echo " (debug mode)";
         echo "</p>";
         debug_log("{$strVersion}: {$application_version} {$application_revision}", TRUE);
 
-        echo "<p align='center'>Copyright &copy; 2010-2011 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />";
+        echo "<p>Copyright &copy; 2010-2011 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />";
         echo "Copyright &copy; 2000-2009 Salford Software Ltd. and Contributors<br />";
         echo "Licence: GNU General Public License Version 2.<br /></p>";
 

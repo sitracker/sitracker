@@ -167,7 +167,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >= 1)
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strSkill}</th><th>{$strVendor}</th>";
         echo "<th>{$strLifetime}</th><th>{$strLinkedToNumProducts}</th>";
         echo "<th>{$strEngineers}</th><th>{$strIncidents}</th><th>{$strActions}</th></tr>";
@@ -269,7 +269,7 @@ else
             $tags = list_tags($product->id, TAG_PRODUCT, TRUE);
 
             if (!empty($tags)) echo "<div id='producttags'>{$tags}</div><br />\n";
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
 
             if (!empty($product->description)) echo "<tr class='shade1'><td colspan='0'>".nl2br($product->description)."</td></tr>";
 
@@ -341,7 +341,7 @@ else
             if (mysql_num_rows($result) > 0)
             {
                 echo "<h3>{$strProductQuestions}</h3>";
-                echo "<table align='center'>";
+                echo "<table class='maintable'>";
                 echo "<tr><th>{$strQuestion}</th><th>{$strAdditionalInfo}</th></tr>";
                 $shade = 'shade1';
                 while ($productinfoobj = mysql_fetch_object($result))
@@ -361,7 +361,7 @@ else
             if (mysql_num_rows($result) >= 1)
             {
                 echo "<h3>{$strRelatedContracts}</h3>";
-                echo "<table align='center'>";
+                echo "<table class='maintable'>";
                 echo "<tr><th>{$strContract}</th><th>{$strSite}</th></tr>";
                 $shade = 'shade1';
                 while ($contract = mysql_fetch_object($result))
@@ -388,7 +388,7 @@ else
             if (mysql_num_rows($result) >= 1)
             {
                 echo "<h3>{$strRelatedIncidents}</h3>";
-                echo "<table align='center'>";
+                echo "<table class='maintable'>";
                 echo "<tr><th>{$strIncident}</th><th>{$strContact}</th><th>{$strSite}</th><th>{$strTitle}</th></tr>";
                 $shade = 'shade1';
                 while ($incident = mysql_fetch_object($result))
@@ -411,7 +411,7 @@ else
         echo "<p class='error'>{$strNoMatchingProduct}</p>";
     }
 
-    echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
+    echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}#{$productid}'>{$strBackToList}</a></p>";
 }
 
 echo "<p align='center'>";

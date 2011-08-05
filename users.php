@@ -88,7 +88,7 @@ else $sql .= "ORDER BY realname ASC ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-echo "<table id='userslisttable' align='center'>";
+echo "<table id='userslisttable' class='maintable'>";
 echo "<tr>";
 $filter = array('gid' => $filtergroup);
 echo colheader('realname', $strName, $sort, $order, $filter);

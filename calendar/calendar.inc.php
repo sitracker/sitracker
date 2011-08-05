@@ -28,7 +28,11 @@ $holidaytype[HOL_FREE] = $GLOBALS['strCompassionateLeave'];
 
 
 /**
-    * @author Ivan Lucas
+ * Return HTML for a month calendar
+ * @author Ivan Lucas
+ * @param int $nmonth
+ * @param int $nyear
+ * @return string HTML
 */
 function draw_calendar($nmonth, $nyear)
 {
@@ -259,7 +263,7 @@ function draw_calendar($nmonth, $nyear)
 
 
 /**
-    * @author Ivan Lucas
+ * @author Ivan Lucas
 */
 function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
 {
@@ -284,16 +288,16 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
 
 
 /**
-    * Draw a month view Holiday planner chart
-    * @author Ivan Lucas
-    * @param string $mode. modes: 'month', 'week', 'day'
-    * @param int $year. Year e.g. 2009
-    * @param int $month. Month number
-    * @param int $day.  Day number
-    * @param int $groupid.
-    * @param int $userid
+ * Draw a month/week/day view Holiday planner chart
+ * @author Ivan Lucas
+ * @param string $mode. modes: 'month', 'week', 'day'
+ * @param int $year. Year e.g. 2009
+ * @param int $month. (optional) Month number
+ * @param int $day.  (optional) Day number
+ * @param int $groupid. (optional) User Group ID
+ * @param int $userid (optional)
 */
-function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
+function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid = '')
 {
     global $plugin_calendar, $sit, $holidaytype, $startofsession;
     if (empty($day)) $day = date('d');
@@ -338,7 +342,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     }
     $numgroups = count($grouparr);
 
-    $html .= "<table align='center' border='1' cellpadding='0' cellspacing='0' style='border-collapse:collapse; border-color: #AAA; width: 99%;'>";
+    $html .= "<table class='calendar'>";
     $usql  = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE status != ".USERSTATUS_ACCOUNT_DISABLED." ";
     if ($groupid == 'allonline')
     {
@@ -404,7 +408,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                     if (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sat')
                     {
                         $shade = 'expired';
-                        $html .= "<td class='$shade' style='text-align: center; font-size: 80%; border-left: 1px solid black;'>";
+                        $html .= "<td class='$shade calnonworked'>";
                         $html .= "<strong title='Week Number' >wk<br />";
                         $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1, 0, 1, 'UTF-8');
                         $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1,1, 1, 'UTF-8')."</strong></td>";
@@ -415,13 +419,13 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
                     }
                     else
                     {
-                        $html .= "<td align='center' class=\"$shade\"";
+                        $html .= "<td align='center' class=\"$shade";
                         if (mktime(0, 0, 0, $month, $cday, $year) == mktime(0, 0, 0, date('m'), date('d'), date('Y')))
                         {
-                            $html .= " style='background: #FFFF00;' title='Today'";
+                            $html .= " today";
                         }
 
-                        $html .= ">";
+                        $html .= "\">";
                         $html .= mb_substr(ldate('l', gmmktime(0, 0, 0, $month, $cday, $year)), 0, $daywidth, 'UTF-8')."<br />";
                         if ($mode == 'day')
                         {
@@ -647,6 +651,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     // Legend
     if ($_SESSION['userconfig']['show_table_legends'] == 'TRUE')
     {
+        $html .= "<br />";
         $html .= "<table class='legend'><tr><td><strong>{$GLOBALS['strKey']}</strong>:</td>";
         foreach ($GLOBALS['holidaytype'] AS $htype)
         {
@@ -654,7 +659,10 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
         }
         $html .= "<td>PH = {$GLOBALS['strPublicHoliday']}</td>";
         $html .= "</tr>";
-        $html .= "<tr><td></td><td class='urgent'>{$GLOBALS['strDeclined']}</td>";
+        $html .= "<tr><td></td>";
+        $html .= "<td class='shade2'>{$GLOBALS['strNone']}</td>";
+        $html .= "<td class='expired'>{$GLOBALS['strSaturday']}/{$GLOBALS['strSunday']}</td>";
+        $html .= "<td class='urgent'>{$GLOBALS['strDeclined']}</td>";
         $html .= "<td class='review'>{$GLOBALS['strNotApproved']}</td>";
         $html .= "<td class='idle'>{$GLOBALS['strApproved']}</td>";
         $html .= "<td class='notice'>{$GLOBALS['strApprovedFree']}</td></tr>";
@@ -662,6 +670,7 @@ function draw_chart($mode, $year, $month='', $day='', $groupid='', $userid='')
     }
     return $html;
 }
+
 
 function month_select($month, $year, $params = '')
 {

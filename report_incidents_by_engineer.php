@@ -43,7 +43,7 @@ if (empty($_REQUEST['mode']))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='incidentsbyengineer'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strStartDate}:</th>";
     echo "<td><input type='text' name='startdate' id='startdate' size='10' /> ";
     echo date_picker('incidentsbyengineer.startdate');
@@ -229,7 +229,7 @@ elseif ($_REQUEST['statistics'] == 'on')
 
     if (sizeof($data) > 0)
     {
-        $html .= "<table align='center'>";
+        $html .= "<table class='maintable'>";
         $html .= "<tr>";
         $html .= "<th>{$strUser}</th>";
         $html .= "<th>{$strNumOfCalls}</th>";

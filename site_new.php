@@ -33,7 +33,7 @@ if ($action == "showform" OR $action == '')
     echo "{$strNewSite}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strName}</th><td><input maxlength='255' class='required' ";
     echo "name='name' size='30' ";
     echo "value='{$_SESSION['formdata']['new_site']['name']}'";
@@ -168,7 +168,8 @@ elseif ($action == "new")
 
         if (!$result)
         {
-            echo "<p class='error'>{$strNewSiteFailed}</p>\n";
+            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            html_redirect(application_url() . 'site_new.php', FALSE, $strNewSiteFailed);
         }
         else
         {

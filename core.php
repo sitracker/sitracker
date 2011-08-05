@@ -35,6 +35,7 @@ include (APPLICATION_LIBPATH.'defaults.inc.php');
 @include ('/etc/sit.conf');
 // Load config file with customisations
 @include (APPLICATION_FSPATH . "config.inc.php");
+if ($CONFIG['debug']) $dbg = '';
 
 @include (APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php");
 

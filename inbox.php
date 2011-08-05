@@ -199,7 +199,7 @@ if (empty($displayid))
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox'  method='post'>";
         $shade = 'shade1';
-        echo "<table align='center' id='inboxtable'>";
+        echo "<table class='maintable' id='inboxtable'>";
         echo "<tr>";
         echo colheader('select', '', FALSE, '', '', '', '1%');
         echo colheader('from', $strFrom, $sort, $order, $filter, '', '25%');

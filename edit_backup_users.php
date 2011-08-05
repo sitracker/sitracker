@@ -68,7 +68,7 @@ if (empty($save))
     if ($countsw >= 1)
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>\n";
-        echo "<table align='center'>\n";
+        echo "<table class='maintable'>\n";
         echo "<tr><th>{$strSkill}</th><th>{$strSubstitute}</th></tr>";
         $class = 'shade1';
         while ($software = mysql_fetch_object($result))

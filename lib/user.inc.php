@@ -923,11 +923,13 @@ function software_backup_userid($userid, $softwareid)
 /**
  *
  * @author Ivan Lucas
+ * @param int $userid The user who's status you want to set
  * @param string $newstatus - Either a user status ID or 'Yes' or 'No'
  * @returns FALSE on failure, or HTML to display status
  * @note Toggles accepting status only when passed 'yes' or 'no'
+ * @note v3.90 added userid parameter
 */
-function set_user_status($newstatus)
+function set_user_status($userid, $newstatus)
 {
     global $dbUsers;
     switch ($newstatus)
@@ -976,13 +978,13 @@ function set_user_status($newstatus)
     if (!empty($newstatus)) $sql .= "status='$newstatus'";
     if (!empty($newstatus) AND !empty($accepting)) $sql .= ', ';
     if (!empty($accepting)) $sql .= "accepting='$accepting'";
-    $sql .= " WHERE id='{$_SESSION['userid']}' LIMIT 1";
+    $sql .= " WHERE id='{$userid}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-    debug_log("setting status: $sql");
-    incident_backup_switchover($_SESSION['userid'], $accepting);
+    debug_log("setting status: $sql", TRUE);
+    incident_backup_switchover($userid, $accepting);
 
-    $t = new TriggerEvent("TRIGGER_USER_CHANGED_STATUS", array('userid' => $_SESSION['userid']));
+    $t = new TriggerEvent("TRIGGER_USER_CHANGED_STATUS", array('userid' => $userid));
 
     return userstatus_summaryline($newstatus, $accepting);
 }

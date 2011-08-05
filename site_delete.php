@@ -29,7 +29,7 @@ if (empty($id))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>{$strDeleteSite}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strSite}:</th><td>".site_drop_down('id', 0)."</td></tr>";
     echo "</table>";
     echo "<p><input name='submit' type='submit' value='{$strDelete}' /></p>";
@@ -46,7 +46,7 @@ else
         $siteresult = mysql_query($sql);
         $site = mysql_fetch_object($siteresult);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strSite}:</th><td><h3>{$site->name}</h3></td></tr>";
         echo "<tr><th>{$strDepartment}:</th><td>{$site->department}</td></tr>";
         echo "<tr><th>{$strAddress1}:</th><td>{$site->address1}</td></tr>";
@@ -75,7 +75,7 @@ else
         {
             echo "<p align='center'>{$strInOrderToDelete}</p>";
             echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strSite}:</th><td>".site_drop_down('destinationid', 0)."</td></tr>";
             echo "</table>";
             echo "<input type='hidden' name='id' value='{$id}' />";

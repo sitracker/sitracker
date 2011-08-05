@@ -64,6 +64,7 @@ if (!empty($selected))
 {
     foreach ($selected as $taskid)
     {
+        $taskid = clean_int($taskid);
         if ($_POST['action'] == 'markcomplete')
         {
             mark_task_completed($taskid, FALSE);
@@ -304,7 +305,7 @@ if (mysql_num_rows($result) >=1 )
 {
     if ($show) $filter = array('show' => $show);
     echo "<form action='{$_SERVER['PHP_SELF']}' id='tasks' name='tasks'  method='post'>";
-    echo "<br /><table align='center'>";
+    echo "<br /><table class='maintable'>";
     echo "<tr>";
     $filter['mode'] = $mode;
     $filter['incident'] = $incident;
@@ -609,7 +610,7 @@ if (mysql_num_rows($result) >=1 )
 
         if (!empty($billing))
         {
-            echo "<table align='center'>\n";
+            echo "<table class='maintable'>\n";
             echo "<tr><td></td><th>{$GLOBALS['strMinutes']}</th></tr>\n";
             echo "<tr><th>{$GLOBALS['strBillingEngineerPeriod']}</th>\n";
             echo "<td>".($billing[-1]['engineerperiod']/60)."</td></tr>\n";
@@ -619,7 +620,7 @@ if (mysql_num_rows($result) >=1 )
 
             echo "<br />";
 
-            echo "<table align='center'>\n";
+            echo "<table class='maintable'>\n";
 
             echo "<tr><th>{$GLOBALS['strOwner']}</th><th>{$GLOBALS['strTotalMinutes']}</th>\n";
             echo "<th>{$GLOBALS['strBillingEngineerPeriod']}</th>\n";

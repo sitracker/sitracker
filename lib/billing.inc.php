@@ -185,7 +185,6 @@ function is_contract_timed($contractid)
 }
 
 
-
 /**
  * Set the last billing time on a service
  * @param int $serviceid - service ID
@@ -218,6 +217,7 @@ function update_last_billed_time($serviceid, $date)
 
     return $rtnvalue;
 }
+
 
 /**
  * Find the billing multiple that should be applied given the day, time and matrix in use
@@ -390,8 +390,8 @@ function get_service_incidentrate($serviceid)
 
 /**
  * @author Paul Heaney
- * @param $contractid  The Contract ID
- * @param $date  UNIX timestamp. The function will look for service that is current as of this timestamp
+ * @param int $contractid  The Contract ID
+ * @param int $date  UNIX timestamp. The function will look for service that is current as of this timestamp
  * @return mixed.     Service ID, or -1 if not found, or FALSE on error
  */
 function get_serviceid($contractid, $date = '')
@@ -465,7 +465,7 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
 
     if ($includereserved)
     {
-    	$balance += contract_transaction_total($contractid, BILLING_RESERVED);
+        $balance += contract_transaction_total($contractid, BILLING_RESERVED);
     }
 
     return $balance;
@@ -517,14 +517,14 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
 {
     global $now, $sit;
     $rtnvalue = FALSE;
-	$balance = get_service_balance($serviceid, TRUE, TRUE);
+    $balance = get_service_balance($serviceid, TRUE, TRUE);
     // TODO take into account overdraft limit
 
     $amount *= -1;
 
     if ($balance != FALSE)
     {
-    	$sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, amount, description, userid, dateupdated, transactionstatus) ";
+        $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, amount, description, userid, dateupdated, transactionstatus) ";
         $sql .= "VALUES ('{$serviceid}', '{$amount}', '{$description}', '{$_SESSION['userid']}', '".date('Y-m-d H:i:s', $now)."', '".BILLING_RESERVED."')";
         $result = mysql_query($sql);
         if (mysql_error())
@@ -568,7 +568,7 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
 function transition_reserved_monites($transactionid, $amount, $description='')
 {
     $rtnvalue = TRUE;
-	$sql = "UPDATE `{$GLOBALS['dbTransactions']}` SET amount = {$amount}, transactionstatus = ".BILLING_AWAITINGAPPROVAL." ";
+    $sql = "UPDATE `{$GLOBALS['dbTransactions']}` SET amount = {$amount}, transactionstatus = ".BILLING_AWAITINGAPPROVAL." ";
     if (!empty($description))
     {
     	$sql .= ", description = '{$description}' ";
@@ -599,7 +599,7 @@ function transition_reserved_monites($transactionid, $amount, $description='')
  */
 function unreserve_monies($transactionid, $linktype)
 {
-	$rtnvalue = FALSE;
+    $rtnvalue = FALSE;
     $sql = "DELETE FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstatus = ".BILLING_RESERVED;
     mysql_query($sql);
 
@@ -608,7 +608,7 @@ function unreserve_monies($transactionid, $linktype)
 
     if ($rtnvalue != FALSE)
     {
-    	$sql = "DELETE FROM `{$GLOBALS['dbLinks']}` WHERE linktype =  {$linktype} AND origcolref = {$transactionid}";
+        $sql = "DELETE FROM `{$GLOBALS['dbLinks']}` WHERE linktype =  {$linktype} AND origcolref = {$transactionid}";
         mysql_query($sql);
         if (mysql_error())
         {
@@ -624,6 +624,7 @@ function unreserve_monies($transactionid, $linktype)
 
     return $rtnvalue;
 }
+
 
 /**
  * Updates the amount and optionally the description on a transaction awaiting reservation
@@ -652,11 +653,11 @@ function update_transaction($transactionid, $amount, $description='', $status)
 {
     if ($status == BILLING_APPROVED)
     {
-    	trigger_error("You cant change a approved transaction", E_USER_ERROR);
+        trigger_error("You cant change a approved transaction", E_USER_ERROR);
         exit;
     }
 
-	$rtnvalue = FALSE;
+    $rtnvalue = FALSE;
     // Note we dont need to check its awaiting reservation as we check this when doing the update
     if (is_numeric($transactionid))
     {
@@ -681,6 +682,7 @@ function update_transaction($transactionid, $amount, $description='', $status)
     return $rtnvalue;
 }
 
+
 /**
  * Do the necessary tasks to billable incidents on closure, including creating transactions
  * @author Paul Heaney
@@ -691,7 +693,7 @@ function close_billable_incident($incidentid)
 {
     global $now, $sit;
     $rtnvalue = TRUE;
-	$sql = "SELECT i.maintenanceid FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbServiceLevels']}` AS sl ";
+    $sql = "SELECT i.maintenanceid FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbServiceLevels']}` AS sl ";
     $sql .= "WHERE i.servicelevel = sl.tag AND i.priority = sl.priority AND i.id = {$incidentid} AND sl.timed = 'yes'";
     $result = mysql_query($sql);
     if (mysql_error())
@@ -702,7 +704,7 @@ function close_billable_incident($incidentid)
 
     if (mysql_num_rows($result) > 0)
     {
-    	//Was logged against a timed contract
+        // Was logged against a timed contract
         list($contractid) = mysql_fetch_row($result);
         $duration = 0;
         $sql = "SELECT SUM(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid}";
@@ -791,6 +793,7 @@ function close_billable_incident($incidentid)
     return $rtnvalue;
 }
 
+
 /**
  * Function to approve an incident, this adds a transaction and confirms the 'bill' is correct.
  * @author Paul Heaney
@@ -851,7 +854,7 @@ function approve_incident_transaction($transactionid)
     }
     else
     {
-    	$rtnvalue = FALSE;
+        $rtnvalue = FALSE;
     }
 
     return $rtnvalue;
@@ -956,7 +959,7 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
 function maintid_from_transaction($transactionid)
 {
     $rtnvalue = -1;
-	$sql = "SELECT i.maintenanceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i WHERE ";
+    $sql = "SELECT i.maintenanceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i WHERE ";
     $sql .= "l.origcolref = {$transactionid} AND l.linkcolref = i.id AND l.linktype = 6";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting maintid for transaction. ".mysql_error(), E_USER_WARNING);
@@ -1004,7 +1007,7 @@ function contract_transaction_total($contractid, $status)
 function service_transaction_total($serviceid, $status)
 {
     $rtnvalue = FALSE;
-	$sql = "SELECT SUM(amount) FROM `{$GLOBALS['dbTransactions']}` ";
+    $sql = "SELECT SUM(amount) FROM `{$GLOBALS['dbTransactions']}` ";
     $sql .= "WHERE serviceid = {$serviceid} AND transactionstatus = '{$status}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting total for type {$status}. ".mysql_error(), E_USER_WARNING);
@@ -1117,7 +1120,7 @@ function contract_service_table($contractid, $billing)
     if (mysql_num_rows($result) > 0)
     {
         $shade = 'shade1';
-        $html = "\n<table align='center'>";
+        $html = "\n<table class='maintable'>";
         $html .= "<tr>";
         if ($billing) $html .= "<th></th>";
         $html .= "<th>{$GLOBALS['strStartDate']}</th><th>{$GLOBALS['strEndDate']}</th>";
@@ -1274,7 +1277,7 @@ function get_incident_billing_details($incidentid)
 {
     /*
     $array[owner][] = array(owner, starttime, duration)
- */
+    */
     $sql = "SELECT * FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} AND duration IS NOT NULL";
     $result = mysql_query($sql);
     if (mysql_error())
@@ -1839,7 +1842,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 }
 
                 $str = "<tr class='$shade'>";
-                $str .= "<td>{$transaction->dateupdated}</td>";
+                $str .= "<td>" . date($CONFIG['dateformat_datetime'], mysql2date($transaction->dateupdated)) . "</td>";
                 $str .= "<td>{$transaction->transactionid}</td>";
                 $str .= "<td>{$transaction->serviceid}</td>";
                 $str .= "<td>".site_name($transaction->site)."</td>";
@@ -1881,7 +1884,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                     }
                 }
 
-                $str = "\"{$transaction->dateupdated}\",";
+                $str = "\"" . date($CONFIG['dateformat_datetime'], mysql2date($transaction->dateupdated)) . "\",";
                 $str .= "\"{$transaction->transactionid}\",";
                 $str .= "\"{$transaction->serviceid}\",\"";
                 $str .= site_name($transaction->site)."\",";
@@ -1953,6 +1956,8 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
             {
                 $table .= $str;
             }
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
 
         if ($sitebreakdown == TRUE)
@@ -1991,10 +1996,10 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 if (!empty($details))
                 {
                     // Dont need to worry about this in the above section as sitebreakdown and serviceid are multually exclusive
-                    $text .= "<div><table align='center'>{$details}</table></div>";
+                    $text .= "<div><table class='maintable'>{$details}</table></div>";
                 }
 
-                $text .= "<table align='center'>";
+                $text .= "<table class='maintable'>";
                 $text .= "<tr><th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strServiceID']}</th>";
                 $text .= "<th>{$GLOBALS['strSite']}</th>";
                 $text .= "<th>{$GLOBALS['strDescription']}</th><th>{$GLOBALS['strStatus']}</th><th>{$GLOBALS['strCredit']}</th><th>{$GLOBALS['strDebit']}</th></tr>";
@@ -2019,10 +2024,6 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $text .= "{$csv_currency}".number_format($totaldebit, 2)."\"\n";
             }
         }
-
-
-        if ($shade == 'shade1') $shade = 'shade2';
-        else $shade = 'shade1';
     }
     else
     {
@@ -2114,7 +2115,7 @@ function service_dropdown_site($siteid, $name, $selected=0)
     }
     else
     {
-    	$html = "No services currently valid";
+        $html = "No services currently valid";
     }
 
     return $html;
@@ -2129,7 +2130,7 @@ function service_dropdown_site($siteid, $name, $selected=0)
  */
 function is_transaction_approved($transactionid)
 {
-	$sql = "SELECT transactionid FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstaus = ".BILLING_APPROVED;
+    $sql = "SELECT transactionid FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstaus = ".BILLING_APPROVED;
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
 

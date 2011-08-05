@@ -15,7 +15,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-
 //create array of strings in the system's language for updates etc
 if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
@@ -76,7 +75,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            20 => array('perm' => PERM_SEARCH, 'name' => $strSearch, 'url' => "{$CONFIG['application_webpath']}search.php"),
                            30 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyDetails, 'url' => "{$CONFIG['application_webpath']}user_profile_edit.php", 'submenu' => 1030),
                            40 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strControlPanel, 'url' => "{$CONFIG['application_webpath']}config.php", 'submenu' => 1040),
-                           50 => array('perm' => PERM_PRODUCT_VIEW, 'name' => $strProductsAndSkills, 'url' => "products.php", 'submenu' => 1050),
+                           50 => array('perm' => PERM_PRODUCT_VIEW, 'name' => htmlspecialchars($strProductsAndSkills), 'url' => "products.php", 'submenu' => 1050),
                            60 => array('perm' => PERM_USER_VIEW, 'name' => $strUsers, 'url' => "{$CONFIG['application_webpath']}users.php", 'submenu' => 1060),
                            70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strLogout, 'url' => "{$CONFIG['application_webpath']}logout.php")
     );
@@ -340,7 +339,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
 
     ksort($hmenu[0], SORT_NUMERIC);
 }
-if ($CONFIG['debug']) $dbg .= print_r($hmenu,true);  // FIXME remove before release
+
 //
 // Non specific update types
 //

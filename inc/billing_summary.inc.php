@@ -58,7 +58,7 @@ if (mysql_num_rows($result) > 0)
 {
     if ($display == 'html')
     {
-        $str .= "<table align='center' class='vertical'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
+        $str .= "<table class='maintable vertical'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
         $str .= "<th>{$strExpiryDate}</th><th>{$strCustomerReference}</th><th>{$strStartDate}</th><th>{$strEndDate}</th>";
         $str .= "<th>{$strFreeOfCharge}</th><th>{$strCreditAmount}</th><th>{$strBalance}</th>";
         $str .= "<th>{$strAwaitingApproval}</th><th>{$strReserved}</th><th>{$strAvailableBalance}</th>";
@@ -185,7 +185,7 @@ if (mysql_num_rows($result) > 0)
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalbalance, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalawaitingapproval, 2)."</td>";
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalreserved, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalactual, 2)."</td><td></td><td>{$remainingunits}</td></tr></tfoot>";
         $str .= "</table>";
-        $str .= "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+        $str .= "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
     }
     elseif ($display == 'csv')
     {

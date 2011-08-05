@@ -402,7 +402,7 @@ switch ($action)
             echo "<p class='error'>{$strNoMatchingTaskFound}</p>";
         }
 
-        echo "<p align='center'><a href='view_task.php?id={$id}'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='view_task.php?id={$id}'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 

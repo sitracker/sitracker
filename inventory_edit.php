@@ -126,7 +126,7 @@ else
 
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
 
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' value='{$row->name}' /> ";
     echo "<span class='required'>{$strRequired}</span></td></tr>";
@@ -207,7 +207,7 @@ else
     echo "<input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
-    echo "<p align='center'>";
+    echo "<p class='return'>";
 
     echo "<a href='inventory_site.php?id={$row->siteid}'>{$strReturnWithoutSaving}</a>";
 

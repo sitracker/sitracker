@@ -57,7 +57,7 @@ $slahistory = incident_sla_history($incidentid);
 
 if (count($slahistory) >= 1)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strEvent}</th><th>{$strUser}</th><th>{$strTarget}</th><th>{$strActual}</th><th>{$strDateAndTime}</th></tr>\n";
     foreach ($slahistory AS $history)
     {
@@ -169,7 +169,7 @@ if (mysql_num_rows($result) > 0)
     }
     else
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strStatus}</th><th>{$strTime}</th></tr>\n";
         foreach ($updatearray as $row)
         {

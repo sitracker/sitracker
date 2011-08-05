@@ -65,10 +65,10 @@ if ($display == 'html')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h3>{$strTransactions}</h3>";
+    echo "<h2>{$strTransactions}</h2>";
 
     echo $text;
-    echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+    echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

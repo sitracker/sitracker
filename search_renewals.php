@@ -78,7 +78,7 @@ else
             printf("<h2>".icon('contract', 32)." {$strContractsExpiringWithinXdays}</h2>", $expire);
             printf("<h5>{$strResultsNum}</h5>", mysql_num_rows($result));
             echo "
-            <table align='center'>
+            <table class='maintable'>
             <tr>
             <th>{$strID}</th>
             <th>{$strSite}</th>

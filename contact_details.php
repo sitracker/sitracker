@@ -72,7 +72,7 @@ while ($contact = mysql_fetch_object($contactresult))
 
     echo "<h2>".icon('contact', 32)." {$strContactDetails}</h2>";
 
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th colspan='2'><h3>".gravatar($contact->email, 32)." {$contact->forenames} {$contact->surname}";
     echo "</h3></th></tr>\n";
     if ($contact->active == 'false')
@@ -224,11 +224,13 @@ while ($contact = mysql_fetch_object($contactresult))
 
     echo "</table>\n";
 
+    $operations = array();
+    $operations[$strNewIncident] = array('perm' => PERM_INCIDENT_ADD, 'url' => "incident_new.php?action=findcontact&amp;contactid={$id}");
+    $operations[$strEdit] = array('perm' => PERM_CONTACT_EDIT, 'url' => "contact_edit.php?action=edit&amp;contact={$id}");
+    $operations[$strDelete] = array('perm' => PERM_SITE_DELETE, 'url' => "contact_delete.php?id={$id}");
     echo "<p align='center'>";
-    echo "<a href='incident_new.php?action=findcontact&amp;contactid={$id}'>{$strNewIncident}</a> | ";
-    echo "<a href='contact_details.php?id={$id}&amp;output=vcard'>".icon('vcard', 16)." vCard</a> | ";
-    echo "<a href='contact_edit.php?action=edit&amp;contact={$id}'>{$strEdit}</a> | ";
-    echo "<a href='contact_delete.php?id={$id}'>{$strDelete}</a>";
+    echo "<a href='contact_details.php?id={$id}&amp;output=vcard'>".icon('vcard', 16)." vCard</a> <span class='separator'>|</span> ";
+    echo html_action_links($operations);
     echo "</p>\n";
 
     // Check if user has permission to view maintenace contracts, if so display those related to this contact

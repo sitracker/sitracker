@@ -81,7 +81,7 @@ if (empty($submit))
         echo "<td><input maxlength='255' name='externalemail' size='30' type='text' value=\"{$incident->externalemail}\" /></td></tr>\n";
         plugin_do('edit_incident_form');
         echo "</table>\n";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input name='type' type='hidden' value='Support' />";
 
         echo "<input name='id' type='hidden' value=\"{$id}\" />";

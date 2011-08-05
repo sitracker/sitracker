@@ -34,7 +34,7 @@ $result = mysql_query($sql);
 
 if (mysql_num_rows($result) > 0)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strSite}</th><th>{$strCount}</th><th>{$strActions}</th></tr>";
     $shade = 'shade1';
     while ($row = mysql_fetch_object($result))

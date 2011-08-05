@@ -89,9 +89,9 @@ if (empty($action))
     echo "</td>";
     echo "</tr>";
     echo "</table>";
-    echo "<p align='center'><input type='submit' value='{$strPublish}' />";
+    echo "<p class='formbuttons'><input type='submit' value='{$strPublish}' />";
     echo "<input type='hidden' name='action' value='publish' /></p>";
-    echo "<p align='center'><a href='ftp_list_files.php'>{$strBackToList}</a></p>";
+    echo "<p class='return'><a href='ftp_list_files.php'>{$strBackToList}</a></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

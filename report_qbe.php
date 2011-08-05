@@ -27,7 +27,7 @@ if (empty($_REQUEST['mode']))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strTable}:</th>";
     echo "<td>";
     $result = mysql_list_tables($CONFIG['db_database']);
@@ -64,7 +64,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strTable}:</th>";
     echo "<td class='shade2'>{$table1}</td></tr>";
 

@@ -43,7 +43,7 @@ if ($incidentid == '')
     if ($contactid > 0) echo incident_drop_down('incidentid', 0, $contactid);
     else echo "<input type='text' name='incidentid' value='{$incidentid}' size='10' maxlength='12' />";
     echo "</label>";
-    echo "<input type='submit' value='{$strMoveUpdate}' /><br />";
+    echo "<p class='formbuttons'><input type='submit' value='{$strMoveUpdate}' /></p><br />";
     echo "<input type='hidden' name='updateid' value='{$updateid}' />";
     echo "<input type='hidden' name='id' value='{$id}' />";
     echo "<input type='hidden' name='win' value='incomingview' />";

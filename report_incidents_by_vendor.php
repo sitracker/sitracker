@@ -76,7 +76,7 @@ else
     if (mysql_num_rows($result) > 0)
     {
         echo "<p>";
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strVendor}</th><th>{$strIncidents}</th></tr>";
         while ($obj = mysql_fetch_object($result))
         {

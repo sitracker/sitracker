@@ -77,7 +77,7 @@ if (is_numeric($_GET['id']))
 
     if (mysql_num_rows($result) > 0)
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strInventoryItems}</th><th>{$strPrivacy}</th>";
         echo "<th>{$strCreatedBy}</th><th>{$strOwner}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';

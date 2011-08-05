@@ -38,7 +38,7 @@ if (empty($action) OR $action == "showform")
     echo "<p align='center'>{$strRemoveLinkContractAndSupportContactText}</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post' onsubmit='return confirm_action(\"{$strAreYouSureDeleteMaintenceContract}\", true)'>";
     echo "<input type='hidden' name='context' value='{$context}' />";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
 
     if (empty($maintid))
     {
@@ -66,7 +66,7 @@ if (empty($action) OR $action == "showform")
     }
 
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

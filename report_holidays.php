@@ -42,7 +42,7 @@ if (empty($submit))
     echo "<td><select name='output' id='output'><option value='screen'>{$strScreen}</option>\n";
     echo "<option value='csv'>{$strCSVfile}</option></select></td></tr>\n";   
     echo "</table>";
-    echo "<p align='center'><input type='submit' name='submit' value='{$strRunReport}' /></p>";
+    echo "<p class='formbuttons'><input type='submit' name='submit' value='{$strRunReport}' /></p>";
     echo "</form>";
     
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

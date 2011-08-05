@@ -157,7 +157,7 @@ if ($CONFIG['portal_site_incidents'])
         }
     }
     echo "</table>";
-    echo "<p align='center'><input type='submit' id='submit' name='submit'  value='{$strUpdate}' /></form></p>";
+    echo "<p class='formbuttons'><input type='submit' id='submit' name='submit'  value='{$strUpdate}' /></form></p>";
 
 }
 echo "<br />";

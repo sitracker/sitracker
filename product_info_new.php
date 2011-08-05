@@ -42,7 +42,7 @@ if (empty($_REQUEST['submit']))
 
     echo "<h2>".icon('info', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strProduct}</th><td>".product_drop_down("product", $product, TRUE)." <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strQuestion}</th><td><input name='information' size='30' class='required' value='{$_SESSION['formdata']['product_info_new']['information']}' /> <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strAdditionalInfo}</th><td><input name='moreinformation' size='30' value='{$_SESSION['formdata']['product_info_new']['moreinformation']}' /></td></tr>";
@@ -51,11 +51,11 @@ if (empty($_REQUEST['submit']))
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     if (!empty($product))
     {
-        echo "<p><a href=\"products.php?productid={$product}\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"products.php?productid={$product}\">{$strReturnWithoutSaving}</a></p>";
     }
     else
     {
-        echo "<p><a href=\"products.php\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"products.php\">{$strReturnWithoutSaving}</a></p>";
     }
 
     echo "</form>";

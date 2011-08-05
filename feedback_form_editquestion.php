@@ -62,7 +62,7 @@ switch ($action)
         while ($question = mysql_fetch_object($result))
         {
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-            echo "<table summary='Form' align='center'>";
+            echo "<table summary='Form' class='maintable'>";
             echo "<tr>";
 
             echo "<th>{$strSectionText}:<br /></th>";
