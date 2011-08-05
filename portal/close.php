@@ -52,7 +52,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         // FIXME i18n ? In db ? - CJ added syslang here - syslang isn't saved for some reason bug 1618
-        $reason = "{$SYSLANG['strRequestClosureViaThePortalBy']} [b]{$user->forenames} {$user->surname}[/b]\n\n";
+        $reason = cleanvar("{$SYSLANG['strRequestClosureViaThePortalBy']} [b]{$user->forenames} {$user->surname}[/b]\n\n");
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
         $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
