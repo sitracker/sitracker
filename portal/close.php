@@ -44,6 +44,8 @@ if ($incidentcontact == $_SESSION['contactid'])
     }
     else
     {
+        if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
+
         $usersql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id={$_SESSION['contactid']}";
         $result = mysql_query($usersql);
         $user = mysql_fetch_object($result);

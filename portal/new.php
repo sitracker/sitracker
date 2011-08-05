@@ -145,6 +145,8 @@ else //submit
     $servicelevel = maintenance_servicelevel_tag($contractid);
     $productid = clean_int($_REQUEST['productid']);
 
+    if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
+    
     $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
     $errors = 0;
     if (empty($incidenttitle))

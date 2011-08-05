@@ -15,7 +15,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-
 //create array of strings in the system's language for updates etc
 if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
