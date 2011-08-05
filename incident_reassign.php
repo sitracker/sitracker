@@ -102,14 +102,6 @@ switch ($action)
         {
             $t = new TriggerEvent('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $triggeruserid, 'incidentid' => $incidentid));
         }
-//         if ($CONFIG['debug'])
-//         {
-//             echo "<pre>";
-//                 print_r($_REQUEST);
-//                 print_r($incident);
-//                 echo "<hr>$sql";
-//                 exit;
-//         }
 
         // add update
         if (strtolower(user_accepting($userid)) != "yes")
@@ -214,15 +206,15 @@ switch ($action)
             echo "<div id='reassignlist'>";
             echo "<table class='maintable'>";
             if ($countusers >= 1 AND $suggested > 0) echo "<thead>\n";
-            echo "<tr>
-                <th colspan='2'>{$strReassignTo}:</th>
-                <th colspan='5'>{$strIncidentsinQueue}</th>
-                <th>{$strAccepting}</th>
-                </tr>";
-            echo "<tr>
-                <th>{$strName}</th>
-                <th>{$strStatus}</th>
-                <th align='center'>{$strActionNeeded} / {$strOther}</th>";
+            echo "<tr>";
+            echo "<th colspan='2'>{$strReassignTo}:</th>";
+            echo "<th colspan='5'>{$strIncidentsinQueue}</th>";
+            echo "<th>{$strAccepting}</th>";
+            echo "</tr>";
+            echo "<tr>";
+            echo "<th>{$strName}</th>";
+            echo "<th>{$strStatus}</th>";
+            echo "<th align='center'>{$strActionNeeded} / {$strOther}</th>";
             echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
             echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
             echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
