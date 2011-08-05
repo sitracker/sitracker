@@ -1405,7 +1405,7 @@ function incident_backup_switchover($userid, $accepting)
             }
         }
     }
-    elseif ($accepting=='')
+    elseif ($accepting == '')
     {
         // Do nothing when accepting status doesn't exist
     }
