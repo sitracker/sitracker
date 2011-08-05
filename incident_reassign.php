@@ -43,6 +43,11 @@ switch ($action)
         $temporary = cleanvar($_REQUEST['temporary']);
         $id = clean_int($_REQUEST['id']);
 
+        echo "<pre>";
+        print_r ($_REQUEST);
+        echo "</pre>";
+        exit;
+        
         if ($tempnewowner == 'yes') $temporary = 'yes';
 
         // Retrieve current incident details
@@ -70,12 +75,12 @@ switch ($action)
             $sql .= "owner='{$sit[2]}', towner=0, "; // make current user = owner
             $triggeruserid = $sit[2];
         }
-        elseif ($temporary != 'yes' AND $sit[2]==$incident->towner)
+        elseif ($temporary != 'yes' AND $sit[2] == $incident->towner)
         {
             $sql .= "towner=0, "; // temp owner removing temp ownership
             $triggeruserid = $incident->owner;
         }
-        elseif ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2]!=$incident->owner)
+        elseif ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2] != $incident->owner)
         {
             $sql .= "towner={$sit[2]}, "; // Temp to self
             $triggeruserid = $sit[2];
