@@ -2209,7 +2209,7 @@ function html_install_status($status)
  * @author Ivan Lucas
  * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
                 format example: $actions['Label'] = 'http://example.com/page.html'
-                alternative format example: $actions['Label'] = array('url => 'http://example.com/page.html', perm = PERM_FOO);
+                alternative format example: $actions['Label'] = array('url' => 'http://example.com/page.html', 'perm' => PERM_FOO);
  * @return string HTML.
  */
 function html_action_links($actions)
