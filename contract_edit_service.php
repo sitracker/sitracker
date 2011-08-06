@@ -324,6 +324,7 @@ switch ($mode)
             echo "<input type='hidden' name='contractid' value='{$contractid}' />";
 
             echo "</form>";
+            echo "<p class='return'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
