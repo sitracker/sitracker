@@ -287,8 +287,11 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
     }
-    // check timed sla data and store it
-
+    if ($amount == 0)
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_contract']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+    }
     if ($timed == 'yes' AND ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == '')))
     {
         $errors++;

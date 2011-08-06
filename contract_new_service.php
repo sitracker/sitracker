@@ -54,7 +54,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     $timed = is_contract_timed($contractid);
 
     echo "<form id='serviceform' name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
-    echo "<table class='maintable vertical'>";
+    echo "<table class='vertical'>";
     if ($timed) echo "<thead>\n";
     echo "<tr><th>{$strStartDate}</th>";
     echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
@@ -169,16 +169,32 @@ else
     $enddate = strtotime($_REQUEST['enddate']);
     if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
     else $enddate = date('Y-m-d',strtotime($startdate)+31556926); // No date set so we default to one year after start
-    $amount =  cleanvar($_POST['amount']);
+    $amount =  clean_float($_POST['amount']);
     if ($amount == '') $amount = 0;
-    $unitrate =  cleanvar($_POST['unitrate']);
+    $unitrate =  clean_float($_POST['unitrate']);
     if ($unitrate == '') $unitrate = 0;
-    $incidentrate =  cleanvar($_POST['incidentrate']);
+    $incidentrate =  clean_float($_POST['incidentrate']);
     if ($incidentrate == '') $incidentrate = 0;
     $notes = cleanvar($_REQUEST['notes']);
     $title = cleanvar($_REQUEST['title']);
-
     $billtype = cleanvar($_REQUEST['billtype']);
+
+    if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_service']['unitrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strUnitRate}'"), E_USER_ERROR);
+    }
+    if ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == ''))
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_service']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
+    }
+    if ($amount == 0)
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+    }
+
     if (!empty($billtype))
     {
         $foc = cleanvar($_REQUEST['foc']);
@@ -201,7 +217,11 @@ else
 
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-    if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+    if (mysql_affected_rows() < 1)
+    {
+        trigger_error("Insert failed", E_USER_ERROR);
+        $errors++;
+    }
 
     $serviceid = mysql_insert_id();
 
@@ -228,6 +248,14 @@ else
         }
     }
 
-    html_redirect("contract_details.php?id={$contractid}", TRUE);
+    if ($errors == 0)
+    {
+        html_redirect("contract_details.php?id={$contractid}", TRUE);
+    }
+    else
+    {
+        html_redirect("contract_new_service?contractid={$contractid}", FALSE);
+    }
+
 }
 ?>
