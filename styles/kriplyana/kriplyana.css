@@ -41,8 +41,9 @@ strong.critical { background-color: #FF0000; /*#4b5c94;*/ color: white; text-dec
 th { border: 1px solid #EEEEEE; background: white; color: #555; letter-spacing: 0.05em;}
 
 table.vertical { border:0px;}
-table.vertical tbody th { background: white; text-align: left; }
-table.vertical tbody td { background: white;}
+table.vertical tbody th, form table.vertical th { background: white; text-align: left; }
+table.vertical tbody td, form table.vertical td { background: white;}
+/*form table.vertical td { background-color: #DEDEFF; }*/
 
 table.legend { border: 1px solid #EEE; width: 50%;  font-weight: normal; }
 .legend td { color: #555; font-size: 80%; }
