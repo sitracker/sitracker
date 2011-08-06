@@ -297,8 +297,6 @@ $strCustomerImpact = 'Drohender Schaden f&uuml;r den Kunden';
 $strCustomerImpactCustomerText = 'Wie viele Benutzer sind betroffen? Steht das ganze System? K&uuml;nnen Anwender nicht mehr arbeiten?';
 $strCustomerRequestedClosure = 'Kunde beantragt den Abschluss des Auftrages';
 
-$strDailyRate = 'Tagesrate';
-
 $strCustomers = 'Kunden';
 
 $strDashboard = '&Uuml;bersicht';

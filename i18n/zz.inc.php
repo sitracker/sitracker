@@ -328,7 +328,6 @@ $strCustomerReminderUpdate = 'strCustomerReminderUpdate';
 $strCustomerRequestedClosure = 'strCustomerRequestedClosure';
 $strCustomers = 'strCustomers';
 
-$strDailyRate = 'strDailyRate';
 $strDashboard = 'strDashboard';
 $strDashboardComponentDoesntExist = 'strDashboardComponentDoesntExist';
 $strDataProtection = 'strDataProtection';

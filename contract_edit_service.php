@@ -137,10 +137,6 @@ switch ($mode)
                         echo "<tr><th colspan='2'>{$strUnableToChangeServiceAsUsed}</th></tr>\n";
                         echo "</tbody>\n";
                     }
-                //  Not sure how applicable daily rate is, INL 4Apr08
-                //     echo "<tr><th>{$strDailyRate}</th>";
-                //     echo "<td>{$CONFIG['currency_symbol']} <input type='text' name='dailyrate' size='5' />";
-                //     echo "</td></tr>";
                 }
                 else
                 {

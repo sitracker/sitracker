@@ -370,7 +370,6 @@ $strCustomerRequestedClosure = 'Le client a demandé la Clôture du Ticket';
 $strCustomers = 'Clients';
 $strCustomerVisible = 'Visible pour les Clients';
 
-$strDailyRate = 'Tarif journalier';
 $strDashboard = 'Tableau de bord';
 $strDashboardComponentDoesntExist = 'Le composant %s du tableau de bord n\'existe pas !';
 $strDataProtection = 'Protection des données (Bloquage d\'envoi)';

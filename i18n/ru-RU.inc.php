@@ -367,7 +367,6 @@ $strCustomerRequestedClosure = 'Запрошенное клиентом закр
 $strCustomers = 'Клиенты';
 $strCustomerVisible = 'Видимый клиенту';
 
-$strDailyRate = 'Суточная норма';
 $strDashboard = 'Рабочий стол';
 $strDashboardComponentDoesntExist = 'Компонент %s рабочего стола не существует';
 $strDataProtection = 'Защита данных';

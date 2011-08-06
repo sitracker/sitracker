@@ -259,7 +259,6 @@ $strCustomer = 'Cliente';
 $strCustomerFeedback = 'Feedback de Cliente';
 $strCustomers = 'Clientes';
 
-$strDailyRate = 'Taxa diária';
 $strDashboard = 'Painel';
 $strDashboardComponentDoesntExist = 'Componente do Painel %s não existe';
 $strDataProtection = 'Protecção de Dados';

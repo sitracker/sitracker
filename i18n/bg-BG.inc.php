@@ -339,7 +339,6 @@ $strCustomerRequestedClosure = 'Клиентът е поискал затвар�
 $strCustomers = 'Клиенти';
 $strCustomerVisible = 'Видим клиент';
 
-$strDailyRate = 'Дневна ставка';
 $strDashboard = 'Табло';
 $strDashboardComponentDoesntExist = 'Компонентът от таблото %s не съществува';
 $strDataProtection = 'Защита на данните';

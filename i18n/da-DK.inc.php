@@ -376,7 +376,6 @@ $strCustomerRequestedClosure = 'Kunden anmodede om lukning af hændelse';
 $strCustomers = 'Kunder';
 $strCustomerVisible = 'Synlig for kunde';
 
-$strDailyRate = 'Daglig rate';
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard komponent %s eksisterer ikke';
 $strDataProtection = 'Data beskyttelse';

@@ -361,7 +361,6 @@ $strCustomerRequestedClosure = 'Klant verzocht sluiting incident';
 $strCustomers = 'Klanten';
 $strCustomerVisible = 'Klant zichtbaar';
 
-$strDailyRate = 'Dagtarief';
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard component %s bestaat niet';
 $strDataProtection = 'Databeveiliging';

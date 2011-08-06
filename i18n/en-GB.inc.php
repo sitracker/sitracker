@@ -408,7 +408,6 @@ $strCustomerRequestedClosure = 'Customer Requested Incident Closure';
 $strCustomers = 'Customers';
 # Visible for customers
 $strCustomerVisible = 'Customer visible';
-$strDailyRate = 'Daily Rate';
 # i.e. place for widgets
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard component %s doesn\'t exist';

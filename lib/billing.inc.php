@@ -335,33 +335,6 @@ function get_service_unitrate($serviceid)
 
 
 /**
- * Returns the daily rate for a service
- * @author Paul Heaney
- * @param int $serviceid - The serviceID to get the daily rate for
- * @return mixed FALSE if no service found else the daily rate
- */
-function get_service_dailyrate($serviceid)
-{
-    $rtnvalue = FALSE;
-    $sql = "SELECT dailyrate FROM `{$GLOBALS['dbService']}` AS p WHERE serviceid = {$serviceid}";
-
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        return FALSE;
-    }
-
-    if (mysql_num_rows($result) > 0)
-    {
-        list($rtnvalue) = mysql_fetch_row($result);
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
  * Returns the incident rate for a service
  * @author Paul Heaney
  * @param int $serviceid - The serviceID to get the incident rate for

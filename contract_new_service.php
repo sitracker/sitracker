@@ -141,12 +141,6 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 
         echo "</tbody>\n";
     }
-
-//  Not sure how applicable daily rate is, INL 4Apr08
-//     echo "<tr><th>{$strDailyRate}</th>";
-//     echo "<td>{$CONFIG['currency_symbol']} <input type='text' name='dailyrate' size='5' />";
-//     echo "</td></tr>";
-
     echo "</table>\n\n";
     echo "<input type='hidden' name='contractid' value='{$contractid}' />";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
