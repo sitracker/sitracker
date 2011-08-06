@@ -1121,7 +1121,6 @@ $strOldPassword = 'Ancien Mot de Passe';
 $strOnHoliday = 'En Congé';
 $strOffline = 'Hors ligne';
 $strOneOfTheSignaturesWillBeInserted = 'Une des signatures ci-dessous sera choisie aléatoirement et insérée au bas des messages sortants. Il est recommandé que vous commenciez cette signature par deux tirets, un espace et un retour à la ligne';
-$strOneTimeBillingEditor = 'Editeur pour facturation unique';
 $strOnline = 'En ligne';
 $strOnlyShowsClosedCalls = 'Montre uniquement les appels fermés';
 $strOnlyShowNewerThan = 'Montre uniquement les nouveaux de plus de %d jours';

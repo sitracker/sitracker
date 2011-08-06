@@ -985,7 +985,6 @@ $strOldPassword = 'strOldPassword';
 $strOnHoliday = 'strOnHoliday';
 $strOffline = 'strOffline';
 $strOneOfTheSignaturesWillBeInserted = 'strOneOfTheSignaturesWillBeInserted';
-$strOneTimeBillingEditor = 'strOneTimeBillingEditor';
 $strOnline = 'strOnline';
 $strOnlyShowsClosedCalls = 'strOnlyShowsClosedCalls';
 $strOnlyShowNewerThan = 'strOnlyShowNewerThan';

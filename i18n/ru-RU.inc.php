@@ -1123,7 +1123,6 @@ $strOldPassword = 'Старый пароль';
 $strOnHoliday = 'На выходных';
 $strOffline = 'Офлайн';
 $strOneOfTheSignaturesWillBeInserted = 'Одна из подписей ниже будет выбрана случайным образом и добавлена в конец исходящих писем. Рекомендуется начинать эту подпись двумя тире, пробелом и переводом строки';
-$strOneTimeBillingEditor = 'Редактор счетов';
 $strOnline = 'Онлайн';
 $strOnlyShowsClosedCalls = 'Показывать только закрытые звонки';
 $strOnlyShowNewerThan = 'Показывать только новее чем %d дней';

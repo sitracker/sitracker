@@ -268,7 +268,7 @@ switch ($mode)
         {
             $title = ("$strContract - $strEditBalance");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            echo "<h2>{$strOneTimeBillingEditor}</h2>";
+            echo "<h2>{$strEditBalance}</h2>";
 
             echo "<form name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
 

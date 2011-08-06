@@ -1081,7 +1081,6 @@ $strOldPassword = 'Стара парола';
 $strOnHoliday = 'На празник';
 $strOffline = 'Офлайн';
 $strOneOfTheSignaturesWillBeInserted = 'Един от подписите по-долу ще бъде избран случайно и добавен най-отдолу в изходящите писма. Препоръчително е да започнете подписа си с две наклонени черти и интервал';
-$strOneTimeBillingEditor = 'Редактор на еднократно фактуриране';
 $strOnline = 'Онлайн';
 $strOnlyShowsClosedCalls = 'Показва само затворените обаждания';
 $strOnlyShowNewerThan = 'Показва само по-нови от %d дена';
