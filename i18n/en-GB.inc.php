@@ -1313,6 +1313,7 @@ $strNotSet = 'Not Set';
 $strNotSettingArea = '<strong>NOTE</strong>: Not setting one may slow down processing your incident';
 $strNotUpdated = 'Not Updated';
 $strNoUpgradesForDashboardComponent = 'No upgrades for %1$s dashboard component';
+$strNoTypesDefined = 'Sorry, no types were found, contact your admin to create some';
 # Short for November
 $strNovAbbr = 'Nov';
 $strNoValidEmailEntered = 'No valid email address entered or wrong email address';

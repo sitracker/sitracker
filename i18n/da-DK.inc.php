@@ -1159,6 +1159,7 @@ $strNoSubstitutes = 'Ingen afløser teknikere er sat';
 $strNoTransactionsMatchYourSearch = 'Ingen transaktioner passer til din søgning';
 $strNoTransactionsFoundWithID = 'Ingen transaktion fundet, med ID';
 $strNoUpgradesForDashboardComponent = 'Ingen opgraderinger for %1s dashboard komponent';
+$strNoTypesDefined = 'Der blev ikke fundet nogle typer, kontakt din administrator for at oprette nogle';
 $strNoTasks = 'Ingen opgaver';
 $strNotAccepting = 'Accepterer ikke';
 $strNotAcceptingIncidents = '<strong>Accepterer ikke</strong> hændelser';
