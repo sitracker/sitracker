@@ -10,9 +10,8 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_CALENDAR_VIEW; /* View your calendar */
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; /* View your calendar */
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = $strHolidayRequests;
 

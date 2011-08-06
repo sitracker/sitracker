@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_TEMPLATE_EDIT; // Edit Template
-
 require ('core.php');
+$permission = PERM_TEMPLATE_EDIT; // Edit Template
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_INCIDENT_REASSIGN; // Reassign Incident
 require ('core.php');
+$permission = PERM_INCIDENT_REASSIGN; // Reassign Incident
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -42,7 +41,7 @@ switch ($action)
         $userid = clean_int($_REQUEST['userid']);
         $temporary = cleanvar($_REQUEST['temporary']);
         $id = clean_int($_REQUEST['id']);
-        
+
         if ($tempnewowner == 'yes') $temporary = 'yes';
 
         // Retrieve current incident details
@@ -95,7 +94,7 @@ switch ($action)
             $sql .= "owner='{$userid}', ";
             $triggeruserid = $userid;
         }
-        
+
         $sql .= "status='{$newstatus}', lastupdated='{$now}' WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

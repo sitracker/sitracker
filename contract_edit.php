@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_CONTRACT_EDIT; // Edit Contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_EDIT; // Edit Contracts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -59,7 +57,7 @@ if ($action == "edit")
         echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
         echo "<tr><th>{$strSite}:</th><td>";
-        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable 
+        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable
         echo "<tr><th>{$strContacts}:</th><td>";
         echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
         echo "{$strLimitTo} <input size='2' value='{$maint->supportedcontacts}' name='amount' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";

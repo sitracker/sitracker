@@ -10,9 +10,8 @@
 //
 //  Author:   Ivan Lucas
 
-$permission = PERM_REPORT_RUN;  // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN;  // Run Reports
 include (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication

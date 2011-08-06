@@ -12,9 +12,8 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //         Tom Gerrard <tom.gerrard[at]salfordsoftware.co.uk>
 
-
-$permission = PERM_CALENDAR_VIEW; // View your calendar
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; // View your calendar
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

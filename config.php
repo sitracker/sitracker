@@ -14,6 +14,7 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
+require ('core.php');
 if (empty($_REQUEST['userid']))
 {
     $permission = PERM_ADMIN; // Administrate
@@ -22,8 +23,6 @@ else
 {
     $permision = PERM_MYPROFILE_EDIT; // Edit your profile, FIXME need a permission for user settings
 }
-
-require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

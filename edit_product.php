@@ -12,9 +12,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_PRODUCT_EDIT; // Edit products
-
 require ('core.php');
+$permission = PERM_PRODUCT_EDIT; // Edit products
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -48,7 +47,7 @@ if ($action == 'save')
     {
         html_redirect("edit_product.php?id={$productid}", FALSE);
     }
-    else 
+    else
     {
         replace_tags(TAG_PRODUCT, $productid, $tags);
 

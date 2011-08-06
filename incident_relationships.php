@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_INCIDENT_VIEW; // View Incident Details
-
 require ('core.php');
+$permission = PERM_INCIDENT_VIEW; // View Incident Details
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

@@ -9,8 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = PERM_ADMIN; // Administrate
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');

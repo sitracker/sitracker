@@ -13,9 +13,8 @@
 // TODO should this update the tasks table?
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission =  81;
-
 require ('core.php');
+$permission =  PERM_BILLING_DURATION_EDIT;
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');

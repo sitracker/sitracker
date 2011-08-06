@@ -11,9 +11,8 @@
 
 // Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>, Tom Gerrard
 
-$permission = PERM_KB_VIEW; // View KB
-
 require ('core.php');
+$permission = PERM_KB_VIEW; // View KB
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

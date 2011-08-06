@@ -9,9 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_EMAIL_SEND; // Send Emails
 require ('core.php');
+$permission = PERM_EMAIL_SEND; // Send Emails
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // include ('mime.inc.php');
 

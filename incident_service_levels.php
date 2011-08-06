@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_INCIDENT_LIST; // View Incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_LIST; // View Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -42,7 +40,7 @@ $product_name = product_name($incident->product);
 if ($incident->softwareid > 0) $software_name = software_name($incident->softwareid);
 
 $servicelevel_tag = $incident->servicelevel;
-if ($servicelevel_tag == '') 
+if ($servicelevel_tag == '')
 {
     $servicelevel_tag = maintenance_servicelevel_tag($incident->maintenanceid);
 }
@@ -62,12 +60,12 @@ if (count($slahistory) >= 1)
     foreach ($slahistory AS $history)
     {
         if (empty($history['targetsla'])) break; // Skip any empty SLA history
-        if ($history['targetmet'] == FALSE) 
+        if ($history['targetmet'] == FALSE)
         {
             $class = 'critical';
         }
-        else 
-        { 
+        else
+        {
             $class = 'shade2';
         }
         echo "<tr class='{$class}'>";
@@ -75,25 +73,25 @@ if (count($slahistory) >= 1)
         echo icon($slatypes[$history['targetsla']]['icon'], 16)." ";
         echo target_type_name($history['targetsla'])."</td>";
         echo "<td>";
-        if (!empty($history['userid'])) 
+        if (!empty($history['userid']))
         {
             echo user_realname($history['userid'], TRUE);
         }
         echo "</td>";
         echo "<td>".format_workday_minutes($history['targettime'])."</td>";
         echo "<td>";
-        if ($history['timestamp'] == 0) 
+        if ($history['timestamp'] == 0)
         {
             echo "<em>";
         }
         echo format_workday_minutes($history['actualtime']);
-        if ($history['timestamp'] == 0) 
+        if ($history['timestamp'] == 0)
         {
             echo "</em>";
         }
         echo "</td>";
         echo "<td>";
-        if ($history['timestamp'] > 0) 
+        if ($history['timestamp'] > 0)
         {
             echo ldate($CONFIG['dateformat_datetime'],$history['timestamp']);
         }
@@ -141,7 +139,7 @@ if (mysql_num_rows($result) > 0)
     {
         $end = $incident->closed;
     }
-    else 
+    else
     {
         $end = $now;
     }

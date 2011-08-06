@@ -12,8 +12,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  1Nov05
 
-$permission = 4; // Edit your profile
 require ('core.php');
+$permission = PERM_MYPROFILE_EDIT; // Edit your profile
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -347,7 +347,7 @@ elseif ($mode == 'save')
             $_SESSION['utcoffset'] = $user->utc_offset;
         }
 
-    
+
         if ($result === FALSE)
         {
 

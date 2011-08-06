@@ -11,9 +11,8 @@
 
 // Authors: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = PERM_INCIDENT_BILLING_APPROVE; // Approve billable incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_BILLING_APPROVE; // Approve billable incidents
 require_once(APPLICATION_LIBPATH.'functions.inc.php');
 include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication

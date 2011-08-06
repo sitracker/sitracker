@@ -12,8 +12,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_FILE_PUBLISH; // ftp publishing
 require ('core.php');
+$permission = PERM_FILE_PUBLISH; // ftp publishing
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication

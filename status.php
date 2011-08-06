@@ -12,8 +12,8 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 // This Page is Valid XHTML 1.0 Transitional!
 
-$permission = PERM_STATUS_VIEW; 
 require ('core.php');
+$permission = PERM_STATUS_VIEW;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $title = $strStatus;

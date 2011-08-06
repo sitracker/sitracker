@@ -13,9 +13,8 @@
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission =  80;
-
 require ('core.php');
+$permission =  PERM_SERVICE_EDIT;
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication

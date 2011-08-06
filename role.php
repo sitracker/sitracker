@@ -11,9 +11,8 @@
 
 // Author: Paul Heaney <paul@sitracker.org>
 
-$permission = PERM_USER_PERMISSIONS_EDIT; // Edit User Permissions
-
 require ('core.php');
+$permission = PERM_USER_PERMISSIONS_EDIT; // Edit User Permissions
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');

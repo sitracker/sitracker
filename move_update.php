@@ -9,8 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = PERM_UPDATE_ADD; // FIXME needs move update permission
 require ('core.php');
+$permission = PERM_UPDATE_ADD; // FIXME needs move update permission
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
