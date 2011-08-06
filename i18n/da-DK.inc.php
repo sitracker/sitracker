@@ -1239,7 +1239,6 @@ $strOldPassword = 'Gammel adgangskode';
 $strOnHoliday = 'På ferie';
 $strOffline = 'Offline';
 $strOneOfTheSignaturesWillBeInserted = 'En af nedenstående signaturer vælges tilfældigt og indsat i bunden af udgående emails. Det anbefales at du begynder denne signatur med to bindestreger, et mellemrum og enter (ny linie)';
-$strOneTimeBillingEditor = 'Enkelt faktura editor';
 $strOnline = 'Online';
 $strOnlyAvailableOnSupportIncidents = 'Kun tilgængelig på support hændelser';
 $strOnlyShowsClosedCalls = 'Vis kun lukkede opkald';
