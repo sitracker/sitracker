@@ -8,9 +8,8 @@
 
 // Author Kieran Hogg <kieran[at]sitracker.org>
 
-$permission = PERM_MYTRIGGERS_MANAGE;
-
 require ('core.php');
+$permission = PERM_MYTRIGGERS_MANAGE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php');
 // This page requires authentication

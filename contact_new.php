@@ -11,10 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  31Oct05
 
-
-$permission = PERM_CONTACT_ADD; // Add new contact
-
 require ('core.php');
+$permission = PERM_CONTACT_ADD; // Add new contact
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

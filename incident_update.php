@@ -9,9 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_UPDATE_ADD; // Update Incident
 require ('core.php');
+$permission = PERM_UPDATE_ADD; // Update Incident
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $disable_priority = TRUE;
@@ -476,7 +475,7 @@ else
     }
 
     // Check the updatetype field, if it's blank look at the target
-    
+
     if (empty($updatetype))
     {
         switch ($target)
@@ -503,7 +502,7 @@ else
 
     if ($target == 'none') $sla = "Null";
     else $sla = "'{$target}'";
-    
+
     // visible update
     if ($cust_vis == "yes")
     {

@@ -11,10 +11,9 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_PRODUCT_VIEW; // View Products and Software
 $title = $strListProducts;
-
 require ('core.php');
+$permission = PERM_PRODUCT_VIEW; // View Products and Software
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication

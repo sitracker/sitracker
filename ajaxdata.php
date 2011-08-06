@@ -10,9 +10,8 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_NOT_REQUIRED; // not required
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'triggers.inc.php');
 

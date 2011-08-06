@@ -12,9 +12,8 @@
 // This Page Is Valid XHTML 1.0 Transitional! 13Sep06
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_CALENDAR_VIEW; // view your calendar
-
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; // view your calendar
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

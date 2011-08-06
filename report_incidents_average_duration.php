@@ -17,9 +17,8 @@
 
 set_time_limit(60);
 
-$permission = PERM_REPORT_RUN; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication

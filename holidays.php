@@ -11,9 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  13Sep06
 
-$permission = 4; // Edit your profile
-
 require ('core.php');
+$permission = PERM_MYPROFILE_EDIT; // Edit your profile
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

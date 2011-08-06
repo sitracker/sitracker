@@ -10,10 +10,8 @@
 //
 //  Author:   Paul Heaney
 
-
-$permission = PERM_REPORT_RUN;  // Run Reports // TODO perhaps should have own permission
-
 require ('core.php');
+$permission = PERM_REPORT_RUN;  // Run Reports // TODO perhaps should have own permission
 include (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

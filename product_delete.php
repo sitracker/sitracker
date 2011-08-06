@@ -13,9 +13,8 @@
 
 // Removes a product
 
-
-$permission = PERM_PRODUCT_DELETE;  // Delete products
 require ('core.php');
+$permission = PERM_PRODUCT_DELETE;  // Delete products
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

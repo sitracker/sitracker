@@ -13,9 +13,8 @@
 // Created: 9th March 2001
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
-
-$permission = PERM_SITE_VIEW; // View Sites
 require ('core.php');
+$permission = PERM_SITE_VIEW; // View Sites
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 

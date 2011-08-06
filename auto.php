@@ -41,7 +41,7 @@ function saction_test()
 function saction_CloseIncidents($closure_delay)
 {
     $success = TRUE;
-    global $dbIncidents, $dbUpdates, $CONFIG, $crlf, $now;
+    global $dbIncidents, $dbUpdates, $CONFIG, $now;
 
     if ($closure_delay < 1) $closure_delay = 554400; // Default  six days and 10 hours
 
@@ -86,8 +86,6 @@ function saction_CloseIncidents($closure_delay)
                 trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 $success = FALSE;
             }
-
-            if ($CONFIG['debug']) //debug_log("  Incident {$obj->id} closed");
 
             $sqlc = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, nextaction, customervisibility) ";
             $sqlc .= "VALUES ('{$obj->id}', '0', 'closing', '{$obj->owner}', '{$obj->status}', 'Incident Closed by {$CONFIG['application_shortname']}', '{$now}', '', 'show' ) ";
@@ -306,7 +304,7 @@ function saction_TimeCalc()
 */
 function saction_SetUserStatus()
 {
-    global $dbHolidays, $dbUsers, $CONFIG, $crlf;
+    global $dbHolidays, $dbUsers, $CONFIG;
     // Find users with holidays today who don't have correct status
     $success = TRUE;
     $startdate = mktime(0,0,0,date('m'),date('d'),date('Y'));
@@ -624,6 +622,15 @@ function saction_MailPreviousMonthsTransactions()
      TODO need a mechanism to subscribe to scheduled events? Could this be done with a trigger? Hmmhhhhhh
 
     */
+    if ($CONFIG['outbound_email_newline'] == 'CRLF')
+    {
+        $crlf = "\r\n";
+    }
+    else
+    {
+        $crlf = "\n";
+    }
+
     $currentmonth = date('m');
     $currentyear = date('y');
     if ($currentmonth == 1)
@@ -643,13 +650,13 @@ function saction_MailPreviousMonthsTransactions()
 
     $csv = transactions_report('', $startdate, $enddate, '', 'csv', TRUE);
 
-    $extra_headers = "Reply-To: {$CONFIG['support_email']}\nErrors-To: {$CONFIG['support_email']}\n"; // TODO should probably be different
-    $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
-    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
+    $extra_headers = "Reply-To: {$CONFIG['support_email']}{$crlf}Errors-To: {$CONFIG['support_email']}{$crlf}"; // TODO should probably be different
+    $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
+    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
 //    if ($ccfield != '')  $extra_headers .= "cc: $ccfield\n";
 //    if ($bccfield != '') $extra_headers .= "Bcc: $bccfield\n";
 
-    $extra_headers .= "\n"; // add an extra crlf to create a null line to separate headers from body
+    $extra_headers .= $crlf; // add an extra crlf to create a null line to separate headers from body
                         // this appears to be required by some email clients - INL
 
     $subject = sprintf($GLOBALS['strBillableIncidentsForPeriodXtoX'], $startdate, $enddate);

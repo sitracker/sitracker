@@ -11,10 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
 
-
-$permission = PERM_CONTRACT_ADD; // Add Maintenance Contract
-
 require ('core.php');
+$permission = PERM_CONTRACT_ADD; // Add Maintenance Contract
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

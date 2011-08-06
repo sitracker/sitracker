@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_SUPPORTED_PRODUCT_EDIT;  // Edit Supported Products
 require ('core.php');
+$permission = PERM_SUPPORTED_PRODUCT_EDIT;  // Edit Supported Products
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

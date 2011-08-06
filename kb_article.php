@@ -13,10 +13,8 @@
 //          Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //          Tom Gerrard <tomgerrard[at]users.sourceforge.net>
 
-
-$permission = PERM_KB_VIEW; // view KB
-
 require ('core.php');
+$permission = PERM_KB_VIEW; // view KB
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -120,7 +118,7 @@ if (isset($_POST['submit']))
 
     foreach ($sections AS $section)
     {
-        
+
         $sectionvar = strtolower($section);
         $sectionvar = str_replace(" ", "", $sectionvar);
         $sectionid = $_POST["{$sectionvar}id"];

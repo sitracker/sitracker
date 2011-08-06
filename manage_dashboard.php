@@ -10,9 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = PERM_DASHLET_INSTALL; // Install dashboard components
 require ('core.php');
+$permission = PERM_DASHLET_INSTALL; // Install dashboard components
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = PERM_NOT_REQUIRED;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 

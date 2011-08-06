@@ -11,10 +11,8 @@
 
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
-
 require ('core.php');
+$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

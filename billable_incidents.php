@@ -11,10 +11,8 @@
 
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
-
 require ('core.php');
+$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
@@ -352,7 +350,7 @@ elseif ($mode == 'approvalpage')
                         }
                         elseif ($unapprovable)
                         {
-                        	$line .= $strUnapprovable;
+                            $line .= $strUnapprovable;
                         }
                         else
                         {

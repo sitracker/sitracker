@@ -13,10 +13,8 @@
 
 // Product information is the info related to a product that is requested when adding an incident
 
-
-$permission = PERM_PRODUCTINFO_ADD; // Add Product Info
-
 require ('core.php');
+$permission = PERM_PRODUCTINFO_ADD; // Add Product Info
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

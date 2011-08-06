@@ -11,13 +11,11 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
+require ('core.php');
 if (empty($_REQUEST['user'])
     OR $_REQUEST['user'] == 'current'
     OR $_REQUEST['userid'] == $_SESSION['userid']) $permission = PERM_MYSKILLS_SET; // Edit your software skills
 else $permission = PERM_USER_SKILLS_SET; // Manage users software skills
-
-require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

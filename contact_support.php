@@ -14,10 +14,8 @@
 // This Page Is Valid XHTML 1.0 Transitional!   4Nov05
 // 24Apr02 INL Fixed a divide by zero bug
 
-
-$permission = PERM_INCIDENT_LIST; // view incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_LIST; // view incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -40,7 +38,7 @@ function context_menu()
     $menu .= "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}&amp;status=closed\">{$GLOBALS['strShowClosedIncidents']}</a> | ";
     $menu .= "<a href=\"{$_SERVER['PHP_SELF']}?id={$id}&amp;mode={$mode}\">{$GLOBALS['strAll']}</a>";
     $menu .= "</p>";
-    
+
     return $menu;
 }
 

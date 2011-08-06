@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_HOLIDAY_APPROVE; // Approve Holiday
 require ('core.php');
+$permission = PERM_HOLIDAY_APPROVE; // Approve Holiday
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = $strApproveHolidays;
 
@@ -65,7 +64,7 @@ if ($user != 'all')
     $bodytext = "Message from {$CONFIG['application_shortname']}: ".user_realname($sit[2])." has ";
     if ($approve == 'FALSE') $bodytext .= "rejected";
     else $bodytext .= "approved";
-   
+
     $bodytext.=" your request for ";
 
     if ($startdate == 'all') $bodytext .= "all days requested\n\n";

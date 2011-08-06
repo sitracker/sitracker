@@ -11,10 +11,8 @@
 // Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //          Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = PERM_ADMIN; // Admin
-
 require ('core.php');
+$permission = PERM_ADMIN; // Admin
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

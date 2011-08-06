@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = PERM_NOT_REQUIRED;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -41,7 +40,7 @@ if (is_numeric($_GET['id']))
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    
+
     if (mysql_num_rows($result) > 0)
     {
         $row = mysql_fetch_object($result);

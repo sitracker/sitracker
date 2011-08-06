@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
-
-$permission = PERM_NOT_REQUIRED; // no permission required
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // no permission required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

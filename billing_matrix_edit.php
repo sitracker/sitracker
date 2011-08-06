@@ -11,9 +11,8 @@
 
 // Author:  Paul Heaney Paul Heaney <paul[at]sitracker.org>
 
-$permission =  81;  // TODO we need a permission to administer billing matrixes
-
 require ('core.php');
+$permission =  PERM_BILLING_DURATION_EDIT;  // TODO we need a permission to administer billing matrixes
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');

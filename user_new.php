@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_USER_ADD; // Add Users
-
 require ('core.php');
+$permission = PERM_USER_ADD; // Add Users
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
