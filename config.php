@@ -89,15 +89,18 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 
                 case '2darray':
                     $value = cleanvar($value);
-                    $value = str_replace('\n', ',', $value);
-                    $value = str_replace('\r', '', $value);
-                    $value = str_replace("\r", '', $value);
-                    $value = str_replace("\n", '', $value);
-                    $parts = explode(",", $value);
-                    foreach ($parts AS $k => $v)
+                    if (!empty($value))
                     {
-                        $y = explode('=&gt;', $v);
-                        $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
+                        $value = str_replace('\n', ',', $value);
+                        $value = str_replace('\r', '', $value);
+                        $value = str_replace("\r", '', $value);
+                        $value = str_replace("\n", '', $value);
+                        $parts = explode(",", $value);
+                        foreach ($parts AS $k => $v)
+                        {
+                            $y = explode('=&gt;', $v);
+                            $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
+                        }
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
                     break;
