@@ -45,6 +45,13 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     else html_redirect("inventory_view.php?id={$id}");
 }
+elseif (count($CONFIG['inventory_types']) <= 0)
+{
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+    echo "<p class='inventory'>{$strNoTypesDefined}</p>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+}
 else
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -57,6 +64,7 @@ else
         echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite), E_USER_WARNING);
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
+    echo (count($CONFIG['inventory_types']));
 
     $url = "{$_SERVER['PHP_SELF']}?action=new";
     if (!empty($_GET['site']))
