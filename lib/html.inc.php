@@ -1079,7 +1079,7 @@ function contract_details($id, $mode='internal')
     if ($mode == 'internal')
     {
         $operations = array();
-        $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
+        $operations[$GLOBALS['strEditContract']] = array('url' => "contract_edit.php?action=edit&amp;maintid=$id", 'perm' => PERM_CONTRACT_EDIT);
 
 
         if ($maint->term != 'yes')
@@ -2212,7 +2212,7 @@ function html_install_status($status)
                 alternative format example: $actions['Label'] = array('url' => 'http://example.com/page.html', 'perm' => PERM_FOO);
  * @return string HTML.
  */
-function html_action_links($actions)
+function html_action_links(&$actions)
 {
     $access = TRUE;
     $html .= "<span class='actionlinks'>";
@@ -2247,6 +2247,7 @@ function html_action_links($actions)
         }
     }
     $html .= "</span>";
+    unset($actions);
     return $html;
 }
 
