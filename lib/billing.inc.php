@@ -1093,7 +1093,7 @@ function contract_service_table($contractid, $billing)
     if (mysql_num_rows($result) > 0)
     {
         $shade = 'shade1';
-        $html = "\n<table class='maintable'>";
+        $html = "\n<table class='maintable' id='contractservicetable'>";
         $html .= "<tr>";
         if ($billing) $html .= "<th></th>";
         $html .= "<th>{$GLOBALS['strStartDate']}</th><th>{$GLOBALS['strEndDate']}</th>";
@@ -1110,12 +1110,19 @@ function contract_service_table($contractid, $billing)
             $service->lastbilled = mysql2date($service->lastbilled);
 
             $expired = false;
+            $future = false;
             if ($service->enddate < $now) $expired = true;
+            if ($service->startdate > $now) $future = true;
 
-            $html .= "<tr class='";
-            if ($expired) $html .= "expired";
-            else $html .= $shade;
-            $html .= "'>";
+            if ($future)
+            {
+                $shade = 'notice';
+            }
+            elseif ($expired)
+            {
+                $shade = 'expired';
+            }
+            $html .= "<tr class='{$shade}'>";
 
             if ($billing)
             {
