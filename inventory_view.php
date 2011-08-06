@@ -123,4 +123,14 @@ if (is_numeric($_GET['id']))
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
+else
+{
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+    echo "<table class='maintable'>";
+    echo "<tr><td>" . user_alert($strNoRecords, E_USER_NOTICE) . "</td></tr>";
+    echo "</table>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+}
+
 ?>
