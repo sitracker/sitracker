@@ -1227,12 +1227,13 @@ function contract_service_table($contractid, $billing)
                 $html .= "</td>";
             }
 
-            $html .= "<td><a href='contract_edit_service.php?mode=editservice&amp;serviceid={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditService']}</a>";
-
+            $html .= "<td>";
+            $operations[$GLOBALS['strEditService']] = array('url' => "contract_edit_service.php?mode=editservice&amp;serviceid={$service->serviceid}&amp;contractid={$contractid}", 'perm' => PERM_SERVICE_EDIT);
             if ($billing)
             {
-                $html .= " | <a href='contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditBalance']}</a>";
+                $operations[$GLOBALS['strEditBalance']] = array('url' => "contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}", 'perm' => PERM_SERVICE_BALANCE_EDIT);
             }
+            $html .= html_action_links($operations);
             $html .= "</td></tr>\n";
 
             if ($shade == 'shade1') $shade = 'shade2';
