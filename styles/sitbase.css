@@ -483,11 +483,9 @@ strong.info,em.info,u.info,span.info
 
 p.alert { border-style: inset; }
 
-p.forgotpwd { text-align: center; }
-
 div.scrollbox { max-width: 500px; white-space: pre; max-height: 100px; overflow: auto; background-color: white; border: 1px inset #ccc; }
 
-.formbuttons, #container .formbuttons { text-align: center; }
+p.sitversion, p.forgotpwd, p.inventory, #inventory, .formbuttons, #container .formbuttons { text-align: center; }
 
 p.trigger
 {
@@ -616,8 +614,6 @@ span.required
 input.required, select.required, textarea.required {
   background-color: #FFD8DE;
 }
-
-p.sitversion { text-align: center; }
 
 div#incidentfooter { border-top: 1px solid #203894; }
 

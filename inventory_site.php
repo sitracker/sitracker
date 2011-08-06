@@ -34,7 +34,7 @@ if (is_numeric($_GET['id']))
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('site', 32)." ".site_name($siteid)."</h2>";
-    echo "<p align='center'>";
+    echo "<p class='inventory'>";
     echo "<a href='inventory_new.php?site={$siteid}'>";
     echo icon('new', 16)." {$strNew}</a> | ";
     echo "<a href='inventory.php'>".icon('site', 16)." {$strBackToSites}</a></p>";
@@ -119,7 +119,7 @@ if (is_numeric($_GET['id']))
             else $shade = 'shade1';
         }
         echo "</table>";
-        echo "<p align='center'>".icon('new', 16);
+        echo "<p class='inventory'>".icon('new', 16);
         echo " <a href='inventory_new.php?site={$siteid}'>";
         echo "{$strNew}</a></p>";
     }
