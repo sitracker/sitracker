@@ -56,23 +56,23 @@ if (mysql_num_rows($result) >= 1)
         if ($task->owner != $sit[2])
         {
             echo "<tr><th>{$strOwner}</th>";
-            echo "<td>".user_realname($task->owner,TRUE)."</td></tr>";
+            echo "<td>".user_realname($task->owner, TRUE)."</td></tr>";
         }
         echo "<tr><th>{$strPriority}</th>";
         echo "<td>".priority_icon($task->priority).' '.priority_name($task->priority)."</td></tr>";
         echo "<tr><th>{$strStartDate}</th>";
         echo "<td>";
-        if ($startdate > 0) echo ldate($CONFIG['dateformat_datetime'],$startdate);
+        if ($startdate > 0) echo ldate($CONFIG['dateformat_datetime'], $startdate);
         echo "</td></tr>";
         echo "<tr><th>{$strDueDate}</th>";
         echo "<td>";
-        if ($duedate > 0) echo ldate($CONFIG['dateformat_datetime'],$duedate);
+        if ($duedate > 0) echo ldate($CONFIG['dateformat_datetime'], $duedate);
         echo "</td></tr>";
         echo "<tr><th>{$strCompletion}</th>";
         echo "<td>".percent_bar($task->completion)."</td></tr>";
         echo "<tr><th>{$strEndDate}</th>";
         echo "<td>";
-        if ($enddate > 0) echo ldate($CONFIG['dateformat_datetime'],$enddate);
+        if ($enddate > 0) echo ldate($CONFIG['dateformat_datetime'], $enddate);
         echo "</td></tr>";
         echo "<tr><th>{$strValue}</th>";
         echo "<td>{$task->value}</td></tr>";
