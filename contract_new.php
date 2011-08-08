@@ -136,7 +136,7 @@ if ($action == "showform" OR $action == '')
         echo "value='0' ";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
-    echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
+//     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
     echo "<input class='required' type='text' name='unitrate' size='5' ";
     if ($_SESSION['formdata']['new_contract']['unitrate'] != '')
@@ -287,7 +287,7 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
     }
-    if ($amount == 0)
+    if ($timed == 'yes' AND $amount == 0)
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
