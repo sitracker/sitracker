@@ -31,6 +31,8 @@ if (empty($action) OR $action == "showform")
 {
     $title = $strNewLink;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo show_form_errors('product_skill_new');
+    clear_form_errors('product_skill_new');
     echo "<h2>{$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post'>\n";
     echo "<input type='hidden' name='context' value='{$context}' />\n";
@@ -79,14 +81,14 @@ elseif ($action == "new")
     // check for blank
     if ($productid == 0)
     {
-        $errors = 1;
-        $errors_string .= "<p class='error'>".sprintf($strSelectionXmustNotBeEmpty, $strProduct)."</p>\n";
+        $errors++;
+        $_SESSION['formerrors']['product_skill_new']['productid'] = user_alert(sprintf($strSelectionXmustNotBeEmpty, "'{$strProduct}'"), E_USER_ERROR);
     }
     // check for blank software id
     if ($softwareid == 0)
     {
-        $errors = 1;
-        $errors_string .= "<p class='error'>".sprintf($strSelectionXmustNotBeEmpty, $strSkill)."</p>\n";
+        $errors++;
+        $_SESSION['formerrors']['product_skill_new']['productid'] = user_alert(sprintf($strSelectionXmustNotBeEmpty, "'{$strSkill}'"), E_USER_ERROR);
     }
 
     // add record if no errors
@@ -125,10 +127,7 @@ elseif ($action == "new")
     }
     else
     {
-        // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo $errors_string;
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect("product_skill_new.php?softwareid={$softwareid}&productid={$productid}", FALSE);
     }
 }
 ?>
