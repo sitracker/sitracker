@@ -183,7 +183,7 @@ else
         $errors++;
         $_SESSION['formerrors']['new_service']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
     }
-    if ($amount == 0)
+    if (($billtype == 'billperunit' OR $billtype == 'billperincident') AND $amount == 0)
     {
         $errors++;
         $_SESSION['formerrors']['new_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
