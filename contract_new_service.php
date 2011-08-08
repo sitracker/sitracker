@@ -102,6 +102,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
         echo "<label>";
         echo "<input type='radio' name='billtype' value='' checked='checked' disabled='disabled' /> ";
         echo "{$strNone}</label>";
+        echo help_link('NewServiceNoBilling');
     }
     echo "</td></tr>\n";
 

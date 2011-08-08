@@ -142,7 +142,9 @@ switch ($mode)
                 {
                     echo "<td><label>";
                     echo "<input type='radio' name='billtype' value='' checked='checked' disabled='disabled' /> ";
-                    echo "{$strNone}</label></td></tr>";
+                    echo "{$strNone}</label>";
+                    echo help_link('NewServiceNoBilling');
+                    echo "</td></tr>";
                 }
 
                 echo "</table>\n\n";
