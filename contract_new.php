@@ -186,7 +186,10 @@ if ($action == "showform" OR $action == '')
     $incident_pools = explode(',', "{$strUnlimited},{$CONFIG['incident_pools']}");
     echo "<td>".array_drop_down($incident_pools,'incident_poolid',$maint['incident_quantity'])."</td></tr>\n";
 
-    echo "<tr><th>{$strProductOnly}</th><td><input name='productonly' type='checkbox' value='yes' /></td></tr></tbody>\n";
+    echo "<tr><th>{$strProductOnly}</th><td><input name='productonly' type='checkbox' value='yes' /></td></tr>";
+    plugin_do('contract_new_form_more');
+    echo "</tbody>\n";
+    plugin_do('contract_new_form');
 
     echo "</table>\n";
     if ($timed) $timed = 'yes';
@@ -382,6 +385,7 @@ elseif ($action == 'new')
         }
         else
         {
+            plugin_do('contract_new_save');
             // show success message
             $t = new TriggerEvent('TRIGGER_NEW_CONTRACT', array('contractid' => $maintid, 'userid' => $sit[2]));
             html_redirect("contract_details.php?id=$maintid");
