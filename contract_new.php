@@ -136,7 +136,7 @@ if ($action == "showform" OR $action == '')
         echo "value='0' ";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
-//     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
+    echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
     echo "<input class='required' type='text' name='unitrate' size='5' ";
     if ($_SESSION['formdata']['new_contract']['unitrate'] != '')
