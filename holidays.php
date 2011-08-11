@@ -42,6 +42,8 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('holiday', 32)." ";
 echo "$title</h2>";
 
+plugin_do('holidays');
+
 echo "<p align='center'>";
 echo "<a href='book_holidays.php?user={$user}'>{$strBookHoliday}</a>";
 echo " | <a href='calendar.php'>{$strHolidayPlanner}</a>";
@@ -226,6 +228,7 @@ if ($totaltaken < 1 AND $numwaiting < 1)
 {
     echo "<tr class='shade2'><td colspan='4'><em>{$strNone}</em</td></tr>\n";
 }
+plugin_do('holiday_list_table');
 echo "</table>\n";
 
 

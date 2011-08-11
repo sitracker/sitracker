@@ -46,6 +46,7 @@ if (empty($mode))
 
     echo "<h2>".icon('user', 32)." ";
     echo sprintf($strEditProfileFor, $user->realname).' '.gravatar($user->email)."</h2>";
+    plugin_do('user_profile_edit');
     echo "<form id='edituser' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='maintable vertical'>";
     echo "<col width='250'></col><col width='*'></col>";
@@ -239,7 +240,7 @@ if (empty($mode))
     echo "<td><input maxlength='50' name='skype' size='30' type='text' value='".strip_tags($user->skype)."' /></td></tr>";
 
 
-    plugin_do('edit_profile_form');
+    plugin_do('user_profile_edit_form');
     // Do not allow password change if using LDAP
     if ($_SESSION['user_source'] == 'sit')
     {
@@ -331,6 +332,7 @@ elseif ($mode == 'save')
             $error_string .= "<h5 class='error'>{$strPasswordsDoNotMatch}</h5>";
         }
     }
+    plugin_do('user_profile_edit_submitted');
 
     // update database if no errors
     if ($errors == 0)
@@ -364,7 +366,7 @@ elseif ($mode == 'save')
         {
             if ($edituserid == $sit[2]) $redirecturl = 'index.php';
             else $redirecturl = 'manage_users.php';
-            plugin_do('save_profile_form');
+            plugin_do('user_profile_edit_saved');
 
             // password was not changed
             if (isset($confirm_message)) html_redirect($redirecturl, TRUE, $confirm_message);

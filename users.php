@@ -49,8 +49,9 @@ echo "<h2>".icon('user', 32)." ";
 echo "{$strUsers}</h2>";
 
 $numgroups = group_selector($filtergroup);
+plugin_do('users');
 
-$sql  = "SELECT * FROM `{$dbUsers}` WHERE status!=0 ";  // status=0 means account disabled
+$sql  = "SELECT * FROM `{$dbUsers}` WHERE status != " . USERSTATUS_ACCOUNT_DISABLED . " ";
 if ($numgroups >= 1 AND $filtergroup == '0')
 {
     $sql .= "AND (groupid='0' OR groupid='' OR groupid IS NULL) ";
@@ -161,7 +162,7 @@ while ($users = mysql_fetch_object($result))
     echo "<td align='center'><a href='incidents.php?user={$users->id}&amp;";
     echo "queue=1&amp;type=support'>";
     $incpriority = user_incidents($users->id);
-    $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+    $countincidents = ($incpriority[PRIORITY_LOW]+$incpriority[PRIORITY_MEDIUM]+$incpriority[PRIORITY_HIGH]+$incpriority[PRIORITY_CRITICAL]);
     if ($countincidents >= 1)
     {
         $countactive = user_activeincidents($users->id);

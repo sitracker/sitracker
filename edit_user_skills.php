@@ -42,6 +42,7 @@ if (empty($submit))
     }
     echo "<h2>".icon('skill', 32)." ";
     echo sprintf($strSkillsFor, user_realname($user,TRUE))."</h2>";
+    plugin_do('edit_user_skills');
     echo "<p align='center'>{$strSelectYourSkills}</p>";
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit=\"populateHidden(document.softwareform.elements['expertise[]'], document.softwareform.choices); populateHidden(document.softwareform.elements['noskills[]'], document.softwareform.ns)\">";
@@ -104,7 +105,7 @@ if (empty($submit))
     echo "</select>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "</td></tr>\n";
-
+    plugin_do('edit_user_skills_form');
     echo "</table>";
     echo "<input type='hidden' name='choices' id='choices' />";
     echo "<input type='hidden' name='ns' id='ns' />";
@@ -124,6 +125,8 @@ else
 
     $ns = urldecode($_POST['ns']);
     parse_str($ns);
+
+    plugin_do('edit_user_skills_submitted');
 
     // NOTE: it is NOT necessary to get expertise OR noskills from the $_POST as this is passed encoded in and handled above
     // See Mantis 1239 for more details, PH 2010-04-06
@@ -175,6 +178,7 @@ else
         }
     }
 
+    plugin_do('edit_user_skills_saved');
     journal(CFG_LOGGING_MAX, 'Skillset Updated', "Users Skillset was Changed", CFG_JOURNAL_USER, 0);
 
     // Have a look to see if any of the software we support is lacking a backup/substitute engineer

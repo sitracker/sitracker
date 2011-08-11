@@ -32,6 +32,7 @@ if (empty($productid) AND $display!='skills')
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
     echo "<h2>".icon('product', 32, $strProducts)." {$strProducts}</h2>";
+    plugin_do('products');
     if (mysql_num_rows($result) >= 1)
     {
         while ($vendor = mysql_fetch_object($result))

@@ -1622,6 +1622,7 @@ function show_edit_site($site, $mode='internal')
         {
             $html .= "<h2>".icon('site', 32)." {$GLOBALS['strEditSite']}: {$site} - ";
             $html .= site_name($site)."</h2>";
+            plugin_do('site_edit');
         }
         else
         {
@@ -1690,8 +1691,8 @@ function show_edit_site($site, $mode='internal')
             $html .= "<tr><th>{$GLOBALS['strNotes']}:</th><td>";
             $html .= "<textarea rows='5' cols='30' name='notes'>{$obj->notes}</textarea>";
             $html .= "</td></tr>\n";
+            plugin_do('site_edit_form');
         }
-        plugin_do('edit_site_form');
         $html .= "</table>\n";
         $html .= "<input name='site' type='hidden' value='$site' />";
         $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
@@ -1740,6 +1741,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
 
     if ($mode == 'internal')
     {
+        plugin_do('contact_new');
         $html .= "<h5 class='warning'>{$GLOBALS['strAvoidDupes']}</h5>";
     }
     $html .= "<form name='contactform' action='{$_SERVER['PHP_SELF']}' ";
@@ -1872,6 +1874,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     else $html .= " disabled='disabled'";
     $html .= " />";
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
+    plugin_do('contact_new_form');
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
     $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";

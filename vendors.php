@@ -69,6 +69,7 @@ switch ($action)
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>" . icon('vendor', 32, $strVendors) . " {$strVendors}</h2>";
+        plugin_do('vendors');
         $sql = "SELECT * FROM `{$dbVendors}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

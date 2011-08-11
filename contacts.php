@@ -75,6 +75,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
+plugin_do('contacts');
 echo "<table summary='alphamenu' class='maintable'>";
 echo "<tr>";
 echo "<td align='center'>";
