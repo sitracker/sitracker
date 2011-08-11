@@ -134,6 +134,8 @@ if (!empty($q))
     //for the search plugin
     $search = $q;
 
+    plugin_do('search_submitted');
+
     //INCIDENT RESULTS
     // MySQL doesn't normally do fulltext index for words 3 characters or shorter
     // See the MySQL option ft_min_word_len
@@ -266,7 +268,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_incidents');
+        plugin_do('search_incidents_table');
         echo "</table>";
     }
 
@@ -366,7 +368,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_sites');
+        plugin_do('search_sites_table');
         echo "</table>";
     }
 
@@ -481,7 +483,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_contacts');
+        plugin_do('search_contacts_table');
         echo "</table>";
     }
 
@@ -581,7 +583,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_user_results');
+        plugin_do('search_users_table');
         echo "</table>";
     }
 
@@ -684,7 +686,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_kb');
+        plugin_do('search_kb_table');
         echo "</table>";
     }
 
@@ -751,6 +753,7 @@ $operations = array($strAdvanced => 'search_incidents_advanced.php',
 echo html_action_links($operations);
 echo "</td>";
 echo "</tr>\n";
+plugin_do('search_form');
 echo "</table>\n";
 echo "<p align='center'><input type='submit' value='";
 if (empty($q))
@@ -763,6 +766,7 @@ else
 }
 
 echo "' /></p></form>";
+plugin_do('search');
 
 echo "<h3>".icon('help', 32, $strHelp)."  {$strHelp}</h3>";
 echo "<div class='help' id='help'>";
