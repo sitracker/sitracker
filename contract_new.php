@@ -32,6 +32,7 @@ if ($action == "showform" OR $action == '')
     clear_form_errors('new_contract');
     echo "<h2>".icon('contract', 32)." ";
     echo "{$strNewContract}</h2>";
+    plugin_do('contract_new');
     echo "<form id='new_contract' name='new_contract' action='{$_SERVER['PHP_SELF']}?action=new' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strSite}</th><td>";
@@ -312,6 +313,7 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
     }
+    plugin_do('contract_new_submitted');
 
     // add maintenance if no errors
     if ($errors == 0)
@@ -385,7 +387,7 @@ elseif ($action == 'new')
         }
         else
         {
-            plugin_do('contract_new_save');
+            plugin_do('contract_new_saved');
             // show success message
             $t = new TriggerEvent('TRIGGER_NEW_CONTRACT', array('contractid' => $maintid, 'userid' => $sit[2]));
             html_redirect("contract_details.php?id=$maintid");
