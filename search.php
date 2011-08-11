@@ -746,8 +746,9 @@ echo "{$strSearch}: ";
 echo "</th>";
 echo "<td>";
 echo "<input maxlength='100' name='q' size='35' type='text' value='".strip_tags(urldecode($q))."' /> ";
-echo html_action_links(array($strAdvanced => 'search_incidents_advanced.php',
-                             $strTagCloud => 'view_tags.php'));
+$operations = array($strAdvanced => 'search_incidents_advanced.php',
+                             $strTagCloud => 'view_tags.php');
+echo html_action_links($operations);
 echo "</td>";
 echo "</tr>\n";
 echo "</table>\n";
