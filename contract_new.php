@@ -110,7 +110,6 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
-    echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
 
     echo "<tbody id='hiddentimed'";
     if (!$timed) echo " style='display:none'";
@@ -169,7 +168,7 @@ if ($action == "showform" OR $action == '')
     }
     echo "/> {$strAboveMustBeCompletedToAllowDeductions}</td></tr>\n";
     echo "</tbody>\n";
-
+    echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
     echo "<tbody id='hidden' style='display:none'>";
 
     echo "<tr><th>{$strReseller}</th><td>";
