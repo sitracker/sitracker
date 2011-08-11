@@ -318,7 +318,7 @@ function user_incidents($id)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $arr = array('1' => '0', '2' => '0', '3' => '0', '4' => '0');
+    $arr = array(PRIORITY_LOW => '0', PRIORITY_MEDIUM => '0', PRIORITY_HIGH => '0', PRIORITY_CRITICAL => '0');
 
     if (mysql_num_rows($result) > 0)
     {
