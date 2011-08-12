@@ -218,7 +218,7 @@ while ($contact = mysql_fetch_object($contactresult))
     echo "<td>".contact_count_inventory_items($id)." ";
     echo "<a href='inventory.php?site=".contact_siteid($id)."'>{$strSeeHere}</a>";
     echo "</td></tr>";
-    plugin_do('contact_details');
+    plugin_do('contact_details_table');
 
     echo "</table>\n";
 

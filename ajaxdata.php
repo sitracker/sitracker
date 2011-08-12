@@ -400,7 +400,7 @@ switch ($action)
         echo json_encode(ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass));
         break;
     default :
-        plugin_do('ajaxdata_new_action', array('action' => $action));
+        plugin_do('ajaxdata_action', array('action' => $action));
         break;
 }
 
