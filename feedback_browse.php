@@ -221,6 +221,7 @@ switch ($mode)
             {
                 echo "<h3>{$strResponsesToAllFeedbackForms}</h3>";
             }
+            plugin_do('feedback_browse');
 
             if ($countrows >= 1)
             {
