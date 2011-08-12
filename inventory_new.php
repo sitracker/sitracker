@@ -64,7 +64,6 @@ else
         echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite), E_USER_WARNING);
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
-    echo (count($CONFIG['inventory_types']));
 
     $url = "{$_SERVER['PHP_SELF']}?action=new";
     if (!empty($_GET['site']))
