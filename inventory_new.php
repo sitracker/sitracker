@@ -120,18 +120,18 @@ else
     echo "<textarea id='inventorynotes' rows='15' cols='60' name='notes'></textarea></td></tr>";
 
     echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
-    echo "<td><input type='radio' name='privacy' value='private' />{$strPrivate}<br />";
+    echo "<td><label><input type='radio' name='privacy' value='private' />{$strPrivate}</label><br />";
 
-    echo "<input type='radio' name='privacy' value='adminonly' />";
-    echo "{$strAdminOnly}<br />";
+    echo "<label><input type='radio' name='privacy' value='adminonly' />";
+    echo "{$strAdminOnly}</label><br />";
 
-    echo "<input type='radio' name='privacy' value='none'";
+    echo "<label><input type='radio' name='privacy' value='none'";
     if (!$selected)
     {
         echo " checked='checked' ";
     }
     echo "/>";
-    echo "{$strNone}<br />";
+    echo "{$strNone}</label><br />";
     echo "</td></tr>";
     plugin_do('inventory_new_form');
     echo "</table>";
