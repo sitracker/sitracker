@@ -198,6 +198,7 @@ if ($action == "showform" OR $action == '')
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>";
+    echo "<p class='return'><a href=\"contracts.php\">{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
     clear_form_data('new_contract');

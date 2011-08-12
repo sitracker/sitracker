@@ -31,6 +31,7 @@ $activeonly = cleanvar($_REQUEST['activeonly']);
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('contract', 32)." ";
 echo "{$title}</h2>";
+plugin_do('contracts');
 echo "<table summary='alphamenu' class='maintable'><tr><td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "{$strBrowseContractsBySite}:"; // <!--<input type="text" name="search_string" />-->

@@ -26,6 +26,8 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
 echo "<p class='inventory'>{$strInventoryDesc}</p>";
 
+plugin_do('inventory');
+
 $sql = "SELECT COUNT(*) AS count, s.* FROM `{$dbInventory}` AS i, `{$dbSites}` AS s ";
 $sql .= "WHERE siteid=s.id ";
 $sql .= "GROUP BY siteid ";
