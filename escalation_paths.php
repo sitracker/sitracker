@@ -43,7 +43,7 @@ if (mysql_num_rows($result) >= 1)
     while ($path = mysql_fetch_object($result))
     {
         $operations = array();
-        $operations[$strEdit] = "edit_escalation_path.php?id={$path->id}";
+        $operations[$strEdit] = "escalation_path_edit.php?id={$path->id}";
         echo "<tr  class='{$shade}'>";
         echo "<td>{$path->name}</td>";
         echo "<td>{$path->track_url}</td>";
