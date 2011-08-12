@@ -31,6 +31,8 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 {
     $post = cleanvar($_POST);
 
+    plugin_do('inventory_new_submitted');
+
     $sql = "INSERT INTO `{$dbInventory}`(address, username, password, type,";
     $sql .= " notes, created, createdby, modified, modifiedby, active,";
     $sql .= " name, siteid, privacy, identifier, contactid) VALUES('{$post['address']}', ";
@@ -43,7 +45,11 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     mysql_query($sql);
     $id = mysql_insert_id();
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    else html_redirect("inventory_view.php?id={$id}");
+    else
+    {
+        plugin_do('inventory_new_saved');
+        html_redirect("inventory_view.php?id={$id}");
+    }
 }
 elseif (count($CONFIG['inventory_types']) <= 0)
 {
@@ -64,6 +70,8 @@ else
         echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite), E_USER_WARNING);
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
+
+    plugin_do('inventory_new');
 
     $url = "{$_SERVER['PHP_SELF']}?action=new";
     if (!empty($_GET['site']))
@@ -125,6 +133,7 @@ else
     echo "/>";
     echo "{$strNone}<br />";
     echo "</td></tr>";
+    plugin_do('inventory_new_form');
     echo "</table>";
     echo "<p class='formbuttons'>";
     echo "<input name='reset' type='reset' value='{$strReset}' /> ";
