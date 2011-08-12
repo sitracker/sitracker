@@ -142,7 +142,7 @@ class User extends Person{
         if (mysql_num_rows($result) != 0)
         {
             // Already exists
-            trigger_error($GLOBALS['strUsernameNotUnique'], E_USER_ERROR);
+            trigger_error($GLOBALS['strUsernameNotUnique'] . " Username: '{$this->username}'", E_USER_ERROR);
             $toReturn = FALSE;
         }
         else
