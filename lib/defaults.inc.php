@@ -379,4 +379,8 @@ $CONFIG['site_config_defaults'] = array('feedback_enabled' => 'yes');
 
 // Allow outbound email
 $CONFIG['enable_outbound_email'] = TRUE;
+
+// Change the newline character if outbound emails have line breaks in the wrong places.(CRLF or LF)
+$CONFIG['outbound_email_newline'] = 'LF';
+
 ?>

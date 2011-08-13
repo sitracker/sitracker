@@ -279,13 +279,12 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
     }
     else
     {
-        $qsappend='';
+        $qsappend = '';
     }
 
     if ($sort == $colname)
     {
-        //if ($order=='') $order=$defaultorder;
-        if ($order=='a')
+        if ($order == 'a')
         {
             $html .= "<a href='{$_SERVER['PHP_SELF']}?sort=$colname&amp;order=d{$qsappend}'>{$coltitle}</a> ";
             $html .= "<img src='{$CONFIG['application_webpath']}images/sort_a.png' width='5' height='5' alt='{$GLOBALS['strSortAscending']}' /> ";
@@ -1079,7 +1078,7 @@ function contract_details($id, $mode='internal')
     if ($mode == 'internal')
     {
         $operations = array();
-        $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
+        $operations[$GLOBALS['strEditContract']] = array('url' => "contract_edit.php?action=edit&amp;maintid=$id", 'perm' => PERM_CONTRACT_EDIT);
 
 
         if ($maint->term != 'yes')
@@ -2209,10 +2208,10 @@ function html_install_status($status)
  * @author Ivan Lucas
  * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
                 format example: $actions['Label'] = 'http://example.com/page.html'
-                alternative format example: $actions['Label'] = array('url => 'http://example.com/page.html', perm = PERM_FOO);
+                alternative format example: $actions['Label'] = array('url' => 'http://example.com/page.html', 'perm' => PERM_FOO);
  * @return string HTML.
  */
-function html_action_links($actions)
+function html_action_links(&$actions)
 {
     $access = TRUE;
     $html .= "<span class='actionlinks'>";
@@ -2247,6 +2246,7 @@ function html_action_links($actions)
         }
     }
     $html .= "</span>";
+    unset($actions);
     return $html;
 }
 

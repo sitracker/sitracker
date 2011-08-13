@@ -12,9 +12,8 @@
 // Author: Kieran Hogg <kieran[at]sitracker.org
 // This Page Is Valid XHTML 1.0 Transitional!
 
-$permission = PERM_TASK_VIEW;
-
 require ('core.php');
+$permission = PERM_TASK_VIEW;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -182,7 +181,7 @@ else
         if ($user != 'all')
         {
             echo "<h2>".icon('task', 32)." ";
-            echo sprintf($strXsTasks, user_realname($sit[2]))."</h2>";
+            echo sprintf($strXsTasks, user_realname($user))."</h2>";
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?user=all&amp;";
             echo "show={$show}&amp;sort={$sort}&amp;order={$order}'>{$strShowEverybodys}</a></p>";
         }
@@ -198,7 +197,7 @@ else
         if ($user != 'all')
         {
             echo "<h2>".icon('task', 32)." ";
-            echo sprintf($strXsTasks, user_realname($sit[2]))."</h2>";
+            echo sprintf($strXsTasks, user_realname($user))."</h2>";
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?show=incidents";
             echo "&amp;user=all'>{$strShowAll}</a></p>";
         }

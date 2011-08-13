@@ -228,7 +228,7 @@ function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required 
 
     $html .= ">{$GLOBALS['strMedium']}</option>\n";
     $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/high_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_HIGH."'";
-    if ($id==3)
+    if ($id == 3)
     {
         $html .= " selected='selected'";
     }
@@ -237,7 +237,7 @@ function priority_drop_down($name, $id = 0, $max=4, $disable = FALSE, $required 
     if ($max >= 4)
     {
         $html .= "<option style='text-indent: 14px; background-image: url({$CONFIG['application_webpath']}images/crit_priority.gif); background-repeat:no-repeat;' value='".PRIORITY_CRITICAL."'";
-        if ($id==4)
+        if ($id == 4)
         {
             $html .= " selected='selected'";
         }

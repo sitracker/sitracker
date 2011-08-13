@@ -13,10 +13,8 @@
 // Removed mention of contactproducts - INL 08Oct01
 // This Page Is Valid XHTML 1.0 Transitional!   - INL 6Apr06
 
-
-$permission = PERM_INCIDENT_LIST;  // view incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_LIST;  // view incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

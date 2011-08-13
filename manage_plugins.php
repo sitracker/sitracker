@@ -9,8 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = array(PERM_ADMIN, PERM_DASHLET_INSTALL); // Configure & Install dashboard components
 require ('core.php');
+$permission = array(PERM_ADMIN, PERM_DASHLET_INSTALL); // Configure & Install dashboard components
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

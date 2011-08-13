@@ -307,8 +307,6 @@ $strCustomerImpact = 'Impacto al Cliente';
 $strCustomerImpactCustomerText = 'Cuántos usuarios están afectados por este problema? Es un problema de downtime o un preocupación menor? Este problema provoca que los usuarios puedan trabajar?';
 $strCustomerRequestedClosure = 'EL cliente ha solicitado que se cierre este Incidente';
 
-$strDailyRate = 'Costo por Día';
-
 $strCustomers = 'Clientes';
 
 $strDashboard = 'Tablero';

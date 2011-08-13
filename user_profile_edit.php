@@ -12,8 +12,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  1Nov05
 
-$permission = 4; // Edit your profile
 require ('core.php');
+$permission = PERM_MYPROFILE_EDIT; // Edit your profile
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -40,6 +40,9 @@ if (empty($mode))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     $user = new User($edituserid);
+
+    $signature = str_replace('\r\n', "\r\n", $user->signature);
+    $message = str_replace('\r\n', "\r\n", $user->message);
 
     echo "<h2>".icon('user', 32)." ";
     echo sprintf($strEditProfileFor, $user->realname).' '.gravatar($user->email)."</h2>";
@@ -97,7 +100,7 @@ if (empty($mode))
     echo "<tr><th>{$strQualifications} ".help_link('QualificationsTip')."</th>";
     echo "<td><input maxlength='255' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
     echo "<tr><th>{$strEmailSignature} ".help_link('EmailSignatureTip')."</th>";
-    echo "<td><textarea name='signature' rows='4' cols='40'>".strip_tags($user->signature)."</textarea></td></tr>\n";
+    echo "<td><textarea name='signature' rows='4' cols='40'>".stripslashes(strip_tags($signature))."</textarea></td></tr>\n";
     $entitlement = user_holiday_entitlement($edituserid);
     if ($edituserpermission && $edituserid != $sit[2])
     {
@@ -181,7 +184,7 @@ if (empty($mode))
     echo $useraccepting;
     echo "</td></tr>\n";
     echo "<tr><th>{$strMessage} ".help_link('MessageTip')."</th>";
-    echo "<td><textarea name='message' rows='4' cols='40'>".strip_tags($user->message)."</textarea></td></tr>\n";
+    echo "<td><textarea name='message' rows='4' cols='40'>".stripslashes(strip_tags($message))."</textarea></td></tr>\n";
     echo "<tr><th colspan='2'>{$strContactDetails}</th></tr>";
     echo "<tr id='email'><th>{$strEmail}</th>";
     echo "<td>";
@@ -347,7 +350,7 @@ elseif ($mode == 'save')
             $_SESSION['utcoffset'] = $user->utc_offset;
         }
 
-    
+
         if ($result === FALSE)
         {
 

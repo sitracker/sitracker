@@ -10,10 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = PERM_RESELLER_ADD;
-
 require ('core.php');
+$permission = PERM_RESELLER_ADD;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

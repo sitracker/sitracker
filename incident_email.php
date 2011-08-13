@@ -9,9 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_EMAIL_SEND; // Send Emails
 require ('core.php');
+$permission = PERM_EMAIL_SEND; // Send Emails
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // include ('mime.inc.php');
 
@@ -376,12 +375,20 @@ switch ($step)
 
         if ($errors == 0)
         {
-            $extra_headers = "Reply-To: {$replytofield}\nErrors-To: ".user_email($sit[2])."\n";
-            $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
-            $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
-            if ($ccfield != '')  $extra_headers .= "CC: {$ccfield}\n";
-            if ($bccfield != '') $extra_headers .= "BCC: {$bccfield}\n";
-            $extra_headers .= "\n"; // add an extra crlf to create a null line to separate headers from body
+            if ($CONFIG['outbound_email_newline'] == 'CRLF')
+            {
+                $crlf = "\r\n";
+            }
+            else
+            {
+                $crlf = "\n";
+            }
+            $extra_headers = "Reply-To: {$replytofield}{$crlf}Errors-To: ".user_email($sit[2]) . $crlf;
+            $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
+            $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
+            if ($ccfield != '')  $extra_headers .= "CC: {$ccfield}" . $crlf;
+            if ($bccfield != '') $extra_headers .= "BCC: {$bccfield}" . $crlf;
+            $extra_headers .= $crlf; // add an extra crlf to create a null line to separate headers from body
                                 // this appears to be required by some email clients - INL
 
             $mime = new MIME_mail($fromfield, $tofield, html_entity_decode($subjectfield), '', $extra_headers, $mailerror);

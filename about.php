@@ -12,10 +12,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 28Oct05
 
-
-$permission = PERM_NOT_REQUIRED; 
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

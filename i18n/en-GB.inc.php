@@ -408,7 +408,6 @@ $strCustomerRequestedClosure = 'Customer Requested Incident Closure';
 $strCustomers = 'Customers';
 # Visible for customers
 $strCustomerVisible = 'Customer visible';
-$strDailyRate = 'Daily Rate';
 # i.e. place for widgets
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard component %s doesn\'t exist';
@@ -1313,6 +1312,7 @@ $strNotSet = 'Not Set';
 $strNotSettingArea = '<strong>NOTE</strong>: Not setting one may slow down processing your incident';
 $strNotUpdated = 'Not Updated';
 $strNoUpgradesForDashboardComponent = 'No upgrades for %1$s dashboard component';
+$strNoTypesDefined = 'Sorry, no types were found, contact your admin to create some';
 # Short for November
 $strNovAbbr = 'Nov';
 $strNoValidEmailEntered = 'No valid email address entered or wrong email address';
@@ -1339,7 +1339,6 @@ $strOldPassword = 'Old Password';
 $strOnHoliday = 'On Holiday';
 $strOffline = 'Offline';
 $strOneOfTheSignaturesWillBeInserted = 'One of the signatures below will be chosen at random and inserted at the bottom of outgoing emails. It\'s recommended that you begin this signature with two dashes, a space and a line feed';
-$strOneTimeBillingEditor = 'One time billing editor';
 $strOnline = 'Online';
 $strOnlyAvailableOnSupportIncidents = 'Only available on support incidents';
 $strOnlyShowsClosedCalls = 'Only shows closed calls';

@@ -12,10 +12,8 @@
 // Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //          Kieran Hogg <kieran[at]sitracker.org>
 
-
-$permission = PERM_TASK_EDIT;
-
 require ('core.php');
+$permission = PERM_TASK_EDIT;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

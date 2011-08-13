@@ -13,8 +13,8 @@
 //          Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 // TODO 3.40 if we user MYSQL 5's relation functions, we can simply delete the user
 
-$permission = PERM_USER_MANAGE;  // FIXME need permission for user delete
 require ('core.php');
+$permission = PERM_USER_MANAGE;  // FIXME need permission for user delete
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

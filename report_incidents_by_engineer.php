@@ -20,10 +20,8 @@
 
 // Requested by Rob Shepley, 3 Oct 05
 
-
-$permission = PERM_REPORT_RUN; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

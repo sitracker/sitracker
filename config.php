@@ -14,6 +14,7 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
+require ('core.php');
 if (empty($_REQUEST['userid']))
 {
     $permission = PERM_ADMIN; // Administrate
@@ -22,8 +23,6 @@ else
 {
     $permision = PERM_MYPROFILE_EDIT; // Edit your profile, FIXME need a permission for user settings
 }
-
-require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -89,15 +88,18 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 
                 case '2darray':
                     $value = cleanvar($value);
-                    $value = str_replace('\n', ',', $value);
-                    $value = str_replace('\r', '', $value);
-                    $value = str_replace("\r", '', $value);
-                    $value = str_replace("\n", '', $value);
-                    $parts = explode(",", $value);
-                    foreach ($parts AS $k => $v)
+                    if (!empty($value))
                     {
-                        $y = explode('=&gt;', $v);
-                        $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
+                        $value = str_replace('\n', ',', $value);
+                        $value = str_replace('\r', '', $value);
+                        $value = str_replace("\r", '', $value);
+                        $value = str_replace("\n", '', $value);
+                        $parts = explode(",", $value);
+                        foreach ($parts AS $k => $v)
+                        {
+                            $y = explode('=&gt;', $v);
+                            $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
+                        }
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
                     break;

@@ -528,6 +528,14 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
     $paramarray = array('incidentid' => $paramarray['incidentid'], 'triggeruserid' => $sit[2]);
+    if ($CONFIG['outbound_email_newline'] == 'CRLF')
+    {
+        $crlf = "\r\n";
+    }
+    else
+    {
+        $crlf = "\n";
+    }
     $from = replace_specials($template->fromfield, $paramarray);
     $replyto = replace_specials($template->replytofield, $paramarray);
     $ccemail = replace_specials($template->ccfield, $paramarray);
@@ -535,7 +543,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     $toemail = replace_specials($template->tofield, $paramarray);
     $subject = replace_specials($template->subjectfield, $paramarray);
     $body = replace_specials($template->body, $paramarray);
-    $extra_headers = "Reply-To: {$replyto}\nErrors-To: ".user_email($sit[2])."\n";
+    $extra_headers = "Reply-To: {$replyto}{$crlf}Errors-To: ".user_email($sit[2]) . $crlf;
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
     $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
     if ($ccemail != '')  $extra_headers .= "CC: $ccemail\n";
@@ -1405,7 +1413,7 @@ function incident_backup_switchover($userid, $accepting)
             }
         }
     }
-    elseif ($accepting=='')
+    elseif ($accepting == '')
     {
         // Do nothing when accepting status doesn't exist
     }

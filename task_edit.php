@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_TASK_EDIT;
-
 require ('core.php');
+$permission = PERM_TASK_EDIT;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

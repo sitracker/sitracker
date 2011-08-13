@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_INCIDENT_CLOSE; //  Close Incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_CLOSE; //  Close Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication

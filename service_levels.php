@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_ADMIN; // Administrate, FIXME need a permission for view/list SLA
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate, FIXME need a permission for view/list SLA
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

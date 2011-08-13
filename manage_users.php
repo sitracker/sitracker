@@ -11,9 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 16Nov05
 
-
-$permission = PERM_ADMIN; // Administrate
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

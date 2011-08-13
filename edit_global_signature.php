@@ -40,10 +40,8 @@ function delete_signature($sig_id)
     exit;
 }
 
-$permission = PERM_GLOBALSIG_EDIT; // Edit global signature
-
-
 require ('core.php');
+$permission = PERM_GLOBALSIG_EDIT; // Edit global signature
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

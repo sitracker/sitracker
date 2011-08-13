@@ -15,11 +15,10 @@
 
 // included by billable_incidents.php
 
-$permission = PERM_BILLING_TRANSACTION_VIEW; // View Transactions
-
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
     require ('core.php');
+    $permission = PERM_BILLING_TRANSACTION_VIEW; // View Transactions
     require_once(APPLICATION_LIBPATH . 'functions.inc.php');
     include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 

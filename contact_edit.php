@@ -11,9 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  31Oct05
 
-$permission = PERM_CONTACT_EDIT; // Edit Contacts
-
 require ('core.php');
+$permission = PERM_CONTACT_EDIT; // Edit Contacts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -59,7 +58,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<td>";
         echo "\n<table><tr><td class='tabletitle'>{$strTitle}<br />";
         echo "<input maxlength='50' name='courtesytitle' title=\"";
-        echo "{$strCourtesyTitle}\" size='7' value='{$contactobj->courtesytitle}'/></td>\n";   
+        echo "{$strCourtesyTitle}\" size='7' value='{$contactobj->courtesytitle}'/></td>\n";
         echo "<td class='tabletitle'>{$strForenames}<br />";
         echo "<input class='required' maxlength='100' name='forenames' value='".htmlspecialchars($contactobj->forenames, ENT_QUOTES)."' /></td>\n";
         echo "<td class='tabletitle'>{$strSurname}<br />";

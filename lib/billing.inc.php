@@ -335,33 +335,6 @@ function get_service_unitrate($serviceid)
 
 
 /**
- * Returns the daily rate for a service
- * @author Paul Heaney
- * @param int $serviceid - The serviceID to get the daily rate for
- * @return mixed FALSE if no service found else the daily rate
- */
-function get_service_dailyrate($serviceid)
-{
-    $rtnvalue = FALSE;
-    $sql = "SELECT dailyrate FROM `{$GLOBALS['dbService']}` AS p WHERE serviceid = {$serviceid}";
-
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        return FALSE;
-    }
-
-    if (mysql_num_rows($result) > 0)
-    {
-        list($rtnvalue) = mysql_fetch_row($result);
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
  * Returns the incident rate for a service
  * @author Paul Heaney
  * @param int $serviceid - The serviceID to get the incident rate for
@@ -1120,7 +1093,7 @@ function contract_service_table($contractid, $billing)
     if (mysql_num_rows($result) > 0)
     {
         $shade = 'shade1';
-        $html = "\n<table class='maintable'>";
+        $html = "\n<table class='maintable' id='contractservicetable'>";
         $html .= "<tr>";
         if ($billing) $html .= "<th></th>";
         $html .= "<th>{$GLOBALS['strStartDate']}</th><th>{$GLOBALS['strEndDate']}</th>";
@@ -1137,12 +1110,19 @@ function contract_service_table($contractid, $billing)
             $service->lastbilled = mysql2date($service->lastbilled);
 
             $expired = false;
+            $future = false;
             if ($service->enddate < $now) $expired = true;
+            if ($service->startdate > $now) $future = true;
 
-            $html .= "<tr class='";
-            if ($expired) $html .= "expired";
-            else $html .= $shade;
-            $html .= "'>";
+            if ($future)
+            {
+                $shade = 'notice';
+            }
+            elseif ($expired)
+            {
+                $shade = 'expired';
+            }
+            $html .= "<tr class='{$shade}'>";
 
             if ($billing)
             {
@@ -1247,12 +1227,13 @@ function contract_service_table($contractid, $billing)
                 $html .= "</td>";
             }
 
-            $html .= "<td><a href='contract_edit_service.php?mode=editservice&amp;serviceid={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditService']}</a>";
-
+            $html .= "<td>";
+            $operations[$GLOBALS['strEditService']] = array('url' => "contract_edit_service.php?mode=editservice&amp;serviceid={$service->serviceid}&amp;contractid={$contractid}", 'perm' => PERM_SERVICE_EDIT);
             if ($billing)
             {
-                $html .= " | <a href='contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}'>{$GLOBALS['strEditBalance']}</a>";
+                $operations[$GLOBALS['strEditBalance']] = array('url' => "contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}", 'perm' => PERM_SERVICE_BALANCE_EDIT);
             }
+            $html .= html_action_links($operations);
             $html .= "</td></tr>\n";
 
             if ($shade == 'shade1') $shade = 'shade2';

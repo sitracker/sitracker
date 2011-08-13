@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = PERM_NOT_REQUIRED;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -25,16 +24,16 @@ if(!$CONFIG['inventory_enabled'])
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
-echo "<p align='center'>{$strInventoryDesc}</p>";
+echo "<p class='inventory'>{$strInventoryDesc}</p>";
 
 $sql = "SELECT COUNT(*) AS count, s.* FROM `{$dbInventory}` AS i, `{$dbSites}` AS s ";
 $sql .= "WHERE siteid=s.id ";
 $sql .= "GROUP BY siteid ";
 $result = mysql_query($sql);
 
+echo "<table class='maintable'>";
 if (mysql_num_rows($result) > 0)
 {
-    echo "<table class='maintable'>";
     echo "<tr><th>{$strSite}</th><th>{$strCount}</th><th>{$strActions}</th></tr>";
     $shade = 'shade1';
     while ($row = mysql_fetch_object($result))
@@ -48,14 +47,13 @@ if (mysql_num_rows($result) > 0)
         if ($shade == 'shade1') $shade = 'shade2';
         else $shade = 'shade1';
     }
-    echo "</table>";
 }
 else
 {
-    echo user_alert($strNoRecords, E_USER_NOTICE);
+    echo "<tr><td>" . user_alert($strNoRecords, E_USER_NOTICE) . "</td></tr>";
 }
-
-echo "<p align='center'><a href='inventory_new.php?newsite=1'>";
+echo "</table>";
+echo "<p class='inventory'><a href='inventory_new.php?newsite=1'>";
 echo "{$strSiteNotListed}</a></p>";
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

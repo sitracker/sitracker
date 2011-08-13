@@ -370,7 +370,6 @@ $strCustomerRequestedClosure = 'Le client a demandé la Clôture du Ticket';
 $strCustomers = 'Clients';
 $strCustomerVisible = 'Visible pour les Clients';
 
-$strDailyRate = 'Tarif journalier';
 $strDashboard = 'Tableau de bord';
 $strDashboardComponentDoesntExist = 'Le composant %s du tableau de bord n\'existe pas !';
 $strDataProtection = 'Protection des données (Bloquage d\'envoi)';
@@ -1122,7 +1121,6 @@ $strOldPassword = 'Ancien Mot de Passe';
 $strOnHoliday = 'En Congé';
 $strOffline = 'Hors ligne';
 $strOneOfTheSignaturesWillBeInserted = 'Une des signatures ci-dessous sera choisie aléatoirement et insérée au bas des messages sortants. Il est recommandé que vous commenciez cette signature par deux tirets, un espace et un retour à la ligne';
-$strOneTimeBillingEditor = 'Editeur pour facturation unique';
 $strOnline = 'En ligne';
 $strOnlyShowsClosedCalls = 'Montre uniquement les appels fermés';
 $strOnlyShowNewerThan = 'Montre uniquement les nouveaux de plus de %d jours';

@@ -12,9 +12,8 @@
 // This Page Is Valid XHTML 1.0 Transitional! 13Sep06
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_CALENDAR_VIEW; // view your calendar
-
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; // view your calendar
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -144,7 +143,7 @@ elseif ($step == '1')
 
     $daynumber = 1;
     $options = 0;
-    // if ($end==$start)
+
     $end += 86400;  // ensure we still loop for single day bookings by setting end to next day
     for ($day = $start; $day < $end; $day = $day + 86400)
     {

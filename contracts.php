@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
@@ -233,7 +232,11 @@ else
         }
 
         echo "</td>";
-        echo "<td><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$strEdit}</a></td>";
+        echo "<td>";
+        $operations[$strView] = array('url' => "contract_details.php?id={$results->maintid}", 'perm' => PERM_CONTRACT_VIEW);
+        $operations[$strEdit] = array('url' => "contract_edit.php?action=edit&amp;maintid={$results->maintid}", 'perm' => PERM_CONTRACT_EDIT);
+        echo html_action_links($operations);
+        echo "</td>";
         echo"</tr>";
     }
 

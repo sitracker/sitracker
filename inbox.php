@@ -8,8 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = PERM_UPDATE_DELETE;
 require ('core.php');
+$permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
