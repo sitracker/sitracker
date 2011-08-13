@@ -9,9 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_UPDATE_DELETE; // Delete Incident Updates
 require ('core.php');
+$permission = PERM_UPDATE_DELETE; // Delete Incident Updates
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

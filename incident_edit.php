@@ -12,9 +12,8 @@
 // Soon to be replaced
 // See incident/edit.inc.php
 
-$permission = PERM_INCIDENT_EDIT; // Edit Incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_EDIT; // Edit Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

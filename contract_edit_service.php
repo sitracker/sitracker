@@ -13,9 +13,8 @@
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission =  80;
-
 require ('core.php');
+$permission =  PERM_SERVICE_EDIT;
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication
@@ -138,10 +137,6 @@ switch ($mode)
                         echo "<tr><th colspan='2'>{$strUnableToChangeServiceAsUsed}</th></tr>\n";
                         echo "</tbody>\n";
                     }
-                //  Not sure how applicable daily rate is, INL 4Apr08
-                //     echo "<tr><th>{$strDailyRate}</th>";
-                //     echo "<td>{$CONFIG['currency_symbol']} <input type='text' name='dailyrate' size='5' />";
-                //     echo "</td></tr>";
                 }
                 else
                 {
@@ -152,7 +147,8 @@ switch ($mode)
 
                 echo "</table>\n\n";
                 echo "<input type='hidden' name='contractid' value='{$contractid}' />";
-                echo "<p><input name='submit' type='submit' value=\"{$strUpdate}\" /></p>";
+                echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+                echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
                 echo "<input type='hidden' name='serviceid' id='serviceid' value='{$serviceid}' />";
                 echo "<input type='hidden' name='mode' id='mode' value='doupdate' />";
                 echo "</form>\n";
@@ -273,14 +269,14 @@ switch ($mode)
         {
             $title = ("$strContract - $strEditBalance");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            echo "<h2>{$strOneTimeBillingEditor}</h2>";
+            echo "<h2>{$strEditBalance}</h2>";
 
             echo "<form name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
 
             echo "<table class='maintable vertical'>";
-            echo "<tr><th>{$strEdit}</th><td>{$sourceservice}</td></tr>";
-            echo "<tr><th></th><td>";
-            echo "<input type='radio' name='mode' id='edit' value='edit' checked='checked' onclick=\"$('transfersection').hide(); $('transfersectionbtn').hide(); $('editsection').show(); \" /> {$strEdit} ";
+            echo "<tr><th>{$strID}</th><td>{$sourceservice}</td></tr>";
+            echo "<tr><th>{$strAction}</th><td>";
+            echo "<label><input type='radio' name='mode' id='edit' value='edit' checked='checked' onclick=\"$('transfersection').hide(); $('transfersectionbtn').hide(); $('editsection').show(); \" /> {$strEdit}</label> ";
 
             // Only allow transfers on the same contractid
             $sql = "SELECT * FROM `{$dbService}` WHERE contractid = '{$contractid}' AND serviceid != {$sourceservice}";
@@ -290,7 +286,7 @@ switch ($mode)
             if (mysql_numrows($result) > 0)
             {
 
-                echo "<input type='radio' name='mode' id='transfer' value='transfer' onclick=\"$('transfersection').show(); $('transfersectionbtn').show(); $('editsection').hide(); \" /> {$strTransfer} ";
+                echo "<label><input type='radio' name='mode' id='transfer' value='transfer' onclick=\"$('transfersection').show(); $('transfersectionbtn').show(); $('editsection').hide(); \" /> {$strTransfer} </label>";
                 echo "</td></tr>";
                 echo "<tbody  style='display:none' id='transfersection' >";
                 echo "<tr><td colspan='2'>";
@@ -314,8 +310,8 @@ switch ($mode)
                 echo "</td></tr>";
             }
 
-            echo "<tr><th>{$strAmountToEditBy}</th><td><input type='text' name='amount' id='amount' /></td></tr>";
-            echo "<tr><th>{$strReason}</th><td><input type='text' name='reason' id='reason' /></td></tr>";
+            echo "<tr><th>{$strAmountToEditBy}</th><td>{$CONFIG['currency_symbol']} <input type='text' name='amount' id='amount' size='5' /></td></tr>";
+            echo "<tr><th>{$strReason}</th><td><input type='text' name='reason' id='reason' size='60' maxlength='255' /></td></tr>";
 
             echo "</table>";
             echo "<p class='formbuttons'><input type='submit' style='display:none'  name='runreport' id='transfersectionbtn' value='{$strTransfer}' /></p>";
@@ -325,6 +321,7 @@ switch ($mode)
             echo "<input type='hidden' name='contractid' value='{$contractid}' />";
 
             echo "</form>";
+            echo "<p class='return'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;

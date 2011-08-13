@@ -58,7 +58,7 @@ if (mysql_num_rows($result) > 0)
 {
     if ($display == 'html')
     {
-        $str .= "<table class='maintable vertical'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
+        $str .= "<table class='maintable'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
         $str .= "<th>{$strExpiryDate}</th><th>{$strCustomerReference}</th><th>{$strStartDate}</th><th>{$strEndDate}</th>";
         $str .= "<th>{$strFreeOfCharge}</th><th>{$strCreditAmount}</th><th>{$strBalance}</th>";
         $str .= "<th>{$strAwaitingApproval}</th><th>{$strReserved}</th><th>{$strAvailableBalance}</th>";
@@ -80,8 +80,8 @@ if (mysql_num_rows($result) > 0)
     {
         if ($obj->foc == 'yes' AND !empty($focaszero))
         {
-			$obj->creditamount = 0;
-			$obj->balance = 0;
+            $obj->creditamount = 0;
+            $obj->balance = 0;
         }
 
         if (!empty($expiredaszero) AND strtotime($obj->enddate) < $now)
@@ -132,9 +132,11 @@ if (mysql_num_rows($result) > 0)
                     $str .= "<td></td>";
                 }
             }
-            $str .= "<td>".ldate('Y-m-d', $obj->maintexpiry)."</td>";
+            $str .= "<td>" . ldate($CONFIG['dateformat_date'], $obj->maintexpiry) . "</td>";
 
-            $str .= "<td>{$obj->cust_ref}</td><td>{$obj->startdate}</td><td>{$obj->enddate}</td>";
+            $str .= "<td>{$obj->cust_ref}</td>";
+            $str .= "<td>" . ldate($CONFIG['dateformat_date'], mysql2date($obj->startdate)) . "</td>";
+            $str .= "<td>" . ldate($CONFIG['dateformat_date'], mysql2date($obj->enddate)) . "</td>";
             if ($obj->foc == 'yes') $str .= "<td>{$strYes}</td>";
             else $str .= "<td>{$strNo}</td>";
             $str .= "<td>{$CONFIG['currency_symbol']}".number_format($obj->creditamount,2)."</td>";
@@ -168,8 +170,9 @@ if (mysql_num_rows($result) > 0)
                 }
             }
 
-            $str .= "\"".ldate('Y-m-d', $obj->maintexpiry)."\",";
-            $str .= "\"{$obj->cust_ref}\",\"{$obj->startdate}\",\"{$obj->enddate}\",";
+            $str .= "\"".ldate($CONFIG['dateformat_date'], $obj->maintexpiry)."\",";
+            $str .= "\"{$obj->cust_ref}\",\"" . ldate($CONFIG['dateformat_date'], mysql2date($obj->startdate));
+            $str .= "\",\"" . ldate($CONFIG['dateformat_date'], mysql2date($obj->enddate)) . "\",";
             if ($obj->foc == 'yes') $str .= "\"{$strYes}\",";
             else $str .= "\"{$strNo}\",";
             $str .= "\"{$csv_currency}{$obj->creditamount}\",\"{$csv_currency}{$obj->balance}\",";

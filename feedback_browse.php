@@ -11,10 +11,8 @@
 
 // by Ivan Lucas <ivanlucas[at]users.sourceforge.net>, June 2004
 
-
-$permission = PERM_FEEDBACK_VIEW; // View Feedback
-
 require ('core.php');
+$permission = PERM_FEEDBACK_VIEW; // View Feedback
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

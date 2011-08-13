@@ -10,8 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = PERM_SKILL_ADD; //add software
 require ('core.php');
+$permission = PERM_SKILL_ADD; //add software
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication

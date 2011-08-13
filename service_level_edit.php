@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_SLA_EDIT; // Edit Service Levels
-
 require ('core.php');
+$permission = PERM_SLA_EDIT; // Edit Service Levels
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

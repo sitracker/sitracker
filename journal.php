@@ -14,9 +14,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   4Nov05
 
-
-$permission = PERM_ADMIN; // administrate
 require ('core.php');
+$permission = PERM_ADMIN; // administrate
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $title = $strBrowseJournal;

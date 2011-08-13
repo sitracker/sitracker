@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = PERM_CONTRACT_VIEW; // View Contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_VIEW; // View Contracts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

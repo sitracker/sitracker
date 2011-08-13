@@ -16,8 +16,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   31Oct05
 
-$permission=32;  // Edit Supported Products
 require ('core.php');
+$permission = PERM_SUPPORTED_PRODUCT_EDIT;  // Edit Supported Products
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

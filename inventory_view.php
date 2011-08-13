@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = PERM_NOT_REQUIRED;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -41,7 +40,7 @@ if (is_numeric($_GET['id']))
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    
+
     if (mysql_num_rows($result) > 0)
     {
         $row = mysql_fetch_object($result);
@@ -109,7 +108,7 @@ if (is_numeric($_GET['id']))
         echo user_realname($row->modifiedby)." {$row->modified}</p>";
         echo "</div>";
 
-        echo "<p align='center'><a href='inventory_site.php?id={$row->siteid}'>";
+        echo "<p class='inventory'><a href='inventory_site.php?id={$row->siteid}'>";
         echo "{$strBackToList}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
@@ -117,8 +116,20 @@ if (is_numeric($_GET['id']))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
-        echo user_alert($strNoRecords, E_USER_NOTICE);
+        echo "<table class='maintable'>";
+        echo "<tr><td>" . user_alert($strNoRecords, E_USER_NOTICE) . "</td></tr>";
+        echo "</table>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
+else
+{
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+    echo "<table class='maintable'>";
+    echo "<tr><td>" . user_alert($strNoRecords, E_USER_NOTICE) . "</td></tr>";
+    echo "</table>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+}
+
 ?>

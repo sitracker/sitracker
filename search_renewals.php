@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
 require ('core.php');
+$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -110,7 +109,7 @@ else
                 }
                 echo "<td align='center'  width='150'>{$notes}</td>";
                 echo "</tr>";
-                
+
                 if ($shade == 'shade1') $shade = "shade2";
                 else $shade = "shade1";
             }

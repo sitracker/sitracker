@@ -10,10 +10,8 @@
 //
 // Author: Kieran Hogg[at]users.sourceforge.net>
 
-
-
-$permission = PERM_NOTICE_POST;
 require ('core.php');
+$permission = PERM_NOTICE_POST;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 

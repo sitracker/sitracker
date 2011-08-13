@@ -1161,7 +1161,6 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `balance` float NOT NULL default '0',
   `unitrate` float NOT NULL default '0',
   `incidentrate` float NOT NULL default '0',
-  `dailyrate` float NOT NULL default '0',
   `billingmatrix` varchar(32) NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
@@ -1765,6 +1764,8 @@ UPDATE `$dbIncidentStatus` SET `ext_name` = 'strAwaitingCustomerAction' WHERE `i
 
 -- INL 2011-07-02
 UDPATE `{$dbScheduler}` SET interval = 600, descripton = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE action = 'SetUserStatus';
+-- INL 2011-08-06
+ALTER TABLE `service` DROP `dailyrate`;
 ";
 
 // ********************************************************************

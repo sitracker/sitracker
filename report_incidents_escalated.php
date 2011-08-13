@@ -14,10 +14,8 @@
 //          Kieran Hogg <kieran[at]sitracker.org>
 // heavily based on the Salford Report by Paul Heaney
 
-
-$permission = PERM_REPORT_RUN; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 include (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 

@@ -9,9 +9,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = PERM_HOLIDAY_MANAGE; // Manage holidays
-
 require ('core.php');
+$permission = PERM_HOLIDAY_MANAGE; // Manage holidays
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -22,9 +21,9 @@ $submit = cleanvar($_REQUEST['submit']);
 if (empty($submit))
 {
 	include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    
+
     echo "<h2>{$strHolidayUsage}</h2>";
-    
+
     echo "<form action='{$_SERVER['PHP_SELF']}' name='holiday_usage' id='holiday_usage' method='post'>";
     echo "<table class='vertical'>";
     echo "<tr><th>{$strStartDate}:</th>";
@@ -35,16 +34,16 @@ if (empty($submit))
     echo "<td><input type='text' name='enddate' id='enddate' size='10' /> ";
     echo date_picker('holiday_usage.enddate');
     echo "</td></tr>\n";
-    
+
     echo group_user_selector($strGroup, "management", $_SESSION['groupid'], 'checkbox');
-    
+
     echo "<tr><th>{$strOutput}</th>\n";
     echo "<td><select name='output' id='output'><option value='screen'>{$strScreen}</option>\n";
-    echo "<option value='csv'>{$strCSVfile}</option></select></td></tr>\n";   
+    echo "<option value='csv'>{$strCSVfile}</option></select></td></tr>\n";
     echo "</table>";
     echo "<p class='formbuttons'><input type='submit' name='submit' value='{$strRunReport}' /></p>";
     echo "</form>";
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
@@ -56,7 +55,7 @@ else
 
     if (empty($enddate)) $enddate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d"), date("y")));
     if (empty($startdate)) $startdate = date("y-m-d", strtotime("{$enddate} - 1 year"));
-    
+
     $sql = "SELECT SUM(if(length = 'day', 1, if(length like '%m', 0.5, 0))) AS count, u.realname, h.type, u.holiday_entitlement  ";
     $sql .= "FROM `{$dbHolidays}` AS h, `{$dbUsers}` AS u ";
     $sql .= "WHERE u.id = h.userid AND h.date >= '{$startdate}' AND h.date <= '{$enddate}' ";
@@ -70,7 +69,7 @@ else
             $gsql .= "u.id = {$users[$i]} ";
             if ($i < ($usercount-1)) $gsql .= " OR ";
         }
-        
+
         $sql .= "AND ({$gsql}) ";
     }
     $sql .= "GROUP BY h.userid, h.type";
@@ -84,14 +83,14 @@ else
             $holidays[$obj->realname]['entitlement'] = $obj->holiday_entitlement;
             $holidays[$obj->realname][$obj->type] = $obj->count;
         }
-        
+
         $array = "{$strName},{$strHolidayEntitlement},{$strHoliday},{$strCompassionateLeave},{$strAbsentSick},{$strWorkingAway},{$strTraining}\n";
-        
+
         foreach ($holidays AS $h)
         {
         	$array .= "{$h['name']},{$h['entitlement']},{$h[HOL_HOLIDAY]},{$h[HOL_FREE]},{$h[HOL_SICKNESS]},{$h[HOL_WORKING_AWAY]},{$h[HOL_TRAINING]}\n";
         }
-        
+
         if ($output == "screen")
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');

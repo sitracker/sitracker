@@ -11,10 +11,8 @@
 
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
-
 require ('core.php');
+$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
@@ -208,7 +206,7 @@ elseif ($mode == 'approvalpage')
 
             $str .= "<th>{$strTotalUnits}</th><th>{$strTotalBillableUnits}</th>";
             $str .= "<th>{$strCredits}</th>";
-            $str .= "<th>{$strBill}</th><th>{$strApprove}</th></tr>\n";
+            $str .= "<th>{$strBill}</th><th>{$strActions}</th></tr>\n";
 
             $used = false;
 
@@ -352,12 +350,13 @@ elseif ($mode == 'approvalpage')
                         }
                         elseif ($unapprovable)
                         {
-                        	$line .= $strUnapprovable;
+                            $line .= $strUnapprovable;
                         }
                         else
                         {
-                            $line .= "<a href='{$_SERVER['PHP_SELF']}?mode=approve&amp;transactionid={$obj->transactionid}&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}&amp;showonlyapproved={$showonlyapproved}'>{$strApprove}</a> | ";
-                            $line .= "<a href='billing_update_incident_balance.php?incidentid={$obj->id}'>{$strAdjust}</a>";
+                            $operations[$strApprove] = array('url' => "{$_SERVER['PHP_SELF']}?mode=approve&amp;transactionid={$obj->transactionid}&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}&amp;showonlyapproved={$showonlyapproved}");
+                            $operations[$strAdjust] = array('url' => "billing_update_incident_balance.php?incidentid={$obj->id}");
+                            $line .= html_action_links($operations);
                             $sitetotalawaitingapproval += $cost;
 
                             $sitetotalsawaitingapproval += $a[-1]['totalcustomerperiods'];

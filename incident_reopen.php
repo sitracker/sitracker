@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = PERM_INCIDENT_REOPEN; // Reopen Incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_REOPEN; // Reopen Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

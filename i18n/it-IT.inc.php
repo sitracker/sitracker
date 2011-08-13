@@ -331,7 +331,6 @@ $strCustomerReminderUpdate = 'Era un avviso al cliente?';
 $strCustomerRequestedClosure = 'Il cliente ha richiesto la chiusura della segnalazione';
 $strCustomers = 'Clienti';
 
-$strDailyRate = 'Tariffa Giornaliera';
 $strDashboard = 'Cruscotto';
 $strDashboardComponentDoesntExist = 'Il componente del cruscotto %s non esiste';
 $strDataProtection = 'Riservatezza dei dati';

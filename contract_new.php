@@ -11,10 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
 
-
-$permission = PERM_CONTRACT_ADD; // Add Maintenance Contract
-
 require ('core.php');
+$permission = PERM_CONTRACT_ADD; // Add Maintenance Contract
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -138,7 +136,7 @@ if ($action == "showform" OR $action == '')
         echo "value='0' ";
     }
     echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
-    echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
+//     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
     echo "<input class='required' type='text' name='unitrate' size='5' ";
     if ($_SESSION['formdata']['new_contract']['unitrate'] != '')
@@ -289,8 +287,11 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
     }
-    // check timed sla data and store it
-
+    if ($timed == 'yes' AND $amount == 0)
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_contract']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+    }
     if ($timed == 'yes' AND ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == '')))
     {
         $errors++;

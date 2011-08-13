@@ -13,9 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 
-
-$permission = PERM_UPDATE_DELETE;
 require ('core.php');
+$permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

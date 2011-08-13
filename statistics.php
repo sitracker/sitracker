@@ -10,9 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = PERM_INCIDENT_LIST; // View incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_LIST; // View incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

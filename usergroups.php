@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = PERM_USER_EDIT; // Edit user
-
 require ('core.php');
+$permission = PERM_USER_EDIT; // Edit user
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $title = $strUserGroups;

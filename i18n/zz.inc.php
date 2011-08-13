@@ -328,7 +328,6 @@ $strCustomerReminderUpdate = 'strCustomerReminderUpdate';
 $strCustomerRequestedClosure = 'strCustomerRequestedClosure';
 $strCustomers = 'strCustomers';
 
-$strDailyRate = 'strDailyRate';
 $strDashboard = 'strDashboard';
 $strDashboardComponentDoesntExist = 'strDashboardComponentDoesntExist';
 $strDataProtection = 'strDataProtection';
@@ -986,7 +985,6 @@ $strOldPassword = 'strOldPassword';
 $strOnHoliday = 'strOnHoliday';
 $strOffline = 'strOffline';
 $strOneOfTheSignaturesWillBeInserted = 'strOneOfTheSignaturesWillBeInserted';
-$strOneTimeBillingEditor = 'strOneTimeBillingEditor';
 $strOnline = 'strOnline';
 $strOnlyShowsClosedCalls = 'strOnlyShowsClosedCalls';
 $strOnlyShowNewerThan = 'strOnlyShowNewerThan';

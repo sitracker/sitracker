@@ -361,7 +361,6 @@ $strCustomerRequestedClosure = 'Klant verzocht sluiting incident';
 $strCustomers = 'Klanten';
 $strCustomerVisible = 'Klant zichtbaar';
 
-$strDailyRate = 'Dagtarief';
 $strDashboard = 'Dashboard';
 $strDashboardComponentDoesntExist = 'Dashboard component %s bestaat niet';
 $strDataProtection = 'Databeveiliging';
@@ -1113,7 +1112,6 @@ $strOldPassword = 'Oud wachtwoord';
 $strOnHoliday = 'Op vakantie';
 $strOffline = 'Ofline';
 $strOneOfTheSignaturesWillBeInserted = 'Een van de handtekeningen wordt willekeurig gekozen en onderaan de email toegevoegd. Het is aanbevolen om de handtekening te beginnen met twee mintekens en een <enter>';
-$strOneTimeBillingEditor = 'Eenmalinge billing editor?';
 $strOnline = 'Online';
 $strOnlyShowsClosedCalls = 'Toont alleen gesloten oproepen';
 $strOnlyShowNewerThan = 'Toont alleen nieuwere dan %d dagen oud';

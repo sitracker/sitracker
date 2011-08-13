@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = array(PERM_ADMIN, PERM_REPORT_RUN); // Administrate / Run Reports
-
 require ('core.php');
+$permission = array(PERM_ADMIN, PERM_REPORT_RUN); // Administrate / Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
