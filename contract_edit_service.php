@@ -45,15 +45,23 @@ switch ($mode)
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             $title = ("$strContract - $strEditService");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+            
             if (mysql_num_rows($result) != 1)
             {
                 echo "<h2>".sprintf($strNoServiceWithIDXFound, $serviceid)."</h2>";
             }
             else
             {
+                echo "<pre>";
+                print_r($_SESSION['formdata']['edit_service']);
+                echo "</pre>";
+                
                 $obj = mysql_fetch_object($result);
                 $timed = is_contract_timed($contractid);
 
+                echo show_form_errors('edit_service');
+                clear_form_errors('edit_service');
+                
                 echo "<h2>{$strEditService}</h2>";
 
                 echo "<form id='serviceform' name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
@@ -61,13 +69,27 @@ switch ($mode)
                 if ($timed) echo "<thead>\n";
                 echo "<tr><th>{$strStartDate}</th>";
                 echo "<td><input class='required' type='text' name='startdate' id='startdate' size='10' ";
-                echo "value='{$obj->startdate}' /> ";
+                if ($_SESSION['formdata']['edit_service']['startdate'] != '')
+                {
+                    echo "value='{$_SESSION['formdata']['edit_service']['startdate']}' />";
+                }
+                else
+                {
+                    echo "value='{$obj->startdate}' /> ";
+                }
                 echo date_picker('serviceform.startdate');
                 echo " <span class='required'>{$strRequired}</span></td></tr>";
 
                 echo "<tr><th>{$strEndDate}</th>";
                 echo "<td><input class='required' type='text' name='enddate' id='enddate' size='10' ";
-                echo "value='{$obj->enddate}' /> ";
+                if ($_SESSION['formdata']['edit_service']['enddate'] != '')
+                {
+                    echo "value='{$_SESSION['formdata']['edit_service']['enddate']}' />";
+                }
+                else
+                {
+                    echo "value='{$obj->enddate}' /> ";
+                }
                 echo date_picker('serviceform.enddate');
                 echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
@@ -79,44 +101,90 @@ switch ($mode)
                 {
                     if ($obj->balance == $obj->creditamount)
                     {
+                        $billperincident = '';
+                        $billperunit = '';
+                        if (!empty($_SESSION['formdata']['edit_service']['billtype']))
+                        {
+                            if ($_SESSION['formdata']['edit_service']['billtype'] == 'billperunit')
+                            {
+                                $billperunit = "checked='checked'";
+                                $unitstyle = "";
+                                $incidentstyle = "style='display:none'";
+                            }
+                            else
+                            {
+                                $billperincident = "checked='checked'";
+                                $unitstyle = "style='display:none'";
+                                $incidentstyle = "";
+                            }
+                        }
+                        else 
+                        {
+                            if (!empty($obj->unitrate) AND $obj->unitrate > 0)
+                            {
+                                $billperunit = "checked='checked'";
+                                $unitstyle = "";
+                                $incidentstyle = "style='display:none'";
+                            }
+                            else 
+                            {
+                                $billperincident = "checked='checked'";
+                                $unitstyle = "style='display:none'";
+                                $incidentstyle = "";
+                            }
+                        }
+                                        
+                        
                         echo "<td>";
                         echo "<input type='hidden' name='editbilling' id='editbilling' value='true' />";
                         echo "<input type='hidden' name='originalcredit' id='originalcredit' value='{$obj->creditamount}' />";
                         echo "<label>";
                         echo "<input type='radio' name='billtype' value='billperunit' onchange=\"newservice_showbilling('serviceform');\" ";
-                        if (!empty($obj->unitrate) AND $obj->unitrate > 0)
-                        {
-                            echo "checked='checked' ";
-                            $unitstyle = "";
-                            $incidentstyle = "style='display:none'";
-                        }
-                        echo "/> {$strPerUnit}</label>";
+                        echo "{$billperunit} /> {$strPerUnit}</label>";
                         echo "<label>";
                         echo "<input type='radio' name='billtype' value='billperincident' onchange=\"newservice_showbilling('serviceform');\" ";
-                        if (!empty($obj->incidentrate) AND $obj->incidentrate > 0)
-                        {
-                            echo "checked='checked' ";
-                            $unitstyle = "style='display:none'";
-                            $incidentstyle = "";
-                        }
-                        echo "/> {$strPerIncident}</label>";
+                        echo "{$billperincident} /> {$strPerIncident}</label>";
                         echo "</td></tr>\n";
                         echo "</thead>\n";
                         echo "<tbody id='billingsection'>\n";
 
                         echo "<tr><th>{$strCreditAmount}</th>\n";
                         echo "<td>{$CONFIG['currency_symbol']} ";
-                        echo "<input class='required' type='text' name='amount' size='5' value='{$obj->creditamount}' />";
+                        echo "<input class='required' type='text' name='amount' id='amount' size='5' "; 
+                        if ($_SESSION['formdata']['edit_service']['amount'] != '')
+                        {
+                            echo "value='{$_SESSION['formdata']['edit_service']['amount']}' />";
+                        }
+                        else 
+                        {
+                            echo "value='{$obj->creditamount}' />";
+                        }
                         echo " <span class='required'>{$strRequired}</span></td></tr>";
 
                         echo "<tr id='unitratesection' {$unitstyle}><th>{$strUnitRate}</th>\n";
                         echo "<td>{$CONFIG['currency_symbol']} ";
-                        echo "<input class='required' type='text' name='unitrate' size='5' value='{$obj->unitrate}' />";
+                        echo "<input class='required' type='text' name='unitrate' id='unitrate' size='5' ";
+                        if ($_SESSION['formdata']['edit_service']['unitrate'] != '')
+                        {
+                            echo "value='{$_SESSION['formdata']['edit_service']['unitrate']}' />";
+                        }
+                        else
+                        {
+                            echo "value='{$obj->unitrate}' />";
+                        }
                         echo " <span class='required'>{$strRequired}</span></td></tr>";
 
                         echo "<tr id='incidentratesection' {$incidentstyle}><th>{$strIncidentRate}</th>\n";
                         echo "<td>{$CONFIG['currency_symbol']} ";
-                        echo "<input class='required' type='text' name='incidentrate' size='5' value='{$obj->incidentrate}' />";
+                        echo "<input class='required' type='text' name='incidentrate' id='incidentrate' size='5' ";
+                        if ($_SESSION['formdata']['edit_service']['incidentrate'] != '')
+                        {
+                            echo "value='{$_SESSION['formdata']['edit_service']['incidentrate']}' />";
+                        }
+                        else 
+                        {
+                            echo "value='{$obj->incidentrate}' />";
+                        }
                         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
                         $fochecked = '';
@@ -157,16 +225,51 @@ switch ($mode)
             }
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }
-
+        clear_form_data('edit_service');
         break;
     case 'doupdate':
-        $success = true;
         if (user_permission($sit[2], PERM_SERVICE_EDIT) == FALSE)
         {
             header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_EDIT);
             exit;
         }
-        else
+        
+        $amount =  clean_float($_POST['amount']);
+        if ($amount == '') $amount = 0;
+        $unitrate =  clean_float($_POST['unitrate']);
+        if ($unitrate == '') $unitrate = 0;
+        $incidentrate =  clean_float($_POST['incidentrate']);
+        if ($incidentrate == '') $incidentrate = 0;
+
+        if ($billtype == 'billperunit') $incidentrate = 0;
+        elseif ($billtype == 'billperincident') $unitrate = 0;
+        
+        $billtype = cleanvar($_REQUEST['billtype']);
+        
+        $_SESSION['formdata']['edit_service'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE,
+                                                 array("@"), array("'" => '"'));
+        
+        $errors = 0;
+        
+        if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
+        {
+            $errors++;
+            $_SESSION['formerrors']['edit_service']['unitrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strUnitRate}'"), E_USER_ERROR);
+        }
+
+        if ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == ''))
+        {
+            $errors++;
+            $_SESSION['formerrors']['edit_service']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
+        }
+
+        if (($billtype == 'billperunit' OR $billtype == 'billperincident') AND $amount == 0)
+        {
+            $errors++;
+            $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+        }
+    
+        if ($errors === 0)
         {
             $originalcredit = clean_float($_REQUEST['originalcredit']);
 
@@ -186,18 +289,6 @@ switch ($mode)
 
             if ($editbilling == "true")
             {
-                $amount =  clean_float($_POST['amount']);
-                if ($amount == '') $amount = 0;
-                $unitrate =  clean_float($_POST['unitrate']);
-                if ($unitrate == '') $unitrate = 0;
-                $incidentrate =  clean_float($_POST['incidentrate']);
-                if ($incidentrate == '') $incidentrate = 0;
-
-                $billtype = cleanvar($_REQUEST['billtype']);
-
-                if ($billtype == 'billperunit') $incidentrate = 0;
-                elseif ($billtype == 'billperincident') $unitrate = 0;
-
                 $updateBillingSQL = ", creditamount = '{$amount}', balance = '{$amount}', unitrate = '{$unitrate}', incidentrate = '{$incidentrate}' ";
             }
 
@@ -215,7 +306,7 @@ switch ($mode)
             if (mysql_error())
             {
                 trigger_error(mysql_error(),E_USER_ERROR);
-                $success = false;
+                $errors++;
             }
 
             $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
@@ -235,27 +326,25 @@ switch ($mode)
                     if (mysql_error())
                     {
                         trigger_error(mysql_error(),E_USER_ERROR);
-                        $success = false;
+                        $errors++;
                     }
 
                     if (mysql_affected_rows() < 1)
                     {
                         trigger_error("Expiry of contract update failed",E_USER_ERROR);
-                        $success = false;
+                        $errors++;
                     }
                 }
             }
-
-            if ($success)
-            {
-                html_redirect("{$CONFIG['application_webpath']}contract_details.php?id={$contractid}", TRUE);
-            }
-            else
-            {
-                html_redirect("{$CONFIG['application_webpath']}contract_details.php?id={$contractid}", FALSE, $strNotUpdated);
-            }
-
-
+        }
+        
+        if ($errors == 0)
+        {
+            html_redirect("contract_details.php?id={$contractid}", TRUE);
+        }
+        else
+        {
+            html_redirect("contract_edit_service.php?mode=editservice&amp;serviceid={$serviceid}&amp;contractid={$contractid}", FALSE);
         }
         break;
     case 'showform':
