@@ -52,10 +52,6 @@ switch ($mode)
             }
             else
             {
-                echo "<pre>";
-                print_r($_SESSION['formdata']['edit_service']);
-                echo "</pre>";
-                
                 $obj = mysql_fetch_object($result);
                 $timed = is_contract_timed($contractid);
 
