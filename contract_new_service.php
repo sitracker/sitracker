@@ -92,7 +92,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     {
         $billperunit = '';
         $billperincident = '';
-        if ($_SESSION['formdata']['new_service']['billtype'] == 'billperunit')
+        if ($_SESSION['formdata']['new_service']['billtype'] == 'billperunit' OR empty($_SESSION['formdata']['new_service']['billtype']))
         {
             $billperunit = "checked='checked'";
             $unitratestyle = "";
@@ -239,56 +239,59 @@ else
         $_SESSION['formerrors']['new_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
     }
 
-    if (!empty($billtype))
+    if ($errors == 0)
     {
-        $foc = cleanvar($_REQUEST['foc']);
-        if (empty($foc)) $foc = 'no';
-
-        if ($billtype == 'billperunit') $incidentrate = 0;
-        elseif ($billtype == 'billperincident') $unitrate = 0;
-
-        $cust_ref = cleanvar($_REQUEST['cust_ref']);
-        $cust_ref_date = cleanvar($_REQUEST['cust_ref_date']);
-
-        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, cust_ref, cust_ref_date, title, notes, foc) ";
-        $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$foc}')";
-    }
-    else
-    {
-        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, title, notes) ";
-        $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$title}', '{$notes}')";
-    }
-
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-    if (mysql_affected_rows() < 1)
-    {
-        trigger_error("Insert failed", E_USER_ERROR);
-        $errors++;
-    }
-
-    $serviceid = mysql_insert_id();
-
-    if ($amount != 0)
-    {
-        update_contract_balance($contractid, "New service", $amount, $serviceid);
-    }
-
-    $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    if (mysql_num_rows($result) > 0)
-    {
-        $obj = mysql_fetch_object($result);
-        if ($obj->expirydate < strtotime($enddate))
+        if (!empty($billtype))
         {
-            $update = "UPDATE `$dbMaintenance` ";
-            $update .= "SET expirydate = '".strtotime($enddate)."' ";
-            $update .= "WHERE id = {$contractid}";
-            mysql_query($update);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed",E_USER_ERROR);
+            $foc = cleanvar($_REQUEST['foc']);
+            if (empty($foc)) $foc = 'no';
+    
+            if ($billtype == 'billperunit') $incidentrate = 0;
+            elseif ($billtype == 'billperincident') $unitrate = 0;
+    
+            $cust_ref = cleanvar($_REQUEST['cust_ref']);
+            $cust_ref_date = cleanvar($_REQUEST['cust_ref_date']);
+    
+            $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, cust_ref, cust_ref_date, title, notes, foc) ";
+            $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$foc}')";
+        }
+        else
+        {
+            $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, title, notes) ";
+            $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$title}', '{$notes}')";
+        }
+    
+        mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_affected_rows() < 1)
+        {
+            trigger_error("Insert failed", E_USER_ERROR);
+            $errors++;
+        }
+    
+        $serviceid = mysql_insert_id();
+    
+        if ($amount != 0)
+        {
+            update_contract_balance($contractid, "New service", $amount, $serviceid);
+        }
+    
+        $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    
+        if (mysql_num_rows($result) > 0)
+        {
+            $obj = mysql_fetch_object($result);
+            if ($obj->expirydate < strtotime($enddate))
+            {
+                $update = "UPDATE `$dbMaintenance` ";
+                $update .= "SET expirydate = '".strtotime($enddate)."' ";
+                $update .= "WHERE id = {$contractid}";
+                mysql_query($update);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed",E_USER_ERROR);
+            }
         }
     }
 
