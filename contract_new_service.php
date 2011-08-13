@@ -248,7 +248,7 @@ else
     }
     else
     {
-        html_redirect("contract_new_service?contractid={$contractid}", FALSE);
+        html_redirect("contract_new_service.php?contractid={$contractid}", FALSE);
     }
 
 }
