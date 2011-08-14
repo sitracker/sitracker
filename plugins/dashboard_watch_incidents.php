@@ -200,8 +200,8 @@ function dashboard_watch_incidents_display($dashletid)
                         $html .= "<tr class='$shade'>";
                         $html .= "<td>{$incident->id}</td>";
                         $html .= "<td>";
-                        $tooltip = "<strong>{$GLOBALS['strCustomer']}:</strong> ".sprintf($GLOBALS['strXofX'], "{$incident->forenames} {$incident->surname}",site_name($incident->siteid));
-                        list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incident->id);
+                        $tooltip = "<strong>{$GLOBALS['strCustomer']}:</strong> ".sprintf($GLOBALS['strXofX'], "{$incident->forenames} {$incident->surname}", site_name($incident->siteid));
+                        list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incident->id);
                         $update_body = parse_updatebody($update_body);
                         if (!empty($update_body) AND $update_body!='...')
                         {
@@ -211,8 +211,8 @@ function dashboard_watch_incidents_display($dashletid)
                         $html .= "</td>";
                         $html .= "<td>".incidentstatus_name($incident->status)."</td>";
                         $html .= "</tr>\n";
-                        if ($shade=='shade1') $shade='shade2';
-                        else $shade='shade1';
+                        if ($shade == 'shade1') $shade = 'shade2';
+                        else $shade = 'shade1';
                     }
                 }
                 else

@@ -279,13 +279,12 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
     }
     else
     {
-        $qsappend='';
+        $qsappend = '';
     }
 
     if ($sort == $colname)
     {
-        //if ($order=='') $order=$defaultorder;
-        if ($order=='a')
+        if ($order == 'a')
         {
             $html .= "<a href='{$_SERVER['PHP_SELF']}?sort=$colname&amp;order=d{$qsappend}'>{$coltitle}</a> ";
             $html .= "<img src='{$CONFIG['application_webpath']}images/sort_a.png' width='5' height='5' alt='{$GLOBALS['strSortAscending']}' /> ";

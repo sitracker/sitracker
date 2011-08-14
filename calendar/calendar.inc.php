@@ -54,17 +54,21 @@ function draw_calendar($nmonth, $nyear)
     do
     {
         # This should probably be recursed, but it works as it is
-        $monthOrig = date('m',mktime(0,0,0,$nmonth,1,$nyear));
-        $monthTest = date('m',mktime(0,0,0,$nmonth,$lastday,$nyear));
-        if ($monthTest != $monthOrig) { $lastday -= 1; }
-    }
+        $monthOrig = date('m', mktime(0, 0, 0, $nmonth, 1, $nyear));
+        $monthTest = date('m', mktime(0, 0, 0, $nmonth, $lastday, $nyear));
+        if ($monthTest != $monthOrig)
+        {
+            $lastday -= 1;
+        }
+    }    
     while ($monthTest != $monthOrig);
-    $monthName = ldate('F',gmmktime(0,0,0,$nmonth,1,$nyear));
+    
+    $monthName = ldate('F',gmmktime(0, 0, 0, $nmonth, 1, $nyear));
 
     if ($CONFIG['debug'])
     {
-        debug_log("first day of the first week of $nmonth $nyear is $firstday (from 0 to 6)");
-        debug_log("The last day of $nmonth $nyear is $lastday");
+        debug_log("first day of the first week of {$nmonth} {$nyear} is {$firstday} (from 0 to 6)");
+        debug_log("The last day of {$nmonth} {$nyear} is {$lastday}");
     }
     $days[0] = $GLOBALS['strSun'];
     $days[1] = $GLOBALS['strMon'];
@@ -103,14 +107,14 @@ function draw_calendar($nmonth, $nyear)
     //       echo "<small><a href=\"blank.php?nmonth=".date('m',$timebase)."&nyear=".date('Y',$timebase)."&nday=".date('d',$timebase)."&sid=$sid\" title=\"jump to today\">".date('D jS M Y')."</a></small><br /> ";
     //       echo "<a href=\"blank.php?nmonth=$prevmonth&nyear=$prevyear&sid=$sid\" title=\"Previous Month\"><img src=\"images/arrow_left.gif\" height=\"9\" width=\"6\" border=\"0\"></a>&nbsp;";
     /* Print Current Month */
-    echo "<a href='{$_SERVER['PHP_SELF']}?display=month&amp;year={$nyear}&amp;month=$nmonth'>{$monthName} {$nyear}</a>";
+    echo "<a href='{$_SERVER['PHP_SELF']}?display=month&amp;year={$nyear}&amp;month={$nmonth}'>{$monthName} {$nyear}</a>";
     //    echo "&nbsp;<a href=\"blank.php?nmonth=$nextmonth&amp;nyear=$nextyear&amp;sid=$sid\" title=\"Next Month\"><img src=\"images/arrow_right.gif\" height=\"9\" width=\"6\" border=\"0\" /></a>";
     echo "</th></tr>\n";
     echo "<tr>\n";
-    for($i=0; $i<=6; $i++)
+    for($i = 0; $i <= 6; $i++)
     {
         echo"<td ";
-        if ($i==0 || $i==6) echo "class='expired'"; // Weekend
+        if ($i == 0 || $i == 6) echo "class='expired'"; // Weekend
         else echo "class='shade1'";
         echo ">{$days[$i]}</td>";
     }
@@ -125,67 +129,67 @@ function draw_calendar($nmonth, $nyear)
     $day = 0;
     while($day < $lastday)
     {
-        if (($dayRow % 7) == 0 AND $dayRow >0) echo "</tr>\n<tr>\n";
+        if (($dayRow % 7) == 0 AND $dayRow > 0) echo "</tr>\n<tr>\n";
         $adjusted_day = $day+1;
-        $bold= '';
-        $notbold= '';
+        $bold = '';
+        $notbold = '';
         // Colour Today in Red
-        if ($adjusted_day==date('d') && $nmonth==date('m') && $nyear==date('Y'))
+        if ($adjusted_day == date('d') && $nmonth == date('m') && $nyear == date('Y'))
         {
-            $bold="<span style='color: red'>";
-            $notbold="</span>";
+            $bold = "<span style='color: red'>";
+            $notbold = "</span>";
         }
-        if (mb_strlen($adjusted_day)==1)  // adjust for days with only one digit
+        if (mb_strlen($adjusted_day) == 1)  // adjust for days with only one digit
         {
-            $calday="0$adjusted_day";
-        }
-        else
-        {
-            $calday=$adjusted_day;
-        }
-        if (mb_strlen($nmonth)==1)  // adjust for months with only one digit
-        {
-            $nmonth="0$nmonth";
+            $calday = "0{$adjusted_day}";
         }
         else
         {
-            $nmonth=$nmonth;
+            $calday = $adjusted_day;
+        }
+        if (mb_strlen($nmonth) == 1)  // adjust for months with only one digit
+        {
+            $nmonth = "0{$nmonth}";
+        }
+        else
+        {
+            $nmonth = $nmonth;
         }
 
-        $rowcount=0;
-        if ($rowcount>0)
+        $rowcount = 0;
+        if ($rowcount > 0)
         {
-            $calnicedate=date( "l jS F Y", mktime(0,0,0,$nmonth,$calday,$nyear) );
-            echo "<td id=\"id$calday\" class=\"calendar\"><a href=\"daymessages.php?month=$nmonth&amp;day=$calday&amp;year=$nyear&amp;sid=$sid\" title=\"$rowcount messages\">{$bold}{$adjusted_day}{$notbold}</a></td>";
+            $calnicedate = date( "l jS F Y", mktime(0, 0, 0, $nmonth, $calday, $nyear) );
+            echo "<td id=\"id{$calday}\" class=\"calendar\"><a href=\"daymessages.php?month={$nmonth}&amp;day={$calday}&amp;year={$nyear}&amp;sid={$sid}\" title='{$rowcount} messages'>{$bold}{$adjusted_day}{$notbold}</a></td>";
         }
         else
         {
             if ($dayRow % 7 == 0 || $dayRow % 7 == 6)
             {
                 echo "<td class='expired'>";
-                echo "$adjusted_day</td>";
+                echo "{$adjusted_day}</td>";
             }
             else
             {
                 /////////////////////////////////
                 // colors and shading
-                $halfday= '';
-                $style='';
+                $halfday = '';
+                $style ='';
 
                 // Get the holiday information for a single day
                 list($dtype, $dlength, $approved, $approvedby) = user_holiday($user, $type, $nyear, $nmonth, $calday, false);
 
-                if ($dlength=='pm')
+                if ($dlength == 'pm')
                 {
                     $halfday = "style=\"background-image: url(images/halfday-pm.gif); background-repeat: no-repeat;\" ";
                     $style="background-image: url(images/halfday-pm.gif); background-repeat: no-repeat; ";
                 }
-                if ($dlength=='am')
+                if ($dlength == 'am')
                 {
                     $halfday = "style=\"background-image: url(images/halfday-am.gif); background-position: bottom right; background-repeat: no-repeat;\" ";
                     $style="background-image: url(images/halfday-am.gif); background-position: bottom right; background-repeat: no-repeat;";
                 }
-                if ($calday==$selectedday && $selectedmonth==$nmonth && $selectedyear==$nyear)
+                if ($calday == $selectedday && $selectedmonth == $nmonth && $selectedyear == $nyear)
                 {
                     // consider a border color to indicate the selected cell
                     $style.="border: 1px red dashed; ";
@@ -201,57 +205,61 @@ function draw_calendar($nmonth, $nyear)
                 switch ($dtype)
                 {
                     case 1:
-                        $shade= "mainshade";
-                        if ($approved==1) { $shade='idle';  }
-                        if ($approved==2) $shade='urgent';
-                    break;
+                        $shade = "mainshade";
+                        if ($approved == 1) $shade = 'idle';
+                        if ($approved == 2) $shade = 'urgent';
+                        break;
 
                     case 2:
-                        $shade= "mainshade";
-                        if ($approved==1) { $shade='idle';  }
-                        if ($approved==2) $shade='urgent';
-                    break;
+                        $shade = "mainshade";
+                        if ($approved == 1) $shade = 'idle';
+                        if ($approved == 2) $shade = 'urgent';
+                        break;
 
                     case 3:
-                        $shade= "mainshade";
-                        if ($approved==1) { $shade='idle';  }
-                        if ($approved==2) $shade='urgent';
-                    break;
+                        $shade = "mainshade";
+                        if ($approved == 1) $shade='idle';
+                        if ($approved == 2) $shade='urgent';
+                        break;
 
                     case 4:
                         $shade= "mainshade";
-                        if ($approved==1) { $shade='idle';  }
-                        if ($approved==2) $shade='urgent';
-                    break;
+                        if ($approved == 1) $shade = 'idle';
+                        if ($approved == 2) $shade = 'urgent';
+                        break;
 
                     case 5:
-                        $shade= "mainshade";
-                        if ($approved==1) { $shade='idle'; $style="border: 1px dotted magenta; "; }
-                        if ($approved==2) $shade='urgent';
-                    break;
+                        $shade = "mainshade";
+                        if ($approved == 1)
+                        {
+                            $shade = 'idle';
+                            $style = "border: 1px dotted magenta; ";
+                        }
+                        if ($approved == 2) $shade = 'urgent';
+                        break;
 
                     case 10: // public holidays
-                        $style="background: #D6D6D6;";
-                        $shade='shade1';
-                    break;
+                        $style = "background: #D6D6D6;";
+                        $shade = 'shade1';
+                        break;
 
                     default:
-                        $shade="shade2";
-                    break;
+                        $shade = "shade2";
+                        break;
                 }
-                if ($dtype==1 || $dtype=='' || $dtype==5 || $dtype==3 || $dtype==2 || $dtype==4)
+                if ($dtype == 1 || $dtype == '' || $dtype == 5 || $dtype == 3 || $dtype == 2 || $dtype == 4)
                 {
-                    echo "<td class=\"$shade\" style=\"width: 15px; $style\">";
-                    echo "<a href=\"holiday_new.php?type=$type&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
+                    echo "<td class=\"{$shade}\" style=\"width: 15px; {$style}\">";
+                    echo "<a href=\"holiday_new.php?type={$type}&amp;user={$user}&amp;year={$nyear}&amp;month={$nmonth}&amp;day={$calday}\"  title=\"{$celltitle}\">{$bold}{$adjusted_day}{$notbold}</a></td>";
                 }
-                elseif ($dtype==10)
+                elseif ($dtype == 10)
                 {
-                    echo "<td class=\"$shade\" style=\"width: 15px; $style\">";
-                    echo "<a href=\"holiday_new.php?type=0&amp;user=$user&amp;year=$nyear&amp;month=$nmonth&amp;day=$calday\"  title=\"$celltitle\">$bold$adjusted_day$notbold</a></td>";
+                    echo "<td class=\"{$shade}\" style=\"width: 15px; {$style}\">";
+                    echo "<a href=\"holiday_new.php?type=0&amp;user={$user}&amp;year={$nyear}&amp;month={$nmonth}&amp;day={$calday}\"  title=\"{$celltitle}\">{$bold}{$adjusted_day}{$notbold}</a></td>";
                 }
                 else
                 {
-                    echo "<td class=\"$shade\" style=\"width:15px; $style\">{$bold}{$adjusted_day}{$notbold}</td>";
+                    echo "<td class=\"{$shade}\" style=\"width:15px; {$style}\">{$bold}{$adjusted_day}{$notbold}</td>";
                 }
             }
         }
@@ -269,7 +277,7 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
 {
     global $sit, $approver;
     $html = '';
-    if ($user==$sit[2] OR $approver==TRUE)
+    if ($user == $sit[2] OR $approver == TRUE)
     {
         // Note: this first div is closed inline
         $html .= "<div class='appointment' onclick=\"appointment('app{$user}{$year}{$month}{$day}{$time}');\">";
@@ -312,7 +320,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
     elseif ($mode == 'week')
     {
         $daysinmonth = 7;
-        $lastday = ($day + $daysinmonth)-1;
+        $lastday = ($day + $daysinmonth) - 1;
         $daywidth = 3;
     }
     elseif ($mode == 'day')
@@ -375,7 +383,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
         {
             unset($hdays);
 
-            $hsql = "SELECT *, UNIX_TIMESTAMP(date) AS startdate FROM `{$GLOBALS['dbHolidays']}` WHERE userid={$user->id} AND date BETWEEN '".date('Y-m-d',$startdate)."' AND '".date('Y-m-d',$enddate)."'";
+            $hsql = "SELECT *, UNIX_TIMESTAMP(date) AS startdate FROM `{$GLOBALS['dbHolidays']}` WHERE userid={$user->id} AND date BETWEEN '".date('Y-m-d', $startdate)."' AND '".date('Y-m-d', $enddate)."'";
             $hsql .= "AND type != ".HOL_PUBLIC;
 
             $hresult = mysql_query($hsql);
@@ -388,7 +396,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
                 $happroved[$cday] = $holiday->approved;
             }
             // Public holidays
-            $phsql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` WHERE type=".HOL_PUBLIC." AND date BETWEEN '".date('Y-m-d',$startdate)."' AND '".date('Y-m-d',$enddate)."'";
+            $phsql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` WHERE type=".HOL_PUBLIC." AND date BETWEEN '".date('Y-m-d', $startdate)."' AND '".date('Y-m-d', $enddate)."'";
             $phresult = mysql_query($phsql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             while ($pubhol = mysql_fetch_object($phresult))
@@ -433,7 +441,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
                         }
                         else
                         {
-                            $html .= "<a href='{$_SERVER['PHP_SELF']}?display=day&amp;year={$year}&amp;month={$month}&amp;day={$cday}'>".date('d',mktime(0,0,0,$month,$cday,$year))."</a>" ;
+                            $html .= "<a href='{$_SERVER['PHP_SELF']}?display=day&amp;year={$year}&amp;month={$month}&amp;day={$cday}'>".date('d', mktime(0, 0, 0, $month, $cday, $year))."</a>" ;
                         }
                         $html .= "</td>";
                     }
@@ -546,7 +554,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
             $html .= "<tr><td>{$GLOBALS['strPM']}</td>";
             for ($cday = $day; $cday <= $lastday; $cday++)
             {
-                $shade='shade1';
+                $shade = 'shade1';
                 if ((date('D',mktime(0, 0, 0, $month, $cday, $year)) == 'Sat' OR date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun'))
                 {
                     // Add  day on for a weekend
@@ -685,21 +693,21 @@ function month_select($month, $year, $params = '')
     $pyear = $cyear-1;
     $nyear = $cyear+1;
     $html .= "<a href='{$SERVER['PHP_SELF']}?display=month&amp;month={$month}";
-    $html .= "&amp;year={$pyear}$params' title='Back one year'>&lt;&lt;</a> ";
+    $html .= "&amp;year={$pyear}{$params}' title='Back one year'>&lt;&lt;</a> ";
     for ($c = 1; $c <= 12; $c++)
     {
-        if (gmmktime(0,0,0,$cmonth,1,$cyear) == gmmktime(0,0,0,date('m'),1,date('Y')))
+        if (gmmktime(0, 0, 0, $cmonth, 1, $cyear) == gmmktime(0, 0, 0, date('m'), 1, date('Y')))
         {
             $html .= "<span class='calnavcurrent' style='background: #FF0;'>";
         }
 
         // Current month
-        if (gmmktime(0,0,0,$cmonth,1,$cyear) == gmmktime(0,0,0,$month,1,$year))
+        if (gmmktime(0, 0, 0, $cmonth, 1, $cyear) == gmmktime(0, 0, 0, $month, 1, $year))
         {
             $html .= "<span class='calnavselected' style='font-size: 160%'>";
         }
 
-        $html .= "<a href='{$SERVER['PHP_SELF']}?display=month&amp;month=$cmonth&amp;year=$cyear$params'>";
+        $html .= "<a href='{$_SERVER['PHP_SELF']}?display=month&amp;month={$cmonth}&amp;year={$cyear}{$params}'>";
         $html .= ldate('M y',gmmktime(0, 0, 0, $cmonth, 1, $cyear))."</a>";
         if (gmmktime(0, 0, 0, $cmonth, 1, $cyear) == gmmktime(0, 0, 0, $month, 1, $year))
         {
@@ -723,7 +731,7 @@ function month_select($month, $year, $params = '')
             $cyear ++;
         }
     }
-    $html .= " <a href='{$SERVER['PHP_SELF']}?month=display=month&amp;{$month}&amp;year={$nyear}$params' title='Forward one year'>&gt;&gt;</a>";
+    $html .= " <a href='{$SERVER['PHP_SELF']}?month=display=month&amp;{$month}&amp;year={$nyear}{$params}' title='Forward one year'>&gt;&gt;</a>";
     $html .= "</p>";
     return $html;
 }
@@ -766,15 +774,15 @@ function get_users_appointments($user, $start, $end)
             {
                 case '2':
                     $bgcolor = '#FFDDFF';
-                break;
+                    break;
 
                 case '1':
                     $bgcolor = '#FFFFBB';
-                break;
+                    break;
 
                 default:
                     $bgcolor = '#FFFFFF';
-                break;
+                    break;
             }
         }
         else
@@ -880,7 +888,7 @@ function book_days_when_free($name, $description, $user, $startdate, $days, $doi
         {
             book_appointment($name, $description, $user, $startdate + $CONFIG['start_working_day'], $startdate + $CONFIG['end_working_day']);
         }
-        $daysarray[] = array('name'=>$name, 'description'=>$description, 'user'=>$user, 'startdate'=>$startdate);
+        $daysarray[] = array('name' => $name, 'description' => $description, 'user' => $user, 'startdate' => $startdate);
         $startdate += 86400;
     }
     return $daysarray;

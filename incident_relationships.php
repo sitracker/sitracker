@@ -129,7 +129,7 @@ if (mysql_num_rows($rresult) >= 1)
     while ($related = mysql_fetch_object($rresult))
     {
         echo "<tr>";
-        if ($related->relatedid==$id)
+        if ($related->relatedid == $id)
         {
             $incidenttitle = incident_title($related->incidentid);
             if ($related->relation == 'child') $relationship = 'Child';

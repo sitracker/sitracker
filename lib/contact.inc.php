@@ -568,7 +568,7 @@ function process_new_contact($mode = 'internal')
         $_SESSION['formerrors']['new_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
     }
     // check for blank email
-    if ($email == '' OR $email=='none' OR $email=='n/a')
+    if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors++;
         $_SESSION['formerrors']['new_contact']['email'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strEmail']);

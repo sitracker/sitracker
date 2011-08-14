@@ -202,9 +202,9 @@ function dashboard_rss_edit($dashletid)
             if (mysql_num_rows($result) > 0)
             {
                 $feed = mysql_fetch_object($result);
-                if ($feed->items=='')
+                if ($feed->items == '')
                 {
-                    $feed->items=0;
+                    $feed->items = 0;
                 }
 
                 echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strEditRSSAtomFeed']}</h2>";

@@ -47,7 +47,7 @@ if (mysql_num_rows($result) >= 1)
         echo "<td>{$task->name}</td></tr>";
         echo "<tr><th>{$strDescription}</th>";
         echo "<td>".nl2br($task->description)."</td></tr>";
-        if ($task->distribution=='public')
+        if ($task->distribution == 'public')
         {
             echo "<tr><th>{$strTags}:</th><td>";
             echo list_tags($taskid, 4);
@@ -78,11 +78,11 @@ if (mysql_num_rows($result) >= 1)
         echo "<td>{$task->value}</td></tr>";
         echo "<tr><th>{$strPrivacy}</th>";
         echo "<td>";
-        if ($task->distribution=='public')
+        if ($task->distribution == 'public')
         {
             echo $strPublic;
         }
-        if ($task->distribution=='private')
+        if ($task->distribution == 'private')
         {
             echo "{$strPrivate} ";
             echo icon('private', 16, $strPrivate);
@@ -90,7 +90,7 @@ if (mysql_num_rows($result) >= 1)
         echo "</td></tr>";
         echo "</table>";
         echo "<p align='center'><a href='task_edit.php?id={$taskid}'>{$strEditTask}</a>";
-        if ($task->owner == $sit[2] AND $task->completion==100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=delete'>{$strDeleteTask}</a>";
+        if ($task->owner == $sit[2] AND $task->completion == 100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=delete'>{$strDeleteTask}</a>";
         if ($task->completion < 100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=markcomplete'>{$strMarkComplete}</a>";
         echo "</p>";
 

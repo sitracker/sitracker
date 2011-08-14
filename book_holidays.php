@@ -143,7 +143,7 @@ elseif ($step == '1')
 
     $daynumber = 1;
     $options = 0;
-    // if ($end==$start)
+
     $end += 86400;  // ensure we still loop for single day bookings by setting end to next day
     for ($day = $start; $day < $end; $day = $day + 86400)
     {

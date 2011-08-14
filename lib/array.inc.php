@@ -19,7 +19,7 @@ function ansort($x,$var,$cmp='strcasecmp')
     // Numeric descending sort of multi array
     if ( is_string($var) ) $var = "'$var'";
 
-    if ($cmp=='numeric')
+    if ($cmp == 'numeric')
     {
         uasort($x, create_function('$a,$b', 'return '.'( $a['.$var.'] < $b['.$var.']);'));
     }

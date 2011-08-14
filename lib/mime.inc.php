@@ -120,7 +120,7 @@ class MIME_mail
             $this->errstr = "fopen() failed";
             return 0;   //failed
         }
-        $contenttype .= ";\r\n\tname=".basename($path);
+        $contenttype .= ";" . CRLF . "\tname=".basename($path);
         $data = fread($fp, filesize($path));
         return $this->attach($data,
                 $description,
