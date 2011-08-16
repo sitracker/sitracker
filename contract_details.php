@@ -26,6 +26,8 @@ $title = ("$strContract - $strContractDetails");
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
+plugin_do('contract_details');
+
 // Display Maintenance
 echo contract_details($id);
 

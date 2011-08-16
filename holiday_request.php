@@ -122,6 +122,7 @@ if (!$sent)
         echo user_realname($user,TRUE);
     }
     echo " - {$strHolidayRequests}</h2>";
+    plugin_do('holiday_request');
 
     if ($approver == TRUE AND $mode != 'approval' AND $user == $sit[2])
     {
@@ -156,9 +157,9 @@ if (!$sent)
             $sql  = "SELECT DISTINCT id, realname, accepting, groupid ";
             $sql .= "FROM `{$dbUsers}` AS u, `{$dbUserPermissions}` AS up, `{$dbRolePermissions}` AS rp ";
             $sql .= "WHERE u.id = up.userid AND u.roleid = rp.roleid ";
-            $sql .= "AND (up.permissionid = 50 AND up.granted = 'true' OR ";
-            $sql .= "rp.permissionid = 50 AND rp.granted = 'true') ";
-            $sql .= "AND u.id != {$sit[2]} AND u.status > 0 ORDER BY realname ASC";
+            $sql .= "AND (up.permissionid = " . PERM_HOLIDAY_APPROVE . " AND up.granted = 'true' OR ";
+            $sql .= "rp.permissionid = " . PERM_HOLIDAY_APPROVE . " AND rp.granted = 'true') ";
+            $sql .= "AND u.id != {$sit[2]} AND u.status > " . USERSTATUS_ACCOUNT_DISABLED . " ORDER BY realname ASC";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             $numapprovers = mysql_num_rows($result);

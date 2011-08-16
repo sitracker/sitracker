@@ -31,6 +31,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('skill', 32)." ";
 echo "$title</h2>";
+plugin_do('skills_matrix');
 echo "<p align='center'>{$strDisplay}: ";
 if (empty($legacy)) echo "<a href='{$_SERVER['PHP_SELF']}?legacy=yes&amp;gid={$groupid}'>{$strAll}</a>";
 else echo "<a href='{$_SERVER['PHP_SELF']}?gid={$groupid}'>{$strActive}</a>";
