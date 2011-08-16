@@ -10,9 +10,8 @@
 //
 
 // by Ivan Lucas, June 2004
-$permission = 49; // Edit Feedback Forms
-
 require ('core.php');
+$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
@@ -62,7 +61,7 @@ switch ($action)
         while ($question = mysql_fetch_object($result))
         {
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-            echo "<table summary='Form' align='center'>";
+            echo "<table summary='Form' class='maintable'>";
             echo "<tr>";
 
             echo "<th>{$strSectionText}:<br /></th>";

@@ -12,15 +12,15 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  1Nov05
 
-$permission = 4; // Edit your profile
 require ('core.php');
+$permission = PERM_MYPROFILE_EDIT; // Edit your profile
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $mode = cleanvar($_REQUEST['mode']);
-$edituserpermission = user_permission($sit[2], 23); // edit user
+$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {
@@ -41,10 +41,14 @@ if (empty($mode))
 
     $user = new User($edituserid);
 
+    $signature = str_replace('\r\n', "\r\n", $user->signature);
+    $message = str_replace('\r\n', "\r\n", $user->message);
+
     echo "<h2>".icon('user', 32)." ";
     echo sprintf($strEditProfileFor, $user->realname).' '.gravatar($user->email)."</h2>";
+    plugin_do('user_profile_edit');
     echo "<form id='edituser' action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<col width='250'></col><col width='*'></col>";
     echo "<tr><th colspan='2'>";
     if ($edituserid == $sit[2])
@@ -70,7 +74,7 @@ if (empty($mode))
 
     echo "</tr>";
     echo "<tr><th>{$strRealName}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_realname']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_realname']))
     {
         echo "<input name='realname' type='hidden' value=\"{$user->realname}\" />{$user->realname}";
     }
@@ -84,7 +88,7 @@ if (empty($mode))
     echo "<tr><th>{$strSource}</th><td>{$user->user_source}</td></th>";
     echo "<tr><th>{$strJobTitle}</th>";
     echo "<td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
     {
         echo $user->jobtitle;
     }
@@ -97,7 +101,7 @@ if (empty($mode))
     echo "<tr><th>{$strQualifications} ".help_link('QualificationsTip')."</th>";
     echo "<td><input maxlength='255' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
     echo "<tr><th>{$strEmailSignature} ".help_link('EmailSignatureTip')."</th>";
-    echo "<td><textarea name='signature' rows='4' cols='40'>".strip_tags($user->signature)."</textarea></td></tr>\n";
+    echo "<td><textarea name='signature' rows='4' cols='40'>".stripslashes(strip_tags($signature))."</textarea></td></tr>\n";
     $entitlement = user_holiday_entitlement($edituserid);
     if ($edituserpermission && $edituserid != $sit[2])
     {
@@ -155,18 +159,37 @@ if (empty($mode))
         $userdisable = FALSE;
     }
 
+    if (user_permission($sit[2], PERM_MYSTATUS_SET)) // edit my status
+    {
+        $userstatus = userstatus_drop_down("status", $user->status, $userdisable);
+        $useraccepting = accepting_drop_down("accepting", $edituserid);
+    }
+    else
+    {
+        $sql = "SELECT us.name FROM `{$dbUserStatus}` AS us, `{$dbUsers}` AS u ";
+        $sql .= "WHERE u.status = us.id AND u.id = '$sit[2]' LIMIT 1";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+        list($userstatus) = mysql_fetch_row($result);
+        $userstatus = $GLOBALS[$userstatus];
+
+        $useraccepting = db_read_column('accepting', $dbUsers, $sit[2]);
+        $useraccepting = str_replace('Yes', $strYes, $useraccepting);
+    }
+
     echo "<tr><th>{$strStatus}</th><td>";
-    echo userstatus_drop_down("status", $user->status, $userdisable);
+    echo $userstatus;
     echo "</td></tr>\n";
     echo "<tr><th>{$strAccepting} {$strIncidents}</th><td>";
-    echo accepting_drop_down("accepting", $edituserid);
+    echo $useraccepting;
     echo "</td></tr>\n";
     echo "<tr><th>{$strMessage} ".help_link('MessageTip')."</th>";
-    echo "<td><textarea name='message' rows='4' cols='40'>".strip_tags($user->message)."</textarea></td></tr>\n";
+    echo "<td><textarea name='message' rows='4' cols='40'>".stripslashes(strip_tags($message))."</textarea></td></tr>\n";
     echo "<tr><th colspan='2'>{$strContactDetails}</th></tr>";
     echo "<tr id='email'><th>{$strEmail}</th>";
     echo "<td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_email']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_email']))
     {
         echo "<input name='email' type='hidden'value='".strip_tags($user->email)."' />{$user->email}";
     }
@@ -178,7 +201,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr id='phone'><th>{$strTelephone}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_telephone']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_telephone']))
     {
         echo $user->phone;
     }
@@ -188,7 +211,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr><th>{$strFax}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_fax']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_fax']))
     {
         echo $user->fax;
     }
@@ -198,7 +221,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr><th>{$strMobile}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_mobile']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_mobile']))
     {
         echo $user->mobile;
     }
@@ -217,9 +240,9 @@ if (empty($mode))
     echo "<td><input maxlength='50' name='skype' size='30' type='text' value='".strip_tags($user->skype)."' /></td></tr>";
 
 
-    plugin_do('edit_profile_form');
+    plugin_do('user_profile_edit_form');
     // Do not allow password change if using LDAP
-    if ($_SESSION['user_source'] == 'sit')
+    if ($user->user_source == 'sit')
     {
         if ($CONFIG['trusted_server'] == FALSE AND $edituserid == $sit[2])
         {
@@ -281,7 +304,7 @@ elseif ($mode == 'save')
     if (empty($user->emoticons)) $user->emoticons = 'false';
 
     // Some extra checking here so that users can't edit other peoples profiles
-    $edituserpermission = user_permission($sit[2], 23); // edit user
+    $edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
     if ($edituserid != $sit[2] AND $edituserpermission == FALSE)
     {
         trigger_error('Error: No permission to edit this users profile', E_USER_ERROR);
@@ -309,6 +332,7 @@ elseif ($mode == 'save')
             $error_string .= "<h5 class='error'>{$strPasswordsDoNotMatch}</h5>";
         }
     }
+    plugin_do('user_profile_edit_submitted');
 
     // update database if no errors
     if ($errors == 0)
@@ -328,7 +352,7 @@ elseif ($mode == 'save')
             $_SESSION['utcoffset'] = $user->utc_offset;
         }
 
-    
+
         if ($result === FALSE)
         {
 
@@ -342,7 +366,7 @@ elseif ($mode == 'save')
         {
             if ($edituserid == $sit[2]) $redirecturl = 'index.php';
             else $redirecturl = 'manage_users.php';
-            plugin_do('save_profile_form');
+            plugin_do('user_profile_edit_saved');
 
             // password was not changed
             if (isset($confirm_message)) html_redirect($redirecturl, TRUE, $confirm_message);

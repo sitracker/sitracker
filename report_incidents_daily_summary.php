@@ -17,7 +17,7 @@
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
-$permission = 67; // Run Reports
+$permission = PERM_MANAGEMENT_REPORT_RUN; // Run Reports
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

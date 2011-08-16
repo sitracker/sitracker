@@ -13,9 +13,8 @@
 // TODO should this update the tasks table?
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission =  81;
-
 require ('core.php');
+$permission =  PERM_BILLING_DURATION_EDIT;
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -87,7 +86,7 @@ switch ($mode)
             echo "<h2>{$strAdjustActivityDuration}</h2>";
 
             echo "<form name='editduration' action='{$_SERVER['PHP_SELF']}?mode=edit' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
-            echo "<table align='center' class='vertical'>";
+            echo "<table class='maintable vertical'>";
 
             echo "<tr><th>{$strDuration}</th><td>".sprintf($strXMinutes, ceil($obj->duration))."</d></tr>";
             echo "<tr><th>{$strNewDuration}</th><td><input type='text' size='10' name='newduration' id='newduration' />{$strMinutes}</d></tr>";

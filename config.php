@@ -14,16 +14,15 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
+require ('core.php');
 if (empty($_REQUEST['userid']))
 {
-    $permission = 22; // Administrate
+    $permission = PERM_ADMIN; // Administrate
 }
 else
 {
-    $permision = 4; // Edit your profile
+    $permision = PERM_MYPROFILE_EDIT; // Edit your profile, FIXME need a permission for user settings
 }
-
-require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -34,7 +33,7 @@ $seltab = cleanvar($_REQUEST['tab']);
 $action = cleanvar($_REQUEST['action']);
 $userid = cleanvar($_REQUEST['userid']);
 
-$edituserpermission = user_permission($sit[2], 23); // edit user
+$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
 
 if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
 {
@@ -54,7 +53,7 @@ else
 
 if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1))
 {
-    plugin_do('config_save');
+    plugin_do('config_submitted');
     if (!empty($selcat))
     {
         $savevar = array();
@@ -89,15 +88,18 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 
                 case '2darray':
                     $value = cleanvar($value);
-                    $value = str_replace('\n', ',', $value);
-                    $value = str_replace('\r', '', $value);
-                    $value = str_replace("\r", '', $value);
-                    $value = str_replace("\n", '', $value);
-                    $parts = explode(",", $value);
-                    foreach ($parts AS $k => $v)
+                    if (!empty($value))
                     {
-                        $y = explode('=&gt;', $v);
-                        $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
+                        $value = str_replace('\n', ',', $value);
+                        $value = str_replace('\r', '', $value);
+                        $value = str_replace("\r", '', $value);
+                        $value = str_replace("\n", '', $value);
+                        $parts = explode(",", $value);
+                        foreach ($parts AS $k => $v)
+                        {
+                            $y = explode('=&gt;', $v);
+                            $parts[$k] = "'{$y[0]}'=>'{$y[1]}'";
+                        }
                     }
                     $value = 'array(' . implode(',', $parts) . ')';
                     break;
@@ -162,7 +164,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             cfgSave($savevar, NAMESPACE_SIT);
         }
     }
-    plugin_do('config_after_save');
+    plugin_do('config_saved');
 }
 
 $pagescripts = array('FormProtector.js');
@@ -178,6 +180,7 @@ else
     echo "<h2>".icon('user', 32, $strDisplayPreferences);
     echo " {$strSettings}</h2>";
 }
+plugin_do('config');
 
 
 if (empty($seltab)) $seltab = 'application';
@@ -220,7 +223,7 @@ if (!empty($selcat))
         echo cfgVarInput($catvar, $userid, $CONFIG['debug']);
     }
 }
-plugin_do('config_form');
+plugin_do('config_tab');
 
 echo "</fieldset>";
 echo "<input type='hidden' name='cat' value='{$selcat}' />";

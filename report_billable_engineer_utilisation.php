@@ -10,10 +10,8 @@
 //
 //  Author:   Paul Heaney
 
-
-$permission = 37;  // Run Reports // TODO perhaps should have own permission
-
 require ('core.php');
+$permission = PERM_REPORT_RUN;  // Run Reports // TODO perhaps should have own permission
 include (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -115,7 +113,7 @@ elseif ($mode == 'runreport')
             echo "<h3>{$u['name']}</h3>";
             foreach ($u['months'] AS $month)
             {
-                echo "<p><table class='vertical' align='center'>";
+                echo "<p><table class='vertical maintable'>";
                 echo "<tr><th colspan='3'>{$month['name']} {$u['name']}</th></tr>";
                 echo "<tr><th>{$strEngineer}</th><th>{$strPositive}</th><th>{$strNegative}</th></tr>";
 
@@ -159,7 +157,7 @@ elseif ($mode == 'runreport')
 
         echo "<p align='center'><h3>{$strGrandTotal}</h3></p>";
 
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strEngineer}</th><th>{$strPositive}</th><th>{$strNegative}</th></tr>";
 
         $shade = 'shade1';

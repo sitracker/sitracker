@@ -16,10 +16,8 @@
 // Notes:
 //  Counts activate calls within the specified period (i.e. those with a lastupdate time > timespecified)
 
-
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -214,7 +212,7 @@ else
 
         if ($monthbreakdownstatus === "on")
         {
-            echo "<p><table align='center'>";
+            echo "<p><table class='maintable'>";
             echo "<tr><th>{$strMonth}</th><th>{$strNumOfCalls}</th></tr>";
             $shade = 'shade1';
 
@@ -241,7 +239,7 @@ else
 
             $shade = "shade1";
 
-            echo "<p><table align='center'><tr><td></td>";
+            echo "<p><table class='maintable'><tr><td></td>";
             foreach ($months AS $m)
             {
                 echo "<th>{$m}</th>";
@@ -315,7 +313,7 @@ else
     }
     else
     {
-        echo "<p class='error'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

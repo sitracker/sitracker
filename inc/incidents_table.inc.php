@@ -21,7 +21,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 if ($CONFIG['debug']) echo "<!-- Support Incidents Table -->";
 
-echo "<table align='center' style='width:95%;'>";
+echo "<table class='maintable'>";
 echo "<col width='7%'></col>";
 echo "<col width='22%'></col>";
 echo "<col width='17%'></col>";
@@ -181,7 +181,7 @@ while ($incidents = mysql_fetch_object($result))
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-                if ($CONFIG['force_critical_flag'] AND $incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
+                if ($CONFIG['force_critical_flag'] AND $incidents->priority == PRIORITY_CRITICAL) $class = 'critical';  // Force critical incidents to be critical always
             }
             elseif ($slaremain < 0)
             {
@@ -206,7 +206,7 @@ while ($incidents = mysql_fetch_object($result))
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
                 if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-                if ($incidents->priority == 4) $class = 'critical';  // Force critical incidents to be critical always
+                if ($incidents->priority == PRIORITY_CRITICAL) $class = 'critical';  // Force critical incidents to be critical always
             }
             elseif ($slaremain < 0)
             {
@@ -320,7 +320,7 @@ while ($incidents = mysql_fetch_object($result))
     }
 //     $blinktime = (time() - ($servicelevel->initial_response_mins * 60));
     //  AND $incidents->lastupdated <= $blinktime
-    if ($CONFIG['force_critical_flag'] == FALSE AND $incidents->priority == 4)
+    if ($CONFIG['force_critical_flag'] == FALSE AND $incidents->priority == PRIORITY_CRITICAL)
     {
         echo "<strong class='critical'>".priority_name($incidents->priority)."</strong>";
     }

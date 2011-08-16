@@ -279,13 +279,12 @@ function colheader($colname, $coltitle, $sort = FALSE, $order='', $filter='', $d
     }
     else
     {
-        $qsappend='';
+        $qsappend = '';
     }
 
     if ($sort == $colname)
     {
-        //if ($order=='') $order=$defaultorder;
-        if ($order=='a')
+        if ($order == 'a')
         {
             $html .= "<a href='{$_SERVER['PHP_SELF']}?sort=$colname&amp;order=d{$qsappend}'>{$coltitle}</a> ";
             $html .= "<img src='{$CONFIG['application_webpath']}images/sort_a.png' width='5' height='5' alt='{$GLOBALS['strSortAscending']}' /> ";
@@ -720,7 +719,7 @@ function new_note_form($linkid, $refid)
  */
 function show_notes($linkid, $refid, $delete = TRUE)
 {
-    global $sit, $iconset, $dbNotes;
+    global $sit, $iconset, $dbNotes, $strDelete, $strAreYouSureDelete;
     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='{$linkid}' AND refid='{$refid}' ORDER BY timestamp DESC, id DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -734,8 +733,12 @@ function show_notes($linkid, $refid, $delete = TRUE)
             {
                 $html .= "<a href='note_delete.php?id={$note->id}&amp;rpath=";
                 $html .= "{$_SERVER['PHP_SELF']}?{$_SERVER['QUERY_STRING']}' ";
-                $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\">";
-                $html .= icon('delete', 16)."</a>";
+                if ($_SESSION['userconfig']['show_confirmation_delete'])
+                {
+                    $html .= "onclick=\"return confirm_action('{$strAreYouSureDelete}', true);\"";
+                }
+                $html .= ">";
+                $html .= icon('delete', 16, $strDelete)."</a>";
             }
             $html .= "</div>\n"; // /detaildate
             $html .= icon('note', 16)." ";
@@ -955,7 +958,7 @@ function contract_details($id, $mode='internal')
 
     $maint = mysql_fetch_object($maintresult);
 
-    $html = "<table align='center' class='vertical'>";
+    $html = "<table class='maintable vertical'>";
     $html .= "<tr><th>{$GLOBALS['strContract']} {$GLOBALS['strID']}:</th>";
     $html .= "<td><h3>".icon('contract', 32)." ";
     $html .= "{$maint->id}</h3></td></tr>";
@@ -1075,7 +1078,7 @@ function contract_details($id, $mode='internal')
     if ($mode == 'internal')
     {
         $operations = array();
-        $operations[$GLOBALS['strEditContract']] = "contract_edit.php?action=edit&amp;maintid=$id";
+        $operations[$GLOBALS['strEditContract']] = array('url' => "contract_edit.php?action=edit&amp;maintid=$id", 'perm' => PERM_CONTRACT_EDIT);
 
 
         if ($maint->term != 'yes')
@@ -1105,7 +1108,7 @@ function contract_details($id, $mode='internal')
             {
                 $allowedcontacts = $GLOBALS['strUnlimited'];
             }
-            $html .= "<table align='center'>";
+            $html .= "<table class='maintable'>";
             $supportcount = 1;
 
             if ($numberofcontacts > 0)
@@ -1135,12 +1138,12 @@ function contract_details($id, $mode='internal')
                     }
                     $supportcount++;
                 }
-                $html .= "</table>";
             }
             else
             {
-                $html .= "<p class='info'>{$GLOBALS['strNoRecords']}<p>";
+                $html .= "<tr><td>".user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE)."</td></tr>";
             }
+            $html .= "</table>";
         }
 
         if ($maint->allcontactssupported != 'yes')
@@ -1186,7 +1189,7 @@ function contract_details($id, $mode='internal')
 
         if (mysql_num_rows($result)>0)
         {
-            $html .="<table align='center'>";
+            $html .="<table class='maintable'>";
             while ($software = mysql_fetch_object($result))
             {
                 $software->lifetime_end = mysql2date($software->lifetime_end);
@@ -1211,7 +1214,7 @@ function contract_details($id, $mode='internal')
     }
     else
     {
-        $html = "<p align='center'>{$GLOBALS['strNothingToDisplay']}</p>";
+        $html = user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
     }
 
     return $html;
@@ -1618,6 +1621,7 @@ function show_edit_site($site, $mode='internal')
         {
             $html .= "<h2>".icon('site', 32)." {$GLOBALS['strEditSite']}: {$site} - ";
             $html .= site_name($site)."</h2>";
+            plugin_do('site_edit');
         }
         else
         {
@@ -1627,7 +1631,7 @@ function show_edit_site($site, $mode='internal')
         $html .= "<form name='edit_site' action='{$_SERVER['PHP_SELF']}";
         $html .= "?action=update' method='post' onsubmit='return ";
         $html .= "confirm_action(\"{$GLOBALS['strAreYouSureMakeTheseChanges']}\")'>";
-        $html .= "<table align='center' class='vertical'>";
+        $html .= "<table class='maintable vertical'>";
         $html .= "<tr><th>{$GLOBALS['strName']}:</th>";
         $html .= "<td><input class='required' maxlength='50' name='name' size='40' value='{$obj->name}' />";
         $html .= " <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>\n";
@@ -1686,8 +1690,8 @@ function show_edit_site($site, $mode='internal')
             $html .= "<tr><th>{$GLOBALS['strNotes']}:</th><td>";
             $html .= "<textarea rows='5' cols='30' name='notes'>{$obj->notes}</textarea>";
             $html .= "</td></tr>\n";
+            plugin_do('site_edit_form');
         }
-        plugin_do('edit_site_form');
         $html .= "</table>\n";
         $html .= "<input name='site' type='hidden' value='$site' />";
         $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
@@ -1736,11 +1740,12 @@ function show_new_contact($siteid = 0, $mode = 'internal')
 
     if ($mode == 'internal')
     {
+        plugin_do('contact_new');
         $html .= "<h5 class='warning'>{$GLOBALS['strAvoidDupes']}</h5>";
     }
     $html .= "<form name='contactform' action='{$_SERVER['PHP_SELF']}' ";
     $html .= "method='post' onsubmit=\"return confirm_action('{$GLOBALS['strAreYouSureAdd']}')\">";
-    $html .= "<table align='center' class='vertical'>";
+    $html .= "<table class='maintable vertical'>";
     $html .= "<tr><th>{$GLOBALS['strName']}</th>\n";
 
     $html .= "<td>";
@@ -1863,11 +1868,12 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     }
     $html .= "<tr><th>{$GLOBALS['strEmailDetails']}</th>";
     // Check the box to send portal details, only if portal is enabled
-    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails'";
+    $html .= "<td><input type='checkbox' id='emaildetails' name='emaildetails' value='on'";
     if ($CONFIG['portal'] == TRUE) $html .= " checked='checked'";
     else $html .= " disabled='disabled'";
     $html .= " />";
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
+    plugin_do('contact_new_form');
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
     $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
@@ -1939,7 +1945,7 @@ function format_external_id($externalid, $escalationpath='')
 function contracts_for_contacts_table($userid, $mode = 'internal')
 {
     global $now, $CONFIG, $sit;
-    if ((!empty($sit[2]) AND user_permission($sit[2], 30)
+    if ((!empty($sit[2]) AND user_permission($sit[2], PERM_SUPPORTED_PRODUCT_VIEW)
         OR ($_SESSION['usertype'] == 'admin'))) // view supported products
     {
         $html .= "<h4>".icon('contract', 16)." {$GLOBALS['strContracts']}:</h4>";
@@ -1968,7 +1974,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            $html .= "<table align='center'>";
+            $html .= "<table class='maintable'>";
             $html .= "<tr>";
             $html .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strProduct']}</th><th>{$GLOBALS['strExpiryDate']}</th>";
             $html .= "</tr>\n";
@@ -2187,7 +2193,7 @@ function html_check_extension($extension, $text, $min_status)
  */
 function html_install_status($status)
 {
-    $html = "<table align='center'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
+    $html = "<table class='maintable'><tr><th></th><th>{$GLOBALS['strRequirement']}</th><th>{$GLOBALS['strRequired']}</th><th>{$GLOBALS['strActual']}</th></tr>";
 
     foreach ($status->statusentries AS $entry)
     {
@@ -2204,16 +2210,38 @@ function html_install_status($status)
  * Creates HTML horizontal list of actions from an array of URL's
  * @author Ivan Lucas
  * @param array $actions Assoc array of Labels and URL's (labels should already be internationalised).
+                format example: $actions['Label'] = 'http://example.com/page.html'
+                alternative format example: $actions['Label'] = array('url' => 'http://example.com/page.html', 'perm' => PERM_FOO);
  * @return string HTML.
  */
-function html_action_links($actions)
+function html_action_links(&$actions)
 {
+    $access = TRUE;
     $html .= "<span class='actionlinks'>";
     $actionscount = count($actions);
     $count = 1;
-    foreach ($actions AS $label => $URL)
+    foreach ($actions AS $label => $action)
     {
-        $html .= "<a href=\"{$URL}\">{$label}</a>";
+        if (is_array($action))
+        {
+            $url = $action['url'];
+            if (!user_permission($_SESSION['userid'], $action['perm']))
+            {
+                $url = "{$CONFIG['application_webpath']}noaccess.php?id={$action['perm']}";
+                $access = FALSE;
+            }
+        }
+        else
+        {
+            $url = $action;
+            $access = TRUE;
+        }
+        $html .= "<a href=\"{$url}\"";
+        if (!$access)
+        {
+            $html .= " class='greyed' title=\"{$GLOBALS['strNoPermission']}\"";
+        }
+        $html .= ">{$label}</a>";
         $count++;
         if ($count <= $actionscount)
         {
@@ -2221,6 +2249,7 @@ function html_action_links($actions)
         }
     }
     $html .= "</span>";
+    unset($actions);
     return $html;
 }
 
@@ -2355,5 +2384,21 @@ function html_hmenu($hmenu)
 
     return $html;
 }
+
+
+/**
+  * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
+  * @author Ivan Lucas
+  * @param string $address, address to search for
+  * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
+*/
+function map_link($address)
+{
+    $url = str_replace('{address}', urlencode($address), $GLOBALS['CONFIG']['map_url']);
+    $link = "<span class='maplink'><a target='_blank' href=\"{$url}\">{$GLOBALS['strMap']}</a></span>";
+
+    return $link;
+}
+
 
 ?>

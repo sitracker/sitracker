@@ -9,9 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 33; // Send Emails
 require ('core.php');
+$permission = PERM_EMAIL_SEND; // Send Emails
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // include ('mime.inc.php');
 
@@ -76,7 +75,7 @@ switch ($step)
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
         echo "<h2>".icon('email', 32)." {$strSendEmail}</h2>";
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' name='updateform' method='post'>";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strTemplate}</th><td>".emailtemplate_drop_down("emailtype", 1, 'incident')."</td></tr>";
         echo "<tr><th>{$strDoesThisUpdateMeetSLA}:</th><td>";
         $target = incident_get_next_target($id);
@@ -144,7 +143,7 @@ switch ($step)
         echo "</td></tr>";
         plugin_do('incident_email_form1');
         echo "</table>";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input type='hidden' name='step' value='2' />";
         echo "<input type='hidden' name='menu' value='$menu' />";
         echo "<input name='submit1' type='submit' value='{$strContinue}' /></p>";
@@ -171,7 +170,7 @@ switch ($step)
                                         setInterval("save_draft('"+<?php echo $id; ?>+"', 'email')")
                                     },
                                     10);
-        
+
         //]]>
         </script>
         <?php
@@ -278,7 +277,7 @@ switch ($step)
         echo "</td></tr>";
         plugin_do('incident_email_form2');
         echo "</table>";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input name='newincidentstatus' id='newincidentstatus' type='hidden' value='{$newincidentstatus}' />";
         echo "<input name='timetonextaction' id='timetonextaction' type='hidden' value='{$timetonextaction}' />";
         echo "<input name='timetonextaction_none' id='timetonextaction_none' type='hidden' value='{$timetonextaction_none}' />";
@@ -376,12 +375,20 @@ switch ($step)
 
         if ($errors == 0)
         {
-            $extra_headers = "Reply-To: {$replytofield}\nErrors-To: ".user_email($sit[2])."\n";
-            $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
-            $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
-            if ($ccfield != '')  $extra_headers .= "CC: {$ccfield}\n";
-            if ($bccfield != '') $extra_headers .= "BCC: {$bccfield}\n";
-            $extra_headers .= "\n"; // add an extra crlf to create a null line to separate headers from body
+            if ($CONFIG['outbound_email_newline'] == 'CRLF')
+            {
+                $crlf = "\r\n";
+            }
+            else
+            {
+                $crlf = "\n";
+            }
+            $extra_headers = "Reply-To: {$replytofield}{$crlf}Errors-To: ".user_email($sit[2]) . $crlf;
+            $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
+            $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
+            if ($ccfield != '')  $extra_headers .= "CC: {$ccfield}" . $crlf;
+            if ($bccfield != '') $extra_headers .= "BCC: {$bccfield}" . $crlf;
+            $extra_headers .= $crlf; // add an extra crlf to create a null line to separate headers from body
                                 // this appears to be required by some email clients - INL
 
             $mime = new MIME_mail($fromfield, $tofield, html_entity_decode($subjectfield), '', $extra_headers, $mailerror);
@@ -534,7 +541,7 @@ switch ($step)
 
                 if ($storeinlog == 'Yes')
                 {
-					// add update
+                    // add update
                     $bodytext = htmlentities($bodytext, ENT_COMPAT, 'UTF-8');
                     $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
@@ -572,26 +579,26 @@ switch ($step)
                 if ($storeinlog == 'No')
                 {
                     //Create a small note in the log to say the mail was sent but not logged (short )
-					$updatebody  = "{$SYSLANG['strUpdateNotLogged']} \n";
+                    $updatebody  = "{$SYSLANG['strUpdateNotLogged']} \n";
                     $updatebody .= "[b] {$SYSLANG['strTemplate']}: [/b]".$templatename."\n";
                     $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                     $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updatebody = mysql_real_escape_string($updatebody);
 
-					$sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
+                    $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     $updateid = mysql_insert_id();
-				}
+                }
 
-				foreach ($files AS $file)
-				{
-					$sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+                foreach ($files AS $file)
+                {
+                    $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
                     $sql .= "VALUES (5, '{$updateid}', '{$file['fileid']}', 'left', '{$sit[2]}')";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-				}
+                }
 
                 $owner = incident_owner($id);
 
@@ -640,9 +647,9 @@ switch ($step)
                 $menu = 'hide';
 
                 $text = $strEmailSentSuccessfullyAutoClose;
-                if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully; 
-                
-                html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);               
+                if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully;
+
+                html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);
             }
             else
             {

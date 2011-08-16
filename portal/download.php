@@ -14,9 +14,8 @@
 // Turn off all error reporting so we don't publish directory structs
 error_reporting(0);
 
-$permission = 0; // no permission required
-
-require ('..'.DIRECTORY_SEPARATOR.'core.php');
+require ('..' . DIRECTORY_SEPARATOR . 'core.php');
+$permission = PERM_NOT_REQUIRED; // no permission required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $accesslevel = 'any';

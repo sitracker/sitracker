@@ -122,14 +122,18 @@ if ($sit[0] != '')
         echo $_SESSION['username'];
     }
     echo "</a>";
-    echo " | <span id='userstatus'>";
-    echo userstatus_summaryline();
-    echo " <a href='javascript:void(0)' onclick='show_status_drop_down()' onblur=\"$('status_drop_down').blur();\">";
-    echo icon('configure', 12, $strSetYourStatus)."</a></span>";
-    echo "<span id='status_drop_down' style='display:none;'>";
-    echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
-    echo "</span> | ";
-    echo "<a href='logout.php'>{$strLogout}</a></div>";
+
+    if (user_permission($sit[2], PERM_MYSTATUS_SET)) // edit my status
+    {
+        echo " | <span id='userstatus'>";
+        echo userstatus_summaryline();
+        echo " <a href='javascript:void(0)' onclick='show_status_drop_down()' onblur=\"$('status_drop_down').blur();\">";
+        echo icon('configure', 12, $strSetYourStatus)."</a></span>";
+        echo "<span id='status_drop_down' style='display:none;'>";
+        echo userstatus_bardrop_down("status", user_status($sit[2])) . help_link("SetYourStatus");
+        echo "</span>";
+    }
+    echo " | <a href='logout.php'>{$strLogout}</a></div>";
 }
 
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
@@ -177,16 +181,17 @@ if ($sit[0] != '')
     list($dbversion) = mysql_fetch_row($versionresult);
     if ($dbversion < $application_version)
     {
-        echo "<p class='error'><strong>IMPORTANT</strong> The SiT database schema needs to be updated";
-        if (user_permission($sit[2], 22))
+        $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
+        if (user_permission($sit[2], PERM_ADMIN))
         {
-            echo " from v{$dbversion} to v{$application_version}</p>";
-            echo "<p class='tip'>Visit <a href='setup.php'>Setup</a> to update the schema";
+            $msg .= " from v{$dbversion} to v{$application_version}</p>";
+            $msg2 = "Visit <a href='setup.php'>Setup</a> to update the schema.";
         }
-        echo "</p>";
+        echo user_alert($msg, E_USER_ERROR);
+        echo user_alert($msg2, E_USER_NOTICE);
     }
 
-    if (user_permission($sit[2], 22))
+    if (user_permission($sit[2], PERM_ADMIN))
     {
         // Check if scheduler is running (bug 108)
         $failure = 0;

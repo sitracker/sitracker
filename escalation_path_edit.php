@@ -1,5 +1,5 @@
 <?php
-// edit_escalation_path - Ability to edit escalation path
+// escalation_path_edit - Ability to edit escalation path
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -12,8 +12,8 @@
 
 //// This Page Is Valid XHTML 1.0 Transitional!  (7 Oct 2006)
 
-$permission = 64; // Manage escalation paths
 require ('core.php');
+$permission = PERM_ESCALATION_MANAGE; // Manage escalation paths
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication
@@ -29,26 +29,29 @@ if (empty($_REQUEST['mode']))
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
+    echo show_form_errors('edit_escalation_path');
+    clear_form_errors('edit_escalation_path');
     echo "<h2>{$title}</h2>";
+    plugin_do('escalation_path_edit');
 
     while ($details = mysql_fetch_object($result))
     {
         echo "<form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
         echo "<table class='vertical'>";
-        echo "<tr><th>{$strName}:</th><td><input name='name' value='{$details->name}'/></td></tr>";
+        echo "<tr><th>{$strName}:</th><td><input name='name' value='{$details->name}' class='required' /> ";
+        echo "<span class='required'>{$strRequired}</span></td></tr>";
         echo "<tr><th>{$strTrackURL}:</th><td><input name='trackurl' value='{$details->track_url}' />";
         echo "<br />{$strNoteInsertExternalID}</td></tr>";
         echo "<tr><th>{$strHomeURL}:</th><td><input name='homeurl' value='{$details->home_url}' /></td></tr>";
         echo "<tr><th>{$strTitle}:</th><td><input name='title' value='{$details->url_title}' /></td></tr>";
         echo "<tr><th>{$strEmailDomain}:</th><td><input name='emaildomain' value='{$details->email_domain}' /></td></tr>";
-
+        plugin_do('escalation_path_edit_form');
         echo "</table>";
         echo "<input type='hidden' value='{$id}' name='id' />";
         echo "<input type='hidden' value='edit' name='mode' />";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
         echo "<input type='submit' name='submit' value=\"{$strSave}\" /></p>";
-        echo "<p><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -67,8 +70,9 @@ else
     if (empty($name))
     {
         $errors++;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_escalation_path']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
     }
+    plugin_do('escalation_path_edit_submitted');
 
     if ($errors == 0)
     {
@@ -84,8 +88,13 @@ else
         }
         else
         {
+            plugin_do('escalation_path_edit_saved');
             html_redirect("escalation_paths.php");
         }
+    }
+    else
+    {
+        html_redirect("escalation_path_edit.php?id={$id}", FALSE);
     }
 }
 

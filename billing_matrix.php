@@ -11,9 +11,8 @@
 
 // Author:  Paul Heaney Paul Heaney <paul[at]sitracker.org>
 
-$permission =  81;  // TODO we need a permission to administer billing matrixes
-
 require ('core.php');
+$permission = PERM_BILLING_DURATION_EDIT;  // TODO we need a permission to administer billing matrixes
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -38,17 +37,19 @@ if (mysql_num_rows($result) >= 1)
         $matrixresult = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<thead><tr><th colspan='9'>{$matrix->tag} <a href='billing_matrix_edit.php?tag={$matrix->tag}'>{$strEdit}</a></th></tr></thead>\n";
         echo "<tr><th>{$strHour}</th><th>{$strMonday}</th><th>{$strTuesday}</th>";
         echo "<th>{$strWednesday}</th><th>{$strThursday}</th><th>{$strFriday}</th>";
         echo "<th>{$strSaturday}</th><th>{$strSunday}</th><th>{$strPublicHoliday}</th></tr>\n";
-
+        $shade = 'shade1';
         while ($obj = mysql_fetch_object($matrixresult))
         {
-            echo "<tr><td>{$obj->hour}</td><td>&#215;{$obj->mon}</td><td>&#215;{$obj->tue}</td>";
+            echo "<tr class='{$shade}'><td>{$obj->hour}</td><td>&#215;{$obj->mon}</td><td>&#215;{$obj->tue}</td>";
             echo "<td>&#215;{$obj->wed}</td><td>&#215;{$obj->thu}</td><td>&#215;{$obj->fri}</td>";
             echo "<td>&#215;{$obj->sat}</td><td>&#215;{$obj->sun}</td><td>&#215;{$obj->holiday}</td></tr>\n";
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
         echo "</table>";
     }

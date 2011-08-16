@@ -11,20 +11,19 @@
 
 // Author: Paul Heaney <paul@sitracker.org>
 
-$permission = 9; // Edit User Permissions
-
 require ('core.php');
+$permission = PERM_USER_PERMISSIONS_EDIT; // Edit User Permissions
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $roleid = clean_int($_REQUEST['roleid']);
 
-$title = $strRole;
+$title = $strViewRole;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-echo "<h2>{$strRole}</h2>";
+echo "<h2>{$title}</h2>";
 
 if (!empty($roleid))
 {
@@ -35,7 +34,7 @@ if (!empty($roleid))
     if (mysql_num_rows($result) > 0)
     {
         $obj = mysql_fetch_object($result);
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strRole}</th><td>{$roleid}</td></tr>";
         echo "<tr><th>{$strName}</th><td>{$obj->rolename}</td></tr>";
         echo "<tr><th>{$strDescription}</th><td>{$obj->description}</td></tr>";
@@ -49,15 +48,19 @@ if (!empty($roleid))
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) == 0)
         {
-            echo "<p align='center'>{$strNoRecords}</p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
         else
         {
             $class = 'shade1';
-            echo "<table align='center' class='vertical'>";
+            echo "<table class='maintable'>";
+            echo "<tr>";
+            echo colheader('userid', $strID);
+            echo colheader('name', $strName);
+            echo "</tr>";
             while ($obj = mysql_fetch_object($result))
             {
-                echo "<tr class='{$class}'><th>{$obj->id}</th>";
+                echo "<tr class='{$class}'><td>{$obj->id}</td>";
                 echo "<td>{$obj->realname}</td></tr>";
                 if ($class == 'shade1') $class = 'shade2';
                 else $class = 'shade1';
@@ -73,31 +76,36 @@ if (!empty($roleid))
 
         if (mysql_num_rows($result) == 0)
         {
-            echo "<p align='center'>{$strNoRecords}</p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
         else
         {
             $class = 'shade1';
-            echo "<table align='center' class='vertical'>";
+            echo "<table class='maintable'>";
+            echo "<tr>";
+            echo colheader('permissionid', $strID);
+            echo colheader('permissionname', $strName);
+            echo "</tr>";
             while ($obj = mysql_fetch_object($result))
             {
                 echo "<tr class='{$class}'><th>";
-                echo "<a href='edit_user_permissions.php?action=check&amp;permid={$obj->id}' title='{$strCheckWhoHasThisPermission}'>{$obj->id}</a></th>";
-                echo "<td>{$obj->name}</td></tr>";
+                echo "<a href='edit_user_permissions.php?action=check&amp;permid={$obj->id}' title='{$strCheckWhoHasPermission}'>{$obj->id}</a></th>";
+                echo "<td>{$GLOBALS["{$obj->name}"]}</td></tr>";
                 if ($class == 'shade1') $class = 'shade2';
                 else $class = 'shade1';
             }
             echo "</table>";
         }
+        echo "<p clasS='return'><a href='edit_user_permissions.php'>{$strReturnToPreviousPage}</a></p>";
     }
     else
     {
-        echo "<p class='error'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 else
 {
-    echo "<p class='error'>{$strNoRoleSpecified}</p>";
+    echo user_alert($strNoRoleSpecified, E_USER_ERROR);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

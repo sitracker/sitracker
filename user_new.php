@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 20; // Add Users
-
 require ('core.php');
+$permission = PERM_USER_ADD; // Add Users
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -43,9 +41,10 @@ if (empty($submit))
 
     echo "<h2>".icon('newuser', 32)." ";
     echo "{$strNewUser}</h2>";
+    plugin_do('user_new');
     echo "<form id='adduser' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
-    echo "<table align='center' class='vertical'>\n";
+    echo "<table class='maintable vertical'>\n";
     echo "<tr><th>{$strRealName}</th>";
     echo "<td><input maxlength='50' name='realname' size='30' class='required' ";
     if ($_SESSION['formdata']['new_user']['realname'] != '')
@@ -148,10 +147,10 @@ if (empty($submit))
         echo date_picker('adduser.startdate');
         echo "</td></tr>\n";
     }
-    plugin_do('new_user_form');
+    plugin_do('user_new_form');
     echo "</table>\n";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
-    echo "<p align='center'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
@@ -230,6 +229,8 @@ else
         $errors++;
         $_SESSION['formerrors']['new_user']['duplicate_email'] = "{$strEmailMustBeUnique}</p>\n";
     }
+    plugin_do('user_new_submitted');
+
 
     // add information if no errors
     if ($errors == 0)
@@ -275,6 +276,7 @@ else
         else
         {
             setup_user_triggers($newuserid);
+            plugin_do('user_new_saved');
             $t = new TriggerEvent('TRIGGER_NEW_USER', array('userid' => $newuserid));
             html_redirect("manage_users.php#userid{$newuserid}");
         }

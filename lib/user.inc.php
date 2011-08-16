@@ -21,7 +21,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @param int $permission or array. The permission id to check, or an array of id's to check
  * @return boolean. TRUE if the user has the permission (or all the permissions in the array), otherwise FALSE
  */
-function user_permission($userid,$permission)
+function user_permission($userid, $permission)
 {
     // Default is no access
     $accessgranted = FALSE;
@@ -318,7 +318,7 @@ function user_incidents($id)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $arr = array('1' => '0', '2' => '0', '3' => '0', '4' => '0');
+    $arr = array(PRIORITY_LOW => '0', PRIORITY_MEDIUM => '0', PRIORITY_HIGH => '0', PRIORITY_CRITICAL => '0');
 
     if (mysql_num_rows($result) > 0)
     {
@@ -923,11 +923,13 @@ function software_backup_userid($userid, $softwareid)
 /**
  *
  * @author Ivan Lucas
+ * @param int $userid The user who's status you want to set
  * @param string $newstatus - Either a user status ID or 'Yes' or 'No'
  * @returns FALSE on failure, or HTML to display status
  * @note Toggles accepting status only when passed 'yes' or 'no'
+ * @note v3.90 added userid parameter
 */
-function set_user_status($newstatus)
+function set_user_status($userid, $newstatus)
 {
     global $dbUsers;
     switch ($newstatus)
@@ -976,13 +978,13 @@ function set_user_status($newstatus)
     if (!empty($newstatus)) $sql .= "status='$newstatus'";
     if (!empty($newstatus) AND !empty($accepting)) $sql .= ', ';
     if (!empty($accepting)) $sql .= "accepting='$accepting'";
-    $sql .= " WHERE id='{$_SESSION['userid']}' LIMIT 1";
+    $sql .= " WHERE id='{$userid}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-    debug_log("setting status: $sql");
-    incident_backup_switchover($_SESSION['userid'], $accepting);
+    debug_log("setting status: $sql", TRUE);
+    incident_backup_switchover($userid, $accepting);
 
-    $t = new TriggerEvent("TRIGGER_USER_CHANGED_STATUS", array('userid' => $_SESSION['userid']));
+    $t = new TriggerEvent("TRIGGER_USER_CHANGED_STATUS", array('userid' => $userid));
 
     return userstatus_summaryline($newstatus, $accepting);
 }

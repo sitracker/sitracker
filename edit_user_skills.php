@@ -11,13 +11,11 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
+require ('core.php');
 if (empty($_REQUEST['user'])
     OR $_REQUEST['user'] == 'current'
-    OR $_REQUEST['userid'] == $_SESSION['userid']) $permission = 58; // Edit your software skills
-else $permission = 59; // Manage users software skills
-
-require ('core.php');
+    OR $_REQUEST['userid'] == $_SESSION['userid']) $permission = PERM_MYSKILLS_SET; // Edit your software skills
+else $permission = PERM_USER_SKILLS_SET; // Manage users software skills
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -44,11 +42,12 @@ if (empty($submit))
     }
     echo "<h2>".icon('skill', 32)." ";
     echo sprintf($strSkillsFor, user_realname($user,TRUE))."</h2>";
+    plugin_do('edit_user_skills');
     echo "<p align='center'>{$strSelectYourSkills}</p>";
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
     echo "onsubmit=\"populateHidden(document.softwareform.elements['expertise[]'], document.softwareform.choices); populateHidden(document.softwareform.elements['noskills[]'], document.softwareform.ns)\">";
-    echo "<table align='center'>";
-    echo "<tr><th>{$strNOSkills}</th><th>&nbsp;{$strOperation}&nbsp;</th><th>{$strHAVESkills}</th></tr>";
+    echo "<table class='maintable'>";
+    echo "<tr><th>{$strNOSkills}</th><th>&nbsp;{$strActions}&nbsp;</th><th>{$strHAVESkills}</th></tr>";
     echo "<tr><td align='center' class='shade1'>";
     echo "\n<select name='noskills[]' multiple='multiple' size='20' style='width: 100%; min-width: 300px; min-height: 200px;'>";
     $sql = "SELECT * FROM `{$dbSoftware}` ORDER BY name";
@@ -106,7 +105,7 @@ if (empty($submit))
     echo "</select>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "</td></tr>\n";
-
+    plugin_do('edit_user_skills_form');
     echo "</table>";
     echo "<input type='hidden' name='choices' id='choices' />";
     echo "<input type='hidden' name='ns' id='ns' />";
@@ -126,6 +125,8 @@ else
 
     $ns = urldecode($_POST['ns']);
     parse_str($ns);
+
+    plugin_do('edit_user_skills_submitted');
 
     // NOTE: it is NOT necessary to get expertise OR noskills from the $_POST as this is passed encoded in and handled above
     // See Mantis 1239 for more details, PH 2010-04-06
@@ -177,6 +178,7 @@ else
         }
     }
 
+    plugin_do('edit_user_skills_saved');
     journal(CFG_LOGGING_MAX, 'Skillset Updated', "Users Skillset was Changed", CFG_JOURNAL_USER, 0);
 
     // Have a look to see if any of the software we support is lacking a backup/substitute engineer

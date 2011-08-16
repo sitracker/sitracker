@@ -13,10 +13,8 @@
 //          Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //          Tom Gerrard <tomgerrard[at]users.sourceforge.net>
 
-
-$permission = 54; // view KB
-
 require ('core.php');
+$permission = PERM_KB_VIEW; // view KB
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -120,7 +118,7 @@ if (isset($_POST['submit']))
 
     foreach ($sections AS $section)
     {
-        
+
         $sectionvar = strtolower($section);
         $sectionvar = str_replace(" ", "", $sectionvar);
         $sectionid = $_POST["{$sectionvar}id"];
@@ -277,8 +275,8 @@ else
     echo "{$strSummary} <span id='summaryspan'>[+]</span></a></h3>";
     echo "<div id='summarysection' style='display: none;'>";
     echo bbcode_toolbar('summary');
-    echo "<textarea id='summary' name='summary' cols='100' rows='8' ";
-    echo "style='overflow: visible; white-space: nowrap;' onchange='kbSectionCollapse();'>{$sections['Summary']}";
+    echo "<textarea id='summary' name='strsummary' cols='100' rows='8' ";
+    echo "style='overflow: visible; white-space: nowrap;' onchange='kbSectionCollapse();'>{$sections['strSummary']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -287,8 +285,8 @@ else
     echo "{$strSymptoms} <span id='symptomsspan'>[+]</span></a></h3>";
     echo "<div id='symptomssection' style='display: none;'>";
     echo bbcode_toolbar('symptoms');
-    echo "<textarea id='symptoms' name='symptoms' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Symptoms']}";
+    echo "<textarea id='symptoms' name='strsymptoms' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strSymptoms']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -297,8 +295,8 @@ else
     echo "{$strCause} <span id='causespan'>[+]</span></a></h3>";
     echo "<div id='causesection' style='display: none;'>";
     echo bbcode_toolbar('cause');
-    echo "<textarea id='cause' name='cause' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Cause']}";
+    echo "<textarea id='cause' name='strcause' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strCause']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -307,8 +305,8 @@ else
     echo "{$strQuestion} <span id='questionspan'>[+]</span></a></h3>";
     echo "<div id='questionsection' style='display: none;'>";
     echo bbcode_toolbar('question');
-    echo "<textarea id='question' name='question' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Question']}";
+    echo "<textarea id='question' name='strquestion' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strQuestion']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -317,8 +315,8 @@ else
     echo "{$strAnswer} <span id='answerspan'>[+]</span></a></h3>";
     echo "<div id='answersection' style='display: none;'>";
     echo bbcode_toolbar('answer');
-    echo "<textarea id='answer' name='answer' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Answer']}";
+    echo "<textarea id='answer' name='stranswer' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strAnswer']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -327,8 +325,8 @@ else
     echo "{$strSolution} <span id='solutionspan'>[+]</span></a></h3>";
     echo "<div id='solutionsection' style='display: none;'>";
     echo bbcode_toolbar('solution');
-    echo "<textarea id='solution' name='solution' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Solution']}";
+    echo "<textarea id='solution' name='strsolution' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strSolution']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -337,8 +335,8 @@ else
     echo "{$strWorkaround} <span id='workaroundspan'>[+]</span></a></h3>";
     echo "<div id='workaroundsection' style='display: none;'>";
     echo bbcode_toolbar('workaround');
-    echo "<textarea id='workaround' name='workaround' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Workaround']}";
+    echo "<textarea id='workaround' name='strworkaround' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strWorkaround']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -347,8 +345,8 @@ else
     echo "{$strStatus} <span id='statusspan'>[+]</span></a></h3>";
     echo "<div id='statussection' style='display: none;'>";
     echo bbcode_toolbar('status');
-    echo "<textarea id='status' name='status' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Status']}";
+    echo "<textarea id='status' name='strstatus' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strStatus']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -357,8 +355,8 @@ else
     echo "{$strAdditionalInfo} <span id='additionalinformationspan'>[+]</span></a></h3>";
     echo "<div id='additionalinformationsection' style='display: none;'>";
     echo bbcode_toolbar('additionalinformation');
-    echo "<textarea id='additionalinformation' name='additionalinformation' cols='100' rows='8'  ";
-    echo "onchange='kbSectionCollapse();'>{$sections['Additional Information']}";
+    echo "<textarea id='additionalinformation' name='stradditionalinfo' cols='100' rows='8'  ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strAdditionalInfo']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -367,8 +365,8 @@ else
     echo "{$strReferences} <span id='referencesspan'>[+]</span></a></h3>";
     echo "<div id='referencessection' style='display: none;'>";
     echo bbcode_toolbar('references');
-    echo "<textarea id='references' name='references' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['References']}";
+    echo "<textarea id='references' name='strreferences' cols='100' rows='8' ";
+    echo "onchange='kbSectionCollapse();'>{$sections['strReferences']}";
     echo "</textarea>";
     echo "</div>";
 
@@ -400,11 +398,11 @@ else
 
     echo "<h3>{$strDisclaimer}</h3>";
     echo $CONFIG['kb_disclaimer_html'];
-    echo "<p align='center'><input name='reset' type='reset' value='{$strReset}' /> ";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
     echo $sectionstore;
     echo "</form></div>";
-    echo "<p align='center'><a href='kb_view_article.php?id=$kbid'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='kb_view_article.php?id=$kbid'>{$strReturnWithoutSaving}</a></p>";
     echo "<script type='text/javascript'>\n//<![CDATA[\nkbSectionCollapse();\n//]]>\n</script>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

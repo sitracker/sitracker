@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 24; // Add Product
-
 require ('core.php');
+$permission = PERM_PRODUCT_ADD; // Add Product
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -33,7 +31,7 @@ if (empty($submit))
     echo "<h2>".icon('product', 32)." ";
     echo "{$strNewProduct}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strVendor}</th><td>";
     if ($_SESSION['formdata']['new_product']['vendor'] != '')
     {
@@ -64,7 +62,7 @@ if (empty($submit))
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     clear_form_data('new_product');
 

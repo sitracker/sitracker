@@ -14,9 +14,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   4Nov05
 
-
-$permission = 22; // administrate
 require ('core.php');
+$permission = PERM_ADMIN; // administrate
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $title = $strBrowseJournal;
@@ -100,13 +99,13 @@ $journaltype[CFG_JOURNAL_TASKS] = $strTasks;
 $journal_count = mysql_num_rows($result);
 if ($journal_count >= 1)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     $filter = array('page' => $page);
     echo colheader('userid', $strUser, $sort, $order, $filter);
     echo colheader('timestamp',"{$strTime}/{$strDate}", $sort, $order, $filter);
     echo colheader('event', $strEvent);
-    echo colheader('action', $strOperation);
+    echo colheader('action', $strActions);
     echo colheader('type', $strType);
     echo "</tr>\n";
     $shade = 'shade1';
@@ -147,13 +146,13 @@ if ($journal_count >= 1)
 
     if ($page > 3 AND $pages > 10) $minpage = $page - 3;
     else $minpage = ($page - 2);
-    
+
     if ($minpage < 1) $minpage = 1;
-    
+
     $maxpage = $minpage + $numpagelinks;
-    
+
     if ($maxpage > $pages + 1) $maxpage = $pages + 1;
-    
+
     if ($minpage >= ($maxpage - $numpagelinks)) $minpage = $maxpage - $numpagelinks;
 
     $prev = $page - 1;

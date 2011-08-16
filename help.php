@@ -9,9 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 26; // Help
 require ('core.php');
+$permission = PERM_HELP_VIEW; // Help
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = "Help";
 

@@ -1,5 +1,5 @@
 <?php
-// software_new.php - Form for adding software
+// skill_new.php - Form for adding skills (skills were called software in earlier versions of SiT)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 56; // Add Skills
-
 require ('core.php');
+$permission = PERM_SKILL_ADD; // Add Skills
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -68,7 +66,7 @@ if (empty($submit))
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
     $_SESSION['formdata']['new_software'] = NULL;
@@ -131,7 +129,7 @@ else
             replace_tags(TAG_SKILL, $id, $tags);
 
             journal(CFG_LOGGING_DEBUG, 'Skill Added', "Skill {$id} was added", CFG_JOURNAL_DEBUG, $id);
-            html_redirect("products.php");
+            html_redirect("products.php?display=skills");
             //clear form data
             $_SESSION['formdata']['new_software'] = NULL;
         }

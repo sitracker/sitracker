@@ -11,9 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  31Oct05
 
-$permission = 10; // Edit Contacts
-
 require ('core.php');
+$permission = PERM_CONTACT_EDIT; // Edit Contacts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -33,10 +32,10 @@ if (empty($action) OR $action == "showform" OR empty($contact))
     // Show select contact form
     echo "<h2>".icon('contact', 32)." {$strEditContact}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("contact", 0)."</td></tr>";
     echo "</table>";
-    echo "<p align='center'><input name='submit' type='submit' value='{$strContinue}' /></p>";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -50,19 +49,19 @@ elseif ($action == "edit" && isset($contact))
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($contactobj = mysql_fetch_object($contactresult))
     {
-        // User does not have access
         echo "<h2>".icon('contact', 32)." ";
         echo "{$strEditContact}: {$contact}</h2>";
+        plugin_do('contact_edit');
         echo "<form name='contactform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\");'>";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strName}</th>\n";
         echo "<td>";
-        echo "\n<table><tr><td align='center'>{$strTitle}<br />";
+        echo "\n<table><tr><td class='tabletitle'>{$strTitle}<br />";
         echo "<input maxlength='50' name='courtesytitle' title=\"";
-        echo "{$strCourtesyTitle}\" size='7' value='{$contactobj->courtesytitle}'/></td>\n";   
-        echo "<td align='center'>{$strForenames}<br />";
+        echo "{$strCourtesyTitle}\" size='7' value='{$contactobj->courtesytitle}'/></td>\n";
+        echo "<td class='tabletitle'>{$strForenames}<br />";
         echo "<input class='required' maxlength='100' name='forenames' value='".htmlspecialchars($contactobj->forenames, ENT_QUOTES)."' /></td>\n";
-        echo "<td align='center'>{$strSurname}<br />";
+        echo "<td class='tabletitle'>{$strSurname}<br />";
         echo "<input class='required' maxlength='100' name='surname' ";
         echo "size='20' title=\"{$strSurname}\" value='".htmlspecialchars($contactobj->surname, ENT_QUOTES)."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "</table>\n</td></tr>\n";
@@ -135,7 +134,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<tr><th>{$strNotes}:</th><td>";
         echo "<textarea rows='5' cols='60' name='notes'>{$contactobj->notes}</textarea></td></tr>\n";
 
-        plugin_do('edit_contact_form');
+        plugin_do('contact_edit_form');
         echo "</table>";
 
         echo "<input name='contact' type='hidden' value='{$contact}' />";
@@ -143,7 +142,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
 
-        echo "<p><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>\n";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -206,6 +205,7 @@ else if ($action == "update")
         $errors = 1;
         trigger_error("Something weird has happened, better call technical support", E_USER_ERROR);
     }
+    plugin_do('contact_edit_submitted');
 
     // edit contact if no errors
     if ($errors == 0)
@@ -243,7 +243,7 @@ else if ($action == "update")
         }
         else
         {
-            plugin_do('save_contact_form');
+            plugin_do('contact_edit_saved');
 
             journal(CFG_LOGGING_NORMAL, 'Contact Edited', "Contact {$contact} was edited", CFG_JOURNAL_CONTACTS, $contact);
             html_redirect("contact_details.php?id={$contact}");

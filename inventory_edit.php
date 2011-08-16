@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -60,6 +59,7 @@ if (isset($_POST['submit']))
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
     }
+    plugin_do('inventory_edit_submitted');
 
     if ($errors > 0)
     {
@@ -104,7 +104,11 @@ if (isset($_POST['submit']))
 
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    else html_redirect("inventory_site.php?id={$siteid}");
+    else
+    {
+        plugin_do('inventory_edit_saved');
+        html_redirect("inventory_site.php?id={$siteid}");
+    }
 }
 else
 {
@@ -114,7 +118,7 @@ else
     $row = mysql_fetch_object($result);
 
     if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-            $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+            $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
     {
         html_redirect('inventory.php', FALSE);
         exit;
@@ -123,10 +127,11 @@ else
     echo show_form_errors('inventory_edit');
     clear_form_errors('inventory_edit');
     echo "<h2>".icon('edit', 32)." {$strEdit}</h2>";
+    plugin_do('inventory_edit');
 
     echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
 
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' value='{$row->name}' /> ";
     echo "<span class='required'>{$strRequired}</span></td></tr>";
@@ -146,7 +151,7 @@ else
     echo "<td><input name='address' value='{$row->address}' /></td></tr>";
 
     if (!is_numeric($id)
-        OR (($row->privacy == 'adminonly' AND user_permission($sit[2], 22))
+        OR (($row->privacy == 'adminonly' AND user_permission($sit[2], PERM_ADMIN))
             OR ($row->privacy == 'private' AND ($row->createdby == $sit[2])) OR $row->privacy == 'none'))
     {
         echo "<tr><th>{$strUsername}</th>";
@@ -160,27 +165,27 @@ else
     echo bbcode_toolbar('inventorynotes');
     echo "<textarea id='inventorynotes' rows='15' cols='80' name='notes'>{$row->notes}</textarea></td></tr>";
 
-    if (($row->privacy == 'adminonly' AND user_permission($sit[2], 22)) OR
+    if (($row->privacy == 'adminonly' AND user_permission($sit[2], PERM_ADMIN)) OR
         ($row->privacy == 'private' AND $row->createdby == $sit[2]) OR
         $row->privacy == 'none')
     {
         echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
-        echo "<td><input type='radio' name='privacy' value='private' ";
+        echo "<td><label><input type='radio' name='privacy' value='private' ";
         if ($row->privacy == 'private')
         {
             echo " checked='checked' ";
             $selected = TRUE;
         }
-        echo "/>{$strPrivate}<br />";
+        echo "/>{$strPrivate}</label><br />";
 
-        echo "<input type='radio' name='privacy' value='adminonly'";
+        echo "<label><input type='radio' name='privacy' value='adminonly'";
         if ($row->privacy == 'adminonly')
         {
             echo " checked='checked' ";
             $selected = TRUE;
         }
         echo "/>";
-        echo "{$strAdminOnly}<br />";
+        echo "{$strAdminOnly}</label><br />";
 
         echo "<input type='radio' name='privacy' value='none'";
         if (!$selected)
@@ -200,14 +205,14 @@ else
         echo "checked = 'checked' ";
     }
     echo "/>";
-
     echo "</td></tr>";
+    plugin_do('inventory_edit_form');
     echo "</table>";
     echo "<p class='formbuttons'>";
     echo "<input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
-    echo "<p align='center'>";
+    echo "<p class='return'>";
 
     echo "<a href='inventory_site.php?id={$row->siteid}'>{$strReturnWithoutSaving}</a>";
 

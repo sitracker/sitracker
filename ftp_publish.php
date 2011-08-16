@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 44; // Publish Files to FTP site
-
 require ('core.php');
+$permission = PERM_FILE_PUBLISH; // Publish Files to FTP site
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -101,7 +99,7 @@ if (!isset($temp_directory))
     echo "</select>";
     echo "</td></tr>";
     echo "</table>";
-    echo "<p align='center'><input type='submit' value='{$strPublish}' /></p>";
+    echo "<p class='formbuttons'><input type='submit' value='{$strPublish}' /></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

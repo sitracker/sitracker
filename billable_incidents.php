@@ -11,10 +11,8 @@
 
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = 11; // View sites, more granular permissions are defined on the more sensitive sections
-
 require ('core.php');
+$permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
@@ -57,7 +55,7 @@ if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h2>".icon('billing', 32)." {$strBilling}</h2>";
+    echo "<h2>".icon('billing', 32, $strBilling)." {$strBilling}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='billableincidents'>";
     echo "<table class='vertical'>";
@@ -66,13 +64,13 @@ if (empty($mode))
     echo "<label><input type='radio' name='mode' value='summarypage' id='summarypage' onclick=\"$('startdatesection').hide();" .
             " $('enddatesection').hide(); $('sitebreakdownsection').hide(); $('displaysection').show(); $('showfoc').show(); $('showfocaszero').show(); $('showexpiredaszero').show();\" checked='checked' />{$strSummary}</label> ";
 
-    if (user_permission($sit[2], 73) == TRUE)
+    if (user_permission($sit[2], PERM_INCIDENT_BILLING_APPROVE) == TRUE)
     {
         echo "<label><input type='radio' name='mode' value='approvalpage' id='approvalpage' onclick=\"$('startdatesection').show();" .
                 " $('enddatesection').show(); $('sitebreakdownsection').hide(); $('displaysection').hide(); $('showfoc').hide(); $('showfocaszero').hide(); $('showexpiredaszero').hide();\" />{$strApprove}</label> ";
     }
 
-    if (user_permission($sit[2], 76) == TRUE)
+    if (user_permission($sit[2], PERM_BILLING_TRANSACTION_VIEW) == TRUE)
     {
         echo "<label><input type='radio' name='mode' value='transactions' id='transactions' onclick=\"$('startdatesection').show(); " .
                 "$('enddatesection').show(); $('sitebreakdownsection').show(); $('displaysection').show(); $('showfoc').show(); $('showfocaszero').show(); $('showexpiredaszero').hide();\" />{$strTransactions}</label> ";
@@ -136,9 +134,9 @@ if (empty($mode))
 }
 elseif ($mode == 'approvalpage')
 {
-    if (user_permission($sit[2], 73) == FALSE)
+    if (user_permission($sit[2], PERM_INCIDENT_BILLING_APPROVE) == FALSE)
     {
-        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=73");
+        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=".PERM_INCIDENT_BILLING_APPROVE);
         exit;
     }
     // Loop around all active sites - those with contracts
@@ -154,7 +152,7 @@ elseif ($mode == 'approvalpage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h2>".icon('billing', 32)." {$strBillableIncidents} - {$strApprove}</h2>";
+        echo "<h2>".icon('billing', 32, $strBillableIncidents)." {$strBillableIncidents} - {$strApprove}</h2>";
 
         echo "<p align='center'>{$strThisReportShowsIncidentsClosedInThisPeriod} ";
         echo ldate($CONFIG['dateformat_date'], $startdate)." - ".ldate($CONFIG['dateformat_date'], $enddate)."</p>";
@@ -208,7 +206,7 @@ elseif ($mode == 'approvalpage')
 
             $str .= "<th>{$strTotalUnits}</th><th>{$strTotalBillableUnits}</th>";
             $str .= "<th>{$strCredits}</th>";
-            $str .= "<th>{$strBill}</th><th>{$strApprove}</th></tr>\n";
+            $str .= "<th>{$strBill}</th><th>{$strActions}</th></tr>\n";
 
             $used = false;
 
@@ -352,12 +350,13 @@ elseif ($mode == 'approvalpage')
                         }
                         elseif ($unapprovable)
                         {
-                        	$line .= $strUnapprovable;
+                            $line .= $strUnapprovable;
                         }
                         else
                         {
-                            $line .= "<a href='{$_SERVER['PHP_SELF']}?mode=approve&amp;transactionid={$obj->transactionid}&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}&amp;showonlyapproved={$showonlyapproved}'>{$strApprove}</a> | ";
-                            $line .= "<a href='billing_update_incident_balance.php?incidentid={$obj->id}'>{$strAdjust}</a>";
+                            $operations[$strApprove] = array('url' => "{$_SERVER['PHP_SELF']}?mode=approve&amp;transactionid={$obj->transactionid}&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}&amp;showonlyapproved={$showonlyapproved}");
+                            $operations[$strAdjust] = array('url' => "billing_update_incident_balance.php?incidentid={$obj->id}");
+                            $line .= html_action_links($operations);
                             $sitetotalawaitingapproval += $cost;
 
                             $sitetotalsawaitingapproval += $a[-1]['totalcustomerperiods'];
@@ -463,7 +462,7 @@ elseif ($mode == 'approvalpage')
 
     if ($output == 'html')
     {
-        echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+        echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
@@ -472,7 +471,7 @@ elseif ($mode == 'invoicepage')
     if ($output == 'html')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $str .= "<h2>".icon('billing', 32)." {$strBillableIncidentsInvoice}</h2>";
+        $str .= "<h2>".icon('billing', 32, $strBillableIncidentsInvoice)." {$strBillableIncidentsInvoice}</h2>";
 
         $resultsite = mysql_query($sitelistsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -549,9 +548,9 @@ elseif ($mode == 'summarypage')
 }
 elseif ($mode == 'transactions')
 {
-    if (user_permission($sit[2], 76) == FALSE)
+    if (user_permission($sit[2], PERM_BILLING_TRANSACTION_VIEW) == FALSE)
     {
-        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=76");
+        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=".PERM_BILLING_TRANSACTION_VIEW);
         exit;
     }
 
@@ -559,9 +558,9 @@ elseif ($mode == 'transactions')
 }
 elseif ($mode == 'approve')
 {
-    if (user_permission($sit[2], 73) == FALSE)
+    if (user_permission($sit[2], PERM_INCIDENT_BILLING_APPROVE) == FALSE)
     {
-        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=73");
+        header("Location: {$CONFIG['application_webpath']}noaccess.php?id=".PERM_INCIDENT_BILLING_APPROVE);
         exit;
     }
 

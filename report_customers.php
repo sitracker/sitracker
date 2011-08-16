@@ -13,9 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  4Feb06
 
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -59,7 +58,7 @@ if (empty($_REQUEST['mode']))
     echo "<input type='submit' value=\"{$strRunReport}\" />";
     echo "</p>";
     echo "</form>";
-    echo "<table align='center'><tr><td>";
+    echo "<table class='maintable'><tr><td>";
     echo "<h4>{$strCSVFileFormatAsFollows}:</h4>";
     echo "<strong>{$strField1}:</strong> {$strForenames}<br />";
     echo "<strong>{$strField2}:</strong> {$strSurname}<br />";

@@ -47,7 +47,7 @@ if (mysql_num_rows($result) >= 1)
         echo "<td>{$task->name}</td></tr>";
         echo "<tr><th>{$strDescription}</th>";
         echo "<td>".nl2br($task->description)."</td></tr>";
-        if ($task->distribution=='public')
+        if ($task->distribution == 'public')
         {
             echo "<tr><th>{$strTags}:</th><td>";
             echo list_tags($taskid, 4);
@@ -56,33 +56,33 @@ if (mysql_num_rows($result) >= 1)
         if ($task->owner != $sit[2])
         {
             echo "<tr><th>{$strOwner}</th>";
-            echo "<td>".user_realname($task->owner,TRUE)."</td></tr>";
+            echo "<td>".user_realname($task->owner, TRUE)."</td></tr>";
         }
         echo "<tr><th>{$strPriority}</th>";
         echo "<td>".priority_icon($task->priority).' '.priority_name($task->priority)."</td></tr>";
         echo "<tr><th>{$strStartDate}</th>";
         echo "<td>";
-        if ($startdate > 0) echo ldate($CONFIG['dateformat_datetime'],$startdate);
+        if ($startdate > 0) echo ldate($CONFIG['dateformat_datetime'], $startdate);
         echo "</td></tr>";
         echo "<tr><th>{$strDueDate}</th>";
         echo "<td>";
-        if ($duedate > 0) echo ldate($CONFIG['dateformat_datetime'],$duedate);
+        if ($duedate > 0) echo ldate($CONFIG['dateformat_datetime'], $duedate);
         echo "</td></tr>";
         echo "<tr><th>{$strCompletion}</th>";
         echo "<td>".percent_bar($task->completion)."</td></tr>";
         echo "<tr><th>{$strEndDate}</th>";
         echo "<td>";
-        if ($enddate > 0) echo ldate($CONFIG['dateformat_datetime'],$enddate);
+        if ($enddate > 0) echo ldate($CONFIG['dateformat_datetime'], $enddate);
         echo "</td></tr>";
         echo "<tr><th>{$strValue}</th>";
         echo "<td>{$task->value}</td></tr>";
         echo "<tr><th>{$strPrivacy}</th>";
         echo "<td>";
-        if ($task->distribution=='public')
+        if ($task->distribution == 'public')
         {
             echo $strPublic;
         }
-        if ($task->distribution=='private')
+        if ($task->distribution == 'private')
         {
             echo "{$strPrivate} ";
             echo icon('private', 16, $strPrivate);
@@ -90,7 +90,7 @@ if (mysql_num_rows($result) >= 1)
         echo "</td></tr>";
         echo "</table>";
         echo "<p align='center'><a href='task_edit.php?id={$taskid}'>{$strEditTask}</a>";
-        if ($task->owner == $sit[2] AND $task->completion==100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=delete'>{$strDeleteTask}</a>";
+        if ($task->owner == $sit[2] AND $task->completion == 100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=delete'>{$strDeleteTask}</a>";
         if ($task->completion < 100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=markcomplete'>{$strMarkComplete}</a>";
         echo "</p>";
 

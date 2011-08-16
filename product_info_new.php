@@ -13,10 +13,8 @@
 
 // Product information is the info related to a product that is requested when adding an incident
 
-
-$permission = 25; // Add Product Info
-
 require ('core.php');
+$permission = PERM_PRODUCTINFO_ADD; // Add Product Info
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -26,7 +24,7 @@ $product = clean_int($_REQUEST['product']);
 $information = clean_dbstring($_POST['information']);
 $moreinformation = clean_dbstring($_POST['moreinformation']);
 
-$title = $strAddProductInformation;
+$title = $strNewProductQuestion;
 
 // Show add product information form
 if (empty($_REQUEST['submit']))
@@ -42,13 +40,22 @@ if (empty($_REQUEST['submit']))
 
     echo "<h2>".icon('info', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strProduct}</th><td>".product_drop_down("product", $product, TRUE)." <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strQuestion}</th><td><input name='information' size='30' class='required' value='{$_SESSION['formdata']['product_info_new']['information']}' /> <span class='required'>{$strRequired}</span></td></tr>";
     echo "<tr><th>{$strAdditionalInfo}</th><td><input name='moreinformation' size='30' value='{$_SESSION['formdata']['product_info_new']['moreinformation']}' /></td></tr>";
     echo "</table>";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+    if (!empty($product))
+    {
+        echo "<p class='return'><a href=\"products.php?productid={$product}\">{$strReturnWithoutSaving}</a></p>";
+    }
+    else
+    {
+        echo "<p class='return'><a href=\"products.php\">{$strReturnWithoutSaving}</a></p>";
+    }
+
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     clear_form_data('product_info_new');

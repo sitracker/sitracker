@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 9; // Edit User Permissions
-
 require ('core.php');
+$permission = PERM_USER_PERMISSIONS_EDIT; // Edit User Permissions
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
@@ -26,9 +25,6 @@ if ($CONFIG['demo'] AND $_SESSION['userid'] != 1)
     html_redirect("manage_users.php", FALSE, $strCannotPerformOperationInDemo);
 }
 
-$pagescripts = array('FormProtector.js');
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 // External variables
 $user = clean_int($_REQUEST['user']);
 $role = clean_int($_REQUEST['role']);
@@ -39,6 +35,9 @@ $seltab = cleanvar($_REQUEST['tab']);
 
 if (empty($action) OR $action == "showform")
 {
+    $pagescripts = array('FormProtector.js');
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
     $sql = "SELECT * FROM `{$dbRoles}` ORDER BY id ASC";
     $result= mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -46,6 +45,8 @@ if (empty($action) OR $action == "showform")
     if (mysql_num_rows($result) >= 1)
     {
         echo "<h2>".icon('trigger', 32)." {$strRolePermissions}</h2>";
+        echo show_form_errors('role_permissions');
+        clear_form_errors('role_permissions');
 
         echo "<p align='center'><a href='role_new.php'>{$strNewRole}</a></p>";
 
@@ -80,13 +81,13 @@ if (empty($action) OR $action == "showform")
         echo "<th>{$GLOBALS[$pcat->category]} {$strPermissions}</th>";
         while ($rolerow = mysql_fetch_object($result))
         {
-            echo "<th style='min-width: 40px;'><a href='role.php?roleid={$rolerow->id}'>{$rolerow->rolename}</a></th>";
+            echo "<th style='min-width: 40px;'><a href='role.php?roleid={$rolerow->id}' title='{$strViewRole}'>{$rolerow->rolename}</a></th>";
         }
         echo "</tr>\n";
         while ($perm = mysql_fetch_object($presult))
         {
             echo "<tr class='$class' onclick='trow(event);'>";
-            echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasThisPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
+            echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
             mysql_data_seek($result, 0);
             while ($rolerow = mysql_fetch_object($result))
             {
@@ -102,7 +103,7 @@ if (empty($action) OR $action == "showform")
             else $class = "shade2";
         }
         echo "</table>";
-        if (mysql_num_rows($presult) < 1) echo "<p>{$strNothingToDisplay}</p>";
+        if (mysql_num_rows($presult) < 1) echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
         echo "</fieldset>";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />";
@@ -113,10 +114,12 @@ if (empty($action) OR $action == "showform")
         echo "</form>";
         echo protectform('permissionsform');
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "edit" && (!empty($user) OR !empty($role)))
 {
     // Show form
+     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($role) AND !empty($user))
     {
         trigger_error("{$strCannotEditUserAndRole}", E_USER_ERROR);
@@ -145,7 +148,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
         }
     }
     echo "<form action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
-    echo "<table align='center'>
+    echo "<table class='maintable'>
     <tr>
     <th>{$strID}</th>
     <th>{$strRolePermissions}</th>
@@ -198,10 +201,13 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
         else $class = "shade2";
     }
     echo "</table>";
-    echo "<p><input name='user' type='hidden' value='{$user}' />";
+    echo "<p class='formbuttons'><input name='user' type='hidden' value='{$user}' />";
     echo "<input name='role' type='hidden' value='' />";
+    echo "<input name='reset' type='submit' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
+    echo "<p class='return'><a href=\"manage_users.php\">{$strReturnWithoutSaving}</a></p>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "update")
 {
@@ -216,11 +222,14 @@ elseif ($action == "update")
         {
             // First pass, set all access to false
             $sql = "UPDATE `{$dbRolePermissions}`, `{$dbPermissions}` SET granted='false' WHERE `{$dbPermissions}`.`id` = `{$dbRolePermissions}`.`permissionid` AND `categoryid` = {$seltab} AND roleid={$rolerow->id}";
-            $sql = "UPDATE `{$dbRolePermissions}` SET granted='false' WHERE roleid='{$rolerow->id}'";
             $aresult = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
-            if (!$aresult) echo user_alert("{$strUpdateRolePermissionsFailed}", E_USER_WARNING);
+            if (!$aresult)
+            {
+                $errors++;
+                $_SESSION['formerrors']['role_permissions']['failure'] = user_alert("{$strUpdateRolePermissionsFailed}", E_USER_WARNING);
+            }
 
             // Second pass, loop through checkbox array setting access to true where boxes are checked
             if (is_array($_POST["{$rolerow->id}perm"]))
@@ -240,13 +249,24 @@ elseif ($action == "update")
                         $isql .= "VALUES ('{$rolerow->id}', '".clean_int($x[1])."', 'true')";
                         $iresult = mysql_query($isql);
                         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                        if (mysql_affected_rows() < 1) echo user_alert("{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}", E_USER_WARNING);
+                        if (mysql_affected_rows() < 1)
+                        {
+                           $errors++;
+                            $_SESSION['formerrors']['role_permissions']['failure'] = user_alert("{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}", E_USER_WARNING);
+                        }
                     }
                 }
             }
-
         }
-        html_redirect("manage_users.php");
+         // Back to role permissions page after saving changes.
+        if ($errors == 0)
+        {
+            html_redirect("edit_user_permissions.php?tab={$seltab}");
+        }
+        else
+        {
+                html_redirect("edit_user_permissions.php?tab={$seltab}", FALSE);
+        }
         exit;
     }
     journal(CFG_LOGGING_NORMAL, '{$strUserPermissionsEdited}', "{$strUserXPermissionsEdited}", CFG_JOURNAL_USERS, $user);
@@ -327,6 +347,7 @@ elseif ($action == "update")
 }
 elseif ($action == "check")
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('trigger', 32)." {$strCheckUserAndRolePermissions}</h2>";
     if (!empty($permid))
     {
@@ -342,7 +363,7 @@ elseif ($action == "check")
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strUser}</th><th>{$strRole}</th></tr>";
             $shade = 'shade1';
             while ($user = mysql_fetch_object($result))
@@ -373,7 +394,7 @@ elseif ($action == "check")
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strUser}</th></tr>";
             $shade = 'shade1';
             while ($user = mysql_fetch_object($result))
@@ -389,10 +410,11 @@ elseif ($action == "check")
     {
         echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strPermission}'"), E_USER_ERROR);
     }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
-    echo user_alert("{$strNoChangesToMake}", E_USER_WARNING);
+    echo html_redirect('manage_users.php', FALSE, "{$strNoChangesToMake}");
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 ?>

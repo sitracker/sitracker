@@ -507,9 +507,9 @@ function ldate($format, $date = '', $utc = FALSE)
     // Internationalise date endings (e.g. st)
     if (strpos($format, 'S') !== FALSE)
     {
-        $endings = array('st', 'nd', 'rd', 'th');
-        $i18nendings = array($GLOBALS['strst'], $GLOBALS['strnd'],
-                            $GLOBALS['strrd'], $GLOBALS['strth']);
+        $endings = array('st ', 'nd ', 'rd ', 'th ');
+        $i18nendings = array($GLOBALS['strst']." ", $GLOBALS['strnd']." ",
+                            $GLOBALS['strrd']." ", $GLOBALS['strth']." ");
         $datestring = str_replace($endings, $i18nendings, $datestring);
     }
 

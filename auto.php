@@ -41,7 +41,7 @@ function saction_test()
 function saction_CloseIncidents($closure_delay)
 {
     $success = TRUE;
-    global $dbIncidents, $dbUpdates, $CONFIG, $crlf, $now;
+    global $dbIncidents, $dbUpdates, $CONFIG, $now;
 
     if ($closure_delay < 1) $closure_delay = 554400; // Default  six days and 10 hours
 
@@ -86,8 +86,6 @@ function saction_CloseIncidents($closure_delay)
                 trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 $success = FALSE;
             }
-
-            if ($CONFIG['debug']) //debug_log("  Incident {$obj->id} closed");
 
             $sqlc = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, nextaction, customervisibility) ";
             $sqlc .= "VALUES ('{$obj->id}', '0', 'closing', '{$obj->owner}', '{$obj->status}', 'Incident Closed by {$CONFIG['application_shortname']}', '{$now}', '', 'show' ) ";
@@ -299,9 +297,14 @@ function saction_TimeCalc()
 }
 
 
+/**
+ * Scheduler Action to automatically set Users status (away) based on data from the
+ * holiday chart
+ * @author Ivan Lucas
+*/
 function saction_SetUserStatus()
 {
-    global $dbHolidays, $dbUsers, $CONFIG, $crlf;
+    global $dbHolidays, $dbUsers, $CONFIG;
     // Find users with holidays today who don't have correct status
     $success = TRUE;
     $startdate = mktime(0,0,0,date('m'),date('d'),date('Y'));
@@ -309,15 +312,14 @@ function saction_SetUserStatus()
     $sql = "SELECT * FROM `{$dbHolidays}` ";
     $sql .= "WHERE `date` >= FROM_UNIXTIME($startdate) AND `date` < ";
     $sql .= "FROM_UNIXTIME($enddate) AND (type >='".HOL_HOLIDAY."' AND type <= ".HOL_FREE.") ";
-    $sql .= "AND (approved=".HOL_APPROVAL_GRANTED." OR approved=".HOL_APPROVAL_DENIED;
-    $sql .= " OR approved=".HOL_APPROVAL_GRANTED_ARCHIVED;
-    $sql .= " OR approved=".HOL_APPROVAL_DENIED_ARCHIVED.")";
+    $sql .= "AND (approved=" . HOL_APPROVAL_GRANTED . " OR approved=" . HOL_APPROVAL_GRANTED_ARCHIVED . ")";
     $result = mysql_query($sql);
     if (mysql_error())
     {
         $success = FALSE;
         trigger_error(mysql_error(), E_USER_WARNING);
     }
+    $numrows = mysql_num_rows($result);
     while ($huser = mysql_fetch_object($result))
     {
         if ($huser->length == 'day'
@@ -329,83 +331,39 @@ function saction_SetUserStatus()
             // Only enabled users
             if ($currentstatus > 0)
             {
-                if ($huser->type == HOL_HOLIDAY AND $currentstatus != USERSTATUS_ON_HOLIDAY) $newstatus = USERSTATUS_ON_HOLIDAY;
-                if ($huser->type == HOL_SICKNESS AND $currentstatus != USERSTATUS_ABSENT_SICK) $newstatus = USERSTATUS_ABSENT_SICK;
-                if ($huser->type == HOL_WORKING_AWAY AND
-                   ($currentstatus != USERSTATUS_WORKING_FROM_HOME AND
-                   $currentstatus != USERSTATUS_WORKING_AWAY)) $newstatus = USERSTATUS_WORKING_AWAY;
-                if ($huser->type == HOL_TRAINING AND $currentstatus != USERSTATUS_ON_TRAINING_COURSE) $newstatus = USERSTATUS_ON_TRAINING_COURSE;
-                if ($huser->type == HOL_FREE AND
-                   ($currentstatus != USERSTATUS_NOT_IN_OFFICE AND
-                   $currentstatus != USERSTATUS_ABSENT_SICK)) $newstatus = USERSTATUS_ABSENT_SICK; // Compassionate
+                if ($huser->type == HOL_HOLIDAY AND $currentstatus != USERSTATUS_ON_HOLIDAY)
+                {
+                    $newstatus = USERSTATUS_ON_HOLIDAY;
+                }
+                elseif ($huser->type == HOL_SICKNESS AND $currentstatus != USERSTATUS_ABSENT_SICK)
+                {
+                    $newstatus = USERSTATUS_ABSENT_SICK;
+                }
+                elseif ($huser->type == HOL_WORKING_AWAY AND
+                       ($currentstatus != USERSTATUS_WORKING_FROM_HOME AND
+                        $currentstatus != USERSTATUS_WORKING_AWAY))
+                {
+                    $newstatus = USERSTATUS_WORKING_AWAY;
+                }
+                elseif ($huser->type == HOL_TRAINING AND $currentstatus != USERSTATUS_ON_TRAINING_COURSE)
+                {
+                    $newstatus = USERSTATUS_ON_TRAINING_COURSE;
+                }
+                elseif ($huser->type == HOL_FREE AND
+                        ($currentstatus != USERSTATUS_NOT_IN_OFFICE AND
+                         $currentstatus != USERSTATUS_ABSENT_SICK))
+                {
+                    $newstatus = USERSTATUS_ABSENT_SICK; // Compassionate
+                }
             }
             if ($newstatus != $currentstatus)
             {
-                $accepting = '';
-                switch ($newstatus)
-                {
-                    case USERSTATUS_IN_OFFICE:
-                        $accepting = 'Yes';
-                        break;
-                    case USERSTATUS_NOT_IN_OFFICE:
-                        $accepting = 'No';
-                        break;
-                    case USERSTATUS_IN_MEETING:
-                        // don't change
-                        $accepting = '';
-                        break;
-                    case USERSTATUS_AT_LUNCH:
-                        $accepting = '';
-                        break;
-                    case USERSTATUS_ON_HOLIDAY:
-                        $accepting = 'No';
-                        break;
-                    case USERSTATUS_WORKING_FROM_HOME:
-                        $accepting = 'Yes';
-                        break;
-                    case USERSTATUS_ON_TRAINING_COURSE:
-                        $accepting = 'No';
-                        break;
-                    case USERSTATUS_ABSENT_SICK:
-                        $accepting =' No';
-                        break;
-                    case USERSTATUS_WORKING_AWAY:
-                        // don't change
-                        $accepting = '';
-                        break;
-                    default:
-                        $accepting = '';
-                }
-                $usql = "UPDATE `{$dbUsers}` SET status='{$newstatus}'";
-                if ($accepting != '') $usql .= ", accepting='{$accepting}'";
-                $usql .= " WHERE id='{$huser->userid}' LIMIT 1";
-                if ($accepting == 'No') incident_backup_switchover($huser->userid, 'no');
-
-                if ($CONFIG['debug'])
-                {
-                    //debug_log(user_realname($huser->userid).': '.userstatus_name($currentstatus).' -> '.userstatus_name($newstatus));
-                    //debug_log($usql);
-                }
-
-                mysql_query($usql);
-                if (mysql_error())
-                {
-                    $success = FALSE;
-                    trigger_error(mysql_error(), E_USER_WARNING);
-                }
+                debug_log('saction_SetUserStatus changing users\' status based on holiday calendar '.user_realname($huser->userid).': '.userstatus_name($currentstatus).' -> '.userstatus_name($newstatus), TRUE);
+                set_user_status($huser->userid, $newstatus);
             }
         }
     }
-    // Find users who are set away but have no entry in the holiday calendar
-    $sql = "SELECT * FROM `{$dbUsers}` WHERE status=".USERSTATUS_ON_HOLIDAY." OR ";
-    $sql .= "status=".USERSTATUS_ON_TRAINING_COURSE." OR ";
-    $sql .= "status=".USERSTATUS_ABSENT_SICK." OR status=".USERSTATUS_WORKING_AWAY." ";
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        $success = FALSE;
-        trigger_error(mysql_error(), E_USER_WARNING);
-    }
+
     return $success;
 }
 
@@ -664,6 +622,15 @@ function saction_MailPreviousMonthsTransactions()
      TODO need a mechanism to subscribe to scheduled events? Could this be done with a trigger? Hmmhhhhhh
 
     */
+    if ($CONFIG['outbound_email_newline'] == 'CRLF')
+    {
+        $crlf = "\r\n";
+    }
+    else
+    {
+        $crlf = "\n";
+    }
+
     $currentmonth = date('m');
     $currentyear = date('y');
     if ($currentmonth == 1)
@@ -683,13 +650,13 @@ function saction_MailPreviousMonthsTransactions()
 
     $csv = transactions_report('', $startdate, $enddate, '', 'csv', TRUE);
 
-    $extra_headers = "Reply-To: {$CONFIG['support_email']}\nErrors-To: {$CONFIG['support_email']}\n"; // TODO should probably be different
-    $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
-    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
+    $extra_headers = "Reply-To: {$CONFIG['support_email']}{$crlf}Errors-To: {$CONFIG['support_email']}{$crlf}"; // TODO should probably be different
+    $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
+    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
 //    if ($ccfield != '')  $extra_headers .= "cc: $ccfield\n";
 //    if ($bccfield != '') $extra_headers .= "Bcc: $bccfield\n";
 
-    $extra_headers .= "\n"; // add an extra crlf to create a null line to separate headers from body
+    $extra_headers .= $crlf; // add an extra crlf to create a null line to separate headers from body
                         // this appears to be required by some email clients - INL
 
     $subject = sprintf($GLOBALS['strBillableIncidentsForPeriodXtoX'], $startdate, $enddate);
@@ -1030,6 +997,6 @@ if ($actions !== FALSE)
         }
     }
 }
-plugin_do('automata');
+plugin_do('auto');
 
 ?>

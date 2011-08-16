@@ -42,7 +42,7 @@ switch ($query)
 if ($start_str == $end_str) echo "<h2>".sprintf($strIncidentsVerbOnDate, $type, $start_str)."</h2>";
 else echo "<h2>".sprintf($strIncidentsVerbBetweenDates, $type, $start_str, $end_str)."</h2>";
 
-echo "<table align='center'>";
+echo "<table class='maintable'>";
 
 if (mysql_num_rows($result) > 0)
 {
@@ -79,7 +79,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo user_alert($strNoRecords, E_USER_WARNING);
+    echo user_alert($strNoRecords, E_USER_INFO);
 }
 
 ?>

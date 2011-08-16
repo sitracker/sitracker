@@ -12,9 +12,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 29; // Edit products
-
 require ('core.php');
+$permission = PERM_PRODUCT_EDIT; // Edit products
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -48,7 +47,7 @@ if ($action == 'save')
     {
         html_redirect("edit_product.php?id={$productid}", FALSE);
     }
-    else 
+    else
     {
         replace_tags(TAG_PRODUCT, $productid, $tags);
 
@@ -79,7 +78,7 @@ else
     echo "$title</h2>\n";
 
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' >";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
 
     $sql = "SELECT * FROM `{$dbProducts}` WHERE id={$id} ";
     $result = mysql_query($sql);
@@ -108,7 +107,7 @@ else
     echo "<input type='submit' value='{$strSave}' /></p>";
     echo "</form>";
 
-    echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
     mysql_free_result($result);
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

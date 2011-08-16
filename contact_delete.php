@@ -13,9 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   31Oct05
 
-$permission = 55; // Delete Sites/Contacts
-
 require ('core.php');
+$permission = PERM_SITE_DELETE; // Delete Sites/Contacts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -32,9 +31,11 @@ if (empty($process))
     if (empty($id))
     {
         echo "<h2>{$strDeleteContact}</h2>";
+        plugin_do('contact_delete');
         echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("id", 0)."</td></tr>";
+        plugin_do('contact_delete_form');
         echo "</table>";
         echo "<p><input name='submit1' type='submit' value=\"{$strDelete}\" /></p>";
         echo "</form>";
@@ -42,12 +43,13 @@ if (empty($process))
     else
     {
         echo "<h2>{$strDeleteContact}</h2>\n";
+        plugin_do('contact_delete');
         $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
         $contactresult = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         while ($contactobj = mysql_fetch_object($contactresult))
         {
-            echo "<table align='center' class='vertical'>";
+            echo "<table class='maintable vertical'>";
             echo "<tr><th>{$strName}:</th><td><h3>{$contactobj->forenames} {$contactobj->surname}</h3></td></tr>";
             echo "<tr><th>{$strSite}:</th><td><a href='site_details.php?id={$contactobj->siteid}'>".site_name($contactobj->siteid)."</a></td></tr>";
             echo "<tr><th>{$strDepartment}:</th><td>{$contactobj->department}</td></tr>";
@@ -57,6 +59,9 @@ if (empty($process))
         }
         mysql_free_result($contactresult);
         echo "</table>\n";
+
+        plugin_do('contact_delete_submitted');
+
         $totalincidents=contact_count_incidents($id);
         if ($totalincidents > 0)
         {
@@ -108,6 +113,7 @@ if (empty($process))
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>";
+            echo "<p class='return'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
         else
         {
@@ -117,10 +123,11 @@ if (empty($process))
             echo "<input type='hidden' name='newcontact' value='' />";  // empty
             echo "<input type='hidden' name='id' value='{$id}' />";
             echo "<input type='hidden' name='process' value='true' />";
-            echo "<p align='center'>";
+            echo "<p class='formbuttons'>";
             echo "<input type='submit' value='{$strDelete}' />";
             echo "</p>";
             echo "</form>\n";
+            echo "<p class='return'><a href=\"contact_details.php?id={$contact}\">{$strReturnWithoutSaving}</a></p>";
         }
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -148,6 +155,7 @@ else
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
+    plugin_do('contact_delete_saved');
     journal(CFG_LOGGING_NORMAL, 'Contact Deleted', "Contact {$id} was deleted", CFG_JOURNAL_CONTACTS, $id);
 
     if (!empty($newcontact)) html_redirect("contact_details.php?id={$newcontact}");

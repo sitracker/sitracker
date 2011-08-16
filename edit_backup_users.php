@@ -21,11 +21,11 @@ if (empty($_REQUEST['user'])
     OR $_REQUEST['user'] == $_SESSION['userid']
     OR $_REQUEST['userid'] == $_SESSION['userid'])
 {
-    $permission = 58; // Edit your software skills
+    $permission = PERM_MYSKILLS_SET; // Edit your software skills
 }
 else
 {
-    $permission = 59; // Manage users software skills
+    $permission = PERM_USER_SKILLS_SET; // Manage users software skills
 }
 
 // This page requires authentication
@@ -53,6 +53,7 @@ if (empty($save))
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user,TRUE))."</h2>\n";
+    plugin_do('edit_backup_users');
     echo "<form name='def' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<p align='center'>{$strDefaultSubstitute}: ";
@@ -68,7 +69,7 @@ if (empty($save))
     if ($countsw >= 1)
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>\n";
-        echo "<table align='center'>\n";
+        echo "<table class='maintable'>\n";
         echo "<tr><th>{$strSkill}</th><th>{$strSubstitute}</th></tr>";
         $class = 'shade1';
         while ($software = mysql_fetch_object($result))
@@ -88,6 +89,7 @@ if (empty($save))
             $softarr[] = $software->id;
         }
         $softlist = implode(',',$softarr);
+        plugin_do('edit_backup_users_form');
         echo "</table>\n";
         echo "<input type='hidden' name='user' value='{$user}' />";
         echo "<input type='hidden' name='softlist' value='{$softlist}' />";
@@ -107,6 +109,9 @@ else
     $softlist = explode(',',$_REQUEST['softlist']);
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
+
+    plugin_do('edit_backup_users_submitted');
+
     foreach ($backup AS $key=>$backupid)
     {
         if ($backupid > 0)
@@ -119,6 +124,7 @@ else
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
     }
+    plugin_do('edit_backup_users_saved');
     if ($_REQUEST['user'] == $sit[2]) html_redirect("edit_user_skills.php", TRUE);
     else html_redirect("manage_users.php");
 }

@@ -11,10 +11,8 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 // This Page Is Valid XHTML 1.0 Transitional!  31Oct05
 
-
-$permission = 14; // View Users
-
 require ('core.php');
+$permission = PERM_USER_VIEW; // View Users
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

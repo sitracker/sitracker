@@ -26,12 +26,16 @@ define ('APPLICATION_I18NPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR
 define ('APPLICATION_PORTALPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'portal') . DIRECTORY_SEPARATOR);
 define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'plugins') . DIRECTORY_SEPARATOR);
 
+// Define permissions
+require (APPLICATION_LIBPATH . 'constants.inc.php');
+
 // Load config defaults
 include (APPLICATION_LIBPATH.'defaults.inc.php');
 // Server Configuration
 @include ('/etc/sit.conf');
 // Load config file with customisations
 @include (APPLICATION_FSPATH . "config.inc.php");
+if ($CONFIG['debug']) $dbg = '';
 
 @include (APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php");
 

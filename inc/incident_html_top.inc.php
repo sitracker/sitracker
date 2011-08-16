@@ -190,7 +190,7 @@ if ($slaremain != 0 AND $incident->status != STATUS_CLOSED)
     if (($slaremain - ($slatarget * ((100 - $CONFIG['notice_threshold']) /100))) < 0 ) $class = 'notice';
     if (($slaremain - ($slatarget * ((100 - $CONFIG['urgent_threshold']) /100))) < 0 ) $class = 'urgent';
     if (($slaremain - ($slatarget * ((100 - $CONFIG['critical_threshold']) /100))) < 0 ) $class = 'critical';
-    if ($incidents["priority"] == 4) $class = 'critical';  // Force critical incidents to be critical always
+    if ($incidents["priority"] == PRIORITY_CRITICAL) $class = 'critical';  // Force critical incidents to be critical always
 }
 
 // Print a table showing summary details of the incident

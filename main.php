@@ -12,8 +12,10 @@
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 // This Page is Valid XHTML 1.0 Transitional!
 
-$permission = 0; // not required
 require ('core.php');
+
+$permission = PERM_NOT_REQUIRED; // not required
+
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -62,7 +64,7 @@ foreach ($dashboardcomponents AS $db)
             $col0++;
             $cols0 .= $c[1].",";
             break;
-        case 1: 
+        case 1:
             $col1++;
             $cols1 .= $c[1].",";
             break;
@@ -81,6 +83,7 @@ $cols2 = mb_substr($cols2, 0, -1);
 echo "<p id='pageoptions'>".help_link("Dashboard")." <a href='manage_user_dashboard.php' title='{$strManageYourDashboard}'>";
 echo icon('dashboardadd', 16)."</a> ";
 echo "<a href=\"javascript:save_dashboard_layout();\" id='savelayout' title='{$strSaveDashbaordLayout}'>".icon('save', 16)."</a></p>";
+plugin_do('main');
 echo "\n<table border=\"0\" width=\"99%\" id='cols'><tr>\n"; //id='dashboardlayout'
 echo "<td width=\"33%\" valign='top' id='col0'>";
 
@@ -106,7 +109,9 @@ foreach ($arr AS $a)
     show_dashboard_component(2, $a);
 }
 
-echo "</td></tr></table>\n";
+echo "</td></tr>";
+plugin_do('dashboard_table');
+echo "</table>\n";
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */

@@ -10,9 +10,8 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 27; /* View your calendar */
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; /* View your calendar */
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = $strHolidayRequests;
 
@@ -34,7 +33,7 @@ function display_holiday_table($result)
 {
     global $CONFIG, $user, $approver, $mode, $sit;
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     if ($user == 'all' AND $approver == TRUE)
     {
@@ -43,7 +42,7 @@ function display_holiday_table($result)
     echo "<th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strLength']}</th><th>{$GLOBALS['strType']}</th>";
     if ($approver AND $mode == 'approval')
     {
-        echo "<th>{$GLOBALS['strOperation']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
+        echo "<th>{$GLOBALS['strActions']}</th><th>{$GLOBALS['strGroupMembersAway']}</th>";
     }
 
     echo "</tr>";
@@ -110,7 +109,7 @@ if (empty($user)) $user = $sit[2];
 if (!$sent)
 {
     // check to see if this user has approve permission
-    $approver = user_permission($sit[2], 50);
+    $approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE);
 
     $waiting = FALSE;
     echo "<h2>".icon('holiday', 32)." ";
@@ -123,6 +122,7 @@ if (!$sent)
         echo user_realname($user,TRUE);
     }
     echo " - {$strHolidayRequests}</h2>";
+    plugin_do('holiday_request');
 
     if ($approver == TRUE AND $mode != 'approval' AND $user == $sit[2])
     {
@@ -157,9 +157,9 @@ if (!$sent)
             $sql  = "SELECT DISTINCT id, realname, accepting, groupid ";
             $sql .= "FROM `{$dbUsers}` AS u, `{$dbUserPermissions}` AS up, `{$dbRolePermissions}` AS rp ";
             $sql .= "WHERE u.id = up.userid AND u.roleid = rp.roleid ";
-            $sql .= "AND (up.permissionid = 50 AND up.granted = 'true' OR ";
-            $sql .= "rp.permissionid = 50 AND rp.granted = 'true') ";
-            $sql .= "AND u.id != {$sit[2]} AND u.status > 0 ORDER BY realname ASC";
+            $sql .= "AND (up.permissionid = " . PERM_HOLIDAY_APPROVE . " AND up.granted = 'true' OR ";
+            $sql .= "rp.permissionid = " . PERM_HOLIDAY_APPROVE . " AND rp.granted = 'true') ";
+            $sql .= "AND u.id != {$sit[2]} AND u.status > " . USERSTATUS_ACCOUNT_DISABLED . " ORDER BY realname ASC";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             $numapprovers = mysql_num_rows($result);

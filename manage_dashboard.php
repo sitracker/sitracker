@@ -10,9 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = 66; // Install dashboard components
 require ('core.php');
+$permission = PERM_DASHLET_INSTALL; // Install dashboard components
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -88,13 +87,13 @@ switch ($_REQUEST['action'])
         else
         {
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>\n";
-            echo "<table align='center' class='vertical'><tr><td>\n";
+            echo "<table class='maintable vertical'><tr><td>\n";
             echo "<select name='comp[]' multiple='multiple' size='20'>\n";
             echo $html;
             echo "</select>\n";
             echo "</td></tr></table>\n";
             echo "<input type='hidden' name='action' value='installdashboard' />";
-            echo "<p align='center'><input type='submit' value='{$strInstall}' /></p>";
+            echo "<p class='formbuttons'><input type='submit' value='{$strInstall}' /></p>";
             echo "</form>\n";
         }
 

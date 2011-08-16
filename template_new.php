@@ -8,10 +8,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 16; // Add Email Template
-
 require ('core.php');
+$permission = PERM_TEMPLATE_ADD; // Add Email Template
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');

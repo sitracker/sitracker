@@ -13,10 +13,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -42,7 +40,7 @@ if (mysql_num_rows($result) > 0)
     }
     arsort($productlist, SORT_NUMERIC);
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>#</th><th>{$strProduct}</th><th>{$strContracts}</th></tr>\n";
     $count = 1;
     $shade = 'shade1';
@@ -57,7 +55,7 @@ if (mysql_num_rows($result) > 0)
 }
 else
 {
-    echo "<p>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

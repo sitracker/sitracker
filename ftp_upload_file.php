@@ -12,8 +12,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 44; // ftp publishing
 require ('core.php');
+$permission = PERM_FILE_PUBLISH; // ftp publishing
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication
@@ -89,9 +89,9 @@ if (empty($action))
     echo "</td>";
     echo "</tr>";
     echo "</table>";
-    echo "<p align='center'><input type='submit' value='{$strPublish}' />";
+    echo "<p class='formbuttons'><input type='submit' value='{$strPublish}' />";
     echo "<input type='hidden' name='action' value='publish' /></p>";
-    echo "<p align='center'><a href='ftp_list_files.php'>{$strBackToList}</a></p>";
+    echo "<p class='return'><a href='ftp_list_files.php'>{$strBackToList}</a></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

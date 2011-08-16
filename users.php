@@ -14,9 +14,8 @@
 // Warning: Unknown: Your script possibly relies on a session side-effect which existed until PHP 4.2.3. Please be advised that the session extension does not consider global variables as a source of data, unless register_globals is enabled. You can disable this functionality and this warning by setting session.bug_compat_42 or session.bug_compat_warn to off, respectively. in Unknown on line 0
 // Not sure why - Ivan 6Sep06
 
-
-$permission = 14; // View Users
 require ('core.php');
+$permission = PERM_USER_VIEW; // View Users
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -50,8 +49,9 @@ echo "<h2>".icon('user', 32)." ";
 echo "{$strUsers}</h2>";
 
 $numgroups = group_selector($filtergroup);
+plugin_do('users');
 
-$sql  = "SELECT * FROM `{$dbUsers}` WHERE status!=0 ";  // status=0 means account disabled
+$sql  = "SELECT * FROM `{$dbUsers}` WHERE status != " . USERSTATUS_ACCOUNT_DISABLED . " ";
 if ($numgroups >= 1 AND $filtergroup == '0')
 {
     $sql .= "AND (groupid='0' OR groupid='' OR groupid IS NULL) ";
@@ -88,7 +88,7 @@ else $sql .= "ORDER BY realname ASC ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-echo "<table id='userslisttable' align='center'>";
+echo "<table id='userslisttable' class='maintable'>";
 echo "<tr>";
 $filter = array('gid' => $filtergroup);
 echo colheader('realname', $strName, $sort, $order, $filter);
@@ -101,10 +101,10 @@ echo "<th>{$strJumpTo}</th>";
 echo "</tr><tr>";
 echo "<th></th>";
 echo "<th align='center'>{$strActionNeeded} / {$strWaiting}</th>";
-echo "<th align='center'>".priority_icon(4)."</th>";
-echo "<th align='center'>".priority_icon(3)."</th>";
-echo "<th align='center'>".priority_icon(2)."</th>";
-echo "<th align='center'>".priority_icon(1)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
 echo "<th colspan='8'></th>";
 echo "</tr>\n";
 
@@ -162,7 +162,7 @@ while ($users = mysql_fetch_object($result))
     echo "<td align='center'><a href='incidents.php?user={$users->id}&amp;";
     echo "queue=1&amp;type=support'>";
     $incpriority = user_incidents($users->id);
-    $countincidents = ($incpriority['1']+$incpriority['2']+$incpriority['3']+$incpriority['4']);
+    $countincidents = ($incpriority[PRIORITY_LOW]+$incpriority[PRIORITY_MEDIUM]+$incpriority[PRIORITY_HIGH]+$incpriority[PRIORITY_CRITICAL]);
     if ($countincidents >= 1)
     {
         $countactive = user_activeincidents($users->id);
@@ -218,7 +218,7 @@ while ($users = mysql_fetch_object($result))
     }
     else
     {
-        echo "<span class='error'>{$strNo}</span>";
+        echo "<span class='negative'>{$strNo}</span>";
     }
     echo "</td><td>";
     echo "<a href='holidays.php?user={$users->id}' title='{$strHolidays}'>";

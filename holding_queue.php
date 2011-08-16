@@ -13,9 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 
-
-$permission = 42;
 require ('core.php');
+$permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -166,6 +165,8 @@ $title = $strReviewHeldUpdates;
 $refresh = $_SESSION['userconfig']['incident_refresh'];
 $selected = $_POST['selected'];
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+echo "<h2>{$strHoldingQueue}</h2>";
+plugin_do('holding_queue');
 
 if ($lock = $_REQUEST['lock'])
 {
@@ -294,7 +295,7 @@ if (mysql_num_rows($resultnew) >= 1)
 }
 
 
-echo "<h2>".icon('support', 32)." {$strUnassignedIncidents}</h2>";
+echo "<h3>".icon('support', 32)." {$strUnassignedIncidents}</h3>";
 
 
 /**
@@ -315,7 +316,7 @@ if (is_array($incidentqueuerows))
         echo "<th>{$strFrom}</th>";
         echo "<th>{$strSubject}</th>";
         echo "<th>{$strMessage}</th>";
-        echo "<th>{$strOperation}</th>";
+        echo "<th>{$strActions}</th>";
         echo "</tr>";
         sort($incidentqueuerows);
         foreach ($incidentqueuerows AS $row)
@@ -333,10 +334,10 @@ if (is_array($incidentqueuerows))
  */
 if ($spamcount > 0)
 {
-    echo "<h2>";
+    echo "<h3>";
     if ($spamcount > 1) echo $strSpamEmails;
     else echo $strSpamEmail;
-    echo "(".sprintf($strXTotal, $spamcount).")</h2>\n";
+    echo "(".sprintf($strXTotal, $spamcount).")</h3>\n";
     echo "<p align='center'>{$strIncomingEmailSpam}</p>";
 
     // Reset back for 'nasty' emails
@@ -345,7 +346,7 @@ if ($spamcount > 0)
     echo "<table align='center' style='width: 95%;'>";
     echo "<tr><th /><th>{$strDate}</th><th>{$strFrom}</th>";
     echo "<th>{$strSubject}</th><th>{$strMessage}</th>";
-    echo "<th>{$strOperation}</th></tr>\n";
+    echo "<th>{$strActions}</th></tr>\n";
 
     while ($updates = mysql_fetch_object($result))
     {
@@ -387,7 +388,7 @@ if (mysql_num_rows($resultchase) >= 1)
             if (empty($html_chase))
             {
                 $html_chase .= "<br />";
-                $html_chase .= "<h2>{$strIncidentsRequiringReminderByPhone}</h2>";
+                $html_chase .= "<h3>{$strIncidentsRequiringReminderByPhone}</h3>";
                 $html_chase .= "<table align='center' style='width: 95%'>";
                 $html_chase .= "<tr><th>{$strIncident} {$strID}</th>";
                 $html_chase .= "<th>{$strIncidentTitle}</th><th>{$strContact}</th>";
@@ -414,7 +415,7 @@ if (mysql_num_rows($resultchase) >= 1)
         }
     }
 }
-else echo "<p>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 if (!empty($html_chase))
 {
@@ -423,8 +424,8 @@ if (!empty($html_chase))
 }
 
 
-echo "<h2>".icon('reassign', 32, $strPendingReassignments);
-echo " {$strPendingReassignments}</h2>";
+echo "<h3>".icon('reassign', 32, $strPendingReassignments);
+echo " {$strPendingReassignments}</h3>";
 $sql = "SELECT * FROM `{$dbTempAssigns}` AS t, `{$dbIncidents}` AS i ";
 $sql .= "WHERE t.incidentid = i.id AND assigned='no' ";
 $result = mysql_query($sql);
@@ -438,7 +439,7 @@ if (mysql_num_rows($result) >= 1)
     $rhtml .= "<table id='pendingreassignments' align='center' style='width: 95%;'>";
     $rhtml .= "<tr><th title='{$strLastUpdated}'>{$strDate}</th><th title='{$strCurrentOwner}'>{$strFrom}</th>";
     $rhtml .= "<th title='{$strIncidentTitle}'>{$strSubject}</th><th>{$strMessage}</th>";
-    $rhtml .= "<th>{$strOperation}</th></tr>\n";
+    $rhtml .= "<th>{$strActions}</th></tr>\n";
 
     while ($assign = mysql_fetch_object($result))
     {
@@ -492,7 +493,7 @@ if (mysql_num_rows($result) >= 1)
     }
     $rhtml .= "</table>\n";
 }
-else echo "<p>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 if ($show)
 {

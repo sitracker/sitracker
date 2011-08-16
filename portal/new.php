@@ -81,7 +81,7 @@ if (!$_REQUEST['action'])
         }
     }
     echo "<form action='{$_SERVER[PHP_SELF]}?page=add&amp;action=submit' method='post'>";
-    echo "<table align='center' width='50%' class='vertical'>";
+    echo "<table class='vertical maintable' width='50%'>";
     if ($CONFIG['portal_creates_incidents'])
     {
         echo "<tr><th>{$strArea}:</th><td class='shade1'>".softwareproduct_drop_down('software', 0, $productid, 'external')."<br />";
@@ -128,7 +128,7 @@ if (!$_REQUEST['action'])
     echo "</table>";
     echo "<input name='contractid' value='{$contractid}' type='hidden' />";
     echo "<input name='productid' value='{$productid}' type='hidden' />";
-    echo "<p align='center'><input type='submit' value='{$strNewIncident}' /></p>";
+    echo "<p class='formbuttons'><input type='submit' value='{$strNewIncident}' /></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -145,6 +145,8 @@ else //submit
     $servicelevel = maintenance_servicelevel_tag($contractid);
     $productid = clean_int($_REQUEST['productid']);
 
+    if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
+    
     $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
     $errors = 0;
     if (empty($incidenttitle))

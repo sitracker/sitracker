@@ -12,9 +12,8 @@
 // Authors: Kieran Hogg <kieran[at]sitracker.org>
 //          Ivan Lucas <ivan_lucas[at]users.sourceforge.net>
 
-
-$permission = 0; // not required
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -244,7 +243,7 @@ elseif ($_REQUEST['mode'] == "show")
     echo "</table>";
     echo "<input type='hidden' name='origcount' value='{$origcount}' />";
     echo "<input name='lang' value='{$tolang}' type='hidden' /><input name='mode' value='save' type='hidden' />";
-    echo "<div align='center'>";
+    echo "<div class='formbuttons'>";
     if (is_writable($myFile))
     {
         echo "<input type='submit' value='{$strSave}' />";
@@ -296,14 +295,14 @@ elseif ($_REQUEST['mode'] == "save")
     {
         if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
         {
-            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
             $i18nfile .= "\${$key} = '".addslashes($_POST[$key])."';\n";
             $lastchar = substr($key, 3, 1);
             $translatedcount++;
         }
         elseif (!empty($_SESSION['translation_foreignvalues'][$key]))
         {
-            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n"; 
+            if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";
             $i18nfile .= "\${$key} = '".addslashes($_SESSION['translation_foreignvalues'][$key])."';\n";
             $lastchar = substr($key, 3, 1);
             $translatedcount++;

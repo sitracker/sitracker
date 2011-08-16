@@ -10,9 +10,8 @@
 //
 // This page is called from incident_html_top.inc.php
 
-
-$permission = 42;
 require ('core.php');
+$permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

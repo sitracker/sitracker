@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -34,7 +33,7 @@ if (is_numeric($_GET['id']))
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('site', 32)." ".site_name($siteid)."</h2>";
-    echo "<p align='center'>";
+    echo "<p class='inventory'>";
     echo "<a href='inventory_new.php?site={$siteid}'>";
     echo icon('new', 16)." {$strNew}</a> | ";
     echo "<a href='inventory.php'>".icon('site', 16)." {$strBackToSites}</a></p>";
@@ -77,7 +76,7 @@ if (is_numeric($_GET['id']))
 
     if (mysql_num_rows($result) > 0)
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th>{$strInventoryItems}</th><th>{$strPrivacy}</th>";
         echo "<th>{$strCreatedBy}</th><th>{$strOwner}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
@@ -103,7 +102,7 @@ if (is_numeric($_GET['id']))
             echo contact_realname($row->contactid)."</td><td>";
             $operations = array();
             if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-                 $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+                 $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
             {
                 echo "{$strView}</a> &nbsp; ";
                 echo "{$strEdit}";
@@ -119,13 +118,13 @@ if (is_numeric($_GET['id']))
             else $shade = 'shade1';
         }
         echo "</table>";
-        echo "<p align='center'>".icon('new', 16);
+        echo "<p class='inventory'>".icon('new', 16);
         echo " <a href='inventory_new.php?site={$siteid}'>";
         echo "{$strNew}</a></p>";
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

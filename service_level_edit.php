@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 53; // Edit Service Levels
-
 require ('core.php');
+$permission = PERM_SLA_EDIT; // Edit Service Levels
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -85,7 +83,7 @@ if (empty($action) OR $action == "showform")
     echo "<input type='hidden' name='tag' value='{$tag}' />";
     echo "<input type='hidden' name='priority' value='{$priority}' />";
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input type='submit' value='{$strSave}' /></p>";
-    echo "<p align='center'><a href='service_levels.php'>{$strBackToList}</a></p>";
+    echo "<p class='return'><a href='service_levels.php'>{$strBackToList}</a></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

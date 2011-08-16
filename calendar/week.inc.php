@@ -34,7 +34,7 @@ switch (date('D',mktime(0,0,0,$month,$day,$year)))
 $gidurl = '';
 if (!empty($groupid)) $gidurl = "&amp;gid={$groupid}";
 
-echo "<p align='center'>";
+echo "<p class='weekcalendarview'>";
 $pdate = mktime(0,0,0,$month,$day-7,$year);
 $ndate = mktime(0,0,0,$month,$day+7,$year);
 echo "<a href='{$_SERVER['PHP_SELF']}?display=week&amp;year=".date('Y',$pdate)."&amp;month=".date('m',$pdate)."&amp;day=".date('d',$pdate)."{$gidurl}'>&lt;</a> ";

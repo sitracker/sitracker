@@ -27,9 +27,10 @@ $sites = array();
 
 $monthago = time() - (60 * 60 * 24 * 30.5);
 
-echo "<h2>{$strRecentIncidents} (".sprintf($strSinceX, ldate($CONFIG['dateformat_date'], $monthago)).")</h2>";
+echo "<h2>{$strRecentIncidents}</h2>";
+echo "<h3>({$strOpened}: ".sprintf($strSinceX, ldate($CONFIG['dateformat_date'], $monthago)).")</h3>";
 
-$sql  = "SELECT s.name, i.id, i.opened, m.product, s.id AS siteid FROM `{$dbSites}` AS s, `{$dbContacts}` as c, `{$dbMaintenance}` AS m, `{$dbIncidents}` AS i ";
+$sql  = "SELECT s.name, i.id, i.opened, m.product, s.id AS siteid, i.title FROM `{$dbSites}` AS s, `{$dbContacts}` as c, `{$dbMaintenance}` AS m, `{$dbIncidents}` AS i ";
 $sql .= "WHERE s.id = c.siteid ";
 $sql .= "AND m.id = i.maintenanceid ";
 $sql .= "AND i.contact = c.id ";
@@ -42,24 +43,37 @@ if (mysql_error()) trigger_error("MySQL Query Error: ".mysql_error(), E_USER_WAR
 if (mysql_num_rows($result) > 0)
 {
     $prvincid = 0;
+    echo "<table class='maintable' id='recentincidents'>";
+    echo "<tr>";
+    echo colheader('incident', $strIncident);
+    echo colheader('site', $strSite);
+    echo colheader('opened', $strOpened);
+    echo colheader('product', $strProduct);
+    echo "</tr>";
+    $shade = 'shade1';
     while ($row = mysql_fetch_object($result))
     {
         if ($prvincid != $row->id)
         {
-            echo "<strong>[{$row->siteid}] {$row->name}</strong> {$strIncident}: <a href=\"javascript:incident_details_window('{$row->id}', 'sit_popup')\">{$row->id}</a>  ";
-            echo "{$strDate}: ".ldate('d M Y', $row->opened)." ";
-            echo "{$strProduct}: ".product_name($row->product);
+            echo "<tr class='{$shade}'>";
+            echo "<td><a href=\"javascript:incident_details_window('{$row->id}', 'sit_popup')\">[{$row->id}] {$row->title}</a></td>";
+            echo "<td>{$row->name}</strong></td>";
+            echo "<td>" . ldate('d M Y', $row->opened) . "</td>";
+            echo "<td>".product_name($row->product) . "</td>";
             $site = $row->siteid;
             $$site++;
             $sites[] = $row->siteid;
-            echo "<br />\n";
+            echo "</tr>\n";
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = 'shade1';
         }
         $prvincid = $row->id;
     }
+    echo "<table>";
 }
 else
 {
-    echo "<p class='warning'>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 $sites = array_unique($sites);

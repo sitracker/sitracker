@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 18; //  Close Incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_CLOSE; //  Close Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 // This page requires authentication
@@ -156,7 +154,7 @@ if (empty($_REQUEST['process']))
     }
     plugin_do('incident_closing_form1');
     echo "</table>\n";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input name='type' type='hidden' value='Support' />";
     echo "<input name='id' type='hidden' value='{$id}' />";
     echo "<input type='hidden' name='process' value='closeincident' />";

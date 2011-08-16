@@ -14,8 +14,8 @@
 //       to enable us to pass variables from PHP to CSS.
 //
 
-$permission = 0; // not required
 require ('..' . DIRECTORY_SEPARATOR . 'core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 
 session_name($CONFIG['session_name']);
 session_start();
@@ -37,22 +37,22 @@ if (empty($iconset)) $iconset = 'sit';
 header('Content-type: text/css');
 
 echo "
-select .initialresponse 
+select .initialresponse
 {
 	background-image: url({$CONFIG['application_webpath']}/images/icons/$iconset/16x16/initialresponse.png);
 }
 
-select .problemdef 
+select .problemdef
 {
 	background-image: url({$CONFIG['application_webpath']}/images/icons/$iconset/16x16/probdef.png);
 }
 
-select .actionplan 
+select .actionplan
 {
 	background-image: url({$CONFIG['application_webpath']}/images/icons/$iconset/16x16/actionplan.png);
 }
 
-select .solution 
+select .solution
 {
 	background-image: url({$CONFIG['application_webpath']}/images/icons/$iconset/16x16/solution.png);
 }

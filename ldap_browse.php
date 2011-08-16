@@ -11,9 +11,8 @@
 
 // Author: Paul Heaney <paul[at]sitracker.org>
 
-$permission = 22; // Administrate
-
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -38,7 +37,7 @@ echo "<div id='ldap_browse_contents' />";
 ?>
     <script type='text/javascript'>
     //<![CDATA[
-        ldap_browse_select_container('<?php echo $base ?>', '<?php echo $field ?>');        
+        ldap_browse_select_container('<?php echo $base ?>', '<?php echo $field ?>');
     //]]>
     </script>
 <?php

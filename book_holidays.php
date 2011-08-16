@@ -12,9 +12,8 @@
 // This Page Is Valid XHTML 1.0 Transitional! 13Sep06
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 27; // view your calendar
-
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; // view your calendar
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -24,7 +23,7 @@ $title = $strBookHoliday;
 // External variables
 $step = $_REQUEST['step'];
 $date = cleanvar($_REQUEST['date']);
-if (!empty($_REQUEST['user']) AND user_permission($sit[2], 68))
+if (!empty($_REQUEST['user']) AND user_permission($sit[2], PERM_HOLIDAY_MANAGE))
 {
     $user = clean_int($_REQUEST['user']); // Manage holidays
 }
@@ -53,7 +52,7 @@ if (empty($step))
     echo "<input name='start' size='10' value='{$date}' /> ";
     echo date_picker('date.start');
     echo "</td></tr>\n";
-    echo "<tr><th>{$strEndDate}:</th><td align='left' class='shade1' title='date picker'>";
+    echo "<tr><th>{$strEndDate}:</th><td class='shade1' title='date picker'>";
     echo "<input name='end' size='10' /> ";
     echo date_picker('date.end');
     echo "</td></tr>\n";
@@ -62,7 +61,7 @@ if (empty($step))
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<input type='hidden' name='step' value='1' />";
     echo "<input type='submit' value=\"{$strBookHoliday}\" /></p>";
-    echo "<p align='center'><a href='holidays.php?user={$user}'>{$strBackToList}</a></p>";
+    echo "<p class='return'><a href='holidays.php?user={$user}'>{$strBackToList}</a></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -127,9 +126,10 @@ elseif ($step == '1')
         echo user_alert($strSicknessOnlyBookedNowOrPast, E_USER_ERROR);
     }
 
-    echo "<p align='center'><strong>{$strSelectDays}</strong></p>";
+    echo "<p class='tagname'><strong>{$strSelectDays}</strong></p>";
+    echo "<div id='holiday'>";
 
-    echo "<table align='center' width='550' class='vertical'>";
+    echo "<table class='maintable' width='550' class='vertical'>";
     echo "<tr><th>{$strStartDate}</th><td>".ldate($CONFIG['dateformat_date'],$start)."</td></tr>";
     echo "<tr><th>{$strEndDate}</th><td>".ldate($CONFIG['dateformat_date'],$end)."</td></tr>";
     echo "</table><br />";
@@ -138,12 +138,12 @@ elseif ($step == '1')
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<input type='hidden' name='type' value='{$type}' />";
 
-    echo "<table align='center' width='550'>";
+    echo "<table class='maintable' width='550'>";
     echo "<tr><th>{$strDate}</th><th>{$strNone}</th><th>{$strDay}</th><th>{$strAM}</th><th>{$strPM}</th></tr>\n";
 
     $daynumber = 1;
     $options = 0;
-    // if ($end==$start)
+
     $end += 86400;  // ensure we still loop for single day bookings by setting end to next day
     for ($day = $start; $day < $end; $day = $day + 86400)
     {
@@ -161,8 +161,8 @@ elseif ($step == '1')
                     $holiday_type = holiday_type($existing_holiday->type);
                     $holiday_legend = strtoupper(mb_substr($holiday_type, 0, 1));
                     echo "<tr>";
-                    echo "<td class='shade2' align='right'> ".ldate('l jS M y', $day)." </td>";
-                    echo "<td class='shade1' align='center'>";
+                    echo "<td class='shade2 holidaydate'> ".ldate('l jS M y', $day)." </td>";
+                    echo "<td class='shade1'>";
                     if ($existing_holiday->length == 'day')
                     {
                         echo "<input type='radio' name='dummy{$daynumber}' value='day' disabled='disabled' />";
@@ -172,7 +172,7 @@ elseif ($step == '1')
                         echo "<input type='radio' name='length{$daynumber}' value='none' checked='checked' />";
                     }
                     echo "</td>";
-                    echo "<td class='shade1' align='center'>";
+                    echo "<td class='shade1'>";
                     if ($existing_holiday->length == 'day')
                     {
                         echo $holiday_legend;
@@ -184,7 +184,7 @@ elseif ($step == '1')
                     echo "</td>";
 
                     // am
-                    echo "<td class='shade2' align='center'>";
+                    echo "<td class='shade2'>";
                     if ($existing_holiday->length == 'am' )
                     {
                         echo $holiday_legend;
@@ -205,7 +205,7 @@ elseif ($step == '1')
                     echo "</td>";
 
                     // pm
-                    echo "<td class='shade1' align='center'>";
+                    echo "<td class='shade1'>";
                     if ($existing_holiday->length == 'pm')
                     {
                         echo $holiday_legend;
@@ -234,14 +234,14 @@ elseif ($step == '1')
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 if (mysql_num_rows($result) > 0)
                 {
-                    echo "<tr><td class='shade1' align='right'>".ldate('l jS M y',$day)."</td>";
+                    echo "<tr><td class='shade1 holidaydate'>".ldate('l jS M y',$day)."</td>";
                     echo "<td colspan='4'>{$strPublicHoliday}";
                     echo "<input type='hidden' name='length{$daynumber}' value='none' />";
                     echo "</td></tr>";
                 }
                 else
                 {
-                    echo "<tr><td class='shade2' align='right'>".ldate('l jS M y', $day)." </td>";
+                    echo "<tr><td class='shade2 holidaydate'>".ldate('l jS M y', $day)." </td>";
                     // Don't allow booking sickness in the future, still not sure
                     // whether we should allow this or not - it could be useful
                     // in the case of long term illness
@@ -251,18 +251,18 @@ elseif ($step == '1')
                         OR ($type == HOL_HOLIDAY AND ($CONFIG['holiday_allow_overbooking'] == TRUE OR
                         ($CONFIG['holiday_allow_overbooking'] == FALSE AND $day < $holiday_resetdate))))
                     {
-                        echo "<td class='shade1' align='center'><input type='radio' name='length{$daynumber}' value='none' /></td>";
-                        echo "<td class='shade1' align='center'><input type='radio' name='length{$daynumber}' value='day' checked='checked' /></td>";
-                        echo "<td class='shade2' align='center'><input type='radio' name='length{$daynumber}' value='am' /></td>";
-                        echo "<td class='shade1' align='center'><input type='radio' name='length{$daynumber}' value='pm' /></td>";
+                        echo "<td class='shade1'><input type='radio' name='length{$daynumber}' value='none' /></td>";
+                        echo "<td class='shade1'><input type='radio' name='length{$daynumber}' value='day' checked='checked' /></td>";
+                        echo "<td class='shade2'><input type='radio' name='length{$daynumber}' value='am' /></td>";
+                        echo "<td class='shade1'><input type='radio' name='length{$daynumber}' value='pm' /></td>";
                         $options++;
                     }
                     else
                     {
-                        echo "<td class='shade1' align='center'>-</td>";
-                        echo "<td class='shade2' align='center'>-</td>";
-                        echo "<td class='shade1' align='center'>-</td>";
-                        echo "<td class='shade2' align='center'>-</td>";
+                        echo "<td class='shade1'>-</td>";
+                        echo "<td class='shade2'>-</td>";
+                        echo "<td class='shade1'>-</td>";
+                        echo "<td class='shade2'>-</td>";
                     }
                     echo "</tr>\n";
                 }
@@ -272,6 +272,7 @@ elseif ($step == '1')
         }
     }
     echo "</table>";
+    echo "</div>";
     echo "<input type='hidden' name='numberofdays' value='{$daynumber}' />";
     echo "<input type='hidden' name='step' value='3' />";
 
@@ -284,7 +285,7 @@ elseif ($step == '1')
     }
     echo "</form>";
 
-    echo "<p align='center'><a href='book_holidays.php?user={$user}'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='book_holidays.php?user={$user}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else

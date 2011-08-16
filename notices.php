@@ -10,10 +10,8 @@
 //
 // Author: Kieran Hogg[at]users.sourceforge.net>
 
-
-
-$permission = 78;
 require ('core.php');
+$permission = PERM_NOTICE_POST;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -24,7 +22,7 @@ if ($action == 'new')
     echo "<h2>".icon('info', 32)." {$strNotices}</h2>";
     echo "<p align='center'>{$strNoticesBlurb}</p>";
     echo "<div align='center'><form action='{$_SERVER[PHP_SELF]}?action=post' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th><h3>{$strNotice}</h3></th>";
     echo "<td>";
     echo bbcode_toolbar('noticetext');
@@ -38,7 +36,7 @@ if ($action == 'new')
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' value='{$strSave}' /></p>";
     echo "</form></div>";
-    echo "<p align='center'><a href='notices.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='notices.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == 'post')
@@ -107,11 +105,12 @@ else
     $shade = 'shade1';
     if (mysql_num_rows($result) > 0)
     {
-        echo "<table align='center'>";
-        echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strOperation}</th></tr>\n";
+        echo "<table class='maintable'>";
+        echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strActions}</th></tr>\n";
         while ($notice = mysql_fetch_object($result))
         {
-            echo "<tr class='$shade'><td>{$notice->id}</td><td>{$notice->timestamp}</td>";
+            echo "<tr class='$shade'><td>{$notice->id}</td>";
+            echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($notice->timestamp))."</td>";
             echo "<td>".bbcode($notice->text)."</td>";
             echo "<td>";
             echo "<a href='{$_SERVER[PHP_SELF]}?action=delete&amp;id=";
@@ -124,7 +123,7 @@ else
     }
     else
     {
-        echo "<p align='center'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
 
     echo "<p align='center'><a href='{$_SERVER[PHP_SELF]}?action=new'>{$strPostNewNotice}</a></p>";

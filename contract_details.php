@@ -14,10 +14,8 @@
 // Purpose: Show All Maintenance Contract Details
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
-
-$permission = 19;  // view Maintenance contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_VIEW;  // view Maintenance contracts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -27,6 +25,8 @@ $id = clean_int($_REQUEST['id']);
 $title = ("$strContract - $strContractDetails");
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+
+plugin_do('contract_details');
 
 // Display Maintenance
 echo contract_details($id);

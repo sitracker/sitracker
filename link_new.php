@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 0; // Allow all auth users
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // Allow all auth users
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -89,7 +87,7 @@ switch ($action)
                 echo "<input type='hidden' name='redirect' value='{$_SERVER['HTTP_REFERER']}' />";
                 echo "</form>";
             }
-            else echo "<p class='error'>{$strNothingToLink}</p>";
+            else echo user_alert($strNothingToLink, E_USER_WARNING);
         }
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

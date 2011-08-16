@@ -249,7 +249,7 @@ switch ($_REQUEST['mode'])
         echo "<p><input type='submit' value=\"{$strSave}\" /></p>";
         echo "</form>";
 
-        echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>\n";
+        echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>\n";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
 
@@ -341,7 +341,7 @@ switch ($_REQUEST['mode'])
                 $selecteduser = $sit[2];
             }
         }
-        echo "<table align='center'><tr><th>{$strTrigger}</th>";
+        echo "<table class='maintable'><tr><th>{$strTrigger}</th>";
         echo "<th>{$strActions}</th><th>{$strOperation}</th></tr>\n";
 
         $shade = 'shade1';

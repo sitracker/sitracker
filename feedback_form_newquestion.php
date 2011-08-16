@@ -13,10 +13,8 @@
 
 // FIXME i18n Whole Page
 
-
-$permission = 48; // Add Feedback Forms
-
 require ('core.php');
+$permission = PERM_FEEDBACK_FORM_ADD; // Add Feedback Forms
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -63,7 +61,7 @@ switch ($_REQUEST['action'])
         echo "<h2 align='center'>$title</h2>\n";
 
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-        echo "<table summary='Form' align='center'>";
+        echo "<table summary='Form' class='maintable'>";
         echo "<tr>";
 
         echo "<th>{$strSectionText}:<br /></th>";

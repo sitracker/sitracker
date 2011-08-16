@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -41,12 +40,12 @@ if (is_numeric($_GET['id']))
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    
+
     if (mysql_num_rows($result) > 0)
     {
         $row = mysql_fetch_object($result);
         if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
-             $row->privacy == 'adminonly' AND !user_permission($sit[2], 22))
+             $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
         {
             html_redirect('inventory.php', FALSE);
             exit;
@@ -54,6 +53,7 @@ if (is_numeric($_GET['id']))
 
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+        plugin_do('inventory_view');
 
         echo "<div id='container' style='width: 40%'>";
         echo "<h3>{$row->name}";
@@ -79,7 +79,7 @@ if (is_numeric($_GET['id']))
             echo contact_realname($row->contactid)."</a></p>";
         }
         echo "<p><strong>{$strUsername}:</strong> ";
-        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], 22)) OR
+        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN)) OR
             ($row->privacy == 'private' AND $row->createdby != $sit[2]))
         {
             echo "<strong>{$strWithheld}</strong>";
@@ -90,7 +90,7 @@ if (is_numeric($_GET['id']))
         }
         echo "</p>";
         echo "<p><strong>{$strPassword}:</strong> ";
-        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], 22)) OR
+        if (($row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN)) OR
             ($row->privacy == 'private' AND $row->createdby != $sit[2]))
         {
             echo "<strong>{$strWithheld}</strong>";
@@ -107,9 +107,10 @@ if (is_numeric($_GET['id']))
         echo "<p><strong>{$strCreatedBy}:</strong> ".user_realname($row->createdby);
         echo " {$row->created}, <strong>{$strLastModifiedBy}:</strong> ";
         echo user_realname($row->modifiedby)." {$row->modified}</p>";
+        plugin_do('inventory_view_content');
         echo "</div>";
 
-        echo "<p align='center'><a href='inventory_site.php?id={$row->siteid}'>";
+        echo "<p class='inventory'><a href='inventory_site.php?id={$row->siteid}'>";
         echo "{$strBackToList}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
@@ -117,8 +118,20 @@ if (is_numeric($_GET['id']))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo "<table class='maintable'>";
+        echo "<tr><td>" . user_alert($strNoRecords, E_USER_NOTICE) . "</td></tr>";
+        echo "</table>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
+else
+{
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+    echo "<table class='maintable'>";
+    echo "<tr><td>" . user_alert($strNoRecords, E_USER_NOTICE) . "</td></tr>";
+    echo "</table>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+}
+
 ?>

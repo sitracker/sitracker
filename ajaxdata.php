@@ -10,9 +10,8 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 0; // not required
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'triggers.inc.php');
 
@@ -344,7 +343,7 @@ switch ($action)
                     echo '<td>'.$ttvararray['{'.$param.'}']['checkreplace']('value['.$i.']')."</td>";
                     // put a hidden input so we can see unchecked boxes
                     echo "<td><input type='hidden' name='enabled[{$i}]' value='off' />";
-                    echo "<input type='checkbox' name='enabled[{$i}]' />{$strEnableCondition}</td></tr>";
+                    echo "<label><input type='checkbox' name='enabled[{$i}]' /> {$strEnableCondition}</label></td></tr>";
                     $i++;
                 }
             }
@@ -355,7 +354,7 @@ switch ($action)
         break;
     case 'set_user_status':
         $userstatus = cleanvar($_REQUEST['userstatus']);
-        $result = set_user_status($userstatus);
+        $result = set_user_status($_SESSION['userid'], $userstatus);
         if ($result === FALSE)
         {
             echo 'FALSE';
@@ -366,7 +365,7 @@ switch ($action)
         }
         break;
     case 'delete_temp_assign':
-        if (user_permission($sit[2], 42))
+        if (user_permission($sit[2], PERM_UPDATE_DELETE))
         {
             $incidentid = clean_int($_REQUEST['incidentid']);
             $originalowner = clean_int($_REQUEST['originalowner']);
@@ -401,7 +400,7 @@ switch ($action)
         echo json_encode(ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass));
         break;
     default :
-        plugin_do('ajaxdata_new_action', array('action' => $action));
+        plugin_do('ajaxdata_action', array('action' => $action));
         break;
 }
 

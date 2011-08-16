@@ -13,10 +13,8 @@
 // Removed mention of contactproducts - INL 08Oct01
 // This Page Is Valid XHTML 1.0 Transitional!   - INL 6Apr06
 
-
-$permission = 6;  // view incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_LIST;  // view incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -170,7 +168,7 @@ else
         else
         {
             echo "<h2>".sprintf($strResultsNum, $countresults)."</h2>";
-            echo "<table align='center'>
+            echo "<table class='maintable'>
             <tr>
             <th>{$strID} (Ext ID)</th>
             <th>{$strTitle}</th>

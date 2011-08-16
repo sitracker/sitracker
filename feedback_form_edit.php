@@ -11,9 +11,8 @@
 
 // by Ivan Lucas, June 2004
 
-$permission = 49; // Edit Feedback Forms
-
 require ('core.php');
+$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -56,11 +55,11 @@ switch ($_REQUEST['action'])
     break;
 
     case 'new':
-        $title = (icon('reports', 32)." $strFeedbackForms - $strNew");
+        $title = "$strFeedbackForms - $strNew";
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo "<h3>{$strNewFeedbackForm}</h3>";
+        echo "<h3>" . icon('reports', 32, $strNewFeedbackForm) . " {$strNewFeedbackForm}</h3>";
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-        echo "<table summary='Form' align='center' class='vertical'>";
+        echo "<table summary='Form' class='vertical maintable'>";
         echo "<tr>";
 
         /*echo "<th>Form ID:</th>";
@@ -99,7 +98,7 @@ switch ($_REQUEST['action'])
         echo "<input type='hidden' name='action' value='save' />";
         echo "<input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input type='submit' value='{$strSave}' /></p>";
-        echo "<p><a href=\"feedback_form_list.php\">{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href=\"feedback_form_list.php\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -122,7 +121,7 @@ switch ($_REQUEST['action'])
             while ($form = mysql_fetch_object($result))
             {
                 echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-                echo "<table summary='Form' align='center'>";
+                echo "<table summary='Form' class='maintable'>";
                 echo "<tr>";
 
                 echo "<th>{$strID}:</th>";

@@ -10,9 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = 0; // not required
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -58,7 +57,7 @@ else
     $num_tags = mysql_num_rows($result);
     if ($num_tags > 0)
     {
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         while ($obj = mysql_fetch_object($result))
         {
             if ($col == 0) echo "<tr style='text-align: left;'>";

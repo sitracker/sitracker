@@ -200,8 +200,8 @@ function dashboard_watch_incidents_display($dashletid)
                         $html .= "<tr class='$shade'>";
                         $html .= "<td>{$incident->id}</td>";
                         $html .= "<td>";
-                        $tooltip = "<strong>{$GLOBALS['strCustomer']}:</strong> ".sprintf($GLOBALS['strXofX'], "{$incident->forenames} {$incident->surname}",site_name($incident->siteid));
-                        list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id)=incident_lastupdate($incident->id);
+                        $tooltip = "<strong>{$GLOBALS['strCustomer']}:</strong> ".sprintf($GLOBALS['strXofX'], "{$incident->forenames} {$incident->surname}", site_name($incident->siteid));
+                        list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incident->id);
                         $update_body = parse_updatebody($update_body);
                         if (!empty($update_body) AND $update_body!='...')
                         {
@@ -211,8 +211,8 @@ function dashboard_watch_incidents_display($dashletid)
                         $html .= "</td>";
                         $html .= "<td>".incidentstatus_name($incident->status)."</td>";
                         $html .= "</tr>\n";
-                        if ($shade=='shade1') $shade='shade2';
-                        else $shade='shade1';
+                        if ($shade == 'shade1') $shade = 'shade2';
+                        else $shade = 'shade1';
                     }
                 }
                 else
@@ -239,7 +239,7 @@ function dashboard_watch_incidents_display($dashletid)
     }
     else
     {
-        $html .= "<p align='center'>{$GLOBALS['strNoRecords']}</p>";
+        $html .= user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE);
     }
 
     return $html;
@@ -324,7 +324,7 @@ function dashboard_watch_incidents_edit($dashletid)
         default:
             echo "<h3>{$GLOBALS['strEditWatchedIncidents']}</h3>";
 
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             for($i = 0; $i < 4; $i++)
             {
                 $sql = "SELECT * FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE userid = {$sit[2]} AND type = {$i}";

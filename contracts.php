@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 19; // View Maintenance Contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_VIEW; // View Maintenance Contracts
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
@@ -32,7 +31,8 @@ $activeonly = cleanvar($_REQUEST['activeonly']);
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('contract', 32)." ";
 echo "{$title}</h2>";
-echo "<table summary='alphamenu' align='center'><tr><td align='center'>";
+plugin_do('contracts');
+echo "<table summary='alphamenu' class='maintable'><tr><td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "{$strBrowseContractsBySite}:"; // <!--<input type="text" name="search_string" />-->
 echo "<input type='text' id='search_string' style='width: 300px;' name='search_string' />";
@@ -133,16 +133,14 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 
 if (mysql_num_rows($result) == 0)
 {
-    echo "<p align='center'>";
-    if (empty($search_string)) echo $strNoRecords;
-    else printf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>");
-    echo "</p>\n";
+    if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
+    else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>", E_USER_NOTICE));
 }
 else
 {
     echo "<p align='center'>".sprintf($strResultsNum, mysql_num_rows($result))."</p>\n";
 
-    echo "<table align='center' style='width: 95%;'>";
+    echo "<table class='maintable' style='width: 95%;'>";
     echo "<tr>";
 
     $filter = array('search_string' => $search_string,
@@ -235,7 +233,11 @@ else
         }
 
         echo "</td>";
-        echo "<td><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$strEdit}</a></td>";
+        echo "<td>";
+        $operations[$strView] = array('url' => "contract_details.php?id={$results->maintid}", 'perm' => PERM_CONTRACT_VIEW);
+        $operations[$strEdit] = array('url' => "contract_edit.php?action=edit&amp;maintid={$results->maintid}", 'perm' => PERM_CONTRACT_EDIT);
+        echo html_action_links($operations);
+        echo "</td>";
         echo"</tr>";
     }
 

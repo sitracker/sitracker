@@ -12,10 +12,8 @@
 // Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //          Kieran Hogg <kieran[at]sitracker.org>
 
-
-$permission=70;
-
 require ('core.php');
+$permission = PERM_TASK_EDIT;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -33,7 +31,7 @@ $incident = clean_int($_REQUEST['incident']);
 if ($incident)
 {
     $sql = "INSERT INTO `{$dbTasks}` (owner, name, priority, distribution, startdate, created, lastupdated) ";
-    $sql .= "VALUES('$sit[2]', '".sprintf($strActivityForIncidentX, $incident)."', 1, 'incident', NOW(), NOW(), NOW())";
+    $sql .= "VALUES('$sit[2]', '".sprintf($strActivityForIncidentX, $incident)."', " . PRIORITY_LOW . ", 'incident', NOW(), NOW(), NOW())";
 
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
@@ -48,16 +46,16 @@ if ($incident)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
-    if (($obj = mysql_fetch_object(($result))) AND $obj->status != 1 AND $obj->status != 3)
+    if (($obj = mysql_fetch_object(($result))) AND $obj->status != STATUS_ACTIVE AND $obj->status != STATUS_RESEARCH)
     {
-    	$sql = "UPDATE `{$dbIncidents}` SET status = 1, lastupdated = {$now} WHERE id = {$incident}";
+    	$sql = "UPDATE `{$dbIncidents}` SET status = " . STATUS_ACTIVE. ", lastupdated = {$now} WHERE id = {$incident}";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
         $bodytext = "Status: ".incidentstatus_name($obj->status)." -&gt; <b>" . incidentstatus_name(1) . "</b>\n\n" . $srtrTaskStarted;
 
         $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) VALUES ";
-        $sql .= "({$incident}, {$sit[2]}, 'research', {$sit[2]}, 1, '{$bodytext}', $now)";
+        $sql .= "({$incident}, {$sit[2]}, 'research', {$sit[2]}, " . STATUS_ACTIVE. ", '{$bodytext}', $now)";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
     }
@@ -98,9 +96,9 @@ else
 
             if ($startdate > $duedate AND $duedate != '' AND $duedate > 0 ) $startdate = "{$duedate} {$duetime}";
 
+            plugin_do('task_new_submitted');
             if ($errors != 0)
             {
-                include (APPLICATION_INCPATH . 'htmlheader.inc.php');
                 html_redirect($_SERVER['PHP_SELF'], FALSE);
             }
             else
@@ -116,6 +114,7 @@ else
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 if (mysql_affected_rows() < 1) trigger_error("Task insert failed", E_USER_ERROR);
+                plugin_do('task_new_saved');
                 unset($_SESSION['formdata']['new_task']);
                 unset($_SESSION['formerrors']['new_task']);
                 html_redirect("tasks.php");
@@ -129,6 +128,7 @@ else
 
             echo "<h2>".icon('task', 32)." ";
             echo "$title</h2>";
+            plugin_do('task_new');
 
             echo "<form id='newtask' action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table class='vertical'>";
@@ -156,7 +156,7 @@ else
             }
             else
             {
-                echo "<td>".priority_drop_down('priority',1)."</td></tr>";
+                echo "<td>".priority_drop_down('priority',PRIORITY_LOW)."</td></tr>";
             }
             echo "<tr><th>{$strStartDate}</th>";
             echo "<td><input type='text' name='startdate' id='startdate' size='10'";
@@ -243,12 +243,13 @@ else
                 echo icon('private', 16, $strPrivate, "{$strPublic}/{$strPrivate}");
                 echo "</label></td></tr>";
             }
+            plugin_do('task_new_form');
             echo "</table>";
             echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
             echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
             echo "<input type='hidden' name='action' value='newtask' />";
             echo "</form>";
-            echo "<p align='center'><a href='tasks.php'>{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href='tasks.php'>{$strReturnWithoutSaving}</a></p>";
             //cleanup form vars
             clear_form_data('new_task');
             clear_form_errors('new_site');

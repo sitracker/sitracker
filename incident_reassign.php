@@ -11,14 +11,13 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 13; // Reassign Incident
 require ('core.php');
+$permission = PERM_INCIDENT_REASSIGN; // Reassign Incident
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$forcepermission = user_permission($sit[2],40);
+$forcepermission = user_permission($sit[2], PERM_INCIDENT_FORCE_ASSIGN);
 
 // External variables
 $bodytext = cleanvar($_REQUEST['bodytext']);
@@ -70,12 +69,12 @@ switch ($action)
             $sql .= "owner='{$sit[2]}', towner=0, "; // make current user = owner
             $triggeruserid = $sit[2];
         }
-        elseif ($temporary != 'yes' AND $sit[2]==$incident->towner)
+        elseif ($temporary != 'yes' AND $sit[2] == $incident->towner)
         {
             $sql .= "towner=0, "; // temp owner removing temp ownership
             $triggeruserid = $incident->owner;
         }
-        elseif ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2]!=$incident->owner)
+        elseif ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2] != $incident->owner)
         {
             $sql .= "towner={$sit[2]}, "; // Temp to self
             $triggeruserid = $sit[2];
@@ -95,6 +94,7 @@ switch ($action)
             $sql .= "owner='{$userid}', ";
             $triggeruserid = $userid;
         }
+
         $sql .= "status='{$newstatus}', lastupdated='{$now}' WHERE id='{$id}' LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -102,14 +102,6 @@ switch ($action)
         {
             $t = new TriggerEvent('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $triggeruserid, 'incidentid' => $incidentid));
         }
-//         if ($CONFIG['debug'])
-//         {
-//             echo "<pre>";
-//                 print_r($_REQUEST);
-//                 print_r($incident);
-//                 echo "<hr>$sql";
-//                 exit;
-//         }
 
         // add update
         if (strtolower(user_accepting($userid)) != "yes")
@@ -178,7 +170,7 @@ switch ($action)
         if ($suggested === FALSE)
         {
             $suggested = 0;
-            $dbg .= "<p>No users suggested</p>";
+            if ($CONFIG['debug']) $dbg .= "<p>No users suggested</p>";
         }
 
         echo "<form name='assignform' action='{$_SERVER['PHP_SELF']}?id={$id}' method='post'>";
@@ -212,21 +204,21 @@ switch ($action)
         if ($countusers > 0 OR ($countusers == 0 AND $suggested > 0))
         {
             echo "<div id='reassignlist'>";
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             if ($countusers >= 1 AND $suggested > 0) echo "<thead>\n";
-            echo "<tr>
-                <th colspan='2'>{$strReassignTo}:</th>
-                <th colspan='5'>{$strIncidentsinQueue}</th>
-                <th>{$strAccepting}</th>
-                </tr>";
-            echo "<tr>
-                <th>{$strName}</th>
-                <th>{$strStatus}</th>
-                <th align='center'>{$strActionNeeded} / {$strOther}</th>";
-            echo "<th align='center'>".priority_icon(4)."</th>";
-            echo "<th align='center'>".priority_icon(3)."</th>";
-            echo "<th align='center'>".priority_icon(2)."</th>";
-            echo "<th align='center'>".priority_icon(1)."</th>";
+            echo "<tr>";
+            echo "<th colspan='2'>{$strReassignTo}:</th>";
+            echo "<th colspan='5'>{$strIncidentsinQueue}</th>";
+            echo "<th>{$strAccepting}</th>";
+            echo "</tr>";
+            echo "<tr>";
+            echo "<th>{$strName}</th>";
+            echo "<th>{$strStatus}</th>";
+            echo "<th align='center'>{$strActionNeeded} / {$strOther}</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+            echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
             echo "<th></th></tr>\n";
 
             if ($suggested > 0)

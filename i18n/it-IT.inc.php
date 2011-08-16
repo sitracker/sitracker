@@ -331,7 +331,6 @@ $strCustomerReminderUpdate = 'Era un avviso al cliente?';
 $strCustomerRequestedClosure = 'Il cliente ha richiesto la chiusura della segnalazione';
 $strCustomers = 'Clienti';
 
-$strDailyRate = 'Tariffa Giornaliera';
 $strDashboard = 'Cruscotto';
 $strDashboardComponentDoesntExist = 'Il componente del cruscotto %s non esiste';
 $strDataProtection = 'Riservatezza dei dati';
@@ -997,7 +996,6 @@ $strOpenedby = 'Aperta da %s';
 $strOpenedbyXonY = 'Aperta da %s su %s';
 $strOpenedViaThePortalByX = 'Aperta tramite il portale da %s';
 $strOpenForX = 'Aperta per %s';
-$strOperation = 'Operazione';
 $strOriginalMessageReceivedAt = 'Messaggio originale ricevuto a: %s';
 $strOrphanedSites = 'Siti Orfani';
 $strOther = 'Altro';

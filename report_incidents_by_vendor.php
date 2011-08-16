@@ -11,10 +11,8 @@
 
 // Authors: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -76,7 +74,7 @@ else
     if (mysql_num_rows($result) > 0)
     {
         echo "<p>";
-        echo "<table class='vertical' align='center'>";
+        echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strVendor}</th><th>{$strIncidents}</th></tr>";
         while ($obj = mysql_fetch_object($result))
         {

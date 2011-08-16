@@ -13,10 +13,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -29,7 +27,7 @@ if (empty($_REQUEST['mode']))
     echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
     echo "<p align='center'>{$strMarketingMailshotDesc}</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strFilter}: {$strTag}</th><td><input type='text' ";
     echo "name='filtertags' value='' size='15' /></td></tr>";
     echo "<tr><th>{$strInclude}: {$strProducts}" . help_link('CTRLAddRemove') . "</th>";
@@ -127,8 +125,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $incsql .= "(";
         for ($i = 0; $i < $includecount; $i++)
         {
-            // $html .= "{$_POST['inc'][$i]} <br />";
-            $incsql .= "product={$_POST['inc'][$i]}";
+            $incsql .= "product= ".clean_int($_POST['inc'][$i]);
             if ($i < ($includecount-1)) $incsql .= " OR ";
         }
         $incsql .= ")";
@@ -140,8 +137,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $excsql .= "(";
         for ($i = 0; $i < $excludecount; $i++)
         {
-            // $html .= "{$_POST['exc'][$i]} <br />";
-            $excsql .= "product!={$_POST['exc'][$i]}";
+            $excsql .= "product!=".clean_int($_POST['exc'][$i]);
             if ($i < ($excludecount-1)) $excsql .= " AND ";
         }
         $excsql .= ")";
@@ -199,7 +195,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $numrows = mysql_num_rows($result);
 
     // FIXME strip slashes from output
-    $html .= "<table width='99%' align='center'>";
+    $html .= "<table class='maintable'>";
     $html .= "<tr><th>{$strForenames}</th><th>{$strSurname}</th><th>";
     $html .= "{$strEmail}</th><th>{$strSite}</th><th>{$strAddress1}</th>";
     $html .= "<th>{$strAddress2}</th><th>{$strCity}</th><th>{$strCounty}</th>";

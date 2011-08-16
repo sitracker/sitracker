@@ -10,9 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = 0; // not required
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -32,6 +31,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('skill', 32)." ";
 echo "$title</h2>";
+plugin_do('skills_matrix');
 echo "<p align='center'>{$strDisplay}: ";
 if (empty($legacy)) echo "<a href='{$_SERVER['PHP_SELF']}?legacy=yes&amp;gid={$groupid}'>{$strAll}</a>";
 else echo "<a href='{$_SERVER['PHP_SELF']}?gid={$groupid}'>{$strActive}</a>";
@@ -140,7 +140,7 @@ if ($countskills > 0 AND $countusers > 0)
         }
     }
     mysql_data_seek($result, 0);
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     $shade = 'shade1';
     echo "<thead><tr><td>{$strSkill}</td>";
     foreach ($users AS $u)
@@ -196,7 +196,7 @@ if ($countskills > 0 AND $countusers > 0)
 }
 else
 {
-    echo "<p align='center'>{$strNothingToDisplay}</p>";
+    echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

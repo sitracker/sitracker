@@ -13,9 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   1Nov05
 
-
-$permission = 44; // FTP Publishing
 require ('core.php');
+$permission = PERM_FILE_PUBLISH; // FTP Publishing
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -33,7 +32,7 @@ if (!empty($CONFIG['ftp_hostname']) AND !empty($CONFIG['ftp_username']))
     echo "<p align='center'><a href='ftp_upload_file.php'>Upload a new file</a></p>";
 }
 
-echo "<table summary='files' align='center'>";
+echo "<table summary='files' class='maintable'>";
 echo "<tr>";
 echo "<th>&nbsp;</th>";
 echo "<th><a href='{$_SERVER['PHP_SELF']}?orderby=filename'>{$strFilename}</a></th>";

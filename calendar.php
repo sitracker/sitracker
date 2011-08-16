@@ -12,9 +12,8 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 //         Tom Gerrard <tom.gerrard[at]salfordsoftware.co.uk>
 
-
-$permission = 27; // View your calendar
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; // View your calendar
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -45,7 +44,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 if (empty($user) || $user == 'current') $user = $sit[2];
 elseif ($user == 'all') $user = '';
 if (empty($type)) $type = HOL_HOLIDAY;
-if (user_permission($sit[2], 50)) $approver = TRUE;
+if (user_permission($sit[2], PERM_HOLIDAY_APPROVE)) $approver = TRUE;
 else $approver = FALSE;
 
 // Force user to 0 (SiT) when setting public holidays

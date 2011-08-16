@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -29,8 +27,8 @@ if (empty($_REQUEST['mode']))
 
     echo "<tr><th>{$strSiteType}:</td>";
     echo "<td>";
-    echo sitetype_drop_down('type', 0);
-    echo "</td></tr>";
+    echo sitetype_drop_down('type', 0, TRUE);
+    echo " <span class='required'>{$strRequired}</span></td></tr>";
 
     echo "<tr><th>{$strOutput}:</th>";
     echo "<td>";
@@ -48,7 +46,7 @@ if (empty($_REQUEST['mode']))
     echo "</p>";
     echo "</form>";
 
-    echo "<table align='center'><tr><td>";
+    echo "<table class='maintable'><tr><td>";
     echo "<h4>{$strCSVFileFormatAsFollows}:</h4>";
     echo "<strong>{$strField1}:</strong> {$strSite}<br />";
     echo "<strong>{$strField2}:</strong> {$strAddress1}<br />";

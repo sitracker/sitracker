@@ -258,6 +258,9 @@ $CONFIG['default_roleid'] = 3;
 // see www.gravatar.com to learn about gravatars
 $CONFIG['default_gravatar'] = 'identicon';
 
+// A URL linking to a web mapping service, use the variable {address} to pass the address to the mapping service. e.g. http://www.google.com/maps?q={address}
+$CONFIG['map_url'] = 'http://www.google.com/maps?q={address}';
+
 // Default holiday entitlement for new users and new holiday periods (in days)
 $CONFIG['default_entitlement'] = 21;
 
@@ -376,4 +379,8 @@ $CONFIG['site_config_defaults'] = array('feedback_enabled' => 'yes');
 
 // Allow outbound email
 $CONFIG['enable_outbound_email'] = TRUE;
+
+// Change the newline character if outbound emails have line breaks in the wrong places.(CRLF or LF)
+$CONFIG['outbound_email_newline'] = 'LF';
+
 ?>

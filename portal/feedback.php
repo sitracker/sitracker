@@ -32,7 +32,7 @@ if (mysql_num_rows($result) < 1)
 else
 {
     $shade = 'shade1';
-    $html = "<table align='center'>";
+    $html = "<table class='maintable'>";
     $html .= "<tr>";
     $html .= colheader('created', $strDate);
     $html .= colheader('incident', $strIncident);

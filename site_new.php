@@ -12,9 +12,8 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 // This Page Is Valid XHTML 1.0 Transitional! 27Oct05
 
-
-$permission = 2; // Add new site
 require ('core.php');
+$permission = PERM_SITE_ADD; // Add new site
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -31,9 +30,10 @@ if ($action == "showform" OR $action == '')
 
     echo "<h2>".icon('site', 32)." ";
     echo "{$strNewSite}</h2>";
+    plugin_do('site_new');
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strName}</th><td><input maxlength='255' class='required' ";
     echo "name='name' size='30' ";
     echo "value='{$_SESSION['formdata']['new_site']['name']}'";
@@ -113,7 +113,9 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strNotes}</th><td><textarea cols='30' name='notes' rows='5'>";
     echo $_SESSION['formdata']['new_site']['notes'];
     echo "</textarea></td></tr>\n";
+    plugin_do('site_new_form_more');
     echo "</tbody>";
+    plugin_do('site_new_form');
     echo "</table>\n";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
@@ -155,6 +157,7 @@ elseif ($action == "new")
         $errors++;
         $_SESSION['formerrors']['new_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
     }
+    plugin_do('site_new_submitted');
 
     if ($errors == 0)
     {
@@ -168,10 +171,13 @@ elseif ($action == "new")
 
         if (!$result)
         {
-            echo "<p class='error'>{$strNewSiteFailed}</p>\n";
+            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            html_redirect(application_url() . 'site_new.php', FALSE, $strNewSiteFailed);
         }
         else
         {
+            plugin_do('site_new_saved');
+
             // show success message
             clear_form_data('new_site');
             clear_form_errors('new_site');

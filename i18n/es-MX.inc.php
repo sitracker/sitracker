@@ -307,8 +307,6 @@ $strCustomerImpact = 'Impacto al Cliente';
 $strCustomerImpactCustomerText = 'Cuántos usuarios están afectados por este problema? Es un problema de downtime o un preocupación menor? Este problema provoca que los usuarios puedan trabajar?';
 $strCustomerRequestedClosure = 'EL cliente ha solicitado que se cierre este Incidente';
 
-$strDailyRate = 'Costo por Día';
-
 $strCustomers = 'Clientes';
 
 $strDashboard = 'Tablero';
@@ -907,7 +905,6 @@ $strOpenedby = 'Abierto por %s';
 $strOpenedbyXonY = 'Abierto por %s en %s';
 $strOpenedViaThePortalByX = 'Abierto desde el portal por %s';
 $strOpenForX = 'Abierto por %s';
-$strOperation = 'Operación';
 $strOriginalMessageReceivedAt = 'El mensaje original se recibió en: %s';
 $strOrphanedSites = 'Sitios huérfanos';
 $strOther = 'Otros';

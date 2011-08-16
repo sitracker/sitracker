@@ -259,7 +259,6 @@ $strCustomer = 'Cliente';
 $strCustomerFeedback = 'Feedback de Cliente';
 $strCustomers = 'Clientes';
 
-$strDailyRate = 'Taxa diária';
 $strDashboard = 'Painel';
 $strDashboardComponentDoesntExist = 'Componente do Painel %s não existe';
 $strDataProtection = 'Protecção de Dados';
@@ -671,7 +670,6 @@ $strOpenedby = 'Aberto por %s';
 $strOpenedbyXonY = 'Aberto por %s em %s';
 $strOpenedViaThePortalByX = 'Aberto via Portal por %s';
 $strOpenForX = 'Aberto para %s';
-$strOperation = 'Operação';
 $strOriginalMessageReceivedAt = 'Mensagem original recebida em: %s';
 $strOther = 'Outro';
 $strOtherIncidents = 'Outros Incidentes';

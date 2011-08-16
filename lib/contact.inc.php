@@ -568,7 +568,7 @@ function process_new_contact($mode = 'internal')
         $_SESSION['formerrors']['new_contact']['siteid'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strSite']);
     }
     // check for blank email
-    if ($email == '' OR $email=='none' OR $email=='n/a')
+    if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors++;
         $_SESSION['formerrors']['new_contact']['email'] = sprintf($GLOBALS['strFieldMustNotBeBlank'], $GLOBALS['strEmail']);
@@ -587,6 +587,7 @@ function process_new_contact($mode = 'internal')
         $_SESSION['formerrors']['new_contact']['duplicate'] = $GLOBALS['strContactRecordExists'];
     }
 
+    plugin_do('contact_new_submitted');
 
     // add contact if no errors
     if ($errors == 0)
@@ -635,7 +636,17 @@ function process_new_contact($mode = 'internal')
         $sql .= "'{$dataprotection_phone}', '{$dataprotection_address}', '{$now}', '{$now}', now(), '{$sit[2]}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
+        if (!$result)
+        {
+            if ($mode == 'internal')
+            {
+                html_redirect("contact_new.php", FALSE);
+            }
+            else
+            {
+                html_redirect("newcontact.php", FALSE);
+            }
+        }
         // concatenate username with insert id to make unique
         $newid = mysql_insert_id();
         $username = $username . $newid;
@@ -656,6 +667,7 @@ function process_new_contact($mode = 'internal')
         }
         else
         {
+            plugin_do('contact_new_saved');
             clear_form_data('new_contact');
             clear_form_errors('new_contact');
             $sql = "SELECT username, password FROM `{$dbContacts}` WHERE id={$newid}";

@@ -158,76 +158,76 @@ function authenticate($username, $password)
 
     if (!empty($username) AND !empty($password))
     {
-	    $sql = "SELECT id, password, status, user_source FROM `{$GLOBALS['dbUsers']}` WHERE username = '{$username}'";
-	    $result = mysql_query($sql);
-	    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-	    if (mysql_num_rows($result) == 1)
-	    {
-	        // Exist in SiT DB
-	        $obj = mysql_fetch_object($result);
-	        if ($obj->user_source == 'sit')
-	        {
-	            if (md5($password) == $obj->password AND $obj->status != 0) $toReturn = true;
-	            else $toReturn = false;
-	        }
-	        elseif ($obj->user_source == 'ldap')
-	        {
-	            // Auth against LDAP and sync
-	            $toReturn =  authenticateLDAP(stripslashes($username), $password, $obj->id);
-	            if ($toReturn === -1)
-	            {
-	                // Communication with LDAP server failed
-	                if ($CONFIG['ldap_allow_cached_password'])
-	                {
-	                    // Use cached password
-	                    if (md5($password) == $obj->password AND $obj->status != 0) $toReturn = true;
-	                    else $toReturn = false;
-	                }
-	                else
-	                {
-	                    $toReturn = false;
-	                }
-	            }
-	            elseif ($toReturn)
-	            {
-	                $toReturn = true;
-	            }
-	            else
-	            {
-	                $toReturn = false;
-	            }
-	        }
-	    }
-	    elseif (mysql_num_rows($result) > 1)
-	    {
-	    	// Multiple this should NEVER happen
-	        trigger_error("Username not unique", E_USER_ERROR);
-	        $toReturn = false;
-	    }
-	    else
-	    {
-	    	// Don't exist, check LDAP etc
-	        if ($CONFIG['use_ldap'])
-	        {
-	            $toReturn =  authenticateLDAP($username, $password);
-	            if ($toReturn === -1) $toReturn = false;
-	        }
-	    }
+        $sql = "SELECT id, password, status, user_source FROM `{$GLOBALS['dbUsers']}` WHERE username = '{$username}'";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_num_rows($result) == 1)
+        {
+            // Exist in SiT DB
+            $obj = mysql_fetch_object($result);
+            if ($obj->user_source == 'sit')
+            {
+                if (md5($password) == $obj->password AND $obj->status != 0) $toReturn = true;
+                else $toReturn = false;
+            }
+            elseif ($obj->user_source == 'ldap')
+            {
+                // Auth against LDAP and sync
+                $toReturn =  authenticateLDAP(stripslashes($username), $password, $obj->id);
+                if ($toReturn === -1)
+                {
+                    // Communication with LDAP server failed
+                    if ($CONFIG['ldap_allow_cached_password'])
+                    {
+                        // Use cached password
+                        if (md5($password) == $obj->password AND $obj->status != 0) $toReturn = true;
+                        else $toReturn = false;
+                    }
+                    else
+                    {
+                        $toReturn = false;
+                    }
+                }
+                elseif ($toReturn)
+                {
+                    $toReturn = true;
+                }
+                else
+                {
+                    $toReturn = false;
+                }
+            }
+        }
+        elseif (mysql_num_rows($result) > 1)
+        {
+            // Multiple this should NEVER happen
+            trigger_error("Username not unique", E_USER_ERROR);
+            $toReturn = false;
+        }
+        else
+        {
+            // Don't exist, check LDAP etc
+            if ($CONFIG['use_ldap'])
+            {
+                $toReturn =  authenticateLDAP($username, $password);
+                if ($toReturn === -1) $toReturn = false;
+            }
+        }
 
-	    if ($toReturn)
-	    {
-	    	journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . getenv('REMOTE_ADDR'),CFG_JOURNAL_LOGIN,0);
-			debug_log ("Authenticate: User authenticated",TRUE);
-		}
-		else
-		{
-			debug_log ("authenticate: User NOT authenticated",TRUE);
-	    }
+        if ($toReturn)
+        {
+            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . getenv('REMOTE_ADDR'),CFG_JOURNAL_LOGIN,0);
+            debug_log ("Authenticate: User authenticated",TRUE);
+        }
+        else
+        {
+            debug_log ("authenticate: User NOT authenticated",TRUE);
+        }
     }
     else
     {
-    	debug_log ("Blank username or password for user thus denying access");
-    	$toReturn = false;
+        debug_log ("Blank username or password for user thus denying access");
+        $toReturn = false;
     }
 
     return $toReturn;
@@ -242,77 +242,77 @@ function authenticateContact($username, $password)
 
     if (!empty($username) AND !empty($password))
     {
-	    $sql = "SELECT id, password, contact_source, active FROM `{$GLOBALS['dbContacts']}` WHERE username = '{$username}'";
-	    $result = mysql_query($sql);
-	    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-	    if (mysql_num_rows($result) == 1)
-	    {
-	        debug_log ("Authenticate: Just one contact in db");
-	        // Exists in SiT DB
-	        $obj = mysql_fetch_object($result);
-	        if ($obj->contact_source == 'sit')
-	        {
-	            if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
-	            else $toReturn = false;
-	        }
-	        elseif ($obj->contact_source == 'ldap')
-	        {
-	            // Auth against LDAP and sync
-	            $toReturn =  authenticateLDAP($username, $password, $obj->id, false);
-	            if ($toReturn === -1)
-	            {
-	                // Communication with LDAP server failed
-	                if ($CONFIG['ldap_allow_cached_password'])
-	                {
-	                    debug_log ("LDAP connection failed, using cached password");
-	                    // Use cached password
-	                    if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
-	                    else $toReturn = false;
-	                    debug_log ("Cached contact {$toReturn} {$password}");
+        $sql = "SELECT id, password, contact_source, active FROM `{$GLOBALS['dbContacts']}` WHERE username = '{$username}'";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_num_rows($result) == 1)
+        {
+            debug_log ("Authenticate: Just one contact in db");
+            // Exists in SiT DB
+            $obj = mysql_fetch_object($result);
+            if ($obj->contact_source == 'sit')
+            {
+                if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
+                else $toReturn = false;
+            }
+            elseif ($obj->contact_source == 'ldap')
+            {
+                // Auth against LDAP and sync
+                $toReturn =  authenticateLDAP($username, $password, $obj->id, false);
+                if ($toReturn === -1)
+                {
+                    // Communication with LDAP server failed
+                    if ($CONFIG['ldap_allow_cached_password'])
+                    {
+                        debug_log ("LDAP connection failed, using cached password");
+                        // Use cached password
+                        if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
+                        else $toReturn = false;
+                        debug_log ("Cached contact {$toReturn} {$password}");
 
-	                }
-	                else
-	                {
-	                    debug_log ("Cached passwords are not enabled");
-	                	$toReturn = false;
-	                }
-	            }
-	            elseif ($toReturn)
-	            {
-	            	$toReturn = true;
-	            }
-	            else
-	            {
-	            	$toReturn = false;
-	            }
-	        }
-	        else
-	        {
-	        	debug_log ("Source SOMETHING ELSE this shouldn't happen'");
-	            $toReturn = false;
-	        }
-	    }
-	    elseif (mysql_num_rows($result) > 1)
-	    {
-	        debug_log ("Multiple");
-	        // Multiple this should NEVER happen
-	        trigger_error($GLOBALS['strUsernameNotUnique'], E_USER_ERROR);
-	        $toReturn = false;
-	    }
-	    else
-	    {
-	        debug_log ("Authenticate: No matching contact '$username' found in db");
-	        // Don't exist, check LDAP etc
-	        if ($CONFIG['use_ldap'] AND !empty($CONFIG['ldap_customer_group']))
-	        {
-	            $toReturn =  authenticateLDAP($username, $password, 0, false);
-	            if ($toReturn === -1) $toReturn = false;
-	        }
-	    }
+                    }
+                    else
+                    {
+                        debug_log ("Cached passwords are not enabled");
+                        $toReturn = false;
+                    }
+                }
+                elseif ($toReturn)
+                {
+                    $toReturn = true;
+                }
+                else
+                {
+                    $toReturn = false;
+                }
+            }
+            else
+            {
+                debug_log ("Source SOMETHING ELSE this shouldn't happen'");
+                $toReturn = false;
+            }
+        }
+        elseif (mysql_num_rows($result) > 1)
+        {
+            debug_log ("Multiple");
+            // Multiple this should NEVER happen
+            trigger_error($GLOBALS['strUsernameNotUnique'], E_USER_ERROR);
+            $toReturn = false;
+        }
+        else
+        {
+            debug_log ("Authenticate: No matching contact '$username' found in db");
+            // Don't exist, check LDAP etc
+            if ($CONFIG['use_ldap'] AND !empty($CONFIG['ldap_customer_group']))
+            {
+                $toReturn =  authenticateLDAP($username, $password, 0, false);
+                if ($toReturn === -1) $toReturn = false;
+            }
+        }
     }
     else
     {
-    	debug_log ("Blank username or password for user thus denying access");
+        debug_log ("Blank username or password for user thus denying access");
         $toReturn = false;
     }
 
@@ -322,15 +322,15 @@ function authenticateContact($username, $password)
 
 
 /**
- * Returns a specified column from a specified table in the database given an ID primary key
- * @author Ivan Lucas
- * @param string $column a database column
- * @param string $table a database table
- * @param int $id the primary key / id column
- * @return A column from the database
- * @note it's not always efficient to read a single column at a time, but when you only need
- *  one column, this is handy
- */
+* Returns a specified column from a specified table in the database given an ID primary key
+* @author Ivan Lucas
+* @param string $column a database column
+* @param string $table a database table
+* @param int $id the primary key / id column
+* @return A column from the database
+* @note it's not always efficient to read a single column at a time, but when you only need
+*  one column, this is handy
+*/
 function db_read_column($column, $table, $id)
 {
     $sql = "SELECT `{$column}` FROM `{$table}` WHERE id ='$id' LIMIT 1";
@@ -350,12 +350,14 @@ function db_read_column($column, $table, $id)
 
 /**
  * @author Ivan Lucas
+ * @note: Requires permission names to be i18n strings in the database table
  */
 function permission_name($permissionid)
 {
     global $dbPermissions;
     $name = db_read_column('name', $dbPermissions, $permissionid);
     if (empty($name)) $name = $GLOBALS['strUnknown'];
+    else $name = $GLOBALS["{$name}"];
     return $name;
 }
 
@@ -526,7 +528,7 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
                     preg_match("/Table '(.*)' doesn't exist/", $errstr))
                 {
                     echo "<p class='tip'>The SiT schema may need updating to fix this problem.";
-                    if (user_permission($sit[2], 22)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
+                    if (user_permission($sit[2], PERM_ADMIN)) echo "Visit <a href='setup.php'>Setup</a>"; // Only show this to admin
                     echo "</p>";
                 }
 
@@ -807,9 +809,10 @@ function schedule_actions_due()
     global $dbScheduler;
 
     $actions = FALSE;
+    // Interval
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'interval' ";
     $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -826,7 +829,7 @@ function schedule_actions_due()
     $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'month' AND (DAYOFMONTH(CURDATE()) > date_offset OR (DAYOFMONTH(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -845,7 +848,7 @@ function schedule_actions_due()
     $sql .= "AND ((date_type = 'year' AND (DAYOFYEAR(CURDATE()) > date_offset ";
     $sql .= "OR (DAYOFYEAR(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, UNIX_TIMESTAMP(NOW())) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -1134,7 +1137,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
     $data = explode("\n", $data);
     if ($output == 'table')
     {
-        $html = "\n<table align='center'><tr>\n";
+        $html = "\n<table class='maintable'><tr>\n";
         $headers = explode(',', $data[0]);
         $rows = sizeof($headers);
         foreach ($headers as $header)
@@ -1145,7 +1148,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
 
         if (sizeof($data) == 1)
         {
-            $html .= "<tr><td rowspan='{$rows}'>{$GLOBALS['strNoRecords']}</td></tr>";
+            $html .= "<tr><td rowspan='{$rows}'>" . user_alert($GLOBALS['strNoRecords'], E_USER_NOTICE) . "</td></tr>";
         }
         else
         {
@@ -1262,6 +1265,13 @@ if (is_array($CONFIG['plugins']))
                         AND $_SESSION['lang'] != $CONFIG['default_i18n'])
                     {
                         @include ("{$plugini18npath}{$_SESSION['lang']}.inc.php");
+                    }
+
+                    // TODO We should parse the folder for other languages rather than just include
+                    // If syslang and user lang isn't found we fall back to en-GB
+                    if (!file_exists("{$plugini18npath}{$CONFIG['default_i18n']}.inc.php") AND (!file_exists("{$plugini18npath}{$_SESSION['lang']}.inc.php")))
+                    {
+                        @include ("{$plugini18npath}en-GB.inc.php");
                     }
                 }
             }

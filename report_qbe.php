@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = array(22, 67); // Administrate / Run Reports
-
 require ('core.php');
+$permission = array(PERM_ADMIN, PERM_REPORT_RUN); // Administrate / Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -27,7 +25,7 @@ if (empty($_REQUEST['mode']))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strTable}:</th>";
     echo "<td>";
     $result = mysql_list_tables($CONFIG['db_database']);
@@ -64,7 +62,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strTable}:</th>";
     echo "<td class='shade2'>{$table1}</td></tr>";
 
@@ -72,7 +70,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<td width='400' class='shade2'>";
     $result = mysql_list_fields($CONFIG['db_database'],$table1);
     $columns = mysql_num_fields($result);
-    echo "<select name='fields[]' multiple='multiple'>";
+    echo "<select name='fields[]' multiple='multiple' size='10'>";
     for ($i = 0; $i < $columns; $i++)
     {
         $fieldname = mysql_field_name($result, $i);
@@ -89,7 +87,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<select name='sortby'>";
     for ($i = 0; $i < $columns; $i++)
     {
-        $fieldname=mysql_field_name($result, $i);
+        $fieldname = mysql_field_name($result, $i);
         echo "<option value='$fieldname'>$fieldname</option>\n";
     }
     echo "</select>";
@@ -105,7 +103,7 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "<select name='criteriafield'>";
     for ($i = 0; $i < $columns; $i++)
     {
-        $fieldname=mysql_field_name($result, $i);
+        $fieldname = mysql_field_name($result, $i);
         echo "<option value='$fieldname'>$fieldname</option>\n";
     }
     echo "</select>";

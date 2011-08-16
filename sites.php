@@ -10,8 +10,8 @@
 //
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 11; // View Sites
 require ('core.php');
+$permission = PERM_SITE_VIEW; // View Sites
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -99,7 +99,9 @@ if ($search_string == '') $search_string='a';
 echo "<h2>".icon('site', 32)." ";
 echo "{$title}</h2>";
 
-echo "<table summary='alphamenu' align='center'>";
+plugin_do('sites');
+
+echo "<table summary='alphamenu' class='maintable'>";
 echo "<tr>";
 echo "<td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
@@ -228,7 +230,7 @@ if ($errors == 0)
 
         }
         echo "</p>";
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr>";
         echo "<th>{$strID}</th>";
         echo "<th>{$strSiteName}</th>";

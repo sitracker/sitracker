@@ -12,10 +12,8 @@
 
 //// This Page Is Valid XHTML 1.0 Transitional!  (1 Oct 2006)
 
-
-$permission = 64; // Manage escalation paths
-
 require ('core.php');
+$permission = PERM_ESCALATION_MANAGE; // Manage escalation paths
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -80,7 +78,7 @@ if (empty($submit))
 
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
-    echo "<p><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
 
     echo "</form>";
 

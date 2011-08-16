@@ -9,11 +9,17 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-$permission = 22; // Administrate
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
+
+if (!$CONFIG['holidays_enabled'])
+{
+    html_redirect('main.php', FALSE, $strDisabled);
+    exit;
+}
 
 $title = $strEditHolidayEntitlement;
 
@@ -76,7 +82,7 @@ switch ($_REQUEST['action'])
         echo date_picker('editholidays.archivedate');
         echo "</div>";
 
-        echo "<table align='center'>";
+        echo "<table class='maintable'>";
         echo "<tr><th></th>";
         echo colheader('realname', $strName, FALSE);
         echo colheader('entitlement', $strEntitlement, FALSE);

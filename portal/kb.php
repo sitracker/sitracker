@@ -177,16 +177,16 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
         }
         else
         {
-            echo "<p align='center'>{$strNoRecords}</p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
     }
     else
     {
-        echo "<p align='center'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
     if ($CONFIG['portal_kb_enabled'] == 'Public' AND $_SESSION['portalauth'] != TRUE)
     {
-        echo "<p align='center'><a href=\"../index.php\">{$strBackToLoginPage}</a></p>";
+        echo "<p class='return'><a href=\"../index.php\">{$strBackToLoginPage}</a></p>";
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

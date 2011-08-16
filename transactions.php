@@ -15,11 +15,10 @@
 
 // included by billable_incidents.php
 
-$permission = 76; // View Transactions
-
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
     require ('core.php');
+    $permission = PERM_BILLING_TRANSACTION_VIEW; // View Transactions
     require_once(APPLICATION_LIBPATH . 'functions.inc.php');
     include_once (APPLICATION_LIBPATH . 'billing.inc.php');
 
@@ -65,10 +64,10 @@ if ($display == 'html')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    echo "<h3>{$strTransactions}</h3>";
+    echo "<h2>{$strTransactions}</h2>";
 
     echo $text;
-    echo "<p align='center'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+    echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

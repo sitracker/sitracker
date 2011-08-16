@@ -120,7 +120,7 @@ if (is_numeric($q))
                     echo $_CONFIG['application_webpath'];
                 }
             }
-            
+
             echo "';\n";
             echo "//]]></script>";
         }
@@ -133,6 +133,8 @@ if (!empty($q))
 {
     //for the search plugin
     $search = $q;
+
+    plugin_do('search_submitted');
 
     //INCIDENT RESULTS
     // MySQL doesn't normally do fulltext index for words 3 characters or shorter
@@ -266,7 +268,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_incidents');
+        plugin_do('search_incidents_table');
         echo "</table>";
     }
 
@@ -366,7 +368,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_sites');
+        plugin_do('search_sites_table');
         echo "</table>";
     }
 
@@ -458,7 +460,7 @@ if (!empty($q))
         echo colheader(email, $strEmail, $sort, $order, $filter);
         echo colheader(telephone, $strTelephone, $sort, $order, $filter);
         echo colheader(fax, $strFax, $sort, $order, $filter);
-        echo colheader(action, "", $sort, $order, $filter);
+        echo colheader(action, $strAction, $sort, $order, $filter);
         echo "</tr>";
 
         $shade = 'shade1';
@@ -481,7 +483,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_contacts');
+        plugin_do('search_contacts_table');
         echo "</table>";
     }
 
@@ -581,7 +583,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_user_results');
+        plugin_do('search_users_table');
         echo "</table>";
     }
 
@@ -684,7 +686,7 @@ if (!empty($q))
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        plugin_do('search_kb');
+        plugin_do('search_kb_table');
         echo "</table>";
     }
 
@@ -740,15 +742,18 @@ $order = cleanvar($_REQUEST['order']);
 if (empty($order)) $order = 'd';
 
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
-echo "<table align='center'>";
+echo "<table class='maintable'>";
 echo "<tr><th>";
 echo "{$strSearch}: ";
 echo "</th>";
 echo "<td>";
 echo "<input maxlength='100' name='q' size='35' type='text' value='".strip_tags(urldecode($q))."' /> ";
-echo "(<a href='search_incidents_advanced.php'>{$strAdvanced}</a> | <a href='view_tags.php'>{$strTagCloud}</a>)";
+$operations = array($strAdvanced => 'search_incidents_advanced.php',
+                             $strTagCloud => 'view_tags.php');
+echo html_action_links($operations);
 echo "</td>";
 echo "</tr>\n";
+plugin_do('search_form');
 echo "</table>\n";
 echo "<p align='center'><input type='submit' value='";
 if (empty($q))
@@ -761,6 +766,12 @@ else
 }
 
 echo "' /></p></form>";
+plugin_do('search');
+
+echo "<h3>".icon('help', 32, $strHelp)."  {$strHelp}</h3>";
+echo "<div class='help' id='help'>";
+echo file_get_help_textfile('SearchHelp');
+echo "<a class = 'helplink' href='http://sitracker.org/wiki/Search'>{$strReadWikiArticleHere} ..</a></div>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

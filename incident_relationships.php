@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 61; // View Incident Details
-
 require ('core.php');
+$permission = PERM_INCIDENT_VIEW; // View Incident Details
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -124,14 +122,14 @@ $rresult = mysql_query($rsql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 if (mysql_num_rows($rresult) >= 1)
 {
-    echo "<table summary='Related Incidents' align='center'>";
+    echo "<table summary='Related Incidents' class='maintable'>";
     echo "<tr><th>{$strIncidentID}</th><th>{$strTitle}</th>";
     echo "<th>{$strRelationship}</th><th>{$strCreatedBy}</th>";
     echo "<th>{$strAction}</th></tr>\n";
     while ($related = mysql_fetch_object($rresult))
     {
         echo "<tr>";
-        if ($related->relatedid==$id)
+        if ($related->relatedid == $id)
         {
             $incidenttitle = incident_title($related->incidentid);
             if ($related->relation == 'child') $relationship = 'Child';

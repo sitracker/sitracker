@@ -13,9 +13,8 @@
 // Email:    ivanlucas[at]users.sourceforge.net
 // Comments: List supported contacts by contract
 
-
-$permission = 19; /* View Maintenance Contracts */
 $title = $strSupportedContactsbySite;
+$permission = PERM_CONTRACT_VIEW; /* View Maintenance Contracts */
 
 require ('core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -71,10 +70,10 @@ while ($site = mysql_fetch_object($result))
                     echo "{$maint->product},";
                     echo "{$maint->licence_quantity} {$maint->licence_type},";
                     echo ldate($CONFIG['dateformat_date'], $maint->expirydate).",";
-                    
+
                     if ($maint->allcontactssupported == 'yes') echo "{$strYes},";
-                    else echo "{$strNo},"; 
-                    
+                    else echo "{$strNo},";
+
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
@@ -114,7 +113,7 @@ while ($site = mysql_fetch_object($result))
                     if ($maint->allcontactssupported == 'yes') echo $strYes;
                     else echo $strNo;
                     echo "</td>";
-                    
+
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";

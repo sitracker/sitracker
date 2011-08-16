@@ -13,10 +13,8 @@
 
 //// This Page Is Valid XHTML 1.0 Transitional!  (7 Oct 2006)
 
-
-$permission = 64; // Manage escalation paths
-
 require ('core.php');
+$permission = PERM_ESCALATION_MANAGE; // Manage escalation paths
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -32,29 +30,34 @@ $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($result) >= 1)
 {
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr>";
     echo colheader('name', $strName);
     echo colheader('track_url', $strTrackURL);
     echo colheader('home_url', $strHomeURL);
     echo colheader('url_title', $strURLTitle);
     echo colheader('email_domain', $strEmailDomain);
-    echo colheader('edit', $strOperation);
+    echo colheader('edit', $strActions);
     echo "</tr>";
+    $shade = 'shade1';
     while ($path = mysql_fetch_object($result))
     {
-        echo "<tr>";
+        $operations = array();
+        $operations[$strEdit] = "escalation_path_edit.php?id={$path->id}";
+        echo "<tr  class='{$shade}'>";
         echo "<td>{$path->name}</td>";
         echo "<td>{$path->track_url}</td>";
         echo "<td>{$path->home_url}</td>";
         echo "<td>{$path->url_title}</td>";
         echo "<td>{$path->email_domain}</td>";
-        echo "<td><a href='edit_escalation_path.php?id={$path->id}'>{$strEdit}</a></td>";
+        echo "<td>" . html_action_links($operations). "</td>";
         echo "</tr>";
+        if ($shade == 'shade1') $shade = 'shade2';
+        else $shade = 'shade1';
     }
     echo "</table>";
 }
-else echo "<p align='center'>{$strNoRecords}</p>";
+else echo user_alert($strNoRecords, E_USER_NOTICE);
 
 echo "<p align='center'><a href='escalation_path_new.php'>{$strNew}</a></p>";
 

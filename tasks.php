@@ -12,9 +12,8 @@
 // Author: Kieran Hogg <kieran[at]sitracker.org
 // This Page Is Valid XHTML 1.0 Transitional!
 
-$permission = 69;
-
 require ('core.php');
+$permission = PERM_TASK_VIEW;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -64,6 +63,7 @@ if (!empty($selected))
 {
     foreach ($selected as $taskid)
     {
+        $taskid = clean_int($taskid);
         if ($_POST['action'] == 'markcomplete')
         {
             mark_task_completed($taskid, FALSE);
@@ -100,7 +100,7 @@ if (!empty($incident))
 
     if ($mode == 'incident')
     {
-        echo "<h2>".icon('activities', 32)." ";
+        echo "<h2>".icon('activities', 32, $strActivities)." ";
         echo "{$strActivities}</h2>";
     }
     echo "<p align='center'>{$strIncidentActivitiesIntro}</p>";
@@ -181,7 +181,7 @@ else
         if ($user != 'all')
         {
             echo "<h2>".icon('task', 32)." ";
-            echo sprintf($strXsTasks, user_realname($sit[2]))."</h2>";
+            echo sprintf($strXsTasks, user_realname($user))."</h2>";
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?user=all&amp;";
             echo "show={$show}&amp;sort={$sort}&amp;order={$order}'>{$strShowEverybodys}</a></p>";
         }
@@ -191,13 +191,14 @@ else
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?show={$show}";
             echo "&amp;sort={$sort}&amp;order={$order}'>{$strShowMine}</a></p>";
         }
+        plugin_do('tasks');
     }
     else
     {
         if ($user != 'all')
         {
             echo "<h2>".icon('task', 32)." ";
-            echo sprintf($strXsTasks, user_realname($sit[2]))."</h2>";
+            echo sprintf($strXsTasks, user_realname($user))."</h2>";
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?show=incidents";
             echo "&amp;user=all'>{$strShowAll}</a></p>";
         }
@@ -304,7 +305,7 @@ if (mysql_num_rows($result) >=1 )
 {
     if ($show) $filter = array('show' => $show);
     echo "<form action='{$_SERVER['PHP_SELF']}' id='tasks' name='tasks'  method='post'>";
-    echo "<br /><table align='center'>";
+    echo "<br /><table class='maintable'>";
     echo "<tr>";
     $filter['mode'] = $mode;
     $filter['incident'] = $incident;
@@ -609,7 +610,7 @@ if (mysql_num_rows($result) >=1 )
 
         if (!empty($billing))
         {
-            echo "<table align='center'>\n";
+            echo "<table class='maintable'>\n";
             echo "<tr><td></td><th>{$GLOBALS['strMinutes']}</th></tr>\n";
             echo "<tr><th>{$GLOBALS['strBillingEngineerPeriod']}</th>\n";
             echo "<td>".($billing[-1]['engineerperiod']/60)."</td></tr>\n";
@@ -619,7 +620,7 @@ if (mysql_num_rows($result) >=1 )
 
             echo "<br />";
 
-            echo "<table align='center'>\n";
+            echo "<table class='maintable'>\n";
 
             echo "<tr><th>{$GLOBALS['strOwner']}</th><th>{$GLOBALS['strTotalMinutes']}</th>\n";
             echo "<th>{$GLOBALS['strBillingEngineerPeriod']}</th>\n";
@@ -649,15 +650,14 @@ if (mysql_num_rows($result) >=1 )
         }
         else
         {
-            echo "<p align='center'><strong>{$strNoRecords}</strong></p>";
+            echo user_alert($strNoRecords, E_USER_NOTICE);
         }
     }
 }
 else
 {
-    echo "<br /><p align='center'>";
-    echo "<strong>{$strNoRecords}</strong>";
-    echo "</p>";
+    echo "<br />";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 
     if ($mode == 'incident')
     {

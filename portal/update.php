@@ -63,9 +63,11 @@ if ($incidentcontact == $_SESSION['contactid'])
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
         $forenames = cleanvar($user->forenames);
-        $surname = $user->surname;
+        $surname = cleanvar($user->surname); // If name has ' in it
         $update = cleanvar($_REQUEST['update']);
-
+       
+        if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
+        
         if (!empty($forenames) AND !empty($surname))
         {
             //TODO change order for a name such as Chinese?

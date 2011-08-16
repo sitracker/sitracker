@@ -12,11 +12,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   31Oct05
 
-
-$permission = 6; // View Incidents
-
-
 require ('core.php');
+$permission = PERM_INCIDENT_LIST; // View Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -88,7 +85,7 @@ switch ($type)
             if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
             else $user = $sit[2]; // force to current user if username not found
         }
-        
+
         $sql = "{$selectsql} AND i.owner > 0 ";  // We always need to have an owner which is not sit
         if ($user != 'all') $sql .= "AND (i.owner='{$user}' OR i.towner='{$user}') ";
         if (!empty($softwareid)) $sql .= "AND softwareid='{$softwareid}' ";
@@ -138,9 +135,10 @@ switch ($type)
             default:
                 trigger_error("Invalid queue ($queue) on query string", E_USER_NOTICE);
                 break;
-        }        
-        
+        }
+
         echo "</h2>\n";
+        plugin_do('incidents');
         if (!empty($sort))
         {
             if ($order == 'a' OR $order == 'ASC') $sortorder = "ASC";
@@ -325,7 +323,7 @@ switch ($type)
                     $sql .= " ORDER BY priority DESC, lastupdated ASC";
                     break;
             }
-        
+
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             $rowcount = mysql_num_rows($result);

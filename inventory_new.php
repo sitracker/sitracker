@@ -8,9 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 0;
-
 require ('core.php');
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -32,6 +31,8 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 {
     $post = cleanvar($_POST);
 
+    plugin_do('inventory_new_submitted');
+
     $sql = "INSERT INTO `{$dbInventory}`(address, username, password, type,";
     $sql .= " notes, created, createdby, modified, modifiedby, active,";
     $sql .= " name, siteid, privacy, identifier, contactid) VALUES('{$post['address']}', ";
@@ -44,20 +45,33 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     mysql_query($sql);
     $id = mysql_insert_id();
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    else html_redirect("inventory_view.php?id={$id}");
+    else
+    {
+        plugin_do('inventory_new_saved');
+        html_redirect("inventory_view.php?id={$id}");
+    }
+}
+elseif (count($CONFIG['inventory_types']) <= 0)
+{
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+    echo "<p class='inventory'>{$strNoTypesDefined}</p>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($_POST['submit']) AND empty($_POST['name']))
     {
-        echo user_alert(sprintf($strFieldMustNotBeBlank, $strName));
+        echo user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_WARNING);
     }
     elseif (!empty($_POST['submit']) AND $_POST['site'] == 0)
     {
-        echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
+        echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite), E_USER_WARNING);
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
+
+    plugin_do('inventory_new');
 
     $url = "{$_SERVER['PHP_SELF']}?action=new";
     if (!empty($_GET['site']))
@@ -67,7 +81,7 @@ else
     }
 
     echo "<form action='{$url}' method='post'>";
-    echo "<table class='vertical' align='center'>";
+    echo "<table class='vertical maintable'>";
     echo "<tr><th>{$strName}</th>";
     echo "<td><input class='required' name='name' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>";
@@ -106,25 +120,26 @@ else
     echo "<textarea id='inventorynotes' rows='15' cols='60' name='notes'></textarea></td></tr>";
 
     echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
-    echo "<td><input type='radio' name='privacy' value='private' />{$strPrivate}<br />";
+    echo "<td><label><input type='radio' name='privacy' value='private' />{$strPrivate}</label><br />";
 
-    echo "<input type='radio' name='privacy' value='adminonly' />";
-    echo "{$strAdminOnly}<br />";
+    echo "<label><input type='radio' name='privacy' value='adminonly' />";
+    echo "{$strAdminOnly}</label><br />";
 
-    echo "<input type='radio' name='privacy' value='none'";
+    echo "<label><input type='radio' name='privacy' value='none'";
     if (!$selected)
     {
         echo " checked='checked' ";
     }
     echo "/>";
-    echo "{$strNone}<br />";
+    echo "{$strNone}</label><br />";
     echo "</td></tr>";
+    plugin_do('inventory_new_form');
     echo "</table>";
     echo "<p class='formbuttons'>";
     echo "<input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
-    echo "<p align='center'>";
+    echo "<p class='return'>";
 
     if ($newsite)
     {

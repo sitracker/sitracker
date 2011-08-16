@@ -84,7 +84,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
                 $value="array(".implode(',',$value).")";
             }
         }
-        if ($setupvar=='db_password' AND $_REQUEST['action']!='reconfigure') $value='';
+        if ($setupvar == 'db_password' AND $_REQUEST['action'] != 'reconfigure') $value = '';
     }
     $value = stripslashes($value);
     switch ($CFGVAR[$setupvar]['type'])

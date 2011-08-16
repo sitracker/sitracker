@@ -11,9 +11,8 @@
 
 // Shows Incidents CLOSED between the dates
 
-$permission = 37; // Run Reports
-
 require ('core.php');
+$permission = PERM_REPORT_RUN; // Run Reports
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -113,7 +112,7 @@ if (empty($mode))
     echo "<td><select name='output' id='output'><option value='screen' onclick='toggleDisableIncidents();'>{$strScreen}</option>\n";
     echo "<option value='csv' onclick='toggleDisableIncidents();'>{$strCSVfile}</option></select></td></tr>\n";
     echo "</table>\n";
-    echo "<p align='center'>";
+    echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<input type='hidden' name='step' value='1' />";
     echo "<input type='reset' value=\"{$strReset}\" /> ";
@@ -339,7 +338,7 @@ else
             echo "<h2>".icon('site', 32)." {$strSiteIncidents}</h2>";
             echo "<p align='center'>{$strStartDate}: {$startdate}. {$strEndDate}: {$enddate}</p>";
 
-            echo "<table align='center'>{$csv}</table>";
+            echo "<table class='maintable'>{$csv}</table>";
 
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         }

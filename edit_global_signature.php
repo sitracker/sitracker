@@ -40,10 +40,8 @@ function delete_signature($sig_id)
     exit;
 }
 
-$permission = 43; // Edit global signature
-
-
 require ('core.php');
+$permission = PERM_GLOBALSIG_EDIT; // Edit global signature
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -99,7 +97,7 @@ elseif (empty($action))
     echo "<p align='center'><a href='edit_global_signature.php?action=new'>{$strNew}</a></p>";
 
     echo "<table align='center' width='60%'>";
-    echo "<tr><th>{$strGlobalSignature}</th><th>{$strOperation}</th></tr>";
+    echo "<tr><th>{$strGlobalSignature}</th><th>{$strActions}</th></tr>";
     while ($signature = mysql_fetch_object($result))
     {
         $id = $signature->id;
@@ -134,7 +132,7 @@ elseif (!empty($action))
             echo "</tr>";
             echo "</table>";
             echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value=\"{$strSave}\" /></p>";
-            echo "<p><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
             echo "</form>\n";
             break;
 
@@ -158,7 +156,7 @@ elseif (!empty($action))
             echo "</table>";
 
             echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value=\"{$strSave}\" /></p>";
-            echo "<p><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
+            echo "<p class='return'><a href=\"{$_SERVER['PHP_SELF']}\">{$strReturnWithoutSaving}</a></p>";
             echo "</form>\n";
             break;
     }

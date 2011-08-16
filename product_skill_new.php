@@ -1,5 +1,5 @@
 <?php
-// product_software_new.php - Associates software with a product
+// product_skill_new.php - Associates skill with a product
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -13,9 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  11Oct06
 
-
-$permission = 24;  // Add Product
 require ('core.php');
+$permission = PERM_PRODUCT_ADD;  // Add Product
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -32,6 +31,8 @@ if (empty($action) OR $action == "showform")
 {
     $title = $strNewLink;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    echo show_form_errors('product_skill_new');
+    clear_form_errors('product_skill_new');
     echo "<h2>{$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post'>\n";
     echo "<input type='hidden' name='context' value='{$context}' />\n";
@@ -65,13 +66,13 @@ if (empty($action) OR $action == "showform")
         echo skill_drop_down("softwareid", 0);
         echo "</p>\n";
     }
-    echo "<p align='center'><input name='submit' type='submit' value='{$strSave}' />";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strSave}' />";
     echo "<input type='checkbox' name='return' value='true' ";
     if ($return == 'true') echo "checked='checked' ";
     echo "/> {$strReturnAfterSaving}</p>\n";
     echo "</form>";
 
-    echo "<p align='center'><a href='products.php?productid={$productid}'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php?productid={$productid}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "new")
@@ -80,14 +81,14 @@ elseif ($action == "new")
     // check for blank
     if ($productid == 0)
     {
-        $errors = 1;
-        $errors_string .= "<p class='error'>".sprintf($strSelectionXmustNotBeEmpty, $strProduct)."</p>\n";
+        $errors++;
+        $_SESSION['formerrors']['product_skill_new']['productid'] = user_alert(sprintf($strSelectionXmustNotBeEmpty, "'{$strProduct}'"), E_USER_ERROR);
     }
     // check for blank software id
     if ($softwareid == 0)
     {
-        $errors = 1;
-        $errors_string .= "<p class='error'>".sprintf($strSelectionXmustNotBeEmpty, $strSkill)."</p>\n";
+        $errors++;
+        $_SESSION['formerrors']['product_skill_new']['productid'] = user_alert(sprintf($strSelectionXmustNotBeEmpty, "'{$strSkill}'"), E_USER_ERROR);
     }
 
     // add record if no errors
@@ -99,7 +100,7 @@ elseif ($action == "new")
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            html_redirect("product_software_new.php?productid={$productid}&return={$return}", FALSE, $strAvoidDupes);
+            html_redirect("product_skill_new.php?productid={$productid}&return={$return}", FALSE, $strAvoidDupes);
             // TODO $strAvoidDupes isn't the perfect string to use here, replace with something better when
             // we have a message about duplicates.
             exit;
@@ -120,16 +121,13 @@ elseif ($action == "new")
         else
         {
             journal(CFG_LOGGING_NORMAL, 'Product Added', "Skill $softwareid was added to product $productid", CFG_JOURNAL_PRODUCTS, $productid);
-            if ($return == 'true') html_redirect("product_software_new.php?productid={$productid}&return=true");
+            if ($return == 'true') html_redirect("product_skill_new.php?productid={$productid}&return=true");
             else html_redirect("products.php?productid={$productid}");
         }
     }
     else
     {
-        // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo $errors_string;
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect("product_skill_new.php?softwareid={$softwareid}&productid={$productid}", FALSE);
     }
 }
 ?>

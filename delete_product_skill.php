@@ -1,5 +1,5 @@
 <?php
-// delete_product_software.php
+// delete_product_skill.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -12,11 +12,10 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-// Removes link between a product and software
+// Removes link between a product and skill
 
-
-$permission = 24;  // Add Product
 require ('core.php');
+$permission = PERM_PRODUCT_ADD;  // Add Product, FIXME need permission for delete
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = "{$strDisassociateSkillWithProduct}";
 

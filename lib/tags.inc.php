@@ -276,7 +276,7 @@ function show_tag_cloud($orderby="name", $showcount = FALSE)
 
     if (mysql_num_rows($result) > 0)
     {
-        $html .= "<table align='center'><tr><td class='tagcloud'>";
+        $html .= "<table class='maintable'><tr><td class='tagcloud'>";
         while ($obj = mysql_fetch_object($result))
         {
             $size = round(log($obj->occurrences * 100) * 32);
@@ -306,7 +306,7 @@ function show_tag_cloud($orderby="name", $showcount = FALSE)
         }
         $html .= "</td></tr></table>";
     }
-    else $html .= "<p align='center'>{$GLOBALS['strNothingToDisplay']}</p>";
+    else $html .= user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
     return $html;
 }
 

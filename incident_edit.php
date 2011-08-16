@@ -12,9 +12,8 @@
 // Soon to be replaced
 // See incident/edit.inc.php
 
-$permission = 7; // Edit Incidents
-
 require ('core.php');
+$permission = PERM_INCIDENT_EDIT; // Edit Incidents
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -37,9 +36,13 @@ if (empty($submit))
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $incident = mysql_fetch_object($result);
 
+    plugin_do('incident_edit');
+
     // SUPPORT INCIDENT
     if ($incident->type == "Support")
     {
+        echo show_form_errors('edit_incident');
+        clear_form_errors('edit_incident');
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post' name='editform'>";
         echo "<table class='vertical'>";
         echo "<tr><th>{$strTitle}</th><td><input maxlength='150' name='title' size='40' type='text' value=\"{$incident->title}\" class='required' /> ";
@@ -77,9 +80,9 @@ if (empty($submit))
         echo "<td><input maxlength='80' name='externalengineer' size='30' type='text' value=\"{$incident->externalengineer}\" /></td></tr>\n";
         echo "<tr><th>{$strExternalEmail}</th>";
         echo "<td><input maxlength='255' name='externalemail' size='30' type='text' value=\"{$incident->externalemail}\" /></td></tr>\n";
-        plugin_do('edit_incident_form');
+        plugin_do('incident_edit_form');
         echo "</table>\n";
-        echo "<p align='center'>";
+        echo "<p class='formbuttons'>";
         echo "<input name='type' type='hidden' value='Support' />";
 
         echo "<input name='id' type='hidden' value=\"{$id}\" />";
@@ -142,18 +145,20 @@ else
     if ($contact == 0)
     {
         $errors += 1;
-        $error_string .= "<p class='error'>You must select a contact</p>\n";
+        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strContact), E_USER_ERROR);
     }
     // check for blank title
     if ($title == '')
     {
         $errors += 1;
-        $error_string .= "<p class='error'>You must enter a title</p>\n";
+        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strTitle), E_USER_ERROR);
     }
+    plugin_do('incident_edit_submitted');
 
     if ($errors > 0)
     {
-        echo "<div>$bodytext</div>";
+        html_redirect("incident_edit.php?id={$id}", FALSE);
+        exit;
     }
 
     if ($errors == 0)
@@ -277,6 +282,7 @@ else
 
         if ($addition_errors == 0)
         {
+            plugin_do('incident_edit_saved');
             journal(CFG_LOGGING_NORMAL, 'Incident Edited', "Incident $id was edited", CFG_JOURNAL_INCIDENTS, $id);
             html_redirect("incident_details.php?id={$id}");
         }

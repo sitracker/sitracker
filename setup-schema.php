@@ -1141,7 +1141,7 @@ CREATE TABLE `{$dbScheduler}` (
 ) ENGINE=MyISAM  DEFAULT CHARACTER SET = utf8;
 
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('CloseIncidents', '554400', 'closure_delay', 'Close incidents that have been marked for closure for longer than the <var>closure_delay</var> parameter (which is in seconds)', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 60, '0000-00-00 00:00:00', 1);
-INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('SetUserStatus', '', NULL, '(EXPERIMENTAL) This will set users status                         based on data from their holiday calendar.                        e.g. Out of Office/Away sick.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 60, '0000-00-00 00:00:00', 1);
+INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('SetUserStatus', '', NULL, 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 600, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('PurgeJournal', '', NULL, 'Delete old journal entries according to the config setting <var>\$CONFIG[''journal_purge_after'']</var>', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 300, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('TimeCalc', '', NULL, 'Calculate SLA Target Times and trigger                        OUT_OF_SLA and OUT_OF_REVIEW system email templates where appropriate.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 60, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('ChaseCustomers', '', NULL, 'Chase customers', 'disabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 3600, '0000-00-00 00:00:00', 1);
@@ -1161,7 +1161,6 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `balance` float NOT NULL default '0',
   `unitrate` float NOT NULL default '0',
   `incidentrate` float NOT NULL default '0',
-  `dailyrate` float NOT NULL default '0',
   `billingmatrix` varchar(32) NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
@@ -1762,6 +1761,11 @@ UPDATE `$dbKBContent` SET header = 'strReferences' WHERE header = 'References' ;
 
 -- INL 2011-06-19
 UPDATE `$dbIncidentStatus` SET `ext_name` = 'strAwaitingCustomerAction' WHERE `id` = 8;
+
+-- INL 2011-07-02
+UDPATE `{$dbScheduler}` SET interval = 600, descripton = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE action = 'SetUserStatus';
+-- INL 2011-08-06
+ALTER TABLE `service` DROP `dailyrate`;
 ";
 
 // ********************************************************************

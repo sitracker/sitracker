@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 22; // Administrate
-
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate, FIXME need a permission for Add SLA
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -65,9 +63,10 @@ if (empty($action) OR $action == "showform")
     echo "{$title}</h2>";
     echo "<form name='new_servicelevel' action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-    echo "<p align='center'>{$strTag}: <input type='text' name='tag' maxlength='32' value='{$_SESSION['formdata']['new_servicelevel']['tag']}' /></p>";
+    echo "<p align='center'>{$strTag}: <input type='text' name='tag' maxlength='32' value='{$_SESSION['formdata']['new_servicelevel']['tag']}' class='required' /> ";
+    echo "<span class='required'>{$strRequired}</p>";
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strTimed}</th><td class='shade1'><input type='checkbox' id='timed' name='timed' value='yes' onchange='enableBillingPeriod();' {$timedchecked} />".help_link('ServiceLevelTimed')."</td></tr>";
     echo "<tr><th>{$strAllowIncidentReopen}</th><td class='shade2'>".html_checkbox('allow_reopen', $sla->allow_reopen)."</td></tr>\n";
     echo "<tr id='engineerBillingPeriod' style='display:none;'><th>{$strBillingEngineerPeriod}</th><td class='shade1'><input type='text' size='5' name='engineerPeriod' maxlength='5' value='{$_SESSION['formdata']['new_servicelevel']['engineerPeriod']}' /> {$strMinutes}</td></tr>";
@@ -75,7 +74,7 @@ if (empty($action) OR $action == "showform")
     echo "<tr id='limit' style='display:none;'><th>{$strLimit}</th><td  class='shade1' >{$CONFIG['currency_symbol']} <input type='text' size='5' name='limit' maxlength='5' value='{$_SESSION['formdata']['new_servicelevel']['limit']}' /></td></tr>";
     echo "</table>";
 
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strPriority}</th><th>{$strInitialResponse}</th>";
     echo "<th>{$strProblemDefinition}</th><th>{$strActionPlan}</th><th>{$strResolutionReprioritisation}</th>";
     echo "<th>{$strReview}</th></tr>";
@@ -116,6 +115,7 @@ if (empty($action) OR $action == "showform")
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<p class='formbuttoms'><input name='reset' type='reset' value='{$strReset}' />  ";
     echo "<input type='submit' value='{$strSave}' /></p>";
+    echo "<p class='return'><a href=\"service_levels.php\">{$strReturnWithoutSaving}</a></p>";
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

@@ -11,15 +11,14 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!  13Sep06
 
-$permission = 4; // Edit your profile
-
 require ('core.php');
+$permission = PERM_MYPROFILE_EDIT; // Edit your profile
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$approver = user_permission($sit[2], 50); // Approve holidays
+$approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE); // Approve holidays
 
 if (!empty($_REQUEST['user']))
 {
@@ -42,6 +41,8 @@ else
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('holiday', 32)." ";
 echo "$title</h2>";
+
+plugin_do('holidays');
 
 echo "<p align='center'>";
 echo "<a href='book_holidays.php?user={$user}'>{$strBookHoliday}</a>";
@@ -227,6 +228,7 @@ if ($totaltaken < 1 AND $numwaiting < 1)
 {
     echo "<tr class='shade2'><td colspan='4'><em>{$strNone}</em</td></tr>\n";
 }
+plugin_do('holiday_list_table');
 echo "</table>\n";
 
 

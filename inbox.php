@@ -8,8 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-$permission = 42;
 require ('core.php');
+$permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -164,6 +164,7 @@ if (empty($displayid))
     else
     {
         echo "<h2>".icon('email', 32)." {$CONFIG['email_address']}: {$strInbox}</h2>";
+        plugin_do('inbox');
         echo "<p align='center'>{$strIncomingEmailText}.  <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></p>";
     }
 
@@ -199,7 +200,7 @@ if (empty($displayid))
     {
         echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox'  method='post'>";
         $shade = 'shade1';
-        echo "<table align='center' id='inboxtable'>";
+        echo "<table class='maintable' id='inboxtable'>";
         echo "<tr>";
         echo colheader('select', '', FALSE, '', '', '', '1%');
         echo colheader('from', $strFrom, $sort, $order, $filter, '', '25%');
@@ -299,7 +300,7 @@ if (empty($displayid))
     }
     else
     {
-        echo "<p class='info'>{$strNoRecords}</p>";
+        echo user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 else
@@ -413,7 +414,7 @@ else
     }
     else
     {
-        echo "<p class='warning'>{$strNoRecords}</p>";
+        user_alert($strNoRecords, E_USER_NOTICE);
     }
 }
 

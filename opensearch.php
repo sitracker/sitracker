@@ -12,10 +12,8 @@
 
 // Supports both Firefox2 and IE7
 
-
-
-$permission = 0; // not required
 require ('core.php');
+$permission = PERM_NOT_REQUIRED; // not required FIXME perhaps use search permission here?
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

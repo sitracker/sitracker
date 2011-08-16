@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 22; // Administrate
 require ('core.php');
+$permission = PERM_ADMIN; // Administrate, FIXME need a permission for view/list SLA
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -23,9 +22,12 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $title = $strServiceLevels;
 
-echo "<h2>".icon('sla', 32)." {$title}</h2>";
+echo "<h2>".icon('sla', 32, $strServiceLevels)." {$title}</h2>";
 
-echo "<p align='center'><a href='service_level_new.php'>{$strNewServiceLevel}</a></p>";
+$operations = array();
+$operations[$strNewServiceLevel] = array('url' => 'service_level_new.php');
+echo "<p align='center'>" . html_action_links($operations) . "</p>";
+
 
 $tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag";
 $tresult = mysql_query($tsql);
@@ -33,8 +35,8 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($tresult) >= 1)
 {
     $minsinday = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
-    
-    echo "<table align='center'>";
+
+    echo "<table class='maintable'>";
     while ($tag = mysql_fetch_object($tresult))
     {
         echo "<thead><tr><th colspan='9'>{$tag->tag}</th></tr></thead>";
@@ -44,7 +46,7 @@ if (mysql_num_rows($tresult) >= 1)
 
         echo "<tr><th colspan='2'>{$strPriority}</th><th>{$strInitialResponse}</th>";
         echo "<th>{$strProblemDefinition}</th><th>{$strActionPlan}</th><th>{$strResolutionReprioritisation}</th>";
-        echo "<th>{$strReview}</th><th>{$strTimed}</th><th>{$strOperation}</th></tr>";
+        echo "<th>{$strReview}</th><th>{$strTimed}</th><th>{$strActions}</th></tr>";
         while ($sla = mysql_fetch_object($result))
         {
             echo "<tr>";
@@ -61,7 +63,9 @@ if (mysql_num_rows($tresult) >= 1)
                 echo "<td>{$strYes}</td>";
             }
             else echo "<td>{$strNo}</td>";
-            echo "<td><a href='service_level_edit.php?tag={$sla->tag}&amp;priority={$sla->priority}'>{$strEdit}</a></td>";
+            $operations = array();
+            $operations[$strEdit] = array('url' => "service_level_edit.php?tag={$sla->tag}&amp;priority={$sla->priority}");
+            echo "<td>" . html_action_links($operations) . "</td>";
             echo "</tr>\n";
         }
     }
@@ -69,7 +73,7 @@ if (mysql_num_rows($tresult) >= 1)
 }
 else
 {
-    echo "<p class='error'>{$strNoRecords}</p>";
+    echo user_alert($strNoRecords, E_USER_NOTICE);
 }
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

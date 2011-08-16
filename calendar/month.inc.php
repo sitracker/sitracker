@@ -47,10 +47,10 @@ $plugin_calendar = plugin_do('holiday_chart_cal');
 
 echo month_select($month, $year, $gidurl);
 echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?month={$prevmonth}&amp;";
-echo "year={$prevyear}{$gidurl}' title='Previous Month'>&lt;</a> ";
+echo "year={$prevyear}{$gidurl}' title=\"{$strPrevious}\">&lt;</a> ";
 echo ldate('F Y',mktime(0,0,0,$month,1,$year));
 echo " <a href='{$_SERVER['PHP_SELF']}?month={$nextmonth}&amp;year={$nextyear}{$gidurl}' ";
-echo "title='Next Month'>&gt;</a></p>";
+echo "title=\"{$strNext}\">&gt;</a></p>";
 
 // echo draw_chart('month', $year, $month, $day, '', $user);
 

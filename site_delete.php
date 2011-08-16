@@ -13,10 +13,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!
 
-
-$permission = 55; // Delete Sites/Contacts
-
 require ('core.php');
+$permission = PERM_SITE_DELETE; // Delete Sites/Contacts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -28,9 +26,11 @@ if (empty($id))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>{$strDeleteSite}</h2>";
+    plugin_do('site_delete');
     echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-    echo "<table align='center'>";
+    echo "<table class='maintable'>";
     echo "<tr><th>{$strSite}:</th><td>".site_drop_down('id', 0)."</td></tr>";
+    plugin_do('site_delete_form');
     echo "</table>";
     echo "<p><input name='submit' type='submit' value='{$strDelete}' /></p>";
     echo "</form>";
@@ -42,15 +42,18 @@ else
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>{$strDeleteSite}</h2>";
+        plugin_do('site_delete');
         $sql = "SELECT * FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
         $siteresult = mysql_query($sql);
         $site = mysql_fetch_object($siteresult);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strSite}:</th><td><h3>{$site->name}</h3></td></tr>";
         echo "<tr><th>{$strDepartment}:</th><td>{$site->department}</td></tr>";
         echo "<tr><th>{$strAddress1}:</th><td>{$site->address1}</td></tr>";
         echo "</table>";
+
+        plugin_do('site_delete_submitted');
 
         // Look for associated contacts
         $sql = "SELECT COUNT(id) FROM `{$dbContacts}` WHERE siteid='{$id}'";
@@ -75,7 +78,7 @@ else
         {
             echo "<p align='center'>{$strInOrderToDelete}</p>";
             echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-            echo "<table align='center'>";
+            echo "<table class='maintable'>";
             echo "<tr><th>{$strSite}:</th><td>".site_drop_down('destinationid', 0)."</td></tr>";
             echo "</table>";
             echo "<input type='hidden' name='id' value='{$id}' />";
@@ -89,6 +92,7 @@ else
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             else
             {
+                plugin_do('site_delete_saved');
                 // FIXME html headers need sorting here, we don't want the header before we do this
                 html_redirect("sites.php");
             }

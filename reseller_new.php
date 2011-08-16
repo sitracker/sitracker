@@ -10,10 +10,8 @@
 //
 // Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-
-$permission = 63;
-
 require ('core.php');
+$permission = PERM_RESELLER_ADD;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -29,9 +27,10 @@ switch ($action)
         $errors = 0;
         if (empty($name))
         {
-            $_SESSION['formerrors']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
+            $_SESSION['formerrors']['new_reseller']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_ERROR);
             $errors++;
         }
+        plugin_do('reseller_new_submitted');
 
         if ($errors != 0)
         {
@@ -59,6 +58,7 @@ switch ($action)
             }
             else
             {
+                plugin_do('reseller_new_saved');
                 // show success message
                 $id = mysql_insert_id();
                 journal(CFG_LOGGING_NORMAL, 'Reseller Added', "Reseller $id Added", CFG_JOURNAL_MAINTENANCE, $id);
@@ -73,14 +73,17 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo show_form_errors('new_reseller');
         clear_form_errors('formerrors');
-        echo "<h2>".icon('site', 32)." {$strNewReseller}</h2>";
+        echo "<h2>".icon('reseller', 32)." {$strNewReseller}</h2>";
+        plugin_do('reseller_new');
         echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
         echo "onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
-        echo "<table align='center' class='vertical'>";
+        echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strName}</th><td><input type='text' name='reseller_name' class='required' /> <span class='required'>{$strRequired}</span></td></tr>";
+        plugin_do('reseller_new_form');
         echo "</table>";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+        echo "<p class='return'><a href=\"contracts.php\">{$strReturnWithoutSaving}</a></p>";
         echo "</form>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;

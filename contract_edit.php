@@ -9,10 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-
-$permission = 21; // Edit Contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_EDIT; // Edit Contracts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -30,12 +28,12 @@ if (empty($action) OR $action == "showform")
     echo "<h2>".icon('contract', 32)." ";
     echo "{$strContract}:</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=edit' method='post'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strContract}:</th><td>";
     echo maintenance_drop_down("maintid", 0, NULL, true);
     echo "</td></tr>\n";
     echo "</table>\n";
-    echo "<p align='center'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -56,10 +54,10 @@ if ($action == "edit")
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
-        echo "<table align='center' class='vertical'>\n";
+        echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
         echo "<tr><th>{$strSite}:</th><td>";
-        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable 
+        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable
         echo "<tr><th>{$strContacts}:</th><td>";
         echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
         echo "{$strLimitTo} <input size='2' value='{$maint->supportedcontacts}' name='amount' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
@@ -69,7 +67,7 @@ if ($action == "edit")
         echo " />{$strAllSiteContactsSupported}</td></tr>";
         echo "<tr><th>{$strProduct}: </th><td>";
         $productname = product_name($maint->product);
-        if (user_permission($sit[2], 22))
+        if (user_permission($sit[2], PERM_ADMIN))
         {
             if ($changeproduct == 'yes')
             {
@@ -112,7 +110,7 @@ if ($action == "edit")
         echo " /></td></tr>\n";
 
 
-        echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strAdvanced}</a></td></tr>";
+        echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>";
         echo "</tbody>\n";
         echo "<tbody id='hidden' style='display:none'>";
 
@@ -142,7 +140,7 @@ if ($action == "edit")
         echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
         echo "</form>\n";
 
-        echo "<p align='center'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
         mysql_free_result($result);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -217,7 +215,7 @@ else if ($action == "update")
         $sql .= "incident_quantity='{$incident_quantity}', ";
         $sql .= "incidentpoolid='{$incidentpoolid}', productonly='{$productonly}', ";
         $sql .= "supportedcontacts='{$amount}', allcontactssupported='{$allcontacts}'";
-        if (!empty($product) AND user_permission($sit[2], 22)) $sql .= ", product='{$product}'";
+        if (!empty($product) AND user_permission($sit[2], PERM_ADMIN)) $sql .= ", product='{$product}'";
         $sql .= " WHERE id='{$maintid}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);

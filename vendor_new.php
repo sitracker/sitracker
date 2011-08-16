@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 56; // Add Software
-
 require ('core.php');
+$permission = PERM_SKILL_ADD; // Add Software
 require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
@@ -30,16 +29,16 @@ if (empty($submit))
 
     echo show_form_errors('new_vendor');
     clear_form_errors('new_vendor');
-    echo "<h2>".icon('newuser', 32)." {$strNewVendor}</h2>";
+    echo "<h2>" . icon('vendor', 32, $strVendors) . " {$strNewVendor}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\")'>";
-    echo "<table align='center' class='vertical'>";
+    echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strVendorName}</th><td><input maxlength='50' name='name' size='30' class='required'> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "</table>";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "<p class='warning'>{$strAvoidDupes}</p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='vendor_edit.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='vendors.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else

@@ -14,8 +14,8 @@
 //       to enable us to pass variables from PHP to Javascript.
 //
 
-$permission = 0; // not required
 require ('..' . DIRECTORY_SEPARATOR . 'core.php');
+$permission = PERM_NOT_REQUIRED; // not required
 
 session_name($CONFIG['session_name']);
 session_start();
@@ -123,7 +123,7 @@ var icon_ldap_group = '{$icon_ldap_group}';
 var icon_ldap_container = '{$icon_ldap_container}';
 
 
-/* 
+/*
     Please don't add functions here, these functions below need moving to webtrack.js
     this file is to make i18n keys available in javascript
 */

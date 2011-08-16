@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 19; // View Contracts
-
 require ('core.php');
+$permission = PERM_CONTRACT_VIEW; // View Contracts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -114,7 +113,7 @@ else
                     echo " {$strResults}</h3>";
                 }
 
-                echo "<table align='center'>
+                echo "<table class='maintable'>
                 <tr>
                 <th>{$strContract}</th>
                 <th>{$strSite}</th>

@@ -1,5 +1,5 @@
 <?php
-// edit_software.php - Form for editing software
+// edit_skill.php - Form for editing skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 56; // Add Software
-
 require ('core.php');
+$permission = PERM_SKILL_ADD; // Add Software
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -66,7 +64,7 @@ if (empty($action) OR $action == 'edit')
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
-    echo "<p align='center'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == 'delete')

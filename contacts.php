@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$permission = 12; // View Contacts
-
 require ('core.php');
+$permission = PERM_CONTACT_VIEW; // View Contacts
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -76,7 +75,8 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('contact', 32)." ";
 echo "{$title}</h2>";
-echo "<table summary='alphamenu' align='center'>";
+plugin_do('contacts');
+echo "<table summary='alphamenu' class='maintable'>";
 echo "<tr>";
 echo "<td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
@@ -167,16 +167,15 @@ else
 
         if (mysql_num_rows($result) == 0)
         {
-            echo "<p align='center'>";
-            if (empty($search_string)) echo $strNoRecords;
-            else printf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>");
-            echo "</p>\n";        }
+            if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
+            else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>", E_USER_NOTICE));
+        }
         else
         {
 
             echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_term}</em>")."</p>";
 
-            echo "<table align='center'>
+            echo "<table class='maintable'>
             <tr>
             <th>{$strName}</th>
             <th>{$strSite}</th>

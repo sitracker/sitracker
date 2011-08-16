@@ -11,9 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 27; // View your calendar
 require ('core.php');
+$permission = PERM_CALENDAR_VIEW; // View your calendar
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -35,9 +34,9 @@ $startdate = mktime(0,0,0, $month, $day, $year);
 $enddate = mktime(23, 59, 59, $month, $day, $year);
 if ($length == '') $length = 'day';
 
-if (user_permission($sit[2],50)) $approver = TRUE;
+if (user_permission($sit[2], PERM_HOLIDAY_APPROVE)) $approver = TRUE;
 else $approver = FALSE;
-if (user_permission($sit[2],22)) $adminuser = TRUE;
+if (user_permission($sit[2], PERM_ADMIN)) $adminuser = TRUE;
 else $adminuser = FALSE;
 
 // Holiday types (for reference)
@@ -93,6 +92,15 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $dlength=$length;
             }
+        }
+        elseif ($type == HOL_NORMAL)
+        {
+            // If there is a holiday here, remove it on request
+            $sql = "DELETE FROM `{$dbHolidays}` ";
+            $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}'";
+            $result = mysql_query($sql);
+            $dlength = $length;
+            $approved = 0;
         }
         else
         {

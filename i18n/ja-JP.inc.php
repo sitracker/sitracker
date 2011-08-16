@@ -382,7 +382,6 @@ $strOnline = 'オンライン';
 $strOnTrainingCourse = 'トレーニング中';
 $strOpen = 'オペン';
 $strOpened = '開いている';
-$strOperation = '運用';
 $strOther = 'その他';
 $strOtherIncidents = '他のインシデント';
 

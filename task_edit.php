@@ -11,10 +11,8 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-
-$permission = 70;
-
 require ('core.php');
+$permission = PERM_TASK_EDIT;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
@@ -402,7 +400,7 @@ switch ($action)
             echo "<p class='error'>{$strNoMatchingTaskFound}</p>";
         }
 
-        echo "<p align='center'><a href='view_task.php?id={$id}'>{$strReturnWithoutSaving}</a></p>";
+        echo "<p class='return'><a href='view_task.php?id={$id}'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 

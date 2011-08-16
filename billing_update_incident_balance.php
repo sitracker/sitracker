@@ -11,9 +11,8 @@
 
 // Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
 
-$permission = 80; //Set -ve balances
-
 require ('core.php');
+$permission = PERM_SERVICE_EDIT; //Set -ve balances FIXME this permission isn't set negative balances, there's no perm for that did it get lost?
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -31,10 +30,10 @@ if (empty($mode))
 
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='modifyincidentbalance'>";
 
-    echo "<table class='vertical'><tr><td>{$strAmount}<br />{$strForRefundsThisShouldBeNegative}</td><td>";
-    echo "<input type='text' name='amount' id='amount' size='10' /> {$strMinutes}</td></tr>";
+    echo "<table class='vertical'><tr><th>{$strAmount}</th><td>";
+    echo "<input type='text' name='amount' id='amount' size='10' /> {$strMinutes}<br />{$strForRefundsThisShouldBeNegative}</td></tr>";
 
-    echo "<tr><td>{$strDescription}</td><td>";
+    echo "<tr><th>{$strDescription}</th><td>";
     echo "<textarea cols='40' name='description' rows='5'></textarea>";
     echo "</tr>";
 
@@ -43,9 +42,9 @@ if (empty($mode))
     echo "<input type='hidden' id='incidentid' name='incidentid' value='{$incidentid}' />";
     echo "<input type='hidden' id='mode' name='mode' value='update' />";
 
-    echo "<p align='center'><input type='submit' name='Sumbit' value='{$strUpdate}'  /></p>";
-
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  <input type='submit' name='Sumbit' value='{$strSave}'  /></p>";
     echo "</form>";
+    echo "<p class='return'><a href='billable_incidents.php'>{$strReturnWithoutSaving}</a></p>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -110,13 +109,13 @@ elseif ($mode == 'update')
             $transactionid = get_incident_transactionid($incidentid);
             if ($transactionid != FALSE)
             {
-            	$r = update_transaction($transactionid, $cost, $desc, BILLING_AWAITINGAPPROVAL);
+                $r = update_transaction($transactionid, $cost, $desc, BILLING_AWAITINGAPPROVAL);
                 if ($r) html_redirect('billable_incidents.php', TRUE, $strUpdateSuccessful);
                 else html_redirect('billable_incidents.php', FALSE, $strUpdateFailed);
             }
             else
             {
-            	html_redirect('billable_incidents.php', FALSE, $strUpdateFailed);
+                html_redirect('billable_incidents.php', FALSE, $strUpdateFailed);
             }
         }
         else

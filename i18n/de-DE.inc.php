@@ -297,8 +297,6 @@ $strCustomerImpact = 'Drohender Schaden f&uuml;r den Kunden';
 $strCustomerImpactCustomerText = 'Wie viele Benutzer sind betroffen? Steht das ganze System? K&uuml;nnen Anwender nicht mehr arbeiten?';
 $strCustomerRequestedClosure = 'Kunde beantragt den Abschluss des Auftrages';
 
-$strDailyRate = 'Tagesrate';
-
 $strCustomers = 'Kunden';
 
 $strDashboard = '&Uuml;bersicht';
@@ -683,7 +681,6 @@ $strOpened = 'Ge&ouml;ffnet';
 $strOpenActivities = 'Offene Aktivit&auml;ten';
 $strOpenedby = 'Er&ouml;ffnet durch %s';
 $strOpenedbyXonY = 'Er&ouml;ffnet durch %s am %s';
-$strOperation = 'Operationen';
 $strOther = 'anderes';
 $strOtherIncidents = 'andere Auftr&auml;ge';
 $strOutput = 'Ausgabe';
