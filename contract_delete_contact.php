@@ -69,6 +69,7 @@ if (empty($action) OR $action == "showform")
     echo "</table>";
     echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>";
+    echo "<p class='return'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "delete")
