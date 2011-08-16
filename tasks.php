@@ -191,6 +191,7 @@ else
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?show={$show}";
             echo "&amp;sort={$sort}&amp;order={$order}'>{$strShowMine}</a></p>";
         }
+        plugin_do('tasks');
     }
     else
     {

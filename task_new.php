@@ -96,6 +96,7 @@ else
 
             if ($startdate > $duedate AND $duedate != '' AND $duedate > 0 ) $startdate = "{$duedate} {$duetime}";
 
+            plugin_do('task_new_submitted');
             if ($errors != 0)
             {
                 html_redirect($_SERVER['PHP_SELF'], FALSE);
@@ -113,6 +114,7 @@ else
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 if (mysql_affected_rows() < 1) trigger_error("Task insert failed", E_USER_ERROR);
+                plugin_do('task_new_saved');
                 unset($_SESSION['formdata']['new_task']);
                 unset($_SESSION['formerrors']['new_task']);
                 html_redirect("tasks.php");
@@ -126,6 +128,7 @@ else
 
             echo "<h2>".icon('task', 32)." ";
             echo "$title</h2>";
+            plugin_do('task_new');
 
             echo "<form id='newtask' action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table class='vertical'>";
@@ -240,6 +243,7 @@ else
                 echo icon('private', 16, $strPrivate, "{$strPublic}/{$strPrivate}");
                 echo "</label></td></tr>";
             }
+            plugin_do('task_new_form');
             echo "</table>";
             echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
             echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
