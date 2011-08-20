@@ -45,7 +45,7 @@ switch ($mode)
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             $title = ("$strContract - $strEditService");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            
+
             if (mysql_num_rows($result) != 1)
             {
                 echo "<h2>".sprintf($strNoServiceWithIDXFound, $serviceid)."</h2>";
@@ -57,7 +57,7 @@ switch ($mode)
 
                 echo show_form_errors('edit_service');
                 clear_form_errors('edit_service');
-                
+
                 echo "<h2>{$strEditService}</h2>";
 
                 echo "<form id='serviceform' name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
@@ -114,7 +114,7 @@ switch ($mode)
                                 $incidentstyle = "";
                             }
                         }
-                        else 
+                        else
                         {
                             if (!empty($obj->unitrate) AND $obj->unitrate > 0)
                             {
@@ -122,15 +122,15 @@ switch ($mode)
                                 $unitstyle = "";
                                 $incidentstyle = "style='display:none'";
                             }
-                            else 
+                            else
                             {
                                 $billperincident = "checked='checked'";
                                 $unitstyle = "style='display:none'";
                                 $incidentstyle = "";
                             }
                         }
-                                        
-                        
+
+
                         echo "<td>";
                         echo "<input type='hidden' name='editbilling' id='editbilling' value='true' />";
                         echo "<input type='hidden' name='originalcredit' id='originalcredit' value='{$obj->creditamount}' />";
@@ -146,12 +146,12 @@ switch ($mode)
 
                         echo "<tr><th>{$strCreditAmount}</th>\n";
                         echo "<td>{$CONFIG['currency_symbol']} ";
-                        echo "<input class='required' type='text' name='amount' id='amount' size='5' "; 
+                        echo "<input class='required' type='text' name='amount' id='amount' size='5' ";
                         if ($_SESSION['formdata']['edit_service']['amount'] != '')
                         {
                             echo "value='{$_SESSION['formdata']['edit_service']['amount']}' />";
                         }
-                        else 
+                        else
                         {
                             echo "value='{$obj->creditamount}' />";
                         }
@@ -177,7 +177,7 @@ switch ($mode)
                         {
                             echo "value='{$_SESSION['formdata']['edit_service']['incidentrate']}' />";
                         }
-                        else 
+                        else
                         {
                             echo "value='{$obj->incidentrate}' />";
                         }
@@ -231,7 +231,7 @@ switch ($mode)
             header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_EDIT);
             exit;
         }
-        
+
         $amount =  clean_float($_POST['amount']);
         if ($amount == '') $amount = 0;
         $unitrate =  clean_float($_POST['unitrate']);
@@ -241,14 +241,14 @@ switch ($mode)
 
         if ($billtype == 'billperunit') $incidentrate = 0;
         elseif ($billtype == 'billperincident') $unitrate = 0;
-        
+
         $billtype = cleanvar($_REQUEST['billtype']);
-        
+
         $_SESSION['formdata']['edit_service'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE,
                                                  array("@"), array("'" => '"'));
-        
+
         $errors = 0;
-        
+
         if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
         {
             $errors++;
@@ -266,7 +266,7 @@ switch ($mode)
             $errors++;
             $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
         }
-    
+
         if ($errors === 0)
         {
             $originalcredit = clean_float($_REQUEST['originalcredit']);
@@ -335,7 +335,7 @@ switch ($mode)
                 }
             }
         }
-        
+
         if ($errors == 0)
         {
             html_redirect("contract_details.php?id={$contractid}", TRUE);
@@ -357,11 +357,13 @@ switch ($mode)
             $title = ("$strContract - $strEditBalance");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
             echo "<h2>{$strEditBalance}</h2>";
+            echo show_form_errors('edit_service');
+            clear_form_errors('edit_service');
 
             echo "<form name='serviceform' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_submit(\"{$strAreYouSureMakeTheseChanges}\");'>";
 
             echo "<table class='maintable vertical'>";
-            echo "<tr><th>{$strID}</th><td>{$sourceservice}</td></tr>";
+            echo "<tr><th>{$strServiceID}</th><td>{$sourceservice}</td></tr>";
             echo "<tr><th>{$strAction}</th><td>";
             echo "<label><input type='radio' name='mode' id='edit' value='edit' checked='checked' onclick=\"$('transfersection').hide(); $('transfersectionbtn').hide(); $('editsection').show(); \" /> {$strEdit}</label> ";
 
@@ -397,7 +399,7 @@ switch ($mode)
                 echo "</td></tr>";
             }
 
-            echo "<tr><th>{$strAmountToEditBy}</th><td>{$CONFIG['currency_symbol']} <input type='text' name='amount' id='amount' size='5' /></td></tr>";
+            echo "<tr><th>{$strAmountToEditBy}</th><td>{$CONFIG['currency_symbol']} <input type='text' class='required' name='amount' id='amount' size='5' /> <span class='required'>{$strRequired}</span></td></tr>";
             echo "<tr><th>{$strReason}</th><td><input type='text' name='reason' id='reason' size='60' maxlength='255' /></td></tr>";
 
             echo "</table>";
@@ -413,6 +415,7 @@ switch ($mode)
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
     case 'edit':
+        $errors = 0;
         if (user_permission($sit[2], PERM_SERVICE_BALANCE_EDIT) == FALSE)
         {
             header("Location: {$CONFIG['application_webpath']}noaccess.php?id=" . PERM_SERVICE_BALANCE_EDIT);
@@ -420,14 +423,30 @@ switch ($mode)
         }
         else
         {
-            $status = update_contract_balance($contractid, $reason, $amount, $sourceservice);
+            if ($amount == '')
+            {
+                $errors++;
+                $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAmountToEditBy}'"), E_USER_ERROR);
+            }
+            if ($errors == 0)
+            {
+                $status = update_contract_balance($contractid, $reason, $amount, $sourceservice);
+            }
+            else
+            {
+                html_redirect("{$_SERVER['PHP_SELF']}?mode=showform&sourceservice={$sourceservice}&contractid={$contractid}", FALSE);
+                exit;
+            }
+
             if ($status)
             {
                 html_redirect("{$CONFIG['application_webpath']}contract_details.php?id={$contractid}", TRUE, $strSuccessfullyUpdated);
+                exit;
             }
             else
             {
                 html_redirect("{$CONFIG['application_webpath']}contract_details.php?id={$contractid}", FALSE, $strUpdateFailed);
+                exit;
             }
         }
         break;
@@ -439,7 +458,21 @@ switch ($mode)
         }
         else
         {
-            $status = update_contract_balance($contractid, $reason, ($amount * -1), $sourceservice);
+            if ($amount == '')
+            {
+                $errors++;
+                $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAmountToEditBy}'"), E_USER_ERROR);
+            }
+            if ($errors == 0)
+            {
+                $status = update_contract_balance($contractid, $reason, ($amount * -1), $sourceservice);
+            }
+            else
+            {
+                html_redirect("{$_SERVER['PHP_SELF']}?mode=showform&sourceservice={$sourceservice}&contractid={$contractid}", FALSE);
+                exit;
+            }
+
             if ($status)
             {
                 $status = update_contract_balance($contractid, $reason, $amount, $destinationservice);
