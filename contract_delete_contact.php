@@ -35,6 +35,7 @@ if (empty($action) OR $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     echo "<h2>{$strRemoveLinkContractAndSupportContact}</h2>";
+    plugin_do('contract_delete_contact');
     echo "<p align='center'>{$strRemoveLinkContractAndSupportContactText}</p>";
     echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post' onsubmit='return confirm_action(\"{$strAreYouSureDeleteMaintenceContract}\", true)'>";
     echo "<input type='hidden' name='context' value='{$context}' />";
@@ -64,10 +65,11 @@ if (empty($action) OR $action == "showform")
         echo "<tr><th>{$strContact} ".icon('contact', 16)."</th><td>{$contactid} - ".contact_realname($contactid);
         echo "<input name='contactid' type='hidden' value='{$contactid}' /></td></tr>";
     }
-
+    plugin_do('contract_delete_contact_form');
     echo "</table>";
     echo "<p class='formbuttons'><input name='submit' type='submit' value='{$strContinue}' /></p>";
     echo "</form>";
+    echo "<p class='return'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == "delete")
@@ -77,15 +79,17 @@ elseif ($action == "delete")
     // check for blank contact
     if ($contactid == 0)
     {
-        $errors = 1;
+        $errors++;
         $errors_string .= user_alert("{$strYouMustSelectAsupportContact}", E_USER_ERROR);
     }
     // check for blank maintenance id
     if ($maintid == 0)
     {
-        $errors = 1;
+        $errors++;
         $errors_string .= user_alert("{$strYouMustSelectAmaintenanceContract}", E_USER_ERROR);
     }
+    plugin_do('contract_delete_contact_submitted');
+    
     // delete maintenance support contact if no errors
     if ($errors == 0)
     {
@@ -104,6 +108,7 @@ elseif ($action == "delete")
         {
             journal(CFG_LOGGING_NORMAL, 'Supported Contact Removed', "Contact {$contactid} removed from maintenance contract $maintid", CFG_JOURNAL_MAINTENANCED, $maintid);
 
+            plugin_do('contract_delete_contact_saved');
             if ($context == 'maintenance') html_redirect("contract_details.php?id={$maintid}");
             else html_redirect("contact_details.php?id={$contactid}");
         }

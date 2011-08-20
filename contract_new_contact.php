@@ -32,6 +32,7 @@ if (empty($action) || $action == "showform")
     echo show_form_errors('contract_new_contact');
     clear_form_errors('contract_new_contact');
     echo "<h2>{$strAssociateContactWithContract}</h2>";
+    plugin_do('contract_new_contact');
 
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post'>";
     echo "<input type='hidden' name='context' value='{$context}' />";
@@ -67,6 +68,7 @@ if (empty($action) || $action == "showform")
         echo "<input name='contactid' type='hidden' value='{$contactid}' />";
         echo "</td></tr>";
     }
+    plugin_do('contract_new_contact_form');
     echo "</table>";
     echo "<p class='formbuttons'>";
     echo "<input name='submit' type='reset' value='{$strReset}' /> ";
@@ -91,6 +93,7 @@ else if ($action == "new")
         $errors++;
         $_SESSION['formerrors']['contract_new_contact']['maintid'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strContract}'"), E_USER_ERROR);
     }
+    plugin_do('contract_new_contact_submitted');
 
     $sql = "SELECT * FROM `{$dbSupportContacts}` WHERE maintenanceid = '{$maintid}' AND contactid = '{$contactid}'";
     $result = mysql_query($sql);
@@ -117,6 +120,7 @@ else if ($action == "new")
         }
         else
         {
+            plugin_do('contract_new_contact_saved');
             if ($context == 'contact') html_redirect("contact_details.php?id={$contactid}");
             else html_redirect("contract_details.php?id={$maintid}");
         }
