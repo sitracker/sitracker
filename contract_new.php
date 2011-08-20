@@ -156,7 +156,7 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
-    echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )."</td>";
+    echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )." <span class='required'>{$strRequired}</span></td>";
     echo "</tr>";
 
     echo "<tr>";
@@ -311,7 +311,7 @@ elseif ($action == 'new')
     if ($timed == 'yes' AND empty($billingmatrix))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['billing_matrix'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
     }
     plugin_do('contract_new_submitted');
 
