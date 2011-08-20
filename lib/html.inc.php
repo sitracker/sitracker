@@ -974,7 +974,7 @@ function contract_details($id, $mode='internal')
 
     if ($maint->expirydate < $now AND $maint->expirydate != '-1')
     {
-        $html .= "<span class='expired'>, {$GLOBALS['strExpired']}</span>";
+        $html .= ", <span class='expired'>{$GLOBALS['strExpired']}</span>";
     }
     $html .= "</td></tr>\n";
     $html .= "<tr><th>{$GLOBALS['strSite']}:</th>";
