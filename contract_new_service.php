@@ -196,7 +196,6 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 
     echo "<p class='return'><a href='contract_details.php?id={$contractid}'>{$strReturnWithoutSaving}</a></p>";
 
-    //cleanup form vars
     clear_form_data('new_service');
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -305,6 +304,8 @@ else
                 if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed",E_USER_ERROR);
             }
         }
+        
+        clear_form_data('new_service');
     }
 
     if ($errors == 0)
