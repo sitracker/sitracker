@@ -383,7 +383,6 @@ else
             echo " &nbsp;";
         }
         echo "</div>\n";
-
         echo "</div>\n";
 
     }
