@@ -177,6 +177,10 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
         echo "/>";
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
+        echo "<tr><th>{$strBillingMatrix}</th>";
+        echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )." <span class='required'>{$strRequired}</span>	</td>";
+        echo "</tr>";        
+
         echo "<tr>";
         echo "<th>{$strFreeOfCharge}</th>";
         echo "<td><input type='checkbox' id='foc' name='foc' value='yes' /> {$strAboveMustBeCompletedToAllowDeductions}</td>";
@@ -220,6 +224,7 @@ else
     if ($incidentrate == '') $incidentrate = 0;
     $notes = cleanvar($_REQUEST['notes']);
     $title = cleanvar($_REQUEST['title']);
+    $billingmatrix = clean_dbstring($_REQUEST['billing_matrix']);
    
     $_SESSION['formdata']['new_service'] = cleanvar($_POST, TRUE, FALSE, FALSE,
                                                      array("@"), array("'" => '"'));
@@ -239,6 +244,12 @@ else
         $errors++;
         $_SESSION['formerrors']['new_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
     }
+    
+    if (!empty($billtype) AND empty($billingmatrix))
+    {
+        $errors++;
+        $_SESSION['formerrors']['new_service']['billing_matrix'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
+    }
 
     if ($errors == 0)
     {
@@ -253,8 +264,8 @@ else
             $cust_ref = cleanvar($_REQUEST['cust_ref']);
             $cust_ref_date = cleanvar($_REQUEST['cust_ref_date']);
     
-            $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, cust_ref, cust_ref_date, title, notes, foc) ";
-            $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$foc}')";
+            $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, cust_ref, cust_ref_date, title, notes, billingmatrix, foc) ";
+            $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$billingmatrix}', '{$foc}')";
         }
         else
         {
