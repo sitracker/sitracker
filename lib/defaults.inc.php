@@ -383,4 +383,8 @@ $CONFIG['enable_outbound_email'] = TRUE;
 // Change the newline character if outbound emails have line breaks in the wrong places.(CRLF or LF)
 $CONFIG['outbound_email_newline'] = 'LF';
 
+// Change the newline character if outbound emails attachments have line breaks in the wrong places.(CRLF or LF)
+$CONFIG['outbound_emailattachment_newline'] = 'CRLF';
+
+
 ?>

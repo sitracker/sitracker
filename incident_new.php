@@ -409,9 +409,9 @@ elseif ($action == 'incidentform')
     // Display form to get details of the actual incident
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    plugin_do('incident_add_form_top');
-
     echo "<h2>".icon('new', 32)." {$strNewIncident} - {$strDetails}</h2>";
+
+    plugin_do('incident_new');
 
     $slatag = contract_slatag($maintid);
     $maxprority = servicelevel_maxpriority($slatag);
@@ -573,6 +573,7 @@ elseif ($action == 'incidentform')
     echo "<label><input name='send_email' type='checkbox' checked='checked' /> ";
     echo "{$strSendOpeningEmailDesc}</label><br />";
     echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", PRIORITY_LOW, $maxprority, FALSE)." </td></tr>";
+    plugin_do('incident_new_form');
     echo "</table>\n";
     echo "<input type='hidden' name='win' value='{$win}' />";
     echo "<p align='center'><input name='submit' type='submit' value='{$strNewIncident}' /></p>";
@@ -665,6 +666,7 @@ elseif ($action == 'assign')
             $errors++;
             $error_string .= $strYouMustSelectAserviceLevel;
         }
+        plugin_do('incident_new_submitted');
 
         if ($errors == 0)
         {
@@ -854,19 +856,17 @@ elseif ($action == 'assign')
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
-            plugin_do('incident_created');
+            plugin_do('incident_new_saved');
 
             // Decrement free support, where appropriate
             if ($type == 'free')
             {
                 decrement_free_incidents(contact_siteid($contactid));
-                plugin_do('incident_created_site');
             }
             else
             {
                 // decrement contract incident by incrementing the number of incidents used
                 increment_incidents_used($maintid);
-                plugin_do('incident_created_contract');
             }
 
             $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
