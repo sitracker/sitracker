@@ -407,6 +407,7 @@ $i18n_codes = array(
                     'fi-FI' => 'Suomi',
                     'fo-FO' => 'føroyskt',
                     'fr-FR' => 'Français',
+                    'gr-GR' => 'Ελληνικά',
                     'he-IL' => 'עִבְרִית',
                     'hr-HR' => 'Hrvatski',
                     'hu-HU' => 'Magyar',
