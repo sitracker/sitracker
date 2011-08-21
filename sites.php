@@ -99,6 +99,8 @@ if ($search_string == '') $search_string='a';
 echo "<h2>".icon('site', 32)." ";
 echo "{$title}</h2>";
 
+plugin_do('sites');
+
 echo "<table summary='alphamenu' class='maintable'>";
 echo "<tr>";
 echo "<td align='center'>";

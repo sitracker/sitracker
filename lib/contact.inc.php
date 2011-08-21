@@ -587,6 +587,7 @@ function process_new_contact($mode = 'internal')
         $_SESSION['formerrors']['new_contact']['duplicate'] = $GLOBALS['strContactRecordExists'];
     }
 
+    plugin_do('contact_new_submitted');
 
     // add contact if no errors
     if ($errors == 0)
@@ -666,6 +667,7 @@ function process_new_contact($mode = 'internal')
         }
         else
         {
+            plugin_do('contact_new_saved');
             clear_form_data('new_contact');
             clear_form_errors('new_contact');
             $sql = "SELECT username, password FROM `{$dbContacts}` WHERE id={$newid}";

@@ -46,6 +46,7 @@ if (empty($mode))
 
     echo "<h2>".icon('user', 32)." ";
     echo sprintf($strEditProfileFor, $user->realname).' '.gravatar($user->email)."</h2>";
+    plugin_do('user_profile_edit');
     echo "<form id='edituser' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='maintable vertical'>";
     echo "<col width='250'></col><col width='*'></col>";
@@ -73,7 +74,7 @@ if (empty($mode))
 
     echo "</tr>";
     echo "<tr><th>{$strRealName}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_realname']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_realname']))
     {
         echo "<input name='realname' type='hidden' value=\"{$user->realname}\" />{$user->realname}";
     }
@@ -87,7 +88,7 @@ if (empty($mode))
     echo "<tr><th>{$strSource}</th><td>{$user->user_source}</td></th>";
     echo "<tr><th>{$strJobTitle}</th>";
     echo "<td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
     {
         echo $user->jobtitle;
     }
@@ -188,7 +189,7 @@ if (empty($mode))
     echo "<tr><th colspan='2'>{$strContactDetails}</th></tr>";
     echo "<tr id='email'><th>{$strEmail}</th>";
     echo "<td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_email']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_email']))
     {
         echo "<input name='email' type='hidden'value='".strip_tags($user->email)."' />{$user->email}";
     }
@@ -200,7 +201,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr id='phone'><th>{$strTelephone}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_telephone']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_telephone']))
     {
         echo $user->phone;
     }
@@ -210,7 +211,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr><th>{$strFax}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_fax']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_fax']))
     {
         echo $user->fax;
     }
@@ -220,7 +221,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr><th>{$strMobile}</th><td>";
-    if ($_SESSION['user_source'] != 'sit' AND !empty($CONFIG['ldap_mobile']))
+    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_mobile']))
     {
         echo $user->mobile;
     }
@@ -239,9 +240,9 @@ if (empty($mode))
     echo "<td><input maxlength='50' name='skype' size='30' type='text' value='".strip_tags($user->skype)."' /></td></tr>";
 
 
-    plugin_do('edit_profile_form');
+    plugin_do('user_profile_edit_form');
     // Do not allow password change if using LDAP
-    if ($_SESSION['user_source'] == 'sit')
+    if ($user->user_source == 'sit')
     {
         if ($CONFIG['trusted_server'] == FALSE AND $edituserid == $sit[2])
         {
@@ -331,6 +332,7 @@ elseif ($mode == 'save')
             $error_string .= "<h5 class='error'>{$strPasswordsDoNotMatch}</h5>";
         }
     }
+    plugin_do('user_profile_edit_submitted');
 
     // update database if no errors
     if ($errors == 0)
@@ -364,7 +366,7 @@ elseif ($mode == 'save')
         {
             if ($edituserid == $sit[2]) $redirecturl = 'index.php';
             else $redirecturl = 'manage_users.php';
-            plugin_do('save_profile_form');
+            plugin_do('user_profile_edit_saved');
 
             // password was not changed
             if (isset($confirm_message)) html_redirect($redirecturl, TRUE, $confirm_message);

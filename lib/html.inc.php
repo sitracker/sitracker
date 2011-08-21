@@ -974,7 +974,7 @@ function contract_details($id, $mode='internal')
 
     if ($maint->expirydate < $now AND $maint->expirydate != '-1')
     {
-        $html .= "<span class='expired'>, {$GLOBALS['strExpired']}</span>";
+        $html .= ", <span class='expired'>{$GLOBALS['strExpired']}</span>";
     }
     $html .= "</td></tr>\n";
     $html .= "<tr><th>{$GLOBALS['strSite']}:</th>";
@@ -1621,6 +1621,7 @@ function show_edit_site($site, $mode='internal')
         {
             $html .= "<h2>".icon('site', 32)." {$GLOBALS['strEditSite']}: {$site} - ";
             $html .= site_name($site)."</h2>";
+            plugin_do('site_edit');
         }
         else
         {
@@ -1689,8 +1690,8 @@ function show_edit_site($site, $mode='internal')
             $html .= "<tr><th>{$GLOBALS['strNotes']}:</th><td>";
             $html .= "<textarea rows='5' cols='30' name='notes'>{$obj->notes}</textarea>";
             $html .= "</td></tr>\n";
+            plugin_do('site_edit_form');
         }
-        plugin_do('edit_site_form');
         $html .= "</table>\n";
         $html .= "<input name='site' type='hidden' value='$site' />";
         $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
@@ -1739,6 +1740,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
 
     if ($mode == 'internal')
     {
+        plugin_do('contact_new');
         $html .= "<h5 class='warning'>{$GLOBALS['strAvoidDupes']}</h5>";
     }
     $html .= "<form name='contactform' action='{$_SERVER['PHP_SELF']}' ";
@@ -1871,6 +1873,7 @@ function show_new_contact($siteid = 0, $mode = 'internal')
     else $html .= " disabled='disabled'";
     $html .= " />";
     $html .= "<label for='emaildetails'>{$GLOBALS['strEmailContactLoginDetails']}</label></td></tr>";
+    plugin_do('contact_new_form');
     $html .= "</table>\n\n";
     if (!empty($returnpage)) $html .= "<input type='hidden' name='return' value='{$returnpage}' />";
     $html .= "<p class='formbuttons'><input name='reset' type='reset' value='{$GLOBALS['strReset']}' /> ";
@@ -2384,10 +2387,10 @@ function html_hmenu($hmenu)
 
 
 /**
-  * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
-  * @author Ivan Lucas
-  * @param string $address, address to search for
-  * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
+ * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
+ * @author Ivan Lucas
+ * @param string $address, address to search for
+ * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
 */
 function map_link($address)
 {
@@ -2397,5 +2400,44 @@ function map_link($address)
     return $link;
 }
 
+
+/**
+ * Return a list of plugin contexts used by the given plugin
+ * @author Ivan Lucas
+ * @param string $plugin. The name of the plugin
+ * @returns string HTML.
+ * @note This relies on plugin function names starting with the plugin name, which is recommended but not enforced
+*/
+function html_plugin_contexts($plugin)
+{
+    global $PLUGINACTIONS, $strNone;
+    $html = '';
+
+    if (is_array($PLUGINACTIONS))
+    {
+        foreach ($PLUGINACTIONS AS $key => $value)
+        {
+            foreach($value AS $hook)
+            {
+                if (beginsWith($hook, $plugin))
+                {
+                    $phook = str_replace($plugin . '_' , '', $hook);
+                    if (!function_exists($hook))
+                    {
+                        $phook = "☠ {$hook}";
+                        $key = "<span style='text-decoration: line-through;'>{$key}</span>";
+                    }
+                    $html .= "<strong title=\"{$phook}()\" style=\"cursor:help;\">{$key}</strong> &nbsp; ";
+                }
+            }
+        }
+    }
+    else
+    {
+        $html = $strNone;
+    }
+
+    return $html;
+}
 
 ?>

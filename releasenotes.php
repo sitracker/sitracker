@@ -23,6 +23,7 @@ if (!empty($version))
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 include_once (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>Release Notes</h2>";
+plugin_do('release_notes');
 
 echo "<div id='help'>";
 echo "<h4>This is a summary of the full release notes showing only the most important changes, for more detailed notes and the latest information on this release please <a href='http://sitracker.org/wiki/ReleaseNotes'>see the SiT website</a>:</h4>";
@@ -110,6 +111,7 @@ echo "<ul>
 </ul>";
 echo "</div>";
 
+plugin_do('release_notes_content');
 echo "</div>";
 
 include_once (APPLICATION_INCPATH . 'htmlfooter.inc.php');

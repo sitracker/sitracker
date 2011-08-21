@@ -29,6 +29,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
 
     echo "<h2>".icon('templates', 32)." ";
     echo "{$strTemplates}</h2>";
+    plugin_do('templates');
     echo "<p align='center'><a href='template_new.php'>{$strNewTemplate}</a></p>";
 
     $sql = "SELECT * FROM `{$dbEmailTemplates}` ORDER BY id";
@@ -139,6 +140,7 @@ elseif ($action == "edit")
     if (mysql_num_rows($result) > 0)
     {
         echo "<h2>{$title}</h2>";
+        plugin_do('templates');
         echo "<div style='width: 48%; float: left;'>";
         echo "<form name='edittemplate' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
         echo "<table class='vertical' width='100%'>";
@@ -277,6 +279,7 @@ elseif ($action == "edit")
             echo " /> {$strVisibleToCustomer})";
             echo "</td></tr>\n";
         }
+        plugin_do('templates_form');
         echo "</table>\n";
 
         echo "<p class='formbuttoms'>";
@@ -344,7 +347,7 @@ elseif ($action == "edit")
         }
 
         echo "</dl>";
-        plugin_do('emailtemplate_list');
+        plugin_do('templates_variables_content');
         echo "</table>\n";
         echo "</div>";
 
@@ -411,6 +414,8 @@ elseif ($action == "update")
     if ($storeinlog == 'Yes') $storeinlog = 'Yes';
     else $storeinlog = 'No';
 
+    plugin_do('templates_submitted');
+
     switch ($template)
     {
         case 'email':
@@ -434,6 +439,7 @@ elseif ($action == "update")
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     if ($result)
     {
+        plugin_do('templates_saved');
         journal(CFG_LOGGING_NORMAL, 'Email Template Updated', "Email Template {$type} was modified", CFG_JOURNAL_ADMIN, $type);
         html_redirect($_SERVER['PHP_SELF']);
     }

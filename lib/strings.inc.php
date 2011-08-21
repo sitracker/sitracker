@@ -336,6 +336,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
                        30 => array ('name' => $strHelpAbout, 'url' => 'about.php')
                        );
 
+    if ($_SESSION['auth'] == TRUE AND function_exists('plugin_do')) plugin_do('define_portal_menu');
 
     ksort($hmenu[0], SORT_NUMERIC);
 }
@@ -406,6 +407,7 @@ $i18n_codes = array(
                     'fi-FI' => 'Suomi',
                     'fo-FO' => 'føroyskt',
                     'fr-FR' => 'Français',
+                    'gr-GR' => 'Ελληνικά',
                     'he-IL' => 'עִבְרִית',
                     'hr-HR' => 'Hrvatski',
                     'hu-HU' => 'Magyar',

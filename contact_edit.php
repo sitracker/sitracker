@@ -49,9 +49,9 @@ elseif ($action == "edit" && isset($contact))
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($contactobj = mysql_fetch_object($contactresult))
     {
-        // User does not have access
         echo "<h2>".icon('contact', 32)." ";
         echo "{$strEditContact}: {$contact}</h2>";
+        plugin_do('contact_edit');
         echo "<form name='contactform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\");'>";
         echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strName}</th>\n";
@@ -134,7 +134,7 @@ elseif ($action == "edit" && isset($contact))
         echo "<tr><th>{$strNotes}:</th><td>";
         echo "<textarea rows='5' cols='60' name='notes'>{$contactobj->notes}</textarea></td></tr>\n";
 
-        plugin_do('edit_contact_form');
+        plugin_do('contact_edit_form');
         echo "</table>";
 
         echo "<input name='contact' type='hidden' value='{$contact}' />";
@@ -205,6 +205,7 @@ else if ($action == "update")
         $errors = 1;
         trigger_error("Something weird has happened, better call technical support", E_USER_ERROR);
     }
+    plugin_do('contact_edit_submitted');
 
     // edit contact if no errors
     if ($errors == 0)
@@ -242,7 +243,7 @@ else if ($action == "update")
         }
         else
         {
-            plugin_do('save_contact_form');
+            plugin_do('contact_edit_saved');
 
             journal(CFG_LOGGING_NORMAL, 'Contact Edited', "Contact {$contact} was edited", CFG_JOURNAL_CONTACTS, $contact);
             html_redirect("contact_details.php?id={$contact}");

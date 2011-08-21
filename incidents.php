@@ -138,6 +138,7 @@ switch ($type)
         }
 
         echo "</h2>\n";
+        plugin_do('incidents');
         if (!empty($sort))
         {
             if ($order == 'a' OR $order == 'ASC') $sortorder = "ASC";

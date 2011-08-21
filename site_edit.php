@@ -51,7 +51,7 @@ elseif ($action == "edit")
 }
 elseif ($action == "update")
 {
-    // Fix for Manits 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
+    // Fix for Mantis 1128 Incident pool dropdown is broken, dropdown now passes pool value, not ID
     $incident_quantity = clean_dbstring($_POST['incident_pool']);
     $name = clean_dbstring($_POST['name']);
     $department = convert_string_null_safe(clean_dbstring($_POST['department']));
@@ -76,9 +76,11 @@ elseif ($action == "update")
 
     if ($name == '')
     {
-        $errors = 1;
+        $errors++;
         $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
     }
+
+    plugin_do('site_edit_submitted');
 
     if ($errors == 0)
     {
@@ -109,7 +111,7 @@ elseif ($action == "update")
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         else
         {
-            plugin_do('edit_site_save');
+            plugin_do('site_edit_saved');
             journal(CFG_LOGGING_NORMAL, $strSiteEdited, sprintf($strSiteXEdited,$site) , CFG_JOURNAL_SITES, $site);
             html_redirect("site_details.php?id={$site}");
             exit;

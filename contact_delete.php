@@ -31,9 +31,11 @@ if (empty($process))
     if (empty($id))
     {
         echo "<h2>{$strDeleteContact}</h2>";
+        plugin_do('contact_delete');
         echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
         echo "<table class='maintable'>";
         echo "<tr><th>{$strContact}:</th><td>".contact_site_drop_down("id", 0)."</td></tr>";
+        plugin_do('contact_delete_form');
         echo "</table>";
         echo "<p><input name='submit1' type='submit' value=\"{$strDelete}\" /></p>";
         echo "</form>";
@@ -41,6 +43,7 @@ if (empty($process))
     else
     {
         echo "<h2>{$strDeleteContact}</h2>\n";
+        plugin_do('contact_delete');
         $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
         $contactresult = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -56,6 +59,9 @@ if (empty($process))
         }
         mysql_free_result($contactresult);
         echo "</table>\n";
+
+        plugin_do('contact_delete_submitted');
+
         $totalincidents=contact_count_incidents($id);
         if ($totalincidents > 0)
         {
@@ -149,6 +155,7 @@ else
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
+    plugin_do('contact_delete_saved');
     journal(CFG_LOGGING_NORMAL, 'Contact Deleted', "Contact {$id} was deleted", CFG_JOURNAL_CONTACTS, $id);
 
     if (!empty($newcontact)) html_redirect("contact_details.php?id={$newcontact}");

@@ -63,6 +63,7 @@ switch ($_REQUEST['action'])
             $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&userid={$userdetails->id}&hash={$hash}";
             $t = new TriggerEvent('TRIGGER_USER_RESET_PASSWORD', array('userid' => $userdetails->id, 'passwordreseturl' => $reseturl));
             echo "<h3 class='forgotpwd'>{$strInformationSent}</h3>";
+            plugin_do('forgotpwd');
             echo "<p class='forgotpwd'>{$strInformationSentRegardingSettingPassword}</p>";
             if ($_REQUEST['action'] == 'forgotpwd')
             {

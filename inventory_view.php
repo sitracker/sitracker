@@ -53,6 +53,7 @@ if (is_numeric($_GET['id']))
 
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('inventory', 32)." {$strInventory}</h2>";
+        plugin_do('inventory_view');
 
         echo "<div id='container' style='width: 40%'>";
         echo "<h3>{$row->name}";
@@ -106,6 +107,7 @@ if (is_numeric($_GET['id']))
         echo "<p><strong>{$strCreatedBy}:</strong> ".user_realname($row->createdby);
         echo " {$row->created}, <strong>{$strLastModifiedBy}:</strong> ";
         echo user_realname($row->modifiedby)." {$row->modified}</p>";
+        plugin_do('inventory_view_content');
         echo "</div>";
 
         echo "<p class='inventory'><a href='inventory_site.php?id={$row->siteid}'>";

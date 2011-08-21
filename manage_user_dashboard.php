@@ -48,6 +48,7 @@ if (empty($dashboardid))
 
     echo "<h2>".icon('dashboard', 32)." {$strDashboard}: ";
     echo user_realname($sit[2])."</h2>\n";
+    plugin_do('manage_user_dashboard');
 
     if (mysql_num_rows($result) > 0)
     {
@@ -75,6 +76,7 @@ if (empty($dashboardid))
 }
 else
 {
+    plugin_do('manage_user_dashboard_submitted');
     $action = $_REQUEST['action'];
     switch ($action)
     {
@@ -105,6 +107,7 @@ else
     $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$dashboardstr}' WHERE id = '{$_SESSION['userid']}'";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    plugin_do('manage_user_dashboard_saved');
     html_redirect("manage_user_dashboard.php");
 }
 

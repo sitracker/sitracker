@@ -89,9 +89,20 @@ if (mysql_num_rows($result) >= 1)
         }
         echo "</td></tr>";
         echo "</table>";
-        echo "<p align='center'><a href='task_edit.php?id={$taskid}'>{$strEditTask}</a>";
-        if ($task->owner == $sit[2] AND $task->completion == 100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=delete'>{$strDeleteTask}</a>";
-        if ($task->completion < 100) echo " | <a href='task_edit.php?id={$taskid}&amp;action=markcomplete'>{$strMarkComplete}</a>";
+        $operations = array();
+        $operations[$strEditTask] = array('url' => "task_edit.php?id={$taskid}", 'perm' => PERM_TASK_EDIT);
+        if ($task->owner == $sit[2] AND $task->completion == 100)
+        {
+            $operations[$strDeleteTask] = array('url' => "task_edit.php?id={$taskid}&amp;action=delete", 'perm' => PERM_TASK_EDIT);
+        }
+        if ($task->completion < 100)
+        {
+            $operations[$strPostpone] = array('url' => "task_edit.php?id={$taskid}&amp;action=postpone", 'perm' => PERM_TASK_EDIT);
+            $operations[$strMarkComplete] = array('url' => "task_edit.php?id={$taskid}&amp;action=markcomplete", 'perm' => PERM_TASK_EDIT);
+        }
+
+        echo "<p align='center'>";
+        echo html_action_links($operations);
         echo "</p>";
 
 //

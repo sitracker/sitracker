@@ -69,6 +69,7 @@ while ($contact = mysql_fetch_object($contactresult))
     }
 
     echo "<h2>".icon('contact', 32)." {$strContactDetails}</h2>";
+    plugin_do('contact_details');
 
     echo "<table class='maintable vertical'>";
     echo "<tr><th colspan='2'><h3>".gravatar($contact->email, 32)." {$contact->forenames} {$contact->surname}";
@@ -218,7 +219,7 @@ while ($contact = mysql_fetch_object($contactresult))
     echo "<td>".contact_count_inventory_items($id)." ";
     echo "<a href='inventory.php?site=".contact_siteid($id)."'>{$strSeeHere}</a>";
     echo "</td></tr>";
-    plugin_do('contact_details');
+    plugin_do('contact_details_table');
 
     echo "</table>\n";
 

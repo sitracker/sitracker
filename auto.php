@@ -997,6 +997,6 @@ if ($actions !== FALSE)
         }
     }
 }
-plugin_do('automata');
+plugin_do('auto');
 
 ?>

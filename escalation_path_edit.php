@@ -1,5 +1,5 @@
 <?php
-// edit_escalation_path - Ability to edit escalation path
+// escalation_path_edit - Ability to edit escalation path
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -32,6 +32,7 @@ if (empty($_REQUEST['mode']))
     echo show_form_errors('edit_escalation_path');
     clear_form_errors('edit_escalation_path');
     echo "<h2>{$title}</h2>";
+    plugin_do('escalation_path_edit');
 
     while ($details = mysql_fetch_object($result))
     {
@@ -44,7 +45,7 @@ if (empty($_REQUEST['mode']))
         echo "<tr><th>{$strHomeURL}:</th><td><input name='homeurl' value='{$details->home_url}' /></td></tr>";
         echo "<tr><th>{$strTitle}:</th><td><input name='title' value='{$details->url_title}' /></td></tr>";
         echo "<tr><th>{$strEmailDomain}:</th><td><input name='emaildomain' value='{$details->email_domain}' /></td></tr>";
-
+        plugin_do('escalation_path_edit_form');
         echo "</table>";
         echo "<input type='hidden' value='{$id}' name='id' />";
         echo "<input type='hidden' value='edit' name='mode' />";
@@ -71,6 +72,7 @@ else
         $errors++;
         $_SESSION['formerrors']['edit_escalation_path']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
     }
+    plugin_do('escalation_path_edit_submitted');
 
     if ($errors == 0)
     {
@@ -86,12 +88,13 @@ else
         }
         else
         {
+            plugin_do('escalation_path_edit_saved');
             html_redirect("escalation_paths.php");
         }
     }
     else
     {
-        html_redirect("edit_escalation_path.php?id={$id}", FALSE);
+        html_redirect("escalation_path_edit.php?id={$id}", FALSE);
     }
 }
 

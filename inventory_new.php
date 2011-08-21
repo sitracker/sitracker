@@ -31,6 +31,8 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 {
     $post = cleanvar($_POST);
 
+    plugin_do('inventory_new_submitted');
+
     $sql = "INSERT INTO `{$dbInventory}`(address, username, password, type,";
     $sql .= " notes, created, createdby, modified, modifiedby, active,";
     $sql .= " name, siteid, privacy, identifier, contactid) VALUES('{$post['address']}', ";
@@ -43,7 +45,11 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     mysql_query($sql);
     $id = mysql_insert_id();
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    else html_redirect("inventory_view.php?id={$id}");
+    else
+    {
+        plugin_do('inventory_new_saved');
+        html_redirect("inventory_view.php?id={$id}");
+    }
 }
 elseif (count($CONFIG['inventory_types']) <= 0)
 {
@@ -64,7 +70,8 @@ else
         echo user_alert(sprintf($strFieldMustNotBeBlank, $strSite), E_USER_WARNING);
     }
     echo "<h2>".icon('new', 32)." {$strNew}</h2>";
-    echo (count($CONFIG['inventory_types']));
+
+    plugin_do('inventory_new');
 
     $url = "{$_SERVER['PHP_SELF']}?action=new";
     if (!empty($_GET['site']))
@@ -113,19 +120,20 @@ else
     echo "<textarea id='inventorynotes' rows='15' cols='60' name='notes'></textarea></td></tr>";
 
     echo "<tr><th>{$strPrivacy} ".help_link('InventoryPrivacy')."</th>";
-    echo "<td><input type='radio' name='privacy' value='private' />{$strPrivate}<br />";
+    echo "<td><label><input type='radio' name='privacy' value='private' />{$strPrivate}</label><br />";
 
-    echo "<input type='radio' name='privacy' value='adminonly' />";
-    echo "{$strAdminOnly}<br />";
+    echo "<label><input type='radio' name='privacy' value='adminonly' />";
+    echo "{$strAdminOnly}</label><br />";
 
-    echo "<input type='radio' name='privacy' value='none'";
+    echo "<label><input type='radio' name='privacy' value='none'";
     if (!$selected)
     {
         echo " checked='checked' ";
     }
     echo "/>";
-    echo "{$strNone}<br />";
+    echo "{$strNone}</label><br />";
     echo "</td></tr>";
+    plugin_do('inventory_new_form');
     echo "</table>";
     echo "<p class='formbuttons'>";
     echo "<input name='reset' type='reset' value='{$strReset}' /> ";

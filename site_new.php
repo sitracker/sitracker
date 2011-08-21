@@ -30,6 +30,7 @@ if ($action == "showform" OR $action == '')
 
     echo "<h2>".icon('site', 32)." ";
     echo "{$strNewSite}</h2>";
+    plugin_do('site_new');
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post' ";
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='maintable vertical'>";
@@ -112,7 +113,9 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strNotes}</th><td><textarea cols='30' name='notes' rows='5'>";
     echo $_SESSION['formdata']['new_site']['notes'];
     echo "</textarea></td></tr>\n";
+    plugin_do('site_new_form_more');
     echo "</tbody>";
+    plugin_do('site_new_form');
     echo "</table>\n";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
@@ -154,6 +157,7 @@ elseif ($action == "new")
         $errors++;
         $_SESSION['formerrors']['new_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
     }
+    plugin_do('site_new_submitted');
 
     if ($errors == 0)
     {
@@ -172,6 +176,8 @@ elseif ($action == "new")
         }
         else
         {
+            plugin_do('site_new_saved');
+
             // show success message
             clear_form_data('new_site');
             clear_form_errors('new_site');

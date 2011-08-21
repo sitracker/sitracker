@@ -19,6 +19,15 @@ else
     $varcrlf = "\n";
 }
 
+if ($CONFIG['outbound_emailattachment_newline'] == 'CRLF')
+{
+    $varacrlf = "\r\n";
+}
+else
+{
+    $varacrlf = "\n";
+}
+
 
 /**
  *  Constants used inside the MIME sending class. This file is included
@@ -36,6 +45,7 @@ define ('HTML', 'text/html');
 define ('JPEG', 'image/jpg');
 define ('GIF', 'image/gif');
 define ('CRLF', "$varcrlf");   // was \r\n
+define ('ACRLF', "$varacrlf");   // was \r\n
 //define ('CHARSET', 'us-ascii');
 define ('CHARSET', 'UTF-8');
 define ('INLINE', 'inline');
@@ -120,7 +130,7 @@ class MIME_mail
             $this->errstr = "fopen() failed";
             return 0;   //failed
         }
-        $contenttype .= ";\r\n\tname=".basename($path);
+        $contenttype .= ";" . ACRLF . "\tname=".basename($path);
         $data = fread($fp, filesize($path));
         return $this->attach($data,
                 $description,

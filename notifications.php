@@ -21,6 +21,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('trigger', 32)." {$title}</h2>";
 echo "<div id='pageintro'>";
+plugin_do('notifications');
 
 echo "<p align='center'>{$strNotificationDescription}</p>";
 

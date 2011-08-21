@@ -32,6 +32,7 @@ if ($action == "showform" OR $action == '')
     clear_form_errors('new_contract');
     echo "<h2>".icon('contract', 32)." ";
     echo "{$strNewContract}</h2>";
+    plugin_do('contract_new');
     echo "<form id='new_contract' name='new_contract' action='{$_SERVER['PHP_SELF']}?action=new' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strSite}</th><td>";
@@ -109,7 +110,6 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
-    echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
 
     echo "<tbody id='hiddentimed'";
     if (!$timed) echo " style='display:none'";
@@ -156,7 +156,7 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
-    echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )."</td>";
+    echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )." <span class='required'>{$strRequired}</span></td>";
     echo "</tr>";
 
     echo "<tr>";
@@ -168,7 +168,7 @@ if ($action == "showform" OR $action == '')
     }
     echo "/> {$strAboveMustBeCompletedToAllowDeductions}</td></tr>\n";
     echo "</tbody>\n";
-
+    echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
     echo "<tbody id='hidden' style='display:none'>";
 
     echo "<tr><th>{$strReseller}</th><td>";
@@ -186,7 +186,10 @@ if ($action == "showform" OR $action == '')
     $incident_pools = explode(',', "{$strUnlimited},{$CONFIG['incident_pools']}");
     echo "<td>".array_drop_down($incident_pools,'incident_poolid',$maint['incident_quantity'])."</td></tr>\n";
 
-    echo "<tr><th>{$strProductOnly}</th><td><input name='productonly' type='checkbox' value='yes' /></td></tr></tbody>\n";
+    echo "<tr><th>{$strProductOnly}</th><td><input name='productonly' type='checkbox' value='yes' /></td></tr>";
+    plugin_do('contract_new_form_more');
+    echo "</tbody>\n";
+    plugin_do('contract_new_form');
 
     echo "</table>\n";
     if ($timed) $timed = 'yes';
@@ -195,6 +198,7 @@ if ($action == "showform" OR $action == '')
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>";
+    echo "<p class='return'><a href=\"contracts.php\">{$strReturnWithoutSaving}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 
     clear_form_data('new_contract');
@@ -307,8 +311,9 @@ elseif ($action == 'new')
     if ($timed == 'yes' AND empty($billingmatrix))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['billing_matrix'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
     }
+    plugin_do('contract_new_submitted');
 
     // add maintenance if no errors
     if ($errors == 0)
@@ -382,6 +387,7 @@ elseif ($action == 'new')
         }
         else
         {
+            plugin_do('contract_new_saved');
             // show success message
             $t = new TriggerEvent('TRIGGER_NEW_CONTRACT', array('contractid' => $maintid, 'userid' => $sit[2]));
             html_redirect("contract_details.php?id=$maintid");

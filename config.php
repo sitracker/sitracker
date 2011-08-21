@@ -53,7 +53,7 @@ else
 
 if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1))
 {
-    plugin_do('config_save');
+    plugin_do('config_submitted');
     if (!empty($selcat))
     {
         $savevar = array();
@@ -164,7 +164,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
             cfgSave($savevar, NAMESPACE_SIT);
         }
     }
-    plugin_do('config_after_save');
+    plugin_do('config_saved');
 }
 
 $pagescripts = array('FormProtector.js');
@@ -180,6 +180,7 @@ else
     echo "<h2>".icon('user', 32, $strDisplayPreferences);
     echo " {$strSettings}</h2>";
 }
+plugin_do('config');
 
 
 if (empty($seltab)) $seltab = 'application';
@@ -222,7 +223,7 @@ if (!empty($selcat))
         echo cfgVarInput($catvar, $userid, $CONFIG['debug']);
     }
 }
-plugin_do('config_form');
+plugin_do('config_tab');
 
 echo "</fieldset>";
 echo "<input type='hidden' name='cat' value='{$selcat}' />";

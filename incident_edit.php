@@ -36,6 +36,8 @@ if (empty($submit))
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $incident = mysql_fetch_object($result);
 
+    plugin_do('incident_edit');
+
     // SUPPORT INCIDENT
     if ($incident->type == "Support")
     {
@@ -78,7 +80,7 @@ if (empty($submit))
         echo "<td><input maxlength='80' name='externalengineer' size='30' type='text' value=\"{$incident->externalengineer}\" /></td></tr>\n";
         echo "<tr><th>{$strExternalEmail}</th>";
         echo "<td><input maxlength='255' name='externalemail' size='30' type='text' value=\"{$incident->externalemail}\" /></td></tr>\n";
-        plugin_do('edit_incident_form');
+        plugin_do('incident_edit_form');
         echo "</table>\n";
         echo "<p class='formbuttons'>";
         echo "<input name='type' type='hidden' value='Support' />";
@@ -109,7 +111,7 @@ if (empty($submit))
 else
 {
     // External variables
-    $externalid = clean_int($_POST['externalid']);
+    $externalid = clean_dbstring($_POST['externalid']);
     $type = cleanvar($_POST['type']);
     $ccemail = cleanvar($_POST['ccemail']);
     $escalationpath = cleanvar($_POST['escalationpath']);
@@ -125,7 +127,7 @@ else
     $oldcontact = cleanvar($_POST['oldcontact']);
     $maintid = clean_int($_POST['maintid']);
     $oldescalationpath = cleanvar($_POST['oldescalationpath']);
-    $oldexternalid = clean_int($_POST['oldexternalid']);
+    $oldexternalid = clean_dbstring($_POST['oldexternalid']);
     $oldexternalemail = clean_int($_POST['oldexternalemail']);
     $oldproduct = cleanvar($_POST['oldproduct']);
     $oldproductversion = cleanvar($_POST['oldproductversion']);
@@ -151,6 +153,7 @@ else
         $errors += 1;
         $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strTitle), E_USER_ERROR);
     }
+    plugin_do('incident_edit_submitted');
 
     if ($errors > 0)
     {
@@ -279,6 +282,7 @@ else
 
         if ($addition_errors == 0)
         {
+            plugin_do('incident_edit_saved');
             journal(CFG_LOGGING_NORMAL, 'Incident Edited', "Incident $id was edited", CFG_JOURNAL_INCIDENTS, $id);
             html_redirect("incident_details.php?id={$id}");
         }

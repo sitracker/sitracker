@@ -82,6 +82,7 @@ if ($_SESSION['auth'] != TRUE)
         echo "</form>";
         echo "</div>";
     }
+    plugin_do('index');
     echo "<div id='login' class='windowbox'>\n";
     echo "<div class='windowtitle'>{$CONFIG['application_shortname']} - ";
     echo "{$strLogin}</div>\n";

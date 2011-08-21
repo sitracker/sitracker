@@ -29,6 +29,7 @@ $mode = cleanvar($_REQUEST['mode']);
 if (empty($mode))
 {
     echo "<h2>".icon('edit', 32)." {$strSiteTypes}</h2>";
+    plugin_do('site_types');
 
     $sql = "SELECT * FROM `{$dbSiteTypes}` ORDER BY typename";
     $result = mysql_query($sql);

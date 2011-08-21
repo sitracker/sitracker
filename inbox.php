@@ -164,6 +164,7 @@ if (empty($displayid))
     else
     {
         echo "<h2>".icon('email', 32)." {$CONFIG['email_address']}: {$strInbox}</h2>";
+        plugin_do('inbox');
         echo "<p align='center'>{$strIncomingEmailText}.  <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></p>";
     }
 

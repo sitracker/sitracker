@@ -1198,7 +1198,7 @@ function contract_service_table($contractid, $billing)
                     $span .= "<strong>{$GLOBALS['strFreeOfCharge']}</strong>";
                 }
 
-                $html .= "<td><a href='transactions.php?serviceid={$service->serviceid}' class='info'>".icon('billing', 16);
+                $html .= "<td><a name='billingicon' class='info'>".icon('billing', 16);
                 if (!empty($span))
                 {
                         $html .= "<span>{$span}</span>";
@@ -1232,6 +1232,7 @@ function contract_service_table($contractid, $billing)
             if ($billing)
             {
                 $operations[$GLOBALS['strEditBalance']] = array('url' => "contract_edit_service.php?mode=showform&amp;sourceservice={$service->serviceid}&amp;contractid={$contractid}", 'perm' => PERM_SERVICE_BALANCE_EDIT);
+                $operations[$GLOBALS['strViewTransactions']] = array('url' => "transactions.php?serviceid={$service->serviceid}", 'perm' => PERM_BILLING_TRANSACTION_VIEW);
             }
             $html .= html_action_links($operations);
             $html .= "</td></tr>\n";

@@ -110,7 +110,7 @@ if ($action == "edit")
         echo " /></td></tr>\n";
 
 
-        echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strAdvanced}</a></td></tr>";
+        echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>";
         echo "</tbody>\n";
         echo "<tbody id='hidden' style='display:none'>";
 
