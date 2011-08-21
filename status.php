@@ -24,6 +24,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>{$CONFIG['application_name']} {$title}</h2>";
+plugin_do('status');
 
 // $status = html_install_status();
 
@@ -46,5 +47,7 @@ switch ($s->get_status())
 }
 
 echo "</p>";
+
+plugin_do('status_content');
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

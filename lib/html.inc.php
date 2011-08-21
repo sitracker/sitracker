@@ -2387,10 +2387,10 @@ function html_hmenu($hmenu)
 
 
 /**
-  * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
-  * @author Ivan Lucas
-  * @param string $address, address to search for
-  * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
+ * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
+ * @author Ivan Lucas
+ * @param string $address, address to search for
+ * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
 */
 function map_link($address)
 {
@@ -2400,5 +2400,44 @@ function map_link($address)
     return $link;
 }
 
+
+/**
+ * Return a list of plugin contexts used by the given plugin
+ * @author Ivan Lucas
+ * @param string $plugin. The name of the plugin
+ * @returns string HTML.
+ * @note This relies on plugin function names starting with the plugin name, which is recommended but not enforced
+*/
+function html_plugin_contexts($plugin)
+{
+    global $PLUGINACTIONS, $strNone;
+    $html = '';
+
+    if (is_array($PLUGINACTIONS))
+    {
+        foreach ($PLUGINACTIONS AS $key => $value)
+        {
+            foreach($value AS $hook)
+            {
+                if (beginsWith($hook, $plugin))
+                {
+                    $phook = str_replace($plugin . '_' , '', $hook);
+                    if (!function_exists($hook))
+                    {
+                        $phook = "☠ {$hook}";
+                        $key = "<span style='text-decoration: line-through;'>{$key}</span>";
+                    }
+                    $html .= "<strong title=\"{$phook}()\" style=\"cursor:help;\">{$key}</strong> &nbsp; ";
+                }
+            }
+        }
+    }
+    else
+    {
+        $html = $strNone;
+    }
+
+    return $html;
+}
 
 ?>

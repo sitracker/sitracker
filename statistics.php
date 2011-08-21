@@ -311,7 +311,7 @@ function give_overview()
         }
         echo "</tr></table>";
     }
-    plugin_do('statistics_table_overview');
+    plugin_do('statistics_content');
 
     mysql_free_result($result);
 
