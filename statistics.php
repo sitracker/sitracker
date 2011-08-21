@@ -525,6 +525,7 @@ switch ($mode)
     case 'overview': //this is the default so just fall though
     default:
         echo "<h2>".icon('statistics', 32)." {$title} - {$strOverview}</h2>";
+        plugin_do('statistics');
         echo give_overview();
         break;
 }
