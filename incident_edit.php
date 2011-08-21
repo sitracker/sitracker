@@ -111,7 +111,7 @@ if (empty($submit))
 else
 {
     // External variables
-    $externalid = clean_int($_POST['externalid']);
+    $externalid = clean_dbstring($_POST['externalid']);
     $type = cleanvar($_POST['type']);
     $ccemail = cleanvar($_POST['ccemail']);
     $escalationpath = cleanvar($_POST['escalationpath']);
@@ -127,7 +127,7 @@ else
     $oldcontact = cleanvar($_POST['oldcontact']);
     $maintid = clean_int($_POST['maintid']);
     $oldescalationpath = cleanvar($_POST['oldescalationpath']);
-    $oldexternalid = clean_int($_POST['oldexternalid']);
+    $oldexternalid = clean_dbstring($_POST['oldexternalid']);
     $oldexternalemail = clean_int($_POST['oldexternalemail']);
     $oldproduct = cleanvar($_POST['oldproduct']);
     $oldproductversion = cleanvar($_POST['oldproductversion']);
