@@ -679,7 +679,7 @@ function new_note_form($linkid, $refid)
     global $now, $sit, $iconset;
     $html = "<form name='addnote' action='note_new.php' method='post'>";
     $html .= "<div class='detailhead note'> <div class='detaildate'>".readable_date($now)."</div>\n";
-    $html .= icon('note', 16, $GLOBALS['strNote ']);
+    $html .= icon('note', 16, $GLOBALS['strNote']);
     $html .= " ".sprintf($GLOBALS['strNewNoteByX'], user_realname($sit[2]))."</div>\n";
     $html .= "<div class='detailentry note'>";
     $html .= "<textarea rows='3' cols='40' name='bodytext' style='width: 94%; margin-top: 5px; margin-bottom: 5px; margin-left: 3%; margin-right: 3%; background-color: transparent; border: 1px dashed #A2A86A;'></textarea>";
