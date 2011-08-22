@@ -263,7 +263,11 @@ switch ($seltab)
                     echo "<br /><strong>{$strHelp}:</strong><br />";
                     echo "<div class='scrollbox'>";
                     echo file_get_contents("{$ondisk_plugin_details['path']}README");
-                    echo "</dvi>";
+                    echo "</div>";
+                }
+                if ($CONFIG['debug'])
+                {
+                    echo "<br />↬ " . html_plugin_contexts($ondisk_plugin);
                 }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";

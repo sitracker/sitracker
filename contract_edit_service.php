@@ -403,8 +403,8 @@ switch ($mode)
             echo "<tr><th>{$strReason}</th><td><input type='text' name='reason' id='reason' size='60' maxlength='255' /></td></tr>";
 
             echo "</table>";
-            echo "<p class='formbuttons'><input type='submit' style='display:none'  name='runreport' id='transfersectionbtn' value='{$strTransfer}' /></p>";
-            echo "<p class='formbuttons'><input type='submit' name='runreport' id='editsection' value='{$strEdit}' /></p>";
+            echo "<p class='formbuttons'><input type='submit' style='display:none'  name='runreport' id='transfersectionbtn' value='{$strTransfer}' />";
+            echo "<input type='submit' name='runreport' id='editsection' value='{$strEdit}' /></p>";
 
             echo "<input type='hidden' name='sourceservice' value='{$sourceservice}' />";
             echo "<input type='hidden' name='contractid' value='{$contractid}' />";

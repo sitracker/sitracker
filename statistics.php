@@ -311,7 +311,7 @@ function give_overview()
         }
         echo "</tr></table>";
     }
-    plugin_do('statistics_table_overview');
+    plugin_do('statistics_content');
 
     mysql_free_result($result);
 
@@ -525,6 +525,7 @@ switch ($mode)
     case 'overview': //this is the default so just fall though
     default:
         echo "<h2>".icon('statistics', 32)." {$title} - {$strOverview}</h2>";
+        plugin_do('statistics');
         echo give_overview();
         break;
 }

@@ -88,6 +88,8 @@ switch ($action)
         $error = array();
         if ($name == '') $error[] = sprintf($strFieldMustNotBeBlank, $strName);
         if ($startdate > $duedate AND $duedate != '' AND $duedate > 0 ) $startdate = $duedate;
+
+        plugin_do('task_edit_submitted');
         if (count($error) >= 1)
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -184,6 +186,7 @@ switch ($action)
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             }
+            plugin_do('task_edit_saved');
             html_redirect("view_task.php?id={$id}", TRUE);
         }
         break;
@@ -298,6 +301,11 @@ switch ($action)
         if ($incident) html_redirect("tasks.php?incident={$incident}", TRUE, $strActivityMarkedCompleteSuccessfully);
         else html_redirect("tasks.php", TRUE);
         break;
+    case 'postpone':
+        postpone_task($id);
+        html_redirect("view_task.php?id={$id}", TRUE);
+    break;
+
     case 'delete':
         $sql = "DELETE FROM `{$dbTasks}` ";
         $sql .= "WHERE id='{$id}' LIMIT 1";
@@ -316,6 +324,7 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('task', 32)." ";
         echo "{$title}</h2>";
+        plugin_do('task_edit');
         $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -376,6 +385,7 @@ switch ($action)
                 echo "<input type='radio' name='distribution' ";
                 if ($task->distribution == 'private') echo "checked='checked' ";
                 echo "value='private' /> {$strPrivate} ".icon('private', 16, $strPrivate)."</td></tr>";
+                plugin_do('task_edit_form');
                 echo "</table>";
                 echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
                 echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
