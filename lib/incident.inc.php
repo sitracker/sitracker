@@ -567,6 +567,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     return $rtnvalue;
 }
 
+
 /**
  * Identified if there are drafts waiting to be sent/updated on an incident
  * @author Paul Heaney
@@ -1085,6 +1086,11 @@ function incidentstatus_name($id, $type='internal')
 }
 
 
+/**
+ * Convert a closing status ID to a readable name
+ * @param int $id. Closing status ID
+ * @retval string Closing Status
+*/
 function closingstatus_name($id)
 {
     global $dbClosingStatus;
@@ -1100,9 +1106,13 @@ function closingstatus_name($id)
     return ($GLOBALS[$closingstatus]);
 }
 
-
-// Returns the number of remaining incidents given an incident pool id
-// Returns 'Unlimited' if theres no match on ID
+/**
+ * Returns the number of remaining incidents given an incident pool id
+ *
+ * @param int $id. Pool ID
+ * @retval int The number of incidents remaining
+ * @retval string Returns a string meaning 'Unlimited' if theres no match on ID
+*/
 function incidents_remaining($id)
 {
     $remaining = db_read_column('incidentsremaining', $GLOBALS['dbIncidentPools'], $id);
@@ -1115,6 +1125,12 @@ function incidents_remaining($id)
 }
 
 
+/**
+ * Decrement a 'free' incident from a site by one
+ *
+ * @param int $siteid. Site ID
+ * @retval TRUE success
+*/
 function decrement_free_incidents($siteid)
 {
     global $dbSites;
@@ -1130,6 +1146,10 @@ function decrement_free_incidents($siteid)
 }
 
 
+/**
+ * Increment the contract count of incidents used by one
+ * @param int $maintid - Contract ID
+*/
 function increment_incidents_used($maintid)
 {
     global $dbMaintenance;
@@ -1204,6 +1224,12 @@ function countdaycurrentincidents($day, $month, $year)
 }
 
 
+/**
+ * Counts the number of updates not yet linked to an incident
+ * @author Ivan Lucas
+ * @note Updates are linked to incident ID 0 (no such incident) when they
+ * arrive via email or portal and not yet assigned to an incident.
+ */
 function count_incoming_updates()
 {
     $sql = "SELECT id FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid=0";
@@ -1214,6 +1240,12 @@ function count_incoming_updates()
 }
 
 
+/**
+ * Identify the next due SLA target for a given incident
+ *
+ * @param int $incidentid
+ * retval string Target type
+*/
 function incident_get_next_target($incidentid)
 {
     global $now;
@@ -1259,6 +1291,11 @@ function incident_get_next_target($incidentid)
 }
 
 
+/**
+ * Convert an SLA target type to a readable SLA target name
+ * @param string $targettype
+ * @retval string Target type readable name
+*/
 function target_type_name($targettype)
 {
     switch ($targettype)
