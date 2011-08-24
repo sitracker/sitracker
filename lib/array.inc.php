@@ -14,9 +14,11 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
+/**
+ * Numeric descending sort of multi array
+ */
 function ansort($x,$var,$cmp='strcasecmp')
 {
-    // Numeric descending sort of multi array
     if ( is_string($var) ) $var = "'$var'";
 
     if ($cmp == 'numeric')
@@ -56,8 +58,9 @@ function array_multi_search($needle, $haystack, $searchkey)
     return FALSE;
 }
 
-
-// Implode assocative array
+/**
+ * Implode assocative array
+ */
 function implode_assoc($glue1, $glue2, $array)
 {
     foreach ($array as $key => $val)

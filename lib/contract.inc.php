@@ -63,7 +63,7 @@ function maintenance_siteid($id)
 
 
 /**
- * Finds the software associated with a contract
+ * Finds the software (skills) associated with a contract
  * @author Ivan Lucas
  * @note Wrap the php function for different versions of php
  */
@@ -103,7 +103,7 @@ function contract_software()
 /**
  * Returns the SLA ID of a contract
  *
- * @deprecated In favor of tags
+ * @deprecated DEPRECATED In favor of tags - see Mantis 1696 - http://bugs.sitracker.org/view.php?id=1696
  * @param int $maintid ID of the contract
  * @return int ID of the SLA
  * @author Kieran Hogg
