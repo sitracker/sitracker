@@ -41,11 +41,11 @@ if (empty($save))
     // External variables
     if (empty($_REQUEST['user']) OR $_REQUEST['user'] == 'current')
     {
-        $user = mysql_real_escape_string($sit[2]);
+        $user = clean_int($sit[2]);
     }
     else
     {
-        $user = mysql_real_escape_string($_REQUEST['user']);
+        $user = clean_int($_REQUEST['user']);
     }
 
     $default = clean_int($_REQUEST['default']);
