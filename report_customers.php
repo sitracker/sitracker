@@ -52,7 +52,6 @@ if (empty($_REQUEST['mode']))
     echo "</td></tr>";
     echo "</table>";
     echo "<p class='formbuttons'>";
-    echo "<input type='hidden' name='table1' value='{$_POST['table1']}' />";
     echo "<input type='hidden' name='mode' value='report' />";
     echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";
@@ -89,7 +88,7 @@ elseif ($_REQUEST['mode'] == 'report')
         for ($i = 0; $i < $includecount; $i++)
         {
             // $html .= "{$_POST['inc'][$i]} <br />";
-            $incsql .= "siteid={$_POST['inc'][$i]}";
+            $incsql .= "siteid=".clean_int($_POST['inc'][$i]);
             if ($i < ($includecount-1)) $incsql .= " OR ";
         }
         $incsql .= ")";
