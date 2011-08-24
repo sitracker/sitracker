@@ -168,7 +168,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>{$strHoldingQueue}</h2>";
 plugin_do('holding_queue');
 
-if ($lock = $_REQUEST['lock'])
+if ($lock = clean_int($_REQUEST['lock']))
 {
     $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
@@ -176,7 +176,7 @@ if ($lock = $_REQUEST['lock'])
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 }
-elseif ($unlock = $_REQUEST['unlock'])
+elseif ($unlock = clean_int($_REQUEST['unlock']))
 {
     $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
     $sql .= "WHERE id='{$unlock}' AND locked = '{$sit[2]}'";
