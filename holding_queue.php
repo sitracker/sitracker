@@ -219,6 +219,7 @@ if (!empty($selected))
 {
     foreach ($selected as $updateid)
     {
+        $updateid = clean_int($updateid);
         $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
