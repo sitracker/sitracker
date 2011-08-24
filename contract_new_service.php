@@ -18,7 +18,7 @@ require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$contractid = mysql_real_escape_string($_REQUEST['contractid']);
+$contractid = clean_int($_REQUEST['contractid']);
 $submit = $_REQUEST['submit'];
 $title = ("$strContract - $strNewService");
 
