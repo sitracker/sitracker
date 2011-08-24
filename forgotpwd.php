@@ -65,16 +65,7 @@ switch ($_REQUEST['action'])
             echo "<h3 class='forgotpwd'>{$strInformationSent}</h3>";
             plugin_do('forgotpwd');
             echo "<p class='forgotpwd'>{$strInformationSentRegardingSettingPassword}</p>";
-            if ($_REQUEST['action'] == 'forgotpwd')
-            {
-                echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
-            }
-            else
-            {
-                echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
-            }
-
-        }
+            echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
         else
         {
             // This is a SiT contact, not a user
