@@ -42,6 +42,7 @@ function send_feedback($contractid)
     return TRUE;
 }
 
+
 /**
  * Creates a blank feedback form response
  * @param $formid int The feedback form to use
@@ -85,6 +86,7 @@ function feedback_hash($formid, $contactid, $incidentid, $contactemail)
     $hashcode = urlencode($hashcode1);
     return $hashcode;
 }
+
 
 /**
  * @author Ivan Lucas
@@ -289,6 +291,7 @@ function feedback_html_question($type, $name, $required, $options, $answer='')
   }
   return $html;
 }
+
 
 /**
  * Generates a hash for opting out of receving feedback

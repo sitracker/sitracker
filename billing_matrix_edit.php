@@ -31,6 +31,7 @@ if (!empty($tag) AND empty($action))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('billing', 32)." {$title}</h2>";
+        plugin_do('billing_matrix_edit');
 
         echo "<p align='center'>{$tag}</p>";
 
@@ -55,7 +56,7 @@ if (!empty($tag) AND empty($action))
             }
             echo "</tr>";
         }
-
+        plugin_do('billing_matrix_edit_form');
         echo "</table>";
         echo "<input type='hidden' name='tag' value='{$tag}' />";
         echo "<input type='hidden' name='action' value='edit' />";
@@ -82,6 +83,8 @@ else if(!empty($tag) AND $action == "edit")
     $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
 
     $hour = 0;
+
+    plugin_do('billing_matrix_edit_submitted');
 
     while ($hour < 24)
     {
@@ -115,6 +118,7 @@ else if(!empty($tag) AND $action == "edit")
     }
     else
     {
+        plugin_do('billing_matrix_edit_saved');
         html_redirect("billing_matrix.php", TRUE);
     }
 }

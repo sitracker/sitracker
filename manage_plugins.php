@@ -260,10 +260,14 @@ switch ($seltab)
                 }
                 if ($_REQUEST['action'] == 'readme' AND $_REQUEST['plugin'] == $ondisk_plugin)
                 {
-                    echo "<br /><strong>{$strHelp}:</strong><br />";
+                    echo "<br /><strong>{$strHelp}:</strong> (<a href=\"{$_SERVER['PHP_SELF']}\">{$strClose}</a>)<br />";
                     echo "<div class='scrollbox'>";
                     echo file_get_contents("{$ondisk_plugin_details['path']}README");
-                    echo "</dvi>";
+                    echo "</div>";
+                }
+                if ($CONFIG['debug'])
+                {
+                    echo "<br />↬ " . html_plugin_contexts($ondisk_plugin);
                 }
                 echo "</td>";
                 echo "<td>{$ondisk_plugin_details['author']}</td>";

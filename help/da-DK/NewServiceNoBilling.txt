@@ -1,0 +1,1 @@
+Fakturerings optioner er ikke tilgængelige fordi den associerede SLA er ikke tidsindstillet

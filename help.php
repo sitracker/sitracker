@@ -26,6 +26,7 @@ journal(CFG_LOGGING_MAX, 'Help Viewed', "Help document $id was viewed", CFG_JOUR
 echo "<h2>".icon('help', 32, $strHelp)." ";
 if ($id > 0) echo permission_name($id).' ';
 echo "{$strHelp}</h2>";
+plugin_do('help');
 echo "<div id='help'>";
 
 $helpfile = APPLICATION_HELPPATH . "{$_SESSION['lang']}".DIRECTORY_SEPARATOR."help.html";

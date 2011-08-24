@@ -110,7 +110,8 @@ $CFGCAT['outboundemail'] = array('enable_outbound_email',
                                  'support_email',
                                  'support_email_tags',
                                  'outbound_email_encoding',
-                                 'outbound_email_newline'
+                                 'outbound_email_newline',
+                                 'outbound_emailattachment_newline'
                                 );
 
 
@@ -561,9 +562,14 @@ $CFGVAR['outbound_email_encoding']['type'] = 'select';
 $CFGVAR['outbound_email_encoding']['options'] = 'quoted-printable|base64';
 
 $CFGVAR['outbound_email_newline']['title'] = 'Choose email newline character';
-$CFGVAR['outbound_email_newline']['help'] = "Change the newline character if outbound emails have line breaks in the wrong places.";
+$CFGVAR['outbound_email_newline']['help'] = "Change the newline character if outbound emails have line breaks in the wrong places (default LF).";
 $CFGVAR['outbound_email_newline']['type'] = 'select';
 $CFGVAR['outbound_email_newline']['options'] = 'LF|CRLF';
+
+$CFGVAR['outbound_emailattachment_newline']['title'] = 'Choose emailattachment newline character';
+$CFGVAR['outbound_emailattachment_newline']['help'] = "Change the newline character if outbound emails attachments doesn't seem to work (defatul CRLF).";
+$CFGVAR['outbound_emailattachment_newline']['type'] = 'select';
+$CFGVAR['outbound_emailattachment_newline']['options'] = 'CRLF|LF';
 
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";

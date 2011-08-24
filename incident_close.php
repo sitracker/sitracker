@@ -43,7 +43,7 @@ if (empty($_REQUEST['process']))
     }
 
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-
+    plugin_do('incident_close');
     echo "<form name='closeform' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical' width='100%'>";
     echo "<tr><th width='20%'>{$strClose}</th>";
@@ -152,7 +152,7 @@ if (empty($_REQUEST['process']))
         echo "<td class='shade2'><label><input name='send_engineer_email' type='radio' value='no' />{$strNo}</label> ";
         echo "<label><input name='send_engineer_email' type='radio' value='yes' checked='checked' />{$strYes}</label></td></tr>\n";
     }
-    plugin_do('incident_closing_form1');
+    plugin_do('incident_close_form');
     echo "</table>\n";
     echo "<p class='formbuttons'>";
     echo "<input name='type' type='hidden' value='Support' />";
@@ -202,7 +202,7 @@ else
         $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSummary}' / '$strSolution'"), E_USER_ERROR);
     }
 
-    plugin_do('pre_incident_closing');
+    plugin_do('incident_close_submitted');
 
     if ($errors == 0)
     {
@@ -462,7 +462,7 @@ else
                 }
 
                 //html_redirect("incident_details.php?id={$id}", TRUE, "Knowledge Base Article {$CONFIG['kb_id_prefix']}{$docid} created");
-                plugin_do('incident_closing');
+                plugin_do('incident_close_saved');
 
                 echo "<html>";
                 echo "<head></head>";
@@ -472,7 +472,7 @@ else
             }
             else
             {
-                plugin_do('incident_closing');
+                plugin_do('incident_close_saved');
 
                 echo "<html>";
                 echo "<head></head>";

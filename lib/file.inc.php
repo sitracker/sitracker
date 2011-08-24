@@ -17,7 +17,9 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 if (!function_exists('list_dir'))
 {
-    // returns an array contains all files in a directory and optionally recurses subdirectories
+    /**
+     * returns an array contains all files in a directory and optionally recurses subdirectories
+     */
     function list_dir($dirname, $recursive = 1)
     {
         // try to figure out what delimeter is being used (for windows or unix)...
@@ -69,7 +71,9 @@ if (!function_exists('list_dir'))
 }
 
 
-// recursive copy from one directory to another
+/**
+ * recursive copy from one directory to another
+ */
 function rec_copy($from_path, $to_path)
 {
     if ($from_path == '') trigger_error('Cannot move file', 'from_path not set', E_USER_WARNING);
@@ -290,11 +294,11 @@ function mime_type($file)
 
 
 /**
-* Function that reads the contents(First 2048 bits) of a .txt file in /help/ and Outputs it.
-* @author Nico du Toit
-* @param $filename The name of the file (without the .txt extension)
-* @return Outputs the text file contents to HTML if it exists, or an error message 
-* if the file does not exist.
+ * Function that reads the contents(First 2048 bits) of a .txt file in /help/ and Outputs it.
+ * @author Nico du Toit
+ * @param $filename The name of the file (without the .txt extension)
+ * @return Outputs the text file contents to HTML if it exists, or an error message 
+ * if the file does not exist.
 */
 function file_get_help_textfile($filename)
 {

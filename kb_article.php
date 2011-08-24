@@ -96,6 +96,8 @@ if (isset($_POST['submit']))
         $errors++;
     }
 
+    plugin_do('kb_article_submitted');
+
     $sql = array();
     if (empty($kbid))
     {
@@ -163,6 +165,7 @@ if (isset($_POST['submit']))
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
     }
+    plugin_do('kb_article_saved');
     $t = new TriggerEvent('TRIGGER_KB_CREATED', array('kbid' => $kbid, 'userid' => $sit[2]));
     html_redirect("kb_view_article.php?id={$kbid}");
     exit;
@@ -201,6 +204,7 @@ else
     {
         echo "<h2>".icon('kb', 32, $strNewKBArticle)." {$strNewKBArticle}</h2>";
     }
+    plugin_do('kb_article');
 
     echo "<div id='kbarticle'>";
     echo "<form enctype='multipart/form-data' action='{$_SERVER['PHP_SELF']}?id={$kbid}' method='post'>";

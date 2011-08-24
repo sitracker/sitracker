@@ -26,6 +26,7 @@ if (empty($action) OR $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     echo "<h2>".icon('billing', 32)." {$title}</h2>";
+    plugin_do('billing_matrix_new');
 
     echo show_form_errors('billing_matrix_new');
     clear_form_errors('billing_matrix_new');
@@ -60,6 +61,7 @@ if (empty($action) OR $action == "showform")
         echo "</tr>";
         $hour++;
     }
+    plugin_do('billing_matrix_new_form');
     echo "</table>";
 
     echo "<input type='hidden' name='action' value='new' />";
@@ -82,6 +84,7 @@ elseif ($action == "new")
         $errors++;
         $_SESSION['formerrors']['billing_matrix_new']['tag'] = sprintf($strFieldMustNotBeBlank, $strTag);
     }
+    plugin_do('billing_matrix_new_submitted');
 
     $sql = "SELECT tag FROM `{$dbBillingMatrix}` WHERE tag='{$tag}'";
     $result = mysql_query($sql);
@@ -142,6 +145,7 @@ elseif ($action == "new")
         }
         else
         {
+            plugin_do('billing_matrix_new_saved');
             html_redirect("billing_matrix.php", TRUE);
         }
     }

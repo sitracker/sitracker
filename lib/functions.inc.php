@@ -397,9 +397,10 @@ function software_name($softwareid)
 }
 
 
-/* Returns a string representing the name of   */
-/* the given product. Returns an empty string if the product  */
-/* does not exist.                                            */
+/**
+ * Returns a string representing the name of the given product. 
+ * @return Returns an empty string if the product does not exist.
+ */
 function product_name($id)
 {
     return db_read_column('name', $GLOBALS['dbProducts'], $id);
@@ -682,6 +683,13 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 }
 
 
+/**
+ * Return a global signature chosen at random
+ *
+ * @author Ivan Lucas
+ * @note This is inefficient SQL but shouldn't be too much of a problem since
+ * there are usually a low number records in this table.
+*/
 function global_signature()
 {
     $sql = "SELECT signature FROM `{$GLOBALS['dbEmailSig']}` ORDER BY RAND() LIMIT 1";
@@ -712,6 +720,12 @@ function dashboard_do($context, $row=0, $dashboardid=0)
 }
 
 
+/**
+ * Output a dashboard component
+ * @author Ivan Lucas
+ * @param string $row
+ * @param string $dashboardid
+ */
 function show_dashboard_component($row, $dashboardid)
 {
     global $dbDashboard;
@@ -731,7 +745,8 @@ function show_dashboard_component($row, $dashboardid)
  * Checks to see if a dashlet is installed
  * @author Paul Heaney
  * @param String $dashlet The name of the dashlet
- * @return boolean True if installed, false otherwise
+ * @retval bool TRUE installed
+ * @retval bool FALSE not installed
  */
 function is_dashlet_installed($dashlet)
 {
@@ -776,8 +791,9 @@ function show_form_errors($formname)
 
 
 /**
- * Cleans form errors
+ * Cleans form errors by clearing the formerrors array in the users session
  * @author Kieran Hogg
+ * @param string $formname. The form name to clear.
  * @return nothing
  */
 function clear_form_errors($formname)
@@ -787,8 +803,9 @@ function clear_form_errors($formname)
 
 
 /**
- * Cleans form data
+ * Cleans form data by clearing the formdata array in the users session
  * @author Kieran Hogg
+ * @param string $formname. The form name to clear.
  * @return nothing
  */
 function clear_form_data($formname)

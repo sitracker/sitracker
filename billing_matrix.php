@@ -22,6 +22,7 @@ $title = $strBillingMatrix;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('billing', 32)." {$title}</h2>";
+plugin_do('billing_matrix');
 
 echo "<p align='center'><a href='billing_matrix_new.php'>$strAddNewBillingMatrix</a></p>";
 

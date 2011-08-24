@@ -243,6 +243,7 @@ function percent_bar($percent)
     return $html;
 }
 
+
 /**
  * Return HTML for a table column header (th and /th) with links for sorting
  * Filter parameter can be an assocative array containing fieldnames and values
@@ -617,8 +618,12 @@ function bbcode($text)
 }
 
 
-
-
+/**
+ * Remove BBcode from a string. Tooltips and BBcode don't mix well
+ * @author Paul Heaney (I think?)
+ * @param string $text. The string to remove BBcode tags from
+ * @retval string String without BBcode tags
+*/
 function strip_bbcode_tooltip($text)
 {
     $bbcode_regex = array(0 => '/\[url\](.*?)\[\/url\]/s',
@@ -679,7 +684,7 @@ function new_note_form($linkid, $refid)
     global $now, $sit, $iconset;
     $html = "<form name='addnote' action='note_new.php' method='post'>";
     $html .= "<div class='detailhead note'> <div class='detaildate'>".readable_date($now)."</div>\n";
-    $html .= icon('note', 16, $GLOBALS['strNote ']);
+    $html .= icon('note', 16, $GLOBALS['strNote']);
     $html .= " ".sprintf($GLOBALS['strNewNoteByX'], user_realname($sit[2]))."</div>\n";
     $html .= "<div class='detailentry note'>";
     $html .= "<textarea rows='3' cols='40' name='bodytext' style='width: 94%; margin-top: 5px; margin-bottom: 5px; margin-left: 3%; margin-right: 3%; background-color: transparent; border: 1px dashed #A2A86A;'></textarea>";
@@ -974,7 +979,7 @@ function contract_details($id, $mode='internal')
 
     if ($maint->expirydate < $now AND $maint->expirydate != '-1')
     {
-        $html .= "<span class='expired'>, {$GLOBALS['strExpired']}</span>";
+        $html .= ", <span class='expired'>{$GLOBALS['strExpired']}</span>";
     }
     $html .= "</td></tr>\n";
     $html .= "<tr><th>{$GLOBALS['strSite']}:</th>";
@@ -1411,6 +1416,12 @@ function password_reveal_link($id)
 }
 
 
+/**
+ * HTML Listbox of a list of question types
+ * @param string $type The question type to pre-select
+ * @author Ivan Lucas
+ * @retval string HTML
+ */
 function qtype_listbox($type)
 {
     global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
@@ -1438,7 +1449,13 @@ function qtype_listbox($type)
 }
 
 
-
+/**
+ * HTML Listbox of a list of feedback question types 
+ * @param string $type The question type to pre-select
+ * @author Ivan Lucas
+ * @retval string HTML
+ * @note how is this different to qtype_listbox?  INL 24/8/2011
+ */
 function feedback_qtype_listbox($type)
 {
     global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
@@ -2047,7 +2064,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
 
 
 /**
- *
+ * HTML controls for choosing a time
  * @author Paul Heaney
  * @param int $hour
  * @param int $minute
@@ -2159,8 +2176,9 @@ function html_status_row($statusentry)
     return $html;
 }
 
+
 /**
- * Checked to see if a PHP extention is installed and prints the corresponding row
+ * Check to see if a PHP extention is installed and prints the corresponding row
  * @author Paul Heaney
  * @param String $extension The extension to check is installed
  * @param String $text The text to print describing this extension
@@ -2387,10 +2405,10 @@ function html_hmenu($hmenu)
 
 
 /**
-  * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
-  * @author Ivan Lucas
-  * @param string $address, address to search for
-  * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
+ * Return a hyperlink to an online mapping service, as configured by $CONFIG['map_url']
+ * @author Ivan Lucas
+ * @param string $address, address to search for
+ * @note The address parameter is url encoded and passed to the URL via the {address} psuedo-variable
 */
 function map_link($address)
 {
@@ -2400,5 +2418,44 @@ function map_link($address)
     return $link;
 }
 
+
+/**
+ * Return a list of plugin contexts used by the given plugin
+ * @author Ivan Lucas
+ * @param string $plugin. The name of the plugin
+ * @returns string HTML.
+ * @note This relies on plugin function names starting with the plugin name, which is recommended but not enforced
+*/
+function html_plugin_contexts($plugin)
+{
+    global $PLUGINACTIONS, $strNone;
+    $html = '';
+
+    if (is_array($PLUGINACTIONS))
+    {
+        foreach ($PLUGINACTIONS AS $key => $value)
+        {
+            foreach($value AS $hook)
+            {
+                if (beginsWith($hook, $plugin))
+                {
+                    $phook = str_replace($plugin . '_' , '', $hook);
+                    if (!function_exists($hook))
+                    {
+                        $phook = "☠ {$hook}";
+                        $key = "<span style='text-decoration: line-through;'>{$key}</span>";
+                    }
+                    $html .= "<strong title=\"{$phook}()\" style=\"cursor:help;\">{$key}</strong> &nbsp; ";
+                }
+            }
+        }
+    }
+    else
+    {
+        $html = $strNone;
+    }
+
+    return $html;
+}
 
 ?>

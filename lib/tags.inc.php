@@ -16,7 +16,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 /**
+ * Convert a tag name to a tag ID
  * @author Ivan Lucas
+ * @param string $tag.
+ * @returns int Tag ID
  */
 function get_tag_id($tag)
 {
@@ -41,7 +44,13 @@ function get_tag_id($tag)
 
 
 /**
+ * Apply a new tag to a record
  * @author Ivan Lucas
+ * @param int $id. Record ID
+ * @param int $type. Tag Type.
+ * @param string $tag. Tag name
+ * @returns bool. Success
+ * @retval true.  This function always returns TRUE
  */
 function new_tag($id, $type, $tag)
 {
@@ -69,7 +78,13 @@ function new_tag($id, $type, $tag)
 
 
 /**
+ * Remove a tag from a record. If no more records use the tag, the tag is also purged.
  * @author Ivan Lucas
+ * @param int $id. Record ID
+ * @param int $type Tag Type.
+ * @param string $tag. Tag name
+ * @returns bool. Success
+ * @retval true.  This function always returns TRUE
  */
 function remove_tag($id, $type, $tag)
 {
@@ -81,15 +96,7 @@ function remove_tag($id, $type, $tag)
         $sql = "DELETE FROM `{$dbSetTags}` WHERE id = '$id' AND type = '$type' AND tagid = '$tagid'";
         $result = @mysql_query($sql);
 
-        // Check tag usage count and remove disused tags completely
-        $sql = "SELECT COUNT(id) FROM `{$dbSetTags}` WHERE tagid = '$tagid'";
-        $result = mysql_query($sql);
-        list($count) = mysql_fetch_row($result);
-        if ($count == 0)
-        {
-            $sql = "DELETE FROM `{$dbTags}` WHERE tagid = '$tagid' LIMIT 1";
-            @mysql_query($sql);
-        }
+        // Check tag usage count and remove (purge) disused tags completely
         purge_tag($tagid);
     }
     return true;
@@ -98,6 +105,9 @@ function remove_tag($id, $type, $tag)
 
 /**
  * Remove existing tags and replace with a new set
+ * @param int $type Tag Type.
+ * @param int $id. Record ID
+ * @param string $tagstring. Tag name
  * @author Ivan Lucas
  */
 function replace_tags($type, $id, $tagstring)
@@ -118,9 +128,12 @@ function replace_tags($type, $id, $tagstring)
     }
 }
 
+
 /**
  * Purge a single tag (if needed)
+ * @param int $tagid. The ID of the tag to purge
  * @author Ivan Lucas
+ * @note the tag will not be purged (deleted) if it is in use
  */
 function purge_tag($tagid)
 {
@@ -140,6 +153,7 @@ function purge_tag($tagid)
 /**
  * Purge all tags (if needed)
  * @author Ivan Lucas
+ * @note tags will not be purged (deleted) if it in use
  */
 function purge_tags()
 {
@@ -208,6 +222,8 @@ function list_tags($recordid, $type, $html = TRUE)
 /**
  * Return HTML to display a list of tag icons
  * @author Ivan Lucas
+ * @param int $recordid. The ID of the record that tags may be attached to.
+ * @param int $type. Tag type.
  * @return string. HTML
  */
 function list_tag_icons($recordid, $type)
@@ -240,11 +256,14 @@ function list_tag_icons($recordid, $type)
     return $str;
 }
 
+
 /**
  * Generate a tag cloud
  * @author Ivan Lucas, Tom Gerrard
- * @return string. HTML
- */
+ * @param string $orderby. Name of column to sort by
+ * @param bool $showcount. Set to TRUE to show a count of the number of tags, or FALSE to ommit
+ * @returns string. HTML
+*/
 function show_tag_cloud($orderby="name", $showcount = FALSE)
 {
     global $CONFIG, $dbTags, $dbSetTags, $iconset;
@@ -269,9 +288,11 @@ function show_tag_cloud($orderby="name", $showcount = FALSE)
 
     if (mb_substr($_SERVER['SCRIPT_NAME'],-8) != "main.php")
     {
-        //not in the dashbaord
-        $html .= "<p align='center'>{$GLOBALS['strSort']}: <a href='view_tags.php?orderby=name'>{$GLOBALS['strAlphabetically']}</a> | ";
-        $html .= "<a href='view_tags.php?orderby=occurrences'>{$GLOBALS['strPopularity']}</a></p>";
+        //not in the dashboard
+        $operations = array();
+        $operations[$GLOBALS['strAlphabetically']] = 'view_tags.php?orderby=name';
+        $operations[$GLOBALS['strPopularity']] = 'view_tags.php?orderby=occurrences';
+        $html .= "<p align='center'>{$GLOBALS['strSort']}: " . html_action_links($operations) . "</p>";
     }
 
     if (mysql_num_rows($result) > 0)

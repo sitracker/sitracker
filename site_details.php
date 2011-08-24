@@ -31,6 +31,8 @@ if ($id == '')
     exit;
 }
 
+plugin_do('site_details');
+
 // Display site
 echo "<table class='maintable vertical'>";
 $sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
@@ -147,7 +149,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "</td></tr>\n";
 }
 
-plugin_do('site_details');
+plugin_do('site_details_table');
 mysql_free_result($siteresult);
 
 echo "</table>\n";
