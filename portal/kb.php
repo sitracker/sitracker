@@ -42,7 +42,7 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
     }
     else
     {
-        $start = $_GET['start'];
+    $start = clean_int($_GET['start']);
     }
 
     $end = $start + $perpage;
