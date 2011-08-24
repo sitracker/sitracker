@@ -23,7 +23,7 @@ if (empty($_REQUEST['mode']))
 {
     $title = $strEditEscalationPath;
     //show page
-    $id = $_REQUEST['id'];
+    $id = clean_int($_REQUEST['id']);
     $sql = "SELECT * FROM `{$dbEscalationPaths}` WHERE id = {$id}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
