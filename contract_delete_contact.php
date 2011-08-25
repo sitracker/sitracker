@@ -24,7 +24,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('','showform','delete'));
 $context = cleanvar($_REQUEST['context']);
 $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
