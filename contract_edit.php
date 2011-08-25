@@ -18,9 +18,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strEditContract;
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('','showform','edit','update'));
 $maintid = clean_int($_REQUEST['maintid']);
-$changeproduct = cleanvar($_REQUEST['changeproduct']);
+$changeproduct = clean_fixed_list($_REQUEST['changeproduct'], array('','no','yes'));
 
 if (empty($action) OR $action == "showform")
 {
