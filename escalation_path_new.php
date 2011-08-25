@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 
 $title = $strNewEscalationPath;
 
@@ -89,12 +89,12 @@ if (empty($submit))
 else
 {
     // External variables
-    $name = cleanvar($_REQUEST['name']);
-    $type = cleanvar($_REQUEST['type']);
-    $trackurl = cleanvar($_REQUEST['trackurl']);
-    $homeurl = cleanvar($_REQUEST['homeurl']);
-    $title = cleanvar($_REQUEST['title']);
-    $emaildomain = cleanvar($_REQUEST['emaildomain']);
+    $name = clean_dbstring($_REQUEST['name']);
+    $type = clean_fixed_list($_REQUEST['type'], array('internal','external'));
+    $trackurl = clean_dbstring($_REQUEST['trackurl']);
+    $homeurl = clean_dbstring($_REQUEST['homeurl']);
+    $title = cleaclean_dbstringnvar($_REQUEST['title']);
+    $emaildomain = clean_dbstring($_REQUEST['emaildomain']);
 
     $_SESSION['formdata']['new_escalation_path'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 

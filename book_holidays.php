@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strBookHoliday;
 
 // External variables
-$step = $_REQUEST['step'];
+$step = clean_int($_REQUEST['step']);
 $date = cleanvar($_REQUEST['date']);
 if (!empty($_REQUEST['user']) AND user_permission($sit[2], PERM_HOLIDAY_MANAGE))
 {
@@ -65,7 +65,7 @@ if (empty($step))
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($step == '1')
+elseif ($step == 1)
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

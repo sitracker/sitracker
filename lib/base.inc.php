@@ -247,14 +247,14 @@ function clean_dbstring($string)
 
 
 /**
-  * Make an external variable safe by ensuring the value is one of a list
-  * of predetermined values
-  * @author Ivan Lucas
-  * @param mixed $string variable to make safe
-  * @param array $list list of safe values
-  * @param bool $strict, also check the types of the values in the list
-  * @returns mixed - DB safe variable
-  * @note If the input string isn't found in the list, the first option is used
+ * Make an external variable safe by ensuring the value is one of a list
+ * of predetermined values
+ * @author Ivan Lucas
+ * @param mixed $string variable to make safe
+ * @param array $list list of safe values
+ * @param bool $strict, also check the types of the values in the list
+ * @returns mixed - DB safe variable
+ * @note If the input string isn't found in the list, the first option is used
 */
 function clean_fixed_list($string, $list, $strict = FALSE)
 {

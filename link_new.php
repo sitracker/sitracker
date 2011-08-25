@@ -84,7 +84,7 @@ switch ($action)
                 echo "<input type='hidden' name='origref' value='{$origref}' />";
                 echo "<input type='hidden' name='linktype' value='{$linktypeid}' />";
                 echo "<input type='hidden' name='dir' value='{$direction}' />";
-                echo "<input type='hidden' name='redirect' value='{$_SERVER['HTTP_REFERER']}' />";
+                echo "<input type='hidden' name='redirect' value='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "' />";
                 echo "</form>";
             }
             else echo user_alert($strNothingToLink, E_USER_WARNING);

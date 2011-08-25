@@ -19,7 +19,7 @@ require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $contractid = mysql_real_escape_string($_REQUEST['contractid']);
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 $title = ("$strContract - $strNewService");
 
 // Contract ID must not be blank
@@ -98,13 +98,13 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
             $unitratestyle = "";
             $inicidentratestyle = "style='display:none'";
         }
-        else 
+        else
         {
             $billperincident = "checked='checked'";
             $unitratestyle = "style='display:none'";
             $inicidentratestyle = "";
         }
-        
+
         echo "<label>";
         echo "<input type='radio' name='billtype' id='billtype' value='billperunit' onchange=\"newservice_showbilling('serviceform');\" {$billperunit} /> ";
         echo "{$strPerUnit}</label>";
@@ -140,7 +140,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
         {
             echo "value='{$_SESSION['formdata']['new_service']['cust_ref_date']}' />";
         }
-        else 
+        else
         {
             echo "value='".date('Y-m-d', $now)."' />";
         }
@@ -179,7 +179,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 
         echo "<tr><th>{$strBillingMatrix}</th>";
         echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )." <span class='required'>{$strRequired}</span>	</td>";
-        echo "</tr>";        
+        echo "</tr>";
 
         echo "<tr>";
         echo "<th>{$strFreeOfCharge}</th>";
@@ -209,9 +209,9 @@ else
     $enddate = strtotime($_REQUEST['enddate']);
     if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
     else $enddate = date('Y-m-d',strtotime($startdate) + 31556926); // No date set so we default to one year after start
-    
+
     $billtype = cleanvar($_REQUEST['billtype']);
-    
+
     $amount =  clean_float($_POST['amount']);
     if ($amount == '') $amount = 0;
     // Prevents both values being present should the user have changed their mind
@@ -224,10 +224,10 @@ else
     $notes = cleanvar($_REQUEST['notes']);
     $title = cleanvar($_REQUEST['title']);
     $billingmatrix = clean_dbstring($_REQUEST['billing_matrix']);
-   
+
     $_SESSION['formdata']['new_service'] = cleanvar($_POST, TRUE, FALSE, FALSE,
                                                      array("@"), array("'" => '"'));
-    
+
     if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
     {
         $errors++;
@@ -243,7 +243,7 @@ else
         $errors++;
         $_SESSION['formerrors']['new_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
     }
-    
+
     if (!empty($billtype) AND empty($billingmatrix))
     {
         $errors++;
@@ -256,13 +256,13 @@ else
         {
             $foc = cleanvar($_REQUEST['foc']);
             if (empty($foc)) $foc = 'no';
-    
+
             if ($billtype == 'billperunit') $incidentrate = 0;
             elseif ($billtype == 'billperincident') $unitrate = 0;
-    
+
             $cust_ref = cleanvar($_REQUEST['cust_ref']);
             $cust_ref_date = cleanvar($_REQUEST['cust_ref_date']);
-    
+
             $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, cust_ref, cust_ref_date, title, notes, billingmatrix, foc) ";
             $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$billingmatrix}', '{$foc}')";
         }
@@ -271,7 +271,7 @@ else
             $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, title, notes) ";
             $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$title}', '{$notes}')";
         }
-    
+
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         if (mysql_affected_rows() < 1)
@@ -279,18 +279,18 @@ else
             trigger_error("Insert failed", E_USER_ERROR);
             $errors++;
         }
-    
+
         $serviceid = mysql_insert_id();
-    
+
         if ($amount != 0)
         {
             update_contract_balance($contractid, "New service", $amount, $serviceid);
         }
-    
+
         $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    
+
         if (mysql_num_rows($result) > 0)
         {
             $obj = mysql_fetch_object($result);
@@ -304,7 +304,7 @@ else
                 if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed",E_USER_ERROR);
             }
         }
-        
+
         clear_form_data('new_service');
     }
 

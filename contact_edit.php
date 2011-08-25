@@ -22,7 +22,7 @@ $title = $strEditContact;
 
 // External variables
 $contact = clean_int($_REQUEST['contact']);
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'],array('','edit','showform','update'));
 
 
 // User has access
@@ -49,6 +49,8 @@ elseif ($action == "edit" && isset($contact))
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($contactobj = mysql_fetch_object($contactresult))
     {
+        echo show_form_errors('edit_contact');
+        clear_form_errors('edit_contact');
         echo "<h2>".icon('contact', 32)." ";
         echo "{$strEditContact}: {$contact}</h2>";
         plugin_do('contact_edit');
@@ -183,27 +185,28 @@ else if ($action == "update")
     // check for blank name
     if ($surname == '')
     {
-        $errors = 1;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSurname}'"), E_USER_ERROR);
+        $errors++;
+        $_SESSION['formerrors']['edit_contact']['surname'] = sprintf($strFieldMustNotBeBlank, $strSurname);
     }
     // check for blank site
-    if ($siteid == '')
+    if ($siteid < 1)
     {
-        $errors = 1;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSiteName}'"), E_USER_ERROR);
+        $errors++;
+        $_SESSION['formerrors']['edit_contact']['siteid'] = sprintf($strFieldMustNotBeBlank, $strSiteName);
     }
     // check for blank name
     if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
-        $errors = 1;
-        echo user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
-        echo user_alert($strMustEnterEmail, E_USER_ERROR);
+        $errors++;
+        $_SESSION['formerrors']['edit_contact']['email'] = sprintf($strFieldMustNotBeBlank, $strEmail);
     }
     // check for blank contact id
-    if ($contact == '')
+    if ($contact < 1)
     {
-        $errors = 1;
-        trigger_error("Something weird has happened, better call technical support", E_USER_ERROR);
+        // Something weird has happened, better call technical support
+        trigger_error("Contact ID was blank when saving contact record", E_USER_ERROR);
+        $errors++;
+        $_SESSION['formerrors']['edit_contact']['contact'] = sprintf($strFieldMustNotBeBlank, $strID);
     }
     plugin_do('contact_edit_submitted');
 
@@ -249,6 +252,11 @@ else if ($action == "update")
             html_redirect("contact_details.php?id={$contact}");
             exit;
         }
+    }
+    else 
+    {
+        html_redirect("contact_edit.php?action=edit&contact={$contact}", FALSE);
+        exit;
     }
 }
 

@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // External variables
 $hashcode = $_REQUEST['ax'];
 $oucode = $_REQUEST['ou'];
-$mode = $_REQUEST['mode'];
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'bare'));
 $ouemail = cleanvar($_POST['unsubscribe']);
 
 // lets ignore the opt out if both variables have data
@@ -31,18 +31,18 @@ if (!empty($hashcode))
 {
     $decodehash = str_rot13(@gzuncompress(base64_decode(urldecode($hashcode))));
     $hashvars = explode('&&',$decodehash);
-    $formid = mysql_real_escape_string($hashvars['0']);
-    $contactid = mysql_real_escape_string($hashvars['1']);
-    $incidentid = urldecode(mysql_real_escape_string($hashvars['2']));
-    $contactemail = urldecode(mysql_real_escape_string($hashvars['3']));
+    $formid = clean_int($hashvars['0']);
+    $contactid = clean_int($hashvars['1']);
+    $incidentid = clean_int(urldecode($hashvars['2']));
+    $contactemail = clean_dbstring(urldecode($hashvars['3']));
 
 }
 elseif (!empty($oucode))
 {
     $decodehash = str_rot13(@gzuncompress(base64_decode(urldecode($oucode))));
     $hashvars = explode('&&',$decodehash);
-    $contactid = mysql_real_escape_string($hashvars['0']);
-    $contactemail = urldecode(mysql_real_escape_string($hashvars['1']));
+    $contactid = clean_int($hashvars['0']);
+    $contactemail = clean_dbstring(urldecode($hashvars['1']));
 }
 else
 {
@@ -72,13 +72,12 @@ if (!empty($oucode))
                 echo "<h4 align='center'>{$strReceiveFeedbackAgain}</h4><br /><br />";
                 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             }
-            
         }
         else
         {
             html_redirect("$PHP_SELF?ou=$oucode", FALSE, $strNoValidEmailEntered);
         }
-        
+
 
     }
     else
@@ -139,7 +138,7 @@ else
                     // make sure there aren't any commas in the list and convert array to comma separated list
                     $_POST[$fieldname] = str_replace(',', '_', $_POST[$fieldname]);
                     $_POST[$fieldname] = implode(",", $_POST[$fieldname]);
-                } 
+                }
                 if ($question->required == 'true' AND (count($_POST[$fieldname]) < 1 OR
                         isset($_POST[$fieldname]) == FALSE))
                         {
@@ -156,7 +155,7 @@ else
                         $qresulttext = '';
                     }
                     else
-                    {   
+                    {
                         // If we've got more than one row or more than 255 chars store it in the resulttext field (which is a blob)
                         $qresult = '';
                         $qresulttext = $_POST[$fieldname];
@@ -226,7 +225,7 @@ else
             // check if contact is the right person
             $csql = "SELECT id from `$dbContacts` ";
             $csql .= "WHERE id='$contactid' AND email='$contactemail'";
-    
+
             $cresult = mysql_query($csql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -243,7 +242,7 @@ else
 
                 $waitingforms = mysql_num_rows($rresult);
                 $waitingform = mysql_fetch_object($rresult);
-    
+
                 if ($waitingforms < 1)
                 {
                     echo "<h3><span class='failure'>{$strError}</span></h3>";
@@ -293,7 +292,7 @@ else
                                 if (mb_strlen(trim($question->sectiontext)) > 3)
                                 {
                                     echo "<tr class='shade'><td colspan='2'><table><hr /><td>{$question->sectiontext}\n</td></table></td></tr>";
-                                }   
+                                }
                                 echo "<tr class='{$shade}'>";
                                 echo "<td><h4>Q{$question->taborder}: {$question->question}";
                                 if ($question->required == 'true')
