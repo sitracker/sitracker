@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$siteid = mysql_real_escape_string($_REQUEST['siteid']);
+$siteid = clean_int($_REQUEST['siteid']);
 $submit = $_REQUEST['submit'];
 $title = $strNewContact;
 
