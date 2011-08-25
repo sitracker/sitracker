@@ -20,9 +20,9 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$process = $_REQUEST['process'];
+$process = clean_fixed_list($_REQUEST['process'], array('', 'true'));
 $id = clean_int($_REQUEST['id']);
-$newcontact = mysql_real_escape_string($_REQUEST['newcontact']);
+$newcontact = clean_int($_REQUEST['newcontact']);
 $title = $strDeleteContact;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
