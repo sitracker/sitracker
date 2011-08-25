@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $id = clean_int($_REQUEST['id']);
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('','edit','delete','save'));
 
 if (empty($action) OR $action == 'edit')
 {

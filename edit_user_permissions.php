@@ -28,10 +28,10 @@ if ($CONFIG['demo'] AND $_SESSION['userid'] != 1)
 // External variables
 $user = clean_int($_REQUEST['user']);
 $role = clean_int($_REQUEST['role']);
-$action = cleanvar($_REQUEST['action']);
-$permselection = cleanvar($_REQUEST['perm']);
+$action = clean_fixed_list($_REQUEST['action'], array('showform','edit','update','check'));
+$permselection = clean_int($_REQUEST['perm']);
 $permid = clean_int($_REQUEST['permid']);
-$seltab = cleanvar($_REQUEST['tab']);
+$seltab = clean_int($_REQUEST['tab']);
 
 if (empty($action) OR $action == "showform")
 {
