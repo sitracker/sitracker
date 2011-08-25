@@ -34,7 +34,7 @@ $startdate = cleanvar($_REQUEST['startdate']);
 $enddate = cleanvar($_REQUEST['enddate']);
 
 $site = clean_int($_REQUEST['site']);
-$sites = $_REQUEST['sites'];
+$sites = clean_int($_REQUEST['sites']);
 $display = cleanvar($_REQUEST['display']);
 if (empty($display)) $display = 'html';
 $showfoc = cleanvar($_REQUEST['foc']);
