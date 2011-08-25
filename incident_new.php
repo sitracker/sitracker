@@ -90,6 +90,7 @@ function to_row($contact)
     return $str;
 }
 
+// External variables
 $action = $_REQUEST['action'];
 $context = cleanvar($_REQUEST['context']);
 $updateid = clean_int($_REQUEST['updateid']);
@@ -97,7 +98,7 @@ $incomingid = clean_int($_REQUEST['incomingid']);
 $query = cleanvar($_REQUEST['query']);
 $siteid = clean_int($_REQUEST['siteid']);
 $contactid = clean_int($_REQUEST['contactid']);
-$search_string = cleanvar($_REQUEST['search_string']);
+$search_string = clean_dbstring($_REQUEST['search_string']);
 $from = cleanvar($_REQUEST['from']);
 $type = cleanvar($_REQUEST['type']);
 $maintid = clean_int($_REQUEST['maintid']);
@@ -157,7 +158,6 @@ elseif ($action == 'findcontact')
         }
     }
 
-    $search_string = mysql_real_escape_string(urldecode($_REQUEST['search_string']));
     // check for blank or very short search field - otherwise this would find too many results
     if (empty($contactid) && mb_strlen($search_string) < 2)
     {
@@ -320,7 +320,7 @@ elseif ($action == 'findcontact')
                 $html .= "</tr>\n";
             }
             $html .=  "</table>\n";
-            $html .= "<p align='center'><a href='contact_new.php?name=".urlencode($search_string)."&amp;return=addincident'>{$strNewContact}</a></p>";
+            $html .= "<p align='center'><a href='contact_new.php?name="..urlencode(htmlspecialchars($search_string, ENT_QUOTES, $i18ncharset))."&amp;return=addincident'>{$strNewContact}</a></p>";
 
             if ($customermatches > 0)
             {
@@ -331,7 +331,7 @@ elseif ($action == 'findcontact')
         else
         {
             echo "<h3>".sprintf($strNoResultsFor, $strContacts)."</h3>";
-            echo "<p align='center'><a href=\"contact_new.php?name=".urlencode($search_string)."&amp;return=addincident\">{$strNewContact}</a></p>";
+            echo "<p align='center'><a href=\"contact_new.php?name=".urlencode(htmlspecialchars($search_string, ENT_QUOTES, $i18ncharset))."&amp;return=addincident\">{$strNewContact}</a></p>";
         }
         echo "<p align='center'><a href=\"{$_SERVER['PHP_SELF']}?updateid={$updateid}&amp;win={$win}\">{$strSearchAgain}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
