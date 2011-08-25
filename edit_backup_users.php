@@ -33,7 +33,7 @@ require (APPLICATION_LIBPATH.'auth.inc.php');
 
 // Valid user with Permission
 // External variables
-$save = $_REQUEST['save'];
+$save = clean_fixed_list($_REQUEST['save'], array('', 'save'));
 $title = $strDefineSubstituteEngineer;
 
 if (empty($save))
@@ -41,15 +41,15 @@ if (empty($save))
     // External variables
     if (empty($_REQUEST['user']) OR $_REQUEST['user'] == 'current')
     {
-        $user = mysql_real_escape_string($sit[2]);
+        $user = clean_int($sit[2]);
     }
     else
     {
-        $user = mysql_real_escape_string($_REQUEST['user']);
+        $user = clean_int($_REQUEST['user']);
     }
 
     $default = clean_int($_REQUEST['default']);
-    $softlist = $_REQUEST['softlist'];
+    $softlist = cleanvar($_REQUEST['softlist']);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user,TRUE))."</h2>\n";
@@ -106,7 +106,7 @@ if (empty($save))
 else
 {
     // External variables
-    $softlist = explode(',',$_REQUEST['softlist']);
+    $softlist = explode(',',cleanvar($_REQUEST['softlist']));
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
 
@@ -125,7 +125,7 @@ else
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
     }
     plugin_do('edit_backup_users_saved');
-    if ($_REQUEST['user'] == $sit[2]) html_redirect("edit_user_skills.php", TRUE);
+    if ($user == $sit[2]) html_redirect("edit_user_skills.php", TRUE);
     else html_redirect("manage_users.php");
 }
 
