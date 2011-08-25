@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $siteid = clean_int($_REQUEST['siteid']);
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 $title = $strNewContact;
 
 if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
