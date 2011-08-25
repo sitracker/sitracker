@@ -1365,9 +1365,14 @@ function group_billing_periods(&$count, $countType, $activity, $period)
 
 /**
  * @author Paul Heaney
+ * @param int $incidentid. Incident ID
+ * @param bool $totals. Set to TRUE to include period totals in the array
+ * @return mixed.
+ * @retval bool FALSE - Failure
+ * @retval array billing array
  * @note  based on periods
  */
-function make_incident_billing_array($incidentid, $totals=TRUE)
+function make_incident_billing_array($incidentid, $totals = TRUE)
 {
 
     $billing = get_incident_billing_details($incidentid);
