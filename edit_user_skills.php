@@ -23,7 +23,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External Variables
 $submit = cleanvar($_REQUEST['submit']);
 if (empty($_REQUEST['user']) || $_REQUEST['user'] == 'current') $user = $sit[2];
-else $user = cleanvar($_REQUEST['user']);
+else $user = clean_int($_REQUEST['user']);
 
 $title = $strEditUserSkills;
 
@@ -192,7 +192,7 @@ else
     }
     else
     {
-        if ($_REQUEST['user'] == $sit[2]) html_redirect("edit_user_skills.php?user={$user}");
+        if ($user == $sit[2]) html_redirect("edit_user_skills.php?user={$user}");
         else html_redirect("manage_users.php");
     }
 }
