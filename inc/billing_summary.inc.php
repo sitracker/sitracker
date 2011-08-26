@@ -18,10 +18,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-$display = cleanvar($_REQUEST['display']);
-$showfoc = cleanvar($_REQUEST['foc']);
-$focaszero = cleanvar($_REQUEST['focaszero']);
-$expiredaszero = cleanvar($_REQUEST['expiredaszero']);
+$display = clean_fixed_list($_REQUEST['display'], array('','html','csv'));
+$showfoc = clean_fixed_list($_REQUEST['foc'], array('','show'));
+$focaszero = clean_fixed_list($_REQUEST['focaszero'], array('','show'));
+$expiredaszero = clean_fixed_list($_REQUEST['expiredaszero'], array('','show'));
 
 if (empty($display)) $display = 'html';
 
@@ -188,7 +188,7 @@ if (mysql_num_rows($result) > 0)
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalbalance, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalawaitingapproval, 2)."</td>";
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalreserved, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalactual, 2)."</td><td></td><td>{$remainingunits}</td></tr></tfoot>";
         $str .= "</table>";
-        $str .= "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+        $str .= "<p class='return'><a href='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
     }
     elseif ($display == 'csv')
     {

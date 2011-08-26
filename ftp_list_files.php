@@ -23,7 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strFTPFilesDB;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$orderby = cleanvar($_REQUEST['orderby']);
+// External Variables
+$orderby = clean_fixed_list($_REQUEST['orderby'],array('','filename','shortdescription','size','version','expiry','date','published'));
 
 echo "<h2>".icon('attach', 32)." {$title}</h2>";
 

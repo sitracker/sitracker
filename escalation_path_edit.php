@@ -19,11 +19,13 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('','edit'));
+
+if (empty($mode))
 {
     $title = $strEditEscalationPath;
     //show page
-    $id = $_REQUEST['id'];
+    $id = clean_int($_REQUEST['id']);
     $sql = "SELECT * FROM `{$dbEscalationPaths}` WHERE id = {$id}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

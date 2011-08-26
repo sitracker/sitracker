@@ -56,7 +56,7 @@ switch ($_REQUEST['action'])
     default:
         $title = "{$strNewFeedbackQuestion}";
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $qid = strip_tags($_REQUEST['qid']);
+        $qid = clean_int($_REQUEST['qid']);
 
         echo "<h2 align='center'>$title</h2>\n";
 

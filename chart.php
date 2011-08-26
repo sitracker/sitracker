@@ -20,7 +20,7 @@ plugin_do('page_start');
 if (!extension_loaded('gd')) trigger_error("{$CONFIG['application_name']} requires the gd module", E_USER_ERROR);
 
 // External variables
-$type = $_REQUEST['type'];
+$type = clean_fixed_list($_REQUEST['type'], array('pie','line','bar'));
 $data = explode('|',cleanvar($_REQUEST['data']));
 $legends = explode('|', cleanvar($_REQUEST['legends'], TRUE, FALSE, FALSE));
 $title = urldecode(cleanvar($_REQUEST['title']));

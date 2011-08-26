@@ -50,7 +50,7 @@ elseif ($_REQUEST['win'] == 'jump')
         }
         else
         {
-            echo "</head><body onload=\"\"><a href=\"{$_SERVER['HTTP_REFERER']}\"{$strPleaseWaitRedirect}</a>";
+            echo "</head><body onload=\"\"><a href=\"" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "\"{$strPleaseWaitRedirect}</a>";
             echo "<script type='text/javascript'>\n//<![CDATA[\n";
             echo "var popwin = incident_details_window($incidentid,'win', true);\n";
             echo "if (!popwin) alert('{$strDidYourBrowserBlockPopupWindow}');\n";
@@ -72,7 +72,7 @@ elseif ($_REQUEST['win'] == 'jump')
         }
         else
         {
-            echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='{$_SERVER['HTTP_REFERER']}';\"></body></html>";
+            echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "';\"></body></html>";
         }
     }
     exit;

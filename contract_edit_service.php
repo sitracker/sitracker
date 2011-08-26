@@ -21,14 +21,13 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require_once (APPLICATION_LIBPATH.'auth.inc.php');
 
 
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('showform','editservice','doupdate','edit','transfer'));
 $amount = clean_float($_REQUEST['amount']);
 $contractid = clean_int($_REQUEST['contractid']);
-$sourceservice = cleanvar($_REQUEST['sourceservice']);
-$destinationservice = cleanvar($_REQUEST['destinationservice']);
-$reason = cleanvar($_REQUEST['reason']);
+$sourceservice = clean_int($_REQUEST['sourceservice']);
+$destinationservice = clean_int($_REQUEST['destinationservice']);
+$reason = clean_dbstring($_REQUEST['reason']);
 $serviceid = clean_int($_REQUEST['serviceid']);
-if (empty($mode)) $mode = 'showform';
 
 switch ($mode)
 {
@@ -239,10 +238,10 @@ switch ($mode)
         $incidentrate =  clean_float($_POST['incidentrate']);
         if ($incidentrate == '') $incidentrate = 0;
 
+        $billtype = clean_fixed_list($_REQUEST['billtype'], array('billperunit', 'billperincident'));
+
         if ($billtype == 'billperunit') $incidentrate = 0;
         elseif ($billtype == 'billperincident') $unitrate = 0;
-
-        $billtype = cleanvar($_REQUEST['billtype']);
 
         $_SESSION['formdata']['edit_service'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE,
                                                  array("@"), array("'" => '"'));
@@ -278,12 +277,11 @@ switch ($mode)
             if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
             else $enddate = date('Y-m-d',$now);
 
-            $notes = cleanvar($_REQUEST['notes']);
+            $notes = clean_dbstring($_REQUEST['notes']);
 
-            $editbilling = cleanvar($_REQUEST['editbilling']);
+            $editbilling = clean_fixed_list($_REQUEST['editbilling'], array('','true','false'));
 
-            $foc = cleanvar($_REQUEST['foc']);
-            if (empty($foc)) $foc = 'no';
+            $foc = clean_fixed_list($_REQUEST['foc'], array('no','yes'));
 
             if ($editbilling == "true")
             {

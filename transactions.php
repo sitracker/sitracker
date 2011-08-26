@@ -34,7 +34,7 @@ $startdate = cleanvar($_REQUEST['startdate']);
 $enddate = cleanvar($_REQUEST['enddate']);
 
 $site = clean_int($_REQUEST['site']);
-$sites = $_REQUEST['sites'];
+$sites = clean_int($_REQUEST['sites']);
 $display = cleanvar($_REQUEST['display']);
 if (empty($display)) $display = 'html';
 $showfoc = cleanvar($_REQUEST['foc']);
@@ -67,7 +67,7 @@ if ($display == 'html')
     echo "<h2>{$strTransactions}</h2>";
 
     echo $text;
-    echo "<p class='return'><a href='{$_SERVER['HTTP_REFERER']}'>{$strReturnToPreviousPage}</a></p>";
+    echo "<p class='return'><a href='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

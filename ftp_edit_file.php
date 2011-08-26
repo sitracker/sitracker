@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Vars
 $id = clean_int($_REQUEST['id']);
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('form','save'));
 $title = $strEditFTPdetailsUpload;
 
 if (empty($mode)) $mode='form';
@@ -89,10 +89,10 @@ switch ($mode)
     break;
 
     case 'save':
-        $shortdescription = mysql_real_escape_string($_REQUEST['shortdescription']);
-        $longdescription = mysql_real_escape_string($_REQUEST['longdescription']);
-        $fileversion = mysql_real_escape_string($_REQUEST['fileversion']);
-        $webcategory = mysql_real_escape_string($_REQUEST['webcategory']);
+        $shortdescription = clean_dbstring($_REQUEST['shortdescription']);
+        $longdescription = clean_dbstring($_REQUEST['longdescription']);
+        $fileversion = clean_dbstring($_REQUEST['fileversion']);
+        $webcategory = clean_dbstring($_REQUEST['webcategory']);
         $sql = "UPDATE `{$dbFiles}` SET ";
         $sql .= "shortdescription='{$shortdescription}', longdescription='{$longdescription}', fileversion='{$fileversion}', ";
         $sql .= "webcategory='{$webcategory}', published='yes'";

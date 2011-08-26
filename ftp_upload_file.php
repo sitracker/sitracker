@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH.'auth.inc.php');
 
 // External variables
 $file = cleanvar($_REQUEST['file']);
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('','publish'));
 
 $max_filesize = return_bytes($CONFIG['upload_max_filesize']);
 
@@ -104,11 +104,11 @@ else
     // TODO v3.2x ext variables
     $file_name = $_FILES['file']['name'];
 
-    $shortdescription = cleanvar($_REQUEST['shortdescription']);
-    $longdescription = cleanvar($_REQUEST['longdescription']);
-    $fileversion = cleanvar($_REQUEST['fileversion']);
+    $shortdescription = clean_dbstring($_REQUEST['shortdescription']);
+    $longdescription = clean_dbstring($_REQUEST['longdescription']);
+    $fileversion = clean_dbstring($_REQUEST['fileversion']);
 
-    $expirytype = cleanvar($_REQUEST['expiry_none']);
+    $expirytype = clean_fixed_list($_REQUEST['expiry_none'], array('','time','date'));
 
 
     if ($expirytype == 'time')
