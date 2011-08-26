@@ -22,7 +22,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 if (!empty($_REQUEST['id']))
 {
     $mode = 'edit';
-    $kbid = intval($_REQUEST['id']);
+    $kbid = clean_int($_REQUEST['id']);
 }
 
 // Array of available sections, in order they are to appear

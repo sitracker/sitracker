@@ -23,7 +23,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $bodytext = cleanvar($_REQUEST['bodytext'], FALSE, TRUE);
 $id = clean_int($_REQUEST['id']);
 $incidentid = $id;
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('','editdraft','deletedraft','newupdate','update'));
 $draftid = cleanvar($_REQUEST['draftid']);
 if (empty($draftid)) $draftid = -1;
 
