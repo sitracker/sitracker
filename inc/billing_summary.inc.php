@@ -18,10 +18,10 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
-$display = cleanvar($_REQUEST['display']);
-$showfoc = cleanvar($_REQUEST['foc']);
-$focaszero = cleanvar($_REQUEST['focaszero']);
-$expiredaszero = cleanvar($_REQUEST['expiredaszero']);
+$display = clean_fixed_list($_REQUEST['display'], array('','html','csv'));
+$showfoc = clean_fixed_list($_REQUEST['foc'], array('','show'));
+$focaszero = clean_fixed_list($_REQUEST['focaszero'], array('','show'));
+$expiredaszero = clean_fixed_list($_REQUEST['expiredaszero'], array('','show'));
 
 if (empty($display)) $display = 'html';
 

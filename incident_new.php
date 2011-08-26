@@ -91,7 +91,7 @@ function to_row($contact)
 }
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('showform','findcontact','incidentform','assign','reassign'));
 $context = cleanvar($_REQUEST['context']);
 $updateid = clean_int($_REQUEST['updateid']);
 $incomingid = clean_int($_REQUEST['incomingid']);

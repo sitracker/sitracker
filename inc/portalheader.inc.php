@@ -124,7 +124,7 @@ if (!empty($_SESSION['lang']) AND $_SESSION['lang'] != $CONFIG['default_i18n'])
 require (APPLICATION_LIBPATH . 'strings.inc.php');
 
 // External variables
-$page = cleanvar($_REQUEST['page']);
+$page = clean_int($_REQUEST['page']);
 $contractid = clean_int($_REQUEST['contractid']);
 
 $filter = array('page' => $page);
