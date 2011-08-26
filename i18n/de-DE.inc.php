@@ -1,6 +1,6 @@
 <?php
 // SiT! Language File - German (de-DE) by Patrick Liebhardt & Raffael Luthiger
-// 2011-08-22: Translation improved by Gabriele Pohl (contact@dipohl.de)
+// 2011-08-25: Translation improved by Gabriele Pohl (contact@dipohl.de)
 
 $languagestring = 'German (de-DE)';
 $i18ncharset = 'UTF-8';
@@ -110,7 +110,7 @@ $strAdminContact = 'Adminkontakt';
 $strAdminContactForContracts = 'Sie sind für folgende Verträge der Adminkontakt. Sie können auswählen, wer diese Tickets im Portal sehen kann.';
 $strAdministratorsOnly = 'Nur für Admins';
 $strAdminOnly = 'Nur für Admin';
-$strAdvanced = 'Fortgeschritten';
+$strAdvanced = 'Erweitert';
 $strAfternoon = 'Nachmittag';
 $strAfterXSurveys = 'nach %s Umfragen';
 $strAge = 'Alter';
@@ -244,13 +244,13 @@ $strBrowseFeedbackForms = 'Feedbackformular suchen';
 $strBrowseJournal = 'Journal durchsuchen';
 $strBrowseKB = 'Wissensfundus durchsuchen';
 $strBrowseSites = 'Niederlassung suchen';
-$strBulkModify = 'Alle ändern';
+$strBulkModify = 'Sammel-Änderung';
 
 # e.g. by Fred
 $strby = 'von';
 
 $strByContact = 'nach Kontaktperson';
-$strByEngineer = 'nach Techniker';
+$strByEngineer = 'nach Techniker/in';
 $strByEscalation = 'nach Eskalation';
 $strByGroup = 'nach Gruppe';
 $strByMaintenance = 'nach Wartung';
@@ -360,7 +360,7 @@ $strComplete = 'Vollständig';
 $strCompleted = 'Abgeschlossen';
 $strCompletion = 'Bearbeitungsstand';
 $strCommentsSentWithRequest = 'Die folgenden Kommentare werden mit der Anfrage';
-$strComponentMustBePlacedInDashboardDir = 'Beachten Sie, dass die Komponente im Verzeichnis der Übersichtsseite abgelegt und wie folgt benannt werden muss: %s';
+$strComponentMustBePlacedInDashboardDir = 'Beachten Sie, dass die Komponente im Verzeichnis des Armaturenbretts abgelegt und wie folgt benannt werden muss: %s';
 $strCopyFrom = 'Von Kopie';
 $strCreateANotice = 'Erstelle eine Anmerkung basierend auf %s';
 $strCreateANoticeWhen = 'Erstelle eine Anmerkung basierend auf %s, wenn %s';
@@ -415,8 +415,8 @@ $strCustomerVisible = 'Dem Kunden sichtbar';
 $strDailyRate = 'Tagesvotum';
 
 # i.e. place for widgets
-$strDashboard = 'Übersichtsseite';
-$strDashboardComponentDoesntExist = 'Übersichtskomponente %s existiert nicht';
+$strDashboard = 'Armaturenbrett';
+$strDashboardComponentDoesntExist = 'Die Armatur %s existiert nicht';
 $strDataProtection = 'geschützt';
 # i.e. 25th December
 $strDate = 'Datum';
@@ -874,7 +874,7 @@ $strInMinutes = 'in Minuten';
 $strInOffice = 'Im Büro';
 $strInOrderToDelete = 'Um den Datensatz zu löschen, müssen Sie einen anderen angeben, der die angehängten Objekte übernehmen soll';
 $strInstall = 'Installieren';
-$strInstallDashboardComponents = 'Neue Übersichtskomponente installieren';
+$strInstallDashboardComponents = 'Neue Armatur installieren';
 $strInterfaceStyle = 'Oberflächengestaltung';
 $strInternalEngineer = 'Interne/r Bearbeiter/in';
 $strInternalEscalation = 'Interne Eskalation';
@@ -989,11 +989,11 @@ $strLowPriority = 'Niedrige Priorität';
 $strMaintenance = 'Verwaltung';
 $strMakeVisibleInPortal = 'Im Portal anzeigen';
 $strMap = 'Karte';
-$strManageDashboardComponents = 'Übersichtskomponenten verwalten';
+$strManageDashboardComponents = 'Armaturen verwalten';
 $strManageEmailTemplates = 'Verwalte E-Mail-Vorlagen';
 $strManageFTPFiles = 'FTP Dateien verwalten';
 $strManageUsers = 'Bearbeiter/innen verwalten';
-$strManageYourDashboard = 'Übersichtsseite verwalten';
+$strManageYourDashboard = 'Armaturenbrett konfigurieren';
 $strMandatoryMarked = 'Erforderliche Felder sind markiert %s';
 $strManyThanks = 'vielen Dank an alle, die Kommentare, Ideen, Vorschläge, Fehlerberichte beigesteuert haben, beim Testen geholfen haben oder Programmcode gestiftet haben. Besonderer Dank geht an: (in zufälliger Reihenfolge)';
 # Short for March
@@ -1045,7 +1045,7 @@ $strMovedFromXtoXbyX = 'Verschoben von %s -&gt; %s durch %s';
 $strMultipleActivitiesRunning = 'Verschiedene Aktivitäten laufen';
 $strMultipleOptions = 'Mehrere Optionen';
 $strMustCompleteActivitiesBeforeClosure = 'Sie müssen zunächst alle Aktivitäten im Ticket abschliessen, bevor dieses geschlossen werden kann.';
-$strMyDashboard = 'Übersichtsseite';
+$strMyDashboard = 'Armaturenbrett';
 $strMyDetails = 'Meine Einstellungen';
 $strMyHolidays = 'Urlaub';
 $strMyIncidents = 'Meine Tickets';
@@ -1123,7 +1123,7 @@ $strNoMatchingTaskFound = 'Keine passende Aufgabe gefunden';
 $strNoNameAssociated = 'Kein Name angegeben';
 $strNoSLA = 'Keine Servicezusage';
 $strNone = 'Keine';
-$strNoNewDashboardComponentsToInstall = 'Keine neuen Übersichtskomponenten verfügbar';
+$strNoNewDashboardComponentsToInstall = 'Keine neuen Armaturen verfügbar';
 $strNoMatchingTask = 'Keine passende Aufgabe gefunden';
 $strNoMatchingProduct = 'Kein passendes Produkt';
 $strNoOpenIncidents = 'Keine offenen Tickets';
@@ -1156,7 +1156,7 @@ $strNoSubstitute = 'Kein/e Vertreter/in angegeben';
 $strNoSubstitutes = 'Keine Vertreter/innen angegeben';
 $strNoTransactionsMatchYourSearch = 'Keine zum Suchkriterium passende Transaktion gefunden';
 $strNoTransactionsFoundWithID = 'Keine Transaktion gefunden mit ID';
-$strNoUpgradesForDashboardComponent = 'Keine Aktualisierungen für %s Übersichtskomponente';
+$strNoUpgradesForDashboardComponent = 'Keine Aktualisierungen für %s Armatur';
 $strNoTasks = 'keine Aufgaben';
 $strNotAccepting = 'Keine Annahme';
 $strNotAcceptingIncidents = '<strong>Keine Annahme</strong> von Tickets';
@@ -1215,7 +1215,7 @@ $strNotRequested = 'Nicht gefordert';
 $strNotSet = 'Nicht gesetzt';
 $strNotSettingArea = '<strong>Hinweis</strong>: Ohne Auswahl des Fachbereichs kann sich die Bearbeitung verzögern.';
 $strNotUpdated = 'Nicht aktualisiert';
-$strNoUpgradesForDashboardComponent = 'Keine Aktualisierungen für Übersichtskomponente %s';
+$strNoUpgradesForDashboardComponent = 'Keine Aktualisierungen für Armatur %s';
 # Short for November
 $strNovAbbr = 'Nov';
 $strNoVendorsDefined = 'Keine Hersteller eingetragen';
