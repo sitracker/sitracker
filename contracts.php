@@ -23,10 +23,10 @@ $pagescripts = array('AutoComplete.js');
 // External variables
 $productid = clean_int($_REQUEST['productid']);
 $resellerid = clean_int($_REQUEST['resellerid']);
-$search_string = cleanvar($_REQUEST['search_string']);
-$sort = cleanvar($_REQUEST['sort']);
-$order = cleanvar($_REQUEST['order']);
-$activeonly = cleanvar($_REQUEST['activeonly']);
+$search_string = clean_dbstring($_REQUEST['search_string']);
+$sort = clean_fixed_list($_REQUEST['sort'], array('','expiry','id','product','site','reseller'));
+$order = clean_fixed_list(($_REQUEST['order'], array('','a','ASC','d','DESC'));
+$activeonly = clean_fixed_list($_REQUEST['activeonly'], array('no','yes');
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('contract', 32)." ";

@@ -19,18 +19,19 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Variables
 $formid = clean_int($_REQUEST['formid']);
+$action = clean_fixed_list($_REQUEST['action'], array('','save','new'));
 
 if (empty($formid)) $formid=1;
 
-switch ($_REQUEST['action'])
+switch ($action)
 {
     case 'save':
         // External variables
-        $name = cleanvar($_REQUEST['name']);
-        $description = cleanvar($_REQUEST['description']);
-        $introduction = cleanvar($_REQUEST['introduction']);
-        $thanks = cleanvar($_REQUEST['thanks']);
-        $isnew = cleanvar($_REQUEST['isnew']);
+        $name = clean_dbstring($_REQUEST['name']);
+        $description = clean_dbstring($_REQUEST['description']);
+        $introduction = clclean_dbstringeanvar($_REQUEST['introduction']);
+        $thanks = clean_dbstring($_REQUEST['thanks']);
+        $isnew = clean_fixed_list($_REQUEST['isnew'], array('no','yes'));
 
         if ($isnew == "yes")
         {

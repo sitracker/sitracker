@@ -21,12 +21,12 @@ $title = $strBrowseFeedback;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // External variables
-$formid = cleanvar($_REQUEST['id']);
+$formid = clean_int($_REQUEST['id']);
 $responseid = clean_int($_REQUEST['responseid']);
-$sort = cleanvar($_REQUEST['sort']);
-$order = cleanvar($_REQUEST['order']);
-$mode = cleanvar($_REQUEST['mode']);
-$completed = cleanvar($_REQUEST['completed']);
+$sort = clean_fixed_list($_REQUEST['sort'], array('','created','contactid','incidentid'));
+$order = clean_fixed_list($_REQUEST['order'], array('','ASC','DESC','a','d'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('','viewresponse'));
+$completed = clean_fixed_list($_REQUEST['completed'], array('','yes','no'));
 
 switch ($mode)
 {

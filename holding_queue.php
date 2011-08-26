@@ -193,12 +193,13 @@ else
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 }
 
-if ($spam_string == $_REQUEST['delete_all_spam'])
+if ($spam_string == cleanvar($_REQUEST['delete_all_spam']))
 {
     $spam_array = explode(',',$spam_string);
     foreach ($spam_array as $spam)
     {
         $ids = explode('_',$spam);
+        $ids[0] = clean_int($ids[0]);
 
         $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$ids[1]}' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='{$ids[0]}' LIMIT 1";
         mysql_query($sql);

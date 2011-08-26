@@ -22,7 +22,7 @@ $title = $strEditContact;
 
 // External variables
 $contact = clean_int($_REQUEST['contact']);
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'],array('','edit','showform','update'));
 
 
 // User has access

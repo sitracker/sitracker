@@ -49,10 +49,10 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strGlobalSignature;
 
 // External variables
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('new','delete','edit'));
 $sig_id = clean_int($_REQUEST['sig_id']);
 $signature = clean_dbstring($_REQUEST['signature']);
-$formaction = cleanvar($_REQUEST['formaction']);
+$formaction = clean_fixed_list($_REQUEST['formaction'], array('new','edit'));
 
 if (!empty($signature))
 {

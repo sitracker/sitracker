@@ -24,7 +24,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $id = clean_int($_REQUEST['id']);
-$output = cleanvar($_REQUEST['output']);
+$output = clean_fixed_list($_REQUEST['output'], array('', 'vcard'));
 $title = $strContactDetails;
 
 if ($output == 'vcard')

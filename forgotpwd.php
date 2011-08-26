@@ -28,6 +28,7 @@ $email = clean_dbstring($_REQUEST['emailaddress']);
 $username = clean_dbstring($_REQUEST['username']);
 $userid = clean_int($_REQUEST['userid']);
 $contactid = clean_int($_REQUEST['contactid']);
+$action = clean_fixed_list($_REQUEST['action'], array('forgotpwd', 'sendpwd', 'confirmreset', 'resetpasswordform', 'savepassword', 'form'));
 
 if (!empty($userid))
 {
@@ -39,7 +40,7 @@ elseif (!empty($contactid))
 }
 $userhash = cleanvar($_REQUEST['hash']);
 
-switch ($_REQUEST['action'])
+switch ($action)
 {
     case 'forgotpwd':
     case 'sendpwd':
@@ -231,8 +232,8 @@ switch ($_REQUEST['action'])
     break;
 
     case 'savepassword':
-        $newpassword1 = cleanvar($_REQUEST['newpassword1']);
-        $newpassword2 = cleanvar($_REQUEST['newpassword2']);
+        $newpassword1 = clean_dbstring($_REQUEST['newpassword1']);
+        $newpassword2 = clean_dbstring($_REQUEST['newpassword2']);
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if ($mode == 'user')
         {

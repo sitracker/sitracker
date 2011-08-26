@@ -33,7 +33,7 @@ if (!isset($_GET['start']))
 }
 else
 {
-    $start = $_GET['start'];
+    $start = clean_int($_GET['start']);
 }
 
 $domain = cleanvar($_GET['domain']);
@@ -113,7 +113,7 @@ if (is_numeric($q))
                 echo "window.location = 'incident_details.php?id={$q}&win=jump&return=";
                 if (!empty($_SERVER['HTTP_REFERER']))
                 {
-                    echo $_SERVER['HTTP_REFERER'];
+                    echo html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset);
                 }
                 else
                 {

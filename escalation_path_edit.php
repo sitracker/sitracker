@@ -19,7 +19,9 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('','edit'));
+
+if (empty($mode))
 {
     $title = $strEditEscalationPath;
     //show page

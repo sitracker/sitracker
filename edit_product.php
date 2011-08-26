@@ -20,8 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $id = clean_int($_REQUEST['id']);
-$name = $_REQUEST['name'];
-$action = $_POST['action'];
+$action = clean_fixed_list($_POST['action'], array('form', 'save'));
 
 if ($action == 'save')
 {
