@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 $id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 

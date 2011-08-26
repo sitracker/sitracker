@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $incidentid = $id;
 
 $title = $strFiles;
@@ -231,6 +231,7 @@ if (isset($_REQUEST['fileselection']))
     echo "<div class='detailentry'>\n";
     foreach ($fileselection AS $filesel)
     {
+        $filesel = cleanvar($filesel);
         echo "$filesel {$strEllipsis} ";
         echo "listed";
         echo "<br />";
