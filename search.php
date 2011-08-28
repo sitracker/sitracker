@@ -17,7 +17,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-$q = cleanvar($_GET['q']);
 
 $title = $strSearch;
 
@@ -40,7 +39,7 @@ $domain = cleanvar($_GET['domain']);
 
 if (isset($_GET['q']))
 {
-    $q = cleanvar($_GET['q']);
+    $q = clean_int($_GET['q']);
 }
 elseif (isset($_GET['search_string']))
 {
