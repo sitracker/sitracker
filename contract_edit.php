@@ -18,9 +18,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strEditContract;
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('','showform','edit','update'));
 $maintid = clean_int($_REQUEST['maintid']);
-$changeproduct = cleanvar($_REQUEST['changeproduct']);
+$changeproduct = clean_fixed_list($_REQUEST['changeproduct'], array('','no','yes'));
 
 if (empty($action) OR $action == "showform")
 {
@@ -147,6 +147,7 @@ if ($action == "edit")
 }
 else if ($action == "update")
 {
+    // External variables
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
     $incident_quantity = $incident_pools[$_POST['incident_poolid']];
     $reseller = clean_int($_POST['reseller']);
@@ -164,7 +165,7 @@ else if ($action == "update")
     else $expirydate = strtotime($_REQUEST['expirydate']);
 
     $allcontacts = 'No';
-    if ($contacts == 'amount') $amount = cleanvar($_REQUEST['amount']);
+    if ($contacts == 'amount') $amount = clean_float($_REQUEST['amount']);
     elseif ($contacts == 'all') $allcontacts = 'Yes';
 
     $errors = 0;

@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$action = clean_dbstring($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('showform','new'));
 $productid = clean_int($_REQUEST['productid']);
 $softwareid = clean_int($_REQUEST['softwareid']);
 $context = cleanvar($_REQUEST['context']);

@@ -20,7 +20,17 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strQueryByExample;
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'selectfields', 'report'));
+
+$result = mysql_list_tables($CONFIG['db_database']);
+while ($row = mysql_fetch_row($result))
+{
+    $tables[] = $row[0];
+}
+
+$table1 = clean_fixed_list($_POST['table1'], $tables);
+
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
@@ -29,12 +39,7 @@ if (empty($_REQUEST['mode']))
     echo "<tr><th>{$strTable}:</th>";
     echo "<td>";
     $result = mysql_list_tables($CONFIG['db_database']);
-    echo "<select name='table1'>";
-    while ($row = mysql_fetch_row($result))
-    {
-        echo "<option value='{$row[0]}'>{$row[0]}</option>\n";
-    }
-    echo "</select>";
+    echo array_drop_down($tables, 'table1');
     echo "</td></tr>\n";
     /*
     echo "<tr><td align='right' width='200' class='shade1'><b>Table 2</b>:</td>";
@@ -56,9 +61,8 @@ if (empty($_REQUEST['mode']))
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($_REQUEST['mode'] == 'selectfields')
+elseif ($mode == 'selectfields')
 {
-    $table1 = cleanvar($_REQUEST['table1']);
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
@@ -104,7 +108,10 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     for ($i = 0; $i < $columns; $i++)
     {
         $fieldname = mysql_field_name($result, $i);
-        echo "<option value='$fieldname'>$fieldname</option>\n";
+        if ($fieldname != 'password')
+        {
+            echo "<option value='$fieldname'>$fieldname</option>\n";
+        }
     }
     echo "</select>";
     echo "<select name='criteriaop'>";
@@ -137,15 +144,15 @@ elseif ($_REQUEST['mode'] == 'selectfields')
     echo "</form>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($_REQUEST['mode'] == 'report')
+elseif ($mode == 'report')
 {
     // External variables
-    $table = cleanvar($_POST['table1']);
-    $criteriafield = cleanvar($_POST['criteriafield']);
-    $criteriaop = cleanvar($_POST['criteriaop']);
-    $criteriaval = cleanvar($_POST['criteriaval']);
-    $sortby = cleanvar($_POST['sortby']);
-    $sortorder = cleanvar($_POST['sortorder']);
+    $table = clean_fixed_list($_POST['table1'], $tables);
+    $criteriafield = clean_dbstring($_POST['criteriafield']);
+    $criteriaop = clean_fixed_list($_POST['criteriaop'], array('eq', 'lt', 'gt'));
+    $criteriaval = clean_dbstring($_POST['criteriaval']);
+    $sortby = clean_dbstring($_POST['sortby']);
+    $sortorder = clean_dbstring($_POST['sortorder']);
     $limit = clean_int($_POST['limit']);
     $columns = count($_POST[fields]);
 
@@ -164,7 +171,7 @@ elseif ($_REQUEST['mode'] == 'report')
         $htmlfieldheaders = "<tr>";
         for ($i = 0; $i < $columns; $i++)
         {
-            $fieldname = cleanvar($_POST[fields][$i]);
+            $fieldname = clean_dbstring($_POST[fields][$i]);
             if ($fieldname != 'password')
             {
                 $fieldlist .= $fieldname;

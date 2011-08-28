@@ -18,10 +18,11 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 $incomingid = clean_int($_REQUEST['id']);
+$action = clean_fixed_list($_REQUEST['action'], array('','updatereason'));
 
-if ($_REQUEST['action'] == "updatereason")
+if ($action == "updatereason")
 {
-    $newreason = cleanvar($_REQUEST['newreason']);
+    $newreason = clean_dbstring($_REQUEST['newreason']);
     $updatetime = date('Y-m-d H:i:s',$now);
     $update = "UPDATE `{$dbTempIncoming}` SET reason='{$newreason}', ";
     $update .= "reason_user='{$sit['2']}', reason_time='{$updatetime}' WHERE id={$incomingid}";
@@ -30,7 +31,6 @@ if ($_REQUEST['action'] == "updatereason")
     unset($result);
 }
 
-$action = cleanvar($_REQUEST['action']);
 $sql = "SELECT * FROM `{$dbTempIncoming}` WHERE id='{$incomingid}' LIMIT 1";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);

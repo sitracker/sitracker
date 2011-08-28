@@ -20,7 +20,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strIncidentsByVendor;
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
+
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -69,7 +71,7 @@ else
 
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
-    echo "<p align='center'>".sprintf($strForThePeriodXToY, $_REQUEST['startdate'], $_REQUEST['enddate'])."</p>";
+    echo "<p align='center'>".sprintf($strForThePeriodXToY, ldate($CONFIG['dateformat_date'], $startdate), ldate($CONFIG['dateformat_date'], $enddate))."</p>";
 
     if (mysql_num_rows($result) > 0)
     {

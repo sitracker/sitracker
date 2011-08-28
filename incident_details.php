@@ -21,8 +21,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $incidentid = clean_int($_REQUEST['id']);
 $id = $incidentid;
+$win - clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview'));
 
-if ($_REQUEST['win'] == 'incomingview')
+if ($win == 'incomingview')
 {
     $title = $strIncoming;
     $incidentid = '';
@@ -30,7 +31,7 @@ if ($_REQUEST['win'] == 'incomingview')
     include (APPLICATION_INCPATH . 'incident_incoming.inc.php');
     exit;
 }
-elseif ($_REQUEST['win'] == 'jump')
+elseif ($win == 'jump')
 {
     if (incident_owner($incidentid) > 0)
     {
@@ -50,7 +51,7 @@ elseif ($_REQUEST['win'] == 'jump')
         }
         else
         {
-            echo "</head><body onload=\"\"><a href=\"{$_SERVER['HTTP_REFERER']}\"{$strPleaseWaitRedirect}</a>";
+            echo "</head><body onload=\"\"><a href=\"" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "\"{$strPleaseWaitRedirect}</a>";
             echo "<script type='text/javascript'>\n//<![CDATA[\n";
             echo "var popwin = incident_details_window($incidentid,'win', true);\n";
             echo "if (!popwin) alert('{$strDidYourBrowserBlockPopupWindow}');\n";
@@ -72,7 +73,7 @@ elseif ($_REQUEST['win'] == 'jump')
         }
         else
         {
-            echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='{$_SERVER['HTTP_REFERER']}';\"></body></html>";
+            echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "';\"></body></html>";
         }
     }
     exit;
@@ -393,13 +394,13 @@ else
 
 
     $offset = clean_int($_REQUEST['offset']);
-    if (empty($offset))
-    {
-        $offset = 0;
-    }
 
     /**
+    * Count and return the number of updates that have been made to an incident
      * @author Ivan Lucas
+    * @param int $incidentid. Incident ID
+    * @note Includes re-assigns and automatic updates
+    * TODO move to lib
      */
     function count_updates($incidentid)
     {

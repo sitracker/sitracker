@@ -20,7 +20,7 @@ $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
 $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
-
+$action = clean_fixed_list($_REQUEST['action'], array('','delete','lock','unlock'));
 
 if (empty($displayid))
 {
@@ -106,16 +106,17 @@ function contact_info($contactid, $email, $name, $subject)
 }
 
 // Perform action on selected items
-if (!empty($_REQUEST['action']))
+if (!empty($action))
 {
     // FIXME BUGBUG remove for release. temporary message
-    echo "<p>Action: {$_REQUEST['action']}</p>";
+    echo "<p>Action: $action</p>";
     if (!is_array($_REQUEST['selected']))
     {
         $_REQUEST['selected'] = array($_REQUEST['selected']);
     }
     foreach ($_REQUEST['selected'] AS $item => $selected)
     {
+        $selected = clean_int($selected);
         $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
         $tresult = mysql_query($tsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -124,7 +125,7 @@ if (!empty($_REQUEST['action']))
             $temp = mysql_fetch_object($tresult);
             if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
 
-            switch ($_REQUEST['action'])
+            switch ($action)
             {
                 case 'delete':
                     // FIXME TODO don't run action on items locked by other people

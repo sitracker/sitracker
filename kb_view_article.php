@@ -35,6 +35,7 @@ if (empty($id))
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('kb', 32, $strKnowledgeBaseArticle)." {$strKnowledgeBaseArticle}</h2>";
+plugin_do('kb_view_article');
 echo kb_article($id);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

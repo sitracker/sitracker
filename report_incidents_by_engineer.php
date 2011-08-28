@@ -32,11 +32,12 @@ $title = $strIncidentsByEngineer;
 // External variables
 $startdate = cleanvar($_POST['startdate']);
 $enddate = cleanvar($_POST['enddate']);
-$type = cleanvar($_POST['type']);
-$inc = cleanvar($_POST['inc']);
-$output = cleanvar($_POST['output']);
+$type = clean_fixed_list($_POST['type'], array('both','opened','closed'));
+$inc = clean_int($_POST['inc']);
+$output = clean_fixed_list($_POST['output'], array('screen','csv'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
 
-if (empty($_REQUEST['mode']))
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
@@ -78,7 +79,6 @@ if (empty($_REQUEST['mode']))
     echo "</td></tr>";
     echo "</table>";
     echo "<p class='formbuttons'>";
-    echo "<input type='hidden' name='table1' value='{$_POST['table1']}' />";
     echo "<input type='hidden' name='mode' value='report' />";
     echo "<input type='reset' value=\"{$strReset}\" /> ";
     echo "<input type='submit' value=\"{$strRunReport}\" />";

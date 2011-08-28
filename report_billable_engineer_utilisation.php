@@ -17,7 +17,7 @@ include (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('showform','runreport'));
 
 if (empty($mode) OR $mode == 'showform')
 {

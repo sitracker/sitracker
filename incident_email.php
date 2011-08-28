@@ -31,7 +31,7 @@ $title = $strEmail;
 
 if (empty($step))
 {
-    $action = $_REQUEST['action'];
+    $action = clean_fixed_list($_REQUEST['action'], array('','deletedraft'));
 
     if ($action == "deletedraft")
     {
@@ -177,12 +177,12 @@ switch ($step)
         // External vars
         if ($draftid == -1)
         {
-            $emailtype = cleanvar($_REQUEST['emailtype']);
-            $newincidentstatus = cleanvar($_REQUEST['newincidentstatus']);
+            $emailtype = clean_int($_REQUEST['emailtype']);
+            $newincidentstatus = clean_int($_REQUEST['newincidentstatus']);
             $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
-            $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);
-            $timetonextaction_hours = cleanvar($_REQUEST['timetonextaction_hours']);
-            $timetonextaction_minutes = cleanvar($_REQUEST['timetonextaction_minutes']);
+            $timetonextaction_days = clean_int($_REQUEST['timetonextaction_days']);
+            $timetonextaction_hours = clean_int($_REQUEST['timetonextaction_hours']);
+            $timetonextaction_minutes = clean_int($_REQUEST['timetonextaction_minutes']);
             $day = clean_int($_REQUEST['day']);
             $month = clean_int($_REQUEST['month']);
             $year = clean_int($_REQUEST['year']);
@@ -190,8 +190,8 @@ switch ($step)
             $chase_customer = cleanvar($_REQUEST['chase_customer']);
             $chase_manager = cleanvar($_REQUEST['chase_manager']);
             $date = cleanvar($_REQUEST['date']);
-            $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-            $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
+            $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
+            $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
             $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
         }
         else
@@ -311,13 +311,13 @@ switch ($step)
         $newincidentstatus = clean_int($_REQUEST['newincidentstatus']);
         $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
         $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
-        $timetonextaction_days = cleanvar($_REQUEST['timetonextaction_days']);
-        $timetonextaction_hours = cleanvar($_REQUEST['timetonextaction_hours']);
-        $timetonextaction_minutes = cleanvar($_REQUEST['timetonextaction_minutes']);
+        $timetonextaction_days = clean_int($_REQUEST['timetonextaction_days']);
+        $timetonextaction_hours = clean_int($_REQUEST['timetonextaction_hours']);
+        $timetonextaction_minutes = clean_int($_REQUEST['timetonextaction_minutes']);
         $date = cleanvar($_REQUEST['date']);
-        $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-        $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
-        $year = cleanvar($_REQUEST['year']);
+        $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
+        $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
+        $year = clean_int($_REQUEST['year']);
         $target = cleanvar($_REQUEST['target']);
         $chase_customer = cleanvar($_REQUEST['chase_customer']);
         $chase_manager = cleanvar($_REQUEST['chase_manager']);

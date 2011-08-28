@@ -19,12 +19,12 @@ $title = $strHolidayRequests;
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$user = cleanvar($_REQUEST['user']);
-$sent = cleanvar($_REQUEST['sent']);
-$mode = cleanvar($_REQUEST['mode']);
+$user = clean_dbstring($_REQUEST['user']);
+$sent = clean_fixed_list($_REQUEST['sent'], array('false','true'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('','notapprove','approval'));
 $action = cleanvar($_REQUEST['action']);
 $type = clean_int($_REQUEST['type']);
-$memo = cleanvar($_REQUEST['memo'], TRUE, FALSE, FALSE);
+$memo = clean_dbstring($_REQUEST['memo']);
 $approvaluser = clean_int($_REQUEST['approvaluser']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

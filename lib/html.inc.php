@@ -243,6 +243,7 @@ function percent_bar($percent)
     return $html;
 }
 
+
 /**
  * Return HTML for a table column header (th and /th) with links for sorting
  * Filter parameter can be an assocative array containing fieldnames and values
@@ -617,8 +618,12 @@ function bbcode($text)
 }
 
 
-
-
+/**
+ * Remove BBcode from a string. Tooltips and BBcode don't mix well
+ * @author Paul Heaney (I think?)
+ * @param string $text. The string to remove BBcode tags from
+ * @retval string String without BBcode tags
+*/
 function strip_bbcode_tooltip($text)
 {
     $bbcode_regex = array(0 => '/\[url\](.*?)\[\/url\]/s',
@@ -679,7 +684,7 @@ function new_note_form($linkid, $refid)
     global $now, $sit, $iconset;
     $html = "<form name='addnote' action='note_new.php' method='post'>";
     $html .= "<div class='detailhead note'> <div class='detaildate'>".readable_date($now)."</div>\n";
-    $html .= icon('note', 16, $GLOBALS['strNote ']);
+    $html .= icon('note', 16, $GLOBALS['strNote']);
     $html .= " ".sprintf($GLOBALS['strNewNoteByX'], user_realname($sit[2]))."</div>\n";
     $html .= "<div class='detailentry note'>";
     $html .= "<textarea rows='3' cols='40' name='bodytext' style='width: 94%; margin-top: 5px; margin-bottom: 5px; margin-left: 3%; margin-right: 3%; background-color: transparent; border: 1px dashed #A2A86A;'></textarea>";
@@ -1411,6 +1416,12 @@ function password_reveal_link($id)
 }
 
 
+/**
+ * HTML Listbox of a list of question types
+ * @param string $type The question type to pre-select
+ * @author Ivan Lucas
+ * @retval string HTML
+ */
 function qtype_listbox($type)
 {
     global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
@@ -1438,7 +1449,13 @@ function qtype_listbox($type)
 }
 
 
-
+/**
+ * HTML Listbox of a list of feedback question types 
+ * @param string $type The question type to pre-select
+ * @author Ivan Lucas
+ * @retval string HTML
+ * @note how is this different to qtype_listbox?  INL 24/8/2011
+ */
 function feedback_qtype_listbox($type)
 {
     global $CONFIG, $strRating, $strOptions, $strMultipleOptions, $strText;
@@ -2047,7 +2064,7 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
 
 
 /**
- *
+ * HTML controls for choosing a time
  * @author Paul Heaney
  * @param int $hour
  * @param int $minute
@@ -2159,8 +2176,9 @@ function html_status_row($statusentry)
     return $html;
 }
 
+
 /**
- * Checked to see if a PHP extention is installed and prints the corresponding row
+ * Check to see if a PHP extention is installed and prints the corresponding row
  * @author Paul Heaney
  * @param String $extension The extension to check is installed
  * @param String $text The text to print describing this extension

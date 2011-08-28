@@ -20,11 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strBrowseContacts;
 
 // External variables
-$search_string = cleanvar($_REQUEST['search_string']);
-$submit_value = cleanvar($_REQUEST['submit']);
-$displayinactive = cleanvar($_REQUEST['displayinactive']);
-if (empty($displayinactive)) $displayinactive = "false";
-
+$search_string = clean_dbstring($_REQUEST['search_string']);
 if ($search_string == '')
 {
     if (!empty($i18nAlphabet))

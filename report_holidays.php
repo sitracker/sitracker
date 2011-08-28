@@ -50,7 +50,7 @@ else
 {
     $startdate = date("Y-m-d", strtotime(cleanvar($_REQUEST['startdate'])));
     $enddate = date("Y-m-d", strtotime(cleanvar($_REQUEST['enddate'])));
-    $output = cleanvar($_REQUEST['output']);
+    $output = clean_fixed_list($_REQUEST['output'], array('screen', 'csv'));
     $users = cleanvar($_POST['users']);
 
     if (empty($enddate)) $enddate = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d"), date("y")));

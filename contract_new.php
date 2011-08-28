@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strNewContract;
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('','showform','new'));
 $siteid = clean_int($_REQUEST['siteid']);
 
 // Show add maintenance form

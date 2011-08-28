@@ -18,22 +18,22 @@ require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $title = $strEditFeedbackQuestion;
 
-$qid = cleanvar($_REQUEST['qid']);
-$fid = cleanvar($_REQUEST['fid']);
-$action = cleanvar($_REQUEST['action']);
+$qid = clean_int($_REQUEST['qid']);
+$fid = clean_int($_REQUEST['fid']);
+$action = clean_fixed_list($_REQUEST['action'], array('','save'));
 
 
 switch ($action)
 {
     case 'save':
         // External variables
-        $question = cleanvar($_POST['question']);
-        $questiontext = cleanvar($_POST['questiontext']);
-        $sectiontext = cleanvar($_POST['sectiontext']);
-        $taborder = cleanvar($_POST['taborder']);
-        $type = cleanvar($_POST['type']);
-        $required = cleanvar($_POST['required']);
-        $options = cleanvar($_POST['options']);
+        $question = clean_dbstring($_POST['question']);
+        $questiontext = clean_dbstring($_POST['questiontext']);
+        $sectiontext = clean_dbstring($_POST['sectiontext']);
+        $taborder = clean_int($_POST['taborder']);
+        $type = clean_dbstring($_POST['type']);
+        $required = clean_fixed_list($_POST['required'], array('false','true'));
+        $options = clean_dbstring($_POST['options']);
 
         $sql = "UPDATE `{$dbFeedbackQuestions}` SET ";
         $sql .= "question='{$question}', ";

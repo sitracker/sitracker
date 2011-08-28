@@ -26,9 +26,9 @@ include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('','add','delete'));
 $relatedid = clean_int($_POST['relatedid']);
-$relation = cleanvar($_POST['relation']);
+$relation = clean_fixed_list($_POST['relation'], array('child','parent','sibling'));
 $rid = clean_int($_REQUEST['rid']);
 
 switch ($action)

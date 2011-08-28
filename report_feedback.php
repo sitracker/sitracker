@@ -20,8 +20,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$type = cleanvar($_REQUEST['type']);
-$dates = cleanvar($_REQUEST['dates']);
+$type = clean_fixed_list($_REQUEST['type'], array('','byengineer','bycustomer','bysite','byproduct'));
+$dates = clean_fixed_list($_REQUEST['dates'], array('feedbackin','closedin'));
 $startdate = strtotime(cleanvar($_REQUEST['startdate']));
 $enddate = strtotime(cleanvar($_REQUEST['enddate']));
 $formid = clean_int($CONFIG['feedback_form']);

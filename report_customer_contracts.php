@@ -22,9 +22,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$siteid = cleanvar($_REQUEST['siteid']);
+$siteid = clean_int($_REQUEST['siteid']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('','csv'));
 
-if ($_REQUEST['mode'] == 'csv')
+if ($mode == 'csv')
 {
     // --- CSV File HTTP Header
     header("Content-type: text/csv\r\n");
@@ -41,7 +42,7 @@ if (!empty($_REQUEST['siteid'])) $sql .= "WHERE id='{$siteid}'";
 else $sql .= "ORDER BY s.name";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-if ($_REQUEST['mode'] == 'csv')
+if ($mode == 'csv')
 {
     echo "{$strSite},{$strProduct},{$strLicense},{$strExpiryDate},{$strAllContacts},{$strEngineer} 1, {$strEngineer} 2, {$strEngineer} 3, {$strEngineer} 4\n";
 }
@@ -60,7 +61,7 @@ while ($site = mysql_fetch_object($result))
     $mresult = mysql_query($msql);
     if (mysql_num_rows($mresult)>=1)
     {
-        if ($_REQUEST['mode'] == 'csv')
+        if ($mode == 'csv')
         {
             while ($maint = mysql_fetch_object($mresult))
             {
@@ -133,7 +134,7 @@ while ($site = mysql_fetch_object($result))
     }
 }
 
-if ($_REQUEST['mode'] != 'csv')
+if ($mode != 'csv')
 {
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?siteid={$siteid}&amp;mode=csv'>{$strSaveAsCSV}</a></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

@@ -20,7 +20,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 
-$formid = $CONFIG['feedback_form'];
+$formid = clean_int($CONFIG['feedback_form']);
+$userid = clean_int($_REQUEST['userid']);
 
 echo "<div style='margin: 20px'>";
 echo "<h2><a href='{$CONFIG['application_webpath']}reports/feedback.php'>{$strFeedback}</a> {$strScores}: {$strByEngineer}</h2>";
@@ -28,7 +29,7 @@ echo feedback_between_dates();
 echo "<p>{$strCustomerFeedbackReportSiteMsg}:</p>";
 
 $usql = "SELECT * FROM `{$dbUsers}` WHERE status > 0 ";
-if ($_REQUEST['userid'] > 0) $usql .= "AND id='".mysql_real_escape_string($_REQUEST['userid'])."' ";
+if ($userid > 0) $usql .= "AND id={$userid} ";
 else $usql .= "ORDER BY username";
 $uresult = mysql_query($usql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);

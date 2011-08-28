@@ -21,7 +21,7 @@ $title = $strManageUsers;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$sort = $_REQUEST['sort'];
+$sort = clean_fixed_list($_REQUEST['sort'], array('','realname','role','jobtitle','email','phone','fax','status','accepting'));
 
 $sql  = "SELECT *,u.id AS userid FROM `{$dbUsers}` AS u, `{$dbRoles}` AS r ";
 $sql .= "WHERE u.roleid = r.id ";

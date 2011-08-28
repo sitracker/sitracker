@@ -21,18 +21,18 @@ $incidentid = clean_int($_REQUEST['incidentid']);
 $updateid = clean_int($_REQUEST['updateid']);
 $contactid = clean_int($_REQUEST['contactid']);
 $id = clean_int($_REQUEST['id']);
-$error = cleanvar($_REQUEST['error']);
+$error = clean_int($_REQUEST['error']);
 $send_email = cleanvar($_REQUEST['send_email']);
 
 if ($incidentid == '')
 {
     $title = $strMoveUpdate;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    $incidentid = cleanvar($_REQUEST['incidentid']); // Need to do this here again as incident_html_top changes this to $id which we need above so the menu works
+    $incidentid = clean_int($_REQUEST['incidentid']); // Need to do this here again as incident_html_top changes this to $id which we need above so the menu works
     echo "<h2>{$title}</h2>";
     echo "<h3>{$strMoveToIncident}</h3>";
 
-    if ($error == '1')
+    if ($error == 1)
     {
         echo "<p class='error'>{$strErrorAssigningUpdate}</p>";
     }

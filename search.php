@@ -17,7 +17,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
-$q = cleanvar($_GET['q']);
 
 $title = $strSearch;
 
@@ -33,14 +32,14 @@ if (!isset($_GET['start']))
 }
 else
 {
-    $start = $_GET['start'];
+    $start = clean_int($_GET['start']);
 }
 
 $domain = cleanvar($_GET['domain']);
 
 if (isset($_GET['q']))
 {
-    $q = cleanvar($_GET['q']);
+    $q = clean_int($_GET['q']);
 }
 elseif (isset($_GET['search_string']))
 {
@@ -113,7 +112,7 @@ if (is_numeric($q))
                 echo "window.location = 'incident_details.php?id={$q}&win=jump&return=";
                 if (!empty($_SERVER['HTTP_REFERER']))
                 {
-                    echo $_SERVER['HTTP_REFERER'];
+                    echo html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset);
                 }
                 else
                 {

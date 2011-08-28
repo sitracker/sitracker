@@ -41,6 +41,7 @@ switch ($action)
         $userid = clean_int($_REQUEST['userid']);
         $temporary = cleanvar($_REQUEST['temporary']);
         $id = clean_int($_REQUEST['id']);
+        $cust_vis = clean_fixed_list($_REQUEST['cust_vis'], array('','no','yes'));
 
         if ($tempnewowner == 'yes') $temporary = 'yes';
 
@@ -112,7 +113,7 @@ switch ($action)
         if ($temporary == 'yes') $assigntype = 'tempassigning';
         else $assigntype = 'reassigning';
 
-        if ($_REQUEST['cust_vis'] == 'yes') $customervisibility='show';
+        if ($cust_vis == 'yes') $customervisibility='show';
         else $customervisibility='hide';
 
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentowner, currentstatus, customervisibility) ";

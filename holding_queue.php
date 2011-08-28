@@ -168,7 +168,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>{$strHoldingQueue}</h2>";
 plugin_do('holding_queue');
 
-if ($lock = $_REQUEST['lock'])
+if ($lock = clean_int($_REQUEST['lock']))
 {
     $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
@@ -176,7 +176,7 @@ if ($lock = $_REQUEST['lock'])
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 }
-elseif ($unlock = $_REQUEST['unlock'])
+elseif ($unlock = clean_int($_REQUEST['unlock']))
 {
     $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
     $sql .= "WHERE id='{$unlock}' AND locked = '{$sit[2]}'";
@@ -193,12 +193,13 @@ else
     if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 }
 
-if ($spam_string == $_REQUEST['delete_all_spam'])
+if ($spam_string == cleanvar($_REQUEST['delete_all_spam']))
 {
     $spam_array = explode(',',$spam_string);
     foreach ($spam_array as $spam)
     {
         $ids = explode('_',$spam);
+        $ids[0] = clean_int($ids[0]);
 
         $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$ids[1]}' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='{$ids[0]}' LIMIT 1";
         mysql_query($sql);
@@ -219,6 +220,7 @@ if (!empty($selected))
 {
     foreach ($selected as $updateid)
     {
+        $updateid = clean_int($updateid);
         $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

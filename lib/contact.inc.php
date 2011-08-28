@@ -24,12 +24,13 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  * @param string $username. Username of customer
  * @retval bool TRUE exists in db
  * @retval bool FALSE does not exist in db
- */
+ * @deprecated DEPRECATED This unused function will be removed after 3.91 (inl) - see Mantis 1697
+*/
 function customerExistsInDB($username)
 {
     global $dbContacts;
     $exists = 0;
-    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='{$username}'";
+    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='{$username}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -37,6 +38,7 @@ function customerExistsInDB($username)
 
     return $exists;
 }
+
 
 /**
  * Find a contacts real name
@@ -170,6 +172,7 @@ function contact_feedback($id)
     return $answer;
 }
 
+
 /**
  * Return the number of incidents ever logged against a contact
  * @author Ivan Lucas
@@ -210,7 +213,6 @@ function contact_count_inventory_items($id)
 
     return $count;
 }
-
 
 
 /**
@@ -509,9 +511,10 @@ function contact_username($userid)
 
 
 /**
- * Procceses a new contact
+ * Proceses form data for a new contact and add it the database
  *
  * @author Kieran Hogg
+ * @param string $mode. Set to 'internal' for internal SiT! interface, or 'external' for portal.
  */
 function process_new_contact($mode = 'internal')
 {

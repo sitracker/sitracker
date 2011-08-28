@@ -18,6 +18,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strManageDashboardComponents;
+
+
+$action = clean_fixed_list($_REQUEST['action'], array('','install','installdashboard','enable','upgradecomponent'));
+
+
 // A duplicate of that in setup.php - Probably wants moving to functions.inc.php eventually PH 9/12/07
 function setup_exec_sql($sqlquerylist)
 {
@@ -45,7 +50,7 @@ function setup_exec_sql($sqlquerylist)
     return $html;
 }
 
-switch ($_REQUEST['action'])
+switch ($action)
 {
     case 'install':
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -196,7 +201,7 @@ switch ($_REQUEST['action'])
 
     case 'enable':
         $id = clean_int($_REQUEST['id']);
-        $enable = clean_dbstring($_REQUEST['enable']);
+        $enable = clean_fixed_list($_REQUEST['enable'], array('false','true'));
         $sql = "UPDATE `{$dbDashboard}` SET enabled = '{$enable}' WHERE id = '{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);

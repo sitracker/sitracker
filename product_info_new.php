@@ -23,11 +23,12 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $product = clean_int($_REQUEST['product']);
 $information = clean_dbstring($_POST['information']);
 $moreinformation = clean_dbstring($_POST['moreinformation']);
+$submit = cleanvar($_REQUEST['submit']);
 
 $title = $strNewProductQuestion;
 
 // Show add product information form
-if (empty($_REQUEST['submit']))
+if (empty($submit))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo show_form_errors('product_info_new');

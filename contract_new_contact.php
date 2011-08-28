@@ -21,9 +21,10 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External Variables
 $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
-$context = cleanvar($_REQUEST['context']);
-$action = $_REQUEST['action'];
-$title = ("$strContract - $strNewContact");
+$context = clean_fixed_list($_REQUEST['context'], array('','contact'));
+$action = clean_fixed_list($_REQUEST['action'], array('', 'showform', 'add'));
+
+$title = ("$strContract - $strAddContact");
 
 // Valid user, check permissions
 if (empty($action) || $action == "showform")

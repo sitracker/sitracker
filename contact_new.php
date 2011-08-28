@@ -18,8 +18,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$siteid = mysql_real_escape_string($_REQUEST['siteid']);
-$submit = $_REQUEST['submit'];
+$siteid = clean_int($_REQUEST['siteid']);
+$submit = cleanvar($_REQUEST['submit']);
 $title = $strNewContact;
 
 if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))

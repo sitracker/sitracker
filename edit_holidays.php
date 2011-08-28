@@ -22,14 +22,15 @@ if (!$CONFIG['holidays_enabled'])
 }
 
 $title = $strEditHolidayEntitlement;
+$action = clean_fixed_list($_REQUEST['action'], array('form','save'));
 
-switch ($_REQUEST['action'])
+switch ($action)
 {
     case 'save':
         $max_carryover = clean_int($_REQUEST['max_carryover']);
         $archivedate = strtotime($_REQUEST['archivedate']);
         if ($archivedate < 1000) $archivedate = $now;
-        $default_entitlement = cleanvar($_REQUEST['default_entitlement']);
+        $default_entitlement = clean_int($_REQUEST['default_entitlement']);
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status >= 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);

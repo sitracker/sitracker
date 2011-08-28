@@ -23,7 +23,7 @@ $title = $strExternalEngineerCallDistribution;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$filterby = cleanvar($_REQUEST['filterby']);
+$filterby = clean_fixed_list($_REQUEST['filterby'], array('','sla','maintenanceid','softwareid','product'));
 $filter = cleanvar($_REQUEST['filter']);
 
 echo "<h2>".icon('reports', 32)." {$strExternalEngineerCallDistribution}</h2>";

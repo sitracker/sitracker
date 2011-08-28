@@ -25,26 +25,22 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $id = clean_int($_REQUEST['id']);
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'all'));
+$increment = clean_int($_REQUEST['increment']);
+$states = clean_int(explode(',',$_REQUEST['states']));
+$output = clean_fixed_list($_REQUEST['output'], array('screen', 'csv'));
+
 $title = $strAverageIncidentDuration;
 
 // Increment selects the number of months to group together
-if (empty($_REQUEST['increment']))
+if (empty($increment))
 {
     $increment = 1;
-}
-else
-{
-    $increment = cleanvar($_REQUEST['increment']);
 }
 
 if (empty($_REQUEST['states']))
 {
     $states = array('0,2,6,7,8');
-}
-else
-{
-    $states = explode(',',$_REQUEST['states']);
 }
 
 // get the first date
@@ -87,7 +83,7 @@ while ($current_time < time())
     $current_time = $next_time;
 }
 
-if ($_REQUEST['output'] == 'csv')
+if ($output == 'csv')
 {
     echo create_report($data, 'csv', 'average_incident_duration.csv');
 }
