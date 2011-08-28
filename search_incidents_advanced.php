@@ -32,7 +32,7 @@ $search_details = cleanvar($_REQUEST['search_details']);
 $search_range = cleanvar($_REQUEST['search_range']);
 $search_date = cleanvar($_REQUEST['search_date']);
 $search_user = clean_int($_REQUEST['search_user']);
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('','search'));
 
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
