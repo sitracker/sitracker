@@ -20,7 +20,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
+$activeonly = clean_fixed_list($_REQUEST['activeonly'], array('no','yes'));
+$output = clean_fixed_list($_REQUEST['output'], array('screen', 'csv'));
+
+if (empty($mode))
 {
     $title = $strMarketingMailshot;
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -104,7 +108,7 @@ if (empty($_REQUEST['mode']))
     echo "({$strListsAllTheCustomersProducts})</em></p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($_REQUEST['mode'] == 'report')
+elseif ($mode == 'report')
 {
     $sitetype = $_POST['sitetype'];
     // echo "REPORT";
@@ -151,24 +155,25 @@ elseif ($_REQUEST['mode'] == 'report')
     $sitetypecount = count($sitetype);
 
     if (empty($incsql) == FALSE OR empty($excsql) == FALSE OR
-        $_REQUEST['activeonly'] == 'yes' OR $sitetypecount > 0)
+        $activeonly == 'yes' OR $sitetypecount > 0)
     {
         $sql .= "WHERE ";
     }
 
-    if ($_REQUEST['activeonly'] == 'yes')
+    if ($activeonly == 'yes')
     {
         if (!empty($filtertype)) $sql .= "AND ";
         $sql .= "m.term != 'yes' AND m.expirydate > '{$now}' ";
     }
     if (!empty($incsql))
     {
-        if (!empty($filtertype) OR $_REQUEST['activeonly'] == 'yes') $sql .= "AND ";
+        if (!empty($filtertype) OR $activeonly == 'yes') $sql .= "AND ";
         $sql .= "$incsql";
     }
     if (!empty($excsql))
     {
-        if (!empty($filtertype) OR $_REQUEST['activeonly'] == 'yes' OR !empty($incsql)) $sql .= "AND ";
+        if (!empty($filtertype) OR $activeonly == 'yes' OR
+        !empty($incsql)) $sql .= "AND ";
         $sql .= "$excsql";
     }
 
@@ -319,7 +324,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $html .= "</table>";
     $html .= "<p align='center'>".sprintf($strShowingXofX, $rowcount, $numrows)."</p>";
 
-    if ($_REQUEST['output'] == 'screen')
+    if ($output == 'screen')
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('reports', 32)." {$strMarketingMailshot}</h2>";
@@ -327,7 +332,7 @@ elseif ($_REQUEST['mode'] == 'report')
         echo $html;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
-    elseif ($_REQUEST['output'] == 'csv')
+    elseif ($output == 'csv')
     {
         // --- CSV File HTTP Header
         header("Content-type: text/csv\r\n");
