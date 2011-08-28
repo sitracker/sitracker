@@ -18,13 +18,9 @@ require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-<<<<<<< HEAD
 $contractid = clean_int($_REQUEST['contractid']);
-$submit = $_REQUEST['submit'];
-=======
-$contractid = mysql_real_escape_string($_REQUEST['contractid']);
 $submit = cleanvar($_REQUEST['submit']);
->>>>>>> e86bd6f64b06da4a55bf630973627c49512c7e86
+
 $title = ("$strContract - $strNewService");
 
 // Contract ID must not be blank
