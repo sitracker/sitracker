@@ -39,7 +39,7 @@ else
 // External variables
 $user = cleanvar($_REQUEST['user']);
 $show = clean_fixed_list($_REQUEST['show'], array('','incidents', 'active', 'completed'));
-$sort = clean_fixed_list(($_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
+$sort = clean_fixed_list($_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
 $order = clean_fixed_list($_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
 $incident = clean_int($_REQUEST['incident']);
 $siteid = clean_int($_REQUEST['siteid']);
