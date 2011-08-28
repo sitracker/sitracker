@@ -320,7 +320,7 @@ elseif ($action == 'findcontact')
                 $html .= "</tr>\n";
             }
             $html .=  "</table>\n";
-            $html .= "<p align='center'><a href='contact_new.php?name="..urlencode(htmlspecialchars($search_string, ENT_QUOTES, $i18ncharset))."&amp;return=addincident'>{$strNewContact}</a></p>";
+            $html .= "<p align='center'><a href='contact_new.php?name=" . urlencode(htmlspecialchars($search_string, ENT_QUOTES, $i18ncharset)) . "&amp;return=addincident'>{$strNewContact}</a></p>";
 
             if ($customermatches > 0)
             {
@@ -331,7 +331,7 @@ elseif ($action == 'findcontact')
         else
         {
             echo "<h3>".sprintf($strNoResultsFor, $strContacts)."</h3>";
-            echo "<p align='center'><a href=\"contact_new.php?name=".urlencode(htmlspecialchars($search_string, ENT_QUOTES, $i18ncharset))."&amp;return=addincident\">{$strNewContact}</a></p>";
+            echo "<p align='center'><a href=\"contact_new.php?name=" . urlencode(htmlspecialchars($search_string, ENT_QUOTES, $i18ncharset)) . "&amp;return=addincident\">{$strNewContact}</a></p>";
         }
         echo "<p align='center'><a href=\"{$_SERVER['PHP_SELF']}?updateid={$updateid}&amp;win={$win}\">{$strSearchAgain}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

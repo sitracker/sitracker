@@ -25,7 +25,7 @@ else $user = cleanvar($_REQUEST['user']);
 $softwareid = clean_int($_REQUEST['softwareid']);
 $queue = clean_int($_REQUEST['queue']);
 $sort = clean_fixed_list($_REQUEST['sort'], array('','id','title','contact','priority','status','lastupdated','duration','nextaction'));
-$order = clean_fixed_list($_REQUEST['order'], array('','a','d','ASC','DESC');
+$order = clean_fixed_list($_REQUEST['order'], array('','a','d','ASC','DESC'));
 $maintexclude = cleanvar($_REQUEST['maintexclude']);
 $title = $strIncidentsList;
 

@@ -25,7 +25,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $action = clean_fixed_list($_REQUEST['action'], array('','showform','delete'));
-$context = clean_fixed_list($_REQUEST['context'], array('', 'maintenance')));
+$context = clean_fixed_list($_REQUEST['context'], array('', 'maintenance'));
 $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
 $title = ("$strContract - $strRemoveASupportedContact");

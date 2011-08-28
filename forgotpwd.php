@@ -67,6 +67,7 @@ switch ($action)
             plugin_do('forgotpwd');
             echo "<p class='forgotpwd'>{$strInformationSentRegardingSettingPassword}</p>";
             echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
+        }
         else
         {
             // This is a SiT contact, not a user
