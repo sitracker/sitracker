@@ -17,9 +17,9 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$id = cleanvar($_REQUEST['id']);
-$action = $_REQUEST['action'];
-$templatetype = cleanvar($_REQUEST['template']);
+$id = cleanvar($_REQUEST['id']); // can be alpha (a name) as well as numeric (id)
+$action = clean_fixed_list($_REQUEST['action'], array('showform', 'list', 'edit', 'update', 'delete'));
+$templatetype = clean_fixed_list($_REQUEST['template'], array('', 'email', 'notice');
 
 if (empty($action) OR $action == 'showform' OR $action == 'list')
 {

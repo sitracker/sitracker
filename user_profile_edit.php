@@ -19,18 +19,21 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$mode = cleanvar($_REQUEST['mode']);
-$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
-
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'save', 'savesessionlang'));
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {
     $edituserid = mysql_real_escape_string($sit[2]);
 }
 else
 {
-    if (!empty($_REQUEST['userid']))
+    if (empty($_REQUEST['userid']) === FALSE AND $edituserpermission === TRUE)
     {
         $edituserid = clean_int($_REQUEST['userid']);
+    }
+    else
+    {
+        html_redirect("noaccess.php?id={$permission}", FALSE);
+        exit;
     }
 }
 

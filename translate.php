@@ -23,9 +23,18 @@ $title = $strTranslate;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $tolang = cleanvar($_REQUEST['lang']);
-$fromlang = cleanvar($_REQUEST['from']);
+$tolang = str_replace(':','', $tolang);
+$tolang = str_replace('//','', $tolang);
+$tolang = str_replace('..','', $tolang);
 
-if (!$_REQUEST['mode'])
+$fromlang = cleanvar($_REQUEST['from']);
+$fromlang = str_replace(':','', $fromlang);
+$fromlang = str_replace('//','', $fromlang);
+$fromlang = str_replace('..','', $fromlang);
+
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'show', 'save'));
+
+if (empty($mode))
 {
     echo "<h2>{$strTranslation}</h2>";
     echo "<div align='center'><p>{$strHelpToTranslate}</p>";
@@ -57,7 +66,7 @@ if (!$_REQUEST['mode'])
     $_SESSION['translation_fromvalues'] = '';
     $_SESSION['translation_foreignvalues'] = '';
 }
-elseif ($_REQUEST['mode'] == "show")
+elseif ($mode == "show")
 {
     $from = cleanvar($_REQUEST['from']);
     if (!empty($_REQUEST['showtranslated']))
@@ -256,7 +265,7 @@ elseif ($_REQUEST['mode'] == "show")
 
     echo "</form>\n";
 }
-elseif ($_REQUEST['mode'] == "save")
+elseif ($mode == "save")
 {
     $badchars = array('.','/','\\');
 
