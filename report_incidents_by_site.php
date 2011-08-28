@@ -22,7 +22,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strIncidentsBySite;
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
+
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";

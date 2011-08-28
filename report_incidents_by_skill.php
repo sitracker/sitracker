@@ -25,7 +25,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strIncidentsBySkill;
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
+
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -54,7 +56,7 @@ if (empty($_REQUEST['mode']))
 }
 else
 {
-    $monthbreakdownstatus = cleanvar($_REQUEST['monthbreakdown']);
+    $monthbreakdownstatus = clean_fixed_list($_REQUEST['monthbreakdown'], array('','on'));
     $startdate = strtotime($_REQUEST['startdate']);
     $enddate = strtotime($_REQUEST['enddate']);
     $software = clean_int($_REQUEST['software']);

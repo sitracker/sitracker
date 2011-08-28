@@ -32,11 +32,12 @@ $title = $strIncidentsByEngineer;
 // External variables
 $startdate = cleanvar($_POST['startdate']);
 $enddate = cleanvar($_POST['enddate']);
-$type = cleanvar($_POST['type']);
-$inc = cleanvar($_POST['inc']);
-$output = cleanvar($_POST['output']);
+$type = clean_fixed_list($_POST['type'], array('both','opened','closed'));
+$inc = clean_int($_POST['inc']);
+$output = clean_fixed_list($_POST['output'], array('screen','csv'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
 
-if (empty($_REQUEST['mode']))
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";

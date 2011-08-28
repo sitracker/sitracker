@@ -23,9 +23,8 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strBillableIncidents;
 $startdate = strtotime(cleanvar($_REQUEST['startdate']));
 $enddate = strtotime(cleanvar($_REQUEST['enddate']));
-$mode = cleanvar($_REQUEST['mode']);
-$output = cleanvar($_REQUEST['output']);
-if (empty($output)) $output = 'html';
+$mode = clean_fixed_list($_REQUEST['mode'], array('','report'));
+$output = clean_fixed_list($_REQUEST['output'], array('html','csv'));
 
 if (empty($mode))
 {

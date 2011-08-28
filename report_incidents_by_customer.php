@@ -22,14 +22,14 @@ $title = $strSiteIncidents;
 
 $startdate = cleanvar($_REQUEST['start']);
 $enddate = cleanvar($_REQUEST['end']);
-$mode = cleanvar($_REQUEST['mode']);
-$zerologged = cleanvar($_REQUEST['zerologged']);
-$showsitesloggedfewerthanxcalls = cleanvar($_REQUEST['showsitesloggedfewerthanxcalls']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'run'));
+$zerologged = clean_fixed_list($_REQUEST['zerologged'], array('','on'));
+$showsitesloggedfewerthanxcalls = clean_fixed_list($_REQUEST['showsitesloggedfewerthanxcalls'], array('','on'));
 $numberofcalls = clean_int($_REQUEST['numberofcalls']);
-$showincidentdetails = cleanvar($_REQUEST['showincidentdetails']);
-$onlyshowactivesites = cleanvar($_REQUEST['onlyshowactivesites']);
-$slas = cleanvar($_REQUEST['slas']);
-$showproducts = cleanvar($_REQUEST['showproducts']);
+$showincidentdetails = clean_fixed_list($_REQUEST['showincidentdetails'], array('','on'));
+$onlyshowactivesites = clean_fixed_list($_REQUEST['onlyshowactivesites'], array('','on'));
+$slas = clean_int($_REQUEST['slas']);
+$showproducts = clean_fixed_list($_REQUEST['showproducts'], array('','on'));
 
 if (empty($mode))
 {
@@ -123,7 +123,7 @@ if (empty($mode))
 }
 else
 {
-    $output = cleanvar($_REQUEST['output']);
+    $output = clean_fixed_list($_REQUEST['output'], array('screen','csv'));
 
     if (empty($startdate)) $startdate = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d"), date("Y")-1)); // 1 year ago
     if (empty($enddate)) $enddate = date('Y-m-d');
