@@ -38,9 +38,9 @@ else
 
 // External variables
 $user = cleanvar($_REQUEST['user']);
-$show = cleanvar($_REQUEST['show']);
-$sort = cleanvar($_REQUEST['sort']);
-$order = cleanvar($_REQUEST['order']);
+$show = clean_fixed_list($_REQUEST['show'], array('','incidents', 'active', 'completed'));
+$sort = clean_fixed_list(($_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
+$order = clean_fixed_list($_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
 $incident = clean_int($_REQUEST['incident']);
 $siteid = clean_int($_REQUEST['siteid']);
 
@@ -156,7 +156,7 @@ else
     // Defaults
     if (empty($user) OR $user == 'current')
     {
-        $user = $sit[2];
+        $user = clean_int($sit[2]);
     }
 
     // If the user is passed as a username lookup the userid

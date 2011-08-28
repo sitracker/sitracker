@@ -18,7 +18,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$action = $_REQUEST['action'];
+// External variables
+$action = clean_fixed_list($_REQUEST['action'], array('showform','edit','update'));
 $site = clean_int($_REQUEST['site']);
 
 $title = $strEditSite;
