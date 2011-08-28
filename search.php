@@ -21,9 +21,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strSearch;
 
 $resultsperpage = 20;
-$domain = cleanvar($_GET['domain']);
-$sort = cleanvar($_GET['sort']);
-$order = cleanvar($_GET['order']);
+$domain = clean_fixed_list($_GET['domain'], array('','incidents','sites','contacts','users','kb'));
+$sort = cleanvar($_GET['sort'], array('','id','incident','date','result','sitename','dept','site','email','telephone','fax','action'));
+$order = clean_fixed_list($_GET['order'], array('','a','d','ASC','DESC'));
 $filter = array('start' => $start, 'order' => $order, 'q' => $q);
 $hits = 0;
 if (!isset($_GET['start']))
