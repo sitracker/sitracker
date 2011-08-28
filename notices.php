@@ -15,7 +15,7 @@ $permission = PERM_NOTICE_POST;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('','new','post','delete');
 if ($action == 'new')
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');

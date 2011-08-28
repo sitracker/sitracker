@@ -77,7 +77,7 @@ if (empty($dashboardid))
 else
 {
     plugin_do('manage_user_dashboard_submitted');
-    $action = $_REQUEST['action'];
+    $action = clean_fixed_list($_REQUEST['action'], array('new',' remove'));
     switch ($action)
     {
         case 'new':
