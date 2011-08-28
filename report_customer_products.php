@@ -18,7 +18,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strSiteProducts;
 
-if (empty($_REQUEST['mode']))
+$mode = clean_fixed_list($_REQUEST['mode'], array('','report'));
+
+if (empty($mode))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('reports', 32)." {$title}</h2>";
@@ -58,7 +60,7 @@ if (empty($_REQUEST['mode']))
     echo "</td></tr></table>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($_REQUEST['mode'] == 'report')
+elseif ($mode == 'report')
 {
     $type = clean_int($_REQUEST['type']);
     $sql = "SELECT * FROM `{$dbSites}` WHERE typeid='{$type}' ORDER BY name";

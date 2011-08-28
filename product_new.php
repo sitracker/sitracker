@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strNewProduct;
 
 // External variables
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 
 if (empty($submit))
 {
@@ -70,9 +70,9 @@ if (empty($submit))
 else
 {
     // External variables
-    $name = cleanvar($_REQUEST['name']);
+    $name = clean_dbstring($_REQUEST['name']);
     $vendor = clean_int($_REQUEST['vendor']);
-    $description = cleanvar($_REQUEST['description']);
+    $description = clean_dbstring($_REQUEST['description']);
 
     $_SESSION['formdata']['new_product'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
     // Add New
