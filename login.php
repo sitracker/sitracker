@@ -243,7 +243,7 @@ elseif ($CONFIG['portal'] == TRUE)
         if ($username != '')
         {
             $errdate = date('M j H:i');
-            $errmsg = "$errdate Failed login for user '{$username}' from IP: {$_SERVER['REMOTE_ADDR']}";
+            $errmsg = "$errdate Failed login for user '{$username}' from IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15);
             $errmsg .= "\n";
             $errlog = @error_log($errmsg, 3, $CONFIG['access_logfile']);
             ## if (!$errlog) echo "Fatal error logging this problem<br />";

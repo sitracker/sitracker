@@ -618,7 +618,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
         $extra_headers .= "Errors-To: {$CONFIG['support_email']}" . $crlf;
     }
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
-    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
+    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
 //     $extra_headers .= "\r\n";
 
     if ($CONFIG['demo'])
