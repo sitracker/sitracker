@@ -227,6 +227,22 @@ function clean_dbstring($string)
 
 
 /**
+  * Make a language string safe for use in a database query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - DB safe variable
+  * @note Use for db queries only, not for display
+*/
+function clean_lang_dbstring($string)
+{
+    stripslashes($string);
+    $string = mysql_real_escape_string($string);
+
+    return $string;
+}
+
+
+/**
  * Make an external variable safe by ensuring the value is one of a list
  * of predetermined values
  * @author Ivan Lucas

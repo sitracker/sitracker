@@ -764,14 +764,14 @@ elseif ($action == 'assign')
                 }
             }
 
-            $updatetext = "{$_SESSION['syslang']['strPriority']}: [b]" . priority_name($priority, TRUE) . "[/b]";
+            $updatetext = clean_lang_dbstring($_SESSION['syslang']['strPriority']) . ": [b]" . priority_name($priority, TRUE) . "[/b]";
             if (!empty($prioritychangedmessage)) $updatetext .= $prioritychangedmessage;
             $updatetext .= "\n\n" . $bodytext;
-            if ($probdesc != '') $updatetext .= "<b>{$_SESSION['syslang']['strProblemDescription']}</b>\n" . $probdesc . "\n\n";
-            if ($workarounds != '') $updatetext .= "<b>{$_SESSION['syslang']['strWorkAroundsAttempted']}</b>\n" . $workarounds . "\n\n";
-            if ($probreproduction != '') $updatetext .= "<b>{$_SESSION['syslang']['strProblemReproduction']}</b>\n" . $probreproduction . "\n\n";
-            if ($custimpact != '') $updatetext .= "<b>{$_SESSION['syslang']['strCustomerImpact']}</b>\n" . $custimpact . "\n\n";
-            if ($other != '') $updatetext .= "<b>{$_SESSION['syslang']['strDetails']}</b>\n" . $other . "\n";
+            if ($probdesc != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strProblemDescription']) . "</b>\n" . $probdesc . "\n\n";
+            if ($workarounds != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strWorkAroundsAttempted']) . "</b>\n" . $workarounds . "\n\n";
+            if ($probreproduction != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strProblemReproduction']) . "</b>\n" . $probreproduction . "\n\n";
+            if ($custimpact != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strCustomerImpact']) . "</b>\n" . $custimpact . "\n\n";
+            if ($other != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strDetails']) . "</b>\n" . $other . "\n";
             if ($cust_vis == "on") $customervisibility = 'show';
             else $customervisibility = 'hide';
 
