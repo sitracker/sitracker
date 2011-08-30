@@ -744,7 +744,7 @@ elseif ($action == 'assign')
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             $incidentid = mysql_insert_id();
-            $_SESSION['incidentid'] = $incidentid;
+            $_SESSION['incidentid'] = intval($incidentid);
 
             // Save productinfo if there is some
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
