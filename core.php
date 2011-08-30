@@ -178,7 +178,7 @@ if (empty($CONFIG['application_uriprefix']))
         {
             $scheme = 'http';
         }
-        if (isset($_SERVER['HTTP_HOST'])) $CONFIG['application_uriprefix'] =  "{$scheme}://{$_SERVER['HTTP_HOST']}";
+        if (isset($_SERVER['HTTP_HOST'])) $CONFIG['application_uriprefix'] =  "{$scheme}://" . htmlspecialchars(substr($_SERVER['HTTP_HOST'], 0, 255), ENT_QUOTES, 'utf-8');
         unset($scheme);
     }
 }

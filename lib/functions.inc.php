@@ -938,7 +938,7 @@ function application_url()
         {
             $baseurl = "https://";
         }
-        $baseurl .= "{$_SERVER['HTTP_HOST']}";
+        $baseurl .= htmlspecialchars(substr($_SERVER['HTTP_HOST'], 0, 255), ENT_QUOTES, 'utf-8');
     }
     else
     {
