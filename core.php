@@ -53,7 +53,33 @@ if (!function_exists("getmicrotime"))
 //Prevent Magic Quotes from affecting scripts, regardless of server settings
 //Make sure when reading file data,
 //PHP doesn't "magically" mangle backslashes!
-set_magic_quotes_runtime(FALSE);
+// This is deprecated in PHP 5.3.0
+if (version_compare(PHP_VERSION, "5.3.0", "<"))
+{
+    set_magic_quotes_runtime(FALSE);
+}
+
+/**
+  * Strip slashes from an array 
+  * @param $data an array
+  * @return An array with slashes stripped
+  * @note this function needs to be in core because it's needed to make quotes safe without magic quotes
+*/
+function stripslashes_array($data)
+{
+    if (is_array($data))
+    {
+        foreach ($data as $key => $value)
+        {
+            $data[$key] = stripslashes_array($value);
+        }
+        return $data;
+    }
+    else
+    {
+        return stripslashes($data);
+    }
+}
 
 if (get_magic_quotes_gpc())
 {

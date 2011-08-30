@@ -75,26 +75,6 @@ mb_internal_encoding($i18ncharset);
 
 //**** Begin functions ****//
 
-/**
- * Strip slashes from an array
- * @param $data an array
- * @return An array with slashes stripped
- */
-function stripslashes_array($data)
-{
-    if (is_array($data))
-    {
-        foreach ($data as $key => $value)
-        {
-            $data[$key] = stripslashes_array($value);
-        }
-        return $data;
-    }
-    else
-    {
-        return stripslashes($data);
-    }
-}
 
 
 /**
