@@ -46,7 +46,7 @@ function mark_task_completed($taskid, $incident)
     if (!$incident)
     {
         // Insert note to say what happened
-        $bodytext = sprintf($_SESSION['syslang']['strTaskMarkedCompleteByX'], $_SESSION['realname']) . ":\n\n" . $bodytext;
+        $bodytext = sprintf(clean_lang_dbstring($_SESSION['syslang']['strTaskMarkedCompleteByX']), $_SESSION['realname']) . ":\n\n" . $bodytext;
         $sql = "INSERT INTO `{$dbNotes}` ";
         $sql .= "(userid, bodytext, link, refid) ";
         $sql .= "VALUES ('0', '{$bodytext}', '10', '{$taskid}')";
