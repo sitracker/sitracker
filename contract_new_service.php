@@ -203,7 +203,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 else
 {
     // External variables
-    $contractid = cleanvar($_POST['contractid']);
+    $contractid = clean_int($_POST['contractid']);
     $startdate = strtotime($_REQUEST['startdate']);
     if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
     else $startdate = date('Y-m-d',$now);

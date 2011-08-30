@@ -151,29 +151,29 @@ else
                     if (mb_strlen($_POST[$fieldname]) < 255 AND $option_list[1] < 2)
                     {
                         // If we've got just one row and less than 255 characters store it in the result field
-                        $qresult = $_POST[$fieldname];
+                        $qresult = clean_dbstring($_POST[$fieldname]);
                         $qresulttext = '';
                     }
                     else
                     {
                         // If we've got more than one row or more than 255 chars store it in the resulttext field (which is a blob)
                         $qresult = '';
-                        $qresulttext = $_POST[$fieldname];
+                        $qresulttext = clean_dbstring($_POST[$fieldname]);
                     }
                 }
                 else
                 {
                     // Store all other types of results in the result field.
-                    $qresult = $_POST[$fieldname];
-                    $qresulttext = $_POST[$fieldname];
+                    $qresult = clean_dbstring($_POST[$fieldname]);
+                    $qresulttext = clean_dbstring($_POST[$fieldname]);
                 }
 
-                $debugtext .= "_POST[$fieldname]={$_POST[$fieldname]}\n";
+                $debugtext .= "_POST[$fieldname]=" . cleanvar($_POST[$fieldname]) . "\n";
 
                 // Put the SQL to be executed into an array to execute later
                 $rsql[] = "INSERT INTO `{$dbFeedbackResults}` (respondentid, questionid, result, resulttext) VALUES ('{$respondentid}', '{$qid}','{$qresult}', '{$qresulttext}')";
                 // Store the field in an array
-                $fieldarray[$question->id] = $_POST[$fieldname];
+                $fieldarray[$question->id] = cleanvar($_POST[$fieldname]);
             }
 
             if (count($errorfields) >= 1)

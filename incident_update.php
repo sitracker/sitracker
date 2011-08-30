@@ -354,19 +354,19 @@ else
     // Update the incident
 
     // External variables
-    $target = cleanvar($_POST['target']);
+    $target = clean_fixed_list($_POST['target'], array('', 'none', 'initialresponse', 'actionplan', 'probdef', 'solution'));
     $updatetype = cleanvar($_POST['updatetype']);
-    $newstatus = cleanvar($_POST['newstatus']);
+    $newstatus = clean_int($_POST['newstatus']);
     $nextaction = cleanvar($_POST['nextaction']);
-    $newpriority = cleanvar($_POST['newpriority']);
-    $cust_vis = cleanvar($_POST['cust_vis']);
+    $newpriority = clean_int($_POST['newpriority']);
+    $cust_vis = clean_fixed_list($_POST['cust_vis'], array('no', 'yes'));
     $timetonextaction = cleanvar($_POST['timetonextaction']);
     $date = cleanvar($_POST['date']);
-    $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-    $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
-    $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
-    $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
-    $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
+    $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
+    $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
+    $timetonextaction_days = clean_int($_POST['timetonextaction_days']);
+    $timetonextaction_hours = clean_int($_POST['timetonextaction_hours']);
+    $timetonextaction_minutes = clean_int($_POST['timetonextaction_minutes']);
     $draftid = cleanvar($_POST['draftid']);
 
     // \p{L} A Unicode character

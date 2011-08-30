@@ -37,24 +37,33 @@ $siteid = clean_int($_REQUEST['site']);
 
 if (isset($_POST['submit']))
 {
+    $active = clean_dbstring($_POST['active']);
+    $address = clean_dbstring($_POST['address']);
+    $username = clean_dbstring($_POST['username']);
+    $password = clean_dbstring($_POST['password']);
+    $type = clean_dbstring($_POST['type']);
+    $notes = clean_dbstring($_POST['notes']);
+    $name = clean_dbstring($_POST['name']);
+    $owner = clean_int($_POST['owner']);
+    $siteid = clean_int($_POST['site']);
+    $identifier = clean_dbstring($_POST['identifier']);
+    $privacy = clean_fixed_list($_POST['privacy'], array('none', 'adminonly', 'private'));
     $errors = 0;
-    $post = cleanvar($_POST);
-
-    if ($post['active'] == 'on')
+    if ($active == 'on')
     {
-        $post['active'] = 1;
+        $active = 1;
     }
-    elseif (isset($post['active']))
+    else
     {
-        $post['active'] = 0;
+        $active = 0;
     }
 
-    if (empty($post['name']))
+    if (empty($name))
     {
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName));
     }
-    if (empty($post['site']))
+    if (empty($site))
     {
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
@@ -68,32 +77,21 @@ if (isset($_POST['submit']))
     }
 
     $sql = "UPDATE `{$dbInventory}` ";
-    $sql .= "SET address='{$post['address']}', ";
-    if (isset($post['username']))
-    {
-        $sql .= "username='{$post['username']}', ";
-    }
-
-    if (isset($post['password']))
-    {
-        $sql .= "password='{$post['password']}', ";
-    }
-
-    $sql .= "type='{$post['type']}', ";
-    $sql .= "notes='{$post['notes']}', modified=NOW(), ";
+    $sql .= "SET address='{$address}', ";
+    $sql .= "username='{$username}', ";
+    $sql .= "password='{$password}', ";
+    $sql .= "type='{$type}', ";
+    $sql .= "notes='{$notes}', modified=NOW(), ";
     $sql .= "modifiedby='{$sit[2]}', ";
-    $sql .= "name='{$post['name']}', ";
-    $sql .= "siteid='{$post['site']}', ";
-    $sql .= "contactid='{$post['owner']}', identifier='{$post['identifier']}' ";
+    $sql .= "name='{$name}', ";
+    $sql .= "siteid={$siteid}, ";
+    $sql .= "contactid={$owner}, identifier='{$identifier}' ";
+    $sql .= ", privacy='{$privacy}' ";
 
-    if (isset($post['privacy']))
-    {
-        $sql .= ", privacy='{$post['privacy']}' ";
-    }
 
-    if (isset($post['active']))
+    if (isset($active))
     {
-        $sql .= ", active='{$post['active']}' ";
+        $sql .= ", active='{$active}' ";
     }
     else
     {

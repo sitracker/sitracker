@@ -770,7 +770,7 @@ function close_billable_incident($incidentid)
 /**
  * Function to approve an incident, this adds a transaction and confirms the 'bill' is correct.
  * @author Paul Heaney
- * @param incidentid ID of the incident to approve
+ * @param int incidentid ID of the incident to approve
  */
 function approve_incident_transaction($transactionid)
 {

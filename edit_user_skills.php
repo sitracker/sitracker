@@ -123,23 +123,19 @@ else
     $selections = urldecode($_POST['choices']);
     parse_str($selections);
 
-    $ns = urldecode($_POST['ns']);
-    parse_str($ns);
-
     plugin_do('edit_user_skills_submitted');
-
-    // NOTE: it is NOT necessary to get expertise OR noskills from the $_POST as this is passed encoded in and handled above
-    // See Mantis 1239 for more details, PH 2010-04-06
 
     // FIXME: whatabout cases where the user is a backup for one of the products
     // he removes? or if the backup user leaves the company?
+
+    $user = clean_int($user);
 
     if (is_array($expertise))
     {
         $expertise = array_unique($expertise);
         foreach ($expertise AS $value)
         {
-            $value = cleanvar($value);
+            $value = clean_int($value);
             if (!empty($value))
             {
                 $checksql = "SELECT userid FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND softwareid='{$value}' LIMIT 1";
@@ -165,7 +161,7 @@ else
         $noskills = array_unique($noskills);
         foreach ($noskills AS $value)
         {
-            $value = cleanvar($value);
+            $value = clean_int($value);
             // Remove the software listed that we don't support
             $sql = "DELETE FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND softwareid='{$value}' LIMIT 1";
             mysql_query($sql);
