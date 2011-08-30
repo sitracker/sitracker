@@ -20,7 +20,7 @@ $title = $strUserGroups;
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('', 'savemembers', 'addgroup', 'deletegroup'));
 
 switch ($action)
 {
