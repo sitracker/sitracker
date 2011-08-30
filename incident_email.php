@@ -329,6 +329,7 @@ switch ($step)
         // Check file size is below limit
         foreach ($_FILES AS $file)
         {
+            $file['name'] = cleanvar($file['name']);
             if ($file['name'] != '')
             {
                 $errorcode = $file['error'];
@@ -398,6 +399,7 @@ switch ($step)
 
             foreach ($_FILES AS $file)
             {
+                $file['name'] = cleanvar($file['name']);
                 // move attachment to a safe place for processing later
                 if ($file['name'] != '' AND mb_strlen($file['name']) > 3)
                 {

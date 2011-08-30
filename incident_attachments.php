@@ -163,7 +163,7 @@ if ($_FILES['attachment']['name'] != '')
         $fileid =  mysql_insert_id();
 
         //create update
-        $updatetext = $SYSLANG['strFileUploaded'].": [[att={$fileid}]]{$_FILES['attachment']['name']}[[/att]]";
+        $updatetext = $SYSLANG['strFileUploaded'].": [[att={$fileid}]]" . cleanvar($_FILES['attachment']['name']) . "[[/att]]";
         $currentowner = incident_owner($incidentid);
         $currentstatus = incident_status($incidentid);
         $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, `type`, `currentowner`, `currentstatus`, ";

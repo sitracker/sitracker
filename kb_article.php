@@ -51,7 +51,7 @@ if (isset($_POST['submit']))
             // OK to proceed
             // Create an entry in the files table
             $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
-            $sql .= "VALUES ('public', '{$_FILES['attachment']['name']}', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
+            $sql .= "VALUES ('public', '" . cleanvar($_FILES['attachment']['name']). "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
             $fileid =  mysql_insert_id();

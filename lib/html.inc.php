@@ -907,7 +907,7 @@ function get_file_upload_error_message($errorcode, $name)
 {
     $str = "<div class='detailinfo'>\n";
 
-    $str .=  sprintf($GLOBALS['strErrorOccuredUploadingX'], $_FILES['attachment']['name']);
+    $str .=  sprintf($GLOBALS['strErrorOccuredUploadingX'], $name);
 
     $str .=  "<p class='error'>";
     switch ($errorcode)

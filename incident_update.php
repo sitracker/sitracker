@@ -471,7 +471,7 @@ else
 
     if ($_FILES['attachment']['name'] != '' && isset($_FILES['attachment']['name']) == TRUE)
     {
-        $bodytext = "{$SYSLANG['strAttachment']}: [[att={$fileid}]]{$_FILES['attachment']['name']}[[/att]]\n\n{$bodytext}";
+        $bodytext = "{$SYSLANG['strAttachment']}: [[att={$fileid}]]" . cleanvar($_FILES['attachment']['name']) ."[[/att]]\n\n{$bodytext}";
     }
 
     // Check the updatetype field, if it's blank look at the target
