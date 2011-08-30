@@ -22,7 +22,7 @@ $title = $strSearch;
 
 $resultsperpage = 20;
 $domain = clean_fixed_list($_GET['domain'], array('','incidents','sites','contacts','users','kb'));
-$sort = cleanvar($_GET['sort'], array('','id','incident','date','result','sitename','dept','site','email','telephone','fax','action'));
+$sort = clean_fixed_list($_GET['sort'], array('','id','incident','date','result','sitename','dept','site','email','telephone','fax','action'));
 $order = clean_fixed_list($_GET['order'], array('','a','d','ASC','DESC'));
 $filter = array('start' => $start, 'order' => $order, 'q' => $q);
 $hits = 0;
@@ -131,7 +131,7 @@ echo "<h2>".icon('search', 32)." {$strSearch} {$CONFIG['application_shortname']}
 if (!empty($q))
 {
     //for the search plugin
-    $search = $q;
+    $search = cleanvar($q);
 
     plugin_do('search_submitted');
 
