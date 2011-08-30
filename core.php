@@ -165,7 +165,8 @@ if (empty($CONFIG['application_uriprefix']))
     {
         $url = parse_url($_SERVER['HTTP_REFERER']);
         $scheme = $url['scheme'];
-        $CONFIG['application_uriprefix'] =  "{$url['scheme']}://{$url['host']}";
+        $CONFIG['application_uriprefix'] =  htmlspecialchars($url['scheme'], ENT_QUOTES, 'utf-8') 
+                                            . "://" . htmlspecialchars(substr($url['host'], 0, 255), ENT_QUOTES, 'utf-8');
         unset($url);
     }
     else
