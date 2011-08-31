@@ -524,10 +524,6 @@ else
     //upload file, here because we need updateid
     if ($_FILES['attachment']['name'] != '')
     {
-        // try to figure out what delimeter is being used (for windows or unix)...
-        //.... // $delim = (strstr($filesarray[$c],"/")) ? "/" : "\\";
-        $delim = (strstr($_FILES['attachment']['tmp_name'],"/")) ? "/" : "\\";
-
         // make incident attachment dir if it doesn't exist
         $umask = umask(0000);
         if (!file_exists("{$CONFIG['attachment_fspath']}{$id}"))
@@ -538,11 +534,11 @@ else
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                trigger_error("Failed creating incident attachment directory: {$CONFIG['attachment_fspath']}{$id}{$delim}", E_USER_WARNING);
+                trigger_error("Failed creating incident attachment directory: {$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR, E_USER_WARNING);
             }
         }
         umask($umask);
-        $newfilename = "{$CONFIG['attachment_fspath']}{$id}{$delim}{$fileid}";
+        $newfilename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}";
 
         // Move the uploaded file from the temp directory into the incidents attachment dir
         $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);

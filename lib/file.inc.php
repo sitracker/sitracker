@@ -22,18 +22,15 @@ if (!function_exists('list_dir'))
      */
     function list_dir($dirname, $recursive = 1)
     {
-        // try to figure out what delimeter is being used (for windows or unix)...
-        $delim = (strstr($dirname,"/")) ? "/" : "\\";
-
-        if ($dirname[mb_strlen($dirname)-1] != $delim)
+        if ($dirname[mb_strlen($dirname)-1] != DIRECTORY_SEPARATOR)
         {
-            $dirname .= $delim;
+            $dirname .= DIRECTORY_SEPARATOR;
         }
 
         $handle = opendir($dirname);
         if ($handle == FALSE)
         {
-            trigger_error("Error in list_dir() Problem attempting to open directory: {$dirname}",E_USER_WARNING);
+            trigger_error("Error in list_dir() Problem attempting to open directory: {$dirname}", E_USER_WARNING);
         }
 
         $result_array = array();
@@ -47,12 +44,12 @@ if (!function_exists('list_dir'))
 
             if (is_dir($dirname.$file) && $recursive)
             {
-                $x = list_dir($dirname.$file.$delim);
+                $x = list_dir($dirname . $file . DIRECTORY_SEPARATOR);
                 $result_array = array_merge($result_array, $x);
             }
             else
             {
-                $result_array[] = $dirname.$file;
+                $result_array[] = $dirname . $file;
             }
         }
         closedir($handle);
@@ -199,10 +196,6 @@ function upload_file($file, $incidentid, $type='public')
     $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid;
     if ($file['name'] != '')
     {
-        // try to figure out what delimeter is being used (for windows or unix)...
-        //.... // $delim = (strstr($filesarray[$c],"/")) ? "/" : "\\";
-        $delim = (strstr($file['tmp_name'],"/")) ? "/" : "\\";
-
         // make incident attachment dir if it doesn't exist
         $umask = umask(0000);
         if (!file_exists("{$CONFIG['attachment_fspath']}{$incidentid}"))
@@ -210,12 +203,12 @@ function upload_file($file, $incidentid, $type='public')
             $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}", 0770);
             if (!$mk) trigger_error("Failed creating incident attachment directory: {$incident_attachment_fspath }{$incidentid}", E_USER_WARNING);
         }
-        $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}{$delim}{$now}", 0770);
-        if (!$mk) trigger_error("Failed creating incident attachment (timestamp) directory: {$incident_attachment_fspath} {$incidentid} {$delim}{$now}", E_USER_WARNING);
+        $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$now}", 0770);
+        if (!$mk) trigger_error("Failed creating incident attachment (timestamp) directory: {$incident_attachment_fspath} {$incidentid} " . DIRECTORY_SEPARATOR . "{$now}", E_USER_WARNING);
         umask($umask);
-        $returnpath = $incidentid.$delim.$now.$delim.$file['name'];
-        $filepath = $incident_attachment_fspath.$delim.$now.$delim;
-        $newfilename = $filepath.$file['name'];
+        $returnpath = $incidentid . DIRECTORY_SEPARATOR . $now . DIRECTORY_SEPARATOR . $file['name'];
+        $filepath = $incident_attachment_fspath . DIRECTORY_SEPARATOR . $now . DIRECTORY_SEPARATOR;
+        $newfilename = $filepath . $file['name'];
 
         // Move the uploaded file from the temp directory into the incidents attachment dir
         $mv = move_uploaded_file($file['tmp_name'], $newfilename);
