@@ -614,15 +614,15 @@ function update_reservation($transactionid, $amount, $description='')
 
 
 /**
- * Updates a transacction which which be either waiting approval or reserved
+ * Updates a transacction that is either waiting approval or reserved
  * @author Paul Heaney
  * @param int $transactionid The transaction ID to update
- * @param int $amount The amount to set the transaction to
+ * @param float $amount The amount to set the transaction to
  * @param string $description (optional) the description to set on the transaction
- * @param int $status either RESERVERED or BILLING_AWAITINGAPPROVAL
+ * @param int $status either BILLING_RESERVED or BILLING_AWAITINGAPPROVAL
  * @return bool TRUE on a sucessful update FALSE otherwise
  */
-function update_transaction($transactionid, $amount, $description='', $status)
+function update_transaction($transactionid, $amount = 0.00, $description = '', $status = BILLING_AWAITINGAPPROVAL)
 {
     if ($status == BILLING_APPROVED)
     {
