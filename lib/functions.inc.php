@@ -136,7 +136,7 @@ function authenticate($username, $password)
             elseif ($obj->user_source == 'ldap')
             {
                 // Auth against LDAP and sync
-                $toReturn =  authenticateLDAP(stripslashes($username), $password, $obj->id);
+                $toReturn =  authenticateLDAP(clean_ldapstring(($username)), clean_ldapstring($password), $obj->id);
                 if ($toReturn === -1)
                 {
                     // Communication with LDAP server failed

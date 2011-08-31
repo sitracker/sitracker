@@ -21,8 +21,9 @@ include (APPLICATION_INCPATH . 'minimal_header.inc.php');
 
 echo "<h2>{$strLDAP}</h2>";
 
-$base = cleanvar($_REQUEST['base']);
-$field = cleanvar($_REQUEST['field']);
+// Only allow certain characters in these fields to avoid JS injection (Mantis 1655)
+$base = cleanvar(preg_replace("[^A-Za-z0-9,=]", "", $_REQUEST['field']));
+$field = cleanvar(preg_replace("[^A-Za-z0-9]", "", $_REQUEST['field']));
 
 $ldap_type = cleanvar($_REQUEST['ldap_type']);
 $ldap_host = cleanvar($_REQUEST['ldap_host']);

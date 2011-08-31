@@ -275,7 +275,7 @@ function clean_fixed_list($string, $list, $strict = FALSE)
 
 
 /**
-  * Make an external variable safe for use as an email address for sending email to
+  * Make a string safe for use as an email address for sending email to
   * @author Ivan Lucas
   * @param mixed $string variable to make safe
   * @returns string - Email safe variable
@@ -286,6 +286,29 @@ function clean_emailstring($string)
     $badchars = array("\r", "\n", "\t", "\0", "\x0B");
 
     $string = str_replace($badchars, '', $string);
+
+    return $string;
+}
+
+
+/**
+  * Make a string safe for use in an LDAP query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - LDAP safe variable
+  * @note This does not imply the string is safe for any other use
+  * @note See rfc2254
+  * @link http://www.faqs.org/rfcs/rfc2254.html
+*/
+function clean_ldapstring($string)
+{
+    $bad_ldap = array('(' => '\28',
+                      ')' => '\29',
+                      '\\' => '\5c',
+                      '*' => '\2a',
+                      "\x00" => '\00');
+
+    $string = str_replace(array_keys($bad_ldap), array_values($bad_ldap), $string);
 
     return $string;
 }
