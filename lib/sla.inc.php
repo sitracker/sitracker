@@ -88,7 +88,7 @@ function incident_sla_history($incidentid)
         $idx++;
     }
     // Get next target, but only if incident is still open
-    if ($incident->status != 2 AND $incident->status != 7)
+    if ($incident->status != STATUS_CLOSED AND $incident->status != STATUS_CLOSING)
     {
         $target = incident_get_next_target($incidentid);
         $slahistory[$idx]['targetsla'] = $target->type;
@@ -565,7 +565,7 @@ function calculate_working_time($t1, $t2, $publicholidays)
  @param array $states (optional) Does not count time when the incident is set to
  any of the states in this array. (Default is closed, awaiting closure and awaiting customer action)
  */
-function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,7,8))
+function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(STATUS_CLOSED, STATUS_CLOSING, STATUS_CUSTOMER))
 {
     if ( $t1 > $t2 )
     {
@@ -585,7 +585,7 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(2,
 
     $time = 0;
     $timeptr = 0;
-    $laststatus = 2; // closed
+    $laststatus = STATUS_CLOSED; // closed
     while ($update = mysql_fetch_object($result))
     {
         //  if ($t1<=$update->timestamp'])

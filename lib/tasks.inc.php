@@ -131,7 +131,7 @@ function open_activities_for_site($siteid)
         $sql = "SELECT i.id FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
         $sql .= "WHERE i.contact = c.id AND ";
         $sql .= "c.siteid = {$siteid} AND ";
-        $sql .= "(i.status != 2 AND i.status != 7)";
+        $sql .= "(i.status != " . STATUS_CLOSED . " AND i.status != " . STATUS_CLOSING . ")";
 
         $result = mysql_query($sql);
 
