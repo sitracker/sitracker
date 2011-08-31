@@ -23,7 +23,10 @@ $id = clean_int($_REQUEST['id']);
 $menu = cleanvar($_REQUEST['menu']);
 $incidentid = $id;
 $draftid = clean_int($_REQUEST['draftid']);
-if (empty($draftid)) $draftid = -1;
+if (empty($draftid)) 
+{
+    $draftid = -1;
+}
 
 debug_log(print_r($_REQUEST, TRUE));
 
@@ -192,7 +195,7 @@ switch ($step)
             $date = cleanvar($_REQUEST['date']);
             $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
             $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
-            $timetonextaction = clean_fixed_list($_REQUEST['timetonextaction'], array('', 'none', 'time', 'date'));
+            $timetonextaction = clean_fixed_list(strtolower($_REQUEST['timetonextaction']), array('', 'none', 'time', 'date'));
         }
         else
         {
@@ -304,16 +307,17 @@ switch ($step)
         break;
     case 3:
         // show form 3 or send email and update incident
+        // Email addresses and bodytext is filtered with mysql_real_escape_string below before db use
         $bodytext = $_REQUEST['bodytext'];
-        $tofield = cleanvar($_REQUEST['tofield']);
-        $fromfield = cleanvar($_REQUEST['fromfield']);
-        $replytofield = cleanvar($_REQUEST['replytofield']);
-        $ccfield = cleanvar($_REQUEST['ccfield']);
-        $bccfield = cleanvar($_REQUEST['bccfield']);
-        $subjectfield = cleanvar($_REQUEST['subjectfield'], FALSE, TRUE, FALSE);
-        $emailtype = cleanvar($_REQUEST['emailtype']);
+        $tofield = clean_emailstring($_REQUEST['tofield']);
+        $fromfield = clean_emailstring($_REQUEST['fromfield']);
+        $replytofield = clean_emailstring($_REQUEST['replytofield']);
+        $ccfield = clean_emailstring($_REQUEST['ccfield']);
+        $bccfield = clean_emailstring($_REQUEST['bccfield']);
+        $subjectfield = clean_dbstring($_REQUEST['subjectfield'], FALSE, TRUE, FALSE);
+        $emailtype = clean_int($_REQUEST['emailtype']);
         $newincidentstatus = clean_int($_REQUEST['newincidentstatus']);
-        $timetonextaction = clean_fixed_list($_REQUEST['timetonextaction'], array('', 'none', 'time', 'date'));
+        $timetonextaction = clean_fixed_list(strtolower($_REQUEST['timetonextaction']), array('', 'none', 'time', 'date'));
         $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
         $timetonextaction_days = clean_int($_REQUEST['timetonextaction_days']);
         $timetonextaction_hours = clean_int($_REQUEST['timetonextaction_hours']);
@@ -375,8 +379,14 @@ switch ($step)
         }
 
         // Store email body in session if theres been an error
-        if ($errors > 0) $_SESSION['temp-emailbody'] = $bodytext;
-        else unset($_SESSION['temp-emailbody']);
+        if ($errors > 0) 
+        {
+            $_SESSION['temp-emailbody'] = $bodytext;
+        }
+        else 
+        {
+            unset($_SESSION['temp-emailbody']);
+        }
 
         if ($errors == 0)
         {
@@ -388,14 +398,20 @@ switch ($step)
             {
                 $crlf = "\n";
             }
-            $extra_headers = "Reply-To: {$replytofield}{$crlf}Errors-To: ".user_email($sit[2]) . $crlf;
+            $extra_headers = "Reply-To: {$replytofield}{$crlf}";
+            $extra_headers .= "Errors-To: " . user_email($sit[2]) . $crlf;
             $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
             $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
-            if ($ccfield != '')  $extra_headers .= "CC: {$ccfield}" . $crlf;
-            if ($bccfield != '') $extra_headers .= "BCC: {$bccfield}" . $crlf;
+            if ($ccfield != '')  
+            {
+                $extra_headers .= "CC: {$ccfield}" . $crlf;
+            }
+            if ($bccfield != '') 
+            {
+                $extra_headers .= "BCC: {$bccfield}" . $crlf;
+            }
             $extra_headers .= $crlf; // add an extra crlf to create a null line to separate headers from body
-                                // this appears to be required by some email clients - INL
-
+                                     // this appears to be required by some email clients - INL
             $mime = new MIME_mail($fromfield, $tofield, html_entity_decode($subjectfield), '', $extra_headers, $mailerror);
             // INL 5 Aug 09, quoted-printable seems to split lines in unexpected places, base64 seems to work ok
             // CJ 2 Jun 11 Config created for switching between quoted-printable and base64 - Groupwise doesn't like QP
@@ -573,6 +589,8 @@ switch ($step)
 
                     if (!empty($updateheader)) $updateheader .= "<hr>";
                     $updatebody = $timetext . $updateheader . $bodytext;
+                    // It's important to make updatebody safe for db use here because we include variables that have not already been made
+                    // db-safe. We do this here rather than at the top of the script to avoid putting slashes into emails as sent.
                     $updatebody = mysql_real_escape_string($updatebody);
 
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";

@@ -275,6 +275,23 @@ function clean_fixed_list($string, $list, $strict = FALSE)
 
 
 /**
+  * Make an external variable safe for use as an email address for sending email to
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - Email safe variable
+  * @note This does not imply the string is safe for database or display
+*/
+function clean_emailstring($string)
+{
+    $badchars = array("\r", "\n", "\t", "\0", "\x0B");
+
+    $string = str_replace($badchars, '', $string);
+
+    return $string;
+}
+
+
+/**
  * Return an array of available languages codes by looking at the files
  * in the i18n directory
  * @author Ivan Lucas
