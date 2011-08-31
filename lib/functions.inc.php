@@ -406,6 +406,10 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
     if (defined('E_STRICT')) $errortype[E_STRICT] = 'Strict Runtime notice';
 
     $trace_errors = array(E_ERROR, E_USER_ERROR);
+    if ($CONFIG['debug'] != TRUE)
+    {
+        $errfile = basename($errfile);
+    }
 
     $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE;
     $system_errors = E_ERROR | E_WARNING | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
@@ -534,7 +538,15 @@ function debug_log($logentry, $debugmodeonly = FALSE)
     if ($debugmodeonly === FALSE
         OR ($debugmodeonly === TRUE AND $CONFIG['debug'] == TRUE))
     {
-        $logentry = $_SERVER["SCRIPT_NAME"] . ' ' .$logentry;
+        if ($CONFIG['debug'] == TRUE)
+        {
+            $scriptname = $_SERVER["SCRIPT_NAME"];
+        }
+        else
+        {
+            $scriptname = basename($_SERVER["SCRIPT_NAME"]);
+        }
+        $logentry = $scriptname . ' ' .$logentry;
 
         if (substr($logentry, -1) != "\n") $logentry .= "\n";
         if (!empty($CONFIG['error_logfile']))
