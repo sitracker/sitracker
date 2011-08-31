@@ -125,7 +125,11 @@ switch ($seltab)
         echo "<h2>SiT! Support Incident Tracker</h2>";
 
         echo "<p class='sitversion'>{$strVersion}: {$application_version} {$application_revision}";
-        if ($CONFIG['debug'] == TRUE) echo " (debug mode)";
+        if ($CONFIG['debug'] == TRUE) 
+        {
+            echo " [debug mode]";
+            debug_log("[Debug mode]", TRUE);
+        }
         echo "</p>";
         debug_log("{$strVersion}: {$application_version} {$application_revision}", TRUE);
 
