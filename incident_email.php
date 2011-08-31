@@ -192,7 +192,7 @@ switch ($step)
             $date = cleanvar($_REQUEST['date']);
             $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
             $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
-            $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
+            $timetonextaction = clean_fixed_list($_REQUEST['timetonextaction'], array('', 'none', 'time', 'date'));
         }
         else
         {
@@ -241,6 +241,12 @@ switch ($step)
             $subject = $metadata[17];
             $body = $metadata[18];
         }
+        
+        $from = format_email_address_list($from);
+        $replyto = format_email_address_list($replyto);
+        $ccemail = format_email_address_list($ccemail);
+        $bccemail = format_email_address_list($bccemail);
+        $toemail = format_email_address_list($toemail);
 
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' ";
         echo "enctype='multipart/form-data' onsubmit=\"return confirm_action('{$strAreYouSureSendEmail}');\" >";
@@ -249,8 +255,6 @@ switch ($step)
         echo "name='fromfield' id='fromfield' size='40' value=\"{$from}\" /></td></tr>\n";
         echo "<tr><th>{$strReplyTo}</th><td><input maxlength='100' name='replytofield' ";
         echo "id='replytofield' size='40' value=\"{$replyto}\" /></td></tr>\n";
-        if (trim($ccemail) == ",") $ccemail = '';
-        if (mb_substr($ccemail, 0, 1) == ",") $ccfield = mb_substr($ccemail, 1, mb_strlen($ccemail));
         echo "<tr><th>{$strCC}</th><td><input maxlength='100' name='ccfield' ";
         echo "id='ccfield' size='40' value=\"{$ccemail}\" /></td></tr>\n";
         echo "<tr><th>{$strBCC}</th><td><input maxlength='100' name='bccfield' ";
@@ -309,7 +313,7 @@ switch ($step)
         $subjectfield = cleanvar($_REQUEST['subjectfield'], FALSE, TRUE, FALSE);
         $emailtype = cleanvar($_REQUEST['emailtype']);
         $newincidentstatus = clean_int($_REQUEST['newincidentstatus']);
-        $timetonextaction = cleanvar($_REQUEST['timetonextaction']);
+        $timetonextaction = clean_fixed_list($_REQUEST['timetonextaction'], array('', 'none', 'time', 'date'));
         $timetonextaction_none = cleanvar($_REQUEST['timetonextaction_none']);
         $timetonextaction_days = clean_int($_REQUEST['timetonextaction_days']);
         $timetonextaction_hours = clean_int($_REQUEST['timetonextaction_hours']);

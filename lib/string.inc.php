@@ -345,4 +345,24 @@ function tag_email_address($email, $tag)
     return str_replace('@', "+{$tag}@", $email);
 }
 
+
+/**
+ * Format an email address list to remove spare punctuation etc.
+ * @author Ivan Lucas
+ * @param string $addresslist. Comma seperated list of email addresses
+ * @return string. Comma seperated list of email addresses
+ */
+function format_email_address_list($addresslist)
+{
+    if (trim($addresslist) == ",") 
+    {
+        return '';
+    }
+    if (mb_substr($addresslist, 0, 1) == ",") 
+    {
+        $addresslist = mb_substr($addresslist, 1, mb_strlen($addresslist));
+    }
+    return $addresslist;
+}
+
 ?>
