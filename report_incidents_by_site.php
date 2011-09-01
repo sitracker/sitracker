@@ -85,7 +85,7 @@ elseif ($_REQUEST['mode'] == 'report')
         for ($i = 0; $i < $includecount; $i++)
         {
             // $html .= "{$_POST['inc'][$i]} <br />";
-            $incsql .= "siteid={$_POST['inc'][$i]}";
+            $incsql .= "siteid=".clean_int($_POST['inc'][$i]);
             if ($i < ($includecount-1)) $incsql .= " OR ";
         }
         $incsql .= ")";
