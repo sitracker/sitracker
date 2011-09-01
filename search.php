@@ -112,7 +112,7 @@ if (is_numeric($q))
                 echo "window.location = 'incident_details.php?id={$q}&win=jump&return=";
                 if (!empty($_SERVER['HTTP_REFERER']))
                 {
-                    echo html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset);
+                    echo htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset);
                 }
                 else
                 {

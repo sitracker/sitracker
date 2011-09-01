@@ -462,7 +462,7 @@ elseif ($mode == 'approvalpage')
 
     if ($output == 'html')
     {
-        echo "<p class='return'><a href='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
+        echo "<p class='return'><a href='" . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
