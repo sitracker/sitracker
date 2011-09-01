@@ -36,25 +36,32 @@ if (empty($mode))
     echo "<h2>{$title}</h2>";
     plugin_do('escalation_path_edit');
 
-    while ($details = mysql_fetch_object($result))
+    if (mysql_num_rows($result) > 1)
     {
-        echo "<form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
-        echo "<table class='vertical'>";
-        echo "<tr><th>{$strName}:</th><td><input name='name' value='{$details->name}' class='required' /> ";
-        echo "<span class='required'>{$strRequired}</span></td></tr>";
-        echo "<tr><th>{$strTrackURL}:</th><td><input name='trackurl' value='{$details->track_url}' />";
-        echo "<br />{$strNoteInsertExternalID}</td></tr>";
-        echo "<tr><th>{$strHomeURL}:</th><td><input name='homeurl' value='{$details->home_url}' /></td></tr>";
-        echo "<tr><th>{$strTitle}:</th><td><input name='title' value='{$details->url_title}' /></td></tr>";
-        echo "<tr><th>{$strEmailDomain}:</th><td><input name='emaildomain' value='{$details->email_domain}' /></td></tr>";
-        plugin_do('escalation_path_edit_form');
-        echo "</table>";
-        echo "<input type='hidden' value='{$id}' name='id' />";
-        echo "<input type='hidden' value='edit' name='mode' />";
-        echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
-        echo "<input type='submit' name='submit' value=\"{$strSave}\" /></p>";
-        echo "<p class='return'><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
-        echo "</form>";
+        while ($details = mysql_fetch_object($result))
+        {
+            echo "<form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
+            echo "<table class='vertical'>";
+            echo "<tr><th>{$strName}:</th><td><input name='name' value='{$details->name}' class='required' /> ";
+            echo "<span class='required'>{$strRequired}</span></td></tr>";
+            echo "<tr><th>{$strTrackURL}:</th><td><input name='trackurl' value='{$details->track_url}' />";
+            echo "<br />{$strNoteInsertExternalID}</td></tr>";
+            echo "<tr><th>{$strHomeURL}:</th><td><input name='homeurl' value='{$details->home_url}' /></td></tr>";
+            echo "<tr><th>{$strTitle}:</th><td><input name='title' value='{$details->url_title}' /></td></tr>";
+            echo "<tr><th>{$strEmailDomain}:</th><td><input name='emaildomain' value='{$details->email_domain}' /></td></tr>";
+            plugin_do('escalation_path_edit_form');
+            echo "</table>";
+            echo "<input type='hidden' value='{$id}' name='id' />";
+            echo "<input type='hidden' value='edit' name='mode' />";
+            echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />  ";
+            echo "<input type='submit' name='submit' value=\"{$strSave}\" /></p>";
+            echo "<p class='return'><a href=\"escalation_paths.php\">{$strReturnWithoutSaving}</a></p>";
+            echo "</form>";
+        }
+    }
+    else 
+    {
+        echo user_alert($strNoRecords, E_USER_WARNING);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
