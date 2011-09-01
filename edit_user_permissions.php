@@ -203,6 +203,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     echo "</table>";
     echo "<p class='formbuttons'><input name='user' type='hidden' value='{$user}' />";
     echo "<input name='role' type='hidden' value='' />";
+     echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
     echo "<input name='reset' type='submit' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>";
@@ -211,6 +212,12 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
 }
 elseif ($action == "update")
 {
+    $formtoken = cleanvar($_POST['formtoken']);
+    if (!check_form_token($formtoken))
+    {
+        html_redirect("main.php", FALSE, $strFormInvalidExpired);
+        exit;
+    }
     $errors = 0;
     // If no role or user is specified we're setting all role permissions
     if (empty($role) AND empty($user))
