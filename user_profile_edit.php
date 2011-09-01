@@ -315,7 +315,7 @@ elseif ($mode == 'save')
     }
     if (!check_form_token($formtoken))
     {
-        html_redirect("main.php", FALSE, "{$strInvalid} / {$strExpired}");
+        html_redirect("main.php", FALSE, $strFormInvalidExpired);
         exit;
     }
 
