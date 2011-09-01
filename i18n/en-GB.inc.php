@@ -738,6 +738,7 @@ $strForIncident = 'For Incident';
 $strForThePeriodXToY = 'For the period %1$s to %2$s';
 $strForgottenPasswordDetails = 'Forgotten Password Details';
 $strForm = 'Form';
+$strFormInvalidExpired = 'The form was invalid. This is probably because the form expired before you submitted it, please try again.';
 $strForRefundsThisShouldBeNegative = 'For refunds this should be negative';
 $strForwardOneYear = 'Forward One Year';
 $strForXDaysHoursMinutes = 'For <em>x</em> days, hours, minutes';
