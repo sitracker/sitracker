@@ -39,13 +39,10 @@ $title = $strDefineSubstituteEngineer;
 if (empty($save))
 {
     // External variables
-    if (empty($_REQUEST['user']) OR $_REQUEST['user'] == 'current')
+    $user = clean_int($_REQUEST['user']);
+    if (empty($user) OR $_REQUEST['user'] == 'current')
     {
         $user = clean_int($sit[2]);
-    }
-    else
-    {
-        $user = clean_int($_REQUEST['user']);
     }
 
     $default = clean_int($_REQUEST['default']);
