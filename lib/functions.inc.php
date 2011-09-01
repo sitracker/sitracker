@@ -790,6 +790,64 @@ function clear_form_data($formname)
 
 
 /**
+ * Generates a form token and timeout value and stores them in the session
+ * @author Ivan Lucas
+ * @retval string MD5 form token
+ */
+function gen_form_token()
+{
+    $formtoken = sha1(uniqid(rand(), true));
+    $_SESSION['formtoken'] = $formtoken;
+    $_SESSION['formtime'] = time();
+
+    return $formtoken;
+}
+
+
+/**
+ * Checks a form token matches the one stored in the session and that the form
+ * hasn't timed out
+ * @author Ivan Lucas
+ * @param string a SHA1 form token
+ * @retval bool TRUE - Form token is valid
+ * @retval bool FALSE - Form token is invalid
+ * @see gen_form_token()
+ * @note Also clears the form token and timeout stored in the session
+ */
+function check_form_token($formtoken)
+{
+    // Time allowed to complete the form (in seconds)
+    $min_time = 3;
+    $max_time = 120;
+
+    $val = FALSE;
+    if ($formtoken != $_SESSION['formtoken'])
+    {
+        trigger_error('Invalid form token', E_USER_WARNING);
+    }
+    else 
+    {
+        $val = TRUE;
+    }
+    
+    if ($val === TRUE AND (time() - $_SESSION['formtime']) < $min_time)
+    {
+        trigger_error('Invalid form. Submitted too quickly', E_USER_WARNING);
+        $val = FALSE;
+    }
+    if ($val === TRUE AND (time() - $_SESSION['formtime']) > $max_time)
+    {
+        trigger_error('Invalid form. Form expired before submission', E_USER_WARNING);
+        $val = FALSE;
+    }
+    unset($_SESSION['formtoken']);
+    unset($_SESSION['formtime']);
+    
+    return $val;
+}
+
+
+/**
  * Finds out which scheduled tasks should be run right now
  * Ensures that a task cannot start until the previous iteration has completed
  * @author Ivan Lucas, Paul Heaney
