@@ -110,6 +110,11 @@ else
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
 
+    // If user variable is zero edit your own
+    if ($user < 1) 
+    {
+        $user = clean_int($sit[2]);
+    }
     plugin_do('edit_backup_users_submitted');
 
     foreach ($backup AS $key=>$backupid)
