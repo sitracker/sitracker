@@ -36,7 +36,7 @@ if (empty($mode))
     echo "<h2>{$title}</h2>";
     plugin_do('escalation_path_edit');
 
-    if (mysql_num_rows($result) > 1)
+    if (mysql_num_rows($result) > 0)
     {
         while ($details = mysql_fetch_object($result))
         {
