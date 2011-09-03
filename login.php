@@ -26,7 +26,7 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = htmlspecialchars(mb_substr(strip_tags($_POST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
+$language = htmlspecialchars(mb_substr(strip_tags($_REQUEST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
 if (mb_substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE)
 {
     $language = 'xx-xx'; // default lang
