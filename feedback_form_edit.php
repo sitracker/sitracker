@@ -29,7 +29,7 @@ switch ($action)
         // External variables
         $name = clean_dbstring($_REQUEST['name']);
         $description = clean_dbstring($_REQUEST['description']);
-        $introduction = clclean_dbstringeanvar($_REQUEST['introduction']);
+        $introduction = clean_dbstring($_REQUEST['introduction']);
         $thanks = clean_dbstring($_REQUEST['thanks']);
         $isnew = clean_fixed_list($_REQUEST['isnew'], array('no','yes'));
 
