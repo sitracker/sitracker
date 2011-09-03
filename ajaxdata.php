@@ -74,7 +74,7 @@ switch ($action)
         if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "en-GB/{$context}.txt";
         if (file_exists($helpfile))
         {
-            $fp = fopen($helpfile, 'r', TRUE);
+            $fp = fopen(clean_fspath($helpfile), 'r', TRUE);
             $helptext = fread($fp, 1024);
             fclose($fp);
             echo nl2br($helptext);

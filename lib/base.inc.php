@@ -317,6 +317,24 @@ function clean_ldapstring($string)
 
 
 /**
+ * Make a string safe for use with file related functions
+ * @author Ivan Lucas
+ * @param string $string Text to clean
+ * @return mixed - DB safe
+ * @note Does not imply any other filtering, only safe for file functions
+ */
+function clean_fspath($string)
+{
+    $string = strip_tags($string);
+
+    $bad = array(':', '//', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "?", "*", '[', ']');
+    $string = str_replace($bad,'', $string);
+
+    return $string;
+}
+
+
+/**
  * Return an array of available languages codes by looking at the files
  * in the i18n directory
  * @author Ivan Lucas

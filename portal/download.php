@@ -93,6 +93,7 @@ elseif ($access == TRUE)
 
     if (file_exists($file_fspath))
     {
+        $file_fspath = clean_fspath($file_fspath);
         $file_size = filesize($file_fspath);
         $fp = fopen($file_fspath, 'r');
         if ($fp && ($file_size !=-1))

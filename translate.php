@@ -22,15 +22,8 @@ $title = $strTranslate;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$tolang = cleanvar($_REQUEST['lang']);
-$tolang = str_replace(':','', $tolang);
-$tolang = str_replace('//','', $tolang);
-$tolang = str_replace('..','', $tolang);
-
-$fromlang = cleanvar($_REQUEST['from']);
-$fromlang = str_replace(':','', $fromlang);
-$fromlang = str_replace('//','', $fromlang);
-$fromlang = str_replace('..','', $fromlang);
+$tolang = cleanvar(clean_fspath($_REQUEST['lang']));
+$fromlang = cleanvar(clean_fspath($_REQUEST['from']));
 
 $mode = clean_fixed_list($_REQUEST['mode'], array('', 'show', 'save'));
 
@@ -81,7 +74,7 @@ elseif ($mode == "show")
     if (empty($_SESSION['translation_fromvalues']))
     {
         //open source language file
-        $fromfile = APPLICATION_I18NPATH . "{$from}.inc.php";
+        $fromfile = clean_fspath(APPLICATION_I18NPATH . "{$from}.inc.php");
         $fh = fopen($fromfile, 'r');
         $theData = fread($fh, filesize($fromfile));
         fclose($fh);
@@ -136,7 +129,7 @@ elseif ($mode == "show")
     if (empty($_SESSION['translation_foreignvalues']))
     {
         //open foreign (destination) file
-        $myFile = APPLICATION_I18NPATH . "{$tolang}.inc.php";
+        $myFile = clean_fspath(APPLICATION_I18NPATH . "{$tolang}.inc.php");
         if (file_exists($myFile))
         {
             $foreignvalues = array();

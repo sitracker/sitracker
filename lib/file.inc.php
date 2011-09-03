@@ -290,7 +290,7 @@ function mime_type($file)
  * Function that reads the contents(First 2048 bits) of a .txt file in /help/ and Outputs it.
  * @author Nico du Toit
  * @param $filename The name of the file (without the .txt extension)
- * @return Outputs the text file contents to HTML if it exists, or an error message 
+ * @return Outputs the text file contents to HTML if it exists, or an error message
  * if the file does not exist.
 */
 function file_get_help_textfile($filename)
@@ -300,7 +300,7 @@ function file_get_help_textfile($filename)
     if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "en-GB/{$filename}.txt";
     if (file_exists($helpfile))
     {
-        $fp = fopen($helpfile, 'r', TRUE);
+        $fp = fopen(clean_fspath($helpfile), 'r', TRUE);
         $helptext = fread($fp, 2048);
         fclose($fp);
         echo nl2br($helptext);

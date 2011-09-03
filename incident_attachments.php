@@ -123,7 +123,7 @@ function draw_file_row($file, $incidentid, $path)
     if (mb_substr($mime_type, 0, 4) == 'text' AND $filesize < 512000)
     {
         // The file is text, extract some of the contents of the file into a string for a preview
-        $handle = fopen($file, "r");
+        $handle = fopen(clean_fspath($file), "r");
         $preview = fread($handle, 512); // only read this much, we can't preview the whole thing, not enough space
         fclose($handle);
         // Make the preview safe to display

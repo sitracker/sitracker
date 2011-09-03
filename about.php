@@ -51,7 +51,7 @@ switch ($seltab)
     case 'thanks':
         echo "<h2>{$strThanksTo}</h2>";
 
-        $fp = fopen($CONFIG['creditsfile'], "r");
+        $fp = fopen(clean_fspath($CONFIG['creditsfile']), "r");
         while (!feof($fp))
         {
             $line = trim(fgets($fp, 4096));
@@ -112,8 +112,8 @@ switch ($seltab)
         break;
 
     case 'licence':
-        $fp = fopen($CONFIG['licensefile'], "r");
-        $contents = htmlentities(fread($fp, filesize($CONFIG['licensefile'])), ENT_COMPAT, $i18ncharset);
+        $fp = fopen(clean_fspath($CONFIG['licensefile']), "r");
+        $contents = htmlentities(fread($fp, filesize(clean_fspath($CONFIG['licensefile']))), ENT_COMPAT, $i18ncharset);
         fclose($fp);
         echo "<h2>{$strLicense}</h2><div id='aboutcontent'>";
         echo $contents;
@@ -125,7 +125,7 @@ switch ($seltab)
         echo "<h2>SiT! Support Incident Tracker</h2>";
 
         echo "<p class='sitversion'>{$strVersion}: {$application_version} {$application_revision}";
-        if ($CONFIG['debug'] == TRUE) 
+        if ($CONFIG['debug'] == TRUE)
         {
             echo " [debug mode]";
             debug_log("[Debug mode]", TRUE);

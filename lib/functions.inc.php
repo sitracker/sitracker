@@ -361,7 +361,7 @@ function software_name($softwareid)
 
 
 /**
- * Returns a string representing the name of the given product. 
+ * Returns a string representing the name of the given product.
  * @return Returns an empty string if the product does not exist.
  */
 function product_name($id)
@@ -555,7 +555,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
             {
                 if (is_writable($CONFIG['error_logfile']))
                 {
-                    $fp = fopen($CONFIG['error_logfile'], 'a+');
+                    $fp = fopen(clean_fspath($CONFIG['error_logfile']), 'a+');
                     if ($fp)
                     {
                         fwrite($fp, date('c').' '.$logentry);
@@ -825,11 +825,11 @@ function check_form_token($formtoken)
     {
         trigger_error('Invalid form token', E_USER_WARNING);
     }
-    else 
+    else
     {
         $val = TRUE;
     }
-    
+
     if ($val === TRUE AND (time() - $_SESSION['formtime']) < $min_time)
     {
         trigger_error('Invalid form. Submitted too quickly', E_USER_WARNING);
@@ -842,7 +842,7 @@ function check_form_token($formtoken)
     }
     unset($_SESSION['formtoken']);
     unset($_SESSION['formtime']);
-    
+
     return $val;
 }
 
@@ -1119,6 +1119,7 @@ function populate_syslang()
 
     if (file_exists($nativefile))
     {
+        $nativefile = clean_fspath($nativefile);
         $fh = fopen($nativefile, "r");
 
         $theData = fread($fh, filesize($nativefile));
@@ -1127,6 +1128,7 @@ function populate_syslang()
 
         if (file_exists($file))
         {
+            $file = clean_fspath($file);
             $fh = fopen($file, "r");
             $theData = fread($fh, filesize($file));
             fclose($fh);
