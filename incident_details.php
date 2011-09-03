@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $incidentid = clean_int($_REQUEST['id']);
 $id = $incidentid;
-$win - clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview', 'sit_popup'));
+$win = clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview', 'sit_popup'));
 
 if ($win == 'incomingview')
 {
