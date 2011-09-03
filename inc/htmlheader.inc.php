@@ -239,7 +239,7 @@ if ($sit[0] != '')
         {
             if ($key != 'noticeid')
             {
-                $url .= "&amp;{$key}=".$_GET[$key];
+                $url .= "&amp;{$key}=".cleanvar($_GET[$key]);
             }
         }
 
