@@ -97,7 +97,7 @@ echo "<h1>Support Incident Tracker - Installation &amp; Setup</h1>";
 
 if (!empty($_REQUEST['msg']))
 {
-    $msg = htmlspecialchars((base64_decode(urldecode($_REQUEST['msg']))), ENT_QUOTES, 'utf8');
+    $msg = htmlspecialchars((base64_decode(urldecode($_REQUEST['msg']))), ENT_QUOTES, 'utf-8');
     if ($cfg_file_exists === FALSE)
     {
         echo "<p class='info'><strong>It looks like you are setting up SiT! for the first time</strong> because we could not find a configuration file.<br />";
