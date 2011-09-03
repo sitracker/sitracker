@@ -746,6 +746,10 @@ echo "<tr><th>";
 echo "{$strSearch}: ";
 echo "</th>";
 echo "<td>";
+if ($q == 0)
+{
+    $q = '';
+}
 echo "<input maxlength='100' name='q' size='35' type='text' value='".strip_tags(urldecode($q))."' /> ";
 $operations = array($strAdvanced => 'search_incidents_advanced.php',
                              $strTagCloud => 'view_tags.php');
