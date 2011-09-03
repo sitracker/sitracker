@@ -111,8 +111,6 @@ elseif ($mode == "show")
             {
                 if (mb_substr($values, 0, 4) == "lang")
                     $languagestring=$values;
-                if (mb_substr($values, 0, 8) == "i18nchar")
-                    $i18ncharset=$values;
             }
             $lastkey = $vars[0];
         }
