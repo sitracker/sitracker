@@ -229,7 +229,8 @@ else
 {
     if (empty($approvaluser))
     {
-        html_redirect('holiday_request.php', FALSE);
+        html_redirect('main.php', FALSE);
+        exit;
     }
     else
     {
