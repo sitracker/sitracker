@@ -213,17 +213,26 @@ function clean_float($vars)
   * @returns string - DB safe variable
   * @note Strips HTML
 */
-function clean_dbstring($string)
+function clean_dbstring($vars)
 {
-    $string = strip_tags($string);
-
-    if (get_magic_quotes_gpc() == 1)
+    if (is_array($vars))
     {
-        stripslashes($string);
+        foreach ($vars as $key => $singlevar)
+        {
+            $string[$key] = clean_dbstring($string);
+        }
     }
+    else
+    {
+        $string = strip_tags($vars);
 
-    $string = mysql_real_escape_string($string);
+        if (get_magic_quotes_gpc() == 1)
+        {
+            stripslashes($string);
+        }
 
+        $string = mysql_real_escape_string($string);
+    }
     return $string;
 }
 
