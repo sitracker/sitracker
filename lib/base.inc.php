@@ -219,7 +219,7 @@ function clean_dbstring($vars)
     {
         foreach ($vars as $key => $singlevar)
         {
-            $string[$key] = clean_dbstring($string);
+            $string[$key] = clean_dbstring($singlevar);
         }
     }
     else
