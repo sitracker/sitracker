@@ -52,7 +52,8 @@ $CFGCAT['locale'] = array('home_country',
                           'display_minute_interval',
                           'currency_symbol',
                           'default_i18n',
-                          'available_i18n');
+                          'available_i18n',
+                          'i18n_selection');
 
 $CFGCAT['sla'] = array('default_service_level',
                        'start_working_day',
@@ -437,6 +438,11 @@ $CFGVAR['home_country']['title'] = "The default country in capitals. e.g. 'UNITE
 $CFGVAR['incident_pools']['title'] = 'Incident Pool options';
 $CFGVAR['incident_pools']['help'] = 'Comma seperated list specifying the numbers of incidents to assign to contracts';
 // Note: incident_pools is not a 1darray, it's actually a comma separated list
+
+$CFGVAR['i18n_selection']['title'] = 'Language selection interface';
+$CFGVAR['i18n_selection']['help'] = 'How should the language be selected prior to login, via a dropdown or a list?';
+$CFGVAR['i18n_selection']['options'] = 'dropdown|list';
+$CFGVAR['i18n_selection']['type'] = 'select';
 
 $CFGVAR['inventory_enabled']['title'] = 'Enable Inventory';
 $CFGVAR['inventory_enabled']['type'] = 'checkbox';
