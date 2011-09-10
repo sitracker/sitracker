@@ -217,6 +217,9 @@ $CONFIG['tag_icons'] = array ('redflag' => 'redflag', 'yellowflag' => 'yellowfla
 // Default Internationalisation tag (rfc4646/rfc4647/ISO 639 code), note the corresponding i18n file must exist in includes/i18n before you can use it
 $CONFIG['default_i18n'] = 'en-GB';
 
+// How should the language be selected prior to login, via a dropdown or a list?
+$CONFIG['i18n_selection'] = 'dropdown';
+
 $CONFIG['timezone'] = 'Europe/London';
 
 // Incidents closed more than this number of days ago aren't show in the incident queue, -1 means disabled
