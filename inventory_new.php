@@ -29,18 +29,18 @@ $newsite = cleanvar($_GET['newsite']);
 
 if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 {
-    $post = cleanvar($_POST);
-
+    $address = clean_dbstring($_POST['address']);
+    $username = clean_dbstring($_POST['username']);
     plugin_do('inventory_new_submitted');
 
     $sql = "INSERT INTO `{$dbInventory}`(address, username, password, type,";
     $sql .= " notes, created, createdby, modified, modifiedby, active,";
-    $sql .= " name, siteid, privacy, identifier, contactid) VALUES('{$post['address']}', ";
-    $sql .= "'{$post['username']}', '{$post['password']}', ";
-    $sql .= "'{$post['type']}', ";
-    $sql .= "'{$post['notes']}', NOW(), '{$sit[2]}', NOW(), ";
-    $sql .= "'{$sit[2]}', '1', '{$post['name']}', '{$post['site']}', ";
-    $sql .= "'{$post['privacy']}', '{$post['identifier']}', '{$post['owner']}')";
+    $sql .= " name, siteid, privacy, identifier, contactid) VALUES('{$address}', ";
+    $sql .= "'{$username}', '{$password}', ";
+    $sql .= "'{$type}', ";
+    $sql .= "'{$notes}', NOW(), '{$sit[2]}', NOW(), ";
+    $sql .= "'{$sit[2]}', '1', '{$name}', '{$siteid}', ";
+    $sql .= "'{$privacy}', '{$identifier}', '{$owner}')";
 
     mysql_query($sql);
     $id = mysql_insert_id();

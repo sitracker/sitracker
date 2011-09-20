@@ -24,7 +24,7 @@ $title = $strSiteTypes;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('','new','edit'));
 
 if (empty($mode))
 {

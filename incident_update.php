@@ -354,19 +354,19 @@ else
     // Update the incident
 
     // External variables
-    $target = cleanvar($_POST['target']);
+    $target = clean_fixed_list($_POST['target'], array('', 'none', 'initialresponse', 'actionplan', 'probdef', 'solution'));
     $updatetype = cleanvar($_POST['updatetype']);
-    $newstatus = cleanvar($_POST['newstatus']);
+    $newstatus = clean_int($_POST['newstatus']);
     $nextaction = cleanvar($_POST['nextaction']);
-    $newpriority = cleanvar($_POST['newpriority']);
-    $cust_vis = cleanvar($_POST['cust_vis']);
+    $newpriority = clean_int($_POST['newpriority']);
+    $cust_vis = clean_fixed_list($_POST['cust_vis'], array('no', 'yes'));
     $timetonextaction = cleanvar($_POST['timetonextaction']);
     $date = cleanvar($_POST['date']);
-    $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-    $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
-    $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
-    $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
-    $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
+    $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
+    $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
+    $timetonextaction_days = clean_int($_POST['timetonextaction_days']);
+    $timetonextaction_hours = clean_int($_POST['timetonextaction_hours']);
+    $timetonextaction_minutes = clean_int($_POST['timetonextaction_minutes']);
     $draftid = cleanvar($_POST['draftid']);
 
     // \p{L} A Unicode character
@@ -471,7 +471,7 @@ else
 
     if ($_FILES['attachment']['name'] != '' && isset($_FILES['attachment']['name']) == TRUE)
     {
-        $bodytext = "{$SYSLANG['strAttachment']}: [[att={$fileid}]]{$_FILES['attachment']['name']}[[/att]]\n\n{$bodytext}";
+        $bodytext = "{$SYSLANG['strAttachment']}: [[att={$fileid}]]" . cleanvar($_FILES['attachment']['name']) ."[[/att]]\n\n{$bodytext}";
     }
 
     // Check the updatetype field, if it's blank look at the target
@@ -524,10 +524,6 @@ else
     //upload file, here because we need updateid
     if ($_FILES['attachment']['name'] != '')
     {
-        // try to figure out what delimeter is being used (for windows or unix)...
-        //.... // $delim = (strstr($filesarray[$c],"/")) ? "/" : "\\";
-        $delim = (strstr($_FILES['attachment']['tmp_name'],"/")) ? "/" : "\\";
-
         // make incident attachment dir if it doesn't exist
         $umask = umask(0000);
         if (!file_exists("{$CONFIG['attachment_fspath']}{$id}"))
@@ -538,11 +534,11 @@ else
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                trigger_error("Failed creating incident attachment directory: {$CONFIG['attachment_fspath']}{$id}{$delim}", E_USER_WARNING);
+                trigger_error("Failed creating incident attachment directory: {$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR, E_USER_WARNING);
             }
         }
         umask($umask);
-        $newfilename = "{$CONFIG['attachment_fspath']}{$id}{$delim}{$fileid}";
+        $newfilename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}";
 
         // Move the uploaded file from the temp directory into the incidents attachment dir
         $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);

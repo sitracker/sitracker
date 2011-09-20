@@ -255,7 +255,7 @@ elseif ($action == 'new')
     elseif ($contacts == 'all') $allcontacts = 'yes';
 
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
-    $incident_quantity = $incident_pools[$_POST['incident_poolid']];
+    $incident_quantity = clean_int($incident_pools[$_POST['incident_poolid']]);
 
     $_SESSION['formdata']['new_contract'] = cleanvar($_POST, TRUE, FALSE, FALSE,
                                                      array("@"), array("'" => '"'));

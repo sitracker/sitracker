@@ -26,7 +26,7 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = mb_substr(strip_tags($_POST['lang']), 0, 5);
+$language = htmlspecialchars(mb_substr(strip_tags($_REQUEST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
 if (mb_substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE)
 {
     $language = 'xx-xx'; // default lang
@@ -243,7 +243,7 @@ elseif ($CONFIG['portal'] == TRUE)
         if ($username != '')
         {
             $errdate = date('M j H:i');
-            $errmsg = "$errdate Failed login for user '{$username}' from IP: {$_SERVER['REMOTE_ADDR']}";
+            $errmsg = "$errdate Failed login for user '{$username}' from IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15);
             $errmsg .= "\n";
             $errlog = @error_log($errmsg, 3, $CONFIG['access_logfile']);
             ## if (!$errlog) echo "Fatal error logging this problem<br />";

@@ -124,12 +124,12 @@ else
     $productservicepacks = cleanvar($_POST['productservicepacks']);
     $id = clean_int($_POST['id']);
     $oldtitle = cleanvar($_POST['oldtitle']);
-    $oldcontact = cleanvar($_POST['oldcontact']);
+    $oldcontact = clean_int($_POST['oldcontact']);
     $maintid = clean_int($_POST['maintid']);
     $oldescalationpath = cleanvar($_POST['oldescalationpath']);
     $oldexternalid = clean_dbstring($_POST['oldexternalid']);
     $oldexternalemail = clean_int($_POST['oldexternalemail']);
-    $oldproduct = cleanvar($_POST['oldproduct']);
+    $oldproduct = clean_int($_POST['oldproduct']);
     $oldproductversion = cleanvar($_POST['oldproductversion']);
     $oldproductservicepacks = cleanvar($_POST['oldproductservicepacks']);
     $oldccemail = cleanvar($_POST['oldccemail']);

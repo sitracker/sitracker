@@ -18,8 +18,7 @@ if ($_SESSION['auth'] == TRUE)
 {
     if ($CONFIG['demo']) echo " (DEMO)";
     echo ' ';
-    $serversoftware = strip_tags($_SERVER["SERVER_SOFTWARE"]);
-    printf($strRunningOn, $serversoftware, ldate('H:i',$now, FALSE));
+    $serversoftware = htmlspecialchars(strip_tags($_SERVER["SERVER_SOFTWARE"]), ENT_QUOTES, $i18ncharset);
 
 }
 echo "</div>\n";

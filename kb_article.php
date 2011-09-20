@@ -36,7 +36,7 @@ if (isset($_POST['submit']))
 {
     $kbtitle = cleanvar($_POST['title']);
     $keywords = cleanvar($_POST['keywords']);
-    $distribution = cleanvar($_POST['distribution']);
+    $distribution = clean_fixed_list($_POST['distribution'], array('public', 'private', 'restricted'));
     $sql = array();
 
     if (isset($_FILES['attachment']) AND ($_FILES['attachment']['name'] != ''))
@@ -51,7 +51,7 @@ if (isset($_POST['submit']))
             // OK to proceed
             // Create an entry in the files table
             $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
-            $sql .= "VALUES ('public', '{$_FILES['attachment']['name']}', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
+            $sql .= "VALUES ('public', '" . cleanvar($_FILES['attachment']['name']). "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
             $fileid =  mysql_insert_id();
@@ -123,9 +123,9 @@ if (isset($_POST['submit']))
 
         $sectionvar = strtolower($section);
         $sectionvar = str_replace(" ", "", $sectionvar);
-        $sectionid = $_POST["{$sectionvar}id"];
-        $content = cleanvar($_POST[$sectionvar], FALSE, TRUE);
-        if ($_POST["{$sectionvar}id"] > 0)
+        $sectionid = clean_int($_POST["{$sectionvar}id"]);
+        $content = clean_dbstring($_POST[$sectionvar], FALSE, TRUE);
+        if ($sectionid > 0)
         {
             if (!empty($content))
             {
@@ -151,7 +151,7 @@ if (isset($_POST['submit']))
         $expertise = cleanvar(array_unique(($_POST['expertise'])));
         foreach ($expertise AS $value)
         {
-            $value = intval($value);
+            $value = clean_int($value);
             $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
         }
     }

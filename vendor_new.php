@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH.'auth.inc.php');
 $title = $strNewVendor;
 
 // External variables
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 
 if (empty($submit))
 {

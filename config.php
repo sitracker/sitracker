@@ -53,6 +53,12 @@ else
 
 if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1))
 {
+    $formtoken = cleanvar($_POST['formtoken']);
+    if (!check_form_token($formtoken))
+    {
+        html_redirect("main.php", FALSE, $strFormInvalidExpired);
+        exit;
+    }
     plugin_do('config_submitted');
     if (!empty($selcat))
     {
@@ -233,6 +239,7 @@ if (!empty($userid))
     echo "<input type='hidden' name='userid' value='{$userid}' />";
 }
 echo "<input type='hidden' name='action' value='save' />";
+echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
 if ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
 {
     echo "<p class='formbuttons'><input type='reset' value=\"{$strReset}\" /> ";

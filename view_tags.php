@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $tagid = clean_int($_REQUEST['tagid']);
-$orderby = cleanvar($_REQUEST['orderby']);
+$orderby = clean_fixed_list($_REQUEST['orderby'], array('', 'name'));
 
 if (empty($orderby)) $orderby = "name";
 

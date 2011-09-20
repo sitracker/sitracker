@@ -17,7 +17,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$legacy = cleanvar($_REQUEST['legacy']);
+$legacy = clean_fixed_list($_REQUEST['legacy'], array('','yes'));
 $groupid = clean_int($_REQUEST['gid']);
 
 // By default show users in home group

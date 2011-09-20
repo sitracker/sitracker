@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title=  $strTodaysStats;
 
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('','detail','daybreakdown','overview'));
 
 /**
     * @author Paul Heaney
@@ -513,13 +513,13 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 switch ($mode)
 {
     case 'breakdown':
-        $query = $_REQUEST['query'];
-        $startdate = $_REQUEST['start'];
-        $enddate = $_REQUEST['end'];
+        $query = clean_int($_REQUEST['query']);
+        $startdate = date('Y-m-d', strtotime($_REQUEST['start']));
+        $enddate = date('Y-m-d', strtotime($_REQUEST['end']));;
         include (APPLICATION_INCPATH . 'statistics_breakdown.inc.php');
         break;
     case 'daybreakdown':
-        $offset = $_REQUEST['offset'];
+        $offset = clean_int($_REQUEST['offset']);
         include (APPLICATION_INCPATH . 'statistics_daybreakdown.inc.php');
         break;
     case 'overview': //this is the default so just fall though

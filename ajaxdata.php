@@ -74,7 +74,7 @@ switch ($action)
         if (!file_exists($helpfile)) $helpfile = APPLICATION_HELPPATH . "en-GB/{$context}.txt";
         if (file_exists($helpfile))
         {
-            $fp = fopen($helpfile, 'r', TRUE);
+            $fp = fopen(clean_fspath($helpfile), 'r', TRUE);
             $helptext = fread($fp, 1024);
             fclose($fp);
             echo nl2br($helptext);
@@ -257,14 +257,14 @@ switch ($action)
         $ldap_port = clean_int($_REQUEST['ldap_port']);
         $ldap_protocol = cleanvar($_REQUEST['ldap_protocol']);
         $ldap_security = cleanvar($_REQUEST['ldap_security']);
-        $ldap_type = cleanvar($_REQUEST['ldap_type']);
-        $ldap_user = cleanvar($_REQUEST['ldap_bind_user']);
-        $ldap_password = cleanvar($_REQUEST['ldap_bind_pass']);
-        $ldap_user_base = cleanvar($_REQUEST['ldap_user_base']);
-        $ldap_admin_group = cleanvar($_REQUEST['ldap_admin_group']);
-        $ldap_manager_group = cleanvar($_REQUEST['ldap_manager_group']);
-        $ldap_user_group = cleanvar($_REQUEST['ldap_user_group']);
-        $ldap_customer_group = cleanvar($_REQUEST['ldap_customer_group']);
+        $ldap_type = clean_fixed_list($_REQUEST['ldap_type'], array('', 'SSL'));
+        $ldap_user = clean_ldapstring($_REQUEST['ldap_bind_user']);
+        $ldap_password = clean_ldapstring($_REQUEST['ldap_bind_pass']);
+        $ldap_user_base = clean_ldapstring($_REQUEST['ldap_user_base']);
+        $ldap_admin_group = clean_ldapstring($_REQUEST['ldap_admin_group']);
+        $ldap_manager_group = clean_ldapstring($_REQUEST['ldap_manager_group']);
+        $ldap_user_group = clean_ldapstring($_REQUEST['ldap_user_group']);
+        $ldap_customer_group = clean_ldapstring($_REQUEST['ldap_customer_group']);
 
         $r = ldapOpen($ldap_host, $ldap_port, $ldap_protocol, $ldap_security, $ldap_user, $ldap_password);
         if ($r == -1) echo LDAP_PASSWORD_INCORRECT; // Failed

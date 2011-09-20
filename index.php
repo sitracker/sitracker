@@ -80,6 +80,14 @@ if ($_SESSION['auth'] != TRUE)
 
         echo array_drop_down($available_languages, 'lang', $setting, "onchange='this.form.submit();'", TRUE);
         echo "</form>";
+
+        // Alternative language selection as an experiment, duplicating the drop-down at the moment,
+        // but lets see if people like it - INL 3/9/2011
+        echo "<br />";
+        foreach ($available_languages AS $alangcode => $alang)
+        {
+            echo "<a href='login.php?lang={$alangcode}'>{$alang}</a> <span class='separator'>|</span> ";
+        }
         echo "</div>";
     }
     plugin_do('index');

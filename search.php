@@ -21,9 +21,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strSearch;
 
 $resultsperpage = 20;
-$domain = cleanvar($_GET['domain']);
-$sort = cleanvar($_GET['sort']);
-$order = cleanvar($_GET['order']);
+$domain = clean_fixed_list($_GET['domain'], array('','incidents','sites','contacts','users','kb'));
+$sort = clean_fixed_list($_GET['sort'], array('','id','incident','date','result','sitename','dept','site','email','telephone','fax','action'));
+$order = clean_fixed_list($_GET['order'], array('','a','d','ASC','DESC'));
 $filter = array('start' => $start, 'order' => $order, 'q' => $q);
 $hits = 0;
 if (!isset($_GET['start']))
@@ -112,7 +112,7 @@ if (is_numeric($q))
                 echo "window.location = 'incident_details.php?id={$q}&win=jump&return=";
                 if (!empty($_SERVER['HTTP_REFERER']))
                 {
-                    echo html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset);
+                    echo htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset);
                 }
                 else
                 {
@@ -131,7 +131,7 @@ echo "<h2>".icon('search', 32)." {$strSearch} {$CONFIG['application_shortname']}
 if (!empty($q))
 {
     //for the search plugin
-    $search = $q;
+    $search = cleanvar($q);
 
     plugin_do('search_submitted');
 
@@ -746,6 +746,10 @@ echo "<tr><th>";
 echo "{$strSearch}: ";
 echo "</th>";
 echo "<td>";
+if ($q == 0)
+{
+    $q = '';
+}
 echo "<input maxlength='100' name='q' size='35' type='text' value='".strip_tags(urldecode($q))."' /> ";
 $operations = array($strAdvanced => 'search_incidents_advanced.php',
                              $strTagCloud => 'view_tags.php');

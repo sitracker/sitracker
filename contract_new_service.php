@@ -20,6 +20,7 @@ require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $contractid = clean_int($_REQUEST['contractid']);
 $submit = cleanvar($_REQUEST['submit']);
+
 $title = ("$strContract - $strNewService");
 
 // Contract ID must not be blank
@@ -202,7 +203,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 else
 {
     // External variables
-    $contractid = cleanvar($_POST['contractid']);
+    $contractid = clean_int($_POST['contractid']);
     $startdate = strtotime($_REQUEST['startdate']);
     if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
     else $startdate = date('Y-m-d',$now);

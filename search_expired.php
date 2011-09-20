@@ -21,9 +21,10 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strShowExpiredContracts;
 
 // External variables
-$expired = cleanvar($_REQUEST['expired']);
-$output = cleanvar($_REQUEST['output']);
-$show = cleanvar($_REQUEST['show']);
+$expired = clean_int($_REQUEST['expired']);
+$show = clean_fixed_list($_REQUEST['show'], array('','terminated'));
+$output = clean_fixed_list($_REQUEST['output'], array('screen','csv'));
+
 
 // show search expired maintenance form
 if (empty($expired))
@@ -97,7 +98,7 @@ else
         }
         else
         {
-            if ($_REQUEST['output'] == 'screen')
+            if ($output == 'screen')
             {
                 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 

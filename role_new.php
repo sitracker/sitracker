@@ -54,7 +54,7 @@ else
 {
     $rolename = clean_dbstring($_REQUEST['rolename']);
     $description = clean_dbstring($_REQUEST['description']);
-    $copyfrom = clean_dbstring($_REQUEST['copyfrom']);
+    $copyfrom = clean_int($_REQUEST['copyfrom']);
 
     $_SESSION['formdata']['role_new'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
