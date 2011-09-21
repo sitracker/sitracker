@@ -40,6 +40,7 @@ switch ($action)
         $newstatus = clean_int($_REQUEST['newstatus']);
         $userid = clean_int($_REQUEST['userid']);
         $temporary = cleanvar($_REQUEST['temporary']);
+        $temporarytoyou = cleanvar($_REQUEST['temporarytoyou']);
         $id = clean_int($_REQUEST['id']);
         $cust_vis = clean_fixed_list($_REQUEST['cust_vis'], array('','no','yes'));
 
@@ -75,7 +76,7 @@ switch ($action)
             $sql .= "towner=0, "; // temp owner removing temp ownership
             $triggeruserid = $incident->owner;
         }
-        elseif ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2] != $incident->owner)
+        elseif (($temporarytoyou == 'yes') OR ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2] != $incident->owner))
         {
             $sql .= "towner={$sit[2]}, "; // Temp to self
             $triggeruserid = $sit[2];
@@ -130,7 +131,7 @@ switch ($action)
         {
             $sql .= "'{$incident->owner}', ";
         }
-        elseif ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2] != $incident->owner)
+        elseif (($temporarytoyou == 'yes') OR ($temporary == 'yes' AND $tempnewowner != 'yes' AND $incident->towner < 1 AND $sit[2] != $incident->owner))
         {
             $sql .= "'{$sit[2]}', ";
         }
@@ -339,7 +340,7 @@ switch ($action)
             {
                 // $incident->towner < 1 AND
                 echo "<tr><th>{$strTemporaryOwner}:</th><td>";
-                echo "<label><input type='checkbox' name='temporary' value='yes' onchange=\"$('reassignlist').toggle();\" /> ";
+                echo "<label><input type='checkbox' name='temporarytoyou' value='yes' onchange=\"$('reassignlist').toggle();\" /> ";
                 echo "{$strAssignTemporarilyTo} <strong>{$strYou}</strong> ({$_SESSION['realname']})</label><br />";
                 echo "<label><input type='checkbox' name='tempnewowner' value='yes'  /> ";
                 echo "{$strAssignTemporarily}</label>";
