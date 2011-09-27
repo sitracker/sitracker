@@ -362,7 +362,7 @@ if ($emails > 0)
                 if (empty($filename))
                 {
                     $filename = 'part'.$part;
-                    if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
+                    if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
                     $part++;
                 }
                 $filesize = mb_strlen($data);
