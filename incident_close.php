@@ -202,6 +202,12 @@ else
         $errors = 1;
         $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSummary}' / '$strSolution'"), E_USER_ERROR);
     }
+    
+    if ($kbarticle == 'yes' AND $kbtitle == '')
+    {
+        $errors = 1;
+        $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strTitle}'"), E_USER_ERROR);
+    }
 
     plugin_do('incident_close_submitted');
 
