@@ -514,8 +514,9 @@ switch ($mode)
 {
     case 'breakdown':
         $query = clean_int($_REQUEST['query']);
-        $startdate = date('Y-m-d', strtotime($_REQUEST['start']));
-        $enddate = date('Y-m-d', strtotime($_REQUEST['end']));;
+        // These are dates though the included file does a few different things and needs the raw UNIX Timestamp
+        $startdate = clean_int($_REQUEST['start']);
+        $enddate = clean_int($_REQUEST['end']);
         include (APPLICATION_INCPATH . 'statistics_breakdown.inc.php');
         break;
     case 'daybreakdown':
