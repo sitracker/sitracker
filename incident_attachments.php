@@ -185,12 +185,12 @@ if ($_FILES['attachment']['name'] != '')
             $mk = mkdir($incident_attachment_fspath, 0770, TRUE);
             if (!$mk)
             {
-                trigger_error('Failed creating incident attachment directory: '.$incident_attachment_fspath, E_USER_WARNING);
+                trigger_error('Failed creating incident attachment directory.', E_USER_WARNING);
             }
         }
         // Move the uploaded file from the temp directory into the incidents attachment dir
-        $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
-        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+        $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to.', E_USER_WARNING);
 
         //create link
         $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";

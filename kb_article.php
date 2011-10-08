@@ -71,8 +71,8 @@ if (isset($_POST['submit']))
                 }
             }
             // Move the uploaded file from the temp directory into the incidents attachment dir
-            $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
-            if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+            $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+            if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
 
             //create link
             $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";

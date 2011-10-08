@@ -201,23 +201,23 @@ function upload_file($file, $incidentid, $type='public')
         if (!file_exists("{$CONFIG['attachment_fspath']}{$incidentid}"))
         {
             $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}", 0770);
-            if (!$mk) trigger_error("Failed creating incident attachment directory: {$incident_attachment_fspath }{$incidentid}", E_USER_WARNING);
+            if (!$mk) trigger_error("Failed creating incident attachment directory.", E_USER_WARNING);
         }
         $mk = @mkdir("{$CONFIG['attachment_fspath']}{$incidentid}" . DIRECTORY_SEPARATOR . "{$now}", 0770);
-        if (!$mk) trigger_error("Failed creating incident attachment (timestamp) directory: {$incident_attachment_fspath} {$incidentid} " . DIRECTORY_SEPARATOR . "{$now}", E_USER_WARNING);
+        if (!$mk) trigger_error("Failed creating incident attachment (timestamp) directory.", E_USER_WARNING);
         umask($umask);
         $returnpath = $incidentid . DIRECTORY_SEPARATOR . $now . DIRECTORY_SEPARATOR . $file['name'];
         $filepath = $incident_attachment_fspath . DIRECTORY_SEPARATOR . $now . DIRECTORY_SEPARATOR;
         $newfilename = $filepath . $file['name'];
 
         // Move the uploaded file from the temp directory into the incidents attachment dir
-        $mv = move_uploaded_file($file['tmp_name'], $newfilename);
-        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+        $mv = @move_uploaded_file($file['tmp_name'], $newfilename);
+        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
 
         // Check file size before attaching
         if ($file['size'] > $att_max_filesize)
         {
-            trigger_error("User Error: Attachment too large or file upload error - size: {$file['size']}", E_USER_WARNING);
+            trigger_error("User Error: Attachment too large or file upload error.", E_USER_WARNING);
             // throwing an error isn't the nicest thing to do for the user but there seems to be no guaranteed
             // way of checking file sizes at the client end before the attachment is uploaded. - INL
             return FALSE;

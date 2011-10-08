@@ -65,9 +65,9 @@ if ($incidentcontact == $_SESSION['contactid'])
         $forenames = cleanvar($user->forenames);
         $surname = cleanvar($user->surname); // If name has ' in it
         $update = cleanvar($_REQUEST['update']);
-       
+
         if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
-        
+
         if (!empty($forenames) AND !empty($surname))
         {
             //TODO change order for a name such as Chinese?
@@ -115,9 +115,9 @@ if ($incidentcontact == $_SESSION['contactid'])
         {
             // make incident attachment dir if it doesn't exist
             $umask = umask(0000);
-            
+
             $directory = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR;
-            
+
             if (!file_exists($directory))
             {
                 $mk = @mkdir($directory, 0770, TRUE);
@@ -127,21 +127,21 @@ if ($incidentcontact == $_SESSION['contactid'])
                     $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    trigger_error("Failed creating incident attachment directory: {$directory}", E_USER_WARNING);
+                    trigger_error("Failed creating incident attachment directory.", E_USER_WARNING);
                 }
             }
             umask($umask);
             $newfilename = "{$directory}{$fileid}-{$_FILES['attachment']['name']}";
 
             // Move the uploaded file from the temp directory into the incidents attachment dir
-            $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+            $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
             if (!$mv)
             {
                 $errors++;
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+                trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
             }
 
             // Check file size before attaching
@@ -152,7 +152,7 @@ if ($incidentcontact == $_SESSION['contactid'])
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                trigger_error('User Error: Attachment too large or file upload error - size:',$_FILES['attachment']['size'], E_USER_WARNING);
+                trigger_error('User Error: Attachment too large or file upload error.', E_USER_WARNING);
                 // throwing an error isn't the nicest thing to do for the user but there seems to be no guaranteed
                 // way of checking file sizes at the client end before the attachment is uploaded. - INL
             }
