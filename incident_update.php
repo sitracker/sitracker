@@ -457,7 +457,7 @@ else
         }
 
         $sql = "INSERT INTO `{$dbFiles}`(category, filename, size, userid, usertype, shortdescription, longdescription, filedate) ";
-        $sql .= "VALUES ('{$category}', '{$filename}', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', '', '', NOW())";
+        $sql .= "VALUES ('{$category}', '" . clean_dbstring($filename) . "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', '', '', NOW())";
         mysql_query($sql);
         if (mysql_error())
         {

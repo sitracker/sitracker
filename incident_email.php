@@ -23,7 +23,7 @@ $id = clean_int($_REQUEST['id']);
 $menu = cleanvar($_REQUEST['menu']);
 $incidentid = $id;
 $draftid = clean_int($_REQUEST['draftid']);
-if (empty($draftid)) 
+if (empty($draftid))
 {
     $draftid = -1;
 }
@@ -244,7 +244,7 @@ switch ($step)
             $subject = $metadata[17];
             $body = $metadata[18];
         }
-        
+
         $from = format_email_address_list($from);
         $replyto = format_email_address_list($replyto);
         $ccemail = format_email_address_list($ccemail);
@@ -379,11 +379,11 @@ switch ($step)
         }
 
         // Store email body in session if theres been an error
-        if ($errors > 0) 
+        if ($errors > 0)
         {
             $_SESSION['temp-emailbody'] = $bodytext;
         }
-        else 
+        else
         {
             unset($_SESSION['temp-emailbody']);
         }
@@ -402,11 +402,11 @@ switch ($step)
             $extra_headers .= "Errors-To: " . user_email($sit[2]) . $crlf;
             $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
             $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
-            if ($ccfield != '')  
+            if ($ccfield != '')
             {
                 $extra_headers .= "CC: {$ccfield}" . $crlf;
             }
-            if ($bccfield != '') 
+            if ($bccfield != '')
             {
                 $extra_headers .= "BCC: {$bccfield}" . $crlf;
             }
@@ -437,7 +437,7 @@ switch ($step)
                     $name = $file['name'];
                     $size = filesize($file['tmp_name']);
                     $sql = "INSERT INTO `{$dbFiles}`(filename, size, userid, usertype) ";
-                    $sql .= "VALUES('{$name}', '{$size}', '{$sit[2]}', '1')";
+                    $sql .= "VALUES('" . clean_dbstring($name) . "', '{$size}', '{$sit[2]}', '1')";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                     $fileid = mysql_insert_id();
