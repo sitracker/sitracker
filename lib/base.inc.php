@@ -344,6 +344,31 @@ function clean_fspath($string)
 
 
 /**
+  * Make an external variable safe. Force it to be an alphanumeric string.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - safe variable, only A-Z, a-z or 0 - 9 characters
+  * @note whitespace not allowed
+*/
+function clean_alphanumeric($vars)
+{
+    if (is_array($vars))
+    {
+        foreach ($vars as $key => $singlevar)
+        {
+            $var[$key] = clean_alphanumeric($singlevar);
+        }
+    }
+    else
+    {
+        $var = preg_replace("/[^a-zA-Z0-9]/", "", $vars);
+    }
+
+    return $var;
+}
+
+
+/**
  * Return an array of available languages codes by looking at the files
  * in the i18n directory
  * @author Ivan Lucas
