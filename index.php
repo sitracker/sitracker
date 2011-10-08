@@ -26,7 +26,7 @@ if ($_SESSION['auth'] != TRUE)
 {
     // External variables
     $id = clean_int($_REQUEST['id']);
-    $page = urldecode($_REQUEST['page']);
+    $page = clean_url($_REQUEST['page']);
     $page = str_replace(':','', $page);
     $page = str_replace('//','', $page);
     $page = str_replace('..','', $page);

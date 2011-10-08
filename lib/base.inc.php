@@ -335,6 +335,25 @@ function clean_fspath($string)
 
 
 /**
+ * Make a string safe for use with url related functions
+ * @author Ivan Lucas/Carsten Jensen
+ * @param string $string Text the clean
+ * @return mixed - URL safe
+ */
+function clean_url($string)
+{
+    $string = urldecode($string);
+    $string = strip_tags($string);
+
+    $bad = array(':', '//', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "*", '[', ']');
+    $string = str_replace($bad,'', $string);
+
+    $string = htmlentities($page, ENT_COMPAT, $GLOBALS['i18ncharset']);
+    return $string;
+}
+
+
+/**
  * Return an array of available languages codes by looking at the files
  * in the i18n directory
  * @author Ivan Lucas
