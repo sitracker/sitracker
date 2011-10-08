@@ -27,6 +27,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 else
 {
     global $CONFIG, $dbFiles, $dbUpdates, $dbTempIncoming, $dbIncidents, $now;
+    global $subject, $decoded, $incidentid, $contactid;
 }
 
 //hack as we have no session
@@ -319,10 +320,7 @@ if ($emails > 0)
             }
         }
 
-        plugin_do('email_arrived', array('incidentid' => $incidentid,
-                                         'contactid' => $contactid,
-                                         'subject' => $subject,
-                                         'decoded' => $decoded));
+        plugin_do('email_arrived');
 
         $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
 
@@ -364,7 +362,7 @@ if ($emails > 0)
                 if (empty($filename))
                 {
                     $filename = 'part'.$part;
-                    if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
+                    if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
                     $part++;
                 }
                 $filesize = mb_strlen($data);

@@ -1,4 +1,6 @@
 /* Cake.  A SiT theme for the portal */
+h1#apptitle { padding-top: 10px; }
+
 body {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10pt;
