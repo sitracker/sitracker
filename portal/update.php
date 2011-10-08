@@ -80,7 +80,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 
         if (!empty($_FILES['attachment']['name']))
         {
-            $filename = cleanvar($_FILES['attachment']['name']);
+            $filename = cleanvar(clean_fspath($_FILES['attachment']['name']));
             $sql = "INSERT INTO `{$dbFiles}`(category, filename, size, userid, usertype, shortdescription, longdescription, filedate) ";
             $sql .= "VALUES ('public', '{$filename}', '{$_FILES['attachment']['size']}', '{$_SESSION['contactid']}', 'contact', '', '', NOW())";
             mysql_query($sql);

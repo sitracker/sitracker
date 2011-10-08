@@ -446,7 +446,7 @@ else
     $att_max_filesize = return_bytes($CONFIG['upload_max_filesize']);
     if ($_FILES['attachment']['name'] != '')
     {
-        $filename = cleanvar($_FILES['attachment']['name']);
+        $filename = cleanvar(clean_fspath($_FILES['attachment']['name']));
         if ($cust_vis == 'yes')
         {
             $category = 'public';

@@ -102,7 +102,7 @@ else
 //     echo "<pre>".print_r($_FILES,true)."</pre>";
 
     // TODO v3.2x ext variables
-    $file_name = $_FILES['file']['name'];
+    $file_name = clean_fspath($_FILES['file']['name']);
 
     $shortdescription = clean_dbstring($_REQUEST['shortdescription']);
     $longdescription = clean_dbstring($_REQUEST['longdescription']);
@@ -143,11 +143,11 @@ else
     // receive the uploaded file to a temp directory on the local server
     if ($_FILES['file']['error'] != '' AND $_FILES['file']['error'] != UPLOAD_ERR_OK)
     {
-        echo get_file_upload_error_message($_FILES['file']['error'], $_FILES['file']['name']);
+        echo get_file_upload_error_message($_FILES['file']['error'], cleanvar($_FILES['file']['name']));
     }
     else
     {
-        $filepath = $CONFIG['attachment_fspath'] . clean_fspath($file_name);
+        $filepath = $CONFIG['attachment_fspath'] . $file_name;
         $mv = @move_uploaded_file($_FILES['file']['tmp_name'], $filepath);
         if (!mv) trigger_error("Problem moving uploaded file from temp directory.", E_USER_WARNING);
 

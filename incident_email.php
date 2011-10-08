@@ -419,7 +419,7 @@ switch ($step)
 
             foreach ($_FILES AS $file)
             {
-                $file['name'] = cleanvar($file['name']);
+                $file['name'] = cleanvar(clean_fspath($file['name']));
                 // move attachment to a safe place for processing later
                 if ($file['name'] != '' AND mb_strlen($file['name']) > 3)
                 {
@@ -434,7 +434,7 @@ switch ($step)
                         }
                     }
 
-                    $name = $file['name'];
+                    $name = clean_fspath($file['name']);
                     $size = filesize($file['tmp_name']);
                     $sql = "INSERT INTO `{$dbFiles}`(filename, size, userid, usertype) ";
                     $sql .= "VALUES('" . clean_dbstring($name) . "', '{$size}', '{$sit[2]}', '1')";

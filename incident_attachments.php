@@ -205,13 +205,13 @@ if ($_FILES['attachment']['name'] != '')
         if ($mk AND $mv)
         {
             echo sprintf($strFileXUploadedOK,
-                         "<strong>{$_FILES['attachment']['name']}</strong>",
+                         "<strong>" . cleanvar($_FILES['attachment']['name']) . "</strong>",
                          "{$_FILES['attachment']['type']}",
                          "{$_FILES['attachment']['size']}");
         }
         else
         {
-            echo "{$strErrorUploading} <strong>{$_FILES['attachment']['name']}</strong>";
+            echo "{$strErrorUploading} <strong>" . cleanvar($_FILES['attachment']['name']) . "</strong>";
         }
 
         // Debug
