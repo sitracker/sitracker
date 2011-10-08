@@ -147,7 +147,7 @@ else
     }
     else
     {
-        $filepath = $CONFIG['attachment_fspath'].$file_name;
+        $filepath = $CONFIG['attachment_fspath'] . clean_fspath($file_name);
         $mv = @move_uploaded_file($_FILES['file']['tmp_name'], $filepath);
         if (!mv) trigger_error("Problem moving uploaded file from temp directory.", E_USER_WARNING);
 

@@ -131,7 +131,7 @@ if ($incidentcontact == $_SESSION['contactid'])
                 }
             }
             umask($umask);
-            $newfilename = "{$directory}{$fileid}-{$_FILES['attachment']['name']}";
+            $newfilename = "{$directory}{$fileid}-" . clean_fspath($_FILES['attachment']['name']);
 
             // Move the uploaded file from the temp directory into the incidents attachment dir
             $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);

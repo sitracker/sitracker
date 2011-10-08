@@ -208,7 +208,7 @@ function upload_file($file, $incidentid, $type='public')
         umask($umask);
         $returnpath = $incidentid . DIRECTORY_SEPARATOR . $now . DIRECTORY_SEPARATOR . $file['name'];
         $filepath = $incident_attachment_fspath . DIRECTORY_SEPARATOR . $now . DIRECTORY_SEPARATOR;
-        $newfilename = $filepath . $file['name'];
+        $newfilename = $filepath . clean_fspath($file['name']);
 
         // Move the uploaded file from the temp directory into the incidents attachment dir
         $mv = @move_uploaded_file($file['tmp_name'], $newfilename);

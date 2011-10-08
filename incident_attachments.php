@@ -177,7 +177,7 @@ if ($_FILES['attachment']['name'] != '')
         $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
         // make incident attachment dir if it doesn't exist
-        $newfilename = $incident_attachment_fspath . $fileid . "-".$_FILES['attachment']['name'];
+        $newfilename = $incident_attachment_fspath . $fileid . "-" . clean_fspath($_FILES['attachment']['name']);
         $umask = umask(0000);
         $mk = TRUE;
         if (!file_exists($incident_attachment_fspath))
