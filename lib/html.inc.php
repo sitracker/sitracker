@@ -38,6 +38,12 @@ function html_redirect($url, $success = TRUE, $message = '', $close = FALSE)
 {
     global $CONFIG, $headerdisplayed, $siterrors;
 
+    $url = clean_url($url);
+    // Redirect to the dashboard if we don't have anywhere to go
+    if (empty($url))
+    {
+        $url = 'main.php';
+    }
     if (!empty($_REQUEST['dashboard']))
     {
         $headerdisplayed = TRUE;

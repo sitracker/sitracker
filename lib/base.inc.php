@@ -165,7 +165,10 @@ function clean_int($vars)
     }
     elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
-        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+        if ($vars != '')
+        {
+            trigger_error("Input was expected to be numeric but received string [$vars] instead", E_USER_WARNING);
+        }
         $var = 0;
     }
     else
@@ -376,13 +379,12 @@ function clean_alphanumeric($vars)
  */
 function clean_url($string)
 {
-    $string = urldecode($string);
     $string = strip_tags($string);
 
-    $bad = array(':', '//', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "*", '[', ']');
+    $bad = array('://', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "*",
+                 '[', ']', '<', '>', 'javascript:');
     $string = str_replace($bad,'', $string);
 
-    $string = htmlentities($page, ENT_COMPAT, $GLOBALS['i18ncharset']);
     return $string;
 }
 
