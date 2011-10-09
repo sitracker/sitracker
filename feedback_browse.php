@@ -158,7 +158,10 @@ switch ($mode)
         }
         else
         {
+            echo "<table class='maintable vertical'>";
+            echo "<tr><td>";
             echo user_alert($strNoResponseFound, E_USER_NOTICE);
+            echo "</td></tr></table>";
         }
         plugin_do('feedback_browse_viewresponse');
         echo "<p class='return'><a href='{$_SERVER['PHP_SELF']}'>{$strBackToList}</a></p>";

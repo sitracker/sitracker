@@ -26,7 +26,7 @@ $userid = clean_int($_REQUEST['userid']);
 echo "<div style='margin: 20px'>";
 echo "<h2><a href='{$CONFIG['application_webpath']}reports/feedback.php'>{$strFeedback}</a> {$strScores}: {$strByEngineer}</h2>";
 echo feedback_between_dates();
-echo "<p>{$strCustomerFeedbackReportSiteMsg}:</p>";
+echo "<p align='center'>{$strCustomerFeedbackReportSiteMsg}:</p>";
 
 $usql = "SELECT * FROM `{$dbUsers}` WHERE status > 0 ";
 if ($userid > 0) $usql .= "AND id={$userid} ";
@@ -50,13 +50,13 @@ if (mysql_num_rows($uresult) >= 1)
             {
                 $numquestions++;
                 $html .= "Q{$qrow->taborder}: {$qrow->question} &nbsp;";
-                $sql = "SELECT * FROM `{$dbFeedbackRespondents}` AS fr, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS fr, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
                 $sql .= "WHERE fr.incidentid = i.id ";
                 $sql .= "AND i.owner = u.id ";
                 $sql .= "AND fr.id = r.respondentid ";
                 $sql .= "AND r.questionid = '$qrow->id' ";
                 $sql .= "AND u.id = '$user->id' ";
-                $sql .= "AND fr.completed = 'yes' \n"; ///////////////////////
+                $sql .= "AND fr.completed = 'yes' \n";
 
                 if (!empty($startdate))
                 {
@@ -91,6 +91,7 @@ if (mysql_num_rows($uresult) >= 1)
                 $cumul = 0;
                 $percent = 0;
                 $average = 0;
+                $calcnumber = (100 / ($CONFIG['feedback_max_score'] -1));
                 ## echo "=== $sql<br /> ";
                 while ($row = mysql_fetch_object($result))
                 {
@@ -98,7 +99,6 @@ if (mysql_num_rows($uresult) >= 1)
                     {
                         $cumul += $row->result;
                         $numresults++;
-                        ## echo "===== Result: {$row->result}<br />";
                     }
                 }
                 if ($numresults > 0)
@@ -106,7 +106,7 @@ if (mysql_num_rows($uresult) >= 1)
                     $average = number_format(($cumul/$numresults), 2);
                 }
 
-                $percent = number_format((($average -1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
+                $percent = number_format((($average -1) * ($calcnumber)), 0);
                 if ($percent < 0)
                 {
                     $percent = 0;
