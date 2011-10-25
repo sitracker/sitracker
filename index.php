@@ -26,12 +26,7 @@ if ($_SESSION['auth'] != TRUE)
 {
     // External variables
     $id = clean_int($_REQUEST['id']);
-    $page = urldecode($_REQUEST['page']);
-    $page = str_replace(':','', $page);
-    $page = str_replace('//','', $page);
-    $page = str_replace('..','', $page);
-    $page = strip_tags($page);
-    $page = htmlentities($page, ENT_COMPAT, $GLOBALS['i18ncharset']);
+    $page = clean_url($_REQUEST['page']);
 
     // Invalid user, show log in form
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
@@ -71,22 +66,30 @@ if ($_SESSION['auth'] != TRUE)
     {
         $available_languages = array_merge(array('xx-xx'=>$strDefault),$available_languages);
         echo "<div id='languageselection'>";
-        echo "<form id='langselectform' action='login.php' method='post'>";
-        echo icon('language', 16, $strLanguage)." <label for='lang'>";
-        echo "{$strLanguage}</label>:  ";
-
-        if (!empty($_SESSION['lang'])) $setting = $_SESSION['lang'];
-        else $setting = 'default';
-
-        echo array_drop_down($available_languages, 'lang', $setting, "onchange='this.form.submit();'", TRUE);
-        echo "</form>";
-
-        // Alternative language selection as an experiment, duplicating the drop-down at the moment,
-        // but lets see if people like it - INL 3/9/2011
-        echo "<br />";
-        foreach ($available_languages AS $alangcode => $alang)
+        if ($CONFIG['i18n_selection'] == 'dropdown')
         {
-            echo "<a href='login.php?lang={$alangcode}'>{$alang}</a> <span class='separator'>|</span> ";
+            echo "<form id='langselectform' action='login.php' method='post'>";
+            echo icon('language', 16, $strLanguage)." <label for='lang'>";
+            echo "{$strLanguage}</label>:  ";
+
+            if (!empty($_SESSION['lang'])) $setting = $_SESSION['lang'];
+            else $setting = 'default';
+
+            echo array_drop_down($available_languages, 'lang', $setting, "onchange='this.form.submit();'", TRUE);
+            echo "</form>";
+        }
+        else
+        {
+            // Alternative language selection as an experiment, duplicating the drop-down at the moment,
+            // but lets see if people like it - INL 3/9/2011
+            echo "<br />";
+            echo icon('language', 16, $strLanguage) . ' ';
+            foreach ($available_languages AS $alangcode => $alang)
+            {
+                $operations[$alang] = "login.php?lang={$alangcode}";
+            }
+            echo html_action_links($operations);
+            unset($operations);
         }
         echo "</div>";
     }

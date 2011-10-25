@@ -16,7 +16,7 @@ require (APPLICATION_LIBPATH . 'trigger.class.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$title = $strNotifications;
+$title = $strSystemActions;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -27,12 +27,12 @@ plugin_do('notifications');
 echo "<p align='center'>{$strNotificationDescription}</p>";
 
 $operations = array();
-$operations[$strNewNotification] = 'action_details.php';
+$operations[$strNewNotification] = 'action_details.php?user=admin';
 echo "<p align='center'>" . html_action_links($operations) . "</p>";
 
 echo "</div><br />";
 
-echo triggers_to_html($_SESSION['userid']);
+echo triggers_to_html(0);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 

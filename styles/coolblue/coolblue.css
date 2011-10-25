@@ -1,6 +1,7 @@
 /* Webtrack Cool Blue Style: Cool Blue */
 /* by Paul Harrison, paul.harrison@salfordsoftware.co.uk - August 2001 */
 /* Recreated by Ivan Lucas - November 2006 */
+h1#apptitle { padding-top: 10px; }
 
 body
 {
@@ -45,3 +46,5 @@ div.windowtitle a:hover { color: white;}
 }
 #statusbar a { color: white; }
 div.windowtitle, div.windowtitle a { color: white;}
+
+#topsearch #searchfield { background: transparent; border-color: #638CC0; position: relative; top: -3px;}

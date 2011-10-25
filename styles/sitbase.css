@@ -1059,7 +1059,7 @@ width:0px;color:red;}
 #inboxtable, #userslisttable { width: 95%; }
 #feedbackformtable { margin-left: auto; margin-right: auto; width: 70%; }
 #tasksform, #skillsmatrixform { text-align: center; }
-#languageselection { margin-left: auto; margin-right: auto; width: 380px; text-align: center; margin-top: 3em; }
+#languageselection { margin-left: auto; margin-right: auto; width: 780px; text-align: center; margin-top: 3em; }
 #incidentsgraphtable { border: 1px solid #000; width: 250px; }
 #producttags {width: 50%; margin: auto;}
 .triggeractions {

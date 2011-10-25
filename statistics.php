@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title=  $strTodaysStats;
 
-$mode = clean_fixed_list($_REQUEST['mode'], array('','detail','daybreakdown','overview'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('','detail','daybreakdown','breakdown','overview'));
 
 /**
     * @author Paul Heaney

@@ -25,7 +25,7 @@ $mode = clean_fixed_list($_REQUEST['mode'], array('','notapprove','approval'));
 $action = cleanvar($_REQUEST['action']);
 $type = clean_int($_REQUEST['type']);
 $memo = clean_dbstring($_REQUEST['memo']);
-$approvaluser = clean_int($_REQUEST['approvaluser']);
+$approvaluser = cleanvar($_REQUEST['approvaluser']);  // can be 'all'
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -105,8 +105,7 @@ function display_holiday_table($result)
 }
 
 if (empty($user)) $user = $sit[2];
-
-if (!$sent)
+if ($sent != 'true')
 {
     // check to see if this user has approve permission
     $approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE);
@@ -229,7 +228,8 @@ else
 {
     if (empty($approvaluser))
     {
-        html_redirect('holiday_request.php', FALSE);
+        html_redirect('main.php', FALSE);
+        exit;
     }
     else
     {
