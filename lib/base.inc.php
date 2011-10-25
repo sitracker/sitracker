@@ -342,13 +342,12 @@ function clean_fspath($string)
  */
 function clean_url($string)
 {
-    $string = urldecode($string);
     $string = strip_tags($string);
 
-    $bad = array(':', '//', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "*", '[', ']');
+    $bad = array('://', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "*",
+                 '[', ']', '<', '>', 'javascript:');
     $string = str_replace($bad,'', $string);
 
-    $string = htmlentities($page, ENT_COMPAT, $GLOBALS['i18ncharset']);
     return $string;
 }
 
