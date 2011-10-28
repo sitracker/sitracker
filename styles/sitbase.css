@@ -1002,6 +1002,7 @@ table.vertical th { text-align: right; }
 
 div.note { font-size: 98%; background-color: #FFFFA2; border-color: #A2A86A; margin-top: 0px; }
 div.appointment:hover { background-color: #FFFFA2; cursor: pointer; }
+div.appointment {width:100%;}
 div.appointmentdata
 {
     visibility: hidden;
