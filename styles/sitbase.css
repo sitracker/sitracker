@@ -35,13 +35,10 @@ p, table, td, center, input, textarea, select
 blockquote
 {
     background-color: transparent;
-    border-top: 3px double #203894;
-    border-bottom: 3px double #203894;
+    border-left: 4px solid #000000;
     padding: 5px;
-    font-style: oblique;
-    font-size: 1em;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 code { white-space: pre; background: #F7F7F7; }
