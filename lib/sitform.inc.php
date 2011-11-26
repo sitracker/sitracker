@@ -75,15 +75,22 @@ class Form
 
         echo "<h2>{$this->formheading}</h2>";
 
+        echo show_form_errors($this->name);
+        clear_form_errors($this->name);
+        
         echo "<form action='{$_SERVER['PHP_SELF']}' id='{$this->name}' name='{$this->name}' method='post'>";
         echo "<table class='vertical'>";
+        
         foreach($this->row AS $r)
         {
             echo $r->generateHTML();
         }
         echo "</table>";
-        echo "<p class='formbuttons'><input type='submit' id='{$this->name}submit' name='submit' value='{$this->submitLabel}' /></p>";
+        echo "<p class='formbuttons'><input type='submit' id='{$this->name}submit' name='submit' value='{$this->submitLabel}' /></p>\n";
+
         echo "</form>";
+        
+        clear_form_data($this->name);
     }
 
 
@@ -95,67 +102,101 @@ class Form
         {
             $toReturn = array_merge ($toReturn, $r->getDB());
         }
+        
+        $errors = 0;
 
-        // print_r($toReturn);
-
-        switch ($this->type)
+        foreach($this->row AS $r)
         {
-            case 'insert':
-                $sql = "INSERT INTO `{$this->tableName}` ";
-                if (count($toReturn) > 0)
+            foreach($r->components AS $c)
+            {
+                foreach ($c->components AS $item)
                 {
-                    $sql .= " (";
-                    foreach ($toReturn AS $d)
+                    if ($item->isMandatory())
                     {
-                        $a[] = "{$d->field}";
+                        // $mandatories[] = $item->name;
+                        if (empty($_REQUEST[$item->name]))
+                        {
+                            $errors++;
+                            
+                            $name = $item->name;
+                            if (!empty($item->label)) $name = $item->label->label;
+                            
+                            $_SESSION['formerrors'][$this->name][$item->name] = user_alert(sprintf($GLOBALS['strFieldMustNotBeBlank'], "'{$name}'"), E_USER_ERROR);
+                        }
                     }
-                    $sql .= implode(",", $a);
-
-                    unset($a);
-                    $sql .= ") VALUES (";
-                    foreach ($toReturn AS $d)
-                    {
-                        $v = cleanvar($_REQUEST[$d->name]);
-                        $a[] = "'{$v}'";
-                    }
-                    $sql .= implode(",", $a);
-                    $sql .= ")";
                 }
-
-                break;
-
-            case 'update':
-                $sql = "UPDATE `{$this->tableName}` ";
-                if (count($toReturn) > 0)
-                {
-                    $sql .= " SET ";
-                    foreach ($toReturn AS $d)
-                    {
-                        $v = cleanvar($_REQUEST[$d->name]);
-                        $a[] .= "{$d->field} = '{$v}'";
-                    }
-                    $sql .= implode(", ", $a);
-
-                    $sql .= "WHERE {$this->keyField} = '{$this->keyValue}'";
-                }
-
-                break;
+        
+            }
         }
-
-        if ($this->debug) echo $sql;
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-        if (mysql_affected_rows() <= 0)
+        
+        // print_r($toReturn);
+        
+        if ($errors ==  0)
         {
-            html_redirect($this->returnURLFailure, FALSE);
-            exit;
+            switch ($this->type)
+            {
+                case 'insert':
+                    $sql = "INSERT INTO `{$this->tableName}` ";
+                    if (count($toReturn) > 0)
+                    {
+                        $sql .= " (";
+                        foreach ($toReturn AS $d)
+                        {
+                            $a[] = "{$d->field}";
+                        }
+                        $sql .= implode(",", $a);
+    
+                        unset($a);
+                        $sql .= ") VALUES (";
+                        foreach ($toReturn AS $d)
+                        {
+                            $v = cleanvar($_REQUEST[$d->name]);
+                            $a[] = "'{$v}'";
+                        }
+                        $sql .= implode(",", $a);
+                        $sql .= ")";
+                    }
+    
+                    break;
+    
+                case 'update':
+                    $sql = "UPDATE `{$this->tableName}` ";
+                    if (count($toReturn) > 0)
+                    {
+                        $sql .= " SET ";
+                        foreach ($toReturn AS $d)
+                        {
+                            $v = cleanvar($_REQUEST[$d->name]);
+                            $a[] .= "{$d->field} = '{$v}'";
+                        }
+                        $sql .= implode(", ", $a);
+    
+                        $sql .= "WHERE {$this->keyField} = '{$this->keyValue}'";
+                    }
+    
+                    break;
+            }
+    
+            if ($this->debug) echo $sql;
+            $result = mysql_query($sql);
+            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            if (mysql_affected_rows() <= 0)
+            {
+                html_redirect($this->returnURLFailure, FALSE);
+                exit;
+            }
+            else
+            {
+            	html_redirect($this->returnURLSuccess, TRUE);
+                exit;
+            }
         }
         else
         {
-        	html_redirect($this->returnURLSuccess, TRUE);
-            exit;
+            echo $this->generateHTML();
         }
     }
+    
 
 
     public function run()
@@ -182,11 +223,23 @@ abstract class Component
     var $value;
     var $dbFieldName;
     var $mandatory;
+    var $label;
+    
     abstract function generateHTML();
     abstract function getDB(); // Returns array
-    function isMandatory($mandatory)
+    function setMandatory($mandatory)
     {
         $this->mandatory = $mandatory; // Boolean
+    }
+    
+    function isMandatory()
+    {
+        return $this->mandatory;
+    }
+    
+    function setLabel($label)
+    {
+        $this->label = $label;
     }
 }
 
@@ -340,18 +393,23 @@ class SingleLineEntry extends Component
 {
     var $size = 30;
 
-    public function __construct($name = "text", $size = 30, $dbField, $value='')
+    public function __construct($name = "text", $size = 30, $dbField, $value='', $mandatory=false)
     {
         $this->name = $name;
         $this->value = $value;
         $this->size = $size;
         $this->dbFieldName = $dbField;
+        $this->setMandatory($mandatory);
     }
 
 
     public function generateHTML()
     {
-        return "<input type='text' id='{$this->name}' name='{$this->name}' size='{$this->size}' value='{$this->value}' />";
+        $str = "<input type='text'  ";
+        if ($this->isMandatory()) $str .= "class='required' ";
+        $str .= "id='{$this->name}' name='{$this->name}' size='{$this->size}' value='{$this->value}' />";
+        if ($this->isMandatory()) $str .= " <span class='required'>{$GLOBALS['strRequired']}</span>";
+        return $str;
     }
 
 
@@ -381,7 +439,7 @@ class HiddenEntry extends Component
 
 
     /**
-     * Returns the DB array or an empty array if dbFieldName is empty this allows for fields to control other behaviours rather than just BD Input
+     * Returns the DB array or an empty array if dbFieldName is empty this allows for fields to control other behaviours rather than just DB Input
      */
     public function getDB()
     {

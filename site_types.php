@@ -62,9 +62,12 @@ elseif ($mode == 'new')
     $form->setReturnURLSuccess($_SERVER['PHP_SELF']);
     $c1 = new Cell();
     $c1->setIsHeader(TRUE);
-    $c1->addComponent(new Label($strSiteType));
+    $label = new Label($strSiteType);
+    $c1->addComponent($label);
     $c2 = new Cell();
-    $c2->addComponent(new SingleLineEntry("typename", 10, "typename"));
+    $sle = new SingleLineEntry("typename", 10, "typename", "", true);
+    $sle->setLabel($label);
+    $c2->addComponent($sle);
 
     $r = new Row();
     $r->addComponent($c1);
@@ -91,9 +94,12 @@ elseif ($mode == 'edit')
     $form->setReturnURLSuccess($_SERVER['PHP_SELF']);
     $c1 = new Cell();
     $c1->setIsHeader(TRUE);
-    $c1->addComponent(new Label($strSiteType));
+    $label = new Label($strSiteType);
+    $c1->addComponent($label);
     $c2 = new Cell();
-    $c2->addComponent(new SingleLineEntry("typename", 10, "typename", $typename));
+    $sle = new SingleLineEntry("typename", 10, "typename", $typename, true);
+    $sle->setLabel($label);
+    $c2->addComponent($sle);
 
     $r = new Row();
     $r->addComponent($c1);
