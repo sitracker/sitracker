@@ -289,6 +289,7 @@ hr
 	top: 0px;
 	position: relative;
 }
+
 #apptitle
 {
     background: transparent;
@@ -386,42 +387,47 @@ hr
     font-size: 8pt;
 }
 
-#menu {
-  display: block;
-  color: #000;
-  margin-bottom: 5px;
-  width: 100%;
-  height: 20px;
+#menu
+{
+    display: block;
+    color: #000;
+    margin-bottom: 5px;
+    width: 100%;
+    height: 20px;
 }
 
-#menu ul {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  list-style-type: none;
-  background-color:#FFF;
+#menu ul 
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    list-style-type: none;
+    background-color:#FFF;
 }
 
-#menu li {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  display: block;
-  float: left;
-  position: relative;
+#menu li
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: block;
+    float: left;
+    position: relative;
 }
 
-#menu li:hover {
-  color: #900;
-  background-color: #FFF;
+#menu li:hover
+{
+    color: #900;
+    background-color: #FFF;
 }
 
-#menu a {
-  display: block;
-  text-decoration: none;
-  text-align: center;
-  color: #5B5B5B;
-  padding: 0.25em 0.8em 0.25em 0.8em;
+#menu a 
+{
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: #5B5B5B;
+    padding: 0.25em 0.8em 0.25em 0.8em;
 }
 
 #menu a.greyed, #menu a.greyed:hover
@@ -429,15 +435,18 @@ hr
     color: #C6C3C6;
 }
 
-#menu li a {
+#menu li a
+{
     position: relative;
 }
 
-#menu li:hover>a, #menu a:hover {
+#menu li:hover>a, #menu a:hover
+{
     color: #205D94;
 }
 
-#menu li ul {
+#menu li ul
+{
     visibility: hidden;
     position: absolute;
     z-index: 10;
@@ -457,7 +466,8 @@ html>body #menu li ul
     display: none;
 }
 
-#menu li li {
+#menu li li 
+{
     width: 100%;
     border-width: 0 1px 0 1px;
     border-style: solid;
@@ -465,7 +475,8 @@ html>body #menu li ul
     background: white;
 }
 
-#menu li li ul {
+#menu li li ul
+{
     top: 0;
     left: 100%;
 }
@@ -476,6 +487,7 @@ div#menu li:hover ul,
 {
     visibility: visible;
 }
+
 div#menu li:hover li ul,
 #menu li:hover li:hover li ul,
 #menu li:hover li:hover li:hover li ul
@@ -485,42 +497,44 @@ div#menu li:hover li ul,
 
 #menu ul li:hover>ul
 {
-  display: block;
-  visibility: visible;
+    display: block;
+    visibility: visible;
 }
 
 #menu li ul a
 {
-  text-align: left;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: normal;
-  font-size: 8pt;
-  word-spacing: 0px;
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 8pt;
+    word-spacing: 0px;
 }
 
 #menu li ul a:hover
 {
-  background-color: #CCC;
-  filter:alpha(opacity=75);
-  opacity: 0.75;
-  -moz-opacity:0.75;
+    background-color: #CCC;
+    filter:alpha(opacity=75);
+    opacity: 0.75;
+    -moz-opacity:0.75;
 }
 
-#menu li ul li ul {
-  padding-top: 0px;
-  border-top-width: 1px;
-  left: 130px;
+#menu li ul li ul
+{
+    padding-top: 0px;
+    border-top-width: 1px;
+    left: 130px;
 }
 
-#menu li li ul {
-  border-width: 1px 0 1px 0;
-  border-style: solid;
-  border-color: #C5C5C5;
+#menu li li ul
+{
+    border-width: 1px 0 1px 0;
+    border-style: solid;
+    border-color: #C5C5C5;
 }
 
 #menu li.menuitem
 {
-  z-index: 100;
+    z-index: 100;
 }
 
 
