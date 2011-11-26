@@ -109,19 +109,22 @@ class Form
         {
             foreach($r->components AS $c)
             {
-                foreach ($c->components AS $item)
+                if (!empty($c->components))
                 {
-                    if ($item->isMandatory())
+                    foreach ($c->components AS $item)
                     {
-                        // $mandatories[] = $item->name;
-                        if (empty($_REQUEST[$item->name]))
+                        if ($item->isMandatory())
                         {
-                            $errors++;
-                            
-                            $name = $item->name;
-                            if (!empty($item->label)) $name = $item->label->label;
-                            
-                            $_SESSION['formerrors'][$this->name][$item->name] = user_alert(sprintf($GLOBALS['strFieldMustNotBeBlank'], "'{$name}'"), E_USER_ERROR);
+                            // $mandatories[] = $item->name;
+                            if (empty($_REQUEST[$item->name]))
+                            {
+                                $errors++;
+                                
+                                $name = $item->name;
+                                if (!empty($item->label)) $name = $item->label->label;
+                                
+                                $_SESSION['formerrors'][$this->name][$item->name] = user_alert(sprintf($GLOBALS['strFieldMustNotBeBlank'], "'{$name}'"), E_USER_ERROR);
+                            }
                         }
                     }
                 }
