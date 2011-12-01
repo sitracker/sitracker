@@ -1779,6 +1779,11 @@ div.appointment:hover
     cursor: pointer;
 }
 
+div.appointment
+{
+    width:100%;
+}
+
 div.appointmentdata
 {
     visibility: hidden;
