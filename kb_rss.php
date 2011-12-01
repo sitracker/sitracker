@@ -17,7 +17,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This script requires no authentication
 // The information it reveals should not be sensitive
 
-$c = cleanvar($_GET['c']);
+$c = clean_dbstring($_GET['c']);
 $salt = md5($CONFIG['db_password']);
 $usql = "SELECT id FROM `{$dbUsers}` WHERE MD5(CONCAT(`username`, '{$salt}')) = '$c' LIMIT 1";
 // $usql = "SELECT id FROM `{$dbUsers}` WHERE username = '$c' LIMIT 1";

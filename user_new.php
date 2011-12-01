@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strNewUser;
 
 // External variables
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -149,7 +149,7 @@ if (empty($submit))
     }
     plugin_do('user_new_form');
     echo "</table>\n";
-    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
     echo "<p class='return'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -175,11 +175,16 @@ else
         $startdate = date('Y-m-d',strtotime($_POST['startdate']));
     }
     else $startdate = '';
+    $formtoken = cleanvar($_POST['formtoken']);
 
     $_SESSION['formdata']['new_user'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
 
     $errors = 0;
-
+    if (!check_form_token($formtoken))
+    {
+        $_SESSION['formerrors']['add_user']['formtoken'] = user_alert($strFormInvalidExpired, E_USER_ERROR);
+        $errors++;
+    }
     if ($realname == '')
     {
         $errors++;

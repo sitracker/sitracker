@@ -63,43 +63,6 @@ if (version_compare(PHP_VERSION, "5.1.0", ">="))
     date_default_timezone_set($CONFIG['timezone']);
 }
 
-//Prevent Magic Quotes from affecting scripts, regardless of server settings
-//Make sure when reading file data,
-//PHP doesn't "magically" mangle backslashes!
-set_magic_quotes_runtime(FALSE);
-
-if (get_magic_quotes_gpc())
-{
-
-    //     All these global variables are slash-encoded by default,
-    //     because    magic_quotes_gpc is set by default!
-    //     (And magic_quotes_gpc affects more than just $_GET, $_POST, and $_COOKIE)
-    //     We don't strip slashes from $_FILES as of 3.32 as this should be safe without
-    //     doing and it will break windows file paths if we do
-    $_SERVER = stripslashes_array($_SERVER);
-    $_GET = stripslashes_array($_GET);
-    $_POST = stripslashes_array($_POST);
-    $_COOKIE = stripslashes_array($_COOKIE);
-    $_ENV = stripslashes_array($_ENV);
-    $_REQUEST = stripslashes_array($_REQUEST);
-    $HTTP_SERVER_VARS = stripslashes_array($HTTP_SERVER_VARS);
-    $HTTP_GET_VARS = stripslashes_array($HTTP_GET_VARS);
-    $HTTP_POST_VARS = stripslashes_array($HTTP_POST_VARS);
-    $HTTP_COOKIE_VARS = stripslashes_array($HTTP_COOKIE_VARS);
-    $HTTP_POST_FILES = stripslashes_array($HTTP_POST_FILES);
-    $HTTP_ENV_VARS = stripslashes_array($HTTP_ENV_VARS);
-    if (isset($_SESSION))
-    {
-        #These are unconfirmed (?)
-        $_SESSION = stripslashes_array($_SESSION, '');
-        $HTTP_SESSION_VARS = stripslashes_array($HTTP_SESSION_VARS, '');
-    }
-    //     The $GLOBALS array is also slash-encoded, but when all the above are
-    //     changed, $GLOBALS is updated to reflect those changes.  (Therefore
-    //     $GLOBALS should never be modified directly).  $GLOBALS also contains
-    //     infinite recursion, so it's dangerous...
-}
-
 
 /**
  * Authenticate a user with a username/password pair
@@ -136,7 +99,7 @@ function authenticateSQL($username, $password)
     }
     else
     {
-        journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . getenv('REMOTE_ADDR'),CFG_JOURNAL_LOGIN,0);
+        journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'],0, 15),CFG_JOURNAL_LOGIN,0);
         return 1;
     }
 }
@@ -173,7 +136,7 @@ function authenticate($username, $password)
             elseif ($obj->user_source == 'ldap')
             {
                 // Auth against LDAP and sync
-                $toReturn =  authenticateLDAP(stripslashes($username), $password, $obj->id);
+                $toReturn =  authenticateLDAP(clean_ldapstring(($username)), clean_ldapstring($password), $obj->id);
                 if ($toReturn === -1)
                 {
                     // Communication with LDAP server failed
@@ -216,7 +179,7 @@ function authenticate($username, $password)
 
         if ($toReturn)
         {
-            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . getenv('REMOTE_ADDR'),CFG_JOURNAL_LOGIN,0);
+            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'],0, 15),CFG_JOURNAL_LOGIN,0);
             debug_log ("Authenticate: User authenticated",TRUE);
         }
         else
@@ -398,7 +361,7 @@ function software_name($softwareid)
 
 
 /**
- * Returns a string representing the name of the given product. 
+ * Returns a string representing the name of the given product.
  * @return Returns an empty string if the product does not exist.
  */
 function product_name($id)
@@ -443,6 +406,10 @@ function sit_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
     if (defined('E_STRICT')) $errortype[E_STRICT] = 'Strict Runtime notice';
 
     $trace_errors = array(E_ERROR, E_USER_ERROR);
+    if ($CONFIG['debug'] != TRUE)
+    {
+        $errfile = basename($errfile);
+    }
 
     $user_errors = E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE;
     $system_errors = E_ERROR | E_WARNING | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING;
@@ -571,7 +538,15 @@ function debug_log($logentry, $debugmodeonly = FALSE)
     if ($debugmodeonly === FALSE
         OR ($debugmodeonly === TRUE AND $CONFIG['debug'] == TRUE))
     {
-        $logentry = $_SERVER["SCRIPT_NAME"] . ' ' .$logentry;
+        if ($CONFIG['debug'] == TRUE)
+        {
+            $scriptname = $_SERVER["SCRIPT_NAME"];
+        }
+        else
+        {
+            $scriptname = basename($_SERVER["SCRIPT_NAME"]);
+        }
+        $logentry = $scriptname . ' ' .$logentry;
 
         if (substr($logentry, -1) != "\n") $logentry .= "\n";
         if (!empty($CONFIG['error_logfile']))
@@ -580,7 +555,7 @@ function debug_log($logentry, $debugmodeonly = FALSE)
             {
                 if (is_writable($CONFIG['error_logfile']))
                 {
-                    $fp = fopen($CONFIG['error_logfile'], 'a+');
+                    $fp = fopen(clean_fspath($CONFIG['error_logfile']), 'a+');
                     if ($fp)
                     {
                         fwrite($fp, date('c').' '.$logentry);
@@ -655,7 +630,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
         $extra_headers .= "Errors-To: {$CONFIG['support_email']}" . $crlf;
     }
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
-    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}" . $crlf;
+    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
 //     $extra_headers .= "\r\n";
 
     if ($CONFIG['demo'])
@@ -811,6 +786,64 @@ function clear_form_errors($formname)
 function clear_form_data($formname)
 {
     unset($_SESSION['formdata'][$formname]);
+}
+
+
+/**
+ * Generates a form token and timeout value and stores them in the session
+ * @author Ivan Lucas
+ * @retval string MD5 form token
+ */
+function gen_form_token()
+{
+    $formtoken = sha1(uniqid(rand(), true));
+    $_SESSION['formtoken'] = $formtoken;
+    $_SESSION['formtime'] = time();
+
+    return $formtoken;
+}
+
+
+/**
+ * Checks a form token matches the one stored in the session and that the form
+ * hasn't timed out
+ * @author Ivan Lucas
+ * @param string a SHA1 form token
+ * @retval bool TRUE - Form token is valid
+ * @retval bool FALSE - Form token is invalid
+ * @see gen_form_token()
+ * @note Also clears the form token and timeout stored in the session
+ */
+function check_form_token($formtoken)
+{
+    // Time allowed to complete the form (in seconds)
+    $min_time = 3;
+    $max_time = 120;
+
+    $val = FALSE;
+    if ($formtoken != $_SESSION['formtoken'])
+    {
+        trigger_error('Invalid form token', E_USER_WARNING);
+    }
+    else
+    {
+        $val = TRUE;
+    }
+
+    if ($val === TRUE AND (time() - $_SESSION['formtime']) < $min_time)
+    {
+        trigger_error('Invalid form. Submitted too quickly', E_USER_WARNING);
+        $val = FALSE;
+    }
+    if ($val === TRUE AND (time() - $_SESSION['formtime']) > $max_time)
+    {
+        trigger_error('Invalid form. Form expired before submission', E_USER_WARNING);
+        $val = FALSE;
+    }
+    unset($_SESSION['formtoken']);
+    unset($_SESSION['formtime']);
+
+    return $val;
 }
 
 
@@ -975,7 +1008,7 @@ function application_url()
         {
             $baseurl = "https://";
         }
-        $baseurl .= "{$_SERVER['HTTP_HOST']}";
+        $baseurl .= htmlspecialchars(substr($_SERVER['HTTP_HOST'], 0, 255), ENT_QUOTES, 'utf-8');
     }
     else
     {
@@ -1086,6 +1119,7 @@ function populate_syslang()
 
     if (file_exists($nativefile))
     {
+        $nativefile = clean_fspath($nativefile);
         $fh = fopen($nativefile, "r");
 
         $theData = fread($fh, filesize($nativefile));
@@ -1094,6 +1128,7 @@ function populate_syslang()
 
         if (file_exists($file))
         {
+            $file = clean_fspath($file);
             $fh = fopen($file, "r");
             $theData = fread($fh, filesize($file));
             fclose($fh);

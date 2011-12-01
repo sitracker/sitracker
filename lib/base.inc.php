@@ -75,26 +75,6 @@ mb_internal_encoding($i18ncharset);
 
 //**** Begin functions ****//
 
-/**
- * Strip slashes from an array
- * @param $data an array
- * @return An array with slashes stripped
- */
-function stripslashes_array($data)
-{
-    if (is_array($data))
-    {
-        foreach ($data as $key => $value)
-        {
-            $data[$key] = stripslashes_array($value);
-        }
-        return $data;
-    }
-    else
-    {
-        return stripslashes($data);
-    }
-}
 
 
 /**
@@ -186,6 +166,7 @@ function clean_int($vars)
     elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+        $var = 0;
     }
     else
     {
@@ -214,6 +195,7 @@ function clean_float($vars)
     elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
         trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+        $var = 0.0;
     }
     else
     {
@@ -247,6 +229,22 @@ function clean_dbstring($string)
 
 
 /**
+  * Make a language string safe for use in a database query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - DB safe variable
+  * @note Use for db queries only, not for display
+*/
+function clean_lang_dbstring($string)
+{
+    stripslashes($string);
+    $string = mysql_real_escape_string($string);
+
+    return $string;
+}
+
+
+/**
  * Make an external variable safe by ensuring the value is one of a list
  * of predetermined values
  * @author Ivan Lucas
@@ -264,7 +262,7 @@ function clean_fixed_list($string, $list, $strict = FALSE)
         {
             if ($string != NULL AND $string != '')
             {
-                trigger_error("Unexpected input", E_USER_WARNING);
+                trigger_error("Unexpected input. Parameter value did not match one of a list of predetermined values. (" . implode(',', $list) . ")", E_USER_WARNING);
             }
             $string = $list[0];
         }
@@ -274,6 +272,82 @@ function clean_fixed_list($string, $list, $strict = FALSE)
         trigger_error("Could not understand list of predetermined values for fixed_list()", E_USER_ERROR);
         return false;
     }
+    return $string;
+}
+
+
+/**
+  * Make a string safe for use as an email address for sending email to
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - Email safe variable
+  * @note This does not imply the string is safe for database or display
+*/
+function clean_emailstring($string)
+{
+    $badchars = array("\r", "\n", "\t", "\0", "\x0B");
+
+    $string = str_replace($badchars, '', $string);
+
+    return $string;
+}
+
+
+/**
+  * Make a string safe for use in an LDAP query
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - LDAP safe variable
+  * @note This does not imply the string is safe for any other use
+  * @note See rfc2254
+  * @link http://www.faqs.org/rfcs/rfc2254.html
+*/
+function clean_ldapstring($string)
+{
+    $bad_ldap = array('(' => '\28',
+                      ')' => '\29',
+                      '\\' => '\5c',
+                      '*' => '\2a',
+                      "\x00" => '\00');
+
+    $string = str_replace(array_keys($bad_ldap), array_values($bad_ldap), $string);
+
+    return $string;
+}
+
+
+/**
+ * Make a string safe for use with file related functions
+ * @author Ivan Lucas
+ * @param string $string Text to clean
+ * @return mixed - DB safe
+ * @note Does not imply any other filtering, only safe for file functions
+ */
+function clean_fspath($string)
+{
+    $string = strip_tags($string);
+
+    $bad = array(':', '//', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "?", "*", '[', ']');
+    $string = str_replace($bad,'', $string);
+
+    return $string;
+}
+
+
+/**
+ * Make a string safe for use with url related functions
+ * @author Ivan Lucas/Carsten Jensen
+ * @param string $string Text the clean
+ * @return mixed - URL safe
+ */
+function clean_url($string)
+{
+    $string = strip_tags($string);
+
+    $bad = array('://', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "*",
+                 '[', ']', '<', '>', 'javascript:');
+    $string = str_replace($bad,'', $string);
+
     return $string;
 }
 

@@ -138,6 +138,7 @@ if ((mysql_num_rows($result) > 0) OR (mysql_num_rows($resultapp) > 0))
             $file_fspath = $old_style;
         }
 
+        $file_fspath = clean_fspath($file_fspath);
         if (file_exists($file_fspath))
         {
             $file_size = filesize($file_fspath);

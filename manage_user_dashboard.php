@@ -33,7 +33,6 @@ if (mysql_num_rows($result) > 0)
 
 if (empty($dashboardid))
 {
-
     foreach ($dashboardcomponents AS $db)
     {
         $c = explode("-",$db);
@@ -77,7 +76,7 @@ if (empty($dashboardid))
 else
 {
     plugin_do('manage_user_dashboard_submitted');
-    $action = clean_fixed_list($_REQUEST['action'], array('new',' remove'));
+    $action = clean_fixed_list($_REQUEST['action'], array('new', 'remove'));
     switch ($action)
     {
         case 'new':
@@ -106,9 +105,16 @@ else
     }
     $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$dashboardstr}' WHERE id = '{$_SESSION['userid']}'";
     $contactresult = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    plugin_do('manage_user_dashboard_saved');
-    html_redirect("manage_user_dashboard.php");
+    if (mysql_error())
+    {
+        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        html_redirect("manage_user_dashboard.php", FALSE);
+    }
+    else
+    {
+        plugin_do('manage_user_dashboard_saved');
+        html_redirect("manage_user_dashboard.php");
+    }
 }
 
 ?>

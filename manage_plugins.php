@@ -150,7 +150,7 @@ if ($_REQUEST['action'] == 'checkforupdates')
     //preg_match_all("|<[^>]+>(.*)</[^>]+>|U", "<b>example: </b><div align=left>this is a test</div>",   $out, PREG_PATTERN_ORDER);
 
     // preg_match_all("/>(\w*)<\/a>\b<\/td><td>(\w*)<\/td>/msU", $plugins_directory, $out, &$pluginnames);
-    preg_match_all("/<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>/msU", $plugins_directory, $out, &$pluginnames);
+    preg_match_all("/<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>\W?<td>(.*)<\/td>/msU", $plugins_directory, $out, $pluginnames);
     // $out = $out[1];
     // echo "<pre>OUT:".print_r($out,true)."</pre>";
     $avail_count = count($out[1]);

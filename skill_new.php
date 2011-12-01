@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strNewSkill;
 
 // External variables
-$submit = $_REQUEST['submit'];
+$submit = cleanvar($_REQUEST['submit']);
 
 if (empty($submit))
 {
@@ -73,8 +73,9 @@ if (empty($submit))
 }
 else
 {
-    $name = cleanvar($_REQUEST['name']);
-    $tags = cleanvar($_REQUEST['tags']);
+    // External variables
+    $name = clean_dbstring($_REQUEST['name']);
+    $tags = clean_dbstring($_REQUEST['tags']);
     $vendor = clean_int($_REQUEST['vendor']);
     if (!empty($_REQUEST['lifetime_start']))
     {

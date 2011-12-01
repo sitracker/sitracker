@@ -23,7 +23,7 @@ $title = $strBrowseSites;
 $search_string = cleanvar($_REQUEST['search_string']);
 $owner = clean_int($_REQUEST['owner']);
 $submit_value = cleanvar($_REQUEST['submit']);
-$displayinactive = cleanvar($_REQUEST['displayinactive']);
+$displayinactive = clean_fixed_list($_REQUEST['displayinactive'], array('','false','true'));
 if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
     $displayinactive = "false";

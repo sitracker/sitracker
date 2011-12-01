@@ -18,7 +18,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$sort = cleanvar($_REQUEST['sort']);
+// External Variables
+$sort = clean_fixed_list($_REQUEST['sort'], array('','realname'));
 
 $title = $strListSkills;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');

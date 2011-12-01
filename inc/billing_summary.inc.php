@@ -36,7 +36,7 @@ if (empty($showfoc) OR $showfoc != 'show')
 
 $sitestr = '';
 
-$csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES, "ISO-8859-15"); // Note using -15 as -1 doesnt support euro
+$csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES);
 
 if (!empty($sites))
 {
@@ -188,7 +188,7 @@ if (mysql_num_rows($result) > 0)
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalbalance, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalawaitingapproval, 2)."</td>";
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalreserved, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalactual, 2)."</td><td></td><td>{$remainingunits}</td></tr></tfoot>";
         $str .= "</table>";
-        $str .= "<p class='return'><a href='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
+        $str .= "<p class='return'><a href='" . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
     }
     elseif ($display == 'csv')
     {

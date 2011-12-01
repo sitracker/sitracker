@@ -22,7 +22,7 @@ $title = $strEditServiceLevel;
 // External variables
 $tag = cleanvar($_REQUEST['tag']);
 $priority = clean_int($_REQUEST['priority']);
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('showform', 'edit'));
 
 if (empty($action) OR $action == "showform")
 {

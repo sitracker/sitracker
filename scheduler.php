@@ -20,10 +20,12 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External vars
 $id = clean_int($_REQUEST['id']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('','edit','save'));
+$reset_saction = clean_fixed_list($_REQUEST['reset_saction'], array('','yes'));
 
 $title = $strScheduler;
 
-switch ($_REQUEST['mode'])
+switch ($mode)
 {
     case 'edit':
         $sql = "SELECT * FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
@@ -150,7 +152,7 @@ switch ($_REQUEST['mode'])
         }
         break;
     case 'save':
-        if (!empty($_REQUEST['startdate']))
+        if (!empty($reset_saction))
         {
             $start = strtotime($_REQUEST['startdate'].' '.$_REQUEST['starttime']);
             $start = date('Y-m-d H:i', $start);
@@ -172,7 +174,7 @@ switch ($_REQUEST['mode'])
 
         $status = clean_fixed_list($_REQUEST['status'], array('disabled','enabled'));
 
-        $params = cleanvar($_REQUEST['params']);
+        $params = clean_dbstring($_REQUEST['params']);
         $interval = clean_int($_REQUEST['interval']);
         if ($interval <= 0 AND $type == 'interval')
         {
@@ -182,7 +184,7 @@ switch ($_REQUEST['mode'])
         $type = clean_fixed_list($_REQUEST['type'], array('interval','date'));
         $frequency = clean_fixed_list($_REQUEST['frequency'], array('','month','year'));
         $date_offset = clean_int($_REQUEST['date_offset']);
-        $date_time = cleanvar($_REQUEST['date_time']);
+        $date_time = clean_int($_REQUEST['date_time']);
 
         if ($date_time < 10) $date_time = "0{$date_time}:00:00";
         else $date_time = "{$date_time}:00:00";
@@ -196,7 +198,7 @@ switch ($_REQUEST['mode'])
             $setsql = " `date_type` = '{$frequency}', `date_offset` = '{$date_offset}', ";
             $setsql .= "`date_time` = '{$date_time}', `type` = 'date' ";
         }
-        if (!empty($_REQUEST['reset_saction']))
+        if (!empty($reset_saction))
         {
             $setsql .= ", `lastran` = NULL, `laststarted` = NULL, `success` = 1 ";
         }

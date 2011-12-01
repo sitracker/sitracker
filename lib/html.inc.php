@@ -907,7 +907,7 @@ function get_file_upload_error_message($errorcode, $name)
 {
     $str = "<div class='detailinfo'>\n";
 
-    $str .=  sprintf($GLOBALS['strErrorOccuredUploadingX'], $_FILES['attachment']['name']);
+    $str .=  sprintf($GLOBALS['strErrorOccuredUploadingX'], $name);
 
     $str .=  "<p class='error'>";
     switch ($errorcode)
@@ -1587,7 +1587,7 @@ function show_create_links($table, $ref)
 {
     global $dbLinkTypes;
     $html .= "<p align='center'>{$GLOBALS['strNewLink']}: ";
-    $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE origtab='$table' OR linktab='$table' ";
+    $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE origtab='{$table}' OR linktab='{$table}' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
     $numlinktypes = mysql_num_rows($result);
@@ -1605,7 +1605,7 @@ function show_create_links($table, $ref)
         else
         {
             $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}'>{$linktype->lrname}</a> | ";
-            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}&amp;dir=rl'>{$linktype->rlname}</a>";
+            $html .= "<a href='link_new.php?origtab=tasks&amp;origref={$ref}&amp;linktype={$linktype->id}&amp;dir=right'>{$linktype->rlname}</a>";
         }
 
         if ($rowcount < $numlinktypes) $html .= " | ";

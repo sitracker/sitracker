@@ -24,7 +24,7 @@ if (!$CONFIG['tasks_enabled'])
 $title = $strEditTask;
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('', 'edittask', 'markcomplete','delete'));
 $id = clean_int($_REQUEST['id']);
 $incident = clean_int($_REQUEST['incident']);
 $SYSLANG = $_SESSION['syslang'];
@@ -68,19 +68,19 @@ switch ($action)
         }
 
         if ($completion == 100 AND $enddate == '') $enddate = $now;
-        $value = cleanvar($_REQUEST['value']);
+        $value = clean_float($_REQUEST['value']);
         $owner = clean_int($_REQUEST['owner']);
-        $distribution = cleanvar($_REQUEST['distribution']);
+        $distribution = clean_fixed_list($_REQUEST['distribution'], array('private', 'public', 'incident', 'event'));
         $old_name = cleanvar($_REQUEST['old_name']);
         $old_description = cleanvar($_REQUEST['old_description']);
         $old_priority = clean_int($_REQUEST['old_priority']);
         $old_startdate = cleanvar($_REQUEST['old_startdate']);
         $old_duedate = cleanvar($_REQUEST['old_duedate']);
-        $old_completion = cleanvar($_REQUEST['old_completion']);
+        $old_completion = clean_int($_REQUEST['old_completion']);
         $old_enddate = cleanvar($_REQUEST['old_enddate']);
-        $old_value = cleanvar($_REQUEST['old_value']);
-        $old_owner = cleanvar($_REQUEST['old_owner']);
-        $old_distribution = cleanvar($_REQUEST['old_distribution']);
+        $old_value = clean_float($_REQUEST['old_value']);
+        $old_owner = clean_int($_REQUEST['old_owner']);
+        $old_distribution = clean_fixed_list($_REQUEST['old_distribution'], array('private', 'public', 'incident', 'event'));
         if ($distribution == 'public') $tags = cleanvar($_POST['tags']);
         else $tags = '';
 

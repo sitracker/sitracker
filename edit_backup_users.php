@@ -39,13 +39,10 @@ $title = $strDefineSubstituteEngineer;
 if (empty($save))
 {
     // External variables
-    if (empty($_REQUEST['user']) OR $_REQUEST['user'] == 'current')
+    $user = clean_int($_REQUEST['user']);
+    if (empty($user) OR $_REQUEST['user'] == 'current')
     {
         $user = clean_int($sit[2]);
-    }
-    else
-    {
-        $user = clean_int($_REQUEST['user']);
     }
 
     $default = clean_int($_REQUEST['default']);
@@ -110,6 +107,11 @@ else
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
 
+    // If user variable is zero edit your own
+    if ($user < 1) 
+    {
+        $user = clean_int($sit[2]);
+    }
     plugin_do('edit_backup_users_submitted');
 
     foreach ($backup AS $key=>$backupid)

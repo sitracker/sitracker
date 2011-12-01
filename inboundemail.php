@@ -27,6 +27,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 else
 {
     global $CONFIG, $dbFiles, $dbUpdates, $dbTempIncoming, $dbIncidents, $now;
+    global $subject, $decoded, $incidentid, $contactid;
 }
 
 //hack as we have no session
@@ -43,7 +44,7 @@ function populate_syslang2()
     // Populate $SYSLANG with first the native lang and then the system lang
     // This is so that we have a complete language file
     $nativefile = APPLICATION_I18NPATH . "en-GB.inc.php";
-    $file = APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php";
+    $file = clean_fspath(APPLICATION_I18NPATH . "{$CONFIG['default_i18n']}.inc.php");
 
     if (file_exists($nativefile))
     {
@@ -319,10 +320,7 @@ if ($emails > 0)
             }
         }
 
-        plugin_do('email_arrived', array('incidentid' => $incidentid,
-                                         'contactid' => $contactid,
-                                         'subject' => $subject,
-                                         'decoded' => $decoded));
+        plugin_do('email_arrived');
 
         $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
 
@@ -380,7 +378,7 @@ if ($emails > 0)
                 if (is_writable($fa_dir))
                 {
                     if ($CONFIG['debug']) debug_log("Writing attachment to disk: {$fa_dir}{$fileid}");
-                    $fwp = fopen($fa_dir.$fileid, 'a');
+                    $fwp = fopen(clean_fspath($fa_dir . $fileid), 'a');
                     fwrite($fwp, $data);
                     fclose($fwp);
                 }

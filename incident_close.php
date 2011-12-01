@@ -18,12 +18,13 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External Variables
 $id = clean_int($_REQUEST['id']);
+$process = clean_fixed_list($_REQUEST['process'], array('', 'closeincident'));
 $incidentid = $id;
 
 $title = $strClose;
 
 // No submit detected show closure form
-if (empty($_REQUEST['process']))
+if (empty($process))
 {
     $sql = "SELECT owner FROM `{$dbIncidents}` WHERE id = '{$incidentid}'";
     $result = mysql_query($sql);
@@ -170,7 +171,7 @@ else
     $id = clean_int($_POST['id']);
     $distribution = cleanvar($_POST['distribution']);
     $solution = cleanvar($_POST['solution']);
-    $kbarticle = cleanvar($_POST['kbarticle']);
+    $kbarticle = clean_fixed_list($_POST['kbarticle'], array('no','yes'));
     $kbtitle = cleanvar($_POST['kbtitle']);
     $symptoms = cleanvar($_POST['symptoms']);
     $cause = cleanvar($_POST['cause']);
@@ -200,6 +201,12 @@ else
     {
         $errors = 1;
         $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSummary}' / '$strSolution'"), E_USER_ERROR);
+    }
+    
+    if ($kbarticle == 'yes' AND $kbtitle == '')
+    {
+        $errors = 1;
+        $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strTitle}'"), E_USER_ERROR);
     }
 
     plugin_do('incident_close_submitted');
@@ -289,7 +296,7 @@ else
             {
                 // Update - mark for closure
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strMarkedforclosure']}', '{$now}', 'solution')";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strMarkedforclosure']) . "', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -297,7 +304,7 @@ else
             {
                 // Update - close immediately
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '{$_SESSION['syslang']['strIncidentClosed']}', '{$now}', 'solution')";
+                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strIncidentClosed']) ."', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -357,7 +364,7 @@ else
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
-        $bodytext = "{$SYSLANG['strClosingStatus']}: <b>" . closingstatus_name($closingstatus) . "</b>\n\n" . $bodytext;
+        $bodytext = clean_lang_dbstring($SYSLANG['strClosingStatus']) . ": <b>" . closingstatus_name($closingstatus) . "</b>\n\n" . $bodytext;
 
         if ($addition_errors == 0)
         {   //maintenceid
@@ -420,7 +427,7 @@ else
                 $docid = mysql_insert_id();
 
                 // Update the incident to say that a KB article was created, with the KB Article number
-                $update = "<b>{$_SESSION['syslang']['strKnowledgeBaseArticleCreated']}: {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid)."</b>";
+                $update = "<b>" . clean_lang_dbstring($_SESSION['syslang']['strKnowledgeBaseArticleCreated']) . ": {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid)."</b>";
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'default', '{$update}', '{$now}')";
                 $result = mysql_query($sql);

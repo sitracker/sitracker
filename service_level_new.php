@@ -19,8 +19,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $tag = clean_dbstring($_REQUEST['tag']);
-$priority = clean_dbstring($_REQUEST['priority']);
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('showform', 'edit'));
 
 if (empty($action) OR $action == "showform")
 {

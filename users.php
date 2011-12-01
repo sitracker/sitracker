@@ -22,10 +22,10 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$sort = cleanvar($_REQUEST['sort']);
-$order = cleanvar($_REQUEST['order']);
-$groupid = cleanvar($_REQUEST['gid']);
-$onlineonly = cleanvar($_REQUEST['onlineonly']);
+$sort = clean_fixed_list($_REQUEST['sort'], array('', 'realname', 'jobtitle', 'email', 'phone', 'fax', 'status', 'accepting'));
+$order = clean_fixed_list($_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
+$groupid = cleanvar($_REQUEST['gid']); // can be 'all'
+$onlineonly = clean_fixed_list($_REQUEST['onlineonly'], array('false','true'));
 
 // By default show users in home group
 if ($groupid == 'all' OR ($groupid == '' AND $_SESSION['groupid'] == 0))

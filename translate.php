@@ -22,10 +22,12 @@ $title = $strTranslate;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-$tolang = cleanvar($_REQUEST['lang']);
-$fromlang = cleanvar($_REQUEST['from']);
+$tolang = cleanvar(clean_fspath($_REQUEST['lang']));
+$fromlang = cleanvar(clean_fspath($_REQUEST['from']));
 
-if (!$_REQUEST['mode'])
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'show', 'save'));
+
+if (empty($mode))
 {
     echo "<h2>{$strTranslation}</h2>";
     echo "<div align='center'><p>{$strHelpToTranslate}</p>";
@@ -57,7 +59,7 @@ if (!$_REQUEST['mode'])
     $_SESSION['translation_fromvalues'] = '';
     $_SESSION['translation_foreignvalues'] = '';
 }
-elseif ($_REQUEST['mode'] == "show")
+elseif ($mode == "show")
 {
     $from = cleanvar($_REQUEST['from']);
     if (!empty($_REQUEST['showtranslated']))
@@ -72,7 +74,7 @@ elseif ($_REQUEST['mode'] == "show")
     if (empty($_SESSION['translation_fromvalues']))
     {
         //open source language file
-        $fromfile = APPLICATION_I18NPATH . "{$from}.inc.php";
+        $fromfile = clean_fspath(APPLICATION_I18NPATH . "{$from}.inc.php");
         $fh = fopen($fromfile, 'r');
         $theData = fread($fh, filesize($fromfile));
         fclose($fh);
@@ -109,8 +111,6 @@ elseif ($_REQUEST['mode'] == "show")
             {
                 if (mb_substr($values, 0, 4) == "lang")
                     $languagestring=$values;
-                if (mb_substr($values, 0, 8) == "i18nchar")
-                    $i18ncharset=$values;
             }
             $lastkey = $vars[0];
         }
@@ -127,7 +127,7 @@ elseif ($_REQUEST['mode'] == "show")
     if (empty($_SESSION['translation_foreignvalues']))
     {
         //open foreign (destination) file
-        $myFile = APPLICATION_I18NPATH . "{$tolang}.inc.php";
+        $myFile = clean_fspath(APPLICATION_I18NPATH . "{$tolang}.inc.php");
         if (file_exists($myFile))
         {
             $foreignvalues = array();
@@ -256,7 +256,7 @@ elseif ($_REQUEST['mode'] == "show")
 
     echo "</form>\n";
 }
-elseif ($_REQUEST['mode'] == "save")
+elseif ($mode == "save")
 {
     $badchars = array('.','/','\\');
 

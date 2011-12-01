@@ -27,17 +27,16 @@ $origref = cleanvar($_REQUEST['origref']);
 $linkref = cleanvar($_REQUEST['linkref']);
 $linktypeid = clean_int($_REQUEST['linktype']);
 $direction = cleanvar($_REQUEST['dir']);
-if ($direction == '') $direction = 'lr';
+if ($direction == '') $direction = 'left';
 $redirect = cleanvar($_REQUEST['redirect']);
 
 switch ($action)
 {
     case 'addlink':
         // Insert the link
-        if ($direction == 'lr')
         $sql = "INSERT INTO `{$dbLinks}` ";
-        $sql .= "(linktype, origcolref, linkcolref, userid) ";
-        $sql .= "VALUES ('{$linktypeid}', '$origref', '$linkref', '{$sit[2]}')";
+        $sql .= "(linktype, origcolref, linkcolref, direction, userid) ";
+        $sql .= "VALUES ('{$linktypeid}', '{$origref}', '{$linkref}', '{$direction}', {$sit[2]}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
 
@@ -52,11 +51,11 @@ switch ($action)
         $result = mysql_query($sql);
         while ($linktype = mysql_fetch_object($result))
         {
-            if ($direction == 'lr')
+            if ($direction == 'left')
             {
                 echo "<h2>Link {$linktype->lrname}</h2>";
             }
-            elseif ($direction == 'rl')
+            elseif ($direction == 'right')
             {
                 echo "<h2>Link {$linktype->rlname}</h2>";
             }
@@ -84,7 +83,7 @@ switch ($action)
                 echo "<input type='hidden' name='origref' value='{$origref}' />";
                 echo "<input type='hidden' name='linktype' value='{$linktypeid}' />";
                 echo "<input type='hidden' name='dir' value='{$direction}' />";
-                echo "<input type='hidden' name='redirect' value='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "' />";
+                echo "<input type='hidden' name='redirect' value='" . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "' />";
                 echo "</form>";
             }
             else echo user_alert($strNothingToLink, E_USER_WARNING);

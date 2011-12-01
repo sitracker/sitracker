@@ -50,6 +50,72 @@ if (!function_exists("getmicrotime"))
     $exec_time_start = getmicrotime();
 }
 
+//Prevent Magic Quotes from affecting scripts, regardless of server settings
+//Make sure when reading file data,
+//PHP doesn't "magically" mangle backslashes!
+// This is deprecated in PHP 5.3.0
+if (version_compare(PHP_VERSION, "5.3.0", "<"))
+{
+    set_magic_quotes_runtime(FALSE);
+}
+
+/**
+  * Strip slashes from an array 
+  * @param $data an array
+  * @return An array with slashes stripped
+  * @note this function needs to be in core because it's needed to make quotes safe without magic quotes
+*/
+function stripslashes_array($data)
+{
+    if (is_array($data))
+    {
+        foreach ($data as $key => $value)
+        {
+            $data[$key] = stripslashes_array($value);
+        }
+        return $data;
+    }
+    else
+    {
+        return stripslashes($data);
+    }
+}
+
+if (get_magic_quotes_gpc())
+{
+
+//     All these global variables are slash-encoded by default,
+//     because    magic_quotes_gpc is set by default!
+//     (And magic_quotes_gpc affects more than just $_GET, $_POST, and $_COOKIE)
+//     We don't strip slashes from $_FILES as of 3.32 as this should be safe without
+//     doing and it will break windows file paths if we do
+    $_SERVER = stripslashes_array($_SERVER);
+    $_GET = stripslashes_array($_GET);
+    $_POST = stripslashes_array($_POST);
+    $_COOKIE = stripslashes_array($_COOKIE);
+    $_ENV = stripslashes_array($_ENV);
+    $_REQUEST = stripslashes_array($_REQUEST);
+    $HTTP_SERVER_VARS = stripslashes_array($HTTP_SERVER_VARS);
+    $HTTP_GET_VARS = stripslashes_array($HTTP_GET_VARS);
+    $HTTP_POST_VARS = stripslashes_array($HTTP_POST_VARS);
+    $HTTP_COOKIE_VARS = stripslashes_array($HTTP_COOKIE_VARS);
+    $HTTP_POST_FILES = stripslashes_array($HTTP_POST_FILES);
+    $HTTP_ENV_VARS = stripslashes_array($HTTP_ENV_VARS);
+    if (isset($_SESSION))
+    {
+        #These are unconfirmed (?)
+        $_SESSION = stripslashes_array($_SESSION, '');
+        $HTTP_SESSION_VARS = stripslashes_array($HTTP_SESSION_VARS, '');
+    }
+//     The $GLOBALS array is also slash-encoded, but when all the above are
+//     changed, $GLOBALS is updated to reflect those changes.  (Therefore
+//     $GLOBALS should never be modified directly).  $GLOBALS also contains
+//     infinite recursion, so it's dangerous...
+}
+
+// Sanitise the PHP_SELF server superglobal against XSS attacks
+$_SERVER['PHP_SELF'] = htmlentities(strip_tags($_SERVER['PHP_SELF']), ENT_QUOTES, 'utf-8');
+
 if ($CONFIG['db_username'] == '' OR $CONFIG['db_database'] == '')
 {
     $msg = urlencode(base64_encode("Could not connect to the database because the database configuration is missing. Have you configured database settings?  Can your config file be read?"));
@@ -125,7 +191,8 @@ if (empty($CONFIG['application_uriprefix']))
     {
         $url = parse_url($_SERVER['HTTP_REFERER']);
         $scheme = $url['scheme'];
-        $CONFIG['application_uriprefix'] =  "{$url['scheme']}://{$url['host']}";
+        $CONFIG['application_uriprefix'] =  htmlspecialchars($url['scheme'], ENT_QUOTES, 'utf-8') 
+                                            . "://" . htmlspecialchars(substr($url['host'], 0, 255), ENT_QUOTES, 'utf-8');
         unset($url);
     }
     else
@@ -138,7 +205,7 @@ if (empty($CONFIG['application_uriprefix']))
         {
             $scheme = 'http';
         }
-        if (isset($_SERVER['HTTP_HOST'])) $CONFIG['application_uriprefix'] =  "{$scheme}://{$_SERVER['HTTP_HOST']}";
+        if (isset($_SERVER['HTTP_HOST'])) $CONFIG['application_uriprefix'] =  "{$scheme}://" . htmlspecialchars(substr($_SERVER['HTTP_HOST'], 0, 255), ENT_QUOTES, 'utf-8');
         unset($scheme);
     }
 }

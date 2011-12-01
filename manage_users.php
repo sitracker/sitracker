@@ -88,7 +88,7 @@ while ($users = mysql_fetch_object($result))
 
     echo "<td>{$users->rolename}</td>";
     echo "<td>";
-    if (user_permission($sit[2],57))
+    if (user_permission($sit[2], PERM_USER_DISABLE))
     {
         if ($users->status > 0) echo "{$strEnabled}";
         else echo "{$strDisabled}";

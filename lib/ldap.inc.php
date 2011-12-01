@@ -156,6 +156,12 @@ if ($CONFIG['use_ldap'])
 /**
  * Opens a connection to the LDAP host
  * @author Lea Anthony
+ * @param string $host
+ * @param int $port
+ * @param string $prototcol
+ * @param string $security - 'SSL' for LDAPS , '' for no cleartext
+ * @param string $user - LDAP bind username
+ * @param string $password - LDAP bind password
  * @return the handle of the opened connection
  */
 function ldapOpen($host='', $port='', $protocol='', $security='', $user='', $password='')

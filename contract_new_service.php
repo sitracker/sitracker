@@ -18,13 +18,9 @@ require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-<<<<<<< HEAD
 $contractid = clean_int($_REQUEST['contractid']);
-$submit = $_REQUEST['submit'];
-=======
-$contractid = mysql_real_escape_string($_REQUEST['contractid']);
 $submit = cleanvar($_REQUEST['submit']);
->>>>>>> e86bd6f64b06da4a55bf630973627c49512c7e86
+
 $title = ("$strContract - $strNewService");
 
 // Contract ID must not be blank
@@ -207,7 +203,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 else
 {
     // External variables
-    $contractid = cleanvar($_POST['contractid']);
+    $contractid = clean_int($_POST['contractid']);
     $startdate = strtotime($_REQUEST['startdate']);
     if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
     else $startdate = date('Y-m-d',$now);

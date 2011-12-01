@@ -46,7 +46,7 @@ function mark_task_completed($taskid, $incident)
     if (!$incident)
     {
         // Insert note to say what happened
-        $bodytext = sprintf($_SESSION['syslang']['strTaskMarkedCompleteByX'], $_SESSION['realname']) . ":\n\n" . $bodytext;
+        $bodytext = sprintf(clean_lang_dbstring($_SESSION['syslang']['strTaskMarkedCompleteByX']), $_SESSION['realname']) . ":\n\n" . $bodytext;
         $sql = "INSERT INTO `{$dbNotes}` ";
         $sql .= "(userid, bodytext, link, refid) ";
         $sql .= "VALUES ('0', '{$bodytext}', '10', '{$taskid}')";
@@ -131,7 +131,7 @@ function open_activities_for_site($siteid)
         $sql = "SELECT i.id FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
         $sql .= "WHERE i.contact = c.id AND ";
         $sql .= "c.siteid = {$siteid} AND ";
-        $sql .= "(i.status != 2 AND i.status != 7)";
+        $sql .= "(i.status != " . STATUS_CLOSED . " AND i.status != " . STATUS_CLOSING . ")";
 
         $result = mysql_query($sql);
 

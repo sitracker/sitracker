@@ -25,7 +25,7 @@ if (!$CONFIG['tasks_enabled'])
 $title = $strNewTask;
 
 // External variables
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('', 'newtask'));
 $incident = clean_int($_REQUEST['incident']);
 
 if ($incident)

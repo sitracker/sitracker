@@ -19,7 +19,7 @@ require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $title = $strVendors;
 
-$action = cleanvar($_REQUEST['action']);
+$action = clean_fixed_list($_REQUEST['action'], array('', 'save', 'edit'));
 
 switch ($action)
 {

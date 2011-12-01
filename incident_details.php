@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $incidentid = clean_int($_REQUEST['id']);
 $id = $incidentid;
-$win - clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview'));
+$win = clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview', 'sit_popup'));
 
 if ($win == 'incomingview')
 {
@@ -51,7 +51,7 @@ elseif ($win == 'jump')
         }
         else
         {
-            echo "</head><body onload=\"\"><a href=\"" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "\"{$strPleaseWaitRedirect}</a>";
+            echo "</head><body onload=\"\"><a href=\"" . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "\"{$strPleaseWaitRedirect}</a>";
             echo "<script type='text/javascript'>\n//<![CDATA[\n";
             echo "var popwin = incident_details_window($incidentid,'win', true);\n";
             echo "if (!popwin) alert('{$strDidYourBrowserBlockPopupWindow}');\n";
@@ -73,7 +73,7 @@ elseif ($win == 'jump')
         }
         else
         {
-            echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='" . html_specialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "';\"></body></html>";
+            echo "</head><body onload=\"incident_details_window($incidentid,'win');window.location='" . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "';\"></body></html>";
         }
     }
     exit;

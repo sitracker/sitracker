@@ -21,10 +21,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strViewTask;
 
 // External variables
-$action = $_REQUEST['action'];
 $id = clean_int($_REQUEST['incident']);
 $taskid = clean_int($_REQUEST['id']);
-$mode = cleanvar($_REQUEST['mode']);
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'incident'));
 
 if ($mode == 'incident')
 {

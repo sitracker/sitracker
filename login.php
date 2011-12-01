@@ -26,11 +26,9 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = mb_substr(strip_tags($_POST['lang']), 0, 5);
-if (mb_substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE)
-{
+$language = htmlspecialchars(mb_substr(strip_tags($_REQUEST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
+if ((substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE) AND mb_strlen($language) != 2)
     $language = 'xx-xx'; // default lang
-}
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php');
@@ -40,7 +38,7 @@ populate_syslang();
 $password = $_REQUEST['password'];
 $username = cleanvar($_REQUEST['username']);
 $public_browser = cleanvar($_REQUEST['public_browser']);
-$page = strip_tags(str_replace('..','',str_replace('//','',str_replace(':','',urldecode($_REQUEST['page'])))));
+$page = clean_url($_REQUEST['page']);
 
 if (empty($_REQUEST['username']) AND empty($_REQUEST['password']) AND $language != $_SESSION['lang'])
 {
@@ -243,7 +241,7 @@ elseif ($CONFIG['portal'] == TRUE)
         if ($username != '')
         {
             $errdate = date('M j H:i');
-            $errmsg = "$errdate Failed login for user '{$username}' from IP: {$_SERVER['REMOTE_ADDR']}";
+            $errmsg = "$errdate Failed login for user '{$username}' from IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15);
             $errmsg .= "\n";
             $errlog = @error_log($errmsg, 3, $CONFIG['access_logfile']);
             ## if (!$errlog) echo "Fatal error logging this problem<br />";

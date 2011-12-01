@@ -614,15 +614,15 @@ function update_reservation($transactionid, $amount, $description='')
 
 
 /**
- * Updates a transacction which which be either waiting approval or reserved
+ * Updates a transacction that is either waiting approval or reserved
  * @author Paul Heaney
  * @param int $transactionid The transaction ID to update
- * @param int $amount The amount to set the transaction to
+ * @param float $amount The amount to set the transaction to
  * @param string $description (optional) the description to set on the transaction
- * @param int $status either RESERVERED or BILLING_AWAITINGAPPROVAL
+ * @param int $status either BILLING_RESERVED or BILLING_AWAITINGAPPROVAL
  * @return bool TRUE on a sucessful update FALSE otherwise
  */
-function update_transaction($transactionid, $amount, $description='', $status)
+function update_transaction($transactionid, $amount = 0.00, $description = '', $status = BILLING_AWAITINGAPPROVAL)
 {
     if ($status == BILLING_APPROVED)
     {
@@ -770,7 +770,7 @@ function close_billable_incident($incidentid)
 /**
  * Function to approve an incident, this adds a transaction and confirms the 'bill' is correct.
  * @author Paul Heaney
- * @param incidentid ID of the incident to approve
+ * @param int incidentid ID of the incident to approve
  */
 function approve_incident_transaction($transactionid)
 {
@@ -1151,6 +1151,18 @@ function contract_service_table($contractid, $billing)
                     $span .= "<br />";
                 }
 
+                
+                $span .= "<strong>{$GLOBALS['strBilling']}</strong>: ";
+                if (!empty($service->unitrate) AND $service->unitrate > 0)
+                {
+                    $span .= $GLOBALS['strPerUnit'];
+                }
+                else
+                {
+                    $span .= $GLOBALS['strPerIncident'];
+                }
+                $span .= "<br />";                
+                
                 if ($service->creditamount != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
@@ -1160,6 +1172,11 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
                 }
+                
+                if ($service->incidentrate != 0)
+                {
+                    $span .= "<strong>{$GLOBALS['strIncidentRate']}</strong>: {$CONFIG['currency_symbol']}{$service->incidentrate}<br />";
+                } 
 
                 $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
 
@@ -1750,7 +1767,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 {
     global $CONFIG;
 
-    $csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES, "ISO-8859-15"); // Note using -15 as -1 doesnt support euro
+    $csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES);
 
     $sql = "SELECT DISTINCT t.*, m.site, p.foc, p.cust_ref, p.cust_ref_date, p.title, p.notes ";
     $sql .= "FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbService']}` AS p, ";

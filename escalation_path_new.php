@@ -90,10 +90,10 @@ else
 {
     // External variables
     $name = clean_dbstring($_REQUEST['name']);
-    $type = clean_fixed_list($_REQUEST['type'], array('internal','external'));
+    $type = clean_fixed_list(strtolower($_REQUEST['type']), array('internal','external'));
     $trackurl = clean_dbstring($_REQUEST['trackurl']);
     $homeurl = clean_dbstring($_REQUEST['homeurl']);
-    $title = cleaclean_dbstringnvar($_REQUEST['title']);
+    $title = clean_dbstring($_REQUEST['title']);
     $emaildomain = clean_dbstring($_REQUEST['emaildomain']);
 
     $_SESSION['formdata']['new_escalation_path'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);

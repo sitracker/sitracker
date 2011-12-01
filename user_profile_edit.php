@@ -19,18 +19,21 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$mode = cleanvar($_REQUEST['mode']);
-$edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
-
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'save', 'savesessionlang'));
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {
     $edituserid = mysql_real_escape_string($sit[2]);
 }
 else
 {
-    if (!empty($_REQUEST['userid']))
+    if (empty($_REQUEST['userid']) === FALSE AND $edituserpermission === TRUE)
     {
         $edituserid = clean_int($_REQUEST['userid']);
+    }
+    else
+    {
+        html_redirect("noaccess.php?id={$permission}", FALSE);
+        exit;
     }
 }
 
@@ -256,7 +259,7 @@ if (empty($mode))
     echo "</table>\n";
     echo "<input type='hidden' name='userid' value='{$edituserid}' />";
     echo "<input type='hidden' name='mode' value='save' />";
-    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
+    echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
     echo "</form>\n";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -308,6 +311,11 @@ elseif ($mode == 'save')
     if ($edituserid != $sit[2] AND $edituserpermission == FALSE)
     {
         trigger_error('Error: No permission to edit this users profile', E_USER_ERROR);
+        exit;
+    }
+    if (!check_form_token($formtoken))
+    {
+        html_redirect("main.php", FALSE, $strFormInvalidExpired);
         exit;
     }
 

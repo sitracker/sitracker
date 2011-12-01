@@ -28,7 +28,9 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
 {
     global $dbIncidentStatus;
     // extract statuses
-    $sql  = "SELECT id, name FROM `{$dbIncidentStatus}` WHERE id<>2 AND id<>7 AND id<>10 ORDER BY name ASC";
+    $sql  = "SELECT id, name FROM `{$dbIncidentStatus}` WHERE id<>" . STATUS_CLOSED;
+    $sql .= " AND id<>" . STATUS_CLOSING;
+    $sql .= " AND id<>" . STATUS_UNASSIGNED . " ORDER BY name ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)

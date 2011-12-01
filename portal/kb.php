@@ -21,7 +21,7 @@ $accesslevel = 'any';
 if ($CONFIG['portal_kb_enabled'] !== 'Public' OR $_SESSION['portalauth'] == TRUE)
 {
     include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-    $view = $_GET['view'];
+    $view = clean_fixed_list($_GET['view'], array('', 'all'));
 }
 else
 {
@@ -33,17 +33,10 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
 
     echo "<h2>".icon('kb', 32, $strKnowledgeBase)." {$strKnowledgeBase}</h2>";
     $perpage = 20;
-    $order = cleanvar($_GET['order']);
-    $sort = cleanvar($_GET['sort']);
+$order = clean_fixed_list($_GET['order'], array('', 'a', 'ASC', 'd', 'DESC'));
+$sort = clean_fixed_list($_GET['sort'], array('', 'title', 'date', 'author', 'keywords'));
 
-    if (!isset($_GET['start']))
-    {
-        $start = 0;
-    }
-    else
-    {
-    $start = clean_int($_GET['start']);
-    }
+$start = clean_int($_GET['start']);
 
     $end = $start + $perpage;
     $filter = array('start' => $start, 'view' => $view);

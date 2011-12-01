@@ -327,10 +327,12 @@ $strContactID = 'Contact\'s ID';
 $strContains = 'Contains';
 $strContinue = 'Continue';
 $strContactDetails = 'Contact Details';
+# Surname means Family Name
 $strContactRecordExists = 'A contact record already exists with that Surname and Email address';
 $strContactResetPassword = 'Contact Reset Password';
 $strContactNotes = 'Contact Notes:';
 $strContacts = 'Contacts';
+# Forename is Other/Given Name
 $strContactsForename = 'Contact\'s forename';
 $strContactsPassword = 'Contact\'s plain text password (only available on account creation)';
 $strContactsPhone = 'Contact\'s phone number';
@@ -632,6 +634,7 @@ $strErrorNoEmptyForm = 'Error, could not locate empty form to store results.';
 $strErrorRequiredQuestionsNotCompleted = 'Error: you did not complete all required questions, please check your answers and try again.';
 $strErrorOccuredUploadingX = 'An error occured while uploading %s';
 $strErrorSendingEmail = 'Error sending email';
+$strErrorStartDateCannotBeAfterEndDate = 'Start date can not be after end date';
 $strErrorUploading = 'Error uploading';
 $strEscalated = 'Escalated';
 $strEscalatedIncidents = 'Escalated Incidents';
@@ -728,6 +731,7 @@ $strFollowThisLink = 'follow this link';
 $strFor = 'for';
 $strForce = 'Force';
 $strForceTo = 'Force To';
+# Other/Given Name
 $strForenames = 'Forenames';
 $strForFurtherAssistance = 'For further assistance please contact %s';
 $strForgottenDetails = 'Forgotten your details?';
@@ -735,6 +739,7 @@ $strForIncident = 'For Incident';
 $strForThePeriodXToY = 'For the period %1$s to %2$s';
 $strForgottenPasswordDetails = 'Forgotten Password Details';
 $strForm = 'Form';
+$strFormInvalidExpired = 'The form was invalid. This is probably because the form expired before you submitted it, please try again.';
 $strForRefundsThisShouldBeNegative = 'For refunds this should be negative';
 $strForwardOneYear = 'Forward One Year';
 $strForXDaysHoursMinutes = 'For <em>x</em> days, hours, minutes';
@@ -1803,6 +1808,7 @@ $strSupportExpired = 'Support Expired';
 $strSupportManagersEmailAddress = 'Technical Support managers email address';
 $strSupportedContacts = 'Supported Contacts';
 $strSupportedContactsbySite = 'Supported Contacts by Site';
+# Family name
 $strSurname = 'Surname';
 $strSwitchUser = 'Switch User';
 $strSymptoms = 'Symptoms';

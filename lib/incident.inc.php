@@ -403,14 +403,13 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
 
     if ($type == 'temp')
     {
-        $sql = "UPDATE `{$dbIncidents} SET towner = '{$tuser}'";
+        $sql = "UPDATE `{$dbIncidents}` SET towner = '{$tuser}' ";
     }
     else
     {
-        $sql = "UPDATE `{$dbIncidents}` SET owner = '{$user}'";
+        $sql = "UPDATE `{$dbIncidents}` SET owner = '{$user}' ";
     }
     $sql .= "WHERE id = '{$incident}'";
-
     mysql_query($sql);
     if (mysql_error())
     {
@@ -545,7 +544,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     $body = replace_specials($template->body, $paramarray);
     $extra_headers = "Reply-To: {$replyto}{$crlf}Errors-To: ".user_email($sit[2]) . $crlf;
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
-    $extra_headers .= "X-Originating-IP: {$_SERVER['REMOTE_ADDR']}\n";
+    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . "\n";
     if ($ccemail != '')  $extra_headers .= "CC: $ccemail\n";
     if ($bccemail != '') $extra_headers .= "BCC: $bccemail\n";
     $extra_headers .= "\n"; // add an extra crlf to create a null line to separate headers from body

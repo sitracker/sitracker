@@ -149,7 +149,7 @@ else if ($action == "update")
 {
     // External variables
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
-    $incident_quantity = $incident_pools[$_POST['incident_poolid']];
+    $incident_quantity = clean_int($incident_pools[$_POST['incident_poolid']]);
     $reseller = clean_int($_POST['reseller']);
     $licence_quantity = clean_int($_POST['licence_quantity']);
     $licence_type = clean_int($_POST['licence_type']);
@@ -190,7 +190,6 @@ else if ($action == "update")
 
     if ($errors == 0)
     {
-        if (empty($productonly)) $productonly = 'no';
         if ($productonly == 'yes') $terminated = 'yes';
 
         if (empty($reseller) OR $reseller == 0)
