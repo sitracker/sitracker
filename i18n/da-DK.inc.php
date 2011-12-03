@@ -1473,6 +1473,7 @@ $strRSSAtomURL = 'RSS/Atom Feed URL';
 $strRules = 'Regler';
 $strRulesNotDefinable = 'Reglerne kan ikke defineres for denne trigger hændelse';
 $strRunningOn = 'Kører på %1s kl. %2s';
+$strRunNow = 'Kør nu';
 $strRunManagementReports = 'Kør ledelses rapporter';
 $strRunReport = 'Kør rapport';
 $strRunReports = 'Kør rapporter';
