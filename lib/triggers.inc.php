@@ -1267,7 +1267,7 @@ function trigger_to_html($trigger_id, $user_id)
         while ($row = mysql_fetch_object($result))
         {
             $t = Trigger::fromID($row->id);
-            $html .= trigger_action_to_html($t);
+            $html .= trigger_action_to_html($t, $user_id);
         }
     }
 
@@ -1279,9 +1279,10 @@ function trigger_to_html($trigger_id, $user_id)
  * Return HTML to describe a trigger action
  * @author Kieran Hogg
  * @param object $trigger - Trigger Object
+ * @param int $user - Optional User to redirect to page
  * @return string HTML
  */
-function trigger_action_to_html($trigger)
+function trigger_action_to_html($trigger, $user_id)
 {
     global $trigger_types, $actionarray, $strChecks, $strParameters, $strMore, $strLess, $strEllipsis;
     $t_array = trigger_to_array($trigger);
@@ -1354,7 +1355,16 @@ function trigger_action_to_html($trigger)
     $operations = array();
     // FIXME 3.90, add edit back in
     // $operations[$GLOBALS['strEdit']] = "action_details.php?id={$trigger->id}";
-    $operations[$GLOBALS['strDelete']] = "action_details.php?action=delete&amp;id={$trigger->id}";
+    if ($user_id == 0)
+    {
+        $userurl = "&amp;user=admin";
+    }
+    else
+    {
+        $userurl = "";
+    }
+
+    $operations[$GLOBALS['strDelete']] = "action_details.php?action=delete&amp;id={$trigger->id}$userurl";
     $html .= html_action_links($operations);
     $html .= "</div><br />";
     return $html;
