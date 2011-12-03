@@ -229,7 +229,7 @@ switch ($mode)
         break;
 
     case 'run':
-        $sql = "SELECT action FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
+        $sql = "SELECT action, params FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
@@ -242,9 +242,18 @@ switch ($mode)
             }
             else
             {
+                if ($saction->params != '')
+                {
+                    $params = $saction->params;
+                }
+                else
+                {
+                    $params = NULL;                    
+                }
+                
                 $fsaction = "saction_" . $saction->action;
                 schedule_action_started($saction->action);
-                $fsaction();
+                $fsaction($params);
                 schedule_action_done($saction->action);
                 html_redirect($_SERVER['PHP_SELF'], TRUE);
                 break;
