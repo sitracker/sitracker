@@ -39,7 +39,7 @@ $domain = cleanvar($_GET['domain']);
 
 if (isset($_GET['q']))
 {
-    $q = clean_int($_GET['q']);
+    $q = clean_dbstring($_GET['q']);
 }
 elseif (isset($_GET['search_string']))
 {

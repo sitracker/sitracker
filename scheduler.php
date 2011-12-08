@@ -14,13 +14,14 @@
 require ('core.php');
 $permission = PERM_ADMIN; // Admin
 require (APPLICATION_LIBPATH . 'functions.inc.php');
+require_once (APPLICATION_LIBPATH . 'sactions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External vars
 $id = clean_int($_REQUEST['id']);
-$mode = clean_fixed_list($_REQUEST['mode'], array('','edit','save'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('','edit','save', 'run'));
 $reset_saction = clean_fixed_list($_REQUEST['reset_saction'], array('','yes'));
 
 $title = $strScheduler;
@@ -226,6 +227,40 @@ switch ($mode)
             html_redirect($_SERVER['PHP_SELF'], TRUE);
         }
         break;
+
+    case 'run':
+        $sql = "SELECT action, params FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) > 0)
+        {
+            $saction = mysql_fetch_object($result);
+            if (($saction->action == '') or (empty($saction->action)))
+            {
+                html_redirect($_SERVER['PHP_SELF'], FALSE);
+                break;
+            }
+            else
+            {
+                if ($saction->params != '')
+                {
+                    $params = $saction->params;
+                }
+                else
+                {
+                    $params = NULL;                    
+                }
+                
+                $fsaction = "saction_" . $saction->action;
+                schedule_action_started($saction->action);
+                $fsaction($params);
+                schedule_action_done($saction->action);
+                html_redirect($_SERVER['PHP_SELF'], TRUE);
+                break;
+            }
+        }
+
+
     case 'list':
     default:
         $refresh = 60;
@@ -240,8 +275,8 @@ switch ($mode)
         if (mysql_num_rows($result) >= 1)
         {
             echo "<table class='maintable'>";
-            echo "<tr><th>{$strAction}</th><th>{$strStartDate}</th><th>{$strInterval}</th>";
-            echo "<th>{$strEndDate}</th><th>{$strLastRan}</th><th>{$strNextRun}</th></tr>\n";
+            echo "<tr><th>{$strActions}</th><th>{$strStartDate}</th><th>{$strInterval}</th>";
+            echo "<th>{$strEndDate}</th><th>{$strLastRan}</th><th>{$strNextRun}</th><th>{$strAction}</th></tr>\n";
             while ($schedule = mysql_fetch_object($result))
             {
                 $shade = 'shade1';
@@ -423,6 +458,8 @@ switch ($mode)
                     echo $strNever;
                 }
 
+                echo "</td>";
+                echo "<td><a href='{$_SERVER['PHP_SELF']}?mode=run&amp;id={$schedule->id}'>{$strRunNow}</a>";
                 echo "</td>";
                 echo "</tr>";
             }

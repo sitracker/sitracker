@@ -134,7 +134,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 if (mysql_num_rows($result) == 0)
 {
     if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
-    else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>", E_USER_NOTICE));
+    else echo user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>"), E_USER_NOTICE);
 }
 else
 {

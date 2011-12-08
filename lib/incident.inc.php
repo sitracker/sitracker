@@ -403,14 +403,13 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
 
     if ($type == 'temp')
     {
-        $sql = "UPDATE `{$dbIncidents} SET towner = '{$tuser}'";
+        $sql = "UPDATE `{$dbIncidents}` SET towner = '{$tuser}' ";
     }
     else
     {
-        $sql = "UPDATE `{$dbIncidents}` SET owner = '{$user}'";
+        $sql = "UPDATE `{$dbIncidents}` SET owner = '{$user}' ";
     }
     $sql .= "WHERE id = '{$incident}'";
-
     mysql_query($sql);
     if (mysql_error())
     {

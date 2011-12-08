@@ -1151,6 +1151,18 @@ function contract_service_table($contractid, $billing)
                     $span .= "<br />";
                 }
 
+                
+                $span .= "<strong>{$GLOBALS['strBilling']}</strong>: ";
+                if (!empty($service->unitrate) AND $service->unitrate > 0)
+                {
+                    $span .= $GLOBALS['strPerUnit'];
+                }
+                else
+                {
+                    $span .= $GLOBALS['strPerIncident'];
+                }
+                $span .= "<br />";                
+                
                 if ($service->creditamount != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
@@ -1160,6 +1172,11 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
                 }
+                
+                if ($service->incidentrate != 0)
+                {
+                    $span .= "<strong>{$GLOBALS['strIncidentRate']}</strong>: {$CONFIG['currency_symbol']}{$service->incidentrate}<br />";
+                } 
 
                 $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
 
@@ -1750,7 +1767,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 {
     global $CONFIG;
 
-    $csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES, "ISO-8859-15"); // Note using -15 as -1 doesnt support euro
+    $csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES);
 
     $sql = "SELECT DISTINCT t.*, m.site, p.foc, p.cust_ref, p.cust_ref_date, p.title, p.notes ";
     $sql .= "FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbService']}` AS p, ";
