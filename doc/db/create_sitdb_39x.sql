@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `system` (
   `version` float(3,2) NOT NULL default '0.00',
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'used to hold schema version number';
 
 # TABLE billingmatrix
 # NOTE ..?..
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `billingmatrix` (
   `holiday` float NOT NULL,
   PRIMARY KEY  (`tag`,`hour`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'billing multipliers';
 
 # TABLE billing_periods
 # NOTE ..?..
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `closingstatus` (
  `name` varchar(50) default NULL,
  PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'extra statuses for closed incidents';
 
 # TABLE config
 # NOTE ..?..
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `value` text,
   PRIMARY KEY  (`config`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT='SiT configuration';
+COMMENT='SiT system configuration';
 
 # TABLE dashboard
 # NOTE ..?..
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `dashboard` (
   `enabled` enum('true','false') NOT NULL default 'false',
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Dashboard components (dashlets)';
 
 # TABLE emailtemplates
 # NOTE ..?..
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `emailtemplates` (
   `modifiedby` smallint(6) default NULL,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Templates for outbound incident emails';
 
 # TABLE escalationpaths
 # NOTE ..?..
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `escalationpaths` (
   `modifiedby` INT NULL ,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Escalation paths';
 
 # TABLE feedbackforms
 # NOTE ..?..
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `feedbackforms` (
   PRIMARY KEY  (`id`),
   KEY `multi` (`multi`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Feedback form summary, meta';
 
 # TABLE feedbackquestions
 # NOTE ..?..
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `feedbackquestions` (
   KEY `type` (`type`),
   KEY `formid` (`formid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Feedback questions for feedback forms';
 
 # TABLE feedbackresults
 # NOTE ..?..
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `feedbackresults` (
   KEY `questionid` (`questionid`),
   KEY `respondentid` (`respondentid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Feedback results (answers/responses) for feedback questions/feedback forms';
 
 # TABLE groups
 # NOTE ..?..
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `incidentpools` (
   PRIMARY KEY  (`id`),
   KEY `maintenanceid` (`maintenanceid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Incident pools for contracts';
 
 # TABLE incidentproductinfo
 # NOTE ..?..
@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `incidentproductinfo` (
   `modifiedby` smallint(6) NULL ,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Responses to product info questions per incident';
 
 # TABLE incidents
 # NOTE ..?..
@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `incidents` (
   KEY `servicelevel` (`servicelevel`),
   KEY `lastupdated` (`lastupdated`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'err Incidents';
 
 # TABLE incidentstatus
 # NOTE ..?..
@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `incidentstatus` (
   `ext_name` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Statuses for incidents, these match constants in the SiT code';
 
 # TABLE kbarticles
 # NOTE ..?..
@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `kbarticles` (
   KEY `distribution` (`distribution`),
   KEY `title` (`title`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT='Knowledge base articles';
+COMMENT='Knowledge base articles, summary/meta';
 
 # TABLE kbcontent
 # NOTE ..?..
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `kbcontent` (
   KEY `docid` (`docid`)
 --  FULLTEXT KEY `c_index` (`content`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Knowledge base section content for knowledge base articles';
 
 # TABLE kbsoftware
 # NOTE ..?..
@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `licencetypes` (
   `name` varchar(100) default NULL,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Contract licence types';
 
 # TABLE linktypes
 # NOTE ..?..
@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `linktypes` (
      KEY `origtab` (`origtab`),
      KEY `linktab` (`linktab`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Soft link definitions';
 
 # TABLE maintenance
 # NOTE ..?..
@@ -414,7 +414,7 @@ CREATE TABLE IF NOT EXISTS `maintenance` (
   KEY `site` (`site`),
   KEY `productonly` (`productonly`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Contracts';
 
 # TABLE noticetemplates
 # NOTE ..?..
@@ -431,7 +431,7 @@ CREATE TABLE IF NOT EXISTS `noticetemplates` (
   `refid` varchar(255) NULL,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Templates for user notices';
 
 # TABLE permissions
 # NOTE ..?..
@@ -443,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   PRIMARY KEY  (`id`),
   KEY `categoryid` (`categoryid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'List of user permissions, these match constants in the sit code';
 
 # TABLE permissioncategories
 # NOTE ..?..
@@ -453,7 +453,7 @@ CREATE TABLE IF NOT EXISTS `permissioncategories` (
 `category` VARCHAR( 255 ) NOT NULL ,
 PRIMARY KEY ( `id` )
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Categories for user permissions';
 
 # TABLE priority
 # NOTE ..?..
@@ -463,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `priority` (
   `name` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
 ) AUTO_INCREMENT=5 DEFAULT CHARACTER SET = utf8
-COMMENT='Used in incidents.php';
+COMMENT='Incident/Task priorities, these match constants in the sit code';
 
 # TABLE productinfo
 # NOTE ..?..
@@ -475,7 +475,7 @@ CREATE TABLE IF NOT EXISTS `productinfo` (
   `moreinformation` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Product info questions';
 
 # TABLE products
 # NOTE ..?..
@@ -503,7 +503,7 @@ CREATE TABLE IF NOT EXISTS `relatedincidents` (
 PRIMARY KEY ( `id` ) ,
 INDEX ( `incidentid` , `relatedid` )
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Links incidents with other incidents';
 
 # TABLE resellers
 # NOTE ..?..
@@ -513,7 +513,7 @@ CREATE TABLE IF NOT EXISTS `resellers` (
   `name` varchar(100) default NULL,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Resellers for products';
 
 # TABLE resellers
 # NOTE ..?..
@@ -524,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 `description` text NULL,
 PRIMARY KEY ( `id` )
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Roles, i.e. categories of user permissions';
 
 # TABLE rolepermissions
 # NOTE ..?..
@@ -535,7 +535,7 @@ CREATE TABLE IF NOT EXISTS `rolepermissions` (
 `granted` enum( 'true', 'false' ) NOT NULL default 'false',
 PRIMARY KEY ( `roleid` , `permissionid` )
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'List of permissions per role';
 
 # TABLE scheduler
 # NOTE ..?..
@@ -560,7 +560,7 @@ CREATE TABLE IF NOT EXISTS `scheduler` (
   PRIMARY KEY  (`id`),
   KEY `job` (`action`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Actions for the scheduler';
 
 # TABLE service
 # NOTE ..?..
@@ -584,7 +584,7 @@ CREATE TABLE IF NOT EXISTS `service` (
   `foc` enum('yes','no') NOT NULL default 'no' COMMENT 'Free of charge (customer not charged)',
     PRIMARY KEY  (`serviceid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'List Billing service periods (per contract)';
 
 # TABLE service
 # NOTE ..?..
@@ -603,7 +603,7 @@ CREATE TABLE IF NOT EXISTS `servicelevels` (
   PRIMARY KEY  (`tag`,`priority`),
   KEY `review_days` (`review_days`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Service levels (SLA)';
 
 # TABLE set_tags
 # NOTE ..?..
@@ -614,7 +614,7 @@ CREATE TABLE IF NOT EXISTS `set_tags` (
 `tagid` INT NOT NULL ,
 PRIMARY KEY ( `id` , `type` , `tagid` )
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Tags that have been set';
 
 # TABLE siteconfig
 # NOTE ..?..
@@ -656,7 +656,7 @@ CREATE TABLE IF NOT EXISTS `sites` (
   KEY `typeid` (`typeid`),
   KEY `owner` (`owner`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Sites';
 
 # TABLE sitetypes
 # NOTE ..?..
@@ -666,7 +666,7 @@ CREATE TABLE IF NOT EXISTS `sitetypes` (
   `typename` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`typeid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Site Types';
 
 # TABLE contacts
 # NOTE ..?..
@@ -713,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   KEY `surname` (`surname`),
   KEY `notify_contactid` (`notify_contactid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Contacts';
 
 # TABLE contactconfig
 # NOTE ..?..
@@ -773,7 +773,7 @@ CREATE TABLE IF NOT EXISTS `feedbackrespondents` (
   KEY `contactid` (`contactid`),
   KEY `completed` (`completed`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'List of responses to feedback forms';
 
 # TABLE inventory
 # NOTE ..?..
@@ -811,7 +811,7 @@ CREATE TABLE IF NOT EXISTS `sitecontacts` (
   PRIMARY KEY  (`siteid`,`contactid`),
   FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`)    
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Links contacts to sites';
 
 # TABLE software
 # NOTE ..?..
@@ -825,7 +825,7 @@ CREATE TABLE IF NOT EXISTS `software` (
   `lifetime_end` date default NULL,
   PRIMARY KEY  (`id`)
 ) AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8
-COMMENT='Individual software products as they are supported';
+COMMENT='Individual skills as they are supported, skills were once called software';
 
 # TABLE softwareproducts
 # NOTE ..?..
@@ -835,7 +835,7 @@ CREATE TABLE IF NOT EXISTS `softwareproducts` (
   `softwareid` int(5) NOT NULL default '0',
   PRIMARY KEY  (`productid`,`softwareid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT='Table to link products with software';
+COMMENT='Table to link products with software (skills)';
 
 # TABLE supportcontacts
 # NOTE ..?..
@@ -846,7 +846,7 @@ CREATE TABLE IF NOT EXISTS `supportcontacts` (
   PRIMARY KEY ( `maintenanceid` , `contactid` ),
   FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`)    
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Named contacts for contracts';
 
 # TABLE tags
 # NOTE ..?..
@@ -856,7 +856,7 @@ CREATE TABLE IF NOT EXISTS `tags` (
   `name` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`tagid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Available tags';
 
 # TABLE tasks
 # NOTE ..?..
@@ -878,7 +878,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   PRIMARY KEY  (`id`),
   KEY `owner` (`owner`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Tasks';
 
 # TABLE tempassigns
 # NOTE ..?..
@@ -966,7 +966,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `status` (`status`),
   KEY `groupid` (`groupid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'SiT Users (Engineers)';
 
 # TABLE holidays
 # NOTE ..?..
@@ -1004,7 +1004,7 @@ CREATE TABLE IF NOT EXISTS `notices` (
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`userid`) REFERENCES `users`(`id`)
 ) AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'User Notices';
 
 # TABLE notes
 # NOTE ..?..
@@ -1037,7 +1037,7 @@ CREATE TABLE IF NOT EXISTS `links` (
   FOREIGN KEY (`userid`) REFERENCES `users`(`id`),       
   KEY `userid` (`userid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Soft links';
 
 # TABLE journal
 # NOTE ..?..
@@ -1088,7 +1088,7 @@ CREATE TABLE IF NOT EXISTS `files` (
   KEY `published` (`published`),
   KEY `webcategory` (`webcategory`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
+COMMENT = 'Meta dataa for uploaded files';
 
 # TABLE drafts
 # NOTE ..?..
