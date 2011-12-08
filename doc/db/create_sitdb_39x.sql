@@ -15,6 +15,170 @@
 set sql_mode='STRICT_ALL_TABLES';
 set storage_engine=innodb;
 
+# TABLE users
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` smallint(6) NOT NULL auto_increment,
+  `username` varchar(50) default NULL,
+  `password` varchar(50) default NULL,
+  `realname` varchar(50) default NULL,
+  `roleid` int(5) NOT NULL default '3',
+  `groupid` int(5) default NULL,
+  `title` varchar(50) default NULL,
+  `signature` text,
+  `email` varchar(50) default NULL,
+  `icq` varchar(15) NOT NULL default '',
+  `aim` varchar(25) NOT NULL default '',
+  `msn` varchar(70) NOT NULL default '',
+  `skype` varchar(70) NOT NULL default '',
+  `phone` varchar(50) default NULL,
+  `mobile` varchar(50) NOT NULL default '',
+  `fax` varchar(50) default NULL,
+  `status` tinyint(4) default NULL,
+  `message` varchar(150) default NULL,
+  `accepting` enum('No','Yes') default 'Yes',
+  `user_startdate` DATE NULL,
+  `var_incident_refresh` int(11) default '60',
+  `var_update_order` enum('desc','asc') default 'desc',
+  `var_num_updates_view` int(11) NOT NULL default '15',
+  `var_style` int(11) default '1',
+  `var_hideautoupdates` enum('true','false') NOT NULL default 'false',
+  `var_hideheader` enum('true','false') NOT NULL default 'false',
+  `var_monitor` enum('true','false') NOT NULL default 'true',
+  `var_i18n` varchar(5) NOT NULL default 'en-GB',
+  `var_utc_offset` int(11) NOT NULL default '0' COMMENT 'Offset from UTC (timezone)',
+  `var_emoticons` enum('true','false') NOT NULL default 'false',
+  `listadmin` tinytext,
+  `holiday_entitlement` float NOT NULL default '0',
+  `holiday_resetdate` DATE NULL,
+  `qualifications` tinytext,
+  `dashboard` varchar(255) NOT NULL default '0-3,1-1,1-2,2-4',
+  `lastseen` DATETIME NOT NULL,
+  `user_source` varchar(32) NOT NULL default 'sit',
+  PRIMARY KEY  (`id`),
+  KEY `username` (`username`),
+  KEY `accepting` (`accepting`),
+  KEY `status` (`status`),
+  KEY `groupid` (`groupid`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'SiT Users (Engineers)';
+
+# TABLE sitetypes
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `sitetypes` (
+  `typeid` int(5) NOT NULL auto_increment,
+  `typename` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`typeid`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Site Types';
+
+# TABLE sites
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `sites` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `department` varchar(255) DEFAULT NULL,
+  `address1` varchar(255) NOT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
+  `telephone` varchar(255) DEFAULT NULL,
+  `fax` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `websiteurl` varchar(255) DEFAULT NULL,
+  `notes` blob,
+  `typeid` int(5) NOT NULL default '1',
+  `freesupport` int(5) NOT NULL default '0',
+  `licenserx` int(5) NOT NULL default '0',
+  `ftnpassword` varchar(40) NOT NULL default '',
+  `owner` smallint(6) NOT NULL default '0',
+  `active` enum('true','false') NOT NULL default 'true',
+  PRIMARY KEY  (`id`),
+  FOREIGN  KEY (`typeid`) REFERENCES `sitetypes`(`typeid`),
+  FOREIGN KEY (`owner`) REFERENCES `users`(`id`),   
+  KEY `typeid` (`typeid`),
+  KEY `owner` (`owner`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Sites';
+
+# TABLE contacts
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `notify_contactid` int(11) NOT NULL DEFAULT '0',
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `forenames` varchar(100) NOT NULL DEFAULT '',
+  `surname` varchar(100) NOT NULL DEFAULT '',
+  `jobtitle` varchar(255) NOT NULL DEFAULT '',
+  `courtesytitle` varchar(50) NOT NULL DEFAULT '',
+  `siteid` int(11) NOT NULL DEFAULT '0',
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `fax` varchar(50) DEFAULT NULL,
+  `department` varchar(255) DEFAULT NULL,
+  `address1` varchar(255) DEFAULT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
+  `dataprotection_email` enum('No','Yes') DEFAULT 'No',
+  `dataprotection_phone` enum('No','Yes') DEFAULT 'No',
+  `dataprotection_address` enum('No','Yes') DEFAULT 'No',
+  `timestamp_added` int(11) DEFAULT NULL,
+  `timestamp_modified` int(11) DEFAULT NULL,
+  `notes` blob,
+  `active` enum('true','false') NOT NULL DEFAULT 'true',
+  `created` datetime DEFAULT NULL,
+  `createdby` smallint(6) DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `modifiedby` smallint(6) DEFAULT NULL,
+  `contact_source` varchar(32) NOT NULL DEFAULT 'sit',
+  PRIMARY KEY (`id`),
+  FOREIGN  KEY (`siteid`) REFERENCES `sites`(`id`),
+  FOREIGN KEY (`notify_contactid`) REFERENCES `contacts`(`id`),  
+  KEY `siteid` (`siteid`),
+  KEY `username` (`username`),
+  KEY `forenames` (`forenames`),
+  KEY `surname` (`surname`),
+  KEY `notify_contactid` (`notify_contactid`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Contacts';
+
+# TABLE updates
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `updates` (
+  `id` int(11) NOT NULL auto_increment,
+  `incidentid` int(11) default NULL,
+  `userid` smallint(6) default NULL,
+  `type` enum('default','editing','opening','email','reassigning','closing','reopening','auto','phonecallout','phonecallin','research','webupdate','emailout','emailin','externalinfo','probdef','solution','actionplan','slamet','reviewmet','tempassigning', 'auto_chase_email', 'auto_chase_phone', 'auto_chase_manager','auto_chased_phone','auto_chased_manager','auto_chase_managers_manager', 'customerclosurerequest', 'fromtask') default 'default',
+  `currentowner` smallint(6) NOT NULL default '0',
+  `currentstatus` smallint(6) NOT NULL default '0',
+  `bodytext` text,
+  `timestamp` int(11) default NULL,
+  `nextaction` varchar(50) NOT NULL default '',
+  `customervisibility` enum('show','hide','unset') default 'unset',
+  `sla` enum('opened','initialresponse','probdef','actionplan','solution','closed') default NULL,
+  `duration` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`userid`) REFERENCES `users`(`id`),
+  FOREIGN KEY (`currentowner`) REFERENCES `users`(`id`),   
+  KEY `currentowner` (`currentowner`,`currentstatus`),
+  KEY `incidentid` (`incidentid`),
+  KEY `timestamp` (`timestamp`),
+  KEY `type` (`type`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'missing a comment here';
+
 # TABLE system
 # NOTE system must be the first table created.
 
@@ -171,6 +335,7 @@ CREATE TABLE IF NOT EXISTS `feedbackquestions` (
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
   PRIMARY KEY  (`id`),
+  FOREIGN KEY (`formid`) REFERENCES `feedbackforms`(`id`),    
   KEY `taborder` (`taborder`),
   KEY `type` (`type`),
   KEY `formid` (`formid`)
@@ -194,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `feedbackresults` (
   KEY `questionid` (`questionid`),
   KEY `respondentid` (`respondentid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Feedback results (answers/responses) for feedback questions/feedback forms';
+COMMENT = 'Answers/responses for feedback questions/feedback forms';
 
 # TABLE groups
 # NOTE ..?..
@@ -241,59 +406,6 @@ CREATE TABLE IF NOT EXISTS `incidentproductinfo` (
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'Responses to product info questions per incident';
 
-# TABLE incidents
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `incidents` (
-  `id` int(11) NOT NULL auto_increment,
-  `escalationpath` int(11) default NULL,
-  `externalid` varchar(50) default NULL,
-  `externalengineer` varchar(80) NOT NULL default '',
-  `externalemail` varchar(255) NOT NULL default '',
-  `ccemail` varchar(255) default NULL,
-  `title` varchar(150) default NULL,
-  `owner` smallint(6) default NULL,
-  `towner` smallint(6) NOT NULL default '0',
-  `contact` int(11) default '0',
-  `priority` tinyint(4) default NULL,
-  `servicelevel` varchar(32) default NULL,
-  `status` tinyint(4) default NULL,
-  `type` enum('Support','Sales','Other','Free') default 'Support',
-  `maintenanceid` int(11) NOT NULL default '0',
-  `product` int(11) default NULL,
-  `softwareid` int(5) NOT NULL default '0',
-  `productversion` varchar(50) default NULL,
-  `productservicepacks` varchar(100) default NULL,
-  `opened` int(11) default NULL,
-  `lastupdated` int(11) default NULL,
-  `timeofnextaction` int(11) default '0',
-  `closed` int(11) default '0',
-  `closingstatus` tinyint(4) default NULL,
-  `slaemail` tinyint(1) NOT NULL default '0',
-  `slanotice` tinyint(1) NOT NULL default '0',
-  `locked` tinyint(4) NOT NULL default '0',
-  `locktime` int(11) NOT NULL default '0',
-  `created` DATETIME NULL,
-  `createdby` smallint(6) NULL ,
-  `modified` DATETIME NULL ,
-  `modifiedby` smallint(6) NULL ,
-  PRIMARY KEY  (`id`),
-  KEY `type` (`type`),
-  KEY `owner` (`owner`),
-  KEY `status` (`status`),
-  KEY `priority` (`priority`),
-  KEY `timeofnextaction` (`timeofnextaction`),
-  KEY `maintenanceid` (`maintenanceid`),
-  KEY `softwareid` (`softwareid`),
-  KEY `contact` (`contact`),
-  KEY `title` (`title`),
-  KEY `opened` (`opened`),
-  KEY `closed` (`closed`),
-  KEY `servicelevel` (`servicelevel`),
-  KEY `lastupdated` (`lastupdated`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'err Incidents';
-
 # TABLE incidentstatus
 # NOTE ..?..
 
@@ -303,7 +415,7 @@ CREATE TABLE IF NOT EXISTS `incidentstatus` (
   `ext_name` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Statuses for incidents, these match constants in the SiT code';
+COMMENT = 'Incident statuses, these match constants in the SiT code';
 
 # TABLE kbarticles
 # NOTE ..?..
@@ -326,26 +438,6 @@ CREATE TABLE IF NOT EXISTS `kbarticles` (
 ) DEFAULT CHARACTER SET = utf8
 COMMENT='Knowledge base articles, summary/meta';
 
-# TABLE kbcontent
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `kbcontent` (
-  `docid` int(5) NOT NULL default '0',
-  `id` int(7) NOT NULL auto_increment,
-  `ownerid` smallint(6) NOT NULL default '0',
-  `headerstyle` char(2) NOT NULL default 'h1',
-  `header` varchar(255) NOT NULL default '',
-  `contenttype` int(5) NOT NULL default '1',
-  `content` mediumtext NOT NULL,
-  `distribution` enum('public','private','restricted') NOT NULL default 'private',
-  PRIMARY KEY  (`id`),
-  KEY `distribution` (`distribution`),
-  KEY `ownerid` (`ownerid`),
-  KEY `docid` (`docid`)
---  FULLTEXT KEY `c_index` (`content`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Knowledge base section content for knowledge base articles';
-
 # TABLE kbsoftware
 # NOTE ..?..
 
@@ -354,7 +446,7 @@ CREATE TABLE IF NOT EXISTS `kbsoftware` (
   `softwareid` int(5) NOT NULL default '0',
   PRIMARY KEY  (`docid`,`softwareid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT='Links kb articles with software';
+COMMENT='Links kb articles with skills (fka software)';
 
 # TABLE licencetypes
 # NOTE ..?..
@@ -416,6 +508,32 @@ CREATE TABLE IF NOT EXISTS `maintenance` (
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'Contracts';
 
+# TABLE service
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `service` (
+  `serviceid` int(11) NOT NULL auto_increment,
+  `contractid` int(11) NOT NULL,
+  `startdate` date NOT NULL,
+  `enddate` date NOT NULL,
+  `lastbilled` datetime NOT NULL,
+  `creditamount` float NOT NULL default '0',
+  `balance` float NOT NULL default '0',
+  `unitrate` float NOT NULL default '0',
+  `incidentrate` float NOT NULL default '0',
+  `billingmatrix` varchar(32) NOT NULL,
+  `priority` smallint(6) NOT NULL default '0',
+  `cust_ref` VARCHAR( 255 ) NULL,
+  `cust_ref_date` DATE NULL,
+  `title` VARCHAR( 255 ) NULL,
+  `notes` TEXT NOT NULL,
+  `foc` enum('yes','no') NOT NULL default 'no' COMMENT 'Free of charge (customer not charged)',
+  PRIMARY KEY  (`serviceid`),
+  FOREIGN  KEY (`contractid`) REFERENCES `maintenance`(`id`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'List Billing service periods (per contract)';
+
+
 # TABLE noticetemplates
 # NOTE ..?..
 
@@ -443,7 +561,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   PRIMARY KEY  (`id`),
   KEY `categoryid` (`categoryid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'List of user permissions, these match constants in the sit code';
+COMMENT = 'List of user permissions, these match constants in the code';
 
 # TABLE permissioncategories
 # NOTE ..?..
@@ -463,7 +581,7 @@ CREATE TABLE IF NOT EXISTS `priority` (
   `name` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
 ) AUTO_INCREMENT=5 DEFAULT CHARACTER SET = utf8
-COMMENT='Incident/Task priorities, these match constants in the sit code';
+COMMENT='Incident/Task priorities, these match constants in the code';
 
 # TABLE productinfo
 # NOTE ..?..
@@ -490,20 +608,6 @@ CREATE TABLE IF NOT EXISTS `products` (
   KEY `name` (`name`)
 ) DEFAULT CHARACTER SET = utf8
 COMMENT='Current List of Products';
-
-# TABLE relatedincidents
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `relatedincidents` (
-`id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
-`incidentid` INT( 5 ) NOT NULL ,
-`relation` ENUM( 'child', 'sibling' ) DEFAULT 'child' NOT NULL ,
-`relatedid` INT( 5 ) NOT NULL ,
-`owner` smallint(6) NOT NULL default '0',
-PRIMARY KEY ( `id` ) ,
-INDEX ( `incidentid` , `relatedid` )
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Links incidents with other incidents';
 
 # TABLE resellers
 # NOTE ..?..
@@ -562,31 +666,7 @@ CREATE TABLE IF NOT EXISTS `scheduler` (
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'Actions for the scheduler';
 
-# TABLE service
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `service` (
-  `serviceid` int(11) NOT NULL auto_increment,
-  `contractid` int(11) NOT NULL,
-  `startdate` date NOT NULL,
-  `enddate` date NOT NULL,
-  `lastbilled` datetime NOT NULL,
-  `creditamount` float NOT NULL default '0',
-  `balance` float NOT NULL default '0',
-  `unitrate` float NOT NULL default '0',
-  `incidentrate` float NOT NULL default '0',
-  `billingmatrix` varchar(32) NOT NULL,
-  `priority` smallint(6) NOT NULL default '0',
-  `cust_ref` VARCHAR( 255 ) NULL,
-  `cust_ref_date` DATE NULL,
-  `title` VARCHAR( 255 ) NULL,
-  `notes` TEXT NOT NULL,
-  `foc` enum('yes','no') NOT NULL default 'no' COMMENT 'Free of charge (customer not charged)',
-    PRIMARY KEY  (`serviceid`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'List Billing service periods (per contract)';
-
-# TABLE service
+# TABLE servicelevels
 # NOTE ..?..
 
 CREATE TABLE IF NOT EXISTS `servicelevels` (
@@ -604,176 +684,114 @@ CREATE TABLE IF NOT EXISTS `servicelevels` (
   KEY `review_days` (`review_days`)
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'Service levels (SLA)';
-
-# TABLE set_tags
+# TABLE software
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `set_tags` (
-`id` INT NOT NULL ,
-`type` MEDIUMINT NOT NULL ,
-`tagid` INT NOT NULL ,
-PRIMARY KEY ( `id` , `type` , `tagid` )
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Tags that have been set';
-
-# TABLE siteconfig
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `siteconfig` (
-  `siteid` int(11) NOT NULL default '0',
-  `config` varchar(255) NOT NULL,
-  `value` text,
-  PRIMARY KEY  (`siteid`,`config`),
-  KEY siteid (`siteid`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT='Site configuration';
-
-# TABLE sites
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `sites` (
-  `id` int(11) NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `software` (
+  `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `department` varchar(255) DEFAULT NULL,
-  `address1` varchar(255) NOT NULL,
-  `address2` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `county` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `postcode` varchar(255) DEFAULT NULL,
-  `telephone` varchar(255) DEFAULT NULL,
-  `fax` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `websiteurl` varchar(255) DEFAULT NULL,
-  `notes` blob,
-  `typeid` int(5) NOT NULL default '1',
-  `freesupport` int(5) NOT NULL default '0',
-  `licenserx` int(5) NOT NULL default '0',
-  `ftnpassword` varchar(40) NOT NULL default '',
-  `owner` smallint(6) NOT NULL default '0',
-  `active` enum('true','false') NOT NULL default 'true',
-  PRIMARY KEY  (`id`),
-  KEY `typeid` (`typeid`),
-  KEY `owner` (`owner`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Sites';
+  `vendorid` INT( 5 ) NOT NULL default '0',
+  `software` int(5) NOT NULL default '0',
+  `lifetime_start` date default NULL,
+  `lifetime_end` date default NULL,
+  PRIMARY KEY  (`id`)
+) AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8
+COMMENT='Individual skills (fka software) as they are supported.';
 
-# TABLE sitetypes
+# TABLE softwareproducts
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `sitetypes` (
-  `typeid` int(5) NOT NULL auto_increment,
-  `typename` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`typeid`)
+CREATE TABLE IF NOT EXISTS `softwareproducts` (
+  `productid` int(5) NOT NULL default '0',
+  `softwareid` int(5) NOT NULL default '0',
+  PRIMARY KEY  (`productid`,`softwareid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Site Types';
+COMMENT='Table to link products with skills (fka software)';
 
-# TABLE contacts
+# TABLE tags
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `contacts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `notify_contactid` int(11) NOT NULL DEFAULT '0',
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL,
-  `forenames` varchar(100) NOT NULL DEFAULT '',
-  `surname` varchar(100) NOT NULL DEFAULT '',
-  `jobtitle` varchar(255) NOT NULL DEFAULT '',
-  `courtesytitle` varchar(50) NOT NULL DEFAULT '',
-  `siteid` int(11) NOT NULL DEFAULT '0',
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `mobile` varchar(50) DEFAULT NULL,
-  `fax` varchar(50) DEFAULT NULL,
-  `department` varchar(255) DEFAULT NULL,
-  `address1` varchar(255) DEFAULT NULL,
-  `address2` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `county` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `postcode` varchar(255) DEFAULT NULL,
-  `dataprotection_email` enum('No','Yes') DEFAULT 'No',
-  `dataprotection_phone` enum('No','Yes') DEFAULT 'No',
-  `dataprotection_address` enum('No','Yes') DEFAULT 'No',
-  `timestamp_added` int(11) DEFAULT NULL,
-  `timestamp_modified` int(11) DEFAULT NULL,
-  `notes` blob,
-  `active` enum('true','false') NOT NULL DEFAULT 'true',
-  `created` datetime DEFAULT NULL,
-  `createdby` smallint(6) DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `modifiedby` smallint(6) DEFAULT NULL,
-  `contact_source` varchar(32) NOT NULL DEFAULT 'sit',
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`siteid`) REFERENCES `sites`(`id`),
-  FOREIGN KEY (`notify_contactid`) REFERENCES `contacts`(`id`),  
-  KEY `siteid` (`siteid`),
-  KEY `username` (`username`),
-  KEY `forenames` (`forenames`),
-  KEY `surname` (`surname`),
-  KEY `notify_contactid` (`notify_contactid`)
+CREATE TABLE IF NOT EXISTS `tags` (
+  `tagid` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`tagid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Contacts';
+COMMENT = 'Available tags';
 
-# TABLE contactconfig
+# TABLE tempassigns
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `contactconfig` (
-  `contactid` int(11) NOT NULL default '0',
-  `config` varchar(255) NOT NULL,
-  `value` text,
-  PRIMARY KEY  (`contactid`,`config`),
-  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),
-  KEY `contactid` (`contactid`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT='Contact configuration';
-
-# TABLE feedbackreport
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `feedbackreport` (
-  `id` int(5) NOT NULL default '0',
-  `formid` int(5) NOT NULL default '0',
-  `respondent` int(11) NOT NULL default '0',
-  `responseref` varchar(255) NOT NULL default '',
-  `email` varchar(255) NOT NULL default '',
-  `completed` enum('yes','no') NOT NULL default 'no',
-  `created` timestamp NOT NULL,
+CREATE TABLE IF NOT EXISTS `tempassigns` (
   `incidentid` int(5) NOT NULL default '0',
-  `contactid` int(5) NOT NULL default '0',
-  `createdby` smallint(6) NULL ,
-  `modified` DATETIME NULL ,
-  `modifiedby` smallint(6) NULL ,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),    
-  KEY `responseref` (`responseref`),
-  KEY `formid` (`formid`),
-  KEY `respondant` (`respondent`),
-  KEY `completed` (`completed`),
-  KEY `incidentid` (`incidentid`),
-  KEY `contactid` (`contactid`)
+  `originalowner` smallint(6) NOT NULL default '0',
+  `userstatus` tinyint(4) NOT NULL default '1',
+  `assigned` enum('yes','no') NOT NULL default 'no',
+  PRIMARY KEY  (`incidentid`,`originalowner`),
+  FOREIGN KEY (`originalowner`) REFERENCES `users`(`id`),   
+  KEY `assigned` (`assigned`)
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'missing a comment here';
 
-# TABLE feedbackreport
+# TABLE tempincoming
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `feedbackrespondents` (
-  `id` int(5) NOT NULL auto_increment,
-  `formid` int(5) NOT NULL default '0',
-  `contactid` int(11) NOT NULL default '0',
-  `incidentid` int(11) NOT NULL default '0',
-  `email` varchar(255) NOT NULL default '',
-  `completed` enum('yes','no') NOT NULL default 'no',
-  `created` timestamp NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),    
-  KEY `responseref` (`incidentid`),
-  KEY `formid` (`formid`),
-  KEY `contactid` (`contactid`),
-  KEY `completed` (`completed`)
+CREATE TABLE IF NOT EXISTS `tempincoming` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `arrived` datetime NOT NULL,
+  `updateid` int(11) NOT NULL DEFAULT '0',
+  `path` varchar(255) NOT NULL DEFAULT '',
+  `incidentid` int(11) NOT NULL DEFAULT '0',
+  `from` varchar(255) DEFAULT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `emailfrom` varchar(255) DEFAULT NULL,
+  `locked` smallint(6) DEFAULT NULL,
+  `lockeduntil` datetime DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `reason_user` int(11) NOT NULL,
+  `reason_time` datetime NOT NULL,
+  `reason_id` tinyint(1) DEFAULT '1',
+  `incident_id` int(11) DEFAULT NULL,
+  `contactid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),      
+  KEY `updateid` (`updateid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'List of responses to feedback forms';
+COMMENT='Temporary store for incoming attachment paths';
+
+# TABLE tasks
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `tasks` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `description` text NOT NULL,
+  `priority` tinyint(4) default NULL,
+  `owner` smallint(6) NOT NULL default '0',
+  `duedate` datetime default NULL,
+  `startdate` datetime default NULL,
+  `enddate` datetime default NULL,
+  `completion` tinyint(4) default NULL,
+  `value` float(6,2) default NULL,
+  `distribution` enum('public','private', 'incident', 'event') NOT NULL default 'public',
+  `created` datetime NOT NULL default '0000-00-00 00:00:00',
+  `lastupdated` timestamp NOT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`owner`) REFERENCES `users`(`id`),   
+  KEY `owner` (`owner`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Tasks';
+
+# TABLE supportcontacts
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `supportcontacts` (
+  `maintenanceid` int(11) default NULL,
+  `contactid` int(11) default NULL,
+  PRIMARY KEY ( `maintenanceid` , `contactid` ),
+  FOREIGN  KEY (`maintenanceid`) REFERENCES `maintenance`(`id`), 
+  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`)    
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Named contacts for contracts';
 
 # TABLE inventory
 # NOTE ..?..
@@ -813,160 +831,184 @@ CREATE TABLE IF NOT EXISTS `sitecontacts` (
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'Links contacts to sites';
 
-# TABLE software
+# TABLE feedbackreport
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `software` (
-  `id` int(5) NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL default '',
-  `vendorid` INT( 5 ) NOT NULL default '0',
-  `software` int(5) NOT NULL default '0',
-  `lifetime_start` date default NULL,
-  `lifetime_end` date default NULL,
-  PRIMARY KEY  (`id`)
-) AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8
-COMMENT='Individual skills as they are supported, skills were once called software';
-
-# TABLE softwareproducts
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `softwareproducts` (
-  `productid` int(5) NOT NULL default '0',
-  `softwareid` int(5) NOT NULL default '0',
-  PRIMARY KEY  (`productid`,`softwareid`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT='Table to link products with software (skills)';
-
-# TABLE supportcontacts
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `supportcontacts` (
-  `maintenanceid` int(11) default NULL,
-  `contactid` int(11) default NULL,
-  PRIMARY KEY ( `maintenanceid` , `contactid` ),
-  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`)    
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Named contacts for contracts';
-
-# TABLE tags
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `tags` (
-  `tagid` int(11) NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`tagid`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Available tags';
-
-# TABLE tasks
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `tasks` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) default NULL,
-  `description` text NOT NULL,
-  `priority` tinyint(4) default NULL,
-  `owner` smallint(6) NOT NULL default '0',
-  `duedate` datetime default NULL,
-  `startdate` datetime default NULL,
-  `enddate` datetime default NULL,
-  `completion` tinyint(4) default NULL,
-  `value` float(6,2) default NULL,
-  `distribution` enum('public','private', 'incident', 'event') NOT NULL default 'public',
-  `created` datetime NOT NULL default '0000-00-00 00:00:00',
-  `lastupdated` timestamp NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `owner` (`owner`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Tasks';
-
-# TABLE tempassigns
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `tempassigns` (
+CREATE TABLE IF NOT EXISTS `feedbackreport` (
+  `id` int(5) NOT NULL default '0',
+  `formid` int(5) NOT NULL default '0',
+  `respondent` int(11) NOT NULL default '0',
+  `responseref` varchar(255) NOT NULL default '',
+  `email` varchar(255) NOT NULL default '',
+  `completed` enum('yes','no') NOT NULL default 'no',
+  `created` timestamp NOT NULL,
   `incidentid` int(5) NOT NULL default '0',
-  `originalowner` smallint(6) NOT NULL default '0',
-  `userstatus` tinyint(4) NOT NULL default '1',
-  `assigned` enum('yes','no') NOT NULL default 'no',
-  PRIMARY KEY  (`incidentid`,`originalowner`),
-  KEY `assigned` (`assigned`)
+  `contactid` int(5) NOT NULL default '0',
+  `createdby` smallint(6) NULL ,
+  `modified` DATETIME NULL ,
+  `modifiedby` smallint(6) NULL ,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`formid`) REFERENCES `feedbackforms`(`id`),    
+  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),    
+  KEY `responseref` (`responseref`),
+  KEY `formid` (`formid`),
+  KEY `respondant` (`respondent`),
+  KEY `completed` (`completed`),
+  KEY `incidentid` (`incidentid`),
+  KEY `contactid` (`contactid`)
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'missing a comment here';
 
-# TABLE tempincoming
+# TABLE contactconfig
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `tempincoming` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `arrived` datetime NOT NULL,
-  `updateid` int(11) NOT NULL DEFAULT '0',
-  `path` varchar(255) NOT NULL DEFAULT '',
-  `incidentid` int(11) NOT NULL DEFAULT '0',
-  `from` varchar(255) DEFAULT NULL,
-  `subject` varchar(255) DEFAULT NULL,
-  `emailfrom` varchar(255) DEFAULT NULL,
-  `locked` smallint(6) DEFAULT NULL,
-  `lockeduntil` datetime DEFAULT NULL,
-  `reason` varchar(255) DEFAULT NULL,
-  `reason_user` int(11) NOT NULL,
-  `reason_time` datetime NOT NULL,
-  `reason_id` tinyint(1) DEFAULT '1',
-  `incident_id` int(11) DEFAULT NULL,
-  `contactid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),      
-  KEY `updateid` (`updateid`)
+CREATE TABLE IF NOT EXISTS `contactconfig` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),
+  KEY `contactid` (`contactid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT='Temporary store for incoming attachment paths';
+COMMENT='Contact configuration';
 
-# TABLE users
+# TABLE siteconfig
 # NOTE ..?..
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` smallint(6) NOT NULL auto_increment,
-  `username` varchar(50) default NULL,
-  `password` varchar(50) default NULL,
-  `realname` varchar(50) default NULL,
-  `roleid` int(5) NOT NULL default '3',
-  `groupid` int(5) default NULL,
-  `title` varchar(50) default NULL,
-  `signature` text,
-  `email` varchar(50) default NULL,
-  `icq` varchar(15) NOT NULL default '',
-  `aim` varchar(25) NOT NULL default '',
-  `msn` varchar(70) NOT NULL default '',
-  `skype` varchar(70) NOT NULL default '',
-  `phone` varchar(50) default NULL,
-  `mobile` varchar(50) NOT NULL default '',
-  `fax` varchar(50) default NULL,
-  `status` tinyint(4) default NULL,
-  `message` varchar(150) default NULL,
-  `accepting` enum('No','Yes') default 'Yes',
-  `user_startdate` DATE NULL,
-  `var_incident_refresh` int(11) default '60',
-  `var_update_order` enum('desc','asc') default 'desc',
-  `var_num_updates_view` int(11) NOT NULL default '15',
-  `var_style` int(11) default '1',
-  `var_hideautoupdates` enum('true','false') NOT NULL default 'false',
-  `var_hideheader` enum('true','false') NOT NULL default 'false',
-  `var_monitor` enum('true','false') NOT NULL default 'true',
-  `var_i18n` varchar(5) NOT NULL default 'en-GB',
-  `var_utc_offset` int(11) NOT NULL default '0' COMMENT 'Offset from UTC (timezone)',
-  `var_emoticons` enum('true','false') NOT NULL default 'false',
-  `listadmin` tinytext,
-  `holiday_entitlement` float NOT NULL default '0',
-  `holiday_resetdate` DATE NULL,
-  `qualifications` tinytext,
-  `dashboard` varchar(255) NOT NULL default '0-3,1-1,1-2,2-4',
-  `lastseen` DATETIME NOT NULL,
-  `user_source` varchar(32) NOT NULL default 'sit',
+CREATE TABLE IF NOT EXISTS `siteconfig` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  FOREIGN  KEY (`siteid`) REFERENCES `sites`(`id`),
+  KEY siteid (`siteid`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT='Site configuration';
+
+# TABLE relatedincidents
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `relatedincidents` (
+  `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
+  `incidentid` INT( 5 ) NOT NULL ,
+  `relation` ENUM( 'child', 'sibling' ) DEFAULT 'child' NOT NULL ,
+  `relatedid` INT( 5 ) NOT NULL ,
+  `owner` smallint(6) NOT NULL default '0',
+  PRIMARY KEY ( `id` ),
+  FOREIGN KEY (`owner`) REFERENCES `users`(`id`), 
+  INDEX ( `incidentid` , `relatedid` )
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Links incidents with other incidents';
+
+# TABLE kbcontent
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `kbcontent` (
+  `docid` int(5) NOT NULL default '0',
+  `id` int(7) NOT NULL auto_increment,
+  `ownerid` smallint(6) NOT NULL default '0',
+  `headerstyle` char(2) NOT NULL default 'h1',
+  `header` varchar(255) NOT NULL default '',
+  `contenttype` int(5) NOT NULL default '1',
+  `content` mediumtext NOT NULL,
+  `distribution` enum('public','private','restricted') NOT NULL default 'private',
   PRIMARY KEY  (`id`),
-  KEY `username` (`username`),
-  KEY `accepting` (`accepting`),
-  KEY `status` (`status`),
-  KEY `groupid` (`groupid`)
+  FOREIGN KEY (`ownerid`) REFERENCES `users`(`id`),   
+  KEY `distribution` (`distribution`),
+  KEY `ownerid` (`ownerid`),
+  KEY `docid` (`docid`)
+--  FULLTEXT KEY `c_index` (`content`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'SiT Users (Engineers)';
+COMMENT = 'Knowledge base section content for knowledge base articles';
+
+# TABLE incidents
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `incidents` (
+  `id` int(11) NOT NULL auto_increment,
+  `escalationpath` int(11) default NULL,
+  `externalid` varchar(50) default NULL,
+  `externalengineer` varchar(80) NOT NULL default '',
+  `externalemail` varchar(255) NOT NULL default '',
+  `ccemail` varchar(255) default NULL,
+  `title` varchar(150) default NULL,
+  `owner` smallint(6) default NULL,
+  `towner` smallint(6) NOT NULL default '0',
+  `contact` int(11) default '0',
+  `priority` tinyint(4) default NULL,
+  `servicelevel` varchar(32) default NULL,
+  `status` tinyint(4) default NULL,
+  `type` enum('Support','Sales','Other','Free') default 'Support',
+  `maintenanceid` int(11) NOT NULL default '0',
+  `product` int(11) default NULL,
+  `softwareid` int(5) NOT NULL default '0',
+  `productversion` varchar(50) default NULL,
+  `productservicepacks` varchar(100) default NULL,
+  `opened` int(11) default NULL,
+  `lastupdated` int(11) default NULL,
+  `timeofnextaction` int(11) default '0',
+  `closed` int(11) default '0',
+  `closingstatus` tinyint(4) default NULL,
+  `slaemail` tinyint(1) NOT NULL default '0',
+  `slanotice` tinyint(1) NOT NULL default '0',
+  `locked` tinyint(4) NOT NULL default '0',
+  `locktime` int(11) NOT NULL default '0',
+  `created` DATETIME NULL,
+  `createdby` smallint(6) NULL ,
+  `modified` DATETIME NULL ,
+  `modifiedby` smallint(6) NULL ,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`owner`) REFERENCES `users`(`id`),
+  FOREIGN KEY (`towner`) REFERENCES `users`(`id`),       
+  KEY `type` (`type`),
+  KEY `owner` (`owner`),
+  KEY `status` (`status`),
+  KEY `priority` (`priority`),
+  KEY `timeofnextaction` (`timeofnextaction`),
+  KEY `maintenanceid` (`maintenanceid`),
+  KEY `softwareid` (`softwareid`),
+  KEY `contact` (`contact`),
+  KEY `title` (`title`),
+  KEY `opened` (`opened`),
+  KEY `closed` (`closed`),
+  KEY `servicelevel` (`servicelevel`),
+  KEY `lastupdated` (`lastupdated`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Core data of incidents';
+
+# TABLE feedbackreport
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `feedbackrespondents` (
+  `id` int(5) NOT NULL auto_increment,
+  `formid` int(5) NOT NULL default '0',
+  `contactid` int(11) NOT NULL default '0',
+  `incidentid` int(11) NOT NULL default '0',
+  `email` varchar(255) NOT NULL default '',
+  `completed` enum('yes','no') NOT NULL default 'no',
+  `created` timestamp NOT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`formid`) REFERENCES `feedbackforms`(`id`),    
+  FOREIGN KEY (`contactid`) REFERENCES `contacts`(`id`),    
+  FOREIGN KEY (`incidentid`) REFERENCES `incidents`(`id`),    
+  KEY `responseref` (`incidentid`),
+  KEY `formid` (`formid`),
+  KEY `contactid` (`contactid`),
+  KEY `completed` (`completed`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'List of responses to feedback forms';
+
+# TABLE set_tags
+# NOTE ..?..
+
+CREATE TABLE IF NOT EXISTS `set_tags` (
+  `id` INT NOT NULL ,
+  `type` MEDIUMINT NOT NULL ,
+  `tagid` INT NOT NULL ,
+  PRIMARY KEY ( `id` , `type` , `tagid` ),
+  FOREIGN  KEY (`tagid`) REFERENCES `tags`(`tagid`)
+) DEFAULT CHARACTER SET = utf8
+COMMENT = 'Tags that have been set for incidents, sites, tasks etc.';
 
 # TABLE holidays
 # NOTE ..?..
@@ -1088,7 +1130,7 @@ CREATE TABLE IF NOT EXISTS `files` (
   KEY `published` (`published`),
   KEY `webcategory` (`webcategory`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT = 'Meta dataa for uploaded files';
+COMMENT = 'Meta data for uploaded files';
 
 # TABLE drafts
 # NOTE ..?..
@@ -1142,31 +1184,6 @@ CREATE TABLE IF NOT EXISTS `triggers` (
   FOREIGN KEY (`userid`) REFERENCES `users`(`id`),  
   KEY `triggerid` (`triggerid`),
   KEY `userid` (`userid`)
-) DEFAULT CHARACTER SET = utf8
-COMMENT = 'missing a comment here';
-
-# TABLE updates
-# NOTE ..?..
-
-CREATE TABLE IF NOT EXISTS `updates` (
-  `id` int(11) NOT NULL auto_increment,
-  `incidentid` int(11) default NULL,
-  `userid` smallint(6) default NULL,
-  `type` enum('default','editing','opening','email','reassigning','closing','reopening','auto','phonecallout','phonecallin','research','webupdate','emailout','emailin','externalinfo','probdef','solution','actionplan','slamet','reviewmet','tempassigning', 'auto_chase_email', 'auto_chase_phone', 'auto_chase_manager','auto_chased_phone','auto_chased_manager','auto_chase_managers_manager', 'customerclosurerequest', 'fromtask') default 'default',
-  `currentowner` tinyint(4) NOT NULL default '0',
-  `currentstatus` smallint(6) NOT NULL default '0',
-  `bodytext` text,
-  `timestamp` int(11) default NULL,
-  `nextaction` varchar(50) NOT NULL default '',
-  `customervisibility` enum('show','hide','unset') default 'unset',
-  `sla` enum('opened','initialresponse','probdef','actionplan','solution','closed') default NULL,
-  `duration` int(11) default NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`userid`) REFERENCES `users`(`id`),  
-  KEY `currentowner` (`currentowner`,`currentstatus`),
-  KEY `incidentid` (`incidentid`),
-  KEY `timestamp` (`timestamp`),
-  KEY `type` (`type`)
 ) DEFAULT CHARACTER SET = utf8
 COMMENT = 'missing a comment here';
 
@@ -1232,7 +1249,7 @@ CREATE TABLE IF NOT EXISTS `usersoftware` (
   FOREIGN KEY (`userid`) REFERENCES `users`(`id`),  
   KEY `backupid` (`backupid`)
 ) DEFAULT CHARACTER SET = utf8
-COMMENT='Defines which software users have expertise with';
+COMMENT='List of skills (fka software) users do support.';
 
 # TABLE userstatus
 # NOTE ..?..
