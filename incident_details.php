@@ -814,8 +814,11 @@ else
             }
             echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
         }
-
+        
+        plugin_do('incident_details_updatehead_content_row');
         echo "</div>\n";
+        plugin_do('incident_details_update_content_row');
+        
         if (!empty($updatebody))
         {
             if ($update->customervisibility == 'show')
