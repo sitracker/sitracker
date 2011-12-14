@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 include ('calendar/calendar.inc.php');
 
-$groupid = clean_int($_REQUEST['gid']);
+$groupid = cleanvar($_REQUEST['gid']); // can be 'all'
 if (empty($groupid)) $groupid = clean_int($_SESSION['groupid']);
 
 // External variables

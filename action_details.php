@@ -63,7 +63,7 @@ $action = clean_fixed_list($_REQUEST['action'], array('', 'save', 'delete'));
 
 if ($trigger_mode == 'system')
 {
-    $return = 'system_actions.php';
+    $return = "system_actions.php";
 }
 else
 {
@@ -95,8 +95,11 @@ switch ($action)
         $triggerid = clean_int($_REQUEST['id']);
 
         // FIXME TODO implement deleting triggers
-        trigger_error("Delete not implemented yet", E_USER_WARNING);
-        html_redirect($return, FALSE, 'Not Implemented');
+
+        $sql =  "DELETE from $dbTriggers where id = $triggerid";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        html_redirect($return, TRUE);
         break;
 
     default:

@@ -358,11 +358,12 @@ if ($emails > 0)
                 $data = $attachment['Data'];
                 $filename = utf8_encode(mb_decode_mimeheader($attachment['FileName']));
                 $filename = str_replace(' ', '_', $filename);
+                $filename = clean_fspath($filename);
 
                 if (empty($filename))
                 {
                     $filename = 'part'.$part;
-                    if ($attachment['SubType'] = 'jpeg') $filename .= '.jpeg';
+                    if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
                     $part++;
                 }
                 $filesize = mb_strlen($data);

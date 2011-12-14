@@ -36,7 +36,7 @@ if (empty($showfoc) OR $showfoc != 'show')
 
 $sitestr = '';
 
-$csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES, "ISO-8859-15"); // Note using -15 as -1 doesnt support euro
+$csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES);
 
 if (!empty($sites))
 {

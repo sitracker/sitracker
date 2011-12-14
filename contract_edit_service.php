@@ -243,6 +243,13 @@ switch ($mode)
         if ($billtype == 'billperunit') $incidentrate = 0;
         elseif ($billtype == 'billperincident') $unitrate = 0;
 
+        $startdate = strtotime($_REQUEST['startdate']);
+        if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
+        else $startdate = date('Y-m-d', $now);
+        $enddate = strtotime($_REQUEST['enddate']);
+        if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
+        else $enddate = date('Y-m-d', $now);
+        
         $_SESSION['formdata']['edit_service'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE,
                                                  array("@"), array("'" => '"'));
 
@@ -266,16 +273,17 @@ switch ($mode)
             $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
         }
 
+        if ($startdate > $enddate)
+        {
+            $errors++;
+            $_SESSION['formerrors']['edit_service']['amount'] = user_alert($strErrorStartDateCannotBeAfterEndDate, E_USER_ERROR);
+        }
+
         if ($errors === 0)
         {
             $originalcredit = clean_float($_REQUEST['originalcredit']);
 
-            $startdate = strtotime($_REQUEST['startdate']);
-            if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
-            else $startdate = date('Y-m-d',$now);
-            $enddate = strtotime($_REQUEST['enddate']);
-            if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
-            else $enddate = date('Y-m-d',$now);
+            
 
             $notes = clean_dbstring($_REQUEST['notes']);
 
