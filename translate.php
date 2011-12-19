@@ -293,6 +293,7 @@ elseif ($mode == "save")
     $translatedcount = 0;
     foreach (array_keys($_SESSION['translation_fromvalues']) as $key)
     {
+        $key = clean_alphanumeric($key);
         if (!empty($_POST[$key]) AND substr($key, 0, 3) == "str")
         {
             if ($lastchar!='' AND substr($key, 3, 1) != $lastchar) $i18nfile .= "\n";

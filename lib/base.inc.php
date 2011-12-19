@@ -165,7 +165,10 @@ function clean_int($vars)
     }
     elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
-        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+        if ($vars != '')
+        {
+            trigger_error("Input was expected to be numeric but received string [$vars] instead", E_USER_WARNING);
+        }
         $var = 0;
     }
     else
@@ -213,17 +216,26 @@ function clean_float($vars)
   * @returns string - DB safe variable
   * @note Strips HTML
 */
-function clean_dbstring($string)
+function clean_dbstring($vars)
 {
-    $string = strip_tags($string);
-
-    if (get_magic_quotes_gpc() == 1)
+    if (is_array($vars))
     {
-        stripslashes($string);
+        foreach ($vars as $key => $singlevar)
+        {
+            $string[$key] = clean_dbstring($singlevar);
+        }
     }
+    else
+    {
+        $string = strip_tags($vars);
 
-    $string = mysql_real_escape_string($string);
+        if (get_magic_quotes_gpc() == 1)
+        {
+            stripslashes($string);
+        }
 
+        $string = mysql_real_escape_string($string);
+    }
     return $string;
 }
 
@@ -331,6 +343,31 @@ function clean_fspath($string)
     $string = str_replace($bad,'', $string);
 
     return $string;
+}
+
+
+/**
+  * Make an external variable safe. Force it to be an alphanumeric string.
+  * @author Ivan Lucas
+  * @param mixed $string variable to make safe
+  * @returns string - safe variable, only A-Z, a-z or 0 - 9 characters
+  * @note whitespace not allowed
+*/
+function clean_alphanumeric($vars)
+{
+    if (is_array($vars))
+    {
+        foreach ($vars as $key => $singlevar)
+        {
+            $var[$key] = clean_alphanumeric($singlevar);
+        }
+    }
+    else
+    {
+        $var = preg_replace("/[^a-zA-Z0-9]/", "", $vars);
+    }
+
+    return $var;
 }
 
 

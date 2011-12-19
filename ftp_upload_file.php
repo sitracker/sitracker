@@ -102,7 +102,7 @@ else
 //     echo "<pre>".print_r($_FILES,true)."</pre>";
 
     // TODO v3.2x ext variables
-    $file_name = $_FILES['file']['name'];
+    $file_name = clean_fspath($_FILES['file']['name']);
 
     $shortdescription = clean_dbstring($_REQUEST['shortdescription']);
     $longdescription = clean_dbstring($_REQUEST['longdescription']);
@@ -143,25 +143,25 @@ else
     // receive the uploaded file to a temp directory on the local server
     if ($_FILES['file']['error'] != '' AND $_FILES['file']['error'] != UPLOAD_ERR_OK)
     {
-        echo get_file_upload_error_message($_FILES['file']['error'], $_FILES['file']['name']);
+        echo get_file_upload_error_message($_FILES['file']['error'], cleanvar($_FILES['file']['name']));
     }
     else
     {
-        $filepath = $CONFIG['attachment_fspath'].$file_name;
-        $mv = move_uploaded_file($_FILES['file']['tmp_name'], $filepath);
-        if (!mv) trigger_error("Problem moving uploaded file from temp directory: {$filepath}", E_USER_WARNING);
+        $filepath = $CONFIG['attachment_fspath'] . $file_name;
+        $mv = @move_uploaded_file($_FILES['file']['tmp_name'], $filepath);
+        if (!mv) trigger_error("Problem moving uploaded file from temp directory.", E_USER_WARNING);
 
-        if (!file_exists($filepath)) trigger_error("Error the temporary upload file ($file) was not found at: {$filepath}", E_USER_WARNING);
+        if (!file_exists($filepath)) trigger_error("Error the temporary upload file was not found.", E_USER_WARNING);
 
         // Check file size
         $filesize = filesize($filepath);
         if ($filesize > $CONFIG['upload_max_filesize'])
         {
-            trigger_error("User Error: Attachment too large or file ('.$file.') upload error - size: ".filesize($filepath), E_USER_WARNING);
+            trigger_error("User Error: Attachment too large or file upload error.", E_USER_WARNING);
             // throwing an error isn't the nicest thing to do for the user but there seems to be no way of
             // checking file sizes at the client end before the attachment is uploaded. - INL
         }
-        if ($filesize == FALSE) trigger_error("Error handling uploaded file: {$file}", E_USER_WARNING);
+        if ($filesize == FALSE) trigger_error("Error handling uploaded file", E_USER_WARNING);
 
         // set up basic connection
         $conn_id = create_ftp_connection();
@@ -169,7 +169,7 @@ else
         $destination_filepath = $CONFIG['ftp_path'] . $file_name;
 
         // check the source file exists
-        if (!file_exists($filepath)) trigger_error("Source file cannot be found: {$filepath}", E_USER_WARNING);
+        if (!file_exists($filepath)) trigger_error("Source file cannot be found.", E_USER_WARNING);
 
         // set passive mode if required
         if (!ftp_pasv($conn_id, $CONFIG['ftp_pasv'])) trigger_error("Problem setting passive ftp mode", E_USER_WARNING);

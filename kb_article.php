@@ -44,14 +44,14 @@ if (isset($_POST['submit']))
         // Check if we had an error whilst uploading
         if ($_FILES['attachment']['error'] != '' AND $_FILES['attachment']['error'] != UPLOAD_ERR_OK)
         {
-            echo get_file_upload_error_message($_FILES['attachment']['error'], $_FILES['attachment']['name']);
+            echo get_file_upload_error_message($_FILES['attachment']['error'], cleanvar($_FILES['attachment']['name']));
         }
         else
         {
             // OK to proceed
             // Create an entry in the files table
             $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
-            $sql .= "VALUES ('public', '" . cleanvar($_FILES['attachment']['name']). "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
+            $sql .= "VALUES ('public', '" . clean_dbstring(clean_fspath($_FILES['attachment']['name'])). "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
             mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
             $fileid =  mysql_insert_id();
@@ -59,7 +59,7 @@ if (isset($_POST['submit']))
             $kb_attachment_fspath = $CONFIG['attachment_fspath'] . DIRECTORY_SEPARATOR . "kb" . DIRECTORY_SEPARATOR . $kbid . DIRECTORY_SEPARATOR;
 
             // make incident attachment dir if it doesn't exist
-            $newfilename = $kb_attachment_fspath . $fileid . "-".$_FILES['attachment']['name'];
+            $newfilename = $kb_attachment_fspath . $fileid . "-" . clean_fspath($_FILES['attachment']['name']);
             $umask = umask(0000);
             $mk = TRUE;
             if (!file_exists($kb_attachment_fspath))
@@ -67,12 +67,12 @@ if (isset($_POST['submit']))
                 $mk = mkdir($kb_attachment_fspath, 0770, TRUE);
                 if (!$mk)
                 {
-                    trigger_error('Failed creating kb attachment directory: '.$kb_attachment_fspath, E_USER_WARNING);
+                    trigger_error('Failed creating kb attachment directory', E_USER_WARNING);
                 }
             }
             // Move the uploaded file from the temp directory into the incidents attachment dir
-            $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
-            if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+            $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+            if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
 
             //create link
             $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";

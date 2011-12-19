@@ -1585,6 +1585,7 @@ $strRules = 'Rules';
 $strRulesNotDefinable = 'Rules are not definable for this trigger action';
 # SiT running on Apache at 12:52
 $strRunningOn = 'running on %1$s at %2$s';
+$strRunNow = 'Run Now';
 $strRunManagementReports = 'Run Management Reports';
 $strRunReport = 'Run Report';
 $strRunReports = 'Run Reports';

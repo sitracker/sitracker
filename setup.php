@@ -84,6 +84,11 @@ foreach ($configfiles AS $conf_filename)
 session_name($CONFIG['session_name']);
 session_start();
 
+if (empty($_SESSION['randomhash']))
+{
+    $_SESSION['randomhash'] = sha1(uniqid(rand(), true));
+}
+
 // Force logout
 $_SESSION['auth'] = FALSE;
 $_SESSION['portalauth'] = FALSE;
@@ -162,7 +167,7 @@ switch ($_REQUEST['action'])
         {
             // We generate a path based on some semi-static values so that it's hard to guess,
             // but will still probably be the same if setup is run again the same day
-            $CONFIG['attachment_fspath'] = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . "attachments-" . $systemhash . DIRECTORY_SEPARATOR;
+            $CONFIG['attachment_fspath'] = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . "attachments-" . $_SESSION['randomhash'] . DIRECTORY_SEPARATOR;
         }
 
         // Extract the differences between the defaults and the newly configured items
