@@ -1105,8 +1105,8 @@ function contract_service_table($contractid, $billing)
         $html .= "</tr>\n";
         while ($service = mysql_fetch_object($result))
         {
-            $service->startdate = mysql2date($service->startdate . '00:00');
-            $service->enddate = mysql2date($service->enddate . '23:59');
+            $service->startdate = mysql2date($service->startdate . ' 00:00');
+            $service->enddate = mysql2date($service->enddate . ' 23:59');
             $service->lastbilled = mysql2date($service->lastbilled);
 
             $expired = false;
