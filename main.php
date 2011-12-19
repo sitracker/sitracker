@@ -26,7 +26,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled='true' ORDER BY id";
 $result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 while ($dashboard = mysql_fetch_object($result))
 {
    include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard->name}.php");
@@ -38,7 +38,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '".$_SESSION['userid']."'";
 $result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
 $dashboardcomponents = array();
 if (mysql_num_rows($result) > 0)
