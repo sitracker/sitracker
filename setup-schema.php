@@ -103,7 +103,7 @@ INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fr
 ('Default', 23, 2, 2, 2, 2, 2, 2, 2, 2);
 
 
-CREATE TABLE `{$dbBillingPeriods}` (
+CREATE TABLE IF NOT EXISTS `{$dbBillingPeriods}` (
 `engineerperiod` INT NOT NULL COMMENT 'In minutes',
 `customerperiod` INT NOT NULL COMMENT 'In minutes',
 `priority` INT( 4 ) NOT NULL,
@@ -117,7 +117,7 @@ PRIMARY KEY ( `tag`,`priority` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbClosingStatus}` (
+CREATE TABLE IF NOT EXISTS `{$dbClosingStatus}` (
  `id` int(11) NOT NULL auto_increment,
  `name` varchar(50) default NULL,
  PRIMARY KEY  (`id`)
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
 ) ENGINE=MyISAM  DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbDashboard}` (
+CREATE TABLE IF NOT EXISTS `{$dbDashboard}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `version` mediumint(9) NOT NULL default '1',
@@ -211,7 +211,7 @@ INSERT INTO `{$dbDashboard}` (`id`, `name`, `enabled`) VALUES (1, 'random_tip', 
 (9, 'tags', 'true');
 
 
-CREATE TABLE `{$dbDrafts}` (
+CREATE TABLE IF NOT EXISTS `{$dbDrafts}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL,
   `incidentid` int(11) NOT NULL,
@@ -224,7 +224,7 @@ CREATE TABLE `{$dbDrafts}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbEmailSig}` (
+CREATE TABLE IF NOT EXISTS `{$dbEmailSig}` (
   `id` int(11) NOT NULL auto_increment,
   `signature` text NOT NULL,
   `created` DATETIME NULL,
@@ -288,7 +288,7 @@ INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fr
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_SEND_FEEDBACK', 'system', 'strEmailSendFeedbackDesc', '{contactemail}', '{supportemail}', '{supportemail}', '', '', '{applicationshortname} [{incidentid}] - {incidenttitle}: feedback requested', 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}', 'hide', 'No', NULL, NULL, NULL, NULL);
 
 
-CREATE TABLE `{$dbEscalationPaths}` (
+CREATE TABLE IF NOT EXISTS `{$dbEscalationPaths}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
   `track_url` varchar(255) default NULL,
@@ -302,7 +302,7 @@ CREATE TABLE `{$dbEscalationPaths}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbFeedbackForms}` (
+CREATE TABLE IF NOT EXISTS `{$dbFeedbackForms}` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `introduction` text NOT NULL,
@@ -318,7 +318,7 @@ CREATE TABLE `{$dbFeedbackForms}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbFeedbackQuestions}` (
+CREATE TABLE IF NOT EXISTS `{$dbFeedbackQuestions}` (
   `id` int(5) NOT NULL auto_increment,
   `formid` int(5) NOT NULL default '0',
   `question` varchar(255) NOT NULL default '',
@@ -339,7 +339,7 @@ CREATE TABLE `{$dbFeedbackQuestions}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbFeedbackReport}` (
+CREATE TABLE IF NOT EXISTS `{$dbFeedbackReport}` (
   `id` int(5) NOT NULL default '0',
   `formid` int(5) NOT NULL default '0',
   `respondent` int(11) NOT NULL default '0',
@@ -362,7 +362,7 @@ CREATE TABLE `{$dbFeedbackReport}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbFeedbackRespondents}` (
+CREATE TABLE IF NOT EXISTS `{$dbFeedbackRespondents}` (
   `id` int(5) NOT NULL auto_increment,
   `formid` int(5) NOT NULL default '0',
   `contactid` int(11) NOT NULL default '0',
@@ -377,7 +377,7 @@ CREATE TABLE `{$dbFeedbackRespondents}` (
   KEY `completed` (`completed`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE `{$dbFeedbackResults}` (
+CREATE TABLE IF NOT EXISTS `{$dbFeedbackResults}` (
   `id` int(5) NOT NULL auto_increment,
   `respondentid` int(5) NOT NULL default '0',
   `questionid` int(5) NOT NULL default '0',
@@ -393,7 +393,7 @@ CREATE TABLE `{$dbFeedbackResults}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbFiles}` (
+CREATE TABLE IF NOT EXISTS `{$dbFiles}` (
   `id` int(11) NOT NULL auto_increment,
   `category` enum('public','private','protected','ftp') NOT NULL default 'public',
   `filename` varchar(255) NULL default '',
@@ -422,7 +422,7 @@ CREATE TABLE `{$dbFiles}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbGroups}` (
+CREATE TABLE IF NOT EXISTS `{$dbGroups}` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `imageurl` varchar(255) NOT NULL default '',
@@ -434,7 +434,7 @@ CREATE TABLE `{$dbGroups}` (
 ) ENGINE=MyISAM COMMENT='List of user groups' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbHolidays}` (
+CREATE TABLE IF NOT EXISTS `{$dbHolidays}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
   `type` int(11) NOT NULL default '1',
@@ -449,7 +449,7 @@ CREATE TABLE `{$dbHolidays}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbIncidentPools}` (
+CREATE TABLE IF NOT EXISTS `{$dbIncidentPools}` (
   `id` int(11) NOT NULL auto_increment,
   `maintenanceid` int(11) NOT NULL default '0',
   `siteid` int(11) NOT NULL default '0',
@@ -460,7 +460,7 @@ CREATE TABLE `{$dbIncidentPools}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbIncidentProductInfo}` (
+CREATE TABLE IF NOT EXISTS `{$dbIncidentProductInfo}` (
   `id` int(11) NOT NULL auto_increment,
   `incidentid` int(11) default NULL,
   `productinfoid` int(11) default NULL,
@@ -473,7 +473,7 @@ CREATE TABLE `{$dbIncidentProductInfo}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbIncidents}` (
+CREATE TABLE IF NOT EXISTS `{$dbIncidents}` (
   `id` int(11) NOT NULL auto_increment,
   `escalationpath` int(11) default NULL,
   `externalid` varchar(50) default NULL,
@@ -523,7 +523,7 @@ CREATE TABLE `{$dbIncidents}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbIncidentStatus}` (
+CREATE TABLE IF NOT EXISTS `{$dbIncidentStatus}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(50) default NULL,
   `ext_name` varchar(50) default NULL,
@@ -543,7 +543,7 @@ INSERT INTO `{$dbIncidentStatus}` VALUES (9, 'strUnsupported', 'strUnsupported')
 INSERT INTO `{$dbIncidentStatus}` VALUES (10, 'strActiveUnassigned', 'strActive');
 
 
-CREATE TABLE `{$dbInventory}` (
+CREATE TABLE IF NOT EXISTS `{$dbInventory}` (
   `id` int(11) NOT NULL auto_increment,
   `identifier` varchar(255) default NULL,
   `name` varchar(255) NOT NULL,
@@ -566,7 +566,7 @@ CREATE TABLE `{$dbInventory}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbJournal}` (
+CREATE TABLE IF NOT EXISTS `{$dbJournal}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
   `timestamp` timestamp NOT NULL,
@@ -580,7 +580,7 @@ CREATE TABLE `{$dbJournal}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbKBArticles}` (
+CREATE TABLE IF NOT EXISTS `{$dbKBArticles}` (
   `docid` int(5) NOT NULL auto_increment,
   `doctype` int(5) NOT NULL default '0',
   `title` varchar(255) NOT NULL default '',
@@ -598,7 +598,7 @@ CREATE TABLE `{$dbKBArticles}` (
 ) ENGINE=MyISAM COMMENT='Knowledge base articles' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbKBContent}` (
+CREATE TABLE IF NOT EXISTS `{$dbKBContent}` (
   `docid` int(5) NOT NULL default '0',
   `id` int(7) NOT NULL auto_increment,
   `ownerid` smallint(6) NOT NULL default '0',
@@ -615,14 +615,14 @@ CREATE TABLE `{$dbKBContent}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbKBSoftware}` (
+CREATE TABLE IF NOT EXISTS `{$dbKBSoftware}` (
   `docid` int(5) NOT NULL default '0',
   `softwareid` int(5) NOT NULL default '0',
   PRIMARY KEY  (`docid`,`softwareid`)
 ) ENGINE=MyISAM COMMENT='Links kb articles with software' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbLicenceTypes}` (
+CREATE TABLE IF NOT EXISTS `{$dbLicenceTypes}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) default NULL,
   PRIMARY KEY  (`id`)
@@ -635,7 +635,7 @@ INSERT INTO `{$dbLicenceTypes}` VALUES (4, 'Site');
 INSERT INTO `{$dbLicenceTypes}` VALUES (5, 'Evaluation');
 
 
-CREATE TABLE `{$dbLinks}` (
+CREATE TABLE IF NOT EXISTS `{$dbLinks}` (
      `linktype` int(11) NOT NULL default '0',
      `origcolref` int(11) NOT NULL default '0',
      `linkcolref` int(11) NOT NULL default '0',
@@ -646,7 +646,7 @@ CREATE TABLE `{$dbLinks}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbLinkTypes}` (
+CREATE TABLE IF NOT EXISTS `{$dbLinkTypes}` (
      `id` int(11) NOT NULL auto_increment,
      `name` varchar(255) NOT NULL default '',
      `lrname` varchar(255) NOT NULL default '',
@@ -673,7 +673,7 @@ VALUES (1,'Task','Subtask','Parent Task','tasks','id','tasks','id','name','','vi
 (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
 
-CREATE TABLE `{$dbMaintenance}` (
+CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `id` int(11) NOT NULL auto_increment,
   `site` int(11) default NULL,
   `product` int(11) default NULL,
@@ -698,7 +698,7 @@ CREATE TABLE `{$dbMaintenance}` (
   KEY `productonly` (`productonly`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE `{$dbNotes}` (
+CREATE TABLE IF NOT EXISTS `{$dbNotes}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL default '0',
   `timestamp` timestamp NOT NULL,
@@ -712,7 +712,7 @@ CREATE TABLE `{$dbNotes}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbNotices}` (
+CREATE TABLE IF NOT EXISTS `{$dbNotices}` (
   `id` int(11) NOT NULL auto_increment,
   `userid` smallint(6) NOT NULL,
   `template` varchar(255) NULL,
@@ -847,7 +847,7 @@ INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'strEditServiceDetails');
 INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'strAdjustActivityDuration');
 
 
-CREATE TABLE `{$dbPermissionCategories}` (
+CREATE TABLE IF NOT EXISTS `{$dbPermissionCategories}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
 `category` VARCHAR( 255 ) NOT NULL ,
 PRIMARY KEY ( `id` )
@@ -867,7 +867,7 @@ INSERT INTO `{$dbPermissionCategories}` (`id`, `category`) VALUES(10, 'strHolida
 INSERT INTO `{$dbPermissionCategories}` (`id`, `category`) VALUES(11, 'strOther');
 
 
-CREATE TABLE `{$dbPriority}` (
+CREATE TABLE IF NOT EXISTS `{$dbPriority}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
@@ -879,7 +879,7 @@ INSERT INTO `{$dbPriority}` VALUES (3, 'High');
 INSERT INTO `{$dbPriority}` VALUES (4, 'Critical');
 
 
-CREATE TABLE `{$dbProductInfo}` (
+CREATE TABLE IF NOT EXISTS `{$dbProductInfo}` (
   `id` int(11) NOT NULL auto_increment,
   `productid` int(11) default NULL,
   `information` text,
@@ -888,7 +888,7 @@ CREATE TABLE `{$dbProductInfo}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbProducts}` (
+CREATE TABLE IF NOT EXISTS `{$dbProducts}` (
   `id` int(11) NOT NULL auto_increment,
   `vendorid` int(5) NOT NULL default '0',
   `name` varchar(50) default NULL,
@@ -899,7 +899,7 @@ CREATE TABLE `{$dbProducts}` (
 ) ENGINE=MyISAM COMMENT='Current List of Products' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbRelatedIncidents}` (
+CREATE TABLE IF NOT EXISTS `{$dbRelatedIncidents}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
 `incidentid` INT( 5 ) NOT NULL ,
 `relation` ENUM( 'child', 'sibling' ) DEFAULT 'child' NOT NULL ,
@@ -910,7 +910,7 @@ INDEX ( `incidentid` , `relatedid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbResellers}` (
+CREATE TABLE IF NOT EXISTS `{$dbResellers}` (
   `id` tinyint(4) NOT NULL auto_increment,
   `name` varchar(100) default NULL,
   PRIMARY KEY  (`id`)
@@ -919,7 +919,7 @@ CREATE TABLE `{$dbResellers}` (
 INSERT INTO `{$dbResellers}` VALUES (1,'Us (No Reseller)');
 
 
-CREATE TABLE `{$dbRoles}` (
+CREATE TABLE IF NOT EXISTS `{$dbRoles}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
 `rolename` VARCHAR( 255 ) NOT NULL ,
 `description` text NULL,
@@ -931,7 +931,7 @@ INSERT INTO `{$dbRoles}` ( `id` , `rolename` ) VALUES ('2', 'Manager');
 INSERT INTO `{$dbRoles}` ( `id` , `rolename` ) VALUES ('3', 'User');
 
 
-CREATE TABLE `{$dbRolePermissions}` (
+CREATE TABLE IF NOT EXISTS `{$dbRolePermissions}` (
 `roleid` tinyint( 4 ) NOT NULL default '0',
 `permissionid` int( 5 ) NOT NULL default '0',
 `granted` enum( 'true', 'false' ) NOT NULL default 'false',
@@ -1119,7 +1119,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 71, 'true');
 
 
-CREATE TABLE `{$dbScheduler}` (
+CREATE TABLE IF NOT EXISTS `{$dbScheduler}` (
   `id` int(11) NOT NULL auto_increment,
   `action` varchar(50) NOT NULL,
   `params` varchar(255) NOT NULL,
@@ -1172,7 +1172,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbServiceLevels}` (
+CREATE TABLE IF NOT EXISTS `{$dbServiceLevels}` (
   `tag` varchar(32) NOT NULL default '',
   `priority` int(5) NOT NULL default '0',
   `initial_response_mins` int(11) NOT NULL default '0',
@@ -1193,7 +1193,7 @@ INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14,
 INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
 
 
-CREATE TABLE `{$dbSetTags}` (
+CREATE TABLE IF NOT EXISTS `{$dbSetTags}` (
 `id` INT NOT NULL ,
 `type` MEDIUMINT NOT NULL ,
 `tagid` INT NOT NULL ,
@@ -1210,14 +1210,14 @@ CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
 ) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbSiteContacts}` (
+CREATE TABLE IF NOT EXISTS `{$dbSiteContacts}` (
   `siteid` int(11) NOT NULL default '0',
   `contactid` int(11) NOT NULL default '0',
   PRIMARY KEY  (`siteid`,`contactid`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbSites}` (
+CREATE TABLE IF NOT EXISTS `{$dbSites}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `department` varchar(255) DEFAULT NULL,
@@ -1244,7 +1244,7 @@ CREATE TABLE `{$dbSites}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbSiteTypes}` (
+CREATE TABLE IF NOT EXISTS `{$dbSiteTypes}` (
   `typeid` int(5) NOT NULL auto_increment,
   `typename` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`typeid`)
@@ -1255,7 +1255,7 @@ INSERT INTO `{$dbSiteTypes}` VALUES (2, 'Commercial');
 INSERT INTO `{$dbSiteTypes}` VALUES (3, 'Academic');
 
 
-CREATE TABLE `{$dbSoftware}` (
+CREATE TABLE IF NOT EXISTS `{$dbSoftware}` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `vendorid` INT( 5 ) NOT NULL default '0',
@@ -1268,7 +1268,7 @@ CREATE TABLE `{$dbSoftware}` (
 INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
 
 
-CREATE TABLE `{$dbSoftwareProducts}` (
+CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   `productid` int(5) NOT NULL default '0',
   `softwareid` int(5) NOT NULL default '0',
   PRIMARY KEY  (`productid`,`softwareid`)
@@ -1277,7 +1277,7 @@ CREATE TABLE `{$dbSoftwareProducts}` (
 INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
 
 
-CREATE TABLE `{$dbSupportContacts}` (
+CREATE TABLE IF NOT EXISTS `{$dbSupportContacts}` (
   `maintenanceid` int(11) default NULL,
   `contactid` int(11) default NULL,
   PRIMARY KEY ( `maintenanceid` , `contactid` )
@@ -1286,14 +1286,14 @@ CREATE TABLE `{$dbSupportContacts}` (
 INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 
-CREATE TABLE `{$dbTags}` (
+CREATE TABLE IF NOT EXISTS `{$dbTags}` (
   `tagid` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`tagid`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbTasks}` (
+CREATE TABLE IF NOT EXISTS `{$dbTasks}` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
   `description` text NOT NULL,
@@ -1312,7 +1312,7 @@ CREATE TABLE `{$dbTasks}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbTempAssigns}` (
+CREATE TABLE IF NOT EXISTS `{$dbTempAssigns}` (
   `incidentid` int(5) NOT NULL default '0',
   `originalowner` smallint(6) NOT NULL default '0',
   `userstatus` tinyint(4) NOT NULL default '1',
@@ -1322,7 +1322,7 @@ CREATE TABLE `{$dbTempAssigns}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbTempIncoming}` (
+CREATE TABLE IF NOT EXISTS `{$dbTempIncoming}` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `arrived` datetime NOT NULL,
     `updateid` int(11) NOT NULL DEFAULT '0',
@@ -1344,7 +1344,7 @@ CREATE TABLE `{$dbTempIncoming}` (
 ) ENGINE=MyISAM COMMENT='Temporary store for incoming attachment paths' DEFAULT CHARACTER SET = utf8;
 
 
- CREATE TABLE `{$dbTransactions}` (
+CREATE TABLE IF NOT EXISTS `{$dbTransactions}` (
 `transactionid` INT NOT NULL AUTO_INCREMENT ,
 `serviceid` INT NOT NULL ,
 `totalunits` INT NOT NULL,
@@ -1374,7 +1374,7 @@ CREATE TABLE IF NOT EXISTS `{$dbTriggers}` (
 
 {$default_triggers}
 
-CREATE TABLE `{$dbUpdates}` (
+CREATE TABLE IF NOT EXISTS `{$dbUpdates}` (
   `id` int(11) NOT NULL auto_increment,
   `incidentid` int(11) default NULL,
   `userid` smallint(6) default NULL,
@@ -1395,14 +1395,14 @@ CREATE TABLE `{$dbUpdates}` (
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbUserGroups}` (
+CREATE TABLE IF NOT EXISTS `{$dbUserGroups}` (
   `userid` smallint(6) NOT NULL default '0',
   `groupid` int(5) NOT NULL default '0',
   PRIMARY KEY  (`userid`,`groupid`)
 ) ENGINE=MyISAM COMMENT='Links users with groups' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbUserPermissions}` (
+CREATE TABLE IF NOT EXISTS `{$dbUserPermissions}` (
   `userid` smallint(6) NOT NULL default '0',
   `permissionid` int(5) NOT NULL default '0',
   `granted` enum('true','false') NOT NULL default 'false',
@@ -1488,7 +1488,7 @@ INSERT INTO `{$dbUserPermissions}` VALUES (1, 76, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 77, 'true');
 
 
-CREATE TABLE `{$dbUsers}` (
+CREATE TABLE IF NOT EXISTS `{$dbUsers}` (
   `id` smallint(6) NOT NULL auto_increment,
   `username` varchar(50) default NULL,
   `password` varchar(50) default NULL,
@@ -1543,7 +1543,7 @@ CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
 ) ENGINE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbUserSoftware}` (
+CREATE TABLE IF NOT EXISTS `{$dbUserSoftware}` (
   `userid` smallint(6) NOT NULL default '0',
   `softwareid` int(5) NOT NULL default '0',
   `backupid` smallint(6) NOT NULL default '0',
@@ -1552,7 +1552,7 @@ CREATE TABLE `{$dbUserSoftware}` (
 ) ENGINE=MyISAM COMMENT='Defines which software users have expertise with' DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE `{$dbUserStatus}` (
+CREATE TABLE IF NOT EXISTS `{$dbUserStatus}` (
   `id` int(11) NOT NULL,
   `name` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
@@ -1571,7 +1571,7 @@ INSERT INTO `{$dbUserStatus}` VALUES (8, 'strAbsentSick');
 INSERT INTO `{$dbUserStatus}` VALUES (9, 'strWorkingAway');
 
 
-CREATE TABLE `{$dbVendors}` (
+CREATE TABLE IF NOT EXISTS `{$dbVendors}` (
   `id` int(5) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)

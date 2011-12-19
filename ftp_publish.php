@@ -165,7 +165,7 @@ else
 
         // store file details in database
         $sql = "INSERT INTO `{$dbFiles}` ('category', filename, size, userid, shortdescription, longdescription, path, date, expiry, fileversion) ";
-        $sql .= "VALUES ('ftp', '$destination_file', '$filesize', '".$sit[2]."', '$shortdescription', '$longdescription', '".$temp_directory.'/'."', '$now', FROM_UNIXTIME($expirydate) ,'$fileversion')";
+        $sql .= "VALUES ('ftp', '" . clean_dbstring($destination_file) . "', '$filesize', '".$sit[2]."', '$shortdescription', '$longdescription', '".$temp_directory.'/'."', '$now', FROM_UNIXTIME($expirydate) ,'$fileversion')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }

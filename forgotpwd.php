@@ -28,7 +28,7 @@ $email = clean_dbstring($_REQUEST['emailaddress']);
 $username = clean_dbstring($_REQUEST['username']);
 $userid = clean_int($_REQUEST['userid']);
 $contactid = clean_int($_REQUEST['contactid']);
-$action = clean_fixed_list($_REQUEST['action'], array('forgotpwd', 'sendpwd', 'confirmreset', 'resetpasswordform', 'savepassword', 'form'));
+$action = clean_fixed_list($_REQUEST['action'], array('form','forgotpwd', 'sendpwd', 'confirmreset', 'resetpasswordform', 'savepassword'));
 
 if (!empty($userid))
 {
@@ -43,6 +43,12 @@ $userhash = cleanvar($_REQUEST['hash']);
 switch ($action)
 {
     case 'forgotpwd':
+        $formtoken = cleanvar($_POST['formtoken']);
+        if (check_form_token($formtoken) == FALSE)
+        {
+            html_redirect("index.php", FALSE, $strFormInvalidExpired);
+            exit;
+        }
     case 'sendpwd':
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         // First look to see if this is a SiT user
@@ -141,6 +147,7 @@ switch ($action)
                 echo "<tr><th>{$strUsername}</th>";
                 echo "<td><input name='username' size='30' type='text' /></td></tr>";
                 echo "</table>";
+                echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
                 echo "<p><input type='submit' value='{$strContinue}' /></p>";
 
                 if ($mode == 'user')
@@ -172,6 +179,12 @@ switch ($action)
     break;
 
     case 'resetpasswordform':
+        $formtoken = cleanvar($_POST['formtoken']);
+        if (!check_form_token($formtoken))
+        {
+            html_redirect("index.php", FALSE, $strFormInvalidExpired);
+            exit;
+        }
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if ($mode == 'user')
         {
@@ -303,6 +316,7 @@ switch ($action)
         echo "</table>";
         echo "<p class='formbuttons'><input type='submit' value='{$strContinue}' /></p>";
         echo "<input type='hidden' name='action' value='forgotpwd' />";
+        echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
         echo "</form>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

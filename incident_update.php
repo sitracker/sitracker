@@ -59,9 +59,9 @@ function display_update_page($draftid=-1)
     <script type="text/javascript">
 
     new PeriodicalExecuter(function(pe) {
-        setInterval("save_draft('"+<?php echo $id; ?>+"', 'update')")
-    },
-    10);
+            save_draft('<?php echo $id; ?>', 'update')
+        },
+        10);
 
     //-->
     </script>
@@ -446,7 +446,7 @@ else
     $att_max_filesize = return_bytes($CONFIG['upload_max_filesize']);
     if ($_FILES['attachment']['name'] != '')
     {
-        $filename = cleanvar($_FILES['attachment']['name']);
+        $filename = cleanvar(clean_fspath($_FILES['attachment']['name']));
         if ($cust_vis == 'yes')
         {
             $category = 'public';
@@ -457,7 +457,7 @@ else
         }
 
         $sql = "INSERT INTO `{$dbFiles}`(category, filename, size, userid, usertype, shortdescription, longdescription, filedate) ";
-        $sql .= "VALUES ('{$category}', '{$filename}', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', '', '', NOW())";
+        $sql .= "VALUES ('{$category}', '" . clean_dbstring($filename) . "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', '', '', NOW())";
         mysql_query($sql);
         if (mysql_error())
         {
@@ -534,26 +534,26 @@ else
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
                 mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                trigger_error("Failed creating incident attachment directory: {$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR, E_USER_WARNING);
+                trigger_error("Failed creating incident attachment directory." . DIRECTORY_SEPARATOR, E_USER_WARNING);
             }
         }
         umask($umask);
         $newfilename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}";
 
         // Move the uploaded file from the temp directory into the incidents attachment dir
-        $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+        $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
         if (!$mv)
         {
             $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+            trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
         }
 
         // Check file size before attaching
         if ($_FILES['attachment']['size'] > $att_max_filesize)
         {
-            trigger_error('User Error: Attachment too large or file upload error - size:',$_FILES['attachment']['size'], E_USER_WARNING);
+            trigger_error('User Error: Attachment too large or file upload error.', E_USER_WARNING);
             // throwing an error isn't the nicest thing to do for the user but there seems to be no guaranteed
             // way of checking file sizes at the client end before the attachment is uploaded. - INL
         }

@@ -157,7 +157,7 @@ if ($_FILES['attachment']['name'] != '')
         // OK to proceed
         // Create an entry in the files table
         $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
-        $sql .= "VALUES ('public', '{$_FILES['attachment']['name']}', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
+        $sql .= "VALUES ('public', " . clean_dbstring(clean_fspath($_FILES['attachment']['name'])) . "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
         $fileid =  mysql_insert_id();
@@ -177,7 +177,7 @@ if ($_FILES['attachment']['name'] != '')
         $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
         // make incident attachment dir if it doesn't exist
-        $newfilename = $incident_attachment_fspath . $fileid . "-".$_FILES['attachment']['name'];
+        $newfilename = $incident_attachment_fspath . $fileid . "-" . clean_fspath($_FILES['attachment']['name']);
         $umask = umask(0000);
         $mk = TRUE;
         if (!file_exists($incident_attachment_fspath))
@@ -185,12 +185,12 @@ if ($_FILES['attachment']['name'] != '')
             $mk = mkdir($incident_attachment_fspath, 0770, TRUE);
             if (!$mk)
             {
-                trigger_error('Failed creating incident attachment directory: '.$incident_attachment_fspath, E_USER_WARNING);
+                trigger_error('Failed creating incident attachment directory.', E_USER_WARNING);
             }
         }
         // Move the uploaded file from the temp directory into the incidents attachment dir
-        $mv = move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
-        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to: '.$newfilename, E_USER_WARNING);
+        $mv = @move_uploaded_file($_FILES['attachment']['tmp_name'], $newfilename);
+        if (!$mv) trigger_error('!Error: Problem moving attachment from temp directory to.', E_USER_WARNING);
 
         //create link
         $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
@@ -205,13 +205,13 @@ if ($_FILES['attachment']['name'] != '')
         if ($mk AND $mv)
         {
             echo sprintf($strFileXUploadedOK,
-                         "<strong>{$_FILES['attachment']['name']}</strong>",
+                         "<strong>" . cleanvar($_FILES['attachment']['name']) . "</strong>",
                          "{$_FILES['attachment']['type']}",
                          "{$_FILES['attachment']['size']}");
         }
         else
         {
-            echo "{$strErrorUploading} <strong>{$_FILES['attachment']['name']}</strong>";
+            echo "{$strErrorUploading} <strong>" . cleanvar($_FILES['attachment']['name']) . "</strong>";
         }
 
         // Debug

@@ -69,7 +69,7 @@ if (mysql_num_rows($result))
 }
 else
 {
-    echo "<p>{$GLOBALS['strNoResults']}</p>";
+    echo "<p class='info'>{$GLOBALS['strNoResults']}</p>";
 }
 
 mysql_free_result($result);

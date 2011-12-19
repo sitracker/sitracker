@@ -1,6 +1,6 @@
 <?php
 // SiT! Language File - German (de-DE) by Patrick Liebhardt & Raffael Luthiger
-// 2011-10-08: Translation improved by Gabriele Pohl (contact@dipohl.de)
+// 2011-12-15: Translation improved by Gabriele Pohl (contact@dipohl.de)
 
 $languagestring = 'German (de-DE)';
 $i18ncharset = 'UTF-8';
@@ -44,6 +44,7 @@ $strActions = 'Aktionen';
 $strActionNeeded = 'Aktion notwendig';
 $strActionPlan = 'Aktionsplan';
 $strActionPlanBy = 'Aktionsplan erstellt von %s';
+$strActionPlanSLA = 'Aktionsplan (SLA)';
 $strActionPlanHasBeenMade = 'Ein Aktionsplan wurde erstellt';
 $strActionTaken = 'Aktion durchgeführt';
 $strActive = 'Aktiv';
@@ -61,38 +62,33 @@ $strActivityForIncidentX = 'Tätigkeit für Anfrage %s';
 $strActivityList = 'Tätigkeitenliste';
 $strActivityMarkedCompleteSuccessfully = 'Tätigkeit wurde als erledigt gekennzeichnet.';
 $strActivityStarted = 'Ativität gestartet: %s';
+$strAddActionToXTrigger = 'Aktion zu Trigger \'%s\' hinzufügen';
 # i.e. Create, New
 $strAdd = 'Hinzufügen';
-$strAddAction = 'Aktion hinzufügen';
-$strAddActionToXTrigger = 'Aktion zu Trigger \'%s\' hinzufügen';
 $strAddContact = 'Kontaktperson hinzufügen';
 $strAddContract = 'Vertrag hinzufügen';
 $strAddContractConfirm = 'Wollen Sie diese Kontaktperson wirklich hinzufügen?';
 $strAdded = 'Hinzugefügt';
+$strAddedRelationshipIncidentX = 'Beziehung zu Ticket %s hinzugefügt';
 $strAddEmailConfirm = 'Wollen Sie wirklich diesen E-Mail Typ anlegen?';
-$strAddEmailTemplate = 'Email-Vorlage hinzufügen';
 $strAddFeedbackForm = 'Abfrageformular hinzufügen';
-$strAddIncident = 'Ticket hinzufügen';
+$strAddIncidents = 'Neue Tickets hinzufügen';
+$strAddingACondition = 'Wenn Sie die Bedingung \'Ticket Eigentümer/in ist Person A\' hinzufügen, wird Person A nur benachrichtigt, wenn Ihr Ticket zugeordnet werden.';
 $strAdditional = 'Zusätzlich';
 $strAdditionalInfo = 'Zusätzliche Informationen';
-$strAddKBArticle = 'Beitrag für Wissensfundus hinzufügen';
-$strAddLink = 'Verknüpfung hinzufügen';
-$strAddNew = 'Neu anlegen';
+$strAddNewBillingMatrix = 'Neue Kalkulationstabelle hinzufügen';
 $strAddNewSiteContact = 'Ansprechpartner/in hinzufügen';
-$strAddNewSupportedContact = 'Kontaktperson hinzufügen';
-$strAddNote = 'Notiz hinzufügen';
+$strAddNewSites = 'Neue Niederlassung hinzufügen';
 $strAddProduct = 'Produkt hinzufügen';
 $strAddProductInformation = 'Produkt Information hinzufügen';
-$strAddProductQuestion = 'Produktspezifische Fragestellung ergänzen';
 $strAddReseller = 'Wiederverkäufer/in anlegen';
 $strAddress = 'Adresse';
 $strAddress1 = 'Adresse1';
 $strAddress2 = 'Adresse2';
 $strAddRSSAtomFeed = 'RSS/Atom Feed hinzufügen';
 $strAddService = 'Dienstleistung hinzufügen';
-$strAddServiceLevel = 'Dienstezusage hinzufügen';
-# i.e. Physical site
-$strAddSite = 'Niederlassung hinzufügen';
+$strAddSoftware = 'Fachbereich hinzufügen';
+# Comparison with en-GB.inc.php until here done
 # i.e. Addition of site failed
 $strAddXfailed = 'Hinzufügen von %s fehlgeschlagen';
 $strAddSiteSupportIncident = 'Ticket für Kunde anlegen';

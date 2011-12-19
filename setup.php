@@ -23,6 +23,8 @@ define ('APPLICATION_I18NPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR
 define ('APPLICATION_PORTALPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'portal') . DIRECTORY_SEPARATOR);
 define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'plugins') . DIRECTORY_SEPARATOR);
 
+// Define permissions
+require (APPLICATION_LIBPATH . 'constants.inc.php');
 
 // Load config defaults
 @include (APPLICATION_LIBPATH . 'defaults.inc.php');
@@ -81,6 +83,11 @@ foreach ($configfiles AS $conf_filename)
 
 session_name($CONFIG['session_name']);
 session_start();
+
+if (empty($_SESSION['randomhash']))
+{
+    $_SESSION['randomhash'] = sha1(uniqid(rand(), true));
+}
 
 // Force logout
 $_SESSION['auth'] = FALSE;
@@ -160,7 +167,7 @@ switch ($_REQUEST['action'])
         {
             // We generate a path based on some semi-static values so that it's hard to guess,
             // but will still probably be the same if setup is run again the same day
-            $CONFIG['attachment_fspath'] = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . "attachments-" . $systemhash . DIRECTORY_SEPARATOR;
+            $CONFIG['attachment_fspath'] = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . "attachments-" . $_SESSION['randomhash'] . DIRECTORY_SEPARATOR;
         }
 
         // Extract the differences between the defaults and the newly configured items
