@@ -837,7 +837,7 @@ function saction_ldapSync()
 
                     if (!ldap_storeDetails('', $userid, TRUE, TRUE, $ldap_conn, $user_attributes))
                     {
-                        trigger_error("Failed to store details for userid {$userid}", E_USER_WARNING);
+                        debug_log("Failed to store details for userid {$userid}");
                         $success = FALSE;
                     }
                     else
@@ -950,8 +950,12 @@ function saction_ldapSync()
 
                         if (!ldap_storeDetails('', $contactid, FALSE, TRUE, $ldap_conn, $contact_attributes))
                         {
-                            trigger_error("Failed to store details for contactid {$contactid}", E_USER_WARNING);
+                            debug_log("Failed to store details for contactid {$contactid}");
                             $success = FALSE;
+                        }
+                        else
+                        {
+                            $success = TRUE;
                         }
                     }
                 }
