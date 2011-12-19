@@ -170,9 +170,9 @@ switch ($step)
         //<![CDATA[
 
         new PeriodicalExecuter(function(pe) {
-                                        setInterval("save_draft('"+<?php echo $id; ?>+"', 'email')")
-                                    },
-                                    10);
+                save_draft('<?php echo $id; ?>', 'email')
+            },
+            10);
 
         //]]>
         </script>

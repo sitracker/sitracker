@@ -59,9 +59,9 @@ function display_update_page($draftid=-1)
     <script type="text/javascript">
 
     new PeriodicalExecuter(function(pe) {
-        setInterval("save_draft('"+<?php echo $id; ?>+"', 'update')")
-    },
-    10);
+            save_draft('<?php echo $id; ?>', 'update')
+        },
+        10);
 
     //-->
     </script>
