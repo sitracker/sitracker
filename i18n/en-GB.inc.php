@@ -1359,6 +1359,7 @@ $strOpenedby = 'Opened by %s';
 $strOpenedbyXonY = 'Opened by %1$s on %2$s';
 $strOpenedViaThePortalByX = 'Opened via the portal by %s';
 $strOpenForX = 'Open for %s';
+$strOptionional = 'Optional';
 $strOptions = 'Options';
 $strOptionsOnePerLine = 'Options (one per line)';
 $strOriginalMessageReceivedAt = 'Original message received at: %s';

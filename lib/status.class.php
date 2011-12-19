@@ -43,7 +43,15 @@ class Status {
     {
         $s = new StatusItem();
         $s->checkname = $name;
-        $s->minimum = $GLOBALS['strInstalled'];
+        if ($min_status == INSTALL_FATAL)
+        {
+            $s->minimum = $GLOBALS['strInstalled'];
+        }
+        else
+        {
+            $s->minimum = $GLOBALS['strOptionional'];
+        }
+
         if (extension_loaded($extension))
         {
             $s->found = $GLOBALS['strInstalled'];
