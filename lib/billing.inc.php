@@ -423,8 +423,8 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
     $sql .= "WHERE contractid = {$contractid} ";
     if ($showonlycurrentlyvalid)
     {
-        $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} ";
-        $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
+        $date = ldate('Y-m-d', $now);
+        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -1667,8 +1667,8 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
 
     if ($showonlycurrentlyvalid)
     {
-        $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} ";
-        $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
+        $date = ldate('Y-m-d', $now);
+        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $sql .= "ORDER BY enddate DESC";
 
@@ -1717,8 +1717,8 @@ function contract_balance($contractid, $includenonapproved = FALSE, $includerese
 
     if ($showonlycurrentlyvalid)
     {
-        $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} ";
-        $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
+        $date = ldate('Y-m-d', $now);
+        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $sql .= "ORDER BY enddate DESC";
 
