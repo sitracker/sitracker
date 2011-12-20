@@ -72,7 +72,8 @@ while ($name = readdir($dir_handle))
 {
     if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
     {
-        $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
+        $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . '.php';
+        debug_log($ondisk_pluginname);
         //$ondisk_plugins[$ondisk_pluginname] = 1;
         $content = file($ondisk_pluginname);
         $content = array_filter($content, 'getplugininfo');
