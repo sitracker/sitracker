@@ -471,6 +471,7 @@ function utc_time($time = '')
 /**
  * Returns a localised and translated date.
  * DST Aware
+ * i18n assistence from http://uk.php.net/manual/en/function.date.php#105270
  * @author Ivan Lucas
  * @param string $format. date() format
  * @param int $date.  UNIX timestamp.  Uses 'now' if ommitted
@@ -478,7 +479,6 @@ function utc_time($time = '')
                      TRUE = passed as UTC
                      FALSE = passed as system time
  * @return string. An internationised date/time string
- * @todo  th/st and am/pm maybe?
  */
 function ldate($format, $date = '', $utc = FALSE)
 {
@@ -502,67 +502,90 @@ function ldate($format, $date = '', $utc = FALSE)
         $date += $CONFIG['dst_adjust'] * 60; // Add an hour of DST
     }
 
-    $datestring = date($format, $date);
-
-    // Internationalise date endings (e.g. st)
-    if (strpos($format, 'S') !== FALSE)
+    $i18nendings = array('st' => $GLOBALS['strst'],
+    					  	'nd' => $GLOBALS['strnd'],
+    					  	'rd' => $GLOBALS['strrd'],
+                            'th' => $GLOBALS['strth']);
+    
+    
+    $i18ndays = array('Monday' => $GLOBALS['strMonday'], 
+                        'Tuesday' => $GLOBALS['strTuesday'],
+                        'Wednesday' => $GLOBALS['strWednesday'],
+                        'Thursday' => $GLOBALS['strThursday'],
+                        'Friday' => $GLOBALS['strFriday'],
+                        'Saturday' => $GLOBALS['strSaturday'],
+                        'Sunday' => $GLOBALS['strSunday']);
+    
+    $i18nshortdays = array('Mon' => $GLOBALS['strMon'],
+                            'Tue' => $GLOBALS['strTue'],
+                            'Wed' => $GLOBALS['strWed'],
+                            'Thu' => $GLOBALS['strThu'],
+                            'Fri' => $GLOBALS['strFri'],
+                            'Sat' => $GLOBALS['strSat'],
+                            'Sun' => $GLOBALS['strSun']);
+    
+    $i18nmonths = array('January' => $GLOBALS['strJanuary'],
+                        'February' => $GLOBALS['strFebruary'],
+                        'March' => $GLOBALS['strMarch'],
+                        'April' => $GLOBALS['strApril'],
+                        'May' => $GLOBALS['strMay'],
+                        'June' => $GLOBALS['strJune'],
+                        'July' => $GLOBALS['strJuly'],
+                        'August' => $GLOBALS['strAugust'],
+                        'September' => $GLOBALS['strSeptember'],
+                        'October' => $GLOBALS['strOctober'],
+                        'November' => $GLOBALS['strNovember'],
+                        'December' => $GLOBALS['strDecember']);
+    
+    $i18nshortmonths = array('Jan' => $GLOBALS['strJanAbbr'],
+                                'Feb' => $GLOBALS['strFebAbbr'],
+                                'Mar' => $GLOBALS['strMarAbbr'],
+                                'Apr' => $GLOBALS['strAprAbbr'],
+                                'May' => $GLOBALS['strMayAbbr'],
+                                'Jun' => $GLOBALS['strJunAbbr'],
+                                'Jul' => $GLOBALS['strJulAbbr'],
+                                'Aug' => $GLOBALS['strAugAbbr'],
+                                'Sep' => $GLOBALS['strSepAbbr'],
+                                'Oct' => $GLOBALS['strOctAbbr'],
+                                'Nov' => $GLOBALS['strNovAbbr'],
+                                'Dec' => $GLOBALS['strDecAbbr']);
+    
+    $i18nampm = array('am' => $GLOBALS['strAM'],
+                        'pm' => $GLOBALS['strPM']);
+    
+    $components = str_split($format);
+    
+    for ($i = 0; $i < count($components); $i++)
     {
-        $endings = array('st ', 'nd ', 'rd ', 'th ');
-        $i18nendings = array($GLOBALS['strst']." ", $GLOBALS['strnd']." ",
-                            $GLOBALS['strrd']." ", $GLOBALS['strth']." ");
-        $datestring = str_replace($endings, $i18nendings, $datestring);
+        if ($components[$i] != "\\")
+        {
+            switch ($components[$i])
+            {
+                case 'S':
+                    $components[$i] = $i18nendings[date('S', $date)];
+                    break;
+                case 'l':
+                    $components[$i] = $i18ndays[date('l', $date)];
+                    break;
+                case 'D':
+                    $components[$i] = $i18nshortdays[date('D', $date)];
+                    break;
+                case 'F':
+                    $components[$i] = $i18nmonths[date('F', $date)];
+                    break;
+                case 'M':
+                    $components[$i] = $i18nshortmonths[date('M', $date)];
+                    break;
+                case 'a':
+                    $components[$i] = $i18nampm[date('a', $date)];
+                    break;
+                default:
+                    $components[$i] = date($components[$i], $date);
+            }
+        }
     }
-
-
-    // Internationalise full day names
-    if (strpos($format, 'l') !== FALSE)
-    {
-        $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-        $i18ndays = array($GLOBALS['strMonday'], $GLOBALS['strTuesday'], $GLOBALS['strWednesday'],
-                        $GLOBALS['strThursday'], $GLOBALS['strFriday'], $GLOBALS['strSaturday'], $GLOBALS['strSunday']);
-        $datestring = str_replace($days, $i18ndays, $datestring);
-    }
-
-    // Internationalise abbreviated day names
-    if (strpos($format, 'D') !== FALSE)
-    {
-        $days = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
-        $i18ndays = array($GLOBALS['strMon'], $GLOBALS['strTue'], $GLOBALS['strWed'],
-                        $GLOBALS['strThu'], $GLOBALS['strFri'], $GLOBALS['strSat'], $GLOBALS['strSun']);
-        $datestring = str_replace($days, $i18ndays, $datestring);
-    }
-
-    // Internationalise full month names
-    if (strpos($format, 'F') !== FALSE)
-    {
-        $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-        $i18nmonths = array($GLOBALS['strJanuary'], $GLOBALS['strFebruary'], $GLOBALS['strMarch'],
-                        $GLOBALS['strApril'], $GLOBALS['strMay'], $GLOBALS['strJune'], $GLOBALS['strJuly'],
-                        $GLOBALS['strAugust'], $GLOBALS['strSeptember'], $GLOBALS['strOctober'],
-                        $GLOBALS['strNovember'], $GLOBALS['strDecember']);
-        $datestring = str_replace($months, $i18nmonths, $datestring);
-    }
-
-    // Internationalise short month names
-    if (strpos($format, 'M') !== FALSE)
-    {
-        $months = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-        $i18nmonths = array($GLOBALS['strJanAbbr'], $GLOBALS['strFebAbbr'], $GLOBALS['strMarAbbr'],
-                        $GLOBALS['strAprAbbr'], $GLOBALS['strMayAbbr'], $GLOBALS['strJunAbbr'], $GLOBALS['strJulAbbr'],
-                        $GLOBALS['strAugAbbr'], $GLOBALS['strSepAbbr'], $GLOBALS['strOctAbbr'],
-                        $GLOBALS['strNovAbbr'], $GLOBALS['strDecAbbr']);
-        $datestring = str_replace($months, $i18nmonths, $datestring);
-    }
-
-    // Internationalise am/pm
-    if (strpos($format, 'a') !== FALSE)
-    {
-        $months = array('am', 'pm');
-        $i18nmonths = array($GLOBALS['strAM'], $GLOBALS['strPM']);
-        $datestring = str_replace($months, $i18nmonths, $datestring);
-    }
-
-    return $datestring;
+    
+    return implode('', $components);
 }
 
 
