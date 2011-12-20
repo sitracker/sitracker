@@ -66,12 +66,13 @@ if ($_REQUEST['action'] != 'checkforupdates')
 
 // Evaluate plugins on disk
 $path = APPLICATION_PLUGINPATH;
-$dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
+$dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory {$path}", E_USER_ERROR);
 
 while ($name = readdir($dir_handle))
 {
-    if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
+    if (endsWith($name, '.php'))
     {
+        $name = substr($name, 0, -4);
         $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . '.php';
         //$ondisk_plugins[$ondisk_pluginname] = 1;
         $content = file($ondisk_pluginname);
