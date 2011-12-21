@@ -153,6 +153,8 @@ switch ($action)
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
+        plugin_do('incident_reassign');
+        
         html_redirect("incident_details.php?id={$id}");
         break;
 
