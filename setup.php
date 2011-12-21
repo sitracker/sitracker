@@ -26,6 +26,8 @@ define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARAT
 // Define permissions
 require (APPLICATION_LIBPATH . 'constants.inc.php');
 
+require (APPLICATION_LIBPATH . 'plugins.inc.php');
+
 // Load config defaults
 @include (APPLICATION_LIBPATH . 'defaults.inc.php');
 // Keep the defaults as a seperate array
@@ -525,7 +527,7 @@ switch ($_REQUEST['action'])
                     {
                         // users table exists and has at least one record, must be already installed
                         // Do upgrade
-
+                        
                         $installed_version = current_schema_version();
                         if ($installed_version === 0)
                         {
@@ -562,6 +564,11 @@ switch ($_REQUEST['action'])
                              *****************************/
                             $installed_version = upgrade_schema($installed_version);
 
+                            /*******************************
+                            * DISABLE INCOMPATABLE PLUGINS *
+                            ********************************/
+                            sit_upgrade_plugin_check(TRUE, $application_version);
+                            
                             /******************************
                              * Do Post-upgrade tasks here *
                              ******************************/
@@ -596,6 +603,8 @@ switch ($_REQUEST['action'])
                         }
                         else
                         {
+                            echo sit_upgrade_plugin_check(FALSE, $application_version);
+
                             echo "<p>Your database schema is v".number_format($installed_version, 2);
                             if ($installed_version < $application_version)
                             {
@@ -614,17 +623,20 @@ switch ($_REQUEST['action'])
 
                             if (is_array($upgrade_schema[$installed_version * 100]))
                             {
-                                foreach ($upgrade_schema[$installed_version*100] AS $possible_schema_updates => $nothing)
+                                foreach ($upgrade_schema[$installed_version * 100] AS $possible_schema_updates => $nothing)
                                 {
                                     $possible_schema_updates = mb_substr($possible_schema_updates, 1);
                                     if ($possible_schema_updates > $installed_schema) $schemaupgradeneeded = TRUE;
                                     else $schemaupgradeneeded = FALSE;
                                 }
                             }
+
                             if ($installed_version < $application_version OR $schemaupgradeneeded == TRUE)
                             {
                                 echo setup_button('upgrade', 'Upgrade Schema');
                             }
+                            
+
                         }
 
                         if ($_REQUEST['action'] == 'createadminuser' AND setup_check_adminuser() == FALSE)
