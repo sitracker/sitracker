@@ -104,9 +104,8 @@ else
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
     echo "<div id='detailsummary'>\n";
-
     echo "<div id='row'>\n";
-    echo "<div id='left'>\n";
+    echo "<div id='left' style='width: 50%;'>\n";
 
     // First column: Contact Details
     echo "<div id='contactdetails'>\n";
@@ -121,7 +120,19 @@ else
     echo sprintf($strContactofSite, $contact, $site)." ";
     echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
     echo "</div>\n";
-    if ($incident->ccemail != '') echo "<div id='ccemail'>CC: <a href=\"mailto:{$incident->ccemail}\">{$incident->ccemail}</a><br /></div>\n";
+    
+    if ($incident->ccemail != '')
+    {
+        echo "<div id='ccemail'>\n CC: ";
+        $cc_array = explode(',', $incident->ccemail);
+        
+        foreach ($cc_array as $key => $value)
+        {
+            echo "<a href=\"mailto:{$value}\">{$value}</a> ";
+        }
+        
+        echo "</div>\n";
+    }
     
     if ($incident->phone != '' OR $incident->mobile != '')
     {
