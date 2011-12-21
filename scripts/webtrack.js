@@ -1319,10 +1319,6 @@ function switch_template()
                 });
         
         $('emailtemplatesbox').hide();
-        $('parametersbox').show();
-        $('journalbox').hide();
-        $('none').hide();
-        $('rulessection').show();
     }
     else if ($('new_action').value == 'ACTION_EMAIL')
     {
@@ -1345,29 +1341,16 @@ function switch_template()
                         }
                     }
                 });
-        
-        $('parametersbox').show();
-        $('journalbox').hide();
-        $('none').hide();
-        $('rulessection').show();
-
     }
     else if ($('new_action').value == 'ACTION_JOURNAL')
     {
-        $('parametersbox').show();
-        $('journalbox').show();
         $('emailtemplatesbox').hide();
         $('noticetemplatesbox').hide();
-        $('none').hide();
     }
     else
     {
         $('noticetemplatesbox').hide();
         $('emailtemplatesbox').hide();
-        $('parametersbox').hide();
-        $('journalbox').hide();
-        $('none').show();
-        $('rulessection').hide();
     }
 }
 

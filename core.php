@@ -166,6 +166,7 @@ mysql_query("SET CHARACTER SET utf8");
 // Soft table names
 require (APPLICATION_LIBPATH . 'tablenames.inc.php');
 
+// TODO this should really be a function as its used in sit_upgrade_plugin_check as its called from setup.php
 // Read config from database (this overrides any config in the config files
 $sql = "SELECT * FROM `{$dbConfig}`";
 $result = @mysql_query($sql);

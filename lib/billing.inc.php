@@ -423,8 +423,8 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
     $sql .= "WHERE contractid = {$contractid} ";
     if ($showonlycurrentlyvalid)
     {
-        $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} ";
-        $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
+        $date = ldate('Y-m-d', $now);
+        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -1105,8 +1105,8 @@ function contract_service_table($contractid, $billing)
         $html .= "</tr>\n";
         while ($service = mysql_fetch_object($result))
         {
-            $service->startdate = mysql2date($service->startdate . '09:00');
-            $service->enddate = mysql2date($service->enddate . '17:00');
+            $service->startdate = mysql2date($service->startdate . ' 00:00');
+            $service->enddate = mysql2date($service->enddate . ' 23:59');
             $service->lastbilled = mysql2date($service->lastbilled);
 
             $expired = false;
@@ -1667,8 +1667,8 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
 
     if ($showonlycurrentlyvalid)
     {
-        $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} ";
-        $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
+        $date = ldate('Y-m-d', $now);
+        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $sql .= "ORDER BY enddate DESC";
 
@@ -1717,8 +1717,8 @@ function contract_balance($contractid, $includenonapproved = FALSE, $includerese
 
     if ($showonlycurrentlyvalid)
     {
-        $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} ";
-        $sql .= "AND UNIX_TIMESTAMP(enddate) >= {$now}  ";
+        $date = ldate('Y-m-d', $now);
+        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $sql .= "ORDER BY enddate DESC";
 
@@ -2056,8 +2056,10 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 function service_dropdown_contract($contractid, $name, $selected=0)
 {
     global $now, $CONFIG;
+    $date = ldate('Y-m-d', $now);
+    
 	$sql = "SELECT * FROM `{$GLOBALS['dbService']}` WHERE contractid = {$contractid} ";
-    $sql .= "AND UNIX_TIMESTAMP(startdate) <= {$now} AND UNIX_TIMESTAMP(enddate) >= {$now}";
+    $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
 
@@ -2094,9 +2096,11 @@ function service_dropdown_contract($contractid, $name, $selected=0)
 function service_dropdown_site($siteid, $name, $selected=0)
 {
     global $now, $CONFIG;
+    $date = ldate('Y-m-d', $now);
+   
     $sql = "SELECT s.* FROM `{$GLOBALS['dbService']}` AS s, `{$GLOBALS['dbMaintenance']}` AS m ";
     $sql .= "WHERE s.contractid = m.id AND  m.site = {$siteid} ";
-    $sql .= "AND UNIX_TIMESTAMP(s.startdate) <= {$now} AND UNIX_TIMESTAMP(s.enddate) >= {$now}";
+    $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
 

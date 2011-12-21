@@ -16,6 +16,8 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
+require (APPLICATION_LIBPATH . 'plugins.inc.php');
+
 $seltab = clean_fixed_list($_REQUEST['tab'], array('installed', 'repository'));
 
 // Make sure right array key is used, we use the translated string as the key
@@ -23,37 +25,6 @@ $seltab = clean_fixed_list($_REQUEST['tab'], array('installed', 'repository'));
 // elseif ($seltab == 'repository') $seltab = $strRepository;
 
 $title = $strManagePlugins;
-
-function getplugininfo($string)
-{
-    if (beginsWith($string, "\$PLUGININFO["))
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-
-
-function getplugininfovalue($string)
-{
-    return trim(mb_substr($string, mb_strpos($string, '=', 12)+1)," \t\n\r\0\x0B;\'\"");
-}
-
-
-function gethtmlstring($body, $prefix, $suffix, $offset=0)
-{
-    $begin = @mb_strpos($body, $prefix, $offset);
-    $begin += mb_strlen($prefix);
-    $end = mb_strpos($body, $suffix, $begin);
-    $length = $end - $begin;
-    $htmlstring = mb_substr($body, $begin, $length);
-
-    return $htmlstring;
-}
-
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 if (!is_array($CONFIG['plugins'])) $CONFIG['plugins'] = array();
@@ -64,33 +35,7 @@ if ($_REQUEST['action'] != 'checkforupdates')
     echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=checkforupdates'>{$strCheckForUpdatesOnline}</a></p>";
 }
 
-// Evaluate plugins on disk
-$path = APPLICATION_PLUGINPATH;
-$dir_handle = @opendir($path) or trigger_error("Unable to open plugins directory $path", E_USER_ERROR);
-
-while ($name = readdir($dir_handle))
-{
-    if (is_dir(APPLICATION_PLUGINPATH . $name) AND strpos($name, '.') === FALSE)
-    {
-        $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
-        //$ondisk_plugins[$ondisk_pluginname] = 1;
-        $content = file($ondisk_pluginname);
-        $content = array_filter($content, 'getplugininfo');
-        foreach ($content AS $key => $value)
-        {
-            if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
-            if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
-            $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
-        }
-    }
-}
-
-closedir($dir_handle);
+$ondisk_plugins = get_plugins_on_disk();
 
 // Actions
 if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')

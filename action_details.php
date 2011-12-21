@@ -125,7 +125,7 @@ switch ($action)
         echo "</select>";
 
         echo "<h3>{$strNotificationMethod}</h3>";
-        echo "<p>$strChooseWhichMethodNotification</p>";
+        echo "<p>{$strChooseWhichMethodNotification}</p>";
         echo "<select id='new_action' name='new_action' onchange='switch_template()' onkeyup='switch_template()'>";
         echo "<option/>";
         foreach ($actionarray as $name => $action)
@@ -141,7 +141,7 @@ switch ($action)
         echo "<div id='emailtemplatesbox' style='display:none'>";
         echo "<h3>{$strEmailTemplate}</h3> ";
 
-        echo "<p>$strChooseWhichTemplate</p>";
+        echo "<p>{$strChooseWhichTemplate}</p>";
         echo email_templates('emailtemplate', $trigger_mode)."</div>";
 
         echo "<div id='noticetemplatesbox' style='display:none'>";

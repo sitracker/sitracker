@@ -109,6 +109,7 @@ else
     echo "<div id='left'>\n";
 
     // First column: Contact Details
+    echo "<div id='contactdetails'>\n";
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
     $contact .= "</a> ";
@@ -119,9 +120,12 @@ else
     $site .= "<br />\n";
     echo sprintf($strContactofSite, $contact, $site)." ";
     echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
-    if ($incident->ccemail != '') echo "CC: <a href=\"mailto:{$incident->ccemail}\">{$incident->ccemail}</a><br />\n";
+    echo "</div>\n";
+    if ($incident->ccemail != '') echo "<div id='ccemail'>CC: <a href=\"mailto:{$incident->ccemail}\">{$incident->ccemail}</a><br /></div>\n";
+    
     if ($incident->phone != '' OR $incident->mobile != '')
     {
+        echo "<div id='phone'>\n";
         if ($incident->phone != '')
         {
             echo "{$strTel}: {$incident->phone} ";
@@ -133,9 +137,11 @@ else
             plugin_do('incident_details_mobile');
         }
         echo "<br />\n";
+        echo "</div>\n";
     }
     else
     {
+        echo "<div id='phonedetails'>\n";
         $sitetelephone = site_telephone($incident->siteid);
         if (!empty($sitetelephone))
         {
@@ -143,17 +149,23 @@ else
             plugin_do('incident_details_phone');
             echo "<br />\n";
         }
+        echo "</div>\n";
     }
+    
     if ($incident->externalid != '' OR $incident->escalationpath > 0)
     {
+        echo "<div id='escalated'>\n";
         echo "{$strEscalated}: ";
         echo format_external_id($incident->externalid, $incident->escalationpath)."<br />\n";
+        echo "</div>\n";
     }
+    
     if ($incident->externalengineer != '')
     {
+        echo "<div id='externalengineer'>\n";
         echo $incident->externalengineer;
         if ($incident->externalemail != '') echo ", <a href=\"mailto:{$incident->externalemail}\">{$incident->externalemail}</a>";
-        echo "<br />\n";
+        echo "<br /></div>\n";
     }
 
     $sql = "SELECT * FROM {$dbLinks} AS l, {$dbInventory} AS i ";
@@ -162,10 +174,11 @@ else
     $sql .= "AND i.id = linkcolref ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    
     if (mysql_num_rows($result) > 0)
     {
         $inventory = mysql_fetch_object($result);
-        echo "<a href='inventory_view.php?id={$inventory->id}'>";
+        echo "<div id='inventory'><a href='inventory_view.php?id={$inventory->id}'>";
         echo "$inventory->name";
         if (!empty($inventory->identifier))
         {
@@ -175,10 +188,11 @@ else
         {
             echo " ({$inventory->address})";
         }
+        echo "</div>\n";
     }
 
     $tags = list_tags($id, TAG_INCIDENT, TRUE);
-    if (!empty($tags)) echo "{$tags}\n";
+    if (!empty($tags)) echo "<div id='tags'>{$tags}</div>\n";
 
     echo "</div>\n";
     echo "<div id='right'>";
@@ -186,17 +200,21 @@ else
     // Second column, Product and Incident details
     if ($incident->owner != $sit[2] OR ($incident->towner > 0 AND $incident->towner != $incident->owner))
     {
+        echo "<div id='owner'>\n";
         echo "{$strOwner}: <strong>".user_realname($incident->owner, TRUE)."</strong> ";
         $incidentowner_phone = user_phone($incident->owner);
         if ($incidentowner_phone != '') echo "({$strTel}: {$incidentowner_phone}) ";
+        
         if ($incident->towner > 0 AND $incident->towner != $incident->owner)
         {
            echo "({$strTemp}: ".user_realname($incident->towner, TRUE).")";
         }
-        echo "<br />";
+        echo "<br /></div>";
     }
+    
     if ($software_name != '' OR $incident->productversion != '' OR $incident->productservicepacks != '')
     {
+        echo "<div id='software'>\n";
         echo $software_name;
         if ($incident->productversion != '' OR $incident->productservicepacks != '')
         {
@@ -204,9 +222,12 @@ else
             if ($incident->productservicepacks != '') echo $incident->productservicepacks;
             echo ")";
         }
-        echo "<br />\n";
+        echo "<br /></div>\n";
     }
+    
+    echo "<div id='contractdetails'>\n";
     echo priority_icon($incident->priority)." ".priority_name($incident->priority);
+    
     if ($product_name != '')
     {
         echo " <a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContractDetails}' target='top.opener'>";
@@ -223,18 +244,25 @@ else
     echo " / ";
 
     echo "{$servicelevel_tag}<br />\n ";
+    echo "</div>\n";
 
     switch (does_contact_have_billable_contract($incident->contactid))
     {
         case CONTACT_HAS_BILLABLE_CONTRACT:
+            echo "<div id='billingdetails'>\n";
             echo "{$strContactHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
+            echo "</div>\n";
             break;
         case SITE_HAS_BILLABLE_CONTRACT:
+            echo "<div id='billingdetails'>\n";
             echo "{$strSiteHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
+            echo "</div>\n";
             break;
     }
 
     $num_open_activities = open_activities_for_incident($incidentid);
+    echo "<div id='openwaiting'>\n";
+    
     if (count($num_open_activities) > 0)
     {
         echo "<a href='tasks.php?incident={$incidentid}' class='info'>";
@@ -255,6 +283,7 @@ else
         echo icon('note', 16, $strDraftsUpdateExist);
         echo "</a> ";
     }
+    echo "</div>\n";
 
     // Product Info
     if (!empty($incident->product))
@@ -263,20 +292,25 @@ else
         $pisql .= "FROM `{$dbIncidentProductInfo}` AS ipi, `{$dbProductInfo}` AS pi ";
         $pisql .= "WHERE pi.id = ipi.productinfoid AND ipi.incidentid = {$incidentid}";
         $piresult = mysql_query($pisql);
+        
         if (mysql_num_rows($piresult) > 0)
         {
+            echo "<div id='productinfo'>\n";
+            
             while ($pi = mysql_fetch_object($piresult))
             {
                 echo "{$pi->label}: {$pi->information} <br />\n";
             }
+            echo "</div>\n";
         }
     }
 
+    echo "<div id='slainfo'>\n";
     echo sprintf($strOpenForX, $opened_for)." - ";
     echo incidentstatus_name($incident->status);
     if ($incident->status == STATUS_CLOSED) echo " (" . closingstatus_name($incident->closingstatus) . ")";
     echo "<br />\n";
-
+    
     // Total billable duration
     $upsql = "SELECT incidentid, duration ";
     $upsql .= "FROM `{$dbUpdates}`";
@@ -325,6 +359,7 @@ else
                 echo "<br />".icon('review', 16)." {$strReviewDueNow}";
             }
         }
+        
         if ($servicelevel->timed == 'yes')
         {
             echo "<br />";
@@ -353,6 +388,7 @@ else
             }
         }
     }
+    echo "</div>\n";
 
     echo "</div>\n";
     echo "</div>\n";
