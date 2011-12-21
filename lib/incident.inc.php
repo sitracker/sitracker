@@ -578,8 +578,8 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
 {
     $rtn = FALSE;
     $sql = "SELECT count(id) AS count FROM `{$GLOBALS['dbDrafts']}` WHERE incidentid = {$incidentid} ";
-    if ($type == "update") $sql .= "AND type = 'update'";
-    elseif ($type == "email") $sql .= "AND type = 'email'";
+    if ($type == "update") $sql .= "AND type = 'update' ";
+    elseif ($type == "email") $sql .= "AND type = 'email' ";
 
     if (!empty($userid)) $sql .= "AND userid = {$userid} ";
 
@@ -590,7 +590,7 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
         $rtn = FALSE;
     }
 
-    list($count) = mysql_fetch_assoc($result);
+    list($count) = mysql_fetch_row($result);
     if ($count > 0) $rtn = TRUE;
 
     return $rtn;
