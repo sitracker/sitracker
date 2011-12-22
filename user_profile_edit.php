@@ -260,6 +260,7 @@ if (empty($mode))
     echo "<input type='hidden' name='userid' value='{$edituserid}' />";
     echo "<input type='hidden' name='mode' value='save' />";
     echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
+    echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input name='submit' type='submit' value='{$strSave}' /></p>";
     echo "</form>\n";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
