@@ -1624,11 +1624,12 @@ UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?
 ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
 ";
 
-
+//FIXME: NDT: Note added for Mantis 1755 we need to do some checks on the tables before ...
 $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;
 ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
 UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
 UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
+ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
 
 
 UPDATE `{$dbPermissions}` SET name = 'strAddNewSiteContact' WHERE id = 1;
@@ -1715,7 +1716,7 @@ DELETE FROM `{$dbRolePermissions}` WHERE permissionid IN (45,46,47);
 DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
 
 ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
-UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM servicelevels WHERE id = servicelevelid);
+UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM `{$dbServiceLevels}` WHERE id = servicelevelid);
 ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
 
 ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` );
@@ -1726,7 +1727,6 @@ ALTER TABLE `{$dbServiceLevels}` DROP `id`;
 
 ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
 ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
-ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
 
 UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 
