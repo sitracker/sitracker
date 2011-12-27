@@ -1623,14 +1623,19 @@ UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?
 -- PH 2010-02-08
 ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
 ";
-
 //FIXME: NDT: Note added for Mantis 1755 we need to do some checks on the tables before ...
-$upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;
-ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL ;
-UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
-UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
-ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+if (setup_check_column_exists($dbBillingMatrix, 'id'))
+{
+    $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
+}
+else
+{
+    $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;";
+}
 
+$upgrade_schema[390] .= "UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
+ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL;
+UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
 
 UPDATE `{$dbPermissions}` SET name = 'strAddNewSiteContact' WHERE id = 1;
 UPDATE `{$dbPermissions}` SET name = 'strAddNewSites' WHERE id = 2;
@@ -1716,16 +1721,20 @@ DELETE FROM `{$dbRolePermissions}` WHERE permissionid IN (45,46,47);
 DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
 
 ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
-UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM `{$dbServiceLevels}` WHERE id = servicelevelid);
-ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
+";
 
+if (setup_check_column_exists($dbServiceLevels, 'servicelevelid'))
+{
+    $upgrade_schema[390] .= "UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM `{$dbServiceLevels}` WHERE id = servicelevelid);";
+}
+
+$upgrade_schema[390] .= "ALTER TABLE `{$dbMaintenance}` DROP `servicelevelid`;
 ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `priority` );
-
 ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
 ALTER TABLE `{$dbServiceLevels}` DROP `id`;
-
 ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+
 ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
 
 UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
@@ -1742,7 +1751,7 @@ ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER
 ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
 -- CJ 2011-06-15
-UPDATE `{$dbTriggers}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `name` = 'EMAIL_SEND_FEEDBACK' ;
+UPDATE `{$dbTriggers}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `triggerid` = 'EMAIL_SEND_FEEDBACK' ;
 
 -- CJ 2011-06-15
 ALTER TABLE `{$dbUsers}` ADD `skype` varchar(70) NOT NULL default '' AFTER `msn` ;
@@ -1763,9 +1772,9 @@ UPDATE `$dbKBContent` SET header = 'strReferences' WHERE header = 'References' ;
 UPDATE `$dbIncidentStatus` SET `ext_name` = 'strAwaitingCustomerAction' WHERE `id` = 8;
 
 -- INL 2011-07-02
-UDPATE `{$dbScheduler}` SET interval = 600, descripton = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE action = 'SetUserStatus';
+UPDATE `{$dbScheduler}` SET interval = 600, descripton = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE action = 'SetUserStatus';
 -- INL 2011-08-06
-ALTER TABLE `service` DROP `dailyrate`;
+ALTER TABLE `{$dbService}` DROP `dailyrate`;
 ";
 
 // ********************************************************************
