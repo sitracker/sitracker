@@ -1751,7 +1751,7 @@ ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER
 ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
 -- CJ 2011-06-15
-UPDATE `{$dbTriggers}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `triggerid` = 'EMAIL_SEND_FEEDBACK' ;
+UPDATE `{$dbEmailTemplates}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `name` = 'EMAIL_SEND_FEEDBACK' ;
 
 -- CJ 2011-06-15
 ALTER TABLE `{$dbUsers}` ADD `skype` varchar(70) NOT NULL default '' AFTER `msn` ;
@@ -1772,7 +1772,7 @@ UPDATE `$dbKBContent` SET header = 'strReferences' WHERE header = 'References' ;
 UPDATE `$dbIncidentStatus` SET `ext_name` = 'strAwaitingCustomerAction' WHERE `id` = 8;
 
 -- INL 2011-07-02
-UPDATE `{$dbScheduler}` SET interval = 600, descripton = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE action = 'SetUserStatus';
+UPDATE `{$dbScheduler}` SET `interval` = 600, `description` = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE `action` = 'SetUserStatus';
 -- INL 2011-08-06
 ALTER TABLE `{$dbService}` DROP `dailyrate`;
 ";
