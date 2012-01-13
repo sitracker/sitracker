@@ -339,7 +339,7 @@ function clean_fspath($string)
 {
     $string = strip_tags($string);
 
-    $bad = array(':', '//', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "?", "*", '[', ']');
+    $bad = array('://', '..', '.htaccess', '.htpasswd', "\n", "\r", "\x00", "?", "*", '[', ']');
     $string = str_replace($bad,'', $string);
 
     return $string;
