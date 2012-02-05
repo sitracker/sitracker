@@ -164,7 +164,7 @@ else
         if (mysql_num_rows($result) == 0)
         {
             if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
-            else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>", E_USER_NOTICE));
+            else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>"), E_USER_NOTICE);
         }
         else
         {
