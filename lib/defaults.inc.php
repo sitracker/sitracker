@@ -389,5 +389,12 @@ $CONFIG['outbound_email_newline'] = 'LF';
 // Change the newline character if outbound emails attachments have line breaks in the wrong places.(CRLF or LF)
 $CONFIG['outbound_emailattachment_newline'] = 'CRLF';
 
+// The string used to prefix the incident number to make the incident reference custamisable
+$CONFIG['incident_reference_prefix'] = '';
 
+// The character(s) to appear before the incident number on an outgoing email e.g. in [123456] this is [
+$CONFIG['incident_id_email_opening_tag'] = '[';
+
+// The character(s) to appear after the incident number on an outgoing email e.g. in [123456] this is ]
+$CONFIG['incident_id_email_closing_tag'] = ']';
 ?>

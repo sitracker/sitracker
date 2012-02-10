@@ -115,4 +115,17 @@ abstract class Chart {
     abstract protected function draw_error();
 }
 
+
+abstract class EscalationPlugin {
+	var $name;
+	
+	/**
+	 * Returns a HTML form for this item
+	 * 
+	 */
+	abstract function getForm();
+	
+	abstract function doEscalation();
+}
+
 ?>
