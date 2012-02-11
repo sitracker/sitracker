@@ -1319,7 +1319,6 @@ if (is_array($CONFIG['plugins']))
 
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
         $pluginfilename = APPLICATION_PLUGINPATH . $plugin . DIRECTORY_SEPARATOR . "{$plugin}.php";
-        echo "A:{$pluginfilename}";
         
         if ($plugin != '')
         {
