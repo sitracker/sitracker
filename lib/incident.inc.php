@@ -627,16 +627,24 @@ function incident_id_from_subject($subject, $from)
         $result = mysql_query($sql);
         if ($result)
         {
-            while ($row = mysql_fetch_object($result))
+            while ($obj = mysql_fetch_object($result))
             {
-                if ($row->email_domain == $domain)
+                if ($obj->email_domain == $domain)
                 {
-                    $sql = "SELECT id FROM `{$dbIncidents}` ";
-                    $sql .= "WHERE externalid";
+                    $sql_ext = "SELECT id FROM `{$dbIncidents}` ";
+                    $sql_ext .= "WHERE externalid = '{$external_id}'";
+                    $result_ext = mysql_query($sql_ext);
+                    if (mysql_num_rows($result_ext) != 1)
+                    {
+                        $o = mysql_fetch_object($result_ext);
+                        $incident_id = $o->id;
+                    }                    
                 }
             }
         }
     }
+    
+    return $incident_id;
 }
 
 
