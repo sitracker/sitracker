@@ -1288,6 +1288,21 @@ function convert_string_null_safe($string)
     else return "'{$string}'";
 }
 
+
+/** 
+ * Escapes special charaters within a regular expression
+ * @author Paul Heaney
+ * @param String $string The string to replace the special characters in
+ * @return String the string with the characters replaced
+ */
+function escape_regex($string)
+{
+	$original = array ('[', ']', '(', ')');
+	$replace = array ('\[', '\]', '\(', '\)');
+	
+	return str_replace($original, $replace, $string);
+}
+
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
 
@@ -1304,6 +1319,8 @@ if (is_array($CONFIG['plugins']))
 
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
         $pluginfilename = APPLICATION_PLUGINPATH . $plugin . DIRECTORY_SEPARATOR . "{$plugin}.php";
+        echo "A:{$pluginfilename}";
+        
         if ($plugin != '')
         {
             if (file_exists($pluginfilename))

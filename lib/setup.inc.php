@@ -589,8 +589,7 @@ function current_schema_version()
  */
 function setup_check_column_exists($table_name, $column_name)
 {
-    
-    $sql = "SHOW COLUMNS FROM $table_name ";
+    $sql = "SHOW COLUMNS FROM {$table_name} ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     

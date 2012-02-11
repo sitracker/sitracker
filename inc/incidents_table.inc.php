@@ -253,7 +253,7 @@ while ($incidents = mysql_fetch_object($result))
     echo "<tr class='{$class}' title ='{$rowtitle}'>";
     echo "<td align='center'>";
 
-    echo "<a href='incident_details.php?id={$incidents->id}' class='direct'>{$incidents->id}</a>";
+    echo "<a href='incident_details.php?id={$incidents->id}' class='direct'>".get_userfacing_incident_id($incidents->id)."</a>";
     if ($externalid != '') echo "<br />{$externalid}";
     echo "</td>";
     echo "<td>";
