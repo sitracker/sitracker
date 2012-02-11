@@ -518,7 +518,7 @@ array('description' => $strExternalID,
 $ttvararray['{incidentid}'] =
 array('description' => $strIncident,
       'requires' => 'incidentid',
-      'replacement' => '$param_array[\'incidentid\'];',
+      'replacement' => 'get_userfacing_incident_id_email($param_array[\'incidentid\']);',
       'checkreplace' => 'incident_drop_down'
       );
 

@@ -139,7 +139,7 @@ function dashboard_user_incidents_display($dashletid)
             {
                 $tooltip = $update_body;
             }
-            echo html_incident_popup_link($obj->id, "{$obj->id} - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}", $tooltip);
+            echo html_incident_popup_link($obj->id, get_userfacing_incident_id($obj->id)." - {$obj->title} {$GLOBALS['strFor']} {$obj->forenames}   {$obj->surname}", $tooltip);
             echo "</td></tr>\n";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';

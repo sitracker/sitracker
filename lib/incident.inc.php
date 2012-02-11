@@ -606,11 +606,16 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
  */
 function incident_id_from_subject($subject, $from)
 {
+	global $CONFIG;
     $incident_id = FALSE;
     $from_parts = explode($from, "@");
     $domain = $from_parts[2];
 
-    if (preg_match('/\[(\d+)\]/', $subject, $m))
+    $open = escape_regex($CONFIG['incident_id_email_opening_tag']);
+    $close = escape_regex($CONFIG['incident_id_email_closing_tag']);
+    $prefix = escape_regex($CONFIG['incident_reference_prefix']);
+    
+    if (preg_match("/{$open}{$prefix}(\d+){$close}/", $subject, $m))
     {
         $incident_id = $m[1];
     }
@@ -622,16 +627,24 @@ function incident_id_from_subject($subject, $from)
         $result = mysql_query($sql);
         if ($result)
         {
-            while ($row = mysql_fetch_object($result))
+            while ($obj = mysql_fetch_object($result))
             {
-                if ($row->email_domain == $domain)
+                if ($obj->email_domain == $domain)
                 {
-                    $sql = "SELECT id FROM `{$dbIncidents}` ";
-                    $sql .= "WHERE externalid";
+                    $sql_ext = "SELECT id FROM `{$dbIncidents}` ";
+                    $sql_ext .= "WHERE externalid = '{$external_id}'";
+                    $result_ext = mysql_query($sql_ext);
+                    if (mysql_num_rows($result_ext) != 1)
+                    {
+                        $o = mysql_fetch_object($result_ext);
+                        $incident_id = $o->id;
+                    }                    
                 }
             }
         }
     }
+    
+    return $incident_id;
 }
 
 
@@ -1777,4 +1790,34 @@ function incident_sla($incident_id, $type)
         return format_workday_minutes($sla);
     }
 }
+
+
+/**
+ * Get the user facing incident ID, this translates the internal ID to the user ID shown to the user
+ * @author Paul Heaney
+ * @param int $id The internal incident ID (from the database)
+ * @return String The user facing incident ID
+ */
+function get_userfacing_incident_id($id)
+{
+	global $CONFIG;
+	
+	return "{$CONFIG['incident_reference_prefix']}{$id}";
+}
+
+
+/**
+* Get the user facing incident ID used for emails, this translates the internal ID to the user ID shown to the user
+* @author Paul Heaney
+* @param int $id The internal incident ID (from the database)
+* @return String The user facing incident ID for emails
+*/
+function get_userfacing_incident_id_email($id)
+{
+	global $CONFIG;
+
+	return "{$CONFIG['incident_id_email_opening_tag']}{$CONFIG['incident_reference_prefix']}{$id}{$CONFIG['incident_id_email_closing_tag']}";
+}
+
+
 ?>

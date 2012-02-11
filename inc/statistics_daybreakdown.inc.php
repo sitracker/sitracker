@@ -22,12 +22,12 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 switch ($offset)
 {
-    case 0: $dayString=$strToday;
+    case 0: $dayString = $strToday;
         break;
-    case 1: $dayString=$strYesterday;
+    case 1: $dayString = $strYesterday;
         break;
     default:
-        $dayString = date("l", mktime(0,0,0,date('m'),date('d')-$offset,date('Y')));
+        $dayString = date("l", mktime(0, 0, 0, date('m'), date('d') - $offset, date('Y')));
         break;
 }
 
@@ -38,7 +38,7 @@ echo "<tr><th>{$strPeriod}</th><th>{$strOpened}</th><th>{$strUpdated}</th><th>{$
 echo "<th>{$strUpdates}</th><th>{$strPerIncident}</th><th>{$strSkills}</th><th>{$strOwners}</th><th>{$strUsers}</th>";
 echo "<th>{$strUpdatePerUserAbbrev}</th><th>{$strIncidentPerOwnerAbbrev}</th><th>{$strEmailReceivedAbbrev}</th><th>{$strEmailTransmittedAbbrev}</th><th>{$strHigherPriority}</th><th>{$strActivity}</th></tr>\n";
 
-echo stats_period_row($dayString, mktime(0,0,0,date('m'),date('d')-$offset,date('Y')),mktime(23,59,59,date('m'),date('d')-$offset,date('Y')));
+echo stats_period_row($dayString, mktime(0, 0, 0, date('m'), date('d') - $offset, date('Y')), mktime(23, 59, 59, date('m'), date('d') - $offset, date('Y')));
 
 echo "</table>";
 

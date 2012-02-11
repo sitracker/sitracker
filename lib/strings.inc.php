@@ -305,7 +305,7 @@ if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
     if (!is_array($hmenu[20])) $hmenu[20] = array();
     $hmenu[20] + $hmenu[20] =
                 array (10 => array ('name' => $strEntitlement, 'url' => 'entitlement.php'),
-                       20 => array ('name' => $strNewIncident, 'url' => 'new.php'),
+                       20 => array ('name' => $strNewIncident, 'url' => 'entitlement.php'),
                        30 => array ('name' => $strViewIncidents, 'url' => 'index.php'),
                        40 => array ('name' => $strFeedback, 'url' => 'feedback.php', 'enablevar' => 'portal_feedback_enabled')
                        );

@@ -319,6 +319,10 @@ if ($emails > 0)
                 debug_log("Incident ID found in email subject: '{$incidentid}'");
             }
         }
+        else
+        {
+            debug_log("Incident ID not found in email subject: '{$subject}'");
+        }
 
         plugin_do('email_arrived');
 

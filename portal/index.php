@@ -177,7 +177,7 @@ echo "<p align='center'>";
 
 if (!$CONFIG['portal_creates_incidents'])
 {
-    echo "<a href='new.php'>";
+    echo "<a href='entitlement.php'>";
 }
 elseif (sizeof($_SESSION['entitlement']) == 1)
 {
