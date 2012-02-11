@@ -90,7 +90,10 @@ $CFGCAT['incidents'] = array('auto_assign_incidents',
                              'hide_closed_incidents_older_than',
                              'incident_pools',
                              'preferred_maintenance',
-                             'record_lock_delay');
+                             'record_lock_delay',
+                             'incident_reference_prefix',
+                             'incident_id_email_opening_tag',
+                             'incident_id_email_closing_tag');
 
 
 $CFGCAT['inboundemail'] = array('enable_inbound_mail',
@@ -443,6 +446,11 @@ $CFGVAR['i18n_selection']['title'] = 'Language selection interface';
 $CFGVAR['i18n_selection']['help'] = 'How should the language be selected prior to login, via a dropdown or a list?';
 $CFGVAR['i18n_selection']['options'] = 'dropdown|list';
 $CFGVAR['i18n_selection']['type'] = 'select';
+
+$CFGVAR['incident_id_email_closing_tag']['title'] = 'When sending am email what should the closing tag be of the incident refernce in the subject line';
+$CFGVAR['incident_id_email_opening_tag']['title'] = 'When sending am email what should the opening tag be of the incident refernce in the subject line';
+$CFGVAR['incident_reference_prefix']['title'] = 'The prefix for the incident ID';
+
 
 $CFGVAR['inventory_enabled']['title'] = 'Enable Inventory';
 $CFGVAR['inventory_enabled']['type'] = 'checkbox';
