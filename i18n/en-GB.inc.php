@@ -636,6 +636,7 @@ $strErrorOccuredUploadingX = 'An error occured while uploading %s';
 $strErrorSendingEmail = 'Error sending email';
 $strErrorStartDateCannotBeAfterEndDate = 'Start date can not be after end date';
 $strErrorUploading = 'Error uploading';
+$strEscalate = 'Escalate';
 $strEscalated = 'Escalated';
 $strEscalatedIncidents = 'Escalated Incidents';
 $strEscalation = 'Escalation';

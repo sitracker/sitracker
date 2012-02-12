@@ -119,13 +119,34 @@ abstract class Chart {
 abstract class EscalationPlugin {
 	var $name;
 	
+	function getName()
+	{
+	    return $this->name;
+	}
+	
 	/**
 	 * Returns a HTML form for this item
 	 * 
 	 */
-	abstract function getForm();
+	abstract function getFormElements();
 	
-	abstract function doEscalation();
+	/**
+	 * 
+	 * @return EscalationStatus
+	 */
+	abstract function doEscalation($incidentid);
+}
+
+class EscalationStatus {
+    var $status; // boolean
+    var $externalid;
+    var $externalengineer;
+    var $externalemail;
+
+    function EscalationStatus()
+    {
+        $this->status = FALSE;
+    }
 }
 
 ?>
