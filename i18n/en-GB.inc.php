@@ -1072,6 +1072,7 @@ $strMarketingMailshot = 'Marketing Mailshot';
 $strMarketingMailshotDesc = 'This report is a list of details for all customers that currently (or previously) have contracts for the products you selected but none of the products excluded';
 $strMarkForClosure = 'Mark for Closure';
 $strMaxCarryOverXDays = 'Max Carry-over %s days';
+$strMaxInputVars = 'PHP Error: set \'max_input_vars {miv}\' or more in php.ini';
 $strMaxResults = 'A maximum of %d results are displayed, your search might have returned more.';
 # Short for the month of May (these happen to be the same in english)
 $strMayAbbr = 'May';
