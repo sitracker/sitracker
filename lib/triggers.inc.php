@@ -524,6 +524,12 @@ array('description' => $strExternalID,
       'replacement' => 'incident_externalid($param_array[\'incidentid\']);'
       );
 
+$ttvararray['{incidentcustomerid}'] =
+array('description' => $strCustomerReference,
+      'requires' => 'incidentid',
+      'replacement' => 'incident_customerid($param_array[\'incidentid\']);'
+);
+
 $ttvararray['{incidentid}'] =
 array('description' => $strIncident,
       'requires' => 'incidentid',
