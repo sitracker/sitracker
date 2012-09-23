@@ -29,11 +29,22 @@ $mode = clean_fixed_list($_REQUEST['mode'], array('', 'show', 'save'));
 
 if (empty($mode))
 {
+    // code fix for max_input_vars set to 1000 in php5.3.9
+    $max_input_vars = ini_get('max_input_vars');
+    $miv = 2500;
+    if ($max_input_vars <= $miv)
+    {
+        $errors++;
+        $max_iv_error = str_replace("{miv}", "= " . $miv,  $strMaxInputVars);
+        $_SESSION['formerrors']['translateform']['max_input_vars'] = user_alert($max_iv_error, E_USER_ERROR);
+    }
+    echo show_form_errors('translateform');
+    clear_form_errors('translateform');
+
     echo "<h2>{$strTranslation}</h2>";
     echo "<div align='center'><p>{$strHelpToTranslate}</p>";
     echo "<p>{$strChooseLanguage}</p>";
-    echo "<form action='{$_SERVER['PHP_SELF']}?mode=show' method='get'>";
-    //FIXME
+    echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
     echo "<input name='mode' value='show' type='hidden' />";
     echo "<strong>{$strFrom}</strong>: ";
     echo "<select name='from'>";

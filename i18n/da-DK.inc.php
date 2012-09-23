@@ -982,6 +982,7 @@ $strMarketingMailshot = 'Marketing masse mail';
 $strMarketingMailshotDesc = 'Denne rapport er en liste af oplysninger for alle kunder der har kontrakter for de produkter du har valgt men ingen af produkterne er ekskluderet';
 $strMarkForClosure = 'Marker til lukning';
 $strMaxCarryOverXDays = 'Max overførsel %s dage';
+$strMaxInputVars = 'PHP Fejl: sæt \'max_input_vars {miv}\' eller mere i php.ini';
 $strMaxResults = 'Et maximum af %d resultater er vist, din søgning kan dog have fundet mere.';
 $strMayAbbr = 'Maj';
 $strMay = 'Maj';
