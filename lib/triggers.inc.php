@@ -139,6 +139,13 @@ array('name' => $strPortalIncidentCreated,
       'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'sitesalespersonid')
     );
 
+$trigger_types['TRIGGER_PORTAL_INCIDENT_REQUESTCLOSURE'] =
+array('name' => $strPortalIncidentRequestClosed,
+      'description' => $strTriggerPortalIncidentRequestClosed,
+      'required' => array('incidentid'),
+      'params' => array('userid')
+    );
+
 $trigger_types['TRIGGER_NEW_CONTACT'] =
 array('name' => $strNewContact,
       'description' => $strTriggerNewContactDesc,
@@ -242,6 +249,7 @@ $email_pair = array('TRIGGER_CONTACT_RESET_PASSWORD' => 'EMAIL_CONTACT_RESET_PAS
                     'TRIGGER_NEW_HELD_EMAIL' => 'EMAIL_HELD_EMAIL_RECEIVED',
                     'TRIGGER_NEW_SITE' => 'EMAIL_SITE_CREATED',
                     'TRIGGER_NEW_USER' => 'EMAIL_USER_CREATED',
+                    'TRIGGER_PORTAL_INCIDENT_REQUESTCLOSURE' => 'EMAIL_REQUEST_CLOSURE',
                     'TRIGGER_SCHEDULER_TASK_FAILED' => 'blank',
                     'TRIGGER_SIT_UPGRADED' => 'EMAIL_SIT_UPGRADED',
                     'TRIGGER_TASK_DUE' => 'blank',
@@ -264,6 +272,7 @@ $notice_pair = array('TRIGGER_INCIDENT_ASSIGNED' => 'NOTICE_INCIDENT_ASSIGNED',
                     'TRIGGER_NEW_HELD_EMAIL' => 'NOTICE_NEW_HELD_EMAIL',
                     'TRIGGER_NEW_SITE' => 'NOTICE_NEW_SITE',
                     'TRIGGER_NEW_USER' => 'NOTICE_NEW_USER',
+                    'TRIGGER_PORTAL_INCIDENT_REQUESTCLOSURE' => 'NOTICE_REQUEST_CLOSURE',
                     'TRIGGER_SCHEDULER_TASK_FAILED' => 'NOTICE_SCHEDULER_TASK_FAILED',
                     'TRIGGER_SIT_UPGRADED' => 'NOTICE_SIT_UPGRADED',
                     'TRIGGER_TASK_DUE' => 'NOTICE_TASK_DUE',
@@ -514,6 +523,12 @@ array('description' => $strExternalID,
       'requires' => 'incidentid',
       'replacement' => 'incident_externalid($param_array[\'incidentid\']);'
       );
+
+$ttvararray['{incidentcustomerid}'] =
+array('description' => $strCustomerReference,
+      'requires' => 'incidentid',
+      'replacement' => 'incident_customerid($param_array[\'incidentid\']);'
+);
 
 $ttvararray['{incidentid}'] =
 array('description' => $strIncident,

@@ -106,7 +106,7 @@ if ($CONFIG['portal_site_incidents'])
             }
             else
             {
-                $row->expirydate = ldate("jS F Y", $row->timestamp);
+                $row->expirydate = ldate("jS F Y", $row->expirydate);
             }
             echo "<tr class='{$shade}'>";
             //echo "<td>{$row->id}</td>";

@@ -916,6 +916,17 @@ function incident_externalid($id)
 
 
 /**
+* @author Paul Heaney
+* @param int $id Incident ID
+* @return id. Current incident customer ID
+*/
+function incident_customerid($id)
+{
+    return db_read_column('customerid', $GLOBALS['dbIncidents'], $id);
+}
+
+
+/**
  * @author Ivan Lucas
  * @param int $id Incident ID
  * @return string. Current incident external engineer

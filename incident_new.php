@@ -443,6 +443,10 @@ elseif ($action == 'incidentform')
     echo icon('contract', 16) . " <strong>{$strContract} {$maintid}</strong>: ";
     echo strip_tags($producttext);
     echo "</td></tr>";
+    
+    echo "<tr>";
+    echo "<td><label for='customerid'>{$strCustomerReference}: </label><input maxlength='50' name='customerid' id='customerid' /></td>";
+    echo "</tr>";
 
     if (empty($updateid))
     {
@@ -618,6 +622,8 @@ elseif ($action == 'assign')
         $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
         $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
 
+        $customerid = cleanvar($_POST['customerid']);
+        
         if ($send_email == 'on')
         {
             $send_email = 1;
@@ -737,9 +743,9 @@ elseif ($action == 'assign')
             }
 
             $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, servicelevel, status, type, maintenanceid, ";
-            $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction) ";
+            $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction, customerid) ";
             $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1}', 'Support', '{$maintid}', ";
-            $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}')";
+            $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}', '{$customerid}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 

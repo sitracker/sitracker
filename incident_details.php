@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $incidentid = clean_int($_REQUEST['id']);
 $id = $incidentid;
-$win = clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview', 'sit_popup'));
+$win = clean_fixed_list($_REQUEST['win'], array('','incomingview', 'jump', 'holdingview', 'sit_popup', 'win'));
 
 if ($win == 'incomingview')
 {
@@ -120,20 +120,20 @@ else
     echo sprintf($strContactofSite, $contact, $site)." ";
     echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
     echo "</div>\n";
-    
+
     if ($incident->ccemail != '')
     {
         echo "<div id='ccemail'>\n CC: ";
         $cc_array = explode(',', $incident->ccemail);
-        
+
         foreach ($cc_array as $key => $value)
         {
             echo "<a href=\"mailto:{$value}\">{$value}</a> ";
         }
-        
+
         echo "</div>\n";
     }
-    
+
     if ($incident->phone != '' OR $incident->mobile != '')
     {
         echo "<div id='phone'>\n";
@@ -162,6 +162,13 @@ else
         }
         echo "</div>\n";
     }
+
+    if ($incident->customerid != '')
+    {
+        echo "<div id='customerref'>\n";
+        echo "{$strCustomerReference}: {$incident->customerid} <br />\n";
+        echo "</div>\n";
+    }
     
     if ($incident->externalid != '' OR $incident->escalationpath > 0)
     {
@@ -170,7 +177,7 @@ else
         echo format_external_id($incident->externalid, $incident->escalationpath)."<br />\n";
         echo "</div>\n";
     }
-    
+
     if ($incident->externalengineer != '')
     {
         echo "<div id='externalengineer'>\n";
@@ -185,7 +192,7 @@ else
     $sql .= "AND i.id = linkcolref ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    
+
     if (mysql_num_rows($result) > 0)
     {
         $inventory = mysql_fetch_object($result);
@@ -215,14 +222,14 @@ else
         echo "{$strOwner}: <strong>".user_realname($incident->owner, TRUE)."</strong> ";
         $incidentowner_phone = user_phone($incident->owner);
         if ($incidentowner_phone != '') echo "({$strTel}: {$incidentowner_phone}) ";
-        
+
         if ($incident->towner > 0 AND $incident->towner != $incident->owner)
         {
            echo "({$strTemp}: ".user_realname($incident->towner, TRUE).")";
         }
         echo "<br /></div>";
     }
-    
+
     if ($software_name != '' OR $incident->productversion != '' OR $incident->productservicepacks != '')
     {
         echo "<div id='software'>\n";
@@ -235,10 +242,10 @@ else
         }
         echo "<br /></div>\n";
     }
-    
+
     echo "<div id='contractdetails'>\n";
     echo priority_icon($incident->priority)." ".priority_name($incident->priority);
-    
+
     if ($product_name != '')
     {
         echo " <a href='contract_details.php?id={$incident->maintenanceid}' title='{$strContractDetails}' target='top.opener'>";
@@ -273,7 +280,7 @@ else
 
     $num_open_activities = open_activities_for_incident($incidentid);
     echo "<div id='openwaiting'>\n";
-    
+
     if (count($num_open_activities) > 0)
     {
         echo "<a href='tasks.php?incident={$incidentid}' class='info'>";
@@ -303,11 +310,11 @@ else
         $pisql .= "FROM `{$dbIncidentProductInfo}` AS ipi, `{$dbProductInfo}` AS pi ";
         $pisql .= "WHERE pi.id = ipi.productinfoid AND ipi.incidentid = {$incidentid}";
         $piresult = mysql_query($pisql);
-        
+
         if (mysql_num_rows($piresult) > 0)
         {
             echo "<div id='productinfo'>\n";
-            
+
             while ($pi = mysql_fetch_object($piresult))
             {
                 echo "{$pi->label}: {$pi->information} <br />\n";
@@ -321,7 +328,7 @@ else
     echo incidentstatus_name($incident->status);
     if ($incident->status == STATUS_CLOSED) echo " (" . closingstatus_name($incident->closingstatus) . ")";
     echo "<br />\n";
-    
+
     // Total billable duration
     $upsql = "SELECT incidentid, duration ";
     $upsql .= "FROM `{$dbUpdates}`";
@@ -370,7 +377,7 @@ else
                 echo "<br />".icon('review', 16)." {$strReviewDueNow}";
             }
         }
-        
+
         if ($servicelevel->timed == 'yes')
         {
             echo "<br />";
@@ -832,7 +839,7 @@ else
             {
                 echo icon($updatetypes[$update->type]['icon'], 16, $showhide);
             }
-                
+
 
             if (!empty($update->sla) AND $update->type != 'slamet')
             {
@@ -865,11 +872,11 @@ else
             }
             echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
         }
-        
+
         plugin_do('incident_details_updatehead_content_row');
         echo "</div>\n";
         plugin_do('incident_details_update_content_row');
-        
+
         if (!empty($updatebody))
         {
             if ($update->customervisibility == 'show')

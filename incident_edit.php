@@ -31,7 +31,7 @@ if (empty($submit))
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
     // extract incident details
-    $sql  = "SELECT * FROM `{$dbIncidents}` WHERE id='$id'";
+    $sql  = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $incident = mysql_fetch_object($result);
@@ -72,6 +72,8 @@ if (empty($submit))
         echo "<td><input maxlength='100' name='productservicepacks' size='30' type='text' value=\"{$incident->productservicepacks}\" /></td></tr>\n";
         echo "<tr><th>CC {$strEmail}</th>";
         echo "<td><input maxlength='255' name='ccemail' size='30' type='text' value=\"{$incident->ccemail}\" /></td></tr>\n";
+        echo "<tr><th>{$strCustomerReference}</th>";
+        echo "<td><input maxlength='50' name='customerid' size='30' type='text' value=\"{$incident->customerid}\" /></td></tr>\n";
         echo "<tr><th>{$strEscalation}</th>";
         echo "<td>".escalation_path_drop_down('escalationpath', $incident->escalationpath)."</td></tr>";
         echo "<tr><th>{$strExternalID}</th>";
@@ -90,6 +92,7 @@ if (empty($submit))
         echo "<input name='oldcontact' type='hidden' value=\"{$incident->contact}\" />";
         echo "<input name='oldccemail' type='hidden' value=\"{$incident->ccemail}\" />";
         echo "<input name='oldescalationpath' type='hidden' value=\"".db_read_column('name', $dbEscalationPaths, $incident->escalationpath)."\" />";
+        echo "<input name='oldcustomerid' type='hidden' value=\"{$incident->customerid}\" />";
         echo "<input name='oldexternalid' type='hidden' value=\"{$incident->externalid}\" />";
         echo "<input name='oldexternalengineer' type='hidden' value=\"{$incident->externalengineer}\" />";
         echo "<input name='oldexternalemail' type='hidden' value=\"{$incident->externalemail}\" />";
@@ -111,12 +114,13 @@ if (empty($submit))
 else
 {
     // External variables
+    $customerid = clean_dbstring($_POST['customerid']);
     $externalid = clean_dbstring($_POST['externalid']);
     $type = cleanvar($_POST['type']);
     $ccemail = cleanvar($_POST['ccemail']);
     $escalationpath = cleanvar($_POST['escalationpath']);
     $externalengineer = cleanvar($_POST['externalengineer']);
-    $externalemail = cleanvar($_POST['externalemail']);
+    $externalemail = cleanvar($_POST['externalemail']);  
     $title = cleanvar($_POST['title']);
     $contact = clean_int($_POST['contact']);
     $software = clean_int($_POST['software']);
@@ -127,6 +131,7 @@ else
     $oldcontact = clean_int($_POST['oldcontact']);
     $maintid = clean_int($_POST['maintid']);
     $oldescalationpath = cleanvar($_POST['oldescalationpath']);
+    $oldcustomerid = clean_dbstring($_POST['oldcustomerid']);
     $oldexternalid = clean_dbstring($_POST['oldexternalid']);
     $oldexternalemail = clean_int($_POST['oldexternalemail']);
     $oldproduct = clean_int($_POST['oldproduct']);
@@ -171,7 +176,7 @@ else
         $sql = "UPDATE `{$dbIncidents}` ";
         $sql .= "SET externalid='{$externalid}', ccemail='{$ccemail}', ";
         $sql .= "escalationpath='{$escalationpath}', externalengineer='{$externalengineer}', externalemail='{$externalemail}', title='{$title}', ";
-        $sql .= "contact='{$contact}', softwareid='{$software}', productversion='{$productversion}', ";
+        $sql .= "contact='{$contact}', softwareid='{$software}', productversion='{$productversion}', customerid='{$customerid}', ";
         $sql .= "productservicepacks='{$productservicepacks}', lastupdated='{$now}' WHERE id='{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -197,6 +202,32 @@ else
                     $header .= "Assigned to <b>{$contactname} of {$contactsite}</b> on behalf of {$maintcontactsite} (The contract holder)\n";
                 }
             }
+            
+            if ($oldcustomerid != $customerid)
+            {
+                $header .= "{$strCustomerReference}: ";
+                if ($oldcustomerid != '')
+                {
+                    $header .= $oldcustomerid;
+                }
+                else
+                {
+                    $header .= "None";
+                }
+                
+                $header .= " -&gt; <b>";
+                if ($customerid != '')
+                {
+                    $header .= $customerid;
+                }
+                else
+                {
+                    $header .= "None";
+                }
+                
+                $header .= "</b>\n";
+            }
+            
             if ($oldexternalid != $externalid)
             {
                 $header .= "External ID: ";

@@ -51,6 +51,7 @@ INSERT INTO `{$dbTriggers}` (`triggerid`, `userid`, `action`, `template`, `param
 INSERT INTO `{$dbTriggers}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`) VALUES('TRIGGER_SERVICE_LIMIT' , 0, 'ACTION_EMAIL', 'EMAIL_SERVICE_LEVEL', '', '{serviceremaining} <= 0.2');
 INSERT INTO `{$dbTriggers}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`) VALUES('TRIGGER_SCHEDULER_TASK_FAILED', 1, 'ACTION_NOTICE', 'NOTICE_SCHEDULER_TASK_FAILED', '', '{schedulertask} == \'CheckIncomingMail\'');
 INSERT INTO `{$dbTriggers}` (`triggerid`, `userid`, `action`, `template`, `parameters`, `checks`) VALUES('TRIGGER_INCIDENT_CLOSED', 0, 'ACTION_EMAIL', 'EMAIL_SEND_FEEDBACK', '', '{sendfeedback} == 1');
+
 ";
 
 $schema = "
@@ -286,6 +287,8 @@ INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fr
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_SERVICE_LEVEL', 'system', 'strEmailServiceLevelDesc', '{salespersonemail}', '{supportemail}', '{supportemail}', NULL, NULL, '{sitename}\'s service credit low', 'Hi, {sitename}''s total service credit is now standing at {serviceremainingstring}.\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'show', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_INCIDENT_UPDATED_CUSTOMER', 'system', 'strEmailIncidentUpdatedCustomerDesc', '{contactemail}', '{supportemail}', '{supportemail}', '', '', '{applicationshortname} {incidentid} - {incidenttitle} updated', 'Hi {contactfirstname},\r\n\r\nYour incident {incidentid} - {incidentid} has been updated, please log into the portal to view the update and respond.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nLog into the portal at: {applicationurl}, where you can also reset your details if you do not know them.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_SEND_FEEDBACK', 'system', 'strEmailSendFeedbackDesc', '{contactemail}', '{supportemail}', '{supportemail}', '', '', '{applicationshortname} {incidentid} - {incidenttitle}: feedback requested', 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}', 'hide', 'No', NULL, NULL, NULL, NULL);
+INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_REQUEST_CLOSURE', 'user', 'strEmailIncidentRequestClosedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, '{incidentid} - {incidenttitle} - Request Closure', 'Hi,\r\n\r\nIncident {incidentid} has been requested to be closed. \r\n\r\n\r\n{globalsignature}', 'show', 'Yes', NULL, NULL, NULL, NULL);
+
 
 
 CREATE TABLE IF NOT EXISTS `{$dbEscalationPaths}` (
@@ -479,6 +482,7 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidents}` (
   `externalid` varchar(50) default NULL,
   `externalengineer` varchar(80) NOT NULL default '',
   `externalemail` varchar(255) NOT NULL default '',
+  `customerid` varchar(50) default NULL,
   `ccemail` varchar(255) default NULL,
   `title` varchar(150) default NULL,
   `owner` smallint(6) default NULL,
@@ -757,7 +761,7 @@ INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `link
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_SITE', 3, 'strNoticeNewSiteDesc', 'strNoticeNewSite', 'strViewSite', '{applicationurl}site_details.php?id={siteid}', 'sticky', '{siteid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_TASK_DUE', 3, 'strNoticeTaskDueDesc', 'strNoticeTaskDue', 'strViewTask', '{applicationurl}view_task.php?id={taskid}', 'sticky', '{taskid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_SCHEDULER_TASK_FAILED', 3, 'strNoticeSchedulerTaskFailedDesc', 'strNoticeSchedulerTaskFailed', '', '', 'sticky', '');
-
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_REQUEST_CLOSURE', 3, 'strNoticeIncidentRequestClosedDesc', 'strNoticeIncidentRequestClosed', NULL, NULL, 'sticky', '{userid}');
 
 CREATE TABLE IF NOT EXISTS `{$dbPermissions}` (
   `id` int(5) NOT NULL auto_increment,
@@ -1791,7 +1795,13 @@ UPDATE `{$dbEmailTemplates}` SET subject = 'Service Request #{incidentexternalid
 UPDATE `{$dbEmailTemplates}` SET subject = '{applicationshortname} {incidentid} - {incidenttitle} updated', body = 'Hi {contactfirstname},\r\n\r\nYour incident {incidentid} - {incidentid} has been updated, please log into the portal to view the update and respond.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nLog into the portal at: {applicationurl}, where you can also reset your details if you do not know them.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}' WHERE name = 'EMAIL_INCIDENT_UPDATED_CUSTOMER';
 UPDATE `{$dbEmailTemplates}` SET subject = '{applicationshortname} {incidentid} - {incidenttitle}: feedback requested' WHERE name = 'EMAIL_SEND_FEEDBACK';
 
+-- CJ 2012-05-05
+INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_REQUEST_CLOSURE', 'user', 'strEmailIncidentRequestClosedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, '{incidentid} - {incidenttitle} - Request Closure', 'Hi,\r\n\r\nIncident {incidentid} has been requested to be closed. \r\n\r\n\r\n{globalsignature}', 'show', 'Yes', NULL, NULL, NULL, NULL);
 
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_REQUEST_CLOSURE', 3, 'strNoticeIncidentRequestClosedDesc', 'strNoticeIncidentRequestClosed', NULL, NULL, 'sticky', '{userid}');
+
+-- PH 2012-09-223
+ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AFTER `externalemail`; 
 ";
 
 // ********************************************************************

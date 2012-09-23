@@ -16,6 +16,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'any';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
+include (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 // External vars
 $id = intval($_REQUEST['id']);
@@ -29,7 +30,7 @@ list($incidentcontact) = mysql_fetch_row($result);
 if ($incidentcontact == $_SESSION['contactid'])
 {
     $id = clean_int($_REQUEST['id']);
-    
+
     if (empty($_REQUEST['reason']))
     {
         include (APPLICATION_INCPATH . 'portalheader.inc.php');
@@ -60,6 +61,8 @@ if ($incidentcontact == $_SESSION['contactid'])
         '{$now}', 'show')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        $t = new TriggerEvent('TRIGGER_PORTAL_INCIDENT_REQUESTCLOSURE', array('incidentid' => $id));
 
         //set incident back to active
         $sql = "UPDATE `{$dbIncidents}` SET status=".STATUS_ACTIVE.", lastupdated={$now} WHERE id={$id}";

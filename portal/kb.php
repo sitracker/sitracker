@@ -34,7 +34,7 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
     echo "<h2>".icon('kb', 32, $strKnowledgeBase)." {$strKnowledgeBase}</h2>";
     $perpage = 20;
 $order = clean_fixed_list($_GET['order'], array('', 'a', 'ASC', 'd', 'DESC'));
-$sort = clean_fixed_list($_GET['sort'], array('', 'title', 'date', 'author', 'keywords'));
+$sort = clean_fixed_list($_GET['sort'], array('', 'id', 'title', 'date', 'author', 'keywords'));
 
 $start = clean_int($_GET['start']);
 
@@ -79,8 +79,6 @@ $start = clean_int($_GET['start']);
             echo "<a href='{$_SERVER['PHP_SELF']}'>{$strShowOnlyRelevant}</a></p>";
         }
     }
-    //get the full SQL so we can see the total rows
-    $countsql = $sql;
     $sql .= "GROUP BY k.docid ";
     if (!empty($sort))
     {
@@ -101,8 +99,7 @@ $start = clean_int($_GET['start']);
 
     if ($result = mysql_query($sql))
     {
-        $countresult = mysql_query($countsql);
-        $numtotal = mysql_num_rows($countresult);
+        $numtotal = mysql_num_rows($result);
         if ($end > $numtotal)
         {
             $end = $numtotal;
@@ -110,7 +107,7 @@ $start = clean_int($_GET['start']);
 
         if ($numtotal > 0)
         {
-            echo "<p align='center'>".sprintf($strShowingXtoXofX, $start+1, $end, $numtotal)."</p>";
+            echo "<p align='center'>".sprintf($strShowingXtoXofX, $start + 1, $end, $numtotal)."</p>";
 
             echo "<p align='center'>";
 
