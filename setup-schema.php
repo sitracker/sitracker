@@ -482,6 +482,7 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidents}` (
   `externalid` varchar(50) default NULL,
   `externalengineer` varchar(80) NOT NULL default '',
   `externalemail` varchar(255) NOT NULL default '',
+  `customerid` varchar(50) default NULL,
   `ccemail` varchar(255) default NULL,
   `title` varchar(150) default NULL,
   `owner` smallint(6) default NULL,
@@ -1799,6 +1800,8 @@ INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fr
 
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_REQUEST_CLOSURE', 3, 'strNoticeIncidentRequestClosedDesc', 'strNoticeIncidentRequestClosed', NULL, NULL, 'sticky', '{userid}');
 
+-- PH 2012-09-223
+ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AFTER `externalemail`; 
 ";
 
 // ********************************************************************

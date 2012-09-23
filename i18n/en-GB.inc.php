@@ -402,6 +402,7 @@ $strCustomerImpact = 'Customer Impact';
 $strCustomerImpactCustomerText = 'How many users are affected by this issue? Is this an issue of downtime or a minor niggle? Does the issue prevent people from working?';
 $strCustomerProductsMaintDesc = 'This report is a list of sites that you selected and the products they have (or have had) maintenance for';
 $strCustomerReference = 'Customer Ref';
+$strCustomerReferenceAbbreviation = 'CR';
 $strCustomerReferenceDate = 'Customer Ref Date';
 $strCustomerReminded = 'Customer has been reminded';
 $strCustomerRemindedByPhone = 'Customer has been reminded by phone';

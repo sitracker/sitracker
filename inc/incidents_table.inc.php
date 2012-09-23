@@ -254,6 +254,7 @@ while ($incidents = mysql_fetch_object($result))
     echo "<td align='center'>";
 
     echo "<a href='incident_details.php?id={$incidents->id}' class='direct'>".get_userfacing_incident_id($incidents->id)."</a>";
+    if ($incidents->customerid != '') echo "<br />{$strCustomerReferenceAbbreviation}: {$incidents->customerid}";
     if ($externalid != '') echo "<br />{$externalid}";
     echo "</td>";
     echo "<td>";

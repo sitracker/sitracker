@@ -163,6 +163,13 @@ else
         echo "</div>\n";
     }
 
+    if ($incident->customerid != '')
+    {
+        echo "<div id='customerref'>\n";
+        echo "{$strCustomerReference}: {$incident->customerid} <br />\n";
+        echo "</div>\n";
+    }
+    
     if ($incident->externalid != '' OR $incident->escalationpath > 0)
     {
         echo "<div id='escalated'>\n";

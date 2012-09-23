@@ -64,7 +64,7 @@ $selectsql = "SELECT i.id, escalationpath, externalid, title, i.owner, towner, p
 $selectsql .= "IF(c.phone IS NULL, s.telephone, c.phone) AS phone, IF(c.email IS NULL, s.email, c.email) AS email, i.maintenanceid, ";
 $selectsql .= "servicelevel, softwareid, lastupdated, timeofnextaction, ";
 $selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
-$selectsql .= "({$now} - lastupdated) AS timesincelastupdate ";
+$selectsql .= "({$now} - lastupdated) AS timesincelastupdate, i.customerid ";
 $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS pr, `{$dbSites}` AS s ";
 $selectsql .= "WHERE contact = c.id AND i.priority = pr.id AND c.siteid = s.id ";
 
