@@ -55,13 +55,14 @@ function incident($incident)
  * @param string $productservicepacks (Optional) Product service packs field
  * @param int $opened (Optional) Timestamp when incident was opened (Default: now)
  * @param int $lastupdated (Optional) Timestamp when incident was updated (Default: now)
+ * @param int $customerid (Optional) The customer reference for the incident
  * @return int|bool Returns FALSE on failure, an incident ID on success
  * @author Kieran Hogg
  */
 function create_incident($title, $contact, $servicelevel, $contract, $product,
                          $software, $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
                          $productversion = '', $productservicepacks = '',
-                         $opened = '', $lastupdated = '')
+                         $opened = '', $lastupdated = '', $customerid = '')
 {
     global $now, $dbIncidents, $dbUpdates, $sit;
 
@@ -74,14 +75,23 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
     {
         $lastupdated = $now;
     }
+    
+    if (!empty($customerid)) 
+    {
+        $customerid = "'{$customerid}'";
+    }
+    else
+    {
+        $customerid = "NULL";
+    }
 
     $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, ";
     $sql .= "servicelevel, status, maintenanceid, product, softwareid, ";
-    $sql .= "productversion, productservicepacks, opened, lastupdated) ";
+    $sql .= "productversion, productservicepacks, opened, lastupdated, customerid) ";
     $sql .= "VALUES ('{$title}', '{$owner}', '{$contact}', '{$priority}', ";
     $sql .= "'{$servicelevel}', '{$status}', '{$contract}', ";
     $sql .= "'{$product}', '{$software}', '{$productversion}', ";
-    $sql .= "'{$productservicepacks}', '{$opened}', '{$lastupdated}')";
+    $sql .= "'{$productservicepacks}', '{$opened}', '{$lastupdated}', $customerid)";
     $result = mysql_query($sql);
     if (mysql_error())
     {
