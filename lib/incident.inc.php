@@ -48,6 +48,7 @@ function incident($incident)
  * @param int $contract The ID of the contract to log the incident under
  * @param int $product The ID of the product the incident refers to
  * @param int $skill The ID of the skill the incident refers to
+ * @param string $updatetext The update to open the incident with
  * @param int $priority (Optional) Priority of the incident (Default: 1 = Low)
  * @param int $owner (Optional) Owner of the incident (Default: 0 = SiT)
  * @param int $status (Optional) Incident status (Default: 1 = Active)
@@ -60,7 +61,7 @@ function incident($incident)
  * @author Kieran Hogg
  */
 function create_incident($title, $contact, $servicelevel, $contract, $product,
-                         $software, $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
+                         $software, $updatetext, $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
                          $productversion = '', $productservicepacks = '',
                          $opened = '', $lastupdated = '', $customerid = '')
 {
