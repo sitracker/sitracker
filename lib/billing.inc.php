@@ -140,6 +140,7 @@ function get_service_percentage($maintid)
 
     if (mysql_num_rows($result) > 0)
     {
+        $total = 0;
         $num = 0;
         while ($service = mysql_fetch_object($result))
         {
