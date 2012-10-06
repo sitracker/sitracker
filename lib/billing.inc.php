@@ -143,7 +143,11 @@ function get_service_percentage($maintid)
         $num = 0;
         while ($service = mysql_fetch_object($result))
         {
-            $total += (float) $service->balance / (float) $service->creditamount;
+
+            if (((float) $service->balance > 0) OR ((float) $service->creditamount > 0))
+            {
+                $total += (float) $service->balance / (float) $service->creditamount;
+            }
             $num++;
         }
         $return = (float) $total / (float) $num;
@@ -1151,7 +1155,7 @@ function contract_service_table($contractid, $billing)
                     $span .= "<br />";
                 }
 
-                
+
                 $span .= "<strong>{$GLOBALS['strBilling']}</strong>: ";
                 if (!empty($service->unitrate) AND $service->unitrate > 0)
                 {
@@ -1161,8 +1165,8 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= $GLOBALS['strPerIncident'];
                 }
-                $span .= "<br />";                
-                
+                $span .= "<br />";
+
                 if ($service->creditamount != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
@@ -1172,11 +1176,11 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
                 }
-                
+
                 if ($service->incidentrate != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strIncidentRate']}</strong>: {$CONFIG['currency_symbol']}{$service->incidentrate}<br />";
-                } 
+                }
 
                 $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
 
@@ -2057,7 +2061,7 @@ function service_dropdown_contract($contractid, $name, $selected=0)
 {
     global $now, $CONFIG;
     $date = ldate('Y-m-d', $now);
-    
+
 	$sql = "SELECT * FROM `{$GLOBALS['dbService']}` WHERE contractid = {$contractid} ";
     $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     $result = mysql_query($sql);
@@ -2097,7 +2101,7 @@ function service_dropdown_site($siteid, $name, $selected=0)
 {
     global $now, $CONFIG;
     $date = ldate('Y-m-d', $now);
-   
+
     $sql = "SELECT s.* FROM `{$GLOBALS['dbService']}` AS s, `{$GLOBALS['dbMaintenance']}` AS m ";
     $sql .= "WHERE s.contractid = m.id AND  m.site = {$siteid} ";
     $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
