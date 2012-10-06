@@ -42,6 +42,7 @@ class TriggerEvent {
                           mysql_error(), E_USER_WARNING);
             return FALSE;
         }
+        $mysqlcount = mysql_num_rows($result);
 
         while ($trigger = mysql_fetch_object($result))
         {
@@ -50,6 +51,7 @@ class TriggerEvent {
                                    $trigger->action, $trigger->checks,
                                    $trigger->parameters, $param_array, $trigger->id);
             $rtn = $trigger->fire();
+           // debug_log("Trigger->Fire: $trigger_type  $mysqlcount {$trigger->template}", TRUE);
         }
 
         // we always return TRUE as all triggers might not match
@@ -258,7 +260,6 @@ class Trigger extends SitEntity {
     function fire()
     {
         global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
-        global $dbTriggers;
 
         // see if we were passed any checks by the trigger
         if (!empty($this->param_array['checks']))
@@ -333,7 +334,7 @@ class Trigger extends SitEntity {
     {
         global $CONFIG, $dbg, $dbTriggers;
 
-        if ($this->user-id > 0)
+        if ($this->user_id > 0)
         {
             $user_prefs = get_user_config_vars($this->user_id);
             $user_status =  user_status($this->user_id);
@@ -346,7 +347,7 @@ class Trigger extends SitEntity {
         }
 
         if ($this->user_id == 0 OR
-           ($this->user_id > 0 AND $user_status != USERSTATUS_ACCOUNT_DISABLED))
+           (($this->user_id > 0) AND ($user_status != USERSTATUS_ACCOUNT_DISABLED)))
         {
             debug_log("Trigger action {$action} with template {$template} for user ID {$this->user_id}", true);
             switch ($action)
@@ -427,7 +428,7 @@ class Trigger extends SitEntity {
         }
         else
         {
-            debug_log("Trigger action {$action} with template {$template} not run because user account '{$this->user_id}' was disabled.", TRUE);
+            debug_log("Trigger action {$action} with template {$template} not run because user account '{$this->user_id}' was disabled. ", TRUE);
             return true;
         }
         return $rtnvalue;

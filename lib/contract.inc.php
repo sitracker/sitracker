@@ -101,22 +101,6 @@ function contract_software()
 
 
 /**
- * Returns the SLA ID of a contract
- *
- * @deprecated DEPRECATED In favor of tags - see Mantis 1696 - http://bugs.sitracker.org/view.php?id=1696
- * @param int $maintid ID of the contract
- * @return int ID of the SLA
- * @author Kieran Hogg
- */
-function contract_slaid($maintid)
-{
-    $maintid = intval($maintid);
-    $slaid = db_read_column('servicelevelid', $GLOBALS['dbMaintenance'], $maintid);
-    return $slaid;
-}
-
-
-/**
  * Returns the SLA Tag of a contract
  *
  * @param int $maintid ID of the contract
