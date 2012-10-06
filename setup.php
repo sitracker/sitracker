@@ -22,7 +22,9 @@ define ('APPLICATION_INCPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR 
 define ('APPLICATION_I18NPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'i18n') . DIRECTORY_SEPARATOR);
 define ('APPLICATION_PORTALPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'portal') . DIRECTORY_SEPARATOR);
 define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARATOR . 'plugins') . DIRECTORY_SEPARATOR);
-
+// Seems a bit silly to duplicate these but we don't include core so....
+define ("MIN_PHP_VERSION", 5.1);
+define ("MIN_MYSQL_VERSION", 4.1);
 
 // Load config defaults
 @include (APPLICATION_LIBPATH . 'defaults.inc.php');
