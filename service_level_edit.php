@@ -77,7 +77,6 @@ if (empty($action) OR $action == "showform")
     echo "</td></tr>";
     echo "<tr id='engineerBillingPeriod' {$timed_display}><th>{$strBillingEngineerPeriod} ".help_link('ServiceLevelEngineerPeriod')."</th><td><input type='text' size='5' name='engineerPeriod' maxlength='5' value='{$engineerPeriod}' /> {$strMinutes}</td></tr>";
     echo "<tr id='customerBillingPeriod' {$timed_display}><th>{$strBillingCustomerPeriod} ".help_link('ServiceLevelCustomerPeriod')."</th><td><input type='text' size='5' name='customerPeriod' maxlength='5' value='{$customerPeriod}' /> {$strMinutes}</td></tr>";
-    echo "<tr id='limit' {$timed_display}><th>{$strLimit} ".help_link('ServiceLevelLimit')."</th><td>{$CONFIG['currency_symbol']} <input type='text' size='5' name='limit' maxlength='5' value='{$limit}' /></td></tr>";
     echo "</table>";
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<input type='hidden' name='tag' value='{$tag}' />";
@@ -106,8 +105,7 @@ elseif ($action == "edit")
     {
         $allow_reopen = 'no';
     }
-    $limit = clean_int($_POST['limit']);
-    if ($limit == '') $limit = 0;
+
     if (!empty($_POST['timed']))
     {
         $timed = 1;
@@ -137,7 +135,7 @@ elseif ($action == "edit")
         if (!empty($billing))
         {
             //update
-            $sql = "UPDATE `{$dbBillingPeriods}` SET customerperiod = '{$customerPeriod}', engineerperiod = '{$engineerPeriod}', `limit` = '{$limit}' ";
+            $sql = "UPDATE `{$dbBillingPeriods}` SET customerperiod = '{$customerPeriod}', engineerperiod = '{$engineerPeriod}' ";
             $sql .= "WHERE priority = {$priority} AND tag = '{$tag}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -145,8 +143,8 @@ elseif ($action == "edit")
         else
         {
             //insert
-            $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod, `limit`) ";
-            $sql .= "VALUES ('{$priority}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
+            $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod) ";
+            $sql .= "VALUES ('{$priority}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }

@@ -114,7 +114,7 @@ if (empty($submit))
 else
 {
     // External variables
-    $customerid = clean_dbstring($_POST['customerid']);
+    $customerid = trim(clean_dbstring($_POST['customerid']));
     $externalid = clean_dbstring($_POST['externalid']);
     $type = cleanvar($_POST['type']);
     $ccemail = cleanvar($_POST['ccemail']);

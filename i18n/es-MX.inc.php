@@ -45,7 +45,6 @@ $strActivityBillingInfo = 'Solo se muestran las actividades cerradas para factur
 $strActivityCompleted = 'Actividad completada: %s, la duración total fue: %s';
 $strActivityContainsNoNotes = 'La Actividad no incluye notas';
 $strActivityList = 'Lista de Actividades';
-$strActivityMarkedCompleteSuccessfully = 'La Actividad marcada se completo exitosamente';
 $strActivityStarted = 'Actividad iniciada: %s';
 $strAdd = 'Agregar';
 $strAddAction = 'Agregar Acción';

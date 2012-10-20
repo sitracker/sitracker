@@ -23,7 +23,7 @@ $title = $strManageDashboardComponents;
 $action = clean_fixed_list($_REQUEST['action'], array('','install','installdashboard','enable','upgradecomponent'));
 
 
-// A duplicate of that in setup.php - Probably wants moving to functions.inc.php eventually PH 9/12/07
+// A duplicate of that in setup.php - Probably wants moving to functions.inc.php eventually PH 9/12/07 TODO
 function setup_exec_sql($sqlquerylist)
 {
     global $CONFIG;
@@ -37,12 +37,11 @@ function setup_exec_sql($sqlquerylist)
             mysql_query($sql);
             if (mysql_error())
             {
-                $html .= "<p><strong>{$strFailed}:</strong> ".htmlspecialchars($sql)."</p>";
-                // FIXME i18n - Probably needs to be trigger_error() instead / CJ 29Jul09
-                $html .= "<p class='error'>".mysql_error()."<br />A MySQL error occurred, this could be because the MySQL user '{$CONFIG['db_username']}' does not have appropriate permission to modify the database schema.<br />";
-                //echo "The SQL command was:<br /><code>$sql</code><br />";
-                $html .= "An error might also be caused by an attempt to upgrade a version that is not supported by this script.<br />";
-                $html .= "Alternatively, you may have found a bug, if you think this is the case please report it.</p>";
+                $str = "A MySQL error occurred, this could be because the MySQL user '{$CONFIG['db_username']}' does not have appropriate permission to modify the database schema. ";
+                $str .= "An error might also be caused by an attempt to upgrade a version that is not supported by this script.<br />";
+                $str .= "Alternatively, you may have found a bug, if you think this is the case please report it.</p>";
+                $str .= "The error was ".mysql_error()." and the SQL was ".htmlspecialchars($sql);
+                trigger_error($str, E_USER_ERROR);
             }
             else $html .= "<p><strong>{$strOK}:</strong> ".htmlspecialchars($sql)."</p>";
         }

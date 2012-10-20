@@ -57,7 +57,6 @@ $strActivityCompleted = 'Activity completed: %1$s, total duration was: %2$s minu
 $strActivityContainsNoNotes = 'Activity contains no notes';
 $strActivityForIncidentX = 'Activity for Incident %s';
 $strActivityList = 'Activity List';
-$strActivityMarkedCompleteSuccessfully = 'Activity Marked Complete Successfully';
 $strActivityStarted = 'Activity started: %s';
 $strAddActionToXTrigger = 'Add Action to \'%s\' trigger';
 # i.e. Create, New

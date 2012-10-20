@@ -70,7 +70,6 @@ if (empty($action) OR $action == "showform")
     echo "<tr><th>{$strAllowIncidentReopen}</th><td class='shade2'>".html_checkbox('allow_reopen', $sla->allow_reopen)."</td></tr>\n";
     echo "<tr id='engineerBillingPeriod' style='display:none;'><th>{$strBillingEngineerPeriod}</th><td class='shade1'><input type='text' size='5' name='engineerPeriod' maxlength='5' value='{$_SESSION['formdata']['new_servicelevel']['engineerPeriod']}' /> {$strMinutes}</td></tr>";
     echo "<tr id='customerBillingPeriod' style='display:none;'><th>{$strBillingCustomerPeriod}</th><td  class='shade2'><input type='text' size='5' name='customerPeriod' maxlength='5' value='{$_SESSION['formdata']['new_servicelevel']['customerPeriod']}' /> {$strMinutes}</td></tr>";
-    echo "<tr id='limit' style='display:none;'><th>{$strLimit}</th><td  class='shade1' >{$CONFIG['currency_symbol']} <input type='text' size='5' name='limit' maxlength='5' value='{$_SESSION['formdata']['new_servicelevel']['limit']}' /></td></tr>";
     echo "</table>";
 
     echo "<table class='maintable'>";
@@ -150,8 +149,6 @@ elseif ($action == "edit")
     $timed = clean_dbstring($_POST['timed']);
     $allow_reopen = clean_dbstring($_POST['allow_reopen']);
     if ($allow_reopen != 'yes') $allow_reopen = 'no';
-    $limit = clean_int($_POST['limit']);
-    if ($limit == '') $limit = 0;
 
     if (empty($timed))
     {
@@ -250,8 +247,8 @@ elseif ($action == "edit")
 
         for ($i = 1; $i <= 4; $i++)
         {
-            $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod, `limit`) ";
-            $sql .= "VALUES ('{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}', '{$limit}')";
+            $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod) ";
+            $sql .= "VALUES ('{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}')";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }

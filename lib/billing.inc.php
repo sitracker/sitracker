@@ -140,10 +140,15 @@ function get_service_percentage($maintid)
 
     if (mysql_num_rows($result) > 0)
     {
+        $total = 0;
         $num = 0;
         while ($service = mysql_fetch_object($result))
         {
-            $total += (float) $service->balance / (float) $service->creditamount;
+
+            if (((float) $service->balance > 0) OR ((float) $service->creditamount > 0))
+            {
+                $total += (float) $service->balance / (float) $service->creditamount;
+            }
             $num++;
         }
         $return = (float) $total / (float) $num;
@@ -446,37 +451,6 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
 
 
 /**
- * Get the overdraft limit for a contract
- * @author Paul Heaney
- * @param int $contractid - The contract to check on
- * @return int - The overdraft limit, FALSE if non found
- */
-function get_overdraft($contractid)
-{
-    $rtnvalue = FALSE;
-    $sql = "SELECT DISTINCT sl.tag FROM `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenance']}` AS m ";
-    $sql .= "WHERE m.servicelevel = sl.tag AND m.id = {$contractid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting servicelevel details. ".mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 1)
-    {
-        list($tag) = mysql_fetch_row($result);
-        $sql = "SELECT DISTINCT limit FROM `{$GLOBALS['dbBillingPeriods']}` ";
-        $sql .= "WHERE AND tag = '{$tag}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("Error getting servicelevel details. ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
-        {
-            list($rtnvalue) = mysql_fetch_row($result);
-        }
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
  * Reserve monies from a serviceid
  * @author Paul Heaney
  * @param int $serviceid - The serviceID to reserve monies from
@@ -491,7 +465,6 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
     global $now, $sit;
     $rtnvalue = FALSE;
     $balance = get_service_balance($serviceid, TRUE, TRUE);
-    // TODO take into account overdraft limit
 
     $amount *= -1;
 
@@ -1085,7 +1058,7 @@ function get_incident_transactionid($incidentid)
  */
 function contract_service_table($contractid, $billing)
 {
-    global $CONFIG, $dbService, $now;
+    global $CONFIG, $dbService, $dbMaintenance, $now;
 
     $sql = "SELECT * FROM `{$dbService}` WHERE contractid = {$contractid} ORDER BY enddate DESC";
     $result = mysql_query($sql);
@@ -1151,7 +1124,7 @@ function contract_service_table($contractid, $billing)
                     $span .= "<br />";
                 }
 
-                
+
                 $span .= "<strong>{$GLOBALS['strBilling']}</strong>: ";
                 if (!empty($service->unitrate) AND $service->unitrate > 0)
                 {
@@ -1161,8 +1134,8 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= $GLOBALS['strPerIncident'];
                 }
-                $span .= "<br />";                
-                
+                $span .= "<br />";
+
                 if ($service->creditamount != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
@@ -1172,13 +1145,18 @@ function contract_service_table($contractid, $billing)
                 {
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
                 }
-                
+
                 if ($service->incidentrate != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strIncidentRate']}</strong>: {$CONFIG['currency_symbol']}{$service->incidentrate}<br />";
-                } 
+                }
 
-                $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
+                $sql1 = "SELECT billingmatrix FROM {$dbMaintenance} WHERE id = {$contractid}";
+                $result1 = mysql_query($sql1);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $maintenanceobj = mysql_fetch_object($result1);
+                
+                $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$maintenanceobj->billingmatrix}<br />";
 
                 if ($balance != $service->balance)
                 {
@@ -1591,8 +1569,8 @@ function get_incident_billable_breakdown_array($incidentid)
 
     $billingmatrix = '';
 
-    $serviceid = get_serviceid(incident_maintid($incidentid));
-    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbService']}` WHERE serviceid = {$serviceid}";
+    $maintenanceid = incident_maintid($incidentid);
+    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$maintenanceid}";
     $result = mysql_query($sql);
     if (mysql_error())
     {
@@ -2057,7 +2035,7 @@ function service_dropdown_contract($contractid, $name, $selected=0)
 {
     global $now, $CONFIG;
     $date = ldate('Y-m-d', $now);
-    
+
 	$sql = "SELECT * FROM `{$GLOBALS['dbService']}` WHERE contractid = {$contractid} ";
     $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     $result = mysql_query($sql);
@@ -2097,7 +2075,7 @@ function service_dropdown_site($siteid, $name, $selected=0)
 {
     global $now, $CONFIG;
     $date = ldate('Y-m-d', $now);
-   
+
     $sql = "SELECT s.* FROM `{$GLOBALS['dbService']}` AS s, `{$GLOBALS['dbMaintenance']}` AS m ";
     $sql .= "WHERE s.contractid = m.id AND  m.site = {$siteid} ";
     $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";

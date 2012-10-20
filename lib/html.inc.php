@@ -2136,7 +2136,7 @@ function html_incident_popup_link($incidentid, $linktext, $tooltip = NULL)
     {
         $windowname = "sit_popup";
     }
-    $html = "<a href=\"javascript:incident_details_window('{$incidentid}','{$windowname}')\"";
+    $html = "<a href=\"javascript:incident_details_window('{$incidentid}','{$windowname}')\" ";
     if (!empty($tooltip))
     {
         $html .= "class='info'";

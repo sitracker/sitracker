@@ -113,7 +113,6 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingPeriods}` (
 `createdby` smallint(6) NULL ,
 `modified` DATETIME NULL ,
 `modifiedby` smallint(6) NULL ,
-`limit` float NOT NULL default 0,
 PRIMARY KEY ( `tag`,`priority` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
@@ -276,10 +275,10 @@ INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fr
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_HELD_EMAIL_MINS', 'user', 'strEmailHeldEmailMinsDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New held email', 'Hi,\r\n\r\nThere\'s been an email in the holding queue for {holdingemailmins}. You can view it at {applicationurl}holding_queue.php\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_USER_CHANGED_STATUS', 'user', 'strEmailUserChangedStatusDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, '{watcheduserrealname} has changed status', 'Hi,\r\n\r\n{userrealname} has set their status to {userstatus} and is {useraccepting} incidents.\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_SIT_UPGRADED', 'user', 'strEmailSitUpgradedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, '{applicationshortname} upgraded', 'Hi,\r\n\r\n{applicationshortname} has been upgraded to {applicationversion}. You can view the changelog at {applicationurl}releasenotes.php?v={applicationversion}\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
-INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_CONTACT_CREATED', 'system', 'strEmailContactCreatedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New contact added', 'Hi,\r\n\r\n{contactname} has been added as a contact to {sitename} by {userealname}.\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
+INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_CONTACT_CREATED', 'system', 'strEmailContactCreatedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New contact added', 'Hi,\r\n\r\n{contactname} has been added as a contact to {sitename} by {userrealname}.\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_INCIDENT_CLOSED_CONTACT', 'system', 'strEmailIncidentClosedContactDesc', '{contactemail}', '{supportemail}', '{supportemail}', NULL, NULL, '{incidentid} - {incidenttitle} - Closed', 'Hi {contactfirstname},\r\n\r\nIncident {incidentid} has now been closed. \r\n\r\n\r\n{globalsignature}', 'show', 'Yes', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_INCIDENT_CLOSED_USER', 'user', 'strEmailIncidentClosedUserDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, '{incidentid} - {incidenttitle} - Closed', 'Hi,\r\n\r\nIncident {incidentid} has now been closed.\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'show', 'Yes', NULL, NULL, NULL, NULL);
-INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_CONTRACT_ADDED', 'user', 'strEmailContractAddedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New contract added to {sitename}', 'Hi,\r\n\r\nA new {contractproduct} contract ID{contractid} has been added to {sitename} by {userealname}. You can view it at {applicationurl}contract_details.php?id={contractid}\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
+INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_CONTRACT_ADDED', 'user', 'strEmailContractAddedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New contract added to {sitename}', 'Hi,\r\n\r\nA new {contractproduct} contract ID{contractid} has been added to {sitename} by {userrealname}. You can view it at {applicationurl}contract_details.php?id={contractid}\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_USER_CREATED', 'user', 'strEmailUserCreatedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New user {userrealname} added', 'Hi,\r\n\r\n{userrealname} has just been added as a new user to the {usergroup} group.\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_SITE_CREATED', 'user', 'strEmailSiteCreatedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, 'New site {sitename} added', 'Hi,\r\n\r\n{sitename} has just been added by {userrealname}. The admin contact is {admincontact}.\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}', 'hide', 'No', NULL, NULL, NULL, NULL);
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_EXTERNAL_INCIDENT_CLOSURE', 'system', 'strEmailExternalIncidentClosureDesc', '{incidentexternalemail}', '{supportemail}', '{supportemail}', NULL, NULL, 'Service Request #{incidentexternalid}  - {incidenttitle} CLOSED - {incidentid}', 'Hi {incidentexternalengineerfirstname},\r\n\r\nThis is an automatic email generated from {applicationname}, our call tracking system.\r\n\r\nIncident {incidentexternalid} has been closed.\r\n\r\nMany thanks for your help.\r\n\r\n{signature}\r\n{globalsignature}', 'show', 'Yes', NULL, NULL, NULL, NULL);
@@ -697,6 +696,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
   `var_incident_visible_contacts` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `var_incident_visible_all` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
+  `billingmatrix` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `site` (`site`),
   KEY `productonly` (`productonly`)
@@ -1165,7 +1165,6 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `balance` float NOT NULL default '0',
   `unitrate` float NOT NULL default '0',
   `incidentrate` float NOT NULL default '0',
-  `billingmatrix` varchar(32) NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
   `cust_ref_date` DATE NULL,
@@ -1777,6 +1776,7 @@ UPDATE `{$dbIncidentStatus}` SET `ext_name` = 'strAwaitingCustomerAction' WHERE 
 
 -- INL 2011-07-02
 UPDATE `{$dbScheduler}` SET `interval` = 600, `description` = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE `action` = 'SetUserStatus';
+
 -- INL 2011-08-06
 ALTER TABLE `{$dbService}` DROP `dailyrate`;
 
@@ -1800,8 +1800,13 @@ INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fr
 
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_REQUEST_CLOSURE', 3, 'strNoticeIncidentRequestClosedDesc', 'strNoticeIncidentRequestClosed', NULL, NULL, 'sticky', '{userid}');
 
--- PH 2012-09-223
-ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AFTER `externalemail`; 
+-- PH 2012-09-23
+ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AFTER `externalemail`;
+
+-- PH 2012-10-20
+ALTER TABLE `{$dbMaintenance}` ADD `billingmatrix` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `{$dbBillingPeriods}` DROP `limit`;
+
 ";
 
 // ********************************************************************

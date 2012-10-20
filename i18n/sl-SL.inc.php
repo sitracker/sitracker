@@ -52,7 +52,6 @@ $strActivityCompleted = 'Delokrog zaključen: %s. Celotno trajanje: %s minut';
 $strActivityContainsNoNotes = 'Delokrog ne vsebuje opomb';
 $strActivityForIncidentX = 'Delokrog za incident %s';
 $strActivityList = 'Seznam delokrogov';
-$strActivityMarkedCompleteSuccessfully = 'Delokrog označen kot uspešno izveden';
 $strActivityStarted = 'Začetek delokroga: %s';
 $strAdd = 'Dodaj';
 $strAddAction = 'Dodaj poseg';

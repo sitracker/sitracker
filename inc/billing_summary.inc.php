@@ -25,7 +25,7 @@ $expiredaszero = clean_fixed_list($_REQUEST['expiredaszero'], array('','show'));
 
 if (empty($display)) $display = 'html';
 
-$sql = "SELECT DISTINCT(CONCAT(m.id,sl.tag)), m.site, m.product, m.expirydate AS maintexpiry, s.* ";
+$sql = "SELECT DISTINCT(CONCAT(m.id,sl.tag)), m.site, m.product, m.expirydate AS maintexpiry, m.billingmatrix, s.* ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbService}` AS s, `{$dbSites}` AS site ";
 $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
 
@@ -58,7 +58,7 @@ if (mysql_num_rows($result) > 0)
 {
     if ($display == 'html')
     {
-        $str .= "<table class='maintable'><tr><th>{$strSiteName}</th><th>{$strProduct}</th>";
+        $str .= "<table class='maintable'><tr><th>{$strSiteName}</th><th>{$strProduct}</th><th>{$strBillingMatrix}</th>";
         $str .= "<th>{$strExpiryDate}</th><th>{$strCustomerReference}</th><th>{$strStartDate}</th><th>{$strEndDate}</th>";
         $str .= "<th>{$strFreeOfCharge}</th><th>{$strCreditAmount}</th><th>{$strBalance}</th>";
         $str .= "<th>{$strAwaitingApproval}</th><th>{$strReserved}</th><th>{$strAvailableBalance}</th>";
@@ -119,6 +119,7 @@ if (mysql_num_rows($result) > 0)
             {
                 $str .= "<td>".site_name($obj->site)."</td>";
                 $str .= "<td>".product_name($obj->product)."</td>";
+                $str .= "<td>{$obj->billingmatrix}</td>";
             }
             else
             {
@@ -126,10 +127,11 @@ if (mysql_num_rows($result) > 0)
                 if ($obj->product != $lastproduct)
                 {
                     $str .= "<td>".product_name($obj->product)."</td>";
+                    $str .= "<td>{$obj->billingmatrix}</td>";
                 }
                 else
                 {
-                    $str .= "<td></td>";
+                    $str .= "<td></td><td></td>";
                 }
             }
             $str .= "<td>" . ldate($CONFIG['dateformat_date'], $obj->maintexpiry) . "</td>";

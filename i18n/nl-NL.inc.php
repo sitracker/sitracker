@@ -49,7 +49,6 @@ $strActivityCompleted = 'Activiteit %s, afgerond totale tijs was: %s minuten';
 $strActivityContainsNoNotes = 'Activiteit heeft geen notities';
 $strActivityForIncidentX = 'Activiteit voor Melding %s';
 $strActivityList = 'Activiteitenlijst';
-$strActivityMarkedCompleteSuccessfully = 'Activiteit gemarkeerd als afgeronf';
 $strActivityStarted = 'Activiteit gestart: %s';
 $strAdd = 'Voeg toe';
 $strAddAction = 'Voeg actie toe';
