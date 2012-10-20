@@ -558,7 +558,7 @@ switch ($_REQUEST['action'])
                             // Move billingmatrix to contract
                             $billingmatrixerror = false;
                             // Its OK to group on contractid as previously we only supported on billing matrix
-                            $sqlup1 = "SELECT billingmatrix, contractid FROM `{$dbService}` GROUP BY contractid";
+                            $sqlup1 = "SELECT billingmatrix, contractid FROM `{$dbService}` ORDER BY serviceid GROUP BY contractid";
                             $resultup1 = mysql_query($sqlup1);
                             if (mysql_error())
                             {
@@ -568,6 +568,10 @@ switch ($_REQUEST['action'])
 
                             while ($obj = mysql_fetch_object($resultup1))
                             {
+                                if (empty($obj->billingmatrix))
+                                {
+                                    $obj->billingmatrix = "Default";
+                                }
                                 $sqlup2 = "UPDATE {$dbMaintenance} SET billingmatrix = '{$obj->billingmatrix}' WHERE id = {$obj->contractid}";
                                 mysql_query($sqlup2);
                                 if (mysql_error())
