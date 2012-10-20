@@ -87,7 +87,7 @@ $trigger_types['TRIGGER_INCIDENT_CREATED'] =
 array('name' => $strIncidentCreated,
       'description' => $strTriggerNewIncidentCreatedDesc,
       'required' => array('incidentid'),
-      'params' => array('contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'salespersonid', 'sendemail')
+      'params' => array('contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slatag', 'salespersonid', 'sendemail')
       );
 
 $trigger_types['TRIGGER_INCIDENT_NEARING_SLA'] =
@@ -136,7 +136,7 @@ $trigger_types['TRIGGER_PORTAL_INCIDENT_CREATED'] =
 array('name' => $strPortalIncidentCreated,
       'description' => $strTriggerPortalIncidentCreated,
       'required' => array('incidentid'),
-      'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slaid', 'sitesalespersonid')
+      'params' => array('incidentid', 'contactid', 'siteid', 'incidentpriorityid', 'contractid', 'slatag', 'sitesalespersonid')
     );
 
 $trigger_types['TRIGGER_PORTAL_INCIDENT_REQUESTCLOSURE'] =
@@ -157,7 +157,7 @@ $trigger_types['TRIGGER_NEW_CONTRACT'] =
 array('name' => $strNewContract,
       'description' => $strTriggerNewContractDesc,
       'required' => array('contractid'),
-      'params' => array('productid', 'slaid')
+      'params' => array('productid', 'slatag')
       );
 
 $trigger_types['TRIGGER_NEW_HELD_EMAIL'] =
@@ -777,14 +777,6 @@ $ttvararray['{slaactionplan}'] =
 array('description' => $strActionPlanSLA,
       'replacement' => 'incident_sla($param_array[\'incidentid\'], \'action_plan\');',
       'requires' => 'incidentid'
-      );
-
-$ttvararray['{slaid}'] =
-array('description' => $strSLA,
-      'replacement' => 'contract_slaid($param_array[\'contractid\']);',
-      'requires' => 'contractid',
-      'checkreplace' => 'servicelevel_drop_down',
-      'show' => FALSE
       );
 
 $ttvararray['{slainitialresponse}'] =

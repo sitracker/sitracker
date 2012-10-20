@@ -75,7 +75,6 @@ switch ($type)
     case 'support':
         // Create SQL for chosen queue
         // If you alter this SQL also update the function user_activeincidents($id)
-        if ($user == 'current') $user = $sit[2];
         // If the user is passed as a username lookup the userid
         if (!is_numeric($user) AND $user != 'current' AND $user != 'all')
         {
