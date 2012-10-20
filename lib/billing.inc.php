@@ -465,7 +465,6 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
     global $now, $sit;
     $rtnvalue = FALSE;
     $balance = get_service_balance($serviceid, TRUE, TRUE);
-    // TODO take into account overdraft limit
 
     $amount *= -1;
 
