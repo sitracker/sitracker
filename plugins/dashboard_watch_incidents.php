@@ -49,31 +49,6 @@ function dashboard_watch_incidents_display($dashletid)
 
     $html = "";
 
-// FIXME, commented out the queue selector, needs recoding to work with one-file dashboards - Ivan 22May08
-
-//     $html .= "<form action='{$_SERVER['PHP_SELF']}' style='text-align: center;'>";
-//     $html .= "{$GLOBALS['strQueue']}: <select class='dropdown' name='queue' onchange='window.location.href=this.options[this.selectedIndex].value'>\n";
-//     $html .= "<option ";
-//     if ($queue == 5)
-//     {
-//         $html .= "selected='selected' ";
-//     }
-//     $html .= "value=\"javascript:get_and_display('display_watch_incidents.inc.php?queue=5','watch_incidents_windows');\">{$GLOBALS['strAll']}</option>\n";
-//     $html .= "<option ";
-//     if ($queue == 1)
-//     {
-//         $html .= "selected='selected' ";
-//     }
-//     $html .= "value=\"javascript:get_and_display('display_watch_incidents.inc.php?queue=1','watch_incidents_windows');\">{$GLOBALS['strActionNeeded']}</option>\n";
-//     $html .= "<option ";
-//     if ($queue == 3)
-//     {
-//         $html .= "selected='selected' ";
-//     }
-//     $html .= "value=\"javascript:get_and_display('display_watch_incidents.inc.php?queue=3','watch_incidents_windows');\">{$GLOBALS['strAllOpen']}</option>\n";
-//     $html .= "</select>\n";
-//     $html .= "</form>";
-
     $sql = "SELECT type, id FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE userid = {$sit[2]} ORDER BY type";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error().$sql,E_USER_WARNING);
