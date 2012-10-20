@@ -113,7 +113,6 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingPeriods}` (
 `createdby` smallint(6) NULL ,
 `modified` DATETIME NULL ,
 `modifiedby` smallint(6) NULL ,
-`limit` float NOT NULL default 0,
 PRIMARY KEY ( `tag`,`priority` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
@@ -1806,6 +1805,8 @@ ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AF
 
 -- PH 2012-10-20
 ALTER TABLE `{$dbMaintenance}` ADD `billingmatrix` VARCHAR( 32 ) NULL DEFAULT NULL;
+ALTER TABLE `{$dbBillingPeriods}` DROP `limit`;
+
 ";
 
 // ********************************************************************

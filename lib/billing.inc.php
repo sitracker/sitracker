@@ -451,37 +451,6 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
 
 
 /**
- * Get the overdraft limit for a contract
- * @author Paul Heaney
- * @param int $contractid - The contract to check on
- * @return int - The overdraft limit, FALSE if non found
- */
-function get_overdraft($contractid)
-{
-    $rtnvalue = FALSE;
-    $sql = "SELECT DISTINCT sl.tag FROM `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenance']}` AS m ";
-    $sql .= "WHERE m.servicelevel = sl.tag AND m.id = {$contractid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting servicelevel details. ".mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) == 1)
-    {
-        list($tag) = mysql_fetch_row($result);
-        $sql = "SELECT DISTINCT limit FROM `{$GLOBALS['dbBillingPeriods']}` ";
-        $sql .= "WHERE AND tag = '{$tag}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("Error getting servicelevel details. ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
-        {
-            list($rtnvalue) = mysql_fetch_row($result);
-        }
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
  * Reserve monies from a serviceid
  * @author Paul Heaney
  * @param int $serviceid - The serviceID to reserve monies from

@@ -707,7 +707,6 @@ function enableBillingPeriod()
     {
         $('engineerBillingPeriod').show();
         $('customerBillingPeriod').show();
-        $('limit').show();
         $('allow_reopen').checked = false;
         $('allow_reopen').disable();
     }
@@ -716,7 +715,6 @@ function enableBillingPeriod()
         $('engineerBillingPeriod').hide();
         $('customerBillingPeriod').hide();
         $('allow_reopen').enable();
-        $('limit').hide();
     }
 }
 
