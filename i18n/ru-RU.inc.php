@@ -53,7 +53,6 @@ $strActivityCompleted = 'Действие завершено: %s, общая п�
 $strActivityContainsNoNotes = 'У действия нет заметок';
 $strActivityForIncidentX = 'Действие по инциденту %s';
 $strActivityList = 'Список действий';
-$strActivityMarkedCompleteSuccessfully = 'Действие успешно помечено как завершенное';
 $strActivityStarted = 'Начало действия: %s';
 $strAdd = 'Добавить';
 $strAddAction = 'Добавить действие';

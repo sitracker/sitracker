@@ -25,7 +25,6 @@ $strActivityAdded = 'Actividade Adicionada';
 $strActivityBilling = 'Actividade Billing';
 $strActivityBillingInfo = 'Apenas activifades fechadas são exibidias para billing.';
 $strActivityList = 'Lista de Actividades';
-$strActivityMarkedCompleteSuccessfully = 'Actividade Marcada Completa com Sucesso';
 $strAdd = 'Adicionar';
 $strAddContact = 'Adicionar Contacto';
 $strAddContract = 'Adicionar Contrato';

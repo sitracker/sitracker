@@ -58,7 +58,6 @@ $strActivityCompleted = 'Activité terminée: %s, la durée totale était de: %s
 $strActivityContainsNoNotes = 'l\'activité ne contient pas de notes';
 $strActivityForIncidentX = 'Activité pour l\'incident %s';
 $strActivityList = 'List d\'activités';
-$strActivityMarkedCompleteSuccessfully = 'Activité marquée comme Terminée avec succès';
 $strActivityStarted = 'Activité débutée: %s';
 $strAdd = 'Ajouter';
 $strAddAction = 'Ajouter une action';

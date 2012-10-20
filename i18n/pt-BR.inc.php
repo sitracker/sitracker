@@ -41,7 +41,6 @@ $strActivityBilling = 'Atividade de faturamento';
 $strActivityBillingInfo = 'Apenas atividades encerradas são indicadas para o faturamento.';
 $strActivityContainsNoNotes = 'Atividade não contém notas';
 $strActivityList = 'Lista de Atividades';
-$strActivityMarkedCompleteSuccessfully = 'Atividade Marcadas concluída com êxito';
 $strActivityStarted = 'Actividade começou:% s';
 $strAdd = 'Adcionar';
 $strAddAction = 'Adicionar Ação';

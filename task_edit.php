@@ -297,8 +297,7 @@ switch ($action)
             mark_task_completed($id, FALSE);
         }
 
-        // FIXME redundant i18n strings
-        if ($incident) html_redirect("tasks.php?incident={$incident}", TRUE, $strActivityMarkedCompleteSuccessfully);
+        if ($incident) html_redirect("tasks.php?incident={$incident}", TRUE, $strUpdateSuccessful);
         else html_redirect("tasks.php", TRUE);
         break;
     case 'postpone':

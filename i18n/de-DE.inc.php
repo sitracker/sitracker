@@ -60,7 +60,6 @@ $strActivityCompleted = 'Tätigkeit abgeschlossen: %s, Dauer war: %s minutes';
 $strActivityContainsNoNotes = 'Tätigkeit beinhaltet keine Notizen';
 $strActivityForIncidentX = 'Tätigkeit für Anfrage %s';
 $strActivityList = 'Tätigkeitenliste';
-$strActivityMarkedCompleteSuccessfully = 'Tätigkeit wurde als erledigt gekennzeichnet.';
 $strActivityStarted = 'Ativität gestartet: %s';
 $strAddActionToXTrigger = 'Aktion zu Trigger \'%s\' hinzufügen';
 # i.e. Create, New

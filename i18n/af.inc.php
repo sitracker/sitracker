@@ -54,7 +54,6 @@ $strActivityCompleted = 'Aktiwiteit gefinaliseer: %1s, totale durasie was: %2 mi
 $strActivityContainsNoNotes = 'Aktiwiteit het geen notas nie';
 $strActivityForIncidentX = 'Aktiwiteit vir Insident %s';
 $strActivityList = 'Aktiwiteite lys';
-$strActivityMarkedCompleteSuccessfully = 'Aktiwiteit Gemerk Suksesvol voltooi';
 $strActivityStarted = 'Aktiwiteit  begin: %s';
 $strAddActionToXTrigger = 'Voeg n\' Aksie by %s sneller';
 $strAdd = 'Voeg by';

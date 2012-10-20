@@ -47,7 +47,6 @@ $strActivityBillingInfo = 'strActivityBillingInfo';
 $strActivityCompleted = 'strActivityCompleted';
 $strActivityContainsNoNotes = 'strActivityContainsNoNotes';
 $strActivityList = 'strActivityList';
-$strActivityMarkedCompleteSuccessfully = 'strActivityMarkedCompleteSuccessfully';
 $strActivityStarted = 'strActivityStarted';
 $strAdd = 'strAdd';
 $strAddAction = 'strAddAction';

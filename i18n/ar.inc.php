@@ -41,7 +41,6 @@ $strActivityBillingInfo = 'الفعاليات المغلقه فقط تظهر ل�
 $strActivityContainsNoNotes = 'فعاليه لا تحتوي على ملاحظات';
 $strActivityForIncidentX = 'فعاليه للحادثه s%';
 $strActivityList = 'قائمة الفعاليات';
-$strActivityMarkedCompleteSuccessfully = 'فعاليه مؤشره على انها اكملت بنجاح';
 $strAdd = 'اضف';
 $strAddContact = 'اضف شخص';
 $strAddContract = 'اضف عقد';

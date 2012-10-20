@@ -53,7 +53,6 @@ $strActivityCompleted = 'Η δραστηριότητα ολοκληρώθηκε:
 $strActivityContainsNoNotes = 'Η δραστηριότητα δεν περιέχει σημειώσεις';
 $strActivityForIncidentX = 'Η δραστηριότητα για το Συμβάν %s';
 $strActivityList = 'Λίστα Δραστηριότητας';
-$strActivityMarkedCompleteSuccessfully = 'Δραστηριότητα Κατεγράφει ως Επιτυχώς Πλήρης';
 $strActivityStarted = 'Δραστηριότητα ξεκίνησε: %s';
 $strAdd = 'Προσθήκη';
 $strAddAction = 'Προσθήκη Ενέργειας';

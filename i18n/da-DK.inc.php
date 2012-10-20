@@ -55,7 +55,6 @@ $strActivityCompleted = 'Aktivit færdiggjort: %1s, samlet varighed var %2s';
 $strActivityContainsNoNotes = 'Aktiviteten indeholder ingen noter';
 $strActivityForIncidentX = 'Aktivitet for hændelse %s';
 $strActivityList = 'Aktivitets liste';
-$strActivityMarkedCompleteSuccessfully = 'Aktivitet er successfuldt markeret som færdiggjort';
 $strActivityStarted = 'Aktivitet startet: %s';
 $strAddActionToXTrigger = 'Tilføj hændelse til \'%s\' trigger';
 $strAdd = 'Tilføj';

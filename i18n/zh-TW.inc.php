@@ -32,7 +32,6 @@ $strActivityAdded = '添加活動成功';
 $strActivityBilling = '活動公告';
 $strActivityBillingInfo = '僅關閉的活動可發佈公告';
 $strActivityList = '活動列表';
-$strActivityMarkedCompleteSuccessfully = '活動已標記為完成.';
 $strAdd = '添加';
 $strAddContact = '添加聯繫人';
 $strAddContract = '添加合約';
