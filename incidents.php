@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $type = cleanvar($_REQUEST['type']);
-if (cleanvar($_REQUEST['user']) == 'current') $user = clean_int($sit[2]);
+if (cleanvar($_REQUEST['user']) == 'current' or empty($_REQUEST['user'])) $user = clean_int($sit[2]);
 else $user = cleanvar($_REQUEST['user']);
 $softwareid = clean_int($_REQUEST['softwareid']);
 $queue = clean_int($_REQUEST['queue']);
@@ -31,7 +31,6 @@ $title = $strIncidentsList;
 
 // Defaults
 if (empty($type)) $type = 'support';
-if (empty($user)) $user = 'current';
 if (empty($sort)) $sort = 'priority';
 if (empty($queue)) $queue = 1;
 
