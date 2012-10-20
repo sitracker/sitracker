@@ -34,7 +34,7 @@ else
 $title = $strInbox;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if (empty($sort)) $sort='date';
+if (empty($sort)) $sort = 'date';
 
 function contact_info($contactid, $email, $name, $subject)
 {
