@@ -119,7 +119,7 @@ if (mysql_num_rows($result) > 0)
             {
                 $str .= "<td>".site_name($obj->site)."</td>";
                 $str .= "<td>".product_name($obj->product)."</td>";
-                $str .= "<td>".$obj->billingmatrix."</td>";
+                $str .= "<td>{$obj->billingmatrix}</td>";
             }
             else
             {
@@ -127,7 +127,7 @@ if (mysql_num_rows($result) > 0)
                 if ($obj->product != $lastproduct)
                 {
                     $str .= "<td>".product_name($obj->product)."</td>";
-                    $str .= "<td>".$obj->billingmatrix."</td>";
+                    $str .= "<td>{$obj->billingmatrix}</td>";
                 }
                 else
                 {
