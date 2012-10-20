@@ -555,6 +555,36 @@ switch ($_REQUEST['action'])
                              * NOTE: we only support upgrades to 4.x from 3.50 or HIGHER *
                              *****************************/
 
+                            // Move billingmatrix to contract
+                            $billingmatrixerror = false;
+                            // Its OK to group on contractid as previously we only supported on billing matrix
+                            $sqlup1 = "SELECT billingmatrix, contractid FROM `{$dbService}` GROUP BY contractid";
+                            $resultup1 = mysql_query($sqlup1);
+                            if (mysql_error())
+                            {
+                                $billingmatrixerror = true;
+                                trigger_error(mysql_error(), E_USER_WARNING);
+                            }
+
+                            while ($obj = mysql_fetch_object($resultup1))
+                            {
+                                $sqlup2 = "UPDATE {$dbMaintenance} SET billingmatrix = '{$obj->billingmatrix}' WHERE id = {$obj->contractid}";
+                                mysql_query($sqlup2);
+                                if (mysql_error())
+                                {
+                                    $billingmatrixerror = true;
+                                    trigger_error(mysql_error(), E_USER_WARNING);
+                                }
+                            }
+                            
+                            if (!$billingmatrixerror)
+                            {
+                                $sqlup3 = "ALTER TABLE `{$dbService}` DROP `billingmatrix`";
+                                mysql_query($sqlup2);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            }
+                            // END Move billingmatrix to contract
+                            
                             /*****************************
                              * Do pre-upgrade tasks here *
                              *****************************/

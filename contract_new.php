@@ -352,11 +352,20 @@ elseif ($action == 'new')
             $licence_type = "'{$licence_type}'";
         }
 
+        if (empty($billingmatrix))
+        {
+            $billingmatrix = "NULL";
+        }
+        else
+        {
+            $billingmatrix = "'{$billingmatrix}'";
+        }
+        
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
-        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, productonly, term, supportedcontacts, allcontactssupported) ";
+        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, productonly, term, supportedcontacts, allcontactssupported, billingmatrix) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$productonly}', '{$term}', '{$numcontacts}', '{$allcontacts}')";
+        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$productonly}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix})";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -369,8 +378,8 @@ elseif ($action == 'new')
         }
 
         // Add service
-        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, billingmatrix, foc) ";
-        $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$billingmatrix}', '{$foc}')";
+        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, foc) ";
+        $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$foc}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);

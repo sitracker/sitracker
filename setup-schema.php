@@ -697,6 +697,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
   `var_incident_visible_contacts` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `var_incident_visible_all` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
+  `billingmatrix` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `site` (`site`),
   KEY `productonly` (`productonly`)
@@ -1165,7 +1166,6 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `balance` float NOT NULL default '0',
   `unitrate` float NOT NULL default '0',
   `incidentrate` float NOT NULL default '0',
-  `billingmatrix` varchar(32) NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
   `cust_ref_date` DATE NULL,
@@ -1777,6 +1777,7 @@ UPDATE `{$dbIncidentStatus}` SET `ext_name` = 'strAwaitingCustomerAction' WHERE 
 
 -- INL 2011-07-02
 UPDATE `{$dbScheduler}` SET `interval` = 600, `description` = 'This will set users away status based on data from their holiday calendar. e.g. Out of Office/Away sick.' WHERE `action` = 'SetUserStatus';
+
 -- INL 2011-08-06
 ALTER TABLE `{$dbService}` DROP `dailyrate`;
 
@@ -1800,8 +1801,11 @@ INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fr
 
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_REQUEST_CLOSURE', 3, 'strNoticeIncidentRequestClosedDesc', 'strNoticeIncidentRequestClosed', NULL, NULL, 'sticky', '{userid}');
 
--- PH 2012-09-223
+-- PH 2012-09-23
 ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AFTER `externalemail`;
+
+-- PH 2012-10-20
+ALTER TABLE `{$dbMaintenance}` ADD `billingmatrix` VARCHAR( 32 ) NULL DEFAULT NULL;
 ";
 
 // ********************************************************************

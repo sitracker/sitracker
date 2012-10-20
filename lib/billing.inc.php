@@ -1090,7 +1090,7 @@ function get_incident_transactionid($incidentid)
  */
 function contract_service_table($contractid, $billing)
 {
-    global $CONFIG, $dbService, $now;
+    global $CONFIG, $dbService, $dbMaintenance, $now;
 
     $sql = "SELECT * FROM `{$dbService}` WHERE contractid = {$contractid} ORDER BY enddate DESC";
     $result = mysql_query($sql);
@@ -1183,7 +1183,12 @@ function contract_service_table($contractid, $billing)
                     $span .= "<strong>{$GLOBALS['strIncidentRate']}</strong>: {$CONFIG['currency_symbol']}{$service->incidentrate}<br />";
                 }
 
-                $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$service->billingmatrix}<br />";
+                $sql1 = "SELECT billingmatrix FROM {$dbMaintenance} WHERE id = {$contractid}";
+                $result1 = mysql_query($sql1);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $maintenanceobj = mysql_fetch_object($result1);
+                
+                $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$maintenanceobj->billingmatrix}<br />";
 
                 if ($balance != $service->balance)
                 {
@@ -1596,8 +1601,8 @@ function get_incident_billable_breakdown_array($incidentid)
 
     $billingmatrix = '';
 
-    $serviceid = get_serviceid(incident_maintid($incidentid));
-    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbService']}` WHERE serviceid = {$serviceid}";
+    $maintenanceid = incident_maintid($incidentid);
+    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$maintenanceid}";
     $result = mysql_query($sql);
     if (mysql_error())
     {
