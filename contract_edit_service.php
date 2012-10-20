@@ -194,7 +194,7 @@ switch ($mode)
                     }
                     else
                     {
-                        echo "</thead>";
+                        echo "</tr></thead>";
                         echo "<input type='hidden' name='editbilling' id='editbilling' value='false' />";
                         echo "<tbody>\n";
                         echo "<tr><th colspan='2'>{$strUnableToChangeServiceAsUsed}</th></tr>\n";
