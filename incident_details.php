@@ -340,7 +340,7 @@ else
         {
             $totalduration = $totalduration + $du->duration;
         }
-        // FIXME for 12/24H clock choice
+        // FIXME for 12/24H clock choice Mantis 183
         if ($totalduration > 0)
         {
             echo ("{$strDuration}: " . format_seconds($totalduration * 60) . "<br />\n");
