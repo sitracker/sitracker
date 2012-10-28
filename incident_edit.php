@@ -133,7 +133,7 @@ else
     $oldescalationpath = cleanvar($_POST['oldescalationpath']);
     $oldcustomerid = clean_dbstring($_POST['oldcustomerid']);
     $oldexternalid = clean_dbstring($_POST['oldexternalid']);
-    $oldexternalemail = clean_int($_POST['oldexternalemail']);
+    $oldexternalemail = cleanvar($_POST['oldexternalemail']);
     $oldproduct = clean_int($_POST['oldproduct']);
     $oldproductversion = cleanvar($_POST['oldproductversion']);
     $oldproductservicepacks = cleanvar($_POST['oldproductservicepacks']);
