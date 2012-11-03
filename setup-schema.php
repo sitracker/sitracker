@@ -1732,9 +1732,9 @@ ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `
 ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
 ALTER TABLE `{$dbServiceLevels}` DROP `id`;
-ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) NOT NULL DEFAULT '';
 
-ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
+ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) NULL DEFAULT NULL ;
 
 UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 
@@ -1745,9 +1745,9 @@ ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
 -- CJ 2011-05-xx
 INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
-ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `address2` `address2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) NOT NULL, CHANGE `address2` `address2` VARCHAR(255) NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
-ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
 -- CJ 2011-06-15
 UPDATE `{$dbEmailTemplates}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `name` = 'EMAIL_SEND_FEEDBACK' ;
