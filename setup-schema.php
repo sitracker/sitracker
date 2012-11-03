@@ -1626,14 +1626,10 @@ UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?
 -- PH 2010-02-08
 ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
 ";
-//FIXME: NDT: Note added for Mantis 1755 we need to do some checks on the tables before ...
+
 if (setup_check_column_exists($dbBillingMatrix, 'id'))
 {
     $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
-}
-else
-{
-    $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;";
 }
 
 $upgrade_schema[390] .= "UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
