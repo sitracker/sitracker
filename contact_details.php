@@ -235,6 +235,7 @@ while ($contact = mysql_fetch_object($contactresult))
     // Check if user has permission to view maintenace contracts, if so display those related to this contact
 
     echo contracts_for_contacts_table($id);
+    print_r(contact_active_contracts($id));
 }
 mysql_free_result($contactresult);
 
