@@ -1826,6 +1826,14 @@ CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
 ALTER TABLE `{$dbTempIncoming}` ADD `arrived` datetime NOT NULL AFTER `id`;
 
 ALTER TABLE `{$dbTriggers}` CHANGE `action` `action` VARCHAR(255) DEFAULT NULL;
+
+CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
+  `userid` smallint(6) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`userid`,`config`),
+  KEY `userid` (`userid`)
+) ENGINE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
 ";
 
 // ********************************************************************
