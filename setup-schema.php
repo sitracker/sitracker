@@ -690,7 +690,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevel` varchar(32) NOT NULL default '',
+  `servicelevel` varchar(32) NOT NULL,
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -1626,14 +1626,10 @@ UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?
 -- PH 2010-02-08
 ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
 ";
-//FIXME: NDT: Note added for Mantis 1755 we need to do some checks on the tables before ...
+
 if (setup_check_column_exists($dbBillingMatrix, 'id'))
 {
     $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
-}
-else
-{
-    $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;";
 }
 
 $upgrade_schema[390] .= "UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
@@ -1736,9 +1732,9 @@ ALTER TABLE `{$dbBillingPeriods}` DROP PRIMARY KEY , ADD PRIMARY KEY ( `tag` , `
 ALTER TABLE `{$dbBillingPeriods}` DROP `servicelevelid`;
 
 ALTER TABLE `{$dbServiceLevels}` DROP `id`;
-ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `{$dbServiceLevels}` CHANGE `tag` `tag` VARCHAR( 32 ) NOT NULL DEFAULT '';
 
-ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;
+ALTER TABLE `{$dbIncidents}` CHANGE `servicelevel` `servicelevel` VARCHAR( 32 ) NULL DEFAULT NULL ;
 
 UPDATE `{$dbUpdates}` SET sla = Null WHERE sla = '';
 
@@ -1749,9 +1745,9 @@ ALTER TABLE `{$dbIncidents}` ADD INDEX ( `lastupdated` ) ;
 -- CJ 2011-05-xx
 INSERT INTO `{$dbLinkTypes}` VALUES (7, 'Attachments', 'KB', 'File', 'kb', 'id', 'knowledgebase', 'id', '', '', '');
 
-ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `address2` `address2` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+ALTER TABLE `{$dbSites}` CHANGE `department` `department` VARCHAR(255) NULL DEFAULT NULL, CHANGE `address1` `address1` VARCHAR(255) NOT NULL, CHANGE `address2` `address2` VARCHAR(255) NULL DEFAULT NULL, CHANGE `city` `city` VARCHAR(255) NULL DEFAULT NULL, CHANGE `county` `county` VARCHAR(255) NULL DEFAULT NULL, CHANGE `country` `country` VARCHAR(255) NULL DEFAULT NULL, CHANGE `postcode` `postcode` VARCHAR(255) NULL DEFAULT NULL, CHANGE `telephone` `telephone` VARCHAR(255) NULL DEFAULT NULL, CHANGE `fax` `fax` VARCHAR(255) NULL DEFAULT NULL, CHANGE `email` `email` VARCHAR(255) NULL DEFAULT NULL, CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
-ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
+ALTER TABLE `{$dbContacts}` CHANGE `mobile` `mobile` VARCHAR( 50 ) NULL DEFAULT NULL , CHANGE `address2` `address2` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `city` `city` VARCHAR( 255 ) NULL DEFAULT NULL ,  CHANGE `county` `county` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `country` `country` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `postcode` `postcode` VARCHAR( 255 ) NULL DEFAULT NULL , CHANGE `notes` `notes` BLOB NULL DEFAULT NULL;
 
 -- CJ 2011-06-15
 UPDATE `{$dbEmailTemplates}` SET `body` = 'Hi {contactfirstname},\r\n\r\nWe would very much value your feedback relating to Incident #{incidentid} - {incidenttitle}.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nPlease visit the following URL to complete our short questionnaire.\r\n\r\n{feedbackurl}\r\n\r\nIf you no longer wish to receive feedback forms, you can visit this link\r\n{feedbackoptout}\r\nyou can always go back to receiving feedback by visiting the portal and change your settings.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}'  WHERE `name` = 'EMAIL_SEND_FEEDBACK' ;
@@ -1781,19 +1777,19 @@ UPDATE `{$dbScheduler}` SET `interval` = 600, `description` = 'This will set use
 ALTER TABLE `{$dbService}` DROP `dailyrate`;
 
 -- PH 2012-02-07
-UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentid} - {incidenttitle} WHERE name = 'Support Email';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentid} - {incidenttitle}' WHERE name = 'Support Email';
 UPDATE `{$dbEmailTemplates}` SET subjectfield = 'Closure Notification: {incidentid} - {incidenttitle}' WHERE name = 'EMAIL_INCIDENT_CLOSURE';
 UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentid} - {incidenttitle}' WHERE name = 'EMAIL_INCIDENT_LOGGED_CONTACT';
 UPDATE `{$dbEmailTemplates}` SET body = 'This is an automatic notification that this incident has gone outside its SLA.  The SLA target nextsla expired {nextslatime} minutes ago.\r\n\r\nIncident: {incidentid} - {incidenttitle}\r\nOwner: {incidentowner}\r\nPriority: {incidentpriority}\r\nExternal Id: {incidentexternalid}\r\nExternal Engineer: {incidentexternalengineer}\r\nSite: {sitename}\r\nContact: {contactname}\r\n\r\nRegards\r\n{applicationname}\r\n\r\n\r\n---\r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_INCIDENT_OUT_OF_SLA';
 UPDATE `{$dbEmailTemplates}` SET body = 'This is an automatic notification that this incident {incidentid} will soon be due for review.\r\n\r\nIncident: {incidentid} - {incidenttitle}\r\nEngineer: {incidentowner}\r\nPriority: {incidentpriority}\r\nExternal Id: {incidentexternalid}\r\nExternal Engineer: {incidentexternalengineer}\r\nSite: {sitename}\r\nContact: {contactname}\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_INCIDENT_OUT_OF_REVIEW';
-UPDATE `{$dbEmailTemplates}` SET subject = '{incidentid} - {incidenttitle}', body = 'Hi,\r\n\r\nIncident {incidentid} {incidenttitle} has been logged.\r\n\r\nThe details of this incident are:\r\n\r\nPriority: {incidentpriority}\r\nContact: {contactname}\r\nSite: {sitename}\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_INCIDENT_CREATED_USER';
-UPDATE `{$dbEmailTemplates}` SET subject = '{incidentpriority} priority call ({incidentid} - {incidenttitle}) has been reassigned to you', body = 'Hi,\r\n\r\nIncident {incidentid} entitled {incidenttitle} has been reassigned to you.\r\n\r\nThe details of this incident are:\r\n\r\nPriority: {incidentpriority}\r\nContact: {contactname}\r\nSite: {sitename}\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}'  WHERE name = 'EMAIL_INCIDENT_REASSIGNED_USER_NOTIFY';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentid} - {incidenttitle}', body = 'Hi,\r\n\r\nIncident {incidentid} {incidenttitle} has been logged.\r\n\r\nThe details of this incident are:\r\n\r\nPriority: {incidentpriority}\r\nContact: {contactname}\r\nSite: {sitename}\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_INCIDENT_CREATED_USER';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentpriority} priority call ({incidentid} - {incidenttitle}) has been reassigned to you', body = 'Hi,\r\n\r\nIncident {incidentid} entitled {incidenttitle} has been reassigned to you.\r\n\r\nThe details of this incident are:\r\n\r\nPriority: {incidentpriority}\r\nContact: {contactname}\r\nSite: {sitename}\r\n\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}'  WHERE name = 'EMAIL_INCIDENT_REASSIGNED_USER_NOTIFY';
 UPDATE `{$dbEmailTemplates}` SET body = 'This is an automatic notification that this incident is about to breach its SLA.  The SLA target {nextsla} will expire in {nextslatime} minutes.\r\n\r\nIncident: {incidentid} - {incidenttitle}\r\nOwner: {incidentowner}\r\nPriority: {incidentpriority}\r\nExternal Id: {incidentexternalid}\r\nExternal Engineer: {incidentexternalengineer}\r\nSite: {sitename}\r\nContact: {contactname}\r\n\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_INCIDENT_NEARING_SLA';
-UPDATE `{$dbEmailTemplates}` SET subject = '{incidentid} - {incidenttitle} - Closed' WHERE name = 'EMAIL_INCIDENT_CLOSED_CONTACT';
-UPDATE `{$dbEmailTemplates}` SET subject = '{incidentid} - {incidenttitle} - Closed' WHERE name = 'EMAIL_INCIDENT_CLOSED_USER';
-UPDATE `{$dbEmailTemplates}` SET subject = 'Service Request #{incidentexternalid}  - {incidenttitle} CLOSED - {incidentid}' WHERE name = 'EMAIL_EXTERNAL_INCIDENT_CLOSURE';
-UPDATE `{$dbEmailTemplates}` SET subject = '{applicationshortname} {incidentid} - {incidenttitle} updated', body = 'Hi {contactfirstname},\r\n\r\nYour incident {incidentid} - {incidentid} has been updated, please log into the portal to view the update and respond.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nLog into the portal at: {applicationurl}, where you can also reset your details if you do not know them.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}' WHERE name = 'EMAIL_INCIDENT_UPDATED_CUSTOMER';
-UPDATE `{$dbEmailTemplates}` SET subject = '{applicationshortname} {incidentid} - {incidenttitle}: feedback requested' WHERE name = 'EMAIL_SEND_FEEDBACK';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentid} - {incidenttitle} - Closed' WHERE name = 'EMAIL_INCIDENT_CLOSED_CONTACT';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{incidentid} - {incidenttitle} - Closed' WHERE name = 'EMAIL_INCIDENT_CLOSED_USER';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = 'Service Request #{incidentexternalid}  - {incidenttitle} CLOSED - {incidentid}' WHERE name = 'EMAIL_EXTERNAL_INCIDENT_CLOSURE';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{applicationshortname} {incidentid} - {incidenttitle} updated', body = 'Hi {contactfirstname},\r\n\r\nYour incident {incidentid} - {incidentid} has been updated, please log into the portal to view the update and respond.\r\n \r\nDO NOT respond to this e-mail directly, use the portal for your responses.\r\n\r\nLog into the portal at: {applicationurl}, where you can also reset your details if you do not know them.\r\n\r\nRegards,\r\n{signature}\r\n\r\n{globalsignature}' WHERE name = 'EMAIL_INCIDENT_UPDATED_CUSTOMER';
+UPDATE `{$dbEmailTemplates}` SET subjectfield = '{applicationshortname} {incidentid} - {incidenttitle}: feedback requested' WHERE name = 'EMAIL_SEND_FEEDBACK';
 
 -- CJ 2012-05-05
 INSERT INTO `{$dbEmailTemplates}` (`name`, `type`, `description`, `tofield`, `fromfield`, `replytofield`, `ccfield`, `bccfield`, `subjectfield`, `body`, `customervisibility`, `storeinlog`, `created`, `createdby`, `modified`, `modifiedby`) VALUES('EMAIL_REQUEST_CLOSURE', 'user', 'strEmailIncidentRequestClosedDesc', '{triggeruseremail}', '{supportemail}', '{supportemail}', NULL, NULL, '{incidentid} - {incidenttitle} - Request Closure', 'Hi,\r\n\r\nIncident {incidentid} has been requested to be closed. \r\n\r\n\r\n{globalsignature}', 'show', 'Yes', NULL, NULL, NULL, NULL);
@@ -1807,7 +1803,51 @@ ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AF
 ALTER TABLE `{$dbMaintenance}` ADD `billingmatrix` VARCHAR( 32 ) NULL DEFAULT NULL;
 ALTER TABLE `{$dbBillingPeriods}` DROP `limit`;
 
+
+-- PH 2012-11-03
+CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  KEY `contactid` (`contactid`)
+) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `{$dbContacts}` CHANGE `email` `email` VARCHAR( 100 ) NOT NULL;
+
+CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  KEY siteid (`siteid`)
+) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `{$dbTempIncoming}` ADD `arrived` datetime NOT NULL AFTER `id`;
+
+ALTER TABLE `{$dbTriggers}` CHANGE `action` `action` VARCHAR(255) DEFAULT NULL;
+
+CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
+  `userid` smallint(6) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`userid`,`config`),
+  KEY `userid` (`userid`)
+) ENGINE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `{$dbKBArticles}` CHANGE `distribution` `distribution` ENUM( 'public', 'private', 'restricted' ) NOT NULL DEFAULT 'public'
+  COMMENT 'public appears in the portal, private is info never to be released to the public,
+  restricted is info that is sensitive but could be mentioned if asked, for example';
+  
+DROP TABLE `{$CONFIG['db_tableprefix']}interfacestyles`;
+
+ALTER TABLE `{$dbService}` DROP `billingmatrix`;
+
+ALTER DATABASE `{$CONFIG['db_database']}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 ";
+
+
 
 // ********************************************************************
 
