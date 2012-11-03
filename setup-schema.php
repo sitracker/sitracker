@@ -1823,7 +1823,9 @@ CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
   KEY siteid (`siteid`)
 ) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
 
-ALTER TABLE `{$dbTempIncoming}` ADD `arrived` datetime NOT NULL AFTER `id`; 
+ALTER TABLE `{$dbTempIncoming}` ADD `arrived` datetime NOT NULL AFTER `id`;
+
+ALTER TABLE `{$dbTriggers}` CHANGE `action` `action` VARCHAR(255) DEFAULT NULL;
 ";
 
 // ********************************************************************
