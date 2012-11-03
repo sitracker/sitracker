@@ -1815,7 +1815,13 @@ CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
 
 ALTER TABLE `{$dbContacts}` CHANGE `email` `emal` VARCHAR( 100 ) NOT NULL DEFAULT;
 
-
+CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
+  `siteid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`siteid`,`config`),
+  KEY siteid (`siteid`)
+) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
 ";
 
 // ********************************************************************
