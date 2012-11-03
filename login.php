@@ -28,7 +28,9 @@ setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
 $language = htmlspecialchars(mb_substr(strip_tags($_REQUEST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
 if ((substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE) AND mb_strlen($language) != 2)
+{
     $language = 'xx-xx'; // default lang
+}
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 require (APPLICATION_LIBPATH . 'trigger.class.php');
