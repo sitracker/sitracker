@@ -1822,6 +1822,8 @@ CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
   PRIMARY KEY  (`siteid`,`config`),
   KEY siteid (`siteid`)
 ) ENGINE=MyISAM COMMENT='Site configuration' DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `{$dbTempIncoming}` ADD `arrived` datetime NOT NULL AFTER `id`; 
 ";
 
 // ********************************************************************
