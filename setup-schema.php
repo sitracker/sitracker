@@ -1804,7 +1804,7 @@ ALTER TABLE `{$dbMaintenance}` ADD `billingmatrix` VARCHAR( 32 ) NULL DEFAULT NU
 ALTER TABLE `{$dbBillingPeriods}` DROP `limit`;
 
 
--- Ph 2012-11-03
+-- PH 2012-11-03
 CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
   `contactid` int(11) NOT NULL default '0',
   `config` varchar(255) NOT NULL,
@@ -1812,6 +1812,9 @@ CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
   PRIMARY KEY  (`contactid`,`config`),
   KEY `contactid` (`contactid`)
 ) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `{$dbContacts}` CHANGE `email` `emal` VARCHAR( 100 ) NOT NULL DEFAULT;
+
 
 ";
 
