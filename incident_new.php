@@ -342,7 +342,8 @@ elseif ($action == 'findcontact')
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         if (!empty($search_string)) $match = "'$search_string'";
         if (!empty($contactid)) $match = "{$strContact} {$strID} {$contactid}";
-        echo "<h2>".sprintf($strSorryNoRecordsMatchingX, $match)."</h2>\n";
+        echo "<h3>".sprintf($strSorryNoRecordsMatchingX, $match)."</h3>\n";
+        echo "<p align='center'><a href='contract_new_contact.php?contactid={$contactid}&amp;context=contact'>{$strAssociateContactWithContract}</a></p>";
         echo "<p align='center'><a href=\"incident_new.php?updateid=$updateid&amp;win={$win}\">{$strSearchAgain}</a></p>";
         // Select the contact from the list of contacts as well
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
@@ -443,7 +444,7 @@ elseif ($action == 'incidentform')
     echo icon('contract', 16) . " <strong>{$strContract} {$maintid}</strong>: ";
     echo strip_tags($producttext);
     echo "</td></tr>";
-    
+
     echo "<tr>";
     echo "<td><label for='customerid'>{$strCustomerReference}: </label><input maxlength='50' name='customerid' id='customerid' /></td>";
     echo "</tr>";
@@ -623,7 +624,7 @@ elseif ($action == 'assign')
         $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
 
         $customerid = cleanvar($_POST['customerid']);
-        
+
         if ($send_email == 'on')
         {
             $send_email = 1;

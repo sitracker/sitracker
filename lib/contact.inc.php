@@ -41,6 +41,49 @@ function customerExistsInDB($username)
 
 
 /**
+ * Returns an array of all active contracts from contact id
+ * @author Carsten Jensen
+ * @param int $userid. Contact ID
+ * @return array|bool array of contract id's or false if none
+ */
+function contact_active_contracts($userid)
+{
+    $sql  = "SELECT sc.maintenanceid AS maintenanceid ";
+    $sql .= "FROM `{$GLOBALS['dbContacts']}` AS c, ";
+    $sql .= "`{$GLOBALS['dbSupportContacts']}` AS sc, ";
+    $sql .= "`{$GLOBALS['dbMaintenance']}` AS m ";
+    $sql .= "WHERE c.id = '{$userid}' ";
+    $sql .= "AND (sc.maintenanceid=m.id AND sc.contactid='{$userid}') ";
+    $sql .= "AND m.term <> 'yes' ";
+    $sql .= "AND (m.expirydate > '" . time() . "' OR m.expirydate = '-1') ";
+    // Contracts we're an 'all supported' on
+    $sql .= "UNION ";
+    $sql .= "SELECT m.id AS maintenanceid ";
+    $sql .= "FROM `{$GLOBALS['dbContacts']}` AS c, ";
+    $sql .= "`{$GLOBALS['dbMaintenance']}` AS m ";
+    $sql .= "WHERE c.id = '{$userid}' AND c.siteid = m.site ";
+    $sql .= "AND m.allcontactssupported = 'yes' ";
+    $sql .= "AND m.term <> 'yes' ";
+    $sql .= "AND (m.expirydate > '" . time() . "' OR m.expirydate = '-1') ";
+
+    $result = mysql_query($sql);
+    if (!mysql_error())
+    {
+        if (mysql_num_rows($result) > 0)
+        {
+            $return = array();
+            while ($obj = mysql_fetch_object($result))
+            {
+                $return[] = $obj->maintenanceid;
+            }
+            return $return;
+        }
+    }
+    return false;
+}
+
+
+/**
  * Find a contacts real name
  * @author Ivan Lucas
  * @param int $id. Contact ID
