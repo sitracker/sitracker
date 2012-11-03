@@ -1803,6 +1803,16 @@ ALTER TABLE `{$dbIncidents}` ADD `customerid` VARCHAR( 50 ) NULL DEFAULT NULL AF
 ALTER TABLE `{$dbMaintenance}` ADD `billingmatrix` VARCHAR( 32 ) NULL DEFAULT NULL;
 ALTER TABLE `{$dbBillingPeriods}` DROP `limit`;
 
+
+-- Ph 2012-11-03
+CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
+  `contactid` int(11) NOT NULL default '0',
+  `config` varchar(255) NOT NULL,
+  `value` text,
+  PRIMARY KEY  (`contactid`,`config`),
+  KEY `contactid` (`contactid`)
+) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
+
 ";
 
 // ********************************************************************
