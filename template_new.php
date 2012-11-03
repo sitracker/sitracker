@@ -16,7 +16,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 if (!empty($_POST['type']))
 {
-    $type = cleanvar($_POST['type']);
+    $type = clean_fixed_list($_POST['type'], array('email','notice'));
     $name = cleanvar($_POST['name']);
 
     if ($type == 'email')
