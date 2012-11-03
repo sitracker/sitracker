@@ -690,7 +690,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `admincontact` int(11) default NULL,
   `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
-  `servicelevel` varchar(32) NOT NULL default '',
+  `servicelevel` varchar(32) NOT NULL,
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
