@@ -1813,7 +1813,7 @@ CREATE TABLE IF NOT EXISTS `{$dbContactConfig}` (
   KEY `contactid` (`contactid`)
 ) ENGINE=MyISAM COMMENT='Contact configuration' DEFAULT CHARACTER SET = utf8;
 
-ALTER TABLE `{$dbContacts}` CHANGE `email` `emal` VARCHAR( 100 ) NOT NULL DEFAULT;
+ALTER TABLE `{$dbContacts}` CHANGE `email` `email` VARCHAR( 100 ) NOT NULL;
 
 CREATE TABLE IF NOT EXISTS `{$dbSiteConfig}` (
   `siteid` int(11) NOT NULL default '0',
@@ -1834,7 +1834,20 @@ CREATE TABLE IF NOT EXISTS `{$dbUserConfig}` (
   PRIMARY KEY  (`userid`,`config`),
   KEY `userid` (`userid`)
 ) ENGINE=MyISAM COMMENT='User configuration' DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `{$dbKBArticles}` CHANGE `distribution` `distribution` ENUM( 'public', 'private', 'restricted' ) NOT NULL DEFAULT 'public'
+  COMMENT 'public appears in the portal, private is info never to be released to the public,
+  restricted is info that is sensitive but could be mentioned if asked, for example';
+  
+DROP TABLE `{$CONFIG['db_tableprefix']}interfacestyles`;
+
+ALTER TABLE `{$dbService}` DROP `billingmatrix`;
+
+ALTER DATABASE `{$CONFIG['db_database']}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 ";
+
+
 
 // ********************************************************************
 
