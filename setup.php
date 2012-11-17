@@ -133,7 +133,7 @@ if (!extension_loaded('mysql'))
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, "<"))
 {
-    echo "<p class='error'>You are running an older PHP version (< PHP 5.1), SiT v3.35 and later require PHP 5.1 or newer, some features may not work properly.</p>";
+    echo "<p class='error'>You are running an older PHP version (< PHP " . MIN_PHP_VERSION . "), SiT v3.35 and later require PHP " . MIN_PHP_VERSION . " or newer, some features may not work properly.</p>";
 }
 
 if (file_exists('/etc/webtrack.conf'))
