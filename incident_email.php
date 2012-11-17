@@ -82,27 +82,29 @@ switch ($step)
         echo "<tr><th>{$strTemplate}</th><td>".emailtemplate_drop_down("emailtype", 1, 'incident')."</td></tr>";
         echo "<tr><th>{$strDoesThisUpdateMeetSLA}:</th><td>";
         $target = incident_get_next_target($id);
+        $sla_targets = get_incident_sla_targets($incidentid);
+        
         echo "<select name='target' class='dropdown'>\n";
         echo "<option value='none'>{$strNo}</option>\n";
         switch ($target->type)
         {
             case 'initialresponse':
-                echo "<option value='initialresponse' class='initialresponse' >{$strInitialResponse}</option>\n";
-                echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
-                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                if ($sla_targets->initial_response_mins > 0) echo "<option value='initialresponse' class='initialresponse' >{$strInitialResponse}</option>\n";
+                if ($sla_targets->prob_determ_mins > 0) echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
+                if ($sla_targets->action_plan_mins > 0) echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
                 echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'probdef':
-                echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
-                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
-                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
+                if ($sla_targets->prob_determ_mins > 0) echo "<option value='probdef' class='problemdef'>{$strProblemDefinition}</option>\n";
+                if ($sla_targets->action_plan_mins > 0) echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                if ($sla_targets->resolution_days > 0) echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'actionplan':
-                echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
-                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
+                if ($sla_targets->action_plan_mins > 0) echo "<option value='actionplan' class='actionplan'>{$strActionPlan}</option>\n";
+                if ($sla_targets->resolution_days > 0) echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
             case 'solution':
-                echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
+                if ($sla_targets->resolution_days > 0) echo "<option value='solution' class='solution'>{$strResolutionReprioritisation}</option>\n";
                 break;
         }
         echo "</select>\n</td></tr>";

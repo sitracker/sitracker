@@ -1293,14 +1293,7 @@ function incident_get_next_target($incidentid)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $incidentsla = incident_service_level($incidentid);
-    
-    $sql_sla = "SELECT initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen ";
-    $sql_sla .= "FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$incidentsla}' GROUP BY tag";
-
-    $result_sla = mysql_query($sql_sla);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $sla_targets = mysql_fetch_object($result_sla);
+    $sla_targets = get_incident_sla_targets($incidentid);
 
     $target = '';
     if (mysql_num_rows($result) > 0)
@@ -1867,5 +1860,24 @@ function get_userfacing_incident_id_email($id)
 	return "{$CONFIG['incident_id_email_opening_tag']}{$CONFIG['incident_reference_prefix']}{$id}{$CONFIG['incident_id_email_closing_tag']}";
 }
 
+
+/**
+ * Gets all the SLA targets for a particular incident 
+ * 
+ * @author Paul Heaney..
+ * @param int $incidentid The ID of the incident to get the applicable SLA targets for.
+ * @return object With the following properties: initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen
+ */
+function get_incident_sla_targets($incidentid)
+{
+    $incidentsla = incident_service_level($incidentid);
+    
+    $sql_sla = "SELECT initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen ";
+    $sql_sla .= "FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$incidentsla}' GROUP BY tag";
+    
+    $result_sla = mysql_query($sql_sla);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    return mysql_fetch_object($result_sla);
+}
 
 ?>
