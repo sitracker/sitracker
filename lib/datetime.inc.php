@@ -140,11 +140,13 @@ function format_seconds($seconds, $showseconds = FALSE)
 /**
  * Return a string containing the time remaining as working days/hours/minutes (eg. 9am - 5pm)
  * @author Ivan Lucas
+ * @param int $minutes The number of minutes to convery to working time
+ * @param string $zero_str - The string to return if the number of working minutes is 0 i.e. the return string is blank
  * @return string. Length of working time, in readable days, hours and minutes
  * @note The working day is calculated using the $CONFIG['end_working_day'] and
  * $CONFIG['start_working_day'] config variables
  */
-function format_workday_minutes($minutes)
+function format_workday_minutes($minutes, $zero_str = '')
 {
     global $CONFIG, $strXMinutes, $str1Minute, $strXHours, $strXHour;
     global $strXWorkingDay, $strXWorkingDays;
@@ -195,6 +197,8 @@ function format_workday_minutes($minutes)
     }
 
     $time = trim($time);
+    
+    if (empty($time)) $time = $zero_str;
 
     return $time;
 }

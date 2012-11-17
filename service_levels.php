@@ -52,11 +52,11 @@ if (mysql_num_rows($tresult) >= 1)
             echo "<tr>";
             echo "<td align='right'>".priority_icon($sla->priority)."</td>";
             echo "<td>".priority_name($sla->priority)."</td>";
-            echo "<td>".format_workday_minutes($sla->initial_response_mins)."</td>";
-            echo "<td>".format_workday_minutes($sla->prob_determ_mins)."</td>";
-            echo "<td>".format_workday_minutes($sla->action_plan_mins)."</td>";
+            echo "<td>".format_workday_minutes($sla->initial_response_mins, $strNotApplicableAbbrev)."</td>";
+            echo "<td>".format_workday_minutes($sla->prob_determ_mins, $strNotApplicableAbbrev)."</td>";
+            echo "<td>".format_workday_minutes($sla->action_plan_mins, $strNotApplicableAbbrev)."</td>";
             // 480 mins in a working day
-            echo "<td>".format_workday_minutes($sla->resolution_days * $minsinday)."</td>";
+            echo "<td>".format_workday_minutes($sla->resolution_days * $minsinday, $strNotApplicableAbbrev)."</td>";
             echo "<td>".sprintf($strXDays, $sla->review_days)."</td>";
             if ($sla->timed == 'yes')
             {
