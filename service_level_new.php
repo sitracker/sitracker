@@ -12,7 +12,7 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 require ('core.php');
-$permission = PERM_ADMIN; // Administrate, FIXME need a permission for Add SLA
+$permission = PERM_SLA_EDIT; // Edit service levels works well here, perhaps not the best named permission though most suitable (it doens't make sense to have an edit and a add permission) 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
