@@ -295,7 +295,7 @@ elseif ($mode == 'save')
     $user->holiday_entitlement = clean_int($_POST['holiday_entitlement']);
     if (!empty($_POST['startdate']))
     {
-        $user->startdate = date('Y-m-d',strtotime($_POST['startdate']));
+        $user->startdate = date('Y-m-d', strtotime($_POST['startdate']));
     }
     else
     {
@@ -314,6 +314,7 @@ elseif ($mode == 'save')
         trigger_error('Error: No permission to edit this users profile', E_USER_ERROR);
         exit;
     }
+
     if (!check_form_token($formtoken))
     {
         html_redirect("main.php", FALSE, $strFormInvalidExpired);
