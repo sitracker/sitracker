@@ -757,9 +757,12 @@ function incident_service_level($incidentid)
 
     $sql = "SELECT servicelevel FROM `{$dbIncidents}` WHERE id = {$incidentid}";
     $result = mysql_query($sql);
-
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($servicelevel) = mysql_fetch_assoc($result);
+
+    if (mysql_num_rows($result) > 0)
+    {
+        $servicelevel = mysql_fetch_object($result)->servicelevel;
+    }
 
     return $servicelevel;
 }
@@ -1283,10 +1286,21 @@ function count_incoming_updates()
 function incident_get_next_target($incidentid)
 {
     global $now;
+
+    
     // Find the most recent SLA target that was met
-    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT sla, timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+    $incidentsla = incident_service_level($incidentid);
+    
+    $sql_sla = "SELECT initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen ";
+    $sql_sla .= "FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$incidentsla}' GROUP BY tag";
+
+    $result_sla = mysql_query($sql_sla);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $sla_targets = mysql_fetch_object($result_sla);
 
     $target = '';
     if (mysql_num_rows($result) > 0)
@@ -1295,17 +1309,29 @@ function incident_get_next_target($incidentid)
         switch ($upd->sla)
         {
             case 'opened':
-                $target->type = 'initialresponse';
-                break;
+                if ($sla_targets->initial_response_mins > 0)
+                {
+                    $target->type = 'initialresponse';
+                    break;
+                }
             case 'initialresponse':
-                $target->type = 'probdef';
-                break;
+                if ($sla_targets->prob_determ_mins > 0)
+                {
+                    $target->type = 'probdef';
+                    break;
+                }
             case 'probdef':
-                $target->type = 'actionplan';
-                break;
+                if ($sla_targets->action_plan_mins > 0)
+                {
+                    $target->type = 'actionplan';
+                    break;
+                }
             case 'actionplan':
-                $target->type = 'solution';
-                break;
+                if ($sla_targets->resolution_days > 0)
+                {
+                    $target->type = 'solution';
+                    break;
+                }
             case 'solution':
                 $target->type = '';
                 break;
