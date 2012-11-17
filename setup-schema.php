@@ -849,7 +849,7 @@ INSERT INTO `{$dbPermissions}` VALUES(78, 11, 'strPostSystemNotices');
 INSERT INTO `{$dbPermissions}` VALUES(79, 8, 'strEditServiceBalances');
 INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'strEditServiceDetails');
 INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'strAdjustActivityDuration');
-
+INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
 
 CREATE TABLE IF NOT EXISTS `{$dbPermissionCategories}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
@@ -1022,6 +1022,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 79, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 80, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 81, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 3, 'true');
@@ -1085,6 +1086,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 73, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 76, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 77, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 3, 'true');
@@ -1121,7 +1123,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 69, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 70, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 71, 'true');
-
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 82, 'true');
 
 CREATE TABLE IF NOT EXISTS `{$dbScheduler}` (
   `id` int(11) NOT NULL auto_increment,
@@ -1844,6 +1846,12 @@ DROP TABLE `{$CONFIG['db_tableprefix']}interfacestyles`;
 ALTER TABLE `{$dbService}` DROP `billingmatrix`;
 
 ALTER DATABASE `{$CONFIG['db_database']}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+-- PH 2012-11-17
+INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 82, 'true');
 
 ";
 
