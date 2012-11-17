@@ -164,10 +164,10 @@ function display_update_page($draftid=-1)
             break;
         case 'actionplan':
             echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} class='solution.png'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'solution':
-            echo "<option value='solution' {$targetSolution} class='solution.png'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
     }
     echo "</select>\n";
