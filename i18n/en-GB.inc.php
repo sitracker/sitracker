@@ -2060,6 +2060,7 @@ $strViewResponse = 'View Response';
 $strViewRole = 'View Role';
 # Legacy though we still have a permission for this
 $strViewSalesIncidents = 'View Sales Incidents';
+$strViewServiceLevels = 'View Service Levels';
 $strViewSite = 'View Site';
 $strViewSites = 'View Sites';
 $strViewStatus = 'View Status';
