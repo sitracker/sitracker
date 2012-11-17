@@ -305,6 +305,8 @@ elseif ($mode == 'save')
     $newpassword1 = cleanvar($_POST['newpassword1']);
     $newpassword2 = cleanvar($_POST['newpassword2']);
 
+    $formtoken = cleanvar($_POST['formtoken']);
+    
     if (empty($user->emoticons)) $user->emoticons = 'false';
 
     // Some extra checking here so that users can't edit other peoples profiles
