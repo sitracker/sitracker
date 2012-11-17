@@ -1201,7 +1201,6 @@ $strProblemHasBeenDefined = 'Het probleem is gedefinieerd';
 $strProblemReproduction = 'Probleem reproduceren';
 $strProblemReproductionCustomerText = 'Doet het probleem zich voor op meerdere machines? Welke stappen moeten worden doorlopen om het probleem te reproduceren';
 $strProduct = 'Product';
-$strProductOnly = 'Product alleen?';
 $strProductQuestions = 'Productvragen';
 $strProducts = 'Producten';
 $strPublic = 'Publiek';

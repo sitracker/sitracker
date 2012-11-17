@@ -128,11 +128,6 @@ if ($action == "edit")
         $incident_pools = explode(',', "Unlimited,{$CONFIG['incident_pools']}");
         echo "<td>".array_drop_down($incident_pools, 'incident_poolid', $maint->incident_quantity, '', TRUE, FALSE)."</td></tr>";
 
-        echo "<tr><th>{$strProductOnly}:</th>";
-        echo "<td><input id='productonly' name='productonly' type='checkbox' value='yes' onclick='set_terminated();' ";
-        if ($maint->productonly == "yes") echo " checked";
-        echo " /></td></tr>\n";
-
         echo "</tbody>";
         echo "</table>\n";
         echo "<input name='maintid' type='hidden' value='{$maintid}' />";
@@ -159,7 +154,6 @@ else if ($action == "update")
     $servicelevel = clean_dbstring($_POST['servicelevel']);
     $incidentpoolid = clean_int($_POST['incidentpoolid']);
     $product = clean_int($_POST['product']);
-    $productonly = cleanvar($_POST['productonly']);
     $contacts = cleanvar($_REQUEST['contacts']);
     if ($_REQUEST['noexpiry'] == 'on') $expirydate = '-1';
     else $expirydate = strtotime($_REQUEST['expirydate']);
@@ -190,8 +184,6 @@ else if ($action == "update")
 
     if ($errors == 0)
     {
-        if ($productonly == 'yes') $terminated = 'yes';
-
         if (empty($reseller) OR $reseller == 0)
         {
             $reseller = "NULL";
@@ -213,7 +205,7 @@ else if ($action == "update")
         $sql  = "UPDATE `{$dbMaintenance}` SET reseller={$reseller}, expirydate='{$expirydate}', licence_quantity='{$licence_quantity}', ";
         $sql .= "licence_type={$licence_type}, notes='{$notes}', admincontact={$admincontact}, term='{$terminated}', servicelevel='{$servicelevel}', ";
         $sql .= "incident_quantity='{$incident_quantity}', ";
-        $sql .= "incidentpoolid='{$incidentpoolid}', productonly='{$productonly}', ";
+        $sql .= "incidentpoolid='{$incidentpoolid}', ";
         $sql .= "supportedcontacts='{$amount}', allcontactssupported='{$allcontacts}'";
         if (!empty($product) AND user_permission($sit[2], PERM_ADMIN)) $sql .= ", product='{$product}'";
         $sql .= " WHERE id='{$maintid}'";

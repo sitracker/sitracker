@@ -676,7 +676,6 @@ $strProblemDescriptionCustomerText = '越多關於該問題的信息，越利於
 $strProblemReproduction = '問題重現';
 $strProblemReproductionCustomerText = '該問題是否在多個機器上出現？工程師要進行哪些步驟來重現該問題？';
 $strProduct = '產品';
-$strProductOnly = '只顯產品';
 $strProducts = '產品';
 $strPublic = '公共';
 $strPublicHoliday = '公共假期';

@@ -1066,7 +1066,6 @@ $strProblemHasBeenDefined = 'strProblemHasBeenDefined';
 $strProblemReproduction = 'strProblemReproduction';
 $strProblemReproductionCustomerText = 'strProblemReproductionCustomerText';
 $strProduct = 'strProduct';
-$strProductOnly = 'strProductOnly';
 $strProductQuestions = 'strProductQuestions';
 $strProducts = 'strProducts';
 $strPublic = 'strPublic';

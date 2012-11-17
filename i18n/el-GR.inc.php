@@ -804,7 +804,6 @@ $strProblemDescription = 'Περιγραφή Προβλήματος';
 $strProblemHasBeenDefined = 'Το πρόβλημα έχει προσδιοριστεί';
 $strProblemReproduction = 'Αναπαραγωγή Προβλήματος';
 $strProduct = 'Προϊόν';
-$strProductOnly = 'Μόνο Προϊόν';
 $strProductQuestions = 'Ερωτήσεις Προϊόντος';
 $strProducts = 'Προϊόντα';
 $strPublic = 'Δημόσιο';

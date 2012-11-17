@@ -688,7 +688,6 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `incidents_used` int(5) NOT NULL default '0',
   `notes` text,
   `admincontact` int(11) default NULL,
-  `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
   `servicelevel` varchar(32) NOT NULL,
   `incidentpoolid` int(11) NOT NULL default '0',
@@ -1852,6 +1851,8 @@ INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 82, 'true');
+
+ALTER TABLE `{$dbMaintenance}` DROP `productonly`;
 
 ";
 

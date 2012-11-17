@@ -1339,7 +1339,6 @@ $strProblemHasBeenDefined = 'Problemstillingen er oprettet';
 $strProblemReproduction = 'Gengivelse af problemet';
 $strProblemReproductionCustomerText = 'Eksisterer problemet ved mere end én maskine? Hvad skal teknikeren gøre for at kunne gengive fejlen?';
 $strProduct = 'Produkt';
-$strProductOnly = 'Produkt kun';
 $strProductQuestions = 'Produkt spørgsmål';
 $strProducts = 'Produkter';
 $strProductsAndSkills = 'Produkter & Færdigheder';

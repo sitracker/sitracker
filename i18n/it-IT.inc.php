@@ -1064,7 +1064,6 @@ $strProblemHasBeenDefined = 'Il problema è stato definito';
 $strProblemReproduction = 'Riproduzione del Problema';
 $strProblemReproductionCustomerText = 'Il problema si presenta si più di una macchina? Quali passaggi deve effettuare il tecnico per riprodurre il caso?';
 $strProduct = 'Prodotto';
-$strProductOnly = 'Solo Prodotto';
 $strProductQuestions = 'Domande sul Prodotto';
 $strProducts = 'Prodotti';
 $strPublic = 'Pubblico';

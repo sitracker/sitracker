@@ -728,7 +728,6 @@ $strProblemDescription = 'Descrição do Problema';
 $strProblemHasBeenDefined = 'O problema foi definido';
 $strProblemReproduction = 'Reprodução do Problema';
 $strProduct = 'Produto';
-$strProductOnly = 'Só produto';
 $strProductQuestions = 'Questões de Produto';
 $strProducts = 'Produtos';
 $strPublic = 'Público';
