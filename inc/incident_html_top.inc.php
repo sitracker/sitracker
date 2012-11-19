@@ -173,15 +173,24 @@ $targettype = target_type_name($target->type);
 
 // Get next review time
 $reviewsince = incident_time_since_review($incidentid);  // time since last review in minutes
-$reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes (1440 minutes in a day)
-if ($reviewtarget > 0)
+if ($servicelevel->review_days > 0)
 {
-    $reviewremain = ($reviewtarget - $reviewsince);
+    $reviewtarget = ($servicelevel->review_days * 1440);          // how often reviews should happen in minutes (1440 minutes in a day)
+    if ($reviewtarget > 0)
+    {
+        $reviewremain = ($reviewtarget - $reviewsince);
+    }
+    else
+    {
+        $reviewremain = 0;
+    }
 }
 else
 {
-    $reviewremain = 0;
+    // Review is disabled for this SLA so default to a 'high' value
+    $reviewremain = 9999;
 }
+
 
 // Color the title bar according to the SLA and priority
 $class = 'normal';

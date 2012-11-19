@@ -186,7 +186,6 @@ if ($action == "showform" OR $action == '')
     $incident_pools = explode(',', "{$strUnlimited},{$CONFIG['incident_pools']}");
     echo "<td>".array_drop_down($incident_pools,'incident_poolid',$maint['incident_quantity'])."</td></tr>\n";
 
-    echo "<tr><th>{$strProductOnly}</th><td><input name='productonly' type='checkbox' value='yes' /></td></tr>";
     plugin_do('contract_new_form_more');
     echo "</tbody>\n";
     plugin_do('contract_new_form');
@@ -215,7 +214,6 @@ elseif ($action == 'new')
     $notes = clean_dbstring($_REQUEST['notes']);
     $servicelevel = clean_dbstring($_REQUEST['servicelevel']);
     $incidentpoolid = clean_int($_REQUEST['incidentpoolid']);
-    $productonly = clean_fixed_list($_REQUEST['productonly'], array('no','yes'));
     $term = clean_fixed_list($_REQUEST['term'], array('no','yes'));
     $contacts = cleanvar($_REQUEST['contacts']);
     $timed = cleanvar($_REQUEST['timed']);
@@ -320,20 +318,6 @@ elseif ($action == 'new')
     {
         $addition_errors = 0;
 
-        if (empty($productonly))
-        {
-            $productonly = 'no';
-        }
-
-        if ($productonly == 'yes')
-        {
-            $term = 'yes';
-        }
-        else
-        {
-            $term = 'no';
-        }
-
         if (empty($reseller) OR $reseller == 0)
         {
             $reseller = "NULL";
@@ -363,9 +347,9 @@ elseif ($action == 'new')
         
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
-        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, productonly, term, supportedcontacts, allcontactssupported, billingmatrix) ";
+        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$productonly}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix})";
+        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix})";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);

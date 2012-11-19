@@ -588,7 +588,6 @@ $strProblemDescriptionCustomerText = 'Tanta Información sobre el problema como 
 $strProblemReproduction = 'Reproducción del Problema';
 $strProblemReproductionCustomerText = 'El problema existe en más de una máquina? Qué pasos necesita tomar un ingeniero para reproducir este incidente?';
 $strProduct = 'Producto';
-$strProductOnly = 'Solo Producto';
 $strProducts = 'Productos';
 $strPublic = 'Publico';
 $strPublicHoliday = 'Festivo Público';

@@ -1168,7 +1168,6 @@ $strProblemHasBeenDefined = 'Проблемът е дефиниран';
 $strProblemReproduction = 'Възпроизвеждане на проблема';
 $strProblemReproductionCustomerText = 'Съществува ли проблем с повече от една машина? Какви стъпки трябва да предприеме инженер, за да възпроизведе този проблем?';
 $strProduct = 'Продукт';
-$strProductOnly = 'Само продукт';
 $strProductQuestions = 'Въпроси за продукт';
 $strProducts = 'Продукти';
 $strPublic = 'Публичен';
