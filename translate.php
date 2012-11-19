@@ -320,7 +320,7 @@ elseif ($mode == "save")
             $translatedcount++;
         }
     }
-    $percent = number_format($translatedcount / $origcount * 100,2);
+    $percent = number_format($translatedcount / $origcount * 100, 2);
 
     $i18nfile .= "?>\n";
 
