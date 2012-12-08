@@ -698,7 +698,6 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `billingmatrix` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `site` (`site`),
-  KEY `productonly` (`productonly`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `{$dbNotes}` (
