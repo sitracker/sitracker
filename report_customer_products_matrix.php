@@ -83,9 +83,9 @@ switch ($_POST['action'])
                 $csv .= strip_comma($site->site);
 
                 $prodsql  = "SELECT p.name AS product, p.id AS productid, m.expirydate AS expirydate, m.term AS term, ";
-                $prodsql .= "m.productonly AS productonly, m.licence_type AS licencetype, ";
+                $prodsql .= "m.licence_type AS licencetype, ";
                 $prodsql .= "m.licence_quantity AS licencequantity FROM `{$dbProducts}` AS p, `{$dbMaintenance}` AS m ";
-                $prodsql .= "WHERE p.id=m.product AND m.site='{$site->siteid}' ";
+                $prodsql .= "WHERE p.id = m.product AND m.site='{$site->siteid}' ";
                 if (!empty($vendor)) $sql .= "AND p.vendorid='{$vendor}' ";
                 $prodsql .= "AND expirydate <= $max_expiry AND expirydate >= $min_expiry ";
                 $prodsql .= "AND m.term!='yes' ";

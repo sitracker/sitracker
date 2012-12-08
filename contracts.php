@@ -79,7 +79,7 @@ $sql  = "SELECT DISTINCT  m.id AS maintid, s.name AS site, p.name AS product, ";
 $sql .= "r.name AS reseller, licence_quantity, ";
 $sql .= "l.name AS licence_type, expirydate, admincontact, ";
 $sql .= "c.forenames AS admincontactforenames, c.surname AS admincontactsurname, ";
-$sql .= "m.notes, s.id AS siteid, m.term AS term, m.productonly AS productonly ";
+$sql .= "m.notes, s.id AS siteid, m.term AS term ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, `{$dbContacts}` AS c, ";
 $sql .= "`{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r ";
 $sql .= "WHERE m.site = s.id AND m.admincontact = c.id AND m.product = p.id ";
@@ -159,13 +159,9 @@ else
     while ($results = mysql_fetch_object($result))
     {
         // define class for table row shading
-        if (($results->expirydate < $now AND $results->expirydate != '-1') || ( $results->term == 'yes' AND $results->productonly == 'no'))
+        if (($results->expirydate < $now AND $results->expirydate != '-1') || $results->term == 'yes')
         {
             $shade = 'expired';
-        }
-        elseif ($results->productonly == 'yes')
-        {
-            $shade = 'notice';
         }
         else
         {
