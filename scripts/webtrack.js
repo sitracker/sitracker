@@ -1352,22 +1352,6 @@ function switch_template()
     }
 }
 
-
-function set_terminated()
-{
-    if ($('productonly').checked == true)
-    {
-        $('terminated').disabled = true;
-        $('terminated').checked = true;
-    }
-    else
-    {
-        $('terminated').disabled = false;
-        $('terminated').checked = false;
-    }
-}
-
-
 function validate_field(field, error)
 {
     if ($(field).value == '')
