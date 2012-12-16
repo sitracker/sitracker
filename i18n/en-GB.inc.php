@@ -452,6 +452,7 @@ $strDeleteSitesContacts = 'Delete Sites/Contacts';
 $strDeleted = 'Deleted';
 $strDeleteTask = 'Delete Task';
 $strDeletionOfSupportContractFailed = 'Deletion of Support ContractFailed';
+$strDeleteUser = 'Delete User';
 $strDenied = 'Denied';
 $strDepartment = 'Department';
 $strDescendingDateOrder = 'Descending date order';

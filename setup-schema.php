@@ -848,6 +848,7 @@ INSERT INTO `{$dbPermissions}` VALUES(79, 8, 'strEditServiceBalances');
 INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'strEditServiceDetails');
 INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'strAdjustActivityDuration');
 INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
+INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
 
 CREATE TABLE IF NOT EXISTS `{$dbPermissionCategories}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
@@ -1022,6 +1023,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 80, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 81, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 3, 'true');
@@ -1856,7 +1858,9 @@ ALTER TABLE `{$dbMaintenance}` DROP `productonly`;
 
 
 -- PH 2012-12-16
-ALTER TABLE `{$dbProducts}` ADD `active` ENUM( 'true', 'false' ) NOT NULL 
+ALTER TABLE `{$dbProducts}` ADD `active` ENUM( 'true', 'false' ) NOT NULL;
+INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
 ";
 
 
