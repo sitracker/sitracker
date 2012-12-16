@@ -75,7 +75,7 @@ echo "</tr>";
 echo "</table>";
 
 // search for criteria
-$sql  = "SELECT DISTINCT  m.id AS maintid, s.name AS site, p.name AS product, ";
+$sql  = "SELECT DISTINCT  m.id AS maintid, s.name AS site, p.name AS product, p.active AS productactive, ";
 $sql .= "r.name AS reseller, licence_quantity, ";
 $sql .= "l.name AS licence_type, expirydate, admincontact, ";
 $sql .= "c.forenames AS admincontactforenames, c.surname AS admincontactsurname, ";
@@ -172,7 +172,12 @@ else
 
         echo "<tr class='{$shade}'>";
         echo "<td><a href='contract_details.php?id={$results->maintid}'>{$strContract} {$results->maintid}</a></td>";
-        echo "<td>{$results->product}</td>";
+        if ($results->productactive == 'false')
+        {
+            $style = "class='terminatedtext'";
+            $productstr = "<br />{$strProductNoLongerAvailable}";
+        }
+        echo "<td {$style}>{$results->product} {$productstr}</td>";
         echo "<td><a href='site_details.php?id={$results->siteid}#contracts'>".htmlspecialchars($results->site)."</a><br />";
         echo "{$strAdminContact}: <a href='contact_details.php?mode=popup&amp;id={$results->admincontact}' target='_blank'>{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
 

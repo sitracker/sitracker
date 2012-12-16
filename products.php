@@ -62,7 +62,9 @@ if (empty($productid) AND $display!='skills')
                     list($countcontracts) = mysql_fetch_row($sresult);
 
                     if ($countlinked < 1) $shade = 'urgent';
-                    if ($countcontracts < 1) $shade = 'expired';
+                    if ($countcontracts < 1) $shade = 'inactive';
+                    if ($product->active == 'false') $shade = 'expired';
+                    
                     echo "<tr class='{$shade}'><td><a href='{$_SERVER['PHP_SELF']}?productid={$product->id}' name='{$product->id}'>{$product->name}</a></td>";
                     echo "<td>{$product->description}</td>";
                     echo "<td align='right'>{$countlinked}</td>";

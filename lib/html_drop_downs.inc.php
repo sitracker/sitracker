@@ -362,14 +362,17 @@ function group_drop_down($name = '', $selected = '')
  * @param string $name. name/id to use for the select element
  * @param int $id. Product ID
  * @param bool $required.
+ * @param bool $showinactive - Whether to show products which are marked as inactive
  * @return string. HTML select
  * @note With the given name and with the given id selected.
  */
-function product_drop_down($name, $id, $required = FALSE)
+function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
     global $dbProducts;
     // extract products
-    $sql  = "SELECT id, name FROM `{$dbProducts}` ORDER BY name ASC";
+    $sql  = "SELECT id, name FROM `{$dbProducts}` ";
+    if ($showinactive == FALSE) $sql .= "WHERE active = 'true' ";
+    $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 

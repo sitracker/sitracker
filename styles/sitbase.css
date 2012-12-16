@@ -635,6 +635,11 @@ tr.urgent
     background-color: #f08080;
 }
 
+tr.inactive
+{
+    background-color: #fccb92;   
+}
+
 tr.expired
 {
     background-color: #DDDDDF;
@@ -2028,4 +2033,9 @@ select .initialresponse, .problemdef, .actionplan, .solution
 	text-indent: 15px;
     height: 17px;
     background-repeat: no-repeat;
+}
+
+td.terminatedtext
+{
+    font-style: italic;
 }

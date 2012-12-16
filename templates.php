@@ -18,7 +18,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $id = cleanvar($_REQUEST['id']); // can be alpha (a name) as well as numeric (id)
-$action = clean_fixed_list($_REQUEST['action'], array('showform', 'list', 'edit', 'update', 'delete'));
+$action = clean_fixed_list($_REQUEST['action'], array('showform', 'list', 'edit', 'update', 'delete', 'new'));
 $templatetype = clean_fixed_list($_REQUEST['template'], array('', 'email', 'notice'));
 
 if (empty($action) OR $action == 'showform' OR $action == 'list')
@@ -113,7 +113,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
     echo "</table>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-elseif ($action == "edit")
+elseif ($action == "edit" OR $action == "new")
 {
     // Retrieve the template from the database, whether it's email or notice
     switch ($templatetype)
@@ -131,13 +131,18 @@ elseif ($action == "edit")
             $title = "{$strEdit}: {$strNoticeTemplate}";
             $templateaction = 'ACTION_NOTICE';
     }
-    $result = mysql_query($sql);
-    $template = mysql_fetch_object($result);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    
+    if ($action != "new")
+    {
+        // This is a edit template so exists in the DB
+        $result = mysql_query($sql);
+        $template = mysql_fetch_object($result);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    }
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    if (mysql_num_rows($result) > 0)
+    if (mysql_num_rows($result) > 0 OR $action == "new")
     {
         echo "<h2>{$title}</h2>";
         plugin_do('templates');
@@ -190,7 +195,14 @@ elseif ($action == "edit")
         }
         echo "</td><tr>";
 
-        echo "<tr><th>{$strTemplate}:</th><td><input class='required' maxlength='100' name='name' size='40' value=\"{$template->name}\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
+        
+        $templatename = $template->name;
+        if ($action == "new")
+        {
+            $templatename = cleanvar($_REQUEST['name']);
+        }
+        
+        echo "<tr><th>{$strTemplate}:</th><td><input class='required' maxlength='100' name='name' size='40' value=\"{$templatename}\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strDescription}:</th>";
         echo "<td><textarea class='required' name='description' cols='50' rows='5' onfocus=\"clearFocusElement(this);\"";
         if (mb_strlen($template->description) > 3 AND substr_compare($template->description, 'str', 0, 3) === 0)
@@ -283,6 +295,10 @@ elseif ($action == "edit")
         echo "</table>\n";
 
         echo "<p class='formbuttoms'>";
+        echo "<input name='savenew' type='hidden' value='";
+        if ($action == "new")  echo "yes";
+        else echo "no";
+        echo "' />";
         echo "<input name='type' type='hidden' value='{$template->type}' />";
         echo "<input name='template' type='hidden' value='{$templatetype}' />";
         echo "<input name='focuselement' id='focuselement' type='hidden' value='' />";
@@ -398,6 +414,8 @@ elseif ($action == "update")
     $storeinlog = cleanvar($_POST['storeinlog']);
     $id = cleanvar($_POST['id']);
     $type = cleanvar($_POST['type']);
+    
+    $savenew = clean_fixed_list($_REQUEST['savenew'], array('yes', 'no'));
 
     // echo "<pre>".print_r($_POST,true)."</pre>";
 
@@ -419,12 +437,50 @@ elseif ($action == "update")
     switch ($template)
     {
         case 'email':
+            if ($savenew == "yes")
+            {
+                // First check the template does not already exist
+                $sql = "SELECT id FROM `{$dbEmailTemplates}` WHERE name = '{$name}' LIMIT 1";
+                $result = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_num_rows($result) < 1)
+                {
+                    $sql = "INSERT INTO `{$dbEmailTemplates}` (name, type) VALUES('{$name}', 'incident')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    $id = mysql_insert_id();
+                }
+                else
+                {
+                    html_redirect($_SERVER['PHP_SELF'], FALSE, $strADuplicateAlreadyExists);
+                    exit;
+                }
+            }
             $sql  = "UPDATE `{$dbEmailTemplates}` SET name='{$name}', description='{$description}', tofield='{$tofield}', fromfield='{$fromfield}', ";
             $sql .= "replytofield='{$replytofield}', ccfield='{$ccfield}', bccfield='{$bccfield}', subjectfield='{$subjectfield}', ";
             $sql .= "body='{$bodytext}', customervisibility='{$cust_vis}', storeinlog='{$storeinlog}' ";
-            $sql .= "WHERE id='$id' LIMIT 1";
+            $sql .= "WHERE id='{$id}' LIMIT 1";
             break;
         case 'notice':
+            if ($savenew == "yes")
+            {
+                // First check the template does not already exist
+                $sql = "SELECT id FROM `{$dbNoticeTemplates}` WHERE name = '{$name}' LIMIT 1";
+                $result = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                if (mysql_num_rows($result) < 1)
+                {
+                    $sql = "INSERT INTO `{$dbNoticeTemplates}`(name) VALUES('{$name}')";
+                    mysql_query($sql);
+                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    $id = mysql_insert_id();
+                }
+                else
+                {
+                    html_redirect($_SERVER['PHP_SELF'], FALSE, $strADuplicateAlreadyExists);
+                    exit;
+                }
+            }
             $sql  = "UPDATE `{$dbNoticeTemplates}` SET name='{$name}', description='{$description}', type='".USER_DEFINED_NOTICE_TYPE."', ";
             $sql .= "linktext='{$linktext}', link='{$link}', durability='{$durability}', ";
             $sql .= "text='{$bodytext}' ";

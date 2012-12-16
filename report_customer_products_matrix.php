@@ -29,10 +29,10 @@ switch ($_POST['action'])
         $output = cleanvar($_POST['output']);
         $vendor = cleanvar($_POST['vendor']);
 
-        if (!empty($min_expire)) $min_expiry=strtotime($min_expire);
+        if (!empty($min_expire)) $min_expiry = strtotime($min_expire);
         else $min_expiry = $now;
 
-        if (!empty($max_expire)) $max_expiry=strtotime($max_expire);
+        if (!empty($max_expire)) $max_expiry = strtotime($max_expire);
         else $max_expiry = $now;
 
         $sql = "SELECT p.id, p.name FROM `{$dbProducts}` AS p, `{$dbMaintenance}` AS m ";
