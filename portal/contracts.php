@@ -69,7 +69,7 @@ $sql .= "WHERE s.id = m.site ";
 $sql .= "AND m.id='{$id}' ";
 $sql .= "AND m.reseller = r.id ";
 $sql .= "AND (m.licence_type IS NULL OR m.licence_type = lt.id) ";
-if ($mode == 'external') $sql .= "AND m.site = '{$_SESSION['siteid']}'";
+$sql .= "AND m.site = '{$_SESSION['siteid']}'";
 
 $maintresult = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -156,10 +156,6 @@ else
 
 echo "</td></tr>";
 
-if ($maint->maintnotes != '' AND $mode == 'internal')
-{
-    echo "<tr><th>{$strNotes}:</th><td>{$maint->maintnotes}</td></tr>";
-}
 echo "</table>";
 
 echo "<h3>{$strNamedContacts}</h3>";
@@ -213,24 +209,17 @@ if (mysql_num_rows($maintresult) > 0)
                         "<strong>".$allowedcontacts."</strong>");
         echo "</p>";
 
-        if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0 AND $mode == 'internal')
-        {
-            echo "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
-            echo "{$strNewNamedContact}</a></p>";
-        }
-        else
-        {
-            echo "<h3>{$strNewNamedContact}</h3>";
-            echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
-            echo "add' method='post' >";
-            echo "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
-            echo contact_site_drop_down('contactid',
-                                            'contactid',
-                                            maintenance_siteid($id),
-                                            supported_contacts($id));
-            echo help_link('NewSupportedContact');
-            echo " <input type='submit' value='{$strNew}' /></p></form>";
-        }
+        echo "<h3>{$strNewNamedContact}</h3>";
+        echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
+        echo "add' method='post' >";
+        echo "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
+        echo contact_site_drop_down('contactid',
+                                        'contactid',
+                                        maintenance_siteid($id),
+                                        supported_contacts($id));
+        echo help_link('NewSupportedContact');
+        echo " <input type='submit' value='{$strNew}' /></p></form>";
+
         echo "<p align='center'><a href='newcontact.php'>";
         echo "{$strNewSiteContact}</a></p>";
     }

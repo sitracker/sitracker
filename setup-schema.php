@@ -895,6 +895,7 @@ CREATE TABLE IF NOT EXISTS `{$dbProducts}` (
   `vendorid` int(5) NOT NULL default '0',
   `name` varchar(50) default NULL,
   `description` text NOT NULL,
+  `active` enum('true','false') NOT NULL, 
   PRIMARY KEY  (`id`),
   KEY `vendorid` (`vendorid`),
   KEY `name` (`name`)
@@ -1853,6 +1854,9 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 
 ALTER TABLE `{$dbMaintenance}` DROP `productonly`;
 
+
+-- PH 2012-12-16
+ALTER TABLE `{$dbProducts}` ADD `active` ENUM( 'true', 'false' ) NOT NULL 
 ";
 
 

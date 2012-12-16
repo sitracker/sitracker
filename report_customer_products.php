@@ -86,7 +86,7 @@ elseif ($mode == 'report')
         $html .= "<td>{$row->city}</td><td>{$row->county}</td>";
         $html .= "<td>{$row->country}</td><td>{$row->postcode}</td>";
         $html .= "<td>";
-        $psql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, ";
+        $psql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, p.active AS productactive, ";
         $psql .= "m.admincontact AS admincontact, ";
         $psql .= "r.name AS reseller, licence_quantity, lt.name AS licence_type, expirydate, admincontact, c.forenames AS admincontactsforenames, c.surname AS admincontactssurname, m.notes AS maintnotes ";
         $psql .= "FROM `{$dbContacts}` AS c, `{$dbProducts}` AS p, `{$dbResellers}` AS r, `{$dbMaintenance}` AS m ";
@@ -98,7 +98,9 @@ elseif ($mode == 'report')
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         while ($prod = mysql_fetch_object($presult))
         {
-            $product.= "{$prod->product}\n";
+            $product .= "{$prod->product}";
+            if ($prod->productactive == 'false') $product .= " ({$strProductNoLongerAvailable})";
+            $product .= "\n";
         }
         $html .= nl2br($product)."</td>";
         $html .= "</tr>";

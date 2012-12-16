@@ -30,6 +30,7 @@ if ($action == 'save')
     $description = clean_dbstring($_POST['description']);
     $productid = clean_int($_POST['productid']);
     $tags = clean_dbstring($_POST['tags']);
+    $active = clean_dbstring($_POST['active']);
 
     if ($vendor == '' OR $vendor == "0")
     {
@@ -50,8 +51,11 @@ if ($action == 'save')
     {
         replace_tags(TAG_PRODUCT, $productid, $tags);
 
+        if ($active == 'true') $activeStr = 'true';
+        else $activeStr = 'false';
+        
         // update database
-        $sql = "UPDATE `{$dbProducts}` SET vendorid='{$vendor}', name='{$name}', description='{$description}' WHERE id='{$productid}' LIMIT 1 ";
+        $sql = "UPDATE `{$dbProducts}` SET vendorid='{$vendor}', name='{$name}', description='{$description}', active='{$activeStr}' WHERE id='{$productid}' LIMIT 1 ";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -97,6 +101,9 @@ else
     echo "<td>";
     echo "<textarea name='description' cols='40' rows='6'>{$row->description}</textarea>";
     echo "</td></tr>";
+    echo "<tr><th>{$strActive}:</th><td><input type='checkbox' name='active' ";
+    if ($row->active == 'true') echo "checked='checked'";
+    echo " value='true' /></td></tr>";
     echo "<tr><th>{$strTags}:</th>";
     echo "<td><textarea rows='2' cols='30' name='tags'>".list_tags($id, TAG_PRODUCT, false)."</textarea></td></tr>\n";
     echo "</table>";

@@ -1415,6 +1415,7 @@ $strPreviousXMonths = 'Previous %s months';
 $strProblemSettingPassiveFTPMode = 'Problem setting passive FTP mode';
 $strProductX = 'Product: %s';
 $strProductInformation = 'product information';
+$strProductNoLongerAvailable = 'This product is no longer available';
 $strProfileLanguage = 'The language the user has set in their profile';
 $strPhonecallmadeby = 'Phonecall made by %s';
 $strPhonecalltakenby = 'Phonecall taken by %s';

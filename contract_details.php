@@ -30,21 +30,22 @@ plugin_do('contract_details');
 
 // Display Maintenance
 $sql  = "SELECT m.*, m.notes AS maintnotes, s.name AS sitename, ";
-$sql .= "r.name AS resellername, lt.name AS licensetypename ";
+$sql .= "r.name AS resellername, lt.name AS licensetypename, p.name AS productname, p.active AS productactive ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, ";
-$sql .= "`{$dbResellers}` AS r, `{$dbLicenceTypes}` AS lt ";
+$sql .= "`{$dbResellers}` AS r, `{$dbLicenceTypes}` AS lt, ";
+$sql .= "`{$dbProducts}` AS p ";
 $sql .= "WHERE s.id = m.site ";
 $sql .= "AND m.id='{$id}' ";
 $sql .= "AND m.reseller = r.id ";
+$sql .= "AND m.product = p.id ";
 $sql .= "AND (m.licence_type IS NULL OR m.licence_type = lt.id) ";
-if ($mode == 'external') $sql .= "AND m.site = '{$_SESSION['siteid']}'";
 
 $maintresult = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
 $maint = mysql_fetch_object($maintresult);
 
-$html = "<table class='maintable vertical'>";
+echo "<table class='maintable vertical'>";
 echo "<tr><th>{$strContract} {$strID}:</th>";
 echo "<td><h3>".icon('contract', 32)." ";
 echo "{$maint->id}</h3></td></tr>";
@@ -65,7 +66,7 @@ if ($maint->expirydate < $now AND $maint->expirydate != '-1')
 echo "</td></tr>\n";
 echo "<tr><th>{$strSite}:</th>";
 
-echo "<td><a href=\"site_details.php?id=".$maint->site."\">".$maint->sitename."</a></td></tr>";
+echo "<td><a href=\"site_details.php?id={$maint->site}\">{$maint->sitename}</a></td></tr>";
 
 echo "<tr><th>{$strAdminContact}:</th>";
 
@@ -84,7 +85,12 @@ else
     echo $maint->resellername;
 }
 echo "</td></tr>";
-echo "<tr><th>{$strProduct}:</th><td>".product_name($maint->product)."</td></tr>";
+if ($maint->productactive == 'false')
+{
+    $style = "class='terminatedtext'";
+    $productstr = "<br />{$strProductNoLongerAvailable}";
+}
+echo "<tr><th>{$strProduct}:</th><td {$style}>{$maint->productname} {$productstr}</td></tr>";
 echo "<tr><th>{$strIncidents}:</th>";
 echo "<td>";
 $incidents_remaining = $maint->incident_quantity - $maint->incidents_used;
@@ -138,7 +144,7 @@ if ($timed)
     echo "</td></tr>";
 }
 
-if ($maint->maintnotes != '' AND $mode == 'internal')
+if ($maint->maintnotes != '')
 {
     echo "<tr><th>{$strNotes}:</th><td>{$maint->maintnotes}</td></tr>";
 }
@@ -205,28 +211,10 @@ if (mysql_num_rows($maintresult) > 0)
                         "<strong>".$allowedcontacts."</strong>");
         echo "</p>";
 
-        if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0 AND $mode == 'internal')
+        if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0)
         {
             echo "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
             echo "{$strNewNamedContact}</a></p>";
-        }
-        else
-        {
-            echo "<h3>{$strNewNamedContact}</h3>";
-            echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
-            echo "add' method='post' >";
-            echo "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
-            echo contact_site_drop_down('contactid',
-                                            'contactid',
-                                            maintenance_siteid($id),
-                                            supported_contacts($id));
-            echo help_link('NewSupportedContact');
-            echo " <input type='submit' value='{$strNew}' /></p></form>";
-        }
-        if ($mode == 'external')
-        {
-            echo "<p align='center'><a href='newcontact.php'>";
-            echo "{$strNewSiteContact}</a></p>";
         }
     }
 
