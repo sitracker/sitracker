@@ -1296,7 +1296,7 @@ function incident_get_next_target($incidentid)
 
     $sla_targets = get_incident_sla_targets($incidentid);
 
-    $target = '';
+    $target = new SLATarget();
     if (mysql_num_rows($result) > 0)
     {
         $upd = mysql_fetch_object($result);

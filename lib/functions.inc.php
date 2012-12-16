@@ -32,6 +32,7 @@ include (APPLICATION_LIBPATH . 'user.class.php');
 include (APPLICATION_LIBPATH . 'contact.class.php');
 include (APPLICATION_LIBPATH . 'incident.class.php');
 include (APPLICATION_LIBPATH . 'status.class.php');
+include (APPLICATION_LIBPATH . 'sla.class.php');
 
 include_once (APPLICATION_LIBPATH . 'file.inc.php');
 include (APPLICATION_LIBPATH . 'ldap.inc.php');
