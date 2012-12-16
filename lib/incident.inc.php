@@ -798,6 +798,7 @@ function load_entitlements($contactid, $siteid)
 
     $contractresult = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    unset($_SESSION['entitlement']);
     while ($contract = mysql_fetch_object($contractresult))
     {
         $_SESSION['entitlement'][] = serialize($contract);
