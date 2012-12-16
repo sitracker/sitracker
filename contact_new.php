@@ -83,7 +83,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
     }
     echo " /></td></tr>\n";
     echo "<tr><th>{$strSite}</th><td>";
-    echo site_drop_down('siteid',$siteid, TRUE)."<span class='required'>{$strRequired}</span></td></tr>\n";
+    echo site_drop_down('siteid', $siteid, TRUE)."<span class='required'>{$strRequired}</span></td></tr>\n";
     
     echo "<tr><th>{$strDepartment}</th><td><input maxlength='255' name='department' size='35'";
     if ($_SESSION['formdata']['new_contact']['department'] != '')
