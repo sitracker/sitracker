@@ -125,8 +125,7 @@ while ($obj = mysql_fetch_object($siteresult))
     echo "<td><input maxlength='50' name='department' size='40' value='{$obj->department}' />";
     echo "</td></tr>\n";
     echo "<tr><th>{$strAddress1}:</th>";
-    echo "<td><input maxlength='50' name='address1' class='required' ";
-    echo "size='40' value='{$obj->address1}' /> <span class='required'>{$strRequired}</span>";
+    echo "<td><input maxlength='50' name='address1' class='required' size='40' value='{$obj->address1}' /> <span class='required'>{$strRequired}</span>";
     echo "</td></tr>\n";
     echo "<tr><th>{$strAddress2}: </th><td><input maxlength='50' name='address2' size='40' value='{$obj->address2}' /></td></tr>\n";
     echo "<tr><th>{$strCity}:</th><td><input maxlength='255' name='city' size='40' value='{$obj->city}' /></td></tr>\n";
@@ -149,7 +148,7 @@ while ($obj = mysql_fetch_object($siteresult))
     plugin_do('portal_site_edit_form');
     
     echo "</table>\n";
-    echo "<input name='site' type='hidden' value='$site' />";
+    echo "<input name='site' type='hidden' value='{$site}' />";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
     

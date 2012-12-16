@@ -34,7 +34,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
         $_SESSION['formdata']['new_contact']['surname'] = ucfirst($name[1]);
     }
     
-    $html = show_form_errors('new_contact');
+    echo show_form_errors('new_contact');
     clear_form_errors('new_contact');
     echo "<h2>".icon('contact', 32)." {$strNewContact}</h2>";
     

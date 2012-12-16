@@ -57,9 +57,7 @@ elseif ($action == "edit")
             echo site_name($site)."</h2>";
             plugin_do('site_edit');
     
-            echo "<form name='edit_site' action='{$_SERVER['PHP_SELF']}";
-            echo "?action=update' method='post' onsubmit='return ";
-            echo "confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
+            echo "<form name='edit_site' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
             echo "<table class='maintable vertical'>";
             echo "<tr><th>{$strName}:</th>";
             echo "<td><input class='required' maxlength='50' name='name' size='40' value='{$obj->name}' />";
@@ -113,7 +111,7 @@ elseif ($action == "edit")
             plugin_do('site_edit_form');
 
             echo "</table>\n";
-            echo "<input name='site' type='hidden' value='$site' />";
+            echo "<input name='site' type='hidden' value='{$site}' />";
             echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
             echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
             echo "<p><a href=\"site_details.php?id={$site}\">{$strReturnWithoutSaving}</a></p>";
