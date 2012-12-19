@@ -1881,4 +1881,22 @@ function get_incident_sla_targets($incidentid)
     return mysql_fetch_object($result_sla);
 }
 
+
+/**
+ * Not 100% sure of the purpose of this function though triggers requires it, TODO revisit and fully under stand
+ * 
+ * @author Paul Heaney - to fix Mantis 1372
+ * @param int $holdingemailid The holding queue ID
+ * @return int the update ID
+ */
+function incoming_email_update_id($holdingemailid)
+{
+    $sql = "SELECT updateid FROM `{$GLOBALS['dbTempIncoming']}` WHERE id = {$holdingemailid}";
+    $contractresult = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    list($updateid) = mysql_fetch_array($result);
+    
+    return $updateid;
+}
+
 ?>
