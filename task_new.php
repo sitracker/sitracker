@@ -127,7 +127,11 @@ else
             clear_form_errors('new_task');
 
             echo "<h2>".icon('task', 32)." ";
-            echo "$title</h2>";
+            echo "{$title}</h2>";
+            
+            echo show_form_errors('new_task');
+            clear_form_errors('new_task');
+            
             plugin_do('task_new');
 
             echo "<form id='newtask' action='{$_SERVER['PHP_SELF']}' method='post'>";
