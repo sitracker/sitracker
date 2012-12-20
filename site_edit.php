@@ -51,13 +51,14 @@ elseif ($action == "edit")
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         echo show_form_errors('site_edit');
         clear_form_errors('site_edit');
+
         while ($obj = mysql_fetch_object($siteresult))
         {
             echo "<h2>".icon('site', 32)." {$GLOBALS['strEditSite']}: {$site} - ";
             echo site_name($site)."</h2>";
             plugin_do('site_edit');
     
-            echo "<form name='edit_site' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
+            echo "<form name='site_edit' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
             echo "<table class='maintable vertical'>";
             echo "<tr><th>{$strName}:</th>";
             echo "<td><input class='required' maxlength='50' name='name' size='40' value='{$obj->name}' />";
@@ -148,7 +149,13 @@ elseif ($action == "update")
     if ($name == '')
     {
         $errors++;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['site_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);       
+    }
+    
+    if ($name == '')
+    {
+        $errors++;
+        $_SESSION['formerrors']['site_edit']['address1'] = sprintf($strFieldMustNotBeBlank, $strAddress1);
     }
 
     plugin_do('site_edit_submitted');
@@ -190,7 +197,7 @@ elseif ($action == "update")
     }
     else
     {
-        html_redirect("site_details.php?id={$site}", FALSE, $errors_string);
+        html_redirect("site_edit.php?action=edit&site={$site}", FALSE);
     }
 }
 ?>
