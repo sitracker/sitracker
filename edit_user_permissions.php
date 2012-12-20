@@ -39,7 +39,7 @@ if (empty($action) OR $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     $sql = "SELECT * FROM `{$dbRoles}` ORDER BY id ASC";
-    $result= mysql_query($sql);
+    $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) >= 1)
@@ -86,7 +86,7 @@ if (empty($action) OR $action == "showform")
         echo "</tr>\n";
         while ($perm = mysql_fetch_object($presult))
         {
-            echo "<tr class='$class' onclick='trow(event);'>";
+            echo "<tr class='{$class}' onclick='trow(event);'>";
             echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
             mysql_data_seek($result, 0);
             while ($rolerow = mysql_fetch_object($result))
@@ -120,7 +120,7 @@ if (empty($action) OR $action == "showform")
 elseif ($action == "edit" && (!empty($user) OR !empty($role)))
 {
     // Show form
-     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     if (!empty($role) AND !empty($user))
     {
         trigger_error("{$strCannotEditUserAndRole}", E_USER_ERROR);
@@ -137,7 +137,7 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     if (!empty($user)) echo "<p align='center'>{$strPermissionsInhereitedCannotBeChanged}</p>";
 
     // Next lookup the permissions
-    $sql = "SELECT * FROM `{$dbUsers}` AS u, `{$dbRolePermissions}` AS rp WHERE u.roleid = rp.roleid AND u.id = '$user' AND granted='true'";
+    $sql = "SELECT * FROM `{$dbUsers}` AS u, `{$dbRolePermissions}` AS rp WHERE u.roleid = rp.roleid AND u.id = '{$user}' AND granted='true'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     $userrolepermission = array();
@@ -175,8 +175,8 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
     }
 
     $sql = "SELECT * FROM `{$dbPermissions}`  ORDER BY id ASC";
-    $result= mysql_query($sql);
-    $class='shade1';
+    $result = mysql_query($sql);
+    $class = 'shade1';
 
     while ($permissions = mysql_fetch_object($result))
     {
@@ -273,7 +273,7 @@ elseif ($action == "update")
         }
         else
         {
-                html_redirect("edit_user_permissions.php?tab={$seltab}", FALSE);
+            html_redirect("edit_user_permissions.php?tab={$seltab}", FALSE);
         }
         exit;
     }

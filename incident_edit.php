@@ -189,7 +189,7 @@ else
         if ($addition_errors == 0)
         {
             // dump details to incident update
-            if ($oldtitle != $title) $header .= "Title: $oldtitle -&gt; <b>$title</b>\n";
+            if ($oldtitle != $title) $header .= "Title: {$oldtitle} -&gt; <b>{$title}</b>\n";
             if ($oldcontact != $contact)
             {
                 $contactname = contact_realname($contact);

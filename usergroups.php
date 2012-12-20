@@ -107,7 +107,7 @@ switch ($action)
         {
             echo "<h3>{$strGroupMembership}</h3>";
 
-            $sql = "SELECT * FROM `{$dbUsers}` WHERE status !=0 ORDER BY realname";  // status=0 means left company
+            $sql = "SELECT * FROM `{$dbUsers}` WHERE status != ".USERSTATUS_ACCOUNT_DISABLED." ORDER BY realname";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 

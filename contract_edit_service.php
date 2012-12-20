@@ -283,8 +283,6 @@ switch ($mode)
         {
             $originalcredit = clean_float($_REQUEST['originalcredit']);
 
-            
-
             $notes = clean_dbstring($_REQUEST['notes']);
 
             $editbilling = clean_fixed_list($_REQUEST['editbilling'], array('','true','false'));
