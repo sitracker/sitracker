@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $formid = clean_int($_REQUEST['formid']);
 $action = clean_fixed_list($_REQUEST['action'], array('','save','new'));
 
-if (empty($formid)) $formid=1;
+if (empty($formid)) $formid = 1;
 
 switch ($action)
 {

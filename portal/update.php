@@ -39,7 +39,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         $j = 0;
         $ext = array($strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes);
         $att_file_size = $CONFIG['upload_max_filesize'];
-        while ($att_file_size >= pow(1024,$j))
+        while ($att_file_size >= pow(1024, $j))
         {
             ++$j;
         }

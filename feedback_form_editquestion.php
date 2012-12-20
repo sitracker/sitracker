@@ -43,7 +43,7 @@ switch ($action)
         $sql .= "type='{$type}', ";
         $sql .= "required='{$required}', ";
         $sql .= "options='{$options}' ";
-        $sql .= "WHERE id='$qid' LIMIT 1";
+        $sql .= "WHERE id='{$qid}' LIMIT 1";
         mysql_query($sql);
         if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
         header("Location: feedback_form_edit.php?formid={$fid}");

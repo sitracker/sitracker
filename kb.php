@@ -66,7 +66,7 @@ if (mb_strlen(utf8_decode($search_string)) > 4)
     {
         echo "{$software->name}";
         if ($count<$softcount) echo ", ";
-        if ($colcount >= 4) {$colcount=0; echo "<br />"; }
+        if ($colcount >= 4) {$colcount = 0; echo "<br />"; }
         $count++; $colcount++;
     }
     echo "</p>\n";
