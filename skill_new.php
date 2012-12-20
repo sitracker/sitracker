@@ -27,9 +27,12 @@ if (empty($submit))
     // Show add product form
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    $_SESSION['formerrors']['new_software'] = NULL;
     echo "<h2>".icon('skill', 32)." ";
     echo "{$strNewSkill}</h2>";
+    
+    echo show_form_errors('new_software');
+    clear_form_errors('new_software');
+
     echo "<form name='addsoftware' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='vertical'>";
     echo "<tr><th>{$strVendor}</th><td>";
@@ -102,7 +105,7 @@ else
     if ($name == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_software']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_software']['name'] = sprintf($strFieldMustNotBeBlank, $strSkill);
     }
     // Check this is not a duplicate
     $sql = "SELECT id FROM `{$dbSoftware}` WHERE LCASE(name)=LCASE('{$name}') LIMIT 1";
