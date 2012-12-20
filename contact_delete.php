@@ -62,7 +62,7 @@ if (empty($process))
 
         plugin_do('contact_delete_submitted');
 
-        $totalincidents=contact_count_incidents($id);
+        $totalincidents = contact_count_incidents($id);
         if ($totalincidents > 0)
         {
             echo user_alert(sprintf($strThereAreXIncidentsAssignedToThisContact, $totalincidents), E_USER_WARNING);
