@@ -44,7 +44,7 @@ if (empty($process))
     {
         echo "<h2>{$strDeleteContact}</h2>\n";
         plugin_do('contact_delete');
-        $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
+        $sql = "SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
         $contactresult = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         while ($contactobj = mysql_fetch_object($contactresult))
@@ -71,9 +71,9 @@ if (empty($process))
         $sql .= "m.expirydate, m.term ";
         $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
         $sql .= "WHERE sc.maintenanceid = m.id AND m.product = p.id AND sc.contactid = '{$id}' ";
-        $result=mysql_query($sql);
+        $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $totalcontracts=mysql_num_rows($result);
+        $totalcontracts = mysql_num_rows($result);
         if ($totalcontracts>0)
         {
             echo user_alert(sprintf($strThereAreXcontractsAssignedToThisPerson, $totalcontracts), E_USER_WARNING);
