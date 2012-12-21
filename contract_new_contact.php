@@ -86,13 +86,13 @@ else if ($action == "new")
     if ($contactid == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['contract_new_contact']['contactid'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strContact}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['contract_new_contact']['contactid'] = sprintf($strFieldMustNotBeBlank, $strContact);
     }
 
     if ($maintid == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['contract_new_contact']['maintid'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strContract}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['contract_new_contact']['maintid'] = sprintf($strFieldMustNotBeBlank, $strContract);
     }
     plugin_do('contract_new_contact_submitted');
 
@@ -103,7 +103,7 @@ else if ($action == "new")
     if (mysql_num_rows($result) > 0)
     {
         $errors++;
-        $_SESSION['formerrors']['contract_new_contact']['contactid'] = user_alert($strADuplicateAlreadyExists, E_USER_ERROR);
+        $_SESSION['formerrors']['contract_new_contact']['contactid'] = $strADuplicateAlreadyExists;
     }
 
     // add maintenance support contact if no errors

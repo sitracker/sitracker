@@ -218,11 +218,11 @@ elseif ($action == 'new')
     $contacts = cleanvar($_REQUEST['contacts']);
     $timed = cleanvar($_REQUEST['timed']);
     $startdate = strtotime($_REQUEST['startdate']);
-    if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
+    if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
     else $startdate = date('Y-m-d',$now);
     $enddate = strtotime($_REQUEST['expiry']);
-    if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
-    else $enddate = date('Y-m-d',$now);
+    if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
+    else $enddate = date('Y-m-d', $now);
 
     if ($_REQUEST['noexpiry'] == 'on')
     {
@@ -264,19 +264,19 @@ elseif ($action == 'new')
     if ($site == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSite}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['site'] = sprintf($strFieldMustNotBeBlank, $strSite);
     }
     // check for blank product
     if ($product == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['product'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strProduct}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['product'] = sprintf($strFieldMustNotBeBlank, $strProduct);
     }
     // check for blank expiry day
     if (empty($_REQUEST['expiry']) AND $expirydate != -1)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['expirydate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strExpiryDate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
     }
     elseif ($expirydate < $now AND $expirydate != -1)
     {
@@ -287,29 +287,29 @@ elseif ($action == 'new')
     if ($admincontact == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['admincontact'] = sprintf($strFieldMustNotBeBlank, $strAdminContact);
     }
     if ($timed == 'yes' AND $amount == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
     }
     if ($timed == 'yes' AND ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == '')))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['unitrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strUnitRate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
     }
 
     if ($timed == 'yes' AND ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == '')))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['incidentrate'] = sprintf($strFieldMustNotBeBlank, $strIncidentRate);
     }
 
     if ($timed == 'yes' AND empty($billingmatrix))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['billing_matrix'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['billing_matrix'] = sprintf($strFieldMustNotBeBlank, $strNoBillingMatrixDefined);
     }
     plugin_do('contract_new_submitted');
 

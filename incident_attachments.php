@@ -135,7 +135,7 @@ function draw_file_row($file, $incidentid, $path)
     $html .= "<td width='20%'>{$file_size}</td>";
     $html .= "<td width='20%'>{$mime_type}</td>";
     $html .= "<td width='20%'>".ldate($CONFIG['dateformat_filedatetime'],filemtime($file))."</td>";
-    // $html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
+    //$html .= "<td width='5%'><input type='checkbox' name='fileselection[]' value='{$filename}' onclick=\"togglerow(this, 'tt');\"/></td>";
     $html .= "</tr>\n";
     return $html;
 }

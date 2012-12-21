@@ -31,7 +31,7 @@ switch ($action)
         if ($vendorname == '')
         {
             $errors++;
-            $_SESSION['formerrors']['edit_vendor']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
+            $_SESSION['formerrors']['edit_vendor']['name'] = sprintf($strFieldMustNotBeBlank, $strVendorName);
         }
 
         if ($errors == 0)

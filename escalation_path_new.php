@@ -102,7 +102,7 @@ else
     if (empty($name))
     {
         $errors++;
-        $_SESSION['formerrors']['new_escalation_path']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_escalation_path']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
 
     if ($errors == 0)

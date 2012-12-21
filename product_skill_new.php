@@ -82,13 +82,13 @@ elseif ($action == "new")
     if ($productid == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['product_skill_new']['productid'] = user_alert(sprintf($strSelectionXmustNotBeEmpty, "'{$strProduct}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['product_skill_new']['productid'] = sprintf($strSelectionXmustNotBeEmpty, $strProduct);
     }
     // check for blank software id
     if ($softwareid == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['product_skill_new']['productid'] = user_alert(sprintf($strSelectionXmustNotBeEmpty, "'{$strSkill}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['product_skill_new']['softwareid'] = sprintf($strSelectionXmustNotBeEmpty, $strSkill);
     }
 
     // add record if no errors

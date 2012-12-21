@@ -150,12 +150,12 @@ elseif ($action == "new")
     if ($name == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_site']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSiteName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_site']['name'] = sprintf($strFieldMustNotBeBlank, $strSiteName);
     }
     if ($address1 == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_site']['address1'] = sprintf($strFieldMustNotBeBlank, $strAddress1);
     }
     plugin_do('site_new_submitted');
 

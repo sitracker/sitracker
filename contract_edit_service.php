@@ -258,25 +258,25 @@ switch ($mode)
         if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
         {
             $errors++;
-            $_SESSION['formerrors']['edit_service']['unitrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strUnitRate}'"), E_USER_ERROR);
+            $_SESSION['formerrors']['edit_service']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
         }
 
         if ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == ''))
         {
             $errors++;
-            $_SESSION['formerrors']['edit_service']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
+            $_SESSION['formerrors']['edit_service']['incidentrate'] = sprintf($strFieldMustNotBeBlank, $strIncidentRate);
         }
 
         if (($billtype == 'billperunit' OR $billtype == 'billperincident') AND $amount == 0)
         {
             $errors++;
-            $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+            $_SESSION['formerrors']['edit_service']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
         }
 
         if ($startdate > $enddate)
         {
             $errors++;
-            $_SESSION['formerrors']['edit_service']['amount'] = user_alert($strErrorStartDateCannotBeAfterEndDate, E_USER_ERROR);
+            $_SESSION['formerrors']['edit_service']['amount'] = $strErrorStartDateCannotBeAfterEndDate;
         }
 
         if ($errors === 0)
@@ -430,7 +430,7 @@ switch ($mode)
             if ($amount == '')
             {
                 $errors++;
-                $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAmountToEditBy}'"), E_USER_ERROR);
+                $_SESSION['formerrors']['edit_service']['amount'] = sprintf($strFieldMustNotBeBlank, $strAmountToEditBy);
             }
             if ($errors == 0)
             {
@@ -465,7 +465,7 @@ switch ($mode)
             if ($amount == '')
             {
                 $errors++;
-                $_SESSION['formerrors']['edit_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAmountToEditBy}'"), E_USER_ERROR);
+                $_SESSION['formerrors']['edit_service']['amount'] = sprintf($strFieldMustNotBeBlank, $strAmountToEditBy);
             }
             if ($errors == 0)
             {
