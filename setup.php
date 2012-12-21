@@ -456,7 +456,7 @@ switch ($_REQUEST['action'])
                         echo "<p>or</p>";
                         // Seems to be duplicated above ???????? TODO FIXME
                         echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
-                                            														<br /><label><input type='checkbox' name='promptinitialdata' id='promptinitialdata' value='yes' checked='checked' /> Prompt for initial data</label>");
+                    														<br /><label><input type='checkbox' name='promptinitialdata' id='promptinitialdata' value='yes' checked='checked' /> Prompt for initial data</label>");
                     }
                     else
                     {
