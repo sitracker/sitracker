@@ -59,13 +59,13 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strCountry}</th><td>";
     if ($_SESSION['formdata']['new_site']['country'] != '')
     {
-        echo country_drop_down('country', $_SESSION['formdata']['new_site']['country'])."</td></tr>\n";
+        echo country_drop_down('country', $_SESSION['formdata']['new_site']['country']);
     }
     else
     {
-        echo country_drop_down('country', $CONFIG['home_country'])."</td></tr>\n";
+        echo country_drop_down('country', $CONFIG['home_country']);
     }
-
+    echo "</td></tr>\n";
     echo "<tr><th>{$strPostcode}</th><td><input maxlength='255' name='postcode' size='30'";
     if ($_SESSION['formdata']['new_site']['postcode'] != '')
     {
