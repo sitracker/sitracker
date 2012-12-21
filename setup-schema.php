@@ -157,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `password` varchar(50) DEFAULT NULL,
   `forenames` varchar(100) NOT NULL DEFAULT '',
   `surname` varchar(100) NOT NULL DEFAULT '',
-  `jobtitle` varchar(255) NOT NULL DEFAULT '',
-  `courtesytitle` varchar(50) NOT NULL DEFAULT '',
+  `jobtitle` varchar(255) NULL,
+  `courtesytitle` varchar(50) NULL,
   `siteid` int(11) NOT NULL DEFAULT '0',
   `email` varchar(100) NOT NULL,
   `phone` varchar(50) DEFAULT NULL,
@@ -1861,6 +1861,10 @@ ALTER TABLE `{$dbMaintenance}` DROP `productonly`;
 ALTER TABLE `{$dbProducts}` ADD `active` ENUM( 'true', 'false' ) NOT NULL;
 INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
+
+-- PH 2012-12-21
+ALTER TABLE `{$dbContacts}` CHANGE `jobtitle` `jobtitle` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+CHANGE `courtesytitle` `courtesytitle` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT ''
 ";
 
 
