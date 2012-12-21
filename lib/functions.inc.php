@@ -1304,6 +1304,7 @@ function escape_regex($string)
 	return str_replace($original, $replace, $string);
 }
 
+
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
 
