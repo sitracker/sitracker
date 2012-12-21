@@ -1271,8 +1271,6 @@ CREATE TABLE IF NOT EXISTS `{$dbSoftware}` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Individual software products as they are supported' AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
-
 
 CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   `productid` int(5) NOT NULL default '0',
@@ -1280,16 +1278,11 @@ CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   PRIMARY KEY  (`productid`,`softwareid`)
 ) ENGINE=MyISAM COMMENT='Table to link products with software' DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
-
-
 CREATE TABLE IF NOT EXISTS `{$dbSupportContacts}` (
   `maintenanceid` int(11) default NULL,
   `contactid` int(11) default NULL,
   PRIMARY KEY ( `maintenanceid` , `contactid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
-
-INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 
 CREATE TABLE IF NOT EXISTS `{$dbTags}` (
@@ -1604,6 +1597,10 @@ INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
 INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','standard',0);
+
+INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
+INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
+INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 ";
 
