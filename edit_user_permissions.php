@@ -236,7 +236,7 @@ elseif ($action == "update")
             if (!$aresult)
             {
                 $errors++;
-                $_SESSION['formerrors']['role_permissions']['failure'] = user_alert("{$strUpdateRolePermissionsFailed}", E_USER_WARNING);
+                $_SESSION['formerrors']['role_permissions']['failure'] = $strUpdateRolePermissionsFailed;
             }
 
             // Second pass, loop through checkbox array setting access to true where boxes are checked
@@ -260,7 +260,7 @@ elseif ($action == "update")
                         if (mysql_affected_rows() < 1)
                         {
                            $errors++;
-                            $_SESSION['formerrors']['role_permissions']['failure'] = user_alert("{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}", E_USER_WARNING);
+                            $_SESSION['formerrors']['role_permissions']['failure'] = "{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}";
                         }
                     }
                 }

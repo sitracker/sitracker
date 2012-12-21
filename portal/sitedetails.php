@@ -49,13 +49,13 @@ if (isset($_POST['submit']))
     if ($name == '')
     {
         $errors = 1;
-        $_SESSION['formerrors']['site_edit']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);;
+        $_SESSION['formerrors']['site_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
 
     if ($address1 == '')
     {
         $errors = 1;
-        $_SESSION['formerrors']['site_edit']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['site_edit']['address1'] = sprintf($strFieldMustNotBeBlank, $strAddress1);
     }
 
     // edit site if no errors
@@ -82,9 +82,9 @@ if (isset($_POST['submit']))
             $activeStr = 'false';
         }
 
-        $sql = "UPDATE `{$dbSites}` SET name='$name', department='$department', address1='$address1', address2='$address2', city='$city', ";
-        $sql .= "county='$county', postcode='$postcode', country='$country', telephone='$telephone', fax='$fax', email='$email', ";
-        $sql .= "websiteurl='$websiteurl', notes='$notes', typeid='$typeid', owner='$owner', freesupport='$incident_quantity', active='$activeStr' WHERE id='$site' LIMIT 1";
+        $sql = "UPDATE `{$dbSites}` SET name='{$name}', department='{$department}', address1='{$address1}', address2='{$address2}', city='{$city}', ";
+        $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
+        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
 
         // licenserx='$licenserx'
         $result = mysql_query($sql);

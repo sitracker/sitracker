@@ -27,7 +27,7 @@ switch ($action)
         $errors = 0;
         if (empty($name))
         {
-            $_SESSION['formerrors']['new_reseller']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName), E_USER_ERROR);
+            $_SESSION['formerrors']['new_reseller']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
             $errors++;
         }
         plugin_do('reseller_new_submitted');

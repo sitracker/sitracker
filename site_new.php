@@ -59,13 +59,13 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strCountry}</th><td>";
     if ($_SESSION['formdata']['new_site']['country'] != '')
     {
-        echo country_drop_down('country', $_SESSION['formdata']['new_site']['country'])."</td></tr>\n";
+        echo country_drop_down('country', $_SESSION['formdata']['new_site']['country']);
     }
     else
     {
-        echo country_drop_down('country', $CONFIG['home_country'])."</td></tr>\n";
+        echo country_drop_down('country', $CONFIG['home_country']);
     }
-
+    echo "</td></tr>\n";
     echo "<tr><th>{$strPostcode}</th><td><input maxlength='255' name='postcode' size='30'";
     if ($_SESSION['formdata']['new_site']['postcode'] != '')
     {
@@ -150,12 +150,12 @@ elseif ($action == "new")
     if ($name == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_site']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSiteName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_site']['name'] = sprintf($strFieldMustNotBeBlank, $strSiteName);
     }
     if ($address1 == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_site']['address1'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAddress1}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_site']['address1'] = sprintf($strFieldMustNotBeBlank, $strAddress1);
     }
     plugin_do('site_new_submitted');
 

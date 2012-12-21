@@ -157,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `password` varchar(50) DEFAULT NULL,
   `forenames` varchar(100) NOT NULL DEFAULT '',
   `surname` varchar(100) NOT NULL DEFAULT '',
-  `jobtitle` varchar(255) NOT NULL DEFAULT '',
-  `courtesytitle` varchar(50) NOT NULL DEFAULT '',
+  `jobtitle` varchar(255) NULL,
+  `courtesytitle` varchar(50) NULL,
   `siteid` int(11) NOT NULL DEFAULT '0',
   `email` varchar(100) NOT NULL,
   `phone` varchar(50) DEFAULT NULL,
@@ -697,7 +697,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `var_incident_visible_all` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `billingmatrix` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `site` (`site`),
+  KEY `site` (`site`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `{$dbNotes}` (
@@ -1271,8 +1271,6 @@ CREATE TABLE IF NOT EXISTS `{$dbSoftware}` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Individual software products as they are supported' AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
-
 
 CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   `productid` int(5) NOT NULL default '0',
@@ -1280,16 +1278,11 @@ CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   PRIMARY KEY  (`productid`,`softwareid`)
 ) ENGINE=MyISAM COMMENT='Table to link products with software' DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
-
-
 CREATE TABLE IF NOT EXISTS `{$dbSupportContacts}` (
   `maintenanceid` int(11) default NULL,
   `contactid` int(11) default NULL,
   PRIMARY KEY ( `maintenanceid` , `contactid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
-
-INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 
 CREATE TABLE IF NOT EXISTS `{$dbTags}` (
@@ -1598,12 +1591,16 @@ INSERT INTO `{$dbSites}` (`id`, `name`, `department`, `address1`, `address2`, `c
 INSERT INTO `{$dbContacts}` (`id`, `notify_contactid`, `username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `fax`, `department`, `address1`, `address2`, `city`, `county`, `country`, `postcode`, `dataprotection_email`, `dataprotection_phone`, `dataprotection_address`, `timestamp_added`, `timestamp_modified`, `notes`) VALUES
 (1, '0', 'Acme1', MD5(RAND()), 'John', 'Acme', 'Chairman', 'Mr', 1, 'acme@example.com', '0666 222111', '', '', '', '', '', '', '', '', '', 'Yes', 'Yes', 'Yes', 1132930556, 1187360933, '');
 
-INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example product.');
+INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example product.','true');
 
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no','standard',0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','standard',0);
+
+INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
+INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
+INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 ";
 
@@ -1861,6 +1858,10 @@ ALTER TABLE `{$dbMaintenance}` DROP `productonly`;
 ALTER TABLE `{$dbProducts}` ADD `active` ENUM( 'true', 'false' ) NOT NULL;
 INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
+
+-- PH 2012-12-21
+ALTER TABLE `{$dbContacts}` CHANGE `jobtitle` `jobtitle` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+CHANGE `courtesytitle` `courtesytitle` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT ''
 ";
 
 

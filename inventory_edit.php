@@ -61,12 +61,12 @@ if (isset($_POST['submit']))
     if (empty($name))
     {
         $errors++;
-        $_SESSION['formerrors']['inventory_edit']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, $strName));
+        $_SESSION['formerrors']['inventory_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
     if (empty($site))
     {
         $errors++;
-        $_SESSION['formerrors']['inventory_edit']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, $strSite));
+        $_SESSION['formerrors']['inventory_edit']['site'] = sprintf($strFieldMustNotBeBlank, $strSite);
     }
     plugin_do('inventory_edit_submitted');
 

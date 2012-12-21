@@ -36,7 +36,7 @@ if (empty($mode))
     {
         $errors++;
         $max_iv_error = str_replace("{miv}", "= " . $miv,  $strMaxInputVars);
-        $_SESSION['formerrors']['translateform']['max_input_vars'] = user_alert($max_iv_error, E_USER_ERROR);
+        $_SESSION['formerrors']['translateform']['max_input_vars'] = $max_iv_error;
     }
     echo show_form_errors('translateform');
     clear_form_errors('translateform');

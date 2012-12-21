@@ -182,37 +182,37 @@ else
     $errors = 0;
     if (!check_form_token($formtoken))
     {
-        $_SESSION['formerrors']['add_user']['formtoken'] = user_alert($strFormInvalidExpired, E_USER_ERROR);
+        $_SESSION['formerrors']['add_user']['formtoken'] = $strFormInvalidExpired;
         $errors++;
     }
     if ($realname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_user']['realname']= sprintf($strFieldMustNotBeBlank, $strRealName)."</p>\n";
+        $_SESSION['formerrors']['new_user']['realname'] = sprintf($strFieldMustNotBeBlank, $strRealName)."</p>\n";
     }
 
     if ($username == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_user']['username']= sprintf($strFieldMustNotBeBlank, $strUsername)."</p>\n";
+        $_SESSION['formerrors']['new_user']['username'] = sprintf($strFieldMustNotBeBlank, $strUsername)."</p>\n";
     }
 
     if ($password == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_user']['password']= sprintf($strFieldMustNotBeBlank, $strPassword)."</p>\n";
+        $_SESSION['formerrors']['new_user']['password'] = sprintf($strFieldMustNotBeBlank, $strPassword)."</p>\n";
     }
 
     if ($jobtitle == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_user']['jobtitle']= sprintf($strFieldMustNotBeBlank, $strJobTitle)."</p>\n";
+        $_SESSION['formerrors']['new_user']['jobtitle'] = sprintf($strFieldMustNotBeBlank, $strJobTitle)."</p>\n";
     }
 
     if ($email == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_user']['email']= sprintf($strFieldMustNotBeBlank, $strEmail)."</p>\n";
+        $_SESSION['formerrors']['new_user']['email'] = sprintf($strFieldMustNotBeBlank, $strEmail)."</p>\n";
     }
 
     $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE username='{$username}'";

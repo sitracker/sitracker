@@ -150,13 +150,13 @@ else
     if ($contact == 0)
     {
         $errors += 1;
-        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strContact), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_incident']['contact'] = sprintf($strFieldMustNotBeBlank, $strContact);
     }
     // check for blank title
     if ($title == '')
     {
         $errors += 1;
-        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strTitle), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_incident']['contact'] = sprintf($strFieldMustNotBeBlank, $strTitle);
     }
     plugin_do('incident_edit_submitted');
 
