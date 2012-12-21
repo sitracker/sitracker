@@ -726,6 +726,8 @@ switch ($_REQUEST['action'])
                             $productvendor = cleanvar($_REQUEST['productvendor']);
                             $productname = cleanvar($_REQUEST['productname']);
 
+                            $skill = cleanvar($_REQUEST['skill']);
+                            
                             // Resellers
                             $reseller_name = cleanvar($_REQUEST['reseller_name']);
                             $_SESSION['formdata']['setupinitialdata'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
@@ -779,6 +781,12 @@ switch ($_REQUEST['action'])
                                 $errors++;
                             }
                             
+                            if(empty($skill))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['skill'] = sprintf($strFieldMustNotBeBlank, 'Skill');
+                                $errors++;
+                            }
+                            
                             $sitedepartment = convert_string_null_safe($sitedepartment);
                             $siteaddress2 = convert_string_null_safe($siteaddress2);
                             $sitecity = convert_string_null_safe($sitecity);
@@ -818,6 +826,11 @@ switch ($_REQUEST['action'])
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 $productid = mysql_insert_id();
                                 
+                                $sql = "INSERT INTO `{$dbSoftware}` (`name`, `lifetime_start`, `lifetime_end`) VALUES ('{$skill}', NULL, NULL)";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $skillid = mysql_insert_id();
+                                
                                 $sql = "INSERT INTO `{$dbResellers}` (name) VALUES ('{$reseller_name}')";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -829,6 +842,18 @@ switch ($_REQUEST['action'])
                                 $sql .= "VALUES ({$siteid},{$productid},{$resellerid},{$expirydate},1,4,0,0,'Created during the installer',1,'no','standard',0)";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $contractid = mysql_insert_id();
+                                
+                                $sql = "INSERT INTO `{$dbSoftwareProducts}` VALUES ({$productid},{$skillid})";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                mysql_insert_id();
+                                
+                                $sql = "INSERT INTO `{$dbSupportContacts}` VALUES ({$contractid},{$contactid})";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                mysql_insert_id();
+                                
                                 
                                 $_SESSION['promptinitialdata'] = FALSE;
                                 clear_form_data('setupinitialdata');
@@ -1025,6 +1050,18 @@ switch ($_REQUEST['action'])
                             }
                             echo "/> <span class='required'>Required</span></td></tr>\n";
                             echo "</table>\n";
+                            echo "</p>";
+
+                            // Skill
+                            echo "<p>Skill";
+                            echo "<table class='maintable vertical'>";
+                            echo "<tr><th>Skill Name</th><td><input type='text' name='skill' class='required' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['skill'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['skill']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>";
+                            echo "</table>";
                             echo "</p>";
 
                             // Resellers
