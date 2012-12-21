@@ -1603,7 +1603,7 @@ INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example pr
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no','standard',0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','standard',0);
 
 ";
 
