@@ -913,8 +913,8 @@ switch ($_REQUEST['action'])
                             echo "<form name='setupinitialdata' action='setup.php' method='post'>\n";
 
                             // Site
-                            echo "<p>Site";
-                            echo "<table>";
+                            echo "<h3>Site</h3>";
+                            echo "<p><table>";
                             echo "<tr><th>Site Name</th><td><input maxlength='255' class='required' name='sitename' size='30'  ";
                             if ($_SESSION['formdata']['setupinitialdata']['sitename'])
                             {
@@ -971,8 +971,8 @@ switch ($_REQUEST['action'])
                             echo "</p>";
 
                             // Contact
-                            echo "<p>Contact";
-                            echo "<table>";
+                            echo "<h3>Contact</h3>";
+                            echo "<p><table>";
                             echo "<tr><th>Name</th>\n";                           
                             echo "<td>";
                             echo "\n<table><tr><td align='center'>Title<br />";
@@ -1031,8 +1031,8 @@ switch ($_REQUEST['action'])
                             echo "</p>";
 
                             // Product
-                            echo "<p>Product:";
-                            echo "<table class='maintable'>";
+                            echo "<h3>Product:</h3>";
+                            echo "<p><table class='maintable'>";
                             echo "<tr><th>Vendor</th><td>";
                             if ($_SESSION['formdata']['setupinitialdata']['productvendor'] != '')
                             {
@@ -1053,8 +1053,8 @@ switch ($_REQUEST['action'])
                             echo "</p>";
 
                             // Skill
-                            echo "<p>Skill";
-                            echo "<table class='maintable vertical'>";
+                            echo "<h3>Skill</h3>";
+                            echo "<p><table class='maintable vertical'>";
                             echo "<tr><th>Skill Name</th><td><input type='text' name='skill' class='required' ";
                             if ($_SESSION['formdata']['setupinitialdata']['skill'])
                             {
@@ -1065,8 +1065,8 @@ switch ($_REQUEST['action'])
                             echo "</p>";
 
                             // Resellers
-                            echo "<p>Reseller";
-                            echo "<table class='maintable vertical'>";
+                            echo "<h3>Reseller</h3>";
+                            echo "<p><table class='maintable vertical'>";
                             echo "<tr><th>Name</th><td><input type='text' name='reseller_name' class='required' ";
                             if ($_SESSION['formdata']['setupinitialdata']['reseller_name'])
                             {
