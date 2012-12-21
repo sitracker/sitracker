@@ -697,7 +697,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `var_incident_visible_all` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `billingmatrix` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `site` (`site`),
+  KEY `site` (`site`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `{$dbNotes}` (
