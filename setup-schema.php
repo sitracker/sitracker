@@ -1862,6 +1862,17 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 -- PH 2012-12-21
 ALTER TABLE `{$dbContacts}` CHANGE `jobtitle` `jobtitle` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 CHANGE `courtesytitle` `courtesytitle` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT ''
+
+UPDATE `{$dbContacts}` SET phone = NULL WHERE phone = '';
+UPDATE `{$dbContacts}` SET mobile = NULL WHERE mobile = '';
+UPDATE `{$dbContacts}` SET fax = NULL WHERE fax = '';
+UPDATE `{$dbContacts}` SET address1 = NULL WHERE address1 = '';
+UPDATE `{$dbContacts}` SET address2 = NULL WHERE address2 = '';
+UPDATE `{$dbContacts}` SET city = NULL WHERE city = '';
+UPDATE `{$dbContacts}` SET county = NULL WHERE county = '';
+UPDATE `{$dbContacts}` SET country = NULL WHERE country = '';
+UPDATE `{$dbContacts}` SET notes = NULL WHERE notes = '';
+
 ";
 
 
