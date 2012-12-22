@@ -1,5 +1,5 @@
 <?php
-// delete_maintenance_support_contact.php
+// contract_delete_contact.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
@@ -35,9 +35,12 @@ if (empty($action) OR $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     echo "<h2>{$strRemoveLinkContractAndSupportContact}</h2>";
+    echo show_form_errors('contract_delete_contact');
+    clear_form_errors('contract_delete_contact');
+
     plugin_do('contract_delete_contact');
     echo "<p align='center'>{$strRemoveLinkContractAndSupportContactText}</p>";
-    echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post' onsubmit='return confirm_action(\"{$strAreYouSureDeleteMaintenceContract}\", true)'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post' onsubmit='return confirm_action(\"{$strAreYouSureDeleteMaintenceContract}\", true)' name='contract_delete_contact' >";
     echo "<input type='hidden' name='context' value='{$context}' />";
     echo "<table class='maintable vertical'>";
 
@@ -79,19 +82,23 @@ elseif ($action == "delete")
     // check for blank contact
     if ($contactid == 0)
     {
+        $_SESSION['formerrors']['contract_delete_contact']['contactid'] = $strYouMustSelectAsupportContact;
         $errors++;
-        $errors_string .= user_alert("{$strYouMustSelectAsupportContact}", E_USER_ERROR);
     }
     // check for blank maintenance id
     if ($maintid == 0)
     {
+        $_SESSION['formerrors']['contract_delete_contact']['contractid'] = $strYouMustSelectAmaintenanceContract;
         $errors++;
-        $errors_string .= user_alert("{$strYouMustSelectAmaintenanceContract}", E_USER_ERROR);
     }
     plugin_do('contract_delete_contact_submitted');
     
     // delete maintenance support contact if no errors
-    if ($errors == 0)
+    if ($errors != 0)
+    {
+        html_redirect("{$_SERVER['PHP_SELF']}?action=showform&context={$context}&maintid={$maintid}&contactid={$contactid}", FALSE);
+    }
+    else
     {
         $sql  = "DELETE FROM `{$dbSupportContacts}` WHERE maintenanceid='{$maintid}' AND contactid='{$contactid}'";
         $result = mysql_query($sql);
@@ -112,13 +119,6 @@ elseif ($action == "delete")
             if ($context == 'maintenance') html_redirect("contract_details.php?id={$maintid}");
             else html_redirect("contact_details.php?id={$contactid}");
         }
-    }
-    else
-    {
-        // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo $errors_string;
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }
 ?>
