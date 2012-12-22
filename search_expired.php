@@ -25,14 +25,17 @@ $expired = clean_int($_REQUEST['expired']);
 $show = clean_fixed_list($_REQUEST['show'], array('','terminated'));
 $output = clean_fixed_list($_REQUEST['output'], array('screen','csv'));
 
-
 // show search expired maintenance form
-if (empty($expired))
+// NOTE had to be the REQUEST variable otheriwse clean_fixed_list returns screen and is note empty
+if (empty($_REQUEST['output']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     echo "<h2>".icon('contract', 32)." {$strShowExpiredContracts}</h2>";
-    echo "<form action='{$_SERVER['PHP_SELF']}' method='get' >";
+    echo show_form_errors('searchexpired');
+    clear_form_errors('searchexpired');
+
+    echo "<form action='{$_SERVER['PHP_SELF']}' name='searchexpired' method='get' >";
     printf("<p>{$strContractsExpiredXdaysAgo}", "<input maxlength='4' name='expired' size='3' type='text' value='30' />");
     echo "<p><input name='show' type='checkbox' value='terminated'> {$strTerminated}</p>";
 
@@ -51,19 +54,24 @@ else
 {
     // perform search
     // check input
+    $errors = 0;
+    
     if ($expired == '')
     {
-        $errors = 1;
-        html_redirect($_SERVER['PHP_SELF'], FALSE, $strEnterNumberOfDays);
-        exit;
+        $_SESSION['formerrors']['searchexpired']['expired'] = sprintf($strFieldMustNotBeBlank, $strDays);
+        $errors++;
     }
     elseif (!is_numeric($expired))
     {
-        $errors = 1;
-        html_redirect($_SERVER['PHP_SELF'], FALSE, $strEnterNumericValue);
-        exit;
+        $_SESSION['formerrors']['searchexpired']['expired'] = $strEnterNumericValue;
+        $errors++;
     }
-    if ($errors == 0)
+
+    if ($errors != 0)
+    {
+        html_redirect($_SERVER['PHP_SELF'], FALSE);
+    }
+    else
     {
         // convert number of days into a timestamp
         $now = time();
