@@ -15,6 +15,7 @@
 require_once ('core.php');
 require_once (APPLICATION_LIBPATH . 'functions.inc.php');
 require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
+require_once (APPLICATION_LIBPATH . 'trigger.class.php');
 require (APPLICATION_LIBPATH . 'mime_parser.inc.php');
 require (APPLICATION_LIBPATH . 'rfc822_addresses.inc.php');
 require (APPLICATION_LIBPATH . 'mailbox.class.php');

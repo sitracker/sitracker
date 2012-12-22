@@ -390,7 +390,7 @@ elseif ($action == 'new')
     else
     {
         // show error message if errors
-        html_redirect("contract_new.php", FALSE);
+        html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 }
 ?>

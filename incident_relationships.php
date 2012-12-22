@@ -74,14 +74,12 @@ switch ($action)
             }
             else
             {
-                echo "<br />";
-                echo user_alert($strADuplicateAlreadyExists);
+                $_SESSION['formerrors']['incidentrelationships']['duplicate'] = $strADuplicateAlreadyExists;
             }
         }
         else
         {
-            echo "<br />";
-            echo user_alert(sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid), E_USER_NOTICE));
+            $_SESSION['formerrors']['incidentrelationships']['duplicate'] = sprintf($strNoResultsFor, sprintf($strIncidentNum, $relatedid));
         }
         break;
     case 'delete':
@@ -116,6 +114,10 @@ switch ($action)
 }
 
 echo "<h2>{$strRelatedIncidents}</h2>";
+
+echo show_form_errors('incidentrelationships');
+clear_form_errors('incidentrelationships');
+
 // Incident relationships
 $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
 $rresult = mysql_query($rsql);
@@ -153,7 +155,7 @@ if (mysql_num_rows($rresult) >= 1)
 }
 else echo "<p align='center'>{$strNoResults}</p>";
 echo "<br /><hr/>";
-echo "\n<form action='incident_relationships.php' method='post'>";
+echo "\n<form action='incident_relationships.php' name='incidentrelationships' method='post'>";
 echo "<h2>".icon('new', 32)." {$strNew}</h2>";
 echo "<table summary='Add a relationship' class='vertical'>";
 echo "<tr><th>{$strIncidentID}</th><td><input type='text' name='relatedid' size='10' class='required' /> ";

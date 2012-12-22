@@ -53,11 +53,15 @@ if ($action == "edit")
 
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
+        
+        echo show_form_errors('maintform');
+        clear_form_errors('maintform');
+        
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
         echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
         echo "<tr><th>{$strSite}:</th><td>";
-        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable
+        echo site_name($maint->site). "</td></tr>";  // This is mandatory though we don't mark it as such as its not editable
         echo "<tr><th>{$strContacts}:</th><td>";
         echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
         echo "{$strLimitTo} <input size='2' value='{$maint->supportedcontacts}' name='amount' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
@@ -161,46 +165,32 @@ else if ($action == "update")
     $allcontacts = 'No';
     if ($contacts == 'amount') $amount = clean_float($_REQUEST['amount']);
     elseif ($contacts == 'all') $allcontacts = 'Yes';
-
+    
     $errors = 0;
 
     if ($reseller == 0)
-    {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strReseller}'"), E_USER_ERROR);
+    {       
+        $_SESSION['formerrors']['maintform']['reseller'] = sprintf($strFieldMustNotBeBlank, $strReseller);
+        $errors++;
     }
 
     if ($admincontact == 0)
     {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['maintform']['admincontact'] = sprintf($strFieldMustNotBeBlank, $strAdminContact);
+        $errors++;
     }
 
-    if ($expirydate == 0)
+    if ($_REQUEST['expirydate'] == 0)
     {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strExpiryDate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
+        $errors++;
     }
 
     if ($errors == 0)
     {
-        if (empty($reseller) OR $reseller == 0)
-        {
-            $reseller = "NULL";
-        }
-        else
-        {
-            $reseller = "'{$reseller}'";
-        }
+        $reseller = convert_string_null_safe($reseller);
+        $licence_type = convert_string_null_safe($licence_type);
 
-        if (empty($licence_type) OR $licence_type == 0)
-        {
-            $licence_type = "NULL";
-        }
-        else
-        {
-            $licence_type = "'{$licence_type}'";
-        }
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "UPDATE `{$dbMaintenance}` SET reseller={$reseller}, expirydate='{$expirydate}', licence_quantity='{$licence_quantity}', ";
         $sql .= "licence_type={$licence_type}, notes='{$notes}', admincontact={$admincontact}, term='{$terminated}', servicelevel='{$servicelevel}', ";
@@ -222,16 +212,13 @@ else if ($action == "update")
         else
         {
             // show success message
-            journal(CFG_LOGGING_NORMAL, 'Contract Edited', "contract $maintid modified", CFG_JOURNAL_MAINTENANCE, $maintid);
+            journal(CFG_LOGGING_NORMAL, 'Contract Edited', "contract {$maintid} modified", CFG_JOURNAL_MAINTENANCE, $maintid);
             html_redirect("contract_details.php?id={$maintid}");
         }
     }
     else
     {
-        // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo $errors_string;
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect("{$_SERVER['PHP_SELF']}?action=edit&maintid={$maintid}", FALSE);
     }
 }
 ?>
