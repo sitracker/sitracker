@@ -727,7 +727,6 @@ elseif ($action == 'assign')
                 $obj = mysql_fetch_object($result);
                 if ($obj->contact_source == 'ldap')
                 {
-                	//function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOnly=FALSE, $searchOnEmail=FALSE)
                     authenticateLDAP($obj->username, '', $contactid, false, true, false);
                 }
             }

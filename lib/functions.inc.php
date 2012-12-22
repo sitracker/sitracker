@@ -799,7 +799,7 @@ function clear_form_data($formname)
  * @param String $defaultvalue The default avlue to show if not set
  * @return String - The String to display
  */
-function show_form_value($formname, $fieldvalue, $defaultvalue)
+function show_form_value($formname, $fieldvalue, $defaultvalue='')
 {
     if (isset($_SESSION['formdata'][$formname][$fieldvalue]))
     {
