@@ -137,7 +137,7 @@ if (!empty($action))
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     break;
                 case 'lock':
-                    $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
+                    $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
                     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
                     $sql .= "WHERE id='{$selected}' AND (locked = 0 OR locked IS NULL)";
                     $result = mysql_query($sql);
@@ -235,7 +235,7 @@ if (empty($displayid))
             if (($incoming->locked != $sit[2]) AND ($incoming->locked > 0))
             {
                 echo icon('locked', 16) . ' ';
-                echo sprintf($strLockedByX, user_realname($incoming->locked,TRUE));
+                echo sprintf($strLockedByX, user_realname($incoming->locked, TRUE));
                 echo " ({$incoming->reason})";
                 echo " &mdash; <a name='locked' class='info'>";
                 echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);

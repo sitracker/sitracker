@@ -48,16 +48,7 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strContacts}</th><td>";
     echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
 
-    echo "{$strLimitTo} <input size='2' name='numcontacts' ";
-    if ($_SESSION['formdata']['new_contract']['numcontacts'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['numcontacts']}'";
-    }
-    else
-    {
-        echo "value='0'";
-    }
-    echo " /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
+    echo "{$strLimitTo} <input size='2' name='numcontacts'  value='".show_form_value('new_contact', 'numcontacts', '0')."' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
     echo "<input type='radio' value='all' name='contacts' />";
     echo "{$strAllSiteContactsSupported}";
     echo "</td></tr>\n";
@@ -126,33 +117,14 @@ if ($action == "showform" OR $action == '')
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strCreditAmount}</th><td>{$CONFIG['currency_symbol']}";
-    echo "<input maxlength='7' name='amount' size='5' class='required' ";
-    if ($_SESSION['formdata']['new_contract']['amount'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['amount']}'  ";
-    }
-    else
-    {
-        echo "value='0' ";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<input maxlength='7' name='amount' size='5' class='required' value='".show_form_value('new_contact', 'amount', '0')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='unitrate' size='5' ";
-    if ($_SESSION['formdata']['new_contract']['unitrate'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['unitrate']}' ";
-    }
-    echo "/>";
+    echo "<input class='required' type='text' name='unitrate' size='5' value='".show_form_value('new_contact', 'unitrate', '')."' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='incidentratesection' style='display:none'><th>{$strIncidentRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='incidentrate' size='5' ";
-    if ($_SESSION['formdata']['new_contract']['incidentrate'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['incidentrate']}' ";
-    }
-    echo "/>";
+    echo "<input class='required' type='text' name='incidentrate' size='5' value='".show_form_value('new_contact', 'incidentrate', '0')." />";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";

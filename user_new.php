@@ -46,28 +46,13 @@ if (empty($submit))
     echo "onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='maintable vertical'>\n";
     echo "<tr><th>{$strRealName}</th>";
-    echo "<td><input maxlength='50' name='realname' size='30' class='required' ";
-    if ($_SESSION['formdata']['new_user']['realname'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['realname']}'";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<td><input maxlength='50' name='realname' size='30' class='required' value='".show_form_value('new_user', 'realname', '')."'/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strUsername}</th>";
-    echo "<td><input maxlength='50' name='username' size='30' class='required' ";
-    if ($_SESSION['formdata']['new_user']['username'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['username']}'";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<td><input maxlength='50' name='username' size='30' class='required' value='".show_form_value('new_user', 'username', '')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr id='password'><th>{$strPassword}</th>";
-    echo "<td><input maxlength='50' name='password' size='30' type='password' class='required' ";
-    if ($_SESSION['formdata']['new_user']['password'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['password']}'";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<td><input maxlength='50' name='password' size='30' type='password' class='required' value='".show_form_value('new_user', 'password', '')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strGroup}</th>";
     if ($_SESSION['formdata']['new_user']['groupid'] != '')
@@ -91,53 +76,19 @@ if (empty($submit))
     }
     echo "</tr>";
 
-    echo "<tr><th>{$strJobTitle}</th><td><input maxlength='50' name='jobtitle' size='30' class='required' ";
-    if ($_SESSION['formdata']['new_user']['jobtitle'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['jobtitle']}'";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<tr><th>{$strJobTitle}</th><td><input maxlength='50' name='jobtitle' size='30' class='required' value='".show_form_value('new_user', 'jobtitle', '')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
 
-    echo "<tr id='email'><th>{$strEmail}</th><td><input maxlength='50' name='email' size='30'  class='required' ";
-    if ($_SESSION['formdata']['new_user']['email'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['email']}'";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<tr id='email'><th>{$strEmail}</th><td><input maxlength='50' name='email' size='30'  class='required' value='".show_form_value('new_user', 'email', '')."'/> <span class='required'>{$strRequired}</span></td></tr>\n";
 
-    echo "<tr><th>{$strTelephone}</th><td><input maxlength='50' name='phone' size='30' ";
-    if ($_SESSION['formdata']['new_user']['phone'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['phone']}'";
-    }
-    echo "/></td></tr>\n";
+    echo "<tr><th>{$strTelephone}</th><td><input maxlength='50' name='phone' size='30' value='".show_form_value('new_user', 'phone', '')."'/></td></tr>\n";
 
-    echo "<tr><th>{$strMobile}</th><td><input maxlength='50' name='mobile' size='30' ";
-    if ($_SESSION['formdata']['new_user']['mobile'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['mobile']}'";
-    }
-    echo "/></td></tr>\n";
+    echo "<tr><th>{$strMobile}</th><td><input maxlength='50' name='mobile' size='30' value='".show_form_value('new_user', 'mobile', '')."'/></td></tr>\n";
 
-    echo "<tr><th>{$strFax}</th><td><input maxlength='50' name='fax' size='30' ";
-    if ($_SESSION['formdata']['new_user']['fax'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_user']['fax']}'";
-    }
-    echo "/></td></tr>\n";
+    echo "<tr><th>{$strFax}</th><td><input maxlength='50' name='fax' size='30' value='".show_form_value('new_user', 'fax', '')."' /></td></tr>\n";
 
     if ($CONFIG['holidays_enabled'])
     {
-        echo "<tr><th>{$strHolidayEntitlement}</th><td><input maxlength='3' name='holiday_entitlement' size='3' ";
-        if ($_SESSION['formdata']['new_user']['holiday_entitlement'] != '')
-        {
-            echo "value='{$_SESSION['formdata']['new_user']['holiday_entitlement']}'";
-        }
-        else
-        {
-            echo "value='{$CONFIG['default_entitlement']}'";
-        }
-        echo " /> {$strDays}</td></tr>\n";
+        echo "<tr><th>{$strHolidayEntitlement}</th><td><input maxlength='3' name='holiday_entitlement' size='3' value='".show_form_value('new_user', 'holiday_entitlement', $CONFIG['default_entitlement'])."' /> {$strDays}</td></tr>\n";
 
         echo "<tr><th>{$strStartDate} ".help_link('UserStartdate')."</th>";
         echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
@@ -150,6 +101,7 @@ if (empty($submit))
     plugin_do('user_new_form');
     echo "</table>\n";
     echo "<input type='hidden' name='formtoken' value='" . gen_form_token() . "' />";
+    echo "<p class='formbuttons'><input type='submit' name='submit' value='{$strSave}' /></p>";
     echo "<p class='return'><a href='manage_users.php'>{$strReturnWithoutSaving}</a></p>";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
