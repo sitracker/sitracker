@@ -150,13 +150,13 @@ else
     if ($contact == 0)
     {
         $errors += 1;
-        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strContact), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_incident']['contact'] = sprintf($strFieldMustNotBeBlank, $strContact);
     }
     // check for blank title
     if ($title == '')
     {
         $errors += 1;
-        $_SESSION['formerrors']['edit_incident']['contact'] = user_alert(sprintf($strFieldMustNotBeBlank, $strTitle), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_incident']['contact'] = sprintf($strFieldMustNotBeBlank, $strTitle);
     }
     plugin_do('incident_edit_submitted');
 
@@ -189,7 +189,7 @@ else
         if ($addition_errors == 0)
         {
             // dump details to incident update
-            if ($oldtitle != $title) $header .= "Title: $oldtitle -&gt; <b>$title</b>\n";
+            if ($oldtitle != $title) $header .= "Title: {$oldtitle} -&gt; <b>{$title}</b>\n";
             if ($oldcontact != $contact)
             {
                 $contactname = contact_realname($contact);

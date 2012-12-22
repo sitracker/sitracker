@@ -757,9 +757,12 @@ function incident_service_level($incidentid)
 
     $sql = "SELECT servicelevel FROM `{$dbIncidents}` WHERE id = {$incidentid}";
     $result = mysql_query($sql);
-
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($servicelevel) = mysql_fetch_assoc($result);
+
+    if (mysql_num_rows($result) > 0)
+    {
+        $servicelevel = mysql_fetch_object($result)->servicelevel;
+    }
 
     return $servicelevel;
 }
@@ -795,6 +798,7 @@ function load_entitlements($contactid, $siteid)
 
     $contractresult = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    unset($_SESSION['entitlement']);
     while ($contract = mysql_fetch_object($contractresult))
     {
         $_SESSION['entitlement'][] = serialize($contract);
@@ -1283,29 +1287,45 @@ function count_incoming_updates()
 function incident_get_next_target($incidentid)
 {
     global $now;
+
+    
     // Find the most recent SLA target that was met
-    $sql = "SELECT sla,timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
+    $sql = "SELECT sla, timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $target = '';
+    $sla_targets = get_incident_sla_targets($incidentid);
+
+    $target = new SLATarget();
     if (mysql_num_rows($result) > 0)
     {
         $upd = mysql_fetch_object($result);
         switch ($upd->sla)
         {
             case 'opened':
-                $target->type = 'initialresponse';
-                break;
+                if ($sla_targets->initial_response_mins > 0)
+                {
+                    $target->type = 'initialresponse';
+                    break;
+                }
             case 'initialresponse':
-                $target->type = 'probdef';
-                break;
+                if ($sla_targets->prob_determ_mins > 0)
+                {
+                    $target->type = 'probdef';
+                    break;
+                }
             case 'probdef':
-                $target->type = 'actionplan';
-                break;
+                if ($sla_targets->action_plan_mins > 0)
+                {
+                    $target->type = 'actionplan';
+                    break;
+                }
             case 'actionplan':
-                $target->type = 'solution';
-                break;
+                if ($sla_targets->resolution_days > 0)
+                {
+                    $target->type = 'solution';
+                    break;
+                }
             case 'solution':
                 $target->type = '';
                 break;
@@ -1841,5 +1861,42 @@ function get_userfacing_incident_id_email($id)
 	return "{$CONFIG['incident_id_email_opening_tag']}{$CONFIG['incident_reference_prefix']}{$id}{$CONFIG['incident_id_email_closing_tag']}";
 }
 
+
+/**
+ * Gets all the SLA targets for a particular incident 
+ * 
+ * @author Paul Heaney..
+ * @param int $incidentid The ID of the incident to get the applicable SLA targets for.
+ * @return object With the following properties: initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen
+ */
+function get_incident_sla_targets($incidentid)
+{
+    $incidentsla = incident_service_level($incidentid);
+    
+    $sql_sla = "SELECT initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen ";
+    $sql_sla .= "FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$incidentsla}' GROUP BY tag";
+    
+    $result_sla = mysql_query($sql_sla);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    return mysql_fetch_object($result_sla);
+}
+
+
+/**
+ * Not 100% sure of the purpose of this function though triggers requires it, TODO revisit and fully under stand
+ * 
+ * @author Paul Heaney - to fix Mantis 1372
+ * @param int $holdingemailid The holding queue ID
+ * @return int the update ID
+ */
+function incoming_email_update_id($holdingemailid)
+{
+    $sql = "SELECT updateid FROM `{$GLOBALS['dbTempIncoming']}` WHERE id = {$holdingemailid}";
+    $contractresult = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    list($updateid) = mysql_fetch_array($result);
+    
+    return $updateid;
+}
 
 ?>

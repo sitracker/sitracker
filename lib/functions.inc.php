@@ -32,6 +32,7 @@ include (APPLICATION_LIBPATH . 'user.class.php');
 include (APPLICATION_LIBPATH . 'contact.class.php');
 include (APPLICATION_LIBPATH . 'incident.class.php');
 include (APPLICATION_LIBPATH . 'status.class.php');
+include (APPLICATION_LIBPATH . 'sla.class.php');
 
 include_once (APPLICATION_LIBPATH . 'file.inc.php');
 include (APPLICATION_LIBPATH . 'ldap.inc.php');
@@ -790,6 +791,27 @@ function clear_form_data($formname)
 
 
 /**
+ * Returns the value for a form returned from either the session or the default value 
+ * Useful in conjunction with show_form_errors where you wish to restore values from the session to aid data input
+ * @author Paul Heaney
+ * @param String $formname form name from _SESSION['formdata'][FORMNAME]
+ * @param String $fieldvalue The field in the form to show the value for
+ * @param String $defaultvalue The default avlue to show if not set
+ * @return String - The String to display
+ */
+function show_form_value($formname, $fieldvalue, $defaultvalue='')
+{
+    if (isset($_SESSION['formdata'][$formname][$fieldvalue]))
+    {
+        return $_SESSION['formdata'][$formname][$fieldvalue];
+    }
+    else
+    {
+        return $defaultvalue;
+    }
+}
+
+/**
  * Generates a form token and timeout value and stores them in the session
  * @author Ivan Lucas
  * @retval string MD5 form token
@@ -1302,6 +1324,7 @@ function escape_regex($string)
 	
 	return str_replace($original, $replace, $string);
 }
+
 
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================

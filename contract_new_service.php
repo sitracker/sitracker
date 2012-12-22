@@ -227,17 +227,17 @@ else
     if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
     {
         $errors++;
-        $_SESSION['formerrors']['new_service']['unitrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strUnitRate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_service']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
     }
     if ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == ''))
     {
         $errors++;
-        $_SESSION['formerrors']['new_service']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_service']['incidentrate'] = sprintf($strFieldMustNotBeBlank, $strIncidentRate);
     }
     if (($billtype == 'billperunit' OR $billtype == 'billperincident') AND $amount == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_service']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_service']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
     }
 
     if ($errors == 0)

@@ -41,12 +41,7 @@ if (empty($submit))
     {
         echo vendor_drop_down('vendor', 0, TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
     }
-    echo "<tr><th>{$strProduct}</th><td><input maxlength='50' name='name' size='40' class='required' ";
-    if ($_SESSION['formdata']['new_product']['name'] != '')
-    {
-        echo "value=".$_SESSION['formdata']['new_product']['name'];
-    }
-    echo " /> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<tr><th>{$strProduct}</th><td><input maxlength='50' name='name' size='40' class='required' value='".show_form_value('new_product', 'name')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strDescription}</th>";
     echo "<td>";

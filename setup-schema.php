@@ -157,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `password` varchar(50) DEFAULT NULL,
   `forenames` varchar(100) NOT NULL DEFAULT '',
   `surname` varchar(100) NOT NULL DEFAULT '',
-  `jobtitle` varchar(255) NOT NULL DEFAULT '',
-  `courtesytitle` varchar(50) NOT NULL DEFAULT '',
+  `jobtitle` varchar(255) NULL,
+  `courtesytitle` varchar(50) NULL,
   `siteid` int(11) NOT NULL DEFAULT '0',
   `email` varchar(100) NOT NULL,
   `phone` varchar(50) DEFAULT NULL,
@@ -688,7 +688,6 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `incidents_used` int(5) NOT NULL default '0',
   `notes` text,
   `admincontact` int(11) default NULL,
-  `productonly` enum('yes','no') NOT NULL default 'no',
   `term` enum('no','yes') default 'no',
   `servicelevel` varchar(32) NOT NULL,
   `incidentpoolid` int(11) NOT NULL default '0',
@@ -698,8 +697,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `var_incident_visible_all` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `billingmatrix` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `site` (`site`),
-  KEY `productonly` (`productonly`)
+  KEY `site` (`site`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `{$dbNotes}` (
@@ -849,7 +847,8 @@ INSERT INTO `{$dbPermissions}` VALUES(78, 11, 'strPostSystemNotices');
 INSERT INTO `{$dbPermissions}` VALUES(79, 8, 'strEditServiceBalances');
 INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'strEditServiceDetails');
 INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'strAdjustActivityDuration');
-
+INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
+INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
 
 CREATE TABLE IF NOT EXISTS `{$dbPermissionCategories}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
@@ -897,6 +896,7 @@ CREATE TABLE IF NOT EXISTS `{$dbProducts}` (
   `vendorid` int(5) NOT NULL default '0',
   `name` varchar(50) default NULL,
   `description` text NOT NULL,
+  `active` enum('true','false') NOT NULL, 
   PRIMARY KEY  (`id`),
   KEY `vendorid` (`vendorid`),
   KEY `name` (`name`)
@@ -1022,6 +1022,8 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 79, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 80, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 81, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 3, 'true');
@@ -1085,6 +1087,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 73, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 76, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 77, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 3, 'true');
@@ -1121,7 +1124,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 69, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 70, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 71, 'true');
-
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 82, 'true');
 
 CREATE TABLE IF NOT EXISTS `{$dbScheduler}` (
   `id` int(11) NOT NULL auto_increment,
@@ -1268,8 +1271,6 @@ CREATE TABLE IF NOT EXISTS `{$dbSoftware}` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM COMMENT='Individual software products as they are supported' AUTO_INCREMENT=1 DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
-
 
 CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   `productid` int(5) NOT NULL default '0',
@@ -1277,16 +1278,11 @@ CREATE TABLE IF NOT EXISTS `{$dbSoftwareProducts}` (
   PRIMARY KEY  (`productid`,`softwareid`)
 ) ENGINE=MyISAM COMMENT='Table to link products with software' DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
-
-
 CREATE TABLE IF NOT EXISTS `{$dbSupportContacts}` (
   `maintenanceid` int(11) default NULL,
   `contactid` int(11) default NULL,
   PRIMARY KEY ( `maintenanceid` , `contactid` )
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
-
-INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 
 CREATE TABLE IF NOT EXISTS `{$dbTags}` (
@@ -1595,12 +1591,16 @@ INSERT INTO `{$dbSites}` (`id`, `name`, `department`, `address1`, `address2`, `c
 INSERT INTO `{$dbContacts}` (`id`, `notify_contactid`, `username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `fax`, `department`, `address1`, `address2`, `city`, `county`, `country`, `postcode`, `dataprotection_email`, `dataprotection_phone`, `dataprotection_address`, `timestamp_added`, `timestamp_modified`, `notes`) VALUES
 (1, '0', 'Acme1', MD5(RAND()), 'John', 'Acme', 'Chairman', 'Mr', 1, 'acme@example.com', '0666 222111', '', '', '', '', '', '', '', '', '', 'Yes', 'Yes', 'Yes', 1132930556, 1187360933, '');
 
-INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example product.');
+INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example product.','true');
 
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
 -- FIXME - decide what the last two fields should be by default
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, productonly, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','no','standard',0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','standard',0);
+
+INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
+INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
+INSERT INTO `{$dbSupportContacts}` VALUES (1,1);
 
 ";
 
@@ -1844,6 +1844,34 @@ DROP TABLE `{$CONFIG['db_tableprefix']}interfacestyles`;
 ALTER TABLE `{$dbService}` DROP `billingmatrix`;
 
 ALTER DATABASE `{$CONFIG['db_database']}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+-- PH 2012-11-17
+INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 82, 'true');
+
+ALTER TABLE `{$dbMaintenance}` DROP `productonly`;
+
+
+-- PH 2012-12-16
+ALTER TABLE `{$dbProducts}` ADD `active` ENUM( 'true', 'false' ) NOT NULL;
+INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
+
+-- PH 2012-12-21
+ALTER TABLE `{$dbContacts}` CHANGE `jobtitle` `jobtitle` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+CHANGE `courtesytitle` `courtesytitle` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT ''
+
+UPDATE `{$dbContacts}` SET phone = NULL WHERE phone = '';
+UPDATE `{$dbContacts}` SET mobile = NULL WHERE mobile = '';
+UPDATE `{$dbContacts}` SET fax = NULL WHERE fax = '';
+UPDATE `{$dbContacts}` SET address1 = NULL WHERE address1 = '';
+UPDATE `{$dbContacts}` SET address2 = NULL WHERE address2 = '';
+UPDATE `{$dbContacts}` SET city = NULL WHERE city = '';
+UPDATE `{$dbContacts}` SET county = NULL WHERE county = '';
+UPDATE `{$dbContacts}` SET country = NULL WHERE country = '';
+UPDATE `{$dbContacts}` SET notes = NULL WHERE notes = '';
 
 ";
 

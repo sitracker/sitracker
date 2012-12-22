@@ -53,11 +53,15 @@ if ($action == "edit")
 
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
+        
+        echo show_form_errors('maintform');
+        clear_form_errors('maintform');
+        
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
         echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
         echo "<tr><th>{$strSite}:</th><td>";
-        echo site_name($maint->site). "</td></tr>";  // This is mandetory though we don't mark it as such as its not editable
+        echo site_name($maint->site). "</td></tr>";  // This is mandatory though we don't mark it as such as its not editable
         echo "<tr><th>{$strContacts}:</th><td>";
         echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
         echo "{$strLimitTo} <input size='2' value='{$maint->supportedcontacts}' name='amount' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
@@ -128,11 +132,6 @@ if ($action == "edit")
         $incident_pools = explode(',', "Unlimited,{$CONFIG['incident_pools']}");
         echo "<td>".array_drop_down($incident_pools, 'incident_poolid', $maint->incident_quantity, '', TRUE, FALSE)."</td></tr>";
 
-        echo "<tr><th>{$strProductOnly}:</th>";
-        echo "<td><input id='productonly' name='productonly' type='checkbox' value='yes' onclick='set_terminated();' ";
-        if ($maint->productonly == "yes") echo " checked";
-        echo " /></td></tr>\n";
-
         echo "</tbody>";
         echo "</table>\n";
         echo "<input name='maintid' type='hidden' value='{$maintid}' />";
@@ -159,7 +158,6 @@ else if ($action == "update")
     $servicelevel = clean_dbstring($_POST['servicelevel']);
     $incidentpoolid = clean_int($_POST['incidentpoolid']);
     $product = clean_int($_POST['product']);
-    $productonly = cleanvar($_POST['productonly']);
     $contacts = cleanvar($_REQUEST['contacts']);
     if ($_REQUEST['noexpiry'] == 'on') $expirydate = '-1';
     else $expirydate = strtotime($_REQUEST['expirydate']);
@@ -167,53 +165,37 @@ else if ($action == "update")
     $allcontacts = 'No';
     if ($contacts == 'amount') $amount = clean_float($_REQUEST['amount']);
     elseif ($contacts == 'all') $allcontacts = 'Yes';
-
+    
     $errors = 0;
 
     if ($reseller == 0)
-    {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strReseller}'"), E_USER_ERROR);
+    {       
+        $_SESSION['formerrors']['maintform']['reseller'] = sprintf($strFieldMustNotBeBlank, $strReseller);
+        $errors++;
     }
 
     if ($admincontact == 0)
     {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['maintform']['admincontact'] = sprintf($strFieldMustNotBeBlank, $strAdminContact);
+        $errors++;
     }
 
-    if ($expirydate == 0)
+    if ($_REQUEST['expirydate'] == 0)
     {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strExpiryDate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
+        $errors++;
     }
 
     if ($errors == 0)
     {
-        if ($productonly == 'yes') $terminated = 'yes';
+        $reseller = convert_string_null_safe($reseller);
+        $licence_type = convert_string_null_safe($licence_type);
 
-        if (empty($reseller) OR $reseller == 0)
-        {
-            $reseller = "NULL";
-        }
-        else
-        {
-            $reseller = "'{$reseller}'";
-        }
-
-        if (empty($licence_type) OR $licence_type == 0)
-        {
-            $licence_type = "NULL";
-        }
-        else
-        {
-            $licence_type = "'{$licence_type}'";
-        }
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "UPDATE `{$dbMaintenance}` SET reseller={$reseller}, expirydate='{$expirydate}', licence_quantity='{$licence_quantity}', ";
         $sql .= "licence_type={$licence_type}, notes='{$notes}', admincontact={$admincontact}, term='{$terminated}', servicelevel='{$servicelevel}', ";
         $sql .= "incident_quantity='{$incident_quantity}', ";
-        $sql .= "incidentpoolid='{$incidentpoolid}', productonly='{$productonly}', ";
+        $sql .= "incidentpoolid='{$incidentpoolid}', ";
         $sql .= "supportedcontacts='{$amount}', allcontactssupported='{$allcontacts}'";
         if (!empty($product) AND user_permission($sit[2], PERM_ADMIN)) $sql .= ", product='{$product}'";
         $sql .= " WHERE id='{$maintid}'";
@@ -230,16 +212,13 @@ else if ($action == "update")
         else
         {
             // show success message
-            journal(CFG_LOGGING_NORMAL, 'Contract Edited', "contract $maintid modified", CFG_JOURNAL_MAINTENANCE, $maintid);
+            journal(CFG_LOGGING_NORMAL, 'Contract Edited', "contract {$maintid} modified", CFG_JOURNAL_MAINTENANCE, $maintid);
             html_redirect("contract_details.php?id={$maintid}");
         }
     }
     else
     {
-        // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo $errors_string;
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect("{$_SERVER['PHP_SELF']}?action=edit&maintid={$maintid}", FALSE);
     }
 }
 ?>

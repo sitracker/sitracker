@@ -96,7 +96,7 @@ switch ($action)
 
         // FIXME TODO implement deleting triggers
 
-        $sql =  "DELETE from $dbTriggers where id = $triggerid";
+        $sql =  "DELETE FROM `{$dbTriggers}` WHERE id = {$triggerid}";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         html_redirect($return, TRUE);

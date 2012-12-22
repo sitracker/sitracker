@@ -146,28 +146,29 @@ function display_update_page($draftid=-1)
     	$typeResearch = " selected='selected' ";
     }
 
+    $sla_targets = get_incident_sla_targets($incidentid);
 
     echo "<select name='target' id='target' class='dropdown' onchange=\"incident_update_sla_change($('target').value)\">\n";
     echo "<option value='none' {$targetNone}>{$GLOBALS['strNone']}</option>\n";
     switch ($target->type)
     {
         case 'initialresponse':
-            echo "<option value='initialresponse' {$targetInitialresponse} class='initialresponse'>{$GLOBALS['strInitialResponse']}</option>\n";
-            echo "<option value='probdef' {$targetProbdef} class='problemdef'>{$GLOBALS['strProblemDefinition']}</option>\n";
-            echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            if ($sla_targets->initial_response_mins > 0) echo "<option value='initialresponse' {$targetInitialresponse} class='initialresponse'>{$GLOBALS['strInitialResponse']}</option>\n";
+            if ($sla_targets->prob_determ_mins > 0) echo "<option value='probdef' {$targetProbdef} class='problemdef'>{$GLOBALS['strProblemDefinition']}</option>\n";
+            if ($sla_targets->action_plan_mins > 0) echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
+            if ($sla_targets->resolution_days > 0) echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'probdef':
-            echo "<option value='probdef' {$targetProbdef} class='problemdef'>{$GLOBALS['strProblemDefinition']}</option>\n";
-            echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            if ($sla_targets->prob_determ_mins > 0) echo "<option value='probdef' {$targetProbdef} class='problemdef'>{$GLOBALS['strProblemDefinition']}</option>\n";
+            if ($sla_targets->action_plan_mins > 0) echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
+            if ($sla_targets->resolution_days > 0) echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'actionplan':
-            echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
-            echo "<option value='solution' {$targetSolution} class='solution.png'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            if ($sla_targets->action_plan_mins > 0) echo "<option value='actionplan' {$targetActionplan} class='actionplan'>{$GLOBALS['strActionPlan']}</option>\n";
+            if ($sla_targets->resolution_days > 0) echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
         case 'solution':
-            echo "<option value='solution' {$targetSolution} class='solution.png'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
+            if ($sla_targets->resolution_days > 0) echo "<option value='solution' {$targetSolution} class='solution'>{$GLOBALS['strResolutionReprioritisation']}</option>\n";
             break;
     }
     echo "</select>\n";

@@ -25,10 +25,10 @@ if (sizeof($_SESSION['entitlement']) >= 1)
 {
     echo "<table class='maintable'>";
     echo "<tr>";
-    echo colheader('id',$strContractID);
-    echo colheader('name',$strProduct);
-    echo colheader('availableincidents',$strIncidentsAvailable);
-    echo colheader('usedincidents',$strIncidentsUsed);
+    echo colheader('id', $strContractID);
+    echo colheader('name', $strProduct);
+    echo colheader('availableincidents', $strIncidentsAvailable);
+    echo colheader('usedincidents', $strIncidentsUsed);
     echo colheader('expirydate', $strExpiryDate);
     echo colheader('actions', $strActions);
     echo "</tr>";

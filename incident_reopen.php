@@ -31,7 +31,7 @@ else
 {
     $returnurl = "incident_details.php?id={$id}";
 }
-$sql = "SELECT * FROM `{$dbIncidents}` WHERE id = '$id' LIMIT 1";
+$sql = "SELECT * FROM `{$dbIncidents}` WHERE id = '{$id}' LIMIT 1";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 if (mysql_num_rows($result) > 0)

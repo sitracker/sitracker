@@ -48,16 +48,7 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strContacts}</th><td>";
     echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
 
-    echo "{$strLimitTo} <input size='2' name='numcontacts' ";
-    if ($_SESSION['formdata']['new_contract']['numcontacts'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['numcontacts']}'";
-    }
-    else
-    {
-        echo "value='0'";
-    }
-    echo " /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
+    echo "{$strLimitTo} <input size='2' name='numcontacts'  value='".show_form_value('new_contact', 'numcontacts', '0')."' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
     echo "<input type='radio' value='all' name='contacts' />";
     echo "{$strAllSiteContactsSupported}";
     echo "</td></tr>\n";
@@ -126,33 +117,14 @@ if ($action == "showform" OR $action == '')
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strCreditAmount}</th><td>{$CONFIG['currency_symbol']}";
-    echo "<input maxlength='7' name='amount' size='5' class='required' ";
-    if ($_SESSION['formdata']['new_contract']['amount'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['amount']}'  ";
-    }
-    else
-    {
-        echo "value='0' ";
-    }
-    echo "/> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<input maxlength='7' name='amount' size='5' class='required' value='".show_form_value('new_contact', 'amount', '0')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='unitrate' size='5' ";
-    if ($_SESSION['formdata']['new_contract']['unitrate'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['unitrate']}' ";
-    }
-    echo "/>";
+    echo "<input class='required' type='text' name='unitrate' size='5' value='".show_form_value('new_contact', 'unitrate', '')."' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='incidentratesection' style='display:none'><th>{$strIncidentRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='incidentrate' size='5' ";
-    if ($_SESSION['formdata']['new_contract']['incidentrate'] != '')
-    {
-        echo "value='{$_SESSION['formdata']['new_contract']['incidentrate']}' ";
-    }
-    echo "/>";
+    echo "<input class='required' type='text' name='incidentrate' size='5' value='".show_form_value('new_contact', 'incidentrate', '0')." />";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
@@ -186,7 +158,6 @@ if ($action == "showform" OR $action == '')
     $incident_pools = explode(',', "{$strUnlimited},{$CONFIG['incident_pools']}");
     echo "<td>".array_drop_down($incident_pools,'incident_poolid',$maint['incident_quantity'])."</td></tr>\n";
 
-    echo "<tr><th>{$strProductOnly}</th><td><input name='productonly' type='checkbox' value='yes' /></td></tr>";
     plugin_do('contract_new_form_more');
     echo "</tbody>\n";
     plugin_do('contract_new_form');
@@ -215,16 +186,15 @@ elseif ($action == 'new')
     $notes = clean_dbstring($_REQUEST['notes']);
     $servicelevel = clean_dbstring($_REQUEST['servicelevel']);
     $incidentpoolid = clean_int($_REQUEST['incidentpoolid']);
-    $productonly = clean_fixed_list($_REQUEST['productonly'], array('no','yes'));
     $term = clean_fixed_list($_REQUEST['term'], array('no','yes'));
     $contacts = cleanvar($_REQUEST['contacts']);
     $timed = cleanvar($_REQUEST['timed']);
     $startdate = strtotime($_REQUEST['startdate']);
-    if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
+    if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
     else $startdate = date('Y-m-d',$now);
     $enddate = strtotime($_REQUEST['expiry']);
-    if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
-    else $enddate = date('Y-m-d',$now);
+    if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
+    else $enddate = date('Y-m-d', $now);
 
     if ($_REQUEST['noexpiry'] == 'on')
     {
@@ -266,19 +236,19 @@ elseif ($action == 'new')
     if ($site == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['site'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSite}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['site'] = sprintf($strFieldMustNotBeBlank, $strSite);
     }
     // check for blank product
     if ($product == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['product'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strProduct}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['product'] = sprintf($strFieldMustNotBeBlank, $strProduct);
     }
     // check for blank expiry day
     if (empty($_REQUEST['expiry']) AND $expirydate != -1)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['expirydate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strExpiryDate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
     }
     elseif ($expirydate < $now AND $expirydate != -1)
     {
@@ -289,29 +259,29 @@ elseif ($action == 'new')
     if ($admincontact == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['admincontact'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strAdminContact}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['admincontact'] = sprintf($strFieldMustNotBeBlank, $strAdminContact);
     }
     if ($timed == 'yes' AND $amount == 0)
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['amount'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strCreditAmount}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
     }
     if ($timed == 'yes' AND ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == '')))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['unitrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strUnitRate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
     }
 
     if ($timed == 'yes' AND ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == '')))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['incidentrate'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strIncidentRate}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['incidentrate'] = sprintf($strFieldMustNotBeBlank, $strIncidentRate);
     }
 
     if ($timed == 'yes' AND empty($billingmatrix))
     {
         $errors++;
-        $_SESSION['formerrors']['new_contract']['billing_matrix'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strNoBillingMatrixDefined}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_contract']['billing_matrix'] = sprintf($strFieldMustNotBeBlank, $strNoBillingMatrixDefined);
     }
     plugin_do('contract_new_submitted');
 
@@ -319,20 +289,6 @@ elseif ($action == 'new')
     if ($errors == 0)
     {
         $addition_errors = 0;
-
-        if (empty($productonly))
-        {
-            $productonly = 'no';
-        }
-
-        if ($productonly == 'yes')
-        {
-            $term = 'yes';
-        }
-        else
-        {
-            $term = 'no';
-        }
 
         if (empty($reseller) OR $reseller == 0)
         {
@@ -363,9 +319,9 @@ elseif ($action == 'new')
         
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
-        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, productonly, term, supportedcontacts, allcontactssupported, billingmatrix) ";
+        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$productonly}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix})";
+        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix})";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -406,7 +362,7 @@ elseif ($action == 'new')
     else
     {
         // show error message if errors
-        html_redirect("contract_new.php", FALSE);
+        html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 }
 ?>

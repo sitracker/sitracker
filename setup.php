@@ -133,7 +133,7 @@ if (!extension_loaded('mysql'))
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, "<"))
 {
-    echo "<p class='error'>You are running an older PHP version (< PHP 5.1), SiT v3.35 and later require PHP 5.1 or newer, some features may not work properly.</p>";
+    echo "<p class='error'>You are running an older PHP version (< PHP " . MIN_PHP_VERSION . "), SiT v3.35 and later require PHP " . MIN_PHP_VERSION . " or newer, some features may not work properly.</p>";
 }
 
 if (file_exists('/etc/webtrack.conf'))
@@ -317,7 +317,8 @@ switch ($_REQUEST['action'])
                         {
                             echo "<p class='info'>You can now go ahead and create a database called '{$CONFIG['db_database']}' for SiT! to use.</p>";
                         }
-                        echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' value='yes' checked='checked' /> With sample data</label>");
+                        echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
+                    														<br /><label><input type='checkbox' name='promptinitialdata' id='promptinitialdata' value='yes' checked='checked' /> Prompt for initial data</label>");
                     }
                     else
                     {
@@ -346,6 +347,8 @@ switch ($_REQUEST['action'])
     case 'createdb':
         if ($_REQUEST['sampledata'] == 'yes' ) $_SESSION['sampledata'] = TRUE;
         else $_SESSION['sampledata'] = FALSE;
+        if ($_REQUEST['promptinitialdata'] == 'yes') $_SESSION['promptinitialdata'] = TRUE;
+        else $_SESSION['promptinitialdata'] = FALSE;
         setup_createdb();
         break;
     case 'checkatttdiragain':
@@ -439,7 +442,7 @@ switch ($_REQUEST['action'])
                     if (!empty($CONFIG['db_username']))
                     {
                         echo "<p class='error'>".mysql_error()."<br />Could not select database";
-                        if ($CONFIG['db_database']!='')
+                        if ($CONFIG['db_database'] != '')
                         {
                             echo " '{$CONFIG['db_database']}', check the database name you have configured matches the database in MySQL";
                         }
@@ -451,7 +454,9 @@ switch ($_REQUEST['action'])
                         echo "</p>";
                         echo setup_button('reconfigure', 'Reconfigure SiT!');
                         echo "<p>or</p>";
-                        echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' value='yes' checked='checked' /> With sample data</label>");
+                        // Seems to be duplicated above ???????? TODO FIXME
+                        echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
+                    														<br /><label><input type='checkbox' name='promptinitialdata' id='promptinitialdata' value='yes' checked='checked' /> Prompt for initial data</label>");
                     }
                     else
                     {
@@ -491,6 +496,11 @@ switch ($_REQUEST['action'])
                         {
                             echo "<p>Installing sample data...</p>";
                             $errors = $errors + setup_exec_sql($sampledata_sql);
+                        }
+                        
+                        if ($_SESSION['promptinitialdata'] == TRUE)
+                        {
+                            
                         }
 
                         $dashlets = install_dashboard_components();
@@ -687,6 +697,169 @@ switch ($_REQUEST['action'])
                                 echo "<p class='error'>Admin account not created, the passwords you entered did not match.</p>";
                             }
                         }
+                        
+                        if ($_REQUEST['action'] == 'createinitialdata') 
+                        {
+                            // Create initial set etc... TODO
+                            // Maintenance - need to created based on data entered
+
+                            $sitename = cleanvar($_REQUEST['sitename']);
+                            $sitedepartment = cleanvar($_REQUEST['sitedepartment']);
+                            $siteaddress1 = cleanvar($_REQUEST['siteaddress1']);
+                            $siteaddress2 = cleanvar($_REQUEST['siteaddress2']);
+                            $sitecity = cleanvar($_REQUEST['sitecity']);
+                            $sitecounty = cleanvar($_REQUEST['sitecounty']);
+                            $sitecountry = cleanvar($_REQUEST['sitecountry']);
+                            $sitepostcode = cleanvar($_REQUEST['sitepostcode']);
+
+                            // Contact
+                            $courtesytitle = cleanvar($_REQUEST['courtesytitle']);
+                            $contactforenames = cleanvar($_REQUEST['contactforenames']);
+                            $contactsurname = cleanvar($_REQUEST['contactsurname']);
+                            $contactjobtitle = cleanvar($_REQUEST['contactjobtitle']);
+                            $contactdepartment = cleanvar($_REQUEST['contactdepartment']);
+                            $contactemail = cleanvar($_REQUEST['contactemail']);
+                            $contactphone = cleanvar($_REQUEST['contactphone']);
+                            $contactmobile = cleanvar($_REQUEST['contactmobile']);
+
+                            // Product
+                            $productvendor = cleanvar($_REQUEST['productvendor']);
+                            $productname = cleanvar($_REQUEST['productname']);
+
+                            $skill = cleanvar($_REQUEST['skill']);
+                            
+                            // Resellers
+                            $reseller_name = cleanvar($_REQUEST['reseller_name']);
+                            $_SESSION['formdata']['setupinitialdata'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
+                            
+                            $errors = 0;
+                            if(empty($sitename))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['sitename'] = sprintf($strFieldMustNotBeBlank, 'Site Name');
+                                $errors++;
+                            }
+                            
+                            if(empty($siteaddress1))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['siteaddress1'] = sprintf($strFieldMustNotBeBlank, 'Site Address 1');
+                                $errors++;
+                            }
+                            
+                            if(empty($contactforenames))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['contactforenames'] = sprintf($strFieldMustNotBeBlank, 'Contact Forenames');
+                                $errors++;
+                            }
+                            
+                            if(empty($contactsurname))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['contactsurname'] = sprintf($strFieldMustNotBeBlank, 'Contact Forenames');
+                                $errors++;
+                            }
+                            
+                            if(empty($contactemail))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['contactemail'] = sprintf($strFieldMustNotBeBlank, 'Contact Email');
+                                $errors++;
+                            }
+                            
+                            if(empty($productvendor))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['productvendor'] = sprintf($strFieldMustNotBeBlank, 'Product Vendor');
+                                $errors++;
+                            }
+                            
+                            if(empty($productname))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['productname'] = sprintf($strFieldMustNotBeBlank, 'Product Name');
+                                $errors++;
+                            }
+                            
+                            if(empty($reseller_name))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['reseller_name'] = sprintf($strFieldMustNotBeBlank, 'Reseller Name');
+                                $errors++;
+                            }
+                            
+                            if(empty($skill))
+                            {
+                                $_SESSION['formerrors']['setupinitialdata']['skill'] = sprintf($strFieldMustNotBeBlank, 'Skill');
+                                $errors++;
+                            }
+                            
+                            $sitedepartment = convert_string_null_safe($sitedepartment);
+                            $siteaddress2 = convert_string_null_safe($siteaddress2);
+                            $sitecity = convert_string_null_safe($sitecity);
+                            $sitecounty = convert_string_null_safe($sitecounty);
+                            $sitecountry = convert_string_null_safe($sitecountry);
+                            $sitepostcode = convert_string_null_safe($sitepostcode);
+                            
+                            // Contact
+                            $courtesytitle = convert_string_null_safe($courtesytitle);
+                            $contactjobtitle = convert_string_null_safe($contactjobtitle);
+                            $contactdepartment = convert_string_null_safe($contactdepartment);
+                            $contactphone = convert_string_null_safe($contactphone);
+                            $contactmobile = convert_string_null_safe($contactmobile);
+                            
+                            
+                            if ($errors == 0)
+                            {
+                                $sql = "INSERT INTO `{$dbSites}` (`name`, `department`, `address1`, `address2`, `city`, `county`,
+                                `country`, `postcode`, `notes`, `typeid`, `freesupport`, `licenserx`,
+                                 `owner`) VALUES ('{$sitename}', {$sitedepartment}, '{$siteaddress1}', {$siteaddress2},
+                                {$sitecity}, {$sitecounty}, {$sitecountry}, {$sitepostcode}, 'Created during setup', 1, 0, 0, 0)";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $siteid = mysql_insert_id();
+
+                                $username = mb_strtolower(mb_substr($contactsurname, 0, strcspn($contactsurname, " "), 'UTF-8'));
+                                $sql =  "INSERT INTO `{$dbContacts}` (`username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `department`, `timestamp_added`, `timestamp_modified`) VALUES
+                                ('{$username}', MD5(RAND()), '{$contactforenames}', '{$contactsurname}', {$contactjobtitle}, {$courtesytitle}, {$siteid}, '{$contactemail}', {$contactphone}, {$contactmobile}, {$contactdepartment}, 1132930556, 1187360933)";
+                                $result = mysql_query($sql);
+            					if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            					$contactid = mysql_insert_id();
+            					$username = $username . $newid;
+            					$sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$contactid}'";
+            					                            
+                                $sql = "INSERT INTO `{$dbProducts}` (vendorid, name) VALUES ({$productvendor},'{$productname}')";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $productid = mysql_insert_id();
+                                
+                                $sql = "INSERT INTO `{$dbSoftware}` (`name`, `lifetime_start`, `lifetime_end`) VALUES ('{$skill}', NULL, NULL)";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $skillid = mysql_insert_id();
+                                
+                                $sql = "INSERT INTO `{$dbResellers}` (name) VALUES ('{$reseller_name}')";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $resellerid = mysql_insert_id();
+                                
+                                $expirydate = strtotime("+1 year");
+                                
+                                $sql = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) ";
+                                $sql .= "VALUES ({$siteid},{$productid},{$resellerid},{$expirydate},1,4,0,0,'Created during the installer',1,'no','standard',0)";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $contractid = mysql_insert_id();
+                                
+                                $sql = "INSERT INTO `{$dbSoftwareProducts}` VALUES ({$productid},{$skillid})";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                mysql_insert_id();
+                                
+                                $sql = "INSERT INTO `{$dbSupportContacts}` VALUES ({$contractid},{$contactid})";
+                                $result = mysql_query($sql);
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                mysql_insert_id();
+                                
+                                
+                                $_SESSION['promptinitialdata'] = FALSE;
+                                clear_form_data('setupinitialdata');
+                            }
+                        }
+                        
                         // Check installation
                         echo "<h2>Checking installation...</h2>";
                         if ($cfg_file_writable)
@@ -728,6 +901,186 @@ switch ($_REQUEST['action'])
                             echo "<p><input type='submit' value='Create Admin User' />";
                             echo "<input type='hidden' name='action' value='createadminuser' />";
                             echo "</form>";
+                        }
+                        elseif ($_SESSION['promptinitialdata'] == TRUE)
+                        {
+                            // Setup initial data
+                            echo "<p>Please setup the initial data.<br /><b>NOTE:</b> The following is only a subset of the possibe data</p>";
+                            
+                            echo show_form_errors('setupinitialdata');
+                            clear_form_errors('setupinitialdata');
+                            
+                            echo "<form name='setupinitialdata' action='setup.php' method='post'>\n";
+
+                            // Site
+                            echo "<h3>Site</h3>";
+                            echo "<p><table>";
+                            echo "<tr><th>Site Name</th><td><input maxlength='255' class='required' name='sitename' size='30'  ";
+                            if ($_SESSION['formdata']['setupinitialdata']['sitename'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['sitename']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>\n";
+                            echo "<tr><th>Department</th><td><input maxlength='255' name='sitedepartment' size='30' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['sitedepartment'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['sitedepartment']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>Address 1</th><td><input class='required' maxlength='255' name='siteaddress1' size='30' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['siteaddress1'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['siteaddress1']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>\n";
+                            echo "<tr><th>Address 2</th><td><input maxlength='255' name='siteaddress2' size='30'  ";
+                            if ($_SESSION['formdata']['setupinitialdata']['siteaddress2'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['siteaddress2']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>City</th><td><input maxlength='255' name='sitecity' size='30' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['sitecity'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['sitecity']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>County</th><td><input maxlength='255' name='sitecounty' size='30' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['sitecounty'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['sitecounty']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>Country</th><td>";
+                            if ($_SESSION['formdata']['setupinitialdata']['sitecountry'] != '')
+                            {
+                                echo country_drop_down('sitecountry', $_SESSION['formdata']['new_site']['sitecountry']);
+                            }
+                            else
+                            {
+                                echo country_drop_down('sitecountry', $CONFIG['home_country']);
+                            }
+                            echo "</td></tr>\n";
+                            echo "<tr><th>Postcode</th><td><input maxlength='255' name='sitepostcode' size='30' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['sitepostcode'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['sitepostcode']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "</table>";
+                            echo "</p>";
+
+                            // Contact
+                            echo "<h3>Contact</h3>";
+                            echo "<p><table>";
+                            echo "<tr><th>Name</th>\n";                           
+                            echo "<td>";
+                            echo "\n<table><tr><td align='center'>Title<br />";
+                            echo "<input maxlength='50' name='courtesytitle' size='7' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['courtesytitle'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['courtesytitle']}' ";
+                            }
+                            echo "/></td>\n";
+                            echo "<td align='center'>Forenames<br />";
+                            echo "<input class='required' maxlength='100' name='contactforenames' size='15' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactforenames'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactforenames']}' ";
+                                }
+                            echo "/></td>\n";
+                            echo "<td align='center'>Surname<br />";
+                            echo "<input class='required' maxlength='100' name='contactsurname' size='20' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactsurname'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactsurname']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>\n";
+                            echo "</table>\n</td></tr>\n";
+                            echo "<tr><th>Job Title</th><td><input maxlength='255' name='contactjobtitle' size='35' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactjobtitle'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactjobtitle']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>Department</th><td><input maxlength='255' name='contactdepartment' size='35' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactdepartment'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactdepartment']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>Email</th><td><input class='required' maxlength='100' name='contactemail' size='35' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactemail'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactemail']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>\n";
+                            echo "<tr><th>Telephone</th><td><input maxlength='50' name='contactphone' size='35' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactphone'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactphone']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "<tr><th>Mobile</th><td><input maxlength='100' name='contactmobile' size='35' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['contactmobile'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['contactmobile']}' ";
+                            }
+                            echo "/></td></tr>\n";
+                            echo "</table>";
+                            echo "</p>";
+
+                            // Product
+                            echo "<h3>Product:</h3>";
+                            echo "<p><table class='maintable'>";
+                            echo "<tr><th>Vendor</th><td>";
+                            if ($_SESSION['formdata']['setupinitialdata']['productvendor'] != '')
+                            {
+                                echo vendor_drop_down('productvendor', $_SESSION['formdata']['setupinitialdata']['productvendor'], TRUE);
+                            }
+                            else 
+                            {
+                                echo vendor_drop_down('productvendor', 0, TRUE);
+                            }                            
+                            echo " <span class='required'>Required</span></td></tr>\n";
+                            echo "<tr><th>Product</th><td><input maxlength='50' name='productname' size='40' class='required'  ";
+                            if ($_SESSION['formdata']['setupinitialdata']['productname'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['productname']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>\n";
+                            echo "</table>\n";
+                            echo "</p>";
+
+                            // Skill
+                            echo "<h3>Skill</h3>";
+                            echo "<p><table class='maintable vertical'>";
+                            echo "<tr><th>Skill Name</th><td><input type='text' name='skill' class='required' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['skill'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['skill']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>";
+                            echo "</table>";
+                            echo "</p>";
+
+                            // Resellers
+                            echo "<h3>Reseller</h3>";
+                            echo "<p><table class='maintable vertical'>";
+                            echo "<tr><th>Name</th><td><input type='text' name='reseller_name' class='required' ";
+                            if ($_SESSION['formdata']['setupinitialdata']['reseller_name'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['reseller_name']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>";
+                            echo "</table>";
+                            echo "</p>";
+
+                            echo "<input type='hidden' name='action' value='createinitialdata' />";
+                            echo setup_button('', 'Add Data');
+                            echo "</form>";
+                            
+                            clear_form_data('setupinitialdata');
                         }
                         else
                         {

@@ -36,7 +36,7 @@ switch ($action)
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         while ($users = mysql_fetch_object($result))
         {
-            $fieldname="user{$users->id}";
+            $fieldname = "user{$users->id}";
             if ($_REQUEST[$fieldname] == 'yes')
             {
                 $orig_entitlement = user_holiday_entitlement($users->id);

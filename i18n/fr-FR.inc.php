@@ -1210,7 +1210,6 @@ $strProblemHasBeenDefined = 'Le problème a été défini';
 $strProblemReproduction = 'Reproduction du problème';
 $strProblemReproductionCustomerText = 'Est-ce que le problème survient sur plus d\'une machine ? Quelles sont les actions que l\'ingénieur devra prendre pour reproduire ce cas ?';
 $strProduct = 'Produit';
-$strProductOnly = 'Produits uniquement';
 $strProductQuestions = 'Questions liées à un produit';
 $strProducts = 'Produits';
 $strPublic = 'Publique';

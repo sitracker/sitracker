@@ -1212,7 +1212,6 @@ $strProblemHasBeenDefined = 'Проблема была определена';
 $strProblemReproduction = 'Воспроизведение проблемы';
 $strProblemReproductionCustomerText = 'Существует ли эта проблема более чем на одном компьютере? Какие шаги необходимо выполнить инженеру, чтобы воспроизвести эту проблему?';
 $strProduct = 'Продукт';
-$strProductOnly = 'Только продукт';
 $strProductQuestions = 'Вопросы по продукту';
 $strProducts = 'Продукты';
 $strPublic = 'Общий';

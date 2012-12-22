@@ -100,17 +100,22 @@ a.button:active
 
 var { font-family: Andale Mono, monospace; font-style: normal; }
 code.small { font-size: 75%; color: #555; }
+
+span.required
+{
+    font-size: 0.8em;
+    color: red;
 }
 
-";
-echo ".help {background: #F7FAFF; border: 1px solid #3165CD; color: #203894; padding: 2px;}\n";
-echo ".helptip { color: #203894; }\n";
-echo ".warning {background: #FFFFE6; border: 2px solid #FFFF31; color: red; padding: 2px;}\n";
-echo "pre {background:#FFF; border:#999; padding: 1em;}\n";
-echo "a.button { border: 1px outset #000; padding: 2px; background-color: #EFEFEF;} ";
-echo "a:link,a:visited { color: #000099; }\n";
-echo "a:hover { background: #99CCFF; }\n";
-echo "hr { background-color: #4D485B; margin-top: 3em; }\n";
+.help {background: #F7FAFF; border: 1px solid #3165CD; color: #203894; padding: 2px;}
+
+.helptip { color: #203894; }
+.warning {background: #FFFFE6; border: 2px solid #FFFF31; color: red; padding: 2px;}
+pre {background:#FFF; border:#999; padding: 1em;}
+a.button { border: 1px outset #000; padding: 2px; background-color: #EFEFEF;}
+a:link,a:visited { color: #000099; }
+a:hover { background: #99CCFF; }
+hr { background-color: #4D485B; margin-top: 3em; }";
 echo "</style>\n";
 echo "<title>Support Incident Tracker Setup</title>\n";
 echo "</head>\n<body>\n";

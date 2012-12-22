@@ -46,7 +46,78 @@ elseif ($action == "edit")
     }
     else
     {
-        echo show_edit_site($site);
+        $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='{$site}' ";
+        $siteresult = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        echo show_form_errors('site_edit');
+        clear_form_errors('site_edit');
+
+        while ($obj = mysql_fetch_object($siteresult))
+        {
+            echo "<h2>".icon('site', 32)." {$GLOBALS['strEditSite']}: {$site} - ";
+            echo site_name($site)."</h2>";
+            plugin_do('site_edit');
+    
+            echo "<form name='site_edit' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
+            echo "<table class='maintable vertical'>";
+            echo "<tr><th>{$strName}:</th>";
+            echo "<td><input class='required' maxlength='50' name='name' size='40' value='{$obj->name}' />";
+            echo " <span class='required'>{$strRequired}</span></td></tr>\n";
+            echo "<tr><th>{$strTags}:</th><td><textarea rows='2' cols='60' name='tags'>";
+            echo list_tags($site, TAG_SITE, false)."</textarea>\n";
+            echo "<tr><th>{$strDepartment}:</th>";
+            echo "<td><input maxlength='50' name='department' size='40' value='{$obj->department}' />";
+            echo "</td></tr>\n";
+            echo "<tr><th>{$strAddress1}:</th>";
+            echo "<td><input maxlength='50' name='address1' class='required' ";
+            echo "size='40' value='{$obj->address1}' /> <span class='required'>{$strRequired}</span>";
+            echo "</td></tr>\n";
+            echo "<tr><th>{$strAddress2}: </th><td><input maxlength='50' name='address2' size='40' value='{$obj->address2}' /></td></tr>\n";
+            echo "<tr><th>{$strCity}:</th><td><input maxlength='255' name='city' size='40' value='{$obj->city}' /></td></tr>\n";
+            echo "<tr><th>{$strCounty}:</th><td><input maxlength='255' name='county' size='40' value='{$obj->county}' /></td></tr>\n";
+            echo "<tr><th>{$strPostcode}:</th><td><input maxlength='255' name='postcode' size='40' value='{$obj->postcode}' /></td></tr>\n";
+            echo "<tr><th>{$strCountry}:</th><td>".country_drop_down('country', $obj->country)."</td></tr>\n";
+            echo "<tr><th>{$strTelephone}:</th><td>";
+            echo "<input maxlength='255' name='telephone' size='40' value='{$obj->telephone}' />";
+            echo "</td></tr>\n";
+            echo "<tr><th>{$strFax}:</th><td>";
+            echo "<input maxlength='255' name='fax' size='40' value='{$obj->fax}' /></td></tr>\n";
+            echo "<tr><th>{$strEmail}:</th><td>";
+            echo "<input maxlength='255' name='email' size='40' value='{$obj->email}' />";
+            echo "</td></tr>\n";
+            echo "<tr><th>{$strWebsite}:</th><td>";
+            echo "<input maxlength='255' name='websiteurl' size='40' value='{$obj->websiteurl}' /></td></tr>\n";
+            echo "<tr><th>{$strSiteType}:</th><td>\n";
+            echo sitetype_drop_down('typeid', $obj->typeid);
+            echo "</td></tr>\n";
+            echo "<tr><th>{$strSalesperson}:</th><td>";
+            echo user_drop_down('owner', $obj->owner, $accepting = FALSE, '', '', TRUE);
+            echo "</td></tr>\n";
+            echo "<tr><th>{$strIncidentPool}:</th>";
+            $incident_pools = explode(',', "{$strNone},{$CONFIG['incident_pools']}");
+            if (array_key_exists($obj->freesupport, $incident_pools) == FALSE)
+            {
+                array_unshift($incident_pools, $obj->freesupport);
+            }
+            echo "<td>".array_drop_down($incident_pools,'incident_pool',$obj->freesupport)."</td></tr>";
+            echo "<tr><th>{$strActive}:</th><td><input type='checkbox' name='active' ";
+            if ($obj->active == 'true')
+            {
+                echo "checked='{$obj->active}'";
+            }
+            echo " value='true' /></td></tr>\n";
+            echo "<tr><th>{$strNotes}:</th><td>";
+            echo "<textarea rows='5' cols='30' name='notes'>{$obj->notes}</textarea>";
+            echo "</td></tr>\n";
+            plugin_do('site_edit_form');
+
+            echo "</table>\n";
+            echo "<input name='site' type='hidden' value='{$site}' />";
+            echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
+            echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
+            echo "<p><a href=\"site_details.php?id={$site}\">{$strReturnWithoutSaving}</a></p>";
+            echo "</form>";
+        }
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -78,7 +149,13 @@ elseif ($action == "update")
     if ($name == '')
     {
         $errors++;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['site_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);       
+    }
+    
+    if ($name == '')
+    {
+        $errors++;
+        $_SESSION['formerrors']['site_edit']['address1'] = sprintf($strFieldMustNotBeBlank, $strAddress1);
     }
 
     plugin_do('site_edit_submitted');
@@ -120,7 +197,7 @@ elseif ($action == "update")
     }
     else
     {
-        html_redirect("site_details.php?id={$site}", FALSE, $errors_string);
+        html_redirect("site_edit.php?action=edit&site={$site}", FALSE);
     }
 }
 ?>

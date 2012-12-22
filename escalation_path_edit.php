@@ -79,7 +79,7 @@ else
     if (empty($name))
     {
         $errors++;
-        $_SESSION['formerrors']['edit_escalation_path']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_escalation_path']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
     plugin_do('escalation_path_edit_submitted');
 

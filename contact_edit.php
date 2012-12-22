@@ -42,9 +42,7 @@ if (empty($action) OR $action == "showform" OR empty($contact))
 elseif ($action == "edit" && isset($contact))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    // FIXME i18n
-    // Show edit contact form
-    $sql="SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
+    $sql = "SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
     $contactresult = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($contactobj = mysql_fetch_object($contactresult))

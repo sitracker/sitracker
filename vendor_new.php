@@ -52,7 +52,7 @@ else
     if ($name == '')
     {
         $errors++;
-        $_SESSION['formerrors']['new_vendor']['name'] = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strVendorName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['new_vendor']['name'] = sprintf($strFieldMustNotBeBlank, $strVendorName);
     }
 
     // add product if no errors

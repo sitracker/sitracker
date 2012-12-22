@@ -29,12 +29,16 @@ if (empty($action) OR $action == 'edit')
 
     echo "<h2>".icon('skill', 32)." ";
     echo "{$title}</h2>";
+    
+    echo show_form_errors('edit_skill');
+    clear_form_errors('edit_skill');
+    
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE id='{$id}' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     while ($software = mysql_fetch_object($result))
     {
-        echo "<form name='editsoftware' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
+        echo "<form name='editskill' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
         echo "<table class='vertical'>";
         echo "<tr><th>{$strVendor}:</th><td>".vendor_drop_down('vendor', $software->vendorid)."</td></tr>\n";
         echo "<tr><th>{$strSkill}:</th><td><input class='required' maxlength='50' name='name' size='30' value='{$software->name}' /> <span class='required'>{$strRequired}</span></td></tr>";
@@ -121,8 +125,8 @@ else
 
     if ($name == '')
     {
-        $errors = 1;
-        $errors_string .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strName}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['edit_skill']['product'] = sprintf($strFieldMustNotBeBlank, $strName);
+        $errors++;
     }
     // add product if no errors
     if ($errors == 0)
@@ -143,9 +147,7 @@ else
     }
     else
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        echo $errors_string;
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        html_redirect("{$_SERVER['PHP_SELF']}?action=edit&id={$id}", FALSE);
     }
 }
 ?>

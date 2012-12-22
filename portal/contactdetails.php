@@ -48,12 +48,6 @@ else
     $id = $_SESSION['contactid'];
 }
 
-if (!empty($_SESSION['formerrors']['portalcontactdetails']))
-{
-    echo $_SESSION['formerrors']['portalcontactdetails'];
-    $_SESSION['formerrors']['portalcontactdetails'] = NULL;
-}
-
 //if new details posted
 if (cleanvar($_REQUEST['action']) == 'update')
 {
@@ -77,6 +71,8 @@ if (cleanvar($_REQUEST['action']) == 'update')
     $newpass = cleanvar($_REQUEST['newpassword']);
     $newpass2 = cleanvar($_REQUEST['newpassword2']);
 
+    $_SESSION['formdata']['portalcontactdetails'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
+    
     $errors = 0;
 
     // VALIDATION CHECKS */
@@ -85,31 +81,31 @@ if (cleanvar($_REQUEST['action']) == 'update')
         if (!valid_username($username))
         {
             $errors++;
-            $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>{$strInvalidUsername}</p>\n";
+            $_SESSION['formerrors']['portalcontactdetails']['username'] = $strInvalidUsername;
         }
     }
 
     if (!empty($newpass) AND empty($newpass2))
     {
         $errors++;
-        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>{$strYouMustEnterYourNewPasswordTwice}</p>\n";
+        $_SESSION['formerrors']['portalcontactdetails']['passwordtwice'] = $strYouMustEnterYourNewPasswordTwice;
     }
     elseif ($newpass != $newpass2)
     {
         $errors++;
-        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>{$strPasswordsDoNotMatch}</p>";
+        $_SESSION['formerrors']['portalcontactdetails']['passwordmatch'] = $strPasswordsDoNotMatch;
     }
 
     if ($surname == '')
     {
         $errors++;
-        $_SESSION['formerrors']['portalcontactdetails'] .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, "'{$strSurname}'")."</p>\n";
+        $_SESSION['formerrors']['portalcontactdetails']['surname'] = sprintf($strFieldMustNotBeBlank, $strSurname);
     }
 
     if ($email == '' OR $email == 'none' OR $email == 'n/a')
     {
         $errors++;
-        $_SESSION['formerrors']['portalcontactdetails'] .= user_alert(sprintf($strFieldMustNotBeBlank, "'{$strEmail}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['portalcontactdetails']['email'] = sprintf($strFieldMustNotBeBlank, $strEmail);
     }
 
     if ($errors == 0)
@@ -130,6 +126,7 @@ if (cleanvar($_REQUEST['action']) == 'update')
         $updatesql .= "WHERE id='{$id}'";
         mysql_query($updatesql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        clear_form_data('portalcontactdetails');
         if ($_SESSION['contactid'] != $id)
         {
             html_redirect($_SERVER['PHP_SELF']."?id={$id}");
@@ -140,8 +137,6 @@ if (cleanvar($_REQUEST['action']) == 'update')
     {
         html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
-
-
 }
 elseif (isset($_POST['add']))
 {
@@ -182,6 +177,8 @@ else
     echo ' '.gravatar($user->email, 32);
     echo "</h2>";
 
+    echo show_form_errors('portalcontactdetails');
+    clear_form_errors('portalcontactdetails');
 
     echo "<form action='{$_SERVER[PHP_SELF]}?action=update' method='post'>";
     echo "<table class='maintable vertical'>";
@@ -189,7 +186,7 @@ else
     if ($CONFIG['portal_usernames_can_be_changed'] && $_SESSION['contact_source'] == 'sit')
     {
         echo "<tr><th>{$strUsername}</th><td>";
-        echo "<input class='required' name='username' value='{$user->username}' />";
+        echo "<input class='required' name='username' value='".show_form_value('portalcontactdetails', 'username', $user->username)."' />";
         echo " <span class='required'>{$strRequired}</span>\n";
         echo "<input name='oldusername' value='{$user->username}' type='hidden' /></td></tr>\n";
 
@@ -201,7 +198,7 @@ else
     }
     else
     {
-        echo "<input class='required' name='forenames' value='{$user->forenames}' />";
+        echo "<input class='required' name='forenames' value='".show_form_value('portalcontactdetails', 'forenames', $user->forenames)."' />";
     }
     echo " <span class='required'>{$strRequired}</span>\n";
     echo "</td></tr>\n";
@@ -212,16 +209,16 @@ else
     }
     else
     {
-        echo "<input class='required' name='surname' value='{$user->surname}' />";
+        echo "<input class='required' name='surname' value='".show_form_value('portalcontactdetails', 'surname', $user->surname)."' />";
         echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
-    echo "<tr><th>{$strDepartment}</th><td><input name='department' value='{$user->department}' /></td></tr>\n";
-    echo "<tr><th>{$strAddress1}</th><td><input name='address1' value='{$user->address1}' /></td></tr>\n";
-    echo "<tr><th>{$strAddress2}</th><td><input name='address2' value='{$user->address2}' /></td></tr>\n";
-    echo "<tr><th>{$strCounty}</th><td><input name='county' value='{$user->county}' /></td></tr>\n";
-    echo "<tr><th>{$strCountry}</th><td><input name='country' value='{$user->country}' /></td></tr>\n";
-    echo "<tr><th>{$strPostcode}</th><td><input name='postcode' value='{$user->postcode}' /></td></tr>\n";
+    echo "<tr><th>{$strDepartment}</th><td><input name='department' value='".show_form_value('portalcontactdetails', 'department', $user->department)."' /></td></tr>\n";
+    echo "<tr><th>{$strAddress1}</th><td><input name='address1' value='".show_form_value('portalcontactdetails', 'address1', $user->address1)."' /></td></tr>\n";
+    echo "<tr><th>{$strAddress2}</th><td><input name='address2' value='".show_form_value('portalcontactdetails', 'address2', $user->address2)."' /></td></tr>\n";
+    echo "<tr><th>{$strCounty}</th><td><input name='county' value='".show_form_value('portalcontactdetails', 'county', $user->county)."' /></td></tr>\n";
+    echo "<tr><th>{$strCountry}</th><td><input name='country' value='".show_form_value('portalcontactdetails', 'country', $user->country)."' /></td></tr>\n";
+    echo "<tr><th>{$strPostcode}</th><td><input name='postcode' value='".show_form_value('portalcontactdetails', 'postcode', $user->postcode)."' /></td></tr>\n";
     echo "<tr><th>{$strTelephone}</th><td>";
     if ($_SESSION['contact_source'] != 'sit' AND !empty($CONFIG['ldap_telephone']))
     {
@@ -229,7 +226,7 @@ else
     }
     else
     {
-        echo "<input name='phone' value='{$user->phone}' />";
+        echo "<input name='phone' value='".show_form_value('portalcontactdetails', 'phone', $user->phone)."' />";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strMobile}</th><td>";
@@ -239,7 +236,7 @@ else
     }
     else
     {
-        echo "<input name='mobile' value='{$user->mobile}' />\n";
+        echo "<input name='mobile' value='".show_form_value('portalcontactdetails', 'mobile', $user->mobile)."' />";
     }
     echo "</td></tr>\n";
     echo "<tr><th>{$strFax}</th><td>";
@@ -249,7 +246,7 @@ else
     }
     else
     {
-        echo "<input name='fax' value='{$user->fax}' />";
+        echo "<input name='fax' value='".show_form_value('portalcontactdetails', 'fax', $user->fax)."' />";
     }
     echo "</td></tr>";
     echo "<tr><th>{$strEmail}</th><td>";
@@ -259,7 +256,7 @@ else
     }
     else
     {
-        echo "<input class='required' name='email' value='{$user->email}' />";
+        echo "<input class='required' name='email' value='".show_form_value('portalcontactdetails', 'email', $user->email)."' />";
         echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
@@ -285,6 +282,9 @@ else
         echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, FALSE, $sit[2])."<br />";
         echo "<input type='submit' name='add' value='{$strSave}' /></p></form>";
     }
+    
+    clear_form_data('portalcontactdetails');
+    
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 ?>

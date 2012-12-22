@@ -33,7 +33,7 @@ if (empty($action) OR $action == "showform")
 
     echo "<form name='billing_matrix_new' action='{$_SERVER['PHP_SELF']}' method='post'>";
 
-    echo "<p align='center'>{$strTag}: <input type='text' name='tag' value='{$_SESSION['formdata']['billing_matrix_new']['tag']}' /></p>";
+    echo "<p align='center'>{$strTag}: <input type='text' name='tag' value='".show_form_value('billing_matrix_new', 'tag')."' /></p>";
 
     echo "<table class='maintable'>";
 

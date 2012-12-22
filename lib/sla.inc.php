@@ -75,7 +75,12 @@ function incident_sla_history($incidentid)
 
         $slahistory[$idx]['timestamp'] = $history->timestamp;
         $slahistory[$idx]['userid'] = $history->userid;
-        if ($slahistory[$idx]['actualtime'] <= $slahistory[$idx]['targettime'])
+        if ($slahistory[$idx]['targettime'] === 0)
+        {
+            // If the target is disabled show it as met
+            $slahistory[$idx]['targetmet'] = TRUE;
+        }
+        else if ($slahistory[$idx]['actualtime'] <= $slahistory[$idx]['targettime'])
         {
             $slahistory[$idx]['targetmet'] = TRUE;
         }
@@ -110,7 +115,12 @@ function incident_sla_history($incidentid)
                 $slahistory[$idx]['targettime'] = 0;
         }
         $slahistory[$idx]['actualtime'] = $target->since;
-        if ($slahistory[$idx]['actualtime'] <= $slahistory[$idx]['targettime'])
+        if ($slahistory[$idx]['targettime'] === 0)
+        {
+            // If the target is disabled show it as met
+            $slahistory[$idx]['targetmet'] = TRUE;
+        }
+        else if ($slahistory[$idx]['actualtime'] <= $slahistory[$idx]['targettime'])
         {
             $slahistory[$idx]['targetmet'] = TRUE;
         }

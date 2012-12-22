@@ -375,7 +375,6 @@ $strPrivacy = 'خصوصيه';
 $strPrivate = 'خاص';
 $strProblemDefinition = 'تعريف المشكله';
 $strProduct = 'منتج';
-$strProductOnly = 'المنتج فقط';
 $strProducts = 'منتجات';
 $strPublic = 'عام';
 $strPublish = 'انشر';

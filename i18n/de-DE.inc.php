@@ -1330,7 +1330,6 @@ $strProblemHasBeenDefined = 'Das Problem wurde beschrieben';
 $strProblemReproduction = 'Problem reproduzieren';
 $strProblemReproductionCustomerText = 'Existiert das Problem mit mehr als einer Maschine? Welche Schritte erlauben uns, das Problem zu reproduzieren?';
 $strProduct = 'Produkt';
-$strProductOnly = 'Nur Produkte';
 $strProductQuestions = 'Fragen zum Produkt';
 $strProducts = 'Produkte';
 $strPublic = 'Öffentlich';

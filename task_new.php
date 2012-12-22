@@ -127,19 +127,18 @@ else
             clear_form_errors('new_task');
 
             echo "<h2>".icon('task', 32)." ";
-            echo "$title</h2>";
+            echo "{$title}</h2>";
+            
+            echo show_form_errors('new_task');
+            clear_form_errors('new_task');
+            
             plugin_do('task_new');
 
             echo "<form id='newtask' action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table class='vertical'>";
             echo "<tr><th>{$strTitle}</th>";
             echo "<td><input class='required' type='text' name='name' ";
-            echo "size='35' maxlength='255'";
-            if ($_SESSION['formdata']['new_task']['name'] != '')
-            {
-                echo "value='{$_SESSION['formdata']['new_task']['name']}'";
-            }
-            echo "/> <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>";
+            echo "size='35' maxlength='255' value='".show_form_value('new_task', 'name')."' /> <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>";
 
             echo "<tr><th>{$strDescription}</th>";
             echo "<td><textarea name='description' rows='4' cols='30'>";
@@ -159,12 +158,7 @@ else
                 echo "<td>".priority_drop_down('priority',PRIORITY_LOW)."</td></tr>";
             }
             echo "<tr><th>{$strStartDate}</th>";
-            echo "<td><input type='text' name='startdate' id='startdate' size='10'";
-            if ($_SESSION['formdata']['new_task']['startdate'] != '')
-            {
-                echo "value='{$_SESSION['formdata']['new_task']['startdate']}'";
-            }
-            echo "/> ";
+            echo "<td><input type='text' name='startdate' id='startdate' size='10' value='".show_form_value('new_task', 'startdate')."' /> ";
             echo date_picker('newtask.startdate');
             if ($_SESSION['formdata']['new_task']['start_time_picker_hour'] != '' OR
                     $_SESSION['formdata']['new_task']['start_time_picker_minute'] != '' )
@@ -178,12 +172,7 @@ else
             echo "</td></tr>";
 
             echo "<tr><th>{$strDueDate}</th>";
-            echo "<td><input type='text' name='duedate' id='duedate' size='10'";
-            if ($_SESSION['formdata']['new_task']['duedate'] != '')
-            {
-                echo "value='{$_SESSION['formdata']['new_task']['duedate']}'";
-            }
-            echo "/> ";
+            echo "<td><input type='text' name='duedate' id='duedate' size='10' value='".show_form_value('new_task', 'duedate')."' /> ";
             echo date_picker('newtask.duedate');
             if ($_SESSION['formdata']['new_task']['due_time_picker_hour'] != '' OR
                     $_SESSION['formdata']['new_task']['due_time_picker_minute'] != '' )
@@ -197,23 +186,9 @@ else
             echo "</td></tr>";
 
             echo "<tr><th>{$strCompletion}</th>";
-            echo "<td><input type='text' name='completion' size='3' maxlength='3'";;
-            if ($_SESSION['formdata']['new_task']['completion'] != '')
-            {
-                echo "value='{$_SESSION['formdata']['new_task']['completion']}'";
-            }
-            else
-            {
-                echo "value='0'";
-            }
-            echo "/>&#037;</td></tr>";
+            echo "<td><input type='text' name='completion' size='3' maxlength='3' value='".show_form_value('new_task', 'completion', '0')."' />&#037;</td></tr>";
             echo "<tr><th>{$strValue}</th>";
-            echo "<td><input type='text' name='value' size='6' maxlength='12'";
-            if ($_SESSION['formdata']['new_task']['value'] != '')
-            {
-                echo "value='{$_SESSION['formdata']['new_task']['value']}'";
-            }
-            echo "/></td></tr>";
+            echo "<td><input type='text' name='value' size='6' maxlength='12' value='".show_form_value('new_task', 'value')."' /></td></tr>";
             echo "<tr><th>{$strUser}</th>";
             echo "<td>";
             if ($_SESSION['formdata']['new_task']['taskuser'] != '')
