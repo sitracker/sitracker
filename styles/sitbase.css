@@ -267,8 +267,8 @@ hr
 
 #masthead {
   background-image: url('../images/top2.png');
-  background-position: top-left;
-  background-repeat: x-repeat;
+  background-position: left top;
+  background-repeat: repeat-x;
   color: #aaa;
 }
 
@@ -281,7 +281,7 @@ hr
 #mastheadcontent
 {
 	background-image: url('../images/sit_swirl2.png');
-	background-position: top-left;
+	background-position: left top;
 	background-repeat: no-repeat;
 	height: 50px;
 	background-color: transparent;
@@ -1805,7 +1805,7 @@ div.appointmentdata
 div.appointmentdata h2
 {
     font-size: 100%;
-    font-style: bold;
+    font-weight: bold;
     background-color: #CCCCFF;
     padding: 0px;
     margin: 0px;
@@ -1994,8 +1994,8 @@ th.today, td.today
 {
     #menu, #statusbar, h1#apptitle, #menulist, .contextmenu
     {
-        isibility:hidden;
-        display:none;
+        visibility: hidden;
+        display: none;
     }
     #pageoptions
     {
