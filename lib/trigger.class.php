@@ -480,7 +480,7 @@ class Trigger extends SitEntity {
         $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
-            debug_log("$toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail", TRUE); // FIXME remove before release
+            debug_log("send_trigger_email {$toemail}, {$from}, {$subject}, {$body}, {$replytoemail}, {$ccemail}, {$bccemail}");
             $mailok = send_email($toemail, $from, $subject, $body, $replytoemail, $ccemail, $bccemail);
             if ($mailok == FALSE)
             {
