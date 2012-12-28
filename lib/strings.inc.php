@@ -35,7 +35,8 @@ if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
     $hmenu[1040] = array (10 => array('perm' => 0, 'name' => "Option1", 'url' => ""),
                           20 => array('perm' => 0, 'name' => "Option2", 'url' => "", enablevar => "example_config"),
-                          30 => array('perm' => 0, 'name' => "Option3", 'url' => "", submenu => 104030 )
+                          30 => array('perm' => 0, 'name' => "Option3", 'url' => "", submenu => 104030 ),
+                          40 => array('perm' => 0, 'name' => "Option4", 'url' => "", 'desc' => 'Description for reports.php')  // used for reports menus
 );
 */
 
@@ -65,7 +66,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            30 => array('perm' => PERM_INCIDENT_LIST, 'name' => $strSupport, 'url' => "{$CONFIG['application_webpath']}incidents.php?user=current&amp;queue=1&amp;type=support", 'submenu' => 30),
                            40 => array('perm' => PERM_TASK_VIEW, 'name' => $strTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php", 'submenu' => 40, 'enablevar' => 'tasks_enabled'),
                            50 => array('perm' => PERM_KB_VIEW, 'name' => $strKnowledgeBase, 'url' => "{$CONFIG['application_webpath']}kb.php", 'submenu' => 50, 'enablevar' => 'kb_enabled'),
-                           60 => array('perm' => PERM_REPORT_RUN, 'name' => $strReports, 'url' => "", 'submenu' => 60),
+                           60 => array('perm' => PERM_REPORT_RUN, 'name' => $strReports, 'url' => "reports.php", 'submenu' => 60),
                            70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strHelp, 'url' => "{$CONFIG['application_webpath']}help.php", 'submenu' => 70)
     );
     // Second Level: SiT! submenu
@@ -219,33 +220,33 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     if (!is_array($hmenu[60])) $hmenu[60] = array();
     $hmenu[60] = $hmenu[60] +
-                array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strMarketingMailshot}", 'url' => "{$CONFIG['application_webpath']}report_marketing.php"),
-                       20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerExport}", 'url' => "{$CONFIG['application_webpath']}report_customers.php"),
-                       30 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strQueryByExample}", 'url' => "{$CONFIG['application_webpath']}report_qbe.php"),
+                array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strMarketingMailshot}", 'url' => "{$CONFIG['application_webpath']}report_marketing.php", 'desc' => $strReportDescMarketting),
+                       20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerExport}", 'url' => "{$CONFIG['application_webpath']}report_customers.php", 'desc' => $strReportDescCustomers),
+                       30 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strQueryByExample}", 'url' => "{$CONFIG['application_webpath']}report_qbe.php", 'desc' => $strReportDescQBE),
                        40 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidents}", 'url' => "", 'submenu' => 6040),
-                       50 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProducts}", 'url' => "{$CONFIG['application_webpath']}report_customer_products.php"),
-                       60 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProductsMatrix}", 'url' => "{$CONFIG['application_webpath']}report_customer_products_matrix.php"),
-                       70 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCountContractsByProduct}", 'url' => "{$CONFIG['application_webpath']}report_contracts_by_product.php"),
-                       80 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteContracts}", 'url' => "{$CONFIG['application_webpath']}report_customer_contracts.php"),
-                       90 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerFeedback}", 'url' => "{$CONFIG['application_webpath']}report_feedback.php", 'enablevar' => 'feedback_enabled'),
-                       100 => array('perm' => PERM_SITE_VIEW, 'name' => "{$strShowOrphanedContacts}", 'url' => "{$CONFIG['application_webpath']}report_orphans_contacts.php"),
-                       110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEngineerMonthlyActivityTotals}",'url' => "{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php",
+                       50 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProducts}", 'url' => "{$CONFIG['application_webpath']}report_customer_products.php", 'desc' => $strReportDescCustomerProduct),
+                       60 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteProductsMatrix}", 'url' => "{$CONFIG['application_webpath']}report_customer_products_matrix.php", 'desc' => $strReportDescCustomerProductsMatrix),
+                       70 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCountContractsByProduct}", 'url' => "{$CONFIG['application_webpath']}report_contracts_by_product.php", 'desc' => $strReportDescContractsByProduct),
+                       80 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteContracts}", 'url' => "{$CONFIG['application_webpath']}report_customer_contracts.php", 'desc' => $strReportDescCustomerContracts),
+                       90 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerFeedback}", 'url' => "{$CONFIG['application_webpath']}report_feedback.php", 'enablevar' => 'feedback_enabled', 'desc' => $strReportDescFeedback),
+                       100 => array('perm' => PERM_SITE_VIEW, 'name' => "{$strShowOrphanedContacts}", 'url' => "{$CONFIG['application_webpath']}report_orphans_contacts.php", 'desc' => $strReportDescOrphansContacts),
+                       110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEngineerMonthlyActivityTotals}",'url' => "{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php", 'desc' => $strReportDescBillableEngineerUtilisation
     ));
     // Second Level: Reports/Incidents submenu
     if (!is_array($hmenu[6040])) $hmenu[6040] = array();
     $hmenu[6040] = $hmenu[6040] +
-                array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySite}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_site.php"),
-                       20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByEngineer}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_engineer.php"),
-                       30 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_customer.php"),
-                       40 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strRecentIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_recent.php"),
-                       50 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsLoggedOpenClosed}", 'url' => "{$CONFIG['application_webpath']}report_incidents_graph.php"),
-                       60 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strAverageIncidentDuration}", 'url' => "{$CONFIG['application_webpath']}report_incidents_average_duration.php"),
-                       70 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySkill}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_skill.php"),
-                       80 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByVendor}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_vendor.php"),
-                       90 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEscalatedIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_escalated.php"),
-                       100 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strBillableIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_billable.php"),
-                       110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsDailySummary}",'url' => "{$CONFIG['application_webpath']}report_incidents_daily_summary.php")
-    );
+                array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySite}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_site.php", 'desc' => $strReportDescIncidentsBySite),
+                       20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByEngineer}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_engineer.php", 'desc' => $strReportDescIncidentsByEngineer),
+                       30 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strSiteIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_customer.php", 'desc' => $strReportDescIncidentsByCustomer),
+                       40 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strRecentIncidents}", 'url' => "{$CONFIG['application_webpath']}report_incidents_recent.php", 'desc' => $strReportDescIncidentsRecent),
+                       50 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsLoggedOpenClosed}", 'url' => "{$CONFIG['application_webpath']}report_incidents_graph.php", 'desc' => $strReportDescIncidentsGraph),
+                       60 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strAverageIncidentDuration}", 'url' => "{$CONFIG['application_webpath']}report_incidents_average_duration.php", 'desc' => $strReportDescIncidentsAverageDuration),
+                       70 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySkill}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_skill.php", 'desc' => $strReportDescIncidentsBySkill),
+                       80 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByVendor}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_vendor.php", 'desc' => $strReportDescIncidentsByVendor),
+                       90 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEscalatedIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_escalated.php", 'desc' => $strReportDescIncidentsEscalated),
+                       100 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strBillableIncidents}",'url' => "{$CONFIG['application_webpath']}report_incidents_billable.php", 'desc' => $strReportDescIncidentsBillable),
+                       110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsDailySummary}",'url' => "{$CONFIG['application_webpath']}report_incidents_daily_summary.php", 'desc' => $strReportDescIncidentsDailySummary
+    ));
 
 
     //
