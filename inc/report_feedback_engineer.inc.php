@@ -9,8 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-//          Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author: Ivan Lucas <ivan[at]sitracker.org>
+//          Paul Heaney <paul[at]sitracker.org>
 
 
 // Prevent script from being run directly (ie. it must always be included

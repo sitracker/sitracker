@@ -10,7 +10,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author:  Paul Heaney Paul Heaney <paul[at]sitracker.org>
 
 // Prevent script from being run directly (ie. it must always be included
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))

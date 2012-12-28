@@ -8,8 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-// Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author: Ivan Lucas <ivan[at]sitracker.org>
+// Author: Paul Heaney <paul[at]sitracker.org>
 // This Page is Valid XHTML 1.0 Transitional!
 
 require ('core.php');

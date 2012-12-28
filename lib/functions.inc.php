@@ -9,10 +9,10 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Authors: Ivan Lucas, <ivanlucas[at]users.sourceforge.net>
+// Authors: Ivan Lucas, <ivan[at]sitracker.org>
 //          Tom Gerrard, <tomgerrard[at]users.sourceforge.net> - 2001 onwards
 //          Martin Kilcoyne - 2000
-//          Paul Heaney, <paulheaney[at]users.sourceforge.net>
+//          Paul Heaney, <paul[at]sitracker.org>
 //          Kieran Hogg, <kieran[at]sitracker.org>
 
 // Many functions here simply extract various snippets of information from

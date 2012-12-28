@@ -9,8 +9,8 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-//          Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Authors: Ivan Lucas <ivan[at]sitracker.org>
+//          Paul Heaney <paul[at]sitracker.org>
 
 // Notes:
 //  Lists incidents that have been logged to specified engineers over the past 12 months

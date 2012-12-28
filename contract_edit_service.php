@@ -11,7 +11,7 @@
 //
 
 // This Page Is Valid XHTML 1.0 Transitional! 24May2009
-// Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author:  Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
 $permission =  PERM_SERVICE_EDIT;

@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author:  Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
 $permission = PERM_SITE_VIEW; // View sites, more granular permissions are defined on the more sensitive sections

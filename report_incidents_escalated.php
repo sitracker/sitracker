@@ -10,7 +10,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Authors: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Authors: Paul Heaney <paul[at]sitracker.org>
 //          Kieran Hogg <kieran[at]sitracker.org>
 // heavily based on the Salford Report by Paul Heaney
 

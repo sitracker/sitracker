@@ -8,8 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Authors: Tom Gerrard, Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-//                       Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Authors: Tom Gerrard, Ivan Lucas <ivan[at]sitracker.org>
+//                       Paul Heaney <paul[at]sitracker.org>
 
 // This Page Is Valid XHTML 1.0 Transitional! 31Oct05
 

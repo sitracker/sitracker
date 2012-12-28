@@ -8,9 +8,9 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author: Paul Heaney <paul[at]sitracker.org>
 
-//// This Page Is Valid XHTML 1.0 Transitional!  (1 Oct 2006)
+// This Page Is Valid XHTML 1.0 Transitional!  (1 Oct 2006)
 
 require ('core.php');
 $permission = PERM_ESCALATION_MANAGE; // Manage escalation paths

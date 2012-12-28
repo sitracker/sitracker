@@ -8,10 +8,10 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author: Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
-$permission = PERM_SITE_VIEW; // View sites
+$permission = PERM_SITE_VIEW;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
@@ -37,7 +37,7 @@ if (mysql_num_rows($result) > 0)
 
     while ($contact = mysql_fetch_object($result))
     {
-        echo "<tr class='$shade'><td>{$contact->forenames} {$contact->surname}</td></tr>";
+        echo "<tr class='{$shade}'><td>{$contact->forenames} {$contact->surname}</td></tr>";
 
         if ($shade == 'shade1')
         {

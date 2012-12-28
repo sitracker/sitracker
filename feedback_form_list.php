@@ -9,10 +9,10 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author: Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
-$permission = PERM_FEEDBACK_FORM_EDIT; // Edit Feedback Forms
+$permission = PERM_FEEDBACK_FORM_EDIT;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
