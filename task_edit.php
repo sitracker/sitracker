@@ -54,8 +54,8 @@ switch ($action)
             $startdate = '';
         }
 
-        $completion = cleanvar(str_replace('%','',$_REQUEST['completion']));
-        if ($completion != '' AND !is_numeric($completion)) $completion=0;
+        $completion = cleanvar(str_replace('%', '', $_REQUEST['completion']));
+        if ($completion != '' AND !is_numeric($completion)) $completion = 0;
         if ($completion > 100) $completion = 100;
         if ($completion < 0) $completion = 0;
         if (!empty($_REQUEST['enddate']))
@@ -85,22 +85,23 @@ switch ($action)
         else $tags = '';
 
         // Validate input
-        $error = array();
-        if ($name == '') $error[] = sprintf($strFieldMustNotBeBlank, $strName);
         if ($startdate > $duedate AND $duedate != '' AND $duedate > 0 ) $startdate = $duedate;
 
-        plugin_do('task_edit_submitted');
-        if (count($error) >= 1)
+        $_SESSION['formdata']['edittask'] = cleanvar($_POST, TRUE, FALSE, FALSE,
+                                                    array("@"), array("'" => '"'));
+        
+        
+        $errors = 0;
+        if ($name == '')
         {
-            include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            echo "<p class='error'>{$strPleaseCheckData}</p>";
-            echo "<ul class='error'>";
-            foreach ($error AS $err)
-            {
-                echo "<li>$err</li>";
-            }
-            echo "</ul>";
-            include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+            $_SESSION['formerrors']['edittask']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
+            $errors++;
+        }
+        
+        plugin_do('task_edit_submitted');
+        if ($errors > 0)
+        {
+            html_redirect("{$_SERVER['PHP_SELF']}?id={$id}&incidentid={$incident}", FALSE);
         }
         else
         {
@@ -187,6 +188,8 @@ switch ($action)
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
             }
             plugin_do('task_edit_saved');
+            clear_form_data("edittask");
+            clear_form_errors("edittask");
             html_redirect("view_task.php?id={$id}", TRUE);
         }
         break;
@@ -324,6 +327,10 @@ switch ($action)
         echo "<h2>".icon('task', 32)." ";
         echo "{$title}</h2>";
         plugin_do('task_edit');
+        
+        echo show_form_errors('edittask');
+        clear_form_errors('edittask');
+        
         $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -331,22 +338,25 @@ switch ($action)
         {
             while ($task = mysql_fetch_object($result))
             {
-                $startdate = mysql2date($task->startdate);
-                $duedate = mysql2date($task->duedate);
-                $enddate = mysql2date($task->enddate);
+                $startdate = mysql2date(show_form_value('edittask', 'startdate', $task->startdate));
+                $duedate = mysql2date(show_form_value('edittask', 'duedate', $task->duedate));
+                $enddate = mysql2date(show_form_value('edittask', 'enddate', $task->enddate));
                 echo "<form id='edittask' action='{$_SERVER['PHP_SELF']}' method='post'>";
                 echo "<table class='vertical'>";
                 echo "<tr><th>{$strTitle}</th>";
-                echo "<td><input type='text' name='name' size='35' maxlength='255' value=\"{$task->name}\" /></td></tr>";
+                $name = show_form_value('edittask', 'name', $task->name); 
+                echo "<td><input class='required' type='text' name='name' size='35' maxlength='255' value=\"{$name}\" /> <span class='required'>{$GLOBALS['strRequired']}</span></td></tr>";
                 echo "<tr><th>{$strDescription}</th>";
-                echo "<td><textarea name='description' rows='4' cols='30'>{$task->description}</textarea></td></tr>";
-                if ($task->distribution == 'public')
+                $description = show_form_value('edittask', 'description', $task->description);
+                echo "<td><textarea name='description' rows='4' cols='30'>{$description}</textarea></td></tr>";
+                $distribution = show_form_value('edittask', 'distribution', $task->distribution);
+                if ($distribution == 'public')
                 {
                     echo "<tr><th>{$strTags}:</th>";
                     echo "<td><textarea rows='2' cols='30' name='tags'>".list_tags($id, 4, false)."</textarea></td></tr>";
                 }
                 echo "<tr><th>{$strPriority}</th>";
-                echo "<td>".priority_drop_down('priority',$task->priority)."</td></tr>";
+                echo "<td>".priority_drop_down('priority', show_form_value('edittask', 'priority', $task->priority))."</td></tr>";
                 echo "<tr><th>{$strStartDate}</th>";
                 echo "<td><input type='text' name='startdate' id='startdate' size='10' value='";
                 if ($startdate > 0) echo date('Y-m-d', $startdate);
@@ -362,7 +372,8 @@ switch ($action)
                 echo " ".time_picker(date('H', $duedate), date('i', $duedate), 'due_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strCompletion}</th>";
-                echo "<td><input type='text' name='completion' size='3' maxlength='3' value='{$task->completion}' />&#037;</td></tr>";
+                $completion = show_form_value('edittask', 'completion', $task->completion);
+                echo "<td><input type='text' name='completion' size='3' maxlength='3' value='{$completion}' />&#037;</td></tr>";
                 echo "<tr><th>{$strEndDate}</th>";
                 echo "<td><input type='text' name='enddate' id='enddate' size='10' value='";
                 if ($enddate > 0) echo date('Y-m-d',$enddate);
@@ -371,18 +382,19 @@ switch ($action)
                 echo " ".time_picker(date('H', $enddate), date('i', $enddate), 'end_');
                 echo "</td></tr>";
                 echo "<tr><th>{$strValue}</th>";
-                echo "<td><input type='text' name='value' size='6' maxlength='12' value='{$task->value}' /></td></tr>";
+                $value = show_form_value('edittask', 'value', $task->value);
+                echo "<td><input type='text' name='value' size='6' maxlength='12' value='{$value}' /></td></tr>";
                 echo "<tr><th>{$strUser}</th>";
                 echo "<td>";
-                echo user_drop_down('owner', $task->owner, FALSE);
+                echo user_drop_down('owner', show_form_value('edittask', 'owner', $task->owner), FALSE);
                 echo help_link('TaskUser')."</td></tr>";
                 echo "<tr><th>{$strPrivacy}</th>";
                 echo "<td>";
                 echo "<input type='radio' name='distribution' ";
-                if ($task->distribution == 'public') echo "checked='checked' ";
+                if ($distribution == 'public') echo "checked='checked' ";
                 echo "value='public' /> {$strPublic}<br />";
                 echo "<input type='radio' name='distribution' ";
-                if ($task->distribution == 'private') echo "checked='checked' ";
+                if ($distribution == 'private') echo "checked='checked' ";
                 echo "value='private' /> {$strPrivate} ".icon('private', 16, $strPrivate)."</td></tr>";
                 plugin_do('task_edit_form');
                 echo "</table>";
@@ -411,6 +423,9 @@ switch ($action)
 
         echo "<p class='return'><a href='view_task.php?id={$id}'>{$strReturnWithoutSaving}</a></p>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        
+        clear_form_data('edittask');
+        clear_form_errors('edittask');
 }
 
 ?>

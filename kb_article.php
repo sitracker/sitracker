@@ -194,9 +194,6 @@ else
     $title = $strEditKBArticle;
     require (APPLICATION_INCPATH . 'htmlheader.inc.php');
     
-    echo show_form_errors('kb_new_article');
-    clear_form_errors('kb_new_article');
-
     if ($mode == 'edit')
     {
         echo "<h2>".icon('kb', 32, $strEditKBArticle)." {$strEditKBArticle}: {$kbid}</h2>";
@@ -225,6 +222,9 @@ else
     {
         echo "<h2>".icon('kb', 32, $strNewKBArticle)." {$strNewKBArticle}</h2>";
     }
+    echo show_form_errors('kb_new_article');
+    clear_form_errors('kb_new_article');
+
     plugin_do('kb_article');
 
     echo "<div id='kbarticle'>";
