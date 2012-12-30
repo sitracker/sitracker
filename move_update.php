@@ -21,7 +21,6 @@ $incidentid = clean_int($_REQUEST['incidentid']);
 $updateid = clean_int($_REQUEST['updateid']);
 $contactid = clean_int($_REQUEST['contactid']);
 $id = clean_int($_REQUEST['id']);
-$error = clean_int($_REQUEST['error']);
 $send_email = cleanvar($_REQUEST['send_email']);
 
 if ($incidentid == '')
@@ -32,13 +31,11 @@ if ($incidentid == '')
     echo "<h2>{$title}</h2>";
     echo "<h3>{$strMoveToIncident}</h3>";
 
-    if ($error == 1)
-    {
-        echo "<p class='error'>{$strErrorAssigningUpdate}</p>";
-    }
+    echo show_form_errors('moveupdate');
+    clear_form_errors('moveupdate');
 
     echo "<div align='center'>";
-    echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
+    echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='moveupdate' name='moveupdate'>";
     echo "<label>{$strToIncidentID}: ";
     if ($contactid > 0) echo incident_drop_down('incidentid', 0, $contactid);
     else echo "<input type='text' name='incidentid' value='{$incidentid}' size='10' maxlength='12' />";
@@ -226,7 +223,8 @@ else
     else
     {
         // no open incident with this number.  Return to form.
-        header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid={$updateid}&error=1&win=incomingview");
+        $_SESSION['formerrors']['moveupdate']['id'] = $strErrorAssigningUpdate;
+        header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid={$updateid}&win=incomingview");
         exit;
     }
 }
