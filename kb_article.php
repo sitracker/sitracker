@@ -39,9 +39,6 @@ if (isset($_POST['submit']))
     $distribution = clean_fixed_list($_POST['distribution'], array('public', 'private', 'restricted'));
     $sql = array();
 
-    $_SESSION['formdata']['kb_new_article'] = cleanvar($_POST, TRUE, FALSE, FALSE,
-                                                array("@"), array("'" => '"'));
-    
     if (isset($_FILES['attachment']) AND ($_FILES['attachment']['name'] != ''))
     {
         // Check if we had an error whilst uploading
