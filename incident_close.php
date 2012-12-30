@@ -64,7 +64,7 @@ if (empty($process))
     echo "{$strMarkForClosure}</label><br />";
     echo "<label><input type='radio' name='wait' value='no' {$wait_no} />{$strCloseImmediately}</label></td></tr>\n";
     echo "<tr><th>{$strKnowledgeBase}";
-// TODO FIXME implement
+
     $kbarticle_checked = ''; 
     if (show_form_value('closeform', 'kbarticle') != '')
     {
