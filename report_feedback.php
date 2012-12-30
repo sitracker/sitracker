@@ -11,7 +11,7 @@
 
 // Report Type: Feedback
 
-// Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author:  Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
 $permission = PERM_REPORT_RUN; // Run Reports

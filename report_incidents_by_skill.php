@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Authors: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Authors: Paul Heaney <paul[at]sitracker.org>
 
 // Requested by Tech Support team (26 Spet 06)
 

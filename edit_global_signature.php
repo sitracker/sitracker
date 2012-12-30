@@ -11,10 +11,8 @@
 
 // This Page Is Valid XHTML 1.0 Transitional!   4Nov05
 
-// Authors: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-//          Paul Heaney <paulheaney[at]users.sourceforge.net>
-
-
+// Authors: Ivan Lucas <ivan[at]sitracker.org>
+//          Paul Heaney <paul[at]sitracker.org>
 
 
 function get_globalsignature($sig_id)

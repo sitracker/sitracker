@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author:  Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
 $permission = PERM_SERVICE_EDIT; //Set -ve balances FIXME this permission isn't set negative balances, there's no perm for that did it get lost?

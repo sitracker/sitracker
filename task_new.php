@@ -227,7 +227,7 @@ else
             echo "<p class='return'><a href='tasks.php'>{$strReturnWithoutSaving}</a></p>";
             //cleanup form vars
             clear_form_data('new_task');
-            clear_form_errors('new_site');
+            clear_form_errors('new_task');
 
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }

@@ -9,9 +9,9 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
+// Author: Ivan Lucas <ivan[at]sitracker.org>
 // Hacked: Tom Gerrard <tom.gerrard[at]salfordsoftware.co.uk>
-// Converted: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Converted: Paul Heaney <paul[at]sitracker.org>
 
 // Prevent script from being run directly (ie. it must always be included
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))

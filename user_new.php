@@ -55,25 +55,11 @@ if (empty($submit))
     echo "<td><input maxlength='50' name='password' size='30' type='password' class='required' value='".show_form_value('new_user', 'password', '')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strGroup}</th>";
-    if ($_SESSION['formdata']['new_user']['groupid'] != '')
-    {
-        echo "<td>".group_drop_down('groupid', $_SESSION['formdata']['new_user']['groupid'])."</td>";
-    }
-    else
-    {
-        echo "<td>".group_drop_down('groupid', 0)."</td>";
-    }
+    echo "<td>".group_drop_down('groupid', show_form_value('new_user', 'groupid', 0))."</td>";
     echo "</tr>";
 
     echo "<tr><th>{$strRole}</th>";
-    if ($_SESSION['formdata']['new_user']['roleid'] != '')
-    {
-        echo "<td>".role_drop_down('roleid', $_SESSION['formdata']['new_user']['roleid'])."</td>";
-    }
-    else
-    {
-        echo "<td>".role_drop_down('roleid', $CONFIG['default_roleid'])."</td>";
-    }
+    echo "<td>".role_drop_down('roleid', show_form_value('new_user', 'roleid', $CONFIG['default_roleid']))."</td>";
     echo "</tr>";
 
     echo "<tr><th>{$strJobTitle}</th><td><input maxlength='50' name='jobtitle' size='30' class='required' value='".show_form_value('new_user', 'jobtitle', '')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
@@ -92,8 +78,7 @@ if (empty($submit))
 
         echo "<tr><th>{$strStartDate} ".help_link('UserStartdate')."</th>";
         echo "<td><input type='text' name='startdate' id='startdate' size='10' ";
-        if ($_SESSION['formdata']['new_user']['startdate'] != '')
-        echo "value='{$_SESSION['formdata']['new_user']['startdate']}'";
+        echo "value='". show_form_value('new_user', 'startdate', '') . "' ";
         echo "/> ";
         echo date_picker('adduser.startdate');
         echo "</td></tr>\n";

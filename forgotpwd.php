@@ -8,8 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Authors: Paul Heaney <paulheaney[at]users.sourceforge.net>
-//          Ivan Lucas <ivanlucas[at]users.sourceforge.net>
+// Authors: Paul Heaney <paul[at]sitracker.org>
+//          Ivan Lucas <ivan[at]sitracker.org>
 //          Kieran Hogg <kieran[at]sitracker.org>
 
 

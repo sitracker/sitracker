@@ -11,7 +11,7 @@
 //
 
 // TODO should this update the tasks table?
-// Author:  Paul Heaney Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author:  Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
 $permission =  PERM_BILLING_DURATION_EDIT;

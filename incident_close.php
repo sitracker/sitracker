@@ -44,27 +44,65 @@ if (empty($process))
     }
 
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
+    
+    echo show_form_errors('closeform');
+    clear_form_errors('closeform');
+    
     plugin_do('incident_close');
+
     echo "<form name='closeform' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<table class='vertical' width='100%'>";
     echo "<tr><th width='20%'>{$strClose}</th>";
-    echo "<td><label><input type='radio' name='wait' value='yes' checked='checked' />";
+    $wait_yes = "checked='checked'";
+    $wait_no = '';
+    if ($_SESSION['formdata']['closeform']['wait'] == 'no')
+    {
+        $wait_yes = '';
+        $wait_no = "checked='checked'";
+    }
+    echo "<td><label><input type='radio' name='wait' value='yes' {$wait_yes} />";
     echo "{$strMarkForClosure}</label><br />";
-    echo "<label><input type='radio' name='wait' value='no' />{$strCloseImmediately}</label></td></tr>\n";
+    echo "<label><input type='radio' name='wait' value='no' {$wait_no} />{$strCloseImmediately}</label></td></tr>\n";
     echo "<tr><th>{$strKnowledgeBase}";
-    echo "</th><td><label><input type='checkbox' id='kbarticle' name='kbarticle' onchange='enablekb();' value='yes' />";
+
+    $kbarticle_checked = ''; 
+    if (show_form_value('closeform', 'kbarticle') != '')
+    {
+        $kbarticle_checked = "checked='checked'";
+    }
+    echo "</th><td><label><input type='checkbox' id='kbarticle' name='kbarticle' onchange='enablekb();' value='yes' {$kbarticle_checked} />";
     echo "{$strNewKBArticle}</label></td></tr>\n";
 
+    $title = show_form_value('closeform', 'kbtitle', $incident_title);
     echo "<tr id='titlerow' style='display:none;'><th>{$strTitle}</th>";
     echo "<td><input class='required' type='text' name='kbtitle' id='kbtitle' ";
-    echo "size='30' value='{$incident_title}' disabled='disabled' /> ";
+    echo "size='30' value='{$title}' disabled='disabled' /> ";
     echo "<span class='required'>{$strRequired}</span></td></tr>\n";
+    
+    $distribution = show_form_value('closeform', 'distribution', $kbobj->distribution);
     echo "<tr id='distributionrow' style='display:none;'><th>{$strDistribution}</th>";
     echo "<td>";
     echo "<select name='distribution'> ";
-    echo "<option value='public' selected='selected'>{$strPublic}</option>";
-    echo "<option value='private' style='color: blue;'>{$strPrivate}</option>";
-    echo "<option value='restricted' style='color: red;'>{$strRestricted}</option>";
+    echo "<option value='public' ";
+    if ($distribution == 'public')
+    {
+        echo " selected='selected' ";
+    }
+    echo ">{$strPublic}</option>";
+
+    echo "<option value='private' style='color: blue;'";
+    if ($distribution == 'private')
+    {
+        echo " selected='selected' ";
+    }
+    echo ">{$strPrivate}</option>";
+
+    echo "<option value='restricted' style='color: red;'";
+    if ($distribution == 'restricted')
+    {
+        echo " selected='selected' ";
+    }
+    echo ">{$strRestricted}</option>";
     echo "</select> ";
     echo help_link('KBDistribution');
     echo "</td></tr>\n";
@@ -83,75 +121,170 @@ if (empty($process))
     echo "<textarea class='required' id='summary' name='summary' cols='40' rows='8' onfocus=\"if (this.enabled) { this.value = saveValue; ";
     echo "setTimeout('document.articlform.summary.blur()',1); } else saveValue=this.value;\">";
 
-    //  style="display: none;"
+    $bodytext = '';
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND type='probdef' ORDER BY timestamp ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($row = mysql_fetch_object($result))
     {
         $bodytext = str_replace("<hr>", "", $row->bodytext);
-        echo $bodytext;
-        echo "\n\n";
+        $bodytext .= "{$bodytext}\n\n";
     }
+    echo show_form_value('closeform', 'summary', $bodytext);
     echo "</textarea>\n";
     echo "</td></tr>";
 
-    echo "<tr id='symptomsrow' style='display:none;'><th><label>{$strSymptoms}<br /><input type='checkbox' id='incsymptoms' name='incsymptoms' onclick=\"revealTextAreaIncidentClose('incsymptoms', 'symptoms')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='symptoms' name='symptoms' cols='40' style='display: none;' rows='8' ></textarea></td></tr>";
+    $symptom_disabled = $symptom_style = $incsymptom= '';
+    if (show_form_value('closeform', 'incsymptoms') == '')
+    {
+        $symptom_disabled = "disabled='disabled'";
+        $symptom_style = "style='display: none;'";
+    }
+    else
+    {
+        $incsymptom = "checked='checked'";
+    }
+    echo "<tr id='symptomsrow' style='display:none;'><th><label>{$strSymptoms}<br /><input type='checkbox' id='incsymptoms' name='incsymptoms' onclick=\"revealTextAreaIncidentClose('incsymptoms', 'symptoms')\" {$symptom_disabled} {$incsymptom} /></label></th>";
+    echo "<td><textarea id='symptoms' name='symptoms' cols='40' {$symptom_style} rows='8' >" . show_form_value('closeform', 'symptoms') . "</textarea></td></tr>";
 
-    echo "<tr id='causerow' style='display:none;'><th><label>{$strCause}<br /><input type='checkbox' id='inccause' name='inccause' onclick=\"revealTextAreaIncidentClose('inccause', 'cause')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='cause' name='cause' cols='40' rows='8' style='display: none;' ></textarea></td></tr>";
+    $cause_disabled = $cause_style = $inccause = '';
+    if (show_form_value('closeform', 'inccause') == '')
+    {
+        $cause_disabled = "disabled='disabled'";
+        $cause_style = "style='display: none;'";
+    }
+    else
+    {
+        $inccause = "checked='checked'";
+    }
+    echo "<tr id='causerow' style='display:none;'><th><label>{$strCause}<br /><input type='checkbox' id='inccause' name='inccause' onclick=\"revealTextAreaIncidentClose('inccause', 'cause')\" {$cause_disabled} {$inccause} /></label></th>";
+    echo "<td><textarea id='cause' name='cause' cols='40' rows='8' {$cause_style} >" . show_form_value('closeform', 'cause') . "</textarea></td></tr>";
 
-    echo "<tr id='questionrow' style='display:none;'><th><label>{$strQuestion}<br /><input type='checkbox' id='incquestion' name='incquestion' onclick=\"revealTextAreaIncidentClose('incquestion', 'question')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='question' name='question' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
+    $question_disabled = $question_style = $incquestion = '';
+    if (show_form_value('closeform', 'incquestion') == '')
+    {
+        $question_disabled = "disabled='disabled'";
+        $question_style = "style='display: none;'";
+    }
+    else
+    {
+        $incquestion = "checked='checked'";
+    }
+    echo "<tr id='questionrow' style='display:none;'><th><label>{$strQuestion}<br /><input type='checkbox' id='incquestion' name='incquestion' onclick=\"revealTextAreaIncidentClose('incquestion', 'question')\" {$question_disabled} {$incquestion} /></label></th>";
+    echo "<td><textarea id='question' name='question' cols='40' rows='8' {$question_style}>" . show_form_value('closeform', 'question') . "</textarea></td></tr>";
 
-    echo "<tr id='answerrow' style='display:none;'><th><label>{$strAnswer}<br /><input type='checkbox' id='incanswer' name='incanswer' onclick=\"revealTextAreaIncidentClose('incanswer', 'answer')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='answer' name='answer' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
+    $answer_disabled = $answer_style = $incanswer = '';
+    if (show_form_value('closeform', 'incanswer') == '')
+    {
+        $answer_disabled = "disabled='disabled'";
+        $answer_style = "style='display: none;'";
+    }
+    else
+    {
+        $incanswer = "checked='checked'";
+    }
+    echo "<tr id='answerrow' style='display:none;'><th><label>{$strAnswer}<br /><input type='checkbox' id='incanswer' name='incanswer' onclick=\"revealTextAreaIncidentClose('incanswer', 'answer')\" {$answer_disabled} {$incanswer} /></label></th>";
+    echo "<td><textarea id='answer' name='answer' cols='40' rows='8' {$answer_style}>" . show_form_value('closeform', 'answer') . "</textarea></td></tr>";
 
     echo "<tr><th><label>{$strSolution}</label>";
     echo "<br /><span class='required'>{$strRequired}</span><br />";
     echo "<input type='checkbox' name='incsolution' onclick=\"revealTextAreaIncidentClose('incsolution', 'solution')\" checked='checked' disabled='disabled' /></th>";
 
     echo "<td><textarea class='required' id='solution' name='solution' cols='40' rows='8' >";
+    $solution = '';
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND (type='solution' OR type='actionplan') ORDER BY timestamp DESC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     while ($row = mysql_fetch_object($result))
     {
         $bodytext = str_replace("<hr>", "", $row->bodytext);
-        echo trim($bodytext);
-        echo "\n\n";
+        $solution .= trim($bodytext)."\n\n";
     }
+    echo show_form_value('closeform', 'solution', $solution);
     echo "</textarea>\n";
     echo "</td></tr>";
 
-    echo "<tr id='workaroundrow' style='display:none;'><th><label>{$strWorkaround}<br /><input type='checkbox' id='incworkaround' name='incworkaround' onclick=\"revealTextAreaIncidentClose('incworkaround', 'workaround')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='workaround' name='workaround' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
+    $workaround_disabled = $workaround_style = $incworkaround = '';
+    if (show_form_value('closeform', 'increferences') == '')
+    {
+        $workaround_disabled = "disabled='disabled'";
+        $workaround_style = "style='display: none;'";
+    }
+    else
+    {
+        $incworkaround = "checked='checked'";
+    }
+    echo "<tr id='workaroundrow' style='display:none;'><th><label>{$strWorkaround}<br /><input type='checkbox' id='incworkaround' name='incworkaround' onclick=\"revealTextAreaIncidentClose('incworkaround', 'workaround')\" {$workaround_disabled} {$incworkaround} /></label></th>";
+    echo "<td><textarea id='workaround' name='workaround' cols='40' rows='8' {$workaround_style}'>" . show_form_value('closeform', 'workaround') . "</textarea></td></tr>";
 
-    echo "<tr id='statusrow' style='display:none;'><th><label>{$strStatus}<br /><input type='checkbox' id='incstatus' name='incstatus' onclick=\"revealTextAreaIncidentClose('incstatus', 'status')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='status' name='status' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
+    $status_disabled = $status_style = $incstatus = '';
+    if (show_form_value('closeform', 'incstatus') == '')
+    {
+        $status_disabled = "disabled='disabled'";
+        $status_style = "style='display: none;'";
+    }
+    else
+    {
+        $incstatus = "checked='checked'";
+    }
+    echo "<tr id='statusrow' style='display:none;'><th><label>{$strStatus}<br /><input type='checkbox' id='incstatus' name='incstatus' onclick=\"revealTextAreaIncidentClose('incstatus', 'status')\" disabled='disabled' {$status_disabled} {$incstatus} /></label></th>";
+    echo "<td><textarea id='status' name='status' cols='40' rows='8' {$status_style}>" . show_form_value('closeform', 'status') . "</textarea></td></tr>";
 
-    echo "<tr id='inforow' style='display:none;'><th><label>{$strAdditionalInfo}<br /><input type='checkbox' id='incadditional' name='incadditional' onclick=\"revealTextAreaIncidentClose('incadditional', 'additional')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='additional' name='additional' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
+    $addinfo_disabled = $addinfo_style = $incaddinfo = '';
+    if (show_form_value('closeform', 'incadditional') == '')
+    {
+        $addinfo_disabled = "disabled='disabled'";
+        $addinfo_style = "style='display: none;'";
+    }
+    else
+    {
+        $addincinfo = "checked='checked'";
+    }
+    echo "<tr id='inforow' style='display:none;'><th><label>{$strAdditionalInfo}<br /><input type='checkbox' id='incadditional' name='incadditional' onclick=\"revealTextAreaIncidentClose('incadditional', 'additional')\"  {$addinfo_disabled} {$addincinfo} /></label></th>";
+    echo "<td><textarea id='additional' name='additional' cols='40' rows='8' {$addinfo_style}>" . show_form_value('closeform', 'additional') . "</textarea></td></tr>";
 
-    echo "<tr id='referencesrow' style='display:none;'><th><label>{$strReferences}<br /><input type='checkbox' id='increferences' name='increferences' onclick=\"revealTextAreaIncidentClose('increferences', 'references')\" disabled='disabled' /></label></th>";
-    echo "<td><textarea id='references' name='references' cols='40' rows='8' style='display: none;'></textarea></td></tr>";
+    $ref_disabled = $ref_style = $incref = '';
+    if (show_form_value('closeform', 'increferences') == '')
+    {
+        $ref_disabled = "disabled='disabled'";
+        $ref_style = "style='display: none;'";
+    }
+    else
+    {
+        $incref = "checked='checked'";
+    }
+    echo "<tr id='referencesrow' style='display:none;'><th><label>{$strReferences}<br /><input type='checkbox' id='increferences' name='increferences' onclick=\"revealTextAreaIncidentClose('increferences', 'references')\"  {$ref_disabled} {$incref} /></label></th>";
+    echo "<td><textarea id='references' name='references' cols='40' rows='8' {$ref_style}>" . show_form_value('closeform', 'references') . "</textarea></td></tr>";
 
     echo "<tr><th>{$strClosingStatus}</th><td>";
-    echo closingstatus_drop_down("closingstatus", 0, TRUE);
+    echo closingstatus_drop_down("closingstatus", show_form_value('closeform', 'closingstatus') , TRUE);
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr><th>".sprintf($strInformX, $strCustomer)."</th>";
     echo "<td>{$strSendEmailExplainingIncidentClosure}<br />";
-    echo "<label><input name='send_email' checked='checked' type='radio' value='no' />{$strNo}</label> ";
-    echo "<input name='send_email' type='radio' value='yes' />{$strYes}</td></tr>\n";
+    $send_email_no = "checked='checked'";
+    $send_email_yes = '';
+    if ($_SESSION['formdata']['closeform']['send_email'] == 'yes')
+    {
+        $send_email_no = '';
+        $send_email_yes = "checked='checked'";
+    }
+    echo "<label><input name='send_email' {$send_email_no} type='radio' value='no' />{$strNo}</label> ";
+    echo "<input name='send_email' {$send_email_yes} type='radio' value='yes' />{$strYes}</td></tr>\n";
     $externalemail = incident_externalemail($id);
     if ($externalemail)
     {
         echo "<tr><th>".sprintf($strInformX, $strExternalEngineer).":<br />";
         printf($strSendEmailExternalIncidentClosure, "<em>{$externalemail}</em>");
         echo "</th>";
-        echo "<td class='shade2'><label><input name='send_engineer_email' type='radio' value='no' />{$strNo}</label> ";
-        echo "<label><input name='send_engineer_email' type='radio' value='yes' checked='checked' />{$strYes}</label></td></tr>\n";
+        $send_engineer_email_no = '';
+        $send_engineer_email_yes = "checked='checked'";
+        if ($_SESSION['formdata']['closeform']['send_engineer_email'] == 'no')
+        {
+            $send_engineer_email_no = "checked='checked'";
+            $send_engineer_email_yes = '';
+        }
+        echo "<td class='shade2'><label><input name='send_engineer_email' {$send_engineer_email_no} type='radio' value='no' />{$strNo}</label> ";
+        echo "<label><input name='send_engineer_email' {$send_engineer_email_yes} type='radio' value='yes'  />{$strYes}</label></td></tr>\n";
     }
     plugin_do('incident_close_form');
     echo "</table>\n";
@@ -161,7 +294,15 @@ if (empty($process))
     echo "<input type='hidden' name='process' value='closeincident' />";
     echo "<input name='submit' type='submit' value=\"{$strClose}\" /></p>";
     echo "</form>";
+    
+    if (show_form_value('closeform', 'kbarticle') != '')
+    {
+        echo "<script type='text/javascript'>enablekb()</script>";
+    }
+    
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
+    
+    clear_form_data("closeform");
 }
 else
 {
@@ -185,33 +326,45 @@ else
     $send_email = cleanvar($_POST['send_email']);
     $send_engineer_email = cleanvar($_POST['send_engineer_email']);
 
+    $_SESSION['formdata']['closeform'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+    
     // Close the incident
     $errors = 0;
-
+    
     echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
 
     // check for blank closing status field
     if ($closingstatus == 0)
     {
-        $errors = 1;
-        $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strClosingStatus}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['closeform']['closingstatus'] = sprintf($strFieldMustNotBeBlank, $strClosingStatus);
+        $errors++;
     }
 
-    if ($_REQUEST['summary'] == '' && $_REQUEST['solution'] == '')
+    if ($_REQUEST['summary'] == '')
     {
-        $errors = 1;
-        $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strSummary}' / '$strSolution'"), E_USER_ERROR);
+        $_SESSION['formerrors']['closeform']['summary_solution'] = sprintf($strFieldMustNotBeBlank, $strSummary);
+        $errors++;
+    }
+    
+    if ($_REQUEST['solution'] == '')
+    {
+        $_SESSION['formerrors']['closeform']['summary_solution'] = sprintf($strFieldMustNotBeBlank, $strSolution);
+        $errors++;
     }
     
     if ($kbarticle == 'yes' AND $kbtitle == '')
     {
-        $errors = 1;
-        $error_string = user_alert(sprintf($strFieldMustNotBeBlank, "'{$strTitle}'"), E_USER_ERROR);
+        $_SESSION['formerrors']['closeform']['kbtitle'] = sprintf($strFieldMustNotBeBlank, $strTitle);
+        $errors++;
     }
 
     plugin_do('incident_close_submitted');
 
-    if ($errors == 0)
+    if ($errors > 0)
+    {
+        html_redirect("{$_SERVER['PHP_SELF']}?id={$id}", FALSE);
+    }
+    else
     {
         $addition_errors = 0;
 
@@ -240,8 +393,8 @@ else
             $bill = close_billable_incident($id);
             if (!$bill)
             {
-                $addition_errors = 1;
-                $addition_errors_string .= "<p class='error'>{$strBilling}: {$strAdditionFail}</p>\n";
+                $_SESSION['formerrors']['closeform']['billing'] = "{$strBilling}: {$strAdditionFail}";
+                $addition_errors++;
             }
             else
             {
@@ -254,12 +407,16 @@ else
 
         if (!$result)
         {
-            $addition_errors = 1;
-            $addition_errors_string .= "<p class='error'>{$strIncident}: {$strUpdateFailed}</p>\n";
+            $_SESSION['formerrors']['closeform']['update'] = "{$strIncident}: {$strUpdateFailed}";
+            $addition_errors++;
         }
 
         // add update(s)
-        if ($addition_errors == 0)
+        if ($addition_errors > 0)
+        {
+            html_redirect("{$_SERVER['PHP_SELF']}?id={$id}", FALSE);
+        }
+        else
         {
             $sql = "SELECT owner, status ";
             $sql .= "FROM `{$dbIncidents}` WHERE id = {$id}";
@@ -487,19 +644,10 @@ else
                 echo "</body>";
                 echo "</html>";
             }
+            
+            clear_form_data("closeform");
+            clear_form_errors("closeform");
         }
-        else
-        {
-            include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-            echo $addition_errors_string;
-            include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
-        }
-    }
-    else
-    {
-        include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-        echo $error_string;
-        include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
     }
 }
 ?>

@@ -9,7 +9,7 @@
 // of the GNU General Public License, incorporated herein by reference.
 //
 
-// Authors: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Authors: Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
 $permission = PERM_INCIDENT_BILLING_APPROVE; // Approve billable incidents

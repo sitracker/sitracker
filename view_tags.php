@@ -8,10 +8,10 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-// Author: Paul Heaney <paulheaney[at]users.sourceforge.net>
+// Author: Paul Heaney <paul[at]sitracker.org>
 
 require ('core.php');
-$permission = PERM_NOT_REQUIRED; // not required
+$permission = PERM_NOT_REQUIRED;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication

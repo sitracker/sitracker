@@ -98,84 +98,99 @@ if (isset($_POST['submit']))
 
     plugin_do('kb_article_submitted');
 
-    $sql = array();
-    if (empty($kbid))
+    if ($errors > 0)
     {
-        // If the KB ID is blank, we assume we're creating a new article
-        $author = user_realname($_SESSION['userid']);
-        $pubdate = date('Y-m-d h:i:s');
-
-        $sqlinsert = "INSERT INTO `{$dbKBArticles}` (title, keywords, distribution, author, published) ";
-        $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '{$pubdate}')";
-        mysql_query($sqlinsert);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_ERROR);
-        $kbid = mysql_insert_id();
-    }
-    else
-    {
-        $sql[] = "UPDATE `{$dbKBArticles}` SET title='{$kbtitle}', keywords='{$keywords}', distribution='{$distribution}' WHERE docid = '{$kbid}'";
-        // Remove associated software ready for re-assocation
-        $sql[] = "DELETE FROM `{$dbKBSoftware}` WHERE docid='{$kbid}'";
-    }
-
-    foreach ($sections AS $section)
-    {
-
-        $sectionvar = strtolower($section);
-        $sectionvar = str_replace(" ", "", $sectionvar);
-        $sectionid = clean_int($_POST["{$sectionvar}id"]);
-        $content = clean_dbstring($_POST[$sectionvar], FALSE, TRUE);
-        if ($sectionid > 0)
+        if (empty($kbid))
         {
-            if (!empty($content))
-            {
-                $sql[] = "UPDATE `{$dbKBContent}` SET content='{$content}', headerstyle='h1', distribution='public' WHERE id='{$sectionid}' AND docid='{$kbid}' ";
-            }
-            else
-            {
-                $sql[] = "DELETE FROM `{$dbKBContent}` WHERE id='{$sectionid}' AND docid='{$kbid}' ";
-            }
+            html_redirect($_SERVER['PHP_SELF'], FALSE);
         }
         else
         {
-            if (!empty($content))
+            html_redirect("{$_SERVER['PHP_SELF']}?id={$kbid}", FALSE);
+        }
+    }
+    else
+    {
+        $sql = array();
+        if (empty($kbid))
+        {
+            // If the KB ID is blank, we assume we're creating a new article
+            $author = user_realname($_SESSION['userid']);
+            $pubdate = date('Y-m-d h:i:s');
+    
+            $sqlinsert = "INSERT INTO `{$dbKBArticles}` (title, keywords, distribution, author, published) ";
+            $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '{$pubdate}')";
+            mysql_query($sqlinsert);
+            if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_ERROR);
+            $kbid = mysql_insert_id();
+        }
+        else
+        {
+            $sql[] = "UPDATE `{$dbKBArticles}` SET title='{$kbtitle}', keywords='{$keywords}', distribution='{$distribution}' WHERE docid = '{$kbid}'";
+            // Remove associated software ready for re-assocation
+            $sql[] = "DELETE FROM `{$dbKBSoftware}` WHERE docid='{$kbid}'";
+        }
+    
+        foreach ($sections AS $section)
+        {
+    
+            $sectionvar = strtolower($section);
+            $sectionvar = str_replace(" ", "", $sectionvar);
+            $sectionid = clean_int($_POST["{$sectionvar}id"]);
+            $content = clean_dbstring($_POST[$sectionvar], FALSE, TRUE);
+            if ($sectionid > 0)
             {
-                $sql[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, header, headerstyle, content, distribution) VALUES ('{$kbid}', '{$sit[2]}', '{$section}', 'h1', '{$content}', 'public')";
+                if (!empty($content))
+                {
+                    $sql[] = "UPDATE `{$dbKBContent}` SET content='{$content}', headerstyle='h1', distribution='public' WHERE id='{$sectionid}' AND docid='{$kbid}' ";
+                }
+                else
+                {
+                    $sql[] = "DELETE FROM `{$dbKBContent}` WHERE id='{$sectionid}' AND docid='{$kbid}' ";
+                }
+            }
+            else
+            {
+                if (!empty($content))
+                {
+                    $sql[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, header, headerstyle, content, distribution) VALUES ('{$kbid}', '{$sit[2]}', '{$section}', 'h1', '{$content}', 'public')";
+                }
             }
         }
-    }
-
-    // Set software / expertise
-    if (is_array($_POST['expertise']))
-    {
-        $expertise = cleanvar(array_unique(($_POST['expertise'])));
-        foreach ($expertise AS $value)
+    
+        // Set software / expertise
+        if (is_array($_POST['expertise']))
         {
-            $value = clean_int($value);
-            $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
+            $expertise = cleanvar(array_unique(($_POST['expertise'])));
+            foreach ($expertise AS $value)
+            {
+                $value = clean_int($value);
+                $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
+            }
         }
-    }
-
-    if (is_array($sql))
-    {
-        foreach ($sql AS $sqlquery)
+    
+        if (is_array($sql))
         {
-//             echo "<p>$sqlquery</p>";
-            mysql_query($sqlquery);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            foreach ($sql AS $sqlquery)
+            {
+                mysql_query($sqlquery);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            }
         }
+        plugin_do('kb_article_saved');
+        $t = new TriggerEvent('TRIGGER_KB_CREATED', array('kbid' => $kbid, 'userid' => $sit[2]));
+        html_redirect("kb_view_article.php?id={$kbid}");
+        clear_form_data("kb_new_article");
+        clear_form_errors("kb_new_article");
+        exit;
     }
-    plugin_do('kb_article_saved');
-    $t = new TriggerEvent('TRIGGER_KB_CREATED', array('kbid' => $kbid, 'userid' => $sit[2]));
-    html_redirect("kb_view_article.php?id={$kbid}");
-    exit;
 }
 else
 {
     //show form
     $title = $strEditKBArticle;
     require (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
+    
     if ($mode == 'edit')
     {
         echo "<h2>".icon('kb', 32, $strEditKBArticle)." {$strEditKBArticle}: {$kbid}</h2>";
@@ -204,6 +219,9 @@ else
     {
         echo "<h2>".icon('kb', 32, $strNewKBArticle)." {$strNewKBArticle}</h2>";
     }
+    echo show_form_errors('kb_new_article');
+    clear_form_errors('kb_new_article');
+
     plugin_do('kb_article');
 
     echo "<div id='kbarticle'>";
@@ -241,36 +259,40 @@ else
     }
 
     echo "<h3>{$strTitle}</h3>";
-    echo "<input class='required' name='title' id='title' size='50' value='{$kbobj->title}'/> ";
+    $title = show_form_value('kb_new_article', 'title', $kbobj->title);
+    echo "<input class='required' name='title' id='title' size='50' value='{$title}'/> ";
     echo "<span class='required'>{$strRequired}</span>";
 
     echo "<h3>{$strKeywords}</h3>";
-    echo "<input name='keywords' id='keywords' size='60' value='{$kbobj->keywords}' />";
+    $keywords = show_form_value('kb_new_article', 'keywords', $kbobj->keywords);
+    echo "<input class='required' name='keywords' id='keywords' size='60' value='{$keywords}' />";
     echo help_link('SeparatedBySpaces');
+    echo "<span class='required'>{$strRequired}</span>";
 
     echo "<h3>{$strDistribution}</h3>";
     echo "<select name='distribution'> ";
 
+    $distribution = show_form_value('kb_new_article', 'distribution', $kbobj->distribution);
     echo "<option value='public' ";
-    if ($kbobj->distribution == 'public')
+    if ($distribution == 'public')
     {
         echo " selected='selected' ";
     }
     echo ">{$strPublic}</option>";
 
     echo "<option value='private' style='color: blue;'";
-    if ($kbobj->distribution == 'private')
+    if ($distribution == 'private')
     {
         echo " selected='selected' ";
     }
     echo ">{$strPrivate}</option>";
 
-    echo "<option value='restricted' style='color: red;";
-    if ($kbobj->distribution == 'restricted')
+    echo "<option value='restricted' style='color: red;'";
+    if ($distribution == 'restricted')
     {
         echo " selected='selected' ";
     }
-    echo "'>{$strRestricted}</option>";
+    echo ">{$strRestricted}</option>";
     echo "</select> ";
     echo help_link('KBDistribution');
 
@@ -280,7 +302,8 @@ else
     echo "<div id='summarysection' style='display: none;'>";
     echo bbcode_toolbar('summary');
     echo "<textarea id='summary' name='strsummary' cols='100' rows='8' ";
-    echo "style='overflow: visible; white-space: nowrap;' onchange='kbSectionCollapse();'>{$sections['strSummary']}";
+    $summary = show_form_value('kb_new_article', 'strsummary', $sections['strSummary']);
+    echo "style='overflow: visible; white-space: nowrap;' onchange='kbSectionCollapse();'>{$summary}";
     echo "</textarea>";
     echo "</div>";
 
@@ -290,7 +313,8 @@ else
     echo "<div id='symptomssection' style='display: none;'>";
     echo bbcode_toolbar('symptoms');
     echo "<textarea id='symptoms' name='strsymptoms' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strSymptoms']}";
+    $symptoms = show_form_value('kb_new_article', 'strsymptoms', $sections['strSymptoms']);
+    echo "onchange='kbSectionCollapse();'>{$symptoms}";
     echo "</textarea>";
     echo "</div>";
 
@@ -300,7 +324,8 @@ else
     echo "<div id='causesection' style='display: none;'>";
     echo bbcode_toolbar('cause');
     echo "<textarea id='cause' name='strcause' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strCause']}";
+    $cause = show_form_value('kb_new_article', 'strcause', $sections['strCause']);
+    echo "onchange='kbSectionCollapse();'>{$cause}";
     echo "</textarea>";
     echo "</div>";
 
@@ -310,7 +335,8 @@ else
     echo "<div id='questionsection' style='display: none;'>";
     echo bbcode_toolbar('question');
     echo "<textarea id='question' name='strquestion' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strQuestion']}";
+    $question = show_form_value('kb_new_article', 'strquestion', $sections['strQuestion']);
+    echo "onchange='kbSectionCollapse();'>{$question}";
     echo "</textarea>";
     echo "</div>";
 
@@ -320,7 +346,8 @@ else
     echo "<div id='answersection' style='display: none;'>";
     echo bbcode_toolbar('answer');
     echo "<textarea id='answer' name='stranswer' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strAnswer']}";
+    $answer = show_form_value('kb_new_article', 'stranswer', $sections['strAnswer']);
+    echo "onchange='kbSectionCollapse();'>{$answer}";
     echo "</textarea>";
     echo "</div>";
 
@@ -330,7 +357,8 @@ else
     echo "<div id='solutionsection' style='display: none;'>";
     echo bbcode_toolbar('solution');
     echo "<textarea id='solution' name='strsolution' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strSolution']}";
+    $solution = show_form_value('kb_new_article', 'strsolution', $sections['strSolution']);
+    echo "onchange='kbSectionCollapse();'>{$solution}";
     echo "</textarea>";
     echo "</div>";
 
@@ -340,7 +368,8 @@ else
     echo "<div id='workaroundsection' style='display: none;'>";
     echo bbcode_toolbar('workaround');
     echo "<textarea id='workaround' name='strworkaround' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strWorkaround']}";
+    $workaround = show_form_value('kb_new_article', 'strworkaround', $sections['strWorkaround']);
+    echo "onchange='kbSectionCollapse();'>{$workaround}";
     echo "</textarea>";
     echo "</div>";
 
@@ -350,7 +379,8 @@ else
     echo "<div id='statussection' style='display: none;'>";
     echo bbcode_toolbar('status');
     echo "<textarea id='status' name='strstatus' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strStatus']}";
+    $status = show_form_value('kb_new_article', 'strstatus', $sections['strStatus']);
+    echo "onchange='kbSectionCollapse();'>{$status}";
     echo "</textarea>";
     echo "</div>";
 
@@ -360,7 +390,8 @@ else
     echo "<div id='additionalinformationsection' style='display: none;'>";
     echo bbcode_toolbar('additionalinformation');
     echo "<textarea id='additionalinformation' name='stradditionalinfo' cols='100' rows='8'  ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strAdditionalInfo']}";
+    $additionalinfo = show_form_value('kb_new_article', 'stradditionalinfo', $sections['strAdditionalInfo']);
+    echo "onchange='kbSectionCollapse();'>{$additionalinfo}";
     echo "</textarea>";
     echo "</div>";
 
@@ -370,7 +401,8 @@ else
     echo "<div id='referencessection' style='display: none;'>";
     echo bbcode_toolbar('references');
     echo "<textarea id='references' name='strreferences' cols='100' rows='8' ";
-    echo "onchange='kbSectionCollapse();'>{$sections['strReferences']}";
+    $references = show_form_value('kb_new_article', 'strreferences', $sections['strReferences']);
+    echo "onchange='kbSectionCollapse();'>{$references}";
     echo "</textarea>";
     echo "</div>";
 
@@ -386,13 +418,13 @@ else
                 WHERE l.linktype = 7
                 AND l.origcolref = '{$kbid}'";
         $fileresult = mysql_query($sqlf);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($fileresult) > 0)
         {
             echo "<br /><table><th>{$strFilename}</th><th>{$strDate}</th>";
             while ($filename = mysql_fetch_object($fileresult))
             {
-                echo "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$kbid}'>$filename->filename</a></td>";
+                echo "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$kbid}'>{$filename->filename}</a></td>";
                 echo "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";
             }
             echo "</table>";
@@ -406,8 +438,10 @@ else
     echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
     echo $sectionstore;
     echo "</form></div>";
-    echo "<p class='return'><a href='kb_view_article.php?id=$kbid'>{$strReturnWithoutSaving}</a></p>";
+    echo "<p class='return'><a href='kb_view_article.php?id={$kbid}'>{$strReturnWithoutSaving}</a></p>";
     echo "<script type='text/javascript'>\n//<![CDATA[\nkbSectionCollapse();\n//]]>\n</script>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+    
+    clear_form_data("kb_new_article");
 }
 ?>
