@@ -274,7 +274,7 @@ function clean_fixed_list($string, $list, $strict = FALSE)
         {
             if ($string != NULL AND $string != '')
             {
-                trigger_error("Unexpected input. Parameter value did not match one of a list of predetermined values. (" . implode(',', $list) . ")", E_USER_WARNING);
+                trigger_error("Unexpected input. Parameter value ('{$string}') did not match one of a list of predetermined values. (" . implode(',', $list) . ")", E_USER_WARNING);
             }
             $string = $list[0];
         }
