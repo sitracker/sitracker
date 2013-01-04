@@ -148,6 +148,7 @@ if ($maint->maintnotes != '')
 {
     echo "<tr><th>{$strNotes}:</th><td>{$maint->maintnotes}</td></tr>";
 }
+plugin_do('contract_details_table');
 echo "</table>";
 
 $operations = array();

@@ -461,19 +461,24 @@ if ($emails > 0)
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $updateid = mysql_insert_id();
 
-            //new call TODO: We need to find a better solution here for letting plugins change the reason
-            if (!$GLOBALS['plugin_reason']) $reason = $SYSLANG['strPossibleNewIncident'];
-            else $reason = $GLOBALS['plugin_reason'];
-            $sql = "INSERT INTO `{$dbTempIncoming}` (`arrived`, `updateid`, `incidentid`, `from`, `emailfrom`, `subject`, `reason`, `contactid`) ";
-            $sql.= "VALUES (FROM_UNIXTIME({$now}), '{$updateid}', '0', '".mysql_real_escape_string($from_email)."', ";
-            $sql .= "'".mysql_real_escape_string($from_name)."', ";
-            $sql .= "'".mysql_real_escape_string($subject)."', ";
-            $sql .= "'{$reason}', '{$contactid}' )";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $holdingemailid = mysql_insert_id();
-
-            $t = new TriggerEvent('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
+            $incidentid = plugin_do('email_arrived_no_owner', array('updateid' => $updateid, 'subject' => $subject));
+            
+            if (empty($incidentid))
+            {
+                //new call TODO: We need to find a better solution here for letting plugins change the reason
+                if (!$GLOBALS['plugin_reason']) $reason = $SYSLANG['strPossibleNewIncident'];
+                else $reason = $GLOBALS['plugin_reason'];
+                $sql = "INSERT INTO `{$dbTempIncoming}` (`arrived`, `updateid`, `incidentid`, `from`, `emailfrom`, `subject`, `reason`, `contactid`) ";
+                $sql.= "VALUES (FROM_UNIXTIME({$now}), '{$updateid}', '0', '".mysql_real_escape_string($from_email)."', ";
+                $sql .= "'".mysql_real_escape_string($from_name)."', ";
+                $sql .= "'".mysql_real_escape_string($subject)."', ";
+                $sql .= "'{$reason}', '{$contactid}' )";
+                mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                $holdingemailid = mysql_insert_id();
+    
+                $t = new TriggerEvent('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
+            }
 
         }
         else
