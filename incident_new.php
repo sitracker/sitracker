@@ -571,16 +571,22 @@ elseif ($action == 'incidentform')
         echo "<td>".parse_updatebody($mailed_body_text)."</td></tr>\n";
         echo "<tr><td class='shade1' colspan='2'>&nbsp;</td></tr>\n";
     }
+
     echo "<tr><td><strong>{$strNextAction}</strong><br />";
     echo show_next_action('supportdetails');
     echo "</td>";
     echo "<td colspan='2'>";
     echo "<strong>{$strVisibleToCustomer}</strong><br />\n";
-    echo "<label><input name='cust_vis' type='checkbox' checked='checked' /> {$strVisibleToCustomer}</label>";
+    
+    $cust_vis_checked = $send_email_checked = '';
+    if ($_SESSION['formdata']['newincident']['cust_vis'] == 'on') $cust_vis_checked = "checked='checked'"; 
+    if ($_SESSION['formdata']['newincident']['send_email'] == 'on') $send_email_checked = "checked='checked'";
+    
+    echo "<label><input name='cust_vis' type='checkbox' {$cust_vis_checked} /> {$strVisibleToCustomer}</label>";
     echo help_link('VisibleToCustomer')."<br />";
-    echo "<label><input name='send_email' type='checkbox' checked='checked' /> ";
+    echo "<label><input name='send_email' type='checkbox' {$send_email_checked} /> ";
     echo "{$strSendOpeningEmailDesc}</label><br />";
-    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", PRIORITY_LOW, $maxprority, FALSE)." </td></tr>";
+    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", show_form_value('newincident', 'priority', PRIORITY_LOW), $maxprority, FALSE)." </td></tr>";
     plugin_do('incident_new_form');
     echo "</table>\n";
     echo "<input type='hidden' name='win' value='{$win}' />";
