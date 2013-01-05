@@ -883,11 +883,11 @@ function schedule_actions_due()
     $actions = FALSE;
     // Interval
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'interval' ";
-    $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
+    $sql .= "AND UNIX_TIMESTAMP(start) <= {$now} AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         while ($action = mysql_fetch_object($result))
@@ -898,13 +898,13 @@ function schedule_actions_due()
 
     // Month
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'date' ";
-    $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND UNIX_TIMESTAMP(start) <= {$now} AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'month' AND (DAYOFMONTH(CURDATE()) > date_offset OR (DAYOFMONTH(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         while ($action = mysql_fetch_object($result))
@@ -915,12 +915,12 @@ function schedule_actions_due()
 
     // Year TODO CHECK
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' ";
-    $sql .= "AND type = 'date' AND UNIX_TIMESTAMP(start) <= $now ";
-    $sql .= "AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND type = 'date' AND UNIX_TIMESTAMP(start) <= {$now} ";
+    $sql .= "AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'year' AND (DAYOFYEAR(CURDATE()) > date_offset ";
     $sql .= "OR (DAYOFYEAR(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -950,7 +950,7 @@ function schedule_action_started($action)
 
     $nowdate = date('Y-m-d H:i:s', $now);
 
-    $sql = "UPDATE `{$GLOBALS['dbScheduler']}` SET laststarted = '$nowdate' ";
+    $sql = "UPDATE `{$GLOBALS['dbScheduler']}` SET laststarted = '{$nowdate}' ";
     $sql .= "WHERE action = '{$action}'";
     mysql_query($sql);
     if (mysql_error())
@@ -980,7 +980,7 @@ function schedule_action_done($doneaction, $success = TRUE)
     }
 
     $nowdate = date('Y-m-d H:i:s', $now);
-    $sql = "UPDATE `{$dbScheduler}` SET lastran = '$nowdate' ";
+    $sql = "UPDATE `{$dbScheduler}` SET lastran = '{$nowdate}' ";
     if ($success == FALSE) $sql .= ", success=0, status='disabled' ";
     else $sql .= ", success=1 ";
     $sql .= "WHERE action = '{$doneaction}'";
@@ -1250,7 +1250,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
         {
             if (!beginsWith($line, "\""))
             {
-                    $line = "\"".str_replace(",", "\",\"",$line)."\"\r\n";
+                    $line = "\"".str_replace(",", "\",\"", $line)."\"\r\n";
             }
 
             $html .= $line;
