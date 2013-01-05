@@ -762,6 +762,7 @@ function show_form_errors($formname)
             }
         }
     }
+
     return $html;
 }
 
