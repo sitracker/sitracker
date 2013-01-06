@@ -2,7 +2,7 @@
 // about.php - Credit, Copyright and Licence page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2011 The Support Incident Tracker Project
+// Copyright (C) 2010-2013 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -133,7 +133,7 @@ switch ($seltab)
         echo "</p>";
         debug_log("{$strVersion}: {$application_version} {$application_revision}", TRUE);
 
-        echo "<p>Copyright &copy; 2010-2011 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />";
+        echo "<p>Copyright &copy; 2010-2013 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />";
         echo "Copyright &copy; 2000-2009 Salford Software Ltd. and Contributors<br />";
         echo "Licence: GNU General Public License Version 2.<br /></p>";
 
