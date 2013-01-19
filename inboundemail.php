@@ -238,10 +238,10 @@ if ($emails > 0)
 
         if (is_array($decoded[0]['ExtractedAddresses']['to:']))
         {
+            $num = sizeof($decoded[0]['ExtractedAddresses']['to:']);
+            $cur = 1;
             foreach ($decoded[0]['ExtractedAddresses']['to:'] as $var)
             {
-                $num = sizeof($decoded[0]['ExtractedAddresses']['to:']);
-                $cur = 1;
                 if (!empty($var['name']))
                 {
                     if (!empty($var['encoding']) AND strcasecmp('UTF-8', $var['encoding']) !== 0)
@@ -249,22 +249,22 @@ if ($emails > 0)
                         $var['name'] = mb_convert_encoding($var['name'], "UTF-8", strtoupper($var['encoding']));
                     }
                     $to .= $var['name']. " <".$var['address'].">";
-                    if ($cur != $num) $to .= ", ";
                 }
                 else
                 {
                     $to .= $var['address'];
                 }
+                if ($cur != $num) $to .= ", ";
                 $cur++;
             }
         }
 
         if (is_array($decoded[0]['ExtractedAddresses']['cc:']))
         {
+            $num = sizeof($decoded[0]['ExtractedAddresses']['cc:']);
+            $cur = 1;
             foreach ($decoded[0]['ExtractedAddresses']['cc:'] as $var)
             {
-                $num = sizeof($decoded[0]['ExtractedAddresses']['cc:']);
-                $cur = 1;
                 if (!empty($var['name']))
                 {
                     if (!empty($var['encoding']) AND strcasecmp('UTF-8', $var['encoding']) !== 0)
@@ -272,12 +272,12 @@ if ($emails > 0)
                         $var['name'] = mb_convert_encoding($var['name'], "UTF-8", strtoupper($var['encoding']));
                     }
                     $cc .= $var['name']. " <".$var['address'].">";
-                    if ($cur != $num) $cc .= ", ";
                 }
                 else
                 {
                     $cc .= $var['address'];
                 }
+                if ($cur != $num) $cc .= ", ";
                 $cur++;
             }
         }
