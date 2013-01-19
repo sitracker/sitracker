@@ -367,9 +367,37 @@ if ($emails > 0)
 
                 if (empty($filename))
                 {
-                    $filename = 'part'.$part;
-                    if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
-                    $part++;
+                    // If it was a forwarded email
+                    if ($attachment['Type'] == 'message')
+                    {
+                        $mime_att = new mime_parser_class();
+                        $mime_att->mbox = 0;
+                        $mime_att->decode_headers = 1;
+                        $mime_att->decode_bodies = 1;
+                        $mime_att->ignore_syntax_errors = 1;
+                        
+                        $parameters_att = array('Data'=>$attachment['Data']);
+
+                        // We can't call Analyse as it would overwrite the existing email in memory
+                        $mime_att->Decode($parameters_att, $decoded_att);
+                        
+                        if (strlen($decoded_att[0]['Headers']['subject:']) > 0)
+                        {
+                            $filename = utf8_encode(mb_decode_mimeheader($decoded_att[0]['Headers']['subject:'])) . '.eml';
+                            $filename = str_replace(' ', '_', $filename);
+                            $filename = clean_fspath($filename);
+                        }
+                    }
+                    
+                    // If its still empty - we may have set it above
+                    if (empty($filename))
+                    {
+                        $filename = 'part'.$part;
+                        if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
+                        if ($attachment['Type'] == 'message') $filename .= '.eml';
+                        $part++;
+                    }
+
                 }
                 $filesize = mb_strlen($data);
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
