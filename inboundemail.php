@@ -361,7 +361,12 @@ if ($emails > 0)
             foreach ($results['Attachments'] as $attachment)
             {
                 $data = $attachment['Data'];
-                $filename = utf8_encode(mb_decode_mimeheader($attachment['FileName']));
+                echo "{$attachment['FileName']}\n";
+                $filename = $attachment['FileName'];
+                if (mb_detect_encoding($filename) != 'UTF-8')
+                {
+                    $filename = utf8_encode($filename);
+                }
                 $filename = str_replace(' ', '_', $filename);
                 $filename = clean_fspath($filename);
 
@@ -403,6 +408,7 @@ if ($emails > 0)
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
+                echo $sql;
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 $fileid = mysql_insert_id();
