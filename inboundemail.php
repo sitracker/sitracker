@@ -327,7 +327,7 @@ if ($emails > 0)
 
         plugin_do('email_arrived');
 
-        $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
+        $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
 
         $customer_visible = 'No';
         $part = 1;
