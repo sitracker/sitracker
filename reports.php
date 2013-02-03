@@ -31,15 +31,15 @@ foreach (reports_draw_menu(60) AS $r){
 }
 
 
-function reports_draw_menu($index, $heading)
+function reports_draw_menu($index, $heading = '')
 {
     global $hmenu, $tables;
 
     $html = "<table class='maintable'>";
     if (!empty($heading)) $html .= "<tr><th colspan='2'>{$heading}</th></tr>";
     $html .= "<tr><th>{$GLOBALS['strName']}</th><th>{$GLOBALS['strDescription']}</th></tr>";
-    
-    
+
+
     foreach ($hmenu[$index] as $top => $topvalue)
     {
         if (in_array($topvalue['perm'], $_SESSION['permissions']))
@@ -56,9 +56,9 @@ function reports_draw_menu($index, $heading)
     }
 
     $html .= "</table>";
-    
+
     $tables[] = $html;
-    
+
     return $tables;
 }
 
