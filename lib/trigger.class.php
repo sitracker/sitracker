@@ -476,7 +476,7 @@ class Trigger extends SitEntity {
         $replytoemail = trigger_replace_specials($this->trigger_type, $template->replytofield, $this->param_array);
         $ccemail = trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
         $bccemail = trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
-        $subject = cleanvar(trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array));
+        $subject = trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array);
         $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
