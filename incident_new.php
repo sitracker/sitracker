@@ -412,6 +412,9 @@ elseif ($action == 'incidentform')
 
     echo "<h2>".icon('new', 32)." {$strNewIncident} - {$strDetails}</h2>";
 
+    echo show_form_errors('newincident');
+    clear_form_errors('newincident');
+    
     plugin_do('incident_new');
 
     $slatag = contract_slatag($maintid);
@@ -446,27 +449,27 @@ elseif ($action == 'incidentform')
     echo "</td></tr>";
 
     echo "<tr>";
-    echo "<td><label for='customerid'>{$strCustomerReference}: </label><input maxlength='50' name='customerid' id='customerid' /></td>";
+    echo "<td><label for='customerid'>{$strCustomerReference}: </label><input maxlength='50' name='customerid' id='customerid' value='".show_form_value('newincident', 'customerid', '')."'/></td>";
     echo "</tr>";
 
     if (empty($updateid))
     {
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
-        echo "name='incidenttitle' size='50' type='text' />";
+        echo "name='incidenttitle' size='50' type='text' value='".show_form_value('newincident', 'incidenttitle', '')."' />";
         echo " <span class='required'>{$strRequired}</span></td>\n";
         echo "<td>";
         if ($type == 'free')
         {
-            echo "<label>{$strServiceLevel}".serviceleveltag_drop_down('servicelevel',$CONFIG['default_service_level'], TRUE)."</label><br />";
+            echo "<label>{$strServiceLevel}".serviceleveltag_drop_down('servicelevel', $CONFIG['default_service_level'], TRUE)."</label><br />";
             echo "<label>{$strSkill}: ".skill_drop_down('software', 0)."</label>";
         }
         else
         {
             echo "<label for='software'>{$strSkill}</label><br />".softwareproduct_drop_down('software', 0, $productid);
         }
-        echo " <label>{$strVersion}: <input maxlength='50' name='productversion' size='8' type='text' /></label> \n";
-        echo " <label>{$strServicePacksApplied}: <input maxlength='100' name='productservicepacks' size='8' type='text' /></label>\n";
+        echo " <label>{$strVersion}: <input maxlength='50' name='productversion' size='8' type='text' value='".show_form_value('newincident', 'productversion', '')."' /></label> \n";
+        echo " <label>{$strServicePacksApplied}: <input maxlength='100' name='productservicepacks' size='8' type='text' value='".show_form_value('newincident', 'productservicepacks', '')."' /></label>\n";
         echo "</td></tr>";
 
         // Inventory
@@ -493,7 +496,7 @@ elseif ($action == 'incidentform')
         if ($contact_inv_count > 0)
         {
             echo "<tr><td><label for='inventory'>{$strInventoryItems}:</label><br />";
-            echo array_drop_down($items_array, 'inventory', '', '', TRUE)."</td><td></td></tr>";
+            echo array_drop_down($items_array, 'inventory', show_form_value('newincident', 'inventory', ''), TRUE)."</td><td></td></tr>";
         }
 
         // Insert pre-defined per-product questions from the database, these should be required fields
@@ -514,7 +517,7 @@ elseif ($action == 'incidentform')
             }
             echo "<br />\n";
             echo "<input class='required' maxlength='50' ";
-            echo "name='pinfo{$productinfoobj->id}' size='70' type='text' />";
+            echo "name='pinfo{$productinfoobj->id}' size='70' type='text' value='".show_form_value('newincident', "pinfo{$productinfoobj->id}", '')."'/>";
             echo " <span class='required'>{$strRequired}</span>";
             echo "</label>";
             echo "</td>";
@@ -526,13 +529,13 @@ elseif ($action == 'incidentform')
             elseif ($cellcount & 1)  echo "</tr>";
         }
         echo "<tr><td><label for='probdesc'>{$strProblemDescription}</label>".help_link('ProblemDescriptionEngineer')."<br />";
-        echo "<textarea id='probdesc' name='probdesc' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'></textarea></td>\n";
+        echo "<textarea id='probdesc' name='probdesc' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'>".show_form_value('newincident', 'probdesc', '')."</textarea></td>\n";
         echo "<td><label for='probreproduction'>{$strProblemReproduction}</label>".help_link('ProblemReproductionEngineer')."<br />";
-        echo "<textarea id='probreproduction' name='probreproduction' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'></textarea></td></tr>\n";
+        echo "<textarea id='probreproduction' name='probreproduction' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'>".show_form_value('newincident', 'probreproduction', '')."</textarea></td></tr>\n";
         echo "<tr><td><label for='workarounds'>{$strWorkAroundsAttempted}</label>".help_link('WorkAroundsAttemptedEngineer')."<br />";
-        echo "<textarea id='workarounds' name='workarounds' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'></textarea></td>\n";
+        echo "<textarea id='workarounds' name='workarounds' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'>".show_form_value('newincident', 'workarounds', '')."</textarea></td>\n";
         echo "<td><label for ='custimpact'>{$strCustomerImpact}</label>".help_link('CustomerImpactEngineer')."<br />";
-        echo "<textarea id='custimpact' name='custimpact' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'></textarea></td></tr>\n";
+        echo "<textarea id='custimpact' name='custimpact' rows='2' cols='60' onfocus='new ResizeableTextarea(this);'>".show_form_value('newincident', 'custimpact', '')."</textarea></td></tr>\n";
     }
     else
     {
@@ -568,433 +571,445 @@ elseif ($action == 'incidentform')
         echo "<td>".parse_updatebody($mailed_body_text)."</td></tr>\n";
         echo "<tr><td class='shade1' colspan='2'>&nbsp;</td></tr>\n";
     }
+
     echo "<tr><td><strong>{$strNextAction}</strong><br />";
     echo show_next_action('supportdetails');
     echo "</td>";
     echo "<td colspan='2'>";
     echo "<strong>{$strVisibleToCustomer}</strong><br />\n";
-    echo "<label><input name='cust_vis' type='checkbox' checked='checked' /> {$strVisibleToCustomer}</label>";
+    
+    $cust_vis_checked = $send_email_checked = '';
+    if ($_SESSION['formdata']['newincident']['cust_vis'] == 'on') $cust_vis_checked = "checked='checked'"; 
+    if ($_SESSION['formdata']['newincident']['send_email'] == 'on') $send_email_checked = "checked='checked'";
+    
+    echo "<label><input name='cust_vis' type='checkbox' {$cust_vis_checked} /> {$strVisibleToCustomer}</label>";
     echo help_link('VisibleToCustomer')."<br />";
-    echo "<label><input name='send_email' type='checkbox' checked='checked' /> ";
+    echo "<label><input name='send_email' type='checkbox' {$send_email_checked} /> ";
     echo "{$strSendOpeningEmailDesc}</label><br />";
-    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", PRIORITY_LOW, $maxprority, FALSE)." </td></tr>";
+    echo "<strong>{$strPriority}</strong><br />".priority_drop_down("priority", show_form_value('newincident', 'priority', PRIORITY_LOW), $maxprority, FALSE)." </td></tr>";
     plugin_do('incident_new_form');
     echo "</table>\n";
     echo "<input type='hidden' name='win' value='{$win}' />";
     echo "<p align='center'><input name='submit' type='submit' value='{$strNewIncident}' /></p>";
     echo "</form>\n";
 
+    clear_form_data('newincident');
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == 'assign')
 {
-    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    if ($type == "support" OR $type == "free")
+    // Assign SUPPORT incident
+    // The incident will be added to the database assigned to the current user, and then a list of engineers
+    // is displayed so that the incident can be redirected
+    
+    // External vars
+    $servicelevel = cleanvar($_REQUEST['servicelevel']);
+    $type = cleanvar($_REQUEST['type']);
+    $incidenttitle = cleanvar($_REQUEST['incidenttitle']);
+    $probdesc = cleanvar($_REQUEST['probdesc']);
+    $workarounds = cleanvar($_REQUEST['workarounds']);
+    $probreproduction = cleanvar($_REQUEST['probreproduction']);
+    $custimpact = cleanvar($_REQUEST['custimpact']);
+    $other = cleanvar($_REQUEST['other']);
+    $priority = clean_int($_REQUEST['priority']);
+    $software = clean_int($_REQUEST['software']);
+    $productversion = cleanvar($_REQUEST['productversion']);
+    $productservicepacks = cleanvar($_REQUEST['productservicepacks']);
+    $bodytext = cleanvar($_REQUEST['bodytext']);
+    $cust_vis = cleanvar($_REQUEST['cust_vis']);
+    $send_email = cleanvar($_REQUEST['send_email']);
+    $inventory = cleanvar($_REQUEST['inventory']);
+    
+    $timetonextaction = cleanvar($_POST['timetonextaction']);
+    $date = cleanvar($_POST['date']);
+    $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
+    $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
+    $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
+    $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
+    $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
+    
+    $customerid = cleanvar($_POST['customerid']);
+    
+    $_SESSION['formdata']['newincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+    
+    if ($send_email == 'on')
     {
+        $send_email = 1;
+    }
+    else
+    {
+        $send_email = 0;
+    }
+    
+    // check form input
+    $errors = 0;
+    // check for blank contact
+    if ($contactid == 0)
+    {
+        $_SESSION['formerrors']['newincident']['account'] = $strYouMustSelectAcontact;
+        $errors++;
+    }
+    
+    // check for blank title
+    if ($incidenttitle == '')
+    {
+        $incidenttitle = $strUntitled;
+    }
+    
+    if ($software < 1)
+    {
+        $_SESSION['formerrors']['newincident']['skill'] = sprintf($strFieldMustNotBeBlank, $strSkill);
+        $errors++;
+    }
+    
+    // check for blank priority
+    if ($priority == 0)
+    {
+        $priority = PRIORITY_LOW;
+    }
+    
+    if ($type == 'free' AND $servicelevel == '' )
+    {
+        $_SESSION['formerrors']['newincident']['servicelevel'] = $strYouMustSelectAserviceLevel;
+        $errors++;
+    }
+        
+    if (!in_array($type, array('support', 'free')))
+    {
+        $_SESSION['formerrors']['newincident']['type'] = $strIncidentTypeWasBlank; // TODO Not quite right but near enought, the type was won we don't recognise 
+        $errors++;
+    }
+    
+    if ($errors > 0)
+    {
+        html_redirect("{$_SERVER['PHP_SELF']}?action=incidentform&type={$type}&contactid={$contactid}&maintid={$maintid}&producttext={$producttext}&productid={$productid}&updateid={$updateid}&siteid={$siteid}&win={$win}", FALSE);
+    }
+    else
+    {
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        
         $html .= "<h2>{$strNewIncident} - {$strAssign}</h2>";
 
-        // Assign SUPPORT incident
-        // The incident will be added to the database assigned to the current user, and then a list of engineers
-        // is displayed so that the incident can be redirected
-
-        // External vars
-        $servicelevel = cleanvar($_REQUEST['servicelevel']);
-        $type = cleanvar($_REQUEST['type']);
-        $incidenttitle = cleanvar($_REQUEST['incidenttitle']);
-        $probdesc = cleanvar($_REQUEST['probdesc']);
-        $workarounds = cleanvar($_REQUEST['workarounds']);
-        $probreproduction = cleanvar($_REQUEST['probreproduction']);
-        $custimpact = cleanvar($_REQUEST['custimpact']);
-        $other = cleanvar($_REQUEST['other']);
-        $priority = clean_int($_REQUEST['priority']);
-        $software = clean_int($_REQUEST['software']);
-        $productversion = cleanvar($_REQUEST['productversion']);
-        $productservicepacks = cleanvar($_REQUEST['productservicepacks']);
-        $bodytext = cleanvar($_REQUEST['bodytext']);
-        $cust_vis = cleanvar($_REQUEST['cust_vis']);
-        $send_email = cleanvar($_REQUEST['send_email']);
-        $inventory = cleanvar($_REQUEST['inventory']);
-
-        $timetonextaction = cleanvar($_POST['timetonextaction']);
-        $date = cleanvar($_POST['date']);
-        $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
-        $time_picker_minute = cleanvar($_REQUEST['time_picker_minute']);
-        $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
-        $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
-        $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
-
-        $customerid = cleanvar($_POST['customerid']);
-
-        if ($send_email == 'on')
-        {
-            $send_email = 1;
-        }
-        else
-        {
-            $send_email = 0;
-        }
-
-        // check form input
-        $errors = 0;
-        // check for blank contact
-        if ($contactid == 0)
-        {
-            $errors = 1;
-            $error_string .= $strYouMustSelectAcontact;
-        }
-
-        // check for blank title
-        if ($incidenttitle == '')
-        {
-            $incidenttitle = $strUntitled;
-        }
-
-        if ($software < 1)
-        {
-            $errors++;
-            $error_string .= sprintf($strFieldMustNotBeBlank, $strSkill);
-        }
-
-        // check for blank priority
-        if ($priority == 0)
-        {
-            $priority = PRIORITY_LOW;
-        }
-
-        // check for blank type
-        if ($type == '')
-        {
-            $errors = 1;
-            $error_string .= $strIncidentTypeWasBlank;
-        }
-
-        if ($type == 'free' AND $servicelevel == '' )
-        {
-            $errors++;
-            $error_string .= $strYouMustSelectAserviceLevel;
-        }
         plugin_do('incident_new_submitted');
 
-        if ($errors == 0)
+        // add incident (assigned to current user)
+
+        // Calculate the time to next action
+        switch ($timetonextaction)
         {
-            // add incident (assigned to current user)
+            case 'none':
+                $timeofnextaction = 0;
+                break;
+            case 'time':
+                $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);
+                break;
+            case 'date':
+                $date = explode("-", $date);
+                $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
+                if ($timeofnextaction < 0) $timeofnextaction = 0;
+                break;
+            default:
+                $timeofnextaction = 0;
+                break;
+        }
 
-            // Calculate the time to next action
-            switch ($timetonextaction)
-            {
-                case 'none':
-                    $timeofnextaction = 0;
-                    break;
-                case 'time':
-                    $timeofnextaction = calculate_time_of_next_action($timetonextaction_days, $timetonextaction_hours, $timetonextaction_minutes);
-                    break;
-                case 'date':
-                    $date = explode("-", $date);
-                    $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
-                    if ($timeofnextaction < 0) $timeofnextaction = 0;
-                    break;
-                default:
-                    $timeofnextaction = 0;
-                    break;
-            }
+        if ($timeofnextaction > 0)
+        {
+            $timetext = "Next Action Time: ";
+            $timetext .= date("D jS M Y @ g:i A", $timeofnextaction);
+            $timetext .= "</b>\n\n";
+            $bodytext = $timetext.$bodytext;
+        }
 
-            if ($timeofnextaction > 0)
-            {
-                $timetext = "Next Action Time: ";
-                $timetext .= date("D jS M Y @ g:i A", $timeofnextaction);
-                $timetext .= "</b>\n\n";
-                $bodytext = $timetext.$bodytext;
-            }
+        // Set the service level the contract
+        if ($servicelevel == '')
+        {
+            $servicelevel = maintenance_servicelevel_tag($maintid);
+        }
 
-            // Set the service level the contract
-            if ($servicelevel == '')
-            {
-                $servicelevel = maintenance_servicelevel_tag($maintid);
-            }
+        // Use default service level if we didn't find one above
+        if ($servicelevel == '')
+        {
+            $servicelevel = $CONFIG['default_service_level'];
+        }
 
-            // Use default service level if we didn't find one above
-            if ($servicelevel == '')
-            {
-                $servicelevel = $CONFIG['default_service_level'];
-            }
-
-            if ($CONFIG['use_ldap'])
-            {
-                // Attempt to update contact
-                $sql = "SELECT username, contact_source FROM `{$GLOBALS['dbContacts']}` WHERE id = {$contactid}";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                $obj = mysql_fetch_object($result);
-                if ($obj->contact_source == 'ldap')
-                {
-                    authenticateLDAP($obj->username, '', $contactid, false, true, false);
-                }
-            }
-
-            // Check the service level priorities, look for the highest possible and reduce the chosen priority if needed
-            $sql = "SELECT priority FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' ORDER BY priority DESC LIMIT 1";
+        if ($CONFIG['use_ldap'])
+        {
+            // Attempt to update contact
+            $sql = "SELECT username, contact_source FROM `{$GLOBALS['dbContacts']}` WHERE id = {$contactid}";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            list($highestpriority) = mysql_fetch_row($result);
-            if ($priority > $highestpriority)
+            $obj = mysql_fetch_object($result);
+            if ($obj->contact_source == 'ldap')
             {
-                $prioritychangedmessage = " (".sprintf($strReducedPrioritySLA, priority_name($priority)).")";
-                $priority = $highestpriority;
+                authenticateLDAP($obj->username, '', $contactid, false, true, false);
             }
+        }
 
-            $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, servicelevel, status, type, maintenanceid, ";
-            $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction, customerid) ";
-            $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1}', 'Support', '{$maintid}', ";
-            $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}', '{$customerid}')";
+        // Check the service level priorities, look for the highest possible and reduce the chosen priority if needed
+        $sql = "SELECT priority FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' ORDER BY priority DESC LIMIT 1";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        list($highestpriority) = mysql_fetch_row($result);
+        if ($priority > $highestpriority)
+        {
+            $prioritychangedmessage = " (".sprintf($strReducedPrioritySLA, priority_name($priority)).")";
+            $priority = $highestpriority;
+        }
+
+        $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, servicelevel, status, type, maintenanceid, ";
+        $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction, customerid) ";
+        $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1}', 'Support', '{$maintid}', ";
+        $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}', '{$customerid}')";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        $incidentid = mysql_insert_id();
+        $_SESSION['incidentid'] = intval($incidentid);
+
+        // Save productinfo if there is some
+        $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) > 0)
+        {
+            while ($productinforow = mysql_fetch_object($result))
+            {
+                $var = "pinfo{$productinforow->id}";
+                $pinfo = cleanvar($_POST[$var]);
+                $pinfo = clean_dbstring($_POST[$var]);
+                $pisql = "INSERT INTO `{$dbIncidentProductInfo}` (incidentid, productinfoid, information) ";
+                $pisql .= "VALUES ('{$incidentid}', '{$productinforow->id}', '{$pinfo}')";
+                mysql_query($pisql);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            }
+        }
+
+        $updatetext = clean_lang_dbstring($_SESSION['syslang']['strPriority']) . ": [b]" . priority_name($priority, TRUE) . "[/b]";
+        if (!empty($prioritychangedmessage)) $updatetext .= $prioritychangedmessage;
+        $updatetext .= "\n\n" . $bodytext;
+        if ($probdesc != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strProblemDescription']) . "</b>\n" . $probdesc . "\n\n";
+        if ($workarounds != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strWorkAroundsAttempted']) . "</b>\n" . $workarounds . "\n\n";
+        if ($probreproduction != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strProblemReproduction']) . "</b>\n" . $probreproduction . "\n\n";
+        if ($custimpact != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strCustomerImpact']) . "</b>\n" . $custimpact . "\n\n";
+        if ($other != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strDetails']) . "</b>\n" . $other . "\n";
+        if ($cust_vis == "on") $customervisibility = 'show';
+        else $customervisibility = 'hide';
+
+        if (!empty($updateid))
+        {
+            // Assign existing update to new incident if we have one
+            $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', sla='opened' WHERE id='{$updateid}'";
+
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
-            $incidentid = mysql_insert_id();
-            $_SESSION['incidentid'] = intval($incidentid);
+            $old_path = $CONFIG['attachment_fspath']. 'updates' . DIRECTORY_SEPARATOR;
+            $new_path = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
-            // Save productinfo if there is some
-            $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
+            //move attachments from updates to incident
+            $sql = "SELECT linkcolref, filename FROM `{$dbLinks}` AS l, ";
+            $sql .= "`{$dbFiles}` as f ";
+            $sql .= "WHERE l.origcolref = '{$updateid}' ";
+            $sql .= "AND l.linktype = 5 ";
+            $sql .= "AND l.linkcolref = f.id";
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) > 0)
+            if ($result)
             {
-                while ($productinforow = mysql_fetch_object($result))
+                if (!file_exists($new_path))
                 {
-                    $var = "pinfo{$productinforow->id}";
-                    $pinfo = cleanvar($_POST[$var]);
-                    $pinfo = clean_dbstring($_POST[$var]);
-                    $pisql = "INSERT INTO `{$dbIncidentProductInfo}` (incidentid, productinfoid, information) ";
-                    $pisql .= "VALUES ('{$incidentid}', '{$productinforow->id}', '{$pinfo}')";
-                    mysql_query($pisql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $umask = umask(0000);
+                    @mkdir($new_path, 0770);
+                    umask($umask);
                 }
-            }
 
-            $updatetext = clean_lang_dbstring($_SESSION['syslang']['strPriority']) . ": [b]" . priority_name($priority, TRUE) . "[/b]";
-            if (!empty($prioritychangedmessage)) $updatetext .= $prioritychangedmessage;
-            $updatetext .= "\n\n" . $bodytext;
-            if ($probdesc != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strProblemDescription']) . "</b>\n" . $probdesc . "\n\n";
-            if ($workarounds != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strWorkAroundsAttempted']) . "</b>\n" . $workarounds . "\n\n";
-            if ($probreproduction != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strProblemReproduction']) . "</b>\n" . $probreproduction . "\n\n";
-            if ($custimpact != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strCustomerImpact']) . "</b>\n" . $custimpact . "\n\n";
-            if ($other != '') $updatetext .= "<b>" . clean_lang_dbstring($_SESSION['syslang']['strDetails']) . "</b>\n" . $other . "\n";
-            if ($cust_vis == "on") $customervisibility = 'show';
-            else $customervisibility = 'hide';
-
-            if (!empty($updateid))
-            {
-                // Assign existing update to new incident if we have one
-                $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', sla='opened' WHERE id='{$updateid}'";
-
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-                $old_path = $CONFIG['attachment_fspath']. 'updates' . DIRECTORY_SEPARATOR;
-                $new_path = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
-
-                //move attachments from updates to incident
-                $sql = "SELECT linkcolref, filename FROM `{$dbLinks}` AS l, ";
-                $sql .= "`{$dbFiles}` as f ";
-                $sql .= "WHERE l.origcolref = '{$updateid}' ";
-                $sql .= "AND l.linktype = 5 ";
-                $sql .= "AND l.linkcolref = f.id";
-                $result = mysql_query($sql);
-                if ($result)
+                while ($row = mysql_fetch_object($result))
                 {
-                    if (!file_exists($new_path))
+                    $filename = $row->linkcolref . "-" . $row->filename;
+                    $old_file = $old_path . $row->linkcolref;
+                    if (file_exists($old_file))
                     {
-                        $umask = umask(0000);
-                        @mkdir($new_path, 0770);
-                        umask($umask);
-                    }
-
-                    while ($row = mysql_fetch_object($result))
-                    {
-                        $filename = $row->linkcolref . "-" . $row->filename;
-                        $old_file = $old_path . $row->linkcolref;
-                        if (file_exists($old_file))
+                        $rename = rename($old_file, $new_path . $filename);
+                        if (!$rename)
                         {
-                            $rename = rename($old_file, $new_path . $filename);
-                            if (!$rename)
-                            {
-                                trigger_error("Couldn't move file: {$file}", E_USER_WARNING);
-                                $moved_attachments = FALSE;
-                            }
+                            trigger_error("Couldn't move file: {$file}", E_USER_WARNING);
+                            $moved_attachments = FALSE;
                         }
                     }
                 }
-                //remove from tempincoming to prevent build up
-                $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
-            else
-            {
-                // Create a new update from details entered
-                $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
-                $sql .= "currentstatus, customervisibility, nextaction, sla) ";
-                $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
-                $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            }
-
-            $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $level = mysql_fetch_object($result);
-
-            $targetval = $level->initial_response_mins * 60;
-            $initialresponse = $now + $targetval;
-
-            // Insert the first Review update, this indicates the review period of an incident has started
-            // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', '')";
+            //remove from tempincoming to prevent build up
+            $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
             mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-            if (!empty($inventory) AND $inventory != 0)
-            {
-                $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
-                $sql .= "VALUES(7, '{$incidentid}', '{$inventory}', 'left', '{$sit[2]}')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            }
-
-            plugin_do('incident_new_saved');
-
-            // Decrement free support, where appropriate
-            if ($type == 'free')
-            {
-                decrement_free_incidents(contact_siteid($contactid));
-            }
-            else
-            {
-                // decrement contract incident by incrementing the number of incidents used
-                increment_incidents_used($maintid);
-            }
-
-            $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
-            $html .= "<p align='center'>";
-            $html .= sprintf($strIncidentLoggedEngineer, $incidentid);
-            $html .= "</p>\n";
-
-            $suggested_user = suggest_reassign_userid($incidentid);
-            $trigger = new TriggerEvent('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
-
-            if ($CONFIG['auto_assign_incidents'])
-            {
-                html_redirect("incident_new.php?action=reassign&userid={$suggested_user}&incidentid={$incidentid}");
-                exit;
-            }
-            else
-            {
-                echo $html;
-            }
-
-            // List Engineers
-            // We need a user type 'engineer' so we don't just list everybody
-            // Status zero means account disabled
-            $sql = "SELECT * FROM `{$dbUsers}` WHERE status!=0 ORDER BY realname";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            echo "<h3>{$strUsers}</h3>
-            <table class='maintable'>
-            <tr>
-                <th>&nbsp;</th>
-                <th>{$strName}</th>
-                <th>{$strTelephone}</th>
-                <th>{$strStatus}</th>
-                <th>{$strMessage}</th>
-                <th colspan='5'>{$strIncidentsinQueue}</th>
-                <th>{$strAccepting}</th>
-            </tr>";
-            echo "<tr>
-            <th colspan='5'></th>
-            <th align='center'>{$strActionNeeded} / {$strOther}</th>";
-            echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
-            echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
-            echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
-            echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
-
-            echo "<th></th>";
-            echo "</tr>";
-
-            $shade = 'shade2';
-            while ($userobj = mysql_fetch_obj($result))
-            {
-                if ($userobj->id == $suggested_user) $shade = 'idle';
-                echo "<tr class='{$shade}'>";
-                // display reassign link only if person is accepting or if the current user has 'reassign when not accepting' permission
-                if ($userobj->accepting == 'Yes')
-                {
-                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
-                    // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
-                    echo ">{$strAssignTo}</a></td>";
-                }
-                elseif (user_permission($sit[2], PERM_INCIDENT_FORCE_ASSIGN) OR $userobj->id == $sit[2])
-                {
-                    echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
-                    // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
-                    echo ">{$strForceTo}</a></td>";
-                }
-                else
-                {
-                    echo "<td class='expired'>&nbsp;</td>";
-                }
-                echo "<td>";
-
-                // Have a look if this user has skills with this software
-                $ssql = "SELECT softwareid FROM `{$dbUserSoftware}` ";
-                $ssql .= "WHERE userid='{$userobj->id}' AND softwareid='{$software}' ";
-                $sresult = mysql_query($ssql);
-                if (mysql_num_rows($sresult) >= 1)
-                {
-                    echo "<strong>{$userobj->realname}</strong>";
-                }
-                else
-                {
-                    echo $userobj->realname;
-                }
-
-                echo "</td>";
-                echo "<td>{$userobj->phone}</td>";
-                echo "<td>".user_online_icon($userobj->id)." ".userstatus_name($userobj->status)."</td>";
-                echo "<td>{$userobj->message}</td>";
-                echo "<td align='center'>";
-
-                $incpriority = user_incidents($userobj->id);
-                $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
-
-                if ($countincidents >= 1) $countactive = user_activeincidents($userobj->id);
-                else $countactive = 0;
-
-                $countdiff = $countincidents - $countactive;
-
-                echo "$countactive / {$countdiff}</td>";
-                echo "<td align='center'>{$incpriority['4']}</td>";
-                echo "<td align='center'>{$incpriority['3']}</td>";
-                echo "<td align='center'>{$incpriority['2']}</td>";
-                echo "<td align='center'>{$incpriority['1']}</td>";
-
-                echo "<td align='center'>";
-                if ($userobj->accepting == 'Yes') echo $strYes;
-                else echo "<span class='error'>{$strNo}</span>";
-                echo "</td>";
-                echo "</tr>\n";
-                if ($shade == 'shade2') $shade = 'shade1';
-                else $shade = 'shade2';
-            }
-            echo "</table>";
-            echo "<p align='center'>{$strUsersBoldSkills}.</p>";
         }
         else
         {
-            echo user_alert($error_string, E_USER_ERROR);
+            // Create a new update from details entered
+            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
+            $sql .= "currentstatus, customervisibility, nextaction, sla) ";
+            $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
+            $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
+            $result = mysql_query($sql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
+
+        $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $level = mysql_fetch_object($result);
+
+        $targetval = $level->initial_response_mins * 60;
+        $initialresponse = $now + $targetval;
+
+        // Insert the first Review update, this indicates the review period of an incident has started
+        // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
+        $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
+        $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', '')";
+        mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        if (!empty($inventory) AND $inventory != 0)
+        {
+            $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
+            $sql .= "VALUES(7, '{$incidentid}', '{$inventory}', 'left', '{$sit[2]}')";
+            mysql_query($sql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        }
+
+        plugin_do('incident_new_saved');
+
+        // Decrement free support, where appropriate
+        if ($type == 'free')
+        {
+            decrement_free_incidents(contact_siteid($contactid));
+        }
+        else
+        {
+            // decrement contract incident by incrementing the number of incidents used
+            increment_incidents_used($maintid);
+        }
+
+        $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
+        $html .= "<p align='center'>";
+        $html .= sprintf($strIncidentLoggedEngineer, $incidentid);
+        $html .= "</p>\n";
+
+        $suggested_user = suggest_reassign_userid($incidentid);
+        $trigger = new TriggerEvent('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
+
+        if ($CONFIG['auto_assign_incidents'])
+        {
+            html_redirect("incident_new.php?action=reassign&userid={$suggested_user}&incidentid={$incidentid}");
+            exit;
+        }
+        else
+        {
+            echo $html;
+        }
+
+        // List Engineers
+        // We need a user type 'engineer' so we don't just list everybody
+        // Status zero means account disabled
+        $sql = "SELECT * FROM `{$dbUsers}` WHERE status!=0 ORDER BY realname";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        echo "<h3>{$strUsers}</h3>
+        <table class='maintable'>
+        <tr>
+            <th>&nbsp;</th>
+            <th>{$strName}</th>
+            <th>{$strTelephone}</th>
+            <th>{$strStatus}</th>
+            <th>{$strMessage}</th>
+            <th colspan='5'>{$strIncidentsinQueue}</th>
+            <th>{$strAccepting}</th>
+        </tr>";
+        echo "<tr>
+        <th colspan='5'></th>
+        <th align='center'>{$strActionNeeded} / {$strOther}</th>";
+        echo "<th align='center'>".priority_icon(PRIORITY_CRITICAL)."</th>";
+        echo "<th align='center'>".priority_icon(PRIORITY_HIGH)."</th>";
+        echo "<th align='center'>".priority_icon(PRIORITY_MEDIUM)."</th>";
+        echo "<th align='center'>".priority_icon(PRIORITY_LOW)."</th>";
+
+        echo "<th></th>";
+        echo "</tr>";
+
+        $shade = 'shade2';
+        while ($userobj = mysql_fetch_obj($result))
+        {
+            if ($userobj->id == $suggested_user) $shade = 'idle';
+            echo "<tr class='{$shade}'>";
+            // display reassign link only if person is accepting or if the current user has 'reassign when not accepting' permission
+            if ($userobj->accepting == 'Yes')
+            {
+                echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
+                // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
+                echo ">{$strAssignTo}</a></td>";
+            }
+            elseif (user_permission($sit[2], PERM_INCIDENT_FORCE_ASSIGN) OR $userobj->id == $sit[2])
+            {
+                echo "<td align='right'><a href=\"{$_SERVER['PHP_SELF']}?action=reassign&amp;userid={$userobj->id}&amp;incidentid={$incidentid}&amp;nextaction=".urlencode($nextaction)."&amp;win={$win}\" ";
+                // if ($priority >= 3) echo " onclick=\"alertform.submit();\"";
+                echo ">{$strForceTo}</a></td>";
+            }
+            else
+            {
+                echo "<td class='expired'>&nbsp;</td>";
+            }
+            echo "<td>";
+
+            // Have a look if this user has skills with this software
+            $ssql = "SELECT softwareid FROM `{$dbUserSoftware}` ";
+            $ssql .= "WHERE userid='{$userobj->id}' AND softwareid='{$software}' ";
+            $sresult = mysql_query($ssql);
+            if (mysql_num_rows($sresult) >= 1)
+            {
+                echo "<strong>{$userobj->realname}</strong>";
+            }
+            else
+            {
+                echo $userobj->realname;
+            }
+
+            echo "</td>";
+            echo "<td>{$userobj->phone}</td>";
+            echo "<td>".user_online_icon($userobj->id)." ".userstatus_name($userobj->status)."</td>";
+            echo "<td>{$userobj->message}</td>";
+            echo "<td align='center'>";
+
+            $incpriority = user_incidents($userobj->id);
+            $countincidents = ($incpriority['1'] + $incpriority['2'] + $incpriority['3'] + $incpriority['4']);
+
+            if ($countincidents >= 1) $countactive = user_activeincidents($userobj->id);
+            else $countactive = 0;
+
+            $countdiff = $countincidents - $countactive;
+
+            echo "$countactive / {$countdiff}</td>";
+            echo "<td align='center'>{$incpriority['4']}</td>";
+            echo "<td align='center'>{$incpriority['3']}</td>";
+            echo "<td align='center'>{$incpriority['2']}</td>";
+            echo "<td align='center'>{$incpriority['1']}</td>";
+
+            echo "<td align='center'>";
+            if ($userobj->accepting == 'Yes') echo $strYes;
+            else echo "<span class='error'>{$strNo}</span>";
+            echo "</td>";
+            echo "</tr>\n";
+            if ($shade == 'shade2') $shade = 'shade1';
+            else $shade = 'shade2';
+        }
+        echo "</table>";
+        echo "<p align='center'>{$strUsersBoldSkills}.</p>";
+        
+        clear_form_data('newincident');
+        
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
     }
-    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 elseif ($action == 'reassign')
 {

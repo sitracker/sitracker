@@ -118,7 +118,7 @@ else
     $site .= list_tag_icons($incident->siteid, TAG_SITE); // site tag icons
     $site .= "<br />\n";
     echo sprintf($strContactofSite, $contact, $site)." ";
-    echo "<a href=\"mailto:{$incident->email}\">{$incident->email}</a><br />\n";
+    echo "<a href=\"mailto:{$incident->email}?subject=".get_userfacing_incident_id_email($incidentid)." - {$incident->title}&cc={$CONFIG['email_address']}\">{$incident->email}</a>\n";
     echo "</div>\n";
 
     if ($incident->ccemail != '')

@@ -253,21 +253,24 @@ switch ($step)
         $bccemail = format_email_address_list($bccemail);
         $toemail = format_email_address_list($toemail);
 
+        echo show_form_errors('incidentemail');
+        clear_form_errors('incidentemail');
+        
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' ";
         echo "enctype='multipart/form-data' onsubmit=\"return confirm_action('{$strAreYouSureSendEmail}');\" >";
         echo "<table align='center' class='vertical' width='95%'>";
-        echo "<tr><th width='30%'>{$strFrom}</th><td><input maxlength='100' ";
-        echo "name='fromfield' id='fromfield' size='40' value=\"{$from}\" /></td></tr>\n";
-        echo "<tr><th>{$strReplyTo}</th><td><input maxlength='100' name='replytofield' ";
-        echo "id='replytofield' size='40' value=\"{$replyto}\" /></td></tr>\n";
-        echo "<tr><th>{$strCC}</th><td><input maxlength='100' name='ccfield' ";
-        echo "id='ccfield' size='40' value=\"{$ccemail}\" /></td></tr>\n";
-        echo "<tr><th>{$strBCC}</th><td><input maxlength='100' name='bccfield' ";
-        echo "id='bccfield' size='40' value=\"{$bccemail}\" /></td></tr>\n";
-        echo "<tr><th>{$strTo}</th><td><input maxlength='100' name='tofield' ";
-        echo "id='tofield' size='40' value=\"{$toemail}\" /></td></tr>\n";
+        echo "<tr><th width='30%'>{$strFrom}</th><td><input maxlength='255' ";
+        echo "name='fromfield' id='fromfield' size='40' value=\"". show_form_value('incidentemail', 'fromfield', $from) . "\" /></td></tr>\n";
+        echo "<tr><th>{$strReplyTo}</th><td><input maxlength='255' name='replytofield' ";
+        echo "id='replytofield' size='40' value=\"". show_form_value('incidentemail', 'replytofield', $replyto) . "\" /></td></tr>\n";
+        echo "<tr><th>{$strCC}</th><td><input maxlength='255' name='ccfield' ";
+        echo "id='ccfield' size='40' value=\"". show_form_value('incidentemail', 'ccfield', $ccemail) . "\" /></td></tr>\n";
+        echo "<tr><th>{$strBCC}</th><td><input maxlength='255' name='bccfield' ";
+        echo "id='bccfield' size='40' value=\"". show_form_value('incidentemail', 'bccfield', $bccemail) . "\" /></td></tr>\n";
+        echo "<tr><th>{$strTo}</th><td><input maxlength='255' name='tofield' ";
+        echo "id='tofield' size='40' value=\"". show_form_value('incidentemail', 'tofield', $toemail) . "\" /></td></tr>\n";
         echo "<tr><th>{$strSubject}</th><td><input maxlength='255' ";
-        echo "name='subjectfield' id='subjectfield' size='40' value=\"{$subject}\" /></td></tr>\n";
+        echo "name='subjectfield' id='subjectfield' size='40' value=\"". show_form_value('incidentemail', 'subject', $subject) . "\" /></td></tr>\n";
         echo "<tr><th>{$strAttachment}";
         $file_size = readable_bytes_size($CONFIG['upload_max_filesize']);
         echo "(&lt; $file_size)";
@@ -280,7 +283,7 @@ switch ($step)
         echo "</td></tr>";
         echo "<tr><th>{$strMessage}</th><td>";
         echo "<textarea name='bodytext' id='bodytext' rows='20' cols='65'>";
-        echo $body;
+        echo show_form_value('incidentemail', 'bodytext', $body);
         echo "</textarea>";
         echo "<div id='updatestr'><a href=\"javascript:save_draft('{$id}', 'email');\">".icon('save', 16, $strSaveDraft)."</a></div>";
         echo "</td></tr>";
@@ -332,8 +335,10 @@ switch ($step)
         $chase_customer = cleanvar($_REQUEST['chase_customer']);
         $chase_manager = cleanvar($_REQUEST['chase_manager']);
 
+        $_SESSION['formdata']['incidentemail'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+        
         $files = array();
-
+        
         $size_of_files = 0;
 
         // Check file size is below limit
@@ -346,8 +351,8 @@ switch ($step)
                 // check the for errors related to file size in php.ini(upload_max_filesize).
                 if ($errorcode == 1 || $errorcode == 2)
                 {
-                    $errors = 1;
-                    $error_string .= "<p class='error'>".get_file_upload_error_message($errorcode, $file['name'])."</p>\n";
+                    $_SESSION['formerrors']['incidentemail']['filesize'] = get_file_upload_error_message($errorcode, $file['name']);
+                    $errors++;
                 }
 
                 $size_of_files += filesize($file['tmp_name']);
@@ -358,26 +363,26 @@ switch ($step)
 
         if ($size_of_files > $CONFIG['upload_max_filesize'])
         {
-            $errors = 1;
-            $error_string .= "<p class='error'>{$strAttachedFilesExceedMaxSize}</p>\n";
+            $_SESSION['formerrors']['incidentemail']['filesize'] = $strAttachedFilesExceedMaxSize;
+            $errors++;
         }
 
         if ($tofield == '')
         {
-            $errors = 1;
-            $error_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strTo)."</p>\n";
+            $_SESSION['formerrors']['incidentemail']['filesize'] = sprintf($strFieldMustNotBeBlank, $strTo);
+            $errors++;
         }
 
         if ($fromfield == '')
         {
-            $errors = 1;
-            $error_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strFrom)."</p>\n";
+            $_SESSION['formerrors']['incidentemail']['filesize'] = sprintf($strFieldMustNotBeBlank, $strFrom);
+            $errors++;
         }
 
         if ($replytofield == '')
         {
-            $errors = 1;
-            $error_string .= "<p class='error'>".sprintf($strFieldMustNotBeBlank, $strReplyTo)."</p>\n";
+            $_SESSION['formerrors']['incidentemail']['filesize'] = sprintf($strFieldMustNotBeBlank, $strReplyTo);
+            $errors++;
         }
 
         // Store email body in session if theres been an error
@@ -675,6 +680,8 @@ switch ($step)
                 $text = $strEmailSentSuccessfullyAutoClose;
                 if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully;
 
+                clear_form_data('incidentemail');
+                
                 html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);
             }
             else
@@ -687,7 +694,7 @@ switch ($step)
         else
         {
             // there were errors
-            html_redirect("incident_email.php?id={$id}&step=2&draftid={$draftid}", FALSE, $error_string);
+            html_redirect("incident_email.php?id={$id}&step=2&draftid={$draftid}", FALSE);
         }
         break;
     default:

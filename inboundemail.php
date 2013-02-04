@@ -238,10 +238,10 @@ if ($emails > 0)
 
         if (is_array($decoded[0]['ExtractedAddresses']['to:']))
         {
+            $num = sizeof($decoded[0]['ExtractedAddresses']['to:']);
+            $cur = 1;
             foreach ($decoded[0]['ExtractedAddresses']['to:'] as $var)
             {
-                $num = sizeof($decoded[0]['ExtractedAddresses']['to:']);
-                $cur = 1;
                 if (!empty($var['name']))
                 {
                     if (!empty($var['encoding']) AND strcasecmp('UTF-8', $var['encoding']) !== 0)
@@ -249,22 +249,22 @@ if ($emails > 0)
                         $var['name'] = mb_convert_encoding($var['name'], "UTF-8", strtoupper($var['encoding']));
                     }
                     $to .= $var['name']. " <".$var['address'].">";
-                    if ($cur != $num) $to .= ", ";
                 }
                 else
                 {
                     $to .= $var['address'];
                 }
+                if ($cur != $num) $to .= ", ";
                 $cur++;
             }
         }
 
         if (is_array($decoded[0]['ExtractedAddresses']['cc:']))
         {
+            $num = sizeof($decoded[0]['ExtractedAddresses']['cc:']);
+            $cur = 1;
             foreach ($decoded[0]['ExtractedAddresses']['cc:'] as $var)
             {
-                $num = sizeof($decoded[0]['ExtractedAddresses']['cc:']);
-                $cur = 1;
                 if (!empty($var['name']))
                 {
                     if (!empty($var['encoding']) AND strcasecmp('UTF-8', $var['encoding']) !== 0)
@@ -272,12 +272,12 @@ if ($emails > 0)
                         $var['name'] = mb_convert_encoding($var['name'], "UTF-8", strtoupper($var['encoding']));
                     }
                     $cc .= $var['name']. " <".$var['address'].">";
-                    if ($cur != $num) $cc .= ", ";
                 }
                 else
                 {
                     $cc .= $var['address'];
                 }
+                if ($cur != $num) $cc .= ", ";
                 $cur++;
             }
         }
@@ -327,7 +327,7 @@ if ($emails > 0)
 
         plugin_do('email_arrived');
 
-        $incident_open = (incident_status($incidentid) != STATUS_CLOSED AND incident_status($incidentid) != STATUS_CLOSING);
+        $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
 
         $customer_visible = 'No';
         $part = 1;
@@ -361,20 +361,54 @@ if ($emails > 0)
             foreach ($results['Attachments'] as $attachment)
             {
                 $data = $attachment['Data'];
-                $filename = utf8_encode(mb_decode_mimeheader($attachment['FileName']));
+                echo "{$attachment['FileName']}\n";
+                $filename = $attachment['FileName'];
+                if (mb_detect_encoding($filename) != 'UTF-8')
+                {
+                    $filename = utf8_encode($filename);
+                }
                 $filename = str_replace(' ', '_', $filename);
                 $filename = clean_fspath($filename);
 
                 if (empty($filename))
                 {
-                    $filename = 'part'.$part;
-                    if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
-                    $part++;
+                    // If it was a forwarded email
+                    if ($attachment['Type'] == 'message')
+                    {
+                        $mime_att = new mime_parser_class();
+                        $mime_att->mbox = 0;
+                        $mime_att->decode_headers = 1;
+                        $mime_att->decode_bodies = 1;
+                        $mime_att->ignore_syntax_errors = 1;
+                        
+                        $parameters_att = array('Data'=>$attachment['Data']);
+
+                        // We can't call Analyse as it would overwrite the existing email in memory
+                        $mime_att->Decode($parameters_att, $decoded_att);
+                        
+                        if (strlen($decoded_att[0]['Headers']['subject:']) > 0)
+                        {
+                            $filename = utf8_encode(mb_decode_mimeheader($decoded_att[0]['Headers']['subject:'])) . '.eml';
+                            $filename = str_replace(' ', '_', $filename);
+                            $filename = clean_fspath($filename);
+                        }
+                    }
+                    
+                    // If its still empty - we may have set it above
+                    if (empty($filename))
+                    {
+                        $filename = 'part'.$part;
+                        if ($attachment['SubType'] == 'jpeg') $filename .= '.jpeg';
+                        if ($attachment['Type'] == 'message') $filename .= '.eml';
+                        $part++;
+                    }
+
                 }
                 $filesize = mb_strlen($data);
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
+                echo $sql;
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 $fileid = mysql_insert_id();

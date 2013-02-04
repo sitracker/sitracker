@@ -601,3 +601,106 @@ function setup_check_column_exists($table_name, $column_name)
     if (in_array($column_name, $column_array)) return TRUE;
     else return FALSE;
 }
+
+
+/**
+*
+* Checks that the current user has the necessary privileges for setup
+* @author Paul Heaney
+* @param array $privs - Array of the required privileges
+* @return array - Array of the privileges missing, an empty array is returned when all privilelges are present
+*/
+function check_mysql_privileges($privs)
+{
+    $rtn = array();
+
+    $granted = array();
+   
+    $sql = "SHOW GRANTS FOR CURRENT_USER()";
+
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+
+    while ($row = mysql_fetch_row($result))
+    {
+        if (preg_match('/(GRANT )(.*) ON.*$/', $row[0], $m))
+        {
+            $m[2] = str_replace(", ", ",", $m[2]);
+            $granted = array_merge(explode(",", $m[2]), $granted);
+        }
+    }
+
+    if (in_array('ALL', $granted))
+    {
+        // User has all privileges
+        $rtn = array();
+        return $rtn;
+    }
+    
+    if (in_array('ALL PRIVILEGES', $granted))
+    {
+        // User has all privileges
+        $rtn = array();
+        return $rtn;
+    }
+
+    foreach ($privs AS $p)
+    {
+        if (!in_array($p, $granted))
+        {
+            $rtn[] = $p;
+        }
+    }
+
+    return $rtn;
+}
+
+
+/**
+ * Looks through the schema upgrade to see what rights are required and returns them as an array
+ * @author Paul Heaney
+ * @param int $installed_version The version currently installed
+ * @return array Strings - The permissions required to upgrade
+ */
+function upgrade_required_perms($installed_version)
+{
+    global $installed_schema, $upgrade_schema, $application_version;
+    
+    $required = array();
+    
+    for ($v = (($installed_version * 100) + 1); $v <= ($application_version * 100); $v++)
+    {
+        if (!empty($upgrade_schema[$v]))
+        {
+            $newversion = number_format(($v / 100), 2);
+        
+            $sqlquerylist = $upgrade_schema[$v]; 
+            
+            if (!is_array($sqlquerylist)) $sqlquerylist = array($sqlquerylist);
+
+            // Loop around the queries
+            foreach ($sqlquerylist AS $schemaversion => $queryelement)
+            {
+                if ($schemaversion != '0') $schemaversion = mb_substr($schemaversion, 1);
+    
+                if ($schemaversion == 0 OR $installed_schema < $schemaversion)
+                {
+                    $sqlqueries = explode( ';', $queryelement);
+                    // We don't need the last entry it's blank, as we end with a ;
+                    array_pop($sqlqueries);
+                    $errors = 0;
+                    foreach ($sqlqueries AS $sql)
+                    {
+                        $p = explode(" ", $sql);
+                        $permission = trim($p[0]);
+                        if (!empty($permission) AND $permission != '--')
+                        {
+                            $required[$permission] = $permission;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return $required;
+}
