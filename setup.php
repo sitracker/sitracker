@@ -27,7 +27,6 @@ define ('APPLICATION_PLUGINPATH', realpath(dirname( __FILE__ ).DIRECTORY_SEPARAT
 require (APPLICATION_LIBPATH . 'constants.inc.php');
 
 require (APPLICATION_LIBPATH . 'plugins.inc.php');
-
 // Load config defaults
 @include (APPLICATION_LIBPATH . 'defaults.inc.php');
 // Keep the defaults as a seperate array

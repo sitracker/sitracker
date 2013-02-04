@@ -226,7 +226,7 @@ hr
 /* ID & Class Selectors */
 
 
-#container p 
+#container p
 {
     text-align: left;
 }
@@ -396,7 +396,7 @@ hr
     height: 20px;
 }
 
-#menu ul 
+#menu ul
 {
     margin: 0;
     padding: 0;
@@ -421,7 +421,7 @@ hr
     background-color: #FFF;
 }
 
-#menu a 
+#menu a
 {
     display: block;
     text-decoration: none;
@@ -466,7 +466,7 @@ html>body #menu li ul
     display: none;
 }
 
-#menu li li 
+#menu li li
 {
     width: 100%;
     border-width: 0 1px 0 1px;
@@ -726,7 +726,7 @@ td.holidaydate
 {
     background-color: #f08080;
     color: black;
-} 
+}
 
 /* yellow -- was #ffbbaa; mild red */
 .notice
@@ -760,13 +760,13 @@ h1.critical
 .expired
 {
     background-color: #D6D6D6;
-} 
+}
 
 /* teal */
 .review
 {
     background-color: #7AC5CD;
-} 
+}
 
 /* green - #90ee90; */
 .idle
@@ -778,7 +778,7 @@ h1.critical
 .visible
 {
     background-color: #DDFFE1;
-} 
+}
 
 #statusbar
 {
@@ -888,7 +888,7 @@ span.separator
 }
 
 /* Information and Errors */
-h2.error,h3.error,h4.error,h5.error,p.error 
+h2.error,h3.error,h4.error,h5.error,p.error
 {
     color: red;
 }
@@ -904,6 +904,7 @@ p.tip,p.info, p.warning, p.error, p.trigger, h5.warning, h5.error
     background-repeat: no-repeat;
     padding: 3px 3px 3px 22px;
     min-height: 16px;
+    border-radius: 5px;
     -moz-border-radius: 5px;
     border: 1px solid #000;
     margin-left: 2em;
@@ -929,7 +930,7 @@ p.info, p.trigger
 }
 
 p.info span, p.error span, p.warning span, p.trigger span
-{ 
+{
     float: right;
     margin-right: 10px;
 }
@@ -986,7 +987,7 @@ div.scrollbox
     border: 1px inset #ccc;
 }
 
-p.sitversion, p.forgotpwd, p.inventory, #inventory, .formbuttons, #container .formbuttons 
+p.sitversion, p.forgotpwd, p.inventory, #inventory, .formbuttons, #container .formbuttons
 {
     text-align: center;
 }
@@ -1270,7 +1271,7 @@ div.iheader
     margin-bottom:5px;
 }
 
-#loginform input[type=text], #loginform input[type=password] 
+#loginform input[type=text], #loginform input[type=password]
 {
     width: 90%;
 }
@@ -1751,7 +1752,7 @@ table.vertical td
 }
 
 table.vertical th
-{ 
+{
     text-align: right;
 }
 
@@ -2012,7 +2013,7 @@ th.today, td.today
     {
         background-color: red;
     }
-    #statusbar, #languageselection 
+    #statusbar, #languageselection
     {
         text-align: left;
         padding-left: 5px;
