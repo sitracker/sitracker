@@ -625,11 +625,6 @@ tr.shade2
     background-color: #DDDDFF;
 }
 
-tr.critical
-{
-    background-color: #FF4433;
-}
-
 tr.urgent
 {
     background-color: #f08080;
