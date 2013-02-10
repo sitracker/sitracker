@@ -180,7 +180,7 @@ function authenticate($username, $password)
 
         if ($toReturn)
         {
-            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'],0, 15),CFG_JOURNAL_LOGIN,0);
+            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'], 0, 15), CFG_JOURNAL_LOGIN, 0);
             debug_log ("Authenticate: User authenticated",TRUE);
         }
         else
