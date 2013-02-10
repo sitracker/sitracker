@@ -66,47 +66,6 @@ if (version_compare(PHP_VERSION, "5.1.0", ">="))
 
 
 /**
- * Authenticate a user with a username/password pair
- * @author Ivan Lucas
- * @param string $username. A username
- * @param string $password. A password (non-md5)
- * @return an integer to indicate whether the user authenticated against the database
- * @retval int 0 the credentials were wrong or the user was not found.
- * @retval int 1 to indicate user is authenticated and allowed to continue.
- */
-function authenticateSQL($username, $password)
-{
-    global $dbUsers;
-
-    $password = md5($password);
-    if ($_SESSION['auth'] == TRUE)
-    {
-        // Already logged in
-        return 1;
-    }
-
-    // extract user
-    $sql  = "SELECT id FROM `{$dbUsers}` ";
-    $sql .= "WHERE username = '{$username}' AND password = '{$password}' AND status != 0 ";
-    // a status of 0 means the user account is disabled
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    // return appropriate value
-    if (mysql_num_rows($result) == 0)
-    {
-        mysql_free_result($result);
-        return 0;
-    }
-    else
-    {
-        journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'],0, 15),CFG_JOURNAL_LOGIN,0);
-        return 1;
-    }
-}
-
-
-/**
  * Authenticate a user
  * @author Lea Anthony
  * @param string $username. Username
