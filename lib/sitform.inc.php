@@ -71,7 +71,7 @@ class Form
 
     private function generateHTML()
     {
-        global $strSubmit;
+        global $strSubmit, $strReset;
 
         echo "<h2>{$this->formheading}</h2>";
 
@@ -86,7 +86,8 @@ class Form
             echo $r->generateHTML();
         }
         echo "</table>";
-        echo "<p class='formbuttons'><input type='submit' id='{$this->name}submit' name='submit' value='{$this->submitLabel}' /></p>\n";
+        echo "<p class='formbuttons'><input type='reset' id='{$this->name}reset' name='reset' value='{$strReset}' />";
+        echo "<input type='submit' id='{$this->name}submit' name='submit' value='{$this->submitLabel}' /></p>\n";
 
         echo "</form>";
         
