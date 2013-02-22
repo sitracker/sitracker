@@ -46,13 +46,14 @@ echo "<table class='maintable'>";
 
 if (mysql_num_rows($result) > 0)
 {
-    echo "<tr><th>{$strID}</th><th>{$strTitle}</th><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strOwner}</th><th>{$strCustomer}</th><th>{$strSite}</th></tr>";
+    echo "<tr><th>{$strID}</th><th>{$strTitle}</th><th>{$strPriority}</th><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strOwner}</th><th>{$strCustomer}</th><th>{$strSite}</th></tr>";
 
     while ($obj = mysql_fetch_object($result))
     {
         echo "<tr>";
         echo "<td>".html_incident_popup_link($obj->id, get_userfacing_incident_id($obj->id))."</td>";
         echo "<td>".html_incident_popup_link($obj->id, $obj->title)."</td>";
+        echo "<td>".priority_name($obj->priority)."</td>";
         echo "<td>".date($CONFIG['dateformat_datetime'], $obj->opened)."</td>";
         if ($obj->status != 2)
         {
@@ -62,7 +63,9 @@ if (mysql_num_rows($result) > 0)
         {
             echo "<td>".date($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
         }
-        echo "<td>".user_realname($obj->owner)."</td>";
+        echo "<td>".user_realname($obj->owner);
+        if ($obj->towner > 0) echo " (".user_realname($obj->towner).") ";
+        echo "</td>";
 
         $sql = "SELECT c.forenames, c.surname, s.name ";
         $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
