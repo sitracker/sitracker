@@ -34,11 +34,13 @@ switch ($action)
             $_SESSION['formerrors']['edit_vendor']['name'] = sprintf($strFieldMustNotBeBlank, $strVendorName);
         }
 
+        plugin_do('vendors_submitted');
         if ($errors == 0)
         {
             $sql = "UPDATE `{$dbVendors}` SET name = '{$vendorname}' WHERE id = '{$vendorid}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            plugin_do('vendors_saved');
             html_redirect("vendors.php");
         }
         else
@@ -57,6 +59,7 @@ switch ($action)
         echo "<table class='maintable'>";
         echo "<tr><th>{$strVendorName}:</th><td><input maxlength='50' name='name' size='30' value='{$vendorname}' class='required' /> ";
         echo "<span class='required'>{$strRequired}</span></td></tr>";
+        plugin_do('vendors_form');
         echo "</table>";
         echo "<input type='hidden' name='action' value='save' />";
         echo "<input type='hidden' name='vendorid' value='{$vendorid}' />";
@@ -90,6 +93,7 @@ switch ($action)
                 if ($shade == 'shade1') $shade = 'shade2';
                 else $shade = 'shade1';
             }
+            plugin_do('vendors_table');
             echo "</table>";
         }
         echo "<p align='center'><a href='vendor_new.php'>{$strNewVendor}</a></p>";
