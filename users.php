@@ -241,6 +241,7 @@ while ($users = mysql_fetch_object($result))
     if ($shade == 'shade1') $shade = 'shade2';
     else $shade = 'shade1';
 }
+plugin_do('users_table');
 $total = $critical + $high + $med + $low;
 echo "<tr align='center'><td></td><td align='right'>";
 echo "<strong>{$strTotal}</strong> ({$total})</td><td>{$critical}</td>";
