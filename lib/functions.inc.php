@@ -1239,7 +1239,7 @@ function add_charting_library($library)
 /**
  * Checks the environment for SiT requirements
  * @author Paul Heaney
- * @return Status The status of SiT
+ * @return Status The status of the SiT environment
  */
 function check_install_status()
 {
@@ -1252,6 +1252,7 @@ function check_install_status()
     $s->add_extension_check('zlib', 'PHP Zlib Compression', INSTALL_FATAL);
     $s->add_extension_check('session', 'PHP Session', INSTALL_FATAL);
     $s->add_extension_check('pcre', 'PHP Regular Expression', INSTALL_FATAL);
+    $s->add_extension_check('gd', 'PHP GD', INSTALL_WARN);
 
     return $s;
 }
