@@ -634,6 +634,8 @@ switch ($_REQUEST['action'])
                              * UPGRADE THE SCHEMA        *
                              *****************************/
                             $installed_version = upgrade_schema($installed_version);
+                            
+                            upgrade_390_migrate_user_config();
 
                             /*******************************
                             * DISABLE INCOMPATABLE PLUGINS *
