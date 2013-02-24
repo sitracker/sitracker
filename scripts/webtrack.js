@@ -26,7 +26,12 @@ function incident_details_window(incidentid, win, rtn)
 {
     // URL = "incident.php?popup=yes&id=" + incidentid;
     // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
-    URL = "incident_details.php?id=" + incidentid + "&win=" + win;
+    URL = "incident_details.php?id=" + incidentid;
+  
+    if (typeof win !== 'undefined') 
+    {
+        URL = URL + "&win=" + win;
+    }
     if (win == 'sit_popup' && popwin)
     {
         popwin.close();
