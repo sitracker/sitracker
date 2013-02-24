@@ -271,7 +271,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
 
 // Portal menu
 
-if (!empty($_SESSION) AND $_SESSION['portalauth'] == TRUE)
+if (!empty($_SESSION) AND isset($_SESSION['portalauth']) AND $_SESSION['portalauth'] == TRUE)
 {
     // Force KB disabled if it's globally disabled
     if (($CONFIG['kb_enabled'] != TRUE) OR ($CONFIG['portal_kb_enabled'] == 'Disabled'))

@@ -10,7 +10,7 @@
 //
 // Author Ivan Lucas <ivan[at]sitracker.org>
 
-require ('..'.DIRECTORY_SEPARATOR.'core.php');
+require ('..' . DIRECTORY_SEPARATOR . 'core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $accesslevel = 'any';
 require (APPLICATION_LIBPATH . 'portalauth.inc.php');

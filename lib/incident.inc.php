@@ -1613,7 +1613,6 @@ function new_update($incidentid, $text, $type = 'default', $sla = '', $userid = 
                     $currentstatus = 1, $visibility = 'show')
 {
     global $now;
-    $text = cleanvar($text);
     $sql  = "INSERT INTO `{$GLOBALS['dbUpdates']}` (incidentid, userid, ";
     $sql .= "type, bodytext, timestamp, currentowner, currentstatus, ";
     $sql .= "customervisibility, sla) VALUES ('{$incidentid}', '{$userid}', ";

@@ -248,7 +248,7 @@ $CONFIG['portal_usernames_can_be_changed'] = TRUE; //portal usernames can be cha
 $CONFIG['portal_iconset'] = 'kriplyana';
 
 // The interface style to use for the portal
-$CONFIG['portal_interface_style'] = 8;
+$CONFIG['portal_interface_style'] = 'kriplyana';
 
 // incidents are automatically assigned based on a lottery weighted towards who
 // are less busy, assumes everyone set to accepting is an engineer and willing to take incidents
