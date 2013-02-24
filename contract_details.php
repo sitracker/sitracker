@@ -56,13 +56,17 @@ if ($maint->term == 'yes')
 }
 else
 {
-    echo $strActive;
+    if ($maint->expirydate < $now AND $maint->expirydate != '-1')
+    {
+        echo "<span class='expired'>{$strExpired}</span>";
+    }
+    else
+    {
+        echo $strActive;
+    }
 }
 
-if ($maint->expirydate < $now AND $maint->expirydate != '-1')
-{
-    echo ", <span class='expired'>{$strExpired}</span>";
-}
+
 echo "</td></tr>\n";
 echo "<tr><th>{$strSite}:</th>";
 
