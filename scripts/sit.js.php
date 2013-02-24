@@ -124,7 +124,7 @@ var icon_ldap_container = '{$icon_ldap_container}';
 
 
 /*
-    Please don't add functions here, these functions below need moving to webtrack.js
+    Please don't add functions here, functions belong in webtrack.js
     this file is to make i18n keys available in javascript
 */
 ";
