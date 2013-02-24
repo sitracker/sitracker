@@ -76,7 +76,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARN
 
 $maint = mysql_fetch_object($maintresult);
 
-$html = "<table class='maintable vertical'>";
+echo "<table class='maintable vertical'>";
 echo "<tr><th>{$strContract} {$strID}:</th>";
 echo "<td><h3>".icon('contract', 32)." ";
 echo "{$maint->id}</h3></td></tr>";
