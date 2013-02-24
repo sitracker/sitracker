@@ -184,7 +184,7 @@ if ($sit[0] != '')
         $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
         if (user_permission($sit[2], PERM_ADMIN))
         {
-            $msg .= " from v{$dbversion} to v{$application_version}</p>";
+            $msg .= " from v{$dbversion} to v{$application_version}<br />";
             $msg2 = "Visit <a href='setup.php'>Setup</a> to update the schema.";
         }
         echo user_alert($msg, E_USER_ERROR);
