@@ -37,14 +37,14 @@ class User extends Person{
     var $incident_refresh;
     var $update_order;
     var $num_updates_view;
-    var $style;
-    var $hide_auto_updates;
-    var $hideheader;
-    var $monitor;
+    var $theme;
+    var $iconset;
     var $i18n;
     var $utc_offset;
     var $emoticons;
     var $startdate;
+    var $language;
+    var $show_next_action;
 
     // Legacy
     var $icq;
@@ -69,12 +69,10 @@ class User extends Person{
         $sql .= "FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRoles']}` AS r ";
         $sql .= "WHERE u.id = {$this->id} AND u.roleid = r.id";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 1)
         {
-            // FIXME the user config part of this needs updating for the new
-            // user config table, see Mantis 863
             $obj = mysql_fetch_object($result);
             $this->username = $obj->username;
             $this->realname = $obj->realname;
@@ -95,20 +93,39 @@ class User extends Person{
             $this->message = $obj->message;
             $this->accepting = $obj->accepting;
             $this->startdate = $obj->user_startdate;
-            $this->incident_refresh = $obj->var_incident_refresh;
-            $this->update_order = $obj->var_update_order;
-            $this->num_updates_view = $obj->var_num_updates_view;
-            $this->style = $obj->var_style;
-            $this->hide_auto_updates = $obj->var_hideautoupdates;
-            $this->hideheader = $obj->var_hideheader;
-            $this->monitor = $obj->var_monitor;
-            $this->i18n = $obj->var_i18n;
-            $this->utc_offset = $obj->var_utc_offset;
-            $this->emoticons = $obj->var_emoticons;
             $this->holiday_entitlement = $obj->holiday_entitlement;
             $this->holiday_resetdate = $obj->holiday_resetdate;
             $this->qualifications = $obj->qualifications;
             $this->source = $obj->user_source;
+            
+            $sql_userconfig = "SELECT config, value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$this->id}";
+            $result_userconfig = mysql_query($sql_userconfig);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            
+            while ($obj_userconfig = mysql_fetch_object($result_userconfig))
+            {
+                switch ($obj_userconfig->config)
+                {
+                    case 'show_emoticons': $this->emoticons = $obj_userconfig->value;
+                        break;
+                    case 'utc_offset': $this->utc_offset = $obj_userconfig->value;
+                        break;
+                    case 'language': $this->i18n = $obj_userconfig->value;
+                        break;
+                    case 'incident_refresh': $this->incident_refresh = $obj_userconfig->value;
+                        break;
+                    case 'incident_log_order': $this->update_order = $obj_userconfig->value;
+                        break;
+                    case 'updates_per_page': $this->num_updates_view = $obj_userconfig->value;
+                        break;
+                    case 'show_next_action': $this->show_next_action = $obj_userconfig->value;
+                        break;
+                    case 'iconset': $this->iconset = $obj_userconfig->value;
+                        break;
+                    case 'theme': $this->theme = $obj_userconfig->value;
+                        break;
+                }
+            }
         }
         else
         {
@@ -149,11 +166,11 @@ class User extends Person{
         {
             // Insert
             $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (username, password, realname, roleid, ";
-            $sql .= "groupid, title, email, phone, mobile, fax, status, var_style, ";
+            $sql .= "groupid, title, email, phone, mobile, fax, status, ";
             $sql .= "holiday_entitlement, user_startdate, lastseen, user_source) ";
             $sql .= "VALUES ('".cleanvar($this->username)."', MD5('".cleanvar($this->password)."'), '".cleanvar($this->realname)."', '".cleanvar($this->roleid)."', ";
             $sql .= "'".cleanvar($this->group->id)."', '".cleanvar($this->jobtitle)."', '".cleanvar($this->email)."', '".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', ";
-            $sql .= "".cleanvar($this->status).", '".cleanvar($this->style)."', ";
+            $sql .= "".cleanvar($this->status).", ";
             $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, '".cleanvar($this->source)."')";
             $result = mysql_query($sql);
             if (mysql_error())
@@ -252,22 +269,22 @@ class User extends Person{
                 if (!empty($this->holiday_entitlement)) $s[] = "holiday_entitlement = ".cleanvar($this->holiday_entitlement)."";
                 if (!empty($this->holiday_resetdate)) $s[] = "holiday_restdate = '".cleanvar($this->holiday_resetdate)."'";
                 if (!empty($this->qualifications)) $s[] = "qualifications = '".cleanvar($this->qualifications)."'";
-                if (!empty($this->incident_refresh) OR $this->incident_refresh === 0) $s[] = "var_incident_refresh = ".cleanvar($this->incident_refresh)."";
-                if (!empty($this->update_order)) $s[] = "var_update_order = '".cleanvar($this->update_order)."'";
-                if (!empty($this->num_updates_view)) $s[] = "var_num_updates_view = ".cleanvar($this->num_updates_view)."";
-                if (!empty($this->style)) $s[] = "var_style = ".cleanvar($this->style)."";
-                if (!empty($this->hide_auto_updates)) $s[] = "var_hideautoupdates = '".cleanvar($this->hide_auto_updates)."'";
-                if (!empty($this->hideheader)) $s[] = "var_hideheader = '".cleanvar($this->hideheader)."'";
-                if (!empty($this->monitor)) $s[] = "var_monitor = '".cleanvar($this->monitor)."'";
-                if (!empty($this->i18n)) $s[] = "var_i18n = '".cleanvar($this->i18n)."'";
-                if (!empty($this->utc_offset) OR $this->utc_offset === 0) $s[] = "var_utc_offset = ".cleanvar($this->utc_offset)."";
-                if (!empty($this->emoticons)) $s[] = "var_emoticons = '".cleanvar($this->emoticons)."'";
                 if (!empty($this->startdate)) $s[] = "user_startdate = '".cleanvar($this->startdate)."'";
                 if (!empty($this->icq)) $s[] = "icq = '".cleanvar($this->icq)."'";
                 if (!empty($this->aim)) $s[] = "aim = '".cleanvar($this->aim)."'";
                 if (!empty($this->msn)) $s[] = "msn = '".cleanvar($this->msn)."'";
                 if (!empty($this->skype)) $s[] = "skype = '".cleanvar($this->skype)."'";
 
+                $userconfig = array();
+                if (!empty($this->incident_refresh) OR $this->incident_refresh === 0) $userconfig[] = array("config" => "incident_refresh", "value" => $this->incident_refresh);
+                if (!empty($this->update_order)) $userconfig[] = array("config" => "incident_log_order", "value" => $this->update_order);
+                if (!empty($this->num_updates_view)) $userconfig[] = array("config" => "updates_per_page", "value" => $this->num_updates_view);
+                if (!empty($this->theme)) $userconfig[] = array("config" => "theme", "value" => $this->theme);
+                if (!empty($this->iconset)) $userconfig[] = array("config" => "iconset", "value" => $this->iconset);
+                if (!empty($this->i18n)) $userconfig[] = array("config" => "language", "value" => $this->i18n);
+                if (!empty($this->utc_offset) OR $this->utc_offset === 0) $userconfig[] = array("config" => "utc_offset", "value" => $this->utc_offset);
+                if (!empty($this->emoticons)) $userconfig[] = array("config" => "show_emoticons", "value" => $this->emoticons);
+                
                 if ($errors == 0)
                 {
                     $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
@@ -280,6 +297,17 @@ class User extends Person{
                     else
                     {
                         $toReturn = TRUE;
+                    }
+                    
+                    foreach ($userconfig AS $u)
+                    {
+                        $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$this->id}, '{$u['config']}', '{$u['value']}') ON DUPLICATE KEY UPDATE value = '{$u['value']}'";
+                        $result = mysql_query($sql);
+                        if (mysql_error())
+                        {
+                            trigger_error(mysql_error(), E_USER_WARNING);
+                            $toReturn = FALSE;
+                        }
                     }
                 }
                 else
