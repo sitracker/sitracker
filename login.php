@@ -199,7 +199,8 @@ elseif ($CONFIG['portal'] == TRUE)
         // Valid user
         $_SESSION['contactid'] = $contact->id;
         $_SESSION['siteid'] = $contact->siteid;
-        $_SESSION['userconfig']['style'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['theme'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['iconset'] = $CONFIG['portal_iconset'];
         $_SESSION['contracts'] = array();
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;
