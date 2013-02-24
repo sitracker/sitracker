@@ -81,15 +81,18 @@ echo "<tr><th>{$strContract} {$strID}:</th>";
 echo "<td><h3>".icon('contract', 32)." ";
 echo "{$maint->id}</h3></td></tr>";
 echo "<tr><th>{$strStatus}:</th><td>";
+$active = true;
 if ($maint->term == 'yes')
 {
     echo "<strong>{$strTerminated}</strong>";
+    $active = false;
 }
 else
 {
     if ($maint->expirydate < $now AND $maint->expirydate != '-1')
     {
         echo "<span class='expired'>{$strExpired}</span>";
+        $active = false;
     }
     else
     {
@@ -213,19 +216,22 @@ if (mysql_num_rows($maintresult) > 0)
                         "<strong>".$allowedcontacts."</strong>");
         echo "</p>";
 
-        echo "<h3>{$strNewNamedContact}</h3>";
-        echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
-        echo "add' method='post' >";
-        echo "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
-        echo contact_site_drop_down('contactid',
-                                        'contactid',
-                                        maintenance_siteid($id),
-                                        supported_contacts($id));
-        echo help_link('NewSupportedContact');
-        echo " <input type='submit' value='{$strNew}' /></p></form>";
-
-        echo "<p align='center'><a href='newcontact.php'>";
-        echo "{$strNewSiteContact}</a></p>";
+        if ($active)
+        {
+            echo "<h3>{$strNewNamedContact}</h3>";
+            echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}&amp;action=";
+            echo "add' method='post' >";
+            echo "<p align='center'>{$GLOBLAS['strNewSupportedContact']} ";
+            echo contact_site_drop_down('contactid',
+                                            'contactid',
+                                            maintenance_siteid($id),
+                                            supported_contacts($id));
+            echo help_link('NewSupportedContact');
+            echo " <input type='submit' value='{$strNew}' /></p></form>";
+    
+            echo "<p align='center'><a href='newcontact.php'>";
+            echo "{$strNewSiteContact}</a></p>";
+        }
     }
 
     echo "<br />";
