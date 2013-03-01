@@ -144,7 +144,10 @@ $filter = array('page' => $page);
 
 plugin_do('html_head');
 echo "</head>\n";
-echo "<body>\n";
+
+$pagnename = substr(end(explode('/', $_SERVER['PHP_SELF'])), 0, -4);
+echo "<body id='portal_{$pagnename}_page' >";
+
 plugin_do('page_start');
 echo "<div id='masthead'><div id='masterheadcontent'>";
 if (!empty($_SESSION['contactid']))
