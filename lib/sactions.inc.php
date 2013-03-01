@@ -656,7 +656,7 @@ function saction_CheckIncomingMail()
     global $CONFIG;
     if ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
     {
-        include 'inboundemail.php';
+        include ( APPLICATION_FSPATH . 'inboundemail.php');
     }
     return TRUE;
 }
