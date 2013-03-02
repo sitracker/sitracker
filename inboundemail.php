@@ -410,7 +410,7 @@ if ($emails > 0)
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
-                echo $sql;
+                debug_log ("inboundemail.php files: {$sql}");
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 $fileid = mysql_insert_id();
