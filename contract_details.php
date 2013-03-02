@@ -50,19 +50,26 @@ echo "<tr><th>{$strContract} {$strID}:</th>";
 echo "<td><h3>".icon('contract', 32)." ";
 echo "{$maint->id}</h3></td></tr>";
 echo "<tr><th>{$strStatus}:</th><td>";
+$active = true;
 if ($maint->term == 'yes')
 {
     echo "<strong>{$strTerminated}</strong>";
+    $active = false;
 }
 else
 {
-    echo $strActive;
+    if ($maint->expirydate < $now AND $maint->expirydate != '-1')
+    {
+        echo "<span class='expired'>{$strExpired}</span>";
+        $active = false;
+    }
+    else
+    {
+        echo $strActive;
+    }
 }
 
-if ($maint->expirydate < $now AND $maint->expirydate != '-1')
-{
-    echo ", <span class='expired'>{$strExpired}</span>";
-}
+
 echo "</td></tr>\n";
 echo "<tr><th>{$strSite}:</th>";
 
@@ -215,7 +222,7 @@ if (mysql_num_rows($maintresult) > 0)
         if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0)
         {
             echo "<p align='center'><a href='contract_new_contact.php?maintid={$id}&amp;siteid={$maint->site}&amp;context=maintenance'>";
-            echo "{$strNewNamedContact}</a></p>";
+            if ($active) echo "{$strNewNamedContact}</a></p>";
         }
     }
 

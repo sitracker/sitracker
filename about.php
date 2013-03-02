@@ -26,6 +26,8 @@ $about_tabs = array('about', 'thanks', 'licence');
 // External variables
 $seltab = clean_fixed_list($_REQUEST['tab'], $about_tabs);
 
+if ($seltab == 'thanks') $seltab = 'thanks to';
+
 echo "<div id='aboutsit'>";
 echo "<img src='images/sitlogo_270x100.png' width='270' height='100' alt='SiT! Support Incident Tracker' />";
 echo "<br />";
@@ -48,7 +50,7 @@ switch ($seltab)
     //         echo "<h2>{$strAuthors}</h2>";
     //         break;
 
-    case 'thanks':
+    case 'thanks to':
         echo "<h2>{$strThanksTo}</h2>";
 
         $fp = fopen(clean_fspath($CONFIG['creditsfile']), "r");

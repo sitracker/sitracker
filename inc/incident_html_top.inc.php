@@ -67,7 +67,10 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
 plugin_do('html_head');
 echo "</head>";
-echo "<body onload=\"self.focus()\">";
+
+$pagnename = substr(end(explode('/', $_SERVER['PHP_SELF'])), 0, -4);
+
+echo "<body id='{$pagnename}_page' onload=\"self.focus()\">";
 plugin_do('page_start');
 
 $incidentid = $id;

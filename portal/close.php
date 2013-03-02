@@ -10,13 +10,12 @@
 //
 // Author Kieran Hogg <kieran[at]sitracker.org>
 
-require ('..'.DIRECTORY_SEPARATOR.'core.php');
+require ('..' . DIRECTORY_SEPARATOR . 'core.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 $accesslevel = 'any';
 
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
-include (APPLICATION_LIBPATH . 'triggers.inc.php');
 
 // External vars
 $id = intval($_REQUEST['id']);

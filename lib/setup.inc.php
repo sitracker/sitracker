@@ -522,8 +522,8 @@ function create_admin_user($password, $email)
 {
     $html = '';
     $password = md5($password);
-    $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `var_style`, `lastseen`) ";
-    $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', '8', NOW());";
+    $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `lastseen`) ";
+    $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', NOW());";
     mysql_query($sql);
     if (mysql_error())
     {
@@ -703,4 +703,57 @@ function upgrade_required_perms($installed_version)
         }
     }
     return $required;
+}
+
+
+function upgrade_390_migrate_user_config()
+{
+    $sql_oldconfig = "SELECT id, var_emoticons, var_utc_offset, var_i18n, var_style, var_incident_refresh, var_update_order, var_num_updates_view FROM `{$GLOBALS['dbUsers']}`";
+    $result_oldconfig = mysql_query($sql_oldconfig);
+    if (mysql_error()) { trigger_error(mysql_error(), E_USER_WARNING); echo "error ".mysql_error()."\n\n";}
+    while ($obj = mysql_fetch_object($result_oldconfig))
+    {
+        $s = array();
+        if (!empty($obj->var_emoticons)) $s[] = "({$obj->id}, 'show_emoticons', '".strtoupper($obj->var_emoticons)."')";
+        if (!empty($obj->var_utc_offset)) $s[] = "({$obj->id}, 'utc_offset', '{$obj->var_utc_offset}')";
+        if (!empty($obj->var_i18n)) $s[] = "({$obj->id}, 'language', '{$obj->var_i18n}')";
+        if (!empty($obj->var_incident_refresh)) $s[] = "({$obj->id}, 'incident_refresh', '{$obj->var_incident_refresh}')";
+        if (!empty($obj->var_update_order)) $s[] = "({$obj->id}, 'incident_log_order', '{$obj->var_update_order}')";
+        if (!empty($obj->var_num_updates_view)) $s[] = "({$obj->id}, 'updates_per_page', '{$obj->var_num_updates_view}')";
+        
+        $sql_style = "SELECT iconset FROM `{$GLOBALS['dbInterfaceStyles']}` WHERE id = {$obj->var_style}";
+        $result_style = mysql_query($sql_style);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if ($obj_style = mysql_fetch_object($result_style))
+        {
+            $s[] = "({$obj->id}, 'iconset', '{$obj_style->iconset}')";
+        }
+        
+        if (!empty($s))
+        {
+            $sql_insert = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ".implode(", ", $s);
+            $result_insert = mysql_query($sql_insert);
+            if (mysql_error())
+            {
+                trigger_error(mysql_error(), E_USER_WARNING);
+            }
+            else
+            {
+                $sql_alter = "ALTER TABLE `{$GLOBALS['dbUsers']}` DROP COLUMN var_incident_refresh, DROP COLUMN var_update_order, DROP COLUMN var_num_updates_view, ";
+                $sql_alter .= "DROP COLUMN var_style, DROP COLUMN var_hideautoupdates, DROP COLUMN var_hideheader, DROP COLUMN var_monitor, ";
+                $sql_alter .= "DROP COLUMN var_i18n, DROP COLUMN var_utc_offset, DROP COLUMN var_emoticons ";
+                $result_alter = mysql_query($sql_alter);
+                if (mysql_error())
+                {
+                    trigger_error(mysql_error(), E_USER_WARNING);
+                }
+                $sql_drop = "DROP DATABASE IF EXISTS `{$GLOBALS['dbInterfaceStyles']}`";
+                $result_drop = mysql_query($sql_drop);
+                if (mysql_error())
+                {
+                    trigger_error(mysql_error(), E_USER_WARNING);
+                }
+            }
+        }
+    }
 }
