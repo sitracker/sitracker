@@ -66,47 +66,6 @@ if (version_compare(PHP_VERSION, "5.1.0", ">="))
 
 
 /**
- * Authenticate a user with a username/password pair
- * @author Ivan Lucas
- * @param string $username. A username
- * @param string $password. A password (non-md5)
- * @return an integer to indicate whether the user authenticated against the database
- * @retval int 0 the credentials were wrong or the user was not found.
- * @retval int 1 to indicate user is authenticated and allowed to continue.
- */
-function authenticateSQL($username, $password)
-{
-    global $dbUsers;
-
-    $password = md5($password);
-    if ($_SESSION['auth'] == TRUE)
-    {
-        // Already logged in
-        return 1;
-    }
-
-    // extract user
-    $sql  = "SELECT id FROM `{$dbUsers}` ";
-    $sql .= "WHERE username = '{$username}' AND password = '{$password}' AND status != 0 ";
-    // a status of 0 means the user account is disabled
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-    // return appropriate value
-    if (mysql_num_rows($result) == 0)
-    {
-        mysql_free_result($result);
-        return 0;
-    }
-    else
-    {
-        journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'],0, 15),CFG_JOURNAL_LOGIN,0);
-        return 1;
-    }
-}
-
-
-/**
  * Authenticate a user
  * @author Lea Anthony
  * @param string $username. Username
@@ -180,7 +139,7 @@ function authenticate($username, $password)
 
         if ($toReturn)
         {
-            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'],0, 15),CFG_JOURNAL_LOGIN,0);
+            journal(CFG_LOGGING_MAX,'User Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR'], 0, 15), CFG_JOURNAL_LOGIN, 0);
             debug_log ("Authenticate: User authenticated",TRUE);
         }
         else
@@ -762,6 +721,7 @@ function show_form_errors($formname)
             }
         }
     }
+
     return $html;
 }
 
@@ -883,11 +843,11 @@ function schedule_actions_due()
     $actions = FALSE;
     // Interval
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'interval' ";
-    $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
+    $sql .= "AND UNIX_TIMESTAMP(start) <= {$now} AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         while ($action = mysql_fetch_object($result))
@@ -898,13 +858,13 @@ function schedule_actions_due()
 
     // Month
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' AND type = 'date' ";
-    $sql .= "AND UNIX_TIMESTAMP(start) <= $now AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND UNIX_TIMESTAMP(start) <= {$now} AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'month' AND (DAYOFMONTH(CURDATE()) > date_offset OR (DAYOFMONTH(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         while ($action = mysql_fetch_object($result))
@@ -915,12 +875,12 @@ function schedule_actions_due()
 
     // Year TODO CHECK
     $sql = "SELECT * FROM `{$dbScheduler}` WHERE `status` = 'enabled' ";
-    $sql .= "AND type = 'date' AND UNIX_TIMESTAMP(start) <= $now ";
-    $sql .= "AND (UNIX_TIMESTAMP(end) >= $now OR UNIX_TIMESTAMP(end) = 0) ";
+    $sql .= "AND type = 'date' AND UNIX_TIMESTAMP(start) <= {$now} ";
+    $sql .= "AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0) ";
     $sql .= "AND ((date_type = 'year' AND (DAYOFYEAR(CURDATE()) > date_offset ";
     $sql .= "OR (DAYOFYEAR(CURDATE()) = date_offset AND CURTIME() >= date_time)) ";
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
-    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= $now ";
+    $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -950,7 +910,7 @@ function schedule_action_started($action)
 
     $nowdate = date('Y-m-d H:i:s', $now);
 
-    $sql = "UPDATE `{$GLOBALS['dbScheduler']}` SET laststarted = '$nowdate' ";
+    $sql = "UPDATE `{$GLOBALS['dbScheduler']}` SET laststarted = '{$nowdate}' ";
     $sql .= "WHERE action = '{$action}'";
     mysql_query($sql);
     if (mysql_error())
@@ -980,7 +940,7 @@ function schedule_action_done($doneaction, $success = TRUE)
     }
 
     $nowdate = date('Y-m-d H:i:s', $now);
-    $sql = "UPDATE `{$dbScheduler}` SET lastran = '$nowdate' ";
+    $sql = "UPDATE `{$dbScheduler}` SET lastran = '{$nowdate}' ";
     if ($success == FALSE) $sql .= ", success=0, status='disabled' ";
     else $sql .= ", success=1 ";
     $sql .= "WHERE action = '{$doneaction}'";
@@ -1250,7 +1210,7 @@ function create_report($data, $output = 'table', $filename = 'report.csv')
         {
             if (!beginsWith($line, "\""))
             {
-                    $line = "\"".str_replace(",", "\",\"",$line)."\"\r\n";
+                    $line = "\"".str_replace(",", "\",\"", $line)."\"\r\n";
             }
 
             $html .= $line;
@@ -1279,7 +1239,7 @@ function add_charting_library($library)
 /**
  * Checks the environment for SiT requirements
  * @author Paul Heaney
- * @return Status The status of SiT
+ * @return Status The status of the SiT environment
  */
 function check_install_status()
 {
@@ -1292,6 +1252,7 @@ function check_install_status()
     $s->add_extension_check('zlib', 'PHP Zlib Compression', INSTALL_FATAL);
     $s->add_extension_check('session', 'PHP Session', INSTALL_FATAL);
     $s->add_extension_check('pcre', 'PHP Regular Expression', INSTALL_FATAL);
+    $s->add_extension_check('gd', 'PHP GD', INSTALL_WARN);
 
     return $s;
 }

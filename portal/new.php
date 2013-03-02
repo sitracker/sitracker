@@ -24,14 +24,12 @@ $productid = clean_int($_REQUEST['product']);
 if (!$_REQUEST['action'])
 {
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
-    if (!empty($_SESSION['formerrors']['portaladdincident']))
-    {
-        echo $_SESSION['formerrors']['portaladdincident'];
-        $_SESSION['formerrors']['portaladdincident'] = NULL;
-    }
 
     echo "<h2>".icon('new', 32, $strNewIncident)." {$strNewIncident}</h2>";
 
+    echo show_form_errors('portalnewincident');
+    clear_form_errors('portalnewincident');
+    
     if ($CONFIG['portal_creates_incidents'])
     {
         //check we are allowed to log against this contract
@@ -84,15 +82,15 @@ if (!$_REQUEST['action'])
     echo "<table class='vertical maintable' width='50%'>";
     if ($CONFIG['portal_creates_incidents'])
     {
-        echo "<tr><th>{$strArea}:</th><td class='shade1'>".softwareproduct_drop_down('software', 0, $productid, 'external')."<br />";
+        echo "<tr><th>{$strArea}:</th><td class='shade1'>".softwareproduct_drop_down('software', show_form_value('portalnewincident', 'software', 0), $productid, 'external')."<br />";
         echo $strNotSettingArea."</td></tr>";
     }
     echo "<tr><th>{$strTitle}:</th><td class='shade1'>";
     echo "<input class='required' maxlength='100' name='title' size='40' type='text' ";
-    echo "value='{$_SESSION['formdata']['portaladdincident']['title']}' />";
+    echo "value='" . show_form_value('portalnewincident', 'title', '') . "' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>";
 
-    $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='$productid'";
+    $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result)  > 0)
@@ -109,7 +107,7 @@ if (!$_REQUEST['action'])
             $pinfo = "pinfo{$productinforow->id}";
             echo "<input maxlength='100' name='{$pinfo}' ";
             echo "class='required' size='40' type='text' ";
-            echo "value='{$_SESSION['formdata']['portaladdincident'][$pinfo]}' />";
+            echo "value='" . show_form_value('portalnewincident', $pinfo, '') . "' />";
             echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         }
     }
@@ -118,11 +116,7 @@ if (!$_REQUEST['action'])
     echo $strTheMoreInformation;
     echo " <span class='required'>{$strRequired}</span>" . "<br />";
     echo "<textarea name='probdesc' rows='20' cols='60' class='required'>";
-    if (!empty($_SESSION['formdata']['portaladdincident']['probdesc']))
-    {
-        echo $_SESSION['formdata']['portaladdincident']['probdesc'];
-        $_SESSION['formdata']['portaladdincident']['probdesc'] = NULL;
-    }
+    echo show_form_value('portalnewincident', 'probdesc', '');
     echo "</textarea></td></tr>";
 
     echo "</table>";
@@ -131,6 +125,8 @@ if (!$_REQUEST['action'])
     echo "<p class='formbuttons'><input type='submit' value='{$strNewIncident}' /></p>";
     echo "</form>";
 
+    clear_form_data('portalnewincident');
+    
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else //submit
@@ -147,18 +143,20 @@ else //submit
 
     if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
     
-    $_SESSION['formdata']['portaladdincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+    $_SESSION['formdata']['portalnewincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
+
     $errors = 0;
+
     if (empty($incidenttitle))
     {
-        $_SESSION['formerrors']['portaladdincident']['title'] = sprintf($strFieldMustNotBeBlank, $strIncidentTitle);
-        $errors = 1;
+        $_SESSION['formerrors']['portalnewincident']['title'] = sprintf($strFieldMustNotBeBlank, $strIncidentTitle);
+        $errors++;
     }
 
     if (empty($probdesc))
     {
-        $_SESSION['formerrors']['portaladdincident']['probdec'] = sprintf($strFieldMustNotBeBlank, $strProblemDescription);
-        $errors = 1;
+        $_SESSION['formerrors']['portalnewincident']['probdec'] = sprintf($strFieldMustNotBeBlank, $strProblemDescription);
+        $errors++;
     }
 
     foreach ($_POST AS $key => $value)
@@ -172,7 +170,7 @@ else //submit
             $fieldobj = mysql_fetch_object($result);
             $field = $fieldobj->information;
 
-            $_SESSION['formerrors']['portaladdincident'][$field] = sprintf($strFieldMustNotBeBlank, $field); // i18n fieldname
+            $_SESSION['formerrors']['portalnewincident'][$field] = sprintf($strFieldMustNotBeBlank, $field); // i18n fieldname
             $errors = 1;
         }
     }
@@ -242,14 +240,13 @@ else //submit
             if ($CONFIG['auto_assign_incidents'])
             {
                 $suggest_user = suggest_reassign_userid($incidentid);
-                if ($suggest_user > 0) {
+                if ($suggest_user > 0)
+                {
                     reassign_incident($incidentid, $suggest_user);
                 }
             }
 
-            $_SESSION['formdata']['portaladdincident'] = NULL;
-            $_SESSION['formerrors']['portaladdincident'] = NULL;
-            html_redirect("index.php", TRUE, $strIncidentAdded);
+            clear_form_data('portalnewincident');            html_redirect("index.php", TRUE, $strIncidentAdded);
         }
         else
         {
@@ -258,8 +255,7 @@ else //submit
             $contact_email = contact_email($_SESSION['contactid']);
             create_temp_incoming($update_id, $contact_name, $incidenttitle,
                                 $contact_email, $_SESSION['contactid']);
-            $_SESSION['formdata']['portaladdincident'] = NULL;
-            $_SESSION['formerrors']['portaladdincident'] = NULL;
+            clear_form_data('portalnewincident');
             html_redirect("index.php", TRUE, $strRequestSent);
         }
         exit;

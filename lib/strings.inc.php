@@ -152,19 +152,19 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     // Second Level: Customers/Sites submenu
     if (!is_array($hmenu[2010])) $hmenu[2010] = array();
     $hmenu[2010] = $hmenu[2010] +
-                    array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}sites.php"),
+                    array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowseSites, 'url' => "{$CONFIG['application_webpath']}sites.php"),
                            20 => array('perm' => PERM_SITE_ADD, 'name' => $strNewSite, 'url' => "{$CONFIG['application_webpath']}site_new.php?action=showform")
     );
     // Second Level: Customers/Contacts submenu
     if (!is_array($hmenu[2020])) $hmenu[2020] = array();
     $hmenu[2020] = $hmenu[2020] +
-                    array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contacts.php"),
+                    array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowseContacts, 'url' => "{$CONFIG['application_webpath']}contacts.php"),
                            20 => array('perm' => PERM_CONTACT_ADD, 'name' => $strNewContact, 'url' => "{$CONFIG['application_webpath']}contact_new.php?action=showform")
     );
     // Second Level: Customers/Contracts submenu
     if (!is_array($hmenu[2030])) $hmenu[2030] = array();
     $hmenu[2030] = $hmenu[2030] +
-                    array (10 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
+                    array (10 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowseContracts, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
                            20 => array('perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
                            30 => array('perm' => PERM_CONTRACT_EDIT, 'name' => $strEditContract, 'url' => "{$CONFIG['application_webpath']}contract_edit.php?action=showform"),
                            40 => array('perm' => PERM_RESELLER_ADD, 'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),

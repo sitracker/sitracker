@@ -94,6 +94,7 @@ if (empty($_SESSION['randomhash']))
 $_SESSION['auth'] = FALSE;
 $_SESSION['portalauth'] = FALSE;
 
+$new_install_perms = array('CREATE', 'INSERT', 'UPDATE', 'DELETE');
 
 require (APPLICATION_INCPATH . 'setupheader.inc.php');
 
@@ -316,8 +317,22 @@ switch ($_REQUEST['action'])
                         {
                             echo "<p class='info'>You can now go ahead and create a database called '{$CONFIG['db_database']}' for SiT! to use.</p>";
                         }
-                        echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
+                        
+                        $missingprivileges = check_mysql_privileges($new_install_perms);
+                                
+                        if (empty($missingprivileges))
+                        {
+                            echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
                     														<br /><label><input type='checkbox' name='promptinitialdata' id='promptinitialdata' value='yes' checked='checked' /> Prompt for initial data</label>");
+                        }
+                        else 
+                        {
+                            echo "<p class='error'>You can not create the schema as the MySQL user does not have the following permissions <ul>";
+                            foreach ($missingprivileges AS $mp) {
+                                echo "<li>{$mp}</li>";
+                            }
+                            echo "</ul></p>";
+                        }
                     }
                     else
                     {
@@ -454,8 +469,21 @@ switch ($_REQUEST['action'])
                         echo setup_button('reconfigure', 'Reconfigure SiT!');
                         echo "<p>or</p>";
                         // Seems to be duplicated above ???????? TODO FIXME
-                        echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
+                        $missingprivileges = check_mysql_privileges($new_install_perms);
+                                
+                        if (empty($missingprivileges))
+                        {
+                            echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
                     														<br /><label><input type='checkbox' name='promptinitialdata' id='promptinitialdata' value='yes' checked='checked' /> Prompt for initial data</label>");
+                        }
+                        else 
+                        {
+                            echo "<p class='error'>You can not create the schema as the MySQL user does not have the following permissions: <ul>";
+                            foreach ($missingprivileges AS $mp) {
+                                echo "<li>{$mp}</li>";
+                            }
+                            echo "</ul></p>";
+                        }
                     }
                     else
                     {
@@ -676,7 +704,21 @@ switch ($_REQUEST['action'])
 
                             if ($installed_version < $application_version OR $schemaupgradeneeded == TRUE)
                             {
-                                echo setup_button('upgrade', 'Upgrade Schema');
+                                $requiredprivileges = upgrade_required_perms($installed_version);
+                                $missingprivileges = check_mysql_privileges($requiredprivileges);
+                                
+                                if (empty($missingprivileges))
+                                {
+                                    echo setup_button('upgrade', 'Upgrade Schema');
+                                }
+                                else 
+                                {
+                                    echo "<p class='error'>You can not upgrade the schema as the MySQL user does not have the following permissions: <ul>";
+                                    foreach ($missingprivileges AS $mp) {
+                                        echo "<li>{$mp}</li>";
+                                    }
+                                    echo "</ul></p>";
+                                }
                             }
                             
 

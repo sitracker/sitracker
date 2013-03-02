@@ -214,6 +214,7 @@ switch ($action)
                 echo "<tr class='password'><th>{$strConfirmNewPassword}:</th>";
                 echo "<td><input maxlength='50' name='newpassword2' size='30' type='password' />";
                 echo "</td></tr>";
+                plugin_do('forgotpwd_form');
                 echo "</table>";
                 if ($mode == 'user')
                 {
@@ -263,6 +264,7 @@ switch ($action)
         $usercount = mysql_num_rows($userresult);
         if ($usercount > 0)
         {
+            plugin_do('forgotpwd_submitted');
             $userdetails = mysql_fetch_object($userresult);
             $newhash = md5($userdetails->username.'.ok.'.$userdetails->password);
             if ($newhash == $userhash)
@@ -279,6 +281,7 @@ switch ($action)
                     }
                     mysql_query($usql);
                     echo "<h3>{$strPasswordReset}</h3>";
+                    plugin_do('forgotpwd_saved');
                     echo "<p class='forgotpwd'>{$strPasswordHasBeenReset}</p>";
                     echo "<p class='return'><a href='index.php'>{$strBackToLoginPage}</a></p>";
                 }
@@ -309,10 +312,12 @@ switch ($action)
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>{$title}</h2>";
+        plugin_do('forgotpwd');
         echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
 
         echo "<table class='vertical'>";
         echo "<tr><th>{$strEmailAddress}</th><td><input name='emailaddress' size='30' type='text' /></td></tr>";
+        plugin_do('forgotpwd_form');
         echo "</table>";
         echo "<p class='formbuttons'><input type='submit' value='{$strContinue}' /></p>";
         echo "<input type='hidden' name='action' value='forgotpwd' />";

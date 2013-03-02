@@ -225,13 +225,13 @@ $strBook = 'Book';
 $strBookHoliday = 'Book Holiday';
 $strBoth = 'Both';
 $strBrowse = 'Browse';
-$strBrowseContacts = 'Browse contacts';
-$strBrowseContracts = 'Browse contracts';
+$strBrowseContacts = 'Browse Contacts';
+$strBrowseContracts = 'Browse Contracts';
 $strBrowseContractsBySite = 'Browse Contracts by Site';
-$strBrowseFeedback = 'Browse feedback';
+$strBrowseFeedback = 'Browse Feedback';
 $strBrowseJournal = 'Browse Journal';
 $strBrowseKB = 'Browse Knowledge Base';
-$strBrowseSites = 'Browse sites';
+$strBrowseSites = 'Browse Sites';
 $strBulkModify = 'Bulk Modify';
 # e.g. by Fred
 $strby = 'by';
