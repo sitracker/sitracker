@@ -41,10 +41,13 @@ if (file_exists(APPLICATION_FSPATH . "config.inc.php") AND !include (APPLICATION
     die('Could not read config file config.inc.php');
 }
 // Server Configuration
-
-if (file_exists('/etc/sit.conf') AND !include ('/etc/sit.conf'))
+// Only try reading from /etc/ if open_basedir restrictions appear to allow it
+if (ini_get('open_basedir') != '' AND strpos(ini_get('open_basedir'), '/etc/') !== FALSE)
 {
-    die('Cound not read config file sit.conf');
+    if (file_exists('/etc/sit.conf') AND !include ('/etc/sit.conf'))
+    {
+        die('Cound not read config file sit.conf');
+    }
 }
 
 // These are the required variables we want to configure during installation
@@ -136,9 +139,13 @@ if (version_compare(PHP_VERSION, MIN_PHP_VERSION, "<"))
     echo "<p class='error'>You are running an older PHP version (< PHP " . MIN_PHP_VERSION . "), SiT v3.35 and later require PHP " . MIN_PHP_VERSION . " or newer, some features may not work properly.</p>";
 }
 
-if (file_exists('/etc/webtrack.conf'))
+// Only try reading from /etc/ if open_basedir restrictions appear to allow it
+if (ini_get('open_basedir') != '' AND strpos(ini_get('open_basedir'), '/etc/') !== FALSE)
 {
-    echo "<p class='warning'>Warning: You have a legacy config file at /etc/webtrack.conf, as of SiT! 4.0 this file is no longer read, please use /etc/sit.conf instead</p>";
+    if (file_exists('/etc/webtrack.conf'))
+    {
+        echo "<p class='warning'>Warning: You have a legacy config file at /etc/webtrack.conf, as of SiT! 4.0 this file is no longer read, please use /etc/sit.conf instead</p>";
+    }
 }
 
 switch ($_REQUEST['action'])
