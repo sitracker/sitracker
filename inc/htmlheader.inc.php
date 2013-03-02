@@ -217,14 +217,14 @@ if ($sit[0] != '')
         $num = $num / 2;
         if ($failure > $num)
         {
-            echo user_alert(sprintf("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>"), E_USER_ERROR);
+            user_notice(sprintf("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>"), WARNING_NOTICE_TYPE, 'session');
         }
     }
 
     // Check users email address
     if (empty($_SESSION['email']))
     {
-        echo user_alert("{$strInvalidEmailAddress} - <a href='user_profile_edit.php'>{$strEditEmail}</a>", E_USER_ERROR);
+        echo user_notice("{$strInvalidEmailAddress} - <a href='user_profile_edit.php'>{$strEditEmail}</a>", NORMAL_NOTICE_TYPE, 'session');
     }
 
     //display (trigger) notices

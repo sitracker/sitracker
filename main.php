@@ -21,6 +21,51 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
+
+if (user_permission($sit[2], PERM_ADMIN))
+{
+    // Check if scheduler is running (bug 108)
+    $failure = 0;
+
+    $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
+    $schedulerresult = mysql_query($schedulersql);
+    if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+
+    while ($schedule = mysql_fetch_object($schedulerresult))
+    {
+        $sqlinterval = ("$schedule->interval");
+        $sqllastran = mysql2date("$schedule->lastran");
+        $dateresult = $sqlinterval + $sqllastran + 60;
+        if ($dateresult < date(U))
+        {
+            $failure ++;
+        }
+    }
+    $num = mysql_num_rows($schedulerresult);
+    $num = $num / 2;
+    if ($failure > $num)
+    {
+        $noticecount = 0;
+        $text = mysql_real_escape_string("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>", $db);
+        $type = WARNING_NOTICE_TYPE;
+        $durability = 'session';
+        $sql = "SELECT COUNT(id) FROM `{$dbNotices}` WHERE userid={$sit[2]} AND type={$type} AND durability='{$durability}' AND text='{$text}'";
+        $noticeresult = mysql_query($sql);
+        list($noticecount) = mysql_fetch_array($noticeresult);
+        if ($noticecount < 1)
+        {
+            $sql = "INSERT INTO `{$dbNotices}` (userid, type, text, timestamp, durability) ";
+            $sql .= "VALUES($sit[2], {$type}, '{$text}', NOW(), '{$durability}')";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                trigger_error(mysql_error(),E_USER_WARNING);
+            }
+        }
+    }
+}
+
+
 // --------------------------------------------------------------------------------------------
 // Dashboard widgets
 
