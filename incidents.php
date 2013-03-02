@@ -241,7 +241,7 @@ switch ($type)
 
         if (($user == 'all') AND (count($rowcount) > 20)) echo "<p align='center'>".sprintf($strThereAreXIncidentsInThisList, $rowcount)."</p>";
 
-        plugin_do('incidents_content_between_my_and_expertise');
+        plugin_do('incidents_content_between_my_and_expertise'); // hack
 
 
         // *********************************************************

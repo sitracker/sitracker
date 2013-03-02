@@ -586,13 +586,13 @@ function current_schema_version()
  * @param string $table_name The name of the table we want the column names for
  * @param string $column_name The name of the column to verify exists in the table
  * @return boolean True if the column exists, False if it does not exist
+ * @note We now don't handle any errors from this query as
+         we're only interested in either TRUE or FALSe results here. (INL)
  */
 function setup_check_column_exists($table_name, $column_name)
 {
     $sql = "SHOW COLUMNS FROM {$table_name} ";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    
     while ($tb_result = mysql_fetch_row($result))
     {
         $column_array[] = $tb_result[0];

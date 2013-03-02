@@ -1277,13 +1277,51 @@ function convert_string_null_safe($string)
  * @author Paul Heaney
  * @param String $string The string to replace the special characters in
  * @return String the string with the characters replaced
- */
+*/
 function escape_regex($string)
 {
-	$original = array ('[', ']', '(', ')');
-	$replace = array ('\[', '\]', '\(', '\)');
-	
-	return str_replace($original, $replace, $string);
+    $original = array ('[', ']', '(', ')');
+    $replace = array ('\[', '\]', '\(', '\)');
+    
+    return str_replace($original, $replace, $string);
+}
+
+
+/**
+ * Creates a temporary (dismissable) notice at the top of current users screen
+ * it's similar to the user_alert() except that it can be made sticky or to
+ * last for the whole login session.
+ * Ensures notices are not duplicated if all the information passed as parameters
+ * is the same.
+ * @author Ivan Lucas
+ * @param string notice text (can include html)
+ * @param int type. (optional) The notice type, see the *_NOTICE_TYPE constants
+ * @param string durability. Either 'session' or 'sticky'
+ *
+ * @note It's also possible to create notices via triggers and through the 
+ * notices form/gui.  This function is useful for system notices that are
+ * not really errors or warnings but informational type hints.
+ * @see user_alert()
+*/
+function user_notice($text, $type = NORMAL_NOTICE_TYPE, $durability = 'session')
+{
+    $text = mysql_real_escape_string($text);
+    $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbNotices']}` WHERE userid={$GLOBALS['sit'][2]} AND type={$type} AND durability='{$durability}' AND text='{$text}'";
+    $noticeresult = mysql_query($sql);
+    if ($noticeresult)
+    {
+        list($noticecount) = mysql_fetch_array($noticeresult);
+        if ($noticecount < 1)
+        {
+            $sql = "INSERT INTO `{$GLOBALS['dbNotices']}` (userid, type, text, timestamp, durability) ";
+            $sql .= "VALUES({$GLOBALS['sit'][2]}, {$type}, '{$text}', NOW(), '{$durability}')";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                trigger_error(mysql_error(),E_USER_WARNING);
+            }
+        }
+    }
 }
 
 
