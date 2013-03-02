@@ -219,6 +219,12 @@ else
 
             html_redirect("inbox.php");
         }
+        else
+        {
+            $_SESSION['formerrors']['moveupdate']['id'] = $strErrorAssigningUpdate;
+            header("Location: {$_SERVER['PHP_SELF']}?id={$id}&updateid={$updateid}&win=incomingview");
+            exit;
+        }
     }
     else
     {
