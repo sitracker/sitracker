@@ -447,12 +447,12 @@ if ($emails > 0)
         // Build up header text to append to the incident log
         if (!empty($from))
         {
-            $headertext = "From: [b]".htmlspecialchars(mysql_real_escape_string($from), ENT_NOQUOTES)."[/b]\n";
+            $headertext = "{$SYSLANG['strFrom']}: [b]".htmlspecialchars(mysql_real_escape_string($from), ENT_NOQUOTES)."[/b]\n";
         }
 
         if (!empty($to))
         {
-            $headertext .= "To: [b]".htmlspecialchars(mysql_real_escape_string($to), ENT_NOQUOTES)."[/b]\n";
+            $headertext .= "{$SYSLANG['strTo']}: [b]".htmlspecialchars(mysql_real_escape_string($to), ENT_NOQUOTES)."[/b]\n";
         }
 
         if (!empty($cc))
@@ -462,13 +462,13 @@ if ($emails > 0)
 
         if (!empty($subject))
         {
-            $headertext .= "Subject: [b]".htmlspecialchars(mysql_real_escape_string($subject))."[/b]\n";
+            $headertext .= "{$SYSLANG['strSubject']}: [b]".htmlspecialchars(mysql_real_escape_string($subject))."[/b]\n";
         }
 
         $count_attachments = count($attachments);
         if ($count_attachments >= 1)
         {
-            $headertext .= $SYSLANG['strAttachments'].": [b]{$count_attachments}[/b] - ";
+            $headertext .= "{$SYSLANG['strAttachments']}: [b]{$count_attachments}[/b] - ";
             $c = 1;
             foreach ($attachments AS $att)
             {
