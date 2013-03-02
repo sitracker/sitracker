@@ -946,8 +946,12 @@ function saction_ldapSync()
                 // TODO reassign incidents?
                 foreach ($sit_db_contacts AS $c)
                 {
-                    debug_log ("Disabling Contact: {$c->username}", TRUE);
-                    $c->disable();
+                    if ($c->status != 'false')
+                    {
+                        // Only disable if not already disabled
+                        debug_log ("Disabling Contact: {$c->username}", TRUE);
+                        $c->disable();
+                    }
                 }
             }
         }
