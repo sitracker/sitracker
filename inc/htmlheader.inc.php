@@ -104,7 +104,10 @@ if ($_SESSION['auth'] == TRUE)
 }
 plugin_do('html_head');
 echo "</head>\n";
-echo "<body>\n";
+
+$pagnename = substr(end(explode('/', $_SERVER['PHP_SELF'])), 0, -4);
+
+echo "<body id='{$pagnename}_page'>\n";
 
 plugin_do('page_start');
 echo "<div id='masthead'>";
@@ -184,7 +187,7 @@ if ($sit[0] != '')
         $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
         if (user_permission($sit[2], PERM_ADMIN))
         {
-            $msg .= " from v{$dbversion} to v{$application_version}</p>";
+            $msg .= " from v{$dbversion} to v{$application_version}<br />";
             $msg2 = "Visit <a href='setup.php'>Setup</a> to update the schema.";
         }
         echo user_alert($msg, E_USER_ERROR);

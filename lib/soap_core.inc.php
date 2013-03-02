@@ -70,9 +70,17 @@ function login($username, $password, $applicationname='noname')
         $_SESSION['userconfig'] = get_user_config_vars($user->id);
         $_SESSION['applicationame'] = $applicationname;
 
-        if ($user->var_i18n != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
+        $sql_userconfig = "SELECT value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$user->id} AND config = 'language'";
+        $result_userconfig = mysql_query($sql_userconfig);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) == 1)
         {
-            $_SESSION['lang'] = is_null($user->var_i18n) ? '' : $user->var_i18n;
+            $obj = mysql_fetch_object($result_userconfig);
+            $_SESSION['lang'] = $obj->value;
+        }
+        else
+        {
+            $_SESSION['lang'] = '';
         }
 
         // Make an array full of users permissions

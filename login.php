@@ -26,10 +26,13 @@ if (function_exists('session_regenerate_id'))
 
 setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
 
-$language = htmlspecialchars(mb_substr(strip_tags($_REQUEST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
-if ((substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE) AND mb_strlen($language) != 2)
+if (!empty($_REQUEST['lang']))
 {
-    $language = 'xx-xx'; // default lang
+    $language = htmlspecialchars(mb_substr(strip_tags($_REQUEST['lang']), 0, 5), ENT_NOQUOTES, 'utf-8');
+    if ((substr($language, 2, 1) != '-' OR mb_strpos('.', $language) !== FALSE) AND mb_strlen($language) != 2)
+    {
+        $language = 'xx-xx'; // default lang
+    }
 }
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -196,7 +199,8 @@ elseif ($CONFIG['portal'] == TRUE)
         // Valid user
         $_SESSION['contactid'] = $contact->id;
         $_SESSION['siteid'] = $contact->siteid;
-        $_SESSION['userconfig']['style'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['theme'] = $CONFIG['portal_interface_style'];
+        $_SESSION['userconfig']['iconset'] = $CONFIG['portal_iconset'];
         $_SESSION['contracts'] = array();
         $_SESSION['auth'] = FALSE;
         $_SESSION['contact_source'] = $contact->contact_source;
