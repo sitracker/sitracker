@@ -217,14 +217,14 @@ if ($sit[0] != '')
         $num = $num / 2;
         if ($failure > $num)
         {
-            echo user_alert(sprintf("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>"), E_USER_ERROR);
+            user_notice(sprintf("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>"), WARNING_NOTICE_TYPE, 'session');
         }
     }
 
     // Check users email address
     if (empty($_SESSION['email']))
     {
-        echo user_alert("{$strInvalidEmailAddress} - <a href='user_profile_edit.php'>{$strEditEmail}</a>", E_USER_ERROR);
+        echo user_notice("{$strInvalidEmailAddress} - <a href='user_profile_edit.php'>{$strEditEmail}</a>", NORMAL_NOTICE_TYPE, 'session');
     }
 
     //display (trigger) notices
@@ -324,17 +324,6 @@ if ($sit[0] != '')
     }
 }
 $headerdisplayed = TRUE; // Set a variable so we can check to see if the header was included
-
-// FIXME @@@ BUGBUG @@@ experimental ivan 10July2008 & 11April2010
-// echo "<div id='menupanel'>";
-// echo "<h3>Menu</h3>";
-// echo "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>";
-// echo "</div>";
-//
-// // FIXME @@@ BUGBUG @@@ experimental ivan 10July2008
-// echo "<p id='menutoggle'><a href='javascript:void(0);' onclick='toggleMenuPanel();' title='{$strMenu}'>";
-// echo "".icon('auto', 16)."</a></p>";
-
 
 echo "<div id='mainframe'>";
 ?>

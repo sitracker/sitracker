@@ -80,7 +80,7 @@ if ($user != 'all')
     $rtnvalue = send_email($email_to, $email_from, $email_subject, $bodytext);
 }
 
-plugin_do('holiday_ack');
+plugin_do('holiday_acknowledge_action');
 
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 header("Location: holiday_request.php?user={$view}&mode=approval");

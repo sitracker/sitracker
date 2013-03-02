@@ -81,7 +81,7 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 $dlength = 0;
                 $dapproved = 0;
-                plugin_do('holiday_cancelled');
+                plugin_do('holiday_cancelled_action');
             }
             else
             {

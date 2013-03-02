@@ -1617,7 +1617,7 @@ UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?
 ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
 ";
 
-if (setup_check_column_exists($dbBillingMatrix, 'id'))
+if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbBillingMatrix, 'id'))
 {
     $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
 }
@@ -1712,7 +1712,7 @@ DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
 ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
 ";
 
-if (setup_check_column_exists($dbServiceLevels, 'servicelevelid'))
+if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbServiceLevels, 'servicelevelid'))
 {
     $upgrade_schema[390] .= "UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM `{$dbServiceLevels}` WHERE id = servicelevelid);";
 }

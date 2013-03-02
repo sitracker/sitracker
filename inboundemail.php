@@ -96,6 +96,8 @@ function populate_syslang2()
         }
 
         $_SESSION['syslang'] = $SYSLANG;
+        
+        return $SYSLANG;
     }
     else
     {
@@ -325,7 +327,7 @@ if ($emails > 0)
             debug_log("Incident ID not found in email subject: '{$subject}'");
         }
 
-        plugin_do('email_arrived');
+        plugin_do('email_arrived_action');
 
         $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
 
@@ -408,7 +410,7 @@ if ($emails > 0)
                 $sql = "INSERT into `{$GLOBALS['dbFiles']}` ";
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
-                echo $sql;
+                debug_log ("inboundemail.php files: {$sql}");
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                 $fileid = mysql_insert_id();
@@ -445,12 +447,12 @@ if ($emails > 0)
         // Build up header text to append to the incident log
         if (!empty($from))
         {
-            $headertext = "From: [b]".htmlspecialchars(mysql_real_escape_string($from), ENT_NOQUOTES)."[/b]\n";
+            $headertext = "{$SYSLANG['strFrom']}: [b]".htmlspecialchars(mysql_real_escape_string($from), ENT_NOQUOTES)."[/b]\n";
         }
 
         if (!empty($to))
         {
-            $headertext .= "To: [b]".htmlspecialchars(mysql_real_escape_string($to), ENT_NOQUOTES)."[/b]\n";
+            $headertext .= "{$SYSLANG['strTo']}: [b]".htmlspecialchars(mysql_real_escape_string($to), ENT_NOQUOTES)."[/b]\n";
         }
 
         if (!empty($cc))
@@ -460,13 +462,13 @@ if ($emails > 0)
 
         if (!empty($subject))
         {
-            $headertext .= "Subject: [b]".htmlspecialchars(mysql_real_escape_string($subject))."[/b]\n";
+            $headertext .= "{$SYSLANG['strSubject']}: [b]".htmlspecialchars(mysql_real_escape_string($subject))."[/b]\n";
         }
 
         $count_attachments = count($attachments);
         if ($count_attachments >= 1)
         {
-            $headertext .= $SYSLANG['strAttachments'].": [b]{$count_attachments}[/b] - ";
+            $headertext .= "{$SYSLANG['strAttachments']}: [b]{$count_attachments}[/b] - ";
             $c = 1;
             foreach ($attachments AS $att)
             {
@@ -495,7 +497,7 @@ if ($emails > 0)
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $updateid = mysql_insert_id();
 
-            $incidentid = plugin_do('email_arrived_no_owner', array('updateid' => $updateid, 'subject' => $subject));
+            $incidentid = plugin_do('email_stored_action', array('updateid' => $updateid, 'subject' => $subject));
             
             if (empty($incidentid))
             {
@@ -554,7 +556,7 @@ if ($emails > 0)
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $updateid = mysql_insert_id();
-                plugin_do('inboundemail_customer_visibility_update', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
+                plugin_do('email_update_setvisibility_action', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
 
                 if ($incident_open) // Do not translate/i18n fixed string
                 {
