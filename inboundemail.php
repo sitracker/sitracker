@@ -96,6 +96,8 @@ function populate_syslang2()
         }
 
         $_SESSION['syslang'] = $SYSLANG;
+        
+        return $SYSLANG;
     }
     else
     {
