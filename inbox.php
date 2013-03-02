@@ -398,6 +398,7 @@ else
             }
         }
         echo "</div>";
+        // Reply form
         echo "<div class='detailentry'>\n";
         if (!empty($_REQUEST['reply']))
         {

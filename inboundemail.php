@@ -325,7 +325,7 @@ if ($emails > 0)
             debug_log("Incident ID not found in email subject: '{$subject}'");
         }
 
-        plugin_do('email_arrived');
+        plugin_do('email_arrived_action');
 
         $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
 
@@ -495,7 +495,7 @@ if ($emails > 0)
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $updateid = mysql_insert_id();
 
-            $incidentid = plugin_do('email_arrived_no_owner', array('updateid' => $updateid, 'subject' => $subject));
+            $incidentid = plugin_do('email_stored_action', array('updateid' => $updateid, 'subject' => $subject));
             
             if (empty($incidentid))
             {
@@ -554,7 +554,7 @@ if ($emails > 0)
                 mysql_query($sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                 $updateid = mysql_insert_id();
-                plugin_do('inboundemail_customer_visibility_update', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
+                plugin_do('email_update_setvisibility_action', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
 
                 if ($incident_open) // Do not translate/i18n fixed string
                 {
