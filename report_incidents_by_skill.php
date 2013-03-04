@@ -108,6 +108,7 @@ else
             $slas[$sla->tag]['notEscalated'] = 0;
             $slas[$sla->tag]['escalated'] = 0;
         }
+        $emptySLA = $slas;
         echo "<tr>";
 
         $others = 0;
@@ -125,7 +126,7 @@ else
                 $others += $countArray[$i];
             }
 
-            $sqlN = "SELECT id, servicelevel, opened FROM `{$dbIncidents}` WHERE softwareid = '".$softwareID[$i]."'";
+            $sqlN = "SELECT id, servicelevel, opened FROM `{$dbIncidents}` WHERE softwareid = '{$softwareID[$i]}'";
             $sqlN .= " AND opened > '{$startdate}' ORDER BY opened";
 
             $resultN = mysql_query($sqlN);
@@ -133,11 +134,7 @@ else
             $numrows = mysql_num_rows($resultN);
 
             foreach ($slas AS $slaReset)
-            {
-                $slaReset['notEscalated'] = 0;
-                $slaReset['escalated'] = 0;
-            }
-
+            $slas = $emptySLA;
 
             if ($numrows > 0)
             {
@@ -148,7 +145,7 @@ else
 
                     // FIXME this sql uses the body to find out which incidents have been escalated
                     $sqlL = "SELECT count(id) FROM `{$dbUpdates}` AS u ";
-                    $sqlL .= "WHERE u.bodytext LIKE \"External ID%\" AND incidentid = '".$obj->id."'";
+                    $sqlL .= "WHERE u.bodytext LIKE \"External ID%\" AND incidentid = '{$obj->id}'";
                     $resultL = mysql_query($sqlL);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                     list($numrowsL) = mysql_fetch_row($resultL);
@@ -167,7 +164,7 @@ else
             foreach ($slas AS $sla)
             {
                 echo "<td>";
-                echo ($sla['notEscalated']+$sla['escalated'])." / ".$sla['escalated'];
+                echo ($sla['notEscalated'] + $sla['escalated'])." / {$sla['escalated']}";
                 echo "</td>";
             }
 
@@ -305,8 +302,8 @@ else
 
         if (extension_loaded('gd'))
         {
-            $data = mb_substr($data, 0, mb_strlen($data)-1);
-            $legend = mb_substr($legend, 0, mb_strlen($legend)-1);
+            $data = mb_substr($data, 0, mb_strlen($data) - 1);
+            $legend = mb_substr($legend, 0, mb_strlen($legend) - 1);
             $title = urlencode($strIncidentsBySkill);
             echo "\n<br /><p><div style='text-align:center;'>";
             echo "\n<img src='chart.php?type=pie&data={$data}&legends={$legend}&title={$title}' />";
