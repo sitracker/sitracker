@@ -13,7 +13,7 @@
 
 require ('core.php');
 
-$permission = PERM_SKILL_ADD; // Add software - most bizarro permission ever, why add software? BUG Mantis 1629 TODO
+$permission = PERM_SITE_TYPES;
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
