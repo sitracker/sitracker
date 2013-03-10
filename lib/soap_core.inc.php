@@ -40,7 +40,7 @@ function login($username, $password, $applicationname='noname')
         session_start();
         $sessionid = session_id();
 
-        // FIXME TODO all this was copied from login.php this probably wants making into a function
+        // FIXME all this was copied from login.php this probably wants making into a function
 
         $_SESSION['auth'] = TRUE;
 
