@@ -46,7 +46,7 @@ function draw_calendar($nmonth, $nyear)
     if (!$nyear) $nyear = date('Y',$timebase);
 
     # get the first day of the week!
-    $firstday = date('w',mktime(0,0,0,$nmonth,1,$nyear));
+    $firstday = date('w', mktime(0, 0, 0,$nmonth, 1, $nyear));
 
     # have to perform a loop to test from 31 backwards using this
     # to see which is the last day of the month
@@ -63,7 +63,7 @@ function draw_calendar($nmonth, $nyear)
     }    
     while ($monthTest != $monthOrig);
     
-    $monthName = ldate('F',gmmktime(0, 0, 0, $nmonth, 1, $nyear));
+    $monthName = ldate('F', mktime(0, 0, 0, $nmonth, 1, $nyear));
 
     if ($CONFIG['debug'])
     {
