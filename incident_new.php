@@ -113,7 +113,6 @@ if (!empty($incomingid) AND empty($updateid))
 
 if (empty($action) OR $action == 'showform')
 {
-    $pagescripts = array('AutoComplete.js');
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<h2>".icon('new', 32)." {$strNewIncident} - {$strFindContact}</h2>";
     if (empty($siteid))
@@ -126,9 +125,11 @@ if (empty($action) OR $action == 'showform')
         echo icon('contact', 16);
         echo " {$strContact}</label></th><td>\n";
         echo "<input type='text' name='search_string' id='search_string' size='30' value='{$query}' />\n";
-        echo autocomplete('search_string', 'autocomplete_sitecontact');
-        echo "<input type='hidden' name='win' value='{$win}' />";
         echo "<input name='submit' type='submit' value='{$strFindContact}' />";
+        echo "<div id='search_string_choices' class='autocomplete'></div>";
+        echo autocomplete('search_string', 'autocomplete_sitecontact', 'search_string_choices');
+        echo "<input type='hidden' name='win' value='{$win}' />";
+        
         echo "</td></tr>";
         echo "</table>";
         echo "<p align='center'><a href='contacts.php'>{$strBrowseContacts}</a>...</p>";

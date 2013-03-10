@@ -16,8 +16,6 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-$pagescripts = array('AutoComplete.js');
-
 $title = $strBrowseSites;
 
 $search_string = cleanvar($_REQUEST['search_string']);
@@ -108,8 +106,10 @@ echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 
 echo "<p>{$strBrowseSites}: ";
 echo "<input type='text' id='search_string' style='width: 300px;' name='search_string' />";
-echo autocomplete('search_string', 'sites');
 echo "<input name='submit' type='submit' value='{$strGo}' /></p>";
+echo "<div id='search_string_choices' class='autocomplete'></div>";
+echo autocomplete('search_string', 'sites', 'search_string_choices');
+
 echo "</form>\n";
 if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 {

@@ -66,7 +66,7 @@ if ($submit_value == 'go')
         header("Location: {$url}");
     }
 }
-$pagescripts = array('AutoComplete.js');
+
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('contact', 32)." ";
@@ -78,8 +78,10 @@ echo "<td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "<p>{$strBrowseContacts}: ";
 echo "<input type='text' id='search_string' style='width: 300px;' name='search_string' />";
-echo autocomplete('search_string', 'contact');
 echo "<input name='submit' type='submit' value=\"{$strGo}\" /></p>";
+echo "<div id='search_string_choices' class='autocomplete'></div>";
+echo autocomplete('search_string', 'contact', 'search_string_choices');
+
 echo "</form>\n";
 if ($displayinactive == "true")
 {

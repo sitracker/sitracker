@@ -85,7 +85,7 @@ if (isset($refresh) && $refresh != 0)
 if ($_SESSION['auth'] == TRUE)
 {
     echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
-    echo "<script src='{$CONFIG['application_webpath']}scripts/scriptaculous/scriptaculous.js?load=effects,dragdrop' type='text/javascript'></script>\n";
+    echo "<script src='{$CONFIG['application_webpath']}scripts/scriptaculous/scriptaculous.js?load=effects,dragdrop,controls' type='text/javascript'></script>\n";
     echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
     echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
     echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";

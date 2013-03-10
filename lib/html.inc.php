@@ -449,7 +449,7 @@ function date_picker($formelement)
 
 
 /**
- * Uses scriptaculous and AutoComplete.js to make a form text input
+ * Uses scriptaculous to make a form text input
  * box autocomplete
  * @author Ivan Lucas
  * @param string $formelement. form element id, eg. textinput
@@ -457,18 +457,14 @@ function date_picker($formelement)
  * @return string HTML javascript block
  * @note The page that calls this function MUST include the required
  * javascript libraries. e.g.
- *   $pagescripts = array('AutoComplete.js');
+ *   $pagescripts = array('scriptaculous.js?load=controls');
  */
-function autocomplete($formelement, $action = 'autocomplete_sitecontact')
+function autocomplete($formelement, $action = 'autocomplete_sitecontact', $autocompletediv)
 {
     $html .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-    // Disable browser autocomplete (it clashes)
-    $html .= "$('$formelement').setAttribute(\"autocomplete\", \"off\"); \n";
-    $html .= "new AutoComplete('{$formelement}', 'ajaxdata.php?action={$action}&s=', {\n";
-    $html .= "delay: 0.25,\n";
-    $html .= "resultFormat: AutoComplete.Options.RESULT_FORMAT_JSON\n";
-    $html .= "}); \n//]]>\n</script>\n";
-
+    $html .= "new Ajax.Autocompleter('{$formelement}', '{$autocompletediv}', 'ajaxdata.php?action={$action}', {minChars: 3, paramName: 's', delay: 0.25, parameters: 'htmllist=true'});\n";
+    $html .= "\n//]]>\n</script>\n";
+    
     return $html;
 }
 
@@ -1501,7 +1497,7 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
 {
     global $CONFIG;
 
-    // FIXME TODO use $CONFIG['dateformat_shorttime']
+    // FIXME use $CONFIG['dateformat_shorttime']
 
     $m = 0;
 

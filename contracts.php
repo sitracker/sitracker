@@ -18,7 +18,6 @@ require (APPLICATION_LIBPATH.'functions.inc.php');
 require (APPLICATION_LIBPATH.'auth.inc.php');
 
 $title = $strBrowseContracts;
-$pagescripts = array('AutoComplete.js');
 
 // External variables
 $productid = clean_int($_REQUEST['productid']);
@@ -36,7 +35,8 @@ echo "<table summary='alphamenu' class='maintable'><tr><td align='center'>";
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "{$strBrowseContractsBySite}:"; // <!--<input type="text" name="search_string" />-->
 echo "<input type='text' id='search_string' style='width: 300px;' name='search_string' />";
-echo autocomplete('search_string', 'contract');
+echo "<div id='search_string_choices' class='autocomplete'></div>";
+echo autocomplete('search_string', 'sites', 'search_string_choices');
 if ($_SESSION['userconfig']['show_inactive_data'] == 'TRUE')
 {
     echo "<label><input type='checkbox' name='activeonly' value='yes' ";

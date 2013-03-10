@@ -130,16 +130,18 @@ switch ($action)
         break;
     case 'autocomplete_sitecontact':
         $s = clean_dbstring($_REQUEST['s']);
-        // JSON encoded
+        $htmllist = clean_dbstring($_REQUEST['htmllist']);
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if ($htmllist == 'true') $str = "<ul>";
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
             {
-                $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
+                if ($htmllist == 'true') $str .= "<li>{$obj->forenames} {$obj->surname}</li>";
+                else $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
             }
         }
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
@@ -150,10 +152,13 @@ switch ($action)
         {
             while ($obj = mysql_fetch_object($result))
             {
-                $str .= "[\"".$obj->name."\"],";
+                if ($htmllist == 'true') $str .= "<li>{$obj->name}</li>";
+                else $str .= "[\"".$obj->name."\"],";
             }
         }
-        echo "[".mb_substr($str,0,-1)."]";
+        if ($htmllist == 'true') $str .= "</ul>";
+        else $str .= "[".mb_substr($str, 0, -1)."]";
+        echo $str;
         break;
     case 'tags':
         $sql = "SELECT DISTINCT t.name FROM `{$dbSetTags}` AS st, `{$dbTags}` AS t WHERE st.tagid = t.tagid GROUP BY t.name";
@@ -170,33 +175,43 @@ switch ($action)
         break;
     case 'contact' :
         $s = clean_dbstring($_REQUEST['s']);
+        $htmllist = clean_dbstring($_REQUEST['htmllist']);
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if ($htmllist == 'true') $str = "<ul>";
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
             {
-                $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
+                if ($htmllist == 'true') $str .= "<li>{$obj->forenames} {$obj->surname}</li>";
+                else $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
             }
         }
-        echo "[".mb_substr($str,0,-1)."]";
+        if ($htmllist == 'true') $str .= "</ul>";
+        else $str .= "[".mb_substr($str, 0, -1)."]";
+        echo $str;
         break;
     case 'sites':
         $s = clean_dbstring($_REQUEST['s']);
+        $htmllist = clean_dbstring($_REQUEST['htmllist']);
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if ($htmllist == 'true') $str = "<ul>";
         if (mysql_num_rows($result) > 0)
         {
             while ($obj = mysql_fetch_object($result))
             {
-                $str .= "[\"".$obj->name."\"],";
+                if ($htmllist == 'true') $str .= "<li>{$obj->name}</li>";
+                else $str .= "[\"".$obj->name."\"],";
             }
         }
-        echo "[".mb_substr($str,0,-1)."]";
+        if ($htmllist == 'true') $str .= "</ul>";
+        else $str .= "[".mb_substr($str, 0, -1)."]";
+        echo $str; 
         break;
     case 'slas':
         $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
