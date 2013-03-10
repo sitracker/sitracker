@@ -231,5 +231,6 @@ define ('PERM_SERVICE_EDIT', 80);
 define ('PERM_BILLING_DURATION_EDIT', 81); //Adjust durations on activities
 define ('PERM_VIEW_SLA', 82); // View SLAs
 define ('PERM_USER_DELETE', 83); // View SLAs
+define ('PERM_SITE_TYPES', 84); // edit Site Types
 // Any new permissions please use a number higher than 99, INL 2011-06-22
 ?>

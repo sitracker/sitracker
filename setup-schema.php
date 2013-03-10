@@ -849,6 +849,7 @@ INSERT INTO `{$dbPermissions}` VALUES(80, 8, 'strEditServiceDetails');
 INSERT INTO `{$dbPermissions}` VALUES(81, 8, 'strAdjustActivityDuration');
 INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
 INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
+INSERT INTO `{$dbPermissions}` VALUES(84, 2, 'strSiteTypes');
 
 CREATE TABLE IF NOT EXISTS `{$dbPermissionCategories}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
@@ -1024,6 +1025,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 81, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 84, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 3, 'true');
@@ -1088,6 +1090,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 76, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 77, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 84, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 3, 'true');
@@ -1862,6 +1865,11 @@ UPDATE `{$dbContacts}` SET city = NULL WHERE city = '';
 UPDATE `{$dbContacts}` SET county = NULL WHERE county = '';
 UPDATE `{$dbContacts}` SET country = NULL WHERE country = '';
 UPDATE `{$dbContacts}` SET notes = NULL WHERE notes = '';
+
+-- PH 2013-03-04
+INSERT INTO `{$dbPermissions}` VALUES(84, 2, 'strSiteTypes');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 84, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 84, 'true');
 
 ";
 
