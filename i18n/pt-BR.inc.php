@@ -408,7 +408,6 @@ $strFri = 'Sex';
 $strFriday = 'Sexta-Feira';
 $strFrom = 'De';
 $strFromXResults = 'a partir de% s resultados';
-$strFTP = 'FTP';
 $strFullDay = 'Dia Inteiro';
 $strFullNameCurrentUser = 'Nome completo do usuário atual';
 
@@ -545,7 +544,6 @@ $strMaintenance = 'Manutenção';
 $strMakeVisibleInPortal = 'Tornar visíveis no portal';
 $strManageDashboardComponents = 'Gerencie componentes do painel';
 $strManageEmailTemplates = 'Gerenciar Modelos de Email';
-$strManageFTPFiles = 'Gerenciar Arquivos do FTP';
 $strManageUsers = 'Gerenciar Usuários';
 $strManageYourDashboard = 'Gerencie seu Painel';
 $strMandatoryMarked = 'Campos obrigatórios são marcados %s';

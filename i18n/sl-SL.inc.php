@@ -374,7 +374,6 @@ $strFrequency = 'Frekvenca';
 $strFri = 'Pet';
 $strFriday = 'Petek';
 $strFrom = 'Iz';
-$strFTP = 'FTP';
 $strFullDay = 'Cel dan';
 $strFullDetails = 'Vse podrobnisti';
 $strFullNameCurrentUser = 'Celotno ime trenutnega uporabnika';

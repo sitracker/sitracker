@@ -160,7 +160,6 @@ $strForenames = 'Vardai/Pavadinimai';
 $strForgottenDetails = 'Pamiršote savo duomenis?';
 $strForm = 'Forma';
 $strFrom = 'Iš';
-$strFTPFilesDB = 'FTP DB';
 
 $strGlobalSignature = 'Bendras parašas';
 $strGo = 'Eiti';
