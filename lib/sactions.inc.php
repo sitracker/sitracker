@@ -543,46 +543,6 @@ function saction_CheckWaitingEmail()
 }
 
 
-/**
- * Checks for expired FTP files (where expired is before now) and removes them
- * @author Paul Heaney
- */
-function saction_PurgeExpiredFTPItems()
-{
-    global $dbFiles, $now;
-    $success = TRUE;
-
-    // Retreieve names first so we can delete them from FTP site
-    $sql = "SELECT * FROM `{$dbFiles}` WHERE expiry <= '{$now}' AND expiry != 0";
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
-        $success = FALSE;
-    }
-
-    if (mysql_numrows($result) > 0)
-    {
-        $connection = create_ftp_connection();
-
-        while ($obj = mysql_fetch_object($result))
-        {
-            $success &= ftp_delete($connection, $obj->path."/".$obj->filename);
-
-            $sqlDel = "DELETE FROM `{$dbFiles}` WHERE id = {$obj->id}";
-            $resultdel = mysql_query($sqlDel);
-            if (mysql_error())
-            {
-                trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
-                $success = FALSE;
-            }
-        }
-
-        ftp_close($connection);
-    }
-    return $success;
-}
-
 // TODO PurgeAttachments
 // Look for the review due trigger, where did it go
 

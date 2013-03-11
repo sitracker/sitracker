@@ -99,7 +99,6 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            30 => array('perm' => PERM_GLOBALSIG_EDIT, 'name' => $strGlobalSignature, 'url' => "{$CONFIG['application_webpath']}edit_global_signature.php"),
                            40 => array('perm' => PERM_ADMIN, 'name' => $strTemplates, 'url' => "{$CONFIG['application_webpath']}templates.php"),
                            50 => array('perm' => PERM_ADMIN, 'name' => $strSetPublicHolidays, 'url' => "{$CONFIG['application_webpath']}calendar.php?type=10&amp;display=year", 'enablevar' => 'holidays_enabled'),
-                           60 => array('perm' => PERM_ADMIN, 'name' => $strFTPFilesDB, 'url' => "{$CONFIG['application_webpath']}ftp_list_files.php"),
                            70 => array('perm' => PERM_ADMIN, 'name' => $strServiceLevels, 'url' => "{$CONFIG['application_webpath']}service_levels.php"),
                            80 => array('perm' => PERM_BILLING_DURATION_EDIT, 'name' => $strBillingMatrix, 'url' => "{$CONFIG['application_webpath']}billing_matrix.php"),
                            90 => array('perm' => PERM_INCIDENT_EDIT, 'name' => $strBulkModify, 'url' => "{$CONFIG['application_webpath']}bulk_modify.php?action=external_esc"),

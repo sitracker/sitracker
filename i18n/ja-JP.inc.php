@@ -227,7 +227,6 @@ $strForm = 'フォーム';
 $strFri = '金';
 $strFriday = '金曜日';
 $strFrom = 'から';
-$strFTPFilesDB = 'FTP ファイル DB';
 
 $strGBytes = 'GB';
 $strGetHelpOnline = '文書類 ウェブサイト';
@@ -306,7 +305,6 @@ $strLow = '低い';
 $strMaintenance = 'メンテナンス';
 $strManageDashboardComponents = 'ダッシュボード管理';
 $strManageEmailTemplates = 'メールテンプレート管';
-$strManageFTPFiles = 'FTPファイル管理';
 $strManageUsers = 'ユーザー管理';
 $strManageYourDashboard = 'ダッシュボード管理';
 $strMandatoryMarked = '%s は必須フィールド';

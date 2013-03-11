@@ -99,16 +99,6 @@ $CONFIG['attachment_webpath'] = "attachments/";
 $CONFIG['upload_max_filesize'] = get_cfg_var('upload_max_filesize');
 // Convert a PHP.INI integer value into a byte value
 
-// FTP Server details, for file upload functionality
-$CONFIG['ftp_hostname'] = '';
-$CONFIG['ftp_username'] = '';
-$CONFIG['ftp_password'] = '';
-
-// Set whether to use passive mode ftp
-$CONFIG['ftp_pasv'] = TRUE;
-// The path to the directory where we store files, (e.g. /pub/support/) the trailing slash is important
-$CONFIG['ftp_path'] = '/';
-
 // The icon set that new users should use
 $CONFIG['default_iconset'] = 'sit';
 

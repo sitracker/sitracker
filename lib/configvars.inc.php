@@ -19,7 +19,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 $CFGTAB['application'] = array('appmain', 'theming', 'ldap', 'other');
 $CFGTAB['email'] = array('inboundemail','outboundemail');
-$CFGTAB['features'] = array('incidents', 'portal', 'ftp', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
+$CFGTAB['features'] = array('incidents', 'portal', 'kb', 'sla', 'billing', 'holidays', 'feedback', 'inventory', 'otherfeatures');
 $CFGTAB['system'] = array('paths', 'locale', 'journal', 'users', 'contacts', 'sites');  // soap
 $TABI18n['plugins'] = $strPlugins;
 
@@ -70,8 +70,6 @@ $CFGCAT['billing'] = array('billing_matrix_multipliers',
                             'billing_default_multiplier');
 
 $CFGCAT['theming'] = array('default_interface_style', 'default_iconset', 'default_gravatar', 'font_file', 'tag_icons', 'default_chart');
-
-$CFGCAT['ftp'] = array('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv', 'ftp_path');
 
 $CFGCAT['portal'] = array('portal',
                           'portal_kb_enabled',
@@ -178,7 +176,6 @@ $CATI18N['appmain'] = $strGeneral;
 $CATI18N['billing'] = $strBilling;
 $CATI18N['contacts'] = $strContacts;
 $CATI18N['feedback'] = $strFeedback;
-$CATI18N['ftp'] = $strFTP;
 $CATI18N['holidays'] = $strHolidays;
 $CATI18N['inboundemail'] = $strInbound;
 $CATI18N['incidents'] = $strIncidents;
@@ -404,21 +401,6 @@ $CFGVAR['feedback_max_score']['type'] = 'select';
 $CFGVAR['free_support_limit']['title'] = 'Number of free (site) support incidents that can be logged to a site';
 $CFGVAR['free_support_limit']['type'] = 'number';
 $CFGVAR['free_support_limit']['unit'] = $strSiteIncidents;
-
-$CFGVAR['ftp_hostname']['title'] = 'FTP hostname';
-$CFGVAR['ftp_hostname']['help'] = 'The hostname or IP address of the FTP server to connect to';
-
-$CFGVAR['ftp_password']['title'] = 'FTP password';
-$CFGVAR['ftp_password']['type'] = 'password';
-
-$CFGVAR['ftp_pasv']['title'] = 'FTP passive mode';
-$CFGVAR['ftp_pasv']['help'] = 'Enable FTP Passive (PASV) mode if your connection uses NAT';
-$CFGVAR['ftp_pasv']['type'] = 'checkbox';
-
-$CFGVAR['ftp_path']['title'] = 'FTP Path';
-$CFGVAR['ftp_path']['help'] = 'The path to the directory where we store files on the ftp server (e.g. /pub/support/) the trailing slash is important';
-
-$CFGVAR['ftp_username']['title'] = 'FTP username';
 
 $CFGVAR['font_file']['title'] = 'Font File location';
 $CFGVAR['font_file']['help'] = 'Location of the font file to use on graphs, leaving blank will default to the internal GD font';

@@ -191,7 +191,7 @@ define ('PERM_INCIDENT_FORCE_ASSIGN', 40);
 define ('PERM_STATUS_VIEW', 41); // view system status
 define ('PERM_UPDATE_DELETE', 42); // Review/Delete Incident updates
 define ('PERM_GLOBALSIG_EDIT', 43);
-define ('PERM_FILE_PUBLISH', 44); // Publish files to FTP site
+// perm 44 unused define ('PERM_FILE_PUBLISH', 44); // Publish files to FTP site
 // perm 45 unused (View Mailing List Subscriptions)
 // perm 46 unused (Edit Mailing List Subscriptions)
 // perm 47 unused (Administrate Mailing Lists)

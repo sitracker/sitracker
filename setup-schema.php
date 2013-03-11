@@ -812,7 +812,6 @@ INSERT INTO `{$dbPermissions}` VALUES(40, 1, 'strReassignIncidentsWhenUserNotAcc
 INSERT INTO `{$dbPermissions}` VALUES(41, 11, 'strViewStatus');
 INSERT INTO `{$dbPermissions}` VALUES(42, 1, 'strReviewDeleteIncidentUpdates');
 INSERT INTO `{$dbPermissions}` VALUES(43, 7, 'strEditGlobalSignature');
-INSERT INTO `{$dbPermissions}` VALUES(44, 11, 'strPublishFielsToFTPSite');
 INSERT INTO `{$dbPermissions}` VALUES(48, 7, 'strAddFeedbackForms');
 INSERT INTO `{$dbPermissions}` VALUES(49, 7, 'strEditFeedbackForms');
 INSERT INTO `{$dbPermissions}` VALUES(50, 10, 'strApproveHolidays');
@@ -1156,7 +1155,6 @@ INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, 
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('TimeCalc', '', NULL, 'Calculate SLA Target Times and trigger                        OUT_OF_SLA and OUT_OF_REVIEW system email templates where appropriate.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 60, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('ChaseCustomers', '', NULL, 'Chase customers', 'disabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 3600, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('CheckWaitingEmail', '', NULL, 'Checks the holding queue for emails and fires the TRIGGER_WAITING_HELD_EMAIL trigger when it finds some.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 60, '0000-00-00 00:00:00', 1);
-INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('PurgeExpiredFTPItems', '', NULL, 'purges files which have expired from the FTP site when run.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 216000, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('CheckIncomingMail', '', NULL, 'Check incoming support mailbox.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 60, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `interval`, `lastran`, `success`) VALUES ('CheckTasksDue', '', NULL, 'Checks for due tasks.', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 3600, '0000-00-00 00:00:00', 1);
 INSERT INTO `{$dbScheduler}` (`action`, `params`, `paramslabel`, `description`, `status`, `start`, `end`, `type`, `interval`, `date_type`, `date_offset`, `date_time`, `laststarted`, `lastran`, `success`) VALUES ('ldapSync', '', NULL, 'Sync users and customers from LDAP', 'enabled', '2008-01-01 00:00:00', '0000-00-00 00:00:00', 'interval', 60, 'month', 0, '00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
@@ -1454,7 +1452,6 @@ INSERT INTO `{$dbUserPermissions}` VALUES (1, 40, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 41, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 42, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 43, 'true');
-INSERT INTO `{$dbUserPermissions}` VALUES (1, 44, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 45, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 46, 'true');
 INSERT INTO `{$dbUserPermissions}` VALUES (1, 47, 'true');
@@ -1671,7 +1668,7 @@ UPDATE `{$dbPermissions}` SET name = 'strReassignIncidentsWhenUserNotAccepting' 
 UPDATE `{$dbPermissions}` SET name = 'strViewStatus' WHERE id = 41;
 UPDATE `{$dbPermissions}` SET name = 'strReviewDeleteIncidentUpdates' WHERE id = 42;
 UPDATE `{$dbPermissions}` SET name = 'strEditGlobalSignature' WHERE id = 43;
-UPDATE `{$dbPermissions}` SET name = 'strPublishFielsToFTPSite' WHERE id = 44;
+-- UPDATE `{$dbPermissions}` SET name = 'strPublishFielsToFTPSite' WHERE id = 44; -- 44 has been removed
 UPDATE `{$dbPermissions}` SET name = 'strAddFeedbackForms' WHERE id = 48;
 UPDATE `{$dbPermissions}` SET name = 'strEditFeedbackForms' WHERE id = 49;
 UPDATE `{$dbPermissions}` SET name = 'strApproveHolidays' WHERE id = 50;
@@ -1866,9 +1863,14 @@ UPDATE `{$dbContacts}` SET country = NULL WHERE country = '';
 UPDATE `{$dbContacts}` SET notes = NULL WHERE notes = '';
 
 -- PH 2013-03-04
-INSERT INTO `{$dbPermissions}` VALUES(84, 2, 'strSiteTypes');
+INSERT INTO `{$dbPermissions}` VALUES (84, 2, 'strSiteTypes');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 84, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 84, 'true');
+
+-- PH 2013-03-11
+DELETE FROM `{$dbConfig}` WHERE config IN ('ftp_hostname', 'ftp_username', 'ftp_password', 'ftp_pasv', 'ftp_path');
+DELETE FROM `{$dbScheduler}` WHERE action = 'PurgeExpiredFTPItems';
+DELETE FROM `{$dbPermissions}` WHERE id = 44;
 
 ";
 
