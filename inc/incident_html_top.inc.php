@@ -63,8 +63,6 @@ $lastseensql = "UPDATE LOW_PRIORITY `{$dbUsers}` SET lastseen=NOW() WHERE id='{$
 mysql_query($lastseensql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-// FIXME put here some js to set action field then post form
-
 plugin_do('html_head');
 echo "</head>";
 
