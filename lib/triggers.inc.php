@@ -1525,8 +1525,8 @@ function checks_to_html($checks)
 }
 
 /**
+ * Used in the above for checkform on {incidentpriorityid}
  * @author Kieran Hogg
- * @todo FIXME This is unused and does nothing. was it supposed to do something? INL 24 June 2011
  */
 function freeform($name)
 {
