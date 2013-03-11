@@ -13,11 +13,10 @@
 // Supports both Firefox2 and IE7
 
 require ('core.php');
-$permission = PERM_NOT_REQUIRED; // not required FIXME perhaps use search permission here?
-require (APPLICATION_LIBPATH . 'functions.inc.php');
+// no permission required as this is simply the  page the browser includes for search, actual search is done by search.php which does have a permission,
+// We can't really put a permission on here as this is included as an internal process in the bowser and as such the login page is never shown 
+$permission = PERM_NOT_REQUIRED;
 
-// This page requires authentication
-require (APPLICATION_LIBPATH . 'auth.inc.php');
 echo "<?xml version=\"1.0\"?>";
 echo "<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">";
 echo "<ShortName>{$CONFIG['application_shortname']}</ShortName>";
