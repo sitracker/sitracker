@@ -378,7 +378,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
             $user->message = $user_attributes[$CONFIG['ldap_description']][0];
             $user->source = 'ldap';
 
-            // TODO FIXME this doesn't take into account custom roles'
+            // TODO this doesn't take into account custom roles'
             switch ($usertype)
             {
                 case LDAP_USERTYPE_ADMIN:
