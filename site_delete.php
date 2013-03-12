@@ -70,10 +70,11 @@ else
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         list($numcontracts) = mysql_fetch_row($result);
-        if ($numcontracts>0)
+        if ($numcontracts > 0)
         {
             echo "<p align='center' class='warning'>".sprintf($strNumContractsAssignedToSite, $numcontracts)."</p>";
         }
+
         if ($numcontacts > 0 OR $numcontracts > 0)
         {
             echo "<p align='center'>{$strInOrderToDelete}</p>";
