@@ -127,7 +127,7 @@ $pdate = mktime(0, 0, 0, $month, $day, $year-1);
 $ndate = mktime(0, 0, 0 ,$month, $day, $year+1);
 echo "<p class='yearcalendarview'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$pdate)."&amp;month=".date('m',$pdate)."&amp;day=".date('d',$pdate)."&amp;type={$type}'>&lt;</a> ";
-echo date('Y',mktime(0,0,0,$month,$day,$year));
+echo date('Y', mktime(0, 0, 0, $month, $day, $year));
 echo " <a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$ndate)."&amp;month=".date('m',$ndate)."&amp;day=".date('d',$ndate)."&amp;type={$type}'>&gt;</a>";
 echo "</p>";
 
@@ -141,7 +141,7 @@ for ($r = 1; $r <= 3;$r ++)
     for ($c = 1; $c <= 4;$c++)
     {
         echo "<td class='shade1 yearcalendar'>";
-        draw_calendar($displaymonth,$displayyear);
+        draw_calendar($displaymonth, $displayyear);
         echo "</td>";
         if ($displaymonth == 12)
         {
