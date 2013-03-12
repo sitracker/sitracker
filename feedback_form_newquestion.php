@@ -11,7 +11,6 @@
 
 // by Ivan Lucas, June 2004
 
-// FIXME i18n Whole Page
 
 require ('core.php');
 $permission = PERM_FEEDBACK_FORM_ADD; // Add Feedback Forms
@@ -19,7 +18,11 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
-if ($_SESSION['tcs'] != $tcs) { header("Location: login.php"); exit; }
+if ($_SESSION['tcs'] != $tcs)
+{
+    header("Location: login.php");
+    exit;
+}
 
 // External variables
 $qid = clean_int($_REQUEST['id']);
@@ -76,7 +79,7 @@ switch ($_REQUEST['action'])
         echo "</tr>\n<tr>";
 
         echo "<th>{$strQuestion}:</th>";
-        echo "<td><input type='text' name='question' size='35' maxlength='255' value='".$question->question."' /></td>";
+        echo "<td><input type='text' name='question' size='35' maxlength='255' value='{$question->question}' /></td>";
         echo "</tr>\n<tr>";
 
         echo "<th>{$strQuestionText}:</th>";
