@@ -364,7 +364,6 @@ elseif ($mode == 'save')
             $_SESSION['utcoffset'] = $user->utc_offset;
         }
 
-
         if ($result === FALSE)
         {
 

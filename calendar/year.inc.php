@@ -62,24 +62,24 @@ echo "<p class='setpublicholidays'>";
 
 if (!empty($selectedday))
 {
-    // FIXME i18n holiday selection
-    echo "$selectedday/$selectedmonth/$selectedyear is ";
+    $dateStr = "{$selectedday}/{$selectedmonth}/{$selectedyear}";
     switch ($length)
     {
         case 'am':
-            echo "selected for the <strong>morning";
+            echo sprintf($strXisSelectedForTheMorning, $dateStrm, holiday_type($type));
             break;
         case 'pm':
-            echo "selected for the <strong>afternoon";
+            echo sprintf($strXisSelectedForTheAfternoon, $dateStr, holiday_type($type));
             break;
         case 'day':
-            echo "selected for the <strong>full day";
+            echo sprintf($strXisSelectedForTheFullDay, $dateStr, holiday_type($type));
             break;
         default:
-            echo "<strong>not selected";
+            echo sprintf($strXisNotSelected, $dateStr, holiday_type($type));
     }
-    echo "</strong> ";
-    echo " as ".holiday_type($type).".  ";
+
+    // Insert white space between sentances
+    echo "  ";
 
     if ($approved == 0)
     {
@@ -127,7 +127,7 @@ $pdate = mktime(0, 0, 0, $month, $day, $year-1);
 $ndate = mktime(0, 0, 0 ,$month, $day, $year+1);
 echo "<p class='yearcalendarview'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$pdate)."&amp;month=".date('m',$pdate)."&amp;day=".date('d',$pdate)."&amp;type={$type}'>&lt;</a> ";
-echo date('Y',mktime(0,0,0,$month,$day,$year));
+echo date('Y', mktime(0, 0, 0, $month, $day, $year));
 echo " <a href='{$_SERVER['PHP_SELF']}?display=year&amp;year=".date('Y',$ndate)."&amp;month=".date('m',$ndate)."&amp;day=".date('d',$ndate)."&amp;type={$type}'>&gt;</a>";
 echo "</p>";
 
@@ -135,13 +135,13 @@ echo "</p>";
 echo "<table class='maintable yearcalendar'>";
 $displaymonth = 1;
 $displayyear = $year;
-for ($r = 1; $r <= 3;$r ++)
+for ($r = 1; $r <= 3; $r++)
 {
     echo "<tr>";
     for ($c = 1; $c <= 4;$c++)
     {
         echo "<td class='shade1 yearcalendar'>";
-        draw_calendar($displaymonth,$displayyear);
+        draw_calendar($displaymonth, $displayyear);
         echo "</td>";
         if ($displaymonth == 12)
         {

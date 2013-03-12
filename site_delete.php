@@ -38,7 +38,19 @@ if (empty($id))
 }
 else
 {
-    if (empty($destinationid))
+    // Look for associated contacts
+    $sql = "SELECT COUNT(id) FROM `{$dbContacts}` WHERE siteid='{$id}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    list($numcontacts) = mysql_fetch_row($result);
+    
+    // Look for associated maintenance contracts
+    $sql = "SELECT COUNT(id) FROM `{$dbMaintenance}` WHERE site='{$id}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    list($numcontracts) = mysql_fetch_row($result);
+    
+    if (empty($destinationid) AND ($numcontacts > 0 OR $numcontracts > 0))
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>{$strDeleteSite}</h2>";
@@ -55,49 +67,38 @@ else
 
         plugin_do('site_delete_submitted');
 
-        // Look for associated contacts
-        $sql = "SELECT COUNT(id) FROM `{$dbContacts}` WHERE siteid='{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        list($numcontacts) = mysql_fetch_row($result);
         if ($numcontacts > 0)
         {
             echo "<p align='center' class='warning'>".sprintf($strNumContactsAssignedToSite, $numcontacts)."</p>";
         }
 
-        // Look for associated maintenance contracts
-        $sql = "SELECT COUNT(id) FROM `{$dbMaintenance}` WHERE site='{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        list($numcontracts) = mysql_fetch_row($result);
-        if ($numcontracts>0)
+
+        if ($numcontracts > 0)
         {
             echo "<p align='center' class='warning'>".sprintf($strNumContractsAssignedToSite, $numcontracts)."</p>";
         }
-        if ($numcontacts > 0 OR $numcontracts > 0)
-        {
-            echo "<p align='center'>{$strInOrderToDelete}</p>";
-            echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
-            echo "<table class='maintable'>";
-            echo "<tr><th>{$strSite}:</th><td>".site_drop_down('destinationid', 0)."</td></tr>";
-            echo "</table>";
-            echo "<input type='hidden' name='id' value='{$id}' />";
-            echo "<p><input name='submit' type='submit' value='{$strDelete}' /></p>";
-            echo "</form>";
-        }
+
+        echo "<p align='center'>{$strInOrderToDelete}</p>";
+        echo "<form action='{$_SERVER['PHP_SELF']}?action=delete' method='post'>";
+        echo "<table class='maintable'>";
+        echo "<tr><th>{$strSite}:</th><td>".site_drop_down('destinationid', 0)."</td></tr>";
+        echo "</table>";
+        echo "<input type='hidden' name='id' value='{$id}' />";
+        echo "<p><input name='submit' type='submit' value='{$strDelete}' /></p>";
+        echo "</form>";
+            
+        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+    }
+    else if (empty($destinationid))
+    {
+        $sql = "DELETE FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         else
         {
-            $sql = "DELETE FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-            else
-            {
-                plugin_do('site_delete_saved');
-                // FIXME html headers need sorting here, we don't want the header before we do this
-                html_redirect("sites.php");
-            }
+            plugin_do('site_delete_saved');
+            html_redirect("sites.php");
         }
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
     {

@@ -1343,8 +1343,7 @@ function trigger_action_to_html($trigger, $user_id)
         }
         if ($t_array['parameters'] != '')
         {
-            // FIXME i18n
-            $html .= "<strong>Parameters</strong>: {$t_array['parameters']} ".help_link('trigger_parameters')." ";
+            $html .=  sprintf(strParametersX, $t_array['parameters']) . help_link('trigger_parameters')." ";
         }
         $html .= "</span>";
     }

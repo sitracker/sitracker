@@ -296,7 +296,7 @@ elseif ($action == "edit" OR $action == "new")
 
         echo "<p class='formbuttoms'>";
         echo "<input name='savenew' type='hidden' value='";
-        if ($action == "new")  echo "yes";
+        if ($action == "new") echo "yes";
         else echo "no";
         echo "' />";
         echo "<input name='type' type='hidden' value='{$template->type}' />";
@@ -314,7 +314,6 @@ elseif ($action == "edit" OR $action == "new")
         echo "</form>";
         echo "</div>";
 
-        // FIXME i18n email templates
         // Show a list of available template variables.  Only variables that have 'requires' matching the 'required'
         // that the trigger provides is shown
         echo "<div id='templatevariables' style='display:none;'>";
