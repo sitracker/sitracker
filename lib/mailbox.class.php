@@ -115,7 +115,7 @@ class Mailbox
                         $message = $message;
                 }
 
-                $fp = fopen($path.$filename,"w");
+                $fp = fopen($path.$filename, "w");
                 fwrite($fp, $message);
                 fclose($fp);
                 $attachments[] = $filename;
