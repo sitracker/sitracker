@@ -457,8 +457,12 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
 
 
 /**
+ * Reads the user object from the LDAP directory
  * @author Paul Heaney
- * @todo TODO document this function
+ * @param string $username - The userame to retreive the user details of from the LDAP directory
+ * @param bool $searchOnEmail - True to search on username, false for nmaing attribute
+ * @param object $ldap_conn - The LDAP connection to search against
+ * @return resource the result entry identifier for the first entry on success and false on error
  */
 function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
 {
@@ -696,6 +700,19 @@ function ldapCheckGroupExists($dn, $mapping)
 }
 
 
+/**
+ * Returns all the group objects within a specificed container
+ * @author Paul Heaney
+ * @param string $base The LDAP base DN to start searching from
+ * @param string $ldap_host The LDAP host to search against
+ * @param string $ldap_port The port the LDAP server is running on
+ * @param string $ldap_type The type of LDAP server being used e.g. AD, eDirectory
+ * @param string $ldap_protocol The protocol version to use to bind to the server
+ * @param bool $ldap_security  Is SSL requried to bind to the server
+ * @param string $ldap_bind_user The DN of the user to bind to LDAP as
+ * @param string $ldap_bind_pass The password for $ldap_bind_user
+ * @return array conttaining (DN, Name, type) where type is either container or group
+ */
 function ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass)
 {
     global $CONFIG;
