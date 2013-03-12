@@ -135,7 +135,7 @@ echo "</p>";
 echo "<table class='maintable yearcalendar'>";
 $displaymonth = 1;
 $displayyear = $year;
-for ($r = 1; $r <= 3;$r ++)
+for ($r = 1; $r <= 3; $r++)
 {
     echo "<tr>";
     for ($c = 1; $c <= 4;$c++)
