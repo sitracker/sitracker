@@ -296,7 +296,7 @@ elseif ($action == "edit" OR $action == "new")
 
         echo "<p class='formbuttoms'>";
         echo "<input name='savenew' type='hidden' value='";
-        if ($action == "new")  echo "yes";
+        if ($action == "new") echo "yes";
         else echo "no";
         echo "' />";
         echo "<input name='type' type='hidden' value='{$template->type}' />";
