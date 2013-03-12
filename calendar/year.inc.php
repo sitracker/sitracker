@@ -62,24 +62,24 @@ echo "<p class='setpublicholidays'>";
 
 if (!empty($selectedday))
 {
-    // FIXME i18n holiday selection
-    echo "$selectedday/$selectedmonth/$selectedyear is ";
+    $dateStr = "{$selectedday}/{$selectedmonth}/{$selectedyear}";
     switch ($length)
     {
         case 'am':
-            echo "selected for the <strong>morning";
+            echo sprintf($strXisSelectedForTheMorning, $dateStrm, holiday_type($type));
             break;
         case 'pm':
-            echo "selected for the <strong>afternoon";
+            echo sprintf($strXisSelectedForTheAfternoon, $dateStr, holiday_type($type));
             break;
         case 'day':
-            echo "selected for the <strong>full day";
+            echo sprintf($strXisSelectedForTheFullDay, $dateStr, holiday_type($type));
             break;
         default:
-            echo "<strong>not selected";
+            echo sprintf($strXisNotSelected, $dateStr, holiday_type($type));
     }
-    echo "</strong> ";
-    echo " as ".holiday_type($type).".  ";
+
+    // Insert white space between sentances
+    echo "  ";
 
     if ($approved == 0)
     {
