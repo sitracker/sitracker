@@ -15,7 +15,7 @@
 // Removes link between a product and skill
 
 require ('core.php');
-$permission = PERM_PRODUCT_ADD;  // Add Product, FIXME need permission for delete
+$permission = PERM_UNLINK_SKILLS_PRODUCTS;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 $title = "{$strDisassociateSkillWithProduct}";
 

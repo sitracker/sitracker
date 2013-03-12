@@ -2005,6 +2005,7 @@ $strUnknown = 'Unknown';
 $strUnknownServiceLevel = 'Unknown service level';
 $strUnlimited = 'Unlimited';
 $strUnlink = 'Unlink';
+$strUnlinkSkillFromProduct = 'Unlink skill from product';
 $strUnlock = 'Unlock';
 $strUnlockThisToBeModifiedByOther = 'Unlock this update so it can be modified by someone else';
 $strUnsolved = 'Unsolved';
