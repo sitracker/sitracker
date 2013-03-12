@@ -678,7 +678,7 @@ elseif ($action == 'assign')
         
     if (!in_array($type, array('support', 'free')))
     {
-        $_SESSION['formerrors']['newincident']['type'] = $strIncidentTypeWasBlank; // TODO Not quite right but near enought, the type was won we don't recognise 
+        $_SESSION['formerrors']['newincident']['type'] = $strIncidentTypeWasBlank; // TODO Not quite right but near enought, the type was one we don't recognise 
         $errors++;
     }
     
