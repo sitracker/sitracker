@@ -1373,6 +1373,7 @@ $strOwnerXAndNotAccepting = 'Owner %s &amp; not accepting';
 $strOverview = 'Overview';
 $strOverXHoursAgo = 'Over %x hours ago';
 $strParameters = 'Parameters';
+$strParametersX = '<string>Parameters</strong>: %s";
 $strPassword = 'Password';
 $strPasswordHasBeenReset = 'Your password has been reset, you can now login using the new details.';
 $strPasswordIncorrect = 'Password Incorrect';
