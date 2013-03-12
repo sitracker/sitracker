@@ -20,7 +20,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 /**
  * Incident class for SiT, represents a single incident within SiT
  * @author Paul Heaney
- * @todo FIXME move out of this file into incidents in SiT3.60, extend SitEntity and make more useful
  */
 class Incident extends SitEntity
 {
