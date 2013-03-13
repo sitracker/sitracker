@@ -10,7 +10,7 @@
 //
 
 require ('core.php');
-$permission = PERM_UPDATE_ADD; // FIXME needs move update permission
+$permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
