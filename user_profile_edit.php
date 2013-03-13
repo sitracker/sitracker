@@ -366,12 +366,7 @@ elseif ($mode == 'save')
 
         if ($result === FALSE)
         {
-
-            // FIXME we might want a html_redirect() or something else here.. CJ
-            include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            trigger_error("!Error while updating users table", E_USER_ERROR);
-            include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-            exit;
+            html_redirect("{$_SERVER['PHP_SELF']}?userid={$edituserid}", FALSE, $strAnUnknownErrorOccured);
         }
         elseif ($result === TRUE)
         {
