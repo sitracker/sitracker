@@ -1336,7 +1336,7 @@ function trigger_action_to_html($trigger, $user_id)
         if ($t_array['checks'] != '')
         {
             $html .= "<strong>{$strChecks}</strong>: ";
-            //FIXME 4.0
+            //FIXME 4.0 - add back displaying triggers as HTML - see function below
             //$html .= checks_to_html($t_array['checks'])." ".help_link('trigger_checks')." ";
             $html .= $t_array['checks']." ".help_link('trigger_checks')." ";
 
@@ -1469,7 +1469,7 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
  * @author Kieran Hogg
  * @param string $checks
  * @returns string HTML
- * @todo FIXME 4.0
+ * @todo FIXME 4.0 - displaying triggers as HTML
  */
 function checks_to_html($checks)
 {
