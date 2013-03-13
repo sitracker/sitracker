@@ -34,7 +34,7 @@ $title = $strEmail;
 
 if (empty($step))
 {
-    $action = clean_fixed_list($_REQUEST['action'], array('','deletedraft'));
+    $action = clean_fixed_list($_REQUEST['action'], array('', 'deletedraft'));
 
     if ($action == "deletedraft")
     {
