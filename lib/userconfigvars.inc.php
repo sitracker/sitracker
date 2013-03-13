@@ -11,8 +11,6 @@
 //
 // Author: Ivan Lucas, <ivanlucas[at]users.sourceforge.net
 
-// FIXME i18n all strings on page
-
 // Prevent script from being run directly (ie. it must always be included
 if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 {
@@ -69,33 +67,33 @@ $CFGVAR['language']['title'] = $strLanguage;
 $CFGVAR['language']['type'] = 'userlanguageselect';
 
 $CFGVAR['incident_log_order']['title'] = $strIncidentLogOrder;
-$CFGVAR['incident_log_order']['help'] = "Choose 'asc' for Ascending (oldest first), or 'desc' for Descending (newest first)";
+$CFGVAR['incident_log_order']['help'] = $strIncidentLogOrderHelp;
 $CFGVAR['incident_log_order']['type'] = 'select';
 $CFGVAR['incident_log_order']['options'] = 'asc|desc';
 
-$CFGVAR['show_next_action']['title'] = 'Show next action';
-$CFGVAR['show_next_action']['help'] = 'Show an incident\'s next action in the incident table';
+$CFGVAR['show_next_action']['title'] = $strShowNextAction;
+$CFGVAR['show_next_action']['help'] = $strShowNextActionHelp;
 $CFGVAR['show_next_action']['type'] = 'checkbox';
 
 $CFGVAR['incident_refresh']['title'] = $strIncidentRefresh;
 $CFGVAR['incident_refresh']['type'] = 'number';
 $CFGVAR['incident_refresh']['unit'] = $strSeconds;
 
-$CFGVAR['incident_popup_onewindow']['title'] = 'Use a single window for incident details';
+$CFGVAR['incident_popup_onewindow']['title'] = $strUseASingleWindowForIncidentDetails;
 $CFGVAR['incident_popup_onewindow']['type'] = 'checkbox';
 
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
 
 // TODO
-$CFGVAR['show_confirmation_caution']['title'] = 'Show general confirmation ("Are you sure?") messages';
+$CFGVAR['show_confirmation_caution']['title'] = $strShowGeneralConfirmationMessages;
 $CFGVAR['show_confirmation_caution']['type'] = 'checkbox';
 
 // TODO
-$CFGVAR['show_confirmation_delete']['title'] = 'Show confirmation messages ("Are you sure?") on delete';
+$CFGVAR['show_confirmation_delete']['title'] = $strShowConfirmationMessagesOnDelete;
 $CFGVAR['show_confirmation_delete']['type'] = 'checkbox';
 
-$CFGVAR['show_confirmation_close_window']['title'] = 'Show confirmation before closing a Window';
+$CFGVAR['show_confirmation_close_window']['title'] = $strShowConfirmationBeforeClosingAWindows;
 $CFGVAR['show_confirmation_close_window']['type'] = 'checkbox';
 
 $CFGVAR['show_emoticons']['title'] = $strShowEmoticons;
@@ -104,7 +102,7 @@ $CFGVAR['show_emoticons']['type'] = 'checkbox';
 $CFGVAR['show_table_legends']['title'] = $strShowTableLegends;
 $CFGVAR['show_table_legends']['type'] = 'checkbox';
 
-$CFGVAR['show_inactive_data']['title'] = 'Show Inactive Data';
+$CFGVAR['show_inactive_data']['title'] = $strShowInactiveData;
 $CFGVAR['show_inactive_data']['type'] = 'checkbox';
 
 // TODO
@@ -116,7 +114,7 @@ $CFGVAR['utc_offset']['title'] = $strUTCOffset;
 $CFGVAR['utc_offset']['type'] = 'timezoneselect';
 
 $CFGVAR['notifications_away']['title'] = $strNotificationsAway;
-$CFGVAR['notifications_away']['help'] = "Which notifications to receive when your status is set to 'Not in Office', 'Absent Sick', 'On Holiday' or 'Working Away'";
+$CFGVAR['notifications_away']['help'] = $strNotificationsAwayHelp;
 $CFGVAR['notifications_away']['type'] = 'select';
 $CFGVAR['notifications_away']['options'] = 'all|notices|emails|none';
 

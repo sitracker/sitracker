@@ -60,7 +60,7 @@ switch ($action)
                 echo "<h2>Link {$linktype->rlname}</h2>";
             }
 
-            echo "<p align='center'>Make a {$linktype} link for origtab {$origtab}, origref {$origref}</p>"; // FIXME i18n
+            echo "<p align='center'>" . sprintf($strMakeAXLinkFromOrigTabXtoX, $linktype, $origtab, $origref) . "</p>";
             $recsql = "SELECT {$linktype->linkcol} AS recordref, {$linktype->selectionsql} AS recordname FROM `{$CONFIG['db_tableprefix']}{$linktype->linktab}` ";
             $recsql .= "WHERE {$linktype->linkcol} != '{$origref}'";
 

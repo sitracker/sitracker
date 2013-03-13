@@ -850,6 +850,7 @@ INSERT INTO `{$dbPermissions}` VALUES(82, 3, 'strViewServiceLevels');
 INSERT INTO `{$dbPermissions}` VALUES(83, 7, 'strDeleteUser');
 INSERT INTO `{$dbPermissions}` VALUES(84, 2, 'strSiteTypes');
 INSERT INTO `{$dbPermissions}` VALUES(85, 3, 'strUnlinkSkillFromProduct');
+INSERT INTO `{$dbPermissions}` VALUES(86, 3, 'strNewService');
 
 CREATE TABLE IF NOT EXISTS `{$dbPermissionCategories}` (
 `id` INT( 5 ) NOT NULL AUTO_INCREMENT ,
@@ -1027,6 +1028,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 83, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 84, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 85, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 86, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 3, 'true');
@@ -1093,6 +1095,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 82, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 84, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 85, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 86, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 1, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 2, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 3, 'true');
@@ -1879,6 +1882,11 @@ DELETE FROM `{$dbPermissions}` WHERE id = 44;
 INSERT INTO `{$dbPermissions}` VALUES(85, 3, 'strUnlinkSkillFromProduct');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 85, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 85, 'true');
+
+-- PH 2013-03-13
+INSERT INTO `{$dbPermissions}` VALUES(86, 3, 'strNewService');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (1, 86, 'true');
+INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 86, 'true');
 
 ";
 

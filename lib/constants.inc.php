@@ -233,5 +233,6 @@ define ('PERM_VIEW_SLA', 82); // View SLAs
 define ('PERM_USER_DELETE', 83); // View SLAs
 define ('PERM_SITE_TYPES', 84); // edit Site Types
 define ('PERM_UNLINK_SKILLS_PRODUCTS', 85); // edit Site Types
+define ('PERM_NEW_SERVICE', 86); // edit Site Types
 // Any new permissions please use a number higher than 99, INL 2011-06-22
 ?>

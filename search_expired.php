@@ -82,6 +82,7 @@ else
         $sql .= "licence_quantity, l.name AS licence_type, expirydate, admincontact, ";
         $sql .= "c.forenames AS admincontactforenames, c.surname AS admincontactsurname, ";
         $sql .= "c.email AS admincontactemail, c.phone AS admincontactphone, m.notes ";
+        $sql .= "c.dataprotection_email, c.dataprotection_phone, c.dataprotection_address ";
         $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbSites}` AS s, `{$dbContacts}` AS c, ";
         $sql .= "`{$dbProducts}` AS p, `{$dbLicenceTypes}` AS l, `{$dbResellers}` AS r WHERE ";
         $sql .= "(siteid = s.id AND product = p.id AND reseller = r.id AND (licence_type = l.id OR licence_type = NULL) AND admincontact = c.id) AND ";
@@ -135,7 +136,7 @@ else
                 <th>{$strEmail}</th>
                 <th>{$strNotes}</th>
                 </tr>\n";
-                // FIXME check data protection fields for email and telephone
+
                 $shade = 'shade1';
                 while ($results = mysql_fetch_object($result))
                 {
@@ -149,8 +150,12 @@ else
                     echo "<td align='center' class='{$shade}' width='100'>".ldate($CONFIG['dateformat_date'], $results->expirydate)."</td>";
                     echo "<td align='center' class='{$shade}' width='100'><a href=\"javascript: wt_winpopup('contact_details.php?contactid={$results->admincontact}')\">{$results->admincontactforenames} {$results->admincontactsurname}</a></td>";
 
-                    echo "<td class='{$shade}'>{$results->admincontactphone}</td>";
-                    echo "<td class='{$shade}'>{$results->admincontactemail}</td>";
+                    echo "<td class='{$shade}'>";
+                    if ($contact->dataprotection_phone != 'Yes') echo $results->admincontactphone;
+                    echo "</td>";
+                    echo "<td class='{$shade}'>";
+                    if ($contact->dataprotection_email != 'Yes') echo $results->admincontactemail;
+                    echo "</td>";
 
                     echo "<td align='center' class='{$shade}' width='150'>";
                     if ($results->notes == '')
