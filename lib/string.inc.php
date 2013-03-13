@@ -164,7 +164,7 @@ function filter_i18n_filenames($var)
  */
 function i18n_filename_to_code(&$elem, $key)
 {
-    $elem = mb_substr($elem, mb_strrpos($elem,DIRECTORY_SEPARATOR)+1, -8);
+    $elem = mb_substr($elem, mb_strrpos($elem, DIRECTORY_SEPARATOR)+1, -8);
 }
 
 
@@ -196,7 +196,7 @@ function filter_css_filenames($var)
  */
 function css_filename_to_themename(&$elem, $key)
 {
-    $elem = mb_substr($elem, mb_strrpos($elem,DIRECTORY_SEPARATOR)+1, -4);
+    $elem = mb_substr($elem, mb_strrpos($elem, DIRECTORY_SEPARATOR)+1, -4);
 }
 
 
