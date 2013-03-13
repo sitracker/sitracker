@@ -1039,6 +1039,7 @@ $strLogTriggerInJournal = 'log the action in the system journal';
 $strLow = 'Low';
 $strLowPriority = 'Low Priority';
 $strMakeVisibleInPortal = 'Make visible in portal';
+$strMakeAXLinkFromOrigTabXtoX = 'Make a %s link for origtab %s, origref %s';
 $strMap = 'Map';
 $strManageDashboardComponents = 'Manage Dashboard Components';
 $strManageEmailTemplates = 'Manage Email Templates';
