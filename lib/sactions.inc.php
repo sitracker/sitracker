@@ -667,8 +667,6 @@ function saction_ldapSync()
 
         if ($ldap_conn != -1)
         {
-            // NOTE TODO FIXME would be more optimal to pass the user type into the create as in the case where the group membership isn't stored its looked up again
-
             // Search for members of each group and then unique the members and loop through
             // Populate an array ($users) with a list of SIT users in LDAP
 
