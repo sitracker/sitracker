@@ -416,7 +416,7 @@ function get_serviceid($contractid, $date = '')
  * @param bool $includereserved - Deduct the reseved amount from the returned balance
  * @return int The total balance remaining on the contract
  * @note The balance is a sum of all the current service that have remaining balance
- * @todo FIXME add a param that makes this optionally show the incident pool balance
+ * @todo add a param that makes this optionally show the incident pool balance
     in the case of non-timed type contracts
  */
 function get_contract_balance($contractid, $includenonapproved = FALSE, $showonlycurrentlyvalid = TRUE, $includereserved = TRUE)
