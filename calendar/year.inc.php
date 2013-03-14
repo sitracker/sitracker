@@ -95,6 +95,7 @@ if (!empty($selectedday))
             case 'day':
                 echo "You can make it <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=am'>the morning</a>, or <a href='holiday_new.php?type={$type}&amp;user={$user}&amp;year={$selectedyear}&amp;month={$selectedmonth}&amp;day={$selectedday}&amp;length=pm'>the afternoon</a> instead. ";
         }
+
         if ($length != '0')
         {
             echo "Or you can <a href='holiday_new.php?type=$type&amp;user=$user&amp;year=$selectedyear&amp;month=$selectedmonth&amp;day=$selectedday&amp;length=0'>deselect</a> it. ";
