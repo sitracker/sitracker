@@ -835,7 +835,7 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
     {
         // Find the correct service record to update
         $serviceid = get_serviceid($contractid);
-        if ($serviceid < 1) trigger_error("Invalid service ID",E_USER_ERROR);
+        if ($serviceid < 1) trigger_error("Invalid service ID", E_USER_ERROR);
     }
 
     if (trim($amount) == '') $amount = 0;
@@ -882,12 +882,12 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
 
         if (mysql_error())
         {
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysql_error(), E_USER_ERROR);
             $rtnvalue = FALSE;
         }
         if (mysql_affected_rows() < 1)
         {
-            trigger_error("Transaction insert failed",E_USER_ERROR);
+            trigger_error("Transaction insert failed", E_USER_ERROR);
             $rtnvalue = FALSE;
         }
     }
