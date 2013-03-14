@@ -2141,10 +2141,6 @@ $strXIncidentsLeft = '%s Incidents Left';
 $strXHasAction = '%s Has Action';
 $strXHour = '%s hour';
 $strXHours = '%s hours';
-$strXisSelectedForTheMorning = '%s is selected for the <strong>morning</strong> as %s.';
-$strXisSelectedForTheAfternoon = '%s is selected for the <strong>afternoon</strong> as %s.';
-$strXisSelectedForTheFullDay = '%s is selected for the <strong>full day</strong> as %s.';
-$strXisNotSelected = '%s is <strong>not selected</strong> as %s.';
 # e.g. '5 minutes late'
 $strXLate = '%s late';
 $strXMinutes = '%s minutes';
