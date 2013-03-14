@@ -1980,6 +1980,7 @@ $strURLTitle = 'URL Title';
 $strUp = 'Up';
 $strUpgrade = 'Upgrade';
 $strUpdate = 'Update';
+$strUpdateIncidentBalance = 'Update Incident Balance';
 $strUpdateFailed = 'Update Failed';
 $strUpdated = 'Updated';
 $strUpdatedAutomaticallyBy = 'Updated automatically by %s';
