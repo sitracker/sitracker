@@ -1053,6 +1053,7 @@ $strManageUsers = 'Manage Users';
 $strManageUsersSkills = 'Manage Users Skills';
 $strManageYourDashboard = 'Manage your Dashboard';
 $strManageYourTriggers = 'Manage your Triggers';
+$strManagerRemindedByPhone = 'Manager has been reminded by phone';
 $strMandatoryMarked = 'Mandatory fields are marked %s';
 $strManyThanks = 'Many thanks to everybody that has offered comments, ideas, suggestions, bug reports and helped with testing or has contributed code. In particular thanks go to: (in random order)';
 # Short for March

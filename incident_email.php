@@ -644,7 +644,7 @@ switch ($step)
                 if (!empty($chase_customer))
                 {
                     $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-                    $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_phone', '{$owner}', '{$newincidentstatus}', '{$SYSLANG['strCustomerHasBeenCalledToChase']}','{$now}','hide')";
+                    $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_phone', '{$owner}', '{$newincidentstatus}', '{$SYSLANG['strCustomerRemindedByPhone']}','{$now}','hide')";
                     mysql_query($sql_insert);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -655,9 +655,8 @@ switch ($step)
 
                 if (!empty($chase_manager))
                 {
-                    // FIXME SYSLANG for DB field
                     $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-                    $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_manager', '{$owner}', '{$newincidentstatus}', 'Manager has been called to chase','{$now}','hide')";
+                    $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_manager', '{$owner}', '{$newincidentstatus}', '{$SYSLANG['strManagerRemindedByPhone']}', '{$now}','hide')";
                     mysql_query($sql_insert);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
