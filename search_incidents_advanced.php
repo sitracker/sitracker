@@ -207,7 +207,7 @@ else
         echo "</table>";
         echo "<br />";
         echo "<p align='center'><a href=\"search_incidents_advanced.php\">{$strSearchAgain}</a></p>";
-        // FIXME v3.4x Replace maxresults limit with paging
+        // MANTIS 1849 Replace maxresults limit with paging
         if ($countresults >= $maxresults) printf($strMaxResults, $maxresults);
     }
 }
