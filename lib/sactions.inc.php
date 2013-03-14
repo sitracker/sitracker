@@ -654,7 +654,7 @@ function saction_CheckTasksDue()
  * Perform the periodic sync of existing user and contact details from LDAP
  * @author Paul Heaney
  * @note This function does not create users or contacts it simply updates existing
- * @note details.
+ *      details.
 */
 function saction_ldapSync()
 {
