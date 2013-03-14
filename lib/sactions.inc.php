@@ -108,7 +108,8 @@ function saction_PurgeJournal()
 }
 
 
-/** Calculate SLA times
+/** 
+ * Calculate SLA times
  * @author Tom Gerrard
  * @note Moved from htdocs/auto/timecalc.php by INL for 3.40 release
  */
@@ -120,7 +121,6 @@ function saction_TimeCalc()
 
     $success = TRUE;
     // FIXME this should only run INSIDE the working day
-    // FIXME ? this will not update the database fully if two SLAs have been met since last run - does it matter ?
 
     $sql = "SELECT id, title, maintenanceid, priority, slaemail, slanotice, servicelevel, status, owner ";
     $sql .= "FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED." AND status != ".STATUS_CLOSING;
