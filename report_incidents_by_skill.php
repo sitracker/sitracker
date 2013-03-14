@@ -143,7 +143,7 @@ else
                 {
                     $datestr = date("M y",$obj->opened);
 
-                    // FIXME this sql uses the body to find out which incidents have been escalated
+                    // MANTIS 811 this sql uses the body to find out which incidents have been escalated
                     $sqlL = "SELECT count(id) FROM `{$dbUpdates}` AS u ";
                     $sqlL .= "WHERE u.bodytext LIKE \"External ID%\" AND incidentid = '{$obj->id}'";
                     $resultL = mysql_query($sqlL);
