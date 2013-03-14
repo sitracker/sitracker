@@ -485,7 +485,7 @@ if (mysql_num_rows($result) >= 1)
             $username = user_realname($assign->owner,TRUE);
             $rhtml .= "<td>".sprintf($strOwnerXAcctingAgain, $userstatusname)."<br />{$usermessage}</td>";
             $originalname = user_realname($assign->originalowner,TRUE);
-            $reason = urlencode(trim("{$originalname} is now accepting incidents again. Previous status {$origstatus} and not accepting."));  // FIXME i18n
+            $reason = urlencode(sprintf($strXIsNoAcceptingIncidentAgain, $originalname, $origstatus));
             $rhtml .= "<td>";
             $rhtml .= "<a href=\"javascript:wt_winpopup('incident_reassign.php?id={$assign->id}&amp;reason={$reason}&amp;originalid={$assign->originalowner}&amp;popup=yes','mini');\" title='{$strReassignTo} {$originalname}'>{$strReturnToOriginalOwner}</a> | ";
 

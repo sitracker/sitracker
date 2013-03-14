@@ -186,7 +186,7 @@ elseif ($_REQUEST['statistics'] == 'on')
         }
     }
 
-    // FIXME this SQL uses the bodytext to find out which incidents have been escalated
+    // MANTIS 811 this SQL uses the bodytext to find out which incidents have been escalated
     $sql = "SELECT COUNT(DISTINCT(incidentid)) AS numberEscalated, u.id, u.realname ";
     $sql .= "FROM `{$dbUpdates}` AS up, `{$dbIncidents}` AS i, `{$dbUsers}` AS u ";
     $sql .= "WHERE  u.id = i.owner AND up.incidentid = i.id  AND up.bodytext LIKE \"External ID%\"";
@@ -384,7 +384,7 @@ elseif ($_REQUEST['mode'] == 'report')
     if (mysql_error()) trigger_error("MySQL Query Error: $sql ".mysql_error(), E_USER_WARNING);
     $numrows = mysql_num_rows($result);
 
-    // FIXME this SQL use the incident body to determine whether it's been escalated
+    // MANTIS 811 this SQL use the incident body to determine whether it's been escalated
     $sql_esc = "SELECT distinct(incidentid) AS incid ";
     $sql_esc .= "FROM `{$dbUpdates}` AS u, `{$dbIncidents}` AS i ";
     $sql_esc .= "WHERE u.incidentid = i.id AND u.bodytext LIKE \"External ID%\" ";

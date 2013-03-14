@@ -36,7 +36,7 @@ $holidaytype[HOL_FREE] = $GLOBALS['strCompassionateLeave'];
 */
 function draw_calendar($nmonth, $nyear)
 {
-    global $type, $user, $selectedday, $selectedmonth, $selectedyear, $CONFIG;
+    global $type, $user, $CONFIG;
 
     // Get the current date/time for the users timezone
     $timebase = gmmktime() + ($timezone * 3600);
@@ -189,13 +189,6 @@ function draw_calendar($nmonth, $nyear)
                     $halfday = "style=\"background-image: url(images/halfday-am.gif); background-position: bottom right; background-repeat: no-repeat;\" ";
                     $style="background-image: url(images/halfday-am.gif); background-position: bottom right; background-repeat: no-repeat;";
                 }
-                if ($calday == $selectedday && $selectedmonth == $nmonth && $selectedyear == $nyear)
-                {
-                    // consider a border color to indicate the selected cell
-                    $style.="border: 1px red dashed; ";
-                    // $shade="critical";
-                }
-
 
                 // idle = green
                 // critical = red

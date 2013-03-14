@@ -122,8 +122,6 @@ function saction_TimeCalc()
     // FIXME this should only run INSIDE the working day
     // FIXME ? this will not update the database fully if two SLAs have been met since last run - does it matter ?
 
-    if ($CONFIG['debug']); //debug_log("Calculating SLA times");
-
     $sql = "SELECT id, title, maintenanceid, priority, slaemail, slanotice, servicelevel, status, owner ";
     $sql .= "FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED." AND status != ".STATUS_CLOSING;
     $incident_result = mysql_query($sql);
@@ -656,7 +654,7 @@ function saction_CheckTasksDue()
  * Perform the periodic sync of existing user and contact details from LDAP
  * @author Paul Heaney
  * @note This function does not create users or contacts it simply updates existing
- * @note details.
+ *      details.
 */
 function saction_ldapSync()
 {
@@ -669,8 +667,6 @@ function saction_ldapSync()
 
         if ($ldap_conn != -1)
         {
-            // NOTE TODO FIXME would be more optimal to pass the user type into the create as in the case where the group membership isn't stored its looked up again
-
             // Search for members of each group and then unique the members and loop through
             // Populate an array ($users) with a list of SIT users in LDAP
 
