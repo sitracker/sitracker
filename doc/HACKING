@@ -37,6 +37,10 @@ Comments can also provide notes for future work, including:
     // DEPRECATED: this is marking a feature as deprecated, and should
     //             state a version or date when the feature is targetted
     //             to be removed completely
+    
+    // MANTIS XXX: this is documenting a limitation or new feature which is recorded 
+    //			in Mantis.  These are not truely a bug but something that is not 
+    //			optimal or requries improving.  XXX is the Mantis reference
 
 
 Use Doxygen (http://www.stack.nl/~dimitri/doxygen/) format to document functions:

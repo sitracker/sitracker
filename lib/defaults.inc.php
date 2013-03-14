@@ -343,8 +343,6 @@ $CONFIG['ldap_allow_cached_password'] = FALSE;
 // If true, portal users create incidents, if FALSE, they just create emails
 $CONFIG['portal_creates_incidents'] = TRUE;
 
-// FIXME unfinished ###INL###
-$CONFIG['holiday_period_increment'] = array(0, 0, 0);
 $CONFIG['holiday_allow_overbooking'] = FALSE;
 
 $CONFIG['soap_enabled'] = FALSE;

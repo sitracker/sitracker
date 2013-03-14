@@ -28,13 +28,9 @@ $user = clean_int($_REQUEST['user']);
 $nmonth = clean_int($_REQUEST['nmonth']);
 $nyear = clean_int($_REQUEST['nyear']);
 $type = clean_int($_REQUEST['type']);
-$selectedday = clean_int($_REQUEST['selectedday']);
-$selectedmonth = clean_int($_REQUEST['selectedmonth']);
-$selectedyear = clean_int($_REQUEST['selectedyear']);
-$selectedtype = clean_int($_REQUEST['selectedtype']);
 $approved = clean_int($_REQUEST['approved']);
-$length = clean_fixed_list($_REQUEST['length'], array('day','am','pm'));
-$display = clean_fixed_list($_REQUEST['display'], array('month','list','year','week','day'));
+$length = clean_fixed_list($_REQUEST['length'], array('day', 'am', 'pm'));
+$display = clean_fixed_list($_REQUEST['display'], array('month', 'list', 'year', 'week', 'day'));
 $weeknumber = clean_int($weeknumber);
 
 $title = $strCalendar;
