@@ -2138,6 +2138,7 @@ $strWithheld = 'Withheld';
 $strXDays = '%s days';
 $strXIncidentsLoggedViaPortal = '%s Incidents Logged via the Portal';
 $strXIncidentsLeft = '%s Incidents Left';
+$strXIsNoAcceptingIncidentAgain = '%s is now accepting incidents again. Previous status %s and not accepting.';
 $strXHasAction = '%s Has Action';
 $strXHour = '%s hour';
 $strXHours = '%s hours';
