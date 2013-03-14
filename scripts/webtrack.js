@@ -680,32 +680,6 @@ function dismissNotice(noticeid, userid)
 }
 
 
-/**
-  * Toggle the display of an experimental menu panel
-  * @author Ivan Lucas
-  * FIXME experimental
-*/
-function toggleMenuPanel()
-{
-    alert('hello');
-    $('menupanel').toggle();
-/*    if ($('menupanel').style.display == 'block')
-    {
-//         $('mainframe').style.width = mainframe;
-        $('menupanel').fade();
-//         $('menupanel').style.display = 'none';
-    }
-    else
-    {
-//         mainframe = $('mainframe').style.width;
-//         $('mainframe').style.width = '80%';
-//         $('menupanel').style.display = 'block';
-        $('menupanel').appear();
-        $('menupanel').style.zindex = 99;
-    }*/
-}
-
-
 function enableBillingPeriod()
 {
     if ($('timed').checked == true)
