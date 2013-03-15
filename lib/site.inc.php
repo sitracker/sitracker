@@ -46,12 +46,13 @@ function site_count_inventory_items($id)
 function site_feedback($id)
 {
     global $dbSiteConfig;
-    $sql = "SELECT value FROM `{$dbSiteConfig}` WHERE siteid = $id AND config = 'feedback_enable' LIMIT 1";
+    $sql = "SELECT value FROM `{$dbSiteConfig}` WHERE siteid = {$id} AND config = 'feedback_enable' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
-        $answer = FALSE;
+        // Site not opted out assumed yes
+        $answer = "yes";
     }
     else
     {
