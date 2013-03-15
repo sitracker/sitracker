@@ -524,13 +524,14 @@ else
         $bodytext = clean_lang_dbstring($SYSLANG['strClosingStatus']) . ": <b>" . closingstatus_name($closingstatus) . "</b>\n\n" . $bodytext;
 
         if ($addition_errors == 0)
-        {   //maintenceid
+        {   
+            //maintenceid
             if ((contact_feedback(incident_contact($id)) == 'yes') AND (site_feedback(contact_siteid(incident_contact($id)))) == 'yes' )
             {
                 $send_feedback = send_feedback(db_read_column('maintenanceid', $dbIncidents, $id));
                 if ($CONFIG['feedback_form'] != '' AND $CONFIG['feedback_form'] > 0 AND $send_feedback == TRUE)
                 {
-                    create_incident_feedback($CONFIG['feedback_form'], $id);
+                    if (!create_incident_feedback($CONFIG['feedback_form'], $id)) $send_feedback = FALSE;
                 }
             }
 

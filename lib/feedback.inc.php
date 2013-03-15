@@ -47,23 +47,35 @@ function send_feedback($contractid)
  * Creates a blank feedback form response
  * @param $formid int The feedback form to use
  * @param $incidentid int The incident to generate the form for
- * @return int The form ID
+ * @return int The form ID or FALSE if not generated
  */
 function create_incident_feedback($formid, $incidentid)
 {
-    global $dbFeedbackRespondents;
     $contactid = incident_contact($incidentid);
     $email = contact_email($contactid);
 
-    $sql = "INSERT INTO `{$dbFeedbackRespondents}` (formid, contactid, email, incidentid) VALUES (";
-    $sql .= "'".mysql_real_escape_string($formid)."', ";
-    $sql .= "'".mysql_real_escape_string($contactid)."', ";
-    $sql .= "'".mysql_real_escape_string($email)."', ";
-    $sql .= "'".mysql_real_escape_string($incidentid)."') ";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
-    $blankformid = mysql_insert_id();
-    return $blankformid;
+    $toReturn = FALSE;
+    
+    $sql = "SELECT * FROM `{$GLOBALS['dbFeedbackForms']}` WHERE id = {$formid}";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) == 0)
+    {
+        debug_log("Attempted to create a feedback form for form ID {$$formid} though it does not exist");
+    }
+    else
+    {
+        $sql = "INSERT INTO `{$GLOBALS['dbFeedbackRespondents']}` (formid, contactid, email, incidentid) VALUES (";
+        $sql .= "'".mysql_real_escape_string($formid)."', ";
+        $sql .= "'".mysql_real_escape_string($contactid)."', ";
+        $sql .= "'".mysql_real_escape_string($email)."', ";
+        $sql .= "'".mysql_real_escape_string($incidentid)."') ";
+        mysql_query($sql);
+        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
+        $toReturn = mysql_insert_id();
+    }
+    
+    return $toReturn;
 }
 
 
