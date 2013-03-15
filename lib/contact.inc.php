@@ -205,7 +205,8 @@ function contact_feedback($id)
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
-        $answer = "notnull";
+        // Contact hasn't opted out so we assume yes
+        $answer = "yes";
     }
     else
     {
