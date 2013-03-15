@@ -223,8 +223,8 @@ else
             $fielddata = unserialize(base64_decode($errorfields[0]));
 
             // check if contact is the right person
-            $csql = "SELECT id from `$dbContacts` ";
-            $csql .= "WHERE id='$contactid' AND email='$contactemail'";
+            $csql = "SELECT id FROM `{$dbContacts}` ";
+            $csql .= "WHERE id='{$contactid}' AND email='{$contactemail}'";
 
             $cresult = mysql_query($csql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -235,7 +235,8 @@ else
             {
                 // Have a look to see if this person has a form waiting to be filled
                 $rsql = "SELECT id FROM `{$dbFeedbackRespondents}` ";
-                $rsql .= "WHERE contactid='$contactid' AND incidentid='$incidentid' AND formid='$formid' AND completed = 'no'";
+                $rsql .= "WHERE contactid='{$contactid}' AND incidentid='{$incidentid}' AND formid='{$formid}' AND completed = 'no'";
+
 
                 $rresult = mysql_query($rsql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -247,7 +248,7 @@ else
                 {
                     echo "<h3><span class='failure'>{$strError}</span></h3>";
                     echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
-                    debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode ce:$contactemail -->\n\n", TRUE);
+                    debug_log("\n\n<!-- FORM NOT WAITING f: {$formid} r:{$respondent} rr:{$responseref} dh:{$decodehash}  hc:{$hashcode} ce:{$contactemail} -->\n\n", TRUE);
                 }
                 else
                 {
@@ -258,7 +259,7 @@ else
                     {
                         echo "<h2>{$strError}</h2>";
                         echo "<p>{$strNoFeedBackFormToCompleteHere}</p>";
-                        debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode ce:$contactemail -->\n\n", TRUE);
+                        debug_log("\n\n<!-- FORM DOES NOT EXIST f: {$formid} r:{$respondent} rr:{$responseref} dh:{$decodehash}  hc:{$hashcode} ce:{$contactemail} -->\n\n", TRUE);
                     }
                     else
                     {
@@ -308,11 +309,11 @@ else
                                 }
                                 if (!empty($fielddata[$question->id]))
                                 {
-                                $answer = $fielddata[$question->id];
+                                    $answer = $fielddata[$question->id];
                                 }
                                 else
                                 {
-                                $answer = '';
+                                    $answer = '';
                                 }
                                 echo "</td><td>";
                                 echo feedback_html_question($question->type, "Q{$question->id}", $question->required, $question->options, $answer);
@@ -349,7 +350,7 @@ else
             {
                 echo "<h3><span class='failure'>{$strError}</span></h3>";
                 echo "<h4>{$strNoFeedBackFormToCompleteHere}</h4>";
-                debug_log("\n\n<!-- f: $formid r:$respondent rr:$responseref dh:$decodehash  hc:$hashcode ce:$contactemail -->\n\n", TRUE);
+                debug_log("\n\n<!-- CONTACT DOES NOT EXIST f: {$formid} r:{$respondent} rr:{$responseref} dh:{$decodehash}  hc:{$hashcode} ce:{$contactemail} -->\n\n", TRUE);
             }
             if ($_REQUEST['mode'] != 'bare')
             {

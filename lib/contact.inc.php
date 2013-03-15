@@ -200,12 +200,13 @@ function contact_fax($id)
 function contact_feedback($id)
 {
     global $dbContactConfig;
-    $sql = "SELECT `value` FROM `{$dbContactConfig}` WHERE contactid = $id AND config = 'feedback_enable' LIMIT 1";
+    $sql = "SELECT `value` FROM `{$dbContactConfig}` WHERE contactid = {$id} AND config = 'feedback_enable' LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
-        $answer = "notnull";
+        // Contact hasn't opted out so we assume yes
+        $answer = "yes";
     }
     else
     {

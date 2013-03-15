@@ -208,7 +208,7 @@ function create_incident_from_incoming($incomingid)
  */
 function move_update_to_incident($update, $incident)
 {
-    global $dbUpdates;
+    global $dbUpdates, $CONFIG, $fsdelim;
     $update = intval($update);
     $incident = intval($incident);
 
@@ -222,6 +222,41 @@ function move_update_to_incident($update, $incident)
     }
     else
     {
+        $old_path = $CONFIG['attachment_fspath']. 'updates' . $fsdelim;
+        $new_path = $CONFIG['attachment_fspath'] . $incident . $fsdelim;
+        
+        //move attachments from updates to incident
+        $sql = "SELECT linkcolref, filename FROM `{$GLOBALS['dbLinks']}` AS l, ";
+        $sql .= "`{$GLOBALS['dbFiles']}` as f ";
+        $sql .= "WHERE l.origcolref = '{$update}' ";
+        $sql .= "AND l.linktype = 5 ";
+        $sql .= "AND l.linkcolref = f.id";
+        $result = mysql_query($sql);
+        if ($result)
+        {
+            if (!file_exists($new_path))
+            {
+                $umask = umask(0000);
+                @mkdir($new_path, 0770);
+                umask($umask);
+            }
+        
+            while ($row = mysql_fetch_object($result))
+            {
+                $filename = $row->linkcolref . "-" . $row->filename;
+                $old_file = $old_path . $row->linkcolref;
+                if (file_exists($old_file))
+                {
+                    $rename = rename($old_file, $new_path . $filename);
+                    if (!$rename)
+                    {
+                        trigger_error("Couldn't move file: {$file}", E_USER_WARNING);
+                        $moved_attachments = FALSE;
+                    }
+                }
+            }
+        }
+        
         return TRUE;
     }
 }

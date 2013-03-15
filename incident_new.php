@@ -902,6 +902,7 @@ elseif ($action == 'assign')
 
         if ($CONFIG['auto_assign_incidents'])
         {
+            clear_form_data('newincident');
             html_redirect("incident_new.php?action=reassign&userid={$suggested_user}&incidentid={$incidentid}");
             exit;
         }
@@ -1045,6 +1046,8 @@ elseif ($action == 'reassign')
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
+    clear_form_data('newincident');
+    
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 ?>
