@@ -26,7 +26,7 @@ echo " {$strPermissionDenied}</h2>";
 if ($username != '')
 {
     $errdate = date('M j H:i');
-    $errmsg = "$errdate ".permission_name($id)."({$id}) ".sprintf($strPermissionDeniedForX, $username);
+    $errmsg = "{$errdate} ".permission_name($id)."({$id}) ".sprintf($strPermissionDeniedForX, $username);
     $errmsg .= "\n";
     if (!empty($CONFIG['access_logfile']))
     {
@@ -38,7 +38,7 @@ if ($username != '')
     unset($errlog);
 }
 
-if (strpos($id,',') !== FALSE)
+if (strpos($id, ',') !== FALSE)
 {
     $refused = explode(',', $id);
 }
