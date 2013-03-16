@@ -120,7 +120,17 @@ function saction_TimeCalc()
     global $GLOBALS, $CONFIG;
 
     $success = TRUE;
-    // FIXME this should only run INSIDE the working day
+
+    $day_of_week = date('w');
+    $hour = date('H');
+    $min = date('i');
+    $current_time = ($hour * 3600) + ($min * 60);
+    
+    if (!in_array($day_of_week, $CONFIG['working_days']) OR ($current_time < $CONFIG['start_working_day'] OR $current_time > $CONFIG['end_working_day']))
+    {
+        // Not in the working day
+        return TRUE;
+    }
 
     $sql = "SELECT id, title, maintenanceid, priority, slaemail, slanotice, servicelevel, status, owner ";
     $sql .= "FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED." AND status != ".STATUS_CLOSING;

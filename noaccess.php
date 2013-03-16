@@ -22,11 +22,11 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('permissiondenied', 32, $strPermissionDenied);
 echo " {$strPermissionDenied}</h2>";
-// FIXME 3.35 triggers
+
 if ($username != '')
 {
     $errdate = date('M j H:i');
-    $errmsg = "$errdate ".permission_name($id)."({$id}) ".sprintf($strPermissionDeniedForX, $username);
+    $errmsg = "{$errdate} ".permission_name($id)."({$id}) ".sprintf($strPermissionDeniedForX, $username);
     $errmsg .= "\n";
     if (!empty($CONFIG['access_logfile']))
     {
@@ -38,7 +38,7 @@ if ($username != '')
     unset($errlog);
 }
 
-if (strpos($id,',') !== FALSE)
+if (strpos($id, ',') !== FALSE)
 {
     $refused = explode(',', $id);
 }
