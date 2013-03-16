@@ -63,65 +63,10 @@ if ($incidentid == '')
         echo "<table align='center' width='95%'>";
         echo "<tr><th>";
 
-        // Header bar for each update
-        // FIXME this should be using a function or something, no point duplicating this code here. INL 7Nov08
-        switch ($updates->type)
-        {
-            case 'opening':
-                echo "Opened by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
-                break;
-            case 'reassigning':
-                echo "Reassigned by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                if ($updates->currentowner != 0)  // only say who it was assigned to if the currentowner field is filled in
-                {
-                    echo " To <strong>".user_realname($updates->currentowner, TRUE)."</strong>";
-                }
-                break;
-            case 'email':
-                echo "Email Sent by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
-                break;
-            case 'closing':
-                echo "Closed by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
-                break;
-            case 'reopening':
-                echo "Reopened by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
-                break;
-            case 'phonecallout':
-                echo "Call made by <strong>".user_realname($updates->userid ,TRUE)."</strong>";
-                break;
-            case 'phonecallin':
-                echo "Call taken by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'research':
-                echo "Researched by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'webupdate':
-                echo "Web Update by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'emailout':
-                echo "Email sent by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'emailin':
-                echo "Email received by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'externalinfo':
-                echo "External info added by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'probdef':
-                echo "Problem Definition by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            case 'solution':
-                echo "Final Solution by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                break;
-            default:
-                echo "Updated by <strong>".user_realname($updates->userid, TRUE)."</strong>";
-                if ($updates->customervisibility == 'show') echo " (Customer Visible)";
-                break;
-        }
+        $text = $updatetypes[$updates->type]['text'];
+        $text = str_replace('currentowner', user_realname($updates->currentowner, TRUE), $text);
+        $text = str_replace('updateuser', user_realname($updates->userid, TRUE), $text);
+        echo $text;
 
         if ($updates->nextaction != '') echo " Next Action: <strong>{$updates->nextaction}</strong>";
 
