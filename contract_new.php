@@ -124,7 +124,7 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='incidentratesection' style='display:none'><th>{$strIncidentRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='incidentrate' size='5' value='".show_form_value('new_contact', 'incidentrate', '0')." />";
+    echo "<input class='required' type='text' name='incidentrate' size='5' value='".show_form_value('new_contact', 'incidentrate', '0')."' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
