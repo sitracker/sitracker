@@ -198,7 +198,6 @@ elseif ($mode == 'report')
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $numrows = mysql_num_rows($result);
 
-    // FIXME strip slashes from output
     $html .= "<table class='maintable'>";
     $html .= "<tr><th>{$strForenames}</th><th>{$strSurname}</th><th>";
     $html .= "{$strEmail}</th><th>{$strSite}</th><th>{$strAddress1}</th>";
