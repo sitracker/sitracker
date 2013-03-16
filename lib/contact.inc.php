@@ -386,7 +386,7 @@ function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE
 
         if ($showsite AND $prevsite != $contacts->siteid)
         {
-            $html .= "<optgroup label='{$contacts->sitename}, {$contacts->department}'>";
+            $html .= "<optgroup label=\"{$contacts->sitename}, {$contacts->department}\">";
         }
 
         $realname = "{$contacts->forenames} {$contacts->surname}";
