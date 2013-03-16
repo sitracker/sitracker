@@ -22,7 +22,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 echo "<h2>".icon('permissiondenied', 32, $strPermissionDenied);
 echo " {$strPermissionDenied}</h2>";
-// FIXME 3.35 triggers
+
 if ($username != '')
 {
     $errdate = date('M j H:i');
