@@ -209,7 +209,7 @@ elseif ($action == "edit" OR $action == "new")
         {
              echo " readonly='readonly' ";
              $template->description = ${$template->description};
-         }
+        }
         echo ">{$template->description}</textarea> <span class='required'>{$strRequired}</span></td></tr>\n";
         switch ($templatetype)
         {
