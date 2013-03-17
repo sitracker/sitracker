@@ -174,8 +174,8 @@ elseif ($mode == "show")
                 {
                     $vars = explode("=", $values);
                     $vars[0] = trim($vars[0]);
-                    $vars[1] = trim(substr_replace($vars[1], "",-2));
-                    $vars[1] = substr_replace($vars[1], "",0, 1);
+                    $vars[1] = trim(substr_replace($vars[1], "", -2));
+                    $vars[1] = substr_replace($vars[1], "", 0, 1);
                     $foreignvalues[$vars[0]] = $vars[1];
                 }
                 elseif (mb_substr($values, 0, 12) == "i18nAlphabet")
