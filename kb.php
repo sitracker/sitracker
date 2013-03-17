@@ -66,7 +66,11 @@ if (mb_strlen(utf8_decode($search_string)) > 4)
     {
         echo "{$software->name}";
         if ($count<$softcount) echo ", ";
-        if ($colcount >= 4) {$colcount = 0; echo "<br />"; }
+        if ($colcount >= 4)
+        {
+            $colcount = 0;
+            echo "<br />";
+        }
         $count++; $colcount++;
     }
     echo "</p>\n";
@@ -118,6 +122,7 @@ if (mysql_num_rows($result) >= 1)
     {
         if (empty($kbarticle->title)) $kbarticle->title = $strUntitled;
         else $kbarticle->title = $kbarticle->title;
+
         if (is_numeric($kbarticle->author))
         {
             $kbarticle->author = user_realname($kbarticle->author);
@@ -140,7 +145,7 @@ if (mysql_num_rows($result) >= 1)
             $count = 1;
             while ($kbsoftware = mysql_fetch_object($sresult))
             {
-                echo "{$kbsoftware->name}";
+                echo $kbsoftware->name;
                 if ($count < $rowcount) echo ", ";
                 $count++;
             }
@@ -172,7 +177,6 @@ else
     echo "<p align='center'>{$strNoResults}</p>";
 }
 
-// echo "<!---SQL === $sql --->";
 echo "<p align='center'><a href='kb_article.php'>{$strNew}</a></p>";
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
