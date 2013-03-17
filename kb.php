@@ -37,14 +37,14 @@ elseif (strtolower($mode) == 'today') echo "<h4>{$strArticlesPublishedToday}</h4
 
 echo "<form action='{$_SERVER['PHP_SELF']}' method='get'>";
 echo "<table summary='alphamenu' class='maintable'>";
-echo "<tr><td align='center''>";
+echo "<tr><td align='center'>";
 echo "<input type='text' name='search_string' /><input type='submit' value=\"{$strGo}\" />";
 echo "</td></tr>";
 echo "<tr><td class='alphamenu'>";
 echo "<a href='{$_SERVER['PHP_SELF']}?mode=RECENT'>{$strRecent}</a>";
 echo alpha_index("{$_SERVER['PHP_SELF']}?search_string=");
 echo " | <a href='kb_article.php'>{$strNew}</a>";
-echo "</tr>";
+echo "</td></tr>";
 echo "</table>";
 echo "</form>";
 echo "<br />";
