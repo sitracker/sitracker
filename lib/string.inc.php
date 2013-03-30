@@ -249,7 +249,6 @@ function enclose_array_values(&$elem, $key, $enclosestring = '\'')
  * Make a string quoted, that is prefix lines with >
  * and strip out irrelevant update headers
  * @author Ivan Lucas
- * @todo FIXME unfinished
  */
 function quote_message($message)
 {
@@ -259,7 +258,7 @@ function quote_message($message)
     {
         if (trim($line) == "<hr>") $endmeta = $linenum + 1;
     }
-    if ($endmeta > 0) $lines = array_slice($lines,$endmeta);
+    if ($endmeta > 0) $lines = array_slice($lines, $endmeta);
     foreach ($lines AS $line)
     {
         $message .= "> {$line}";
