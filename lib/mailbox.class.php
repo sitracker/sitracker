@@ -83,48 +83,6 @@ class Mailbox
         return count($headers);
     }
 
-    function getAttachments($id, $path)
-    {
-        $parts = imap_fetchstructure($this->mailbox, $id);
-        $attachments = array();
-
-        //FIXME if we do an is_array() here it breaks howver if we don't
-        //we get foreach errors
-        foreach($parts->parts as $key => $value)
-        {
-            $encoding = $parts->parts[$key]->encoding;
-            if($parts->parts[$key]->ifdparameters)
-            {
-                $filename = $parts->parts[$key]->dparameters[0]->value;
-                $message = imap_fetchbody($this->mailbox, $id, $key + 1);
-
-                switch($encoding)
-                {
-                    case 0:
-                        $message = imap_8bit($message);
-                    case 1:
-                        $message = imap_8bit ($message);
-                    case 2:
-                        $message = imap_binary ($message);
-                    case 3:
-                        $message = imap_base64 ($message);
-                    case 4:
-                        $message = quoted_printable_decode($message);
-                    case 5:
-                    default:
-                        $message = $message;
-                }
-
-                $fp = fopen($path.$filename, "w");
-                fwrite($fp, $message);
-                fclose($fp);
-                $attachments[] = $filename;
-            }
-        }
-        return $attachments;
-
-    }
-
     function messageBody($id)
     {
         global $CONFIG;
