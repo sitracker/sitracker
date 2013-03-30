@@ -263,13 +263,13 @@ else
         $sql = "UPDATE `{$dbHolidays}` SET approvedby='{$approvaluser}' ";
         $sql .= "WHERE userid='{$user}' AND approved = ".HOL_APPROVAL_NONE;
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-
-        $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist));
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         
-        if ($rtnvalue === TRUE)
+        $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist));
+       
+        if ($rtnvalue)
         {
             echo "<h2>{$strRequestSent}</h2>";
             echo "<p align='center'>".nl2br($holidaylist)."</p>";
