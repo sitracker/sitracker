@@ -88,32 +88,23 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
 
     echo "<tr><th>{$strNotes}</th><td>";
     echo "<textarea rows='5' cols='20' name='notes'></textarea></td></tr>";
-
+    
     echo "<tr><th>{$strBilling}</th>";
     echo "<td>";
     if ($timed)
     {
-        $billperunit = '';
-        $billperincident = '';
-        if ($_SESSION['formdata']['new_service']['billtype'] == 'billperunit' OR empty($_SESSION['formdata']['new_service']['billtype']))
+        $billtype = get_contract_billable_type($contractid);
+        
+        if ($billtype == 'unit')
         {
-            $billperunit = "checked='checked'";
-            $unitratestyle = "";
-            $inicidentratestyle = "style='display:none'";
+            echo $strPerUnit;
         }
-        else
+        else if ($billtype == 'incident')
         {
-            $billperincident = "checked='checked'";
-            $unitratestyle = "style='display:none'";
-            $inicidentratestyle = "";
+            echo $strPerIncident;
         }
-
-        echo "<label>";
-        echo "<input type='radio' name='billtype' id='billtype' value='billperunit' onchange=\"newservice_showbilling('serviceform');\" {$billperunit} /> ";
-        echo "{$strPerUnit}</label>";
-        echo "<label>";
-        echo "<input type='radio' name='billtype' id='billtype' value='billperincident' onchange=\"newservice_showbilling('serviceform');\" {$billperincident} /> ";
-        echo "{$strPerIncident}</label>";
+        
+        echo "<input type='hidden' id='billtype' name='billtype' value='{$billtype}' />";
     }
     else
     {
@@ -170,16 +161,6 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
         echo "/>";
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
-        echo "<tr id='incidentratesection' {$inicidentratestyle}><th>{$strIncidentRate}</th>";
-        echo "<td>{$CONFIG['currency_symbol']} ";
-        echo "<input class='required' type='text' name='incidentrate' id='incidentrate' size='5' ";
-        if ($_SESSION['formdata']['new_service']['incidentrate'] != '')
-        {
-            echo "value='{$_SESSION['formdata']['new_service']['incidentrate']}'";
-        }
-        echo "/>";
-        echo " <span class='required'>{$strRequired}</span></td></tr>\n";
-
         echo "<tr>";
         echo "<th>{$strFreeOfCharge}</th>";
         echo "<td><input type='checkbox' id='foc' name='foc' value='yes' /> {$strAboveMustBeCompletedToAllowDeductions}</td>";
@@ -203,40 +184,30 @@ else
     // External variables
     $contractid = clean_int($_POST['contractid']);
     $startdate = strtotime($_REQUEST['startdate']);
-    if ($startdate > 0) $startdate = date('Y-m-d',$startdate);
-    else $startdate = date('Y-m-d',$now);
+    if ($startdate > 0) $startdate = date('Y-m-d', $startdate);
+    else $startdate = date('Y-m-d', $now);
     $enddate = strtotime($_REQUEST['enddate']);
-    if ($enddate > 0) $enddate = date('Y-m-d',$enddate);
-    else $enddate = date('Y-m-d',strtotime($startdate) + 31556926); // No date set so we default to one year after start
+    if ($enddate > 0) $enddate = date('Y-m-d', $enddate);
+    else $enddate = date('Y-m-d', strtotime($startdate) + 31556926); // No date set so we default to one year after start
 
     $billtype = cleanvar($_REQUEST['billtype']);
 
     $amount =  clean_float($_POST['amount']);
     if ($amount == '') $amount = 0;
-    // Prevents both values being present should the user have changed their mind
-    if ($billtype == 'billperunit') $_POST['incidentrate'] = 0;
-    else $_POST['unitrate'] = 0;
-    $unitrate =  clean_float($_POST['unitrate']);
-    if ($unitrate == '') $unitrate = 0;
-    $incidentrate =  clean_float($_POST['incidentrate']);
-    if ($incidentrate == '') $incidentrate = 0;
+    $unitrate = clean_float($_POST['unitrate']);
     $notes = cleanvar($_REQUEST['notes']);
     $title = cleanvar($_REQUEST['title']);
 
     $_SESSION['formdata']['new_service'] = cleanvar($_POST, TRUE, FALSE, FALSE,
                                                      array("@"), array("'" => '"'));
 
-    if ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == ''))
+    if (isset($billtype) AND empty($unitrate))
     {
         $errors++;
         $_SESSION['formerrors']['new_service']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
     }
-    if ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == ''))
-    {
-        $errors++;
-        $_SESSION['formerrors']['new_service']['incidentrate'] = sprintf($strFieldMustNotBeBlank, $strIncidentRate);
-    }
-    if (($billtype == 'billperunit' OR $billtype == 'billperincident') AND $amount == 0)
+
+    if (isset($billtype) AND $amount == 0)
     {
         $errors++;
         $_SESSION['formerrors']['new_service']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
@@ -249,14 +220,11 @@ else
             $foc = cleanvar($_REQUEST['foc']);
             if (empty($foc)) $foc = 'no';
 
-            if ($billtype == 'billperunit') $incidentrate = 0;
-            elseif ($billtype == 'billperincident') $unitrate = 0;
-
             $cust_ref = cleanvar($_REQUEST['cust_ref']);
             $cust_ref_date = cleanvar($_REQUEST['cust_ref_date']);
 
-            $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, cust_ref, cust_ref_date, title, notes, foc) ";
-            $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$foc}')";
+            $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, rate, cust_ref, cust_ref_date, title, notes, foc) ";
+            $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$cust_ref}', '{$cust_ref_date}', '{$title}', '{$notes}', '{$foc}')";
         }
         else
         {
@@ -265,7 +233,7 @@ else
         }
 
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         if (mysql_affected_rows() < 1)
         {
             trigger_error("Insert failed", E_USER_ERROR);
@@ -281,19 +249,19 @@ else
 
         $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) > 0)
         {
             $obj = mysql_fetch_object($result);
             if ($obj->expirydate < strtotime($enddate))
             {
-                $update = "UPDATE `$dbMaintenance` ";
+                $update = "UPDATE `{$dbMaintenance}` ";
                 $update .= "SET expirydate = '".strtotime($enddate)."' ";
                 $update .= "WHERE id = {$contractid}";
                 mysql_query($update);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed",E_USER_ERROR);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed", E_USER_ERROR);
             }
         }
 

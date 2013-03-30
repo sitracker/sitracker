@@ -696,6 +696,7 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `var_incident_visible_contacts` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `var_incident_visible_all` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'no',
   `billingmatrix` varchar(32) default NULL,
+  `billingtype` VARCHAR( 32 ) NULL COMMENT 'Billing type used by contract e.g. unit, incident',
   PRIMARY KEY  (`id`),
   KEY `site` (`site`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
@@ -1180,8 +1181,7 @@ CREATE TABLE IF NOT EXISTS `{$dbService}` (
   `lastbilled` datetime NOT NULL,
   `creditamount` float NOT NULL default '0',
   `balance` float NOT NULL default '0',
-  `unitrate` float NOT NULL default '0',
-  `incidentrate` float NOT NULL default '0',
+  `rate` float NOT NULL,
   `priority` smallint(6) NOT NULL default '0',
   `cust_ref` VARCHAR( 255 ) NULL,
   `cust_ref_date` DATE NULL,
@@ -1906,6 +1906,10 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (2, 88, 'true');
 INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES (3, 88, 'true');
 UPDATE `{$dbEmailTemplates}` SET `body` = 'Hi,\r\n\r\n{userrealname} has requested that you approve the following holidays:\r\n\r\n{listofholidays}\r\n\r\nThe user attached the following request\r\n\r\n{holidayrequestnote}\r\n\r\nPlease point your browser to {applicationurl}holiday_request.php?user={userid}&mode=approval to approve or decline these requests.\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_HOLIDAYS_REQUESTED';
+ALTER TABLE `{$dbMaintenance}` ADD `billingtype` VARCHAR( 32 ) NULL COMMENT 'Billing type used by contract e.g. unit, incident';
+ALTER TABLE `{$dbService}` ADD `rate` FLOAT NOT NULL AFTER `incidentrate`;
+UPDATE `{$dbService}` SET rate = IF (`unitrate` == 0, `incidentrate`, `unitrate`);
+-- unitrate and incidentrate dropped in setup.php  
 ";
 
 

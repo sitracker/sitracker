@@ -18,6 +18,9 @@ define ("BILLING_APPROVED", 0);
 define ("BILLING_AWAITINGAPPROVAL", 5);
 define ("BILLING_RESERVED", 10);
 
+define ("BILLING_TYPE_UNIT", 'unit');
+define ("BILLING_TYPE_INCIDENT", 'incident');
+
 /**
  * Returns if the contact has a timed contract or if the site does in the case of the contact not.
  * @author Paul Heaney
@@ -321,39 +324,12 @@ function get_unit_rate($contractid, $date='')
 function get_service_unitrate($serviceid)
 {
     $rtnvalue = FALSE;
-	$sql = "SELECT unitrate FROM `{$GLOBALS['dbService']}` AS p WHERE serviceid = {$serviceid}";
+	$sql = "SELECT rate FROM `{$GLOBALS['dbService']}` AS p WHERE serviceid = {$serviceid}";
 
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        return FALSE;
-    }
-
-    if (mysql_num_rows($result) > 0)
-    {
-        list($rtnvalue) = mysql_fetch_row($result);
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
- * Returns the incident rate for a service
- * @author Paul Heaney
- * @param int $serviceid - The serviceID to get the incident rate for
- * @return mixed FALSE if no service found else the incident rate
- */
-function get_service_incidentrate($serviceid)
-{
-    $rtnvalue = FALSE;
-    $sql = "SELECT incidentrate FROM `{$GLOBALS['dbService']}` AS p WHERE serviceid = {$serviceid}";
-
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         return FALSE;
     }
 
@@ -1141,14 +1117,9 @@ function contract_service_table($contractid, $billing)
                     $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
                 }
 
-                if ($service->unitrate != 0)
+                if ($service->rate != 0)
                 {
-                    $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->unitrate}<br />";
-                }
-
-                if ($service->incidentrate != 0)
-                {
-                    $span .= "<strong>{$GLOBALS['strIncidentRate']}</strong>: {$CONFIG['currency_symbol']}{$service->incidentrate}<br />";
+                    $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->rate}<br />";
                 }
 
                 $sql1 = "SELECT billingmatrix FROM {$dbMaintenance} WHERE id = {$contractid}";
@@ -1647,7 +1618,7 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
         while ($service = mysql_fetch_object($result))
         {
             $multiplier = get_billable_multiplier(strtolower(date('D', $now)), date('G', $now));
-            $unitamount = $service->unitrate * $multiplier;
+            $unitamount = $service->rate * $multiplier;
             if ($unitamount > 0 AND $service->balance != 0) $unitbalance += round($service->balance / $unitamount);
         }
 
@@ -2111,6 +2082,31 @@ function is_transaction_approved($transactionid)
 
     if (mysql_num_rows($result) > 0) return TRUE;
     else return FALSE;
+}
+
+
+/**
+ * Returns the type of billing used on the contract if any
+ * @author Paul Heaney
+ * @param int $contractid The ID of the contract to check
+ * @return string the billing type being used, blank if not billed
+ * @todo Possibly merge with is_contract_timed
+ */
+function get_contract_billable_type($contractid)
+{
+    $toReturn = '';
+    
+    $sql = "SELECT billingtype FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$contractid}";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
+    
+    if (mysql_num_rows($result) > 0)
+    {
+        $obj = mysql_fetch_object($result);
+        $toReturn = $obj->billingtype;
+    }
+    
+    return  $toReturn;
 }
 
 ?>

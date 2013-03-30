@@ -101,7 +101,7 @@ if (mysql_num_rows($result) > 0)
         $actual = ($obj->balance - $awaitingapproval) - $reserved;
         $totalactual += $actual;
 
-        if ($obj->unitrate != 0) $unitsat1times = round(($actual /$obj->unitrate), 2);
+        if ($obj->rate != 0) $unitsat1times = round(($actual /$obj->rate), 2);
         else $unitsat1times = 0;
 
         $remainingunits += $unitsat1times;
@@ -146,7 +146,7 @@ if (mysql_num_rows($result) > 0)
             $str .= "<td>{$CONFIG['currency_symbol']}".number_format($awaitingapproval, 2)."</td>";
             $str .= "<td>{$CONFIG['currency_symbol']}".number_format($reserved, 2)."</td>";
             $str .= "<td>{$CONFIG['currency_symbol']}".number_format($actual, 2)."</td>";
-            $str .= "<td>{$CONFIG['currency_symbol']}{$obj->unitrate}</td>";
+            $str .= "<td>{$CONFIG['currency_symbol']}{$obj->rate}</td>";
             $str .= "<td>{$unitsat1times}</td></tr>\n";
 
             $lastsite = $obj->site;
@@ -179,7 +179,7 @@ if (mysql_num_rows($result) > 0)
             else $str .= "\"{$strNo}\",";
             $str .= "\"{$csv_currency}{$obj->creditamount}\",\"{$csv_currency}{$obj->balance}\",";
             $str .= "\"{$awaitingapproval}\",\"{$reserved}\",\"{$actual}\",";
-            $str .= "\"{$csv_currency}{$obj->unitrate}\",";
+            $str .= "\"{$csv_currency}{$obj->rate}\",";
             $str .= "\"{$unitsat1times}\"\n";
         }
     }

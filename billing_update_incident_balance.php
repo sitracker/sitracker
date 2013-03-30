@@ -104,7 +104,7 @@ elseif ($mode == 'update')
 
             $cost = (($totalbillableunits + $totalrefunds)  * $unitrate) * -1;
 
-            $desc = trim("{$numberofunits} {$strUnits} @ {$CONFIG['currency_symbol']}{$unitrate} {$strForIncident} {$incidentid}. {$s}");
+            $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
 
             $transactionid = get_incident_transactionid($incidentid);
             if ($transactionid != FALSE)
