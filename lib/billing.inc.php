@@ -695,7 +695,7 @@ function close_billable_incident($incidentid)
 
             $cost = (($totalbillableunits + $totalrefunds)  * $unitrate) * -1;
 
-            $desc = trim("{$numberofunits} {$strUnits} @ {$CONFIG['currency_symbol']}{$unitrate} for incident {$incidentid}. {$s}"); //FIXME i18n
+            $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
 
             // $rtn = update_contract_balance(incident_maintid($incidentid), $desc, $cost);
 
@@ -789,7 +789,7 @@ function approve_incident_transaction($transactionid)
 
         $cost = (($totalbillableunits += $totalrefunds) * $unitrate) * -1;
 
-        $desc = trim("Incident {$incidentid}: {$totalbillableunits}: {$strUnits} @ {$CONFIG['currency_symbol']}{$unitrate}. {$s}"); //FIXME i18n
+        $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $totalbillableunits, $CONFIG['currency_symbol'], $unitrate, $s));
 
         $rtn = update_contract_balance(incident_maintid($incidentid), $desc, $cost, $serviceid, $transactionid, $totalunits, $totalbillableunits, $totalrefunds);
 

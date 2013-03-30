@@ -213,6 +213,8 @@ $strBillableIncidents = 'Billable Incidents';
 $strBillableIncidentsInvoice = 'Billable Incidents';
 $strBillableIncidentsForPeriodXtoX = 'Billable incidents for period %1$s to %2$s';
 $strBillableIncidentsReport = 'Billable Incidents Report';
+# Used in transaction summary reads e.g. "Incident 1234: 5 Units @ £10, 1 unit at x1, 2 units at x2"
+$strBillableIncidentSummary = 'Incident %s: %s units @ %s%s %s';
 $strBilling = 'Billing';
 $strBillingCustomerPeriod = 'Customer Period';
 $strBillingEngineerPeriod = 'Engineer Period';
