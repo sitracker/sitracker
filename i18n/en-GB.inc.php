@@ -262,6 +262,7 @@ $strCallMustBeAssignedBeforeClosure = 'Call must be assigned before closure';
 # Data Protection message, happy to receive phone calls
 $strCallsOK = 'Calls OK';
 $strCancel = 'Cancel';
+$strCancelHoliday = 'Cancel Holiday';
 $strCannotDeleteSkill = 'Sorry, this skill cannot be deleted because it has been associated with one or more incidents';
 $strCannotResetThisPassword = 'You cannot reset this users password';
 $strCannotResetPasswordInDemoMode = 'You cannot reset passwords while in DEMO MODE';

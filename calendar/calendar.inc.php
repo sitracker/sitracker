@@ -280,10 +280,11 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
         {
             $html .= "<a href='holiday_new.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length={$time}'>{$GLOBALS['strBookHoliday']}</a><br />";
         }
-//         else $html .= "<a href=''>Cancel Holiday</a><br />";
-//          TODO: Add the ability to cancel holiday from the holiday planner
+        else $html .= "<a href='holiday_new.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length=0'>{$GLOBALS['strCancelHoliday']}</a><br />";
+
         $html .= "</div>";
     }
+
     return $html;
 }
 
@@ -324,7 +325,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
     }
     else
     {
-        $daysinmonth = date('t',mktime(0, 0, 0, $month, $day, $year));
+        $daysinmonth = date('t', mktime(0, 0, 0, $month, $day, $year));
         $lastday = $daysinmonth;
         $daywidth = 1;
     }
@@ -365,7 +366,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
 
     $usql .= "ORDER BY groupid, realname";
     $uresult = mysql_query($usql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $numusers = mysql_num_rows($uresult);
     $prevgroupid = '-1';
@@ -380,7 +381,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
             $hsql .= "AND type != ".HOL_PUBLIC;
 
             $hresult = mysql_query($hsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             while ($holiday = mysql_fetch_object($hresult))
             {
                 $cday = date('j',mysql2date($holiday->date));
@@ -391,7 +392,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
             // Public holidays
             $phsql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` WHERE type=".HOL_PUBLIC." AND date BETWEEN '".date('Y-m-d', $startdate)."' AND '".date('Y-m-d', $enddate)."'";
             $phresult = mysql_query($phsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             while ($pubhol = mysql_fetch_object($phresult))
             {
                 $cday = date('j',mysql2date($pubhol->date));
@@ -412,7 +413,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
                         $html .= "<td class='$shade calnonworked'>";
                         $html .= "<strong title='Week Number' >wk<br />";
                         $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1, 0, 1, 'UTF-8');
-                        $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1,1, 1, 'UTF-8')."</strong></td>";
+                        $html .= mb_substr(date('W',mktime(0, 0, 0, $month, $cday, $year))+1, 1, 1, 'UTF-8')."</strong></td>";
                     }
                     elseif (date('D', mktime(0, 0, 0, $month, $cday, $year)) == 'Sun')
                     {
@@ -535,7 +536,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
                                               'month'=> $month,
                                               'day'=> $cday,
                                               'useremail' => $user->email);
-                            $html .= plugin_do('holiday_chart_day_am',$pluginparams);
+                            $html .= plugin_do('holiday_chart_day_am', $pluginparams);
                             if ($user->id == $sit[2]) $html .= "</div>";
                             $html .= "</td>";
                         }
