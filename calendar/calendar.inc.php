@@ -280,7 +280,10 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
         {
             $html .= "<a href='holiday_new.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length={$time}'>{$GLOBALS['strBookHoliday']}</a><br />";
         }
-        else $html .= "<a href='holiday_new.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length=0'>{$GLOBALS['strCancelHoliday']}</a><br />";
+        else
+        {
+            $html .= "<a href='holiday_new.php?type=1&amp;user={$user}&amp;year={$year}&amp;month={$month}&amp;day={$day}&amp;length=0&amp;time={$time}'>{$GLOBALS['strCancelHoliday']}</a><br />";
+        }
 
         $html .= "</div>";
     }
@@ -336,7 +339,7 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
     // Get list of user groups
     $gsql = "SELECT * FROM `{$GLOBALS['dbGroups']}` ORDER BY name";
     $gresult = mysql_query($gsql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $grouparr[0] = $GLOBALS['strNone'];
     while ($group = mysql_fetch_object($gresult))
     {
