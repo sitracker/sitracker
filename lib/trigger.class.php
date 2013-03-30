@@ -217,7 +217,6 @@ class Trigger extends SitEntity {
         $this->action = cleanvar($action);
         $this->parameters = cleanvar($parameters, FALSE, FALSE);
         $this->checks = $checks;
-        //$this->parameters = $parameters;
         $this->id = cleanvar($id);
 
         debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
