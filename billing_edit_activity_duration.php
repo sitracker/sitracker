@@ -22,7 +22,7 @@ require_once (APPLICATION_LIBPATH . 'auth.inc.php');
 $mode = cleanvar($_REQUEST['mode']);
 $updateid = clean_int($_REQUEST['updateid']);
 $incidentid = clean_int($_REQUEST['incidentid']);
-$id = $incidentid; // So he header works
+$id = $incidentid; // So the header works
 $title = $strAdjustActivityDuration;
 
 switch ($mode)
@@ -35,7 +35,7 @@ switch ($mode)
         $newduration = clean_int($_REQUEST['newduration']); // In minutes
 
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 1)
         {
@@ -43,10 +43,9 @@ switch ($mode)
             if ($obj->duration == $oldduration)
             {
             	// Double check the oldduration thats been passed is whats in the DB
-                $text = "{$obj->bodytext}\n\n[b]Duration adjusted[/b] by ".user_realname($sit[2]) . 
-                        " on ".ldate($CONFIG['dateformat_datetime'], $now)." from ".ceil($obj->duration) . 
-                        "minutes to {$newduration}minutes, reason given:\n---\n{$reason}\n---"; // FIXME should this be i18n? If so which language
-                // $newduration *= 60;
+                $text = $obj->bodytext . "\n\n" . sprintf($SYSLANG['strBillingDurationAdjusted'], user_realname($sit[2]),
+                                                        ldate($CONFIG['dateformat_datetime'], $now), ceil($obj->duration), $newduration, "\n\n----{$reason}----\n\n");
+                
                 $usql = "UPDATE `{$dbUpdates}` SET bodytext = '".mysql_real_escape_string($text)."', duration = '{$newduration}' WHERE id = '{$updateid}'";
                 mysql_query($usql);
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
@@ -78,7 +77,7 @@ switch ($mode)
     default:
         $sql = "SELECT duration FROM `{$dbUpdates}` WHERE id = {$updateid} AND duration IS NOT NULL AND duration != 0";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 1)
         {

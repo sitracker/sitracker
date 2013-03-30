@@ -217,6 +217,7 @@ $strBillableIncidentsReport = 'Billable Incidents Report';
 $strBillableIncidentSummary = 'Incident %s: %s units @ %s%s %s';
 $strBilling = 'Billing';
 $strBillingCustomerPeriod = 'Customer Period';
+$strBillingDurationAdjusted = '[b]Duration adjusted[/b] by %s on %s from %s minutes to %s minutes, reason given %s';
 $strBillingEngineerPeriod = 'Engineer Period';
 $strBillingMatrix = 'Billing Matrix';
 $strBillingMatrixAddFailed = 'Failed to Add Billing Matrix';
