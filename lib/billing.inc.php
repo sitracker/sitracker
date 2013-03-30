@@ -699,12 +699,12 @@ function close_billable_incident($incidentid)
                 mysql_query($sql);
                 if (mysql_error())
                 {
-                    trigger_error(mysql_error(),E_USER_ERROR);
+                    trigger_error(mysql_error(), E_USER_ERROR);
                     $rtnvalue = FALSE;
                 }
                 if (mysql_affected_rows() < 1)
                 {
-                    trigger_error("Link transaction on closure failed",E_USER_ERROR);
+                    trigger_error("Link transaction on closure failed", E_USER_ERROR);
                     $rtnvalue = FALSE;
                 }
             }
