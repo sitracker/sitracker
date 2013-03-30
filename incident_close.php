@@ -555,8 +555,6 @@ else
                 }
             }
 
-            //FIXME move the FALSE->0 hack into triggers
-            if (!$send_feedback) $send_feedback = '0';
             $t = new TriggerEvent('TRIGGER_INCIDENT_CLOSED', array('incidentid' => $incidentid,
                                                      'userid' => $sit[2],
                                                      'notifyexternal' => $notifyexternal,
