@@ -20,14 +20,12 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $user = clean_dbstring($_REQUEST['user']);
-$sent = clean_fixed_list($_REQUEST['sent'], array('false','true'));
-$mode = clean_fixed_list($_REQUEST['mode'], array('','notapprove','approval'));
+$sent = clean_fixed_list($_REQUEST['sent'], array('false', 'true'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'notapprove', 'approval'));
 $action = cleanvar($_REQUEST['action']);
 $type = clean_int($_REQUEST['type']);
 $memo = clean_dbstring($_REQUEST['memo']);
 $approvaluser = cleanvar($_REQUEST['approvaluser']);  // can be 'all'
-
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 function display_holiday_table($result)
 {
@@ -107,6 +105,8 @@ function display_holiday_table($result)
 if (empty($user)) $user = $sit[2];
 if ($sent != 'true')
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    
     // check to see if this user has approve permission
     $approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE);
 
@@ -223,6 +223,8 @@ if ($sent != 'true')
             display_holiday_table($result);
         }
     }
+    
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
@@ -265,6 +267,8 @@ else
 
         $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist));
 
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        
         if ($rtnvalue === TRUE)
         {
             echo "<h2>{$strRequestSent}</h2>";
@@ -276,6 +280,7 @@ else
         }
     }
     echo "<p align='center'><a href='holidays.php?user={$user}'>{$strMyHolidays}</p></p>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 ?>
