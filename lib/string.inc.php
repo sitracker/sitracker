@@ -295,7 +295,8 @@ function encode_email_subject($subject, $charset)
 
 
 //Check to see if it exists in case PHP has this function later
-if (!function_exists("mb_substr_replace")){
+if (!function_exists("mb_substr_replace"))
+{
 
     /**
      * Encode email subject as per RFC 2047
@@ -325,7 +326,7 @@ if (!function_exists("mb_substr_replace")){
             }
             else
             {
-                return mb_substr($string, 0, $start, $encoding). $replacement. mb_substr($string, $start + $length,mb_strlen($string, $encoding), $encoding);
+                return mb_substr($string, 0, $start, $encoding). $replacement. mb_substr($string, $start + $length, mb_strlen($string, $encoding), $encoding);
             }
         }
     }
