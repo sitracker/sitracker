@@ -812,6 +812,7 @@ $strHolidayMorningOnlyConfirm = 'Are you sure you want to make this morning only
 $strHolidays = 'Holidays';
 $strHolidayEntitlement = 'Holiday Entitlement';
 $strHolidayPlanner = 'Holiday Planner';
+$strHolidayRequestNote = 'Holiday Request Note';
 $strHolidayRequested = 'Holiday Requested';
 $strHolidayRequests = 'Holiday Requests';
 $strHolidayType = 'Holiday Type';
