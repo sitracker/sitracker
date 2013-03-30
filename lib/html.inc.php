@@ -1497,8 +1497,6 @@ function time_picker($hour = '', $minute = '', $name_prefix = '')
 {
     global $CONFIG;
 
-    // FIXME use $CONFIG['dateformat_shorttime']
-
     $m = 0;
 
     if (empty($hour))
