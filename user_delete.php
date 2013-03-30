@@ -11,7 +11,7 @@
 
 // Authors: Valdemaras Pipiras <info[at]ambernet.lt>
 //          Ivan Lucas <ivanlucas[at]users.sourceforge.net>
-// TODO 3.40 if we user MYSQL 5's relation functions, we can simply delete the user
+// TODO 3.40 if we user MySQL 5's relation functions, we can simply delete the user
 
 require ('core.php');
 $permission = PERM_USER_DELETE;
@@ -55,8 +55,18 @@ if (!empty($userid))
     $sql = "SELECT id FROM `{$dbUpdates}` WHERE userid={$userid} LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_num_rows($result) >= 1) $errors++;
+    
+    // Check there are no journel entries by this user
+    $sql = "SELECT id FROM `{$dbJournal}` WHERE userid={$userid} LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_num_rows($result) >= 1) $errors++;
+    
+    // Check there are no transaction entries by this user
+    $sql = "SELECT id FROM `{$dbTransactions}` WHERE userid={$userid} LIMIT 1";
+    $result = mysql_query($sql);
+    if (mysql_num_rows($result) >= 1) $errors++;
 
-    // FIXME need to check more tables for data possibly linked to userid
+    
     // We break data integrity if we delete the user and there are things
     // related to him/her
 
@@ -67,8 +77,13 @@ if (!empty($userid))
         $sql[] = "DELETE FROM `{$dbHolidays}` WHERE userid = {$userid}";
         $sql[] = "DELETE FROM `{$dbUserGroups}` WHERE userid = {$userid}";
         $sql[] = "DELETE FROM `{$dbUserPermissions}` WHERE userid = {$userid}";
+        $sql[] = "DELETE FROM `{$dbDrafts}` WHERE userid = {$userid}";
+        $sql[] = "DELETE FROM `{$dbTriggers}` WHERE userid = {$userid}";
+        $sql[] = "DELETE FROM `{$dbNotices}` WHERE userid = {$userid}";
+        $sql[] = "DELETE FROM `{$dbUserConfig}` WHERE userid = {$userid}";
+        $sql[] = "DELETE FROM `{$dbUserSoftware}` WHERE userid = {$userid}";
 
-        foreach ($sql as $query)
+        foreach ($sql AS $query)
         {
             $result = mysql_query($query);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
