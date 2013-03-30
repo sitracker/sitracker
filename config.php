@@ -21,7 +21,7 @@ if (empty($_REQUEST['userid']))
 }
 else
 {
-    $permision = PERM_MYPROFILE_EDIT; // Edit your profile, FIXME need a permission for user settings
+    $permision = PERM_EDIT_USER_SETTINGS;
 }
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 // This page requires authentication

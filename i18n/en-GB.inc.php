@@ -543,6 +543,7 @@ $strEditTemplate = 'Edit Template';
 $strEditTemplates = 'Edit Templates';
 $strEditUser = 'Edit User';
 $strEditUserPermissions = 'Edit User Permissions';
+$strEditUserSettings = 'Edit User Settings';
 $strEditUserSkills = 'Edit User Skills';
 $strEditVendor = 'Edit Vendor';
 $strEditWatchedIncidents = 'Edit Watched Incidents';
