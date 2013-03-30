@@ -701,7 +701,7 @@ function close_billable_incident($incidentid)
 
             // Add transaction
             $serviceid = get_serviceid($contractid);
-            if ($serviceid < 1) trigger_error("Invalid service ID",E_USER_ERROR);
+            if ($serviceid < 1) trigger_error("Invalid service ID", E_USER_ERROR);
             $date = date('Y-m-d H:i:s', $now);
 
             $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, totalunits, totalbillableunits, totalrefunds, amount, description, userid, dateupdated, transactionstatus) ";
@@ -852,7 +852,7 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
 
     if (mysql_affected_rows() < 1 AND $amount != 0)
     {
-        trigger_error("Contract balance update failed",E_USER_ERROR);
+        trigger_error("Contract balance update failed", E_USER_ERROR);
         $rtnvalue = FALSE;
     }
 
@@ -1259,7 +1259,7 @@ function get_incident_billing_details($incidentid)
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
         return FALSE;
     }
 
@@ -1270,7 +1270,7 @@ function get_incident_billing_details($incidentid)
             if ($obj->duration > 0)
             {
                 $temparray['owner'] = $obj->userid;
-                $temparray['starttime'] = ($obj->timestamp-($obj->duration*60));
+                $temparray['starttime'] = ($obj->timestamp - ($obj->duration * 60));
                 $temparray['duration'] = $obj->duration;
                 $billing[$obj->userid][] = $temparray;
             }
@@ -1450,12 +1450,6 @@ function make_incident_billing_array($incidentid, $totals = TRUE)
                     $owner = user_realname($activity['owner']);
                     $duration += $activity['duration'];
 
-                    /*
-                    echo "<pre>";
-                    print_r($count);
-                    echo "</pre>";
-                    */
-
                     group_billing_periods($count, 'engineer', $activity, $engineerPeriod);
 
                     // Optimisation no need to compute again if we already have the details
@@ -1472,11 +1466,6 @@ function make_incident_billing_array($incidentid, $totals = TRUE)
                 $tduration += $duration;
                 $totalengineerperiods += sizeof($count['engineer']);
                 $totalcustomerperiods += sizeof($count['customer']);
-                /*
-                echo "<pre>";
-                print_r($count);
-                echo "</pre>";
-                */
 
                 $billing_a[$activity['owner']]['owner'] = $owner;
                 $billing_a[$activity['owner']]['duration'] = $duration;
@@ -1574,7 +1563,7 @@ function get_incident_billable_breakdown_array($incidentid)
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error("Unable to get billing matrix for service {$serviceid} ".mysql_error(),E_USER_WARNING);
+        trigger_error("Unable to get billing matrix for service {$serviceid} ".mysql_error(), E_USER_WARNING);
     }
     list($billingmatrix) = mysql_fetch_row($result);
 
