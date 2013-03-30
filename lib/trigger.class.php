@@ -450,7 +450,7 @@ class Trigger extends SitEntity {
         global $CONFIG, $dbg, $dbEmailTemplates;
         if ($CONFIG['debug'])
         {
-            $dbg .= "TRIGGER: send_trigger_email({$trigger->userid},{$trigger_type}, {$this->param_array})\n";
+            $dbg .= "TRIGGER: send_trigger_email({$template})\n";
         }
         // $trigger_types[$this->trigger_type]['type'])
 
