@@ -48,7 +48,7 @@ $sitebreakdown =  clean_fixed_list($_REQUEST['sitebreakdown'], array('', 'on'));
 
 if (!empty($enddate))
 {
-    $a = explode("-", $enddateorig);
+    $a = explode("-", $enddate);
 
     $m = mktime(0, 0, 0, $a[1], $a[2]+1, $a[0]);
     $enddate = date("Y-m-d", $m);
