@@ -127,7 +127,7 @@ if (empty($mode))
     echo "</table>";
 
     echo "<p align='center'>";
-    echo "<input type='submit' name='runreport' value='{$strRunReport}' onclick=\"return process_billable_incidents_form();\" /></p>";
+    echo "<input type='submit' name='runreport' value='{$strRunReport}' /></p>";
     echo "</form>";
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
@@ -166,7 +166,9 @@ elseif ($mode == 'approvalpage')
     $resultsite = mysql_query($sitelistsql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-    $multipliers = get_all_available_multipliers();
+    // FIXME hack doesn't support incident rates 
+    $b = new UnitBillable();
+    $multipliers = $b->get_all_available_multipliers();
 
     if (mysql_num_rows($resultsite) > 0)
     {
@@ -248,7 +250,7 @@ elseif ($mode == 'approvalpage')
             $result = mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 return FALSE;
             }
 
@@ -260,7 +262,10 @@ elseif ($mode == 'approvalpage')
 
                 while ($obj = mysql_fetch_object($result))
                 {
-                    $a = make_incident_billing_array($obj->id);
+                    // FIXME this who area is abit off a mess and assumes per unit billing
+                    // FIXME this will not work with anything other than per unit
+                    $billable = get_billable_object_from_incident_id($obj->id);
+                    $a = $billable->make_incident_billing_array($obj->id);
                     $unapprovable = FALSE;
                     unset($billtotalsincident);
 
@@ -287,7 +292,7 @@ elseif ($mode == 'approvalpage')
                         $line .= "<td>".user_realname($obj->owner)."</td>";
                         $line .= "<td>".ldate($CONFIG['dateformat_datetime'], $obj->opened)."</td><td>".ldate($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
 
-                        $bills = get_incident_billable_breakdown_array($obj->id);
+                        $bills = $billable->get_incident_billable_breakdown_array($obj->id);
 
                         foreach ($bills AS $bill)
                         {
@@ -463,82 +468,6 @@ elseif ($mode == 'approvalpage')
     if ($output == 'html')
     {
         echo "<p class='return'><a href='" . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $i18ncharset) . "'>{$strReturnToPreviousPage}</a></p>";
-        include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-    }
-}
-elseif ($mode == 'invoicepage')
-{
-    if ($output == 'html')
-    {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        $str .= "<h2>".icon('billing', 32, $strBillableIncidentsInvoice)." {$strBillableIncidentsInvoice}</h2>";
-
-        $resultsite = mysql_query($sitelistsql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-
-        $multipliers = get_all_available_multipliers();
-
-        if (mysql_num_rows($resultsite) > 0)
-        {
-            while ($objsite = mysql_fetch_object($resultsite))
-            {
-                unset($servicesapproved);
-
-                $servicestr = '';
-
-                $str .= "<table width='80%' align='center'><tr><th colspan='3'>{$objsite->name}</th></tr>\n";
-                $str .= "<tr><th>{$strDate}</th><th>{$strDescription}</th><th>{$strAmount}</th></tr>\n";
-
-                $sql = "SELECT t.* FROM `{$dbTransactions}` AS t, `{$dbService}` AS p, `{$dbMaintenance}` AS m ";
-                $sql .= "WHERE t.serviceid = p.serviceid AND p.contractid = m.id AND t.dateupdated <= '{$enddateorig}' ";
-                $sql .= "AND t.dateupdated > p.lastbilled AND m.site = {$objsite->site} ";
-
-                $result = mysql_query($sql);
-                if (mysql_error())
-                {
-                    trigger_error(mysql_error(), E_USER_WARNING);
-                    return FALSE;
-                }
-
-                if (mysql_num_rows($result) > 0)
-                {
-                    $shade = 'shade1';
-
-                    while ($obj = mysql_fetch_object($result))
-                    {
-                        $str .= "<tr class='{$shade}'>";
-                        $str .= "<td>{$obj->date}</td>";
-                        $str .= "<td>{$obj->description}</td>";
-                        $str .= "<td>".number_format($obj->amount, 2)."</td>";
-                        $str .= "</tr>\n";
-
-                        if ($shade == "shade1") $shade = "shade2";
-                        else $shade = "shade1";
-
-                        if (empty($servicesapproved[$obj->serviceid]))
-                        {
-                            $servicesapproved[$obj->serviceid] = $obj->serviceid;
-                            update_last_billed_time($obj->serviceid, $enddateorig);
-
-                            $servicestr .= "<p align='center'>".sprintf($strServiceIDXLastInvoiceUptoX, $obj->serviceid, $enddateorig)."</p>";
-                        }
-                    }
-                }
-                else
-                {
-                    $str .= "<tr><td colspan='3' align='center'>{$strNone}</td></tr>\n";
-                }
-
-                $str .= "</table>";
-                $str .= $servicestr;
-            }
-        }
-    }
-
-
-    if ($output == 'html')
-    {
-        echo $str;
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }

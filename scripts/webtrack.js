@@ -1315,29 +1315,6 @@ function validate_field(field, error)
 
 
 /**
- * 
- * @returns Boolean
- * @author Paul Heaney
- */
-function process_billable_incidents_form()
-{
-    var approval = $('approvalpage');
-    var invoice = $('invoicepage');
-
-    var enddate = $('enddate').value;
-
-    var toReturn = true;
-
-    if (invoice.checked)
-    {
-        toReturn = confirm_action(strAreYouSureUpdateLastBilled);
-    }
-
-    return toReturn;
-}
-
-
-/**
  * @author Ivan Lucas
  */
 function recordFocusElement(element)

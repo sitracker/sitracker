@@ -30,8 +30,8 @@ $title = $strTransactions;
 
 // External variables
 $serviceid = clean_int($_REQUEST['serviceid']);
-$startdate = date('Y-m-d', strtotime($_REQUEST['startdate']));
-$enddate = date('Y-m-d', strtotime($_REQUEST['enddate']));
+$startdate = cleanvar($_REQUEST['startdate']);
+$enddate = cleanvar($_REQUEST['enddate']);
 
 $site = clean_int($_REQUEST['site']);
 $sites = clean_int($_REQUEST['sites']);
@@ -45,14 +45,6 @@ else $showfoc = TRUE;
 if (!empty($site) AND empty($sites)) $sites = array($site);
 
 $sitebreakdown =  clean_fixed_list($_REQUEST['sitebreakdown'], array('', 'on'));
-
-if (!empty($enddate))
-{
-    $a = explode("-", $enddate);
-
-    $m = mktime(0, 0, 0, $a[1], $a[2]+1, $a[0]);
-    $enddate = date("Y-m-d", $m);
-}
 
 if ($sitebreakdown == 'on') $sitebreakdown = TRUE;
 else $sitebreakdown = FALSE;

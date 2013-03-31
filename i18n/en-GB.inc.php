@@ -210,11 +210,10 @@ $strBill = 'Bill';
 $strBillableIncidentApproved = 'Billable Incident Approved';
 $strBillableIncidentApprovedDesc = 'When an billable incident is approved';
 $strBillableIncidents = 'Billable Incidents';
-$strBillableIncidentsInvoice = 'Billable Incidents';
 $strBillableIncidentsForPeriodXtoX = 'Billable incidents for period %1$s to %2$s';
 $strBillableIncidentsReport = 'Billable Incidents Report';
 # Used in transaction summary reads e.g. "Incident 1234: 5 Units @ £10, 1 unit at x1, 2 units at x2"
-$strBillableIncidentSummary = 'Incident %s: %s units @ %s%s %s';
+$strBillableIncidentSummary = 'Incident %s: %s units @ %s%s (%s)';
 $strBilling = 'Billing';
 $strBillingCustomerPeriod = 'Customer Period';
 $strBillingDurationAdjusted = '[b]Duration adjusted[/b] by %s on %s from %s minutes to %s minutes, reason given %s';
@@ -1685,7 +1684,6 @@ $strServiceBalanceInfo = 'The amount of remaining service balance as a number e.
 $strServiceBalanceString = 'The amount of remaining service as a percentage e.g. "34%"';
 $strServiceHistory = 'Service History';
 $strServiceID = 'Service ID';
-$strServiceIDXLastInvoiceUptoX = 'Service ID: %1$s last invoice time up to %2$s';
 $strServiceLevel = 'Service Level';
 $strServiceLevelPreventsReopen = 'The service level of this incident prevents it being reopened';
 $strServiceLevels = 'Service Levels';
@@ -2166,6 +2164,7 @@ $strXProductForYSite = '%1$s for %2$s';
 # e.g. John's Activities
 $strXsActivities = '%s\'s Activities';
 $strXSeconds = '%s seconds';
+$strXUnitsAtX = '%d units @ %dx';
 # e.g. John's Tasks
 $strXsTasks = '%s\'s Tasks';
 $strXWorkingDay = '%s working day';

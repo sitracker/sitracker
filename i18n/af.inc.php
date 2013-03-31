@@ -193,7 +193,6 @@ $strBill = 'Faktuur';
 $strBillableIncidentApproved = 'Faktureerbare Insident Goedgekeur';
 $strBillableIncidentApprovedDesc = 'Wanneer \'n faktureerbare insident goedgekeur is';
 $strBillableIncidents = 'Faktureerbare Insidente';
-$strBillableIncidentsInvoice = 'Faktureerbare Insidente';
 $strBillableIncidentsForPeriodXtoX = 'Faktureerbare Insidente vir die periode %1s tot %2s';
 $strBillableIncidentsReport = 'Faktureerbare Insidente Rapport';
 $strBilling = 'Fakturasie';

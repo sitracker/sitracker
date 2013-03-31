@@ -489,7 +489,6 @@ if (mysql_num_rows($result) >=1 )
         }
         else
         {
-            $billing = make_incident_billing_array($incidentid);
             echo "<td>".format_date_friendly($startdate)."</td>";
             if ($enddate == '0')
             {
@@ -508,6 +507,9 @@ if (mysql_num_rows($result) >=1 )
             }
             else
             {
+                // FIXME this needs to support per incident
+                $b = new UnitBillable();
+                $billing = $b->make_incident_billing_array($incidentid);
                 $duration = $enddate - $startdate;
 
                 $a = $duration % ($billing[-1]['customerperiod']);

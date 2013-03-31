@@ -40,6 +40,7 @@ include (APPLICATION_LIBPATH . 'base.inc.php');
 include_once (APPLICATION_LIBPATH . 'array.inc.php');
 include_once (APPLICATION_LIBPATH . 'datetime.inc.php');
 include_once (APPLICATION_LIBPATH . 'billing.inc.php');
+include_once (APPLICATION_LIBPATH . 'billing_unused.inc.php');
 include_once (APPLICATION_LIBPATH . 'user.inc.php');
 include_once (APPLICATION_LIBPATH . 'sla.inc.php');
 include_once (APPLICATION_LIBPATH . 'tags.inc.php');

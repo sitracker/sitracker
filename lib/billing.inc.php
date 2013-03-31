@@ -14,6 +14,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
     exit;
 }
 
+require_once (APPLICATION_LIBPATH . 'billing.class.php');
+
 define ("BILLING_APPROVED", 0);
 define ("BILLING_AWAITINGAPPROVAL", 5);
 define ("BILLING_RESERVED", 10);
@@ -228,70 +230,6 @@ function update_last_billed_time($serviceid, $date)
 
 
 /**
- * Find the billing multiple that should be applied given the day, time and matrix in use
- * @author Paul Heaney
- * @param string $dayofweek 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' or 'holiday'
- * @param int $hour The hour in the day, values in the range 0 - 23
- * @param string $billingmatrix The billing matrix to get the multiple from, defaults to 'Default'
- * @return float - The applicable multiplier for the time of day and billing matrix being used
- */
-function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 'Default')
-{
-    $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrix']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
-
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        return FALSE;
-    }
-
-    $rate = 1;
-
-    if (mysql_num_rows($result) > 0)
-    {
-        $obj = mysql_fetch_object($result);
-        $rate = $obj->rate;
-    }
-
-    return $rate;
-}
-
-
-/**
- * Function to get an array of all billing multipliers for a billing matrix
- * @author Paul Heaney
- * @param String $matrixid The TAG of the billing matrix being used, defaults to 'Default'
- * @return array - All available billing multipliers for the specified Matrix
- */
-function get_all_available_multipliers($matrixid='')
-{
-    $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
-
-    foreach ($days AS $d)
-    {
-        $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrix']}` ";
-        if (!empty($matrixid)) $sql .= " WHERE tag = '{$matrixid}'";
-        $result = mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error(mysql_error(),E_USER_WARNING);
-            return FALSE;
-        }
-
-        while ($obj = mysql_fetch_object($result))
-        {
-            $a[$obj->day] = $obj->day;
-        }
-    }
-
-    ksort($a);
-
-    return $a;
-}
-
-
-/**
  * Function to find the most applicable unit rate for a particular contract
  * @author Paul Heaney
  * @param int $contractid - The contract id
@@ -427,128 +365,6 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
 
 
 /**
- * Reserve monies from a serviceid
- * @author Paul Heaney
- * @param int $serviceid - The serviceID to reserve monies from
- * @param int $linktype - The type of link to create between the transaction and the reserve type
- * @param int $linkref - The ID to link this transaction to
- * @param int $amount - The positive amount of money to reserve
- * @param string $description - A description to put on the reservation
- * @return int - The transaction ID
- */
-function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
-{
-    global $now, $sit;
-    $rtnvalue = FALSE;
-    $balance = get_service_balance($serviceid, TRUE, TRUE);
-
-    $amount *= -1;
-
-    if ($balance != FALSE)
-    {
-        $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, amount, description, userid, dateupdated, transactionstatus) ";
-        $sql .= "VALUES ('{$serviceid}', '{$amount}', '{$description}', '{$_SESSION['userid']}', '".date('Y-m-d H:i:s', $now)."', '".BILLING_RESERVED."')";
-        $result = mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
-            $rtnvalue = FALSE;
-        }
-
-        $rtnvalue = mysql_insert_id();
-
-        if ($rtnvalue != FALSE)
-        {
-
-            $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES ({$linktype}, {$rtnvalue}, {$linkref}, 'left', '{$_SESSION['userid']}')";
-            mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error(mysql_error(),E_USER_ERROR);
-                $rtnvalue = FALSE;
-            }
-            if (mysql_affected_rows() < 1)
-            {
-                trigger_error("Link reservation failed",E_USER_ERROR);
-                $rtnvalue = FALSE;
-            }
-        }
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
- * Transitions reserved monies to awaitingapproval
- * @author Paul Heaney
- * @param int $transactionid The transaction ID to transition
- * @param int $amount The final amount to charge
- * @param string $description (optional) The description to update the transaction with
- * @return bool TRUE on sucess FALSE otherwise
- */
-function transition_reserved_monites($transactionid, $amount, $description='')
-{
-    $rtnvalue = TRUE;
-    $sql = "UPDATE `{$GLOBALS['dbTransactions']}` SET amount = {$amount}, transactionstatus = ".BILLING_AWAITINGAPPROVAL." ";
-    if (!empty($description))
-    {
-    	$sql .= ", description = '{$description}' ";
-    }
-    $sql .= "WHERE transactionid = {$transactionid} AND transactionstatus = ".BILLING_RESERVED;
-    mysql_query($sql);
-
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(), E_USER_ERROR);
-        $rtnvalue = FALSE;
-    }
-    if (mysql_affected_rows() < 1)
-    {
-        trigger_error("Transition reserved monies failed {$sql}",E_USER_ERROR);
-        $rtnvalue = FALSE;
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
- * Unreserve a reserved transaction, this removes the transaction thus removing the reservation
- * @author Paul Heaney
- * @param int $transactionid - The transaction to unreserv
- * @return bool TRUE on sucess FALSE otherwise
- */
-function unreserve_monies($transactionid, $linktype)
-{
-    $rtnvalue = FALSE;
-    $sql = "DELETE FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstatus = ".BILLING_RESERVED;
-    mysql_query($sql);
-
-    if (mysql_error()) trigger_error("Error unreserving monies ".mysql_error(), E_USER_ERROR);
-    if (mysql_affected_rows() == 1) $rtnvalue = TRUE;
-
-    if ($rtnvalue != FALSE)
-    {
-        $sql = "DELETE FROM `{$GLOBALS['dbLinks']}` WHERE linktype =  {$linktype} AND origcolref = {$transactionid}";
-        mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error(mysql_error(),E_USER_ERROR);
-            $rtnvalue = FALSE;
-        }
-        if (mysql_affected_rows() < 1)
-        {
-            trigger_error("Link deletion failed",E_USER_ERROR);
-            $rtnvalue = FALSE;
-        }
-    }
-
-    return $rtnvalue;
-}
-
-
-/**
  * Updates the amount and optionally the description on a transaction awaiting reservation
  * @author Paul Heaney
  * @param int $transactionid The transaction ID to update
@@ -613,108 +429,106 @@ function update_transaction($transactionid, $amount = 0.00, $description = '', $
  */
 function close_billable_incident($incidentid)
 {
-    global $now, $sit;
-    $rtnvalue = TRUE;
-    $sql = "SELECT i.maintenanceid FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE i.servicelevel = sl.tag AND i.priority = sl.priority AND i.id = {$incidentid} AND sl.timed = 'yes'";
+    $toReturn = FALSE;
+    $billableincident = get_billable_object_from_incident_id($incidentid);
+    if ($billableincident)
+    {
+        $toReturn = $billableincident->close_incident($incidentid);
+    }
+    
+    return $toReturn;
+}
+
+
+
+/**
+ * Function to return a billable incident object based on incident ID
+ * @author Paul Heaney
+ * @param int $incidentid The incident ID to get a billable incident for
+ * @return mixed Billable if incident is billable else FALSE
+ * @todo This may be removed following the billable code refactor
+ */
+function get_billable_object_from_incident_id($incidentid)
+{
+    $toReturn = FALSE;
+    
+    $sql = "SELECT m.billingtype FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbIncidents']}` AS i WHERE i.maintenanceid = m.id AND i.id = {$incidentid}";
     $result = mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error("Error identifying if incident was timed ".mysql_error(), E_USER_WARNING);
-        $rtnvalue = FALSE;
+        trigger_error("Error finding type of incident billing ".mysql_error(), E_USER_WARNING);
+        $toReturn = FALSE;
+    }
+    
+    if (mysql_num_rows($result) > 0)
+    {
+        list($billingtype) = mysql_fetch_row($result);
+        $toReturn = get_billable_incident_object($billingtype);  
+    }
+    
+    return $toReturn;
+}
+
+
+/**
+ * Function to return a billable incident object based on contract  ID
+ * @author Paul Heaney
+ * @param int $incidentid The contract ID to get a object for
+ * @return mixed Billable if incident is billable else FALSE
+ * @todo This may be removed following the billable code refactor
+ */
+function get_billable_object_from_contract_id($contractid)
+{
+    $toReturn = FALSE;
+
+    $sql = "SELECT m.billingtype FROM `{$GLOBALS['dbMaintenance']}` AS m WHERE m.id = {$contractid}";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error("Error finding type of contract billing ".mysql_error(), E_USER_WARNING);
+        $toReturn = FALSE;
     }
 
     if (mysql_num_rows($result) > 0)
     {
-        // Was logged against a timed contract
-        list($contractid) = mysql_fetch_row($result);
-        $duration = 0;
-        $sql = "SELECT SUM(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid}";
-        $result = mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error("Error getting duration for billable incident. ".mysql_error(), E_USER_WARNING);
-            $rtnvalue = FALSE;
-        }
-        list($duration) = mysql_fetch_row($result);
-        if ($duration > 0)
-        {
-        	// There where activities on this update so add to the transactions table
-
-            $bills = get_incident_billable_breakdown_array($incidentid);
-
-            $multipliers = get_all_available_multipliers();
-
-            $totalunits = 0;
-            $totalbillableunits = 0;
-            $totalrefunds = 0;
-
-            foreach ($bills AS $bill)
-            {
-                foreach ($multipliers AS $m)
-                {
-                    $a[$m] += $bill[$m]['count'];
-                }
-            }
-
-            foreach ($multipliers AS $m)
-            {
-                $s .= sprintf($GLOBALS['strXUnitsAtX'], $a[$m], $m);
-                $totalunits += $a[$m];
-                $totalbillableunits += ($m * $a[$m]);
-            }
-
-            $unitrate = get_unit_rate(incident_maintid($incidentid));
-
-            $totalrefunds = $bills['refunds'];
-            // $numberofunits += $bills['refunds'];
-
-            $cost = (($totalbillableunits + $totalrefunds)  * $unitrate) * -1;
-
-            $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
-
-            // $rtn = update_contract_balance(incident_maintid($incidentid), $desc, $cost);
-
-            // Add transaction
-            $serviceid = get_serviceid($contractid);
-            if ($serviceid < 1) trigger_error("Invalid service ID", E_USER_ERROR);
-            $date = date('Y-m-d H:i:s', $now);
-
-            $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, totalunits, totalbillableunits, totalrefunds, amount, description, userid, dateupdated, transactionstatus) ";
-            $sql .= "VALUES ('{$serviceid}', '{$totalunits}',  '{$totalbillableunits}', '{$totalrefunds}', '{$cost}', '{$desc}', '{$_SESSION['userid']}', '{$date}', '".BILLING_AWAITINGAPPROVAL."')";
-
-            $result = mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
-                $rtnvalue = FALSE;
-            }
-
-            $transactionid = mysql_insert_id();
-
-            if ($transactionid != FALSE)
-            {
-
-                $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES (6, {$transactionid}, {$incidentid}, 'left', {$_SESSION['userid']})";
-                mysql_query($sql);
-                if (mysql_error())
-                {
-                    trigger_error(mysql_error(), E_USER_ERROR);
-                    $rtnvalue = FALSE;
-                }
-                if (mysql_affected_rows() < 1)
-                {
-                    trigger_error("Link transaction on closure failed", E_USER_ERROR);
-                    $rtnvalue = FALSE;
-                }
-            }
-
-        }
+        list($billingtype) = mysql_fetch_row($result);
+        $toReturn = get_billable_incident_object($billingtype);
     }
 
-    return $rtnvalue;
+    return $toReturn;
 }
 
+
+/**
+ * Returns a billable object given a particular billing type
+ * @author Paul Heaney
+ * @param String $billingtype The billing type to return an object off
+ * @return mixed Billable if incident is billable else FALSE
+ * @todo This may be removed following the billable code refactor
+ */
+function get_billable_incident_object($billingtype)
+{
+    $toReturn = FALSE;
+
+    switch ($billingtype)
+    {
+        case 'unit':
+            $toReturn = new UnitBillable();
+            break;
+        case 'incident':
+            $toReturn = new IncidentBillable();
+            break;
+        case '':
+            // Its not a billable incident
+            $toReturn = FALSE;
+            break;
+        default:
+            $toReturn = FALSE;
+            trigger_error("Unknown billable type of '{$billingtype}'");
+    }
+    
+    return $toReturn;
+}
 
 /**
  * Function to approve an incident, this adds a transaction and confirms the 'bill' is correct.
@@ -723,62 +537,20 @@ function close_billable_incident($incidentid)
  */
 function approve_incident_transaction($transactionid)
 {
-    global $dbLinks, $sit, $CONFIG, $strUnits;
+    $rtnvalue = FALSE;;
 
-    $rtnvalue = TRUE;
-
-    // Check transaction exists, and is awaiting approval and is an incident
-    $sql = "SELECT l.linkcolref, t.serviceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
+    $sql = "SELECT l.linkcolref FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
     $sql .= "WHERE t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND l.linktype = 6 AND t.transactionid = {$transactionid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error identify incident transaction. ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        list($incidentid, $serviceid) = mysql_fetch_row($result);
-
-        $bills = get_incident_billable_breakdown_array($incidentid);
-
-        $multipliers = get_all_available_multipliers();
-
-        $totalunits = 0;
-        $totalbillableunits = 0;
-        $totalrefunds = 0;
-
-        foreach ($bills AS $bill)
-        {
-            foreach ($multipliers AS $m)
-            {
-                $a[$m] += $bill[$m]['count'];
-            }
-        }
-
-        foreach ($multipliers AS $m)
-        {
-            $s .= sprintf($GLOBALS['strXUnitsAtX'], $a[$m], $m);
-            $totalbillableunits += ($m * $a[$m]);
-            $totalunits += $a[$m];
-        }
-
-        $unitrate = get_unit_rate(incident_maintid($incidentid));
-
-        $totalrefunds += $bills['refunds'];
-
-        $cost = (($totalbillableunits += $totalrefunds) * $unitrate) * -1;
-
-        $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $totalbillableunits, $CONFIG['currency_symbol'], $unitrate, $s));
-
-        $rtn = update_contract_balance(incident_maintid($incidentid), $desc, $cost, $serviceid, $transactionid, $totalunits, $totalbillableunits, $totalrefunds);
-
-        if ($rtn == FALSE)
-        {
-            $rtnvalue = FALSE;
-        }
+        list($incidentid) = mysql_fetch_row($result);
+        
+        $billable = get_billable_object_from_incident_id($incidentid);
+        $rtnvalue = $billable->approve_incident_transaction($transactionid);
     }
-    else
-    {
-        $rtnvalue = FALSE;
-    }
-
+    
     return $rtnvalue;
 }
 
@@ -822,7 +594,7 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         $rtnvalue = FALSE;
     }
 
@@ -896,7 +668,7 @@ function maintid_from_transaction($transactionid)
 
 
 /**
- * Returns the total value of inicidents in a particular status
+ * Returns the total value of incidents in a particular status
  * @author Paul Heaney
  * @param int $contractid. Contract ID of the contract to find total value of inicdents awaiting approval
  * @param int $status The type you are after e.g. BILLING_AWAITINGAPPROVAL, BILLING_APPROVED, BILLING_RESERVED
@@ -1122,7 +894,7 @@ function contract_service_table($contractid, $billing)
                     $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->rate}<br />";
                 }
 
-                $sql1 = "SELECT billingmatrix FROM {$dbMaintenance} WHERE id = {$contractid}";
+                $sql1 = "SELECT billingmatrix FROM `{$dbMaintenance}` WHERE id = {$contractid}";
                 $result1 = mysql_query($sql1);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 $maintenanceobj = mysql_fetch_object($result1);
@@ -1213,20 +985,27 @@ function contract_service_table($contractid, $billing)
 
 
 /**
- * Creates a billing array containing an entry for every activity that has happened
- * for the duration of the incident specfified.
+ * Returns the amount of billable units used for a site with the option of filtering by date
  * @author Paul Heaney
- * @param int $incidentid - Incident number of the incident to create the array from
- * @return array
- * @note The $billing array lists the owner of each activity with start time and
- * @note duration.  Used for calculating billing totals.
- */
-function get_incident_billing_details($incidentid)
+ * @param int $siteid The siteid to report on
+ * @param int $startdate unixtimestamp on the start date to filter by
+ * @param int $enddate unixtimestamp on the end date to filter by
+ * @return String describing billable units used
+ **/
+function amount_used_site($siteid, $startdate=0, $enddate=0)
 {
-    /*
-    $array[owner][] = array(owner, starttime, duration)
-    */
-    $sql = "SELECT * FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} AND duration IS NOT NULL";
+    $sql = "SELECT i.id, m.billingtype FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbMaintenance']}` AS m ";
+    $sql .= "WHERE m.id = i.maintenanceid AND m.site = {$siteid} ";
+    if ($startdate != 0)
+    {
+        $sql .= "AND i.closed >= {$startdate} ";
+    }
+
+    if ($enddate != 0)
+    {
+        $sql .= "AND i.closed <= {$enddate} ";
+    }
+
     $result = mysql_query($sql);
     if (mysql_error())
     {
@@ -1234,358 +1013,25 @@ function get_incident_billing_details($incidentid)
         return FALSE;
     }
 
-    if (mysql_num_rows($result) > 0)
-    {
-        while($obj = mysql_fetch_object($result))
-        {
-            if ($obj->duration > 0)
-            {
-                $temparray['owner'] = $obj->userid;
-                $temparray['starttime'] = ($obj->timestamp - ($obj->duration * 60));
-                $temparray['duration'] = $obj->duration;
-                $billing[$obj->userid][] = $temparray;
-            }
-            else
-            {
-                if (empty($billing['refunds'])) $billing['refunds'] = 0;
-                $billing['refunds'] += $obj->duration;
-            }
-        }
-    }
-
-    return $billing;
-}
-
-
-/**
- * Takes an array of engineer/times of services and groups them so we have only periods which should be charged for.
- * This takes into account tasks started in the same period by the same engineer e.g. task started at 17:00 for 10 mins
- * another at 17:30 for 10 mins with a period of 60mins only one is reported
- * @author Paul Heaney
- * @param array $count (Passed by reference) The array to return into, either the 'engineer' or 'customer' element see $countType
- * @param string $countType The counttype we are doing so either engineer or customer
- * @param array $activity The current activity
- * @param int $period The billing period to group to (in seconds)
- * @return $count is passed in by reference so nothing is returned
- */
-function group_billing_periods(&$count, $countType, $activity, $period)
-{
-    $duration = $activity['duration'] * 60;
-    $startTime = $activity['starttime'];
-
-    if (!empty($count[$countType]))
-    {
-        while ($duration > 0)
-        {
-            $saved = "false";
-            foreach ($count[$countType] AS $ind)
-            {
-                /*
-                echo "<pre>";
-                print_r($ind);
-                echo "</pre>";
-                */
-                //echo "IN:{$ind}:START:{$act['starttime']}:ENG:{$engineerPeriod}<br />";
-
-                if($ind <= $activity['starttime'] AND $ind <= ($activity['starttime'] + $period))
-                {
-                    //echo "IND:{$ind}:START:{$act['starttime']}<br />";
-                    // already have something which starts in this period just need to check it fits in the period
-                    if($ind + $period > $activity['starttime'] + $duration)
-                    {
-                        $remainderInPeriod = ($ind + $period) - $activity['starttime'];
-                        $duration -= $remainderInPeriod;
-
-                        $saved = "true";
-                    }
-                }
-            }
-            //echo "Saved: {$saved}<br />";
-            // This section runs when there are no engineer or customer billing period totals yet (first iteration)
-            if ($saved == "false" AND $activity['duration'] > 0)
-            {
-                //echo "BB:".$activity['starttime'].":SAVED:{$saved}:DUR:{$activity['duration']}<br />";
-                // need to add a new block
-                $count[$countType][$startTime] = $startTime;
-
-                $startTime += $period;
-
-                $duration -= $period;
-            }
-        }
-    }
-    else
-    {
-        $count[$countType][$activity['starttime']] = $activity['starttime'];
-        $localDur = $duration - $period;
-
-        while ($localDur > 0)
-        {
-            $startTime += $period;
-            $count[$countType][$startTime] = $startTime;
-            $localDur -= $period; // was just -
-        }
-    }
-}
-
-
-/**
- * @author Paul Heaney
- * @param int $incidentid. Incident ID
- * @param bool $totals. Set to TRUE to include period totals in the array
- * @return mixed.
- * @retval bool FALSE - Failure
- * @retval array billing array
- * @note  based on periods
- */
-function make_incident_billing_array($incidentid, $totals = TRUE)
-{
-
-    $billing = get_incident_billing_details($incidentid);
-
-    // echo "<pre>";
-    // print_r($billing);
-    // echo "</pre><hr />";
-
-    $sql = "SELECT servicelevel, priority FROM `{$GLOBALS['dbIncidents']}` WHERE id = {$incidentid}";
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        return FALSE;
-    }
-
-    $incident = mysql_fetch_object($result);
-    $servicelevel_tag = $incident->servicelevel;
-    $priority = $incident->priority;
-
-    if (!empty($billing))
-    {
-        $billingSQL = "SELECT * FROM `{$GLOBALS['dbBillingPeriods']}` WHERE tag='{$servicelevel_tag}' AND priority='{$priority}'";
-
-        /*
-        echo "<pre>";
-        print_r($billing);
-        echo "</pre>";
-
-        echo "<pre>";
-        print_r(make_billing_array($incidentid));
-        echo "</pre>";
-        */
-
-        //echo $billingSQL;
-
-        $billingresult = mysql_query($billingSQL);
-        // echo $billingSQL;
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $billingObj = mysql_fetch_object($billingresult);
-
-        unset($billingresult);
-
-        $engineerPeriod = $billingObj->engineerperiod * 60;  //to seconds
-        $customerPeriod = $billingObj->customerperiod * 60;
-
-        if (empty($engineerPeriod) OR $engineerPeriod == 0) $engineerPeriod = 3600;
-        if (empty($customerPeriod) OR $customerPeriod == 0) $customerPeriod = 3600;
-
-        /*
-        echo "<pre>";
-        print_r($billing);
-        echo "</pre>";
-        */
-
-        $count = array();
-
-
-        // Loop over each activity that happened during the duration of the incident
-        // Grouped by Engineer - and then calculate totals
-        foreach ($billing AS $engineer)
-        {
-            /*
-                [eng][starttime]
-            */
-
-            if (is_array($engineer))
-            {
-                $owner = "";
-                $duration = 0;
-
-                unset($count);
-                $count = array();
-
-                $count['engineer'];
-                $count['customer'];
-
-                foreach ($engineer AS $activity)
-                {
-                    $owner = user_realname($activity['owner']);
-                    $duration += $activity['duration'];
-
-                    group_billing_periods($count, 'engineer', $activity, $engineerPeriod);
-
-                    // Optimisation no need to compute again if we already have the details
-                    if ($engineerPeriod != $customerPeriod)
-                    {
-                        group_billing_periods($count, 'customer', $activity, $customerPeriod);
-                    }
-                    else
-                    {
-                        $count['customer'] = $count['engineer'];
-                    }
-                }
-
-                $tduration += $duration;
-                $totalengineerperiods += sizeof($count['engineer']);
-                $totalcustomerperiods += sizeof($count['customer']);
-
-                $billing_a[$activity['owner']]['owner'] = $owner;
-                $billing_a[$activity['owner']]['duration'] = $duration;
-                $billing_a[$activity['owner']]['engineerperiods'] = $count['engineer'];
-                $billing_a[$activity['owner']]['customerperiods'] = $count['customer'];
-            }
-
-            if ($totals == TRUE)
-            {
-                if (empty($totalengineerperiods)) $totalengineerperiods = 0;
-                if (empty($totalcustomerperiods)) $totalcustomerperiods = 0;
-                if (empty($tduration)) $tduration = 0;
-
-                $billing_a[-1]['totalduration'] = $tduration;
-                $billing_a[-1]['totalengineerperiods'] = $totalengineerperiods;
-                $billing_a[-1]['totalcustomerperiods'] = $totalcustomerperiods;
-                $billing_a[-1]['customerperiod'] = $customerPeriod;
-                $billing_a[-1]['engineerperiod'] = $engineerPeriod;
-            }
-
-            if (!empty($billing['refunds'])) $billing_a[-1]['refunds'] = $billing['refunds']/$customerPeriod; // return refunds as a number of units
-            else $billing_a[-1]['refunds'] = 0;
-
-        }
-
-    }
-
-    //echo "<pre>";
-    //print_r($billing_a);
-    //echo "</pre>";
-
-    return $billing_a;
-}
-
-
-/**
- * Returns the amount of billable units used for a site with the option of filtering by date
- * @author Paul Heaney
- * @param int $siteid The siteid to report on
- * @param int $startdate unixtimestamp on the start date to filter by
- * @param int $enddate unixtimestamp on the end date to filter by
- * @return int Number of units used by site
- **/
-function billable_units_site($siteid, $startdate=0, $enddate=0)
-{
-    $sql = "SELECT i.id FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbContacts']}` AS c ";
-    $sql .= "WHERE c.id = i.contact AND c.siteid = {$siteid} ";
-    if ($startdate != 0)
-    {
-        $sql .= "AND closed >= {$startdate} ";
-    }
-
-    if ($enddate != 0)
-    {
-        $sql .= "AND closed <= {$enddate} ";
-    }
-
-    $result = mysql_query($sql);
-    if (mysql_error())
-    {
-        trigger_error(mysql_error(),E_USER_WARNING);
-        return FALSE;
-    }
-
-    $units = 0;
+    $units = array();
 
     if (mysql_num_rows($result) > 0)
     {
         while ($obj = mysql_fetch_object($result))
         {
-            $a = make_incident_billing_array($obj->id);
-            $units += $a[-1]['totalcustomerperiods'];
+            $billable = get_billable_incident_object($obj->billingtype);
+            $units[$obj->billingtype] += $billable->amount_used_incident($obj->id); 
         }
     }
 
-    return $units;
-}
-
-
-/**
- * Function to make an array with the number of units at each billable multiplier, broken down by engineer
- * @author Paul Heaney
- * @param int $incidentid The inicident to create the billing breakdown for
- * @return array. Array of the billing for this incident broken down by enegineer
- *
- */
-function get_incident_billable_breakdown_array($incidentid)
-{
-    $billable = make_incident_billing_array($incidentid, FALSE);
-
-    $billingmatrix = '';
-
-    $maintenanceid = incident_maintid($incidentid);
-    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$maintenanceid}";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $str = '';
+    
+    foreach ($units AS $var => $val)
     {
-        trigger_error("Unable to get billing matrix for service {$serviceid} ".mysql_error(), E_USER_WARNING);
+        $str .= "{$var} = {$val}, ";
     }
-    list($billingmatrix) = mysql_fetch_row($result);
-
-    //echo "<pre>";
-    //print_r($billable);
-    //echo "</pre>";
-
-    if (!empty($billable))
-    {
-        foreach ($billable AS $engineer)
-        {
-            if (is_array($engineer) AND empty($engineer['refunds']))
-            {
-                $engineerName = $engineer['owner'];
-                foreach ($engineer['customerperiods'] AS $period)
-                {
-                    // $period is the start time
-                    $day = date('D', $period);
-                    $hour = date('H', $period);
-
-                    $dayNumber = date('d', $period);
-                    $month = date('n', $period);
-                    $year = date('Y', $period);
-                    // echo "DAY {$day} HOUR {$hour}";
-
-                    $dayofweek = strtolower($day);
-
-                    if (is_day_bank_holiday($dayNumber, $month, $year))
-                    {
-                        $dayofweek = "holiday";
-                    }
-
-                    $multiplier = get_billable_multiplier($dayofweek, $hour, $billingmatrix);
-
-                    $billing[$engineerName]['owner'] = $engineerName;
-                    $billing[$engineerName][$multiplier]['multiplier'] = $multiplier;
-                    if (empty($billing[$engineerName][$multiplier]['count']))
-                    {
-                        $billing[$engineerName][$multiplier]['count'] = 0;
-                    }
-
-                    $billing[$engineerName][$multiplier]['count']++;
-                }
-            }
-        }
-
-        if (!empty($billable[-1]['refunds'])) $billing['refunds'] = $billable[-1]['refunds'];
-
-    }
-
-    return $billing;
+    
+    return $str;
 }
 
 
@@ -1597,45 +1043,14 @@ function get_incident_billable_breakdown_array($incidentid)
  **/
 function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
 {
-    global $now, $dbService;
-
-    $unitbalance = 0;
-
-    $sql = "SELECT * FROM `{$dbService}` WHERE contractid = {$contractid} ";
-
-    if ($showonlycurrentlyvalid)
+    $toReturn = FALSE;
+    $billable = get_billable_object_from_contract_id($contractid);
+    if ($billable)
     {
-        $date = ldate('Y-m-d', $now);
-        $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
-    }
-    $sql .= "ORDER BY enddate DESC";
-
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) > 0)
-    {
-        while ($service = mysql_fetch_object($result))
-        {
-            $multiplier = get_billable_multiplier(strtolower(date('D', $now)), date('G', $now));
-            $unitamount = $service->rate * $multiplier;
-            if ($unitamount > 0 AND $service->balance != 0) $unitbalance += round($service->balance / $unitamount);
-        }
-
-        if ($includenonapproved)
-        {
-            $awaiting = contract_transaction_total($contractid, BILLING_AWAITINGAPPROVAL);
-            if ($awaiting != 0) $unitbalance += round($awaiting / $unitamount);
-        }
-
-        if ($includereserved)
-        {
-            $reserved = contract_transaction_total($contractid, BILLING_RESERVED);
-            if ($reserved != 0) $unitbalance += round($reserved / $unitamount);
-        }
-    }
-
-    return $unitbalance;
+        $toReturn = $billable->contract_unit_balance($contractid, $includenonapproved, $includereserved, $showonlycurrentlyvalid);
+    } 
+    return $toReturn;
+    
 }
 
 
@@ -1741,7 +1156,6 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
     if (!empty($site)) $sql .= "AND m.site = {$site} ";
 
     $sql .= "ORDER BY t.dateupdated, s.name ";
-
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -1984,108 +1398,6 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
 
 /**
- * Produces a HTML dropdown of all valid services for a contract
- * @author Paul Heaney
- * @param int $contractid The contract ID to report on
- * @param int $name name for the dropdown
- * @param int $selected The service ID to select
- * @return string HTML for the dropdown
- */
-function service_dropdown_contract($contractid, $name, $selected=0)
-{
-    global $now, $CONFIG;
-    $date = ldate('Y-m-d', $now);
-
-	$sql = "SELECT * FROM `{$GLOBALS['dbService']}` WHERE contractid = {$contractid} ";
-    $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
-
-    $html = FALSE;
-
-    if (mysql_num_rows($result) > 0)
-    {
-    	$html = "<select name='{$name}' id={$name}>\n";
-        $html .= "<option value='0' ";
-        if ($selected == 0) $html .= " selected='selected' ";
-        $html .= "></option>";
-        while ($obj = mysql_fetch_object($result))
-        {
-        	$html .= "<option value='{$obj->serviceid}' ";
-            if ($selected == $obj->serviceid) $html .= " selected='selected' ";
-            $html .= ">{$CONFIG['currency_symbol']}".get_service_balance($obj->serviceid, TRUE, TRUE);
-            $html .= " ({$obj->startdate} - {$obj->enddate})</option>";
-        }
-        $html .= "</select>\n";
-    }
-
-    return $html;
-}
-
-
-/**
- * Produces a HTML dropdown of all valid services for a site
- * @author Paul Heaney
- * @param int $contractid The contract ID to report on
- * @param int $name name for the dropdown
- * @param int $selected The service ID to select
- * @return string HTML for the dropdown
- */
-function service_dropdown_site($siteid, $name, $selected=0)
-{
-    global $now, $CONFIG;
-    $date = ldate('Y-m-d', $now);
-
-    $sql = "SELECT s.* FROM `{$GLOBALS['dbService']}` AS s, `{$GLOBALS['dbMaintenance']}` AS m ";
-    $sql .= "WHERE s.contractid = m.id AND  m.site = {$siteid} ";
-    $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
-
-    $html = FALSE;
-
-    if (mysql_num_rows($result) > 0)
-    {
-        $html = "<select name='{$name}' id={$name}>\n";
-        $html .= "<option value='0' ";
-        if ($selected == 0) $html .= " selected='selected' ";
-        $html .= "></option>";
-        while ($obj = mysql_fetch_object($result))
-        {
-            $html .= "<option value='{$obj->serviceid}' ";
-            if ($selected == $obj->serviceid) $html .= " selected='selected' ";
-            $html .= ">{$CONFIG['currency_symbol']}".get_service_balance($obj->serviceid, TRUE, TRUE);
-            $html .= " ({$obj->startdate} - {$obj->enddate})</option>";
-        }
-        $html .= "</select>\n";
-    }
-    else
-    {
-        $html = "No services currently valid";
-    }
-
-    return $html;
-}
-
-
-/**
- * Identify if a transaction has been approved or not
- * @author Paul Heaney
- * @param int $transactionid The transaction ID to check
- * @return bool TRUE if approved FALSE otherwise
- */
-function is_transaction_approved($transactionid)
-{
-    $sql = "SELECT transactionid FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstaus = ".BILLING_APPROVED;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
-
-    if (mysql_num_rows($result) > 0) return TRUE;
-    else return FALSE;
-}
-
-
-/**
  * Returns the type of billing used on the contract if any
  * @author Paul Heaney
  * @param int $contractid The ID of the contract to check
@@ -2107,6 +1419,30 @@ function get_contract_billable_type($contractid)
     }
     
     return  $toReturn;
+}
+
+
+/**
+ * Find the billing matrix for a particular contract
+ * @author Paul Heaney
+ * @param int $contractid The contract ID to find the billing matrix for
+ * @return string The billing matrix being used
+ */
+function get_contract_billing_matrix($contractid)
+{
+    $toReturn = '';
+    
+    $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$contractid}";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
+    
+    if (mysql_num_rows($result) > 0)
+    {
+        $obj = mysql_fetch_object($result);
+        $toReturn = $obj->billingmatrix;
+    }
+    
+    return $toReturn;
 }
 
 ?>

@@ -74,9 +74,11 @@ elseif ($mode == 'update')
 
         if ($success)
         {
-            $bills = get_incident_billable_breakdown_array($incidentid);
+            // FIXME hack we only support unit based here
+            $b = new UnitBillable();
+            $bills = $b->get_incident_billable_breakdown_array($incidentid);
 
-            $multipliers = get_all_available_multipliers();
+            $multipliers = $b->get_all_available_multipliers();
 
             $totalunits = 0;
             $totalbillableunits = 0;
