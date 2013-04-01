@@ -259,8 +259,8 @@ elseif ($mode == 'approve')
             $status = $status AND $l;
 
             $maintid = maintid_from_transaction($s);
-            $p = get_service_percentage($maintid);
-            if (p == FALSE) $percent = true;
+            $percent = get_service_percentage($maintid);
+            if ($percent == FALSE) $percent = true;
         }
     }
 
