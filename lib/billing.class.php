@@ -25,6 +25,7 @@ abstract class Billable {
     abstract function approve_incident_transaction($transactionid);
     abstract function amount_used_incident($incidentid);
     abstract function produce_site_approvals_table($siteid, $formname, $startdate, $enddate);
+    abstract function update_incident_transaction_record($incidentid);
     
     /**
      * Does this billing method uses activities or some other mechanism?
@@ -513,6 +514,52 @@ class UnitBillable extends Billable {
         return $str;
     }
     
+    
+    function update_incident_transaction_record($incidentid)
+    {
+        $toReturn = FALSE;
+
+        $bills = $this->get_incident_billable_breakdown_array($incidentid);
+        $multipliers = $this->get_all_available_multipliers();
+        
+        $totalunits = 0;
+        $totalbillableunits = 0;
+        $totalrefunds = 0;
+        
+        foreach ($bills AS $bill)
+        {
+            foreach ($multipliers AS $m)
+            {
+                $a[$m] += $bill[$m]['count'];
+            }
+        }
+        
+        foreach ($multipliers AS $m)
+        {
+            $s .= sprintf($GLOBALS['strXUnitsAtX'], $a[$m], $m);
+            $totalunits += $a[$m];
+            $totalbillableunits += ($m * $a[$m]);
+        }
+        
+        $unitrate = get_unit_rate(incident_maintid($incidentid));
+        
+        $totalrefunds = $bills['refunds'];
+        // $numberofunits += $bills['refunds'];
+        
+        $cost = (($totalbillableunits + $totalrefunds)  * $unitrate) * -1;
+        
+        $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
+        
+        $transactionid = get_incident_transactionid($incidentid);
+        if ($transactionid != FALSE)
+        {
+            $toReturn = update_transaction($transactionid, $cost, $desc, BILLING_AWAITINGAPPROVAL);
+        }
+        
+        return $toReturn;
+        
+    }
+    
     /**
      * Find the billing multiple that should be applied given the day, time and matrix in use
      * @author Paul Heaney
@@ -945,4 +992,8 @@ class IncidentBillable extends Billable {
         trigger_error("Not yet implemented");
     }
     
+    function update_incident_transaction_record($incidentid)
+    {
+        trigger_error("Not yet implemented");
+    }
 }
