@@ -385,4 +385,7 @@ $CONFIG['incident_id_email_opening_tag'] = '[';
 
 // The character(s) to appear after the incident number on an outgoing email e.g. in [123456] this is ]
 $CONFIG['incident_id_email_closing_tag'] = ']';
+
+// How many address components are required before the map link appears on site details 
+$CONFIG['address_components_to_map'] = 3;
 ?>

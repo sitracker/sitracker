@@ -148,7 +148,8 @@ $CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
 $CFGCAT['contacts'] = array('contact_config_defaults');
 
-$CFGCAT['sites'] = array('site_config_defaults');
+$CFGCAT['sites'] = array('site_config_defaults',
+                         'address_components_to_map');
 
 
 $CFGCAT['kb'] = array('kb_enabled',
@@ -620,6 +621,10 @@ $CFGVAR['session_name']['help'] = 'The session name for use in cookies and URLs,
 $CFGVAR['site_config_defaults']['title'] = "Site configuration defaults";
 $CFGVAR['site_config_defaults']['help'] = "You can set configuration defaults here for sites that have not personalised their settings. Enter config one per line, format: variable=>setting";
 $CFGVAR['site_config_defaults']['type'] = '2darray';
+
+$CFGVAR['address_components_to_map']['title'] = 'Address components required for mapping';
+$CFGVAR['address_components_to_map']['help'] = 'How many components (address1, address2, postcode etc) are required before the map link is shown';
+$CFGVAR['address_components_to_map']['type'] = 'number';
 
 $CFGVAR['soap_enabled']['title'] = 'Enable SOAP';
 $CFGVAR['soap_enabled']['help'] = 'Enable SOAP (Simple Object Access Protocol) for SiT! users (<em>Experimental feature</em>)';
