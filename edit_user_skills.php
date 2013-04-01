@@ -125,8 +125,7 @@ else
 
     plugin_do('edit_user_skills_submitted');
 
-    // FIXME: whatabout cases where the user is a backup for one of the products
-    // he removes? or if the backup user leaves the company?
+    // Mantis 1855 and 1856 need resolving to handle users removing skills
 
     $user = clean_int($user);
 
