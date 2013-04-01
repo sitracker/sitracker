@@ -85,11 +85,9 @@ $CFGVAR['incident_popup_onewindow']['type'] = 'checkbox';
 $CFGVAR['theme']['title'] = $strInterfaceStyle;
 $CFGVAR['theme']['type'] = 'interfacestyleselect';
 
-// TODO
 $CFGVAR['show_confirmation_caution']['title'] = $strShowGeneralConfirmationMessages;
 $CFGVAR['show_confirmation_caution']['type'] = 'checkbox';
 
-// TODO
 $CFGVAR['show_confirmation_delete']['title'] = $strShowConfirmationMessagesOnDelete;
 $CFGVAR['show_confirmation_delete']['type'] = 'checkbox';
 

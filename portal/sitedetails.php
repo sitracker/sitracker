@@ -37,7 +37,6 @@ if (isset($_POST['submit']))
     $email = cleanvar($_POST['email']);
     $websiteurl = cleanvar($_POST['websiteurl']);
     $notes = cleanvar($_POST['notes']);
-    $typeid = clean_int($_POST['typeid']);
     $owner = clean_int($_POST['owner']);
     $site = clean_int($_POST['site']);
     $tags = cleanvar($_POST['tags']);
@@ -61,7 +60,6 @@ if (isset($_POST['submit']))
     // edit site if no errors
     if ($errors == 0)
     {
-
         replace_tags(3, $site, $tags);
         if (isset($licenserx))
         {
@@ -84,7 +82,7 @@ if (isset($_POST['submit']))
 
         $sql = "UPDATE `{$dbSites}` SET name='{$name}', department='{$department}', address1='{$address1}', address2='{$address2}', city='{$city}', ";
         $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
-        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
+        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
 
         // licenserx='$licenserx'
         $result = mysql_query($sql);
@@ -142,9 +140,6 @@ while ($obj = mysql_fetch_object($siteresult))
     echo "</td></tr>\n";
     echo "<tr><th>{$strWebsite}:</th><td>";
     echo "<input maxlength='255' name='websiteurl' size='40' value='{$obj->websiteurl}' /></td></tr>\n";
-    echo "<tr><th>{$strSiteType}:</th><td>\n";
-    echo sitetype_drop_down('typeid', $obj->typeid);
-    echo "</td></tr>\n";
     plugin_do('portal_site_edit_form');
     
     echo "</table>\n";

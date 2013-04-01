@@ -111,7 +111,7 @@ elseif (authenticate($username, $_REQUEST['password']))
     if ($_SESSION['lang'] != '' AND !empty($_SESSION['userconfig']['language']) AND
         $_SESSION['lang'] != $_SESSION['userconfig']['language'])
     {
-        $t = new triggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $_SESSION['userconfig']['language'],
+        $t = new TriggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $_SESSION['userconfig']['language'],
                     'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
     }
 

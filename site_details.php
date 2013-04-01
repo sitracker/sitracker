@@ -62,32 +62,36 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
     if (!empty($siteobj->address1))
     {
-        $address = '';
-        if (!empty($siteobj->address1))
-        {
-            $address = "{$siteobj->address1}";
-        }
+        $address = "{$siteobj->address1}";
+        $count = 1;
+
         if (!empty($siteobj->address2))
         {
             $address .= ", {$siteobj->address2}";
+            $count++;
         }
         if (!empty($siteobj->postcode))
         {
             $address .= ", {$siteobj->postcode}";
+            $count++;
         }
         if (!empty($siteobj->city))
         {
             $address .= ", {$siteobj->city}";
+            $count++;
         }
         if (!empty($siteobj->country))
         {
             $address .= ", {$siteobj->country}";
+            $count++;
         }
         if (!empty($siteobj->county))
         {
             $address .= ", {$siteobj->county}";
+            $count++;
         }
-        echo "(".map_link($address).")";
+        
+        if ($count >= $CONFIG['address_components_to_map']) echo "(".map_link($address).")";
     }
     echo "</td></tr>";
     echo "<tr><th>{$strTelephone}:</th><td>{$siteobj->telephone}</td></tr>";

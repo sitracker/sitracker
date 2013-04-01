@@ -12,11 +12,19 @@
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
 require ('core.php');
+require (APPLICATION_LIBPATH . 'functions.inc.php');
+
 if (empty($_REQUEST['user'])
     OR $_REQUEST['user'] == 'current'
-    OR $_REQUEST['userid'] == $_SESSION['userid']) $permission = PERM_MYSKILLS_SET; // Edit your software skills
-else $permission = PERM_USER_SKILLS_SET; // Manage users software skills
-require (APPLICATION_LIBPATH . 'functions.inc.php');
+    OR $_REQUEST['userid'] == $_SESSION['userid'])
+{
+    $permission = PERM_MYSKILLS_SET; // Edit your software skills
+}
+else
+{
+    $permission = PERM_USER_SKILLS_SET; // Manage users software skills
+}
+
 // This page requires authentication
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
@@ -125,8 +133,7 @@ else
 
     plugin_do('edit_user_skills_submitted');
 
-    // FIXME: whatabout cases where the user is a backup for one of the products
-    // he removes? or if the backup user leaves the company?
+    // Mantis 1855 and 1856 need resolving to handle users removing skills
 
     $user = clean_int($user);
 
@@ -145,7 +152,7 @@ else
                 {
                     if ($value > 0)
                     {
-                        $sql = "INSERT DELAYED INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
+                        $sql = "INSERT INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     }

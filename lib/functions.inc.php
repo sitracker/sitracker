@@ -577,11 +577,11 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 
     $extra_headers  = '';
     if (!empty($replyto)) $extra_headers .= "Reply-To: {$replyto}" . $crlf;
-    if (!empty($email_cc))
+    if (!empty($cc))
     {
         $extra_headers .= "CC: {$cc}" . $crlf;
     }
-    if (!empty($email_bcc))
+    if (!empty($bcc))
     {
         $extra_headers .= "BCC: {$bcc}" . $crlf;
     }
@@ -590,8 +590,8 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
         $extra_headers .= "Errors-To: {$CONFIG['support_email']}" . $crlf;
     }
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
-    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
-//     $extra_headers .= "\r\n";
+    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'], 0, 15) . $crlf;
+    // $extra_headers .= "\r\n";
 
     if ($CONFIG['demo'])
     {

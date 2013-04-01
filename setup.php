@@ -475,7 +475,7 @@ switch ($_REQUEST['action'])
                         echo "</p>";
                         echo setup_button('reconfigure', 'Reconfigure SiT!');
                         echo "<p>or</p>";
-                        // Seems to be duplicated above ???????? TODO FIXME
+                        // TODO Looks like a duplicate of above 
                         $missingprivileges = check_mysql_privileges($new_install_perms);
                                 
                         if (empty($missingprivileges))
