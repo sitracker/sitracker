@@ -397,10 +397,10 @@ elseif ($mode == 'savesessionlang')
     $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$sit[2]}, 'language', '{$_SESSION['lang']}') ON DUPLICATE KEY UPDATE value = '{$_SESSION['lang']}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    // FIXME 3.35 use revoke instead
-    $sql = "DELETE FROM `{$dbNotices}` WHERE type='".USER_LANG_DIFFERS_TYPE."' AND userid={$sit[2]}";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    
+    $t = new Trigger('TRIGGER_LANGUAGE_DIFFERS', $sit[2], '', '');
+    $t->revoke();
+    
     html_redirect("main.php");
 }
 

@@ -554,9 +554,9 @@ class Trigger extends SitEntity {
                 $user_id = $this->param_array['userid'];
             } */
 
-            $sql = "INSERT INTO `{$dbNotices}` (userid, type, text, linktext,";
+            $sql = "INSERT INTO `{$dbNotices}` (userid, template, type, text, linktext,";
             $sql .= " link, durability, referenceid, timestamp) ";
-            $sql .= "VALUES ('{$this->user_id}', '{$notice->type}', '{$notice_text}',";
+            $sql .= "VALUES ('{$this->user_id}', '{$template}', '{$notice->type}', '{$notice_text}',";
             $sql .= " '{$noticelinktext}', '{$noticelink}', '{$durability}', ";
             $sql .= "'{$refid}', NOW())";
             mysql_query($sql);
@@ -578,28 +578,29 @@ class Trigger extends SitEntity {
      * @param $reference_id integer Reference of the notice
      */
     //TODO should this be limited to one delete, is there ever more than one?
-    private function revoke($reference_id = 0)
+    function revoke($reference_id = 0)
     {
+        debug_log("REVOKE");
         global $GLOBALS;
         //find all triggers of this type and user
         $sql = "SELECT * FROM `{$GLOBALS['dbTriggers']}` ";
         $sql .= "WHERE triggerid = '{$this->trigger_type}' ";
         $sql .= "AND userid = {$this->user_id} ";
-        $sql .= "AND action='ACTION_NOTICE' AND template != 0";
+        $sql .= "AND action='ACTION_NOTICE'";
         $result = mysql_query($sql);
-        if ($result AND mysql_num_rows($result) > 0)
+        if (mysql_num_rows($result) > 0)
         {
             while ($triggerobj = mysql_fetch_object($result))
             {
                 $templatesql = "DELETE FROM {$GLOBALS['dbNotices']} ";
-                $templatesql .= "WHERE template = {$triggerobj->template} ";
-                $templatesql .= "AND userid = {$user_id} ";
+                $templatesql .= "WHERE template = '{$triggerobj->template}' ";
+                $templatesql .= "AND userid = {$this->user_id} ";
 
                 if ($referenceid != 0)
                 {
                     $templatesql .= "AND referenceid = {$referenceid}";
                 }
-                $result = mysql_query($templatesql);
+                $resultdel = mysql_query($templatesql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             }
         }
