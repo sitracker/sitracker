@@ -24,13 +24,14 @@ abstract class Billable {
     abstract function contract_unit_balance($contractid,$includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE);
     abstract function approve_incident_transaction($transactionid);
     abstract function amount_used_incident($incidentid);
+    abstract function produce_site_approvals_table($siteid, $formname, $startdate, $enddate);
     
     /**
      * Does this billing method uses activities or some other mechanism?
      * @author Paul Heaney
      * @return boolean TRUE if this billing method uses activities (like Unit) or FALSE otherwise
      */
-    function uses_actities()
+    function uses_activities()
     {
         return FALSE;
     }
@@ -259,16 +260,258 @@ class UnitBillable extends Billable {
         
     }
     
-    
     /**
      * (non-PHPdoc)
-     * @see Billable::uses_actities()
+     * @see Billable::uses_activities()
      */
-    function uses_actities()
+    function uses_activities()
     {
        return TRUE; 
     }
+
     
+    function produce_site_approvals_table($siteid, $sitenamenospaces, $startdate, $enddate)
+    {
+        global $CONFIG;
+        
+        // TODO this code is abit messy and could do we a tidy up PH 2013-04-01
+
+        $sitetotals = 0;
+        $sitetotalsbillable = 0;
+        $sitetotalrefunds = 0;
+        
+        $sitetotalawaitingapproval = 0;
+        $sitetotalsawaitingapproval = 0;
+        $sitetotalsbillableawaitingapproval = 0;
+        $billableunitsincidentunapproved = 0;
+        $refundedunapproved = 0;
+
+        $str = "<table align='center' width='80%'>";
+        
+        $str .= "<tr>";
+        $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
+        $str .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strIncidentTitle']}</th><th>{$GLOBALS['strContact']}</th>";
+        $str .= "<th>{$GLOBALS['strEngineer']}</th><th>{$GLOBALS['strOpened']}</th><th>{$GLOBALS['strClosed']}</th>";
+        
+        $multipliers = $this->get_all_available_multipliers();
+        
+        foreach ($multipliers AS $m)
+        {
+            $str .= "<th>{$m}&#215;</th>";
+        }
+        
+        $str .= "<th>{$GLOBALS['strTotalUnits']}</th><th>{$GLOBALS['strTotalBillableUnits']}</th>";
+        $str .= "<th>{$GLOBALS['strCredits']}</th>";
+        $str .= "<th>{$GLOBALS['strBill']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
+        
+        $used = FALSE;
+        
+        $sql = "SELECT i.id, i.owner, i.contact, i.title, i.closed, i.opened, t.transactionid FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i ";
+        $sql .= ", `{$GLOBALS['dbContacts']}` AS c WHERE ";
+        $sql .= "t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND linktype= 6 AND l.linkcolref = i.id AND i.contact = c.id AND c.siteid = {$siteid} ";
+        if ($startdate != 0)
+        {
+            $sql .= "AND i.closed >= {$startdate} ";
+        }
+        
+        if ($enddate != 0)
+        {
+            $sql .= "AND i.closed <= {$enddate} ";
+        }
+        $sql .= "ORDER BY i.closed";
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error(mysql_error(), E_USER_WARNING);
+            return FALSE;
+        }
+        
+        $units = 0;
+        
+        if (mysql_num_rows($result) > 0)
+        {
+            $shade = 'shade1';
+        
+            while ($obj = mysql_fetch_object($result))
+            {
+                $a = $this->make_incident_billing_array($obj->id);
+                $unapprovable = FALSE;
+                unset($billtotalsincident);
+        
+                if ($a[-1]['totalcustomerperiods'] > 0)
+                {
+                    $billableunitsincident = 0;
+        
+                    $isapproved = FALSE;
+        
+                    $unitrate = get_unit_rate(incident_maintid($obj->id));
+        
+                    if ($unitrate == -1) $unapprovable = TRUE;
+        
+                    $line = "<tr class='{$shade}'><td style='text-align: center'>";
+        
+                    if (!$isapproved AND !$unapprovable)
+                    {
+                        $line .= "<input type='checkbox' name='selected[]' value='{$obj->transactionid}' />";
+                    }
+                    $line .= "</td>";
+                    $line .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td>";
+                    $line .= "<td>{$obj->title}</td><td>".contact_realname($obj->contact)."</td>";
+                    $line .= "<td>".user_realname($obj->owner)."</td>";
+                    $line .= "<td>".ldate($CONFIG['dateformat_datetime'], $obj->opened)."</td><td>".ldate($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
+        
+                    $bills = $this->get_incident_billable_breakdown_array($obj->id);
+        
+                    foreach ($bills AS $bill)
+                    {
+                        foreach ($multipliers AS $m)
+                        {
+                            if (!empty($bill[$m]))
+                            {
+                                $billtotalssite[$m] += $bill[$m]['count'];
+                                $billtotalsincident[$m] += $bill[$m]['count'];
+        
+                                if (!$isapproved)
+                                {
+                                    $billtotalssiteunapproved[$m] += $bill[$m]['count'];
+                                }
+                            }
+                        }
+                    }
+        
+                    foreach ($multipliers AS $m)
+                    {
+                        $line .= "<td>";
+                        if (!empty($billtotalsincident[$m]))
+                        {
+                            $line .= $billtotalsincident[$m];
+        
+                            $billableunitsincident += $m * $billtotalsincident[$m];
+        
+                            if (!$isapproved)
+                            {
+                                $billableunitsincidentunapproved += $m * $billtotalsincident[$m];
+                            }
+                        }
+                        else
+                        {
+                            $line .= "0";
+                        }
+        
+                        $line .= "</td>";
+                    }
+        
+                    $actualunits = ($billableunitsincident + $a[-1]['refunds']);
+        
+                    $sitetotalrefunds += $a[-1]['refunds'];
+        
+                    $cost = $actualunits * $unitrate;
+        
+                    $line .= "<td>{$a[-1]['totalcustomerperiods']}</td>";
+                    $line .= "<td>{$billableunitsincident}</td>";
+                    $line .= "<td>{$a[-1]['refunds']}</td>";
+                    $bill = number_format($cost, 2);
+                    if ($unapprovable) $bill = "?";
+                    $line .= "<td>{$CONFIG['currency_symbol']}{$bill}</td>";
+        
+                    $line .= "<td>";
+        
+                    if ($isapproved)
+                    {
+                        $line .= $GLOBALS['strApproved'];
+                    }
+                    elseif ($unapprovable)
+                    {
+                        $line .= $GLOBALS['strUnapprovable'];
+                    }
+                    else
+                    {
+                        $operations[$GLOBALS['strApprove']] = array('url' => "{$_SERVER['PHP_SELF']}?mode=approve&amp;transactionid={$obj->transactionid}&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}&amp;showonlyapproved={$showonlyapproved}");
+                        $operations[$GLOBALS['strAdjust']] = array('url' => "billing_update_incident_balance.php?incidentid={$obj->id}");
+                        $line .= html_action_links($operations);
+                        $sitetotalawaitingapproval += $cost;
+        
+                        $sitetotalsawaitingapproval += $a[-1]['totalcustomerperiods'];
+                        $sitetotalsbillablewaitingapproval += $billableunitsincident;
+                        $refundedunapproved += $a[-1]['refunds'];
+                    }
+        
+                    $line .= "</td>";
+        
+                    $line .= "</tr>\n";
+        
+                    $sitetotals += $a[-1]['totalcustomerperiods'];
+                    $sitetotalsbillable += $billableunitsincident;
+        
+                    if ($shade == "shade1") $shade = "shade2";
+                    else $shade = "shade1";
+        
+                    $used = true;
+        
+                    if (($showonlyapproved AND !$isapproved) OR !$showonlyapproved)
+                    {
+                        $str .= $line;
+                    }
+                }
+            }
+        }
+        
+        $str .= "<tr><td><input type='submit' value='{$GLOBALS['strApprove']}' />";
+        $str .= "</td><td colspan='5'></td>";
+        
+        if (!$showonlyapproved)
+        {
+            $str .= "<td>{$GLOBALS['strTOTALS']}</td>";
+        
+            foreach ($multipliers AS $m)
+            {
+                $str .= "<td>";
+                if (!empty($billtotalssite[$m])) $str .= $billtotalssite[$m];
+                else $str .= "0";
+                $str .= "</td>";
+            }
+        
+            $str .= "<td>{$sitetotals}</td>";
+            $str .= "<td>{$sitetotalsbillable}</td>";
+            $str .= "<td>{$sitetotalrefunds}</td>";
+        
+            $cost = ($sitetotalsbillable + $sitetotalrefunds) * $unitrate;
+        
+            $str.= "<td>{$CONFIG['currency_symbol']}".number_format($cost, 2)."</td><td></td>";
+        
+            $str .= "</tr>\n";
+        
+            $str .= "<tr><td align='right' colspan='6'></td>";
+        }
+        
+        $str .= "<td>{$strAwaitingApproval}</td>";
+        
+        foreach ($multipliers AS $m)
+        {
+            $str .= "<td>";
+            if (!empty($billtotalssiteunapproved[$m]))
+            {
+                $str .= $billtotalssiteunapproved[$m];
+            }
+            else
+            {
+                $str .= "0";
+            }
+            $str .= "</td>";
+        }
+        
+        $str .= "<td>{$sitetotalsawaitingapproval}</td>";
+        $str .= "<td>{$billableunitsincidentunapproved}</td>";
+        $str .= "<td>{$refundedunapproved}</td>";
+        
+        
+        $str .= "<td>{$CONFIG['currency_symbol']}".number_format($sitetotalawaitingapproval, 2)."</td><td></td></tr>";
+        
+        $str .= "</table>";
+        
+        if (!$used) $str = FALSE;
+        return $str;
+    }
     
     /**
      * Find the billing multiple that should be applied given the day, time and matrix in use
@@ -674,6 +917,8 @@ class UnitBillable extends Billable {
 
 
 class IncidentBillable extends Billable {
+    
+    public $billing_type_name = 'incident';
    
     function close_incident($incidentid)
     {
@@ -694,4 +939,10 @@ class IncidentBillable extends Billable {
     {
         trigger_error("Not yet implemented");
     }
+    
+    function produce_site_approvals_table($siteid, $formname, $startdate, $enddate)
+    {
+        trigger_error("Not yet implemented");
+    }
+    
 }
