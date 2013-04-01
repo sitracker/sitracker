@@ -144,7 +144,7 @@ else
                 {
                     if ($value > 0)
                     {
-                        $sql = "INSERT DELAYED INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
+                        $sql = "INSERT INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
                         mysql_query($sql);
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     }
