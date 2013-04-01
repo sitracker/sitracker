@@ -109,22 +109,18 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strBilling}</th>";
     echo "<td>";
     echo "<label>";
-    echo "<input type='radio' name='billtype' value='billperunit' onchange=\"newservice_showbilling('new_contract');\" checked='checked' /> ";
+    echo "<input type='radio' name='billtype' value='unit' checked='checked' /> ";
     echo "{$strPerUnit}</label>";
     echo "<label>";
-    echo "<input type='radio' name='billtype' value='billperincident' onchange=\"newservice_showbilling('new_contract');\" /> ";
+    echo "<input type='radio' name='billtype' value='incident' /> ";
     echo "{$strPerIncident}</label>";
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strCreditAmount}</th><td>{$CONFIG['currency_symbol']}";
-    echo "<input maxlength='7' name='amount' size='5' class='required' value='".show_form_value('new_contact', 'amount', '0')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<input maxlength='7' name='amount' size='5' class='required' value='".show_form_value('new_contract', 'amount', '0')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='unitrate' size='5' value='".show_form_value('new_contact', 'unitrate', '')."' />";
-    echo " <span class='required'>{$strRequired}</span></td></tr>\n";
-    echo "<tr id='incidentratesection' style='display:none'><th>{$strIncidentRate}</th>";
-    echo "<td>{$CONFIG['currency_symbol']} ";
-    echo "<input class='required' type='text' name='incidentrate' size='5' value='".show_form_value('new_contact', 'incidentrate', '0')." />";
+    echo "<input class='required' type='text' name='unitrate' size='5' value='".show_form_value('new_contract', 'unitrate', '')."' />";
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
@@ -204,21 +200,15 @@ elseif ($action == 'new')
     {
         $expirydate = strtotime($_REQUEST['expiry']);
     }
-    $amount =  clean_float($_POST['amount']);
+    $amount = clean_float($_POST['amount']);
     if ($amount == '') $amount = 0;
-    $unitrate =  clean_float($_POST['unitrate']);
-    if ($unitrate == '') $unitrate = 0;
-    $incidentrate =  clean_float($_POST['incidentrate']);
-    if ($incidentrate == '') $incidentrate = 0;
+    $unitrate = clean_float($_POST['unitrate']);
 
     $billtype = cleanvar($_REQUEST['billtype']);
     $foc = cleanvar($_REQUEST['foc']);
     if (empty($foc)) $foc = 'no';
 
     $billingmatrix = clean_dbstring($_REQUEST['billing_matrix']);
-
-    if ($billtype == 'billperunit') $incidentrate = 0;
-    elseif ($billtype == 'billperincident') $unitrate = 0;
 
     $allcontacts = 'no';
     if ($contacts == 'amount') $numcontacts = clean_int($_REQUEST['numcontacts']);
@@ -266,16 +256,10 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
     }
-    if ($timed == 'yes' AND ($billtype == 'billperunit' AND ($unitrate == 0 OR trim($unitrate) == '')))
+    if ($timed == 'yes' AND empty($unitrate))
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
-    }
-
-    if ($timed == 'yes' AND ($billtype == 'billperincident' AND ($incidentrate == 0 OR trim($incidentrate) == '')))
-    {
-        $errors++;
-        $_SESSION['formerrors']['new_contract']['incidentrate'] = sprintf($strFieldMustNotBeBlank, $strIncidentRate);
     }
 
     if ($timed == 'yes' AND empty($billingmatrix))
@@ -319,9 +303,9 @@ elseif ($action == 'new')
         
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
-        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix) ";
+        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix, billingtype) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix})";
+        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix}, '{$billtype}')";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -334,8 +318,8 @@ elseif ($action == 'new')
         }
 
         // Add service
-        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, unitrate, incidentrate, foc) ";
-        $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$incidentrate}', '{$foc}')";
+        $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, rate, foc) ";
+        $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$foc}')";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
         if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);

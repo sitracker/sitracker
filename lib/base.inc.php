@@ -167,7 +167,7 @@ function clean_int($vars)
     {
         if ($vars != '')
         {
-            trigger_error("Input was expected to be numeric but received string [$vars] instead", E_USER_WARNING);
+            trigger_error("Input was expected to be numeric but received string [{$vars}] instead - cleant_int", E_USER_WARNING);
         }
         $var = 0;
     }
@@ -197,7 +197,7 @@ function clean_float($vars)
     }
     elseif (!is_null($vars) AND $vars != '' AND !is_numeric($vars))
     {
-        trigger_error("Input was expected to be numeric but received string instead", E_USER_WARNING);
+        trigger_error("Input was expected to be numeric but received string [{$vars}] instead - clean_float", E_USER_WARNING);
         $var = 0.0;
     }
     else

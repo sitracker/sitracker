@@ -20,14 +20,12 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
 $user = clean_dbstring($_REQUEST['user']);
-$sent = clean_fixed_list($_REQUEST['sent'], array('false','true'));
-$mode = clean_fixed_list($_REQUEST['mode'], array('','notapprove','approval'));
+$sent = clean_fixed_list($_REQUEST['sent'], array('false', 'true'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'notapprove', 'approval'));
 $action = cleanvar($_REQUEST['action']);
 $type = clean_int($_REQUEST['type']);
 $memo = clean_dbstring($_REQUEST['memo']);
 $approvaluser = cleanvar($_REQUEST['approvaluser']);  // can be 'all'
-
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 function display_holiday_table($result)
 {
@@ -107,6 +105,8 @@ function display_holiday_table($result)
 if (empty($user)) $user = $sit[2];
 if ($sent != 'true')
 {
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    
     // check to see if this user has approve permission
     $approver = user_permission($sit[2], PERM_HOLIDAY_APPROVE);
 
@@ -223,6 +223,8 @@ if ($sent != 'true')
             display_holiday_table($result);
         }
     }
+    
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
 {
@@ -261,11 +263,13 @@ else
         $sql = "UPDATE `{$dbHolidays}` SET approvedby='{$approvaluser}' ";
         $sql .= "WHERE userid='{$user}' AND approved = ".HOL_APPROVAL_NONE;
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        
         $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist));
-
-        if ($rtnvalue === TRUE)
+       
+        if ($rtnvalue)
         {
             echo "<h2>{$strRequestSent}</h2>";
             echo "<p align='center'>".nl2br($holidaylist)."</p>";
@@ -276,6 +280,7 @@ else
         }
     }
     echo "<p align='center'><a href='holidays.php?user={$user}'>{$strMyHolidays}</p></p>";
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
-include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+
 ?>

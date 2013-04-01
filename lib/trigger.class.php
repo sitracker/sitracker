@@ -217,7 +217,6 @@ class Trigger extends SitEntity {
         $this->action = cleanvar($action);
         $this->parameters = cleanvar($parameters, FALSE, FALSE);
         $this->checks = $checks;
-        $this->parameters = $parameters;
         $this->id = cleanvar($id);
 
         debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
@@ -294,7 +293,15 @@ class Trigger extends SitEntity {
                 }
             }
         }
-
+        
+        foreach ($this->param_array AS $var => $val)
+        {
+            if (empty($val))
+            {
+                $this->param_array[$var] = '0';
+            }
+        }
+        
         if (!empty($this->checks))
         {
             $checks = trigger_replace_specials($this->trigger_type, $this->checks, $this->param_array);
@@ -450,7 +457,7 @@ class Trigger extends SitEntity {
         global $CONFIG, $dbg, $dbEmailTemplates;
         if ($CONFIG['debug'])
         {
-            $dbg .= "TRIGGER: send_trigger_email({$trigger->userid},{$trigger_type}, {$this->param_array})\n";
+            $dbg .= "TRIGGER: send_trigger_email({$template})\n";
         }
         // $trigger_types[$this->trigger_type]['type'])
 

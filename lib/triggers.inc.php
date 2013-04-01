@@ -65,6 +65,7 @@ array('name' => $strHolidayRequested,
       'description' => $strTriggerHolidayRequestedDesc,
       'required' => array('userid', 'approvaluseremail', 'listofholidays'),
       'permission' => 'user_permission($_SESSION[\'userid\'], PERM_HOLIDAY_APPROVE);',
+      'params' => array('holidayrequestnote'),
       'type' => 'system'
       );
 
@@ -474,6 +475,12 @@ $ttvararray['{globalsignature}'] =
 array('description' => $strGlobalSignature,
       'replacement' => 'global_signature();'
       );
+
+$ttvararray['{holidayrequestnote}'] =
+array('description' => $strHolidayRequestNote,
+        'replacement' => '$param_array[\'holidayrequestnote\'];',
+        'requires' => 'memo'
+);
 
 // $ttvararray['{holdingemailid}'] =
 // array('description' => 'ID of the new email in the holding queue',

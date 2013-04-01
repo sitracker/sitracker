@@ -146,7 +146,6 @@ echo "</td></tr>\n";
 if ($timed)
 {
     echo "<tr><th>{$strBalance}</th><td>{$CONFIG['currency_symbol']}".number_format(get_contract_balance($id, TRUE, TRUE), 2);
-    $multiplier = get_billable_multiplier(strtolower(date('D', $now)), date('G', $now));
     echo " (&cong;".contract_unit_balance($id, TRUE, TRUE)." units)";
     echo "</td></tr>";
 }

@@ -443,7 +443,7 @@ else
             {
                 // Final Solution
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'solution', '{$currentowner}', '{$currentstatus}', '{$solution}', '$now', 'hide')";
+                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'solution', '{$currentowner}', '{$currentstatus}', '{$solution}', '{$now}', 'hide')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -521,6 +521,7 @@ else
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
+
         $bodytext = clean_lang_dbstring($SYSLANG['strClosingStatus']) . ": <b>" . closingstatus_name($closingstatus) . "</b>\n\n" . $bodytext;
 
         if ($addition_errors == 0)
@@ -555,8 +556,6 @@ else
                 }
             }
 
-            //FIXME move the FALSE->0 hack into triggers
-            if (!$send_feedback) $send_feedback = '0';
             $t = new TriggerEvent('TRIGGER_INCIDENT_CLOSED', array('incidentid' => $incidentid,
                                                      'userid' => $sit[2],
                                                      'notifyexternal' => $notifyexternal,

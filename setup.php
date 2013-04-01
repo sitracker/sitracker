@@ -606,7 +606,7 @@ switch ($_REQUEST['action'])
                             $resultup1 = mysql_query($sqlup1);
                             if (mysql_error())
                             {
-                                $billingmatrixerror = true;
+                                $billingmatrixerror = TRUE;
                                 trigger_error(mysql_error(), E_USER_WARNING);
                             }
 
@@ -620,7 +620,7 @@ switch ($_REQUEST['action'])
                                 mysql_query($sqlup2);
                                 if (mysql_error())
                                 {
-                                    $billingmatrixerror = true;
+                                    $billingmatrixerror = TRUE;
                                     trigger_error(mysql_error(), E_USER_WARNING);
                                 }
                             }
@@ -652,6 +652,44 @@ switch ($_REQUEST['action'])
                             /******************************
                              * Do Post-upgrade tasks here *
                              ******************************/
+                            
+                            $sqlup4 = "SELECT contractid, SUM(unitrate) AS unitrate, SUM(incidentrate) AS incidentrate FROM `{$dbService}` WHERE unitrate > 0 OR incidentrate > 0 GROUP BY contractid";
+                            $resultup4 = mysql_query($sqlup4);
+                            if (mysql_error())
+                            {
+                                $serviceerror = TRUE;
+                                trigger_error(mysql_error(), E_USER_WARNING);
+                            }
+                            
+                            while ($obj = mysql_fetch_object($resultup4))
+                            {
+                                if ($obj->unitrate > 0 AND $obj->incidentrate > 0)
+                                {
+                                    $upgradeok = FALSE;
+                                    $serviceerror = TRUE;
+                                    trigger_error("Error contact {$obj->contractid} has incident and unit rate services we only support one per contract now");
+                                }
+                                else
+                                {
+                                    $billingtype = 'unit';
+                                    if ($obj->incidentrate > 0) $billingtype = 'incident';
+                                    
+                                    $sqlup4a = "UPDATE `{$dbMaintenance}` SET billingtype = '{$billingtype}'";
+                                    $resultup4a = mysql_query($sqlup4a);
+                                    if (mysql_error())
+                                    {
+                                        $serviceerror = TRUE;
+                                        trigger_error(mysql_error(), E_USER_WARNING);
+                                    }
+                                } 
+                            }
+                            
+                            if (!$serviceerror)
+                            {
+                                $sqlup4b = "ALTER TABLE `{$dbService}` DROP COLUMN `unitrate`, DROP COLUMN `incidentrate`";
+                                mysql_query($sqlup4b);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            }
 
 
                             if ($installed_version == $application_version)

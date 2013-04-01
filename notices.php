@@ -57,21 +57,21 @@ elseif ($action == 'post')
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysql_error(), E_USER_WARNING);
     }
     else
     {
         $refid = mysql_insert_id();
         $sql = "UPDATE `$dbNotices` SET referenceid='{$refid}' WHERE id='{$refid}'";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         while ($user = mysql_fetch_object($result))
         {
             $sql = "INSERT INTO `{$dbNotices}` (userid, referenceid, type, text, timestamp, durability) ";
             $sql .= "VALUES({$user->id}, '{$refid}', {$type}, '{$text}', NOW(), '{$durability}')";
             mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
         html_redirect('notices.php');
     }
@@ -82,13 +82,13 @@ elseif ($action == 'delete')
 
     $sql = "SELECT referenceid, type FROM `{$dbNotices}` WHERE id='{$noticeid}'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $noticeobj = mysql_fetch_object($result);
 
     $sql = "DELETE FROM `{$dbNotices}` WHERE referenceid='{$noticeobj->referenceid}' ";
     $sql .= "AND type='{$noticeobj->type}' ";
     mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     html_redirect('notices.php');
 }

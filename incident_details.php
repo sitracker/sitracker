@@ -378,7 +378,8 @@ else
             }
         }
 
-        if ($servicelevel->timed == 'yes')
+        $b = get_billable_object_from_incident_id($id);
+        if ($b AND $b->uses_activities())
         {
             echo "<br />";
             switch (count($num_open_activities))

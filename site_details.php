@@ -130,8 +130,8 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strInventory}:</th>";
     echo "<td>".site_count_inventory_items($id);
     echo " <a href='inventory_site.php?id={$id}'>{$strSeeHere}</a></td></tr>";
-    $billableunits = billable_units_site($siteobj->id, $now - 2678400); // Last 31 days
-    if ($billableunits > 0)
+    $billableunits = amount_used_site($siteobj->id, $now - 2678400); // Last 31 days
+    if (!empty($billableunits))
     {
         echo "<tr><th>".sprintf($strUnitsUsedLastXdays, 31).":</th><td>{$billableunits}</td></tr>"; // More appropriate label
     }

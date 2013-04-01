@@ -1731,9 +1731,7 @@ div.tabcontainer
 /* Table classes */
 th.subhead
 {
-    font-variant: small-caps;
-    font-size: 120%;
-    text-align: right;
+    text-align: center;
 }
 
 table.vertical

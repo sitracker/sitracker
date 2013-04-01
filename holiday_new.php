@@ -27,10 +27,11 @@ $user = clean_int($_REQUEST['user']);
 $type = clean_int($_REQUEST['type']);
 $length = cleanvar($_REQUEST['length']);
 $return = cleanvar($_REQUEST['return']);
+$time = cleanvar($_REQUEST['time']);
 $title = $strCalendar;
 
 // startdate in unix format
-$startdate = mktime(0,0,0, $month, $day, $year);
+$startdate = mktime(0, 0, 0, $month, $day, $year);
 $enddate = mktime(23, 59, 59, $month, $day, $year);
 if ($length == '') $length = 'day';
 
@@ -51,7 +52,7 @@ list($dtype, $dlength, $dapproved, $dapprovedby) = user_holiday($user, 0, $year,
 
 // allow approver (or admin) to unbook holidays already approved
 if ($length == '0' AND (($approver == TRUE AND ($dapprovedby = $sit[2] OR $adminuser == TRUE))
-                   OR ($user == $sit[2] AND mysql2date("$year-$month-$day") >= $today)))
+                   OR ($user == $sit[2] AND mysql2date("{$year}-{$month}-{$day}") >= $today)))
 {
     // Delete the holiday
     $sql = "DELETE FROM `{$dbHolidays}` ";
@@ -61,8 +62,8 @@ if ($length == '0' AND (($approver == TRUE AND ($dapprovedby = $sit[2] OR $admin
     $result = mysql_query($sql);
     // echo $sql;
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    $dlength=0;
-    $dapproved=0;
+    $dlength = 0;
+    $dapproved = 0;
 }
 else
 {
@@ -71,26 +72,48 @@ else
         // Only allow these types to be modified
         if ($dtype == HOL_HOLIDAY || $dtype == HOL_WORKING_AWAY || $dtype == HOL_TRAINING)
         {
-            if ($length == '0')
+            if ($length == '0' AND $user == $sit[2])
             {
                 // Cancel Holiday
-                // FIXME: doesn't check permission or anything
-                $sql = "DELETE FROM `{$dbHolidays}` ";
-                $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' ";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+               
+                if ($dlength == 'day' AND in_array($time, array('am', 'pm')))
+                {
+                    if ($time == 'am') $length = 'pm';
+                    else $length = 'am';
+                    
+                    // there is an existing booking so alter it
+                    $sql = "UPDATE `{$dbHolidays}` SET length='{$length}' ";
+                    $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' AND length='{$dlength}'";
+                    $result = mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    
+                    
+                }
+                else
+                {
+                    $sql = "DELETE FROM `{$dbHolidays}` ";
+                    $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' ";
+                    $result = mysql_query($sql);
+                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                }
                 $dlength = 0;
                 $dapproved = 0;
                 plugin_do('holiday_cancelled_action');
             }
             else
             {
+                if ($length != $dlength)
+                {
+                    // We have a current booking that is for that same day but for a different period so we need to book the full day
+                    $length = 'day';
+                }
+                
                 // there is an existing booking so alter it
-                $sql = "UPDATE `{$dbHolidays}` SET length='$length' ";
+                $sql = "UPDATE `{$dbHolidays}` SET length='{$length}' ";
                 $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' AND length='{$dlength}'";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                $dlength=$length;
+                $dlength = $length;
             }
         }
         elseif ($type == HOL_NORMAL)
@@ -122,7 +145,7 @@ if ($return == 'list')
 else
 {
     $url = $_SERVER['HTTP_REFERER'];
-    header("Location: $url");
+    header("Location: {$url}");
     exit;
 }
 ?>

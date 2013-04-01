@@ -360,7 +360,7 @@ if ($emails > 0)
                 // Treat related content as attachment
                 $results['Attachments'] = array_merge($results['Attachments'], $results['Related']);
             }
-            foreach ($results['Attachments'] as $attachment)
+            foreach ($results['Attachments'] AS $attachment)
             {
                 $data = $attachment['Data'];
                 echo "{$attachment['FileName']}\n";

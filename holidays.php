@@ -242,7 +242,7 @@ if ($user == $sit[2])
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     echo "<table align='center' width='450'>";
-    echo "<tr><th align='right'>{$strWhosAwayToday}</th></tr>\n";
+    echo "<tr><th class='subhead'>{$strWhosAwayToday}</th></tr>\n";
     if (mysql_num_rows($result) >=1)
     {
         while ($users = mysql_fetch_object($result))

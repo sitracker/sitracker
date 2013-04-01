@@ -84,7 +84,7 @@ elseif ($mode == 'report')
         {
             $used = false;
 
-            $sql = "SELECT i.* FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbContacts']}` AS c WHERE c.id = i.contact AND c.siteid = {$objsite->site} ";
+            $sql = "SELECT i.id, i.title FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbContacts']}` AS c WHERE c.id = i.contact AND c.siteid = {$objsite->site} ";
             if ($startdate != 0)
             {
                 $sql .= "AND closed >= {$startdate} ";
@@ -98,21 +98,28 @@ elseif ($mode == 'report')
             $result = mysql_query($sql);
             if (mysql_error())
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysql_error(), E_USER_WARNING);
                 return FALSE;
             }
             $units = 0;
 
+            // TODO improve the print out for multiple billing types
+            
             if (mysql_num_rows($result) > 0)
             {
                 while ($obj = mysql_fetch_object($result))
                 {
-                    $a = make_incident_billing_array($obj->id);
-
-                    if ($a[-1]['totalcustomerperiods'] > 0)
+                    $b = get_billable_object_from_incident_id($obj->id);
+                    
+                    if ($b)
                     {
-                        $str .= "<tr><td>{$obj->id}</td><td>{$obj->title}</td><td>{$a[-1]['totalcustomerperiods']}</td></tr>";
-                        $used = true;
+                        $amount = $b->amount_used_incident($obj->id);
+                        
+                        if ($amount > 0)
+                        {
+                            $str .= "<tr><td>{$obj->id}</td><td>{$obj->title}</td><td>{$amount}</td></tr>";
+                            $used = true;
+                        }
                     }
                 }
             }

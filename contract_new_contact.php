@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External Variables
 $maintid = clean_int($_REQUEST['maintid']);
 $contactid = clean_int($_REQUEST['contactid']);
-$context = clean_fixed_list($_REQUEST['context'], array('','contact'));
+$context = clean_fixed_list($_REQUEST['context'], array('','contact', 'maintenance'));
 $action = clean_fixed_list($_REQUEST['action'], array('', 'showform', 'add', 'new'));
 
 $title = ("$strContract - $strAddContact");

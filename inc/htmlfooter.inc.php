@@ -37,9 +37,9 @@ if ($CONFIG['debug'] == TRUE)
     $exec_time_end = getmicrotime();
     if (empty($exec_time_start)) $exec_time_start = $_SERVER['REQUEST_TIME'];
     $exec_time = $exec_time_end - $exec_time_start;
-    echo "<p>Execution Time: ".number_format($exec_time,3)." seconds<br />";
+    echo "<p>Execution Time: ".number_format($exec_time, 3)." seconds<br />";
     echo "Memory Usage: ".readable_bytes_size(memory_get_usage())."</p>";
-    if (isset($dbg)) echo "<hr /><pre>".print_r($dbg,true)."</pre>";
+    if (isset($dbg)) echo "<hr /><pre>".print_r($dbg, true)."</pre>";
     echo "</div>";
 }
 

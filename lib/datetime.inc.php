@@ -596,25 +596,31 @@ function ldate($format, $date = '', $utc = FALSE)
 /**
  * Function passed a day, month and year to identify if this day is defined as a public holiday
  * @author Paul Heaney
- * FIXME this is horribily inefficient, we should load a table ONCE with all the public holidays
-        and then just check that with this function
  */
 function is_day_bank_holiday($day, $month, $year)
 {
-    global $dbHolidays;
+    global $dbHolidays, $bankholidays;
 
-    $date = "{$year}-{$month}-{$day}";
-    $sql = "SELECT * FROM `{$dbHolidays}` WHERE type = 10 AND date = '{$date}'";
-
-    $result = mysql_query($sql);
-    if (mysql_error())
+    if (empty($bankholidays))
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
-        return FALSE;
+        $sql = "SELECT date FROM `{$dbHolidays}` WHERE type = 10";
+        
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error(mysql_error(), E_USER_ERROR);
+        }
+        
+        while ($obj = mysql_fetch_object($result))
+        {
+            $bankholidays[$obj->date] = '1';
+        }
+        
     }
-
-    if (mysql_num_rows($result) > 0) return TRUE;
-    else return FALSE;
+    
+    $date = "{$year}-{$month}-{$day}";
+    
+    return array_key_exists($date, $bankholidays);
 }
 
 

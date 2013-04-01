@@ -199,7 +199,7 @@ elseif (empty($productid) AND ($display == 'skills' OR $display == 'software'))
             if ($countlinked < 1) $shade = "urgent";
             if ($lifetime_start > $now OR ($lifetime_end > 1 AND $lifetime_end < $now))
             {
-                $shade='expired';
+                $shade = 'expired';
             }
 
             echo "<tr class='{$shade}'>";

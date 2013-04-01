@@ -81,7 +81,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
         {
             echo icon('support',16, $strIncident);
         }
-        if ($numtriggers > 0) echo icon('trigger',16, $strTrigger);
+        if ($numtriggers > 0) echo icon('trigger', 16, $strTrigger);
         if ($numtriggers > 1) echo " (&#215;{$numtriggers})";
         echo "</td>";
         echo "<td><a href='{$editurl}'>{$template['name']}</a>";
@@ -209,7 +209,7 @@ elseif ($action == "edit" OR $action == "new")
         {
              echo " readonly='readonly' ";
              $template->description = ${$template->description};
-         }
+        }
         echo ">{$template->description}</textarea> <span class='required'>{$strRequired}</span></td></tr>\n";
         switch ($templatetype)
         {
