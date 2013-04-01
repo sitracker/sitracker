@@ -90,10 +90,6 @@ if (empty($mode))
     echo "<td><input type='checkbox' name='sitebreakdown' id='sitebreakdown' size='10' /> ";
     echo "</td></tr></tbody>\n";
 
-    //    echo "<tbody style='display:none' id='showapprovedsection' ><tr><th>Show only awaiting approved:</th>";
-    //    echo "<td><input type='checkbox' name='showonlyapproved' value='true' checked='checked' />";
-    //    echo "</td></tr></tbody>\n";
-
     echo "<tbody id='showfoc'><tr><th>{$strShowFreeOfCharge}</th>";
     echo "<td><input type='checkbox' id='foc' name='foc' value='show' checked='checked' /></td></tr></tbody>";
 
@@ -192,8 +188,6 @@ elseif ($mode == 'approvalpage')
 
             $str = "<form action='{$_SERVER['PHP_SELF']}?mode=approve&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}' name='{$sitenamenospaces}' id='{$sitenamenospaces}'  method='post'>";
 
-            // $sitename .= "<h3>{$sitename}</h3>";
-
             $str .= "<table align='center' width='80%'>";
 
             $str .= "<tr>";
@@ -211,28 +205,6 @@ elseif ($mode == 'approvalpage')
             $str .= "<th>{$strBill}</th><th>{$strActions}</th></tr>\n";
 
             $used = false;
-
-            /*
-            $sql = "SELECT i.* FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbContacts']}` AS c, `{$dbServiceLevels}` AS sl ";
-            $sql .= "WHERE c.id = i.contact AND c.siteid = {$objsite->site} ";
-            $sql .= "AND sl.tag = i.servicelevel AND sl.priority = i.priority AND sl.timed = 'yes' ";
-            $sql .= "AND i.status = 2 "; // Only want closed incidents, dont want awaiting closure as they could be reactivated
-            if ($startdate != 0)
-            {
-                $sql .= "AND closed >= {$startdate} ";
-            }
-
-            if ($enddate != 0)
-            {
-                $sql .= "AND closed <= {$enddate} ";
-            }
-
-            $sql .= "ORDER by closed ";
-            */
-            /*
-             * WORKED
-             * SELECT * FROM `transactions` t, `links` l, `incidents` i, `contacts` c WHERE t.transactionid = l.origcolref AND t.status = 5 AND linktype= 6 AND l.linkcolref = i.id AND i.contact = c.id
-             */
 
             $sql = "SELECT i.id, i.owner, i.contact, i.title, i.closed, i.opened, t.transactionid FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i ";
             $sql .= ", `{$GLOBALS['dbContacts']}` AS c WHERE ";
@@ -273,8 +245,7 @@ elseif ($mode == 'approvalpage')
                     {
                         $billableunitsincident = 0;
 
-                        // $isapproved = is_billable_incident_approved($obj->id);
-                        $isapproved = false;
+                        $isapproved = FALSE;
 
                         $unitrate = get_unit_rate(incident_maintid($obj->id));
 
@@ -347,7 +318,6 @@ elseif ($mode == 'approvalpage')
                         $line .= "<td>{$CONFIG['currency_symbol']}{$bill}</td>";
 
                         $line .= "<td>";
-                        // Approval ?
 
                         if ($isapproved)
                         {
@@ -517,7 +487,6 @@ elseif ($mode == 'approve')
             if (p == FALSE) $percent = true;
         }
     }
-
 
     if ($percent !== FALSE)
     {
