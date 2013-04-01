@@ -77,21 +77,21 @@ elseif ($mode == 'update')
             $b = get_billable_object_from_incident_id($incidentid);
             if ($b AND $b->update_incident_transaction_record($incidentid))
             {
-                html_redirect('billable_incidents.php', TRUE, $strUpdateSuccessful);
+                html_redirect('billable_incidents.php?mode=approvalpage', TRUE, $strUpdateSuccessful);
             }
             else
             {
-                html_redirect('billable_incidents.php', FALSE, $strUpdateFailed);
+                html_redirect('billable_incidents.php?mode=approvalpage', FALSE, $strUpdateFailed);
             }
         }
         else
         {
-            html_redirect('billable_incidents.php', FALSE, $strUpdateFailed);
+            html_redirect('billable_incidents.php?mode=approvalpage', FALSE, $strUpdateFailed);
         }
     }
     else
     {
-        html_redirect('billable_incidents.php', FALSE, $strFailedToFindDateIncidentClosed);
+        html_redirect('billable_incidents.php?mode=approvalpage', FALSE, $strFailedToFindDateIncidentClosed);
     }
 }
 
