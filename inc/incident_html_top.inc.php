@@ -244,6 +244,7 @@ if ($menu != 'hide')
     }
     elseif (incident_status($id) != STATUS_CLOSED)
     {
+        
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_update.php?id={$id}&amp;popup={$popup}' accesskey='U'>{$strUpdate}</a> | ";
         echo "<a class='barlink' href='javascript:close_window({$id});' accesskey='C'>{$strClose}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_reassign.php?id={$id}&amp;popup={$popup}' accesskey='R'>{$strReassign}</a> | ";
@@ -255,7 +256,8 @@ if ($menu != 'hide')
             echo "<a class='barlink' href='javascript:email_window({$id})' accesskey='E'>{$strEmail}</a> | ";
         }
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_attachments.php?id={$id}&amp;popup={$popup}' accesskey='F'>{$strFiles}</a> | ";
-        if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
+        $b = get_billable_object_from_incident_id($id);
+        if ($b AND $b->uses_actities()) echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
         plugin_do('incident_html_top_menu_open_incident');  // hack
         echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";
@@ -266,7 +268,8 @@ if ($menu != 'hide')
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_service_levels.php?id={$id}&amp;popup={$poup}' accesskey='S'>{$strService}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_relationships.php?id={$id}&amp;tab=relationships'>{$strRelations}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_attachments.php?id={$id}&amp;popup={$popup}' accesskey='F'>{$strFiles}</a> | ";
-        if ($servicelevel->timed == 'yes') echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
+        $b = get_billable_object_from_incident_id($id);
+        if ($b AND $b->uses_actities()) echo "<a class='barlink' href='{$CONFIG['application_webpath']}tasks.php?incident={$id}'>{$strActivities}</a> | ";
         echo "<a class='barlink' href='{$CONFIG['application_webpath']}incident_details.php?id={$id}&amp;popup={$popup}' accesskey='D'>{$strDetailsAndLog}</a> | ";
         plugin_do('incident_html_top_menu_closed_incident');
         echo "<a class='barlink' target='top.opener' href='{$CONFIG['application_webpath']}help.php'>{$strHelpChar}</a>";

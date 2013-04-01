@@ -24,6 +24,16 @@ abstract class Billable {
     abstract function contract_unit_balance($contractid,$includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE);
     abstract function approve_incident_transaction($transactionid);
     abstract function amount_used_incident($incidentid);
+    
+    /**
+     * Does this billing method uses activities or some other mechanism?
+     * @author Paul Heaney
+     * @return boolean TRUE if this billing method uses activities (like Unit) or FALSE otherwise
+     */
+    function uses_actities()
+    {
+        return FALSE;
+    }
 }
 
 
@@ -248,6 +258,17 @@ class UnitBillable extends Billable {
         return $a[-1]['totalcustomerperiods'];
         
     }
+    
+    
+    /**
+     * (non-PHPdoc)
+     * @see Billable::uses_actities()
+     */
+    function uses_actities()
+    {
+       return TRUE; 
+    }
+    
     
     /**
      * Find the billing multiple that should be applied given the day, time and matrix in use

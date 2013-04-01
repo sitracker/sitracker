@@ -507,7 +507,8 @@ if (mysql_num_rows($result) >=1 )
             }
             else
             {
-                // FIXME this needs to support per incident
+                // TODO this doesn't seem ideal that we have this code deaply embedded in this page
+                // This page now only shows on unit billable incidents so the below 'hack' is OK 
                 $b = new UnitBillable();
                 $billing = $b->make_incident_billing_array($incidentid);
                 $duration = $enddate - $startdate;
