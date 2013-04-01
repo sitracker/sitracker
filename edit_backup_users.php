@@ -90,7 +90,7 @@ if (empty($save))
         echo "</table>\n";
         echo "<input type='hidden' name='user' value='{$user}' />";
         echo "<input type='hidden' name='softlist' value='{$softlist}' />";
-        echo "<input type='hidden' name='save' value='vqvbgf' />";
+        echo "<input type='hidden' name='save' value='save' />";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> <input type='submit' value='{$strSave}' /></p>";
         echo "</form>";
     }
