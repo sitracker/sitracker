@@ -11,7 +11,7 @@
 //  Author:   Paul Heaney
 
 require ('core.php');
-$permission = PERM_REPORT_RUN;  // Run Reports // TODO perhaps should have own permission
+$permission = PERM_REPORT_RUN;  // Run Reports 
 include (APPLICATION_LIBPATH . 'functions.inc.php');
 
 // This page requires authentication
