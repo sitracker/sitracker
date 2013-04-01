@@ -580,7 +580,6 @@ class Trigger extends SitEntity {
     //TODO should this be limited to one delete, is there ever more than one?
     function revoke($reference_id = 0)
     {
-        debug_log("REVOKE");
         global $GLOBALS;
         //find all triggers of this type and user
         $sql = "SELECT * FROM `{$GLOBALS['dbTriggers']}` ";
