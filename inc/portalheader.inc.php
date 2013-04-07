@@ -36,6 +36,7 @@ echo "     This software may be used and distributed according to the terms\n";
 echo "     of the GNU General Public License, incorporated herein by reference. -->\n";
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html;charset={$i18ncharset}\" />\n";
 echo "<meta name=\"GENERATOR\" content=\"{$CONFIG['application_name']} {$application_version_string}\" />\n";
+echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n";
 echo "<title>";
 if (isset($title))
 {
