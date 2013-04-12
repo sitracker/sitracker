@@ -21,10 +21,42 @@ abstract class Billable {
      * @param int $incidentid
      */
     abstract function close_incident($incidentid);
-    abstract function contract_unit_balance($contractid,$includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE);
+    
+    /**
+     * ?????
+     * @param unknown $contractid
+     * @param string $includenonapproved
+     * @param string $includereserved
+     * @param string $showonlycurrentlyvalid
+     */
+    abstract function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE);
+    
+    /**
+     * Approve a transaction for a closed incident, this function typically needs to confirm now much has been used and authorise its deduction from the balance
+     * @param unknown $transactionid
+     */
     abstract function approve_incident_transaction($transactionid);
+
+    /**
+     * Identity the amount used on a particular incident e.g. home many hours, units etc
+     * @param int $incidentid - The incident ID to check for
+     */
     abstract function amount_used_incident($incidentid);
+    
+    /**
+     * Creates the HTML table which is displayed on the approvals page of the billing system
+     * @param int $siteid - ID of the site to produce the table for
+     * @param string $formname - Name of the form this table is being added to
+     * @param string $startdate - The start date to start show incidents awaiting approval from
+     * @param string $enddate - The start date to stop showing incidents awaiting approval from
+     * @return string - The HTML for the table
+     */
     abstract function produce_site_approvals_table($siteid, $formname, $startdate, $enddate);
+    
+    /**
+     * Updates the transaction record prior to approval, this is called after adjusting duration etc on a incident and forces a recalculation.
+     * @param int $incidentid The incident to force a recalculation on
+     */
     abstract function update_incident_transaction_record($incidentid);
     
     /**
@@ -970,9 +1002,14 @@ class IncidentBillable extends Billable {
     function close_incident($incidentid)
     {
         trigger_error("Not yet implemented");
+        
+        // Get incident cost for the incident/contract
+        // Create transaction in BILLING_AWAITINGAPPROVAL
+        // Add Link  ("INSERT INTO `{$GLOBALS['dbLinks']}` VALUES (6, {$transactionid}, {$incidentid}, 'left', {$_SESSION['userid']})";)
+        // Last two per probably need to abstract and make a function
     }
     
-    function contract_unit_balance($contractid,$includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
+    function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
     {
         trigger_error("Not yet implemented");
     }
