@@ -8,6 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
+// FIXME complete this code
+
 require ('core.php');
 $permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -108,12 +110,13 @@ function contact_info($contactid, $email, $name, $subject)
 // Perform action on selected items
 if (!empty($action))
 {
-    // FIXME BUGBUG remove for release. temporary message
-    echo "<p>Action: $action</p>";
+    if ($CONFIG['debug'])  $dbg .= "<pre>Action: {$action}</pre>";
+
     if (!is_array($_REQUEST['selected']))
     {
         $_REQUEST['selected'] = array($_REQUEST['selected']);
     }
+
     foreach ($_REQUEST['selected'] AS $item => $selected)
     {
         $selected = clean_int($selected);
@@ -123,7 +126,7 @@ if (!empty($action))
         if ($tresult AND mysql_num_rows($tresult) > 0)
         {
             $temp = mysql_fetch_object($tresult);
-            if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
+            if ($CONFIG['debug']) $dbg .= "<pre>Action on: {$selected}</pre>";
 
             switch ($action)
             {
@@ -199,7 +202,7 @@ if (empty($displayid))
 
     if ($countresults > 0)
     {
-        echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox'  method='post'>";
+        echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox' method='post'>";
         $shade = 'shade1';
         echo "<table class='maintable' id='inboxtable'>";
         echo "<tr>";
