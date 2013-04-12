@@ -63,40 +63,6 @@ else
 if (empty($theme)) $theme = $CONFIG['portal_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
 
-//some css for the KB
-echo "<style type='text/css'>
-    .kbprivate
-    {
-        color: #FFFFFF;
-/*         background-color: #FF3300; */
-        background-image:url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/private.png);
-        background-repeat: no-repeat;
-        background-position: top right;
-        border: 2px dashed #FF3300;
-        margin: 3px 0px;
-        padding: 0px 2px;
-    }
-
-    .kbrestricted
-    {
-        background-color: #DDDDDD;
-        background-image:url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/private.png);
-        background-repeat: no-repeat;
-        background-position: top right;
-    }
-
-    .keykbprivate
-    {
-        color: #FFFFFF;
-        background-color: #FF3300;
-    }
-
-    .keykbrestricted
-    {
-        background-color: #DDDDDD;
-    }
-
-    </style>";
 if (isset($refresh) && $refresh != 0)
 {
    echo "<meta http-equiv='refresh' content='{$refresh}' />\n";

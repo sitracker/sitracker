@@ -56,4 +56,25 @@ select .solution
 {
 	background-image: url({$CONFIG['application_webpath']}/images/icons/$iconset/16x16/solution.png);
 }
+
+
+.kbprivate
+{
+    color: #FFFFFF;
+    background-image:url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/private.png);
+    background-repeat: no-repeat;
+    background-position: top right;
+    border: 2px dashed #FF3300;
+    margin: 3px 0px;
+    padding: 0px 2px;
+}
+
+.kbrestricted
+{
+    background-color: #DDDDDD;
+    background-image:url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/private.png);
+    background-repeat: no-repeat;
+    background-position: top right;
+}
+
 ";

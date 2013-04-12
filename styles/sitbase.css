@@ -2065,3 +2065,16 @@ div.autocomplete ul li
     cursor: pointer;
     text-align: left;
 }
+
+/* KB Portal */
+
+.keykbprivate
+{
+    color: #FFFFFF;
+    background-color: #FF3300;
+}
+
+.keykbrestricted
+{
+    background-color: #DDDDDD;
+}
