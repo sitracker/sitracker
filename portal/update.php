@@ -32,9 +32,17 @@ if ($incidentcontact == $_SESSION['contactid'])
         include (APPLICATION_INCPATH . 'portalheader.inc.php');
         echo "<h2>".icon('note', 32, $strUpdateIncident);
         echo " {$strUpdateIncident} {$_REQUEST['id']}</h2>";
-        echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?page=update&amp;id={$id}' method='post' enctype='multipart/form-data'>";
-        echo "<p>{$strUpdate}:</p><textarea cols='60' rows='10' name='update'></textarea><br />";
-        echo "<p>".icon('attach', 16, $strAttachment);
+        echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?id={$id}' method='post' id='updateform' name='updateform' enctype='multipart/form-data'>";
+        
+        echo "<table class='vertical maintable' width='50%'>";
+        
+        echo "<tr><th>{$strUpdate}:</th><td><textarea cols='60' rows='10' name='update'></textarea></td></tr>";
+        
+        echo "<tr><th>";
+        echo "{$strPutIncidentOnHoldUntil}</th><td><input name='timetonextaction_date' id='timetonextaction_date' size='10' /> ".date_picker("updateform.timetonextaction_date");
+        echo "</td></tr>";
+
+        echo "<tr><th>".icon('attach', 16, $strAttachment);
         // calculate upload filesize
         $j = 0;
         $ext = array($strBytes, $strKBytes, $strMBytes, $strGBytes, $strTBytes);
@@ -44,19 +52,22 @@ if ($incidentcontact == $_SESSION['contactid'])
             ++$j;
         }
 
-        $att_file_size = round($att_file_size / pow(1024,$j-1) * 100) / 100 . ' ' . $ext[$j-1];
+        $att_file_size = round($att_file_size / pow(1024, $j-1) * 100) / 100 . ' ' . $ext[$j-1];
 
-        echo "{$strAttachment} ";
+        echo " {$strAttachment} ";
 
-        echo "(&lt;{$att_file_size}): ";
+        echo "(&lt;{$att_file_size}):</th><td>";
         echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$CONFIG['upload_max_filesize']}' />";
-        echo "<input type='file' name='attachment' size='20' /></p>";
+        echo "<input type='file' name='attachment' size='20' /></td></tr>";
+        
+        echo "</table>";
         echo "<p><input type='submit' value=\"{$strUpdate}\"/></p></form></div>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
     else
     {
+        // echo "<pre>";print_r($_POST);"</pre>";exit;
         $usersql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='{$_SESSION['contactid']}'";
         $result = mysql_query($usersql);
         $user = mysql_fetch_object($result);
@@ -65,6 +76,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         $forenames = cleanvar($user->forenames);
         $surname = cleanvar($user->surname); // If name has ' in it
         $update = cleanvar($_REQUEST['update']);
+        $timetonextaction_date = cleanvar($_POST['timetonextaction_date']);
 
         if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
@@ -97,11 +109,26 @@ if ($incidentcontact == $_SESSION['contactid'])
         }
         //add the update
         $updatebody .= $update;
+        
+        $timeofnextaction = 0;
+        
+        if (!empty($timetonextaction_date)) 
+        {
+            $date = explode("-", $timetonextaction_date);
+            $timeofnextaction = mktime($time_picker_hour, $time_picker_minute, 0, $date[1], $date[2], $date[0]);
+            if ($timeofnextaction < 0) $timeofnextaction = 0;
+            else 
+            {
+                $timetext = "Next Action Time: ".date("D jS M Y @ g:i A", $timeofnextaction)."</b>\n\n";
+                $updatebody = $timetext.$updatebody;
+            }
+            
+        }
 
         $owner = incident_owner($id);
 
-        $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-        $sql .= "VALUES('{$id}', '0', 'webupdate', '{$owner}', '1', '{$updatebody}', '{$now}', 'show')";
+        $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility, nextaction) ";
+        $sql .= "VALUES('{$id}', '0', 'webupdate', '{$owner}', '1', '{$updatebody}', '{$now}', 'show', {$timeofnextaction})";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         else
@@ -169,9 +196,15 @@ if ($incidentcontact == $_SESSION['contactid'])
             trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         }
 
-        //set incident back to active
+        // Set incident status, active if not put on hold until a future date
         $id = clean_int($_REQUEST['id']);
-        $sql = "UPDATE `{$dbIncidents}` SET status=" . STATUS_ACTIVE. ", lastupdated='{$now}' WHERE id='{$id}'";
+        $status = STATUS_ACTIVE;
+        if (!empty($timetonextaction_date) AND $timeofnextaction > $now)
+        {
+            $status = STATUS_CUSTOMER;
+        }
+
+        $sql = "UPDATE `{$dbIncidents}` SET status={$status}, lastupdated='{$now}' WHERE id='{$id}'";
         mysql_query($sql);
         if (mysql_error())
         {

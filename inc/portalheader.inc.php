@@ -74,6 +74,7 @@ echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$them
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
+echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
 // To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
 if (is_array($pagescripts))
 {
