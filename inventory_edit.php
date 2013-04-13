@@ -63,7 +63,8 @@ if (isset($_POST['submit']))
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
-    if (empty($site))
+
+    if (empty($siteid))
     {
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['site'] = sprintf($strFieldMustNotBeBlank, $strSite);
