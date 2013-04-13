@@ -299,7 +299,7 @@ if (empty($displayid))
         echo "<option value='lock'>{$strLock}</option>";
         echo "<option value='unlock'>{$strUnlock}</option>";
         echo "<option value='delete'>{$strDelete}</option>";
-//         echo "<option value='assign'>{$strAssign}</option>";
+        // echo "<option value='assign'>{$strAssign}</option>";
         echo "</select>";
         echo "<input type='submit' value=\"{$strGo}\" />";
         echo "</td>";
@@ -389,8 +389,6 @@ else
             echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string=".urlencode("{$incoming->forenames} {$incoming->surname}")."&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>"; // FIXME
             echo " | <a href=\"move_update.php?id={$displayid}&amp;updateid={$incoming->updateid}&amp;contactid={$incoming->contactid}&amp;win=incomingview\" title=\"{$strUpdateIncident}\">";
             echo "{$strMoveToIncident}</a>"; // FIXME needs help
-
-
 
             if ($lockedbyyou)
             {
