@@ -78,8 +78,7 @@ if ($_REQUEST['action'] == 'enable' OR $_REQUEST['action'] == 'disable')
     }
     else
     {
-        // TODO
-        // Enable/Disable dashlet
+        // TODO - Enable/Disable dashlet
     }
 }
 
