@@ -19,7 +19,7 @@ if(!$CONFIG['inventory_enabled'])
     exit;
 }
 
-$title = "$strInventory - $strNew";
+$title = "{$strInventory} - {$strNew}";
 
 if (!empty($_GET['site']))
 {
@@ -31,6 +31,14 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
 {
     $address = clean_dbstring($_POST['address']);
     $username = clean_dbstring($_POST['username']);
+    $password = clean_dbstring($_POST['password']);
+    $type = clean_dbstring($_POST['type']);
+    $notes = clean_dbstring($_POST['notes']);
+    $name = clean_dbstring($_POST['name']);
+    $siteid = clean_int($_POST['site']);
+    $privacy = clean_fixed_list($_POST['privacy'], array('private', 'adminonly', 'none'));
+    $identifier = clean_dbstring($_POST['identifier']);
+    $owner = clean_int($_POST['owner']);
     plugin_do('inventory_new_submitted');
 
     $sql = "INSERT INTO `{$dbInventory}`(address, username, password, type,";
