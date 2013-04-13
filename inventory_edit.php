@@ -73,7 +73,7 @@ if (isset($_POST['submit']))
 
     if ($errors > 0)
     {
-        html_redirect("inventory_edit.php?id={$siteid}", FALSE);
+        html_redirect("inventory_edit.php?id={$id}", FALSE);
         exit;
     }
 
