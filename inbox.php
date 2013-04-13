@@ -66,7 +66,10 @@ function contact_info($contactid, $email, $name, $subject)
     {
         $linktext = "{$email}";
     }
-    else $linktext .= "{$strUnknown}";
+    else
+    {
+        $linktext .= "{$strUnknown}";
+    }
 
     if (!empty($email))
     {
@@ -120,7 +123,7 @@ if (!empty($action))
     foreach ($_REQUEST['selected'] AS $item => $selected)
     {
         $selected = clean_int($selected);
-        $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
+        $tsql = "SELECT updateid, locked FROM `{$dbTempIncoming}` WHERE id={$selected}";
         $tresult = mysql_query($tsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if ($tresult AND mysql_num_rows($tresult) > 0)
@@ -131,13 +134,16 @@ if (!empty($action))
             switch ($action)
             {
                 case 'delete':
-                    // FIXME TODO don't run action on items locked by other people
-                    $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
-                    mysql_query($dsql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
-                    mysql_query($dsql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    if ($temp->locked == $sit[2])
+                    {
+                        // Only allow the person who has the update located delete it
+                        $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    }
                     break;
                 case 'lock':
                     $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
