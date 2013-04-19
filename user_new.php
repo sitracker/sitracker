@@ -109,7 +109,7 @@ else
     $holiday_entitlement = clean_int($_REQUEST['holiday_entitlement']);
     if (!empty($_POST['startdate']))
     {
-        $startdate = date('Y-m-d',strtotime($_POST['startdate']));
+        $startdate = date('Y-m-d', strtotime($_POST['startdate']));
     }
     else $startdate = '';
     $formtoken = cleanvar($_POST['formtoken']);

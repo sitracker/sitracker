@@ -66,9 +66,9 @@ if (empty($mode))
 }
 elseif ($_REQUEST['mode'] == 'report')
 {
-    if (is_array($_POST['exc']) && is_array($_POST['exc'])) $_POST['inc']=array_values(array_diff($_POST['inc'],$_POST['exc']));  // don't include anything excluded
+    if (is_array($_POST['exc']) && is_array($_POST['exc'])) $_POST['inc'] = array_values(array_diff(clean_dbstring($_POST['inc']), clean_dbstring($_POST['exc'])));  // don't include anything excluded
 
-    $includecount=count($_POST['inc']);
+    $includecount = count($_POST['inc']);
     if ($_POST['showsitetotals'] == 'yes') $showsitetotals = TRUE;
     else $showsitetotals = FALSE;
 

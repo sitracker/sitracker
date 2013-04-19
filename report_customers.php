@@ -79,36 +79,20 @@ elseif ($mode == 'report')
 {
     if (is_array($_POST['exc']) && is_array($_POST['exc']))
     {
-        $_POST['inc'] = array_values(array_diff($_POST['inc'],$_POST['exc']));  // don't include anything excluded
+        $_POST['inc'] = array_values(array_diff($_POST['inc'], $_POST['exc']));  // don't include anything excluded
     }
     $includecount = count($_POST['inc']);
     if ($includecount >= 1)
     {
-        // $html .= "<strong>Include:</strong><br />";
         $incsql .= "(";
         for ($i = 0; $i < $includecount; $i++)
         {
-            // $html .= "{$_POST['inc'][$i]} <br />";
             $incsql .= "siteid=".clean_int($_POST['inc'][$i]);
             if ($i < ($includecount-1)) $incsql .= " OR ";
         }
         $incsql .= ")";
     }
-    /*
-    $excludecount=count($_POST['exc']);
-    if ($excludecount >= 1)
-    {
-    // $html .= "<strong>Exclude:</strong><br />";
-    $excsql .= "(";
-    for ($i = 0; $i < $excludecount; $i++)
-    {
-        // $html .= "{$_POST['exc'][$i]} <br />";
-        $excsql .= "siteid!={$_POST['exc'][$i]}";
-        if ($i < ($excludecount-1)) $excsql .= " OR ";
-    }
-    $excsql .= ")";
-    }
-    */
+
     $sql = "SELECT *, c.id AS contactid, s.name AS site, c.email AS cemail FROM `{$dbContacts}` AS c ";
     $sql .= "LEFT JOIN `{$dbSites}` AS s ON c.siteid = s.id ";
 

@@ -224,7 +224,7 @@ function dashboard_watch_incidents_display($dashletid)
 function dashboard_watch_incidents_edit($dashletid)
 {
     global $CONFIG, $sit;
-    $editaction = $_REQUEST['editaction'];
+    $editaction = clean_dbstring($_REQUEST['editaction']);
 
     switch ($editaction)
     {
