@@ -18,11 +18,11 @@ $accesslevel = 'any';
 include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 
 // External vars
-$id = intval($_REQUEST['id']);
+$id = clean_int($_REQUEST['id']);
 $fail = clean_int($_POST['fail']);
 
 // First check the portal user is allowed to access this incident
-$sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = $id LIMIT 1";
+$sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = {$id} LIMIT 1";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 list($incidentcontact) = mysql_fetch_row($result);
@@ -55,8 +55,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
         $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
-        $sql .= "VALUES({$id}, '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}',
-        '{$now}', 'show')";
+        $sql .= "VALUES({$id}, '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}', '{$now}', 'show')";
         mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
@@ -73,7 +72,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 else
 {
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
-    echo "<p class='warning'>$strNoPermission.</p>";
+    echo "<p class='warning'>{$strNoPermission}.</p>";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     exit;
 }
