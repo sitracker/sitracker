@@ -144,7 +144,7 @@ function dashboard_rss_display($dashletid)
             }
             else
             {
-                echo "Error: It's not possible to get $url...";
+                echo "Error: It's not possible to get {$url}...";
             }
         }
     }
@@ -159,7 +159,7 @@ function dashboard_rss_edit($dashletid)
 {
     global $CONFIG, $sit;
 
-    $action = $_REQUEST['editaction'];
+    $action = clean_dbstring($_REQUEST['editaction']);
 
     switch ($action)
     {
@@ -260,8 +260,8 @@ function dashboard_rss_edit($dashletid)
             }
             break;
         case 'delete':
-            $url = $_REQUEST['url'];
-            $enable = $_REQUEST['enable'];
+            $url = urldecode(cleanvar($_REQUEST['url']));
+            $enable = cleanvar($_REQUEST['enable']);
             $sql = "DELETE FROM `{$CONFIG['db_tableprefix']}dashboard_rss` WHERE url = '{$url}' AND owner = {$sit[2]}";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
