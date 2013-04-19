@@ -263,7 +263,7 @@ function dashboard_watch_incidents_edit($dashletid)
             break;
 
         case 'do_new':
-            $id =clean_int($_REQUEST['id']);
+            $id = clean_int($_REQUEST['id']);
             $type = clean_int($_REQUEST['type']);
             $sql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` VALUES ({$sit[2]},'{$type}','{$id}')";
             $result = mysql_query($sql);
@@ -280,7 +280,7 @@ function dashboard_watch_incidents_edit($dashletid)
             }
             break;
         case 'delete':
-            $id =clean_int($_REQUEST['id']);
+            $id = clean_int($_REQUEST['id']);
             $type = clean_int($_REQUEST['type']);
             $sql = "DELETE FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE id = '{$id}' AND userid = {$sit[2]} AND type = '{$type}'";
             $result = mysql_query($sql);
