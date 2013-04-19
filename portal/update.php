@@ -31,7 +31,7 @@ if ($incidentcontact == $_SESSION['contactid'])
     {
         include (APPLICATION_INCPATH . 'portalheader.inc.php');
         echo "<h2>".icon('note', 32, $strUpdateIncident);
-        echo " {$strUpdateIncident} {$_REQUEST['id']}</h2>";
+        echo " {$strUpdateIncident} {$id}</h2>";
         echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?id={$id}' method='post' id='updateform' name='updateform' enctype='multipart/form-data'>";
         
         echo "<table class='vertical maintable' width='50%'>";
