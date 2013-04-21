@@ -255,7 +255,7 @@ if (mysql_num_rows($maintresult) > 0)
     }
     else
     {
-        echo "<p align='center'>{$strNone} / {$strUnknown}<p>";
+        echo "<p align='center'>{$strNone} / {$strUnknown}</p>";
     }
 }
 else
