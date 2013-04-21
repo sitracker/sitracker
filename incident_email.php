@@ -150,7 +150,7 @@ switch ($step)
         echo "</table>";
         echo "<p class='formbuttons'>";
         echo "<input type='hidden' name='step' value='2' />";
-        echo "<input type='hidden' name='menu' value='$menu' />";
+        echo "<input type='hidden' name='menu' value='{$menu}' />";
         echo "<input name='submit1' type='submit' value='{$strContinue}' /></p>";
         echo "</form>\n";
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');

@@ -213,7 +213,7 @@ $strBillableIncidents = 'Billable Incidents';
 $strBillableIncidentsForPeriodXtoX = 'Billable incidents for period %1$s to %2$s';
 $strBillableIncidentsReport = 'Billable Incidents Report';
 # Used in transaction summary reads e.g. "Incident 1234: 5 Units @ £10, 1 unit at x1, 2 units at x2"
-$strBillableIncidentSummary = 'Incident %s: %s units @ %s%s (%s)';
+$strBillableIncidentSummary = 'Incident %s: %s units @ %s%s %s';
 $strBilling = 'Billing';
 $strBillingCustomerPeriod = 'Customer Period';
 $strBillingDurationAdjusted = '[b]Duration adjusted[/b] by %s on %s from %s minutes to %s minutes, reason given %s';
@@ -861,6 +861,7 @@ $strIncidentPool = 'Incident Pool';
 $strIncidentRate = 'Incident Rate';
 $strIncidentPriority = 'Incident Priority';
 $strIncidentRefresh = 'Incident Refresh';
+$strIncidentRefunded = 'Incident Refunded';
 $strIncidentResolved = 'The incident has been resolved or reprioritised.\nThe issue should now be brought to a close or a new problem definition created within the service level';
 $strIncidentReviewDue = 'Incident Review Due';
 $strIncidentTypeWasBlank = 'Incident type was blank';
@@ -1499,6 +1500,7 @@ $strReferences = 'References';
 $strRefresh = 'Refresh';
 # Abbreviation for Reference ID
 $strRefID = 'Ref ID';
+$strRefundIncident = 'Refund Incident';
 $strRegister = 'Register';
 $strRelated = 'Related';
 $strRelatedContracts = 'Related Contracts';

@@ -139,7 +139,7 @@ switch ($seltab)
                 {
                     $operations[$strVisitHomepage] = "{$avail_plugin_details['url']}";
                 }
-//                 $operations[$strInstall] = "{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)";
+                // $operations[$strInstall] = "{$_SERVER['PHP_SELF']}?action=install&amp;plugin=".urlencode($avail_plugin)";
                 if (!in_array($avail_plugin, $ondisk_plugins))
                 {
                     echo "<tr class='{$shade}'>";

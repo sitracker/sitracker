@@ -671,8 +671,8 @@ switch ($_REQUEST['action'])
                                 }
                                 else
                                 {
-                                    $billingtype = 'unit';
-                                    if ($obj->incidentrate > 0) $billingtype = 'incident';
+                                    $billingtype = 'UnitBillable';
+                                    if ($obj->incidentrate > 0) $billingtype = 'IncidentBillable';
                                     
                                     $sqlup4a = "UPDATE `{$dbMaintenance}` SET billingtype = '{$billingtype}'";
                                     $resultup4a = mysql_query($sqlup4a);
