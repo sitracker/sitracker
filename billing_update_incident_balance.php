@@ -20,7 +20,9 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 
 $mode = cleanvar($_REQUEST['mode']);
 $incidentid = clean_int($_REQUEST['incidentid']);
-$title = "{$strUpdateIncidentXsBalance}, $incidentid";
+$title = sprintf($strUpdateIncidentXsBalance, $incidentid);
+
+$billingObj = get_billable_object_from_incident_id($incidentid);
 
 if (empty($mode))
 {
@@ -31,7 +33,7 @@ if (empty($mode))
     echo "<form action='{$_SERVER['PHP_SELF']}' method='post' id='modifyincidentbalance'>";
 
     echo "<table class='vertical'><tr><th>{$strAmount}</th><td>";
-    echo "<input type='text' name='amount' id='amount' size='10' /> {$strMinutes}<br />{$strForRefundsThisShouldBeNegative}</td></tr>";
+    echo $billingObj->incident_update_amount_interface("amount")."</td></tr>";
 
     echo "<tr><th>{$strDescription}</th><td>";
     echo "<textarea cols='40' name='description' rows='5'></textarea>";
@@ -62,7 +64,7 @@ elseif ($mode == 'update')
     {
         $obj = mysql_fetch_object($result);
 
-        $description = "[b]{$strAmount}[/b]: {$amount} {$strMinutes}\n\n{$description}";
+        $description = $billingObj->incident_update_amount_text($amount, $description);
 
         $sqlInsert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, duration) VALUES ";
         $sqlInsert .= "('{$incidentid}', '{$sit[2]}', 'editing', '{$obj->owner}', '{$obj->status}', '{$description}', '{$now}', '{$amount}')";

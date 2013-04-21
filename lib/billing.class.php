@@ -15,17 +15,92 @@
 abstract class Billable {
     
     public $billing_type_name = '';
+    public $billing_matrix_type = ''; // TODO static?
+    public $uses_billing_matrix = TRUE;
     
     /**
      * This function closes an incident and performs type specific operations
      * @param int $incidentid
      */
     abstract function close_incident($incidentid);
-    abstract function contract_unit_balance($contractid,$includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE);
+    
+    /**
+     * ?????
+     * @param unknown $contractid
+     * @param string $includenonapproved
+     * @param string $includereserved
+     * @param string $showonlycurrentlyvalid
+     */
+    abstract function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE);
+    
+    /**
+     * Approve a transaction for a closed incident, this function typically needs to confirm now much has been used and authorise its deduction from the balance
+     * @param unknown $transactionid
+     */
     abstract function approve_incident_transaction($transactionid);
+
+    /**
+     * Identity the amount used on a particular incident e.g. home many hours, units etc
+     * @param int $incidentid - The incident ID to check for
+     */
     abstract function amount_used_incident($incidentid);
+    
+    /**
+     * Creates the HTML table which is displayed on the approvals page of the billing system
+     * @param int $siteid - ID of the site to produce the table for
+     * @param string $formname - Name of the form this table is being added to
+     * @param string $startdate - The start date to start show incidents awaiting approval from
+     * @param string $enddate - The start date to stop showing incidents awaiting approval from
+     * @return string - The HTML for the table
+     */
     abstract function produce_site_approvals_table($siteid, $formname, $startdate, $enddate);
+    
+    /**
+     * Updates the transaction record prior to approval, this is called after adjusting duration etc on a incident and forces a recalculation.
+     * @param int $incidentid The incident to force a recalculation on
+     */
     abstract function update_incident_transaction_record($incidentid);
+    
+    /**
+     * Returns the HTML for the relevent billing matrix drop down
+     * @param string $id ID and name to give the select element
+     * @param string $selected The currently selected element
+     * @return string the select HTML element
+     */
+    abstract function billing_matrix_selector($id, $selected='');
+
+    /**
+     * Returns the display name for this billing type
+     * @return string the display name for this type
+     */
+    abstract function display_name();
+    
+    /**
+     * The interface to choose to manually update an incidents billable amount 
+     * e.g. to give a refund or increase the amount
+     * This should be the contents of a table cell, the table cell is drawn by the interface
+     * @param string $id The ID for the input element
+     * @return string The HTML for the table cell to display the incident edit field
+     */
+    abstract function incident_update_amount_interface($id);
+    
+    
+    /**
+     * Produces the text added to the update log on manual incident adjustment
+     * @param int $amount - The amount to adjust the incident by
+     * @param string $description - The text given for the update
+     * @return string - The text to insert into the update log
+     * @author Paul Heaney
+     */
+    abstract function incident_update_amount_text($amount, $description);
+
+    
+    /**
+     * Produces the HTML that is displayed at the bottom of the incident update in the incident log
+     * @param int $amount - The amount of the update change
+     * @return string The HTML to display at the bottom of the update in the incident log
+     */
+    abstract function incident_log_update_summary($amount);
     
     /**
      * Does this billing method uses activities or some other mechanism?
@@ -36,13 +111,78 @@ abstract class Billable {
     {
         return FALSE;
     }
+    
+  
+    /**
+     * Creates a transaction awaiting approval, this should called from close_incident as every incident should create a transaction waiting approval 
+     * @param int $incidentid - The incident ID to create the transaction for
+     * @param int $contractid - The contract tht the transaction relates to - this could be calculated here though its usually required to get this during the logic to identify the cost so is passed in as an optimisation 
+     * @param int $numberofunits - The number of units thsi incident was active for
+     * @param int $unitrate - The rate per unit
+     * @param int $totalunits - The total number of units - taking into account any multiplies
+     * @param int $totalbillableunits - Total number of units to use, this is usually $totalunits - $refunds
+     * @param int $totalrefunds - Number of units refunded
+     * @param int $cost - The total cost for this transaction
+     * @param string $texttoappend
+     * @author Paul Heaney
+     * @return boolean
+     */
+    function create_transaction_awaiting_approval($incidentid, $contractid, $numberofunits, $unitrate, $totalunits, $totalbillableunits, $totalrefunds, $cost, $texttoappend)
+    {
+        global $CONFIG, $now;
+
+        $rtnvalue = TRUE;
+        
+        if (!empty($texttoappend)) $texttoappend = "({$texttoappend})";
+
+        $desc = trim(sprintf($GLOBALS['strBillableIncidentSummary'], $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $texttoappend));
+        
+        // Add transaction
+        $serviceid = get_serviceid($contractid);
+        if ($serviceid < 1) trigger_error("Invalid service ID", E_USER_ERROR);
+        $date = date('Y-m-d H:i:s', $now);
+        
+        $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, totalunits, totalbillableunits, totalrefunds, amount, description, userid, dateupdated, transactionstatus) ";
+        $sql .= "VALUES ('{$serviceid}', '{$totalunits}',  '{$totalbillableunits}', '{$totalrefunds}', '{$cost}', '{$desc}', '{$_SESSION['userid']}', '{$date}', '".BILLING_AWAITINGAPPROVAL."')";
+        
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
+            $rtnvalue = FALSE;
+        }
+        
+        $transactionid = mysql_insert_id();
+        
+        if ($transactionid != FALSE)
+        {
+        
+            $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES (6, {$transactionid}, {$incidentid}, 'left', {$_SESSION['userid']})";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                trigger_error(mysql_error(), E_USER_ERROR);
+                $rtnvalue = FALSE;
+            }
+            if (mysql_affected_rows() < 1)
+            {
+                trigger_error("Link transaction on closure failed", E_USER_ERROR);
+                $rtnvalue = FALSE;
+            }
+        }
+        else 
+        {
+            $rtnvalue = FALSE;
+        }
+        
+        return $rtnvalue;
+    }
 }
 
 
 class UnitBillable extends Billable {
     
     public $billing_type_name = 'unit';
-    
 
     /**
      * (non-PHPdoc)
@@ -96,46 +236,11 @@ class UnitBillable extends Billable {
             $unitrate = get_unit_rate($contractid);
         
             $totalrefunds = $bills['refunds'];
-            // $numberofunits += $bills['refunds'];
+            $numberofunits += $bills['refunds'];
         
             $cost = (($totalbillableunits + $totalrefunds)  * $unitrate) * -1;
         
-            $desc = trim(sprintf($GLOBALS['strBillableIncidentSummary'], $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
-        
-            // Add transaction
-            $serviceid = get_serviceid($contractid);
-            if ($serviceid < 1) trigger_error("Invalid service ID", E_USER_ERROR);
-            $date = date('Y-m-d H:i:s', $now);
-        
-            $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, totalunits, totalbillableunits, totalrefunds, amount, description, userid, dateupdated, transactionstatus) ";
-            $sql .= "VALUES ('{$serviceid}', '{$totalunits}',  '{$totalbillableunits}', '{$totalrefunds}', '{$cost}', '{$desc}', '{$_SESSION['userid']}', '{$date}', '".BILLING_AWAITINGAPPROVAL."')";
-        
-            $result = mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
-                $rtnvalue = FALSE;
-            }
-        
-            $transactionid = mysql_insert_id();
-        
-            if ($transactionid != FALSE)
-            {
-        
-                $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES (6, {$transactionid}, {$incidentid}, 'left', {$_SESSION['userid']})";
-                mysql_query($sql);
-                if (mysql_error())
-                {
-                    trigger_error(mysql_error(), E_USER_ERROR);
-                    $rtnvalue = FALSE;
-                }
-                if (mysql_affected_rows() < 1)
-                {
-                    trigger_error("Link transaction on closure failed", E_USER_ERROR);
-                    $rtnvalue = FALSE;
-                }
-            }
-        
+            $rtnvalue = $this->create_transaction_awaiting_approval($incidentid, $contractid, $numberofunits, $unitrate, $totalunits, $totalbillableunits, $totalrefunds, $cost, $s);
         }
 
         return $rtnvalue;
@@ -188,7 +293,7 @@ class UnitBillable extends Billable {
     
     function approve_incident_transaction($transactionid)
     {
-        global $dbLinks, $sit, $CONFIG, $strUnits;
+        global $CONFIG;
         
         $rtnvalue = TRUE;
         
@@ -236,6 +341,8 @@ class UnitBillable extends Billable {
         
             $cost = (($totalbillableunits += $totalrefunds) * $unitrate) * -1;
         
+            if (!empty($s)) $s = "({$s})";
+            
             $desc = trim(sprintf($GLOBALS['strBillableIncidentSummary'], $incidentid, $totalbillableunits, $CONFIG['currency_symbol'], $unitrate, $s));
         
             $rtn = update_contract_balance(incident_maintid($incidentid), $desc, $cost, $serviceid, $transactionid, $totalunits, $totalbillableunits, $totalrefunds);
@@ -258,8 +365,33 @@ class UnitBillable extends Billable {
     {
         $a = $this->make_incident_billing_array($incidentid);
         return $a[-1]['totalcustomerperiods'];
-        
     }
+
+
+    function billing_matrix_selector($id, $selected='')
+    {
+        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrix']}`";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) >= 1)
+        {
+            $html = "<select name='{$id}' id='{$id}'>\n";
+            while ($obj = mysql_fetch_object($result))
+            {
+                $html .= "<option value='{$obj->tag}'";
+                if ($obj->tag == $selected) $html .= " selected='selected'";
+                $html .= ">{$obj->tag}</option>\n";
+            }
+            $html .= "</select>\n";
+        }
+        else
+        {
+            $html = "{$GLOBALS['strNoBillingMatrixDefined']}";
+        }
+    
+        return $html;
+    }
+    
     
     /**
      * (non-PHPdoc)
@@ -308,8 +440,9 @@ class UnitBillable extends Billable {
         $used = FALSE;
         
         $sql = "SELECT i.id, i.owner, i.contact, i.title, i.closed, i.opened, t.transactionid FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i ";
-        $sql .= ", `{$GLOBALS['dbContacts']}` AS c WHERE ";
-        $sql .= "t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND linktype= 6 AND l.linkcolref = i.id AND i.contact = c.id AND c.siteid = {$siteid} ";
+        $sql .= ", `{$GLOBALS['dbContacts']}` AS c, `{$GLOBALS['dbMaintenance']}` AS m  WHERE ";
+        $sql .= "t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND linktype= 6 AND l.linkcolref = i.id AND i.contact = c.id AND i.maintenanceid = m.id AND c.siteid = {$siteid} ";
+        $sql .= "AND m.billingtype = 'UnitBillable' ";
         if ($startdate != 0)
         {
             $sql .= "AND i.closed >= {$startdate} ";
@@ -548,7 +681,9 @@ class UnitBillable extends Billable {
         
         $cost = (($totalbillableunits + $totalrefunds)  * $unitrate) * -1;
         
-        $desc = trim(sprintf($strBillableIncidentSummary, $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
+        if (!empty($s)) $s = "({$s})";
+        
+        $desc = trim(sprintf($GLOBALS['strBillableIncidentSummary'], $incidentid, $numberofunits, $CONFIG['currency_symbol'], $unitrate, $s));
         
         $transactionid = get_incident_transactionid($incidentid);
         if ($transactionid != FALSE)
@@ -557,7 +692,6 @@ class UnitBillable extends Billable {
         }
         
         return $toReturn;
-        
     }
     
     /**
@@ -958,6 +1092,45 @@ class UnitBillable extends Billable {
         return $billing;
     }
     
+    
+    function display_name()
+    {
+        return $GLOBALS['strPerUnit'];
+    }
+    
+    
+    /**
+     * (non-PHPdoc)
+     * @see Billable::incident_update_amount_interface()
+     * @author Paul Heaney
+     */
+    function incident_update_amount_interface($id)
+    {
+        return "<input type='text' name='{$id}' id='{$id}' size='10' /> {$GLOBALS['strMinutes']}<br />{$GLOBALS['strForRefundsThisShouldBeNegative']}";
+    }
+
+    
+    /**
+     * (non-PHPdoc)
+     * @see Billable::incident_update_amount_text()
+     * @author Paul Heaney
+     */
+    function incident_update_amount_text($amount, $description)
+    {
+        return "[b]{$GLOBALS['strAmount']}[/b]: {$amount} {$GLOBALS['strMinutes']}\n\n{$description}";
+    }
+    
+    
+    /**
+     * (non-PHPdoc)
+     * @see Billable::incident_log_update_summary()
+     * @author Paul Heaney
+     */
+    function incident_log_update_summary($amount)
+    {
+        $inminutes = ceil($amount); // Always round up
+        return "{$GLOBALS['strDuration']}: {$inminutes} {$GLOBALS['strMinutes']}";
+    }
 }
 
 
@@ -966,34 +1139,354 @@ class UnitBillable extends Billable {
 class IncidentBillable extends Billable {
     
     public $billing_type_name = 'incident';
+    public $uses_billing_matrix = FALSE;
    
     function close_incident($incidentid)
     {
-        trigger_error("Not yet implemented");
+        global $CONFIG, $now;
+        
+        if (!(get_billable_object_from_incident_id($incidentid) instanceof IncidentBillable))
+        {
+            trigger_error("Trying to close a non IncidentBillable incident with the IncidentBillable function");
+        } 
+        
+        // Get incident cost for the incident/contract
+        $contractid = incident_maintid($incidentid);
+        $unitrate = get_unit_rate($contractid);
+        
+        $sql = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} and duration < 0) AS refunds, ";
+        $sql .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$incidentid} and duration > 0) AS addititions";
+        
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        
+        $refunds = 0;
+        $additions = 0;
+        
+        if (mysql_num_rows($result) > 0)
+        {
+            list($refunds, $additions) = mysql_fetch_row($result);
+        }
+        
+        $totalunits = 1 + $refunds + $additions;
+        $totalbillableunits = 1 + $additions;
+        $totalcost = ($totalunits * $unitrate) * -1;  
+        
+        return $this->create_transaction_awaiting_approval($incidentid, $contractid, $totalunits, $unitrate, $totalbillableunits, $totalunits, $refunds, $totalcost, '');
     }
     
-    function contract_unit_balance($contractid,$includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
+    function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
     {
-        trigger_error("Not yet implemented");
+        global $now;
+        
+        $unitbalance = 0;
+        
+        $sql = "SELECT * FROM `{$GLOBALS['dbService']}` WHERE contractid = {$contractid} ";
+        
+        if ($showonlycurrentlyvalid)
+        {
+            $date = ldate('Y-m-d', $now);
+            $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
+        }
+        $sql .= "ORDER BY enddate DESC";
+        
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        
+        if (mysql_num_rows($result) > 0)
+        {
+            while ($service = mysql_fetch_object($result))
+            {
+                $rate = $service->rate;
+                $unitbalance += ( $service->balance / $rate );
+            }
+            
+            if ($includenonapproved)
+            {
+                $awaiting = contract_transaction_total($contractid, BILLING_AWAITINGAPPROVAL);
+                if ($awaiting != 0) $unitbalance += round($awaiting / $rate);
+            }
+            
+            if ($includereserved)
+            {
+                $reserved = contract_transaction_total($contractid, BILLING_RESERVED);
+                if ($reserved != 0) $unitbalance += round($reserved / $rate);
+            }
+        }
+        
+        
+        return floor($unitbalance);
+        
     }
     
     function approve_incident_transaction($transactionid)
     {
-        trigger_error("Not yet implemented");
+        global $CONFIG;
+        
+        $rtnvalue = TRUE;
+        
+        // Check transaction exists, and is awaiting approval and is an incident
+        $sql = "SELECT l.linkcolref, t.serviceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
+        $sql .= "WHERE t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND l.linktype = 6 AND t.transactionid = {$transactionid}";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("Error identify incident transaction. ".mysql_error(), E_USER_WARNING);
+        if (mysql_num_rows($result) > 0)
+        {
+            list($incidentid, $serviceid) = mysql_fetch_row($result);
+        
+            $unitrate = get_service_unitrate($serviceid);
+            
+            $sqlUpdates = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} and duration < 0) AS refunds, ";
+            $sqlUpdates .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$incidentid} and duration > 0) AS addititions";
+            
+            $resultUpdates = mysql_query($sqlUpdates);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            
+            $refunds = 0;
+            $additions = 0;
+            
+            if (mysql_num_rows($resultUpdates) > 0)
+            {
+                list($refunds, $additions) = mysql_fetch_row($resultUpdates);
+            }
+            
+            $totalunits = 1 + $refunds + $additions;
+            $totalbillableunits = 1 + $additions;
+            $totalcost = ($totalunits * $unitrate) * -1;
+           
+            $desc = trim(sprintf($GLOBALS['strBillableIncidentSummary'], $incidentid, 1, $CONFIG['currency_symbol'], $unitrate, ''));
+        
+            $rtn = update_contract_balance(incident_maintid($incidentid), $desc, $totalcost, $serviceid, $transactionid, $totalbillableunits, $totalunits, $refunds);
+        
+            if ($rtn == FALSE)
+            {
+                $rtnvalue = FALSE;
+            }
+        }
+        else
+        {
+            $rtnvalue = FALSE;
+        }
+        
+        return $rtnvalue;
     }
     
     function amount_used_incident($incidentid)
     {
-        trigger_error("Not yet implemented");
+        $contractid = incident_maintid($incidentid);
+        return get_unit_rate($contractid);
     }
     
     function produce_site_approvals_table($siteid, $formname, $startdate, $enddate)
     {
-        trigger_error("Not yet implemented");
+        global $CONFIG;
+        
+        $used = FALSE;
+        
+        $sitetotalawaitingapproval = 0;
+        
+        $sitetotalsbillablewaitingapproval = 0;
+        $refundedunapproved = 0;
+
+        $str = "<table align='center' width='80%'>";
+        $str .= "<tr>";
+        $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
+        $str .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strIncidentTitle']}</th><th>{$GLOBALS['strContact']}</th>";
+        $str .= "<th>{$GLOBALS['strEngineer']}</th><th>{$GLOBALS['strOpened']}</th><th>{$GLOBALS['strClosed']}</th>";
+        $str .= "<th>{$GLOBALS['strTotalUnits']}</th><th>{$GLOBALS['strCredits']}</th>";
+        $str .= "<th>{$GLOBALS['strBill']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
+        $str .= "<tr>";
+        
+        $sql = "SELECT i.id, i.owner, i.contact, i.title, i.closed, i.opened, t.transactionid FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i ";
+        $sql .= ", `{$GLOBALS['dbContacts']}` AS c, `{$GLOBALS['dbMaintenance']}` AS m WHERE ";
+        $sql .= "t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND linktype= 6 AND l.linkcolref = i.id AND i.contact = c.id AND i.maintenanceid = m.id AND c.siteid = {$siteid} ";
+        $sql .= "AND m.billingtype = 'IncidentBillable' ";
+        if ($startdate != 0)
+        {
+            $sql .= "AND i.closed >= {$startdate} ";
+        }
+        
+        if ($enddate != 0)
+        {
+            $sql .= "AND i.closed <= {$enddate} ";
+        }
+        $sql .= "ORDER BY i.closed";
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error(mysql_error(), E_USER_WARNING);
+            return FALSE;
+        }
+        
+        $units = 0;
+        
+        if (mysql_num_rows($result) > 0)
+        {
+            $shade = 'shade1';
+        
+            while ($obj = mysql_fetch_object($result))
+            {
+                $used = TRUE;
+                $unitrate = get_unit_rate(incident_maintid($obj->id));
+                
+                $unapprovable = FALSE;
+                
+                if ($unitrate == -1) $unapprovable = TRUE;
+                
+                
+                $sqlIncident = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$obj->id} and duration < 0) AS refunds, ";
+                $sqlIncident .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$obj->id} and duration > 0) AS addititions";
+                $resultIncident = mysql_query($sqlIncident);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                
+                $refunds = 0;
+                $additions = 0;
+
+                if (mysql_num_rows($resultIncident) > 0)
+                {
+                    list($refunds, $additions) = mysql_fetch_row($resultIncident);
+                }
+
+                if (empty($refunds)) $refunds = 0;
+                if (empty($additions)) $additions = 0;
+
+                $totalunits = 1 + $refunds + $additions;
+                $totalbillableunits = 1 + $additions;
+                $totalcost = $totalunits * $unitrate;
+                
+                $line = "<tr class='{$shade}'><td style='text-align: center'>";
+                
+                if (!$unapprovable)
+                {
+                    $line .= "<input type='checkbox' name='selected[]' value='{$obj->transactionid}' />";
+                }
+
+                $line .= "</td>";
+                $line .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td>";
+                $line .= "<td>{$obj->title}</td><td>".contact_realname($obj->contact)."</td>";
+                $line .= "<td>".user_realname($obj->owner)."</td>";
+                $line .= "<td>".ldate($CONFIG['dateformat_datetime'], $obj->opened)."</td><td>".ldate($CONFIG['dateformat_datetime'], $obj->closed)."</td>";
+                $line .= "<td>{$totalbillableunits}</td><td>".($refunds * -1 )."</td><td>{$CONFIG['currency_symbol']} {$totalcost}</td>";
+
+                $line .= "<td>";
+                
+                if ($unapprovable)
+                {
+                    $line .= $GLOBALS['strUnapprovable'];
+                }
+                else
+                {
+                    $operations[$GLOBALS['strApprove']] = array('url' => "{$_SERVER['PHP_SELF']}?mode=approve&amp;transactionid={$obj->transactionid}&amp;startdate={$startdateorig}&amp;enddate={$enddateorig}&amp;showonlyapproved={$showonlyapproved}"); // $showonlyapproved not passed in 
+                    $operations[$GLOBALS['strAdjust']] = array('url' => "billing_update_incident_balance.php?incidentid={$obj->id}");
+                    $line .= html_action_links($operations);
+                    $sitetotalawaitingapproval += $unitrate;
+                
+                    $sitetotalsbillablewaitingapproval += $totalbillableunits;
+                    $refundedunapproved += $refunds;
+                }
+                
+                $line .= "</td>";
+                
+                $line .= "</tr>\n";
+                
+                $str .= $line;
+                
+                if ($shade == "shade1") $shade = "shade2";
+                else $shade = "shade1";
+            }
+        }        
+        
+        $str .= "<tr><td><input type='submit' value='{$GLOBALS['strApprove']}' />";
+        $str .= "</td><td colspan='5'></td>";
+        $str .= "<td>{$GLOBALS['strTOTALS']}</td>";
+        $str .= "<td>{$sitetotalsbillablewaitingapproval}</td>";
+        $str .= "<td>".( $refundedunapproved * -1 )."</td>";
+        $str.= "<td>{$CONFIG['currency_symbol']} {$sitetotalawaitingapproval}</td><td></td>";
+        
+        $str .= "</tr>\n";
+        
+        $str .= "<tr><td align='right' colspan='6'></td>";
+        
+        $str .= "</table>\n";
+        
+        if (!$used) $str = FALSE;
+        
+        return $str;
+        
     }
     
     function update_incident_transaction_record($incidentid)
     {
-        trigger_error("Not yet implemented");
+        $toReturn = FALSE;
+        
+        $contractid = incident_maintid($incidentid);
+        $unitrate = get_unit_rate($contractid);
+        
+        $desc = trim(sprintf($GLOBALS['strBillableIncidentSummary'], $incidentid, 1, $CONFIG['currency_symbol'], $unitrate, ''));
+        
+        $transactionid = get_incident_transactionid($incidentid);
+        if ($transactionid != FALSE)
+        {
+            $toReturn = update_transaction($transactionid, $cost, $desc, BILLING_AWAITINGAPPROVAL);
+        }
+        
+        return $toReturn;
+    }
+    
+    function billing_matrix_selector($id, $selected='') {
+        // We don't use a billing matrix for Incidents
+        return "";
+    }
+    
+    function display_name()
+    {
+        return $GLOBALS['strPerIncident'];
+    }
+    
+    function incident_update_amount_interface($id)
+    {
+        return "<input type='checkbox' name='{$id}' id='{$id}' value='-1' /> {$GLOBALS['strRefundIncident']}";
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see Billable::incident_update_amount_text()
+     * @author Paul Heaney
+     */
+    function incident_update_amount_text($amount, $description)
+    {
+        $toReturn = $GLOBALS['strInvalidParameter'];
+        
+        if ($amount == -1)
+        {
+            $toReturn = "[b]{$GLOBALS['strIncidentRefunded']}[/b]\n\n{$description}";
+        }
+        else
+        {
+            trigger_error("IncidentBillable.incident_update_amount_text passed an amount of ".$amount." we only support -1");
+        }
+
+        return $toReturn;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see Billable::incident_log_update_summary()
+     * @author Paul Heaney
+     */
+    function incident_log_update_summary($amount)
+    {
+        $toReturn = $GLOBALS['strInvalidParameter'];
+        
+        if ($amount == -1)
+        {
+            $toReturn = $GLOBALS['strIncidentRefunded'];
+        }
+        else
+        {
+            trigger_error("IncidentBillable.incident_log_update_summary passed an amount of ".$amount." we only support -1");
+        }
+        
+        return $toReturn;
     }
 }

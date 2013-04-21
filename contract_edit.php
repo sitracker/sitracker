@@ -101,7 +101,7 @@ if ($action == "edit")
         echo "</label>";
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strServiceLevel}:</th><td>";
-        echo servicelevel_drop_down('servicelevel',$maint->servicelevel, TRUE);
+        echo servicelevel_drop_down('servicelevel', $maint->servicelevel, TRUE, '', FALSE);
         echo "</td></tr>\n";
         echo "<tr><th>{$strAdminContact}: </th><td>";
         echo contact_drop_down("admincontact", $maint->admincontact, TRUE, TRUE);

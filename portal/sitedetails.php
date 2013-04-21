@@ -23,7 +23,7 @@ if (isset($_POST['submit']))
 {
     // External Variables
     $incident_pools = explode(',', "0,{$CONFIG['incident_pools']}");
-    $incident_quantity = $incident_pools[$_POST['incident_poolid']];
+    $incident_quantity = $incident_pools[clen_int($_POST['incident_poolid'])];
     $name = cleanvar($_POST['name']);
     $department = cleanvar($_POST['department']);
     $address1 = cleanvar($_POST['address1']);

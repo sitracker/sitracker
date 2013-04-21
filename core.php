@@ -84,11 +84,11 @@ function stripslashes_array($data)
 if (get_magic_quotes_gpc())
 {
 
-//     All these global variables are slash-encoded by default,
-//     because    magic_quotes_gpc is set by default!
-//     (And magic_quotes_gpc affects more than just $_GET, $_POST, and $_COOKIE)
-//     We don't strip slashes from $_FILES as of 3.32 as this should be safe without
-//     doing and it will break windows file paths if we do
+    // All these global variables are slash-encoded by default,
+    // because    magic_quotes_gpc is set by default!
+    // And magic_quotes_gpc affects more than just $_GET, $_POST, and $_COOKIE)
+    // We don't strip slashes from $_FILES as of 3.32 as this should be safe without
+    // doing and it will break windows file paths if we do
     $_SERVER = stripslashes_array($_SERVER);
     $_GET = stripslashes_array($_GET);
     $_POST = stripslashes_array($_POST);
@@ -107,10 +107,10 @@ if (get_magic_quotes_gpc())
         $_SESSION = stripslashes_array($_SESSION, '');
         $HTTP_SESSION_VARS = stripslashes_array($HTTP_SESSION_VARS, '');
     }
-//     The $GLOBALS array is also slash-encoded, but when all the above are
-//     changed, $GLOBALS is updated to reflect those changes.  (Therefore
-//     $GLOBALS should never be modified directly).  $GLOBALS also contains
-//     infinite recursion, so it's dangerous...
+    // The $GLOBALS array is also slash-encoded, but when all the above are
+    // changed, $GLOBALS is updated to reflect those changes.  (Therefore
+    // $GLOBALS should never be modified directly).  $GLOBALS also contains
+    // infinite recursion, so it's dangerous...
 }
 
 // Sanitise the PHP_SELF server superglobal against XSS attacks
@@ -148,7 +148,7 @@ if (mysql_error())
     // Attempt socket connection to database to check if server is alive
     if (!fsockopen($CONFIG['db_hostname'], 3306, $errno, $errstr, 5))
     {
-        trigger_error("!Error: No response from database server within 5 seconds, Database Server ({$CONFIG['db_hostname']}) is probably down - contact a Systems Administrator",E_USER_ERROR);
+        trigger_error("!Error: No response from database server within 5 seconds, Database Server ({$CONFIG['db_hostname']}) is probably down - contact a Systems Administrator", E_USER_ERROR);
     }
     else
     {
@@ -157,6 +157,7 @@ if (mysql_error())
         exit;
     }
 }
+
 // See Mantis 506 for sql_mode discussion
 @mysql_query("SET SESSION sql_mode = '';");
 mysql_query("SET NAMES 'utf8'");

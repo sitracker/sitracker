@@ -262,7 +262,7 @@ function get_unit_rate($contractid, $date='')
 function get_service_unitrate($serviceid)
 {
     $rtnvalue = FALSE;
-	$sql = "SELECT rate FROM `{$GLOBALS['dbService']}` AS p WHERE serviceid = {$serviceid}";
+	$sql = "SELECT rate FROM `{$GLOBALS['dbService']}` WHERE serviceid = {$serviceid}";
 
     $result = mysql_query($sql);
     if (mysql_error())
@@ -504,29 +504,37 @@ function get_billable_object_from_contract_id($contractid)
  * @author Paul Heaney
  * @param String $billingtype The billing type to return an object off
  * @return mixed Billable if incident is billable else FALSE
- * @todo This may be removed following the billable code refactor
+ * @todo This may be removed following the billable code refactor - we store the Object name in the DB now perhaps remove?  Only benefit its it centralises error handling
  */
 function get_billable_incident_object($billingtype)
 {
     $toReturn = FALSE;
 
-    switch ($billingtype)
+    if (class_exists($billingtype) and is_subclass_of($billingtype, 'Billable'))
     {
-        case 'unit':
-            $toReturn = new UnitBillable();
-            break;
-        case 'incident':
-            $toReturn = new IncidentBillable();
-            break;
-        case '':
-            // Its not a billable incident
-            $toReturn = FALSE;
-            break;
-        default:
-            $toReturn = FALSE;
-            trigger_error("Unknown billable type of '{$billingtype}'");
+        $toReturn = new $billingtype();
     }
-    
+    else 
+    {
+        // Try and identity from old internal name
+        switch ($billingtype)
+        {
+            case 'unit':
+                $toReturn = new UnitBillable();
+                break;
+            case 'incident':
+                $toReturn = new IncidentBillable();
+                break;
+            case '':
+                // Its not a billable incident
+                $toReturn = FALSE;
+                break;
+            default:
+                $toReturn = FALSE;
+                trigger_error("Unknown billable type of '{$billingtype}'");
+        }
+    }
+        
     return $toReturn;
 }
 
@@ -813,8 +821,12 @@ function contract_service_table($contractid, $billing)
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
+        $billingObj = get_billable_object_from_contract_id($contractid);
+        
+        $html = "<strong>{$GLOBALS['strBilling']}</strong>: ".$billingObj->display_name();
+        
         $shade = 'shade1';
-        $html = "\n<table class='maintable' id='contractservicetable'>";
+        $html .= "\n<table class='maintable' id='contractservicetable'>";
         $html .= "<tr>";
         if ($billing) $html .= "<th></th>";
         $html .= "<th>{$GLOBALS['strStartDate']}</th><th>{$GLOBALS['strEndDate']}</th>";
@@ -824,6 +836,7 @@ function contract_service_table($contractid, $billing)
         }
         $html .= "<th>{$GLOBALS['strActions']}</th>";
         $html .= "</tr>\n";
+        
         while ($service = mysql_fetch_object($result))
         {
             $service->startdate = mysql2date($service->startdate . ' 00:00');
@@ -872,18 +885,6 @@ function contract_service_table($contractid, $billing)
                     $span .= "<br />";
                 }
 
-
-                $span .= "<strong>{$GLOBALS['strBilling']}</strong>: ";
-                if (!empty($service->unitrate) AND $service->unitrate > 0)
-                {
-                    $span .= $GLOBALS['strPerUnit'];
-                }
-                else
-                {
-                    $span .= $GLOBALS['strPerIncident'];
-                }
-                $span .= "<br />";
-
                 if ($service->creditamount != 0)
                 {
                     $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
@@ -899,7 +900,10 @@ function contract_service_table($contractid, $billing)
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
                 $maintenanceobj = mysql_fetch_object($result1);
                 
-                $span .= "<strong>{$GLOBALS['strBillingMatrix']}</string>: {$maintenanceobj->billingmatrix}<br />";
+                if ($billingObj->uses_billing_matrix)
+                {
+                    $span .= "<strong>{$GLOBALS['strBillingMatrix']}</strong>: {$maintenanceobj->billingmatrix}<br />";
+                }
 
                 if ($balance != $service->balance)
                 {
@@ -1415,7 +1419,8 @@ function get_contract_billable_type($contractid)
     if (mysql_num_rows($result) > 0)
     {
         $obj = mysql_fetch_object($result);
-        $toReturn = $obj->billingtype;
+        $toReturn = new $obj->billingtype();
+        $toReturn = $toReturn->billing_type_name;
     }
     
     return  $toReturn;

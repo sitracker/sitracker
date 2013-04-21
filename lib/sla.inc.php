@@ -140,9 +140,10 @@ function incident_sla_history($incidentid)
  * @param string $tag The tag which should be chosen
  * @param bool $collapse Only show the tag rather than tag + priority
  * @param string $select additional parameter to the select clause e.g. onchange code
+ * @param boolean $allowtimestatuschange Whether to allow changing from a timed to a non timed SLA or vica versa
  * @return String HTML of the SLA drop down
  */
-function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = '')
+function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = '', $allowtimestatuschange = TRUE)
 {
     global $dbServiceLevels;
 
@@ -154,6 +155,12 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
     {
         $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}`";
     }
+    
+    if (!$allowtimestatuschange AND !empty($tag))
+    {
+        $sql .= " WHERE timed = (SELECT DISTINCT timed FROM `{$dbServiceLevels}` WHERE tag = '{$tag}')";
+    }
+    
     $result = mysql_query($sql);
 
     $html = "<select id='{$name}' name='{$name}' {$select}>\n";

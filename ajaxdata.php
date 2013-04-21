@@ -414,6 +414,24 @@ switch ($action)
         $ldap_bind_pass = cleanvar($_REQUEST['ldap_bind_pass']);
         echo json_encode(ldapGroupBrowse($base, $ldap_host, $ldap_port, $ldap_type, $ldap_protocol, $ldap_security, $ldap_bind_user, $ldap_bind_pass));
         break;
+    case 'display_billingmatrix':
+        $billingtype = cleanvar($_REQUEST['billingtype']);
+        $selected = cleanvar($_REQUEST['selected']);
+        
+        $bill = new $billingtype();
+        $s = $bill->billing_matrix_selector('billing_matrix', $selected);
+        
+        if (empty($s)) 
+        {
+            $s = $GLOBALS['strNotApplicableAbbrev'];
+        }
+        else
+        {
+            $s = $s . "<span class='required'>{$GLOBALS['strRequired']}</span>"; 
+        }
+        
+        echo $s;
+        break;
     default :
         plugin_do('ajaxdata_action', array('action' => $action));
         break;

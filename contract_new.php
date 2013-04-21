@@ -109,10 +109,10 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strBilling}</th>";
     echo "<td>";
     echo "<label>";
-    echo "<input type='radio' name='billtype' value='unit' checked='checked' /> ";
+    echo "<input type='radio' name='billtype' value='UnitBillable' onchange=\"addcontract_display_billing_matrix('new_contract', '{$_SESSION['formdata']['new_contract']['billing_matrix']}');\" checked='checked' /> ";
     echo "{$strPerUnit}</label>";
     echo "<label>";
-    echo "<input type='radio' name='billtype' value='incident' /> ";
+    echo "<input type='radio' name='billtype' value='IncidentBillable' onchange=\"addcontract_display_billing_matrix('new_contract', '{$_SESSION['formdata']['new_contract']['billing_matrix']}');\" /> ";
     echo "{$strPerIncident}</label>";
     echo "</td></tr>\n";
 
@@ -124,7 +124,7 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
-    echo "<td>".billing_matrix_selector('billing_matrix', $_SESSION['formdata']['new_contract']['billing_matrix'] )." <span class='required'>{$strRequired}</span></td>";
+    echo "<td><div id='billingmatrix_cell'></div></td>";
     echo "</tr>";
 
     echo "<tr>";
@@ -262,7 +262,8 @@ elseif ($action == 'new')
         $_SESSION['formerrors']['new_contract']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
     }
 
-    if ($timed == 'yes' AND empty($billingmatrix))
+    $billingObj = new $billtype();
+    if ($timed == 'yes' AND $billingObj->uses_billing_matrix AND empty($billingmatrix))
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['billing_matrix'] = sprintf($strFieldMustNotBeBlank, $strNoBillingMatrixDefined);
@@ -292,14 +293,7 @@ elseif ($action == 'new')
             $licence_type = "'{$licence_type}'";
         }
 
-        if (empty($billingmatrix))
-        {
-            $billingmatrix = "NULL";
-        }
-        else
-        {
-            $billingmatrix = "'{$billingmatrix}'";
-        }
+        $billingmatrix = convert_string_null_safe($billingmatrix);
         
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
@@ -339,7 +333,7 @@ elseif ($action == 'new')
             plugin_do('contract_new_saved');
             // show success message
             $t = new TriggerEvent('TRIGGER_NEW_CONTRACT', array('contractid' => $maintid, 'userid' => $sit[2]));
-            html_redirect("contract_details.php?id=$maintid");
+            html_redirect("contract_details.php?id={$maintid}");
         }
         clear_form_data('new_contract');
     }

@@ -64,14 +64,14 @@ else
 
         if (!$result)
         {
-            html_redirect('vendor_edit.php', FAIL, $strAdditionFail);
+            html_redirect('vendor_new.php', FAIL, $strAdditionFail);
             exit;
         }
         else
         {
             $id = mysql_insert_id();
             journal(CFG_LOGGING_DEBUG, 'Vendor Added', "Vendor {$id} was added", CFG_JOURNAL_DEBUG, $id);
-            html_redirect("vendor_edit.php");
+            html_redirect("vendors.php");
         }
         clear_form_data('new_vendor');
         clear_form_errors('new_vendor');
