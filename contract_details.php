@@ -228,7 +228,7 @@ if (mysql_num_rows($maintresult) > 0)
     echo "<br />";
     echo "<h3>{$strSkillsSupportedUnderContract}:</h3>";
     // supported software
-    $sql = "SELECT * FROM `{$GLOBALS[dbSoftwareProducts]}` AS sp, `{$GLOBALS[dbSoftware]}` AS s ";
+    $sql = "SELECT * FROM `{$dbSoftwareProducts}` AS sp, `{$dbSoftware}` AS s ";
     $sql .= "WHERE sp.softwareid = s.id AND productid='{$maint->product}' ";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
