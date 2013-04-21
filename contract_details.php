@@ -214,8 +214,8 @@ if (mysql_num_rows($maintresult) > 0)
     {
         echo "<p align='center'>";
         echo sprintf($strUsedNofN,
-                        "<strong>".$numberofcontacts."</strong>",
-                        "<strong>".$allowedcontacts."</strong>");
+                        "<strong>{$numberofcontacts}</strong>",
+                        "<strong>{$allowedcontacts}</strong>");
         echo "</p>";
 
         if ($numberofcontacts < $allowedcontacts OR $allowedcontacts == 0)
