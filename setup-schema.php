@@ -1863,7 +1863,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 
 -- PH 2012-12-21
 ALTER TABLE `{$dbContacts}` CHANGE `jobtitle` `jobtitle` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-CHANGE `courtesytitle` `courtesytitle` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT ''
+CHANGE `courtesytitle` `courtesytitle` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '';
 
 UPDATE `{$dbContacts}` SET phone = NULL WHERE phone = '';
 UPDATE `{$dbContacts}` SET mobile = NULL WHERE mobile = '';
@@ -1908,7 +1908,7 @@ INSERT INTO `{$dbRolePermissions}` (`roleid`, `permissionid`, `granted`) VALUES 
 UPDATE `{$dbEmailTemplates}` SET `body` = 'Hi,\r\n\r\n{userrealname} has requested that you approve the following holidays:\r\n\r\n{listofholidays}\r\n\r\nThe user attached the following request\r\n\r\n{holidayrequestnote}\r\n\r\nPlease point your browser to {applicationurl}holiday_request.php?user={userid}&mode=approval to approve or decline these requests.\r\nRegards\r\n{applicationname}\r\n\r\n-- \r\n{todaysdate} - {applicationshortname} {applicationversion}\r\n{globalsignature}\r\n{triggersfooter}' WHERE name = 'EMAIL_HOLIDAYS_REQUESTED';
 ALTER TABLE `{$dbMaintenance}` ADD `billingtype` VARCHAR( 32 ) NULL COMMENT 'Billing type used by contract e.g. unit, incident';
 ALTER TABLE `{$dbService}` ADD `rate` FLOAT NOT NULL AFTER `incidentrate`;
-UPDATE `{$dbService}` SET rate = IF (`unitrate` == 0, `incidentrate`, `unitrate`);
+UPDATE `{$dbService}` SET rate = IF (`unitrate` = 0, `incidentrate`, `unitrate`);
 -- unitrate and incidentrate dropped in setup.php  
 ";
 
