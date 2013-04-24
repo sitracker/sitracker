@@ -1024,7 +1024,10 @@ function amount_used_site($siteid, $startdate=0, $enddate=0)
         while ($obj = mysql_fetch_object($result))
         {
             $billable = get_billable_incident_object($obj->billingtype);
-            $units[$obj->billingtype] += $billable->amount_used_incident($obj->id); 
+            if ($billable instanceof Billable)
+            {
+                $units[$obj->billingtype] += $billable->amount_used_incident($obj->id);
+            } 
         }
     }
 
