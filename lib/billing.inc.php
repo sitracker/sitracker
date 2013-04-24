@@ -823,7 +823,7 @@ function contract_service_table($contractid, $billing)
     {
         $billingObj = get_billable_object_from_contract_id($contractid);
 
-        $billingTypeName = $strNone;
+        $billingTypeName = $GLOBALS['strNone'];
         
         if ($billing AND ($billingObj instanceof Billable)) $billingTypeName = $billingObj->display_name();
         
