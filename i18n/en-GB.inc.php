@@ -1354,6 +1354,7 @@ $strOneOfTheSignaturesWillBeInserted = 'One of the signatures below will be chos
 $strOnline = 'Online';
 $strOnlyAvailableOnSupportIncidents = 'Only available on support incidents';
 $strOnlyShowsClosedCalls = 'Only shows closed calls';
+$strOnlyShowsContractsOfSameSLA = 'Only shows contracts of the same SLA';
 $strOnlyShowNewerThan = 'Only show newer than %d days old';
 $strOnlyShowSitesWithActiveContracts = 'Only show sites with active contracts';
 $strOnTrainingCourse = 'On Training Course';
