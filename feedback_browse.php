@@ -114,38 +114,38 @@ switch ($mode)
             $html .= "</table>\n";
             $html .= "<p align='center'>{$strPositivity}: {$average} <strong>({$percent}%)</strong></p>";
             $html .= "<p align='center'>{$strAnswered}: <strong>{$statquestions}</strong>/{$numresults}</p>";
+        }
 
-            // Return text/options/multioptions fields
-            $qsql = "SELECT id, taborder, question FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
-            $qresult = mysql_query($qsql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        // Return text/options/multioptions fields
+        $qsql = "SELECT id, taborder, question FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
+        $qresult = mysql_query($qsql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-            if (mysql_num_rows($qresult) >= 1)
+        if (mysql_num_rows($qresult) >= 1)
+        {
+            while ($qrow = mysql_fetch_object($qresult))
             {
-                while ($qrow = mysql_fetch_object($qresult))
-                {
 
-                    $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
-                    $sql .= "WHERE f.incidentid = i.id ";
-                    $sql .= "AND i.owner = u.id ";
-                    $sql .= "AND f.id = r.respondentid ";
-                    $sql .= "AND r.questionid = '{$qrow->id}' ";
-                    $sql .= "AND f.id = '{$responseid}' ";
-                    $sql .= "AND f.completed = 'yes' \n";
-                    $sql .= "ORDER BY i.owner, i.id";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    while ($row = mysql_fetch_object($result))
+                $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
+                $sql .= "WHERE f.incidentid = i.id ";
+                $sql .= "AND i.owner = u.id ";
+                $sql .= "AND f.id = r.respondentid ";
+                $sql .= "AND r.questionid = '{$qrow->id}' ";
+                $sql .= "AND f.id = '{$responseid}' ";
+                $sql .= "AND f.completed = 'yes' \n";
+                $sql .= "ORDER BY i.owner, i.id";
+                $result = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                while ($row = mysql_fetch_object($result))
+                {
+                    $html .= "<p align='center'><strong>Q{$qrow->taborder}: {$qrow->question}</strong></p>";
+                    if (!empty($row->result))
                     {
-                        $html .= "<p align='center'><strong>Q{$qrow->taborder}: {$qrow->question}</strong></p>";
-                        if (!empty($row->result))
-                        {
-                            $html .= "<p align='center'>{$row->result}</p>";
-                        }
-                        else
-                        {
-                            $html .= "<p align='center'><em>{$strNoAnswerGiven}</em></p>";
-                        }
+                        $html .= "<p align='center'>{$row->result}</p>";
+                    }
+                    else
+                    {
+                        $html .= "<p align='center'><em>{$strNoAnswerGiven}</em></p>";
                     }
                 }
             }
@@ -154,7 +154,7 @@ switch ($mode)
 
             //if ($total_average>0)
             echo $html;
-            echo "\n\n\n<!-- $surveys -->\n\n\n";
+            echo "\n\n\n<!-- {$surveys} -->\n\n\n";
         }
         else
         {
