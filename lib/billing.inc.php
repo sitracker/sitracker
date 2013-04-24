@@ -822,8 +822,12 @@ function contract_service_table($contractid, $billing)
     if (mysql_num_rows($result) > 0)
     {
         $billingObj = get_billable_object_from_contract_id($contractid);
+
+        $billingTypeName = $strNone;
         
-        $html = "<strong>{$GLOBALS['strBilling']}</strong>: ".$billingObj->display_name();
+        if ($billing AND ($billingObj instanceof Billable)) $billingTypeName = $billingObj->display_name();
+        
+        $html = "<strong>{$GLOBALS['strBilling']}</strong>: {$billingTypeName}";
         
         $shade = 'shade1';
         $html .= "\n<table class='maintable' id='contractservicetable'>";
