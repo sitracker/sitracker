@@ -165,7 +165,6 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     $hmenu[2030] = $hmenu[2030] +
                     array (10 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowseContracts, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
                            20 => array('perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
-                           30 => array('perm' => PERM_CONTRACT_EDIT, 'name' => $strEditContract, 'url' => "{$CONFIG['application_webpath']}contract_edit.php?action=showform"),
                            40 => array('perm' => PERM_RESELLER_ADD, 'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),
                            50 => array('perm' => PERM_SKILL_ADD, 'name' => $strSiteTypes, 'url' => "{$CONFIG['application_webpath']}site_types.php"),
                            60 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strShowRenewals, 'url' => "{$CONFIG['application_webpath']}search_renewals.php?action=showform"),
