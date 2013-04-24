@@ -401,7 +401,7 @@ function give_overview()
 
             while ($irow = mysql_fetch_object($iresult))
             {
-                $string .= "<small>".html_incident_popup_link($irow->id, get_userfacing_incident_id_email($irow->id))."</small> ";
+                $string .= "<small>".html_incident_popup_link($irow->id, get_userfacing_incident_id_email($irow->id), $irow->title)."</small> ";
             }
 
             $string .= "</td></tr>";
