@@ -822,8 +822,12 @@ function contract_service_table($contractid, $billing)
     if (mysql_num_rows($result) > 0)
     {
         $billingObj = get_billable_object_from_contract_id($contractid);
+
+        $billingTypeName = $GLOBALS['strNone'];
         
-        $html = "<strong>{$GLOBALS['strBilling']}</strong>: ".$billingObj->display_name();
+        if ($billing AND ($billingObj instanceof Billable)) $billingTypeName = $billingObj->display_name();
+        
+        $html = "<strong>{$GLOBALS['strBilling']}</strong>: {$billingTypeName}";
         
         $shade = 'shade1';
         $html .= "\n<table class='maintable' id='contractservicetable'>";
@@ -1024,7 +1028,10 @@ function amount_used_site($siteid, $startdate=0, $enddate=0)
         while ($obj = mysql_fetch_object($result))
         {
             $billable = get_billable_incident_object($obj->billingtype);
-            $units[$obj->billingtype] += $billable->amount_used_incident($obj->id); 
+            if ($billable instanceof Billable)
+            {
+                $units[$obj->billingtype] += $billable->amount_used_incident($obj->id);
+            } 
         }
     }
 

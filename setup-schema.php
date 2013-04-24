@@ -1724,7 +1724,7 @@ DELETE FROM `{$dbUserPermissions}` WHERE permissionid IN (45,46,47);
 ALTER TABLE `{$dbMaintenance}` ADD `servicelevel` VARCHAR( 32 ) NOT NULL AFTER `term` ;
 ";
 
-if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbServiceLevels, 'servicelevelid'))
+if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbMaintenance, 'servicelevelid'))
 {
     $upgrade_schema[390] .= "UPDATE `{$dbMaintenance}` SET servicelevel = (SELECT DISTINCT(tag) FROM `{$dbServiceLevels}` WHERE id = servicelevelid);";
 }

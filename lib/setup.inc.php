@@ -490,6 +490,7 @@ function upgrade_schema($installed_version)
         {
             $newversion = number_format(($v / 100), 2);
             echo "<p>Updating schema from {$installed_version} to v{$newversion}&hellip;</p>";
+            
             $errors = setup_exec_sql($upgrade_schema[$v]);
 
             // Update the system version
@@ -597,7 +598,7 @@ function setup_check_column_exists($table_name, $column_name)
     {
         $column_array[] = $tb_result[0];
     }
-    
+
     if (in_array($column_name, $column_array)) return TRUE;
     else return FALSE;
 }
@@ -708,6 +709,9 @@ function upgrade_required_perms($installed_version)
 
 function upgrade_390_migrate_user_config()
 {
+    global $CONFIG;
+    $dbInterfaceStyles = "{$CONFIG['db_tableprefix']}dbInterfaceStyles";
+    
     $sql_oldconfig = "SELECT id, var_emoticons, var_utc_offset, var_i18n, var_style, var_incident_refresh, var_update_order, var_num_updates_view FROM `{$GLOBALS['dbUsers']}`";
     $result_oldconfig = mysql_query($sql_oldconfig);
     if (mysql_error()) { trigger_error(mysql_error(), E_USER_WARNING); echo "error ".mysql_error()."\n\n";}
@@ -721,7 +725,7 @@ function upgrade_390_migrate_user_config()
         if (!empty($obj->var_update_order)) $s[] = "({$obj->id}, 'incident_log_order', '{$obj->var_update_order}')";
         if (!empty($obj->var_num_updates_view)) $s[] = "({$obj->id}, 'updates_per_page', '{$obj->var_num_updates_view}')";
         
-        $sql_style = "SELECT iconset FROM `{$GLOBALS['dbInterfaceStyles']}` WHERE id = {$obj->var_style}";
+        $sql_style = "SELECT iconset FROM `{$dbInterfaceStyles}` WHERE id = {$obj->var_style}";
         $result_style = mysql_query($sql_style);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if ($obj_style = mysql_fetch_object($result_style))
@@ -747,7 +751,7 @@ function upgrade_390_migrate_user_config()
                 {
                     trigger_error(mysql_error(), E_USER_WARNING);
                 }
-                $sql_drop = "DROP DATABASE IF EXISTS `{$GLOBALS['dbInterfaceStyles']}`";
+                $sql_drop = "DROP DATABASE IF EXISTS `{$dbInterfaceStyles}`";
                 $result_drop = mysql_query($sql_drop);
                 if (mysql_error())
                 {

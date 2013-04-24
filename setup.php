@@ -33,6 +33,7 @@ require (APPLICATION_LIBPATH . 'plugins.inc.php');
 $DEFAULTS = $CONFIG;
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 
 // Load config file with customisations
 // @include ("config.inc-dist.php");
@@ -671,10 +672,11 @@ switch ($_REQUEST['action'])
                                 }
                                 else
                                 {
-                                    $billingtype = 'UnitBillable';
-                                    if ($obj->incidentrate > 0) $billingtype = 'IncidentBillable';
+                                    $billingtype = 'Null';
+                                    if ($obj->unitrate > 0) $billingtype = "'UnitBillable'";
+                                    if ($obj->incidentrate > 0) $billingtype = "'IncidentBillable'";
                                     
-                                    $sqlup4a = "UPDATE `{$dbMaintenance}` SET billingtype = '{$billingtype}'";
+                                    $sqlup4a = "UPDATE `{$dbMaintenance}` SET billingtype = {$billingtype} WHERE id = {$obj->contractid}";
                                     $resultup4a = mysql_query($sqlup4a);
                                     if (mysql_error())
                                     {
@@ -711,7 +713,6 @@ switch ($_REQUEST['action'])
                                 $installed_version = $application_version;
                                 echo "<h2>Upgrade complete</h2>";
                                 echo "<p>Upgraded to v{$application_version}</p>";
-                                include (APPLICATION_LIBPATH . 'triggers.inc.php');
                                 $t = new TriggerEvent("TRIGGER_SIT_UPGRADED", array('applicationversion' => $application_version));
                             }
                             else
