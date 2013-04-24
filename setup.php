@@ -33,6 +33,7 @@ require (APPLICATION_LIBPATH . 'plugins.inc.php');
 $DEFAULTS = $CONFIG;
 
 require (APPLICATION_LIBPATH . 'functions.inc.php');
+require (APPLICATION_LIBPATH . 'trigger.class.php');
 
 // Load config file with customisations
 // @include ("config.inc-dist.php");
