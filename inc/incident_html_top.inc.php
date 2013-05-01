@@ -91,7 +91,7 @@ $site_name = $site->name;
 
 if (!empty($site->notes))
 {
-    $site_notes = icon('site', 16)." <strong>{$strSiteNotes}</strong><br />".nl2br($site->notes);
+    $site_notes = icon('site', 16)." <strong>{$strSiteNotes}</strong><br />".nl2br(htmlentities($site->notes));
 }
 else
 {

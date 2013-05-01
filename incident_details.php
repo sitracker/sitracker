@@ -112,13 +112,13 @@ else
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
     $contact .= "</a> ";
-    $site = "<a href='site_details.php?id={$incident->siteid}' title='{$strSite}' target='top.opener' class='info'>{$site_name}";
+    $site = "<a href='site_details.php?id={$incident->siteid}' title='{$strSite}' target='top.opener' class='info'>".htmlentities($site_name);
     if (!empty($site_notes)) $site .= "<span>{$site_notes}</span>";
     $site .= "</a> ";
     $site .= list_tag_icons($incident->siteid, TAG_SITE); // site tag icons
     $site .= "<br />\n";
     echo sprintf($strContactofSite, $contact, $site)." ";
-    echo "<a href=\"mailto:{$incident->email}?subject=".get_userfacing_incident_id_email($incidentid)." - {$incident->title}&cc={$CONFIG['email_address']}\">{$incident->email}</a>\n";
+    echo "<a href=\"mailto:{$incident->email}?subject=".get_userfacing_incident_id_email($incidentid)." - {$incident->title}&amp;cc={$CONFIG['email_address']}\">{$incident->email}</a>\n";
     echo "</div>\n";
 
     if ($incident->ccemail != '')
