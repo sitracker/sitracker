@@ -33,7 +33,7 @@ if (empty($action) OR $action == "showform")
     echo maintenance_drop_down("maintid", 0, NULL, true);
     echo "</td></tr>\n";
     echo "</table>\n";
-    echo "<p class='formbuttons'><input name='submit' type='submit' value=\"$strContinue\" /></p>\n";
+    echo "<p class='formbuttons'><input name='submit' type='submit' value=\"{$strContinue}\" /></p>\n";
     echo "</form>\n";
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -109,6 +109,7 @@ if ($action == "edit")
         echo "<tr><th>{$strNotes}:</th><td><textarea cols='40' name='notes' rows='5'>";
         echo $maint->notes;
         echo "</textarea></td></tr>\n";
+        plugin_do('contract_edit_form');
         echo "<tr><th>{$strTerminated}:</th><td><input name='terminated' id='terminated' type='checkbox' value='yes'";
         if ($maint->term == "yes") echo " checked";
         echo " /></td></tr>\n";
@@ -133,6 +134,7 @@ if ($action == "edit")
         echo "<td>".array_drop_down($incident_pools, 'incident_poolid', $maint->incident_quantity, '', TRUE, FALSE)."</td></tr>";
 
         echo "</tbody>";
+        plugin_do('contract_edit_form_more');
         echo "</table>\n";
         echo "<input name='maintid' type='hidden' value='{$maintid}' />";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
@@ -185,6 +187,8 @@ else if ($action == "update")
         $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
         $errors++;
     }
+    
+    plugin_do('contract_edit_submitted');
 
     if ($errors == 0)
     {
@@ -211,6 +215,7 @@ else if ($action == "update")
         }
         else
         {
+            plugin_do('contract_edit_saved');
             // show success message
             journal(CFG_LOGGING_NORMAL, 'Contract Edited', "contract {$maintid} modified", CFG_JOURNAL_MAINTENANCE, $maintid);
             html_redirect("contract_details.php?id={$maintid}");
