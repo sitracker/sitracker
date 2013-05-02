@@ -102,6 +102,8 @@ if ($action == "showform" OR $action == '')
 
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
 
+    plugin_do('contract_new_form');
+    
     echo "<tbody id='hiddentimed'";
     if (!$timed) echo " style='display:none'";
     echo ">";
@@ -156,7 +158,6 @@ if ($action == "showform" OR $action == '')
 
     plugin_do('contract_new_form_more');
     echo "</tbody>\n";
-    plugin_do('contract_new_form');
 
     echo "</table>\n";
     if ($timed) $timed = 'yes';

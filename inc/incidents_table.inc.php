@@ -36,13 +36,13 @@ echo "<tr>";
 $filter = array('queue' => $queue,
                 'user' => $user,
                 'type' => $type);
-echo colheader('id',$strID,$sort, $order, $filter);
-echo colheader('title',$strTitle,$sort, $order, $filter);
-echo colheader('contact',$strContact,$sort, $order, $filter);
-echo colheader('priority',$strPriority,$sort, $order, $filter);
-echo colheader('status',$strStatus,$sort, $order, $filter);
-echo colheader('lastupdated',$strLastUpdated,$sort, $order, $filter);
-echo colheader('nextaction',$strSLATarget,$sort, $order, $filter);
+echo colheader('id', $strID,$sort, $order, $filter);
+echo colheader('title', $strTitle,$sort, $order, $filter);
+echo colheader('contact', $strContact,$sort, $order, $filter);
+echo colheader('priority', $strPriority,$sort, $order, $filter);
+echo colheader('status', $strStatus,$sort, $order, $filter);
+echo colheader('lastupdated', $strLastUpdated,$sort, $order, $filter);
+echo colheader('nextaction', $strSLATarget,$sort, $order, $filter);
 echo colheader('info', $strInfo, $sort, $order, $filter);
 echo "</tr>";
 // Display the Support Incidents Themselves
@@ -306,7 +306,7 @@ while ($incidents = mysql_fetch_object($result))
     echo "<td>";
     echo "<a href='contact_details.php?id={$incidents->contactid}' class='info'><span>{$incidents->phone}<br />";
     echo "{$incidents->email}</span>{$incidents->forenames} {$incidents->surname}</a><br />";
-    echo "{$incidents->site} {$postsitetext} </td>";
+    echo htmlentities($incidents->site)." {$postsitetext} </td>";
 
     echo "<td align='center'>";
 

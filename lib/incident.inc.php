@@ -1072,7 +1072,7 @@ function priority_name($id, $syslang = FALSE)
 function incident_lastupdate($id)
 {
     // Find the most recent update
-    $sql = "SELECT userid, type, sla, currentowner, currentstatus, LEFT(bodytext,500) AS body, timestamp, nextaction, id ";
+    $sql = "SELECT userid, type, sla, currentowner, currentstatus, bodytext AS body, timestamp, nextaction, id ";
     $sql .= "FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND bodytext != '' ORDER BY timestamp DESC, id DESC LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -1084,8 +1084,15 @@ function incident_lastupdate($id)
     else
     {
         $update = mysql_fetch_object($result);
-
         mysql_free_result($result);
+        
+        $pos = strpos($update->body, " ", 500);
+        if (!empty($pos)) 
+        {
+            // Only truncate if longer than 500 characters
+            $update->body = substr($update->body, 0, $pos);
+        }
+        
         // Remove Tags from update Body
         $update->body = trim($update->body);
         $update->body = $update->body;

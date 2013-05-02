@@ -41,7 +41,7 @@ if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 while ($siteobj = mysql_fetch_object($siteresult))
 {
     echo "<tr><th>{$strSite}:</th><td>";
-    echo "<h3>".icon('site', 32)." {$siteobj->name}</h3>";
+    echo "<h3>".icon('site', 32)." ".htmlentities($siteobj->name)."</h3>";
     echo "</td></tr>";
     if ($siteobj->active == 'false')
     {
@@ -106,7 +106,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     }
 
     echo "</td></tr>";
-    echo "<tr><th>{$strNotes}:</th><td>".nl2br($siteobj->notes)."</td></tr>";
+    echo "<tr><th>{$strNotes}:</th><td>".nl2br(htmlentities($siteobj->notes))."</td></tr>";
     echo "<tr><td colspan='2'>&nbsp;</td></tr>";
     echo "<tr><th>{$strIncidents}:</th>";
     echo "<td>".site_count_incidents($id)." <a href=\"contact_support.php?id={$siteobj->id}&amp;mode=site\">{$strSeeHere}</a> (".site_count_incidents($id, TRUE)." <a href=\"contact_support.php?id={$siteobj->id}&amp;mode=site&amp;status=open\">{$strOpen})</a></td></tr>";
