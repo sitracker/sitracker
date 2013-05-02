@@ -76,23 +76,24 @@ function get_plugins_on_disk()
     
     while ($name = readdir($dir_handle))
     {
-        if (endsWith($name, '.php'))
+        if (is_dir(APPLICATION_PLUGINPATH . $name)) 
         {
-            $name = substr($name, 0, -4);
-            $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . '.php';
-            //$ondisk_plugins[$ondisk_pluginname] = 1;
-            $content = file($ondisk_pluginname);
-            $content = array_filter($content, 'getplugininfo');
-            foreach ($content AS $key => $value)
+            $ondisk_pluginname = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR . $name . '.php';
+            if (is_file($ondisk_pluginname))
             {
-                if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
-                if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
-                if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
-                if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
-                if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
-                if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
-                if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
-                $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
+                $content = file($ondisk_pluginname);
+                $content = array_filter($content, 'getplugininfo');
+                foreach ($content AS $key => $value)
+                {
+                    if (strrpos($value, '[\'version\']') !== FALSE) $ondisk_plugins[$name]['version'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'description\']') !== FALSE) $ondisk_plugins[$name]['desc'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'author\']') !== FALSE) $ondisk_plugins[$name]['author'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'legal\']') !== FALSE) $ondisk_plugins[$name]['legal'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'sitminversion\']') !== FALSE) $ondisk_plugins[$name]['sitminversion'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'sitmaxversion\']') !== FALSE) $ondisk_plugins[$name]['sitmaxversion'] = getplugininfovalue($value);
+                    if (strrpos($value, '[\'url\']') !== FALSE) $ondisk_plugins[$name]['url'] = getplugininfovalue($value);
+                    $ondisk_plugins[$name]['path'] = APPLICATION_PLUGINPATH . $name . DIRECTORY_SEPARATOR;
+                }
             }
         }
     }
