@@ -28,8 +28,6 @@ if (empty($draftid))
     $draftid = -1;
 }
 
-debug_log(print_r($_REQUEST, TRUE));
-
 $title = $strEmail;
 
 if (empty($step))
