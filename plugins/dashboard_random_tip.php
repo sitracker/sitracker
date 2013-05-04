@@ -2,13 +2,13 @@
 // dashboard_random_tip.php - A random tip
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2011 The Support Incident Tracker Project
+// Copyright (C) 2010-2013 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-$dashboard_random_tip_version = 2;
+$dashboard_random_tip_version = 3;
 
 function dashboard_random_tip($dashletid)
 {
@@ -24,6 +24,7 @@ function dashboard_random_tip_display($dashletid)
 
     $delim="\n";
     $tipsfile = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."help/{$_SESSION['lang']}/tips.txt";
+    if (!file_exists($tipsfile)) $tipsfile = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."help/{$CONFIG['default_i18n']}/tips.txt";
     if (!file_exists($tipsfile)) $tipsfile = dirname( __FILE__ ).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR."help/en-GB/tips.txt";
     if (!file_exists($tipsfile))
     {
