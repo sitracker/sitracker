@@ -692,6 +692,25 @@ switch ($_REQUEST['action'])
                                 mysql_query($sqlup4b);
                                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                             }
+                            
+                            // We can't do this in SQL as MySQL will not let you delete from a table where the table is in the subquery
+                            $sqlup5 = "SELECT ti.id FROM `{$dbTempIncoming}` AS ti, `{$dbUpdates}` AS u WHERE ti.updateid = u.id and u.incidentid <> 0";
+                            $resultup5 = mysql_query($sqlup5);
+                            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            
+                            $tempIncomingsToRemove = array();
+                            
+                            while ($obj = mysql_fetch_object($resultup5))
+                            {
+                                $tempIncomingsToRemove[] = $obj->id;
+                            }
+                            
+                            if (!empty($tempIncomingsToRemove))
+                            {
+                                $sqlup5a = "DELETE FROM `{$dbTempIncoming}` WHERE id IN (".implode(", ", $tempIncomingsToRemove).")";
+                                mysql_query($sqlup5a);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            }
 
 
                             if ($installed_version == $application_version)

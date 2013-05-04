@@ -30,7 +30,7 @@ if ((!empty($oucode)) AND (!empty($hashcode)))
 if (!empty($hashcode))
 {
     $decodehash = str_rot13(@gzuncompress(base64_decode(urldecode($hashcode))));
-    $hashvars = explode('&&',$decodehash);
+    $hashvars = explode('&&', $decodehash);
     $formid = clean_int($hashvars['0']);
     $contactid = clean_int($hashvars['1']);
     $incidentid = clean_int(urldecode($hashvars['2']));
@@ -40,7 +40,7 @@ if (!empty($hashcode))
 elseif (!empty($oucode))
 {
     $decodehash = str_rot13(@gzuncompress(base64_decode(urldecode($oucode))));
-    $hashvars = explode('&&',$decodehash);
+    $hashvars = explode('&&', $decodehash);
     $contactid = clean_int($hashvars['0']);
     $contactemail = clean_dbstring(urldecode($hashvars['1']));
 }
