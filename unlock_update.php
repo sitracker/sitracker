@@ -29,8 +29,7 @@ if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERRO
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 else
 {
-    // FIXME Have temporarily disabled the inbox feature by removing it from the menu for v3.50 release
-    // header('Location: inbox.php');
+    // TODO remove this page as and when the new inbox is live
     header('Location: holding_queue.php');
 }
 

@@ -340,7 +340,6 @@ elseif ($_REQUEST['mode'] == 'report')
             $incsql_esc .= "(";
             for ($i = 0; $i < $includecount; $i++)
             {
-                // $html .= "{$_POST['inc'][$i]} <br />";
                 $incsql .= "u.id={$inc[$i]}";
                 $incsql_esc .= "i.owner={$inc[$i]}";
                 if ($i < ($includecount-1)) $incsql .= " OR ";

@@ -11,13 +11,14 @@
 
 // Author: Ivan Lucas <ivanlucas[at]users.sourceforge.net>
 
-$title = $strListProducts;
 require ('core.php');
 $permission = PERM_PRODUCT_VIEW; // View Products and Software
 require (APPLICATION_LIBPATH.'functions.inc.php');
 
 // This page requires authentication
 require (APPLICATION_LIBPATH.'auth.inc.php');
+
+$title = $strListProducts;
 
 // External Variables
 $productid = clean_int($_REQUEST['productid']);

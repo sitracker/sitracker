@@ -40,7 +40,7 @@ require (APPLICATION_LIBPATH . 'trigger.class.php');
 
 populate_syslang();
 // External vars
-$password = $_REQUEST['password'];
+$password = $_REQUEST['password'];  // We don't need to clean as its md5'ed else where
 $username = cleanvar($_REQUEST['username']);
 $public_browser = cleanvar($_REQUEST['public_browser']);
 $page = clean_url($_REQUEST['page']);
@@ -57,7 +57,7 @@ if (empty($_REQUEST['username']) AND empty($_REQUEST['password']) AND $language 
     }
     header ("Location: index.php");
 }
-elseif (authenticate($username, $_REQUEST['password']))
+elseif (authenticate($username, $password))
 {
     // Valid user
     $_SESSION['auth'] = TRUE;

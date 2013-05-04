@@ -34,7 +34,6 @@ $display = clean_fixed_list($_REQUEST['display'], array('month', 'list', 'year',
 $weeknumber = clean_int($weeknumber);
 
 $title = $strCalendar;
-$pagecss = array('calendar/planner.css.php');
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 if (empty($user) || $user == 'current') $user = $sit[2];

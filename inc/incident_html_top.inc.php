@@ -27,6 +27,7 @@ else
 echo "</title>";
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset={$i18ncharset}\" />\n";
 echo "<meta name=\"GENERATOR\" content=\"{$CONFIG['application_name']} {$application_version_string}\" />\n";
+echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n";
 echo "<style type='text/css'>@import url('{$CONFIG['application_webpath']}styles/sitbase.css');</style>\n";
 
 if ($_SESSION['auth'] == TRUE)
@@ -90,7 +91,7 @@ $site_name = $site->name;
 
 if (!empty($site->notes))
 {
-    $site_notes = icon('site', 16)." <strong>{$strSiteNotes}</strong><br />".nl2br($site->notes);
+    $site_notes = icon('site', 16)." <strong>{$strSiteNotes}</strong><br />".nl2br(htmlentities($site->notes));
 }
 else
 {

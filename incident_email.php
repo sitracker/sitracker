@@ -28,8 +28,6 @@ if (empty($draftid))
     $draftid = -1;
 }
 
-debug_log(print_r($_REQUEST, TRUE));
-
 $title = $strEmail;
 
 if (empty($step))
@@ -150,7 +148,7 @@ switch ($step)
         echo "</table>";
         echo "<p class='formbuttons'>";
         echo "<input type='hidden' name='step' value='2' />";
-        echo "<input type='hidden' name='menu' value='$menu' />";
+        echo "<input type='hidden' name='menu' value='{$menu}' />";
         echo "<input name='submit1' type='submit' value='{$strContinue}' /></p>";
         echo "</form>\n";
         include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
@@ -163,7 +161,7 @@ switch ($step)
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $draftobj = mysql_fetch_object($draftresult);
 
-            $metadata = explode("|",$draftobj->meta);
+            $metadata = explode("|", $draftobj->meta);
         }
 
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
@@ -198,30 +196,7 @@ switch ($step)
             $time_picker_hour = clean_int($_REQUEST['time_picker_hour']);
             $time_picker_minute = clean_int($_REQUEST['time_picker_minute']);
             $timetonextaction = clean_fixed_list(strtolower($_REQUEST['timetonextaction']), array('', 'none', 'time', 'date'));
-        }
-        else
-        {
-            $emailtype = $metadata[0];
-            $newincidentstatus = $metadata[1];
-            $timetonextaction_none = $metadata[2];
-            $timetonextaction_days = $metadata[3];
-            $timetonextaction_hours = $metadata[4];
-            $timetonextaction_minutes = $metadata[5];
-            $day = $metadata[6];
-            $month = $metadata[7];
-            $year = $metadata[8];
-            $target = $metadata[9];
-            $chase_customer = $metadata[10];
-            $chase_manager = $metadata[11];
-            $date = $metadata[12];
-            $time_picker_hour = $metadata[13];
-            $time_picker_minute = $metadata[14];
-            $timetonextaction = $metadata[15];
-        }
-
-
-        if ($draftid == -1)
-        {
+            
             // Grab the template
             $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$emailtype} LIMIT 1";
             $tresult = mysql_query($tsql);
@@ -238,6 +213,18 @@ switch ($step)
         }
         else
         {
+            $emailtype = $metadata[0];
+            $newincidentstatus = $metadata[1];
+            $timetonextaction_none = $metadata[2];
+            $timetonextaction_days = $metadata[3];
+            $timetonextaction_hours = $metadata[4];
+            $timetonextaction_minutes = $metadata[5];
+            $day = $metadata[6];
+            $month = $metadata[7];
+            $year = $metadata[8];
+            $target = $metadata[9];
+            $chase_customer = $metadata[10];
+            $chase_manager = $metadata[11];
             $from = $metadata[12];
             $replyto = $metadata[13];
             $ccemail = $metadata[14];
@@ -245,6 +232,10 @@ switch ($step)
             $toemail = $metadata[16];
             $subject = $metadata[17];
             $body = $metadata[18];
+            $date = $metadata[19];
+            $time_picker_hour = $metadata[20];
+            $time_picker_minute = $metadata[21];
+            $timetonextaction = $metadata[22];
         }
 
         $from = format_email_address_list($from);

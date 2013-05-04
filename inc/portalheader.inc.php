@@ -36,6 +36,7 @@ echo "     This software may be used and distributed according to the terms\n";
 echo "     of the GNU General Public License, incorporated herein by reference. -->\n";
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html;charset={$i18ncharset}\" />\n";
 echo "<meta name=\"GENERATOR\" content=\"{$CONFIG['application_name']} {$application_version_string}\" />\n";
+echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n";
 echo "<title>";
 if (isset($title))
 {
@@ -62,40 +63,6 @@ else
 if (empty($theme)) $theme = $CONFIG['portal_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['portal_iconset'];
 
-//some css for the KB
-echo "<style type='text/css'>
-    .kbprivate
-    {
-        color: #FFFFFF;
-/*         background-color: #FF3300; */
-        background-image:url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/private.png);
-        background-repeat: no-repeat;
-        background-position: top right;
-        border: 2px dashed #FF3300;
-        margin: 3px 0px;
-        padding: 0px 2px;
-    }
-
-    .kbrestricted
-    {
-        background-color: #DDDDDD;
-        background-image:url({$CONFIG['application_webpath']}images/icons/{$iconset}/16x16/private.png);
-        background-repeat: no-repeat;
-        background-position: top right;
-    }
-
-    .keykbprivate
-    {
-        color: #FFFFFF;
-        background-color: #FF3300;
-    }
-
-    .keykbrestricted
-    {
-        background-color: #DDDDDD;
-    }
-
-    </style>";
 if (isset($refresh) && $refresh != 0)
 {
    echo "<meta http-equiv='refresh' content='{$refresh}' />\n";
@@ -107,6 +74,7 @@ echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$them
 echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
 echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
+echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='text/javascript'></script>\n";
 // To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
 if (is_array($pagescripts))
 {

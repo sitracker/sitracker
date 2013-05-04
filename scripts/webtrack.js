@@ -353,7 +353,7 @@ function update_ttna() {
 
 /**
  * Check whether a service level is timed when adding a contract
- * @author Unknown ???
+ * @author Paul Heaney
  *
  */
 function addcontract_sltimed(servicelevel)
@@ -371,6 +371,8 @@ function addcontract_sltimed(servicelevel)
                     {
                         $('hiddentimed').show();
                         $('timed').value = 'yes';
+                        
+                        addcontract_display_billing_matrix('new_contract', '');
                     }
                     else
                     {
@@ -383,6 +385,30 @@ function addcontract_sltimed(servicelevel)
         });
 }
 
+
+/**
+ * Displays the relevent billing matrix drop down for a particular billing type
+ * @author Paul Heaney
+ */
+function addcontract_display_billing_matrix(form, defaultvalue)
+{
+	var billingtype = Form.getInputs(form,'radio','billtype').find(function(radio) { return radio.checked; }).value;
+	
+	new Ajax.Request(application_webpath + 'ajaxdata.php',
+	        {
+	            method: 'get',
+	            parameters: {action: 'display_billingmatrix', billingtype: billingtype, selected: defaultvalue},
+	            onSuccess: function(transport)
+	            {
+	                var response = transport.responseText || "no response text";
+	                if (transport.responseText)
+	                {
+	                    $('billingmatrix_cell').innerHTML = response;
+	                }
+	            },
+	            onFailure: function(){ alert('Something went wrong...') }
+	        });
+}
 
 /**
  * Hide context help [?] popups
@@ -1137,7 +1163,7 @@ function save_draft(incidentid, type){
         meta = meta+$('target').value+"|"+$('chase_customer').value+"|";
         meta = meta+$('chase_manager').value+"|"+$('fromfield').value+"|"+$('replytofield').value+"|";
         meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
-        meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|"
+        meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|";
         meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
         
         toPass = $('bodytext').value;

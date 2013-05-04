@@ -76,6 +76,7 @@ switch ($action)
         $_POST = cleanvar($_POST);
         $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], $_POST['enabled'], $_POST['conditions']);
 
+        // Don't need to cleanvar below as we've done above
         if ($_POST['new_action'] == 'ACTION_NOTICE')
         {
             $template = $_POST['noticetemplate'];

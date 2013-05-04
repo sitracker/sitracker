@@ -25,7 +25,7 @@ $expiredaszero = clean_fixed_list($_REQUEST['expiredaszero'], array('','show'));
 
 if (empty($display)) $display = 'html';
 
-$sql = "SELECT DISTINCT(CONCAT(m.id,sl.tag)), m.site, m.product, m.expirydate AS maintexpiry, m.billingmatrix, s.* ";
+$sql = "SELECT DISTINCT(CONCAT(m.id,sl.tag)), m.site, m.product, m.expirydate AS maintexpiry, m.billingmatrix, m.billingtype, s.* ";
 $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbService}` AS s, `{$dbSites}` AS site ";
 $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.id = s.contractid AND m.site = site.id ";
 
@@ -58,7 +58,7 @@ if (mysql_num_rows($result) > 0)
 {
     if ($display == 'html')
     {
-        $str .= "<table class='maintable'><tr><th>{$strSiteName}</th><th>{$strProduct}</th><th>{$strBillingMatrix}</th>";
+        $str .= "<table class='maintable'><tr><th>{$strSiteName}</th><th>{$strProduct}</th><th>{$strBilling}</th>";
         $str .= "<th>{$strExpiryDate}</th><th>{$strCustomerReference}</th><th>{$strStartDate}</th><th>{$strEndDate}</th>";
         $str .= "<th>{$strFreeOfCharge}</th><th>{$strCreditAmount}</th><th>{$strBalance}</th>";
         $str .= "<th>{$strAwaitingApproval}</th><th>{$strReserved}</th><th>{$strAvailableBalance}</th>";
@@ -67,7 +67,7 @@ if (mysql_num_rows($result) > 0)
     elseif ($display == 'csv')
     {
         // NOTE: do not seperate each of these entries with spaces some apps can't decode properly (OpenOffice) and you get " in the entries
-        $str .= "\"{$strSiteName}\",\"{$strProduct}\",\"{$strExpiryDate}\",\"{$strCustomerReference}\",\"{$strStartDate}\",";
+        $str .= "\"{$strSiteName}\",\"{$strProduct}\",\"{$strBilling}\",\"{$strExpiryDate}\",\"{$strCustomerReference}\",\"{$strStartDate}\",";
         $str .= "\"{$strEndDate}\",\"{$strFreeOfCharge}\",\"{$strCreditAmount}\",\"{$strBalance}\",\"{$strAwaitingApproval}\",";
         $str .= "\"{$strReserved}\",\"{$strAvailableBalance}\",\"{$strUnitRate}\",\"{$strUnitsRemaingSingleTime}\"\n";
     }
@@ -78,6 +78,8 @@ if (mysql_num_rows($result) > 0)
     $shade = 'shade1';
     while ($obj = mysql_fetch_object($result))
     {
+        $billingObj = get_billable_incident_object($obj->billingtype);
+        
         if ($obj->foc == 'yes' AND !empty($focaszero))
         {
             $obj->creditamount = 0;
@@ -101,7 +103,7 @@ if (mysql_num_rows($result) > 0)
         $actual = ($obj->balance - $awaitingapproval) - $reserved;
         $totalactual += $actual;
 
-        if ($obj->rate != 0) $unitsat1times = round(($actual /$obj->rate), 2);
+        if ($obj->rate != 0) $unitsat1times = round(($actual / $obj->rate), 2);
         else $unitsat1times = 0;
 
         $remainingunits += $unitsat1times;
@@ -115,11 +117,15 @@ if (mysql_num_rows($result) > 0)
             }
 
             $str .= "<tr class='{$shade}'>";
+            
+            $billingmatrix = "";
+            if (!empty($obj->billingmatrix)) $billingmatrix = "({$obj->billingmatrix})";
+            
             if ($obj->site != $lastsite)
             {
                 $str .= "<td>".site_name($obj->site)."</td>";
                 $str .= "<td>".product_name($obj->product)."</td>";
-                $str .= "<td>{$obj->billingmatrix}</td>";
+                $str .= "<td>".$billingObj->display_name()."<br />{$billingmatrix}</td>";
             }
             else
             {
@@ -127,7 +133,7 @@ if (mysql_num_rows($result) > 0)
                 if ($obj->product != $lastproduct)
                 {
                     $str .= "<td>".product_name($obj->product)."</td>";
-                    $str .= "<td>{$obj->billingmatrix}</td>";
+                    $str .= "<td>".$billingObj->display_name()."<br />{$billingmatrix}</td>";
                 }
                 else
                 {
@@ -158,6 +164,7 @@ if (mysql_num_rows($result) > 0)
             {
                 $str .= "\"".site_name($obj->site)."\",";
                 $str .= "\"".product_name($obj->product)."\",";
+                $str .= "\"".$billingObj->display_name()."\",";
             }
             else
             {
@@ -170,6 +177,7 @@ if (mysql_num_rows($result) > 0)
                 {
                     $str .= ",";
                 }
+                $str .= "\"".$billingObj->display_name()."\",";
             }
 
             $str .= "\"".ldate($CONFIG['dateformat_date'], $obj->maintexpiry)."\",";
@@ -186,7 +194,7 @@ if (mysql_num_rows($result) > 0)
 
     if ($display == 'html')
     {
-        $str .= "<tfoot><tr><td colspan='7' align='right'><strong>{$strTOTALS}</strong></td><td>{$CONFIG['currency_symbol']}".number_format($totalcredit, 2)."</td>";
+        $str .= "<tfoot><tr><td colspan='8' align='right'><strong>{$strTOTALS}</strong></td><td>{$CONFIG['currency_symbol']}".number_format($totalcredit, 2)."</td>";
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalbalance, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalawaitingapproval, 2)."</td>";
         $str .= "<td>{$CONFIG['currency_symbol']}".number_format($totalreserved, 2)."</td><td>{$CONFIG['currency_symbol']}".number_format($totalactual, 2)."</td><td></td><td>{$remainingunits}</td></tr></tfoot>";
         $str .= "</table>";

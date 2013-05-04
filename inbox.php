@@ -8,6 +8,8 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
+// FIXME complete this code
+
 require ('core.php');
 $permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -64,7 +66,10 @@ function contact_info($contactid, $email, $name, $subject)
     {
         $linktext = "{$email}";
     }
-    else $linktext .= "{$strUnknown}";
+    else
+    {
+        $linktext .= "{$strUnknown}";
+    }
 
     if (!empty($email))
     {
@@ -112,10 +117,11 @@ if (!empty($action))
     {
         $_REQUEST['selected'] = array($_REQUEST['selected']);
     }
+
     foreach ($_REQUEST['selected'] AS $item => $selected)
     {
         $selected = clean_int($selected);
-        $tsql = "SELECT updateid FROM `{$dbTempIncoming}` WHERE id={$selected}";
+        $tsql = "SELECT updateid, locked FROM `{$dbTempIncoming}` WHERE id={$selected}";
         $tresult = mysql_query($tsql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if ($tresult AND mysql_num_rows($tresult) > 0)
@@ -125,13 +131,16 @@ if (!empty($action))
             switch ($action)
             {
                 case 'delete':
-                    // FIXME TODO don't run action on items locked by other people
-                    $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
-                    mysql_query($dsql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
-                    mysql_query($dsql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    if ($temp->locked == $sit[2])
+                    {
+                        // Only allow the person who has the update located delete it
+                        $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
+                        mysql_query($dsql);
+                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    }
                     break;
                 case 'lock':
                     $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
@@ -196,7 +205,7 @@ if (empty($displayid))
 
     if ($countresults > 0)
     {
-        echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox'  method='post'>";
+        echo "<form action='{$_SERVER['PHP_SELF']}' id='inboxform' name='inbox' method='post'>";
         $shade = 'shade1';
         echo "<table class='maintable' id='inboxtable'>";
         echo "<tr>";
@@ -287,7 +296,7 @@ if (empty($displayid))
         echo "<option value='lock'>{$strLock}</option>";
         echo "<option value='unlock'>{$strUnlock}</option>";
         echo "<option value='delete'>{$strDelete}</option>";
-//         echo "<option value='assign'>{$strAssign}</option>";
+        // echo "<option value='assign'>{$strAssign}</option>";
         echo "</select>";
         echo "<input type='submit' value=\"{$strGo}\" />";
         echo "</td>";
@@ -377,8 +386,6 @@ else
             echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string=".urlencode("{$incoming->forenames} {$incoming->surname}")."&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>"; // FIXME
             echo " | <a href=\"move_update.php?id={$displayid}&amp;updateid={$incoming->updateid}&amp;contactid={$incoming->contactid}&amp;win=incomingview\" title=\"{$strUpdateIncident}\">";
             echo "{$strMoveToIncident}</a>"; // FIXME needs help
-
-
 
             if ($lockedbyyou)
             {

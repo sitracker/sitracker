@@ -63,7 +63,8 @@ if (isset($_POST['submit']))
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
-    if (empty($site))
+
+    if (empty($siteid))
     {
         $errors++;
         $_SESSION['formerrors']['inventory_edit']['site'] = sprintf($strFieldMustNotBeBlank, $strSite);
@@ -72,7 +73,7 @@ if (isset($_POST['submit']))
 
     if ($errors > 0)
     {
-        html_redirect("inventory_edit.php?id={$siteid}", FALSE);
+        html_redirect("inventory_edit.php?id={$id}", FALSE);
         exit;
     }
 

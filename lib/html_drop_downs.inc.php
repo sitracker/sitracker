@@ -1193,31 +1193,6 @@ function billing_multiplier_dropdown($name, $selected='')
 }
 
 
-function billing_matrix_selector($id, $selected='')
-{
-    $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrix']}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) >= 1)
-    {
-        $html = "<select name='{$id}' id='{$id}'>\n";
-        while ($obj = mysql_fetch_object($result))
-        {
-            $html .= "<option value='{$obj->tag}'";
-            if ($obj->tag == $selected) $html .= " selected='selected'";
-            $html .= ">{$obj->tag}</option>\n";
-        }
-        $html .= "</select>\n";
-    }
-    else
-    {
-        $html = "{$GLOBALS['strNoBillingMatrixDefined']}";
-    }
-
-    return $html;
-}
-
-
 /**
  * Generates a drop down of the available charting libraries
  * @author Paul Heaney

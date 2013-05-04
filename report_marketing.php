@@ -110,12 +110,12 @@ if (empty($mode))
 }
 elseif ($mode == 'report')
 {
-    $sitetype = $_POST['sitetype'];
+    $sitetype = cleanvar($_POST['sitetype']);
     // echo "REPORT";
     // don't include anything excluded
     if (is_array($_POST['inc']) && is_array($_POST['exc']))
     {
-        $_POST['inc'] = array_values(array_diff($_POST['inc'],$_POST['exc']));
+        $_POST['inc'] = array_values(array_diff($_POST['inc'], $_POST['exc']));
     }
 
     $filtertags = cleanvar($_POST['filtertags']);

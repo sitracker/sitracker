@@ -21,7 +21,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strNewLink;
 
 // External variables
-$action = $_REQUEST['action'];
+$action = clean_fixed_list($_REQUEST['action'], array('', 'addlink'));
 $origtab = cleanvar($_REQUEST['origtab']);
 $origref = cleanvar($_REQUEST['origref']);
 $linkref = cleanvar($_REQUEST['linkref']);

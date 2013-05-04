@@ -112,13 +112,13 @@ else
     $contact = "<a href='contact_details.php?id={$incident->contactid}' title=\"{$strContact}\" target='top.opener' class='info'>{$incident->forenames} {$incident->surname}";
     if (!empty($contact_notes)) $contact .= "<span>{$contact_notes}</span>";
     $contact .= "</a> ";
-    $site = "<a href='site_details.php?id={$incident->siteid}' title='{$strSite}' target='top.opener' class='info'>{$site_name}";
+    $site = "<a href='site_details.php?id={$incident->siteid}' title='{$strSite}' target='top.opener' class='info'>".htmlentities($site_name);
     if (!empty($site_notes)) $site .= "<span>{$site_notes}</span>";
     $site .= "</a> ";
     $site .= list_tag_icons($incident->siteid, TAG_SITE); // site tag icons
     $site .= "<br />\n";
     echo sprintf($strContactofSite, $contact, $site)." ";
-    echo "<a href=\"mailto:{$incident->email}?subject=".get_userfacing_incident_id_email($incidentid)." - {$incident->title}&cc={$CONFIG['email_address']}\">{$incident->email}</a>\n";
+    echo "<a href=\"mailto:{$incident->email}?subject=".get_userfacing_incident_id_email($incidentid)." - {$incident->title}&amp;cc={$CONFIG['email_address']}\">{$incident->email}</a>\n";
     echo "</div>\n";
 
     if ($incident->ccemail != '')
@@ -264,20 +264,29 @@ else
     echo "{$servicelevel_tag}<br />\n ";
     echo "</div>\n";
 
-    switch (does_contact_have_billable_contract($incident->contactid))
+    $billingObj = get_billable_object_from_incident_id($incidentid);
+    
+    if ($billingObj instanceof Billable)
     {
-        case CONTACT_HAS_BILLABLE_CONTRACT:
-            echo "<div id='billingdetails'>\n";
-            echo "{$strContactHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
-            echo "</div>\n";
-            break;
-        case SITE_HAS_BILLABLE_CONTRACT:
-            echo "<div id='billingdetails'>\n";
-            echo "{$strSiteHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
-            echo "</div>\n";
-            break;
+        echo "<div id='billingdetails'>{$strBilling}: ".$billingObj->display_name()."</div>\n";
     }
-
+    else
+    {
+        switch (does_contact_have_billable_contract($incident->contactid))
+        {
+            case CONTACT_HAS_BILLABLE_CONTRACT:
+                echo "<div id='billingdetails'>\n";
+                echo "{$strContactHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
+                echo "</div>\n";
+                break;
+            case SITE_HAS_BILLABLE_CONTRACT:
+                echo "<div id='billingdetails'>\n";
+                echo "{$strSiteHasBillableContract} (&cong;".contract_unit_balance(get_billable_contract_id($incident->contactid))." units)<br />";
+                echo "</div>\n";
+                break;
+        }
+    }
+        
     $num_open_activities = open_activities_for_incident($incidentid);
     echo "<div id='openwaiting'>\n";
 
@@ -906,8 +915,8 @@ else
 
                 if ($update->duration != 0)
                 {
-                    $inminutes = ceil($update->duration); // Always round up
-                    echo  "{$strDuration}: {$inminutes} {$strMinutes}";
+                    $billingObj = get_billable_object_from_incident_id($incidentid);
+                    echo $billingObj->incident_log_update_summary($update->duration);
 
                     // Permision to adjust durations is 81
                     if ($CONFIG['allow_duration_adjustment'] AND user_permission($sit[2], PERM_BILLING_DURATION_EDIT) AND !$billable_incident_approved)

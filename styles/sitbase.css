@@ -1313,7 +1313,8 @@ a.info:hover span
     background: white;
     width: 34em;
     padding: 1px;
-    border:1px solid InfoText;
+    /*border:1px solid InfoText;*/
+    border:1px solid;
     text-decoration: none;
     font-weight: normal;
     background-color:#FFFF99; color:#000000 ;
@@ -2064,4 +2065,17 @@ div.autocomplete ul li
     padding: 2px;
     cursor: pointer;
     text-align: left;
+}
+
+/* KB Portal */
+
+.keykbprivate
+{
+    color: #FFFFFF;
+    background-color: #FF3300;
+}
+
+.keykbrestricted
+{
+    background-color: #DDDDDD;
 }

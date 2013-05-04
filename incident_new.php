@@ -688,10 +688,6 @@ elseif ($action == 'assign')
     }
     else
     {
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        
-        $html .= "<h2>{$strNewIncident} - {$strAssign}</h2>";
-
         plugin_do('incident_new_submitted');
 
         // add incident (assigned to current user)
@@ -892,10 +888,6 @@ elseif ($action == 'assign')
             increment_incidents_used($maintid);
         }
 
-        $html .= "<h3>{$strIncident}: {$incidentid}</h3>";
-        $html .= "<p align='center'>";
-        $html .= sprintf($strIncidentLoggedEngineer, $incidentid);
-        $html .= "</p>\n";
 
         $suggested_user = suggest_reassign_userid($incidentid);
         $trigger = new TriggerEvent('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
@@ -908,7 +900,14 @@ elseif ($action == 'assign')
         }
         else
         {
-            echo $html;
+            include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+            
+            echo "<h2>{$strNewIncident} - {$strAssign}</h2>";
+            echo "<h3>{$strIncident}: {$incidentid}</h3>";
+            echo "<p align='center'>";
+            echo sprintf($strIncidentLoggedEngineer, $incidentid);
+            echo "</p>\n";
+                
         }
 
         // List Engineers
@@ -940,7 +939,7 @@ elseif ($action == 'assign')
         echo "</tr>";
 
         $shade = 'shade2';
-        while ($userobj = mysql_fetch_obj($result))
+        while ($userobj = mysql_fetch_object($result))
         {
             if ($userobj->id == $suggested_user) $shade = 'idle';
             echo "<tr class='{$shade}'>";

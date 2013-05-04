@@ -65,7 +65,7 @@ elseif ($mode == 'new')
     $label = new Label($strSiteType);
     $c1->addComponent($label);
     $c2 = new Cell();
-    $sle = new SingleLineEntry("typename", 10, "typename", "", true);
+    $sle = new SingleLineEntry("typename", 30, "typename", "", true);
     $sle->setLabel($label);
     $c2->addComponent($sle);
 
@@ -97,7 +97,7 @@ elseif ($mode == 'edit')
     $label = new Label($strSiteType);
     $c1->addComponent($label);
     $c2 = new Cell();
-    $sle = new SingleLineEntry("typename", 10, "typename", $typename, true);
+    $sle = new SingleLineEntry("typename", 30, "typename", $typename, true);
     $sle->setLabel($label);
     $c2->addComponent($sle);
 

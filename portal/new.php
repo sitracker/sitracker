@@ -163,6 +163,7 @@ else //submit
     {
         if (mb_substr($key, 0, 5) == 'pinfo' AND empty($value))
         {
+            $key = cleanvar($key);
             $id = intval(str_replace("pinfo", "", $key));
             $sql = "SELECT information FROM `{$dbProductInfo}` ";
             $sql .= "WHERE id='{$id}' ";
