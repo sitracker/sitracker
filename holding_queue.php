@@ -163,14 +163,14 @@ function deldir($location)
 
 $title = $strReviewHeldUpdates;
 $refresh = $_SESSION['userconfig']['incident_refresh'];
-$selected = $_POST['selected'];
+$selected = clean_int($_POST['selected']);
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>{$strHoldingQueue}</h2>";
 plugin_do('holding_queue');
 
 if ($lock = clean_int($_REQUEST['lock']))
 {
-    $lockeduntil = date('Y-m-d H:i:s',$now+$CONFIG['record_lock_delay']);
+    $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
     $sql .= "WHERE id='{$lock}' AND (locked = 0 OR locked IS NULL)";
     $result = mysql_query($sql);
