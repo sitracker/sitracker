@@ -46,8 +46,6 @@ else
 
 $title = $strNewTriggerInterface;
 
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 if (isset($_GET['id']))
 {
     $id = clean_int($_GET['id']);
@@ -73,23 +71,50 @@ else
 switch ($action)
 {
     case 'save':
-        $_POST = cleanvar($_POST);
-        $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], $_POST['enabled'], $_POST['conditions']);
-
-        // Don't need to cleanvar below as we've done above
-        if ($_POST['new_action'] == 'ACTION_NOTICE')
+        $_SESSION['formdata']['new_trigger'] = cleanvar($_POST, TRUE, FALSE, FALSE,
+                array("@"), array("'" => '"'));
+        
+        $errors = 0;
+        
+        if (empty($_POST['triggertype']))
         {
-            $template = $_POST['noticetemplate'];
+            $errors++;
+            $_SESSION['formerrors']['new_trigger']['triggertype'] = sprintf($strFieldMustNotBeBlank, $strAction);
         }
-        elseif ($_POST['new_action'] == 'ACTION_EMAIL')
+        
+        if (empty($_POST['new_action']))
         {
-            $template = $_POST['emailtemplate'];
+            $errors++;
+            $_SESSION['formerrors']['new_trigger']['new_action'] = sprintf($strFieldMustNotBeBlank, $strNotificationMethod);
         }
-
-        $t = new Trigger($_POST['triggertype'], $user_id, $template, $_POST['new_action'], $checks, $parameters);
-
-        $success = $t->add();
-        html_redirect($return, $success, $t->getError_text());
+        
+        if ($errors == 0)
+        {
+            $_POST = cleanvar($_POST);
+            $checks = create_check_string($_POST['param'], $_POST['value'], $_POST['join'], $_POST['enabled'], $_POST['conditions']);
+    
+            // Don't need to cleanvar below as we've done above
+            if ($_POST['new_action'] == 'ACTION_NOTICE')
+            {
+                $template = $_POST['noticetemplate'];
+            }
+            elseif ($_POST['new_action'] == 'ACTION_EMAIL')
+            {
+                $template = $_POST['emailtemplate'];
+            }
+    
+            $t = new Trigger($_POST['triggertype'], $user_id, $template, $_POST['new_action'], $checks, $parameters);
+    
+            $success = $t->add();
+            
+            clear_form_data('new_trigger');
+            html_redirect($return, $success, $t->getError_text());
+        }
+        else
+        {
+            // show error message if errors
+            html_redirect($_SERVER['PHP_SELF'], FALSE);
+        }
         break;
 
     case 'delete':
@@ -102,9 +127,14 @@ switch ($action)
         break;
 
     default:
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        
+        echo show_form_errors('new_trigger');
+        clear_form_errors('new_trigger');
+        
         echo "<h2>{$strNewAction}</h2>";
         echo "<div id='container'>";
-        echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
+        echo "<form id='new_trigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
         if ($trigger_mode == 'system')
         {
             echo "<h3>{$strUser}</h3>";
@@ -118,7 +148,9 @@ switch ($action)
             if (($trigger['type'] == 'system' AND $trigger_mode == 'system') OR
                 (($trigger['type'] == 'user' AND $trigger_mode == 'user') OR !isset($trigger['type'])))
             {
-                echo "<option id='{$name}' value='{$name}'>{$trigger['description']}</option>\n";
+                if ($name == show_form_value('new_trigger', 'triggertype')) $selected = "selected='selected'";
+                else $selected = '';
+                echo "<option id='{$name}' value='{$name}' {$selected}>{$trigger['description']}</option>\n";
             }
         }
         echo "</select>";
@@ -160,16 +192,18 @@ switch ($action)
         echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
         echo "</form>";
 
-    //     foreach ($ttvararray as $trigger => $data)
-    //     {
-    //         if (is_numeric($trigger)) $data = $data[0];
-    //         if (isset($data['checkreplace']))
-    //         {
-    //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
-    //         }
-    //     }
+        //     foreach ($ttvararray as $trigger => $data)
+        //     {
+        //         if (is_numeric($trigger)) $data = $data[0];
+        //         if (isset($data['checkreplace']))
+        //         {
+        //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
+        //         }
+        //     }
         echo "<p class='return'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p></div>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+        
+        clear_form_data('new_trigger');
 }
 
 ?>
