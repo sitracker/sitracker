@@ -513,11 +513,8 @@ if (mysql_num_rows($result) >=1 )
                 $billing = $b->make_incident_billing_array($incidentid);
                 $duration = $enddate - $startdate;
 
-                $a = $duration % ($billing[-1]['customerperiod']);
-                $duration += ($billing[-1]['customerperiod'] - $a);
-
                 echo "<td>".format_date_friendly($enddate)."</td>";
-                echo "<td>".format_seconds($duration)."</td>";
+                echo "<td>".format_seconds($duration, TRUE)."</td>";
                 $closedduration += $duration;
 
                 $temparray['owner'] = $task->owner;
@@ -535,7 +532,7 @@ if (mysql_num_rows($result) >=1 )
             echo "<td>";
             if ($enddate > 0)
             {
-                echo ldate($CONFIG['dateformat_date'],$enddate);
+                echo ldate($CONFIG['dateformat_date'], $enddate);
             }
 
             echo "</td>";
