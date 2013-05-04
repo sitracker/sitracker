@@ -8,8 +8,6 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 
-// FIXME complete this code
-
 require ('core.php');
 $permission = PERM_UPDATE_DELETE;
 require (APPLICATION_LIBPATH . 'functions.inc.php');
@@ -22,7 +20,7 @@ $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
 $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
-$action = clean_fixed_list($_REQUEST['action'], array('','delete','lock','unlock'));
+$action = clean_fixed_list($_REQUEST['action'], array('','delete','lock','unlock','updatereason'));
 
 if (empty($displayid))
 {
@@ -113,8 +111,6 @@ function contact_info($contactid, $email, $name, $subject)
 // Perform action on selected items
 if (!empty($action))
 {
-    if ($CONFIG['debug'])  $dbg .= "<pre>Action: {$action}</pre>";
-
     if (!is_array($_REQUEST['selected']))
     {
         $_REQUEST['selected'] = array($_REQUEST['selected']);
@@ -129,7 +125,6 @@ if (!empty($action))
         if ($tresult AND mysql_num_rows($tresult) > 0)
         {
             $temp = mysql_fetch_object($tresult);
-            if ($CONFIG['debug']) $dbg .= "<pre>Action on: {$selected}</pre>";
 
             switch ($action)
             {
@@ -145,6 +140,7 @@ if (!empty($action))
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     }
                     break;
+
                 case 'lock':
                     $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
                     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
@@ -152,11 +148,23 @@ if (!empty($action))
                     $result = mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     break;
+
                 case 'unlock':
                     $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
                     $sql .= "WHERE id='{$selected}' AND locked = '{$sit[2]}'";
                     $result = mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    break;
+
+                case 'updatereason':
+                    $newreason = clean_dbstring($_REQUEST['newreason']);
+                    $updatetime = date('Y-m-d H:i:s',$now);
+                    $update = "UPDATE `{$dbTempIncoming}` SET reason='{$newreason}', ";
+                    $update .= "reason_user='{$sit['2']}', reason_time='{$updatetime}' WHERE id={$selected}";
+                    mysql_query($update);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    break;
+                    
                 default:
                     trigger_error('Unrecognised form action', E_USER_ERROR);
             }
@@ -245,7 +253,10 @@ if (empty($displayid))
             {
                 echo icon('locked', 16) . ' ';
                 echo sprintf($strLockedByX, user_realname($incoming->locked, TRUE));
-                echo " ({$incoming->reason})";
+                if (!empty($incoming->reason)) 
+                {
+                    echo " ({$incoming->reason})";
+                }
                 echo " &mdash; <a name='locked' class='info'>";
                 echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);
             }
@@ -254,6 +265,10 @@ if (empty($displayid))
                 if ($incoming->locked > 0)
                 {
                     echo icon('locked', 16) . ' ';
+                    if (!empty($incoming->reason)) 
+                    {
+                        echo " ({$incoming->reason})";
+                    }
                 }
                 // TODO option for popup or not (Mantis 619)
                 // $url = "javascript:incident_details_window('{$incoming->id}','incomingview');";
@@ -376,24 +391,35 @@ else
         if (empty($_REQUEST['reply']))
         {
             echo " &mdash; ";
-            echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>";
-            echo " | <a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; // FIXME
+// Reply feature incomplete and therefore disabled for 3.90, I aim to finish this code soon. INL 4/5/2013
+// echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>  | ";
+
+            if (!empty($incoming->forenames) OR !empty($incoming->surname))
+            {
+                $search_string = urlencode("{$incoming->forenames} {$incoming->surname}");
+            }
+            else
+            {
+                $search_string = urlencode($incoming->emailfrom);
+            }
+
+            echo "<a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; 
             if (!$incoming->locked)
             {
-                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=lock&amp;selected={$displayid}'>{$strLock}</a>"; // FIXME
+                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=lock&amp;selected={$displayid}'>{$strLock}</a>";
             }
             elseif ($lockedbyyou)
             {
-                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=unlock&amp;selected={$displayid}'>{$strUnlock}</a>"; // FIXME
+                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=unlock&amp;selected={$displayid}'>{$strUnlock}</a>";
             }
-            echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string=".urlencode("{$incoming->forenames} {$incoming->surname}")."&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>"; // FIXME
+            echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string={$search_string}&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>";
             echo " | <a href=\"move_update.php?id={$displayid}&amp;updateid={$incoming->updateid}&amp;contactid={$incoming->contactid}&amp;win=incomingview\" title=\"{$strUpdateIncident}\">";
-            echo "{$strMoveToIncident}</a>"; // FIXME needs help
+            echo "{$strMoveToIncident}</a>"; 
 
             if ($lockedbyyou)
             {
                 echo "<div class='detaildate'>";
-                echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$displayid}&win=incomingview&action=updatereason'>";
+                echo "<form method='post' action='{$_SERVER['PHP_SELF']}?selected={$displayid}&win=incomingview&action=updatereason'>";
                 echo "{$strMessage}: <input name='newreason' type='text' value=\"{$incoming->reason}\" size='25' maxlength='100' />";
                 echo "<input type='submit' value='{$strSave}' />";
                 echo "</form>";
@@ -413,6 +439,7 @@ else
             echo "<textarea style='width: 98%' rows='30'>";
             echo quote_message($update->bodytext);
             echo "</textarea>";
+            // TODO reply button and make reply actually work.
         }
         else
         {

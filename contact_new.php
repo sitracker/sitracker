@@ -33,6 +33,10 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
         $_SESSION['formdata']['new_contact']['forenames'] = ucfirst($name[0]);
         $_SESSION['formdata']['new_contact']['surname'] = ucfirst($name[1]);
     }
+    if (!empty($_REQUEST['email']))
+    {
+        $_SESSION['formdata']['new_contact']['email'] = clean_emailstring($_REQUEST['email']);
+    }
     
     echo show_form_errors('new_contact');
     clear_form_errors('new_contact');

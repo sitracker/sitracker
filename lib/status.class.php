@@ -45,7 +45,7 @@ class Status {
         $s->checkname = $name;
         if ($min_status == INSTALL_FATAL)
         {
-            $s->minimum = $GLOBALS['strInstalled'];
+            $s->minimum = $GLOBALS['strRequired'];
         }
         else
         {

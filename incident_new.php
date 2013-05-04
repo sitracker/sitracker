@@ -344,8 +344,21 @@ elseif ($action == 'findcontact')
         if (!empty($search_string)) $match = "'$search_string'";
         if (!empty($contactid)) $match = "{$strContact} {$strID} {$contactid}";
         echo "<h3>".sprintf($strSorryNoRecordsMatchingX, $match)."</h3>\n";
-        echo "<p align='center'><a href='contract_new_contact.php?contactid={$contactid}&amp;context=contact'>{$strAssociateContactWithContract}</a></p>";
+        if ($contactid > 0)
+        {
+            echo "<p align='center'><a href='contract_new_contact.php?contactid={$contactid}&amp;context=contact'>{$strAssociateContactWithContract}</a></p>";
+        }
         echo "<p align='center'><a href=\"incident_new.php?updateid=$updateid&amp;win={$win}\">{$strSearchAgain}</a></p>";
+        
+        if (!empty($incomingid))
+        {
+            
+            $tsql = "SELECT `from` FROM `{$dbTempIncoming}` WHERE id = $incomingid";
+            $tresult = mysql_query($tsql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            list($email) = mysql_fetch_row($tresult);
+        }
+        
         // Select the contact from the list of contacts as well
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
         if (empty($contactid))
@@ -395,12 +408,12 @@ elseif ($action == 'findcontact')
                 echo $html;
             }
 
-            echo "<p align='center'><a href='contact_new.php?name=".urlencode($search_string)."&amp;return=addincident'>{$strNewContact}</a></p>\n";
+            echo "<p align='center'><a href='contact_new.php?name=".urlencode($search_string)."&amp;email=".urlencode($email)."&amp;return=addincident'>{$strNewContact}</a></p>\n";
         }
         else
         {
             echo "<h3>".sprintf($strNoResultsFor, $strContacts)."</h3>";
-            echo "<p align='center'><a href=\"contact_new.php?name=".urlencode($search_string)."&amp;return=addincident\">{$strNewContact}</a></p>\n";
+            echo "<p align='center'><a href=\"contact_new.php?name=".urlencode($search_string)."&amp;email=".urlencode($email)."&amp;return=addincident\">{$strNewContact}</a></p>\n";
         }
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');

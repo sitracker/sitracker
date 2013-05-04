@@ -1600,32 +1600,6 @@ function html_status_row($statusentry)
 
 
 /**
- * Check to see if a PHP extention is installed and prints the corresponding row
- * @author Paul Heaney
- * @param String $extension The extension to check is installed
- * @param String $text The text to print describing this extension
- * @param int $min_status The minimum accepted status e.g. INSTALL_FATAL if we require this, INSTALL_WARN if its optional
- * @return int either INSTALL_OK or the $min_status
- */
-function html_check_extension($extension, $text, $min_status)
-{
-    if (extension_loaded($extension))
-    {
-        $str = $GLOBALS['strInstalled'];
-        $toreturn = INSTALL_OK;
-    }
-    else
-    {
-        $str = $GLOBALS['strNotInstalled'];
-        $toreturn = $min_status;
-    }
-    echo html_status_row($toreturn, $text, $GLOBALS['strInstalled'], $str);
-
-    return $toreturn;
-}
-
-
-/**
  * Function to generate and display a HTML table of the staus of the sit install
  * @param Status $status The status object to print as a table
  * @author Paul Heaney
