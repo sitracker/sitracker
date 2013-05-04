@@ -235,13 +235,13 @@ function give_overview()
     echo "<th>{$GLOBALS['strEmailTransmittedAbbrev']}</th><th>{$GLOBALS['strHigherPriority']}</th>";
     echo "<th>{$GLOBALS['strActivity']}</th></tr>\n";
 
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=0'>{$GLOBALS['strToday']}</a>", mktime(0,0,0,date('m'),date('d'),date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=1'>{$GLOBALS['strYesterday']}</a>", mktime(0,0,0,date('m'),date('d')-1,date('Y')),mktime(23,59,59,date('m'),date('d')-1,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=2'>".ldate('l',mktime(0,0,0,date('m'),date('d')-2,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-2,date('Y')),mktime(23,59,59,date('m'),date('d')-2,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=3'>".ldate('l',mktime(0,0,0,date('m'),date('d')-3,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-3,date('Y')),mktime(23,59,59,date('m'),date('d')-3,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=4'>".ldate('l',mktime(0,0,0,date('m'),date('d')-4,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-4,date('Y')),mktime(23,59,59,date('m'),date('d')-4,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=5'>".ldate('l',mktime(0,0,0,date('m'),date('d')-5,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-5,date('Y')),mktime(23,59,59,date('m'),date('d')-5,date('Y')));
-    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=6'>".ldate('l',mktime(0,0,0,date('m'),date('d')-6,date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-6,date('Y')),mktime(23,59,59,date('m'),date('d')-6,date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=0'>{$GLOBALS['strToday']}</a>", mktime(0, 0, 0, date('m'), date('d'), date('Y')), mktime(23, 59, 59, date('m'), date('d'), date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=1'>{$GLOBALS['strYesterday']}</a>", mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')),mktime(23, 59, 59, date('m'), date('d') - 1, date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=2'>".ldate('l',mktime(0, 0, 0, date('m'), date('d') - 2, date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-2,date('Y')),mktime(23, 59, 59, date('m'), date('d') - 2, date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=3'>".ldate('l',mktime(0, 0, 0, date('m'), date('d') - 3, date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-3,date('Y')),mktime(23, 59, 59, date('m'), date('d') - 3, date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=4'>".ldate('l',mktime(0, 0, 0, date('m'), date('d') - 4, date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-4,date('Y')),mktime(23, 59, 59, date('m'), date('d') - 4, date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=5'>".ldate('l',mktime(0, 0, 0, date('m'), date('d') - 5, date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-5,date('Y')),mktime(23, 59, 59, date('m'), date('d') - 5, date('Y')));
+    echo stats_period_row("<a href='{$_SERVER['PHP_SELF']}?mode=daybreakdown&amp;offset=6'>".ldate('l',mktime(0, 0, 0, date('m'), date('d') - 6, date('Y')))."</a>", mktime(0,0,0,date('m'),date('d')-6,date('Y')),mktime(23, 59, 59, date('m'), date('d') - 6, date('Y')));
     echo "<tr><td colspan='*'></td></tr>";
     echo stats_period_row($GLOBALS['strThisWeek'], mktime(0,0,0,date('m'),date('d')-6,date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
     echo stats_period_row($GLOBALS['strLastWeek'], mktime(0,0,0,date('m'),date('d')-13,date('Y')),mktime(23,59,59,date('m'),date('d')-7,date('Y')));
@@ -249,20 +249,20 @@ function give_overview()
 
     if ($mode == 'detail')
     {
-        echo stats_period_row($GLOBALS['strThisMonth'], mktime(0,0,0,date('m'),1,date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
-        echo stats_period_row($GLOBALS['strLastMonth'], mktime(0,0,0,date('m')-1,date('d'),date('Y')),mktime(23,59,59,date('m'),0,date('Y')));
-        echo stats_period_row(date('F y',mktime(0,0,0,date('m')-2,1,date('Y'))), mktime(0,0,0,date('m')-2,date('d'),date('Y')),mktime(23,59,59,date('m')-1,0,date('Y')));
-        echo stats_period_row(date('F y',mktime(0,0,0,date('m')-3,1,date('Y'))), mktime(0,0,0,date('m')-3,date('d'),date('Y')),mktime(23,59,59,date('m')-2,0,date('Y')));
-        echo stats_period_row(date('F y',mktime(0,0,0,date('m')-4,1,date('Y'))), mktime(0,0,0,date('m')-4,date('d'),date('Y')),mktime(23,59,59,date('m')-3,0,date('Y')));
-        echo stats_period_row(date('F y',mktime(0,0,0,date('m')-5,1,date('Y'))), mktime(0,0,0,date('m')-5,date('d'),date('Y')),mktime(23,59,59,date('m')-4,0,date('Y')));
-        echo stats_period_row(date('F y',mktime(0,0,0,date('m')-6,1,date('Y'))), mktime(0,0,0,date('m')-6,date('d'),date('Y')),mktime(23,59,59,date('m')-5,0,date('Y')));
+        echo stats_period_row($GLOBALS['strThisMonth'], mktime(0, 0, 0, date('m'), 1, date('Y')), mktime(23, 59, 59, date('m'), date('d'), date('Y')));
+        echo stats_period_row($GLOBALS['strLastMonth'], mktime(0, 0, 0, date('m') - 1, date('d'), date('Y')), mktime(23, 59, 59, date('m'), 0, date('Y')));
+        echo stats_period_row(date('F y',mktime(0, 0, 0, date('m') -2, 1, date('Y'))), mktime(0, 0, 0, date('m') - 2, date('d'), date('Y')), mktime(23, 59, 59, date('m') -1, 0, date('Y')));
+        echo stats_period_row(date('F y',mktime(0, 0, 0, date('m') -3, 1, date('Y'))), mktime(0, 0, 0, date('m') - 3, date('d'), date('Y')), mktime(23, 59, 59, date('m') -2, 0, date('Y')));
+        echo stats_period_row(date('F y',mktime(0, 0, 0, date('m') -4, 1, date('Y'))), mktime(0, 0, 0, date('m') - 4, date('d'), date('Y')), mktime(23, 59, 59, date('m') -3, 0, date('Y')));
+        echo stats_period_row(date('F y',mktime(0, 0, 0, date('m') -5, 1, date('Y'))), mktime(0, 0, 0, date('m') - 5, date('d'), date('Y')), mktime(23, 59, 59, date('m') -4, 0, date('Y')));
+        echo stats_period_row(date('F y',mktime(0, 0, 0, date('m') -6, 1, date('Y'))), mktime(0, 0, 0, date('m') - 6, date('d'), date('Y')), mktime(23, 59, 59, date('m') -5, 0, date('Y')));
         echo "<tr><td colspan='*'></td></tr>";
-        echo stats_period_row($GLOBALS['strThisYear'], mktime(0,0,0,1,1,date('Y')),mktime(23,59,59,date('m'),date('d'),date('Y')));
-        echo stats_period_row($GLOBALS['strLastYear'], mktime(0,0,0,1,1,date('Y')-1),mktime(23,59,59,12,31,date('Y')-1));
-        echo stats_period_row(date('Y',mktime(0,0,0,1,1,date('Y')-2)), mktime(0,0,0,1,1,date('Y')-2),mktime(23,59,59,12,31,date('Y')-2));
-        echo stats_period_row(date('Y',mktime(0,0,0,1,1,date('Y')-3)), mktime(0,0,0,1,1,date('Y')-3),mktime(23,59,59,12,31,date('Y')-3));
-        echo stats_period_row(date('Y',mktime(0,0,0,1,1,date('Y')-4)), mktime(0,0,0,1,1,date('Y')-4),mktime(23,59,59,12,31,date('Y')-4));
-        echo stats_period_row(date('Y',mktime(0,0,0,1,1,date('Y')-5)), mktime(0,0,0,1,1,date('Y')-5),mktime(23,59,59,12,31,date('Y')-5));
+        echo stats_period_row($GLOBALS['strThisYear'], mktime(0, 0, 0, 1, 1, date('Y')), mktime(23, 59, 59, date('m'), date('d'), date('Y')));
+        echo stats_period_row($GLOBALS['strLastYear'], mktime(0, 0, 0, 1, 1, date('Y') - 1), mktime(23, 59, 59, 12, 31, date('Y') - 1));
+        echo stats_period_row(date('Y',mktime(0, 0, 0, 1, 1, date('Y') - 2)), mktime(0, 0, 0, 1, 1, date('Y') - 2), mktime(23, 59, 59, 12, 31, date('Y') - 2));
+        echo stats_period_row(date('Y',mktime(0, 0, 0, 1, 1, date('Y') - 3)), mktime(0, 0, 0, 1, 1, date('Y') - 3), mktime(23, 59, 59, 12, 31, date('Y') - 3));
+        echo stats_period_row(date('Y',mktime(0, 0, 0, 1, 1, date('Y') - 4)), mktime(0, 0, 0, 1, 1, date('Y') - 4), mktime(23, 59, 59, 12, 31, date('Y') - 4));
+        echo stats_period_row(date('Y',mktime(0, 0, 0, 1, 1, date('Y') - 5)), mktime(0, 0, 0, 1, 1, date('Y') - 5), mktime(23, 59, 59, 12, 31, date('Y') - 5));
     }
     echo "</table>\n";
 
