@@ -82,7 +82,7 @@ else
     $vendor = clean_int($_REQUEST['vendor']);
     if (!empty($_REQUEST['lifetime_start']))
     {
-        $lifetime_start = date('Y-m-d',strtotime($_REQUEST['lifetime_start']));
+        $lifetime_start = date('Y-m-d', strtotime($_REQUEST['lifetime_start']));
     }
     else
     {
@@ -91,7 +91,7 @@ else
 
     if (!empty($_REQUEST['lifetime_end']))
     {
-        $lifetime_end = date('Y-m-d',strtotime($_REQUEST['lifetime_end']));
+        $lifetime_end = date('Y-m-d', strtotime($_REQUEST['lifetime_end']));
     }
     else
     {
