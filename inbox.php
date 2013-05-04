@@ -142,6 +142,7 @@ if (!empty($action))
                         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     }
                     break;
+
                 case 'lock':
                     $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
                     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
@@ -149,11 +150,23 @@ if (!empty($action))
                     $result = mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                     break;
+
                 case 'unlock':
                     $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
                     $sql .= "WHERE id='{$selected}' AND locked = '{$sit[2]}'";
                     $result = mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    break;
+
+                case 'updatereason':
+                    $newreason = clean_dbstring($_REQUEST['newreason']);
+                    $updatetime = date('Y-m-d H:i:s',$now);
+                    $update = "UPDATE `{$dbTempIncoming}` SET reason='{$newreason}', ";
+                    $update .= "reason_user='{$sit['2']}', reason_time='{$updatetime}' WHERE id={$selected}";
+                    mysql_query($update);
+                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    break;
+                    
                 default:
                     trigger_error('Unrecognised form action', E_USER_ERROR);
             }
@@ -242,7 +255,10 @@ if (empty($displayid))
             {
                 echo icon('locked', 16) . ' ';
                 echo sprintf($strLockedByX, user_realname($incoming->locked, TRUE));
-                echo " ({$incoming->reason})";
+                if (!empty($incoming->reason)) 
+                {
+                    echo " ({$incoming->reason})";
+                }
                 echo " &mdash; <a name='locked' class='info'>";
                 echo htmlentities($incoming->subject,ENT_QUOTES, $GLOBALS['i18ncharset']);
             }
@@ -251,6 +267,10 @@ if (empty($displayid))
                 if ($incoming->locked > 0)
                 {
                     echo icon('locked', 16) . ' ';
+                    if (!empty($incoming->reason)) 
+                    {
+                        echo " ({$incoming->reason})";
+                    }
                 }
                 // TODO option for popup or not (Mantis 619)
                 // $url = "javascript:incident_details_window('{$incoming->id}','incomingview');";
@@ -401,7 +421,7 @@ else
             if ($lockedbyyou)
             {
                 echo "<div class='detaildate'>";
-                echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$displayid}&win=incomingview&action=updatereason'>";
+                echo "<form method='post' action='{$_SERVER['PHP_SELF']}?selected={$displayid}&win=incomingview&action=updatereason'>";
                 echo "{$strMessage}: <input name='newreason' type='text' value=\"{$incoming->reason}\" size='25' maxlength='100' />";
                 echo "<input type='submit' value='{$strSave}' />";
                 echo "</form>";
