@@ -108,8 +108,6 @@ function contact_info($contactid, $email, $name, $subject)
 // Perform action on selected items
 if (!empty($action))
 {
-    // FIXME BUGBUG remove for release. temporary message
-    echo "<p>Action: $action</p>";
     if (!is_array($_REQUEST['selected']))
     {
         $_REQUEST['selected'] = array($_REQUEST['selected']);
@@ -123,7 +121,6 @@ if (!empty($action))
         if ($tresult AND mysql_num_rows($tresult) > 0)
         {
             $temp = mysql_fetch_object($tresult);
-            if ($CONFIG['debug']) echo "<p>action on: $selected</p>"; // FIXME BUGBUG remove for release. temporary message
 
             switch ($action)
             {
