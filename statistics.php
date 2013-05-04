@@ -300,10 +300,7 @@ function give_overview()
                     echo "<tr><th>{$GLOBALS[$rowGroup->name]}</th><td class='shade2' align='left'>";
                     echo "{$rowGroup->count}</td></tr>";
 
-                    //if (strpos(strtolower($rowGroup['name']), "clos") === false)
-                    //{
-                        $openCallsGroup += $rowGroup->count;
-                    //}
+                    $openCallsGroup += $rowGroup->count;
                 }
                 echo "<tr><th>{$GLOBALS['strTotalOpen']}</th>";
                 echo "<td class='shade2' align='left'><strong>{$openCallsGroup}</strong></td></tr></table></td>";
@@ -316,12 +313,6 @@ function give_overview()
     mysql_free_result($result);
 
     //count incidents by Vendor
-
-/*
-    $sql = "SELECT DISTINCT products.vendorid, vendors.name FROM incidents, products, vendors ";
-    $sql .= "WHERE (status != 2 AND status != 7) AND incidents.product = products.id AND vendors.id = products.vendorid ORDER BY vendorid";
-*/
-
     $sql = "SELECT DISTINCT s.vendorid, v.name FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbSoftware']}` AS s, `{$GLOBALS['dbVendors']}` AS v ";
     $sql .= "WHERE (status != 2 AND status != 7) AND i.softwareid = s.id AND v.id = s.vendorid ORDER BY vendorid";
 
