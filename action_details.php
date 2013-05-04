@@ -88,6 +88,18 @@ switch ($action)
             $_SESSION['formerrors']['new_trigger']['new_action'] = sprintf($strFieldMustNotBeBlank, $strNotificationMethod);
         }
         
+        for ($i = 0; $i < sizeof($_POST['param']); $i++)
+        {
+            if ($_POST['enabled'][$i] == 'on')
+            {
+                if (empty($_POST['value'][$i]))
+                {
+                    $errors++;
+                    $_SESSION['formerrors']['new_trigger']['new_action'] = sprintf($strFieldMustNotBeBlank, "Enabled field not set");
+                }
+            }
+        }
+        
         if ($errors == 0)
         {
             $_POST = cleanvar($_POST);
