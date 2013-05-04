@@ -46,8 +46,6 @@ else
 
 $title = $strNewTriggerInterface;
 
-include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 if (isset($_GET['id']))
 {
     $id = clean_int($_GET['id']);
@@ -102,6 +100,8 @@ switch ($action)
         break;
 
     default:
+        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+        
         echo "<h2>{$strNewAction}</h2>";
         echo "<div id='container'>";
         echo "<form id='newtrigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
@@ -160,14 +160,14 @@ switch ($action)
         echo "<input type='submit' name='submit' value='{$strSave}' /></p>";
         echo "</form>";
 
-    //     foreach ($ttvararray as $trigger => $data)
-    //     {
-    //         if (is_numeric($trigger)) $data = $data[0];
-    //         if (isset($data['checkreplace']))
-    //         {
-    //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
-    //         }
-    //     }
+        //     foreach ($ttvararray as $trigger => $data)
+        //     {
+        //         if (is_numeric($trigger)) $data = $data[0];
+        //         if (isset($data['checkreplace']))
+        //         {
+        //             echo 'Only notify when '. $data['description']. ' is ' .$data['checkreplace'](),"<br />";
+        //         }
+        //     }
         echo "<p class='return'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p></div>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
