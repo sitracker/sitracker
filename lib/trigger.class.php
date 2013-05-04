@@ -276,7 +276,7 @@ class Trigger extends SitEntity {
 
         if (!isset($this->param_array['userid']))
         {
-            $this->param_array['userid']= $sit[2];
+            $this->param_array['userid'] = $sit[2];
         }
 
         //if we have any params from the actual trigger, append to user params
