@@ -268,7 +268,7 @@ switch ($action)
                 echo "<td align='center'>".$incpriority['2']."</td>";
                 echo "<td align='center'>".$incpriority['1']."</td>";
                 echo "<td align='center'>";
-                echo $suguser->accepting == 'Yes' ? $strYes : "<span class='error'>{$strNo}</span>";
+                echo $suguser->accepting == 'Yes' ? $strYes : "<span class='notaccepting'>{$strNo}</span>";
                 echo "</td>";
                 echo "</tr>\n";
             }
@@ -304,7 +304,7 @@ switch ($action)
                     echo "<td align='center'>{$incpriority['1']}</td>";
                     echo "<td align='center'>";
                     if ($users->accepting == 'Yes') echo $strYes;
-                    else echo "<span class='error'>{$strNo}</span>";
+                    else echo "<span class='notaccepting'>{$strNo}</span>";
                     echo "</td>";
                     echo "</tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
