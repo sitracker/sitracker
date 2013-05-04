@@ -1536,7 +1536,7 @@ function checks_to_html($checks)
  */
 function freeform($name)
 {
-    $html = "<input name='name' />";
+    $html = "<input name='{$name}' />";
     return $html;
 }
 
