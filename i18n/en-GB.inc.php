@@ -1435,6 +1435,7 @@ $strPortalIncidentCreated = 'Portal incident created';
 $strPortalIncidentRequestClosed = 'Portal incident requested closed';
 $strPositive = 'Positive';
 $strPositivity = 'Positivity';
+$strPositivityXXfromXFormsCompleted = 'Positivity: %s <strong>(%s)</strong> from %s forms completed';
 $strPossibleNewIncident = 'Possible new incident';
 # Postal code
 $strPostcode = 'Postcode';
