@@ -22,7 +22,7 @@ $sort = cleanvar($_REQUEST['sort']);
 $order = cleanvar($_REQUEST['order']);
 $filter = cleanvar($_REQUEST['filter']);
 $displayid = cleanvar($_REQUEST['id']);
-$action = clean_fixed_list($_REQUEST['action'], array('','delete','lock','unlock'));
+$action = clean_fixed_list($_REQUEST['action'], array('','delete','lock','unlock','updatereason'));
 
 if (empty($displayid))
 {
@@ -373,19 +373,30 @@ else
         if (empty($_REQUEST['reply']))
         {
             echo " &mdash; ";
-            echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>";
-            echo " | <a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; // FIXME
+// Reply feature incomplete and therefore disabled for 3.90, I aim to finish this code soon. INL 4/5/2013
+// echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>  | ";
+
+            if (!empty($incoming->forenames) OR !empty($incoming->surname))
+            {
+                $search_string = urlencode("{$incoming->forenames} {$incoming->surname}");
+            }
+            else
+            {
+                $search_string = urlencode($incoming->emailfrom);
+            }
+
+            echo "<a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; 
             if (!$incoming->locked)
             {
-                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=lock&amp;selected={$displayid}'>{$strLock}</a>"; // FIXME
+                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=lock&amp;selected={$displayid}'>{$strLock}</a>";
             }
             elseif ($lockedbyyou)
             {
-                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=unlock&amp;selected={$displayid}'>{$strUnlock}</a>"; // FIXME
+                echo " | <a href='{$_SERVER['PHP_SELF']}?id={$displayid}&amp;action=unlock&amp;selected={$displayid}'>{$strUnlock}</a>";
             }
-            echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string=".urlencode("{$incoming->forenames} {$incoming->surname}")."&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>"; // FIXME
+            echo " | <a href=\"incident_new.php?action=findcontact&amp;incomingid={$displayid}&amp;search_string={$search_string}&amp;from={$incoming->emailfrom}&amp;contactid={$incoming->contactid}&amp;win=incomingcreate\" title=\"{$strCreateAnIncident}\">{$strCreateNewIncident}</a>"; // FIXME
             echo " | <a href=\"move_update.php?id={$displayid}&amp;updateid={$incoming->updateid}&amp;contactid={$incoming->contactid}&amp;win=incomingview\" title=\"{$strUpdateIncident}\">";
-            echo "{$strMoveToIncident}</a>"; // FIXME needs help
+            echo "{$strMoveToIncident}</a>"; 
 
             if ($lockedbyyou)
             {
@@ -410,6 +421,7 @@ else
             echo "<textarea style='width: 98%' rows='30'>";
             echo quote_message($update->bodytext);
             echo "</textarea>";
+            // TODO reply button and make reply actually work.
         }
         else
         {
