@@ -58,7 +58,7 @@ new PeriodicalExecuter(function(pe) {
 <?php
 
 
-$selected = $_POST['selected'];
+$selected = clean_int($_POST['selected']);
 if (!empty($selected))
 {
     foreach ($selected as $taskid)
