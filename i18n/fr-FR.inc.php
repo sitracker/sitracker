@@ -699,7 +699,8 @@ $strHolidayRequests = 'Demandes de Vacances';
 $strHolidayType = 'Type de Vacances';
 $strHolidayUsage = 'Usage lors des Vacances';
 $strHomeURL = 'URL Accueil';
-$strHours = 'Heure';
+$strHour = 'Heure';
+$strHours = 'Heures';
 
 $strID = 'ID';
 $strIfYourBrowserNotReload = 'Si votre navigateur ne recharge pas la page en quelques secondes';
@@ -949,6 +950,7 @@ $strnd = 'e';
 $strNeedsSubstitueEngineers = '%s requiert que des ingénieurs de remplacement soient définis';
 $strNegative = 'Négatif';
 $strNever = 'Jamais';
+$strNew = 'Nouveau';
 $strNewContact = 'Nouveau contact';
 $strNewContract = 'Nouveau contrat';
 $strNewDuration = 'Nouvelle durée';
