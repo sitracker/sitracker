@@ -1,0 +1,1 @@
+The amount of money to credit this contract with initially, this will form the initial balance of the contract and any incidents logged against this contract will deduct from the balance.

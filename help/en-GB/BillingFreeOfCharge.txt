@@ -1,0 +1,1 @@
+The balance added to this contract has been given as gratis/free, it is still necessary to add the credit amount and unit rate to allow for time to be recorded.  This option is commonly used when an amount of free credit is given on a contract.  Choosing this option allows for free and paid for balances to be identified which is useful from a commerical/finance perspective. 

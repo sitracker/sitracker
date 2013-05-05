@@ -1,0 +1,1 @@
+This is the rate that a unit costs for this contract e.g. setting this to £100 in a per incident model will mean that a £100 is deducted from the balance per incident, in a per unit model where 8 units at single time have been consumed £800 would be deducted.

@@ -119,11 +119,12 @@ if ($action == "showform" OR $action == '')
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strCreditAmount}</th><td>{$CONFIG['currency_symbol']}";
-    echo "<input maxlength='7' name='amount' size='5' class='required' value='".show_form_value('new_contract', 'amount', '0')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo "<input maxlength='7' name='amount' size='5' class='required' value='".show_form_value('new_contract', 'amount', '0')."' /> ";
+    echo "<span class='required'>{$strRequired}</span>".help_link("BillingCreditAmount")."</td></tr>\n";
     echo "<tr id='unitratesection'><th>{$strUnitRate}</th>";
     echo "<td>{$CONFIG['currency_symbol']} ";
     echo "<input class='required' type='text' name='unitrate' size='5' value='".show_form_value('new_contract', 'unitrate', '')."' />";
-    echo " <span class='required'>{$strRequired}</span></td></tr>\n";
+    echo " <span class='required'>{$strRequired}</span>".help_link("BillingUnitRate")."</td></tr>\n";
 
     echo "<tr><th>{$strBillingMatrix}</th>";
     echo "<td><div id='billingmatrix_cell'></div></td>";
@@ -136,7 +137,7 @@ if ($action == "showform" OR $action == '')
     {
         echo "checked='checked''  ";
     }
-    echo "/> {$strAboveMustBeCompletedToAllowDeductions}</td></tr>\n";
+    echo "/> ".help_link("BillingFreeOfCharge")."{$strAboveMustBeCompletedToAllowDeductions}</td></tr>\n";
     echo "</tbody>\n";
     echo "<tr><th></th><td><a href=\"javascript:void(0);\" onclick=\"$('hidden').toggle();\">{$strMore}</a></td></tr>\n";
     echo "<tbody id='hidden' style='display:none'>";
