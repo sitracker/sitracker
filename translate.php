@@ -121,7 +121,9 @@ elseif ($mode == "show")
             else
             {
                 if (mb_substr($values, 0, 4) == "lang")
-                    $languagestring=$values;
+                {
+                    $languagestring = $values;
+                }
             }
             $lastkey = $vars[0];
         }
@@ -195,7 +197,7 @@ elseif ($mode == "show")
             {
                 $meta = array();
             }
-            $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ($tolang) by {$_SESSION['realname']} <{$_SESSION['email']}>";
+            $meta[] = "SiT! Language File - {$i18n_codes[$tolang]} ({$tolang}) by {$_SESSION['realname']} <{$_SESSION['email']}>";
         }
     }
     else
@@ -269,7 +271,7 @@ elseif ($mode == "show")
 }
 elseif ($mode == "save")
 {
-    $badchars = array('.','/','\\');
+    $badchars = array('.', '/', '\\');
 
     $lang = str_replace($badchars, '', $tolang);
     $origcount = clean_int($_REQUEST['origcount']);
