@@ -288,7 +288,7 @@ elseif ($mode == "save")
         foreach ($_REQUEST['meta'] AS $meta)
         {
             $meta = cleanvar($meta);
-            $i18nfile .= "// $meta\n";
+            $i18nfile .= "// {$meta}\n";
         }
     }
     $i18nfile .= "\n";
