@@ -26,7 +26,7 @@ plugin_do('billing_matrix');
 
 echo "<p align='center'><a href='billing_matrix_new.php'>$strAddNewBillingMatrix</a></p>";
 
-$sql = "SELECT DISTINCT tag FROM `{$dbBillingMatrix}";
+$sql = "SELECT DISTINCT tag FROM `{$dbBillingMatrixUnit}";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
@@ -34,7 +34,7 @@ if (mysql_num_rows($result) >= 1)
 {
     while ($matrix = mysql_fetch_object($result))
     {
-        $sql = "SELECT * FROM `{$dbBillingMatrix}` WHERE tag = '{$matrix->tag}'";
+        $sql = "SELECT * FROM `{$dbBillingMatrixUnit}` WHERE tag = '{$matrix->tag}'";
         $matrixresult = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 

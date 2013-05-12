@@ -1429,6 +1429,7 @@ $strPleaseConfirmUsername = 'Please confirm your username';
 $strPleaseWaitRedirect = 'Please wait while you are redirected';
 $strPlugin = 'Plugin';
 $strPlugins = 'Plugins';
+$strPointsBased = 'Points Based';
 $strPopularity = 'Popularity';
 $strPortal = 'Portal';
 $strPortalIncidentCreated = 'Portal incident created';

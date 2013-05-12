@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
 
 -- NOTE system must be the first table created.
 
-CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
+CREATE TABLE IF NOT EXISTS `{$dbBillingMatrixUnit}` (
   `tag` varchar(32) NOT NULL,
   `hour` smallint(6) NOT NULL,
   `mon` float NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `{$dbBillingMatrix}` (
   PRIMARY KEY  (`tag`,`hour`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbBillingMatrix}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
+INSERT INTO `{$dbBillingMatrixUnit}` (`tag`, `hour`, `mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`, `holiday`) VALUES
 ('Default', 0, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 1, 2, 2, 2, 2, 2, 2, 2, 2),
 ('Default', 2, 2, 2, 2, 2, 2, 2, 2, 2),
@@ -1629,12 +1629,16 @@ UPDATE `{$dbNoticeTemplates}` SET `link` = '{applicationurl}kb_view_article.php?
 ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NOT NULL DEFAULT  '0';
 ";
 
-if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbBillingMatrix, 'id'))
+$dbBillingMatrix = "{$CONFIG['db_tableprefix']}billingmatrix";
+
+$upgrade_schema[390] = "RENAME TABLE `{$dbBillingMatrix}` TO `sit4`.`{$dbBillingMatrixUnit}` ;";
+
+if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbBillingMatrixUnit, 'id'))
 {
-    $upgrade_schema[390] = "ALTER TABLE `{$dbBillingMatrix}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
+    $upgrade_schema[390] .= "ALTER TABLE `{$dbBillingMatrixUnit}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
 }
 
-$upgrade_schema[390] .= "UPDATE `{$dbBillingMatrix}` SET tag = 'Default' WHERE tag = 1;
+$upgrade_schema[390] .= "UPDATE `{$dbBillingMatrixUnit}` SET tag = 'Default' WHERE tag = 1;
 ALTER TABLE `{$dbService}` CHANGE `billingmatrix` `billingmatrix` VARCHAR( 32 ) NOT NULL;
 UPDATE `{$dbService}` SET billingmatrix = 'Default' WHERE billingmatrix = 1;
 

@@ -385,7 +385,7 @@ class UnitBillable extends Billable {
 
     function billing_matrix_selector($id, $selected='')
     {
-        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrix']}`";
+        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixUnit']}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
@@ -720,7 +720,7 @@ class UnitBillable extends Billable {
      */
     function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 'Default')
     {
-        $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrix']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
+        $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrixUnit']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
     
         $result = mysql_query($sql);
         if (mysql_error())
@@ -969,7 +969,7 @@ class UnitBillable extends Billable {
     
         foreach ($days AS $d)
         {
-            $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrix']}` ";
+            $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrixUnit']}` ";
             if (!empty($matrixtag)) $sql .= " WHERE tag = '{$matrixtag}'";
             $result = mysql_query($sql);
             if (mysql_error())
@@ -1524,3 +1524,7 @@ class IncidentBillable extends Billable {
         return $toReturn;
     }
 }
+
+
+
+require ('points_billing.inc.php');
