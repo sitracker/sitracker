@@ -1085,12 +1085,18 @@ function incident_lastupdate($id)
     {
         $update = mysql_fetch_object($result);
         mysql_free_result($result);
+
+        $offset = 500;
         
-        $pos = strpos($update->body, " ", 500);
-        if (!empty($pos)) 
+        if (strlen($update->body) > $offset) 
         {
-            // Only truncate if longer than 500 characters
-            $update->body = substr($update->body, 0, $pos);
+            // Only truncate if more than $offset in length
+            $pos = strpos($update->body, " ", $offset);
+            if (!empty($pos)) 
+            {
+                // Only truncate if longer than 500 characters
+                $update->body = substr($update->body, 0, $pos);
+            }
         }
         
         // Remove Tags from update Body
