@@ -25,6 +25,12 @@ abstract class Billable {
     abstract function close_incident($incidentid);
     
     /**
+     * This function performs any necessary billing tasks when opening an incident
+     * @param int $incidentid
+     */
+    abstract function open_incident($incidentid);
+    
+    /**
      * ?????
      * @param unknown $contractid
      * @param string $includenonapproved
@@ -246,7 +252,16 @@ class UnitBillable extends Billable {
         return $rtnvalue;
     }
     
-    
+    /**
+     * Unit billable incidents don't need to do anything special when opening, this always returns true
+     * @see Billable::open_incident()
+     */
+    function open_incident($incidentid)
+    {
+        return true;
+    }
+
+
     function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
     {
         global $now;
@@ -693,7 +708,8 @@ class UnitBillable extends Billable {
         
         return $toReturn;
     }
-    
+
+
     /**
      * Find the billing multiple that should be applied given the day, time and matrix in use
      * @author Paul Heaney
@@ -1175,6 +1191,17 @@ class IncidentBillable extends Billable {
         return $this->create_transaction_awaiting_approval($incidentid, $contractid, $totalunits, $unitrate, $totalbillableunits, $totalunits, $refunds, $totalcost, '');
     }
     
+    /**
+     * Incident billable incidents should reserve a incident, 
+     * @todo IMPLEMENT
+     * @see Billable::open_incident()
+     */
+    function open_incident($incidentid)
+    {
+        return true; // TODO this should reserve an incident,  - close_incident needs updating to reflect that we now have a reservation.
+    }
+    
+    
     function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
     {
         global $now;
@@ -1215,9 +1242,9 @@ class IncidentBillable extends Billable {
         }
         
         
-        return floor($unitbalance);
-        
+        return floor($unitbalance);        
     }
+
     
     function approve_incident_transaction($transactionid)
     {
@@ -1270,13 +1297,15 @@ class IncidentBillable extends Billable {
         
         return $rtnvalue;
     }
+
     
     function amount_used_incident($incidentid)
     {
         $contractid = incident_maintid($incidentid);
         return get_unit_rate($contractid);
     }
-    
+
+
     function produce_site_approvals_table($siteid, $formname, $startdate, $enddate)
     {
         global $CONFIG;
@@ -1414,7 +1443,8 @@ class IncidentBillable extends Billable {
         return $str;
         
     }
-    
+
+
     function update_incident_transaction_record($incidentid)
     {
         $toReturn = FALSE;
@@ -1432,17 +1462,20 @@ class IncidentBillable extends Billable {
         
         return $toReturn;
     }
-    
+
+
     function billing_matrix_selector($id, $selected='') {
         // We don't use a billing matrix for Incidents
         return "";
     }
     
+
     function display_name()
     {
         return $GLOBALS['strPerIncident'];
     }
-    
+
+
     function incident_update_amount_interface($id)
     {
         return "<input type='checkbox' name='{$id}' id='{$id}' value='-1' /> {$GLOBALS['strRefundIncident']}";
@@ -1468,7 +1501,8 @@ class IncidentBillable extends Billable {
 
         return $toReturn;
     }
-    
+
+
     /**
      * (non-PHPdoc)
      * @see Billable::incident_log_update_summary()

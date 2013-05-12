@@ -901,6 +901,11 @@ elseif ($action == 'assign')
             increment_incidents_used($maintid);
         }
 
+        $billableincident = get_billable_object_from_incident_id($incidentid);
+        if ($billableincident)
+        {
+            $toReturn = $billableincident->open_incident($incidentid);
+        }
 
         $suggested_user = suggest_reassign_userid($incidentid);
         $trigger = new TriggerEvent('TRIGGER_INCIDENT_CREATED', array('incidentid' => $incidentid, 'sendemail' => $send_email));
@@ -926,7 +931,7 @@ elseif ($action == 'assign')
         // List Engineers
         // We need a user type 'engineer' so we don't just list everybody
         // Status zero means account disabled
-        $sql = "SELECT * FROM `{$dbUsers}` WHERE status!=0 ORDER BY realname";
+        $sql = "SELECT * FROM `{$dbUsers}` WHERE status != 0 ORDER BY realname";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         echo "<h3>{$strUsers}</h3>
@@ -1022,7 +1027,6 @@ elseif ($action == 'assign')
         clear_form_data('newincident');
         
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-
     }
 }
 elseif ($action == 'reassign')
