@@ -130,7 +130,7 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $html = "<select name='$name'>\n";
+    $html = "<select name='{$name}'>\n";
     if ($userdisable)
     {
         $html .= "<option class='disable' selected='selected' value='0'>ACCOUNT DISABLED</option>\n";
@@ -171,7 +171,7 @@ function userstatus_bardrop_down($name, $id)
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    $html = "<select id='userstatus_dropdown' name='$name' title='{$GLOBALS['strSetYourStatus']}' ";
+    $html = "<select id='userstatus_dropdown' name='{$name}' title='{$GLOBALS['strSetYourStatus']}' ";
     $html .= "onchange=\"set_user_status();\" onblur=\"hide_status_drop_down();\">";
     $html .= "\n";
     while ($statuses = mysql_fetch_object($result))
@@ -252,14 +252,14 @@ function accepting_drop_down($name, $userid)
 {
     if (user_accepting($userid) == "Yes")
     {
-        $html = "<select name=\"$name\">\n";
+        $html = "<select name=\"{$name}\">\n";
         $html .= "<option selected='selected' value=\"Yes\">{$GLOBALS['strYes']}</option>\n";
         $html .= "<option value=\"No\">{$GLOBALS['strNo']}</option>\n";
         $html .= "</select>\n";
     }
     else
     {
-        $html = "<select name=\"$name\">\n";
+        $html = "<select name=\"{$name}\">\n";
         $html .= "<option value=\"Yes\">{$GLOBALS['strYes']}</option>\n";
         $html .= "<option selected='selected' value=\"No\">{$GLOBALS['strNo']}</option>\n";
         $html .= "</select>\n";
