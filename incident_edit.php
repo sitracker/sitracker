@@ -146,6 +146,9 @@ else
     // check form input
     $errors = 0;
 
+    // Initilise here so we can overwrite in plugin
+    $header = '';
+
     // check for blank contact
     if ($contact == 0)
     {

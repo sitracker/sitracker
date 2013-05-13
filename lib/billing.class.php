@@ -117,7 +117,18 @@ abstract class Billable {
     {
         return FALSE;
     }
+
     
+    /**
+     * Does this billing method use the unit rate?
+     * @author Paul Heaney
+     * @return boolean TRUE if this billing method uses the unit rate (like Unit or Incident) or FALSE otherwise
+     */
+    function uses_unit_rate()
+    {
+        return TRUE;
+    }
+
   
     /**
      * Creates a transaction awaiting approval, this should called from close_incident as every incident should create a transaction waiting approval 

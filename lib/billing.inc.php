@@ -1438,13 +1438,15 @@ function get_contract_billable_type($contractid)
  * Find the billing matrix for a particular contract
  * @author Paul Heaney
  * @param int $contractid The contract ID to find the billing matrix for
+ * @param String $billingtype The type of billing e.g UnitBillable (optional)
  * @return string The billing matrix being used
  */
-function get_contract_billing_matrix($contractid)
+function get_contract_billing_matrix($contractid, $billingtype='')
 {
     $toReturn = '';
     
     $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$contractid}";
+    if (!empty($type)) $sql .= " AND billingtype = '{$billingtype}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
     

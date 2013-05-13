@@ -63,6 +63,18 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
 
 -- NOTE system must be the first table created.
 
+CREATE TABLE IF NOT EXISTS `{$dbBillingMatrixPoints}` (
+  `tag` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `points` float NOT NULL,
+  PRIMARY KEY (`tag`,`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
+('Default', 'Question', 0),
+('Default', 'Remote Access', 2),
+('Default', 'Standard', 1);
+
 CREATE TABLE IF NOT EXISTS `{$dbBillingMatrixUnit}` (
   `tag` varchar(32) NOT NULL,
   `hour` smallint(6) NOT NULL,
@@ -1913,7 +1925,20 @@ UPDATE `{$dbEmailTemplates}` SET `body` = 'Hi,\r\n\r\n{userrealname} has request
 ALTER TABLE `{$dbMaintenance}` ADD `billingtype` VARCHAR( 32 ) NULL COMMENT 'Billing type used by contract e.g. unit, incident';
 ALTER TABLE `{$dbService}` ADD `rate` FLOAT NOT NULL AFTER `incidentrate`;
 UPDATE `{$dbService}` SET rate = IF (`unitrate` = 0, `incidentrate`, `unitrate`);
--- unitrate and incidentrate dropped in setup.php  
+-- unitrate and incidentrate dropped in setup.php
+
+-- PH 2013-05-12
+CREATE TABLE IF NOT EXISTS `{$dbBillingMatrixPoints}` (
+  `tag` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `points` float NOT NULL,
+  PRIMARY KEY (`tag`,`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
+('Default', 'Question', 0),
+('Default', 'Remote Access', 2),
+('Default', 'Standard', 1);
 ";
 
 

@@ -857,6 +857,7 @@ $strIncidentNum = 'Incident %d';
 $strIncidentNumOrSearchTerm = 'Incident # or search term';
 # Abbreviation of incidents per owner
 $strIncidentPerOwnerAbbrev = 'inc per owner';
+$strIncidentPoints = 'Incident Points';
 $strIncidentPool = 'Incident Pool';
 $strIncidentRate = 'Incident Rate';
 $strIncidentPriority = 'Incident Priority';
