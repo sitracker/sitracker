@@ -519,10 +519,10 @@ function get_billable_incident_object($billingtype)
         // Try and identity from old internal name
         switch ($billingtype)
         {
-            case 'unit':
+            case BILLING_TYPE_UNIT:
                 $toReturn = new UnitBillable();
                 break;
-            case 'incident':
+            case BILLING_TYPE_INCIDENT:
                 $toReturn = new IncidentBillable();
                 break;
             case '':
