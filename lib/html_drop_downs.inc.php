@@ -133,7 +133,7 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
     $html = "<select name='$name'>\n";
     if ($userdisable)
     {
-        $html .= "<option class='disable' selected='selected' value='0'>ACCOUNT DISABLED</option>\n";
+        $html .= "<option class='disable' selected='selected' value='0'>{$GLOBALS['strAccountDisabled']}</option>\n";
     }
 
     while ($statuses = mysql_fetch_object($result))

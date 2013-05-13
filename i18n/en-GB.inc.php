@@ -30,6 +30,7 @@ $strAboutXMinutesAgo = 'About %d minutes ago';
 $strAboveMustBeCompletedToAllowDeductions = 'Above must be completed to allow deductions';
 $strAbsentSick = 'Absent Sick';
 $strAcceptingIncidents = 'Accepting Incidents';
+$strAccountDisabled = 'Account Disabled';
 $strAccountManager = 'Account Manager';
 $strActual = 'Actual';
 $strAcknowledge = 'Acknowledge';
