@@ -1430,6 +1430,7 @@ $strPleaseConfirmUsername = 'Please confirm your username';
 $strPleaseWaitRedirect = 'Please wait while you are redirected';
 $strPlugin = 'Plugin';
 $strPlugins = 'Plugins';
+$strPoints = 'Points';
 $strPointsBased = 'Points Based';
 $strPopularity = 'Popularity';
 $strPortal = 'Portal';
@@ -1942,6 +1943,7 @@ $strTotalDebit = 'Total Debit';
 $strTotalDuration = 'Total Duration';
 $strTotalMinutes = 'Total Minutes';
 $strTotalOpen = 'Total Open';
+$strTotalPoints = 'Total Points';
 $strTotalUnits = 'Total Units';
 $strTrackURL = 'Track URL';
 $strTraining = 'Training';
@@ -2161,13 +2163,15 @@ $strXMinutes = '%s minutes';
 $strXMonths = '%s months';
 # e.g. '5 days old'
 $strXold = '%s old';
+# e.g. Linux Support for Example Site
+$strXProductForYSite = '%1$s for %2$s';
+$strXPoint = '%s Point';
+$strXPoints = '%s Points';
 $strXTotal = '%s Total';
 # e.g. 'Fred of ACME Inc'. i.e. 'Name' of 'Site'
 $strXofX = '%1$s of %2$s';
 # e.g. '5 Records'
 $strXRecords = '%s Records';
-# e.g. Linux Support for Example Site
-$strXProductForYSite = '%1$s for %2$s';
 # e.g. John's Activities
 $strXsActivities = '%s\'s Activities';
 $strXSeconds = '%s seconds';

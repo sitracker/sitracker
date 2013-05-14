@@ -129,7 +129,7 @@ abstract class Billable {
         return TRUE;
     }
 
-  
+
     /**
      * Creates a transaction awaiting approval, this should called from close_incident as every incident should create a transaction waiting approval 
      * @param int $incidentid - The incident ID to create the transaction for
@@ -445,7 +445,8 @@ class UnitBillable extends Billable {
         $billableunitsincidentunapproved = 0;
         $refundedunapproved = 0;
 
-        $str = "<table align='center' width='80%'>";
+        $str .= "<h3>".$this->display_name()."</h3>";
+        $str .= "<table align='center' width='80%'>";
         
         $str .= "<tr>";
         $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
@@ -1328,7 +1329,8 @@ class IncidentBillable extends Billable {
         $sitetotalsbillablewaitingapproval = 0;
         $refundedunapproved = 0;
 
-        $str = "<table align='center' width='80%'>";
+        $str .= "<h3>".$this->display_name()."</h3>";
+        $str .= "<table align='center' width='80%'>";
         $str .= "<tr>";
         $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
         $str .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strIncidentTitle']}</th><th>{$GLOBALS['strContact']}</th>";
@@ -1451,8 +1453,7 @@ class IncidentBillable extends Billable {
         
         if (!$used) $str = FALSE;
         
-        return $str;
-        
+        return $str;        
     }
 
 
@@ -1507,7 +1508,7 @@ class IncidentBillable extends Billable {
         }
         else
         {
-            trigger_error("IncidentBillable.incident_update_amount_text passed an amount of ".$amount." we only support -1");
+            trigger_error("IncidentBillable.incident_update_amount_text passed an amount of {$amount} we only support -1");
         }
 
         return $toReturn;
