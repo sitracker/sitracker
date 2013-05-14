@@ -175,7 +175,7 @@ elseif ($mode == 'approvalpage')
 
             $str = '';
             
-            $sqlbillabletypes = "SELECT DISTINCT billingtype AS billingtype, id FROM `{$dbMaintenance}` WHERE site = {$objsite->site} AND billingtype IS NOT NULL";
+            $sqlbillabletypes = "SELECT billingtype AS billingtype, id FROM `{$dbMaintenance}` WHERE site = {$objsite->site} AND billingtype IS NOT NULL GROUP BY billingtype ORDER BY billingtype";
             $resultbillabletypes = mysql_query($sqlbillabletypes);
             if (mysql_num_rows($resultbillabletypes) > 0)
             {
