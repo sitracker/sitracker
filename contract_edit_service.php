@@ -100,15 +100,10 @@ switch ($mode)
                         echo "<input type='hidden' name='editbilling' id='editbilling' value='true' />";
                         echo "<input type='hidden' name='originalcredit' id='originalcredit' value='{$obj->creditamount}' />";
                         
-                        $billtype = get_contract_billable_type($contractid);
-                        
-                        if ($billtype == 'unit')
+                        $billtype = get_billable_object_from_contract_id($contractid);
+                        if ($billtype instanceof Billable)
                         {
-                            echo $strPerUnit;
-                        }
-                        else if ($billtype == 'incident')
-                        {
-                            echo $strPerIncident;
+                            echo $billtype->display_name();
                         }
                         
                         echo "</td></tr>\n";

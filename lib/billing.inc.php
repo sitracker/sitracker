@@ -1409,32 +1409,6 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
 
 /**
- * Returns the type of billing used on the contract if any
- * @author Paul Heaney
- * @param int $contractid The ID of the contract to check
- * @return string the billing type being used, blank if not billed
- * @todo Possibly merge with is_contract_timed
- */
-function get_contract_billable_type($contractid)
-{
-    $toReturn = '';
-    
-    $sql = "SELECT billingtype FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$contractid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
-    
-    if (mysql_num_rows($result) > 0)
-    {
-        $obj = mysql_fetch_object($result);
-        $toReturn = new $obj->billingtype();
-        $toReturn = $toReturn->billing_type_name;
-    }
-    
-    return  $toReturn;
-}
-
-
-/**
  * Find the billing matrix for a particular contract
  * @author Paul Heaney
  * @param int $contractid The contract ID to find the billing matrix for

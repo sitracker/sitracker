@@ -93,17 +93,12 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_service']))
     echo "<td>";
     if ($timed)
     {
-        $billtype = get_contract_billable_type($contractid);
-        
-        if ($billtype == 'unit')
+        $billtype = get_billable_object_from_contract_id($contractid);
+        if ($billtype instanceof Billable)
         {
-            echo $strPerUnit;
+            echo $billtype->display_name();
         }
-        else if ($billtype == 'incident')
-        {
-            echo $strPerIncident;
-        }
-        
+
         echo "<input type='hidden' id='billtype' name='billtype' value='{$billtype}' />";
     }
     else
