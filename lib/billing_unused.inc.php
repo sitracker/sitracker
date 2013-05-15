@@ -16,60 +16,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 
-
-/**
- * Reserve monies from a serviceid
- * @author Paul Heaney
- * @param int $serviceid - The serviceID to reserve monies from
- * @param int $linktype - The type of link to create between the transaction and the reserve type
- * @param int $linkref - The ID to link this transaction to
- * @param int $amount - The positive amount of money to reserve
- * @param string $description - A description to put on the reservation
- * @return int - The transaction ID
- */
-function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
-{
-    global $now, $sit;
-    $rtnvalue = FALSE;
-    $balance = get_service_balance($serviceid, TRUE, TRUE);
-
-    $amount *= -1;
-
-    if ($balance != FALSE)
-    {
-        $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, amount, description, userid, dateupdated, transactionstatus) ";
-        $sql .= "VALUES ('{$serviceid}', '{$amount}', '{$description}', '{$_SESSION['userid']}', '".date('Y-m-d H:i:s', $now)."', '".BILLING_RESERVED."')";
-        $result = mysql_query($sql);
-        if (mysql_error())
-        {
-            trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
-            $rtnvalue = FALSE;
-        }
-
-        $rtnvalue = mysql_insert_id();
-
-        if ($rtnvalue != FALSE)
-        {
-
-            $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES ({$linktype}, {$rtnvalue}, {$linkref}, 'left', '{$_SESSION['userid']}')";
-            mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error(mysql_error(),E_USER_ERROR);
-                $rtnvalue = FALSE;
-            }
-            if (mysql_affected_rows() < 1)
-            {
-                trigger_error("Link reservation failed",E_USER_ERROR);
-                $rtnvalue = FALSE;
-            }
-        }
-    }
-
-    return $rtnvalue;
-}
-
-
 /**
  * Transitions reserved monies to awaitingapproval
  * @author Paul Heaney

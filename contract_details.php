@@ -145,7 +145,8 @@ echo "</td></tr>\n";
 
 if ($timed)
 {
-    echo "<tr><th>{$strBalance}</th><td>{$CONFIG['currency_symbol']}".number_format(get_contract_balance($id, TRUE, TRUE), 2);
+    $billingObj = get_billable_object_from_contract_id($id);
+    echo "<tr><th>{$strBalance}</th><td>".$billingObj->format_amount(get_contract_balance($id, TRUE, TRUE), 2);
     echo " (&cong;".contract_unit_balance($id, TRUE, TRUE)." units)";
     echo "</td></tr>";
 }

@@ -840,7 +840,7 @@ function contract_service_table($contractid, $billing)
         }
         $html .= "<th>{$GLOBALS['strActions']}</th>";
         $html .= "</tr>\n";
-        
+
         while ($service = mysql_fetch_object($result))
         {
             $service->startdate = mysql2date($service->startdate . ' 00:00');
@@ -891,12 +891,12 @@ function contract_service_table($contractid, $billing)
 
                 if ($service->creditamount != 0)
                 {
-                    $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->creditamount, 2)."<br />";
+                    $span .= "<strong>{$GLOBALS['strCreditAmount']}</strong>: ".$billingObj->format_amount($service->creditamount)."<br />";
                 }
 
                 if ($service->rate != 0)
                 {
-                    $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: {$CONFIG['currency_symbol']}{$service->rate}<br />";
+                    $span .= "<strong>{$GLOBALS['strUnitRate']}</strong>: ".$billingObj->format_amount($service->rate)."<br />";
                 }
 
                 $sql1 = "SELECT billingmatrix FROM `{$dbMaintenance}` WHERE id = {$contractid}";
@@ -911,21 +911,21 @@ function contract_service_table($contractid, $billing)
 
                 if ($balance != $service->balance)
                 {
-                    $span .= "<strong>{$GLOBALS['strBalance']}</strong>: {$CONFIG['currency_symbol']}".number_format($service->balance, 2)."<br />";
+                    $span .= "<strong>{$GLOBALS['strBalance']}</strong>: ".$billingObj->format_amount($service->balance)."<br />";
                     if ($awaitingapproval != FALSE)
                     {
-                        $span .= "<strong>{$GLOBALS['strAwaitingApproval']}</strong>: {$CONFIG['currency_symbol']}".number_format($awaitingapproval, 2)."<br />";
+                        $span .= "<strong>{$GLOBALS['strAwaitingApproval']}</strong>: ".$billingObj->format_amount($awaitingapproval)."<br />";
                     }
 
                     if ($reserved != FALSE)
                     {
-                        $span .= "<strong>{$GLOBALS['strReserved']}</strong>: {$CONFIG['currency_symbol']}".number_format($reserved, 2)."<br />";
+                        $span .= "<strong>{$GLOBALS['strReserved']}</strong>: ".$billingObj->format_amount($reserved)."<br />";
                     }
 
                     $span .= "<strong>{$GLOBALS['strAvailableBalance']}</strong>: ";
                     if (!$expired)
                     {
-                        $span .= "{$CONFIG['currency_symbol']}".number_format($balance, 2);
+                        $span .= $billingObj->format_amount($balance);
                     }
                     else
                     {
@@ -959,7 +959,7 @@ function contract_service_table($contractid, $billing)
             }
             else
             {
-                $html .= "<td>".ldate($CONFIG['dateformat_date'],$service->startdate);
+                $html .= "<td>".ldate($CONFIG['dateformat_date'], $service->startdate);
                 $html .= "</td>";
             }
             $html .= "<td>";
@@ -967,8 +967,8 @@ function contract_service_table($contractid, $billing)
 
             if ($billing)
             {
-                $html .= "<td>{$CONFIG['currency_symbol']}";
-                if (!$expired) $html .= number_format($balance, 2);
+                $html .= "<td>";
+                if (!$expired) $html .= $billingObj->format_amount($balance);
                 else $html .= "0";
                 $html .= "</td>";
             }
@@ -1431,6 +1431,63 @@ function get_contract_billing_matrix($contractid, $billingtype='')
     }
     
     return $toReturn;
+}
+
+
+/*
+ * RESERVATIONS
+ */
+
+/**
+ * Reserve monies from a serviceid
+ * @author Paul Heaney
+ * @param int $serviceid - The serviceID to reserve monies from
+ * @param int $linktype - The type of link to create between the transaction and the reserve type
+ * @param int $linkref - The ID to link this transaction to
+ * @param int $amount - The positive amount of money to reserve
+ * @param string $description - A description to put on the reservation
+ * @return int - The transaction ID
+ */
+function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
+{
+    global $now, $sit;
+    $rtnvalue = FALSE;
+    $balance = get_service_balance($serviceid, TRUE, TRUE);
+
+    $amount *= -1;
+
+    if ($balance != FALSE)
+    {
+        $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, amount, description, userid, dateupdated, transactionstatus) ";
+        $sql .= "VALUES ('{$serviceid}', '{$amount}', '{$description}', '{$_SESSION['userid']}', '".date('Y-m-d H:i:s', $now)."', '".BILLING_RESERVED."')";
+        $result = mysql_query($sql);
+        if (mysql_error())
+        {
+            trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
+            $rtnvalue = FALSE;
+        }
+
+        $rtnvalue = mysql_insert_id();
+
+        if ($rtnvalue != FALSE)
+        {
+
+            $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES ({$linktype}, {$rtnvalue}, {$linkref}, 'left', '{$_SESSION['userid']}')";
+            mysql_query($sql);
+            if (mysql_error())
+            {
+                trigger_error(mysql_error(),E_USER_ERROR);
+                $rtnvalue = FALSE;
+            }
+            if (mysql_affected_rows() < 1)
+            {
+                trigger_error("Link reservation failed",E_USER_ERROR);
+                $rtnvalue = FALSE;
+            }
+        }
+    }
+
+    return $rtnvalue;
 }
 
 ?>

@@ -128,6 +128,19 @@ abstract class Billable {
     {
         return TRUE;
     }
+    
+    
+    /**
+     * Formats an amount on the billing, the by default uses CURRENCY $amount
+     * @author Paul Heaney
+     * @param float $amount The amount to format
+     * @return string the representation of the amount of the billing type
+     */
+    function format_amount($amount)
+    {
+        global $CONFIG;
+        return "{$CONFIG['currency_symbol']}".number_format($amount, 2);
+    }
 
 
     /**
