@@ -1133,7 +1133,7 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
     $csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES);
 
-    $sql = "SELECT DISTINCT t.*, m.site, p.foc, p.cust_ref, p.cust_ref_date, p.title, p.notes ";
+    $sql = "SELECT DISTINCT t.*, m.site, m.billingtype, p.foc, p.cust_ref, p.cust_ref_date, p.title, p.notes ";
     $sql .= "FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbService']}` AS p, ";
     $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbSites']}` AS s ";
     $sql .= "WHERE t.serviceid = p.serviceid AND p.contractid = m.id "; // AND t.date <= '{$enddateorig}' ";
@@ -1182,6 +1182,8 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
         while ($transaction = mysql_fetch_object($result))
         {
+            $billingObj = new $transaction->billingtype();
+            
             if ($display == 'html')
             {
                 if ($serviceid > 0 AND empty($details))
@@ -1283,11 +1285,11 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $totaldebit += $transaction->amount;
                 if ($display == 'html')
                 {
-                    $str .= "<td></td><td>{$CONFIG['currency_symbol']}".number_format($transaction->amount, 2)."</td>";
+                    $str .= "<td></td><td>".$billingObj->format_amount(number_format($transaction->amount, 2))."</td>";
                 }
                 elseif ($display == 'csv')
                 {
-                    $str .= ",\"{$csv_currency}".number_format($transaction->amount, 2)."\",";
+                    $str .= ",\"".$billingObj->format_amount(number_format($transaction->amount, 2))."\",";
                 }
             }
             else
@@ -1295,11 +1297,11 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $totalcredit += $transaction->amount;
                 if ($display == 'html')
                 {
-                    $str .= "<td>{$CONFIG['currency_symbol']}".number_format($transaction->amount, 2)."</td><td></td>";
+                    $str .= "<td>".$billingObj->format_amount(number_format($transaction->amount, 2))."</td><td></td>";
                 }
                 elseif ($display == 'csv')
                 {
-                    $str .= "\"{$csv_currency}".number_format($transaction->amount, 2)."\",,";
+                    $str .= "\"".$billingObj->format_amount(number_format($transaction->amount, 2))."\",,";
                 }
             }
 
@@ -1372,8 +1374,8 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $text .= "<th>{$GLOBALS['strDescription']}</th><th>{$GLOBALS['strStatus']}</th><th>{$GLOBALS['strCredit']}</th><th>{$GLOBALS['strDebit']}</th></tr>";
                 $text .= $table;
                 $text .= "<tfoot><tr><td colspan='6' align='right'>{$GLOBALS['strTOTALS']}</td>";
-                $text .= "<td>{$CONFIG['currency_symbol']}".number_format($totalcredit, 2)."</td>";
-                $text .= "<td>{$CONFIG['currency_symbol']}".number_format($totaldebit, 2)."</td></tr></tfoot>";
+                $text .= "<td>".$billingObj->format_amount(number_format($totalcredit, 2))."</td>";
+                $text .= "<td>".$billingObj->format_amount(number_format($totaldebit, 2))."</td></tr></tfoot>";
                 $text .= "</table>";
             }
             elseif ($display == 'csv')
@@ -1387,8 +1389,8 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
                 $text .= "\"{$GLOBALS['strDescription']}\",\"{$GLOBALS['strStatus']}\",\"{$GLOBALS['strCredit']}\",\"{$GLOBALS['strDebit']}\"\n";
                 $text .= $table;
                 $text .= ",,,,{$GLOBALS['strTOTALS']},";
-                $text .= "\"{$csv_currency}".number_format($totalcredit, 2)."\",\"";
-                $text .= "{$csv_currency}".number_format($totaldebit, 2)."\"\n";
+                $text .= "\"".$billingObj->format_amount(number_format($totalcredit, 2))."\",\"";
+                $text .= $billingObj->format_amount(number_format($totaldebit, 2))."\"\n";
             }
         }
     }
