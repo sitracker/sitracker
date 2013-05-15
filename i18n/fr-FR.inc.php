@@ -960,6 +960,7 @@ $strNewEscalationPath = 'Nouveau Chemin d\'escalade';
 $strNewHeldEmail = 'Nouvel email pris en charge';
 $strNewestAtBottom = 'Récent en bas';
 $strNewestAtTop = 'Récent en haut';
+$strNewIncident = 'Nouveau Ticket';
 $strNewIncidentStatus = 'Nouveau statut du Ticket';
 $strNewKBArticle = 'Nouvel Article de KB';
 $strNewNoteByX = 'Nouvelle Note par %s';
