@@ -21,7 +21,7 @@ function dashboard_incoming($dashletid)
     global $dbUpdates, $dbTempIncoming;
 	
 	$content = "<p align='center'><img src='{$CONFIG['application_webpath']}images/ajax-loader.gif' alt='Loading icon' /></p>";
-	echo dashlet('incoming', $dashletid, icon('emailin', 16), 'Holding Queue Emails', 'holding_queue.php', $content);
+	echo dashlet('incoming', $dashletid, icon('emailin', 16), $GLOBALS['strHoldingQueue'], 'holding_queue.php', $content);
 }
 
 function dashboard_incoming_display($dashletid)
