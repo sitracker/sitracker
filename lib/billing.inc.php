@@ -1492,4 +1492,37 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
     return $rtnvalue;
 }
 
+
+/**
+ * Transitions reserved monies to awaitingapproval
+ * @author Paul Heaney
+ * @param int $transactionid The transaction ID to transition
+ * @param int $amount The final amount to charge
+ * @param string $description (optional) The description to update the transaction with
+ * @return bool TRUE on sucess FALSE otherwise
+ */
+function transition_reserved_monites($transactionid, $amount, $description='')
+{
+    $rtnvalue = TRUE;
+    $sql = "UPDATE `{$GLOBALS['dbTransactions']}` SET amount = {$amount}, transactionstatus = ".BILLING_AWAITINGAPPROVAL." ";
+    if (!empty($description))
+    {
+        $sql .= ", description = '{$description}' ";
+    }
+    $sql .= "WHERE transactionid = {$transactionid} AND transactionstatus = ".BILLING_RESERVED;
+    mysql_query($sql);
+
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(), E_USER_ERROR);
+        $rtnvalue = FALSE;
+    }
+    if (mysql_affected_rows() < 1)
+    {
+        trigger_error("Transition reserved monies failed {$sql}", E_USER_ERROR);
+        $rtnvalue = FALSE;
+    }
+
+    return $rtnvalue;
+}
 ?>
