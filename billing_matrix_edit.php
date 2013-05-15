@@ -24,7 +24,7 @@ $title = $strEditBillingMatrix;
 
 if (!empty($tag) AND empty($action))
 {
-    $sql = "SELECT * FROM `{$dbBillingMatrix}` WHERE tag='{$tag}' ORDER BY hour";
+    $sql = "SELECT * FROM `{$dbBillingMatrixUnit}` WHERE tag='{$tag}' ORDER BY hour";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -99,7 +99,7 @@ else if(!empty($tag) AND $action == "edit")
         $sun = clean_float($_REQUEST["sun_{$hour}"]);
         $holiday = clean_float($_REQUEST["holiday_{$hour}"]);
 
-        $sql = "UPDATE `{$dbBillingMatrix}` SET mon = {$mon}, tue = {$tue}, wed = {$wed}, thu = {$thu}, ";
+        $sql = "UPDATE `{$dbBillingMatrixUnit}` SET mon = {$mon}, tue = {$tue}, wed = {$wed}, thu = {$thu}, ";
         $sql .= "fri = {$fri}, sat = {$sat}, sun = {$sun}, holiday = {$holiday} WHERE tag = '{$tag}' AND hour = {$hour}";
         $result = mysql_query($sql);
         if (mysql_error())

@@ -18,7 +18,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 // Database Table Names
-$dbBillingMatrix = "{$CONFIG['db_tableprefix']}billingmatrix";
+$dbBillingMatrixPoints = "{$CONFIG['db_tableprefix']}billingmatrixpoints";
+$dbBillingMatrixUnit = "{$CONFIG['db_tableprefix']}billingmatrixunit";
 $dbBillingPeriods = "{$CONFIG['db_tableprefix']}billing_periods";
 $dbClosingStatus = "{$CONFIG['db_tableprefix']}closingstatus";
 $dbConfig = "{$CONFIG['db_tableprefix']}config";

@@ -86,7 +86,7 @@ elseif ($action == "new")
     }
     plugin_do('billing_matrix_new_submitted');
 
-    $sql = "SELECT tag FROM `{$dbBillingMatrix}` WHERE tag='{$tag}'";
+    $sql = "SELECT tag FROM `{$dbBillingMatrixUnit}` WHERE tag='{$tag}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
@@ -126,7 +126,7 @@ elseif ($action == "new")
             $sun = clean_float($_REQUEST["sun_{$hour}"]);
             $holiday = clean_float($_REQUEST["holiday_{$hour}"]);
 
-            $sql = "INSERT INTO `{$dbBillingMatrix}` (tag, hour, mon, tue, wed, thu, fri, sat, sun, holiday) ";
+            $sql = "INSERT INTO `{$dbBillingMatrixUnit}` (tag, hour, mon, tue, wed, thu, fri, sat, sun, holiday) ";
             $sql .= "VALUES ('{$tag}', {$hour}, {$mon}, {$tue}, {$wed}, {$thu}, {$fri}, {$sat}, {$sun}, {$holiday})";
             $result = mysql_query($sql);
             if (mysql_error())

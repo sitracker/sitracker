@@ -97,7 +97,7 @@ if ($action == "showform" OR $action == '')
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strAdminContact}</th>";
-    echo "<td>".contact_drop_down("admincontact", 0, TRUE, TRUE);
+    echo "<td>".contact_drop_down("admincontact", show_form_value('new_contract', 'admincontact', 0), TRUE, TRUE);
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
@@ -116,6 +116,9 @@ if ($action == "showform" OR $action == '')
     echo "<label>";
     echo "<input type='radio' name='billtype' value='IncidentBillable' onchange=\"addcontract_display_billing_matrix('new_contract', '{$_SESSION['formdata']['new_contract']['billing_matrix']}');\" /> ";
     echo "{$strPerIncident}</label>";
+    echo "<label>";
+    echo "<input type='radio' name='billtype' value='PointsBillable' onchange=\"addcontract_display_billing_matrix('new_contract', '{$_SESSION['formdata']['new_contract']['billing_matrix']}');\" /> ";
+    echo "{$strPointsBased}</label>";
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strCreditAmount}</th><td>{$CONFIG['currency_symbol']}";
@@ -155,7 +158,7 @@ if ($action == "showform" OR $action == '')
 
     echo "<tr><th>{$strIncidentPool}</th>";
     $incident_pools = explode(',', "{$strUnlimited},{$CONFIG['incident_pools']}");
-    echo "<td>".array_drop_down($incident_pools,'incident_poolid',$maint['incident_quantity'])."</td></tr>\n";
+    echo "<td>".array_drop_down($incident_pools, 'incident_poolid', $maint['incident_quantity'])."</td></tr>\n";
 
     plugin_do('contract_new_form_more');
     echo "</tbody>\n";
@@ -230,12 +233,14 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['site'] = sprintf($strFieldMustNotBeBlank, $strSite);
     }
+
     // check for blank product
     if ($product == 0)
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['product'] = sprintf($strFieldMustNotBeBlank, $strProduct);
     }
+
     // check for blank expiry day
     if (empty($_REQUEST['expiry']) AND $expirydate != -1)
     {
@@ -247,24 +252,28 @@ elseif ($action == 'new')
         $errors++;
         $_SESSION['formerrors']['new_contract']['expirydate2'] = "{$strExpiryDateCannotBeInThePast}\n";
     }
+
     // check for blank admin contact
     if ($admincontact == 0)
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['admincontact'] = sprintf($strFieldMustNotBeBlank, $strAdminContact);
     }
+
     if ($timed == 'yes' AND $amount == 0)
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['amount'] = sprintf($strFieldMustNotBeBlank, $strCreditAmount);
     }
-    if ($timed == 'yes' AND empty($unitrate))
+    
+    $billingObj = new $billtype();
+
+    if ($timed == 'yes' AND empty($unitrate) AND $billingObj->uses_unit_rate())
     {
         $errors++;
         $_SESSION['formerrors']['new_contract']['unitrate'] = sprintf($strFieldMustNotBeBlank, $strUnitRate);
     }
 
-    $billingObj = new $billtype();
     if ($timed == 'yes' AND $billingObj->uses_billing_matrix AND empty($billingmatrix))
     {
         $errors++;

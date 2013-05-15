@@ -117,8 +117,32 @@ abstract class Billable {
     {
         return FALSE;
     }
+
     
-  
+    /**
+     * Does this billing method use the unit rate?
+     * @author Paul Heaney
+     * @return boolean TRUE if this billing method uses the unit rate (like Unit or Incident) or FALSE otherwise
+     */
+    function uses_unit_rate()
+    {
+        return TRUE;
+    }
+    
+    
+    /**
+     * Formats an amount on the billing, the by default uses CURRENCY $amount
+     * @author Paul Heaney
+     * @param float $amount The amount to format
+     * @return string the representation of the amount of the billing type
+     */
+    function format_amount($amount)
+    {
+        global $CONFIG;
+        return "{$CONFIG['currency_symbol']}".number_format($amount, 2);
+    }
+
+
     /**
      * Creates a transaction awaiting approval, this should called from close_incident as every incident should create a transaction waiting approval 
      * @param int $incidentid - The incident ID to create the transaction for
@@ -385,7 +409,7 @@ class UnitBillable extends Billable {
 
     function billing_matrix_selector($id, $selected='')
     {
-        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrix']}`";
+        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixUnit']}`";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
@@ -434,7 +458,8 @@ class UnitBillable extends Billable {
         $billableunitsincidentunapproved = 0;
         $refundedunapproved = 0;
 
-        $str = "<table align='center' width='80%'>";
+        $str .= "<h3>".$this->display_name()."</h3>";
+        $str .= "<table align='center' width='80%'>";
         
         $str .= "<tr>";
         $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
@@ -720,7 +745,7 @@ class UnitBillable extends Billable {
      */
     function get_billable_multiplier($dayofweek, $hour, $billingmatrix = 'Default')
     {
-        $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrix']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
+        $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrixUnit']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
     
         $result = mysql_query($sql);
         if (mysql_error())
@@ -969,7 +994,7 @@ class UnitBillable extends Billable {
     
         foreach ($days AS $d)
         {
-            $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrix']}` ";
+            $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrixUnit']}` ";
             if (!empty($matrixtag)) $sql .= " WHERE tag = '{$matrixtag}'";
             $result = mysql_query($sql);
             if (mysql_error())
@@ -1317,7 +1342,8 @@ class IncidentBillable extends Billable {
         $sitetotalsbillablewaitingapproval = 0;
         $refundedunapproved = 0;
 
-        $str = "<table align='center' width='80%'>";
+        $str .= "<h3>".$this->display_name()."</h3>";
+        $str .= "<table align='center' width='80%'>";
         $str .= "<tr>";
         $str .= "<th><input type='checkbox' name='selectAll' value='CheckAll' onclick=\"checkAll({$sitenamenospaces}, this.checked);\" /></th>";
         $str .= "<th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strIncidentTitle']}</th><th>{$GLOBALS['strContact']}</th>";
@@ -1440,8 +1466,7 @@ class IncidentBillable extends Billable {
         
         if (!$used) $str = FALSE;
         
-        return $str;
-        
+        return $str;        
     }
 
 
@@ -1496,7 +1521,7 @@ class IncidentBillable extends Billable {
         }
         else
         {
-            trigger_error("IncidentBillable.incident_update_amount_text passed an amount of ".$amount." we only support -1");
+            trigger_error("IncidentBillable.incident_update_amount_text passed an amount of {$amount} we only support -1");
         }
 
         return $toReturn;
@@ -1524,3 +1549,7 @@ class IncidentBillable extends Billable {
         return $toReturn;
     }
 }
+
+
+
+require ('points_billing.inc.php');
