@@ -431,17 +431,16 @@ class PointsBillable extends Billable {
 
 function points_billing_incident_edit()
 {
-    global $id;
-    $b = get_billable_object_from_incident_id($id);
-    
-    if ($b instanceof PointsBillable)
+    global $id, $billingObj;
+        
+    if ($billingObj instanceof PointsBillable)
     {
         $current_base_points = points_incident_base_points($id);
         
         echo "<tr>";
         echo "<th>{$GLOBALS['strIncidentPoints']}</th>";
         echo "<td>";
-        echo $b->get_points_drop_down('points_base', $current_base_points, $id);
+        echo $billingObj->get_points_drop_down('points_base', $current_base_points, $id);
         echo "</td>";
         echo "</tr>";
     }
@@ -459,9 +458,10 @@ plugin_register('incident_edit_form', 'points_billing_incident_edit');
 function points_billing_incident_edited()
 {
     global $id;
-    $b = get_billable_object_from_incident_id($id);
     
-    if ($b instanceof PointsBillable)
+    $billingObj = get_billable_object_from_incident_id($id);
+    
+    if ($billingObj instanceof PointsBillable)
     {
         $new_points = clean_float($_REQUEST['points_base']);
     
@@ -484,9 +484,9 @@ function points_billing_incident_edit_submitted()
 {
     global $id, $errors, $header, $SYSLANG;
     
-    $b = get_billable_object_from_incident_id($id);
+    $billingObj = get_billable_object_from_incident_id($id);
     
-    if ($b instanceof PointsBillable)
+    if ($billingObj instanceof PointsBillable)
     {
         $new_points = clean_float($_REQUEST['points_base']);
         $current_base_points = points_incident_base_points($id);
@@ -525,8 +525,10 @@ plugin_register('incident_edit_submitted', 'points_billing_incident_edit_submitt
 function points_incident_new_form()
 {
     global $maintid;
-    $b = get_billable_object_from_contract_id($maintid);
-    if ($b instanceof PointsBillable)
+
+    $billingObj = get_billable_object_from_contract_id($maintid);
+    
+    if ($billingObj instanceof PointsBillable)
     {
         $billingmatrix = get_contract_billing_matrix($maintid, 'PointsBillable');
         
@@ -549,9 +551,9 @@ function points_incident_new_saved()
 {
     global $incidentid;
     
-    $b = get_billable_object_from_incident_id($incidentid);
+    $billingObj = get_billable_object_from_incident_id($incidentid);
     
-    if ($b instanceof PointsBillable)
+    if ($billingObj instanceof PointsBillable)
     {
         $points = clean_float($_REQUEST['points_base']);
     

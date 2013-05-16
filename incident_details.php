@@ -263,8 +263,6 @@ else
 
     echo "{$servicelevel_tag}<br />\n ";
     echo "</div>\n";
-
-    $billingObj = get_billable_object_from_incident_id($incidentid);
     
     if ($billingObj instanceof Billable)
     {

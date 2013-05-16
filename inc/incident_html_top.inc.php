@@ -73,6 +73,9 @@ echo "<body id='{$pagnename}_page' onload=\"self.focus()\">";
 plugin_do('page_start');
 
 $incidentid = $id;
+
+$billingObj = get_billable_object_from_incident_id($incidentid);
+
 // Retrieve incident
 // extract incident details
 $sql  = "SELECT *, i.id AS incidentid, ";
