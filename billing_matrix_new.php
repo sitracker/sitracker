@@ -92,7 +92,7 @@ elseif ($action == "new")
     if (mysql_num_rows($result) > 0)
     {
         $errors++;
-        $_SESSION['formerrors']['billing_matrix_new']['tag1'] = sprintf(strADuplicateAlreadyExists, $strTag);
+        $_SESSION['formerrors']['billing_matrix_new']['tag1'] = sprintf($strADuplicateAlreadyExists, $strTag);
     }
 
 
@@ -102,7 +102,6 @@ elseif ($action == "new")
                                                      array("@"), array("'" => '"'));
 
         // show error message if errors
-        include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
     else
