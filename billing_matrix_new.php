@@ -144,6 +144,8 @@ elseif ($action == "new")
         }
         else
         {
+            clear_form_data('billing_matrix_new');
+            clear_form_errors('billing_matrix_new');
             plugin_do('billing_matrix_new_saved');
             html_redirect("billing_matrix.php", TRUE);
         }
