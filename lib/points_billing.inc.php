@@ -458,8 +458,8 @@ class PointsBillable extends Billable {
      */
     function format_amount($amount)
     {
-        if ($amount === 1) $desc = sprintf($GLOBALS['strXPoint'], $amount * -1);
-        else $desc = sprintf($GLOBALS['strXPoints'], $amount * 1);
+        if ($amount == 1) $desc = sprintf($GLOBALS['strXPoint'], $amount);
+        else $desc = sprintf($GLOBALS['strXPoints'], $amount);
         
         return $desc; 
     }
@@ -602,6 +602,25 @@ function points_incident_new_saved()
 
 
 plugin_register('incident_new_saved', 'points_incident_new_saved');
+
+
+function points_incident_details_billing()
+{
+    global $incidentid;
+    
+    $billingObj = get_billable_object_from_incident_id($incidentid);
+    
+    if ($billingObj instanceof PointsBillable)
+    {
+        $billingmatrix = get_contract_billing_matrix(incident_maintid($incidentid), 'PointsBillable');
+        $points = points_incident_base_points($incidentid);
+        $points_name = points_name($billingmatrix, $points);
+        echo "<div id='incident_details_points'><strong>{$GLOBALS['strPoints']}:</strong> {$points_name} (".$billingObj->format_amount($points).")</div>";
+    }
+}
+
+
+plugin_register('incident_details_billing', 'points_incident_details_billing');
 
 
 /**

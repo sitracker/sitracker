@@ -266,7 +266,8 @@ else
     
     if ($billingObj instanceof Billable)
     {
-        echo "<div id='billingdetails'>{$strBilling}: ".$billingObj->display_name()."</div>\n";
+        echo "<div id='billingdetails'><strong>{$strBilling}:</strong> ".$billingObj->display_name()."</div>\n";
+        plugin_do('incident_details_billing');
     }
     else
     {
@@ -350,7 +351,7 @@ else
         // TODO for 12/24H clock choice Mantis 183
         if ($totalduration > 0)
         {
-            echo ("{$strDuration}: " . format_seconds($totalduration * 60) . "<br />\n");
+            echo "<strong>{$strDuration}:</strong> " . format_seconds($totalduration * 60) . "<br />\n";
         }
     }
 
