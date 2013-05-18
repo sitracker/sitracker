@@ -17,6 +17,8 @@ abstract class Billable {
     public $billing_type_name = '';
     public $billing_matrix_type = ''; // TODO static?
     public $uses_billing_matrix = TRUE;
+    public $new_billing_matrix_page = '';
+    public $edit_billing_matrix_page = '';
     
     /**
      * This function closes an incident and performs type specific operations
@@ -74,6 +76,12 @@ abstract class Billable {
      * @return string the select HTML element
      */
     abstract function billing_matrix_selector($id, $selected='');
+    
+    /**
+     * Returns the HTML for the all the billing matrixes of the type
+     * @return string The HTML for all the billing matrixes
+     */    
+    abstract function show_billing_matrix_details();
 
     /**
      * Returns the display name for this billing type
@@ -213,7 +221,9 @@ abstract class Billable {
 class UnitBillable extends Billable {
     
     public $billing_type_name = 'unit';
-
+    public $new_billing_matrix_page = 'billing_matrix_new.php';
+    public $edit_billing_matrix_page = 'billing_matrix_edit.php';
+    
     /**
      * (non-PHPdoc)
      * @see Billable::close_incident()
@@ -430,8 +440,45 @@ class UnitBillable extends Billable {
     
         return $html;
     }
-    
-    
+
+
+    function show_billing_matrix_details()
+    {
+        $html = '';
+        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixUnit']}";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        
+        if (mysql_num_rows($result) >= 1)
+        {
+            while ($matrix = mysql_fetch_object($result))
+            {
+                $sql = "SELECT * FROM `{$GLOBALS['dbBillingMatrixUnit']}` WHERE tag = '{$matrix->tag}'";
+                $matrixresult = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        
+                $html .= "<table class='maintable'>";
+                $html .= "<thead><tr><th colspan='9'>{$matrix->tag} <a href='{$this->edit_billing_matrix_page}?type=PointsBillable&amp;tag={$matrix->tag}'>{$GLOBALS['strEdit']}</a></th></tr></thead>\n";
+                $html .= "<tr><th>{$GLOBALS['strHour']}</th><th>{$GLOBALS['strMonday']}</th><th>{$GLOBALS['strTuesday']}</th>";
+                $html .= "<th>{$GLOBALS['strWednesday']}</th><th>{$GLOBALS['strThursday']}</th><th>{$GLOBALS['strFriday']}</th>";
+                $html .= "<th>{$GLOBALS['strSaturday']}</th><th>{$GLOBALS['strSunday']}</th><th>{$GLOBALS['strPublicHoliday']}</th></tr>\n";
+                $shade = 'shade1';
+                while ($obj = mysql_fetch_object($matrixresult))
+                {
+                    $html .= "<tr class='{$shade}'><td>{$obj->hour}</td><td>&#215;{$obj->mon}</td><td>&#215;{$obj->tue}</td>";
+                    $html .= "<td>&#215;{$obj->wed}</td><td>&#215;{$obj->thu}</td><td>&#215;{$obj->fri}</td>";
+                    $html .= "<td>&#215;{$obj->sat}</td><td>&#215;{$obj->sun}</td><td>&#215;{$obj->holiday}</td></tr>\n";
+                    if ($shade == 'shade1') $shade = 'shade2';
+                    else $shade = 'shade1';
+                }
+                $html .= "</table>";
+            }
+        }
+        
+        return $html;
+    }
+
+
     /**
      * (non-PHPdoc)
      * @see Billable::uses_activities()
@@ -1489,11 +1536,18 @@ class IncidentBillable extends Billable {
     }
 
 
-    function billing_matrix_selector($id, $selected='') {
+    function billing_matrix_selector($id, $selected='')
+    {
         // We don't use a billing matrix for Incidents
         return "";
     }
     
+    function show_billing_matrix_details()
+    {
+        // We don't use a billing matrix for Incidents
+        trigger_error("No billing marix used on IncidentBillable so we can't display the details");
+        return "";
+    }
 
     function display_name()
     {

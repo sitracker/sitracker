@@ -73,6 +73,8 @@ if (empty($mode))
 elseif ($mode == "show")
 {
     $from = cleanvar($_REQUEST['from']);
+    $firstletter = cleanvar($_REQUEST['firstletter']);
+    
     if (!empty($_REQUEST['showtranslated']))
     {
         $showtranslated = TRUE;
@@ -110,8 +112,8 @@ elseif ($mode == "show")
             if (mb_substr($vars[0], 0, 3) == "str")
             {
                 //remove leading and trailing quotation marks
-                $vars[1] = substr_replace($vars[1], "",-2);
-                $vars[1] = substr_replace($vars[1], "",0, 1);
+                $vars[1] = substr_replace($vars[1], "", -2);
+                $vars[1] = substr_replace($vars[1], "", 0, 1);
                 $fromvalues[$vars[0]] = $vars[1];
             }
             elseif (mb_substr($vars[0], 0, 2) == "# ")
@@ -226,35 +228,42 @@ elseif ($mode == "show")
     echo "<tr><th>{$strVariable}</th><th>{$from}</th><th>{$tolang}</th></tr>";
 
     $shade = 'shade1';
+    
+    $lowerfirst = strtolower($firstletter);
+    
     foreach (array_keys($fromvalues) as $key)
     {
-        if ($showtranslated === TRUE OR ($showtranslated === FALSE AND empty($foreignvalues[$key]) === TRUE))
+        if (strtolower(substr($key, 0, 4)) == "str{$lowerfirst}")
         {
-            if ($tolang == 'zz') $foreignvalues[$key] = $key;
-            echo "<tr class='$shade'><td><label for=\"{$key}\"><code>{$key}</code></label></td>";
-            echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
-
-            echo "<td><input id=\"{$key}\" ";
-            if (empty($foreignvalues[$key]))
+            if ($showtranslated === TRUE OR ($showtranslated === FALSE AND empty($foreignvalues[$key]) === TRUE))
             {
-                echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \" ";
-            }
-            echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" />";
-            if (empty($foreignvalues[$key]))
-            {
-                echo "<span style='color:red;'>*</span>";
-            }
-            echo "</td></tr>\n";
-            if ($shade == 'shade1') $shade = 'shade2';
-            else $shade = 'shade1';
-            if (!empty($comments[$key]))
-            {
-                echo "<tr><td colspan='3' class='{$shade}'><strong>{$strNotes}:</strong> {$comments[$key]}</td></tr>\n";
+                if ($tolang == 'zz') $foreignvalues[$key] = $key;
+                echo "<tr class='$shade'><td><label for=\"{$key}\"><code>{$key}</code></label></td>";
+                echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
+    
+                echo "<td><input id=\"{$key}\" ";
+                if (empty($foreignvalues[$key]))
+                {
+                    echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \" ";
+                }
+                echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" />";
+                if (empty($foreignvalues[$key]))
+                {
+                    echo "<span style='color:red;'>*</span>";
+                }
+                echo "</td></tr>\n";
+                if ($shade == 'shade1') $shade = 'shade2';
+                else $shade = 'shade1';
+                if (!empty($comments[$key]))
+                {
+                    echo "<tr><td colspan='3' class='{$shade}'><strong>{$strNotes}:</strong> {$comments[$key]}</td></tr>\n";
+                }
             }
         }
     }
     echo "</table>";
     echo "<input type='hidden' name='origcount' value='{$origcount}' />";
+    echo "<input type='hidden' name='firstletter' value='{$firstletter}' />";
     echo "<input name='lang' value='{$tolang}' type='hidden' /><input name='mode' value='save' type='hidden' />";
     echo "<div class='formbuttons'>";
     if (is_writable($myFile))
@@ -277,6 +286,7 @@ elseif ($mode == "save")
     $origcount = clean_int($_REQUEST['origcount']);
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
     $meta = cleanvar($_REQUEST['meta'], TRUE, FALSE);
+    $firstletter = cleanvar($_REQUEST['firstletter']);
 
     $filename = "{$lang}.inc.php";
 

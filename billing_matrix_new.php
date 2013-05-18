@@ -1,5 +1,5 @@
 <?php
-// billing_matrix.php - Page to view a billing matrix
+// billing_matrix_new.php - Page to add a new Unit based billing matrix
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010 The Support Incident Tracker Project

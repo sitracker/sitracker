@@ -15,6 +15,9 @@
 
 class PointsBillable extends Billable {
 
+    public $new_billing_matrix_page = 'billing_matrix_new_point_based.php';
+    public $edit_billing_matrix_page = 'billing_matrix_edit_points_based.php';
+    
     function close_incident($incidentid)
     {
         global $CONFIG, $now;
@@ -354,6 +357,40 @@ class PointsBillable extends Billable {
             $html = "{$GLOBALS['strNoBillingMatrixDefined']}";
         }
         
+        return $html;
+    }
+    
+    
+    function show_billing_matrix_details()
+    {
+        $html = '';
+        $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixPoints']}";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    
+        if (mysql_num_rows($result) >= 1)
+        {
+            while ($matrix = mysql_fetch_object($result))
+            {
+                $sql = "SELECT * FROM `{$GLOBALS['dbBillingMatrixPoints']}` WHERE tag = '{$matrix->tag}' ORDER BY points ASC";
+                $matrixresult = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    
+                $html .= "<table class='maintable'>";
+                $html .= "<thead><tr><th colspan='2'>{$matrix->tag} <a href='{$this->edit_billing_matrix_page}?type=PointsBillable&amp;tag={$matrix->tag}'>{$GLOBALS['strEdit']}</a></th></tr></thead>\n";
+                
+                $html .= "<tr><th>{$GLOBALS['strName']}</th><th>{$GLOBALS['strPoints']}</th></tr>\n";
+                $shade = 'shade1';
+                while ($obj = mysql_fetch_object($matrixresult))
+                {
+                    $html .= "<tr class='{$shade}'><td>{$obj->name}</td><td>{$obj->points}</td></tr>\n";
+                    if ($shade == 'shade1') $shade = 'shade2';
+                    else $shade = 'shade1';
+                }
+                $html .= "</table>";
+            }
+        }
+    
         return $html;
     }
 
