@@ -64,10 +64,12 @@ CREATE TABLE IF NOT EXISTS `{$dbSystem}` (
 -- NOTE system must be the first table created.
 
 CREATE TABLE IF NOT EXISTS `{$dbBillingMatrixPoints}` (
+ `id` int(11) NOT NULL auto_increment,
   `tag` varchar(32) NOT NULL,
   `name` varchar(32) NOT NULL,
   `points` float NOT NULL,
-  PRIMARY KEY (`tag`,`name`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tag` (`tag`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
@@ -1929,10 +1931,12 @@ UPDATE `{$dbService}` SET rate = IF (`unitrate` = 0, `incidentrate`, `unitrate`)
 
 -- PH 2013-05-12
 CREATE TABLE IF NOT EXISTS `{$dbBillingMatrixPoints}` (
+ `id` int(11) NOT NULL auto_increment,
   `tag` varchar(32) NOT NULL,
   `name` varchar(32) NOT NULL,
   `points` float NOT NULL,
-  PRIMARY KEY (`tag`,`name`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tag` (`tag`,`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
