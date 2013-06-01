@@ -304,13 +304,20 @@ elseif ($action == 'new')
             $licence_type = "'{$licence_type}'";
         }
 
+        if ($timed != 'yes')
+        {
+            $billingmatrix = '';
+            $billtype = '';
+        }
+        
         $billingmatrix = convert_string_null_safe($billingmatrix);
+        $billtype = convert_string_null_safe($billtype);
         
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
         $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix, billingtype) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix}, '{$billtype}')";
+        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix}, {$billtype})";
 
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
