@@ -44,20 +44,20 @@ if ($incident)
 
     $sql = "SELECT status FROM `{$dbIncidents}` WHERE id = {$incident}";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     if (($obj = mysql_fetch_object(($result))) AND $obj->status != STATUS_ACTIVE AND $obj->status != STATUS_RESEARCH)
     {
     	$sql = "UPDATE `{$dbIncidents}` SET status = " . STATUS_ACTIVE. ", lastupdated = {$now} WHERE id = {$incident}";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         $bodytext = "Status: ".incidentstatus_name($obj->status)." -&gt; <b>" . incidentstatus_name(1) . "</b>\n\n" . $srtrTaskStarted;
 
         $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) VALUES ";
         $sql .= "({$incident}, {$sit[2]}, 'research', {$sit[2]}, " . STATUS_ACTIVE. ", '{$bodytext}', $now)";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
 
     html_redirect("tasks.php?incident={$incident}", TRUE, $strActivityAdded);
@@ -105,7 +105,7 @@ else
             {
                 if ($startdate > 0) $startdate = date('Y-m-d', $startdate)." ".$start_time_picker_hour.":".$start_time_picker_minute;
                 else $startdate = '';
-                if ($duedate > 0) $duedate = date('Y-m-d',$duedate)." ".$due_time_picker_hour.":".$due_time_picker_minute;
+                if ($duedate > 0) $duedate = date('Y-m-d', $duedate)." ".$due_time_picker_hour.":".$due_time_picker_minute;
                 else $duedate = '';
                 if ($startdate < 1 AND $completion > 0) $startdate = date('Y-m-d H:i:s')." ".$start_time_picker_hour.":".$start_time_picker_minute;;
                 $sql = "INSERT INTO `{$dbTasks}` ";

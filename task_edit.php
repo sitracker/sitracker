@@ -35,6 +35,12 @@ switch ($action)
         $name = cleanvar($_REQUEST['name']);
         $description = cleanvar($_REQUEST['description']);
         $priority = clean_int($_REQUEST['priority']);
+        $start_time_picker_hour = cleanvar($_POST['start_time_picker_hour']);
+        $start_time_picker_minute = cleanvar($_POST['start_time_picker_minute']);
+        $due_time_picker_hour = cleanvar($_POST['due_time_picker_hour']);
+        $due_time_picker_minute = cleanvar($_POST['due_time_picker_minute']);
+        $end_time_picker_hour = cleanvar($_POST['end_time_picker_hour']);
+        $end_time_picker_minute = cleanvar($_POST['end_time_picker_minute']);
 
         if (!empty($_REQUEST['duedate']))
         {
