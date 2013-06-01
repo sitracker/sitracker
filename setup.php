@@ -599,41 +599,7 @@ switch ($_REQUEST['action'])
 							/*****************************
                              * NOTE: we only support upgrades to 4.x from 3.50 or HIGHER *
                              *****************************/
-
-                            // Move billingmatrix to contract
-                            $billingmatrixerror = false;
-                            // Its OK to group on contractid as previously we only supported on billing matrix
-                            $sqlup1 = "SELECT billingmatrix, contractid FROM `{$dbService}` ORDER BY serviceid GROUP BY contractid";
-                            $resultup1 = mysql_query($sqlup1);
-                            if (mysql_error())
-                            {
-                                $billingmatrixerror = TRUE;
-                                trigger_error(mysql_error(), E_USER_WARNING);
-                            }
-
-                            while ($obj = mysql_fetch_object($resultup1))
-                            {
-                                if (empty($obj->billingmatrix))
-                                {
-                                    $obj->billingmatrix = "Default";
-                                }
-                                $sqlup2 = "UPDATE {$dbMaintenance} SET billingmatrix = '{$obj->billingmatrix}' WHERE id = {$obj->contractid}";
-                                mysql_query($sqlup2);
-                                if (mysql_error())
-                                {
-                                    $billingmatrixerror = TRUE;
-                                    trigger_error(mysql_error(), E_USER_WARNING);
-                                }
-                            }
-                            
-                            if (!$billingmatrixerror)
-                            {
-                                $sqlup3 = "ALTER TABLE `{$dbService}` DROP `billingmatrix`";
-                                mysql_query($sqlup2);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                            }
-                            // END Move billingmatrix to contract
-                            
+                           
                             /*****************************
                              * Do pre-upgrade tasks here *
                              *****************************/
@@ -653,6 +619,43 @@ switch ($_REQUEST['action'])
                             /******************************
                              * Do Post-upgrade tasks here *
                              ******************************/
+                            
+                            // Move billingmatrix to contract
+                            $billingmatrixerror = false;
+                            // Its OK to group on contractid as previously we only supported one billing matrix
+                            $sqlup1 = "SELECT s.billingmatrix, s.contractid FROM `{$dbService}` AS s, `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl ";
+                            $sqlup1 .= "WHERE s.contractid = m.id AND m.servicelevel = sl.tag AND sl.priority = 1 AND sl.timed = 'yes' ";
+                            $sqlup1 .= "GROUP BY serviceid ORDER BY contractid";
+                            $resultup1 = mysql_query($sqlup1);
+                            if (mysql_error())
+                            {
+                                $billingmatrixerror = TRUE;
+                                trigger_error(mysql_error(), E_USER_WARNING);
+                            }
+                            
+                            while ($obj = mysql_fetch_object($resultup1))
+                            {
+                                if (empty($obj->billingmatrix) OR $obj->billingmatrix === 1)
+                                {
+                                    $obj->billingmatrix = "Default";
+                                }
+                                $sqlup2 = "UPDATE `{$dbMaintenance}` SET billingmatrix = '{$obj->billingmatrix}' WHERE id = {$obj->contractid}";
+                                mysql_query($sqlup2);
+                                if (mysql_error())
+                                {
+                                    $billingmatrixerror = TRUE;
+                                    trigger_error(mysql_error(), E_USER_WARNING);
+                                }
+                            }
+                            
+                            if (!$billingmatrixerror)
+                            {
+                                $sqlup3 = "ALTER TABLE `{$dbService}` DROP `billingmatrix`";
+                                mysql_query($sqlup2);
+                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            }
+                            // END Move billingmatrix to contract
+                            
                             
                             $sqlup4 = "SELECT contractid, SUM(unitrate) AS unitrate, SUM(incidentrate) AS incidentrate FROM `{$dbService}` WHERE unitrate > 0 OR incidentrate > 0 GROUP BY contractid";
                             $resultup4 = mysql_query($sqlup4);
@@ -688,7 +691,7 @@ switch ($_REQUEST['action'])
                             
                             if (!$serviceerror)
                             {
-                                $sqlup4b = "ALTER TABLE `{$dbService}` DROP COLUMN `unitrate`, DROP COLUMN `incidentrate`";
+                                $sqlup4b = "ALTER TABLE `{$dbService}` DROP COLUMN `unitrate`, DROP COLUMN `incidentrate`, DROP COLUMN `billingmatrix`";
                                 mysql_query($sqlup4b);
                                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                             }

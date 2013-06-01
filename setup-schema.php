@@ -1647,7 +1647,9 @@ $dbBillingMatrix = "{$CONFIG['db_tableprefix']}billingmatrix";
 
 $upgrade_schema[390] = "RENAME TABLE `{$dbBillingMatrix}` TO `{$dbBillingMatrixUnit}` ;";
 
-if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbBillingMatrixUnit, 'id'))
+// Checking on the old table name ($dbBillingMatrix) as the rename has not been performed, 
+// though doing the work on the renamed table as by the time this executes it will have been renamed
+if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbBillingMatrix, 'id'))
 {
     $upgrade_schema[390] .= "ALTER TABLE `{$dbBillingMatrixUnit}` CHANGE `id` `tag` VARCHAR( 32 ) NOT NULL ;";
 }
@@ -1859,10 +1861,6 @@ ALTER TABLE `{$dbKBArticles}` CHANGE `distribution` `distribution` ENUM( 'public
   COMMENT 'public appears in the portal, private is info never to be released to the public,
   restricted is info that is sensitive but could be mentioned if asked, for example';
   
-DROP TABLE `{$CONFIG['db_tableprefix']}interfacestyles`;
-
-ALTER TABLE `{$dbService}` DROP `billingmatrix`;
-
 ALTER DATABASE `{$CONFIG['db_database']}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- PH 2012-11-17

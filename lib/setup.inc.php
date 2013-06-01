@@ -710,11 +710,19 @@ function upgrade_required_perms($installed_version)
 function upgrade_390_migrate_user_config()
 {
     global $CONFIG;
-    $dbInterfaceStyles = "{$CONFIG['db_tableprefix']}dbInterfaceStyles";
+    $dbInterfaceStyles = "{$CONFIG['db_tableprefix']}interfacestyles";
+    
+    $errors = 0;
     
     $sql_oldconfig = "SELECT id, var_emoticons, var_utc_offset, var_i18n, var_style, var_incident_refresh, var_update_order, var_num_updates_view FROM `{$GLOBALS['dbUsers']}`";
     $result_oldconfig = mysql_query($sql_oldconfig);
-    if (mysql_error()) { trigger_error(mysql_error(), E_USER_WARNING); echo "error ".mysql_error()."\n\n";}
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(), E_USER_WARNING);
+        echo "error ".mysql_error()."\n\n";
+        $errors++;
+    }
+    
     while ($obj = mysql_fetch_object($result_oldconfig))
     {
         $s = array();
@@ -740,24 +748,30 @@ function upgrade_390_migrate_user_config()
             if (mysql_error())
             {
                 trigger_error(mysql_error(), E_USER_WARNING);
-            }
-            else
-            {
-                $sql_alter = "ALTER TABLE `{$GLOBALS['dbUsers']}` DROP COLUMN var_incident_refresh, DROP COLUMN var_update_order, DROP COLUMN var_num_updates_view, ";
-                $sql_alter .= "DROP COLUMN var_style, DROP COLUMN var_hideautoupdates, DROP COLUMN var_hideheader, DROP COLUMN var_monitor, ";
-                $sql_alter .= "DROP COLUMN var_i18n, DROP COLUMN var_utc_offset, DROP COLUMN var_emoticons ";
-                $result_alter = mysql_query($sql_alter);
-                if (mysql_error())
-                {
-                    trigger_error(mysql_error(), E_USER_WARNING);
-                }
-                $sql_drop = "DROP DATABASE IF EXISTS `{$dbInterfaceStyles}`";
-                $result_drop = mysql_query($sql_drop);
-                if (mysql_error())
-                {
-                    trigger_error(mysql_error(), E_USER_WARNING);
-                }
+                $errors++;
             }
         }
+    }
+    
+    if ($errors == 0)
+    {
+        $sql_alter = "ALTER TABLE `{$GLOBALS['dbUsers']}` DROP COLUMN var_incident_refresh, DROP COLUMN var_update_order, DROP COLUMN var_num_updates_view, ";
+        $sql_alter .= "DROP COLUMN var_style, DROP COLUMN var_hideautoupdates, DROP COLUMN var_hideheader, DROP COLUMN var_monitor, ";
+        $sql_alter .= "DROP COLUMN var_i18n, DROP COLUMN var_utc_offset, DROP COLUMN var_emoticons ";
+        $result_alter = mysql_query($sql_alter);
+        if (mysql_error())
+        {
+            trigger_error(mysql_error(), E_USER_WARNING);
+        }
+        $sql_drop = "DROP DATABASE IF EXISTS `{$dbInterfaceStyles}`";
+        $result_drop = mysql_query($sql_drop);
+        if (mysql_error())
+        {
+            trigger_error(mysql_error(), E_USER_WARNING);
+        }
+    }
+    else
+    {
+        echo "Error migrating user config settings, old data retained";
     }
 }
