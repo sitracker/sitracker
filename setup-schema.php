@@ -1645,7 +1645,7 @@ ALTER TABLE  `{$dbUserSoftware}` CHANGE  `backupid`  `backupid` SMALLINT( 6 ) NO
 
 $dbBillingMatrix = "{$CONFIG['db_tableprefix']}billingmatrix";
 
-$upgrade_schema[390] = "RENAME TABLE `{$dbBillingMatrix}` TO `sit4`.`{$dbBillingMatrixUnit}` ;";
+$upgrade_schema[390] = "RENAME TABLE `{$dbBillingMatrix}` TO `{$dbBillingMatrixUnit}` ;";
 
 if ($_REQUEST['action'] == 'upgrade' AND setup_check_column_exists($dbBillingMatrixUnit, 'id'))
 {
