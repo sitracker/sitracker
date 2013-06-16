@@ -104,7 +104,7 @@ while ($row = mysql_fetch_object($result))
     if ($row->status == 2) $shade = 'expired';
     else $shade = 'shade1';
     echo "<tr class='{$shade}'>";
-    echo "<td>".get_userfacing_incident_id($row->incidentid)."</td>";
+    echo "<td><a href=\"javascript:incident_details_window('{$row->incidentid}', 'sit_popup')\">".get_userfacing_incident_id($row->incidentid)."</a></td>";
     // title
     echo "<td>";
     if (trim($row->title) != '') $linktext = $row->title;
