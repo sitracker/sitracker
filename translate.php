@@ -21,9 +21,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strTranslate;
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-
 $tolang = cleanvar(clean_fspath($_REQUEST['lang']));
 $fromlang = cleanvar(clean_fspath($_REQUEST['from']));
+$origcount = clean_int($_REQUEST['origcount']);
 
 $mode = clean_fixed_list($_REQUEST['mode'], array('', 'show', 'save'));
 
@@ -127,7 +127,6 @@ elseif ($mode == "show")
             }
             $lastkey = $vars[0];
         }
-        $origcount = count($fromvalues);
         unset($lines);
         $_SESSION['translation_fromvalues'] = $fromvalues;
     }
@@ -135,7 +134,7 @@ elseif ($mode == "show")
     {
         $fromvalues = $_SESSION['translation_fromvalues'];
     }
-
+    $origcount = count($fromvalues);
 
     if (empty($_SESSION['translation_foreignvalues']))
     {
@@ -232,14 +231,15 @@ elseif ($mode == "show")
         {
             if ($tolang == 'zz') $foreignvalues[$key] = $key;
             echo "<tr class='$shade'><td><label for=\"{$key}\"><code>{$key}</code></label></td>";
-            echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
+//             echo "<td><input name='english_{$key}' value=\"".htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" readonly='readonly' /></td>";
+            echo "<td>" . htmlentities($fromvalues[$key], ENT_QUOTES, 'UTF-8'). "</td>";
 
             echo "<td><input id=\"{$key}\" ";
             if (empty($foreignvalues[$key]))
             {
                 echo "class='notice' onblur=\"if ($('{$key}').value != '') { $('{$key}').removeClassName('notice'); $('{$key}').addClassName('idle');} \" ";
             }
-            echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"45\" />";
+            echo "name=\"{$key}\" value=\"".htmlentities($foreignvalues[$key], ENT_QUOTES, 'UTF-8')."\" size=\"85\" />";
             if (empty($foreignvalues[$key]))
             {
                 echo "<span style='color:red;'>*</span>";
@@ -278,6 +278,11 @@ elseif ($mode == "save")
     $i18nalphabet = cleanvar($_REQUEST['i18nalphabet'], TRUE, FALSE);
     $meta = cleanvar($_REQUEST['meta'], TRUE, FALSE);
 
+    if (empty($lang) OR empty($origcount))
+    {
+        trigger_error('Unable to process translation, check your php.ini setting max_input_vars and set it higher.', E_USER_ERROR);
+    }
+    
     $filename = "{$lang}.inc.php";
 
     $i18nfile = '';
