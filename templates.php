@@ -306,7 +306,7 @@ elseif ($action == "edit" OR $action == "new")
         echo "<input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value=\"{$strSave}\" />";
         echo "</p>\n";
-        // FIXME when to allow deletion?
+        // TODO We should check whether a template is in use perhaps before allowing deletion? Mantis 1885
         if ($template->type == 'user')
         {
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
