@@ -317,8 +317,14 @@ elseif ($action == "edit" OR $action == "new")
         echo "<input name='reset' type='reset' value='{$strReset}' /> ";
         echo "<input name='submit' type='submit' value=\"{$strSave}\" />";
         echo "</p>\n";
+
+        // Don't allow deletion when template is being used
+        $sql = "SELECT * FROM `{$dbTriggers}` WHERE template = '{$template->name}'";
+        $resultUsed = mysql_query($sql);
+
         // TODO We should check whether a template is in use perhaps before allowing deletion? Mantis 1885
-        if ($template->type == 'user')
+        if ($template->type == 'user' AND mysql_num_rows($resultUsed) == 0)
+
         {
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
         }
@@ -394,10 +400,19 @@ elseif ($action == "delete")
         header("Location: {$_SERVER['PHP_SELF']}?action=showform");
         exit;
     }
-    // We only allow user templates to be deleted
-    $sql = "DELETE FROM `{$dbEmailTemplates}` WHERE id='{$id}' AND type='user' LIMIT 1";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    
+    // Don't allow deletion when template is being used
+    $sql = "SELECT * FROM `{$dbTriggers}` AS t, `{$dbEmailTemplates}` AS et WHERE t.template = et.name AND et.id = {$id}";
+    $resultUsed = mysql_query($sql);
+    
+    if (mysql_num_rows($resultUsed) > 0)
+    {
+        // Only try and delete if not used
+        // We only allow user templates to be deleted
+        $sql = "DELETE FROM `{$dbEmailTemplates}` WHERE id='{$id}' AND type='user' LIMIT 1";
+        mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    }
     header("Location: {$_SERVER['PHP_SELF']}?action=showform");
     exit;
 }
