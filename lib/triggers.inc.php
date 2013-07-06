@@ -1355,8 +1355,6 @@ function trigger_action_to_html($trigger, $user_id)
 
     $html .=  "<div class='triggeractions'>";
     $operations = array();
-    // FIXME 3.90, add edit back in - edit functionality needs to be written
-    // $operations[$GLOBALS['strEdit']] = "action_details.php?id={$trigger->id}";
     if ($user_id == 0)
     {
         $userurl = "&amp;user=admin";
