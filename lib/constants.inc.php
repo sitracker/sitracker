@@ -19,11 +19,11 @@
  **/
 
 // Journal Logging
-define ('CFG_LOGGING_OFF',0);        // 0 = No logging
-define ('CFG_LOGGING_MIN',1);        // 1 = Minimal Logging
-define ('CFG_LOGGING_NORMAL',2);     // 2 = Normal Logging
-define ('CFG_LOGGING_FULL',3);       // 3 = Full Logging
-define ('CFG_LOGGING_MAX',4);        // 4 = Maximum/Debug Logging
+define ('CFG_LOGGING_OFF', 0);        // 0 = No logging
+define ('CFG_LOGGING_MIN', 1);        // 1 = Minimal Logging
+define ('CFG_LOGGING_NORMAL', 2);     // 2 = Normal Logging
+define ('CFG_LOGGING_FULL', 3);       // 3 = Full Logging
+define ('CFG_LOGGING_MAX', 4);        // 4 = Maximum/Debug Logging
 
 define ('CFG_JOURNAL_DEBUG', 0);     // 0 = for internal debugging use
 define ('CFG_JOURNAL_LOGIN', 1);     // 1 = Logon/Logoff
@@ -76,16 +76,16 @@ define ('TRIGGER_NOTICE_TYPE', 3);
 define ('USER_DEFINED_NOTICE_TYPE', 4);
 
 // Incident statuses
-define ("STATUS_ACTIVE",1);
-define ("STATUS_CLOSED",2);
-define ("STATUS_RESEARCH",3);
-define ("STATUS_LEFTMESSAGE",4);
-define ("STATUS_COLLEAGUE",5);
-define ("STATUS_SUPPORT",6);
-define ("STATUS_CLOSING",7);
-define ("STATUS_CUSTOMER",8);
-define ("STATUS_UNSUPPORTED",9);
-define ("STATUS_UNASSIGNED",10);
+define ("STATUS_ACTIVE", 1);
+define ("STATUS_CLOSED", 2);
+define ("STATUS_RESEARCH", 3);
+define ("STATUS_LEFTMESSAGE", 4);
+define ("STATUS_COLLEAGUE", 5);
+define ("STATUS_SUPPORT", 6);
+define ("STATUS_CLOSING", 7);
+define ("STATUS_CUSTOMER", 8);
+define ("STATUS_UNSUPPORTED", 9);
+define ("STATUS_UNASSIGNED", 10);
 
 // User statuses
 define ('USERSTATUS_ACCOUNT_DISABLED', 0);
