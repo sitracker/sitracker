@@ -48,7 +48,7 @@ disabled by default and can be re-enabled via a setting in SiT! -> Control
 Panel -> Configure -> Features -> Service Levels - "Force critical priority
 incidents to flag as critical"
 
-Feedback system have had some rework, it is now possible for a contact
+Feedback systems have had some rework, it is now possible for a contact
 to access feedback from the portal. Feedback from portal is configurable so
 it can be turned on and off. A contact can choose not to receive feedback, by
 opting out by email.
@@ -60,6 +60,9 @@ has a setting for enabling/disabling plugins.
 A priority column has been added to the incidents list in the portal, this makes
 it easier for contacts to see the current priority of an incident.
 
+See here for help converting your plugin to 3.90
+http://sitracker.org/wiki/Plugin_Contexts#Converting_your_plugin_from_3.6x_to_3.90.2B
+
 The plugin context 'email arrived' in inboundemail.php has been changed. if you have a 
 plugin that depends on this plugin hook, please pay attention that we have 
 removed the $params from the statement. These values can now be picked up as 
@@ -67,6 +70,7 @@ $GLOBALS in your plugin. The inclusion of a $params array of values to pass to t
 plugin is no longer required as all Global variables are also available in a global 
 scope in the plugin.
 
+The 'product only' field has been removed.
 
 Upgrading to 3.60
 -----------------
