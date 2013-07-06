@@ -369,8 +369,8 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
                 $ticket[] = $user->userid;
             }
 
-            // Have a look at the users incident queue (owned)
-            $qsql = "SELECT id, priority, lastupdated, status, softwareid FROM `{$dbIncidents}` WHERE owner={$user->userid}";
+            // Have a look at the users (all open) incident queue (owned)
+            $qsql = "SELECT id, priority, lastupdated, status, softwareid FROM `{$dbIncidents}` WHERE owner={$user->userid} AND status != " . STATUS_CLOSED . "AND status != " . STATUS_CLOSING;
             $qresult = mysql_query($qsql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $queue_size = mysql_num_rows($qresult);
