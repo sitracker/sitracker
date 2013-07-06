@@ -310,7 +310,7 @@ elseif ($action == "edit" OR $action == "new")
         // Don't allow deletion when template is being used
         $sql = "SELECT * FROM `{$dbTriggers}` WHERE template = '{$template->name}'";
         $resultUsed = mysql_query($sql);
-        
+
         // TODO We should check whether a template is in use perhaps before allowing deletion? Mantis 1885
         if ($template->type == 'user' AND mysql_num_rows($resultUsed) == 0)
         {
