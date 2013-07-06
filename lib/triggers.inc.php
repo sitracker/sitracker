@@ -1318,7 +1318,7 @@ function trigger_action_to_html($trigger, $user_id)
 
     if (!empty($t_array['template']))
     {
-        $html .= " <a href='templates.php?id={$t_array['template']}'>";
+        $html .= " <a href='templates.php?id={$t_array['template']}&action=edit&template=email'>";
         $html .= "{$t_array['template']}</a> ";
         $desc = template_description($t_array['template'], $t_array['action']);
         if ($desc != '')

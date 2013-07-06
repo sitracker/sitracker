@@ -21,7 +21,7 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('new', 32)." {$strNewTemplate}</h2>";
 
 echo "<form action='templates.php?action=new' method='post'>";
-echo "<p align='center'><label>{$strType}: ";
+echo "<p align='center'><label>{$strTemplate}: ";
 echo "<select name='template'>";
 echo "<option value='email'>{$strEmail}</option>";
 echo "<option value='notice'>{$strNotice}</option>";

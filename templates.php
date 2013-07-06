@@ -19,7 +19,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 // External variables
 $id = cleanvar($_REQUEST['id']); // can be alpha (a name) as well as numeric (id)
 $action = clean_fixed_list($_REQUEST['action'], array('showform', 'list', 'edit', 'update', 'delete', 'new'));
-$templatetype = clean_fixed_list($_REQUEST['template'], array('', 'email', 'notice'));
+$templategenre = clean_fixed_list($_REQUEST['template'], array('', 'email', 'notice'));
+
+$templatetypes = array('incident', 'user', 'system'); // 'contact','site','incident','kb'
 
 if (empty($action) OR $action == 'showform' OR $action == 'list')
 {
@@ -116,7 +118,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
 elseif ($action == "edit" OR $action == "new")
 {
     // Retrieve the template from the database, whether it's email or notice
-    switch ($templatetype)
+    switch ($templategenre)
     {
         case 'email':
             if (!is_numeric($id)) $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE name='{$id}' LIMIT 1";
@@ -170,12 +172,12 @@ elseif ($action == "edit" OR $action == "new")
 
         echo "<tr><th>{$strID}:</th><td>";
         echo "<input maxlength='50' name='name' size='5' value='{$template->id} 'readonly='readonly' disabled='disabled' /> <span class='required'>{$strRequired}</span></td></tr>\n";
-        echo "<tr><th>{$strTemplateType}:</th><td>";
-        if ($templatetype == 'notice')
+        echo "<tr><th>{$strTemplate}:</th><td>";
+        if ($templategenre == 'notice')
         {
             echo icon('info', 32).' '.$strNotice;
         }
-        elseif ($templatetype == 'email')
+        elseif ($templategenre == 'email')
         {
             echo icon('email', 32).' '.$strEmail;
         }
@@ -198,7 +200,7 @@ elseif ($action == "edit" OR $action == "new")
             $required = $triggerarray[$trigaction->triggerid]['required'];
         }
 
-        echo " ({$template->type})";
+//         echo " ({$template->type})";
 
         if (!empty($required) AND $CONFIG['debug'])
         {
@@ -213,7 +215,8 @@ elseif ($action == "edit" OR $action == "new")
             $templatename = cleanvar($_REQUEST['name']);
         }
         
-        echo "<tr><th>{$strTemplate}:</th><td><input class='required' maxlength='100' name='name' size='40' value=\"{$templatename}\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
+        echo "<tr><th>{$strName}:</th><td><input class='required' maxlength='100' name='name' size='40' value=\"{$templatename}\" /> <span class='required'>{$strRequired}</span></td></tr>\n";
+        echo "<tr><th>{$strType}:</th><td>". array_drop_down($templatetypes, 'type', $template->type) . " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strDescription}:</th>";
         echo "<td><textarea class='required' name='description' cols='50' rows='5' onfocus=\"clearFocusElement(this);\"";
         if (mb_strlen($template->description) > 3 AND substr_compare($template->description, 'str', 0, 3) === 0)
@@ -222,7 +225,7 @@ elseif ($action == "edit" OR $action == "new")
              $template->description = ${$template->description};
         }
         echo ">{$template->description}</textarea> <span class='required'>{$strRequired}</span></td></tr>\n";
-        switch ($templatetype)
+        switch ($templategenre)
         {
             case 'email':
                 echo "<tr><th colspan='2'>{$strEmail}</th></tr>";
@@ -272,11 +275,11 @@ elseif ($action == "edit" OR $action == "new")
         echo "</td></tr>\n";
 
 
-        if ($templatetype == 'email') $body = $template->body;
+        if ($templategenre == 'email') $body = $template->body;
         else $body = $template->text;
         echo "<tr><th>{$strText}</th>";
         echo "<td>";
-        if ($templatetype == 'notice') echo bbcode_toolbar('bodytext');
+        if ($templategenre == 'notice') echo bbcode_toolbar('bodytext');
 
         echo "<textarea id='bodytext' name='bodytext' rows='20' cols='50' onfocus=\"recordFocusElement(this);\"";
         if (mb_strlen($body) > 3 AND substr_compare($body, 'str', 0, 3) === 0)
@@ -311,7 +314,7 @@ elseif ($action == "edit" OR $action == "new")
         else echo "no";
         echo "' />";
         echo "<input name='type' type='hidden' value='{$template->type}' />";
-        echo "<input name='template' type='hidden' value='{$templatetype}' />";
+        echo "<input name='template' type='hidden' value='{$templategenre}' />";
         echo "<input name='focuselement' id='focuselement' type='hidden' value='' />";
         echo "<input name='id' type='hidden' value='{$id}' />";
         echo "<input name='reset' type='reset' value='{$strReset}' /> ";
@@ -422,7 +425,8 @@ elseif ($action == "update")
     $template = cleanvar($_POST['template']);
     $name = cleanvar($_POST['name']);
     $description = cleanvar($_POST['description']);
-
+    $templatetype = clean_fixed_list($_POST['type'], $templatetypes);
+    
     $tofield = cleanvar($_POST['tofield']);
     $fromfield = cleanvar($_POST['fromfield']);
     $replytofield = cleanvar($_POST['replytofield']);
@@ -470,7 +474,7 @@ elseif ($action == "update")
                 if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
                 if (mysql_num_rows($result) < 1)
                 {
-                    $sql = "INSERT INTO `{$dbEmailTemplates}` (name, type) VALUES('{$name}', 'incident')";
+                    $sql = "INSERT INTO `{$dbEmailTemplates}` (name, type) VALUES('{$name}', '{$templatetype}')";
                     mysql_query($sql);
                     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
                     $id = mysql_insert_id();
@@ -481,7 +485,7 @@ elseif ($action == "update")
                     exit;
                 }
             }
-            $sql  = "UPDATE `{$dbEmailTemplates}` SET name='{$name}', description='{$description}', tofield='{$tofield}', fromfield='{$fromfield}', ";
+            $sql  = "UPDATE `{$dbEmailTemplates}` SET name='{$name}', type='{$templatetype}', description='{$description}', tofield='{$tofield}', fromfield='{$fromfield}', ";
             $sql .= "replytofield='{$replytofield}', ccfield='{$ccfield}', bccfield='{$bccfield}', subjectfield='{$subjectfield}', ";
             $sql .= "body='{$bodytext}', customervisibility='{$cust_vis}', storeinlog='{$storeinlog}' ";
             $sql .= "WHERE id='{$id}' LIMIT 1";
