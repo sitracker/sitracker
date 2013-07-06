@@ -311,6 +311,7 @@ elseif ($action == "edit" OR $action == "new")
         $sql = "SELECT * FROM `{$dbTriggers}` WHERE template = '{$template->name}'";
         $resultUsed = mysql_query($sql);
         
+        // TODO We should check whether a template is in use perhaps before allowing deletion? Mantis 1885
         if ($template->type == 'user' AND mysql_num_rows($resultUsed) == 0)
         {
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
