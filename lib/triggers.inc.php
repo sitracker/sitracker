@@ -1318,7 +1318,7 @@ function trigger_action_to_html($trigger, $user_id)
 
     if (!empty($t_array['template']))
     {
-        $html .= " <a href='templates.php?id={$t_array['template']}'>";
+        $html .= " <a href='templates.php?id={$t_array['template']}&action=edit&template=email'>";
         $html .= "{$t_array['template']}</a> ";
         $desc = template_description($t_array['template'], $t_array['action']);
         if ($desc != '')
@@ -1343,8 +1343,6 @@ function trigger_action_to_html($trigger, $user_id)
         if ($t_array['checks'] != '')
         {
             $html .= "<strong>{$strChecks}</strong>: ";
-            //FIXME 4.0 - add back displaying triggers as HTML - see function below
-            //$html .= checks_to_html($t_array['checks'])." ".help_link('trigger_checks')." ";
             $html .= $t_array['checks']." ".help_link('trigger_checks')." ";
 
         }
@@ -1357,8 +1355,6 @@ function trigger_action_to_html($trigger, $user_id)
 
     $html .=  "<div class='triggeractions'>";
     $operations = array();
-    // FIXME 3.90, add edit back in - edit functionality needs to be written
-    // $operations[$GLOBALS['strEdit']] = "action_details.php?id={$trigger->id}";
     if ($user_id == 0)
     {
         $userurl = "&amp;user=admin";
@@ -1470,65 +1466,6 @@ function create_check_string($param, $value, $join, $enabled, $conditions)
     return $final_check;
 }
 
-
-/**
- * Returns HTML human readable listing of trigger checks (rules)
- * @author Kieran Hogg
- * @param string $checks
- * @returns string HTML
- * @todo FIXME 4.0 - displaying triggers as HTML
- */
-function checks_to_html($checks)
-{
-    $checks = trim($checks);
-    if ($checks != '')
-    {
-        if (strpos($checks, 'AND') !== FALSE)
-        {
-            $checks = explode('AND', $checks);
-        }
-        elseif (strpos($checks, 'OR') !== FALSE)
-        {
-            $checks = explode('OR', $checks);
-        }
-        else
-        {
-            $checks[0] = $checks;
-        }
-        $html = "";
-        foreach ($checks as $check)
-        {
-            $original_check = $check;
-            if (strpos($check, '==') !== FALSE)
-            {
-                $check = explode('==', $check);
-                $check[0] = trim($check[0]);
-                $check[1] = trim($check[1]);
-            }
-            elseif (strpos($check, '!=') !== FALSE)
-            {
-                $check = explode('!=', $check);
-                $check[0] = trim($check[0]);
-                $check[1] = trim($check[1]);
-            }
-            else
-            {
-                trigger_error('not yet supported', E_USER_ERROR);
-                $html .= $original_check;
-            }
-
-            if ($ttvararray[$check[0]]['checkreplace'] != '')
-            {
-                $html .= $ttvararray[$check[0]]['checkreplace']();
-            }
-            else
-            {
-                $html .= $original_check;
-            }
-        }
-    }
-    return $html;
-}
 
 /**
  * Used in the above for checkform on {incidentpriorityid}

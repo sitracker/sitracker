@@ -141,8 +141,9 @@ $CFGCAT['ldap'] = array('use_ldap',
                         'ldap_cache_passwords',
                         'ldap_allow_cached_password');
 
-$CFGCAT['soap'] = array('soap_enabled',
-                         'soap_portal_enabled');
+// SOAP Feature is experimental at the moment (INL 2003-07-06) so the setting to enable it should not be shown (yet)
+// $CFGCAT['soap'] = array('soap_enabled',
+//                          'soap_portal_enabled');
 
 $CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
