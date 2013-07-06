@@ -49,7 +49,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
     ksort($templates);
     $shade = 'shade1';
     echo "<table class='maintable'>";
-    echo "<tr><th>{$strType}</th><th>{$strUsed}</th><th>{$strTemplate}</th><th>{$strActions}</th></tr>";
+    echo "<tr><th>{$strTemplate}</th><th>{$strType}</th><th>{$strUsed}</th><th>{$strTemplate}</th><th>{$strActions}</th></tr>";
     foreach ($templates AS $template)
     {
         $system = FALSE;
@@ -75,7 +75,7 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
             echo $strOther;
         }
         echo "</td>";
-        //echo "<td>{$template['type']} {$template['template']}</td>";
+        echo "<td>{$template['type']} {$template['template']}</td>";
         echo "<td>";
         if ($template['template'] == 'email' AND $template['type'] == 'incident')
         {
@@ -185,9 +185,20 @@ elseif ($action == "edit" OR $action == "new")
         }
 
         // Set up required params, each template type needs an entry here TODO add the rest
-        if ($template->type == 'user') $required = array('incidentid', 'userid');
-        elseif ($template->type == 'incident') $required = array('incidentid', 'triggeruserid');
-        else $required = $triggerarray[$trigaction->triggerid]['required'];
+        if ($template->type == 'user') 
+        {
+            $required = array('incidentid', 'userid');
+        }
+        elseif ($template->type == 'incident') 
+        {
+            $required = array('incidentid', 'triggeruserid');
+        }
+        else 
+        {
+            $required = $triggerarray[$trigaction->triggerid]['required'];
+        }
+
+        echo " ({$template->type})";
 
         if (!empty($required) AND $CONFIG['debug'])
         {
