@@ -2,7 +2,7 @@
 // contract_new.php - Add a new maintenance contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2011 The Support Incident Tracker Project
+// Copyright (C) 2010-2013 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -36,42 +36,26 @@ if ($action == "showform" OR $action == '')
     echo "<form id='new_contract' name='new_contract' action='{$_SERVER['PHP_SELF']}?action=new' method='post' onsubmit='return confirm_action(\"{$strAreYouSureAdd}\");'>";
     echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strSite}</th><td>";
-    if ($_SESSION['formdata']['new_contract']['site'] != '')
-    {
-        echo site_drop_down("site", $_SESSION['formdata']['new_contract']['site'], TRUE);
-    }
-    else
-    {
-        echo site_drop_down("site", $siteid, TRUE);
-    }
+    echo site_drop_down("site", show_form_value('new_contract', 'site', $siteid), TRUE);
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr><th>{$strContacts}</th><td>";
-    echo "<input value='amount' type='radio' name='contacts' checked='checked' />";
+    
+    $amountChecked = $allChecked = '';
+    if ($_SESSION['formdata']['new_contract']['contacts'] == 'all') $allChecked = "checked='checked'"; 
+    else $amountChecked = "checked='checked'";
+    
+    echo "<input value='amount' type='radio' name='contacts' {$amountChecked} />";
 
-    echo "{$strLimitTo} <input size='2' name='numcontacts'  value='".show_form_value('new_contact', 'numcontacts', '0')."' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
-    echo "<input type='radio' value='all' name='contacts' />";
+    echo "{$strLimitTo} <input size='2' name='numcontacts'  value='".show_form_value('new_contract', 'numcontacts', '0')."' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
+    echo "<input type='radio' value='all' name='contacts' {$allChecked} />";
     echo "{$strAllSiteContactsSupported}";
     echo "</td></tr>\n";
     echo "<tr><th>{$strProduct}</th><td>";
-    if ($_SESSION['formdata']['new_contract']['product'] != '')
-    {
-        echo product_drop_down("product", $_SESSION['formdata']['new_contract']['product'], TRUE)." <span class='required'>{$strRequired}</span> </td></tr>\n";
-    }
-    else
-    {
-        echo product_drop_down("product", 0, TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
-    }
 
+    echo product_drop_down("product", show_form_value('new_contract', 'product', 0), TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
+    
     echo "<tr><th>{$strServiceLevel}</th><td>";
-    if ($_SESSION['formdata']['new_contract']['servicelevel'] != '')
-    {
-        $sltag = $_SESSION['formdata']['new_contract']['servicelevel'];
-    }
-    else
-    {
-        $sltag = $CONFIG['default_service_level'];
-    }
-    echo servicelevel_drop_down('servicelevel', $sltag, TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
+    echo servicelevel_drop_down('servicelevel', show_form_value('new_contract', 'servicelevel', $CONFIG['default_service_level']), TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
     // check the initially selected service level to decide whether to show the extra hiddentimed section
     $timed = servicelevel_timed($sltag);
 
@@ -146,19 +130,19 @@ if ($action == "showform" OR $action == '')
     echo "<tbody id='hidden' style='display:none'>";
 
     echo "<tr><th>{$strReseller}</th><td>";
-    reseller_drop_down("reseller", 1);
+    reseller_drop_down("reseller", show_form_value('new_contract', 'reseller', 1));
     echo "</td></tr>\n";
 
-    echo "<tr><th>{$strLicenseQuantity}</th><td><input value='0' maxlength='7' name='licence_quantity' size='5' />";
+    echo "<tr><th>{$strLicenseQuantity}</th><td><input maxlength='7' name='licence_quantity' size='5' value='".show_form_value('new_contract', 'licence_quantity', 0)."' />";
     echo " ({$str0MeansUnlimited})</td></tr>\n";
 
     echo "<tr><th>{$strLicenseType}</th><td>";
-    licence_type_drop_down("licence_type", LICENCE_SITE);
+    licence_type_drop_down("licence_type", show_form_value('new_contract', 'licence_type', LICENCE_SITE));
     echo "</td></tr>\n";
 
     echo "<tr><th>{$strIncidentPool}</th>";
     $incident_pools = explode(',', "{$strUnlimited},{$CONFIG['incident_pools']}");
-    echo "<td>".array_drop_down($incident_pools, 'incident_poolid', $maint['incident_quantity'])."</td></tr>\n";
+    echo "<td>".array_drop_down($incident_pools, 'incident_poolid', show_form_value('new_contract', 'incident_poolid', $maint['incident_quantity']))."</td></tr>\n";
 
     plugin_do('contract_new_form_more');
     echo "</tbody>\n";
