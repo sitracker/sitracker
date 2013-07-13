@@ -1,77 +1,555 @@
+Changes in v3.90 beta1
+-----------------------------------------------------------------------
+- 0001877: [i18n] Port hu-HU translation to git (ivan) - resolved.
+- 0001878: [i18n] Port es-CO translation to git (paulh) - resolved.
+- 0001830: [outbound email] Incident Details send email to use and carbon copy incident (paulh) - resolved.
+- 0001761: [menu] Cosmetic Menu choices (paulh) - resolved.
+- 0001833: [sites & contacts] Site Types edit (paulh) - resolved.
+- 0001048: [authentication] remove authenticateSQL (paulh) - resolved.
+- 0001839: [reports] statistics.php?mode=breakdown shows temporary owner when not set (paulh) - resolved.
+- 0001844: [theme] add a little code in inc/htmlheader.inc.php so that every page have a unique body (paulh) - resolved.
+- 0001797: [setup/config] During fresh install trigger errors (paulh) - resolved.
+- 0001629: [permissions] Site types page has skills permission (paulh) - resolved.
+- 0001853: [feedback] feedback forms sent out when no feedback form exists (paulh) - resolved.
+- 0001577: [holidays] holiday request redirect broken (paulh) - resolved.
+- 0001570: [sites & contacts] map link shouldn't appear if nothing to map (paulh) - resolved.
+- 0001674: [billing] Per incident billing charges per unit (paulh) - resolved.
+- 0001854: [billing] Per incident billing does not work (paulh) - resolved.
+- 0001677: [billing] Contract page inconsistant when SLA changed from non-timed to timed (paulh) - resolved.
+- 0001871: [menu] remove edit contract from menu (paulh) - resolved.
+- 0001872: [other] Edit site type box too small (paulh) - resolved.
+- 0001868: [incidents] No title on incident hover on statistics.php (paulh) - resolved.
+- 0001867: [incidents] Contract dropdown on incident_edit.php (paulh) - resolved.
+- 0001676: [billing] Activity page "Duration" column is wrong/misleading (paulh) - resolved.
+- 0001865: [incidents] When creating and assigning an incident and the user is not accepting the interface looks ugly (paulh) - resolved.
+- 0001579: [incidents] incident update redirect broken (paulh) - resolved.
+- 0001386: [billing] Activities within the same time frame adds up in total. - resolved.
+- 0000750: [billing] Confusing billing terminology (paulh) - resolved.
+- 0001870: [calendar] error on calendary (paulh) - resolved.
+- 0001884: [incidents] Auto assign function does not work as described / expected (ivan) - resolved.
+- 0000039: [inbound email] Show email from date (ivan) - resolved.
+- 0000704: [triggers] Optional trigger parameters that are not provided can cause errors in trigger rules (ivan) - resolved.
+- 0000102: [other] Check every external variable and make it safe (ivan) - resolved.
+- 0001458: [feedback] [META] Working feedback system (Tomse) - resolved.
+ - 0001599: [other] statistics page shows wrong feedback stats (paulh) - resolved.
+ - 0001561: [reports] Calculation error on feedback report (Tomse) - resolved.
+ - 0000945: [feedback] Feedbacks should be enabled pr site. (Tomse) - resolved.
+ - 0001195: [feedback] Ability to opt out of feedback forms (Tomse) - resolved.
+ - 0000608: [feedback] Add and edit feedback different appearance - resolved.
+ - 0001460: [feedback] Wrong counting feedback (Tomse) - resolved.
+ - 0001188: [feedback] Browse feedback does not show any info on options of type "options" (Tomse) - resolved.
+ - 0001539: [feedback] Feedback browse page doesn't show options/multioptions, only text and ratings (Tomse) - resolved.
+ - 0001396: [feedback] Feedback form HTML broken (Tomse) - resolved.
+ - 0000061: [portal] Obtain feedback via the portal (Tomse) - resolved.
+  - 0001527: [config] when bug 61 is created we might want to enable/disable it (Tomse) - resolved.
+- 0001669: [billing] Unable to edit service after editing balance (paulh) - resolved.
+- 0001861: [inbound email] Following upgrade inbox.php shows 58 new emails (paulh) - resolved.
+- 0001808: [triggers] editing a trigger template renames the template name (Tomse) - resolved.
+- 0001863: [feedback] Feedbackresponses lost on upgrade (paulh) - resolved.
+- 0001866: [billing] Upgrade incorrectly makes contracts as UnitBillable (paulh) - resolved.
+- 0001858: [setup/config] Error on upgrade to 3.90 (paulh) - resolved.
+- 0001860: [incidents] Following upgrade SLA missing when attempting to open incident (paulh) - resolved.
+- 0001869: [users] Unable to edit other users (paulh) - resolved.
+- 0000054: [portal] Allow contacts to put incidents on hold (paulh) - resolved.
+- 0001026: [templates] Bind templates to triggers - resolved.
+- 0001846: Remove FTP (paulh) - resolved.
+- 0001842: [incidents] When searching for a contact, Auto complete window is in the wrong place (paulh) - resolved.
+- 0001681: [plugin hooks] Make plugin hooks consistent (ivan) - resolved.
+- 0001840: [scheduler] Scheduler: Check Incoming email gives error in debug log and does not execute (paulh) - resolved.
+- 0001841: [setup/config] Backslashes are removed from path names under Windows (GiT version) (paulh) - resolved.
+- 0001106: [config] Migrate existing user configuration from users table to userconfig table (paulh) - resolved.
+- 0000958: [sites & contacts] contact's and site's phones (paulh) - resolved.
+- 0001828: [theme] A version of kriplyana with red out-of-sla incidents (paulh) - resolved.
+- 0000538: [setup/config] setup.php crashes if db user does not have ALTER privilege (paulh) - resolved.
+- 0001576: [other] Some forms don't use $_SESSION['formerrors'] for user form errors (paulh) - resolved.
+- 0000293: [theme] Theme issues (ivan) - resolved.
+ - 0001131: [theme] New theme Kriplyana (ivan) - resolved.
+- 0001821: [other] Plugin edit_site_form does not work - resolved.
+ - 0001283: [other] Bad html functions (paulh) - resolved.
+- 0001826: [reports] Page which lists description of each report (paulh) - resolved.
+- 0000387: [setup/config] Setup should prompt for initial site/contact etc (paulh) - resolved.
+- 0001095: [portal] trying to open an incident in the portal lists each contract multiple times (nicdev) - resolved.
+- 0000043: [other] Allow products to be marked as terminated/disabled (paulh) - resolved.
+- 0000319: [templates] Entry created too early on template creation (paulh) - resolved.
+- 0001076: [contracts] 'Product Only' is not clear (paulh) - resolved.
+- 0001703: [setup/config] Setup min php version message is hardcoded to php 5.1 even though we now have a constant (paulh) - resolved.
+- 0001526: [contracts] When a contact doesn't have a contract we should offer to create/link one (Tomse) - resolved.
+- 0001755: [setup/config] Inconsistencies in "setup-schema.php" can cause an upgrade to fail (paulh) - resolved.
+- 0000444: [billing] limit on Service Level not used (paulh) - resolved.
+- 0001671: [billing] Adding service under a contract doesn't show which site/product (paulh) - resolved.
+- 0001670: [billing] Billing matrix is blank when adding service to a contract (paulh) - resolved.
+- 0000015: [other] [META] Standardise SQL queries (Tomse) - resolved.
+- 0001300: [triggers] Make notice links respect popup setting (kieran) - resolved.
+- 0001696: [templates] template variable {slaid} should be removed (Tomse) - resolved.
+- 0001803: [incidents] Store customer reference within SiT (paulh) - resolved.
+- 0001751: [incidents] Draft icons do not show up in incident header (nicdev) - resolved.
+- 0001513: [i18n] $languagestring doesn't save proper language name when translating a page (Tomse) - resolved.
+- 0000049: [other] Custom incident reference (paulh) - resolved.
+- 0001753: [portal] In the portal menu clicking "Support -> New incident" gives permission denied (Tomse) - resolved.
+- 0001756: [config] clean_fspath() removes the ":" from windows paths (paulh) - resolved.
+- 0001592: [triggers] action_details.php produces javascript errors and save trigger (paulh) - resolved.
+- 0001754: [contracts] Binding a contact with a contract gives error (Tomse) - resolved.
+- 0001752: [users] The user edit page does not have a "Save" or "Reset" button (nicdev) - resolved.
+- 0001644: [incidents] Redesign the layout and implementation of the "header" section of the "incident_details.php" page (nicdev) - resolved.
+- 0001508: [i18n] ldate doesn't seem to properly replace strings when there are special chars (paulh) - resolved.
+- 0000834: [billing] End of service error (paulh) - resolved.
+- 0001749: [incidents] Incident_update and Incident_email saves multiple drafts (paulh) - resolved.
+- 0001750: [other] Constants not defined in setup.php (development version in GIT) (paulh) - resolved.
+- 0001748: [incidents] Duplicate SLA icon in incident update div (nicdev) - resolved.
+- 0001589: [triggers] Attempting to delete a trigger takes you to New Action (Tomse) - resolved.
+- 0000192: [scheduler] Force option for scheduler (Tomse) - resolved.
+- 0001551: [theme] BBtag quote css theme is ugly (paulh) - resolved.
+- 0001662: [billing] No indication on contract page whether service is per unit or per incident (paulh) - resolved.
+- 0001612: [other] you can add "" as a name to site_types (paulh) - resolved.
+ - 0001606: [sites & contacts] edit site type page doesn't show existing values (Tomse) - resolved.
+- 0001666: [billing] Possible to have service that ends before it starts (paulh) - resolved.
+- 0001640: [billing] Transactions report outputs currency as ISO-8859-15 (paulh) - resolved.
+- 0001529: [triggers] system_action.php missing (Tomse) - resolved.
+- 0001506: [other] portal icons seems to be broken (paulh) - resolved.
+- 0001504: [other] error message when saving translations (Tomse) - resolved.
+- 0001542: [reports] report_customer_contracts shows 1 site / 1 contract (where there are 2 sites and 3 contracts) (subwolf) - resolved.
+- 0001543: [reports] report_incidents_average_duration needs i18n (subwolf) - resolved.
+- 0001520: [i18n] Saving a translation on the webinterface, the meta isn't saved (Tomse) - resolved.
+- 0001544: [reports] report_incidents_by_skill.php shows weird graphics (probably need UTF8) (Tomse) - resolved.
+- 0001630: [theme] Need icons for vendors and resellers (ivan) - resolved.
+- 0001618: [portal] syslang strings isn't saved in the DB (paulh) - resolved.
+- 0001655: [security] XSS: Possible to inject javascript into ldap_browser (ivan) - resolved.
+- 0001355: [outbound email] Non ascii characters in the CC field of outgoing emails fails (ivan) - resolved.
+ - 0001430: [outbound email] Outbound email: Special characters in email address fails (ivan) - resolved.
+- 0001704: [other] Use PHP constant for slashes instead of calculating $fsdelim (ivan) - resolved.
+- 0001488: [other] $fsdelim variable needs replacing with DIRECTORY_SEPARATOR constant (paulh) - resolved.
+- 0001653: [outbound email] Broken File-Attachments (Tomse) - resolved.
+- 0001695: [tasks] Allow tasks to be postponed from task page as well as list (ivan) - resolved.
+- 0001663: [contracts] the expired text when a contract is expired needs some styling (ivan) - resolved.
+- 0001690: [tasks] edit_task.php sould be renamed for new naming scheme (ivan) - resolved.
+- 0001658: [billing] One time billing editor has no required fields (ivan) - resolved.
+- 0001657: [billing] Required fields ignored when editing service (paulh) - resolved.
+- 0001668: [billing] Edit service shows per-unit and per-incident fields at once (paulh) - resolved.
+- 0001639: [billing] Required fields are ignored when adding service (ivan) - resolved.
+- 0001659: [billing] One time billing editor - badly named? (Tomse) - resolved.
+- 0001667: [billing] We should add some colours to the list of service to indicate active/expired (ivan) - resolved.
+- 0001661: [contracts] contracts page can be somewhat confusing - view details could be added to operations (ivan) - resolved.
+- 0001641: [billing] Unused code for daily rate (ivan) - resolved.
+- 0001596: [profiles] changing status from within the user profile page doesn't redirect you back to the profile page (Tomse) - resolved.
+- 0001637: [theme] missing icon initialresponse (Tomse) - resolved.
+- 0001634: [profiles] Editing user profile page adds slashes (Tomse) - resolved.
+- 0001540: [reports] running recent_incidents_report display could use a better layout (ivan) - resolved.
+- 0001632: [security] Page security no longer checked (ivan) - resolved.
+- 0001656: [config] Saving inventory ends up with a => (Tomse) - resolved.
+- 0001590: [inventory] When no inventory types are configured the drop-down is empty (Tomse) - resolved.
+- 0001620: [portal] $SYSLANG isn't saved into the database when saving a "request closure" from the portal (paulh) - resolved.
+- 0001636: [sites & contacts] adding a new contact that doesn't insert into the db gives success message (Tomse) - resolved.
+- 0001455: [config] Allow users to configure map link (ivan) - resolved.
+- 0001635: [sites & contacts] Can't create site without department field (paulh) - resolved.
+- 0000208: [scheduler] Set user status based on holiday chart (ivan) - resolved.
+- 0001593: [i18n] Notification page needs i18n (ivan) - resolved.
+- 0001628: [users] Change status permission isn't checked (Tomse) - resolved.
+- 0001557: [theme] Holiday calendar looks awful with kriplyana theme (ivan) - resolved.
+- 0001555: [incidents] rand error when adding incidents (ivan) - resolved.
+- 0001374: [permissions] Permissions constants (ivan) - resolved.
+- 0001627: [i18n] plugins don't have a fallback language (Tomse) - resolved.
+- 0001553: [holidays] Not possible to unset a public holiday (Tomse) - resolved.
+- 0001240: [Skills] Empty strings in skill list (ivan) - resolved.
+- 0001623: [portal] Portal status column sometimes shows blank (ivan) - resolved.
+- 0001500: [portal] portal kbarticle.php doesn't have a menu bar (ivan) - resolved.
+- 0001156: [i18n] KB Article headings need i18n (Tomse) - resolved.
+- 0001492: [incidents] Duplicate information on incidents list page (Tomse) - resolved.
+- 0000001: [plugins] Plugin manager (ivan) - resolved.
+ - 0001441: [setup/config] Check plugin versions before upgrading (paulh) - resolved.
+- 0001154: [plugins] Plugins Repository (ivan) - resolved.
+- 0001469: [incidents] Add plugin_do to incident_html_top.inc to extend the menu and add id's to the html tags (ivan) - resolved.
+- 0001616: [incidents] The close window link is missing from the incident popup (ivan) - resolved.
+- 0001493: [incidents] SLA status not consistent between queues on incident lists (ivan) - resolved.
+- 0000945: [feedback] Feedbacks should be enabled pr site. (Tomse) - resolved.
+- 0001610: [other] kdeclassic is broken - needing alot of icons and structure isn't correct (Tomse) - resolved.
+- 0000681: [profiles] Skype field on user profile (Tomse) - resolved.
+- 0001604: [users] User edit; when saving it produces an error in the debug log (Tomse) - resolved.
+- 0001566: [reports] External Engineer Call Distribution report displays "test" (ivan) - resolved.
+- 0000948: [profiles] "User.retrieveDetails() not yet implemented" on user profile page (paulh) - resolved.
+- 0001591: [portal] Adding a new incident from portal points to unknown page. (Tomse) - resolved.
+- 0001533: [users] Possible to create two identically named user groups (Tomse) - resolved.
+- 0001530: [authentication] contact password reset broken (Tomse) - resolved.
+- 0000551: [other] Some ideas for better HTML code (ivan) - resolved.
+- 0001594: [i18n] billing_matrix.php add new billing matrix is static (Tomse) - resolved.
+- 0001523: [i18n] Courtesy title needs i18n (paulh) - resolved.
+- 0001588: [triggers] Warning when adding notification about new site (paulh) - resolved.
+- 0001569: [other] html_redirect() doesn't redirect (ivan) - resolved.
+- 0000443: [other] Clarify add/new (Tomse) - resolved.
+- 0001554: [other] Time selector drop down should have leading zeros (paulh) - resolved.
+- 0001548: [theme] New notification icon missing (paulh) - resolved.
+- 0001564: [templates] Templates page doesn't have a menu bar (paulh) - resolved.
+- 0001328: [inbound email] Inbound email limited to recognise only up to incident # 99999 (ivan) - resolved.
+- 0001563: [feedback] feedback response page (feedback_browse.php) date is wrong (Tomse) - resolved.
+- 0001558: [feedback] Feedback hash needs a salt (Tomse) - resolved.
+- 0001552: [theme] Missing icon edit.png on edit global signature page (paulh) - resolved.
+- 0000887: [other] db definition of sites and contacts (paulh) - resolved.
+- 0001546: [billing] SQL error in billing summary: 'sl.id' missing (paulh) - resolved.
+- 0001537: [sites & contacts] Editing a contact with a ' in it's name removes the ' and the rest of the name (nicdev) - resolved.
+- 0001535: [theme] New contract page has different style to rest of the forms (Tomse) - resolved.
+- 0001536: [contracts] When trying to associate a cantact with an existing contract, we have a mysql error (nicdev) - resolved.
+- 0001534: [Skills] Linking a new skill to a product redirects to an empty page (nicdev) - resolved.
+- 0001531: [i18n] translation.php doesn't save the metalines (Tomse) - resolved.
+- 0000964: [incidents] skill selection in incident (ivan) - resolved.
+- 0000061: [portal] Obtain feedback via the portal (Tomse) - resolved.
+- 0001131: [theme] New theme Kriplyana (ivan) - resolved.
+- 0001525: [triggers] Sending feedback forms to a contact uses wrong contact id in triggers (Tomse) - resolved.
+- 0001044: [inbound email] Issues with special characters in email addresses (ivan) - resolved.
+- 0000962: [i18n] No translation for SLA target updates (Tomse) - resolved.
+- 0000912: [i18n] search_string=A on url for browse pages assumes english language (ivan) - resolved.
+- 0001127: [theme] Allow default iconset to be configured (ivan) - resolved.
+- 0001522: [theme] Status bar doesn't always reach across browser window (ivan) - resolved.
+- 0001521: [sites & contacts] Not possible to mark a contact active (Tomse) - resolved.
+- 0001180: [sites & contacts] Browse sites should show all sites by default (ivan) - resolved.
+- 0001034: [other] Should use mb_substr rather than substr (ivan) - resolved.
+- 0001346: [outbound email] Bad mail format (Tomse) - resolved.
+- 0001519: [sites & contacts] Special alphabet chars are shown as "?" in clubs (ivan) - resolved.
+- 0001342: [outbound email] Add ability to disable outgoing emails (Tomse) - resolved.
+- 0001515: [outbound email] we should have a setting where we can choose between CR & CRLF for mails (Tomse) - resolved.
+- 0001514: [i18n] if comment lines from translation file are missing, an error occurs when saving translations (Tomse) - resolved.
+- 0001512: [contracts] Editing a contract shows nothing (Tomse) - resolved.
+- 0001075: [triggers] Finish auto create incidents trigger UI - resolved.
+- 0000520: [plugins] Mechanism for plugins to add to config centre (ivan) - resolved.
+- 0001505: [profiles] saved language settings isn't read upon login (paulh) - resolved.
+- 0000273: [other] "View Incoming" to view in HTML (ie. view URLs as URLs) (ivan) - resolved.
+- 0001122: [incidents] better grammar needed in incident_details.php (ivan) - resolved.
+- 0001085: [i18n] Translations can be difficult in some languages because of the sequence of %s (ivan) - resolved.
+- 0000879: [incidents] incident_add.php finds incorrect details (ivan) - resolved.
+- 0001040: [incidents] Unable to add incident when contacts name is in Cryillic (ivan) - resolved.
+- 0001497: [i18n] action_details.php contains static text (Tomse) - resolved.
+- 0001453: [knowledge base] Attach files to a Knowledge Base Article (Tomse) - resolved.
+- 0000742: [incidents] Consolidate SLA updates and their text (paulh) - resolved.
+- 0001384: [setup/config] Setup should check for all dependancies (paulh) - resolved.
+- 0001218: [other] do we still need utf8_substr and utf8_strlen (ivan) - resolved.
+- 0001494: [incidents] contact_support.php filter should be at top not the bottom (paulh) - resolved.
+- 0001477: [scheduler] run of auto.php brings a lot of warnings (paulh) - resolved.
+- 0001486: [dashboard] Dashboard sql queries are not run during install (paulh) - resolved.
+- 0000017: [other] [META] Tidy scripts (paulh) - resolved.
+ - 0000105: [other] Remove Dojo toolkit (ivan) - resolved.
+  - 0000488: [timesheet] Timesheet uses dojo (ivan) - resolved.
+   - 0001112: [calendar] Move timesheet feature to Project Plugin (ivan) - resolved.
+- 0001058: [other] Consistent Ajax (paulh) - resolved.
+- 0001413: [incidents] For new plugin: Add plugin_do to incident_details and give 'id' to div tag (paulh) - resolved.
+- 0000634: [authentication] LDAP setup - Feature request (paulh) - resolved.
+- 0001482: [config] Config setting for portal icon set (paulh) - resolved.
+- 0000706: [reports] Use pChart for charts/reports (paulh) - resolved.
+- 0001439: [other] Update Prototype JavaScript framework to 1.7 (kieran) - resolved.
+- 0001432: [reports] report_incidents_daily_summary.php lacks a nice layout (Tomse) - resolved.
+- 0001292: [triggers] TRIGGER_CONTACT_ADDED is in schema but not fired (kieran) - resolved.
+- 0001102: [triggers] adding rules to triggers (kieran) - resolved.
+- 0001158: [i18n] when updating an incident, most choices from the SLA type selection box gives static update type (kieran) - resolved.
+- 0001280: [triggers] Reset password broken (kieran) - resolved.
+- 0001470: [incidents] Add plugin_do context to be able to show site incidents table before the "add incident form (ivan) - resolved.
+- 0000812: [LDAP] Filter mask for LDAP (paulh) - resolved.
+- 0001109: [scheduler] Undefined variable in auto.php (ivan) - resolved.
+- 0000586: [i18n] Role permission names are hardocded in the DB (paulh) - resolved.
+- 0000624: [templates] Incident Update Email Template to include the latest update made (kieran) - resolved.
+- 0000705: [other] Turn off line numbers for notices? (Tomse) - resolved.
+- 0000724: [other] Remove webtrack.conf include (paulh) - resolved.
+- 0001298: [triggers] Don't fire user triggers when status is out of office etc (kieran) - resolved.
+- 0000556: [billing] Interface to edit/add billing matrixs (paulh) - resolved.
+- 0000426: [triggers] Add the SLA times to variables for a future release (kieran) - resolved.
+- 0000450: [triggers] Contextual trigger rule pages (kieran) - resolved.
+- 0000004: [triggers] Use revoke() for triggers (kieran) - resolved.
+- 0000047: [other] Popup uniqueness option (ivan) - resolved.
+- 0000060: [other] "Are you sure messages", should be optional (ivan) - resolved.
+ - 0001507: [outbound email] Ability to disable the second confirmation popup in Incident email (paulh) - resolved.
+- 0000067: [incidents] Show next action on the incident table (kieran) - resolved.
+- 0000090: [other] Functions should be broken up (paulh) - resolved.
+- 0000181: [outbound email] Add ability to send multiple attachments (paulh) - resolved.
+- 0000274: [other] Date sorting Incoming Email (Holding) Queue (Tomse) - resolved.
+- 0000291: [dashboard] Install all dashboard components by default (Tomse) - resolved.
+- 0000334: [incidents] Need config option to turn legend on incident.php off (ivan) - resolved.
+- 0000411: [incidents] Ability to send/forward the entire case history to another person internal or external (kieran) - resolved.
+- 0000419: [theme] Themes should be easier to add (ivan) - resolved.
+- 0001416: [other] Remove reference to mailing list (paulh) - resolved.
+- 0000747: [search] Create a plugin hook on the search page (Tomse) - resolved.
+- 0000769: [portal] Portal incident created trigger needed (kieran) - resolved.
+- 0001277: [other] Login page includes alot of uncessary javascript (ivan) - resolved.
+- 0001260: [other] remove check_email (paulh) - resolved.
+- 0000568: [triggers] Add trigger when an incident changes status (kieran) - resolved.
+- 0001068: [incidents] Duplicate files incident_update.php (paulh) - resolved.
+- 0001238: [inventory] $row references in inventory_add.php (paulh) - resolved.
+- 0001081: [contracts] Rename maintenance to contracts (Tomse) - resolved.
+- 0001222: [incidents] time to next action limited to 8 - 5 (paulh) - resolved.
+- 0001094: [other] Redesign user preferences table (ivan) - resolved.
+ - 0001106: [config] Migrate existing user configuration from users table to userconfig table (paulh) - resolved.
+- 0001107: [incidents] The funtion "autocomplete()" does not work in incident_email page (nicdev) - resolved.
+- 0001112: [calendar] Move timesheet feature to Project Plugin (ivan) - resolved.
+- 0001211: [config] SLA Config should be simpler (paulh) - resolved.
+- 0001130: [config] Control Panel page is redundant (paulh) - resolved.
+- 0001173: [other] Many pages doesn't have a nice icon next to the headline but others do (Tomse) - resolved.
+- 0001279: [triggers] Use friendly names (kieran) - resolved.
+- 0001172: [inventory] BBTags in inventory item notes (ivan) - resolved.
+- 0000802: [reports] clicking in "exclude sites with" - makes it diffcult to remove (Tomse) - resolved.
+- 0001293: [incidents] Incidents of type other than support should show something on edit (paulh) - resolved.
+- 0000855: [contracts] Inactive contracts do not get hidden (ivan) - resolved.
+- 0000885: [incidents] Remove blinking 'Critical' (ivan) - resolved.
+- 0001350: [incidents] incident details should show a sum of duration time registered (Tomse) - resolved.
+- 0000629: [other] var_utc_offset ignores DST (ivan) - resolved.
+- 0000915: [sites & contacts] email should not be required (ivan) - resolved.
+- 0000929: [SLAs] Limited SLA title (paulh) - resolved.
+- 0001291: [triggers] TRIGGER_INCIDENT_CLOSED and default NOTICE_INCIDENT_CLOSED (kieran) - resolved.
+- 0001457: [inbound email] Tempincoming.arrived doesn't exist (ivan) - resolved.
+- 0001321: [triggers] Broken redirect when add incident via portal in git (paulh) - resolved.
+- 0001438: [config] config : target='_blank' for external sites - closed.
+- 0000937: [sites & contacts] Branch3 SVN - Clicking on the DK Letter Å shows results from A - closed.
+- 0001532: [i18n] Translate page doesn't work properly for en-US - closed.
+- 0001256: [plugins] Create 'queues' plugin (paulh) - closed.
+- 0001694: [billing] New services have blank billing matrix - closed.
+- 0001499: [i18n] section headers of kb_view_article.php isn't translated, though kb_article is (Tomse) - closed.
+
+Changes in v3.67 released 18 August 2012
+-----------------------------------------------------------------------
+- 0001723: [security[ XSS vulnerability in setup script
+
+Changes in v3.66 released 7 July 2012
+-----------------------------------------------------------------------
+- 0001789: [notices] Creating default object from empty value in functions.inc.php (ivan) - resolved.
+- 0001731: [security] Multiple security issues discovered by Ilya Verbitskiy (ivan) - resolved.
+- 0001303: [portal] When user/contact update the incident no trigger occurs (Tomse) - resolved.
+- 0001788: [i18n] translation page fails when saving. (Tomse) - resolved.
+- 0001767: [notices] Trigger (Notification/Email) when user requests ticket closure (Tomse) - resolved.
+- 0001764: [portal] Add an Incident Title (ivan) - resolved.
+- 0001763: [i18n] en-US.inc.php (ivan) - resolved.
+- 0001780: [scheduler] changing "closure_delay" parameter do nothing with CloseIncidents action within auto.php (ivan) - resolved.
+- 0001737: [security] PHP Code Injection Vulnerability (ivan) - resolved.
+- 0001782: [portal] Input was expected to be numeric but received string [close] instead (ivan) - resolved.
+- 0001783: [incidents] clean_fixed_list error in incident_details (Tomse) - resolved.
+- 0001778: [portal] admin.php [portal], Wrong variable (paulh) - resolved.
+- 0001779: [knowledge base] kb.php [portal], Wrong variable (paulh) - resolved.
+- 0001775: [feedback] In feedback forms - new, the text "simple html allowed" is there but functionality removed. (Tomse) - resolved.
+- 0001719: [config] Backslashes are removed from path names under Windows (Tomse) - resolved.
+- 0001771: [Skills] Trying to add skills isn't accepted but error messages says success (Tomse) - resolved.
+- 0001770: [tasks] Deleting a note from a task fails (Tomse) - resolved.
+- 0001738: [portal] BBCode img/url tags for external links in KB dont't work (ivan) - resolved.
+- 0001713: [config] The function: clean_fspath($string) removes ":" from the strings which breaks file paths in Windows (ivan) - resolved.
+- 0001758: [incidents] Search for a word is not possible (Tomse) - resolved.
+- 0001643: [incidents] CC addresses without space between each address displays badly in the Incident_details window (nicdev) - resolved.
+- 0001742: [LDAP] ldapSync fails if no LDAP group for SIT admins/managers/users specified or the group contains no users (paulh) - resolved.
+- 0001726: [calendar] Unable to view holidays for all or allonline (paulh) - resolved.
+- 0001735: [plugin hooks] Add 2 new plugin contexts to incident_details.php for plugins to access each incident update (nicdev) - resolved.
+- 0001745: [setup/config] Error in function check_form_token() (Tomse) - resolved.
+- 0001729: [authentication] Roll-over mouse doesn work in holidays planning (paulh) - resolved.
+- 0001730: [other] Page not found/404 error after session expiry (Tomse) - resolved.
+- 0001734: [other] Plugin context "html_head" not in version 3.65LTS (nicdev) - resolved.
+- 0001471: [triggers] Tasks due trigger doesn't fire (Tomse) - resolved.
+- 0001715: [dashboard] Adding Dashboard components creates an error (Tomse) - resolved.
+- 0001727: [other] Statistics shows 1970-01-01 when you click a stat (paulh) - resolved.
+- 0001725: [reports] Can't click on numbers (links) on stats page to get breakdown (ivan) - resolved.
+- 0001718: [search] Search for strings doesn't work (paulh) - resolved.
+- 0001716: [incidents] temp reassign incidents go to wrong person (paulh) - resolved.
+- 0001714: [incidents] When opening an incident for viewing: Application Warning [512] Unexpected input (in line 382 of file base.inc.php) (paulh) - resolved.
+
+
+Changes in v3.65 Released 04 September 2011
+-----------------------------------------------------------------------
+- 0001688: [plugin hooks] Please add plugin context to contract_edit.php (ivan) - resolved.
+- 0001699: [security] Multiple security vulnerabilities HTB23043 (ivan) - resolved.
+- 0001601: [security] Errors should strip path from in-page output (ivan) - resolved.
+- 0001705: [security] May be possible to inject malicious SQL via syslang (ivan) - resolved.
+- 0001702: [other] Tidy ambiguous code in link_add.php (paulh) - resolved.
+- 0001565: [security] We should not allow QBE report to output password columns (ivan) - resolved.
+- 0001701: [security] XSS: Possible to inject javascript into search page (ivan) - resolved.
+- 0001691: [incidents] External ID value changed upon editing an incident (paulh) - resolved.
+- 0001687: [users] View Users | Jump to | Tasks displays session users tasks (paulh) - resolved.
+- 0001685: [users] Cannot edit user email (ivan) - resolved.
+- 0001680: [plugin hooks] Please add plugin context to contract_add.php (ivan) - resolved.
+
+
+Changes in v3.64 released 17 July 2011
+-----------------------------------------------------------------------
+- 0001451: [sites & contacts] site URL not always clickable (paulh) - resolved.
+- 0001502: [incidents] function "reassign_incident()" in incident.inc.php contains errors (paulh) - resolved.
+- 0001573: [config] Saving config arrays break the lines (ivan) - resolved.
+- 0001509: [other] SiT! 3.6x should refuse to run with 3.9x/4.x database schema (ivan) - resolved.
+- 0001648: [security] CVSS v2:Base Score: 6.5; Vector: (AV:N/AC:L/Au:S/C:P/I:P/A:P/E:P/RL:U/RC:C) (ivan) - resolved.
+- 0001615: [sites & contacts] clean_int() error occurs momentarily when a site is disabled (Tomse) - resolved.
+- 0001572: [Skills] Invalid argument supplied for foreach() in edit_backup_users.php (paulh) - resolved.
+- 0001575: [contracts] markus found anothter clean_int error in contract_add_contact (context=contract) (Tomse) - resolved.
+- 0001571: [users] application warning 512 on users page (Tomse) - resolved.
+- 0001560: [inventory] Inventory link from site_details points to inventory, not inventory_site (Tomse) - resolved.
+- 0001517: [other] Apostrophies in app name are escaped when displayed (paulh) - resolved.
+
+
+Changes in v3.63 released 16 April 2011
+-----------------------------------------------------------------------
+- 0001479: [inbound email] Add plugin in inboundemail.php (ivan) - resolved.
+- 0001197: [feedback] Add 2 x plugin_do() statements to feedback_browse.php (Tomse) - resolved.
+- 0001490: [other] main.php does not include $pagescripts correctly (nicdev) - resolved.
+- 0000756: [Chart] Pie-Chart Legend visual bug (paulh) - resolved.
+- 0001475: [incidents] Possible to add a critical priority incident even if SLA doesn't support it (paulh) - resolved.
+- 0001472: [search] search renewals doesn't work if no license specified (paulh) - resolved.
+- 0001480: [SLAs] service level timings are wrongly calculated if the working hours aren't 8. (paulh) - resolved.
+- 0001485: [SLAs] service_level_add.php caches last SLA added (paulh) - resolved.
+- 0001484: [contracts] License type should have a default (paulh) - resolved.
+- 0001483: [incidents] "typo" in report_incidents_recent.php (Tomse) - resolved.
+- 0001478: [sites & contacts] HTML entities displayed as code (paulh) - resolved.
+- 0001473: [plugin hooks] Plugin hook in "edit_escalation_path.php" (ivan) - resolved.
+- 0001104: [i18n] Missing en-US help files (subwolf) - resolved.
+- 0001410: [other] cleanvar should have an intval option (ivan) - resolved.
+- 0001143: [reports] report_customer_contracts.php doens't show contracts with no license type (tom) - resolved.
+- 0001431: [incidents] Incident update page: editing has no submit button (Tomse) - resolved.
+- 0001433: [plugins] Plugin hooks in incident_add.php do not work (ivan) - resolved.
+- 0001466: [plugins] if config['plugins'] contains a space in the array it doesn't load the plugins (paulh) - resolved.
+- 0001465: [setup/config] Unable to install on mysql 5.5 (paulh) - resolved.
+- 0001463: [setup/config] Schema should use ENGINE= rather than TYPE= (paulh) - resolved.
+- 0001415: [scheduler] LdapSync and plugins don't run when CheckIncomingMail fails due to bad config (ivan) - resolved.
+- 0001436: [sites & contacts] Address to google map only links post number (Tomse) - resolved.
+- 0001429: [setup/config] error message when upgrading from 3.62 to svn3.63 due to clean_int() (ivan) - resolved.
+- 0001400: [feedback] Unable to edit question if no question text set (ivan) - resolved.
+- 0001428: [permissions] After setting a single checkmark in role permissions, the rest of the tabs gets de-checked (ivan) - resolved.
+- 0001376: [inbound email] Importing "screenshots" fails when there is already an attachment to the inbound email. (ivan) - resolved.
+- 0001409: [scheduler] Scheduled job that takes longer than next auto.php execution, will have it's start time moved (ivan) - resolved.
+- 0001394: [feedback] Can´t browse feedback (paulh) - resolved.
+- 0001352: [reports] Report of intendents (paulh) - resolved.
+- 0001140: [reports] report_customer_products.php (paulh) - resolved.
+- 0001417: [LDAP] Edit contactdetails deletes username for LDAP users (paulh) - resolved.
+- 0001419: [triggers] Error when adding triggers (paulh) - resolved.
+- 0001399: [LDAP] ldap_logindisabledattribute produces call of non-object in auto.php (paulh) - resolved.
+- 0001392: [other] mime_content_type deprecated (paulh) - resolved.
+- 0001411: [LDAP] If LDAP password expires all users are disabled (paulh) - resolved.
+- 0001395: [calendar] possible SQL injection (paulh) - resolved.
+- 0001402: [sites & contacts] Bug Edit Sites - resolved.
+- 0001391: [search] Search function does not work correctly (nicdev) - resolved.
+- 0001373: [LDAP] SiT will not import LDAP users which have an apostrophe in their name (paulh) - resolved.
+- 0001390: [LDAP] Users with apostrophies in their login name can't log in (paulh) - resolved.
+- 0001113: [inbound email] Spam subject setting breaks incoming email when empty (paulh) - resolved.
+- 0001359: [reports] Report customer contracts csv output broken (paulh) - resolved.
+- 0001378: [reports] Duration column in Site Incidents report. (paulh) - resolved.
+
+Changes in v3.62 released 18 July 2010
+-----------------------------------------------------------------------
+- 0000862: [reports]  report_incidents_daily_summary.php should have a nice result page + i18n + l10n (ivan) - resolved.
+- 0001364: [contracts] A user can still add incidents on a terminated contract in the portal (Tomse) - resolved.
+- 0001367: [incidents] Help Link on incidents detail screen broken (Tomse) - resolved.
+- 0001366: [incidents] Typo in Link Title (Tomse) - resolved.
+- 0001362: [reports] Incidents Daily Summary report mixes opened and closed incidents (ivan) - resolved.
+- 0001360: [i18n] strShowQuote isn't used but it's in the lang files (Tomse) - resolved.
+- 0000122: [portal] Need a help document for Portal users (paulh) - resolved.
+- 0001313: [tasks] Editing tasks loses start and due time (paulh) - resolved.
+- 0001345: [incidents] On incident list & in site name is expanded to & amp ; (paulh) - resolved.
+- 0001347: [inbound email] attachments that moved by move_update.php are not moved (ivan) - resolved.
+- 0000671: [inbound email] inbound email does not work (Using MTA mode) (paulh) - resolved.
+- 0001338: [outbound email] Warning 'Compilation failed: nothing to repeat' when some emails are sent (ivan) - resolved.
+- 0001243: [triggers] Wrong link to KB article in trigger (paulh) - resolved.
+- 0001322: [portal] Show Close Incidents no show Other Site Incidents (paulh) - resolved.
+- 0001333: [tasks] Filtering tasks by site is broken (paulh) - resolved.
+- 0001348: [inbound email] MTA problem solved (paulh) - resolved.
+- 0001014: [inbound email] inboundemail.php does not work (paulh) - resolved.
+- 0001353: [portal] Marked Required fields are not checked if empty (paulh) - resolved.
+- 0001354: [portal] Editing contact_details in the portal (paulh) - resolved.
+- 0001349: [inbound email] Certain messages are imported with empty message bodies (ivan) - resolved.
+- 0001341: [feedback] Disabling Feedback has no effect (paulh) - resolved.
+- 0001302: [triggers] Trigger action editor not work ok (ivan) - resolved.
+- 0001339: [search] Search dont works fine with short words (ivan) - resolved.
+
+Changes in v3.61 released 29 May 2010
+-----------------------------------------------------------------------
+- 0001332: [inbound email] Attachments in inbound emails are stored in the attachment-xxxxx folder as a number .... (Tomse) - resolved.
+- 0001204: [SLAs] Incident SLA calculations wrong (ivan) - resolved.
+- 0001320: [sites & contacts] classes.inc.php missing a global for $dbContacts (paulh) - resolved.
+- 0001308: [LDAP] When logging in via ldap your holiday entitlement is set back to $CONFIG['default_entitlement'] (paulh) - resolved.
+- 0001225: [incidents] time to next action doesn't work on emails (paulh) - resolved.
+- 0001286: [LDAP] Trigger doesn't fire when a contact is added via LDAP (paulh) - resolved.
+- 0001288: [plugins] trigger_actions_defined plugin hook missing (kieran) - resolved.
+- 0000575: [billing] contract_details page should show expired services as 0 (paulh) - resolved.
+- 0001203: [billing] Div by zero when all services have expired (paulh) - resolved.
+- 0001241: [incidents] Bad long texts on charts (paulh) - resolved.
+- 0001294: [billing] Can add services to terminated contracts (paulh) - resolved.
+- 0001289: [LDAP] Users sync'd via LDAP show up 'Online' (paulh) - resolved.
+- 0001226: [incidents] incident add ignores time of next action (paulh) - resolved.
+- 0001100: [inbound email] SQL Error importing email with odd named attachment (ivan) - resolved.
+- 0001259: [LDAP] Some passwords don't work with admin connection (paulh) - resolved.
+- 0001271: [notices] Notices have only one line (ivan) - resolved.
+- 0001274: [calendar] year view shows all dates as unix epoch (paulh) - resolved.
+- 0001273: [calendar] MIssing table header on users with no group (paulh) - resolved.
+- 0001264: [holidays] Bad symbols in holiday table (paulh) - resolved.
+- 0001232: [outbound email] Outbound mail marks as spam because of subject encoding (ivan) - resolved.
+- 0001248: [scheduler] PurgeJournal is being deactivated (Tomse) - resolved.
+- 0001239: [Skills] Bugs managing skills (paulh) - resolved.
+- 0001231: [billing] Billing report columns don't line up (paulh) - resolved.
+- 0001234: [inventory] Inventory item owner does not saves (paulh) - resolved.
+- 0001171: [inventory] Inventory item field Notes" should be more larger (paulh) - resolved.
+- 0001198: [incidents] Review Due 0 minutes ago! (ivan) - resolved.
+- 0001224: [contracts] Sample data is out of date... (ivan) - resolved.
+- 0001215: [incidents] Bad symbol in incident table (paulh) - resolved.
+- 0001217: [i18n] strEllipsis missing in 3.x (paulh) - resolved.
+- 0001209: [scheduler] TimeCalc is being deactivated under certain circumstances (Tomse) - resolved.
+
 Changes in v3.60 released 27 March 2010
 -----------------------------------------------------------------------
-- 0001198: [incidents] Review Due 0 minutes ago! (ivan) - resolved.
-- 0000890: [reports] Reports not including statistics from Incidents logged for customers (paulh) - resolved.
-- 0001197: [feedback] Add 2 x plugin_do() statements to feedback_browse.php (ivan) - resolved.
-- 0001182: [feedback] Contact can access the feedback form multiple times (paulh) - resolved.
-- 0001045: [inbound email] Tempincoming table grows and grows (ivan) - resolved.
+- 0000545: [i18n] edit_user_permissions needs i18n - resolved.
+- 0001056: [i18n] Missing string strSendFeedbackDesc (paulh) - resolved.
+- 0001055: [i18n] Missing string strChased (kieran) - resolved.
+- 0001051: [incidents] Drafts functionality doesn't work in cyrilic (paulh) - resolved.
+- 0001128: [sites & contacts] Incident pool dropdown is broken (ivan) - resolved.
+- 0001035: [other] truncate string uses ellipses for remove chars (ivan) - resolved.
+- 0001030: [other] Can't set language in portal (ivan) - resolved.
+- 0001015: [reports] The csv export function does not work in the report "average incident duration" (paulh) - resolved.
+- 0001050: [reports] cannot create the report by engineer utilization (paulh) - resolved.
+- 0000847: [templates] Possible to edit built-in templates (ivan) - resolved.
+- 0001062: [reports] report_incidents_by_skill.php pie chart wrong (paulh) - resolved.
+- 0000997: [incidents] Unassigned incidents show in the queue (paulh) - resolved.
+- 0001110: [plugins] Plugin contexts for the config page (ivan) - resolved.
+- 0001077: [feedback] mutiple options in feedback form causes error, need confirmation (Tomse) - resolved.
+- 0001064: [knowledge base] Javascript error when trying to add new KB article manually (paulh) - resolved.
+- 0001067: [search] search page gives a JS error (paulh) - resolved.
+- 0000604: [portal] Customer contact creating incident on portal against contract with limited incident pool not being charged to contract (paulh) - resolved.
+- 0000700: [plugins] Ability to extend portal menu via plugins (ivan) - resolved.
+- 0001111: [incidents] Add plugin contexts to incident_email.php to allow for autocomplete (nicdev) - resolved.
+- 0000817: [other] Total open incidents figure incorrect in group stats is incorrect (ivan) - resolved.
 - 0001192: [reports] report_incidents_by_engineer.php doesn't fiter by user (paulh) - resolved.
-- 0001191: [reports] report_incidents_by_engineer.php div by zero (paulh) - resolved.
-- 0001189: [tasks] Javascript is output before page header (paulh) - resolved.
-- 0001186: [other] 'All online' feature of users page shows offline users too (ivan) - resolved.
-- 0001190: [incidents] drafts icons shows when drafts exist for other users (paulh) - resolved.
-- 0000439: [contracts] Editing admin contact changes expiry date to a day early (ivan) - resolved.
-- 0000829: [i18n] SYSLANG assumes system language is 100% complete (ivan) - resolved.
-- 0000130: [other] $_SESSION['formdata'] contains raw input with no checking (ivan) - resolved.
-- 0000998: [incidents] review due wrong (ivan) - resolved.
-- 0001150: [knowledge base] When editing a KB article - The "Additional information" headers is duplicated instead of updated (nicdev) - resolved.
-- 0000810: [ftp] FTP DB page incorrect (ivan) - resolved.
-- 0000857: [theme] Icons missing from the 'sit' iconset (ivan) - resolved.
-- 0001171: [inventory] Inventory item field Notes" should be more larger (Tomse) - resolved.
-- 0001162: [other] adding a fictive ID to incident_details.php should generate an error message (Tomse) - resolved.
-- 0000939: [feedback] Feedback - after answer message - brush up (Tomse) - resolved.
+- 0001103: [plugins] Add a plugin_do to ajaxdata.php to add custom "actions" (ivan) - resolved.
 - 0001119: [incidents] Bad link to inventory item from incident view (paulh) - resolved.
-- 0001065: [other] No russian language help (ivan) - resolved.
+- 0001132: [wiki] setting up auto.php isn't clearly written in the steps of configuring (ivan) - resolved.
+- 0001189: [tasks] Javascript is output before page header (paulh) - resolved.
+- 0001191: [reports] report_incidents_by_engineer.php div by zero (paulh) - resolved.
+- 0001186: [other] 'All online' feature of users page shows offline users too (ivan) - resolved.
+- 0001182: [feedback] Contact can access the feedback form multiple times (paulh) - resolved.
+- 0001171: [inventory] Inventory item field Notes" should be more larger (Tomse) - resolved.
+- 0001169: [other] qtype_listbox function duplicated (paulh) - resolved.
 - 0001157: [incidents] incident_details.php / editing an incident shows am/pm times and not using config (ivan) - resolved.
-- 0001152: [sites & contacts] Inventory owner does not saves + wrong owner list (paulh) - resolved.
 - 0001151: [other] When trying to delete a product that has a skill attached, an empty error appears (Tomse) - resolved.
+- 0001150: [knowledge base] When editing a KB article - The "Additional information" headers is duplicated instead of updated (nicdev) - resolved.
 - 0001149: [plugins] dashlet_rss doesn't update feed anymore from SF.net (Tomse) - resolved.
+- 0001197: [feedback] Add 2 x plugin_do() statements to feedback_browse.php (ivan) - resolved.
+- 0001138: [reports] report_incidents_by_engineer.php title incorrect/missing (ivan) - resolved.
+- 0001136: [incidents] Mobile number doesn't show on incident details when telephone number blank (ivan) - resolved.
+- 0001190: [incidents] drafts icons shows when drafts exist for other users (paulh) - resolved.
+- 0000829: [i18n] SYSLANG assumes system language is 100% complete (ivan) - resolved.
+- 0000838: [dashboard] Adding a component to "my dashboard" redirects afterwards to main.php - should go back to last menu (Tomse) - resolved.
+- 0000857: [theme] Icons missing from the 'sit' iconset (ivan) - resolved.
+- 0000868: [other] Hovering help text is overlapped by mouse cursor (ivan) - resolved.
+- 0000781: [inventory] Some bugs in inventory and some suggestions (paulh) - resolved.
+- 0000565: [incidents] Next action oddities and ie7 (paulh) - resolved.
+- 0000909: [incidents] Bad symbols in picture (paulh) - resolved.
+- 0000939: [feedback] Feedback - after answer message - brush up (Tomse) - resolved.
+- 0000439: [contracts] Editing admin contact changes expiry date to a day early (ivan) - resolved.
+- 0000976: [reports] Save as CSV request in Incident Duration report causes error (paulh) - resolved.
+- 0000998: [incidents] review due wrong (ivan) - resolved.
+- 0001045: [inbound email] Tempincoming table grows and grows (ivan) - resolved.
+- 0000130: [other] $_SESSION['formdata'] contains raw input with no checking (ivan) - resolved.
+- 0000020: [i18n] Date popup is not translated (ivan) - resolved.
+- 0001083: [other] Support for php5.2 and up - Issues found are mostly IMAP (ivan) - resolved.
+ - 0000985: [inbound email] Error message: Warning imap_open() expects parameter 4 to be long (paulh) - resolved.
+ - 0001135: [other] need to switch from mysql_escape_string to mysql_real_escape_string (ivan) - resolved.
+- 0001078: [feedback] Not able to change type, when editing (paulh) - resolved.
+- 0001162: [other] adding a fictive ID to incident_details.php should generate an error message (Tomse) - resolved.
+- 0001096: [reports] report_incidents_by_skills shows ??? for title on pie lang is zh_CN (paulh) - resolved.
+- 0000890: [reports] Reports not including statistics from Incidents logged for customers (paulh) - resolved.
+- 0000810: [ftp] FTP DB page incorrect (ivan) - resolved.
+- 0001065: [other] No russian language help (ivan) - resolved.
+- 0001152: [sites & contacts] Inventory owner does not saves + wrong owner list (paulh) - resolved.
 - 0000974: [holidays] Holidays taken on holidays.php counts denied holidays (ivan) - resolved.
 - 0001117: [wiki] Document font plugin (paulh) - resolved.
-- 0001103: [plugins] Add a plugin_do to ajaxdata.php to add custom "actions" (ivan) - resolved.
-- 0000838: [dashboard] Adding a component to "my dashboard" redirects afterwards to main.php - should go back to last menu (Tomse) - resolved.
 - 0001147: [plugins] dashboard_rss uses html_redirect (Tomse) - resolved.
 - 0000355: [dashboard] watch_incidents dashlet doesn't redirect after adding (Tomse) - resolved.
-- 0001138: [reports] report_incidents_by_engineer.php title incorrect/missing (ivan) - resolved.
-- 0000868: [other] Hovering help text is overlapped by mouse cursor (ivan) - resolved.
-- 0000020: [i18n] Date popup is not translated (ivan) - resolved.
 - 0001137: [billing] report_billable_engineer_utilisation.php incorrect (paulh) - resolved.
 - 0001142: [reports] report_incidents_by_customer.php doesn't return any data (paulh) - resolved.
 - 0001144: [dashboard] Some dashlets have been upgraded, but still shows version 1 (Tomse) - resolved.
 - 0001139: [reports] report_incidents_by_vendor.php doesn't show pie (paulh) - resolved.
 - 0001057: [menu] Engineer Utilisation report missleading menu link (paulh) - resolved.
-- 0001132: [wiki] setting up auto.php isn't clearly written in the steps of configuring (ivan) - resolved.
-- 0001136: [incidents] Mobile number doesn't show on incident details when telephone number blank (ivan) - resolved.
-- 0001083: [other] Support for php5.2 and up - Issues found are mostly IMAP (ivan) - resolved.
- - 0000985: [inbound email] Error message: Warning imap_open() expects parameter 4 to be long (paulh) - resolved.
- - 0001135: [other] need to switch from mysql_escape_string to mysql_real_escape_string (ivan) - resolved.
-- 0001128: [sites & contacts] Incident pool dropdown is broken (ivan) - resolved.
-- 0001035: [other] truncate string uses ellipses for remove chars (ivan) - resolved.
-- 0000700: [plugins] Ability to extend portal menu via plugins (ivan) - resolved.
-- 0000817: [other] Total open incidents figure incorrect in group stats is incorrect (ivan) - resolved.
 - 0001126: [security] $_SESSION['lang'] is used to include a file without proper checking (ivan) - resolved.
-- 0000847: [templates] Possible to edit built-in templates (ivan) - resolved.
-- 0001030: [other] Can't set language in portal (ivan) - resolved.
-- 0001077: [feedback] mutiple options in feedback form causes error, need confirmation (Tomse) - resolved.
-- 0000604: [portal] Customer contact creating incident on portal against contract with limited incident pool not being charged to contract (paulh) - resolved.
-- 0001111: [incidents] Add plugin contexts to incident_email.php to allow for autocomplete (nicdev) - resolved.
-- 0000997: [incidents] Unassigned incidents show in the queue (paulh) - resolved.
-- 0001015: [reports] The csv export function does not work in the report "average incident duration" (paulh) - resolved.
-- 0001110: [plugins] Plugin contexts for the config page (ivan) - resolved.
-- 0001056: [i18n] Missing string strSendFeedbackDesc (paulh) - resolved.
-- 0001055: [i18n] Missing string strChased (kieran) - resolved.
-- 0001062: [reports] report_incidents_by_skill.php pie chart wrong (paulh) - resolved.
-- 0000545: [i18n] edit_user_permissions needs i18n - resolved.
-- 0001064: [knowledge base] Javascript error when trying to add new KB article manually (paulh) - resolved.
-- 0001067: [search] search page gives a JS error (paulh) - resolved.
-- 0001051: [incidents] Drafts functionality doesn't work in cyrilic (paulh) - resolved.
-- 0001050: [reports] cannot create the report by engineer utilization (paulh) - resolved.
-- 0001165: [theme] Missing icon in sit iconset, note2.png (ivan) - closed.
-- 0000470: [incidents] Drafts do not save correctly (ivan) - closed.
-- 0000535: [inbound email] Incoming email list does not show the site details or the identicon for recognised contacts (ivan) - closed.
-- 0000493: [knowledge base] Make portal KB publically accessible (kieran) - closed.
-- 0000583: [i18n] 3.50 svn5217 - Trigger action static language (kieran) - closed.
-- 0000422: [setup/config] Move all configuration into config.php - closed.
 
 Changes in v3.51 released 23 January 2010
 -----------------------------------------------------------------------
