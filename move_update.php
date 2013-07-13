@@ -109,7 +109,7 @@ else
             if (!file_exists($new_path))
             {
                 $umask = umask(0000);
-                mkdir($CONFIG['attachment_fspath'] . "$incidentid", 0770);
+                mkdir($CONFIG['attachment_fspath'] . "{$incidentid}", 0770);
                 umask($umask);
             }
 

@@ -172,7 +172,7 @@ elseif ($mode == 'runreport')
     }
     else
     {
-        echo "<p align='center'>{$strNoBillableIncidents}</p>";
+        echo "<p align='center'>{$strNoRecords}</p>";
     }
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
