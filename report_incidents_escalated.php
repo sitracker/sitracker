@@ -108,24 +108,6 @@ while ($escalations = mysql_fetch_object($escs))
     $sql .= "WHERE escalationpath = '{$escalations->id}' AND closed = '0' AND sw.id = i.softwareid ";
     $sql .= " AND i.contact = c.id AND c.siteid = s.id ";
 
-    if (!empty($filterby))
-    {
-        switch ($filterby)
-        {
-            case 'sla':
-                $sql .= "AND i.servicelevel = '{$filter}' ";
-                break;
-            case 'maintenanceid':
-                $sql .= "AND i.maintenanceid = '{$filter}' ";
-                break;
-            case 'softwareid':
-                $sql .= "AND i.softwareid = '{$filter}' ";
-                break;
-            case 'product':
-                $sql .= "AND i.product = '{$filter}' ";
-                break;
-            }
-    }
     $sql .= $filterSQL;
 
     $sql .= "ORDER BY externalengineer";
