@@ -931,7 +931,7 @@ elseif ($action == 'assign')
         // List Engineers
         // We need a user type 'engineer' so we don't just list everybody
         // Status zero means account disabled
-        $sql = "SELECT * FROM `{$dbUsers}` WHERE status != 0 ORDER BY realname";
+        $sql = "SELECT * FROM `{$dbUsers}` WHERE status != " . USERSTATUS_ACCOUNT_DISABLED . " ORDER BY realname";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         echo "<h3>{$strUsers}</h3>
