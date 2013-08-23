@@ -75,7 +75,7 @@ if (!empty($oucode))
         }
         else
         {
-            html_redirect("$PHP_SELF?ou=$oucode", FALSE, $strNoValidEmailEntered);
+            html_redirect("{$_SERVER['PHP_SELF']}?ou={$oucode}", FALSE, $strNoValidEmailEntered);
         }
 
 
