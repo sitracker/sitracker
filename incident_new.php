@@ -353,7 +353,7 @@ elseif ($action == 'findcontact')
         if (!empty($incomingid))
         {
             
-            $tsql = "SELECT `from` FROM `{$dbTempIncoming}` WHERE id = $incomingid";
+            $tsql = "SELECT `from` FROM `{$dbTempIncoming}` WHERE id = {$incomingid}";
             $tresult = mysql_query($tsql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             list($email) = mysql_fetch_row($tresult);
@@ -366,12 +366,12 @@ elseif ($action == 'findcontact')
             $sql .= "AND (surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR s.name LIKE '%{$search_string}%' ";
             $sql .= "OR CONCAT_WS(' ', forenames, surname) = '{$search_string}' )";
         }
-        else $sql .= "AND c.id = '$contactid' ";
+        else $sql .= "AND c.id = '{$contactid}' ";
         $sql .= "ORDER by c.surname, c.forenames ";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
-        if (mysql_num_rows($result)>0)
+        if (mysql_num_rows($result) > 0)
         {
             $html = "<h3>{$strCustomers}</h3>\n";
             $html .= "<p align='center'>{$strThisListShowsCustomers}</p>";
@@ -820,7 +820,7 @@ elseif ($action == 'assign')
 
             //move attachments from updates to incident
             $sql = "SELECT linkcolref, filename FROM `{$dbLinks}` AS l, ";
-            $sql .= "`{$dbFiles}` as f ";
+            $sql .= "`{$dbFiles}` AS f ";
             $sql .= "WHERE l.origcolref = '{$updateid}' ";
             $sql .= "AND l.linktype = 5 ";
             $sql .= "AND l.linkcolref = f.id";
@@ -1007,7 +1007,7 @@ elseif ($action == 'assign')
 
             $countdiff = $countincidents - $countactive;
 
-            echo "$countactive / {$countdiff}</td>";
+            echo "{$countactive} / {$countdiff}</td>";
             echo "<td align='center'>{$incpriority['4']}</td>";
             echo "<td align='center'>{$incpriority['3']}</td>";
             echo "<td align='center'>{$incpriority['2']}</td>";

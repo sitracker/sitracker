@@ -1,5 +1,5 @@
 <?php
-// edit_incident.php - Form for editing incident title and other fields
+// incident_edit.php - Form for editing incident title and other fields
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2013 The Support Incident Tracker Project
@@ -8,9 +8,6 @@
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
 //
-
-// Soon to be replaced
-// See incident/edit.inc.php
 
 require ('core.php');
 $permission = PERM_INCIDENT_EDIT; // Edit Incidents
@@ -258,21 +255,21 @@ else
             $escalationpath = db_read_column('name', $dbEscalationPaths, $escalationpath);
             if ($oldccemail != $ccemail)
             {
-                $header .= "CC Email: " . $oldccemail . " -&gt; <b>" . $ccemail . "</b>\n";
+                $header .= "CC Email: {$oldccemail} -&gt; <b>{$ccemail}</b>\n";
             }
 
             if ($oldescalationpath != $escalationpath)
             {
-                $header .= "Escalation: " . $oldescalationpath . " -&gt; <b>" . $escalationpath . "</b>\n";
+                $header .= "Escalation: {$oldescalationpath} -&gt; <b>{$escalationpath}</b>\n";
             }
             if ($oldexternalengineer != $externalengineer)
             {
-                $header .= "External Engineer: " . $oldexternalengineer . " -&gt; <b>" . $externalengineer . "</b>\n";
+                $header .= "External Engineer: {$oldexternalengineer} -&gt; <b>{$externalengineer}</b>\n";
             }
 
             if ($oldexternalemail != $externalemail)
             {
-                $header .= "External email: " . $oldexternalemail . " -&gt; <b>" . $externalemail . "</b>\n";
+                $header .= "External email: {$oldexternalemail} -&gt; <b>{$externalemail}</b>\n";
             }
 
             if ($oldsoftware != $software)
@@ -282,12 +279,12 @@ else
 
             if ($oldproductversion != $productversion)
             {
-                $header .= "Version: ".$oldproductversion." -&gt; <b>".$productversion."</b>\n";
+                $header .= "Version: {$oldproductversion} -&gt; <b>{$productversion}</b>\n";
             }
 
             if ($oldproductservicepacks != $productservicepacks)
             {
-                $header .= "Service Packs Applied: ".$oldproductservicepacks." -&gt; <b>".$productservicepacks."</b>\n";
+                $header .= "Service Packs Applied: {$oldproductservicepacks} -&gt; <b>{$productservicepacks}</b>\n";
             }
 
             if (!empty($header)) $header .= "<hr>";
@@ -317,7 +314,7 @@ else
         if ($addition_errors == 0)
         {
             plugin_do('incident_edit_saved');
-            journal(CFG_LOGGING_NORMAL, 'Incident Edited', "Incident $id was edited", CFG_JOURNAL_INCIDENTS, $id);
+            journal(CFG_LOGGING_NORMAL, 'Incident Edited', "Incident {$id} was edited", CFG_JOURNAL_INCIDENTS, $id);
             html_redirect("incident_details.php?id={$id}");
         }
         else
