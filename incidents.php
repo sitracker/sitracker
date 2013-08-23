@@ -288,7 +288,7 @@ switch ($type)
                     }
                     break;
                 default:
-                    trigger_error("Invalid queue ($queue) on query string", E_USER_NOTICE);
+                    trigger_error("Invalid queue ({$queue}) on query string", E_USER_NOTICE);
                     break;
             }
 

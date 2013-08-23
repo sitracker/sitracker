@@ -85,7 +85,7 @@ else
         $sql = "INSERT INTO `{$dbProductInfo}` (productid, information, moreinformation) ";
         $sql .= "VALUES ('{$product}', '{$information}', '{$moreinformation}')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         if (!$result)
         {

@@ -464,7 +464,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
     // extract software
     $sql  = "SELECT id, name FROM `{$dbSoftware}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp WHERE s.id = sp.softwareid ";
-    $sql .= "AND productid = '$productid' ";
+    $sql .= "AND productid = '{$productid}' ";
     $sql .= "ORDER BY name ASC";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
@@ -472,7 +472,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
     $numrows = mysql_num_rows($result);
     if ($numrows > 0)
     {
-        $html = "<select name='$name' id='$name'";
+        $html = "<select name='{$name}' id='{$name}'";
         if ($visibility == 'internal' AND $id == 0)
         {
             $html .= " class='required'>";

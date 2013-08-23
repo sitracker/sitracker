@@ -170,7 +170,7 @@ if ($journal_count >= 1)
         else echo "<strong>{$i}</strong> ";
     }
 
-    if ($maxpage < ($pages -3))
+    if ($maxpage < ($pages - 3))
     {
         echo " {$strEllipsis} <a href='{$_SERVER['PHP_SELF']}?page={$pages}'>{$pages}</a>";
     }

@@ -453,7 +453,7 @@ else
             {
                 // Update - mark for closure
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strMarkedforclosure']) . "', '{$now}', 'solution')";
+                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strMarkedforclosure']) . "', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -461,7 +461,7 @@ else
             {
                 // Update - close immediately
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
-                $sql .= "VALUES ('$id', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strIncidentClosed']) ."', '{$now}', 'solution')";
+                $sql .= "VALUES ('{$id}', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strIncidentClosed']) ."', '{$now}', 'solution')";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -597,18 +597,18 @@ else
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 list($softwareid) = mysql_fetch_row($result);
 
-                if (!empty($_POST['summary'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSummary', '1', '{$summary}', 'public') ";
-                if (!empty($_POST['symptoms'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSymptoms', '1', '{$symptoms}', 'public') ";
-                if (!empty($_POST['cause'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strCause', '1', '{$cause}', 'public') ";
-                if (!empty($_POST['question'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strQuestion', '1', '{$question}', 'public') ";
-                if (!empty($_POST['answer'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strAnswer', '1', '{$answer}', 'public') ";
-                if (!empty($_POST['solution'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSolution', '1', '{$solution}', 'public') ";
-                if (!empty($_POST['workaround'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strWorkaround', '1', '{$workaround}', 'public') ";
-                if (!empty($_POST['status'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strStatus', '1', '{$status}', 'public') ";
-                if (!empty($_POST['additional'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strAdditionalInfo', '1', '{$additional}', 'public') ";
-                if (!empty($_POST['references'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'strReferences', '1', '{$references}', 'public') ";
+                if (!empty($_POST['summary'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSummary', '1', '{$summary}', 'public') ";
+                if (!empty($_POST['symptoms'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSymptoms', '1', '{$symptoms}', 'public') ";
+                if (!empty($_POST['cause'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strCause', '1', '{$cause}', 'public') ";
+                if (!empty($_POST['question'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strQuestion', '1', '{$question}', 'public') ";
+                if (!empty($_POST['answer'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strAnswer', '1', '{$answer}', 'public') ";
+                if (!empty($_POST['solution'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSolution', '1', '{$solution}', 'public') ";
+                if (!empty($_POST['workaround'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strWorkaround', '1', '{$workaround}', 'public') ";
+                if (!empty($_POST['status'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strStatus', '1', '{$status}', 'public') ";
+                if (!empty($_POST['additional'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strAdditionalInfo', '1', '{$additional}', 'public') ";
+                if (!empty($_POST['references'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strReferences', '1', '{$references}', 'public') ";
 
-                if (count($query) < 1) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('$docid', '".mysql_real_escape_string($sit[2])."', 'h1', 'Summary', '1', 'Enter details here...', 'restricted') ";
+                if (count($query) < 1) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'Summary', '1', 'Enter details here...', 'restricted') ";
 
                 foreach ($query AS $sql)
                 {
