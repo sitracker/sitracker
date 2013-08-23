@@ -43,7 +43,7 @@ if (empty($action) OR $action == "showform")
         {
             $name = db_read_column('name', $dbSoftware, $softwareid);
             echo "<h3>".icon('skill',16)." ";
-            echo "{$strSkill}: $name</h3>";
+            echo "{$strSkill}: {$name}</h3>";
         }
         echo "<input name='softwareid' type='hidden' value='{$softwareid}' />\n";
         echo "<p align='center'>{$strProduct}: ".icon('product', 16)." ";
@@ -120,7 +120,7 @@ elseif ($action == "new")
         // update db and show success message
         else
         {
-            journal(CFG_LOGGING_NORMAL, 'Product Added', "Skill $softwareid was added to product $productid", CFG_JOURNAL_PRODUCTS, $productid);
+            journal(CFG_LOGGING_NORMAL, 'Product Added', "Skill {$softwareid} was added to product {$productid}", CFG_JOURNAL_PRODUCTS, $productid);
             if ($return == 'true') html_redirect("product_skill_new.php?productid={$productid}&return=true");
             else html_redirect("products.php?productid={$productid}");
         }

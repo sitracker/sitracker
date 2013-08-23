@@ -20,7 +20,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $title = $strManageDashboardComponents;
 
 
-$action = clean_fixed_list($_REQUEST['action'], array('','install','installdashboard','enable','upgradecomponent'));
+$action = clean_fixed_list($_REQUEST['action'], array('', 'install', 'installdashboard', 'enable', 'upgradecomponent'));
 
 
 // TODO A duplicate of that in setup.php - Probably wants moving to functions.inc.php eventually PH 9/12/07

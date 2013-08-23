@@ -22,20 +22,20 @@ $title = $strManageYourDashboard;
 
 $sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '{$_SESSION['userid']}'";
 $result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
 if (mysql_num_rows($result) > 0)
 {
     $obj = mysql_fetch_object($result);
     $dashboardstr = $obj->dashboard;
-    $dashboardcomponents = explode(",",$obj->dashboard);
+    $dashboardcomponents = explode(",", $obj->dashboard);
 }
 
 if (empty($dashboardid))
 {
     foreach ($dashboardcomponents AS $db)
     {
-        $c = explode("-",$db);
+        $c = explode("-", $db);
         $ondashboard[$c[1]] = $c[1];
     }
 
@@ -43,7 +43,7 @@ if (empty($dashboardid))
 
     $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled = 'true'";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     echo "<h2>".icon('dashboard', 32)." {$strDashboard}: ";
     echo user_realname($sit[2])."</h2>\n";
