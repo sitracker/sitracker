@@ -48,7 +48,7 @@ if ($submit_value == 'go')
         }
         else
         {
-            $sql .= "surname LIKE '%$search_string%' OR forenames LIKE '%{$search_string}%' OR ";
+            $sql .= "surname LIKE '%{$search_string}%' OR forenames LIKE '%{$search_string}%' OR ";
             $sql .= "CONCAT(forenames,' ',surname) LIKE '%{$search_string}%'";
         }
     }
@@ -85,14 +85,14 @@ echo autocomplete('search_string', 'contact', 'search_string_choices');
 echo "</form>\n";
 if ($displayinactive == "true")
 {
-    echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=false";
+    echo "<a href='{$_SERVER['PHP_SELF']}?displayinactive=false";
     if (!empty($search_string)) echo "&amp;search_string={$search_string}";
     echo "'>{$strShowActiveOnly}</a>";
     $inactivestring="displayinactive=true";
 }
 else
 {
-    echo "<a href='".$_SERVER['PHP_SELF']."?displayinactive=true";
+    echo "<a href='{$_SERVER['PHP_SELF']}?displayinactive=true";
     if (!empty($search_string)) echo "&amp;search_string={$search_string}";
     echo "'>{$strShowAll}</a>";
     $inactivestring="displayinactive=false";
@@ -190,10 +190,17 @@ else
                 echo "<tr class='{$shade}'>";
                 echo "<td><a href='contact_details.php?id={$results->id}'>{$results->surname}, {$results->forenames}</a></td>";
                 echo "<td><a href='site_details.php?id={$results->siteid}'>".site_name($results->siteid)."</a></td>";
-                echo "<td>{$results->email}</td>";
                 echo "<td>";
-                if ($results->phone == '')  echo "<em>{$strNone}</em>";
-                else echo $results->phone;
+                if ($results->dataprotection_email == 'Yes') echo "<em>{$strNoEmail}</em>"; 
+                else echo $results->email;
+                echo "</td>";
+                echo "<td>";
+                if ($results->dataprotection_phone == 'Yes') echo "<em>{$strNoCalls}</em>";
+                else 
+                {
+                    if ($results->phone == '')  echo "<em>{$strNone}</em>";
+                    else echo $results->phone;
+                }
                 echo "</td>";
                 echo "<td>";
                 if ($results->fax == '') echo "<em>{$strNone}</em>";
