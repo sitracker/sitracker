@@ -115,12 +115,13 @@ switch ($action)
             {
                 $sql .= "('{$dashboardcomponents[$i]}', 'true'), ";
             }
-            $result = mysql_query(mb_substr($sql, 0, mb_strlen($sql)-2));
+            $result = mysql_query(mb_substr($sql, 0, mb_strlen($sql) - 2));
             if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
             if (!$result)
             {
-                echo "<p class='error'>{$strFailed}</p>";
+                html_redirect("manage_dashboard.php", false, $strFailed);
+                exit;
             }
             else
             {
@@ -129,7 +130,7 @@ switch ($action)
                 foreach ($dashboardcomponents AS $comp)
                 {
                     include (APPLICATION_PLUGINPATH . "dashboard_{$comp}.php");
-                    $func = "dashboard_".$comp."_install";
+                    $func = "dashboard_{$comp}_install";
                     if (function_exists($func)) $installed = $func();
                     if ($installed !== TRUE)
                     {
@@ -200,14 +201,14 @@ switch ($action)
 
     case 'enable':
         $id = clean_int($_REQUEST['id']);
-        $enable = clean_fixed_list($_REQUEST['enable'], array('false','true'));
+        $enable = clean_fixed_list($_REQUEST['enable'], array('false', 'true'));
         $sql = "UPDATE `{$dbDashboard}` SET enabled = '{$enable}' WHERE id = '{$id}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
         if (!$result)
         {
-            echo "<p class='error'>{$strChangeStateFailed}</p>";
+            html_redirect("manage_dashboard.php", false, $strChangeStateFailed);
         }
         else
         {
