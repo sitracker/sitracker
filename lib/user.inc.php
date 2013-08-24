@@ -495,7 +495,7 @@ function user_holiday_resetdate($userid)
  * @param string $attribs. Extra attributes for the select control
  * @return string HTML
  */
-function user_drop_down($name='', $id = 0, $accepting = TRUE, $exclude = FALSE, $attribs= '', $return = true)
+function user_drop_down($name='', $id = 0, $accepting = TRUE, $exclude = FALSE, $attribs= '', $return = true, $allowNone = FALSE)
 {
     global $dbUsers;
     $sql  = "SELECT id, realname, accepting FROM `{$dbUsers}` WHERE status > 0 ORDER BY realname ASC";
@@ -509,9 +509,10 @@ function user_drop_down($name='', $id = 0, $accepting = TRUE, $exclude = FALSE, 
     }
 
     $html .= ">\n";
-    if ($id == 0)
+    if ($id == 0 OR $allowNone)
     {
-        $html .= "<option selected='selected' value='0'></option>\n";
+        if ($id == 0) $s = "selected='selected'";
+        $html .= "<option {$s} value='0'></option>\n";
     }
 
     while ($users = mysql_fetch_object($result))
