@@ -57,8 +57,8 @@ h2 img, h3 img
 
 p, table, td, center, input, textarea, select
 {
-  font-size: 8pt;
-  color: #000000;
+    font-size: 8pt;
+    color: #000000;
 }
 
 
@@ -982,7 +982,7 @@ div.scrollbox
     border: 1px inset #ccc;
 }
 
-p.sitversion, p.forgotpwd, p.inventory, #inventory, .formbuttons, #container .formbuttons
+p.sitversion, p.forgotpwd, p.inventory, #inventory, .formbuttons, #container, .formbuttons, div.forgotpwd
 {
     text-align: center;
 }
@@ -1691,20 +1691,20 @@ div.tabcontainer
 
 .smalltabs a:link, .smalltabs a:visited
 {
-  float: left;
-  line-height: 14px;
-  font-weight: bold;
-  margin: 0 10px 4px 10px;
-  text-decoration: none;
-  color: #999;
+    float: left;
+    line-height: 14px;
+    font-weight: bold;
+    margin: 0 10px 4px 10px;
+    text-decoration: none;
+    color: #999;
 }
 
 .smalltabs ul li.active a:link, .smalltabs ul li.active a:visited, .smalltabs a:hover
 {
-  border-bottom: 3px solid #185594;
-  padding-bottom: 2px;
-  background: transparent;
-  color: #185594;
+    border-bottom: 3px solid #185594;
+    padding-bottom: 2px;
+    background: transparent;
+    color: #185594;
 }
 
 #navlist a:hover
