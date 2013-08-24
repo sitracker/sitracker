@@ -589,7 +589,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
     $subject = replace_specials($template->subjectfield, $paramarray);
     $body = replace_specials($template->body, $paramarray);
     $extra_headers = "Reply-To: {$replyto}{$crlf}Errors-To: ".user_email($sit[2]) . $crlf;
-    $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
+    if ($CONFIG['outbound_email_send_xoriginatingip']) $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . "\n";
     $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . "\n";
     if ($ccemail != '')  $extra_headers .= "CC: $ccemail\n";
     if ($bccemail != '') $extra_headers .= "BCC: $bccemail\n";

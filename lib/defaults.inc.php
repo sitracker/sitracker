@@ -377,6 +377,9 @@ $CONFIG['outbound_email_newline'] = 'LF';
 // Change the newline character if outbound emails attachments have line breaks in the wrong places.(CRLF or LF)
 $CONFIG['outbound_emailattachment_newline'] = 'CRLF';
 
+// Send X-Originating-IP header
+$CONFIG['outbound_email_send_xoriginatingip'] = TRUE;
+
 // The string used to prefix the incident number to make the incident reference custamisable
 $CONFIG['incident_reference_prefix'] = '';
 

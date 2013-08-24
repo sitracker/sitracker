@@ -91,7 +91,7 @@ elseif ($action == "edit")
             echo sitetype_drop_down('typeid', $obj->typeid);
             echo "</td></tr>\n";
             echo "<tr><th>{$strSalesperson}:</th><td>";
-            echo user_drop_down('owner', $obj->owner, $accepting = FALSE, '', '', TRUE);
+            echo user_drop_down('owner', $obj->owner, $accepting = FALSE, '', '', TRUE, TRUE);
             echo "</td></tr>\n";
             echo "<tr><th>{$strIncidentPool}:</th>";
             $incident_pools = explode(',', "{$strNone},{$CONFIG['incident_pools']}");
