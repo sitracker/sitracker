@@ -590,7 +590,7 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
         $extra_headers .= "Errors-To: {$CONFIG['support_email']}" . $crlf;
     }
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
-    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'], 0, 15) . $crlf;
+    if ($CONFIG['outbound_email_send_xoriginatingip']) $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'], 0, 15) . $crlf;
     // $extra_headers .= "\r\n";
 
     if ($CONFIG['demo'])

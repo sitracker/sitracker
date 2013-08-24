@@ -602,9 +602,9 @@ function saction_MailPreviousMonthsTransactions()
 
     $extra_headers = "Reply-To: {$CONFIG['support_email']}{$crlf}Errors-To: {$CONFIG['support_email']}{$crlf}"; // TODO should probably be different
     $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
-    $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'], 0, 15) . $crlf;
-//    if ($ccfield != '')  $extra_headers .= "cc: $ccfield\n";
-//    if ($bccfield != '') $extra_headers .= "Bcc: $bccfield\n";
+    if ($CONFIG['outbound_email_send_xoriginatingip']) $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'], 0, 15) . $crlf;
+    //    if ($ccfield != '')  $extra_headers .= "cc: $ccfield\n";
+//        if ($bccfield != '') $extra_headers .= "Bcc: $bccfield\n";
 
     $extra_headers .= $crlf; // add an extra crlf to create a null line to separate headers from body
                         // this appears to be required by some email clients - INL

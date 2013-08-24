@@ -399,7 +399,7 @@ switch ($step)
             $extra_headers = "Reply-To: {$replytofield}{$crlf}";
             $extra_headers .= "Errors-To: " . user_email($sit[2]) . $crlf;
             $extra_headers .= "X-Mailer: {$CONFIG['application_shortname']} {$application_version_string}/PHP " . phpversion() . $crlf;
-            $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
+            if ($CONFIG['outbound_email_send_xoriginatingip']) $extra_headers .= "X-Originating-IP: " . substr($_SERVER['REMOTE_ADDR'],0, 15) . $crlf;
             if ($ccfield != '')
             {
                 $extra_headers .= "CC: {$ccfield}" . $crlf;
