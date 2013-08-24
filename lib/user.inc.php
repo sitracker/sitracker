@@ -497,10 +497,6 @@ function user_holiday_resetdate($userid)
  */
 function user_drop_down($name='', $id = 0, $accepting = TRUE, $exclude = FALSE, $attribs= '', $return = true)
 {
-    // INL 1Jul03 Now only shows users with status > 0 (ie current users)
-    // INL 2Nov04 Optional accepting field, to hide the status 'Not Accepting'
-    // INL 19Jan05 Option exclude field to exclude a user, or an array of
-    // users
     global $dbUsers;
     $sql  = "SELECT id, realname, accepting FROM `{$dbUsers}` WHERE status > 0 ORDER BY realname ASC";
     $result = mysql_query($sql);
