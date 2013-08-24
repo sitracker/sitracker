@@ -90,7 +90,7 @@ else
 }
 
 // Check for asked incident ID
-$sql = "SELECT id FROM {$dbIncidents} ";
+$sql = "SELECT id FROM `{$dbIncidents}` ";
 $sql .= "WHERE id = {$id} ";
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -166,7 +166,9 @@ else
     if ($incident->customerid != '')
     {
         echo "<div id='customerref'>\n";
-        echo "{$strCustomerReference}: {$incident->customerid} <br />\n";
+        echo "{$strCustomerReference}: {$incident->customerid} ";
+        plugin_do('incident_details_customerid');
+        echo "<br />\n";
         echo "</div>\n";
     }
     
@@ -174,7 +176,9 @@ else
     {
         echo "<div id='escalated'>\n";
         echo "{$strEscalated}: ";
-        echo format_external_id($incident->externalid, $incident->escalationpath)."<br />\n";
+        echo format_external_id($incident->externalid, $incident->escalationpath);
+        plugin_do('incident_details_externalid');
+        echo "<br />\n";
         echo "</div>\n";
     }
 
@@ -183,10 +187,11 @@ else
         echo "<div id='externalengineer'>\n";
         echo $incident->externalengineer;
         if ($incident->externalemail != '') echo ", <a href=\"mailto:{$incident->externalemail}\">{$incident->externalemail}</a>";
+        plugin_do('incident_details_externalengineer');
         echo "<br /></div>\n";
     }
 
-    $sql = "SELECT * FROM {$dbLinks} AS l, {$dbInventory} AS i ";
+    $sql = "SELECT * FROM `{$dbLinks}` AS l, `{$dbInventory}` AS i ";
     $sql .= "WHERE linktype = 7 ";
     $sql .= "AND origcolref = {$incidentid} ";
     $sql .= "AND i.id = linkcolref ";

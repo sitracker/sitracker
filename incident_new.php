@@ -1066,4 +1066,5 @@ elseif ($action == 'reassign')
     
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
+
 ?>

@@ -331,7 +331,7 @@ if ($emails > 0)
 
         $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
 
-        $customer_visible = 'No';
+        $customer_visible = 'hide';
         $part = 1;
         //process attachments
         if (!empty($incidentid) AND $incident_open)
@@ -345,7 +345,7 @@ if ($emails > 0)
 
         if (!file_exists($fa_dir))
         {
-            if (!mkdir($fa_dir, 0775, TRUE)) trigger_error("Failed to create incident update attachment directory $fa_dir", E_USER_WARNING);
+            if (!mkdir($fa_dir, 0775, TRUE)) trigger_error("Failed to create incident update attachment directory {$fa_dir}", E_USER_WARNING);
         }
         $attachments = array();
         if (is_array($results['Attachments']) OR is_array($results['Related']))

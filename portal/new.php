@@ -78,7 +78,7 @@ if (!$_REQUEST['action'])
             exit;
         }
     }
-    echo "<form action='{$_SERVER[PHP_SELF]}?page=add&amp;action=submit' method='post'>";
+    echo "<form action='{$_SERVER[PHP_SELF]}?action=submit' method='post'>";
     echo "<table class='vertical maintable' width='50%'>";
     if ($CONFIG['portal_creates_incidents'])
     {
@@ -247,7 +247,8 @@ else //submit
                 }
             }
 
-            clear_form_data('portalnewincident');            html_redirect("index.php", TRUE, $strIncidentAdded);
+            clear_form_data('portalnewincident');
+            html_redirect("index.php", TRUE, $strIncidentAdded);
         }
         else
         {

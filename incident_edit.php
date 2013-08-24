@@ -62,7 +62,7 @@ if (empty($submit))
         flush();
         $maintid = maintenance_siteid($incident->maintenanceid);
         echo "<tr><th>{$strSite}</th><td>".site_name($maintid)."</td></tr>";
-        echo "<tr><th>{$strSkill}</th><td>".skill_drop_down("software", $incident->softwareid)."</td></tr>\n";
+        echo "<tr><th>{$strSkill}</th><td>".softwareproduct_drop_down("software", $incident->softwareid, $incident->product)."</td></tr>\n";
         echo "<tr><th>{$strVersion}</th>";
         echo "<td><input maxlength='50' name='productversion' size='30' type='text' value=\"{$incident->productversion}\" /></td></tr>\n";
         echo "<tr><th>{$strServicePacksApplied}</th>";
