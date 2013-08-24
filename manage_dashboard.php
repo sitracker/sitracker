@@ -274,7 +274,7 @@ switch ($action)
         }
         echo "</table>";
 
-        echo "<p align='center'><a href='".$_SERVER['PHP_SELF']."?action=install'>{$strInstall}</a></p>";
+        echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=install'>{$strInstall}</a></p>";
 
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         break;
