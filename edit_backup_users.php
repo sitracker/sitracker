@@ -114,7 +114,7 @@ else
     }
     plugin_do('edit_backup_users_submitted');
 
-    foreach ($backup AS $key=>$backupid)
+    foreach ($backup AS $key => $backupid)
     {
         if ($backupid > 0)
         {
@@ -124,7 +124,7 @@ else
         // echo "{$softlist[$key]} -- $key -- $value<br />";
         //echo "$sql <br />";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
     plugin_do('edit_backup_users_saved');
     if ($user == $sit[2]) html_redirect("edit_user_skills.php", TRUE);
