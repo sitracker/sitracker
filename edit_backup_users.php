@@ -49,12 +49,12 @@ if (empty($save))
     $softlist = cleanvar($_REQUEST['softlist']);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user,TRUE))."</h2>\n";
+    echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user, TRUE))."</h2>\n";
     plugin_do('edit_backup_users');
     echo "<form name='def' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<p align='center'>{$strDefaultSubstitute}: ";
-    user_drop_down('default', $default, FALSE, $user, "onchange='javascript:this.form.submit();'");
+    echo user_drop_down('default', $default, FALSE, $user, "onchange='javascript:this.form.submit();'");
     echo "</p>";
     echo "</form>";
 
