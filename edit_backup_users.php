@@ -49,12 +49,12 @@ if (empty($save))
     $softlist = cleanvar($_REQUEST['softlist']);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user,TRUE))."</h2>\n";
+    echo "<h2>".icon('user', 32)." ".sprintf($strDefineSubstituteEngineersFor, user_realname($user, TRUE))."</h2>\n";
     plugin_do('edit_backup_users');
     echo "<form name='def' action='{$_SERVER['PHP_SELF']}' method='post'>";
     echo "<input type='hidden' name='user' value='{$user}' />";
     echo "<p align='center'>{$strDefaultSubstitute}: ";
-    user_drop_down('default', $default, FALSE, $user, "onchange='javascript:this.form.submit();'");
+    echo user_drop_down('default', $default, FALSE, $user, "onchange='javascript:this.form.submit();'");
     echo "</p>";
     echo "</form>";
 
@@ -103,7 +103,7 @@ if (empty($save))
 else
 {
     // External variables
-    $softlist = explode(',',cleanvar($_REQUEST['softlist']));
+    $softlist = explode(',', cleanvar($_REQUEST['softlist']));
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
 
@@ -114,17 +114,12 @@ else
     }
     plugin_do('edit_backup_users_submitted');
 
-    foreach ($backup AS $key=>$backupid)
+    foreach ($backup AS $key => $backupid)
     {
-        if ($backupid > 0)
-        {
-            $softlist[$key] = clean_int($softlist[$key]);
-            $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
-        }
-        // echo "{$softlist[$key]} -- $key -- $value<br />";
-        //echo "$sql <br />";
+        $softlist[$key] = clean_int($softlist[$key]);
+        $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
         mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
     plugin_do('edit_backup_users_saved');
     if ($user == $sit[2]) html_redirect("edit_user_skills.php", TRUE);
