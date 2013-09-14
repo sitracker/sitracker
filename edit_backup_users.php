@@ -103,7 +103,7 @@ if (empty($save))
 else
 {
     // External variables
-    $softlist = explode(',',cleanvar($_REQUEST['softlist']));
+    $softlist = explode(',', cleanvar($_REQUEST['softlist']));
     $backup = clean_int($_REQUEST['backup']);
     $user = clean_int($_REQUEST['user']);
 
@@ -116,13 +116,8 @@ else
 
     foreach ($backup AS $key => $backupid)
     {
-        if ($backupid > 0)
-        {
-            $softlist[$key] = clean_int($softlist[$key]);
-            $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
-        }
-        // echo "{$softlist[$key]} -- $key -- $value<br />";
-        //echo "$sql <br />";
+        $softlist[$key] = clean_int($softlist[$key]);
+        $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
         mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
