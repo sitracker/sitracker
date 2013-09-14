@@ -23,7 +23,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 $application_version = '3.90';
 
 // Revision string, e.g. 'beta2' or 'git' or ''
-$application_revision = 'beta1';
+$application_revision = 'beta2';
 
 // The number of errors that have occurred
 $siterrors = 0;
