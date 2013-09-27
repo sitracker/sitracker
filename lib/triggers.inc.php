@@ -556,6 +556,18 @@ array('description' => $strIncidentOwnersEmail,
       'replacement' => 'user_email(incident_owner($param_array[incidentid]));'
       );
 
+$ttvararray['{incidentownersmanager}'] =
+array('description' => $strIncidentOwnersManagersFullName,
+        'requires' => 'incidentid',
+        'replacement' => 'user_realname(user_managerid(incident_owner($param_array[incidentid])));'
+);
+
+$ttvararray['{incidentownersmanageremail}'] =
+array('description' => $strIncidentOwnersManagerEmail,
+        'requires' => 'incidentid',
+        'replacement' => 'user_email(user_managerid(incident_owner($param_array[incidentid])));'
+);
+
 $ttvararray['{incidentpriority}'] =
 array('description' => $strIncidentPriority,
       'requires' => 'incidentid',

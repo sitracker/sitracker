@@ -880,7 +880,7 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
     $sql = "SELECT *, u.id AS userid FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s, `{$dbUsers}` AS u ";
     $sql .= "WHERE us.softwareid = s.id ";
     $sql .= "AND s.id = '{$softwareid}' ";
-    $sql .= "AND userid != '{$userid}' AND u.status > 0 ";
+    $sql .= "AND userid != '{$userid}' AND u.status > ".USERSTATUS_ACCOUNT_DISABLED;
     $sql .= "AND us.userid = u.id ";
     $sql .= " ORDER BY realname";
     $result = mysql_query($sql);
@@ -904,7 +904,7 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
     {
         $html .= "<input type='hidden' name='{$name}' value='0' />{$GLOBALS['strNoneAvailable']}";
     }
-    return ($html);
+    return $html;
 }
 
 
@@ -1215,4 +1215,37 @@ function chart_selector($selected)
     return  $html;
 }
 
+
+function user_dropdown($name, $selected='', $self='')
+{
+    global $dbUsers, $dbUserSoftware, $dbSoftware;
+    $sql = "SELECT * FROM `{$dbUsers}` AS u ";
+    $sql .= "WHERE  u.status > ".USERSTATUS_ACCOUNT_DISABLED;
+    $sql .= " ORDER BY realname";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $count = mysql_num_rows($result);
+    if ($count >= 1)
+    {
+        $html = "<select name='{$name}' id='{$name}'>\n";
+        $html .= "<option value='0'";
+        if (empty($selected)) $html .= " selected='selected'";
+        $html .= ">{$GLOBALS['strNone']}</option>\n";
+        while ($user = mysql_fetch_object($result))
+        {
+            if ($user->id != $self)
+            {
+                $html .= "<option value='{$user->id}'";
+                if ($user->id == $selected) $html .= " selected='selected'";
+                $html .= ">{$user->realname}</option>\n";
+            }
+        }
+        $html .= "</select>\n";
+    }
+    else
+    {
+        $html .= "<input type='hidden' name='{$name}' value='0' />{$GLOBALS['strNoneAvailable']}";
+    }
+    return $html;
+}
 ?>

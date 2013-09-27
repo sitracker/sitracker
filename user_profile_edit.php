@@ -153,6 +153,7 @@ if (empty($mode))
         echo $strNotSet;
     }
     echo "</td></tr>";
+    echo "<tr><th>{$strManager}</th><td>".user_dropdown('managerid', $user->managerid, $edituserid)."</td></tr>";
     echo "<tr><th colspan='2'>{$strWorkStatus}</th></tr>";
 
     if ($edituserpermission AND $edituserid != $sit[2] AND $user->source == 'sit')
@@ -290,6 +291,7 @@ elseif ($mode == 'save')
     $user->fax = cleanvar($_POST['fax']);
     $user->signature = cleanvar($_POST['signature']);
     $user->status = cleanvar($_POST['status']);
+    $user->managerid = cleanvar($_POST['managerid']);
 
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
@@ -308,7 +310,7 @@ elseif ($mode == 'save')
     $newpassword2 = cleanvar($_POST['newpassword2']);
 
     $formtoken = cleanvar($_POST['formtoken']);
-    
+
     if (empty($user->emoticons)) $user->emoticons = 'false';
 
     // Some extra checking here so that users can't edit other peoples profiles

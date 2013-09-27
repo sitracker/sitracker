@@ -27,6 +27,7 @@ class User extends Person{
     var $roleid;
     var $rolename;
     var $group;
+    var $managerid;
     var $signature;
     var $status;
     var $message;
@@ -95,6 +96,7 @@ class User extends Person{
             $this->holiday_resetdate = $obj->holiday_resetdate;
             $this->qualifications = $obj->qualifications;
             $this->source = $obj->user_source;
+            $this->managerid = $obj->managerid;
 
             $sql_userconfig = "SELECT config, value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$this->id}";
             $result_userconfig = mysql_query($sql_userconfig);
@@ -165,11 +167,11 @@ class User extends Person{
             // Insert
             $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (username, password, realname, roleid, ";
             $sql .= "groupid, title, email, phone, mobile, fax, status, ";
-            $sql .= "holiday_entitlement, user_startdate, lastseen, user_source) ";
+            $sql .= "holiday_entitlement, user_startdate, lastseen, managerid, user_source) ";
             $sql .= "VALUES ('".cleanvar($this->username)."', MD5('".cleanvar($this->password)."'), '".cleanvar($this->realname)."', '".cleanvar($this->roleid)."', ";
             $sql .= "'".cleanvar($this->group->id)."', '".cleanvar($this->jobtitle)."', '".cleanvar($this->email)."', '".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', ";
             $sql .= "".cleanvar($this->status).", ";
-            $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, '".cleanvar($this->source)."')";
+            $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, ".convert_string_null_safe($this->managerd).", '".cleanvar($this->source)."')";
             $result = mysql_query($sql);
             if (mysql_error())
             {
@@ -230,6 +232,7 @@ class User extends Person{
                 if (!empty($this->realname)) $s[] = "realname = '".cleanvar($this->realname)."'";
                 if (!empty($this->roleid)) $s[] = "roleid = ".cleanvar($this->roleid)."";
                 if (!empty($this->group) AND !empty($this->group->id)) $s[] = "groupid = ".cleanvar($this->group->id)."";
+                if (!empty($this->managerid)) $s[] = "managerid = ".convert_string_null_safe($this->managerid);
                 if (!empty($this->jobtitle)) $s[] = "title = '".cleanvar($this->jobtitle)."'";
                 if (!empty($this->signature)) $s[] = "signature = '".cleanvar($this->signature)."'";
                 if (!empty($this->email))
