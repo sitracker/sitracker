@@ -1541,6 +1541,7 @@ CREATE TABLE IF NOT EXISTS `{$dbUsers}` (
   `qualifications` tinytext,
   `dashboard` varchar(255) NOT NULL default '0-3,1-1,1-2,2-4',
   `lastseen` DATETIME NOT NULL,
+  `managerid` smallint(6) NULL default NULL,
   `user_source` varchar(32) NOT NULL default 'sit',
   PRIMARY KEY  (`id`),
   KEY `username` (`username`),
@@ -1941,6 +1942,9 @@ INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
 ('Default', 'Question', 0),
 ('Default', 'Remote Access', 2),
 ('Default', 'Standard', 1);
+
+-- PH 2013-09-27
+ALTER TABLE `{$dbUsers}` ADD `managerid` SMALLINT NULL AFTER `lastseen`;
 ";
 
 

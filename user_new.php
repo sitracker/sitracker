@@ -57,6 +57,7 @@ if (empty($submit))
     echo "<tr><th>{$strGroup}</th>";
     echo "<td>".group_drop_down('groupid', show_form_value('new_user', 'groupid', 0))."</td>";
     echo "</tr>";
+    echo "<tr><th>{$strManager}</th><td>".user_dropdown('managerid')."</td></tr>";
 
     echo "<tr><th>{$strRole}</th>";
     echo "<td>".role_drop_down('roleid', show_form_value('new_user', 'roleid', $CONFIG['default_roleid']))."</td>";
@@ -100,6 +101,7 @@ else
     $realname = cleanvar($_REQUEST['realname']);
     $password = clean_dbstring($_REQUEST['password']);
     $groupid = clean_int($_REQUEST['groupid']);
+    $managerid = clean_int($_REQUEST['managerid']);
     $roleid = clean_int($_REQUEST['roleid']);
     $jobtitle = cleanvar($_REQUEST['jobtitle']);
     $email = cleanvar($_REQUEST['email']);
@@ -173,17 +175,16 @@ else
     }
     plugin_do('user_new_submitted');
 
-
     // add information if no errors
     if ($errors == 0)
     {
         $password = md5($password);
         $sql = "INSERT INTO `{$dbUsers}` (username, password, realname, roleid,
                 groupid, title, email, phone, mobile, fax, status,
-                holiday_entitlement, user_startdate, lastseen) ";
+                holiday_entitlement, user_startdate, managerid, lastseen) ";
         $sql .= "VALUES ('{$username}', '{$password}', '{$realname}', '{$roleid}',
                 '{$groupid}', '{$jobtitle}', '{$email}', '{$phone}', '{$mobile}', '{$fax}',
-                1, '{$holiday_entitlement}', '{$startdate}', NOW())";
+                1, '{$holiday_entitlement}', '{$startdate}', ".convert_string_null_safe($managerid).", NOW())";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
         $newuserid = mysql_insert_id();
@@ -217,13 +218,14 @@ else
         }
         else
         {
+            clear_form_data('new_user');
+            clear_form_errors('new_user');
+
             setup_user_triggers($newuserid);
             plugin_do('user_new_saved');
             $t = new TriggerEvent('TRIGGER_NEW_USER', array('userid' => $newuserid));
-            html_redirect("manage_users.php#userid{$newuserid}");
+            html_redirect("manage_users.php");
         }
-        clear_form_data('new_user');
-        clear_form_errors('new_user');
     }
     else
     {

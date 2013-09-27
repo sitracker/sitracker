@@ -1053,4 +1053,23 @@ function get_user_config_vars($userid)
     return $userconfig;
 }
 
+
+/**
+ * Retrieve the ID of a users manager
+ * @param int $userid The ID of the user to find the manager of
+ * @return int The ID of the manager
+ * @author Paul Heaney
+ */
+function user_managerid($userid)
+{
+    global $dbUsers;
+
+    $sql = "SELECT managerid FROM `{$dbUsers}`";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    list($managerid) = mysql_fetch_row($result);
+
+    return $managerid;
+}
+
 ?>
