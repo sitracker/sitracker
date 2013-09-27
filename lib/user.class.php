@@ -95,11 +95,11 @@ class User extends Person{
             $this->holiday_resetdate = $obj->holiday_resetdate;
             $this->qualifications = $obj->qualifications;
             $this->source = $obj->user_source;
-            
+
             $sql_userconfig = "SELECT config, value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$this->id}";
             $result_userconfig = mysql_query($sql_userconfig);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            
+
             while ($obj_userconfig = mysql_fetch_object($result_userconfig))
             {
                 switch ($obj_userconfig->config)
@@ -282,7 +282,7 @@ class User extends Person{
                 if (!empty($this->i18n)) $userconfig[] = array("config" => "language", "value" => $this->i18n);
                 if (!empty($this->utc_offset) OR $this->utc_offset === 0) $userconfig[] = array("config" => "utc_offset", "value" => $this->utc_offset);
                 if (!empty($this->emoticons)) $userconfig[] = array("config" => "show_emoticons", "value" => $this->emoticons);
-                
+
                 if ($errors == 0)
                 {
                     $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
@@ -296,7 +296,7 @@ class User extends Person{
                     {
                         $toReturn = TRUE;
                     }
-                    
+
                     foreach ($userconfig AS $u)
                     {
                         $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$this->id}, '{$u['config']}', '{$u['value']}') ON DUPLICATE KEY UPDATE value = '{$u['value']}'";
