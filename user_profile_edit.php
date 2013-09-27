@@ -79,7 +79,7 @@ if (empty($mode))
 
     echo "</tr>";
     echo "<tr><th>{$strRealName}</th><td>";
-    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_realname']))
+    if ($user->source != 'sit' AND !empty($CONFIG['ldap_realname']))
     {
         echo "<input name='realname' type='hidden' value=\"{$user->realname}\" />{$user->realname}";
     }
@@ -90,10 +90,10 @@ if (empty($mode))
         echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
-    echo "<tr><th>{$strSource}</th><td>{$user->user_source}</td></th>";
+    echo "<tr><th>{$strSource}</th><td>{$user->source}</td></th>";
     echo "<tr><th>{$strJobTitle}</th>";
     echo "<td>";
-    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
+    if ($user->source != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
     {
         echo $user->jobtitle;
     }
@@ -194,7 +194,7 @@ if (empty($mode))
     echo "<tr><th colspan='2'>{$strContactDetails}</th></tr>";
     echo "<tr id='email'><th>{$strEmail}</th>";
     echo "<td>";
-    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_email']))
+    if ($user->source != 'sit' AND !empty($CONFIG['ldap_email']))
     {
         echo "<input name='email' type='hidden'value='".strip_tags($user->email)."' />{$user->email}";
     }
@@ -206,7 +206,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr id='phone'><th>{$strTelephone}</th><td>";
-    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_telephone']))
+    if ($user->source != 'sit' AND !empty($CONFIG['ldap_telephone']))
     {
         echo $user->phone;
     }
@@ -216,7 +216,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr><th>{$strFax}</th><td>";
-    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_fax']))
+    if ($user->source != 'sit' AND !empty($CONFIG['ldap_fax']))
     {
         echo $user->fax;
     }
@@ -226,7 +226,7 @@ if (empty($mode))
     }
     echo "</td></tr>";
     echo "<tr><th>{$strMobile}</th><td>";
-    if ($user->user_source != 'sit' AND !empty($CONFIG['ldap_mobile']))
+    if ($user->source != 'sit' AND !empty($CONFIG['ldap_mobile']))
     {
         echo $user->mobile;
     }
@@ -247,7 +247,7 @@ if (empty($mode))
 
     plugin_do('user_profile_edit_form');
     // Do not allow password change if using LDAP
-    if ($user->user_source == 'sit')
+    if ($user->source == 'sit')
     {
         if ($CONFIG['trusted_server'] == FALSE AND $edituserid == $sit[2])
         {
