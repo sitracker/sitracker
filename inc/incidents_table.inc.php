@@ -267,6 +267,7 @@ while ($incidents = mysql_fetch_object($result))
     echo "</td>";
     echo "<td>";
 
+    echo "[{$incidents->type}] ";
     if (!empty($incidents->softwareid)) echo software_name($incidents->softwareid)."<br />";
 
     if (count(open_activities_for_incident($incidents->id)) > 0)

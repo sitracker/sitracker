@@ -125,7 +125,21 @@ if ($maint->licence_quantity != '0')
     echo "<td>{$maint->licence_quantity} {$maint->licensetypename}</td></tr>\n";
 }
 
-echo "<tr><th>{$strServiceLevel}:</th><td>".get_sla_name($maint->servicelevel)."</td></tr>";
+echo "<tr><th>{$strServiceLevel}:</th><td>";
+
+$timed = false;
+
+$sql_slas = "SELECT msl.servicelevel, it.name FROM `{$dbMaintenanceServiceLevels}` AS msl, `{$dbIncidentTypes}` AS it WHERE msl.incidenttypeid = it.id AND msl.maintenanceid = {$id}";
+$result_slas = mysql_query($sql_slas);
+if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+echo "<table><tr><th>{$strIncidentType}</th><th>{$strServiceLevel}</th></tr>";
+while ($obj = mysql_fetch_object($result_slas))
+{
+    echo "<tr><td>{$obj->name}</td><td>".get_sla_name($obj->servicelevel)."</td></tr>";
+    if (servicelevel_timed($obj->servicelevel)) $timed = true;
+}
+echo "</table>";
+echo "</td></tr>";
 echo "<tr><th>{$strExpiryDate}:</th><td>";
 if ($maint->expirydate == '-1')
 {
@@ -138,7 +152,6 @@ else
 
 echo "</td></tr>";
 
-$timed = servicelevel_timed($maint->servicelevel);
 echo "<tr><th>{$strService}</th><td>";
 echo contract_service_table($id, $timed);
 echo "</td></tr>\n";

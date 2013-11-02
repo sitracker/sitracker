@@ -20,6 +20,7 @@ function dashboard_statistics($dashletid)
 }
 
 
+// TODO handle displaying stats for multiple incident types
 function dashboard_statistics_display()
 {
     global $todayrecent, $dbIncidents, $dbKBArticles, $iconset;
@@ -48,7 +49,7 @@ function dashboard_statistics_display()
     // count total number of SUPPORT incidents that are open at this time (not closed)
     $sql = "SELECT id FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED;
     $sql .= " AND status != ".STATUS_UNSUPPORTED." AND status != ";
-    $sql .= STATUS_CLOSING." AND type='support'";
+    $sql .= STATUS_CLOSING." AND typeid='1'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $supportopen = mysql_num_rows($result);

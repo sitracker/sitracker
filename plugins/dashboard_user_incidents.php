@@ -26,7 +26,7 @@ function dashboard_user_incidents_display($dashletid)
     global $GLOBALS;
     global $CONFIG;
     global $iconset;
-    global $dbIncidents, $dbContacts, $dbPriority;
+    global $dbIncidents, $dbContacts, $dbPriority, $dbIncidentTypes;
     $user = "current";
 
     // Create SQL for chosen queue
@@ -41,7 +41,7 @@ function dashboard_user_incidents_display($dashletid)
         if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
         else $user = $sit[2]; // force to current user if username not found
     }
-    $sql =  "WHERE i.contact = c.id AND i.priority = p.id ";
+    $sql =  "WHERE i.contact = c.id AND i.priority = p.id AND i.typeid = it.id ";
     if ($user != 'all') $sql .= "AND (owner='{$user}' OR towner='{$user}') ";
 
 
@@ -58,7 +58,7 @@ function dashboard_user_incidents_display($dashletid)
     $selectsql .= "servicelevel, softwareid, lastupdated, timeofnextaction, ";
     $selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
     $selectsql .= "($now - lastupdated) AS timesincelastupdate ";
-    $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS p ";
+    $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS p, `{$dbIncidentTypes}` AS it ";
     // Create SQL for Sorting
     switch ($sort)
     {

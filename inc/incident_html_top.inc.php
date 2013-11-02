@@ -79,10 +79,10 @@ $billingObj = get_billable_object_from_incident_id($incidentid);
 // Retrieve incident
 // extract incident details
 $sql  = "SELECT *, i.id AS incidentid, ";
-$sql .= "c.id AS contactid, c.notes AS contactnotes, servicelevel ";
-$sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
-$sql .= "WHERE (i.id='{$incidentid}' AND i.contact = c.id) ";
-$sql .= " OR i.contact=NULL ";
+$sql .= "c.id AS contactid, c.notes AS contactnotes, servicelevel, it.name AS incidenttype ";
+$sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbIncidentTypes}` AS it ";
+$sql .= "WHERE i.typeid = it.id AND ((i.id='{$incidentid}' AND i.contact = c.id) ";
+$sql .= " OR i.contact=NULL) ";
 $incidentresult = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 $incident = mysql_fetch_object($incidentresult);
@@ -215,7 +215,7 @@ if ($_REQUEST['win'] == 'incomingview')
 }
 else
 {
-    echo "<h1 class='{$class}'>{$title}: ".get_userfacing_incident_id($incidentid)." - {$incident->title}</h1>";
+    echo "<h1 class='{$class}'>($incident->incidenttype) {$title}: ".get_userfacing_incident_id($incidentid)." - {$incident->title}</h1>";
 }
 
 echo "<div id='navmenu'>";

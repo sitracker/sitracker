@@ -53,10 +53,10 @@ if ($action == "edit")
 
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
-        
+
         echo show_form_errors('maintform');
         clear_form_errors('maintform');
-        
+
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
         echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
@@ -167,11 +167,11 @@ else if ($action == "update")
     $allcontacts = 'No';
     if ($contacts == 'amount') $amount = clean_float($_REQUEST['amount']);
     elseif ($contacts == 'all') $allcontacts = 'Yes';
-    
+
     $errors = 0;
 
     if ($reseller == 0)
-    {       
+    {
         $_SESSION['formerrors']['maintform']['reseller'] = sprintf($strFieldMustNotBeBlank, $strReseller);
         $errors++;
     }
@@ -187,7 +187,7 @@ else if ($action == "update")
         $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
         $errors++;
     }
-    
+
     plugin_do('contract_edit_submitted');
 
     if ($errors == 0)

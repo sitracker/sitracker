@@ -312,12 +312,16 @@ function calculate_time_of_next_action($days, $hours, $minutes)
  * Retrieves the service level tag of a given maintenance contract
  * @author Paul Heaney
  * @param int $maintid. Contract ID
+ * @param String $typeid - Type of incident
  * @return. string Service Level Tag
+ * @todo add concept of default ServiceLevel so we can remove =1 and select the one marked as default
  */
-function maintenance_servicelevel_tag($maintid)
+function maintenance_servicelevel_tag($maintid, $typeid=1)
 {
-    global $CONFIG, $dbMaintenance;
-    $sql = "SELECT servicelevel FROM `{$dbMaintenance}` WHERE id='{$maintid}' ";
+    global $CONFIG, $dbMaintenanceServiceLevels;
+    $sql = "SELECT servicelevel FROM `{$dbMaintenanceServiceLevels}` WHERE maintenanceid='{$maintid}' ";
+    $sql .= "AND incidenttypeid = {$typeid}";
+
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 

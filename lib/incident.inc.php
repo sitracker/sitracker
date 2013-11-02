@@ -158,7 +158,7 @@ function create_incident_from_incoming($incomingid)
     $sql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp ";
     $sql .= "WHERE m.id = '{$contract}' ";
-    $sql .= "AND m.servicelevel = s.tag ";
+    $sql .= "AND m.servicelevel = s.tag ";  // FIXME servicelevel
     $sql .= "AND m.product = sp.productid LIMIT 1";
 
     $result = mysql_query($sql);
@@ -370,7 +370,8 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
             }
 
             // Have a look at the users (all open) incident queue (owned)
-            $qsql = "SELECT id, priority, lastupdated, status, softwareid FROM `{$dbIncidents}` WHERE owner={$user->userid} AND status != " . STATUS_CLOSED . "AND status != " . STATUS_CLOSING;
+            $qsql = "SELECT id, priority, lastupdated, status, softwareid FROM `{$dbIncidents}` ";
+            $qsql .= "WHERE owner={$user->userid} AND status != " . STATUS_CLOSED . " AND status != " . STATUS_CLOSING;
             $qresult = mysql_query($qsql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             $queue_size = mysql_num_rows($qresult);

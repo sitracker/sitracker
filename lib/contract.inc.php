@@ -107,11 +107,17 @@ function contract_software()
  * @return String TAG of the SLA
  * @author Kieran Hogg
  */
-function contract_slatag($maintid)
+function contract_slatag($maintid, $incidenttype)
 {
     $maintid = intval($maintid);
-    $slatag = db_read_column('servicelevel', $GLOBALS['dbMaintenance'], $maintid);
-    return $slatag;
+    $incidenttype = intval($incidenttype);
+    $sql = "SELECT servicelevel FROM `{$GLOBALS['dbMaintenanceServiceLevels']}` WHERE maintenanceid = {$maintid} AND incidenttypeid = {$incidenttype}";
+    $result = mysql_query($sql);
+    $obj = mysql_fetch_object($result);
+    if (!empty($obj->servicelevel))
+    {
+        return $obj->servicelevel;
+    }
 }
 
 

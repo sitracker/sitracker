@@ -35,8 +35,8 @@ $showonlyapproved = cleanvar($_REQUEST['showonlyapproved']);
 if (empty($enddate)) $enddate = $now;
 
 $sitelistsql = "SELECT DISTINCT m.site, s.name ";
-$sitelistsql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbSites}` AS s ";
-$sitelistsql .= "WHERE  m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
+$sitelistsql .= "FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$dbSites}` AS s, `{$dbMaintenanceServiceLevels}` AS msl ";
+$sitelistsql .= "WHERE m.id = msl.maintenanceid AND msl.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
 
 $sitestr = '';
 

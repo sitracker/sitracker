@@ -35,8 +35,8 @@ function does_contact_have_billable_contract($contactid)
     $return = NO_BILLABLE_CONTRACT;
 
     $siteid = contact_siteid($contactid);
-    $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
+    $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql .= "WHERE m.id = msl.maintenanceid AND msl.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
     $result = mysql_query($sql);
 
@@ -82,8 +82,8 @@ function get_billable_contract_id($contactid)
     $return = -1;
 
     $siteid = contact_siteid($contactid);
-    $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
+    $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql .= "WHERE m.id = msl.maintenanceid AND msl.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
 
     $result = mysql_query($sql);
@@ -111,8 +111,8 @@ function get_site_billable_contract_id($siteid)
 
     $return = -1;
 
-    $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl ";
-    $sql .= "WHERE m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
+    $sql = "SELECT DISTINCT m.id FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql .= "WHERE m.id = msl.maintenanceid, msl.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = {$siteid} ";
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
 
     $result = mysql_query($sql);
@@ -178,8 +178,8 @@ function is_contract_timed($contractid)
 {
     global $dbMaintenance, $dbServiceLevels;
     $timed = FALSE;
-    $sql = "SELECT timed FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl ";
-    $sql .= "WHERE m.servicelevel = sl.tag AND m.id = {$contractid}";
+    $sql = "SELECT timed FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql .= "WHERE m.id = msl.maintenanceid, msl.servicelevel = sl.tag AND m.id = {$contractid}";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
@@ -451,7 +451,7 @@ function close_billable_incident($incidentid)
 function get_billable_object_from_incident_id($incidentid)
 {
     $toReturn = FALSE;
-    
+
     $sql = "SELECT m.billingtype FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbIncidents']}` AS i WHERE i.maintenanceid = m.id AND i.id = {$incidentid}";
     $result = mysql_query($sql);
     if (mysql_error())
@@ -459,13 +459,13 @@ function get_billable_object_from_incident_id($incidentid)
         trigger_error("Error finding type of incident billing ".mysql_error(), E_USER_WARNING);
         $toReturn = FALSE;
     }
-    
+
     if (mysql_num_rows($result) > 0)
     {
         list($billingtype) = mysql_fetch_row($result);
         $toReturn = get_billable_incident_object($billingtype);  
     }
-    
+
     return $toReturn;
 }
 
@@ -824,11 +824,11 @@ function contract_service_table($contractid, $billing)
         $billingObj = get_billable_object_from_contract_id($contractid);
 
         $billingTypeName = $GLOBALS['strNone'];
-        
+
         if ($billing AND ($billingObj instanceof Billable)) $billingTypeName = $billingObj->display_name();
-        
+
         $html = "<strong>{$GLOBALS['strBilling']}</strong>: {$billingTypeName}";
-        
+
         $shade = 'shade1';
         $html .= "\n<table class='maintable' id='contractservicetable'>";
         $html .= "<tr>";
@@ -1135,9 +1135,9 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
     $sql = "SELECT DISTINCT t.*, m.site, m.billingtype, p.foc, p.cust_ref, p.cust_ref_date, p.title, p.notes ";
     $sql .= "FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbService']}` AS p, ";
-    $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbSites']}` AS s ";
+    $sql .= "`{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbServiceLevels']}` AS sl, `{$GLOBALS['dbSites']}` AS s, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
     $sql .= "WHERE t.serviceid = p.serviceid AND p.contractid = m.id "; // AND t.date <= '{$enddateorig}' ";
-    $sql .= "AND m.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
+    $sql .= "AND m.id = msl.maintenanceid AND msl.servicelevel = sl.tag AND sl.timed = 'yes' AND m.site = s.id ";
     //// $sql .= "AND t.date > p.lastbilled AND m.site = {$objsite->site} ";
     if ($serviceid > 0) $sql .= "AND t.serviceid = {$serviceid} ";
     if (!empty($startdate)) $sql .= "AND t.dateupdated >= '{$startdate}' ";

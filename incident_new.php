@@ -39,6 +39,25 @@ function to_row($contact)
 
     $incidents_remaining = $contact->incident_quantity - $contact->incidents_used;
 
+    $sql_incidenttypes = "SELECT it.name, msl.incidenttypeid, msl.servicelevel FROM `{$GLOBALS['dbIncidentTypes']}` AS it, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql_incidenttypes .= "WHERE it.id = msl.incidenttypeid AND msl.maintenanceid = {$contact->maintid} ";
+
+    $types = array();
+
+    $result_incidenttypes = mysql_query($sql_incidenttypes);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result_incidenttypes) > 0)
+    {
+        while ($obj = mysql_fetch_object($result_incidenttypes)) 
+        {
+            $a = array();
+            $a['type'] = $obj->name;
+            $a['sla'] = $obj->servicelevel;
+            $a['typeid'] = $obj->incidenttypeid;
+            $types[] = $a;
+        } 
+    }
+
     $str = "<tr class='{$class}'>";
     if ($contact->expirydate < $now AND $contact->expirydate != '-1')
     {
@@ -52,32 +71,48 @@ function to_row($contact)
     {
         $str .= "<td class='expired'>{$GLOBALS['strZeroRemaining']} ({$contact->incidents_used}/{$contact->incident_quantity} {$strUsed})</td>";
     }
+    else if (empty($types))
+    {
+        $str .=  "<td>{$GLOBALS['strInvalidDetails']}</td>";
+    }
     else
     {
-        $str .=  "<td><a href=\"{$_SERVER['PHP_SELF']}?action=incidentform&amp;type=support&amp;";
-        $str .= "contactid={$contact->contactid}&amp;maintid={$contact->maintid}";
-        $str .= "&amp;producttext=".urlencode($contact->productname)."&amp;productid=";
-        $str .= "{$contact->productid}&amp;updateid={$updateid}&amp;siteid={$contact->siteid}";
-        $str .= "&amp;win={$win}\"";
-        if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
+        $str .=  "<td>";
+        foreach ($types AS $type)
         {
-            $str .= " onclick=\"return confirm_action('{$GLOBALS['strContractAreYouSure']}');\"";
-        }
-        $str .= ">{$GLOBALS['strNewIncident']}</a> ";
-        if ($contact->incident_quantity == 0)
-        {
-            $str .=  "({$GLOBALS['strUnlimited']})";
-        }
-        else
-        {
-            $str .= "(".sprintf($GLOBALS['strRemaining'], $incidents_remaining).")";
+            $str .= "<a href=\"{$_SERVER['PHP_SELF']}?action=incidentform&amp;";
+            $str .= "contactid={$contact->contactid}&amp;maintid={$contact->maintid}";
+            $str .= "&amp;producttext=".urlencode($contact->productname)."&amp;productid=";
+            $str .= "{$contact->productid}&amp;updateid={$updateid}&amp;siteid={$contact->siteid}&amp;type={$type['typeid']}";
+            $str .= "&amp;win={$win}\"";
+            if ($_SESSION['userconfig']['show_confirmation_caution'] == 'TRUE')
+            {
+                $str .= " onclick=\"return confirm_action('{$GLOBALS['strContractAreYouSure']}');\"";
+            }
+            $str .= ">{$GLOBALS['strNewIncident']} ({$type['type']})</a> ";
+
+            if ($contact->incident_quantity == 0)
+            {
+                $str .=  "({$GLOBALS['strUnlimited']})";
+            }
+            else
+            {
+                $str .= "(".sprintf($GLOBALS['strRemaining'], $incidents_remaining).")";
+            }
+            $str .= "<br />";
         }
     }
     $str .=  "</td>";
     $str .=  "<td>{$contact->forenames} {$contact->surname}</td>";
     $str .=  "<td>{$contact->name}</td>";
     $str .=  "<td>{$contact->productname}</td>";
-    $str .=  "<td>{$contact->servicelevel}</td>";
+    $str .=  "<td>";
+
+    foreach ($types AS $type)
+    {
+        $str .= "{$type['sla']}<br />";
+    }
+    $str .= "</td>";
     if ($contact->expirydate == '-1')
     {
         $str .= "<td>{$GLOBALS['strUnlimited']}</td>";
@@ -129,7 +164,7 @@ if (empty($action) OR $action == 'showform')
         echo "<div id='search_string_choices' class='autocomplete'></div>";
         echo autocomplete('search_string', 'autocomplete_sitecontact', 'search_string_choices');
         echo "<input type='hidden' name='win' value='{$win}' />";
-        
+
         echo "</td></tr>";
         echo "</table>";
         echo "<p align='center'><a href='contacts.php'>{$strBrowseContacts}</a>...</p>";
@@ -177,7 +212,7 @@ elseif ($action == 'findcontact')
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames ";
     $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -194,7 +229,7 @@ elseif ($action == 'findcontact')
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames ";
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -314,7 +349,7 @@ elseif ($action == 'findcontact')
                 }
                 else
                 {
-                    $html .=  "<td class='expired'>{$strZeroRemaining}</td>";
+                    $html .= "<td class='expired'>{$strZeroRemaining}</td>";
                 }
                 $html .= "<td>{$contactobj->forenames} {$contactobj->surname}</td>";
                 $html .= '<td>'.site_name($contactobj->siteid).'</td>';
@@ -349,16 +384,15 @@ elseif ($action == 'findcontact')
             echo "<p align='center'><a href='contract_new_contact.php?contactid={$contactid}&amp;context=contact'>{$strAssociateContactWithContract}</a></p>";
         }
         echo "<p align='center'><a href=\"incident_new.php?updateid=$updateid&amp;win={$win}\">{$strSearchAgain}</a></p>";
-        
+
         if (!empty($incomingid))
         {
-            
             $tsql = "SELECT `from` FROM `{$dbTempIncoming}` WHERE id = {$incomingid}";
             $tresult = mysql_query($tsql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
             list($email) = mysql_fetch_row($tresult);
         }
-        
+
         // Select the contact from the list of contacts as well
         $sql = "SELECT *, c.id AS contactid FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id ";
         if (empty($contactid))
@@ -428,15 +462,14 @@ elseif ($action == 'incidentform')
 
     echo show_form_errors('newincident');
     clear_form_errors('newincident');
-    
+
     plugin_do('incident_new');
 
-    $slatag = contract_slatag($maintid);
+    $slatag = contract_slatag($maintid, $type);
     $maxprority = servicelevel_maxpriority($slatag);
 
     echo "<form action='{$_SERVER['PHP_SELF']}?action=assign'";
     echo " method='post' id='supportdetails' name='supportdetails' onsubmit=\"return validate_field('incidenttitle', '{$strYouMustEnterIncidentTitle}')\">";
-    echo "<input type='hidden' name='type' value=\"{$type}\" />";
     echo "<input type='hidden' name='contactid' value=\"{$contactid}\" />";
     echo "<input type='hidden' name='productid' value=\"{$productid}\" />";
     echo "<input type='hidden' name='maintid' value=\"{$maintid}\" />";
@@ -464,6 +497,18 @@ elseif ($action == 'incidentform')
 
     echo "<tr>";
     echo "<td><label for='customerid'>{$strCustomerReference}: </label><input maxlength='50' name='customerid' id='customerid' value='".show_form_value('newincident', 'customerid', '')."'/></td>";
+
+    if ($type == 'free') echo "<input type='hidden' name='type' value='Free' />";
+    else
+    {
+        $incidenttype_sql = "SELECT it.id, it.name FROM `{$dbIncidentTypes}` AS it, `{$dbMaintenanceServiceLevels}` AS msl WHERE msl.incidenttypeid = it.id AND msl.maintenanceid = {$maintid}";
+        $incidenttype_result = mysql_query($incidenttype_sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+
+        echo "<td>{$strIncidentType}: <strong>".db_read_column('name', $dbIncidentTypes, $type)."</strong>";
+        echo "<input type='hidden' name='type' id='type' value='{$type}' /></td>";
+    }
+
     echo "</tr>";
 
     if (empty($updateid))
@@ -475,7 +520,7 @@ elseif ($action == 'incidentform')
         echo "<td>";
         if ($type == 'free')
         {
-            echo "<label>{$strServiceLevel}".serviceleveltag_drop_down('servicelevel', $CONFIG['default_service_level'], TRUE)."</label><br />";
+            echo "<label>{$strServiceLevel}: ".serviceleveltag_drop_down('servicelevel', $CONFIG['default_service_level'], TRUE)."</label><br />";
             echo "<label>{$strSkill}: ".skill_drop_down('software', 0)."</label>";
         }
         else
@@ -616,7 +661,7 @@ elseif ($action == 'assign')
     // Assign SUPPORT incident
     // The incident will be added to the database assigned to the current user, and then a list of engineers
     // is displayed so that the incident can be redirected
-    
+
     // External vars
     $servicelevel = cleanvar($_REQUEST['servicelevel']);
     $type = cleanvar($_REQUEST['type']);
@@ -634,7 +679,7 @@ elseif ($action == 'assign')
     $cust_vis = cleanvar($_REQUEST['cust_vis']);
     $send_email = cleanvar($_REQUEST['send_email']);
     $inventory = cleanvar($_REQUEST['inventory']);
-    
+
     $timetonextaction = cleanvar($_POST['timetonextaction']);
     $date = cleanvar($_POST['date']);
     $time_picker_hour = cleanvar($_REQUEST['time_picker_hour']);
@@ -642,11 +687,11 @@ elseif ($action == 'assign')
     $timetonextaction_days = cleanvar($_POST['timetonextaction_days']);
     $timetonextaction_hours = cleanvar($_POST['timetonextaction_hours']);
     $timetonextaction_minutes = cleanvar($_POST['timetonextaction_minutes']);
-    
+
     $customerid = cleanvar($_POST['customerid']);
     
     $_SESSION['formdata']['newincident'] = cleanvar($_POST, TRUE, FALSE, FALSE);
-    
+
     if ($send_email == 'on')
     {
         $send_email = 1;
@@ -655,7 +700,7 @@ elseif ($action == 'assign')
     {
         $send_email = 0;
     }
-    
+
     // check form input
     $errors = 0;
     // check for blank contact
@@ -664,37 +709,37 @@ elseif ($action == 'assign')
         $_SESSION['formerrors']['newincident']['account'] = $strYouMustSelectAcontact;
         $errors++;
     }
-    
+
     // check for blank title
     if ($incidenttitle == '')
     {
         $incidenttitle = $strUntitled;
     }
-    
+
     if ($software < 1)
     {
         $_SESSION['formerrors']['newincident']['skill'] = sprintf($strFieldMustNotBeBlank, $strSkill);
         $errors++;
     }
-    
+
     // check for blank priority
     if ($priority == 0)
     {
         $priority = PRIORITY_LOW;
     }
-    
+
     if ($type == 'free' AND $servicelevel == '' )
     {
         $_SESSION['formerrors']['newincident']['servicelevel'] = $strYouMustSelectAserviceLevel;
         $errors++;
     }
-        
-    if (!in_array($type, array('support', 'free')))
+
+    if ($type == '')
     {
         $_SESSION['formerrors']['newincident']['type'] = $strIncidentTypeWasBlank; // TODO Not quite right but near enought, the type was one we don't recognise 
         $errors++;
     }
-    
+
     if ($errors > 0)
     {
         html_redirect("{$_SERVER['PHP_SELF']}?action=incidentform&type={$type}&contactid={$contactid}&maintid={$maintid}&producttext={$producttext}&productid={$productid}&updateid={$updateid}&siteid={$siteid}&win={$win}", FALSE);
@@ -735,7 +780,7 @@ elseif ($action == 'assign')
         // Set the service level the contract
         if ($servicelevel == '')
         {
-            $servicelevel = maintenance_servicelevel_tag($maintid);
+            $servicelevel = maintenance_servicelevel_tag($maintid, $type);
         }
 
         // Use default service level if we didn't find one above
@@ -768,9 +813,9 @@ elseif ($action == 'assign')
             $priority = $highestpriority;
         }
 
-        $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, servicelevel, status, type, maintenanceid, ";
+        $sql  = "INSERT INTO `{$dbIncidents}` (title, owner, contact, priority, servicelevel, status, typeid, maintenanceid, ";
         $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction, customerid) ";
-        $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1}', 'Support', '{$maintid}', ";
+        $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1', {$type}, '{$maintid}', ";
         $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}', '{$customerid}')";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -919,13 +964,12 @@ elseif ($action == 'assign')
         else
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-            
+
             echo "<h2>{$strNewIncident} - {$strAssign}</h2>";
             echo "<h3>{$strIncident}: {$incidentid}</h3>";
             echo "<p align='center'>";
             echo sprintf($strIncidentLoggedEngineer, $incidentid);
             echo "</p>\n";
-                
         }
 
         // List Engineers
@@ -1023,9 +1067,9 @@ elseif ($action == 'assign')
         }
         echo "</table>";
         echo "<p align='center'>{$strUsersBoldSkills}.</p>";
-        
+
         clear_form_data('newincident');
-        
+
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
     }
 }

@@ -26,7 +26,7 @@ $display = clean_fixed_list($_REQUEST['display'], array('','skills','software'))
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if (empty($productid) AND $display!='skills')
+if (empty($productid) AND $display != 'skills')
 {
     $sql = "SELECT * FROM `{$dbVendors}` ORDER BY name";
     $result = mysql_query($sql);
@@ -65,7 +65,7 @@ if (empty($productid) AND $display!='skills')
                     if ($countlinked < 1) $shade = 'urgent';
                     if ($countcontracts < 1) $shade = 'inactive';
                     if ($product->active == 'false') $shade = 'expired';
-                    
+
                     echo "<tr class='{$shade}'><td><a href='{$_SERVER['PHP_SELF']}?productid={$product->id}' name='{$product->id}'>{$product->name}</a></td>";
                     echo "<td>{$product->description}</td>";
                     echo "<td align='right'>{$countlinked}</td>";

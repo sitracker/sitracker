@@ -504,7 +504,7 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidents}` (
   `priority` tinyint(4) default NULL,
   `servicelevel` varchar(32) default NULL,
   `status` tinyint(4) default NULL,
-  `type` enum('Support','Sales','Other','Free') default 'Support',
+  `typeid` smallint(6) unsigned NOT NULL,
   `maintenanceid` int(11) NOT NULL default '0',
   `product` int(11) default NULL,
   `softwareid` int(5) NOT NULL default '0',
@@ -524,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidents}` (
   `modified` DATETIME NULL ,
   `modifiedby` smallint(6) NULL ,
   PRIMARY KEY  (`id`),
-  KEY `type` (`type`),
+  KEY `typeid` (`typeid`),
   KEY `owner` (`owner`),
   KEY `status` (`status`),
   KEY `priority` (`priority`),
@@ -559,6 +559,18 @@ INSERT INTO `{$dbIncidentStatus}` VALUES (8, 'strAwaitingCustomerAction', 'strAw
 INSERT INTO `{$dbIncidentStatus}` VALUES (9, 'strUnsupported', 'strUnsupported');
 INSERT INTO `{$dbIncidentStatus}` VALUES (10, 'strActiveUnassigned', 'strActive');
 
+
+CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `type` ENUM('system','user') NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbIncidentTypes}` VALUES(1, 'Support', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(2, 'Sales', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(3, 'Other', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(4, 'Free', 'system');
 
 CREATE TABLE IF NOT EXISTS `{$dbInventory}` (
   `id` int(11) NOT NULL auto_increment,
@@ -703,7 +715,6 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   `notes` text,
   `admincontact` int(11) default NULL,
   `term` enum('no','yes') default 'no',
-  `servicelevel` varchar(32) NOT NULL,
   `incidentpoolid` int(11) NOT NULL default '0',
   `supportedcontacts` INT( 255 ) NOT NULL DEFAULT '0',
   `allcontactssupported` ENUM( 'no', 'yes' ) NOT NULL DEFAULT 'no',
@@ -714,6 +725,13 @@ CREATE TABLE IF NOT EXISTS `{$dbMaintenance}` (
   PRIMARY KEY  (`id`),
   KEY `site` (`site`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `{$dbMaintenanceServiceLevels}` (
+  `maintenanceid` int(11) NOT NULL,
+  `incidenttypeid` smallint(5) unsigned NOT NULL,
+  `servicelevel` varchar(32) NOT NULL,
+  PRIMARY KEY (`maintenanceid`,`incidenttypeid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `{$dbNotes}` (
   `id` int(11) NOT NULL auto_increment,
@@ -1945,6 +1963,39 @@ INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
 
 -- PH 2013-09-27
 ALTER TABLE `{$dbUsers}` ADD `managerid` SMALLINT NULL AFTER `lastseen`;
+
+-- PH 2013-09-28
+CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `type` ENUM('system','user') NOT NULL DEFAULT 'user',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbIncidentTypes}` VALUES(1, 'Support', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(2, 'Sales', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(3, 'Other', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(4, 'Free', 'system');
+ALTER TABLE `{$dbIncidents}` ADD `typeid` SMALLINT UNSIGNED NOT NULL AFTER `type` ;
+
+UPDATE `{$dbIncidents}` SET typeid = 1 WHERE type = 'Support';
+UPDATE `{$dbIncidents}` SET typeid = 2 WHERE type = 'Sales';
+UPDATE `{$dbIncidents}` SET typeid = 3 WHERE type = 'Other' OR type NOT IN ('Support', 'Sales', 'Free');
+UPDATE `{$dbIncidents}` SET typeid = 4 WHERE type = 'Free';
+
+ALTER TABLE `{$dbIncidents}` DROP `type`;
+
+CREATE TABLE IF NOT EXISTS `{$dbMaintenanceServiceLevels}` (
+  `maintenanceid` int(11) NOT NULL,
+  `incidenttypeid` smallint(5) unsigned NOT NULL,
+  `servicelevel` varchar(32) NOT NULL,
+  PRIMARY KEY (`maintenanceid`,`incidenttypeid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbMaintenanceServiceLevels}` SELECT id, 1, servicelevel FROM `{$dbMaintenance}`;
+
+ALTER TABLE `{$dbMaintenance}` DROP `servicelevel`;
+
 ";
 
 

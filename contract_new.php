@@ -39,11 +39,11 @@ if ($action == "showform" OR $action == '')
     echo site_drop_down("site", show_form_value('new_contract', 'site', $siteid), TRUE);
     echo " <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "<tr><th>{$strContacts}</th><td>";
-    
+
     $amountChecked = $allChecked = '';
     if ($_SESSION['formdata']['new_contract']['contacts'] == 'all') $allChecked = "checked='checked'"; 
     else $amountChecked = "checked='checked'";
-    
+
     echo "<input value='amount' type='radio' name='contacts' {$amountChecked} />";
 
     echo "{$strLimitTo} <input size='2' name='numcontacts'  value='".show_form_value('new_contract', 'numcontacts', '0')."' /> {$strSupportedContacts} ({$str0MeansUnlimited})<br />";
@@ -53,7 +53,7 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strProduct}</th><td>";
 
     echo product_drop_down("product", show_form_value('new_contract', 'product', 0), TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
-    
+
     echo "<tr><th>{$strServiceLevel}</th><td>";
     echo servicelevel_drop_down('servicelevel', show_form_value('new_contract', 'servicelevel', $CONFIG['default_service_level']), TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
     // check the initially selected service level to decide whether to show the extra hiddentimed section
@@ -87,7 +87,7 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strNotes}</th><td><textarea cols='40' name='notes' rows='5'>{$_SESSION['formdata']['new_contract']['notes']}</textarea></td></tr>\n";
 
     plugin_do('contract_new_form');
-    
+
     echo "<tbody id='hiddentimed'";
     if (!$timed) echo " style='display:none'";
     echo ">";

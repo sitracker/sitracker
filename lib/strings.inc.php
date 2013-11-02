@@ -108,7 +108,8 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            130 => array('perm' => PERM_NOTICE_POST, 'name' => $strNotices, 'url' => "{$CONFIG['application_webpath']}notices.php"),
                            140 => array('perm' => PERM_ADMIN, 'name' => $strSystemActions, 'url' => "{$CONFIG['application_webpath']}system_actions.php"),
                            150 => array('perm' => PERM_ADMIN, 'name' => $strScheduler, 'url' => "{$CONFIG['application_webpath']}scheduler.php"),
-                           160 => array('perm' => PERM_ADMIN, 'name' => $strJournal, 'url' => "{$CONFIG['application_webpath']}journal.php")
+                           160 => array('perm' => PERM_ADMIN, 'name' => $strJournal, 'url' => "{$CONFIG['application_webpath']}journal.php"),
+                           170 => array('perm' => PERM_PRODUCT_VIEW, 'name' => $strIncidentTypes, 'url' => "{$CONFIG['application_webpath']}incident_types.php")
     );
     // Third Level: Control Panel/Manage Users submenu
     if (!is_array($hmenu[104020])) $hmenu[104020] = array();
