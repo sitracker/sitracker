@@ -296,6 +296,7 @@ function display_update_page($draftid=-1)
     // maxfilesize='{$CONFIG['upload_max_filesize']}'
     echo "<input type='file' name='attachment' size='40' /></td>";
     echo "</tr>";
+    plugin_do('incident_update_form');
     echo "</table>";
     echo "<p class='center'>";
     echo "<input type='hidden' name='action' id='action' value='update' />";
@@ -414,6 +415,8 @@ else
             $timeofnextaction = 0;
             break;
     }
+
+    plugin_do('incident_update_submitted');
 
     // Put text into body of update for field changes (reverse order)
     // delim first
@@ -590,6 +593,7 @@ else
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
+    plugin_do('incident_update_saved');
 
     if (!$result)
     {
