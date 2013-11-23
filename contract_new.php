@@ -61,7 +61,6 @@ if ($action == "showform" OR $action == '')
     echo "</table>";
     echo "<a href=\"javascript:void(0);\" onclick=\"add_row_to_incident_sla_table('incident_types_table')\">{$strAdd}</a>\n";
     echo "</td></tr>\n";
-    // TODO REMOVE echo servicelevel_drop_down('servicelevel', show_form_value('new_contract', 'servicelevel', $CONFIG['default_service_level']), TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
     // check the initially selected service level to decide whether to show the extra hiddentimed section
     $timed = servicelevel_timed($sltag);
 
