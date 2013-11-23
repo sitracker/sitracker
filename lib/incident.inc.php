@@ -1895,10 +1895,10 @@ function get_userfacing_incident_id($id)
 	$sql = "SELECT it.prefix FROM `{$GLOBALS['dbIncidentTypes']}` AS it, `{$GLOBALS['dbIncidents']}` AS i WHERE it.id = i.typeid AND i.id = {$id}";
 	$result = mysql_query($sql);
 	if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-	$obj = mysql_fetch_object($result);
+	list($prefix) = mysql_fetch_row($result);
 	
-	if (empty($obj->prefix)) $prefix = $CONFIG['incident_reference_prefix'];
-	else if ($CONFIG['incident_id_include_type']) $prefix = $obj->prefix;
+	if (empty($prefix)) $prefix = $CONFIG['incident_reference_prefix'];
+	else if (!$CONFIG['incident_id_include_type']) $prefix = '';
 
 	return "{$prefix}{$id}";
 }
@@ -1917,10 +1917,10 @@ function get_userfacing_incident_id_email($id)
 	$sql = "SELECT it.prefix FROM `{$GLOBALS['dbIncidentTypes']}` AS it, `{$GLOBALS['dbIncidents']}` AS i WHERE it.id = i.typeid AND i.id = {$id}";
 	$result = mysql_query($sql);
 	if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-	$obj = mysql_fetch_object($result);
+	list($prefix) = mysql_fetch_row($result);
 	
-	if (empty($obj->prefix)) $prefix = $CONFIG['incident_reference_prefix'];
-	else if ($CONFIG['incident_id_include_type']) $prefix = $obj->prefix;
+	if (empty($prefix)) $prefix = $CONFIG['incident_reference_prefix'];
+	else if (!$CONFIG['incident_id_include_type']) $prefix = '';
 	
 	return "{$CONFIG['incident_id_email_opening_tag']}{$prefix}{$id}{$CONFIG['incident_id_email_closing_tag']}";
 }

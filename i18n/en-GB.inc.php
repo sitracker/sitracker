@@ -713,6 +713,7 @@ $strField10 = 'Field 10';
 $strField11 = 'Field 11';
 $strField12 = 'Field 12';
 $strFieldMustNotBeBlank = 'The form field %s must not be left blank';
+$strFieldMustNotConatainNumbers = 'The form field %s must not contain numbers';
 # e.g. form fields
 $strFields = 'Fields';
 $strFileManagement = 'File Management';
@@ -1422,6 +1423,7 @@ $strPerIncident = 'Per Incident';
 $strPerUnit = 'Per Unit';
 $strPerUser = 'Per User';
 $strPreferred = 'Preferred';
+$strPrefix = 'Prefix';
 $strPreReleaseNotice = 'You are using a pre-release version of SiT - %s, Pre-release versions are for you to test, provide feedback and to help with further development and should never be used in a live production environment';
 $strPrevious = 'Previous';
 $strPreviousIncidentOwner = 'Previous Incident Owner';
