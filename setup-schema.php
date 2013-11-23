@@ -564,13 +564,15 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `type` ENUM('system','user') NOT NULL DEFAULT 'user',
+  `prefix` varchar(16) DEFAULT NULL, 
   PRIMARY KEY (`id`)
+  UNIQUE KEY `prefix` (`prefix`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO `{$dbIncidentTypes}` VALUES(1, 'Support', 'system');
-INSERT INTO `{$dbIncidentTypes}` VALUES(2, 'Sales', 'system');
-INSERT INTO `{$dbIncidentTypes}` VALUES(3, 'Other', 'system');
-INSERT INTO `{$dbIncidentTypes}` VALUES(4, 'Free', 'system');
+INSERT INTO `{$dbIncidentTypes}` VALUES(1, 'Support', 'system', 'INC');
+INSERT INTO `{$dbIncidentTypes}` VALUES(2, 'Sales', 'system', 'SALES');
+INSERT INTO `{$dbIncidentTypes}` VALUES(3, 'Other', 'system', 'OTHER');
+INSERT INTO `{$dbIncidentTypes}` VALUES(4, 'Free', 'system', 'FREE');
 
 CREATE TABLE IF NOT EXISTS `{$dbInventory}` (
   `id` int(11) NOT NULL auto_increment,
@@ -1969,7 +1971,9 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `type` ENUM('system','user') NOT NULL DEFAULT 'user',
+  `prefix` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`id`)
+  UNIQUE KEY `prefix` (`prefix`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `{$dbIncidentTypes}` VALUES(1, 'Support', 'system');

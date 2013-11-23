@@ -661,8 +661,8 @@ function incident_id_from_subject($subject, $from)
     $open = escape_regex($CONFIG['incident_id_email_opening_tag']);
     $close = escape_regex($CONFIG['incident_id_email_closing_tag']);
     $prefix = escape_regex($CONFIG['incident_reference_prefix']);
-    
-    if (preg_match("/{$open}{$prefix}(\d+){$close}/", $subject, $m))
+
+    if (preg_match("/{$open}{$prefix}.*(\d+){$close}/", $subject, $m))
     {
         $incident_id = $m[1];
     }
@@ -1891,8 +1891,16 @@ function incident_sla($incident_id, $type)
 function get_userfacing_incident_id($id)
 {
 	global $CONFIG;
+
+	$sql = "SELECT it.prefix FROM `{$GLOBALS['dbIncidentTypes']}` AS it, `{$GLOBALS['dbIncidents']}` AS i WHERE it.id = i.typeid AND i.id = {$id}";
+	$result = mysql_query($sql);
+	if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+	$obj = mysql_fetch_object($result);
 	
-	return "{$CONFIG['incident_reference_prefix']}{$id}";
+	if (empty($obj->prefix)) $prefix = $CONFIG['incident_reference_prefix'];
+	else if ($CONFIG['incident_id_include_type']) $prefix = $obj->prefix;
+
+	return "{$prefix}{$id}";
 }
 
 
@@ -1906,7 +1914,15 @@ function get_userfacing_incident_id_email($id)
 {
 	global $CONFIG;
 
-	return "{$CONFIG['incident_id_email_opening_tag']}{$CONFIG['incident_reference_prefix']}{$id}{$CONFIG['incident_id_email_closing_tag']}";
+	$sql = "SELECT it.prefix FROM `{$GLOBALS['dbIncidentTypes']}` AS it, `{$GLOBALS['dbIncidents']}` AS i WHERE it.id = i.typeid AND i.id = {$id}";
+	$result = mysql_query($sql);
+	if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+	$obj = mysql_fetch_object($result);
+	
+	if (empty($obj->prefix)) $prefix = $CONFIG['incident_reference_prefix'];
+	else if ($CONFIG['incident_id_include_type']) $prefix = $obj->prefix;
+	
+	return "{$CONFIG['incident_id_email_opening_tag']}{$prefix}{$id}{$CONFIG['incident_id_email_closing_tag']}";
 }
 
 
@@ -1923,7 +1939,7 @@ function get_incident_sla_targets($incidentid)
     
     $sql_sla = "SELECT initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen ";
     $sql_sla .= "FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$incidentsla}' GROUP BY tag";
-    
+
     $result_sla = mysql_query($sql_sla);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     return mysql_fetch_object($result_sla);

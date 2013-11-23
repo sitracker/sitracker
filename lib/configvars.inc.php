@@ -91,7 +91,8 @@ $CFGCAT['incidents'] = array('auto_assign_incidents',
                              'record_lock_delay',
                              'incident_reference_prefix',
                              'incident_id_email_opening_tag',
-                             'incident_id_email_closing_tag');
+                             'incident_id_email_closing_tag',
+                             'incident_id_include_type');
 
 
 $CFGCAT['inboundemail'] = array('enable_inbound_mail',
@@ -436,6 +437,8 @@ $CFGVAR['incident_id_email_closing_tag']['title'] = 'When sending am email what 
 $CFGVAR['incident_id_email_opening_tag']['title'] = 'When sending am email what should the opening tag be of the incident refernce in the subject line';
 $CFGVAR['incident_reference_prefix']['title'] = 'The prefix for the incident ID';
 
+$CFGVAR['incident_id_include_type']['title'] = "Include incident type in incident id";
+$CFGVAR['incident_id_include_type']['type'] = 'checkbox';
 
 $CFGVAR['inventory_enabled']['title'] = 'Enable Inventory';
 $CFGVAR['inventory_enabled']['type'] = 'checkbox';
