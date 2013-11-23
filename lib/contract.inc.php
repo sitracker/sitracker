@@ -241,4 +241,16 @@ function incident_slaid($incidentid)
     return $id;
 }
 
+
+/**
+ * Returns a string containing a table row of two drop downs for incident type and service level
+ * This is a function so it can easily be called from javascript
+ * @return string
+ * @author Paul Heaney
+ */
+function incident_type_service_level_row()
+{
+    return "<tr><td>".incident_types_dropdown('incident_type[]')."</td><td>".servicelevel_drop_down('servicelevel[]', show_form_value('new_contract', 'servicelevel', $CONFIG['default_service_level']), TRUE, "onchange=\\\"addcontract_sltimed(\$F('servicelevel'));\\\"")."</td></tr>";
+}
+
 ?>

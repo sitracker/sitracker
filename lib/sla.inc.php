@@ -163,7 +163,7 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
     
     $result = mysql_query($sql);
 
-    $html = "<select id='{$name}' name='{$name}' {$select}>\n";
+    $html = "<select id='{$name}' name='{$name}' {$select}>";
     // INL 30Mar06 Removed this ability to select a null service level
     // if ($id == 0) $html .= "<option selected='selected' value='0'></option>\n";
     while ($servicelevels = mysql_fetch_object($result))
@@ -185,7 +185,7 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
             $html .= "{$servicelevels->tag} ".priority_name($servicelevels->priority);
         }
 
-        $html .= "</option>\n";
+        $html .= "</option>";
     }
     $html .= "</select>";
     return $html;

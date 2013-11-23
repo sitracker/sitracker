@@ -123,6 +123,11 @@ var icon_ldap_group = '{$icon_ldap_group}';
 var icon_ldap_container = '{$icon_ldap_container}';
 
 
+function add_row_to_incident_sla_table(element)
+{
+	$(element).down('tr').insert({after: \"".incident_type_service_level_row()."\"});
+}
+
 /*
     Please don't add functions here, functions belong in webtrack.js
     this file is to make i18n keys available in javascript

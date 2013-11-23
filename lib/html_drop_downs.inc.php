@@ -1248,4 +1248,42 @@ function user_dropdown($name, $selected='', $self='')
     }
     return $html;
 }
+
+
+/**
+ * Creates a dropdown of incident types
+ * 
+ * @param string $name The name of the field
+ * @param string $selected The ID of the selected value
+ * @return String HTML for the dropdown
+ * @author Paul Heaney
+ */
+function incident_types_dropdown($name, $selected=1)
+{
+    global $dbIncidentTypes;
+    $sql = "SELECT * FROM `{$dbIncidentTypes}` AS it ";
+    $sql .= " ORDER BY name";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $count = mysql_num_rows($result);
+    if ($count >= 1)
+    {
+        $html = "<select name='{$name}' id='{$name}'>";
+        while ($obj = mysql_fetch_object($result))
+        {
+            if ($obj->id != $self)
+            {
+                $html .= "<option value='{$obj->id}'";
+                if ($obj->id == $selected) $html .= " selected='selected'";
+                $html .= ">{$obj->name}</option>";
+            }
+        }
+        $html .= "</select>";
+    }
+    else
+    {
+        $html .= "<input type='hidden' name='{$name}' value='0' />{$GLOBALS['strNoneAvailable']}";
+    }
+    return $html;
+}
 ?>
