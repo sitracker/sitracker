@@ -293,7 +293,7 @@ class Trigger extends SitEntity {
                 }
             }
         }
-        
+
         foreach ($this->param_array AS $var => $val)
         {
             if (empty($val))
@@ -301,7 +301,7 @@ class Trigger extends SitEntity {
                 $this->param_array[$var] = '0';
             }
         }
-        
+
         if (!empty($this->checks))
         {
             $checks = trigger_replace_specials($this->trigger_type, $this->checks, $this->param_array);
