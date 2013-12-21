@@ -331,7 +331,9 @@ if ($emails > 0)
 
         $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
 
-        $customer_visible = 'hide';
+        if ($CONFIG['inbound_emails_visible_in_portal']) $customer_visible = 'show';
+        else $customer_visible = 'hide';
+
         $part = 1;
         //process attachments
         if (!empty($incidentid) AND $incident_open)

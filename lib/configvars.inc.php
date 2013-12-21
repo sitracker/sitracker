@@ -105,7 +105,8 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'email_incoming_folder',
                                 'email_archive_folder',
                                 'max_incoming_email_perday',
-                                'spam_email_subject'
+                                'spam_email_subject',
+                                'inbound_emails_visible_in_portal'
                                 );
 
 $CFGCAT['outboundemail'] = array('enable_outbound_email',
@@ -642,6 +643,10 @@ $CFGVAR['soap_portal_enabled']['type'] = 'checkbox';
 
 $CFGVAR['spam_email_subject']['title'] = 'Spam Subject';
 $CFGVAR['spam_email_subject']['help'] = 'String to look for in email message subject to determine a message is spam';
+
+$CFGVAR['inbound_emails_visible_in_portal']['title'] = 'Are inbound emails visible in the portal?';
+$CFGVAR['inbound_emails_visible_in_portal']['help'] = 'Should received emails be visible within the portal?';
+$CFGVAR['inbound_emails_visible_in_portal']['type'] = 'checkbox';
 
 $CFGVAR['start_working_day']['title'] = 'Start of the working day';
 $CFGVAR['start_working_day']['help'] = 'The time the working day starts (e.g. 9:00)';
