@@ -138,6 +138,9 @@ $CONFIG['record_lock_delay'] = 1800;  // 30 minutes
 // maximum no. of incoming emails per incident before a mail-loop is detected
 $CONFIG['max_incoming_email_perday'] = 15;
 
+// Are inbound emails marked as visible
+$CONFIG['inbound_emails_visible_in_portal'] = FALSE;
+
 // String to look for in email message subject to determine a message is spam
 $CONFIG['spam_email_subject'] = 'SPAMASSASSIN';
 
