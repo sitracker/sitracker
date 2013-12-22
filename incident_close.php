@@ -327,10 +327,10 @@ else
     $send_engineer_email = cleanvar($_POST['send_engineer_email']);
 
     $_SESSION['formdata']['closeform'] = cleanvar($_POST, TRUE, FALSE, FALSE);
-    
+
     // Close the incident
     $errors = 0;
-    
+
     echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
 
     // check for blank closing status field
@@ -345,13 +345,13 @@ else
         $_SESSION['formerrors']['closeform']['summary_solution'] = sprintf($strFieldMustNotBeBlank, $strSummary);
         $errors++;
     }
-    
+
     if ($_REQUEST['solution'] == '')
     {
         $_SESSION['formerrors']['closeform']['summary_solution'] = sprintf($strFieldMustNotBeBlank, $strSolution);
         $errors++;
     }
-    
+
     if ($kbarticle == 'yes' AND $kbtitle == '')
     {
         $_SESSION['formerrors']['closeform']['kbtitle'] = sprintf($strFieldMustNotBeBlank, $strTitle);
@@ -399,7 +399,7 @@ else
             else
             {
                 // mark incident as closed
-                $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}' WHERE id={$id}";
+                $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}', timeofnextaction=0 WHERE id={$id}";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
@@ -525,9 +525,9 @@ else
         $bodytext = clean_lang_dbstring($SYSLANG['strClosingStatus']) . ": <b>" . closingstatus_name($closingstatus) . "</b>\n\n" . $bodytext;
 
         if ($addition_errors == 0)
-        {   
+        {
             //maintenceid
-            if ((contact_feedback(incident_contact($id)) == 'yes') AND (site_feedback(contact_siteid(incident_contact($id)))) == 'yes' )
+            if ((contact_feedback(incident_contact($id)) == 'yes') AND (site_feedback(contact_siteid(incident_contact($id)))) == 'yes' AND $wait != 'yes')
             {
                 $send_feedback = send_feedback(db_read_column('maintenanceid', $dbIncidents, $id));
                 if ($CONFIG['feedback_form'] != '' AND $CONFIG['feedback_form'] > 0 AND $send_feedback == TRUE)
@@ -625,7 +625,6 @@ else
                     journal(CFG_LOGGING_NORMAL, 'KB Article Added', "KB Article {$docid} was added", CFG_JOURNAL_KB, $docid);
                 }
 
-                //html_redirect("incident_details.php?id={$id}", TRUE, "Knowledge Base Article {$CONFIG['kb_id_prefix']}{$docid} created");
                 plugin_do('incident_close_saved');
 
                 echo "<html>";
@@ -644,7 +643,7 @@ else
                 echo "</body>";
                 echo "</html>";
             }
-            
+
             clear_form_data("closeform");
             clear_form_errors("closeform");
         }

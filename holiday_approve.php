@@ -20,11 +20,11 @@ $title = $strApproveHolidays;
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$approve = clean_fixed_list($_REQUEST['approve'], aray('true','false','free'));
+$approve = clean_fixed_list($_REQUEST['approve'], aray('true', 'false', 'free'));
 $startdate = clean_dbstring($_REQUEST['startdate']);
 $type = clean_int($_REQUEST['type']);
 $user = clean_int($_REQUEST['user']);
-$length = clean_fixed_lit($_REQUEST['length'], array('day','am','pm'));
+$length = clean_fixed_lit($_REQUEST['length'], array('day', 'am', 'pm'));
 $view = clean_int($_REQUEST['view']);
 
 // there is an existing booking so alter it
