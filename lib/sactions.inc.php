@@ -27,6 +27,36 @@ function saction_CloseIncidents($closure_delay)
 
     if ($closure_delay < 1) $closure_delay = 554400; // Default  six days and 10 hours
 
+    $sql = "SELECT id FROM `{$dbIncidents}` WHERE status='".STATUS_CLOSING."' ";
+    $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
+    $sql .= "AND (timeofnextaction='0' OR timeofnextaction <= '{$now}')";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(), E_USER_WARNING);
+        $success = FALSE;
+    }
+
+    while ($obj = mysql_fetch_object($result))
+    {
+        if ((contact_feedback(incident_contact($obj->id)) == 'yes') AND (site_feedback(contact_siteid(incident_contact($obj->id)))) == 'yes')
+        {
+            $send_feedback = send_feedback(db_read_column('maintenanceid', $dbIncidents, $obj->id));
+            if ($CONFIG['feedback_form'] != '' AND $CONFIG['feedback_form'] > 0 AND $send_feedback == TRUE)
+            {
+                if (!create_incident_feedback($CONFIG['feedback_form'], $obj->id)) $send_feedback = FALSE;
+            }
+
+            $t = new TriggerEvent('TRIGGER_INCIDENT_CLOSED', array('incidentid' => $obj->id,
+                    'userid' => 0,
+                    'notifyexternal' => FALSE,
+                    'notifycontact' => TRUE,
+                    'awaitingclosure' => FALSE,
+                    'sendfeedback' => $send_feedback
+            ));
+        }
+    }
+
     // Code added back in to fix mark as closure incidents
     // http://bugs.sitracker.org/view.php?id=717
     $sql = "UPDATE `{$dbIncidents}` SET lastupdated='{$now}', ";
