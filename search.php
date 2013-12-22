@@ -538,8 +538,8 @@ if (!empty($q))
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
                                           "<strong>".($begin+1)."</strong>",
-                                          "<strong>".$end."</strong>",
-                                          "<strong>".$results."</strong>")."</p>\n";
+                                          "<strong>{$end}</strong>",
+                                          "<strong>{$results}</strong>")."</p>\n";
         echo "<p align='center'>";
         if (!empty($_GET['start']))
         {
@@ -638,14 +638,15 @@ if (!empty($q))
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
                                           "<strong>".($begin+1)."</strong>",
-                                          "<strong>".$end."</strong>",
-                                          "<strong>".$results."</strong>")."</p>";
+                                          "<strong>{$end}</strong>",
+                                          "<strong>{$results}</strong>")."</p>";
         echo "<p align='center'>";
         if (!empty($_GET['start']) AND $domain == 'kb')
         {
             echo " <a href='{$_SERVER['PHP_SELF']}?domain=kb&q={$q}&start=";
             echo $begin-$resultsperpage."&amp;sort={$sort}&amp;order={$order}&amp;view={$view}'>";
-            echo icon('leftarrow', 16,  $strPrevious)." {$strPrevious}</a> ";        }
+            echo icon('leftarrow', 16,  $strPrevious)." {$strPrevious}</a> ";
+        }
         else
         {
             echo "{$strPrevious}";
@@ -723,7 +724,7 @@ if (!empty($q) AND mb_strlen($q) < 3)
 }
 elseif (!empty($q) AND $hits == 0)
 {
-    echo "<p align='center'>".sprintf($strNoResultsFor, "<strong>'".$q."'</strong>")."<br />";
+    echo "<p align='center'>".sprintf($strNoResultsFor, "<strong>'{$q}'</strong>")."<br />";
     echo "<a href='search.php'>{$strSearchAgain}</a></p>";
 }
 
