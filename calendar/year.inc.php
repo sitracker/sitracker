@@ -74,7 +74,7 @@ $displayyear = $year;
 for ($r = 1; $r <= 3; $r++)
 {
     echo "<tr>";
-    for ($c = 1; $c <= 4;$c++)
+    for ($c = 1; $c <= 4; $c++)
     {
         echo "<td class='shade1 yearcalendar'>";
         draw_calendar($displaymonth, $displayyear);
