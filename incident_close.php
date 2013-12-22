@@ -399,7 +399,7 @@ else
             else
             {
                 // mark incident as closed
-                $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}' WHERE id={$id}";
+                $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}', timeofnextaction=0 WHERE id={$id}";
                 $result = mysql_query($sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
