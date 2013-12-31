@@ -25,7 +25,7 @@ $title = $strNewContact;
 if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-    
+
     $returnpage = cleanvar($_REQUEST['return']);
     if (!empty($_REQUEST['name']))
     {
@@ -37,11 +37,11 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
     {
         $_SESSION['formdata']['new_contact']['email'] = clean_emailstring($_REQUEST['email']);
     }
-    
+
     echo show_form_errors('new_contact');
     clear_form_errors('new_contact');
     echo "<h2>".icon('contact', 32)." {$strNewContact}</h2>";
-    
+
     plugin_do('contact_new');
     echo "<h5 class='warning'>{$strAvoidDupes}</h5>";
 
@@ -49,47 +49,49 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
     echo "method='post' onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
     echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strName}</th>\n";
-    
+
     echo "<td>";
     echo "\n<table><tr><td align='center'>{$strTitle}<br />";
     echo "<input maxlength='50' name='courtesytitle' title=\"";
     echo "{$strCourtesyTitle}\" size='7' value='".show_form_value('new_contact', 'courtesytitle')."' /></td>\n";
-    
+
     echo "<td align='center'>{$strForenames}<br />";
     echo "<input class='required' maxlength='100' name='forenames' ";
     echo "size='15' title=\"{$strForenames}\" value='".show_form_value('new_contact', 'forenames')."' /></td>\n";
-    
+
     echo "<td align='center'>{$strSurname}<br />";
     echo "<input class='required' maxlength='100' name='surname' ";
     echo "size='20' title=\"{$strSurname}\" value='".show_form_value('new_contact', 'surname')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "</table>\n</td></tr>\n";
-    
+
+    if (!empty(show_form_value('new_contact', 'siteid'))) $siteid = show_form_value('new_contact', 'siteid');
+
     echo "<tr><th>{$strJobTitle}</th><td><input maxlength='255'";
     echo " name='jobtitle' size='35' title=\"{$strJobTitle}\" value='".show_form_value('new_contact', 'jobtitle')."' /></td></tr>\n";
     echo "<tr><th>{$strSite}</th><td>";
     echo site_drop_down('siteid', $siteid, TRUE)."<span class='required'>{$strRequired}</span></td></tr>\n";
-    
+
     echo "<tr><th>{$strDepartment}</th><td><input maxlength='255' name='department' size='35' value='".show_form_value('new_contact', 'department')."' /></td></tr>\n";
-    
+
     echo "<tr><th>{$strEmail}</th><td>";
     echo "<input class='required' maxlength='100' name='email' size='35' value='".show_form_value('new_contact', 'email')."' /> <span class='required'>{$strRequired}</span> ";
-    
+
     echo "<label>";
     echo html_checkbox('dataprotection_email', 'No');
     echo "{$strEmail} {$strDataProtection}</label>".help_link("EmailDataProtection");
     echo "</td></tr>\n";
-    
+
     echo "<tr><th>{$strTelephone}</th><td><input maxlength='50' name='phone' size='35' value='".show_form_value('new_contact', 'phone')."' /> ";
-    
+
     echo "<label>";
     echo html_checkbox('dataprotection_phone', 'No');
     echo "{$strTelephone} {$strDataProtection}</label>".help_link("TelephoneDataProtection");
     echo "</td></tr>\n";
-    
+
     echo "<tr><th>{$strMobile}</th><td><input maxlength='100' name='mobile' size='35' value='".show_form_value('new_contact', 'mobile')."' /></td></tr>\n";
-    
+
     echo "<tr><th>{$strFax}</th><td><input maxlength='50' name='fax' size='35' value='".show_form_value('new_contact', 'fax')."' /></td></tr>\n";
-    
+
     echo "<tr><th>{$strAddress}</th><td><label>";
     echo html_checkbox('dataprotection_address', 'No');
     echo " {$strAddress} {$strDataProtection}</label>";
@@ -125,10 +127,10 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value=\"{$strSave}\" /></p>";
     echo "</form>\n";
-    
+
     //cleanup form vars
     clear_form_data('new_contact');
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 else
