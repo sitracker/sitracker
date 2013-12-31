@@ -95,7 +95,7 @@ if ($_SESSION['auth'] == TRUE)
     {
         foreach ($pagescripts AS $pscript)
         {
-            echo "<script src='{$CONFIG['application_webpath']}scripts/{$pscript}' type='text/javascript'></script>\n";
+            echo "<script src='{$CONFIG['application_webpath']}{$pscript}' type='text/javascript'></script>\n";
         }
         unset($pagescripts, $pscript);
     }
