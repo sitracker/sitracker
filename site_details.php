@@ -90,7 +90,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
             $address .= ", {$siteobj->county}";
             $count++;
         }
-        
+
         if ($count >= $CONFIG['address_components_to_map']) echo "(".map_link($address).")";
     }
     echo "</td></tr>";
