@@ -915,7 +915,7 @@ function schedule_action_started($action)
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         return FALSE;
     }
     if (mysql_affected_rows() > 0) return TRUE;
@@ -947,7 +947,7 @@ function schedule_action_done($doneaction, $success = TRUE)
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         return FALSE;
     }
     if (mysql_affected_rows() > 0) return TRUE;
@@ -964,7 +964,7 @@ function session_regenerate()
 {
     if (function_exists('session_regenerate_id'))
     {
-        if (!version_compare(phpversion(),"5.1.0",">=")) session_regenerate_id(FALSE);
+        if (!version_compare(phpversion(), "5.1.0", ">=")) session_regenerate_id(FALSE);
         else session_regenerate_id();
     }
 }
