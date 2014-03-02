@@ -881,7 +881,7 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
     $sql .= "WHERE us.softwareid = s.id ";
     $sql .= "AND s.id = '{$softwareid}' ";
     $sql .= "AND userid != '{$userid}' AND u.status > ".USERSTATUS_ACCOUNT_DISABLED;
-    $sql .= "AND us.userid = u.id ";
+    $sql .= " AND us.userid = u.id ";
     $sql .= " ORDER BY realname";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
