@@ -478,7 +478,7 @@ switch ($_REQUEST['action'])
                         echo "<p>or</p>";
                         // TODO Looks like a duplicate of above 
                         $missingprivileges = check_mysql_privileges($new_install_perms);
-                                
+
                         if (empty($missingprivileges))
                         {
                             echo setup_button('createdb', 'Create a database', "<br /><label><input type='checkbox' name='sampledata' id='sampledata' value='yes'  /> With sample data</label>
@@ -532,10 +532,10 @@ switch ($_REQUEST['action'])
                             echo "<p>Installing sample data...</p>";
                             $errors = $errors + setup_exec_sql($sampledata_sql);
                         }
-                        
+
                         if ($_SESSION['promptinitialdata'] == TRUE)
                         {
-                            
+
                         }
 
                         $dashlets = install_dashboard_components();
@@ -572,7 +572,7 @@ switch ($_REQUEST['action'])
                     {
                         // users table exists and has at least one record, must be already installed
                         // Do upgrade
-                        
+
                         $installed_version = current_schema_version();
                         if ($installed_version === 0)
                         {
@@ -596,10 +596,10 @@ switch ($_REQUEST['action'])
 
                         if ($_REQUEST['action'] == 'upgrade')
                         {
-							/*****************************
+                            /*****************************
                              * NOTE: we only support upgrades to 4.x from 3.50 or HIGHER *
                              *****************************/
-                           
+
                             /*****************************
                              * Do pre-upgrade tasks here *
                              *****************************/
@@ -608,18 +608,18 @@ switch ($_REQUEST['action'])
                              * UPGRADE THE SCHEMA        *
                              *****************************/
                             $installed_version = upgrade_schema($installed_version);
-                            
+
                             upgrade_390_migrate_user_config();
 
                             /*******************************
                             * DISABLE INCOMPATABLE PLUGINS *
                             ********************************/
                             sit_upgrade_plugin_check(TRUE, $application_version);
-                            
+
                             /******************************
                              * Do Post-upgrade tasks here *
                              ******************************/
-                            
+
                             // Move billingmatrix to contract
                             $billingmatrixerror = false;
                             // Its OK to group on contractid as previously we only supported one billing matrix
@@ -632,7 +632,7 @@ switch ($_REQUEST['action'])
                                 $billingmatrixerror = TRUE;
                                 trigger_error(mysql_error(), E_USER_WARNING);
                             }
-                            
+
                             while ($obj = mysql_fetch_object($resultup1))
                             {
                                 if (empty($obj->billingmatrix) OR $obj->billingmatrix === 1)
@@ -647,7 +647,7 @@ switch ($_REQUEST['action'])
                                     trigger_error(mysql_error(), E_USER_WARNING);
                                 }
                             }
-                            
+
                             if (!$billingmatrixerror)
                             {
                                 $sqlup3 = "ALTER TABLE `{$dbService}` DROP `billingmatrix`";
@@ -655,8 +655,8 @@ switch ($_REQUEST['action'])
                                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                             }
                             // END Move billingmatrix to contract
-                            
-                            
+
+
                             $sqlup4 = "SELECT contractid, SUM(unitrate) AS unitrate, SUM(incidentrate) AS incidentrate FROM `{$dbService}` WHERE unitrate > 0 OR incidentrate > 0 GROUP BY contractid";
                             $resultup4 = mysql_query($sqlup4);
                             if (mysql_error())
@@ -664,7 +664,7 @@ switch ($_REQUEST['action'])
                                 $serviceerror = TRUE;
                                 trigger_error(mysql_error(), E_USER_WARNING);
                             }
-                            
+
                             while ($obj = mysql_fetch_object($resultup4))
                             {
                                 if ($obj->unitrate > 0 AND $obj->incidentrate > 0)
@@ -678,7 +678,7 @@ switch ($_REQUEST['action'])
                                     $billingtype = 'Null';
                                     if ($obj->unitrate > 0) $billingtype = "'UnitBillable'";
                                     if ($obj->incidentrate > 0) $billingtype = "'IncidentBillable'";
-                                    
+
                                     $sqlup4a = "UPDATE `{$dbMaintenance}` SET billingtype = {$billingtype} WHERE id = {$obj->contractid}";
                                     $resultup4a = mysql_query($sqlup4a);
                                     if (mysql_error())
@@ -688,26 +688,26 @@ switch ($_REQUEST['action'])
                                     }
                                 } 
                             }
-                            
+
                             if (!$serviceerror)
                             {
                                 $sqlup4b = "ALTER TABLE `{$dbService}` DROP COLUMN `unitrate`, DROP COLUMN `incidentrate`, DROP COLUMN `billingmatrix`";
                                 mysql_query($sqlup4b);
                                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
                             }
-                            
+
                             // We can't do this in SQL as MySQL will not let you delete from a table where the table is in the subquery
                             $sqlup5 = "SELECT ti.id FROM `{$dbTempIncoming}` AS ti, `{$dbUpdates}` AS u WHERE ti.updateid = u.id and u.incidentid <> 0";
                             $resultup5 = mysql_query($sqlup5);
                             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                            
+
                             $tempIncomingsToRemove = array();
-                            
+
                             while ($obj = mysql_fetch_object($resultup5))
                             {
                                 $tempIncomingsToRemove[] = $obj->id;
                             }
-                            
+
                             if (!empty($tempIncomingsToRemove))
                             {
                                 $sqlup5a = "DELETE FROM `{$dbTempIncoming}` WHERE id IN (".implode(", ", $tempIncomingsToRemove).")";
@@ -776,7 +776,7 @@ switch ($_REQUEST['action'])
                             {
                                 $requiredprivileges = upgrade_required_perms($installed_version);
                                 $missingprivileges = check_mysql_privileges($requiredprivileges);
-                                
+
                                 if (empty($missingprivileges))
                                 {
                                     echo setup_button('upgrade', 'Upgrade Schema');
@@ -790,8 +790,6 @@ switch ($_REQUEST['action'])
                                     echo "</ul></p>";
                                 }
                             }
-                            
-
                         }
 
                         if ($_REQUEST['action'] == 'createadminuser' AND setup_check_adminuser() == FALSE)
@@ -808,7 +806,7 @@ switch ($_REQUEST['action'])
                                 echo "<p class='error'>Admin account not created, the passwords you entered did not match.</p>";
                             }
                         }
-                        
+
                         if ($_REQUEST['action'] == 'createinitialdata') 
                         {
                             // Create initial set etc... TODO
@@ -838,81 +836,80 @@ switch ($_REQUEST['action'])
                             $productname = cleanvar($_REQUEST['productname']);
 
                             $skill = cleanvar($_REQUEST['skill']);
-                            
+
                             // Resellers
                             $reseller_name = cleanvar($_REQUEST['reseller_name']);
                             $_SESSION['formdata']['setupinitialdata'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
-                            
+
                             $errors = 0;
                             if(empty($sitename))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['sitename'] = sprintf($strFieldMustNotBeBlank, 'Site Name');
                                 $errors++;
                             }
-                            
+
                             if(empty($siteaddress1))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['siteaddress1'] = sprintf($strFieldMustNotBeBlank, 'Site Address 1');
                                 $errors++;
                             }
-                            
+
                             if(empty($contactforenames))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['contactforenames'] = sprintf($strFieldMustNotBeBlank, 'Contact Forenames');
                                 $errors++;
                             }
-                            
+
                             if(empty($contactsurname))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['contactsurname'] = sprintf($strFieldMustNotBeBlank, 'Contact Forenames');
                                 $errors++;
                             }
-                            
+
                             if(empty($contactemail))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['contactemail'] = sprintf($strFieldMustNotBeBlank, 'Contact Email');
                                 $errors++;
                             }
-                            
+
                             if(empty($productvendor))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['productvendor'] = sprintf($strFieldMustNotBeBlank, 'Product Vendor');
                                 $errors++;
                             }
-                            
+
                             if(empty($productname))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['productname'] = sprintf($strFieldMustNotBeBlank, 'Product Name');
                                 $errors++;
                             }
-                            
+
                             if(empty($reseller_name))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['reseller_name'] = sprintf($strFieldMustNotBeBlank, 'Reseller Name');
                                 $errors++;
                             }
-                            
+
                             if(empty($skill))
                             {
                                 $_SESSION['formerrors']['setupinitialdata']['skill'] = sprintf($strFieldMustNotBeBlank, 'Skill');
                                 $errors++;
                             }
-                            
+
                             $sitedepartment = convert_string_null_safe($sitedepartment);
                             $siteaddress2 = convert_string_null_safe($siteaddress2);
                             $sitecity = convert_string_null_safe($sitecity);
                             $sitecounty = convert_string_null_safe($sitecounty);
                             $sitecountry = convert_string_null_safe($sitecountry);
                             $sitepostcode = convert_string_null_safe($sitepostcode);
-                            
+
                             // Contact
                             $courtesytitle = convert_string_null_safe($courtesytitle);
                             $contactjobtitle = convert_string_null_safe($contactjobtitle);
                             $contactdepartment = convert_string_null_safe($contactdepartment);
                             $contactphone = convert_string_null_safe($contactphone);
                             $contactmobile = convert_string_null_safe($contactmobile);
-                            
-                            
+
                             if ($errors == 0)
                             {
                                 $sql = "INSERT INTO `{$dbSites}` (`name`, `department`, `address1`, `address2`, `city`, `county`,
@@ -927,50 +924,49 @@ switch ($_REQUEST['action'])
                                 $sql =  "INSERT INTO `{$dbContacts}` (`username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `department`, `timestamp_added`, `timestamp_modified`) VALUES
                                 ('{$username}', MD5(RAND()), '{$contactforenames}', '{$contactsurname}', {$contactjobtitle}, {$courtesytitle}, {$siteid}, '{$contactemail}', {$contactphone}, {$contactmobile}, {$contactdepartment}, 1132930556, 1187360933)";
                                 $result = mysql_query($sql);
-            					if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            					$contactid = mysql_insert_id();
-            					$username = $username . $newid;
-            					$sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$contactid}'";
-            					                            
+                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $contactid = mysql_insert_id();
+                                $username = $username . $newid;
+                                $sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$contactid}'";
+
                                 $sql = "INSERT INTO `{$dbProducts}` (vendorid, name) VALUES ({$productvendor},'{$productname}')";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 $productid = mysql_insert_id();
-                                
+
                                 $sql = "INSERT INTO `{$dbSoftware}` (`name`, `lifetime_start`, `lifetime_end`) VALUES ('{$skill}', NULL, NULL)";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 $skillid = mysql_insert_id();
-                                
+
                                 $sql = "INSERT INTO `{$dbResellers}` (name) VALUES ('{$reseller_name}')";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 $resellerid = mysql_insert_id();
-                                
+
                                 $expirydate = strtotime("+1 year");
-                                
+
                                 $sql = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) ";
                                 $sql .= "VALUES ({$siteid},{$productid},{$resellerid},{$expirydate},1,4,0,0,'Created during the installer',1,'no','standard',0)";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 $contractid = mysql_insert_id();
-                                
+
                                 $sql = "INSERT INTO `{$dbSoftwareProducts}` VALUES ({$productid},{$skillid})";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 mysql_insert_id();
-                                
+
                                 $sql = "INSERT INTO `{$dbSupportContacts}` VALUES ({$contractid},{$contactid})";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 mysql_insert_id();
-                                
-                                
+
                                 $_SESSION['promptinitialdata'] = FALSE;
                                 clear_form_data('setupinitialdata');
                             }
                         }
-                        
+
                         // Check installation
                         echo "<h2>Checking installation...</h2>";
                         if ($cfg_file_writable)
@@ -1017,10 +1013,10 @@ switch ($_REQUEST['action'])
                         {
                             // Setup initial data
                             echo "<p>Please setup the initial data.<br /><b>NOTE:</b> The following is only a subset of the possibe data</p>";
-                            
+
                             echo show_form_errors('setupinitialdata');
                             clear_form_errors('setupinitialdata');
-                            
+
                             echo "<form name='setupinitialdata' action='setup.php' method='post'>\n";
 
                             // Site
@@ -1190,7 +1186,7 @@ switch ($_REQUEST['action'])
                             echo "<input type='hidden' name='action' value='createinitialdata' />";
                             echo setup_button('', 'Add Data');
                             echo "</form>";
-                            
+
                             clear_form_data('setupinitialdata');
                         }
                         else
