@@ -915,7 +915,6 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
  * @param string $country - Country to pre-select (default to config file setting)
  * @param string $extraattributes - Extra attributes to put on the select tag
  * @return HTML
- * @note if the $country given is not in the list, an editable input box is given instead of a select box
  * @todo TODO i18n country list (How do we do this?)
  */
 function country_drop_down($name, $country, $extraattributes='')
@@ -923,246 +922,22 @@ function country_drop_down($name, $country, $extraattributes='')
     global $CONFIG;
     if ($country == '') $country = $CONFIG['home_country'];
 
-    if ($country == 'UK') $country = 'UNITED KINGDOM';
-    $countrylist[] = 'ALBANIA';
-    $countrylist[] = 'ALGERIA';
-    $countrylist[] = 'AMERICAN SAMOA';
-    $countrylist[] = 'ANDORRA';
-    $countrylist[] = 'ANGOLA';
-    $countrylist[] = 'ANGUILLA';
-    $countrylist[] = 'ANTIGUA';
-    $countrylist[] = 'ARGENTINA';
-    $countrylist[] = 'ARMENIA';
-    $countrylist[] = 'ARUBA';
-    $countrylist[] = 'AUSTRALIA';
-    $countrylist[] = 'AUSTRIA';
-    $countrylist[] = 'AZERBAIJAN';
-    $countrylist[] = 'BAHAMAS';
-    $countrylist[] = 'BAHRAIN';
-    $countrylist[] = 'BANGLADESH';
-    $countrylist[] = 'BARBADOS';
-    $countrylist[] = 'BELARUS';
-    $countrylist[] = 'BELGIUM';
-    $countrylist[] = 'BELIZE';
-    $countrylist[] = 'BENIN';
-    $countrylist[] = 'BERMUDA';
-    $countrylist[] = 'BHUTAN';
-    $countrylist[] = 'BOLIVIA';
-    $countrylist[] = 'BONAIRE';
-    $countrylist[] = 'BOSNIA HERZEGOVINA';
-    $countrylist[] = 'BOTSWANA';
-    $countrylist[] = 'BRAZIL';
-    $countrylist[] = 'BRUNEI';
-    $countrylist[] = 'BULGARIA';
-    $countrylist[] = 'BURKINA FASO';
-    $countrylist[] = 'BURUNDI';
-    $countrylist[] = 'CAMBODIA';
-    $countrylist[] = 'CAMEROON';
-    $countrylist[] = 'CANADA';
-    $countrylist[] = 'CANARY ISLANDS';
-    $countrylist[] = 'CAPE VERDE ISLANDS';
-    $countrylist[] = 'CAYMAN ISLANDS';
-    $countrylist[] = 'CENTRAL AFRICAN REPUBLIC';
-    $countrylist[] = 'CHAD';
-    $countrylist[] = 'CHANNEL ISLANDS';
-    $countrylist[] = 'CHILE';
-    $countrylist[] = 'CHINA';
-    $countrylist[] = 'COLOMBIA';
-    $countrylist[] = 'COMOROS ISLANDS';
-    $countrylist[] = 'CONGO';
-    $countrylist[] = 'COOK ISLANDS';
-    $countrylist[] = 'COSTA RICA';
-    $countrylist[] = 'CROATIA';
-    $countrylist[] = 'CUBA';
-    $countrylist[] = 'CURACAO';
-    $countrylist[] = 'CYPRUS';
-    $countrylist[] = 'CZECH REPUBLIC';
-    $countrylist[] = 'DENMARK';
-    $countrylist[] = 'DJIBOUTI';
-    $countrylist[] = 'DOMINICA';
-    $countrylist[] = 'DOMINICAN REPUBLIC';
-    $countrylist[] = 'ECUADOR';
-    $countrylist[] = 'EGYPT';
-    $countrylist[] = 'EL SALVADOR';
-    $countrylist[] = 'EQUATORIAL GUINEA';
-    $countrylist[] = 'ERITREA';
-    $countrylist[] = 'ESTONIA';
-    $countrylist[] = 'ETHIOPIA';
-    $countrylist[] = 'FAROE ISLANDS';
-    $countrylist[] = 'FIJI ISLANDS';
-    $countrylist[] = 'FINLAND';
-    $countrylist[] = 'FRANCE';
-    $countrylist[] = 'FRENCH GUINEA';
-    $countrylist[] = 'GABON';
-    $countrylist[] = 'GAMBIA';
-    $countrylist[] = 'GEORGIA';
-    $countrylist[] = 'GERMANY';
-    $countrylist[] = 'GHANA';
-    $countrylist[] = 'GIBRALTAR';
-    $countrylist[] = 'GREECE';
-    $countrylist[] = 'GREENLAND';
-    $countrylist[] = 'GRENADA';
-    $countrylist[] = 'GUADELOUPE';
-    $countrylist[] = 'GUAM';
-    $countrylist[] = 'GUATEMALA';
-    $countrylist[] = 'GUINEA REPUBLIC';
-    $countrylist[] = 'GUINEA-BISSAU';
-    $countrylist[] = 'GUYANA';
-    $countrylist[] = 'HAITI';
-    $countrylist[] = 'HONDURAS REPUBLIC';
-    $countrylist[] = 'HONG KONG';
-    $countrylist[] = 'HUNGARY';
-    $countrylist[] = 'ICELAND';
-    $countrylist[] = 'INDIA';
-    $countrylist[] = 'INDONESIA';
-    $countrylist[] = 'IRAN';
-    $countrylist[] = 'IRELAND, REPUBLIC';
-    $countrylist[] = 'ISRAEL';
-    $countrylist[] = 'ITALY';
-    $countrylist[] = 'IVORY COAST';
-    $countrylist[] = 'JAMAICA';
-    $countrylist[] = 'JAPAN';
-    $countrylist[] = 'JORDAN';
-    $countrylist[] = 'KAZAKHSTAN';
-    $countrylist[] = 'KENYA';
-    $countrylist[] = 'KIRIBATI, REP OF';
-    $countrylist[] = 'KOREA, SOUTH';
-    $countrylist[] = 'KUWAIT';
-    $countrylist[] = 'KYRGYZSTAN';
-    $countrylist[] = 'LAOS';
-    $countrylist[] = 'LATVIA';
-    $countrylist[] = 'LEBANON';
-    $countrylist[] = 'LESOTHO';
-    $countrylist[] = 'LIBERIA';
-    $countrylist[] = 'LIBYA';
-    $countrylist[] = 'LIECHTENSTEIN';
-    $countrylist[] = 'LITHUANIA';
-    $countrylist[] = 'LUXEMBOURG';
-    $countrylist[] = 'MACAU';
-    $countrylist[] = 'MACEDONIA';
-    $countrylist[] = 'MADAGASCAR';
-    $countrylist[] = 'MALAWI';
-    $countrylist[] = 'MALAYSIA';
-    $countrylist[] = 'MALDIVES';
-    $countrylist[] = 'MALI';
-    $countrylist[] = 'MALTA';
-    $countrylist[] = 'MARSHALL ISLANDS';
-    $countrylist[] = 'MARTINIQUE';
-    $countrylist[] = 'MAURITANIA';
-    $countrylist[] = 'MAURITIUS';
-    $countrylist[] = 'MEXICO';
-    $countrylist[] = 'MOLDOVA, REP OF';
-    $countrylist[] = 'MONACO';
-    $countrylist[] = 'MONGOLIA';
-    $countrylist[] = 'MONTSERRAT';
-    $countrylist[] = 'MOROCCO';
-    $countrylist[] = 'MOZAMBIQUE';
-    $countrylist[] = 'MYANMAR';
-    $countrylist[] = 'NAMIBIA';
-    $countrylist[] = 'NAURU, REP OF';
-    $countrylist[] = 'NEPAL';
-    $countrylist[] = 'NETHERLANDS';
-    $countrylist[] = 'NEVIS';
-    $countrylist[] = 'NEW CALEDONIA';
-    $countrylist[] = 'NEW ZEALAND';
-    $countrylist[] = 'NICARAGUA';
-    $countrylist[] = 'NIGER';
-    $countrylist[] = 'NIGERIA';
-    $countrylist[] = 'NIUE';
-    $countrylist[] = 'NORWAY';
-    $countrylist[] = 'OMAN';
-    $countrylist[] = 'PAKISTAN';
-    $countrylist[] = 'PANAMA';
-    $countrylist[] = 'PAPUA NEW GUINEA';
-    $countrylist[] = 'PARAGUAY';
-    $countrylist[] = 'PERU';
-    $countrylist[] = 'PHILLIPINES';
-    $countrylist[] = 'POLAND';
-    $countrylist[] = 'PORTUGAL';
-    $countrylist[] = 'PUERTO RICO';
-    $countrylist[] = 'QATAR';
-    $countrylist[] = 'REUNION ISLAND';
-    $countrylist[] = 'ROMANIA';
-    $countrylist[] = 'RUSSIAN FEDERATION';
-    $countrylist[] = 'RWANDA';
-    $countrylist[] = 'SAIPAN';
-    $countrylist[] = 'SAO TOME & PRINCIPE';
-    $countrylist[] = 'SAUDI ARABIA';
-    $countrylist[] = 'SENEGAL';
-    $countrylist[] = 'SEYCHELLES';
-    $countrylist[] = 'SIERRA LEONE';
-    $countrylist[] = 'SINGAPORE';
-    $countrylist[] = 'SLOVAKIA';
-    $countrylist[] = 'SLOVENIA';
-    $countrylist[] = 'SOLOMON ISLANDS';
-    $countrylist[] = 'SOUTH AFRICA';
-    $countrylist[] = 'SPAIN';
-    $countrylist[] = 'SRI LANKA';
-    $countrylist[] = 'ST BARTHELEMY';
-    $countrylist[] = 'ST EUSTATIUS';
-    $countrylist[] = 'ST KITTS';
-    $countrylist[] = 'ST LUCIA';
-    $countrylist[] = 'ST MAARTEN';
-    $countrylist[] = 'ST VINCENT';
-    $countrylist[] = 'SUDAN';
-    $countrylist[] = 'SURINAME';
-    $countrylist[] = 'SWAZILAND';
-    $countrylist[] = 'SWEDEN';
-    $countrylist[] = 'SWITZERLAND';
-    $countrylist[] = 'SYRIA';
-    $countrylist[] = 'TAHITI';
-    $countrylist[] = 'TAIWAN';
-    $countrylist[] = 'TAJIKISTAN';
-    $countrylist[] = 'TANZANIA';
-    $countrylist[] = 'THAILAND';
-    $countrylist[] = 'TOGO';
-    $countrylist[] = 'TONGA';
-    $countrylist[] = 'TRINIDAD & TOBAGO';
-    $countrylist[] = 'TURKEY';
-    $countrylist[] = 'TURKMENISTAN';
-    $countrylist[] = 'TURKS & CAICOS ISLANDS';
-    $countrylist[] = 'TUVALU';
-    $countrylist[] = 'UGANDA';
-    // $countrylist[] = 'UK';
-    $countrylist[] = 'UKRAINE';
-    $countrylist[] = 'UNITED KINGDOM';
-    $countrylist[] = 'UNITED STATES';
-    $countrylist[] = 'URUGUAY';
-    $countrylist[] = 'UTD ARAB EMIRATES';
-    $countrylist[] = 'UZBEKISTAN';
-    $countrylist[] = 'VANUATU';
-    $countrylist[] = 'VENEZUELA';
-    $countrylist[] = 'VIETNAM';
-    $countrylist[] = 'VIRGIN ISLANDS';
-    $countrylist[] = 'VIRGIN ISLANDS (UK)';
-    $countrylist[] = 'WESTERN SAMOA';
-    $countrylist[] = 'YEMAN, REP OF';
-    $countrylist[] = 'YUGOSLAVIA';
-    $countrylist[] = 'ZAIRE';
-    $countrylist[] = 'ZAMBIA';
-    $countrylist[] = 'ZIMBABWE';
+    $sql = "SELECT * FROM `{$GLOBALS['dbCountryList']}";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    if (in_array(strtoupper($country), $countrylist))
+    $html = "<select id=\"{$name}\" name=\"{$name}\" {$extraattributes}>";
+    while ($obj = mysql_fetch_object($result))
     {
-        // make drop down
-        $html = "<select id=\"{$name}\" name=\"{$name}\" {$extraattributes}>";
-        foreach ($countrylist as $key => $value)
+        $html .= "<option value='{$obj->isocode}'";
+        if ($obj->isocode == $country)
         {
-            $value = htmlspecialchars($value);
-            $html .= "<option value='$value'";
-            if ($value == strtoupper($country))
-            {
-                $html .= " selected='selected'";
-            }
-            $html .= ">$value</option>\n";
+            $html .= " selected='selected'";
         }
-        $html .= "</select>";
+        $html .= ">{$obj->name}</option>\n";
     }
-    else
-    {
-        // make editable input box
-        $html = "<input maxlength='100' name='{$name}' size='40' value='{$country}' {$extraattributes} />";
-    }
+    $html .= "</select>";
+
     return $html;
 }
 

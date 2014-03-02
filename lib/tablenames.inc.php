@@ -25,6 +25,7 @@ $dbClosingStatus = "{$CONFIG['db_tableprefix']}closingstatus";
 $dbConfig = "{$CONFIG['db_tableprefix']}config";
 $dbContactConfig = "{$CONFIG['db_tableprefix']}contactconfig";
 $dbContacts = "{$CONFIG['db_tableprefix']}contacts";
+$dbCountryList = "{$CONFIG['db_tableprefix']}countrylist";
 $dbDashboard = "{$CONFIG['db_tableprefix']}dashboard";
 $dbDashboardRSS = "{$CONFIG['db_tableprefix']}dashboard_rss";
 $dbDashboardWatchIncidents = "{$CONFIG['db_tableprefix']}dashboard_watch_incidents";

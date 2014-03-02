@@ -610,6 +610,7 @@ switch ($_REQUEST['action'])
                             $installed_version = upgrade_schema($installed_version);
 
                             upgrade_390_migrate_user_config();
+                            echo update_390_country_list();
 
                             /*******************************
                             * DISABLE INCOMPATABLE PLUGINS *

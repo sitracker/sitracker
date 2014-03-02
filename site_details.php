@@ -58,7 +58,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strAddress2}:</th><td>{$siteobj->address2}</td></tr>";
     echo "<tr><th>{$strCity}:</th><td>{$siteobj->city}</td></tr>";
     echo "<tr><th>{$strCounty}:</th><td>{$siteobj->county}</td></tr>";
-    echo "<tr><th>{$strCountry}:</th><td>{$siteobj->country}</td></tr>";
+    echo "<tr><th>{$strCountry}:</th><td>".get_country_name($siteobj->country)."</td></tr>";
     echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
     if (!empty($siteobj->address1))
     {

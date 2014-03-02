@@ -883,7 +883,7 @@ function schedule_actions_due()
     $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         while ($action = mysql_fetch_object($result))
@@ -892,7 +892,7 @@ function schedule_actions_due()
         }
     }
 
-    if (is_array($actions)) debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
+    if (is_array($actions)) debug_log('Scheduler actions due: '.implode(', ', array_keys($actions)));
 
     return $actions;
 }
@@ -1316,14 +1316,29 @@ function user_notice($text, $type = NORMAL_NOTICE_TYPE, $durability = 'session')
             $sql = "INSERT INTO `{$GLOBALS['dbNotices']}` (userid, type, text, timestamp, durability) ";
             $sql .= "VALUES({$GLOBALS['sit'][2]}, {$type}, '{$text}', NOW(), '{$durability}')";
             mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error(mysql_error(),E_USER_WARNING);
-            }
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
     }
 }
 
+
+/**
+ * Gets the friendly name for a country given an ISO code
+ * @param String $isocode The two digit ISO code for the country
+ * @return String the friendly name for the site
+ * @author Paul Heaney
+ */
+function get_country_name($isocode)
+{
+    $sql = "SELECT name FROM `{$GLOBALS['dbCountryList']}` WHERE isocode = '{$isocode}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        $obj = mysql_fetch_object($result);
+        return $obj->name;
+    }
+}
 
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
@@ -1341,7 +1356,7 @@ if (is_array($CONFIG['plugins']))
 
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
         $pluginfilename = APPLICATION_PLUGINPATH . $plugin . DIRECTORY_SEPARATOR . "{$plugin}.php";
-        
+
         if ($plugin != '')
         {
             if (file_exists($pluginfilename))
