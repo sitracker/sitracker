@@ -99,7 +99,7 @@ else
             $dashboardstr = $dashboardstr.",".$newposition."-".$dashboardid;
             break;
         case 'remove':
-            $regex = "/[012]-".$dashboardid."[,]?/";
+            $regex = "/[012]-".$dashboardid."[,|$]/";
             $dashboardstr = preg_replace($regex,"",$dashboardstr);
             break;
     }
