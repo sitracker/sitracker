@@ -1012,7 +1012,7 @@ function update_390_country_list()
         if (in_array($oldName, $countriesToAlert) AND mysql_affected_rows() > 0)
         {
             // We need to alert
-            $sql = "SELECT c.id, c.forenames, c.surname, s.name FROM `{$GLOBALS['dbContacts']}` AS c, `{$GLOBALS['dbSites']} AS s ";
+            $sql = "SELECT c.id, c.forenames, c.surname, s.name FROM `{$GLOBALS['dbContacts']}` AS c, `{$GLOBALS['dbSites']}` AS s ";
             $sql .= "WHERE c.siteid = s.id AND c.country = '{$code}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -1030,8 +1030,8 @@ function update_390_country_list()
         if (in_array($oldName, $countriesToAlert) AND mysql_affected_rows() > 0)
         {
             // We need to alert
-            $sql = "SELECT s.id, s.name FROM `{$GLOBALS['dbSites']} AS s ";
-            $sql .= "WHERE c.country = '{$code}'";
+            $sql = "SELECT s.id, s.name FROM `{$GLOBALS['dbSites']}` AS s ";
+            $sql .= "WHERE s.country = '{$code}'";
             $result = mysql_query($sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             while ($obj = mysql_fetch_object($result))
@@ -1042,15 +1042,24 @@ function update_390_country_list()
         }
     }
 
+    // Change to a two character column now
+    $sql = "ALTER TABLE `{$GLOBALS['dbContacts']}` CHANGE `country` `country` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+    $sql = "ALTER TABLE `{$GLOBALS['dbSites']}` CHANGE `country` `country` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
     $str = '';
 
     if (empty($alertContacts) AND empty($alertSites))
     {
-        $str .= "<p>Country data transfered sucessfully</p>";
+        $str .= "<p>Country data transfered successfully</p>";
     }
     else 
     {
-        $str .= "<p>Country data transfered, you had some data using one of the following countries Yugoslavia or Channel Islands these have been mapped to Jersey and Serbia, please update the following records if incorrect</p>";
+        $str .= "<p class='info'>Country data transfered, you had some data using one of the following countries Yugoslavia or Channel Islands these have been mapped to Jersey and Serbia, please update the following records if incorrect, the affected data is listed below:</p>";
         if (!empty($alertContacts))
         {
             $str .= "<p>Contacts:<ul>";
@@ -1071,6 +1080,8 @@ function update_390_country_list()
             $str .= "</ul></p>";
         }
     }
+
+    return $str;
 
     // TODO reduce size of columns
 }

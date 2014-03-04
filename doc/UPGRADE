@@ -72,6 +72,13 @@ scope in the plugin.
 
 The 'product only' field has been removed.
 
+Country list has been updated and is now stored in the database allowing for easier 
+additions in the futue.  Countries have been mapped where possible with the exception of 
+Yugoslavia and Channel Islands which have been mapped to Serbia and Jersey based on 
+as these countries have now split to multiple ISO registered countries, the defaults where 
+choosen based on the size of the new countries population, it best to check data relating to 
+these counties.
+
 Upgrading to 3.60
 -----------------
 3.60 only shows incidents in the queues which are assigned to an engineer
