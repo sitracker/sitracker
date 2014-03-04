@@ -910,12 +910,12 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
 
 /**
  * Print a listbox of countries
- * @author Ivan Lucas
+ * @author Paul Heaney
  * @param string $name - HTML select 'name' attribute
  * @param string $country - Country to pre-select (default to config file setting)
  * @param string $extraattributes - Extra attributes to put on the select tag
  * @return HTML
- * @todo TODO i18n country list (How do we do this?)
+ * @todo TODO i18n country list (propose this is done using either a macro/placeholder in DB or just i18n based on iso code)
  */
 function country_drop_down($name, $country, $extraattributes='')
 {
