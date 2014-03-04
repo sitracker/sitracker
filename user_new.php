@@ -200,6 +200,14 @@ else
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
+        if (!empty($CONFIG['default_i18n']))
+        {
+            $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+            $sql .= "VALUES ('{$newuserid}', 'language', '{$CONFIG['default_i18n']}') ";
+            $result = mysql_query($sql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        }
+
         // Create permissions (set to none)
         $sql = "SELECT id FROM `{$dbPermissions}`";
         $result = mysql_query($sql);
