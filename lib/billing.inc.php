@@ -100,7 +100,7 @@ function get_billable_contract_id($contactid)
 
 
 /**
- * Gte sthe billable contract ID for a site, if multiple exist then the first one is choosen
+ * Get sthe billable contract ID for a site, if multiple exist then the first one is choosen
  * @author Paul Heaney
  * @param int $siteid - The site ID you want to find the contract for
  * @return int the ID of the contract, -1 if not found

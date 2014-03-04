@@ -248,9 +248,9 @@ switch ($mode)
                 }
                 else
                 {
-                    $params = NULL;                    
+                    $params = NULL;
                 }
-                
+
                 $fsaction = "saction_" . $saction->action;
                 schedule_action_started($saction->action);
                 $fsaction($params);

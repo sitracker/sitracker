@@ -131,6 +131,9 @@ else
     $selections = urldecode($_POST['choices']);
     parse_str($selections);
 
+    $ns = urldecode($_POST['ns']);
+    parse_str($ns);
+
     plugin_do('edit_user_skills_submitted');
 
     // Mantis 1855 and 1856 need resolving to handle users removing skills

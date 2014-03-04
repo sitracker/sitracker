@@ -27,7 +27,7 @@ if ($_SESSION['auth'] != TRUE)
     // External variables
     $id = clean_int($_REQUEST['id']);
     $page = htmlentities(clean_url(urldecode($_REQUEST['page'])), ENT_COMPAT, $GLOBALS['i18ncharset']);
-    
+
     // Invalid user, show log in form
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<p class='error'>If you are not a developer, please under no circumstances run this version of SiT!, it is now destined for 4.0, at best it will be barely be useable, at worst it might injure you.</p>";

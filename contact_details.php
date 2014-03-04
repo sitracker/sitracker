@@ -107,7 +107,7 @@ while ($contact = mysql_fetch_object($contactresult))
             echo "(<a target='_new' href='http://www.google.com/maps?q={$postcode}'>{$strMap}</a>)";
         }
         echo "</td></tr>\n";
-        echo "<tr><th>{$strCountry}:</th><td>{$country}</td></tr>\n";
+        echo "<tr><th>{$strCountry}:</th><td>".get_country_name($country)."</td></tr>";
     }
 
     if ($contact->dataprotection_email != 'Yes')

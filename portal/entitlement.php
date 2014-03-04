@@ -43,7 +43,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
         {
             $shade = 'expired';
         }
-        echo "<tr class='$shade'>";
+        echo "<tr class='{$shade}'>";
         echo "<td>";
         // Only show link to contract details if the contract belongs to our site
         // Since we can be supported by contracts that aren't our site
