@@ -1040,6 +1040,10 @@ function update_390_country_list()
                 $alertSites[] = $a;
             }
         }
+
+        $sql = "UPDATE `{$GLOBALS['dbConfig']}` SET value = '{$code}' WHERE value = '{$oldName}' AND config = 'home_country'";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
     // Change to a two character column now

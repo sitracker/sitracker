@@ -422,7 +422,7 @@ $CFGVAR['hide_closed_incidents_older_than']['unit'] = $strDays;
 $CFGVAR['holidays_enabled']['title'] = "Enable Holidays";
 $CFGVAR['holidays_enabled']['type'] = 'checkbox';
 
-$CFGVAR['home_country']['title'] = "The default country in capitals. e.g. 'UNITED KINGDOM'";
+$CFGVAR['home_country']['title'] = "The default countrys ISO code in capitals. e.g. 'GB'";
 
 $CFGVAR['incident_pools']['title'] = 'Incident Pool options';
 $CFGVAR['incident_pools']['help'] = 'Comma seperated list specifying the numbers of incidents to assign to contracts';
