@@ -2,7 +2,7 @@
 // constants.inc.php - Constants
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
