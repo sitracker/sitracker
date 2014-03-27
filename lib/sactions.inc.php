@@ -2,7 +2,7 @@
 // sactions.inc.php - functions relating to scheduler actions/auto
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -572,7 +572,7 @@ function saction_CheckWaitingEmail()
         $result = mysql_query($sql);
         list($interval) = mysql_fetch_row($result);
         // so we don't get a duplicate if we receive an email exactly at check time
-        $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
+        $checks = "{$timestamp} + ({holdingmins} * 60) + {$interval} >= {$now}";
         new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL",
                         array('holdingmins' => ceil($minswaiting / 60),
                               'checks' => $checks));

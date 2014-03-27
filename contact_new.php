@@ -2,7 +2,7 @@
 // contact_new.php - Adds a new contact
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -64,7 +64,7 @@ if (empty($submit) OR !empty($_SESSION['formerrors']['new_contact']))
     echo "size='20' title=\"{$strSurname}\" value='".show_form_value('new_contact', 'surname')."' /> <span class='required'>{$strRequired}</span></td></tr>\n";
     echo "</table>\n</td></tr>\n";
 
-    if (!empty(show_form_value('new_contact', 'siteid'))) $siteid = show_form_value('new_contact', 'siteid');
+    if (!empty($_SESSION['formdata']['new_contact']['siteid'])) $siteid = $_SESSION['formdata']['new_contact']['siteid'];
 
     echo "<tr><th>{$strJobTitle}</th><td><input maxlength='255'";
     echo " name='jobtitle' size='35' title=\"{$strJobTitle}\" value='".show_form_value('new_contact', 'jobtitle')."' /></td></tr>\n";

@@ -2,7 +2,7 @@
 // approve_transaction.php - Page which does the approval of a transaction
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2007 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
