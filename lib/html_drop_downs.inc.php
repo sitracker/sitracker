@@ -475,7 +475,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
         $html = "<select name='{$name}' id='{$name}'";
         if ($visibility == 'internal' AND $id == 0)
         {
-            $html .= " class='required'>";
+            $html .= " class='required'";
         }
         $html .= ">";
 
