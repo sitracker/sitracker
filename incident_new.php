@@ -1048,6 +1048,7 @@ elseif ($action == 'reassign')
     $userphone = user_phone($uid);
     if ($userphone != '')
     {
+        echo "<h3>{$name} {$strContactDetails}</h3>";
         echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
     }
     $sql = "UPDATE `{$dbIncidents}` SET owner='{$uid}', lastupdated='{$now}' WHERE id='{$incidentid}'";
