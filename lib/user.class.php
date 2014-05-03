@@ -46,6 +46,7 @@ class User extends Person{
     var $startdate;
     var $language;
     var $show_next_action;
+    var $source;
 
     // Legacy
     var $icq;

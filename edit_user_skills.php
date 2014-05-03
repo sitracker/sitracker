@@ -129,10 +129,10 @@ else
 {
     // Update user profile
     $selections = urldecode($_POST['choices']);
-    parse_str($selections);
+    $expertise = explode(';', $selections);
 
     $ns = urldecode($_POST['ns']);
-    parse_str($ns);
+    $noskills = explode(';', $ns);
 
     plugin_do('edit_user_skills_submitted');
 
