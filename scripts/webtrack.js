@@ -284,13 +284,15 @@ function deleteBlankOption(fromObject)
  * @note This Javascript code placed in the public domain
           at http://www.irt.org/script/1265.htm
           "Code examples on irt.org can be freely copied and used."
+  code changed sit project
  */
 function populateHidden(fromObject, toObject)
 {
     var output = '';
     for (var i = 0, l = fromObject.options.length; i < l; i++)
     {
-        output += escape(fromObject.name) + '=' + escape(fromObject.options[i].value) + '&';
+        output += escape(fromObject.options[i].value) + ';';
+        deleteOption(fromObject, i); // Remove elements from array so we don't end up posting a large array and exceing max_input_vars (See Mantis 1921)
     }
     // alert(output);
     toObject.value = output;
