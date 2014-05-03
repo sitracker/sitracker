@@ -96,7 +96,7 @@ function authenticate($username, $password)
             elseif ($obj->user_source == 'ldap')
             {
                 // Auth against LDAP and sync
-                $toReturn =  authenticateLDAP(clean_ldapstring(($username)), clean_ldapstring($password), $obj->id);
+                $toReturn = authenticateLDAP(clean_ldapstring(($username)), clean_ldapstring($password), $obj->id);
                 if ($toReturn === -1)
                 {
                     // Communication with LDAP server failed
@@ -132,7 +132,7 @@ function authenticate($username, $password)
             // Don't exist, check LDAP etc
             if ($CONFIG['use_ldap'])
             {
-                $toReturn =  authenticateLDAP($username, $password);
+                $toReturn = authenticateLDAP($username, $password);
                 if ($toReturn === -1) $toReturn = false;
             }
         }
@@ -157,6 +157,12 @@ function authenticate($username, $password)
 }
 
 
+/**
+ * Authenticates a contact
+ * @param string $username
+ * @param string $password
+ * @return mixed returns contactID if successful false otherwise
+ */
 function authenticateContact($username, $password)
 {
     debug_log ("authenticateContact called");
@@ -165,17 +171,18 @@ function authenticateContact($username, $password)
 
     if (!empty($username) AND !empty($password))
     {
-        $sql = "SELECT id, password, contact_source, active FROM `{$GLOBALS['dbContacts']}` WHERE username = '{$username}'";
+        $sql = "SELECT id, password, contact_source, active, username FROM `{$GLOBALS['dbContacts']}` WHERE (username = '{$username}' OR email = '{$username}')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) == 1)
         {
             debug_log ("Authenticate: Just one contact in db");
+
             // Exists in SiT DB
             $obj = mysql_fetch_object($result);
             if ($obj->contact_source == 'sit')
             {
-                if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
+                if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = $obj->id;
                 else $toReturn = false;
             }
             elseif ($obj->contact_source == 'ldap')
@@ -189,7 +196,7 @@ function authenticateContact($username, $password)
                     {
                         debug_log ("LDAP connection failed, using cached password");
                         // Use cached password
-                        if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
+                        if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = $obj->id;
                         else $toReturn = false;
                         debug_log ("Cached contact {$toReturn} {$password}");
 
@@ -202,7 +209,7 @@ function authenticateContact($username, $password)
                 }
                 elseif ($toReturn)
                 {
-                    $toReturn = true;
+                    $toReturn = $obj->id;
                 }
                 else
                 {
@@ -224,11 +231,11 @@ function authenticateContact($username, $password)
         }
         else
         {
-            debug_log ("Authenticate: No matching contact '$username' found in db");
+            debug_log ("Authenticate: No matching contact '{$username}' found in db");
             // Don't exist, check LDAP etc
             if ($CONFIG['use_ldap'] AND !empty($CONFIG['ldap_customer_group']))
             {
-                $toReturn =  authenticateLDAP($username, $password, 0, false);
+                $toReturn = authenticateLDAP($username, $password, 0, false);
                 if ($toReturn === -1) $toReturn = false;
             }
         }
