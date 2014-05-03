@@ -27,11 +27,12 @@ function incident_details_window(incidentid, win, rtn)
     // URL = "incident.php?popup=yes&id=" + incidentid;
     // URL = application_webpath + "incident_details.php?id=" + incidentid + "&win=" + win;
     URL = application_webpath + "incident_details.php?id=" + incidentid;
-  
+
     if (typeof win !== 'undefined') 
     {
         URL = URL + "&win=" + win;
     }
+
     if (win == 'sit_popup' && popwin)
     {
         popwin.close();
@@ -373,7 +374,7 @@ function addcontract_sltimed(servicelevel)
                     {
                         $('hiddentimed').show();
                         $('timed').value = 'yes';
-                        
+
                         addcontract_display_billing_matrix('new_contract', '');
                     }
                     else
@@ -481,6 +482,7 @@ function contexthelp(elem, context, auth)
         $(span).style.top = '1em';
         $(span).style.left = '1em';
     }
+
     if (span.innerHTML == '')
     {
         new Ajax.Request(application_webpath + 'ajaxdata.php',
@@ -972,12 +974,12 @@ function ldap_browse_select_container(ldap_base, field)
                     if (transport.responseText)
                     {
                         var html = 'Current Level: '
-    
+
                             if (ldap_base.length > 0) html += ldap_base;
                             else html += '[root]';
-    
+
                         html += '<table>';
-    
+
                         if (ldap_base.length > 0)
                         {
                             if (ldap_base.indexOf(',') == -1)
@@ -988,12 +990,12 @@ function ldap_browse_select_container(ldap_base, field)
                             {
                                 parent = ldap_base.substring(ldap_base.indexOf(',')+1);
                             }
-    
+
                             html += "<tr><td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+icon_navup+"</a></td><td>..</td>";
                             html += "<td><a onclick=\"ldap_browse_select_container('"+parent+"', '"+field+"');\" href='javascript:void(0)'>"+strUp+"</a></td>";
                             html += "</tr>";
                         }
-    
+
                         var data = response.evalJSON();
                         if (data.length == 0)
                         {
@@ -1019,7 +1021,7 @@ function ldap_browse_select_container(ldap_base, field)
                                         html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+icon_ldap_group+"</a></td>";
                                         html += "<td><a onclick=\"ldap_browse_update_group('"+data[i].dn+"', '"+field+"');\" href='javascript:void(0)'>"+data[i].cn+"</a></td>";
                                     }
-    
+
                                     html += '</tr>';
                                 }
                             }
@@ -1032,9 +1034,9 @@ function ldap_browse_select_container(ldap_base, field)
                                 html += "<tr><td colspan='3'>"+data[0].status+"</td></tr>";
                             }
                         }
-    
+
                         html += '</table>';
-    
+
                         $('ldap_browse_contents').innerHTML = html;
                     }
                 },
@@ -1154,7 +1156,7 @@ function save_draft(incidentid, type){
     {
         var meta = $('target').value+"|"+$('updatetype').value+"|"+$('cust_vis').checked+"|";
         meta += $('priority').value+"|"+$('newstatus').value+"|"+$('nextaction').value+"|";
-        
+
         toPass = $('updatelog').value;
     }
     else if (type == 'email')
@@ -1167,7 +1169,7 @@ function save_draft(incidentid, type){
         meta = meta+$('ccfield').value+"|"+$('bccfield').value+"|"+$('tofield').value+"|";
         meta = meta+$('subjectfield').value+"|"+$('bodytext').value+"|";
         meta = meta+$('date').value+"|"+$('time_picker_hour').value+"|"+$('time_picker_minute').value+"|"+$('timetonextaction').value;
-        
+
         toPass = $('bodytext').value;
     }
 
@@ -1412,14 +1414,13 @@ function enablekb()
         for (i = 0; i < fields.length; i++)
         {
             $(fields[i]).disabled = true;
-            
-            
+
             if ($(fields[i]) instanceof HTMLInputElement)
             {
                 $(fields[i]).checked = false;
             }
         }
-        
+
         $('helptext').innerHTML = strEnterDetailsAboutIncidentToBeStoredInLog;
         $('helptext').innerHTML = $('helptext').innerHTML + ' '  + strSummaryOfProblemAndResolution;
         $('helptext').innerHTML = $('helptext').innerHTML + "<br /><strong>" + strFinalUpdate + "</strong>:";
