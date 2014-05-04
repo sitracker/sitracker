@@ -571,7 +571,7 @@ $CFGVAR['outbound_emailattachment_newline']['help'] = "Change the newline charac
 $CFGVAR['outbound_emailattachment_newline']['type'] = 'select';
 $CFGVAR['outbound_emailattachment_newline']['options'] = 'CRLF|LF';
 
-$CFGVAR['outbound_email_send_xoriginatingip']['title'] = 'Enable Outbound Email to have ';
+$CFGVAR['outbound_email_send_xoriginatingip']['title'] = 'Enable Outbound Email to have X-Originating-IP header';
 $CFGVAR['outbound_email_send_xoriginatingip']['help'] = "You can disable outbound email from having the X-Originating-IP which can cause spam assassin to make the email as spam if it includes an internal address";
 $CFGVAR['outbound_email_send_xoriginatingip']['type'] = 'checkbox';
 
