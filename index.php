@@ -105,6 +105,7 @@ if ($_SESSION['auth'] != TRUE)
     echo "name='password' size='28' type='password' /></label><br />";
     echo "<input type='hidden' name='page' value='$page' />";
     echo "<input type='submit' value='{$strLogIn}' /><br />";
+    plugin_do('index_form');
     echo "<br /><a href='forgotpwd.php'>{$strForgottenDetails}</a>";
     if ($CONFIG['kb_enabled'] AND $CONFIG['portal'] AND $CONFIG['portal_kb_enabled'] == 'Public')
     {
