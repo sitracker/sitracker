@@ -210,6 +210,7 @@ class Trigger extends SitEntity {
     function __construct($trigger_type, $user_id, $template, $action, $checks = '',
                      $parameters = '', $param_array = array(), $id = -1)
     {
+        global $CONFIG;
         $this->trigger_type = cleanvar($trigger_type);
         $this->param_array = $param_array;
         $this->user_id = cleanvar($user_id);
@@ -219,8 +220,11 @@ class Trigger extends SitEntity {
         $this->checks = $checks;
         $this->id = cleanvar($id);
 
-        debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
-            print_r($param_array, TRUE));
+        if ($CONFIG['debug'])
+        {
+            debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
+                print_r($param_array, TRUE));
+        }
     }
 
     /**
