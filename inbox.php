@@ -129,7 +129,7 @@ if (!empty($action))
             switch ($action)
             {
                 case 'delete':
-                    if ($temp->locked == $sit[2])
+                    if ($temp->locked == $sit[2] OR empty($temp->locked))
                     {
                         // Only allow the person who has the update located delete it
                         $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
