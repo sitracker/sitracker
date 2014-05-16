@@ -1014,12 +1014,12 @@ CREATE TABLE IF NOT EXISTS `{$dbNoticeTemplates}` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_CREATED', 3, 'strNoticeIncidentCreatedDesc', 'strNoticeIncidentCreated', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_ASSIGNED', 3, 'strNoticeIncidentAssignedDesc', 'strNoticeIncidentAssigned', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_NEARING_SLA', 3, 'strNoticeIncidentNearingSLADesc', 'strNoticeIncidentNearingSLA', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky','{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_CREATED', 3, 'strNoticeIncidentCreatedDesc', 'strNoticeIncidentCreated', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky', '{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_ASSIGNED', 3, 'strNoticeIncidentAssignedDesc', 'strNoticeIncidentAssigned', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky', '{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_NEARING_SLA', 3, 'strNoticeIncidentNearingSLADesc', 'strNoticeIncidentNearingSLA', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky','{incidentid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_LANGUAGE_DIFFERS', 3, 'strNoticeLanguageDiffersDesc', 'strNoticeLanguageDiffers', 'strKeepCurrentLanguage', '{applicationurl}user_profile_edit.php?mode=savesessionlang', 'session', '{currentlang}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_CONTACT', 3, 'strNoticeNewContactDesc', 'strNoticeNewContact', 'strViewContact', '{applicationurl}contact_details.php?id={contactid}', 'sticky','{contactid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_REVIEW_DUE', 3, 'strNoticeIncidentReviewDueDesc', 'strNoticeIncidentReviewDue', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_REVIEW_DUE', 3, 'strNoticeIncidentReviewDueDesc', 'strNoticeIncidentReviewDue', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky', '{incidentid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_KB_CREATED', 3, 'strNoticeKBCreatedDesc', 'strNoticeKBCreated', 'strViewArticle', '{applicationurl}kb_view_article.php?id={kbid}', 'sticky', '{kbid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_HELD_EMAIL', 3, 'strNoticeNewHeldEmailDesc', 'strNoticeNewHeldEmail', 'strViewHoldingQueue', '{applicationurl}holding_queue.php', 'sticky', '{holdingemailid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_MINS_HELD_EMAIL', 3, 'strNoticeMinsHeldEmailDesc', 'strNoticeMinsHeldEmail', 'strViewHoldingQueue', '{applicationurl}holding_queue.php', 'sticky', '{holdingemailid}');
@@ -2459,6 +2459,13 @@ INSERT INTO `{$dbCountryList}` VALUES('EH', 'Western Sahara');
 INSERT INTO `{$dbCountryList}` VALUES('YE', 'Yemen');
 INSERT INTO `{$dbCountryList}` VALUES('ZM', 'Zambia');
 INSERT INTO `{$dbCountryList}` VALUES('ZW', 'Zimbabwe');
+
+
+-- PH 2014-05-16
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_CREATED';
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_ASSIGNED';
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_NEARING_SLA';
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_REVIEW_DUE';
 ";
 
 

@@ -300,7 +300,7 @@ if ($sit[0] != '')
 
             if (!empty($notice->link))
             {
-                echo " - <a href='{$notice->link}'>";
+                echo " - <a href=\"{$notice->link}\">";
                 if (mb_substr($notice->linktext, 0, 3) == 'str')
                 {
                     echo $GLOBALS[$notice->linktext];

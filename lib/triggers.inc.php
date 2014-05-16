@@ -544,6 +544,12 @@ array('description' => $strIncident,
       'checkreplace' => 'incident_drop_down'
       );
 
+$ttvararray['{incidentidinternal}'] =
+array('description' => $strIncident,
+        'requires' => 'incidentid',
+        'replacement' => '$param_array[\'incidentid\'];',
+);
+
 $ttvararray['{incidentowner}'] =
 array('description' => $strIncidentOwnersFullName,
       'requires' => 'incidentid',
