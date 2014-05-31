@@ -429,7 +429,7 @@ function update_transaction($transactionid, $amount = 0.00, $description = '', $
  */
 function close_billable_incident($incidentid)
 {
-    $toReturn = FALSE;
+    $toReturn = TRUE; // Default to it not being a billiable incidents
     $billableincident = get_billable_object_from_incident_id($incidentid);
     if ($billableincident)
     {

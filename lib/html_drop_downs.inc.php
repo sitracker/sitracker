@@ -922,7 +922,7 @@ function country_drop_down($name, $country, $extraattributes='')
     global $CONFIG;
     if ($country == '') $country = $CONFIG['home_country'];
 
-    $sql = "SELECT * FROM `{$GLOBALS['dbCountryList']}";
+    $sql = "SELECT * FROM `{$GLOBALS['dbCountryList']}`";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
