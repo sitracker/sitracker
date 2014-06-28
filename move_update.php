@@ -86,7 +86,10 @@ if ($incidentid == '')
 else
 {
     // check that the incident is still open.  i.e. status not = closed
-    if (incident_status($incidentid) != STATUS_CLOSED)
+
+    $incidentstatus = incident_status($incidentid);
+
+    if (!empty($incidentstatus) AND $incidentstatus != STATUS_CLOSED)
     {
         $moved_attachments = TRUE;
         // update the incident record, change the incident status to active
