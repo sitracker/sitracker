@@ -46,9 +46,6 @@ if (empty($mode))
 
     $user = new User($edituserid);
 
-    $signature = str_replace('\r\n', "\r\n", $user->signature);
-    $message = str_replace('\r\n', "\r\n", $user->message);
-
     echo "<h2>".icon('user', 32)." ";
     echo sprintf($strEditProfileFor, $user->realname).' '.gravatar($user->email)."</h2>";
     plugin_do('user_profile_edit');
@@ -106,7 +103,7 @@ if (empty($mode))
     echo "<tr><th>{$strQualifications} ".help_link('QualificationsTip')."</th>";
     echo "<td><input maxlength='255' size='100' name='qualifications' value='{$user->qualifications}' /></td></tr>\n";
     echo "<tr><th>{$strEmailSignature} ".help_link('EmailSignatureTip')."</th>";
-    echo "<td><textarea name='signature' rows='4' cols='40'>".stripslashes(strip_tags($signature))."</textarea></td></tr>\n";
+    echo "<td><textarea name='signature' rows='4' cols='40'>".stripslashes(strip_tags($user->signature))."</textarea></td></tr>\n";
     $entitlement = user_holiday_entitlement($edituserid);
     if ($edituserpermission && $edituserid != $sit[2])
     {
@@ -191,7 +188,7 @@ if (empty($mode))
     echo $useraccepting;
     echo "</td></tr>\n";
     echo "<tr><th>{$strMessage} ".help_link('MessageTip')."</th>";
-    echo "<td><textarea name='message' rows='4' cols='40'>".stripslashes(strip_tags($message))."</textarea></td></tr>\n";
+    echo "<td><textarea name='message' rows='4' cols='40'>".stripslashes(strip_tags($user->message))."</textarea></td></tr>\n";
     echo "<tr><th colspan='2'>{$strContactDetails}</th></tr>";
     echo "<tr id='email'><th>{$strEmail}</th>";
     echo "<td>";
@@ -276,7 +273,6 @@ elseif ($mode == 'save')
 
     $edituserid = clean_int($_POST['userid']); // remove when tested
 
-    $user->message = cleanvar($_POST['message']);
     $user->realname = cleanvar($_POST['realname']);
     $user->qualifications = cleanvar($_POST['qualifications']);
 
@@ -289,9 +285,14 @@ elseif ($mode == 'save')
     $user->msn = cleanvar($_POST['msn']);
     $user->skype = cleanvar($_POST['skype']);
     $user->fax = cleanvar($_POST['fax']);
-    $user->signature = cleanvar($_POST['signature']);
     $user->status = cleanvar($_POST['status']);
     $user->managerid = cleanvar($_POST['managerid']);
+
+    // PH 2014.06.29
+    // We don't do a cleanvar on these as its already being done in the User::edit() function and we result in double escaping
+    // Technically we don't need to escape any of these variables as they are all done in the class 
+    $user->message = $_POST['message'];
+    $user->signature = $_POST['signature'];
 
     if (cleanvar($_POST['accepting']) == 'Yes') $user->accepting = true;
     else $user->accepting = false;
