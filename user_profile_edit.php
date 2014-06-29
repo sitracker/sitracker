@@ -87,7 +87,7 @@ if (empty($mode))
         echo " <span class='required'>{$strRequired}</span>";
     }
     echo "</td></tr>\n";
-    echo "<tr><th>{$strSource}</th><td>{$user->source}</td></th>";
+    echo "<tr><th>{$strSource}</th><td>{$user->source}</td></tr>";
     echo "<tr><th>{$strJobTitle}</th>";
     echo "<td>";
     if ($user->source != 'sit' AND !empty($CONFIG['ldap_jobtitle']))
