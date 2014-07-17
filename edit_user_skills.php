@@ -49,7 +49,7 @@ if (empty($submit))
         }
     }
     echo "<h2>".icon('skill', 32)." ";
-    echo sprintf($strSkillsFor, user_realname($user,TRUE))."</h2>";
+    echo sprintf($strSkillsFor, user_realname($user, TRUE))."</h2>";
     plugin_do('edit_user_skills');
     echo "<p align='center'>{$strSelectYourSkills}</p>";
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
