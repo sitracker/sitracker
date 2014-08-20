@@ -243,7 +243,12 @@ if (empty($displayid))
             }
 
             echo "<tr class='{$shade}' onclick='trow(event);'>";
-            echo "<td>".html_checkbox('selected[]', FALSE, $incoming->id);
+            echo "<td>";
+
+            if (empty($incoming->locked) OR $incoming->locked == $sit[2])
+            {
+                echo html_checkbox('selected[]', FALSE, $incoming->id);
+            }
             echo "</td>";
             echo "<td>".contact_info($incoming->contactid, $incoming->from, $incoming->emailfrom, $incoming->subject)."</td>";
             echo "</td>";
