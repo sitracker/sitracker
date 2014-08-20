@@ -399,8 +399,8 @@ else
         if (empty($_REQUEST['reply']))
         {
             echo " &mdash; ";
-// Reply feature incomplete and therefore disabled for 3.90, I aim to finish this code soon. INL 4/5/2013
-// echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>  | ";
+            // Reply feature incomplete and therefore disabled for 3.90, I aim to finish this code soon. INL 4/5/2013
+            // echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>  | ";
 
             if (!empty($incoming->forenames) OR !empty($incoming->surname))
             {
