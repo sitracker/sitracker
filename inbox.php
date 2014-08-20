@@ -154,6 +154,7 @@ if (!empty($action))
                     $sql .= "WHERE id='{$selected}' AND locked = '{$sit[2]}'";
                     $result = mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $displayid = null;
                     break;
 
                 case 'updatereason':
@@ -378,6 +379,7 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             $lockedbyname = $strYou;
             $lockedbyyou = true;
+            $incoming->locked = true;
         }
         elseif ($incoming->locked != $sit[2])
         {
