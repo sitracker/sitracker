@@ -97,7 +97,7 @@ switch ($seltab)
 
             <p>pChart 2.1.0 from the <a href='http://www.pchart.net'>pChart project</a>.   Licensed under GPLv3</p>
 
-            <p>Prototype JavaScript framework 1.7 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
+            <p>Prototype JavaScript framework 1.7.2 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
             Copyright &copy; 2005-2010 Sam Stephenson. Licensed under an MIT style license.</p>
 
             <p>script.aculo.us 1.9.0 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
