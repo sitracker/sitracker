@@ -344,7 +344,7 @@ function give_overview()
             if (mysql_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
-                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendorsname}</strong>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors->name}</strong>";
                 echo "<table class='vertical maintable'>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {
