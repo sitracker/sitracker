@@ -673,9 +673,9 @@ function dismissNotice(noticeid, userid)
                 parameters: {action: 'dismiss_notice', noticeid: noticeid, userid: userid, rand: get_random()},
                 onSuccess: function(transport)
                 {
-                    $(div).fade();
+                    $(div).fade({ duration: 0.2 });
                     $(div).removeClassName('noticebar');
-                    if ($$('.noticebar').length < 2) $('dismissall').fade();
+                    if ($$('.noticebar').length < 2) $('dismissall').fade({ duration: 0.2 });
                 },
                 onFailure: function(){ alert('Notice Error\nSorry, we could not dismiss the notice.') }
             });
