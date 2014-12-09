@@ -30,7 +30,7 @@ function dashboard_incoming_display($dashletid)
     global $sit, $CONFIG, $iconset;
     global $dbUpdates, $dbTempIncoming;
     // extract updates (query copied from review_incoming_email.php)
-    $sql  = "SELECT u.id AS id, u.bodytext AS bodytext, ti.emailfrom AS emailfrom, ti.subject AS subject, ";
+    $sql  = "SELECT u.id AS id, ti.id AS tiid, u.bodytext AS bodytext, ti.emailfrom AS emailfrom, ti.subject AS subject, ";
     $sql .= "u.timestamp AS timestamp, ti.incidentid AS incidentid, ti.id AS tempid, ti.locked AS locked, ";
     $sql .= "ti.reason AS reason, ti.contactid AS contactid, ti.`from` AS fromaddr ";
     $sql .= "FROM `{$dbUpdates}` AS u, `{$dbTempIncoming}` AS ti ";
@@ -60,10 +60,11 @@ function dashboard_incoming_display($dashletid)
                 echo "<tr class='$shade'>";
     #            echo "<td><a href='holding_queue.php' class='info'>".truncate_string($incoming->emailfrom, 15);
     #            echo "</a></td>";
-                echo "<td><a href='inbox.php?id=" . $incoming->id . "' class='info'>".truncate_string($incoming->subject, 30);
+                echo "<td><a href='inbox.php?id=" . $incoming->tiid . "' class='info'>".truncate_string($incoming->subject, 30);
+                if (!empty($incoming->bodytext)) echo '<span>'.parse_updatebody(truncate_string($incoming->bodytext, 1024)).'</span>';
                 echo "</a></td>";
                 echo "<td>".truncate_string($incoming->reason, 25);
-                echo "/td>";
+                echo "</td>";
                 echo "</tr>\n";
                 if ($shade == 'shade1') $shade = 'shade2';
                 else $shade = 'shade1';
