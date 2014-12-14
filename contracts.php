@@ -1,5 +1,5 @@
 <?php
-// browse_contracts.php - List of contracts
+// contracts.php - List of contracts
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2014 The Support Incident Tracker Project
@@ -56,7 +56,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class='alphamenu'>";
 
-if ($search_string == '')
+if ($search_string == '' AND empty($productid) AND empty($resellerid))
 {
     if (!empty($i18nAlphabet))
     {
@@ -88,7 +88,7 @@ $sql .= "AND (licence_type IS NULL OR (licence_type = l.id AND licence_type IS N
 
 if ($activeonly == 'yes' OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
-    $sql .= "AND term!='yes' AND (expirydate > $now OR expirydate = '-1') ";
+    $sql .= "AND term != 'yes' AND (expirydate > $now OR expirydate = '-1') ";
 }
 
 if ($search_string != '*')
