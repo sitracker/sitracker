@@ -762,7 +762,7 @@ function upgrade_390_migrate_user_config()
         {
             trigger_error(mysql_error(), E_USER_WARNING);
         }
-        $sql_drop = "DROP DATABASE IF EXISTS `{$dbInterfaceStyles}`";
+        $sql_drop = "DROP TABLE IF EXISTS `{$dbInterfaceStyles}`";
         $result_drop = mysql_query($sql_drop);
         if (mysql_error())
         {
