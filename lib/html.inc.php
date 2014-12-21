@@ -3,7 +3,7 @@
 //                or convert plain text to HTML ...
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -461,8 +461,9 @@ function date_picker($formelement)
  */
 function autocomplete($formelement, $action = 'autocomplete_sitecontact', $autocompletediv)
 {
+    global $CONFIG;
     $html .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-    $html .= "new Ajax.Autocompleter('{$formelement}', '{$autocompletediv}', 'ajaxdata.php?action={$action}', {minChars: 3, paramName: 's', delay: 0.25, parameters: 'htmllist=true'});\n";
+    $html .= "new Ajax.Autocompleter('{$formelement}', '{$autocompletediv}', '{$CONFIG['application_webpath']}ajaxdata.php?action={$action}', {minChars: 3, paramName: 's', delay: 0.25, parameters: 'htmllist=true'});\n";
     $html .= "\n//]]>\n</script>\n";
     
     return $html;

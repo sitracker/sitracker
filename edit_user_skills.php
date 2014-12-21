@@ -2,7 +2,7 @@
 // edit_user_skills.php - Form to set users skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -49,7 +49,7 @@ if (empty($submit))
         }
     }
     echo "<h2>".icon('skill', 32)." ";
-    echo sprintf($strSkillsFor, user_realname($user,TRUE))."</h2>";
+    echo sprintf($strSkillsFor, user_realname($user, TRUE))."</h2>";
     plugin_do('edit_user_skills');
     echo "<p align='center'>{$strSelectYourSkills}</p>";
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
@@ -129,7 +129,10 @@ else
 {
     // Update user profile
     $selections = urldecode($_POST['choices']);
-    parse_str($selections);
+    $expertise = explode(';', $selections);
+
+    $ns = urldecode($_POST['ns']);
+    $noskills = explode(';', $ns);
 
     plugin_do('edit_user_skills_submitted');
 

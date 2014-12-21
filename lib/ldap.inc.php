@@ -2,7 +2,7 @@
 // ldapv2.inc.php - LDAP function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -442,7 +442,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
                 $contact->id = $id;
                 $status = $contact->edit();
             }
-            
+
             if ($status) $toReturn = true;
             else $toReturn = false;
         }
@@ -493,7 +493,7 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
     debug_log("LDAP Filter: {$filter}", TRUE);
     debug_log("LDAP Base: {$base}", TRUE);
     $sr = ldap_search($ldap_conn, $base, $filter, $attributes);
-    
+
     if (ldap_count_entries($ldap_conn, $sr) != 1)
     {
         // Multiple or zero
@@ -501,7 +501,7 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
         $toReturn = false;
     }
     else
-    {            
+    {
         // just one
         debug_log("LDAP got details for object: '$username'", TRUE);
         $toReturn  = ldap_first_entry($ldap_conn, $sr);
@@ -541,7 +541,7 @@ function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOn
         * Verify roles
         */
         $entry = ldap_getDetails($username, $searchOnEmail, $ldap_conn);
-        
+
         if (!$entry)
         {
             // Multiple or zero

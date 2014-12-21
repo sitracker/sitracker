@@ -2,7 +2,7 @@
 // incident_details.php - Show incident details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -301,14 +301,14 @@ else
         echo "</a> ";
     }
 
-    if (drafts_waiting_on_incident($incidentid, 'email'))
+    if (drafts_waiting_on_incident($incidentid, 'email', $_SESSION['userid']))
     {
         echo "<a href='javascript:email_window($incidentid)' class='info'>";
         echo icon('email', 16, $strDraftsEmailExist);
         echo "</a> ";
     }
 
-    if (drafts_waiting_on_incident($incidentid, 'update'))
+    if (drafts_waiting_on_incident($incidentid, 'update', $_SESSION['userid']))
     {
         echo "<a href='incident_update.php?id={$incidentid}&amp;popup=' class='info'>";
         echo icon('note', 16, $strDraftsUpdateExist);

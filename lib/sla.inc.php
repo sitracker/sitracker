@@ -2,7 +2,7 @@
 // sla.inc.php - functions relating to SLA / Service Levels
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -75,10 +75,11 @@ function incident_sla_history($incidentid)
 
         $slahistory[$idx]['timestamp'] = $history->timestamp;
         $slahistory[$idx]['userid'] = $history->userid;
-        if ($slahistory[$idx]['targettime'] === 0)
+        if (intval($slahistory[$idx]['targettime']) === 0)
         {
             // If the target is disabled show it as met
             $slahistory[$idx]['targetmet'] = TRUE;
+            $slahistory[$idx]['targettime'] = $slahistory[$idx]['actualtime']+1; 
         }
         else if ($slahistory[$idx]['actualtime'] <= $slahistory[$idx]['targettime'])
         {
@@ -115,7 +116,7 @@ function incident_sla_history($incidentid)
                 $slahistory[$idx]['targettime'] = 0;
         }
         $slahistory[$idx]['actualtime'] = $target->since;
-        if ($slahistory[$idx]['targettime'] === 0)
+        if (intval($slahistory[$idx]['targettime']) === 0)
         {
             // If the target is disabled show it as met
             $slahistory[$idx]['targetmet'] = TRUE;

@@ -46,6 +46,7 @@ class User extends Person{
     var $startdate;
     var $language;
     var $show_next_action;
+    var $source;
 
     // Legacy
     var $icq;
@@ -251,7 +252,7 @@ class User extends Person{
                 if (!empty($this->phone)) $s[] = "phone = '".cleanvar($this->phone)."'";
                 if (!empty($this->mobile)) $s[] = "mobile = '".cleanvar($this->mobile)."'";
                 if (!empty($this->fax)) $s[] = "fax = '".cleanvar($this->fax)."'";
-                if (!empty($this->status))
+                if (isset($this->status))
                 {
                     if ($oldUser->status != $this->status)
                     {

@@ -2,7 +2,7 @@
 // incident_new.php - Multi-page form for Adding Incidents
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -1089,9 +1089,10 @@ elseif ($action == 'reassign')
     $name = user_realname($uid);
     printf($strHasBeenAutoMovedToX, $incidentnum, $name, $queuename);
     echo help_link('AutoAssignIncidents')."</p><br /><br />";
-    $userphone = user_phone($userid);
+    $userphone = user_phone($uid);
     if ($userphone != '')
     {
+        echo "<h3>{$name} {$strContactDetails}</h3>";
         echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
     }
     $sql = "UPDATE `{$dbIncidents}` SET owner='{$uid}', lastupdated='{$now}' WHERE id='{$incidentid}'";

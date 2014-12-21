@@ -2,7 +2,7 @@
 // move_update.php - Moves an incident from the pending/holding queue
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -86,7 +86,10 @@ if ($incidentid == '')
 else
 {
     // check that the incident is still open.  i.e. status not = closed
-    if (incident_status($incidentid) != STATUS_CLOSED)
+
+    $incidentstatus = incident_status($incidentid);
+
+    if (!empty($incidentstatus) AND $incidentstatus != STATUS_CLOSED)
     {
         $moved_attachments = TRUE;
         // update the incident record, change the incident status to active

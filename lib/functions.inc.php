@@ -3,7 +3,7 @@
 // functions.inc.php - Function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -96,7 +96,7 @@ function authenticate($username, $password)
             elseif ($obj->user_source == 'ldap')
             {
                 // Auth against LDAP and sync
-                $toReturn =  authenticateLDAP(clean_ldapstring(($username)), clean_ldapstring($password), $obj->id);
+                $toReturn = authenticateLDAP(clean_ldapstring(($username)), clean_ldapstring($password), $obj->id);
                 if ($toReturn === -1)
                 {
                     // Communication with LDAP server failed
@@ -132,7 +132,7 @@ function authenticate($username, $password)
             // Don't exist, check LDAP etc
             if ($CONFIG['use_ldap'])
             {
-                $toReturn =  authenticateLDAP($username, $password);
+                $toReturn = authenticateLDAP($username, $password);
                 if ($toReturn === -1) $toReturn = false;
             }
         }
@@ -157,6 +157,12 @@ function authenticate($username, $password)
 }
 
 
+/**
+ * Authenticates a contact
+ * @param string $username
+ * @param string $password
+ * @return mixed returns contactID if successful false otherwise
+ */
 function authenticateContact($username, $password)
 {
     debug_log ("authenticateContact called");
@@ -165,17 +171,18 @@ function authenticateContact($username, $password)
 
     if (!empty($username) AND !empty($password))
     {
-        $sql = "SELECT id, password, contact_source, active FROM `{$GLOBALS['dbContacts']}` WHERE username = '{$username}'";
+        $sql = "SELECT id, password, contact_source, active, username FROM `{$GLOBALS['dbContacts']}` WHERE (username = '{$username}' OR email = '{$username}')";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) == 1)
         {
             debug_log ("Authenticate: Just one contact in db");
+
             // Exists in SiT DB
             $obj = mysql_fetch_object($result);
             if ($obj->contact_source == 'sit')
             {
-                if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
+                if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = $obj->id;
                 else $toReturn = false;
             }
             elseif ($obj->contact_source == 'ldap')
@@ -189,7 +196,7 @@ function authenticateContact($username, $password)
                     {
                         debug_log ("LDAP connection failed, using cached password");
                         // Use cached password
-                        if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = true;
+                        if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = $obj->id;
                         else $toReturn = false;
                         debug_log ("Cached contact {$toReturn} {$password}");
 
@@ -202,7 +209,7 @@ function authenticateContact($username, $password)
                 }
                 elseif ($toReturn)
                 {
-                    $toReturn = true;
+                    $toReturn = $obj->id;
                 }
                 else
                 {
@@ -224,11 +231,11 @@ function authenticateContact($username, $password)
         }
         else
         {
-            debug_log ("Authenticate: No matching contact '$username' found in db");
+            debug_log ("Authenticate: No matching contact '{$username}' found in db");
             // Don't exist, check LDAP etc
             if ($CONFIG['use_ldap'] AND !empty($CONFIG['ldap_customer_group']))
             {
-                $toReturn =  authenticateLDAP($username, $password, 0, false);
+                $toReturn = authenticateLDAP($username, $password, 0, false);
                 if ($toReturn === -1) $toReturn = false;
             }
         }
@@ -883,7 +890,7 @@ function schedule_actions_due()
     $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
         while ($action = mysql_fetch_object($result))
@@ -892,7 +899,7 @@ function schedule_actions_due()
         }
     }
 
-    if (is_array($actions)) debug_log('Scheduler actions due: '.implode(', ',array_keys($actions)));
+    if (is_array($actions)) debug_log('Scheduler actions due: '.implode(', ', array_keys($actions)));
 
     return $actions;
 }
@@ -915,7 +922,7 @@ function schedule_action_started($action)
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         return FALSE;
     }
     if (mysql_affected_rows() > 0) return TRUE;
@@ -947,7 +954,7 @@ function schedule_action_done($doneaction, $success = TRUE)
     mysql_query($sql);
     if (mysql_error())
     {
-        trigger_error(mysql_error(),E_USER_ERROR);
+        trigger_error(mysql_error(), E_USER_ERROR);
         return FALSE;
     }
     if (mysql_affected_rows() > 0) return TRUE;
@@ -964,7 +971,7 @@ function session_regenerate()
 {
     if (function_exists('session_regenerate_id'))
     {
-        if (!version_compare(phpversion(),"5.1.0",">=")) session_regenerate_id(FALSE);
+        if (!version_compare(phpversion(), "5.1.0", ">=")) session_regenerate_id(FALSE);
         else session_regenerate_id();
     }
 }
@@ -1316,14 +1323,29 @@ function user_notice($text, $type = NORMAL_NOTICE_TYPE, $durability = 'session')
             $sql = "INSERT INTO `{$GLOBALS['dbNotices']}` (userid, type, text, timestamp, durability) ";
             $sql .= "VALUES({$GLOBALS['sit'][2]}, {$type}, '{$text}', NOW(), '{$durability}')";
             mysql_query($sql);
-            if (mysql_error())
-            {
-                trigger_error(mysql_error(),E_USER_WARNING);
-            }
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         }
     }
 }
 
+
+/**
+ * Gets the friendly name for a country given an ISO code
+ * @param String $isocode The two digit ISO code for the country
+ * @return String the friendly name for the site
+ * @author Paul Heaney
+ */
+function get_country_name($isocode)
+{
+    $sql = "SELECT name FROM `{$GLOBALS['dbCountryList']}` WHERE isocode = '{$isocode}'";
+    $result = mysql_query($sql);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysql_num_rows($result) > 0)
+    {
+        $obj = mysql_fetch_object($result);
+        return $obj->name;
+    }
+}
 
 // -------------------------- // -------------------------- // --------------------------
 // leave this section at the bottom of functions.inc.php ================================
@@ -1341,7 +1363,7 @@ if (is_array($CONFIG['plugins']))
 
         $plugini18npath = APPLICATION_PLUGINPATH . "{$plugin}". DIRECTORY_SEPARATOR . "i18n". DIRECTORY_SEPARATOR;
         $pluginfilename = APPLICATION_PLUGINPATH . $plugin . DIRECTORY_SEPARATOR . "{$plugin}.php";
-        
+
         if ($plugin != '')
         {
             if (file_exists($pluginfilename))

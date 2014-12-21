@@ -2,7 +2,7 @@
 // sactions.inc.php - functions relating to scheduler actions/auto
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -26,6 +26,36 @@ function saction_CloseIncidents($closure_delay)
     global $dbIncidents, $dbUpdates, $CONFIG, $now;
 
     if ($closure_delay < 1) $closure_delay = 554400; // Default  six days and 10 hours
+
+    $sql = "SELECT id FROM `{$dbIncidents}` WHERE status='".STATUS_CLOSING."' ";
+    $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
+    $sql .= "AND (timeofnextaction='0' OR timeofnextaction <= '{$now}')";
+    $result = mysql_query($sql);
+    if (mysql_error())
+    {
+        trigger_error(mysql_error(), E_USER_WARNING);
+        $success = FALSE;
+    }
+
+    while ($obj = mysql_fetch_object($result))
+    {
+        if ((contact_feedback(incident_contact($obj->id)) == 'yes') AND (site_feedback(contact_siteid(incident_contact($obj->id)))) == 'yes')
+        {
+            $send_feedback = send_feedback(db_read_column('maintenanceid', $dbIncidents, $obj->id));
+            if ($CONFIG['feedback_form'] != '' AND $CONFIG['feedback_form'] > 0 AND $send_feedback == TRUE)
+            {
+                if (!create_incident_feedback($CONFIG['feedback_form'], $obj->id)) $send_feedback = FALSE;
+            }
+
+            $t = new TriggerEvent('TRIGGER_INCIDENT_CLOSED', array('incidentid' => $obj->id,
+                    'userid' => 0,
+                    'notifyexternal' => FALSE,
+                    'notifycontact' => TRUE,
+                    'awaitingclosure' => FALSE,
+                    'sendfeedback' => $send_feedback
+            ));
+        }
+    }
 
     // Code added back in to fix mark as closure incidents
     // http://bugs.sitracker.org/view.php?id=717
@@ -542,7 +572,7 @@ function saction_CheckWaitingEmail()
         $result = mysql_query($sql);
         list($interval) = mysql_fetch_row($result);
         // so we don't get a duplicate if we receive an email exactly at check time
-        $checks = "{$timestamp} + ({notifymins} * 60) + {$interval} >= {$now}";
+        $checks = "{$timestamp} + ({holdingmins} * 60) + {$interval} >= {$now}";
         new TriggerEvent("TRIGGER_WAITING_HELD_EMAIL",
                         array('holdingmins' => ceil($minswaiting / 60),
                               'checks' => $checks));

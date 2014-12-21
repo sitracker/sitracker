@@ -2,7 +2,7 @@
 // site_details.php - Show all site details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -58,7 +58,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strAddress2}:</th><td>{$siteobj->address2}</td></tr>";
     echo "<tr><th>{$strCity}:</th><td>{$siteobj->city}</td></tr>";
     echo "<tr><th>{$strCounty}:</th><td>{$siteobj->county}</td></tr>";
-    echo "<tr><th>{$strCountry}:</th><td>{$siteobj->country}</td></tr>";
+    echo "<tr><th>{$strCountry}:</th><td>".get_country_name($siteobj->country)."</td></tr>";
     echo "<tr><th>{$strPostcode}:</th><td>{$siteobj->postcode} ";
     if (!empty($siteobj->address1))
     {
@@ -90,7 +90,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
             $address .= ", {$siteobj->county}";
             $count++;
         }
-        
+
         if ($count >= $CONFIG['address_components_to_map']) echo "(".map_link($address).")";
     }
     echo "</td></tr>";

@@ -2,7 +2,7 @@
 // login.php - processes the login
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -103,7 +103,7 @@ elseif (authenticate($username, $password))
     }
 
     // Delete any old session user notices
-    $sql = "DELETE FROM `{$dbNotices}` WHERE durability='session' AND userid={$_SESSION['userid']}";
+    $sql = "DELETE FROM `{$dbNotices}` WHERE durability='session' AND userid = {$_SESSION['userid']}";
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
@@ -180,12 +180,14 @@ elseif ($CONFIG['portal'] == TRUE)
         $_SESSION['lang'] = $language;
     }
 
-    if (authenticateContact($username, $password))
+    $authContact = authenticateContact($username, $password); 
+
+    if ($authContact)
     {
         debug_log("PORTAL AUTH SUCESSFUL");
         $_SESSION['portalauth'] = TRUE;
 
-        $sql = "SELECT * FROM `{$dbContacts}` WHERE username = '{$username}'";
+        $sql = "SELECT * FROM `{$dbContacts}` WHERE id = '{$authContact}'";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) < 1)

@@ -3,7 +3,7 @@
 //                      and functions to manage them
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -106,7 +106,8 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'email_incoming_folder',
                                 'email_archive_folder',
                                 'max_incoming_email_perday',
-                                'spam_email_subject'
+                                'spam_email_subject',
+                                'inbound_emails_visible_in_portal'
                                 );
 
 $CFGCAT['outboundemail'] = array('enable_outbound_email',
@@ -422,7 +423,7 @@ $CFGVAR['hide_closed_incidents_older_than']['unit'] = $strDays;
 $CFGVAR['holidays_enabled']['title'] = "Enable Holidays";
 $CFGVAR['holidays_enabled']['type'] = 'checkbox';
 
-$CFGVAR['home_country']['title'] = "The default country in capitals. e.g. 'UNITED KINGDOM'";
+$CFGVAR['home_country']['title'] = "The default countrys ISO code in capitals. e.g. 'GB'";
 
 $CFGVAR['incident_pools']['title'] = 'Incident Pool options';
 $CFGVAR['incident_pools']['help'] = 'Comma seperated list specifying the numbers of incidents to assign to contracts';
@@ -573,7 +574,7 @@ $CFGVAR['outbound_emailattachment_newline']['help'] = "Change the newline charac
 $CFGVAR['outbound_emailattachment_newline']['type'] = 'select';
 $CFGVAR['outbound_emailattachment_newline']['options'] = 'CRLF|LF';
 
-$CFGVAR['outbound_email_send_xoriginatingip']['title'] = 'Enable Outbound Email to have ';
+$CFGVAR['outbound_email_send_xoriginatingip']['title'] = 'Enable Outbound Email to have X-Originating-IP header';
 $CFGVAR['outbound_email_send_xoriginatingip']['help'] = "You can disable outbound email from having the X-Originating-IP which can cause spam assassin to make the email as spam if it includes an internal address";
 $CFGVAR['outbound_email_send_xoriginatingip']['type'] = 'checkbox';
 
@@ -645,6 +646,10 @@ $CFGVAR['soap_portal_enabled']['type'] = 'checkbox';
 
 $CFGVAR['spam_email_subject']['title'] = 'Spam Subject';
 $CFGVAR['spam_email_subject']['help'] = 'String to look for in email message subject to determine a message is spam';
+
+$CFGVAR['inbound_emails_visible_in_portal']['title'] = 'Are inbound emails visible in the portal?';
+$CFGVAR['inbound_emails_visible_in_portal']['help'] = 'Should received emails be visible within the portal?';
+$CFGVAR['inbound_emails_visible_in_portal']['type'] = 'checkbox';
 
 $CFGVAR['start_working_day']['title'] = 'Start of the working day';
 $CFGVAR['start_working_day']['help'] = 'The time the working day starts (e.g. 9:00)';

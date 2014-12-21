@@ -2,7 +2,7 @@
 // triggers.inc.php - Trigger definitions and helper functions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -543,6 +543,12 @@ array('description' => $strIncident,
       'replacement' => 'get_userfacing_incident_id_email($param_array[\'incidentid\']);',
       'checkreplace' => 'incident_drop_down'
       );
+
+$ttvararray['{incidentidinternal}'] =
+array('description' => $strIncident,
+        'requires' => 'incidentid',
+        'replacement' => '$param_array[\'incidentid\'];',
+);
 
 $ttvararray['{incidentowner}'] =
 array('description' => $strIncidentOwnersFullName,

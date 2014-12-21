@@ -2,7 +2,7 @@
 // statistics.php - Over view and stats of calls logged - intended for last 24hours
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -344,7 +344,7 @@ function give_overview()
             if (mysql_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
-                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendorsname}</strong>";
+                echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors->name}</strong>";
                 echo "<table class='vertical maintable'>";
                 while ($rowVendor = mysql_fetch_object($resultVendor))
                 {

@@ -2,7 +2,7 @@
 // year.inc.php - Displays a year view of the calendar
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -74,7 +74,7 @@ $displayyear = $year;
 for ($r = 1; $r <= 3; $r++)
 {
     echo "<tr>";
-    for ($c = 1; $c <= 4;$c++)
+    for ($c = 1; $c <= 4; $c++)
     {
         echo "<td class='shade1 yearcalendar'>";
         draw_calendar($displaymonth, $displayyear);

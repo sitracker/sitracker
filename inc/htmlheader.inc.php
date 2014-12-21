@@ -2,7 +2,7 @@
 // htmlheader.inc.php - Header html to be included at the top of pages
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -30,7 +30,7 @@ if (isset($i18ndirection) AND !empty($i18ndirection))
 echo ">\n";
 echo "<head>\n";
 echo "<!-- SiT (Support Incident Tracker) - Support call tracking system\n";
-echo "     Copyright (C) 2010-2013 The Support Incident Tracker Project\n";
+echo "     Copyright (C) 2010-2014 The Support Incident Tracker Project\n";
 echo "     Copyright (C) 2000-2009 Salford Software Ltd. and Contributors\n\n";
 echo "     This software may be used and distributed according to the terms\n";
 echo "     of the GNU General Public License, incorporated herein by reference. -->\n";
@@ -95,7 +95,7 @@ if ($_SESSION['auth'] == TRUE)
     {
         foreach ($pagescripts AS $pscript)
         {
-            echo "<script src='{$CONFIG['application_webpath']}scripts/{$pscript}' type='text/javascript'></script>\n";
+            echo "<script src='{$CONFIG['application_webpath']}{$pscript}' type='text/javascript'></script>\n";
         }
         unset($pagescripts, $pscript);
     }
@@ -233,7 +233,7 @@ if ($sit[0] != '')
     // Don't show more than 20 notices, saftey cap
     $noticesql .= "WHERE userid={$sit[2]} ORDER BY timestamp DESC LIMIT 20";
     $noticeresult = mysql_query($noticesql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($noticeresult) > 0)
     {
         echo "<div id='noticearea'>\n";
@@ -300,7 +300,7 @@ if ($sit[0] != '')
 
             if (!empty($notice->link))
             {
-                echo " - <a href='{$notice->link}'>";
+                echo " - <a href=\"{$notice->link}\">";
                 if (mb_substr($notice->linktext, 0, 3) == 'str')
                 {
                     echo $GLOBALS[$notice->linktext];
@@ -327,4 +327,5 @@ if ($sit[0] != '')
 $headerdisplayed = TRUE; // Set a variable so we can check to see if the header was included
 
 echo "<div id='mainframe'>";
+
 ?>

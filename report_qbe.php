@@ -2,7 +2,7 @@
 // qbe.php - Very simple query by example
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -149,7 +149,7 @@ elseif ($mode == 'report')
     // External variables
     $table = clean_fixed_list($_POST['table1'], $tables);
     $criteriafield = clean_dbstring($_POST['criteriafield']);
-    $criteriaop = clean_fixed_list($_POST['criteriaop'], array('eq', 'lt', 'gt'));
+    $criteriaop = clean_fixed_list($_POST['criteriaop'], array('eq', 'lt', 'gt', 'LIKE'));
     $criteriaval = clean_dbstring($_POST['criteriaval']);
     $sortby = clean_dbstring($_POST['sortby']);
     $sortorder = clean_dbstring($_POST['sortorder']);
@@ -163,6 +163,8 @@ elseif ($mode == 'report')
         case 'lt': $criteriaop = "<";
             break;
         case 'gt' : $criteriaop = ">";
+            break;
+        case 'LIKE' : $criteriaop = "LIKE";
             break;
     }
 

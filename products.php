@@ -2,7 +2,7 @@
 // products.php - List products
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -267,18 +267,20 @@ else
         while ($product = mysql_fetch_object($presult))
         {
             echo "<h2>".icon('product', 32)." ".sprintf($strProductX, $product->name)."</h2>";
-            echo "<p align='center'><a href='edit_product.php?id={$product->id}'>Edit</a> ";
-            echo "| <a href='product_delete.php?id={$product->id}'>{$strDelete}</a></p>";
+
             $tags = list_tags($product->id, TAG_PRODUCT, TRUE);
 
             if (!empty($tags)) echo "<div id='producttags'>{$tags}</div><br />\n";
-            echo "<table class='maintable'>";
+            
+            if (!empty($product->description)) echo "<p align='center'>".nl2br($product->description)."</p>";
+            echo "<p align='center'><a href='edit_product.php?id={$product->id}'>Edit</a> ";
+            echo "| <a href='product_delete.php?id={$product->id}'>{$strDelete}</a></p>";
 
-            if (!empty($product->description)) echo "<tr class='shade1'><td colspan='0'>".nl2br($product->description)."</td></tr>";
+            echo "<table class='maintable'>";
 
             $swsql = "SELECT * FROM `{$dbSoftwareProducts}` AS sp, `{$dbSoftware}` AS s ";
             $swsql .= "WHERE sp.softwareid=s.id AND productid='{$product->id}' ORDER BY name";
-            $swresult=mysql_query($swsql);
+            $swresult = mysql_query($swsql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
 
             if (mysql_num_rows($swresult) > 0)

@@ -2,7 +2,7 @@
 // setup-schema.php - Defines database schema for use in setup.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -181,9 +181,9 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `department` varchar(255) DEFAULT NULL,
   `address1` varchar(255) DEFAULT NULL,
   `address2` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
+  `city` char(2) DEFAULT NULL,
   `county` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
+  `country` char(2) DEFAULT NULL,
   `postcode` varchar(255) DEFAULT NULL,
   `dataprotection_email` enum('No','Yes') DEFAULT 'No',
   `dataprotection_phone` enum('No','Yes') DEFAULT 'No',
@@ -204,6 +204,263 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   KEY `surname` (`surname`),
   KEY `notify_contactid` (`notify_contactid`)
 ) ENGINE=MyISAM  DEFAULT CHARACTER SET = utf8;
+
+
+CREATE TABLE IF NOT EXISTS `{$dbCountryList}` (
+  `isocode` char(2) NOT NULL,
+  `name` varbinary(256) NOT NULL,
+  PRIMARY KEY (`isocode`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbCountryList}` VALUES('AF', 'Afghanistan');
+INSERT INTO `{$dbCountryList}` VALUES('AX', 'Åland Islands');
+INSERT INTO `{$dbCountryList}` VALUES('AL', 'Albania');
+INSERT INTO `{$dbCountryList}` VALUES('DZ', 'Algeria');
+INSERT INTO `{$dbCountryList}` VALUES('AS', 'American Samoa');
+INSERT INTO `{$dbCountryList}` VALUES('AD', 'Andorra');
+INSERT INTO `{$dbCountryList}` VALUES('AO', 'Angola');
+INSERT INTO `{$dbCountryList}` VALUES('AI', 'Anguilla');
+INSERT INTO `{$dbCountryList}` VALUES('AQ', 'Antarctica');
+INSERT INTO `{$dbCountryList}` VALUES('AG', 'Antigua and Barbuda');
+INSERT INTO `{$dbCountryList}` VALUES('AR', 'Argentina');
+INSERT INTO `{$dbCountryList}` VALUES('AM', 'Armenia');
+INSERT INTO `{$dbCountryList}` VALUES('AW', 'Aruba');
+INSERT INTO `{$dbCountryList}` VALUES('AU', 'Australia');
+INSERT INTO `{$dbCountryList}` VALUES('AT', 'Austria');
+INSERT INTO `{$dbCountryList}` VALUES('AZ', 'Azerbaijan');
+INSERT INTO `{$dbCountryList}` VALUES('BS', 'Bahamas');
+INSERT INTO `{$dbCountryList}` VALUES('BH', 'Bahrain');
+INSERT INTO `{$dbCountryList}` VALUES('BD', 'Bangladesh');
+INSERT INTO `{$dbCountryList}` VALUES('BB', 'Barbados');
+INSERT INTO `{$dbCountryList}` VALUES('BY', 'Belarus');
+INSERT INTO `{$dbCountryList}` VALUES('BE', 'Belgium');
+INSERT INTO `{$dbCountryList}` VALUES('BZ', 'Belize');
+INSERT INTO `{$dbCountryList}` VALUES('BJ', 'Benin');
+INSERT INTO `{$dbCountryList}` VALUES('BM', 'Bermuda');
+INSERT INTO `{$dbCountryList}` VALUES('BT', 'Bhutan');
+INSERT INTO `{$dbCountryList}` VALUES('BO', 'Bolivia, Plurinational State of');
+INSERT INTO `{$dbCountryList}` VALUES('BQ', 'Bonaire, Sint Eustatius and Saba');
+INSERT INTO `{$dbCountryList}` VALUES('BA', 'Bosnia and Herzegovina');
+INSERT INTO `{$dbCountryList}` VALUES('BW', 'Botswana');
+INSERT INTO `{$dbCountryList}` VALUES('BV', 'Bouvet Island');
+INSERT INTO `{$dbCountryList}` VALUES('BR', 'Brazil');
+INSERT INTO `{$dbCountryList}` VALUES('IO', 'British Indian Ocean Territory');
+INSERT INTO `{$dbCountryList}` VALUES('BN', 'Brunei Darussalam');
+INSERT INTO `{$dbCountryList}` VALUES('BG', 'Bulgaria');
+INSERT INTO `{$dbCountryList}` VALUES('BF', 'Burkina Faso');
+INSERT INTO `{$dbCountryList}` VALUES('BI', 'Burundi');
+INSERT INTO `{$dbCountryList}` VALUES('KH', 'Cambodia');
+INSERT INTO `{$dbCountryList}` VALUES('CM', 'Cameroon');
+INSERT INTO `{$dbCountryList}` VALUES('CA', 'Canada');
+INSERT INTO `{$dbCountryList}` VALUES('CV', 'Cape Verde');
+INSERT INTO `{$dbCountryList}` VALUES('KY', 'Cayman Islands');
+INSERT INTO `{$dbCountryList}` VALUES('CF', 'Central African Republic');
+INSERT INTO `{$dbCountryList}` VALUES('TD', 'Chad');
+INSERT INTO `{$dbCountryList}` VALUES('CL', 'Chile');
+INSERT INTO `{$dbCountryList}` VALUES('CN', 'China');
+INSERT INTO `{$dbCountryList}` VALUES('CX', 'Christmas Island');
+INSERT INTO `{$dbCountryList}` VALUES('CC', 'Cocos (Keeling) Islands');
+INSERT INTO `{$dbCountryList}` VALUES('CO', 'Colombia');
+INSERT INTO `{$dbCountryList}` VALUES('KM', 'Comoros');
+INSERT INTO `{$dbCountryList}` VALUES('CG', 'Congo');
+INSERT INTO `{$dbCountryList}` VALUES('CD', 'Congo, the Democratic Republic of the');
+INSERT INTO `{$dbCountryList}` VALUES('CK', 'Cook Islands');
+INSERT INTO `{$dbCountryList}` VALUES('CR', 'Costa Rica');
+INSERT INTO `{$dbCountryList}` VALUES('CI', 'Côte d''Ivoire');
+INSERT INTO `{$dbCountryList}` VALUES('HR', 'Croatia');
+INSERT INTO `{$dbCountryList}` VALUES('CU', 'Cuba');
+INSERT INTO `{$dbCountryList}` VALUES('CW', 'Curaçao');
+INSERT INTO `{$dbCountryList}` VALUES('CY', 'Cyprus');
+INSERT INTO `{$dbCountryList}` VALUES('CZ', 'Czech Republic');
+INSERT INTO `{$dbCountryList}` VALUES('DK', 'Denmark');
+INSERT INTO `{$dbCountryList}` VALUES('DJ', 'Djibouti');
+INSERT INTO `{$dbCountryList}` VALUES('DM', 'Dominica');
+INSERT INTO `{$dbCountryList}` VALUES('DO', 'Dominican Republic');
+INSERT INTO `{$dbCountryList}` VALUES('EC', 'Ecuador');
+INSERT INTO `{$dbCountryList}` VALUES('EG', 'Egypt');
+INSERT INTO `{$dbCountryList}` VALUES('SV', 'El Salvador');
+INSERT INTO `{$dbCountryList}` VALUES('GQ', 'Equatorial Guinea');
+INSERT INTO `{$dbCountryList}` VALUES('ER', 'Eritrea');
+INSERT INTO `{$dbCountryList}` VALUES('EE', 'Estonia');
+INSERT INTO `{$dbCountryList}` VALUES('ET', 'Ethiopia');
+INSERT INTO `{$dbCountryList}` VALUES('FK', 'Falkland Islands');
+INSERT INTO `{$dbCountryList}` VALUES('FO', 'Faroe Islands');
+INSERT INTO `{$dbCountryList}` VALUES('FJ', 'Fiji');
+INSERT INTO `{$dbCountryList}` VALUES('FI', 'Finland');
+INSERT INTO `{$dbCountryList}` VALUES('FR', 'France');
+INSERT INTO `{$dbCountryList}` VALUES('GF', 'French Guiana');
+INSERT INTO `{$dbCountryList}` VALUES('PF', 'French Polynesia');
+INSERT INTO `{$dbCountryList}` VALUES('TF', 'French Southern Territories');
+INSERT INTO `{$dbCountryList}` VALUES('GA', 'Gabon');
+INSERT INTO `{$dbCountryList}` VALUES('GM', 'Gambia');
+INSERT INTO `{$dbCountryList}` VALUES('GE', 'Georgia');
+INSERT INTO `{$dbCountryList}` VALUES('DE', 'Germany');
+INSERT INTO `{$dbCountryList}` VALUES('GH', 'Ghana');
+INSERT INTO `{$dbCountryList}` VALUES('GI', 'Gibraltar');
+INSERT INTO `{$dbCountryList}` VALUES('GR', 'Greece');
+INSERT INTO `{$dbCountryList}` VALUES('GL', 'Greenland');
+INSERT INTO `{$dbCountryList}` VALUES('GD', 'Grenada');
+INSERT INTO `{$dbCountryList}` VALUES('GP', 'Guadeloupe');
+INSERT INTO `{$dbCountryList}` VALUES('GU', 'Guam');
+INSERT INTO `{$dbCountryList}` VALUES('GT', 'Guatemala');
+INSERT INTO `{$dbCountryList}` VALUES('GG', 'Guernsey');
+INSERT INTO `{$dbCountryList}` VALUES('GN', 'Guinea');
+INSERT INTO `{$dbCountryList}` VALUES('GW', 'Guinea-Bissau');
+INSERT INTO `{$dbCountryList}` VALUES('GY', 'Guyana');
+INSERT INTO `{$dbCountryList}` VALUES('HT', 'Haiti');
+INSERT INTO `{$dbCountryList}` VALUES('HM', 'Heard Island and McDonald Islands');
+INSERT INTO `{$dbCountryList}` VALUES('VA', 'Holy See (Vatican City State)');
+INSERT INTO `{$dbCountryList}` VALUES('HN', 'Honduras');
+INSERT INTO `{$dbCountryList}` VALUES('HK', 'Hong Kong');
+INSERT INTO `{$dbCountryList}` VALUES('HU', 'Hungary');
+INSERT INTO `{$dbCountryList}` VALUES('IS', 'Iceland');
+INSERT INTO `{$dbCountryList}` VALUES('IN', 'India');
+INSERT INTO `{$dbCountryList}` VALUES('ID', 'Indonesia');
+INSERT INTO `{$dbCountryList}` VALUES('IR', 'Iran, Islamic Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('IQ', 'Iraq');
+INSERT INTO `{$dbCountryList}` VALUES('IE', 'Ireland');
+INSERT INTO `{$dbCountryList}` VALUES('IM', 'Isle of Man');
+INSERT INTO `{$dbCountryList}` VALUES('IL', 'Israel');
+INSERT INTO `{$dbCountryList}` VALUES('IT', 'Italy');
+INSERT INTO `{$dbCountryList}` VALUES('JM', 'Jamaica');
+INSERT INTO `{$dbCountryList}` VALUES('JP', 'Japan');
+INSERT INTO `{$dbCountryList}` VALUES('JE', 'Jersey');
+INSERT INTO `{$dbCountryList}` VALUES('JO', 'Jordan');
+INSERT INTO `{$dbCountryList}` VALUES('KZ', 'Kazakhstan');
+INSERT INTO `{$dbCountryList}` VALUES('KE', 'Kenya');
+INSERT INTO `{$dbCountryList}` VALUES('KI', 'Kiribati');
+INSERT INTO `{$dbCountryList}` VALUES('KP', 'Korea, Democratic People''s Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('KR', 'Korea, Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('KW', 'Kuwait');
+INSERT INTO `{$dbCountryList}` VALUES('KG', 'Kyrgyzstan');
+INSERT INTO `{$dbCountryList}` VALUES('LA', 'Lao People''s Democratic Republic');
+INSERT INTO `{$dbCountryList}` VALUES('LV', 'Latvia');
+INSERT INTO `{$dbCountryList}` VALUES('LB', 'Lebanon');
+INSERT INTO `{$dbCountryList}` VALUES('LS', 'Lesotho');
+INSERT INTO `{$dbCountryList}` VALUES('LR', 'Liberia');
+INSERT INTO `{$dbCountryList}` VALUES('LY', 'Libya');
+INSERT INTO `{$dbCountryList}` VALUES('LI', 'Liechtenstein');
+INSERT INTO `{$dbCountryList}` VALUES('LT', 'Lithuania');
+INSERT INTO `{$dbCountryList}` VALUES('LU', 'Luxembourg');
+INSERT INTO `{$dbCountryList}` VALUES('MO', 'Macao');
+INSERT INTO `{$dbCountryList}` VALUES('MK', 'Macedonia, the former Yugoslav Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('MG', 'Madagascar');
+INSERT INTO `{$dbCountryList}` VALUES('MW', 'Malawi');
+INSERT INTO `{$dbCountryList}` VALUES('MY', 'Malaysia');
+INSERT INTO `{$dbCountryList}` VALUES('MV', 'Maldives');
+INSERT INTO `{$dbCountryList}` VALUES('ML', 'Mali');
+INSERT INTO `{$dbCountryList}` VALUES('MT', 'Malta');
+INSERT INTO `{$dbCountryList}` VALUES('MH', 'Marshall Islands');
+INSERT INTO `{$dbCountryList}` VALUES('MQ', 'Martinique');
+INSERT INTO `{$dbCountryList}` VALUES('MR', 'Mauritania');
+INSERT INTO `{$dbCountryList}` VALUES('MU', 'Mauritius');
+INSERT INTO `{$dbCountryList}` VALUES('YT', 'Mayotte');
+INSERT INTO `{$dbCountryList}` VALUES('MX', 'Mexico');
+INSERT INTO `{$dbCountryList}` VALUES('FM', 'Micronesia, Federated States of');
+INSERT INTO `{$dbCountryList}` VALUES('MD', 'Moldova, Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('MC', 'Monaco');
+INSERT INTO `{$dbCountryList}` VALUES('MN', 'Mongolia');
+INSERT INTO `{$dbCountryList}` VALUES('ME', 'Montenegro');
+INSERT INTO `{$dbCountryList}` VALUES('MS', 'Montserrat');
+INSERT INTO `{$dbCountryList}` VALUES('MA', 'Morocco');
+INSERT INTO `{$dbCountryList}` VALUES('MZ', 'Mozambique');
+INSERT INTO `{$dbCountryList}` VALUES('MM', 'Myanmar');
+INSERT INTO `{$dbCountryList}` VALUES('NA', 'Namibia');
+INSERT INTO `{$dbCountryList}` VALUES('NR', 'Nauru');
+INSERT INTO `{$dbCountryList}` VALUES('NP', 'Nepal');
+INSERT INTO `{$dbCountryList}` VALUES('NL', 'Netherlands');
+INSERT INTO `{$dbCountryList}` VALUES('NC', 'New Caledonia');
+INSERT INTO `{$dbCountryList}` VALUES('NZ', 'New Zealand');
+INSERT INTO `{$dbCountryList}` VALUES('NI', 'Nicaragua');
+INSERT INTO `{$dbCountryList}` VALUES('NE', 'Niger');
+INSERT INTO `{$dbCountryList}` VALUES('NG', 'Nigeria');
+INSERT INTO `{$dbCountryList}` VALUES('NU', 'Niue');
+INSERT INTO `{$dbCountryList}` VALUES('NF', 'Norfolk Island');
+INSERT INTO `{$dbCountryList}` VALUES('MP', 'Northern Mariana Islands');
+INSERT INTO `{$dbCountryList}` VALUES('NO', 'Norway');
+INSERT INTO `{$dbCountryList}` VALUES('OM', 'Oman');
+INSERT INTO `{$dbCountryList}` VALUES('PK', 'Pakistan');
+INSERT INTO `{$dbCountryList}` VALUES('PW', 'Palau');
+INSERT INTO `{$dbCountryList}` VALUES('PS', 'Palestine, State of');
+INSERT INTO `{$dbCountryList}` VALUES('PA', 'Panama');
+INSERT INTO `{$dbCountryList}` VALUES('PG', 'Papua New Guinea');
+INSERT INTO `{$dbCountryList}` VALUES('PY', 'Paraguay');
+INSERT INTO `{$dbCountryList}` VALUES('PE', 'Peru');
+INSERT INTO `{$dbCountryList}` VALUES('PH', 'Philippines');
+INSERT INTO `{$dbCountryList}` VALUES('PN', 'Pitcairn');
+INSERT INTO `{$dbCountryList}` VALUES('PL', 'Poland');
+INSERT INTO `{$dbCountryList}` VALUES('PT', 'Portugal');
+INSERT INTO `{$dbCountryList}` VALUES('PR', 'Puerto Rico');
+INSERT INTO `{$dbCountryList}` VALUES('QA', 'Qatar');
+INSERT INTO `{$dbCountryList}` VALUES('RE', 'Réunion');
+INSERT INTO `{$dbCountryList}` VALUES('RO', 'Romania');
+INSERT INTO `{$dbCountryList}` VALUES('RU', 'Russian Federation');
+INSERT INTO `{$dbCountryList}` VALUES('RW', 'Rwanda');
+INSERT INTO `{$dbCountryList}` VALUES('BL', 'Réunion');
+INSERT INTO `{$dbCountryList}` VALUES('SH', 'Saint Helena, Ascension and Tristan da Cunha');
+INSERT INTO `{$dbCountryList}` VALUES('KN', 'Saint Kitts and Nevis');
+INSERT INTO `{$dbCountryList}` VALUES('LC', 'Saint Lucia');
+INSERT INTO `{$dbCountryList}` VALUES('MF', 'Saint Martin (French part)');
+INSERT INTO `{$dbCountryList}` VALUES('PM', 'Saint Pierre and Miquelon');
+INSERT INTO `{$dbCountryList}` VALUES('VC', 'Saint Vincent and the Grenadines');
+INSERT INTO `{$dbCountryList}` VALUES('WS', 'Samoa');
+INSERT INTO `{$dbCountryList}` VALUES('SM', 'San Marino');
+INSERT INTO `{$dbCountryList}` VALUES('ST', 'Sao Tome and Principe');
+INSERT INTO `{$dbCountryList}` VALUES('SA', 'Saudi Arabia');
+INSERT INTO `{$dbCountryList}` VALUES('SN', 'Senegal');
+INSERT INTO `{$dbCountryList}` VALUES('RS', 'Serbia');
+INSERT INTO `{$dbCountryList}` VALUES('SC', 'Seychelles');
+INSERT INTO `{$dbCountryList}` VALUES('SL', 'Sierra Leone');
+INSERT INTO `{$dbCountryList}` VALUES('SG', 'Singapore');
+INSERT INTO `{$dbCountryList}` VALUES('SX', 'Sint Maarten (Dutch part)');
+INSERT INTO `{$dbCountryList}` VALUES('SK', 'Slovakia');
+INSERT INTO `{$dbCountryList}` VALUES('SI', 'Slovenia');
+INSERT INTO `{$dbCountryList}` VALUES('SB', 'Solomon Islands');
+INSERT INTO `{$dbCountryList}` VALUES('SO', 'Somalia');
+INSERT INTO `{$dbCountryList}` VALUES('ZA', 'South Africa');
+INSERT INTO `{$dbCountryList}` VALUES('GS', 'South Georgia and the South Sandwich Islands');
+INSERT INTO `{$dbCountryList}` VALUES('SS', 'South Sudan');
+INSERT INTO `{$dbCountryList}` VALUES('ES', 'Spain');
+INSERT INTO `{$dbCountryList}` VALUES('LK', 'Sri Lanka');
+INSERT INTO `{$dbCountryList}` VALUES('SD', 'Sudan');
+INSERT INTO `{$dbCountryList}` VALUES('SR', 'Suriname');
+INSERT INTO `{$dbCountryList}` VALUES('SJ', 'Svalbard and Jan Mayen');
+INSERT INTO `{$dbCountryList}` VALUES('SZ', 'Swaziland');
+INSERT INTO `{$dbCountryList}` VALUES('SE', 'Sweden');
+INSERT INTO `{$dbCountryList}` VALUES('CH', 'Switzerland');
+INSERT INTO `{$dbCountryList}` VALUES('SY', 'Syrian Arab Republic');
+INSERT INTO `{$dbCountryList}` VALUES('TW', 'Taiwan, Province of China');
+INSERT INTO `{$dbCountryList}` VALUES('TJ', 'Tajikistan');
+INSERT INTO `{$dbCountryList}` VALUES('TZ', 'Tanzania, United Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('TH', 'Thailand');
+INSERT INTO `{$dbCountryList}` VALUES('TL', 'Timor-Leste');
+INSERT INTO `{$dbCountryList}` VALUES('TG', 'Togo');
+INSERT INTO `{$dbCountryList}` VALUES('TK', 'Tokelau');
+INSERT INTO `{$dbCountryList}` VALUES('TO', 'Tonga');
+INSERT INTO `{$dbCountryList}` VALUES('TT', 'Trinidad and Tobago');
+INSERT INTO `{$dbCountryList}` VALUES('TN', 'Tunisia');
+INSERT INTO `{$dbCountryList}` VALUES('TR', 'Turkey');
+INSERT INTO `{$dbCountryList}` VALUES('TM', 'Turkmenistan');
+INSERT INTO `{$dbCountryList}` VALUES('TC', 'Turks and Caicos Islands');
+INSERT INTO `{$dbCountryList}` VALUES('TV', 'Tuvalu');
+INSERT INTO `{$dbCountryList}` VALUES('UG', 'Uganda');
+INSERT INTO `{$dbCountryList}` VALUES('UA', 'Ukraine');
+INSERT INTO `{$dbCountryList}` VALUES('AE', 'United Arab Emirates');
+INSERT INTO `{$dbCountryList}` VALUES('GB', 'United Kingdom');
+INSERT INTO `{$dbCountryList}` VALUES('US', 'United States');
+INSERT INTO `{$dbCountryList}` VALUES('UM', 'United States Minor Outlying Islands');
+INSERT INTO `{$dbCountryList}` VALUES('UY', 'Uruguay');
+INSERT INTO `{$dbCountryList}` VALUES('UZ', 'Uzbekistan');
+INSERT INTO `{$dbCountryList}` VALUES('VU', 'Vanuatu');
+INSERT INTO `{$dbCountryList}` VALUES('VE', 'Venezuela, Bolivarian Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('VN', 'Vietnam');
+INSERT INTO `{$dbCountryList}` VALUES('VG', 'Virgin Islands, British');
+INSERT INTO `{$dbCountryList}` VALUES('VI', 'Virgin Islands, U.S.');
+INSERT INTO `{$dbCountryList}` VALUES('WF', 'Wallis and Futuna');
+INSERT INTO `{$dbCountryList}` VALUES('EH', 'Western Sahara');
+INSERT INTO `{$dbCountryList}` VALUES('YE', 'Yemen');
+INSERT INTO `{$dbCountryList}` VALUES('ZM', 'Zambia');
+INSERT INTO `{$dbCountryList}` VALUES('ZW', 'Zimbabwe');
 
 
 CREATE TABLE IF NOT EXISTS `{$dbDashboard}` (
@@ -559,7 +816,6 @@ INSERT INTO `{$dbIncidentStatus}` VALUES (8, 'strAwaitingCustomerAction', 'strAw
 INSERT INTO `{$dbIncidentStatus}` VALUES (9, 'strUnsupported', 'strUnsupported');
 INSERT INTO `{$dbIncidentStatus}` VALUES (10, 'strActiveUnassigned', 'strActive');
 
-
 CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
@@ -777,12 +1033,12 @@ CREATE TABLE IF NOT EXISTS `{$dbNoticeTemplates}` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_CREATED', 3, 'strNoticeIncidentCreatedDesc', 'strNoticeIncidentCreated', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_ASSIGNED', 3, 'strNoticeIncidentAssignedDesc', 'strNoticeIncidentAssigned', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_NEARING_SLA', 3, 'strNoticeIncidentNearingSLADesc', 'strNoticeIncidentNearingSLA', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky','{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_CREATED', 3, 'strNoticeIncidentCreatedDesc', 'strNoticeIncidentCreated', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky', '{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_ASSIGNED', 3, 'strNoticeIncidentAssignedDesc', 'strNoticeIncidentAssigned', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky', '{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_NEARING_SLA', 3, 'strNoticeIncidentNearingSLADesc', 'strNoticeIncidentNearingSLA', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky','{incidentid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_LANGUAGE_DIFFERS', 3, 'strNoticeLanguageDiffersDesc', 'strNoticeLanguageDiffers', 'strKeepCurrentLanguage', '{applicationurl}user_profile_edit.php?mode=savesessionlang', 'session', '{currentlang}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_CONTACT', 3, 'strNoticeNewContactDesc', 'strNoticeNewContact', 'strViewContact', '{applicationurl}contact_details.php?id={contactid}', 'sticky','{contactid}');
-INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_REVIEW_DUE', 3, 'strNoticeIncidentReviewDueDesc', 'strNoticeIncidentReviewDue', 'strViewIncident', 'javascript:incident_details_window({incidentid})', 'sticky', '{incidentid}');
+INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_INCIDENT_REVIEW_DUE', 3, 'strNoticeIncidentReviewDueDesc', 'strNoticeIncidentReviewDue', 'strViewIncident', 'javascript:incident_details_window({incidentidinternal})', 'sticky', '{incidentid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_KB_CREATED', 3, 'strNoticeKBCreatedDesc', 'strNoticeKBCreated', 'strViewArticle', '{applicationurl}kb_view_article.php?id={kbid}', 'sticky', '{kbid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_NEW_HELD_EMAIL', 3, 'strNoticeNewHeldEmailDesc', 'strNoticeNewHeldEmail', 'strViewHoldingQueue', '{applicationurl}holding_queue.php', 'sticky', '{holdingemailid}');
 INSERT INTO `{$dbNoticeTemplates}` (`name`, `type`, `description`, `text`, `linktext`, `link`, `durability`, `refid`) VALUES('NOTICE_MINS_HELD_EMAIL', 3, 'strNoticeMinsHeldEmailDesc', 'strNoticeMinsHeldEmail', 'strViewHoldingQueue', '{applicationurl}holding_queue.php', 'sticky', '{holdingemailid}');
@@ -1279,7 +1535,7 @@ CREATE TABLE IF NOT EXISTS `{$dbSites}` (
   `address2` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
   `county` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
+  `country` char(2) DEFAULT NULL,
   `postcode` varchar(255) DEFAULT NULL,
   `telephone` varchar(255) DEFAULT NULL,
   `fax` varchar(255) DEFAULT NULL,
@@ -1623,7 +1879,7 @@ $sampledata_sql = "
 INSERT INTO `{$dbSites}` (`id`, `name`, `department`, `address1`, `address2`, `city`, `county`,
 `country`, `postcode`, `telephone`, `fax`, `email`, `notes`, `typeid`, `freesupport`, `licenserx`,
  `owner`) VALUES (1, 'ACME Widgets Co.', 'Manufacturing Dept.', '21 Any Street', '',
-'Anytown', 'Anyshire', 'UNITED KINGDOM', 'AN1 0TH', '0555 555555', '0444 444444', 'acme@example.com',
+'Anytown', 'Anyshire', 'GB', 'AN1 0TH', '0555 555555', '0444 444444', 'acme@example.com',
 'Example site', 1, 0, 0, 0);
 
 INSERT INTO `{$dbContacts}` (`id`, `notify_contactid`, `username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `fax`, `department`, `address1`, `address2`, `city`, `county`, `country`, `postcode`, `dataprotection_email`, `dataprotection_phone`, `dataprotection_address`, `timestamp_added`, `timestamp_modified`, `notes`) VALUES
@@ -1966,6 +2222,7 @@ INSERT INTO `{$dbBillingMatrixPoints}` (`tag`, `name`, `points`) VALUES
 -- PH 2013-09-27
 ALTER TABLE `{$dbUsers}` ADD `managerid` SMALLINT NULL AFTER `lastseen`;
 
+
 -- PH 2013-09-28
 CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -2000,6 +2257,269 @@ INSERT INTO `{$dbMaintenanceServiceLevels}` SELECT id, 1, servicelevel FROM `{$d
 
 ALTER TABLE `{$dbMaintenance}` DROP `servicelevel`;
 
+-- PH 2014-03-02
+CREATE TABLE IF NOT EXISTS `{$dbCountryList}` (
+  `isocode` char(2) NOT NULL,
+  `name` varbinary(256) NOT NULL,
+  PRIMARY KEY (`isocode`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `{$dbCountryList}` VALUES('AF', 'Afghanistan');
+INSERT INTO `{$dbCountryList}` VALUES('AX', 'Åland Islands');
+INSERT INTO `{$dbCountryList}` VALUES('AL', 'Albania');
+INSERT INTO `{$dbCountryList}` VALUES('DZ', 'Algeria');
+INSERT INTO `{$dbCountryList}` VALUES('AS', 'American Samoa');
+INSERT INTO `{$dbCountryList}` VALUES('AD', 'Andorra');
+INSERT INTO `{$dbCountryList}` VALUES('AO', 'Angola');
+INSERT INTO `{$dbCountryList}` VALUES('AI', 'Anguilla');
+INSERT INTO `{$dbCountryList}` VALUES('AQ', 'Antarctica');
+INSERT INTO `{$dbCountryList}` VALUES('AG', 'Antigua and Barbuda');
+INSERT INTO `{$dbCountryList}` VALUES('AR', 'Argentina');
+INSERT INTO `{$dbCountryList}` VALUES('AM', 'Armenia');
+INSERT INTO `{$dbCountryList}` VALUES('AW', 'Aruba');
+INSERT INTO `{$dbCountryList}` VALUES('AU', 'Australia');
+INSERT INTO `{$dbCountryList}` VALUES('AT', 'Austria');
+INSERT INTO `{$dbCountryList}` VALUES('AZ', 'Azerbaijan');
+INSERT INTO `{$dbCountryList}` VALUES('BS', 'Bahamas');
+INSERT INTO `{$dbCountryList}` VALUES('BH', 'Bahrain');
+INSERT INTO `{$dbCountryList}` VALUES('BD', 'Bangladesh');
+INSERT INTO `{$dbCountryList}` VALUES('BB', 'Barbados');
+INSERT INTO `{$dbCountryList}` VALUES('BY', 'Belarus');
+INSERT INTO `{$dbCountryList}` VALUES('BE', 'Belgium');
+INSERT INTO `{$dbCountryList}` VALUES('BZ', 'Belize');
+INSERT INTO `{$dbCountryList}` VALUES('BJ', 'Benin');
+INSERT INTO `{$dbCountryList}` VALUES('BM', 'Bermuda');
+INSERT INTO `{$dbCountryList}` VALUES('BT', 'Bhutan');
+INSERT INTO `{$dbCountryList}` VALUES('BO', 'Bolivia, Plurinational State of');
+INSERT INTO `{$dbCountryList}` VALUES('BQ', 'Bonaire, Sint Eustatius and Saba');
+INSERT INTO `{$dbCountryList}` VALUES('BA', 'Bosnia and Herzegovina');
+INSERT INTO `{$dbCountryList}` VALUES('BW', 'Botswana');
+INSERT INTO `{$dbCountryList}` VALUES('BV', 'Bouvet Island');
+INSERT INTO `{$dbCountryList}` VALUES('BR', 'Brazil');
+INSERT INTO `{$dbCountryList}` VALUES('IO', 'British Indian Ocean Territory');
+INSERT INTO `{$dbCountryList}` VALUES('BN', 'Brunei Darussalam');
+INSERT INTO `{$dbCountryList}` VALUES('BG', 'Bulgaria');
+INSERT INTO `{$dbCountryList}` VALUES('BF', 'Burkina Faso');
+INSERT INTO `{$dbCountryList}` VALUES('BI', 'Burundi');
+INSERT INTO `{$dbCountryList}` VALUES('KH', 'Cambodia');
+INSERT INTO `{$dbCountryList}` VALUES('CM', 'Cameroon');
+INSERT INTO `{$dbCountryList}` VALUES('CA', 'Canada');
+INSERT INTO `{$dbCountryList}` VALUES('CV', 'Cape Verde');
+INSERT INTO `{$dbCountryList}` VALUES('KY', 'Cayman Islands');
+INSERT INTO `{$dbCountryList}` VALUES('CF', 'Central African Republic');
+INSERT INTO `{$dbCountryList}` VALUES('TD', 'Chad');
+INSERT INTO `{$dbCountryList}` VALUES('CL', 'Chile');
+INSERT INTO `{$dbCountryList}` VALUES('CN', 'China');
+INSERT INTO `{$dbCountryList}` VALUES('CX', 'Christmas Island');
+INSERT INTO `{$dbCountryList}` VALUES('CC', 'Cocos (Keeling) Islands');
+INSERT INTO `{$dbCountryList}` VALUES('CO', 'Colombia');
+INSERT INTO `{$dbCountryList}` VALUES('KM', 'Comoros');
+INSERT INTO `{$dbCountryList}` VALUES('CG', 'Congo');
+INSERT INTO `{$dbCountryList}` VALUES('CD', 'Congo, the Democratic Republic of the');
+INSERT INTO `{$dbCountryList}` VALUES('CK', 'Cook Islands');
+INSERT INTO `{$dbCountryList}` VALUES('CR', 'Costa Rica');
+INSERT INTO `{$dbCountryList}` VALUES('CI', 'Côte d''Ivoire');
+INSERT INTO `{$dbCountryList}` VALUES('HR', 'Croatia');
+INSERT INTO `{$dbCountryList}` VALUES('CU', 'Cuba');
+INSERT INTO `{$dbCountryList}` VALUES('CW', 'Curaçao');
+INSERT INTO `{$dbCountryList}` VALUES('CY', 'Cyprus');
+INSERT INTO `{$dbCountryList}` VALUES('CZ', 'Czech Republic');
+INSERT INTO `{$dbCountryList}` VALUES('DK', 'Denmark');
+INSERT INTO `{$dbCountryList}` VALUES('DJ', 'Djibouti');
+INSERT INTO `{$dbCountryList}` VALUES('DM', 'Dominica');
+INSERT INTO `{$dbCountryList}` VALUES('DO', 'Dominican Republic');
+INSERT INTO `{$dbCountryList}` VALUES('EC', 'Ecuador');
+INSERT INTO `{$dbCountryList}` VALUES('EG', 'Egypt');
+INSERT INTO `{$dbCountryList}` VALUES('SV', 'El Salvador');
+INSERT INTO `{$dbCountryList}` VALUES('GQ', 'Equatorial Guinea');
+INSERT INTO `{$dbCountryList}` VALUES('ER', 'Eritrea');
+INSERT INTO `{$dbCountryList}` VALUES('EE', 'Estonia');
+INSERT INTO `{$dbCountryList}` VALUES('ET', 'Ethiopia');
+INSERT INTO `{$dbCountryList}` VALUES('FK', 'Falkland Islands');
+INSERT INTO `{$dbCountryList}` VALUES('FO', 'Faroe Islands');
+INSERT INTO `{$dbCountryList}` VALUES('FJ', 'Fiji');
+INSERT INTO `{$dbCountryList}` VALUES('FI', 'Finland');
+INSERT INTO `{$dbCountryList}` VALUES('FR', 'France');
+INSERT INTO `{$dbCountryList}` VALUES('GF', 'French Guiana');
+INSERT INTO `{$dbCountryList}` VALUES('PF', 'French Polynesia');
+INSERT INTO `{$dbCountryList}` VALUES('TF', 'French Southern Territories');
+INSERT INTO `{$dbCountryList}` VALUES('GA', 'Gabon');
+INSERT INTO `{$dbCountryList}` VALUES('GM', 'Gambia');
+INSERT INTO `{$dbCountryList}` VALUES('GE', 'Georgia');
+INSERT INTO `{$dbCountryList}` VALUES('DE', 'Germany');
+INSERT INTO `{$dbCountryList}` VALUES('GH', 'Ghana');
+INSERT INTO `{$dbCountryList}` VALUES('GI', 'Gibraltar');
+INSERT INTO `{$dbCountryList}` VALUES('GR', 'Greece');
+INSERT INTO `{$dbCountryList}` VALUES('GL', 'Greenland');
+INSERT INTO `{$dbCountryList}` VALUES('GD', 'Grenada');
+INSERT INTO `{$dbCountryList}` VALUES('GP', 'Guadeloupe');
+INSERT INTO `{$dbCountryList}` VALUES('GU', 'Guam');
+INSERT INTO `{$dbCountryList}` VALUES('GT', 'Guatemala');
+INSERT INTO `{$dbCountryList}` VALUES('GG', 'Guernsey');
+INSERT INTO `{$dbCountryList}` VALUES('GN', 'Guinea');
+INSERT INTO `{$dbCountryList}` VALUES('GW', 'Guinea-Bissau');
+INSERT INTO `{$dbCountryList}` VALUES('GY', 'Guyana');
+INSERT INTO `{$dbCountryList}` VALUES('HT', 'Haiti');
+INSERT INTO `{$dbCountryList}` VALUES('HM', 'Heard Island and McDonald Islands');
+INSERT INTO `{$dbCountryList}` VALUES('VA', 'Holy See (Vatican City State)');
+INSERT INTO `{$dbCountryList}` VALUES('HN', 'Honduras');
+INSERT INTO `{$dbCountryList}` VALUES('HK', 'Hong Kong');
+INSERT INTO `{$dbCountryList}` VALUES('HU', 'Hungary');
+INSERT INTO `{$dbCountryList}` VALUES('IS', 'Iceland');
+INSERT INTO `{$dbCountryList}` VALUES('IN', 'India');
+INSERT INTO `{$dbCountryList}` VALUES('ID', 'Indonesia');
+INSERT INTO `{$dbCountryList}` VALUES('IR', 'Iran, Islamic Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('IQ', 'Iraq');
+INSERT INTO `{$dbCountryList}` VALUES('IE', 'Ireland');
+INSERT INTO `{$dbCountryList}` VALUES('IM', 'Isle of Man');
+INSERT INTO `{$dbCountryList}` VALUES('IL', 'Israel');
+INSERT INTO `{$dbCountryList}` VALUES('IT', 'Italy');
+INSERT INTO `{$dbCountryList}` VALUES('JM', 'Jamaica');
+INSERT INTO `{$dbCountryList}` VALUES('JP', 'Japan');
+INSERT INTO `{$dbCountryList}` VALUES('JE', 'Jersey');
+INSERT INTO `{$dbCountryList}` VALUES('JO', 'Jordan');
+INSERT INTO `{$dbCountryList}` VALUES('KZ', 'Kazakhstan');
+INSERT INTO `{$dbCountryList}` VALUES('KE', 'Kenya');
+INSERT INTO `{$dbCountryList}` VALUES('KI', 'Kiribati');
+INSERT INTO `{$dbCountryList}` VALUES('KP', 'Korea, Democratic People''s Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('KR', 'Korea, Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('KW', 'Kuwait');
+INSERT INTO `{$dbCountryList}` VALUES('KG', 'Kyrgyzstan');
+INSERT INTO `{$dbCountryList}` VALUES('LA', 'Lao People''s Democratic Republic');
+INSERT INTO `{$dbCountryList}` VALUES('LV', 'Latvia');
+INSERT INTO `{$dbCountryList}` VALUES('LB', 'Lebanon');
+INSERT INTO `{$dbCountryList}` VALUES('LS', 'Lesotho');
+INSERT INTO `{$dbCountryList}` VALUES('LR', 'Liberia');
+INSERT INTO `{$dbCountryList}` VALUES('LY', 'Libya');
+INSERT INTO `{$dbCountryList}` VALUES('LI', 'Liechtenstein');
+INSERT INTO `{$dbCountryList}` VALUES('LT', 'Lithuania');
+INSERT INTO `{$dbCountryList}` VALUES('LU', 'Luxembourg');
+INSERT INTO `{$dbCountryList}` VALUES('MO', 'Macao');
+INSERT INTO `{$dbCountryList}` VALUES('MK', 'Macedonia, the former Yugoslav Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('MG', 'Madagascar');
+INSERT INTO `{$dbCountryList}` VALUES('MW', 'Malawi');
+INSERT INTO `{$dbCountryList}` VALUES('MY', 'Malaysia');
+INSERT INTO `{$dbCountryList}` VALUES('MV', 'Maldives');
+INSERT INTO `{$dbCountryList}` VALUES('ML', 'Mali');
+INSERT INTO `{$dbCountryList}` VALUES('MT', 'Malta');
+INSERT INTO `{$dbCountryList}` VALUES('MH', 'Marshall Islands');
+INSERT INTO `{$dbCountryList}` VALUES('MQ', 'Martinique');
+INSERT INTO `{$dbCountryList}` VALUES('MR', 'Mauritania');
+INSERT INTO `{$dbCountryList}` VALUES('MU', 'Mauritius');
+INSERT INTO `{$dbCountryList}` VALUES('YT', 'Mayotte');
+INSERT INTO `{$dbCountryList}` VALUES('MX', 'Mexico');
+INSERT INTO `{$dbCountryList}` VALUES('FM', 'Micronesia, Federated States of');
+INSERT INTO `{$dbCountryList}` VALUES('MD', 'Moldova, Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('MC', 'Monaco');
+INSERT INTO `{$dbCountryList}` VALUES('MN', 'Mongolia');
+INSERT INTO `{$dbCountryList}` VALUES('ME', 'Montenegro');
+INSERT INTO `{$dbCountryList}` VALUES('MS', 'Montserrat');
+INSERT INTO `{$dbCountryList}` VALUES('MA', 'Morocco');
+INSERT INTO `{$dbCountryList}` VALUES('MZ', 'Mozambique');
+INSERT INTO `{$dbCountryList}` VALUES('MM', 'Myanmar');
+INSERT INTO `{$dbCountryList}` VALUES('NA', 'Namibia');
+INSERT INTO `{$dbCountryList}` VALUES('NR', 'Nauru');
+INSERT INTO `{$dbCountryList}` VALUES('NP', 'Nepal');
+INSERT INTO `{$dbCountryList}` VALUES('NL', 'Netherlands');
+INSERT INTO `{$dbCountryList}` VALUES('NC', 'New Caledonia');
+INSERT INTO `{$dbCountryList}` VALUES('NZ', 'New Zealand');
+INSERT INTO `{$dbCountryList}` VALUES('NI', 'Nicaragua');
+INSERT INTO `{$dbCountryList}` VALUES('NE', 'Niger');
+INSERT INTO `{$dbCountryList}` VALUES('NG', 'Nigeria');
+INSERT INTO `{$dbCountryList}` VALUES('NU', 'Niue');
+INSERT INTO `{$dbCountryList}` VALUES('NF', 'Norfolk Island');
+INSERT INTO `{$dbCountryList}` VALUES('MP', 'Northern Mariana Islands');
+INSERT INTO `{$dbCountryList}` VALUES('NO', 'Norway');
+INSERT INTO `{$dbCountryList}` VALUES('OM', 'Oman');
+INSERT INTO `{$dbCountryList}` VALUES('PK', 'Pakistan');
+INSERT INTO `{$dbCountryList}` VALUES('PW', 'Palau');
+INSERT INTO `{$dbCountryList}` VALUES('PS', 'Palestine, State of');
+INSERT INTO `{$dbCountryList}` VALUES('PA', 'Panama');
+INSERT INTO `{$dbCountryList}` VALUES('PG', 'Papua New Guinea');
+INSERT INTO `{$dbCountryList}` VALUES('PY', 'Paraguay');
+INSERT INTO `{$dbCountryList}` VALUES('PE', 'Peru');
+INSERT INTO `{$dbCountryList}` VALUES('PH', 'Philippines');
+INSERT INTO `{$dbCountryList}` VALUES('PN', 'Pitcairn');
+INSERT INTO `{$dbCountryList}` VALUES('PL', 'Poland');
+INSERT INTO `{$dbCountryList}` VALUES('PT', 'Portugal');
+INSERT INTO `{$dbCountryList}` VALUES('PR', 'Puerto Rico');
+INSERT INTO `{$dbCountryList}` VALUES('QA', 'Qatar');
+INSERT INTO `{$dbCountryList}` VALUES('RE', 'Réunion');
+INSERT INTO `{$dbCountryList}` VALUES('RO', 'Romania');
+INSERT INTO `{$dbCountryList}` VALUES('RU', 'Russian Federation');
+INSERT INTO `{$dbCountryList}` VALUES('RW', 'Rwanda');
+INSERT INTO `{$dbCountryList}` VALUES('BL', 'Réunion');
+INSERT INTO `{$dbCountryList}` VALUES('SH', 'Saint Helena, Ascension and Tristan da Cunha');
+INSERT INTO `{$dbCountryList}` VALUES('KN', 'Saint Kitts and Nevis');
+INSERT INTO `{$dbCountryList}` VALUES('LC', 'Saint Lucia');
+INSERT INTO `{$dbCountryList}` VALUES('MF', 'Saint Martin (French part)');
+INSERT INTO `{$dbCountryList}` VALUES('PM', 'Saint Pierre and Miquelon');
+INSERT INTO `{$dbCountryList}` VALUES('VC', 'Saint Vincent and the Grenadines');
+INSERT INTO `{$dbCountryList}` VALUES('WS', 'Samoa');
+INSERT INTO `{$dbCountryList}` VALUES('SM', 'San Marino');
+INSERT INTO `{$dbCountryList}` VALUES('ST', 'Sao Tome and Principe');
+INSERT INTO `{$dbCountryList}` VALUES('SA', 'Saudi Arabia');
+INSERT INTO `{$dbCountryList}` VALUES('SN', 'Senegal');
+INSERT INTO `{$dbCountryList}` VALUES('RS', 'Serbia');
+INSERT INTO `{$dbCountryList}` VALUES('SC', 'Seychelles');
+INSERT INTO `{$dbCountryList}` VALUES('SL', 'Sierra Leone');
+INSERT INTO `{$dbCountryList}` VALUES('SG', 'Singapore');
+INSERT INTO `{$dbCountryList}` VALUES('SX', 'Sint Maarten (Dutch part)');
+INSERT INTO `{$dbCountryList}` VALUES('SK', 'Slovakia');
+INSERT INTO `{$dbCountryList}` VALUES('SI', 'Slovenia');
+INSERT INTO `{$dbCountryList}` VALUES('SB', 'Solomon Islands');
+INSERT INTO `{$dbCountryList}` VALUES('SO', 'Somalia');
+INSERT INTO `{$dbCountryList}` VALUES('ZA', 'South Africa');
+INSERT INTO `{$dbCountryList}` VALUES('GS', 'South Georgia and the South Sandwich Islands');
+INSERT INTO `{$dbCountryList}` VALUES('SS', 'South Sudan');
+INSERT INTO `{$dbCountryList}` VALUES('ES', 'Spain');
+INSERT INTO `{$dbCountryList}` VALUES('LK', 'Sri Lanka');
+INSERT INTO `{$dbCountryList}` VALUES('SD', 'Sudan');
+INSERT INTO `{$dbCountryList}` VALUES('SR', 'Suriname');
+INSERT INTO `{$dbCountryList}` VALUES('SJ', 'Svalbard and Jan Mayen');
+INSERT INTO `{$dbCountryList}` VALUES('SZ', 'Swaziland');
+INSERT INTO `{$dbCountryList}` VALUES('SE', 'Sweden');
+INSERT INTO `{$dbCountryList}` VALUES('CH', 'Switzerland');
+INSERT INTO `{$dbCountryList}` VALUES('SY', 'Syrian Arab Republic');
+INSERT INTO `{$dbCountryList}` VALUES('TW', 'Taiwan, Province of China');
+INSERT INTO `{$dbCountryList}` VALUES('TJ', 'Tajikistan');
+INSERT INTO `{$dbCountryList}` VALUES('TZ', 'Tanzania, United Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('TH', 'Thailand');
+INSERT INTO `{$dbCountryList}` VALUES('TL', 'Timor-Leste');
+INSERT INTO `{$dbCountryList}` VALUES('TG', 'Togo');
+INSERT INTO `{$dbCountryList}` VALUES('TK', 'Tokelau');
+INSERT INTO `{$dbCountryList}` VALUES('TO', 'Tonga');
+INSERT INTO `{$dbCountryList}` VALUES('TT', 'Trinidad and Tobago');
+INSERT INTO `{$dbCountryList}` VALUES('TN', 'Tunisia');
+INSERT INTO `{$dbCountryList}` VALUES('TR', 'Turkey');
+INSERT INTO `{$dbCountryList}` VALUES('TM', 'Turkmenistan');
+INSERT INTO `{$dbCountryList}` VALUES('TC', 'Turks and Caicos Islands');
+INSERT INTO `{$dbCountryList}` VALUES('TV', 'Tuvalu');
+INSERT INTO `{$dbCountryList}` VALUES('UG', 'Uganda');
+INSERT INTO `{$dbCountryList}` VALUES('UA', 'Ukraine');
+INSERT INTO `{$dbCountryList}` VALUES('AE', 'United Arab Emirates');
+INSERT INTO `{$dbCountryList}` VALUES('GB', 'United Kingdom');
+INSERT INTO `{$dbCountryList}` VALUES('US', 'United States');
+INSERT INTO `{$dbCountryList}` VALUES('UM', 'United States Minor Outlying Islands');
+INSERT INTO `{$dbCountryList}` VALUES('UY', 'Uruguay');
+INSERT INTO `{$dbCountryList}` VALUES('UZ', 'Uzbekistan');
+INSERT INTO `{$dbCountryList}` VALUES('VU', 'Vanuatu');
+INSERT INTO `{$dbCountryList}` VALUES('VE', 'Venezuela, Bolivarian Republic of');
+INSERT INTO `{$dbCountryList}` VALUES('VN', 'Vietnam');
+INSERT INTO `{$dbCountryList}` VALUES('VG', 'Virgin Islands, British');
+INSERT INTO `{$dbCountryList}` VALUES('VI', 'Virgin Islands, U.S.');
+INSERT INTO `{$dbCountryList}` VALUES('WF', 'Wallis and Futuna');
+INSERT INTO `{$dbCountryList}` VALUES('EH', 'Western Sahara');
+INSERT INTO `{$dbCountryList}` VALUES('YE', 'Yemen');
+INSERT INTO `{$dbCountryList}` VALUES('ZM', 'Zambia');
+INSERT INTO `{$dbCountryList}` VALUES('ZW', 'Zimbabwe');
+
+
+-- PH 2014-05-16
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_CREATED';
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_ASSIGNED';
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_NEARING_SLA';
+UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_REVIEW_DUE';
 ";
 
 

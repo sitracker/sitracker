@@ -2,7 +2,7 @@
 // search2.php - New search
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -149,10 +149,11 @@ if (!empty($q))
     }
     else
     {
+        // Its assumed all customerref or externalid's will be longer than three characters
         $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
         $incidentsql .= "1 AS score ";
         $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
-        $incidentsql .= "WHERE bodytext LIKE '% {$search} %' ";
+        $incidentsql .= "WHERE (bodytext LIKE '% {$search} %' OR i.customerid = '{$search}' OR i.externalid = '{$search}') ";
         $incidentsql .= "AND u.incidentid=i.id ";
         $incidentsql .= "GROUP BY u.incidentid ";
     }
@@ -538,8 +539,8 @@ if (!empty($q))
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
                                           "<strong>".($begin+1)."</strong>",
-                                          "<strong>".$end."</strong>",
-                                          "<strong>".$results."</strong>")."</p>\n";
+                                          "<strong>{$end}</strong>",
+                                          "<strong>{$results}</strong>")."</p>\n";
         echo "<p align='center'>";
         if (!empty($_GET['start']))
         {
@@ -638,14 +639,15 @@ if (!empty($q))
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
                                           "<strong>".($begin+1)."</strong>",
-                                          "<strong>".$end."</strong>",
-                                          "<strong>".$results."</strong>")."</p>";
+                                          "<strong>{$end}</strong>",
+                                          "<strong>{$results}</strong>")."</p>";
         echo "<p align='center'>";
         if (!empty($_GET['start']) AND $domain == 'kb')
         {
             echo " <a href='{$_SERVER['PHP_SELF']}?domain=kb&q={$q}&start=";
             echo $begin-$resultsperpage."&amp;sort={$sort}&amp;order={$order}&amp;view={$view}'>";
-            echo icon('leftarrow', 16,  $strPrevious)." {$strPrevious}</a> ";        }
+            echo icon('leftarrow', 16,  $strPrevious)." {$strPrevious}</a> ";
+        }
         else
         {
             echo "{$strPrevious}";
@@ -723,7 +725,7 @@ if (!empty($q) AND mb_strlen($q) < 3)
 }
 elseif (!empty($q) AND $hits == 0)
 {
-    echo "<p align='center'>".sprintf($strNoResultsFor, "<strong>'".$q."'</strong>")."<br />";
+    echo "<p align='center'>".sprintf($strNoResultsFor, "<strong>'{$q}'</strong>")."<br />";
     echo "<a href='search.php'>{$strSearchAgain}</a></p>";
 }
 

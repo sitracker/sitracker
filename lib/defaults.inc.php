@@ -2,7 +2,7 @@
 // defaults.inc.php - Provide configuration defaults
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -49,7 +49,7 @@ $CONFIG['db_database'] = 'sit';
 // Prefix database tables with the a string (e.g. 'sit_', use this if the database you are using is shared with other applications
 $CONFIG['db_tableprefix'] = '';
 
-$CONFIG['home_country'] = 'UNITED KINGDOM';
+$CONFIG['home_country'] = 'GB';
 
 $CONFIG['support_email'] = 'support@localhost';
 // DEPRECATED support_manager_email is obsolete as of v3.45, use support_manager instead
@@ -137,6 +137,9 @@ $CONFIG['record_lock_delay'] = 1800;  // 30 minutes
 
 // maximum no. of incoming emails per incident before a mail-loop is detected
 $CONFIG['max_incoming_email_perday'] = 15;
+
+// Are inbound emails marked as visible
+$CONFIG['inbound_emails_visible_in_portal'] = FALSE;
 
 // String to look for in email message subject to determine a message is spam
 $CONFIG['spam_email_subject'] = 'SPAMASSASSIN';

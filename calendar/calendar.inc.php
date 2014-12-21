@@ -2,7 +2,7 @@
 // calendar.inc.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -60,9 +60,9 @@ function draw_calendar($nmonth, $nyear)
         {
             $lastday -= 1;
         }
-    }    
+    }
     while ($monthTest != $monthOrig);
-    
+
     $monthName = ldate('F', mktime(0, 0, 0, $nmonth, 1, $nyear));
 
     if ($CONFIG['debug'])
@@ -113,7 +113,7 @@ function draw_calendar($nmonth, $nyear)
     echo "<tr>\n";
     for($i = 0; $i <= 6; $i++)
     {
-        echo"<td ";
+        echo "<td ";
         if ($i == 0 || $i == 6) echo "class='expired'"; // Weekend
         else echo "class='shade1'";
         echo ">{$days[$i]}</td>";

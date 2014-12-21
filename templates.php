@@ -2,7 +2,7 @@
 // templates.php - Manage email and notice templates
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -327,7 +327,6 @@ elseif ($action == "edit" OR $action == "new")
 
         // TODO We should check whether a template is in use perhaps before allowing deletion? Mantis 1885
         if ($template->type == 'user' AND mysql_num_rows($resultUsed) == 0)
-
         {
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
         }

@@ -2,7 +2,7 @@
 // user_new.php - Form for adding users
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -199,6 +199,14 @@ else
         $sql .= "VALUES ('{$newuserid}', 'iconset', '{$CONFIG['default_iconset']}') ";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+
+        if (!empty($CONFIG['default_i18n']))
+        {
+            $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+            $sql .= "VALUES ('{$newuserid}', 'language', '{$CONFIG['default_i18n']}') ";
+            $result = mysql_query($sql);
+            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        }
 
         // Create permissions (set to none)
         $sql = "SELECT id FROM `{$dbPermissions}`";

@@ -2,7 +2,7 @@
 // triggers.class.php - A representation of a trigger
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -210,6 +210,7 @@ class Trigger extends SitEntity {
     function __construct($trigger_type, $user_id, $template, $action, $checks = '',
                      $parameters = '', $param_array = array(), $id = -1)
     {
+        global $CONFIG;
         $this->trigger_type = cleanvar($trigger_type);
         $this->param_array = $param_array;
         $this->user_id = cleanvar($user_id);
@@ -219,8 +220,11 @@ class Trigger extends SitEntity {
         $this->checks = $checks;
         $this->id = cleanvar($id);
 
-        debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
-            print_r($param_array, TRUE));
+        if ($CONFIG['debug'])
+        {
+            debug_log("Trigger {$trigger_type} created.  Parameters:\n" .
+                print_r($param_array, TRUE));
+        }
     }
 
     /**
@@ -293,7 +297,7 @@ class Trigger extends SitEntity {
                 }
             }
         }
-        
+
         foreach ($this->param_array AS $var => $val)
         {
             if (empty($val))
@@ -301,7 +305,7 @@ class Trigger extends SitEntity {
                 $this->param_array[$var] = '0';
             }
         }
-        
+
         if (!empty($this->checks))
         {
             $checks = trigger_replace_specials($this->trigger_type, $this->checks, $this->param_array);

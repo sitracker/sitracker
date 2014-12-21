@@ -2,7 +2,7 @@
 // holiday_approve.php -
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -20,11 +20,11 @@ $title = $strApproveHolidays;
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 // External variables
-$approve = clean_fixed_list($_REQUEST['approve'], aray('true','false','free'));
+$approve = clean_fixed_list($_REQUEST['approve'], array('true', 'false', 'free'));
 $startdate = clean_dbstring($_REQUEST['startdate']);
 $type = clean_int($_REQUEST['type']);
 $user = clean_int($_REQUEST['user']);
-$length = clean_fixed_lit($_REQUEST['length'], array('day','am','pm'));
+$length = clean_fixed_list($_REQUEST['length'], array('day', 'am', 'pm'));
 $view = clean_int($_REQUEST['view']);
 
 // there is an existing booking so alter it

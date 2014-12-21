@@ -2,7 +2,7 @@
 // inbox.php - View/Respond to incoming email
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -129,7 +129,7 @@ if (!empty($action))
             switch ($action)
             {
                 case 'delete':
-                    if ($temp->locked == $sit[2])
+                    if ($temp->locked == $sit[2] OR empty($temp->locked))
                     {
                         // Only allow the person who has the update located delete it
                         $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
@@ -154,6 +154,7 @@ if (!empty($action))
                     $sql .= "WHERE id='{$selected}' AND locked = '{$sit[2]}'";
                     $result = mysql_query($sql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $displayid = null;
                     break;
 
                 case 'updatereason':
@@ -243,7 +244,12 @@ if (empty($displayid))
             }
 
             echo "<tr class='{$shade}' onclick='trow(event);'>";
-            echo "<td>".html_checkbox('selected[]', FALSE, $incoming->id);
+            echo "<td>";
+
+            if (empty($incoming->locked) OR $incoming->locked == $sit[2])
+            {
+                echo html_checkbox('selected[]', FALSE, $incoming->id);
+            }
             echo "</td>";
             echo "<td>".contact_info($incoming->contactid, $incoming->from, $incoming->emailfrom, $incoming->subject)."</td>";
             echo "</td>";
@@ -373,6 +379,7 @@ else
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             $lockedbyname = $strYou;
             $lockedbyyou = true;
+            $incoming->locked = true;
         }
         elseif ($incoming->locked != $sit[2])
         {
@@ -394,8 +401,8 @@ else
         if (empty($_REQUEST['reply']))
         {
             echo " &mdash; ";
-// Reply feature incomplete and therefore disabled for 3.90, I aim to finish this code soon. INL 4/5/2013
-// echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>  | ";
+            // Reply feature incomplete and therefore disabled for 3.90, I aim to finish this code soon. INL 4/5/2013
+            // echo "<a href='{$_SERVER['PHP_SELF']}?id={$displayid}&reply=true'>{$strReply}</a>  | ";
 
             if (!empty($incoming->forenames) OR !empty($incoming->surname))
             {

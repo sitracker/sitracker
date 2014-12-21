@@ -2,7 +2,7 @@
 // billing.inc.php - functions relating to billing
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -100,7 +100,7 @@ function get_billable_contract_id($contactid)
 
 
 /**
- * Gte sthe billable contract ID for a site, if multiple exist then the first one is choosen
+ * Get sthe billable contract ID for a site, if multiple exist then the first one is choosen
  * @author Paul Heaney
  * @param int $siteid - The site ID you want to find the contract for
  * @return int the ID of the contract, -1 if not found
@@ -429,7 +429,7 @@ function update_transaction($transactionid, $amount = 0.00, $description = '', $
  */
 function close_billable_incident($incidentid)
 {
-    $toReturn = FALSE;
+    $toReturn = TRUE; // Default to it not being a billiable incidents
     $billableincident = get_billable_object_from_incident_id($incidentid);
     if ($billableincident)
     {

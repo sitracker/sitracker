@@ -2,7 +2,7 @@
 // contact_details.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -107,7 +107,7 @@ while ($contact = mysql_fetch_object($contactresult))
             echo "(<a target='_new' href='http://www.google.com/maps?q={$postcode}'>{$strMap}</a>)";
         }
         echo "</td></tr>\n";
-        echo "<tr><th>{$strCountry}:</th><td>{$country}</td></tr>\n";
+        echo "<tr><th>{$strCountry}:</th><td>".get_country_name($country)."</td></tr>";
     }
 
     if ($contact->dataprotection_email != 'Yes')

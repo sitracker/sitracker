@@ -26,21 +26,21 @@ function dashboard_statistics_display()
     global $todayrecent, $dbIncidents, $dbKBArticles, $iconset;
 
     // Count incidents logged today
-    $sql = "SELECT id FROM `{$dbIncidents}` WHERE opened > '$todayrecent'";
+    $sql = "SELECT id FROM `{$dbIncidents}` WHERE opened > '{$todayrecent}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $todaysincidents = mysql_num_rows($result);
     mysql_free_result($result);
 
     // Count incidents updated today
-    $sql = "SELECT id FROM `{$dbIncidents}` WHERE lastupdated > '$todayrecent'";
+    $sql = "SELECT id FROM `{$dbIncidents}` WHERE lastupdated > '{$todayrecent}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $todaysupdated = mysql_num_rows($result);
     mysql_free_result($result);
 
     // Count incidents closed today
-    $sql = "SELECT id FROM `{$dbIncidents}` WHERE closed > '$todayrecent'";
+    $sql = "SELECT id FROM `{$dbIncidents}` WHERE closed > '{$todayrecent}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     $todaysclosed = mysql_num_rows($result);
