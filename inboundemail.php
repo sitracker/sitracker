@@ -497,12 +497,14 @@ if ($emails > 0)
         }
         //** END UPDATE INCIDENT **//
 
-        //** BEGIN UPDATE **//
-        $bodytext = $headertext . "<hr>" . htmlspecialchars(mysql_real_escape_string($message), ENT_NOQUOTES);
-
         // Strip excessive line breaks
         $message = str_replace("\n\n\n\n","\n", $message);
+        $message = str_replace("\r\n\r\n\r\n\r\n","\n", $message);
         $message = str_replace(">\n>\n>\n>\n",">\n", $message);
+        $message = str_replace(">\r\n>\r\n>\r\n>\r\n",">\n", $message);
+
+        //** BEGIN UPDATE **//
+        $bodytext = $headertext . "<hr>" . htmlspecialchars(mysql_real_escape_string($message), ENT_NOQUOTES);
 
         if (empty($incidentid))
         {
@@ -532,11 +534,10 @@ if ($emails > 0)
     
                 $t = new TriggerEvent('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
             }
-
         }
         else
         {
-            if (!$incident_open) // Do not translate/i18n fixed string
+            if (!$incident_open)
             {
                 //Dont want to associate with a closed call
                 $oldincidentid = $incidentid;
