@@ -149,10 +149,11 @@ if (!empty($q))
     }
     else
     {
+        // Its assumed all customerref or externalid's will be longer than three characters
         $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
         $incidentsql .= "1 AS score ";
         $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
-        $incidentsql .= "WHERE bodytext LIKE '% {$search} %' ";
+        $incidentsql .= "WHERE (bodytext LIKE '% {$search} %' OR i.customerid = '{$search}' OR i.externalid = '{$search}') ";
         $incidentsql .= "AND u.incidentid=i.id ";
         $incidentsql .= "GROUP BY u.incidentid ";
     }

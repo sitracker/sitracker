@@ -188,7 +188,7 @@ if ($emails > 0)
 
         if ($CONFIG['debug'])
         {
-            debug_log("Message $i Email Type: '{$results['Type']}', Encoding: '{$results['Encoding']}'");
+            debug_log("Message {$i} Email Type: '{$results['Type']}', Encoding: '{$results['Encoding']}'");
             debug_log('DECODED: '.print_r($decoded, true));
             //debug_log('RESULTS: '.print_r($results, true));
         }
@@ -317,9 +317,15 @@ if ($emails > 0)
         }
         elseif ($incidentid = incident_id_from_subject($subject, $from))
         {
+            debug_log("Extracted incident ID '{$incidentid}' frmo subject");
             if (FALSE !== incident_status($incidentid))
             {
                 debug_log("Incident ID found in email subject: '{$incidentid}'");
+            }
+            else 
+            {
+                debug_log("Incident ID not found, clearing");
+                $incidentid = null;
             }
         }
         else
@@ -329,7 +335,16 @@ if ($emails > 0)
 
         plugin_do('email_arrived_action');
 
-        $incident_open = (incident_status($incidentid) != STATUS_CLOSED);
+        $incident_open = FALSE;
+        $status = incident_status($incidentid);
+        if ($status !== FALSE)
+        {
+            if ($status != STATUS_CLOSED) $incident_open = TRUE;
+        }
+        else
+        {
+            $incidentid = null;
+        }
 
         if ($CONFIG['inbound_emails_visible_in_portal']) $customer_visible = 'show';
         else $customer_visible = 'hide';
@@ -482,12 +497,14 @@ if ($emails > 0)
         }
         //** END UPDATE INCIDENT **//
 
-        //** BEGIN UPDATE **//
-        $bodytext = $headertext . "<hr>" . htmlspecialchars(mysql_real_escape_string($message), ENT_NOQUOTES);
-
         // Strip excessive line breaks
         $message = str_replace("\n\n\n\n","\n", $message);
+        $message = str_replace("\r\n\r\n\r\n\r\n","\n", $message);
         $message = str_replace(">\n>\n>\n>\n",">\n", $message);
+        $message = str_replace(">\r\n>\r\n>\r\n>\r\n",">\n", $message);
+
+        //** BEGIN UPDATE **//
+        $bodytext = $headertext . "<hr>" . htmlspecialchars(mysql_real_escape_string($message), ENT_NOQUOTES);
 
         if (empty($incidentid))
         {
@@ -517,11 +534,10 @@ if ($emails > 0)
     
                 $t = new TriggerEvent('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
             }
-
         }
         else
         {
-            if (!$incident_open) // Do not translate/i18n fixed string
+            if (!$incident_open)
             {
                 //Dont want to associate with a closed call
                 $oldincidentid = $incidentid;
