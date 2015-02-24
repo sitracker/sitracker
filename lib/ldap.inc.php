@@ -871,4 +871,31 @@ function ldap_is_account_disabled($attribute)
     }
 }
 
+/**
+ * Set an LDAP password
+ * @param type $dn User DN
+ * @param type $password New password to set
+ * @return true on success
+ * @author Tom Gerrard
+ */
+function ldapSetPassword($dn, $password)
+{
+    global $CONFIG;
+    $ldap_conn = ldapOpen(); // Need to get an admin thread
+    if (strtoupper($CONFIG['ldap_type']) == 'AD')
+    {
+        $newPassword = array('unicodePwd' => mb_convert_encoding("\"$password\"", 'UTF-16LE', 'UTF-8'));
+    }
+    else
+    {
+        $newPassword = array('userPassword' => $password);
+    }
+
+    if (!@ldap_mod_replace($ldap_conn, $dn, $newPassword))
+    {
+        return ldap_error($ldap_conn);
+    }
+    return '';
+}
+
 ?>
