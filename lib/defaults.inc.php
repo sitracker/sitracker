@@ -343,6 +343,9 @@ $CONFIG['ldap_cache_passwords'] = FALSE;
 // connect to LDAP server
 $CONFIG['ldap_allow_cached_password'] = FALSE;
 
+// Whether to attempt to update LDAP passwords
+$CONFIG['ldap_update_directory_passwords'] = FALSE;
+
 // If true, portal users create incidents, if FALSE, they just create emails
 $CONFIG['portal_creates_incidents'] = TRUE;
 

@@ -119,13 +119,32 @@ if (cleanvar($_REQUEST['action']) == 'update')
         $updatesql .= "department='{$department}', address1={$address1}, address2={$address2}, ";
         $updatesql .= "county={$county}, country={$country}, postcode={$postcode}, ";
         $updatesql .= "phone={$phone}, mobile={$mobile}, fax={$fax}, email='{$email}'";
+
         if ($newpass != '')
         {
-            $updatesql .= ", password=MD5('{$newpass}') ";
+            if ($_SESSION['contact_source'] == 'sit')
+            {
+                $updatesql .= ", password=MD5('{$newpass}') ";
+            }
+            else if ($_SESSION['contact_source'] == 'ldap' && !empty($_SESSION['ldap_user_dn']))
+            {
+                $ldaperror = ldapSetPassword($_SESSION['ldap_user_dn'], $newpass);
+                if (!empty($ldaperror))
+                {
+                    trigger_error("LDAP Error " . $ldaperror, E_USER_ERROR);
+                }
+            }
         }
+
         $updatesql .= "WHERE id='{$id}'";
+
         mysql_query($updatesql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        if (mysql_error())
+        {
+            trigger_error("MySQL Query Error " . mysql_error(), E_USER_ERROR);
+        }
+
         clear_form_data('portalcontactdetails');
         if ($_SESSION['contactid'] != $id)
         {
@@ -173,8 +192,7 @@ else
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         exit;
     }
-    echo "<h2>".icon('contact', 32, $strContact)." {$user->forenames} {$user->surname}";
-    echo ' '.gravatar($user->email, 32);
+    echo "<h2>" . gravatar($user->email, 32) . " {$user->forenames} {$user->surname}";
     echo "</h2>";
 
     echo show_form_errors('portalcontactdetails');
@@ -261,7 +279,7 @@ else
     }
     echo "</td></tr>\n";
 
-    if ( $_SESSION['contact_source'] == 'sit' )
+    if ($_SESSION['contact_source'] == 'sit' || ($_SESSION['contact_source'] == 'ldap') && $CONFIG['ldap_update_directory_passwords'])
     {
         echo "<tr><th>{$strNewPassword}</th><td><input name='newpassword' value='' type='password' /></td></tr>\n";
         echo "<tr><th>{$strConfirmNewPassword}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
