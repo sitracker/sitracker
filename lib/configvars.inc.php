@@ -171,7 +171,7 @@ $CFGCAT['other'] = array('debug', 'error_logfile',
                           'changelogfile','creditsfile',
                           'licensefile',
                           'session_name', 'map_url',
-                          'upload_max_filesize','trusted_server');
+                          'upload_max_filesize','trusted_server', 'trusted_server_username_header', 'trusted_server_client_id', 'trusted_server_client_secret');
 
 $CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
 
@@ -687,6 +687,18 @@ $CFGVAR['timezone']['options'] = file_get_contents('lib/timezones.txt');
 $CFGVAR['trusted_server']['help'] = 'When enabled passwords will no longer be used or required, this assumes that you are using an external mechanism for authentication';
 $CFGVAR['trusted_server']['title'] = 'Enable trusted server mode';
 $CFGVAR['trusted_server']['type'] = 'checkbox';
+
+$CFGVAR['trusted_server_username_header']['help'] = 'The header variable which will contain the username, exlucing the leading HTTP_';
+$CFGVAR['trusted_server_username_header']['title'] = 'Header to receive username in';
+$CFGVAR['trusted_server_username_header']['type'] = 'text';
+
+$CFGVAR['trusted_server_client_id']['help'] = 'The username for the trused authentication source to authenticate with using basic authentication, if blank not used';
+$CFGVAR['trusted_server_client_id']['title'] = 'Username for trusted server to authenticate with';
+$CFGVAR['trusted_server_client_id']['type'] = 'text';
+
+$CFGVAR['trusted_server_client_secret']['help'] = 'The password or secret for the trusted authentication source to authenticate with using basic authentication';
+$CFGVAR['trusted_server_client_secret']['title'] = 'Secret for trusted server to authenticate with ';
+$CFGVAR['trusted_server_client_secret']['type'] = 'password';
 
 $CFGVAR['upload_max_filesize']['title'] = "The maximum file upload size (in bytes)";
 $CFGVAR['upload_max_filesize']['type'] = 'number';

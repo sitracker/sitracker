@@ -24,6 +24,12 @@ session_name($CONFIG['session_name']);
 session_start();
 
 // Check session is authenticated, if not redirect to login page
+if ((!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE) AND $CONFIG['trusted_server'])
+{
+    if (($username = authenticateTrustedServerMode())) createUserSession($username);
+    if (($username = authenticateTrustedServerModeContact())) createUserSessionContact($username);
+}
+
 if (!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE)
 {
     $_SESSION['auth'] = FALSE;

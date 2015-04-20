@@ -22,6 +22,12 @@ session_start();
 include (APPLICATION_LIBPATH . 'strings.inc.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
+if ($_SESSION['auth'] != TRUE AND $CONFIG['trusted_server'])
+{
+    if (($username = authenticateTrustedServerMode())) createUserSession($username);
+    if (($username = authenticateTrustedServerModeContact())) createUserSessionContact($username);
+}
+
 if ($_SESSION['auth'] != TRUE)
 {
     // External variables
