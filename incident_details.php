@@ -461,7 +461,6 @@ else
 
     echo "</div>\n";
 
-
     $offset = clean_int($_REQUEST['offset']);
 
     /**
@@ -885,7 +884,7 @@ else
                     echo icon($updatetypes['slamet']['icon'], 16, $showhide);
                 }
             }
-            echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
+            echo "</a>" . sprintf($strUpdatedXbyX, "({$update->type})", $updateuser);
         }
 
         plugin_do('incident_details_updatehead_content_row');
@@ -949,11 +948,6 @@ else
     {
         echo log_nav_bar();
     }
-
-//    if (!$_GET['win'])
-//    {
-//        echo "</div><!-- AA -->";
-//    }
 
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }
