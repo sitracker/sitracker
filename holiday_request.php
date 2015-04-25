@@ -252,12 +252,6 @@ else
                 $holidaylist .= ", ";
                 $holidaylist .= holiday_type($holiday->type)."\n";
             }
-
-            if (mb_strlen($memo) > 3)
-            {
-                $holidaylist .= "\n{$SYSLANG['strCommentsSentWithRequest']}:\n\n";
-                $holidaylist .= "---\n{$memo}\n---\n\n";
-            }
         }
         // Mark the userid of the person who will approve the request so that they can see them
         $sql = "UPDATE `{$dbHolidays}` SET approvedby='{$approvaluser}' ";
@@ -266,8 +260,8 @@ else
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        
-        $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist));
+
+        $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist, 'holidayrequestnote' => $memo));
        
         if ($rtnvalue)
         {

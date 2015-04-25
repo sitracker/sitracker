@@ -63,7 +63,7 @@ array('name' => $strContactResetPassword,
 $trigger_types['TRIGGER_HOLIDAY_REQUESTED'] =
 array('name' => $strHolidayRequested,
       'description' => $strTriggerHolidayRequestedDesc,
-      'required' => array('userid', 'approvaluseremail', 'listofholidays'),
+      'required' => array('userid', 'approvaluseremail', 'listofholidays', 'holidayrequestnote'),
       'permission' => 'user_permission($_SESSION[\'userid\'], PERM_HOLIDAY_APPROVE);',
       'params' => array('holidayrequestnote'),
       'type' => 'system'
@@ -479,7 +479,7 @@ array('description' => $strGlobalSignature,
 $ttvararray['{holidayrequestnote}'] =
 array('description' => $strHolidayRequestNote,
         'replacement' => '$param_array[\'holidayrequestnote\'];',
-        'requires' => 'memo'
+        'requires' => 'holidayrequestnote'
 );
 
 // $ttvararray['{holdingemailid}'] =
@@ -1166,6 +1166,7 @@ function trigger_replace_specials($trigger_type, $string_array, $param_array)
                 $multiple = TRUE;
             }
         }
+
         if ($multiple == FALSE)
         {
             $trigger_replaces = replace_vars($trigger_type, $ttvar, $identifier, $param_array);
@@ -1177,6 +1178,7 @@ function trigger_replace_specials($trigger_type, $string_array, $param_array)
             }
         }
     }
+
     $string = preg_replace($trigger_regex, $trigger_replace, $string_array);
     return $string;
 }
