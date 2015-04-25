@@ -124,7 +124,7 @@ elseif ($CONFIG['enable_inbound_mail'] == 'POP/IMAP')
     $mailbox = new Mailbox($CONFIG['email_username'], $CONFIG['email_password'],
                            $CONFIG['email_address'], $CONFIG['email_server'],
                            $CONFIG['email_servertype'], $CONFIG['email_port'],
-                           $CONFIG['email_options']);
+                           preg_replace("/\s/", "", $CONFIG['email_options']));
 
 
     if (!$mailbox->connect())
