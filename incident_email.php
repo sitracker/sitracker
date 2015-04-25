@@ -443,7 +443,7 @@ switch ($step)
                     $filename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}-{$name}";
 
                     $mv = rename($file['tmp_name'], $filename);
-                    if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
+                    if (!$mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
                     $attachmenttype = $file['type'];
 
                     $f = array();
