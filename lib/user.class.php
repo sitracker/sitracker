@@ -259,6 +259,8 @@ class User extends Person{
                         // reassign the users incidents if appropriate
                         if (empty($this->accepting)) $this->accepting = $oldUser->accepting; // Set accepting to the DB level if one isn't set'
                         incident_backup_switchover($this->id, $this->accepting);
+                        
+                        if ($this->status == USERSTATUS_ACCOUNT_DISABLED) $this->disable();
                     }
                     $s[] = "status = {$this->status}";
                 }
@@ -337,12 +339,11 @@ class User extends Person{
     function disable()
     {
         $toReturn = true;
-        if (!empty($this->id) AND $this->status != 0)
+        if (!empty($this->id))
         {
             $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET status = 0 WHERE id = {$this->id}";
-
             $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_affected_rows() != 1)
             {
                 $sql = "SELECT status FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id} AND status = 0 ";
@@ -361,6 +362,16 @@ class User extends Person{
             else
             {
                 $toReturn = TRUE;
+            }
+
+            // tidy user up
+            $tidyup[] = "DELETE FROM `{$GLOBALS['dbDrafts']}` WHERE userid = {$this->id}";
+            $tidyup[] = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE userid = {$this->id}";
+            $tidyup[] = "DELETE FROM `{$GLOBALS['dbInventory']}` WHERE createdby = {$this->id} AND privacy = 'private'";
+            foreach ($tidyup AS $sql)
+            {
+                $result = mysql_query($sql);
+                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             }
         }
 
