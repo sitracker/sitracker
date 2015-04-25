@@ -329,7 +329,10 @@ elseif ($mode == 'save')
     }
 
     // If users status is set to 0 (disabled) force 'accepting' to no
-    if ($user->status == 0) $user->accepting = false;
+    if ($user->status == USERSTATUS_ACCOUNT_DISABLED)
+    {
+        $user->accepting = false;
+    }
 
     // Update user profile
     $errors = 0;
