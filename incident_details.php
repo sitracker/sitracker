@@ -37,6 +37,7 @@ elseif ($win == 'jump')
     {
         echo "<html><head>";
         echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
+        echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
         echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
         if (!empty($_GET['return']))
         {
