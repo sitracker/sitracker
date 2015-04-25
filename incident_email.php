@@ -562,6 +562,10 @@ switch ($step)
                 if ($storeinlog == 'Yes')
                 {
                     // add update
+                    $tofield = preg_replace("/[;,]/", "; ", $tofield);
+                    $ccfield = preg_replace("/[;,]/", "; ", $ccfield);
+                    $bccfield = preg_replace("/[;,]/", "; ", $bccfield);
+                    
                     $bodytext = htmlentities($bodytext, ENT_COMPAT, 'UTF-8');
                     $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
