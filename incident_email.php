@@ -570,8 +570,8 @@ switch ($step)
                     $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strReplyTo']}: [b]{$replytofield}[/b]\n";
-                    if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "CC: [b]{$ccfield}[/b]\n";
-                    if ($bccfield != '') $updateheader .= "BCC: [b]{$bccfield}[/b]\n";
+                    if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "{$SYSLANG['strCC']}: [b]{$ccfield}[/b]\n";
+                    if ($bccfield != '') $updateheader .= "{$SYSLANG['strBCC']}: [b]{$bccfield}[/b]\n";
                     if (!empty($files))
                     {
                         if (count($files) > 1) $updateheader .= "{$SYSLANG['strAttachments']}: ";
