@@ -28,6 +28,7 @@ if ((!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE) AND $CONFIG['trust
 {
     if (($username = authenticateTrustedServerMode())) createUserSession($username);
     if (($username = authenticateTrustedServerModeContact())) createUserSessionContact($username);
+    populate_syslang();
 }
 
 if (!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE)
