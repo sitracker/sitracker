@@ -473,7 +473,7 @@ function createContactSession($userid)
     debug_log("PORTAL AUTH SUCESSFUL");
     $_SESSION['portalauth'] = TRUE;
     
-    $sql = "SELECT * FROM `{$GLOBALS['dbContacts']}` WHERE id = '{$authContact}'";
+    $sql = "SELECT * FROM `{$GLOBALS['dbContacts']}` WHERE id = '{$userid}'";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
