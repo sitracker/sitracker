@@ -191,6 +191,10 @@ elseif ($action == 'findcontact')
     {
         $sql .= "AND c.id = '{$contactid}' ";
     }
+    if (!empty($CONFIG['hide_contracts_older_than_when_opening_incident']) AND $CONFIG['hide_contracts_older_than_when_opening_incident'] != -1)
+    {
+        $sql .= "AND FROM_UNIXTIME(m.expirydate) >= DATE_SUB(CURDATE(), INTERVAL {$CONFIG['hide_contracts_older_than_when_opening_incident']} DAY) ";
+    }
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
@@ -208,6 +212,11 @@ elseif ($action == 'findcontact')
     {
         $sql .= "AND c.id = '{$contactid}' ";
     }
+    if (!empty($CONFIG['hide_contracts_older_than_when_opening_incident']) AND $CONFIG['hide_contracts_older_than_when_opening_incident'] != -1)
+    {
+        $sql .= "AND FROM_UNIXTIME(m.expirydate) >= DATE_SUB(CURDATE(), INTERVAL {$CONFIG['hide_contracts_older_than_when_opening_incident']} DAY) ";
+    }
+
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)

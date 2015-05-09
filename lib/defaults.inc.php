@@ -218,6 +218,9 @@ $CONFIG['timezone'] = 'Europe/London';
 // Incidents closed more than this number of days ago aren't show in the incident queue, -1 means disabled
 $CONFIG['hide_closed_incidents_older_than'] = 90;
 
+// Contracts that have finished more than this number of days ago aren't show when opening new incidents, -1 means disabled
+$CONFIG['hide_contracts_older_than_when_opening_incident']= 365;
+
 // Following is still BETA
 $CONFIG['auto_chase'] = FALSE;
 $CONFIG['chase_email_minutes'] = 0; // number of minutes incident has been 'awaiting customer action' before sending a chasing email, 0 is disabled

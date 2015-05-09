@@ -86,6 +86,7 @@ $CFGCAT['holidays'] = array('holidays_enabled',
 $CFGCAT['incidents'] = array('auto_assign_incidents',
                              'free_support_limit',
                              'hide_closed_incidents_older_than',
+                             'hide_contracts_older_than_when_opening_incident',
                              'incident_pools',
                              'preferred_maintenance',
                              'record_lock_delay',
@@ -419,6 +420,11 @@ $CFGVAR['hide_closed_incidents_older_than']['help'] = "Incidents closed more tha
 $CFGVAR['hide_closed_incidents_older_than']['title'] = 'Hide closed incidents older than';
 $CFGVAR['hide_closed_incidents_older_than']['type'] = 'number';
 $CFGVAR['hide_closed_incidents_older_than']['unit'] = $strDays;
+
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['help'] = "Contracts that have finished more than this number of days ago aren't show when opening new incidents, -1 means disabled";
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['title'] = 'Hide contracts older than when opening';
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['type'] = 'number';
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['unit'] = $strDays;
 
 $CFGVAR['holidays_enabled']['title'] = "Enable Holidays";
 $CFGVAR['holidays_enabled']['type'] = 'checkbox';
