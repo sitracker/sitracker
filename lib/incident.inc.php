@@ -1932,7 +1932,7 @@ function get_incident_sla_targets($incidentid)
 /**
  * Not 100% sure of the purpose of this function though triggers requires it, TODO revisit and fully under stand
  * 
- * @author Paul Heaney - to fix Mantis 1372
+ * @author Paul Heaney - to fix Mantis 1372 (lack of function)
  * @param int $holdingemailid The holding queue ID
  * @return int the update ID
  */
