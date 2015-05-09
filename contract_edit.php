@@ -182,7 +182,7 @@ else if ($action == "update")
         $errors++;
     }
 
-    if ($_REQUEST['expirydate'] == 0)
+    if ($_REQUEST['expirydate'] == 0 AND $expirydate != -1)
     {
         $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
         $errors++;
