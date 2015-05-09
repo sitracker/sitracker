@@ -77,6 +77,7 @@ if (empty($action) OR $action == "showform")
     echo "</td></tr>";
     echo "<tr id='engineerBillingPeriod' {$timed_display}><th>{$strBillingEngineerPeriod} ".help_link('ServiceLevelEngineerPeriod')."</th><td><input type='text' size='5' name='engineerPeriod' maxlength='5' value='{$engineerPeriod}' /> {$strMinutes}</td></tr>";
     echo "<tr id='customerBillingPeriod' {$timed_display}><th>{$strBillingCustomerPeriod} ".help_link('ServiceLevelCustomerPeriod')."</th><td><input type='text' size='5' name='customerPeriod' maxlength='5' value='{$customerPeriod}' /> {$strMinutes}</td></tr>";
+    echo "<tr><th>{$strActive}</th><td>".html_checkbox('active', $sla->active)."</td></tr>\n";
     echo "</table>";
     echo "<input type='hidden' name='action' value='edit' />";
     echo "<input type='hidden' name='tag' value='{$tag}' />";
@@ -97,6 +98,7 @@ elseif ($action == "edit")
     $engineerPeriod = clean_int($_POST['engineerPeriod']);
     $customerPeriod = clean_int($_POST['customerPeriod']);
     $allow_reopen = cleanvar($_POST['allow_reopen']);
+    $active = cleanvar($_POST['active']);
     if (!empty($allow_reopen))
     {
         $allow_reopen = 'yes';
@@ -105,6 +107,8 @@ elseif ($action == "edit")
     {
         $allow_reopen = 'no';
     }
+    if (empty($active)) $active = 'false';
+    else $active = true;
 
     if (!empty($_POST['timed']))
     {
@@ -118,15 +122,21 @@ elseif ($action == "edit")
     $sql .= "prob_determ_mins='{$prob_determ_mins}', ";
     $sql .= "action_plan_mins='{$action_plan_mins}', ";
     $sql .= "resolution_days='{$resolution_days}', ";
-    $sql .= "review_days='{$review_days}', ";
-    $sql .= "timed='{$timed}', ";
-    $sql .= "allow_reopen='{$allow_reopen}' ";
+    $sql .= "review_days='{$review_days}' ";
     $sql .= "WHERE tag='{$tag}' AND priority='{$priority}'";
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-    //if (mysql_affected_rows() == 0) trigger_error("UPDATE affected zero rows",E_USER_WARNING);
     else
     {
+        $sql = "UPDATE `{$dbServiceLevels}` SET ";
+        $sql .= "timed='{$timed}', ";
+        $sql .= "allow_reopen='{$allow_reopen}', ";
+        $sql .= "active='{$active}' ";
+        $sql .= "WHERE tag='{$tag}'";
+        $result = mysql_query($sql);
+        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        
+        
         $billingSQL = "SELECT * FROM `{$dbBillingPeriods}` WHERE priority = {$priority} AND tag = '{$tag}'";
         $billingResult = mysql_query($billingSQL);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);

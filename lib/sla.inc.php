@@ -150,16 +150,16 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
 
     if ($collapse)
     {
-        $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
+        $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}` WHERE active = 'true' ";
     }
     else
     {
-        $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}`";
+        $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}` WHERE active = 'true' ";
     }
     
     if (!$allowtimestatuschange AND !empty($tag))
     {
-        $sql .= " WHERE timed = (SELECT DISTINCT timed FROM `{$dbServiceLevels}` WHERE tag = '{$tag}')";
+        $sql .= " AND timed = (SELECT DISTINCT timed FROM `{$dbServiceLevels}` WHERE tag = '{$tag}')";
     }
     
     $result = mysql_query($sql);

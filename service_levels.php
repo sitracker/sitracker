@@ -39,7 +39,9 @@ if (mysql_num_rows($tresult) >= 1)
     echo "<table class='maintable'>";
     while ($tag = mysql_fetch_object($tresult))
     {
-        echo "<thead><tr><th colspan='9'>{$tag->tag}</th></tr></thead>";
+        $strActive = '';
+        if ($tag->active == 'false') $strActive = "({$strDisabled})";
+        echo "<thead><tr><th colspan='9'>{$tag->tag} {$strActive}</th></tr></thead>";
         $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag->tag}' ORDER BY priority";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);

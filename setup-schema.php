@@ -1474,6 +1474,7 @@ CREATE TABLE IF NOT EXISTS `{$dbServiceLevels}` (
   `review_days` int(11) NOT NULL default '365',
   `timed` enum('yes','no') NOT NULL default 'no',
   `allow_reopen` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'yes' COMMENT 'Allow incidents to be reopened?',
+  `active` enum('true','false') NOT NULL default 'true',
   PRIMARY KEY  (`tag`,`priority`),
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
@@ -2466,6 +2467,9 @@ UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_windo
 UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_ASSIGNED';
 UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_NEARING_SLA';
 UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_REVIEW_DUE';
+
+-- PH 2015-05-09
+ALTER TABLE `{$dbServiceLevels}` ADD `active` ENUM('true','false') NOT NULL DEFAULT 'true' ;
 ";
 
 
