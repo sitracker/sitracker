@@ -25,7 +25,7 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 if ($_SESSION['auth'] != TRUE AND $CONFIG['trusted_server'])
 {
     if (($username = authenticateTrustedServerMode())) createUserSession($username);
-    if (($username = authenticateTrustedServerModeContact())) createUserSessionContact($username);
+    if (($username = authenticateTrustedServerModeContact())) createContactSession($username);
     populate_syslang();
 }
 
