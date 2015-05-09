@@ -40,34 +40,39 @@ if (mysql_num_rows($tresult) >= 1)
     while ($tag = mysql_fetch_object($tresult))
     {
         $strActive = '';
-        if ($tag->active == 'false') $strActive = "({$strDisabled})";
-        echo "<thead><tr><th colspan='9'>{$tag->tag} {$strActive}</th></tr></thead>";
+        $class = '';
+        if ($tag->active == 'false')
+        {
+            $strActive = "({$strDisabled})";
+            $class = "class='expired' ";
+        }
+        echo "<thead><tr><th colspan='9' {$class}>{$tag->tag} {$strActive}</th></tr></thead>";
         $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag->tag}' ORDER BY priority";
         $result = mysql_query($sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-        echo "<tr><th colspan='2'>{$strPriority}</th><th>{$strInitialResponse}</th>";
-        echo "<th>{$strProblemDefinition}</th><th>{$strActionPlan}</th><th>{$strResolutionReprioritisation}</th>";
-        echo "<th>{$strReview}</th><th>{$strTimed}</th><th>{$strActions}</th></tr>";
+        echo "<tr><th colspan='2' {$class}>{$strPriority}</th><th {$class}>{$strInitialResponse}</th>";
+        echo "<th {$class}>{$strProblemDefinition}</th><th {$class}>{$strActionPlan}</th><th {$class}>{$strResolutionReprioritisation}</th>";
+        echo "<th {$class}>{$strReview}</th><th {$class}>{$strTimed}</th><th {$class}>{$strActions}</th></tr>";
         while ($sla = mysql_fetch_object($result))
         {
             echo "<tr>";
-            echo "<td align='right'>".priority_icon($sla->priority)."</td>";
-            echo "<td>".priority_name($sla->priority)."</td>";
-            echo "<td>".format_workday_minutes($sla->initial_response_mins, $strNotApplicableAbbrev)."</td>";
-            echo "<td>".format_workday_minutes($sla->prob_determ_mins, $strNotApplicableAbbrev)."</td>";
-            echo "<td>".format_workday_minutes($sla->action_plan_mins, $strNotApplicableAbbrev)."</td>";
+            echo "<td align='right' {$class}>".priority_icon($sla->priority)."</td>";
+            echo "<td {$class}>".priority_name($sla->priority)."</td>";
+            echo "<td {$class}>".format_workday_minutes($sla->initial_response_mins, $strNotApplicableAbbrev)."</td>";
+            echo "<td {$class}>".format_workday_minutes($sla->prob_determ_mins, $strNotApplicableAbbrev)."</td>";
+            echo "<td {$class}>".format_workday_minutes($sla->action_plan_mins, $strNotApplicableAbbrev)."</td>";
             // 480 mins in a working day
-            echo "<td>".format_workday_minutes($sla->resolution_days * $minsinday, $strNotApplicableAbbrev)."</td>";
-            echo "<td>".sprintf($strXDays, $sla->review_days)."</td>";
+            echo "<td {$class}>".format_workday_minutes($sla->resolution_days * $minsinday, $strNotApplicableAbbrev)."</td>";
+            echo "<td {$class}>".sprintf($strXDays, $sla->review_days)."</td>";
             if ($sla->timed == 'yes')
             {
-                echo "<td>{$strYes}</td>";
+                echo "<td {$class}>{$strYes}</td>";
             }
-            else echo "<td>{$strNo}</td>";
+            else echo "<td {$class}>{$strNo}</td>";
             $operations = array();
             $operations[$strEdit] = array('url' => "service_level_edit.php?tag={$sla->tag}&amp;priority={$sla->priority}");
-            echo "<td>" . html_action_links($operations) . "</td>";
+            echo "<td {$class}>" . html_action_links($operations) . "</td>";
             echo "</tr>\n";
         }
     }
