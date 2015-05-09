@@ -491,7 +491,7 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
 
     $time = time();
     $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', ";
-    $sql .= "lastupdated='{$time}', closed='0' WHERE id='{$incident}' LIMIT 1";
+    $sql .= "lastupdated='{$time}', closed='0', owner='0', towner='0' WHERE id='{$incident}' LIMIT 1";
     mysql_query($sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 

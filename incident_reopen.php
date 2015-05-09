@@ -103,7 +103,7 @@ if ($allow_reopen == 'yes')
         }
         else
         {
-            html_redirect($returnurl);
+            html_redirect("incident_reassign.php?id={$id}");
         }
     }
 }
