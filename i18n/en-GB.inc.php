@@ -2156,6 +2156,7 @@ $strWorkStatus = 'Work Status';
 $strWebsite = 'Website';
 $strWithheld = 'Withheld';
 $strXDays = '%s days';
+$strInactive = '%s inactive';
 $strXIncidentsLoggedViaPortal = '%s Incidents Logged via the Portal';
 $strXIncidentsLeft = '%s Incidents Left';
 $strXIsNoAcceptingIncidentAgain = '%s is now accepting incidents again. Previous status %s and not accepting.';
