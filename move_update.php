@@ -165,6 +165,8 @@ else
 
             journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update {$update} moved to incident {$incidentid}", CFG_JOURNAL_INCIDENTS, $incidentid);
 
+            $t = new TriggerEvent('TRIGGER_INCIDENT_UPDATED_EXTERNAL', array('incidentid' => $incidentid));
+
             html_redirect("inbox.php");
         }
         else
