@@ -217,7 +217,7 @@ else //submit
             $incidentid = 0;
         }
 
-        $update_id = new_update($incidentid, $updatetext, 'opening');
+        $update_id = new_update($incidentid, $updatetext, 'opening', 'opened'); // todo opened should be a constant
 
         if ($CONFIG['portal_creates_incidents'])
         {
