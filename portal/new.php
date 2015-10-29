@@ -188,7 +188,7 @@ else //submit
         if ($CONFIG['portal_creates_incidents'])
         {
             $incidentid = create_incident($incidenttitle, $contactid, $servicelevel,
-                                    $contractid, $productid, $software);
+                                    $contractid, $productid, $software, $updatetext, 'show');
             $_SESSION['incidentid'] = $incidentid;
 
             // Need to reload the entitlements data into the session
@@ -217,25 +217,8 @@ else //submit
             $incidentid = 0;
         }
 
-        $update_id = new_update($incidentid, $updatetext, UPDATE_TYPE_OPENING, UPDATE_SLA_OPENED);
-
         if ($CONFIG['portal_creates_incidents'])
         {
-            $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $level = mysql_fetch_object($result);
-
-            $targetval = $level->initial_response_mins * 60;
-            $initialresponse = $now + $targetval;
-
-            // Insert the first Review update, this indicates the review period of an incident has started
-            // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '0', 'reviewmet', '{$now}', '0', '1', 'hide', '')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             $t = new TriggerEvent('TRIGGER_PORTAL_INCIDENT_CREATED', array('incidentid' => $incidentid));
 
             if ($CONFIG['auto_assign_incidents'])
@@ -252,6 +235,8 @@ else //submit
         }
         else
         {
+            $update_id = new_update($incidentid, $updatetext, UPDATE_TYPE_OPENING, UPDATE_SLA_OPENED);
+
             $contact_id = intval($_SESSION['contactid']);
             $contact_name = contact_realname($_SESSION['contactid']);
             $contact_email = contact_email($_SESSION['contactid']);

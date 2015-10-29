@@ -61,7 +61,7 @@ function incident($incident)
  * @author Kieran Hogg
  */
 function create_incident($title, $contact, $servicelevel, $contract, $product,
-                         $software, $updatetext, $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
+                         $software, $updatetext = '', $customervisibility = 'hide', $priority = PRIORITY_LOW, $owner = 0, $status = STATUS_ACTIVE,
                          $productversion = '', $productservicepacks = '',
                          $opened = '', $lastupdated = '', $customerid = '')
 {
@@ -109,8 +109,8 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
     //add the updates and SLA etc
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, ";
     $sql .= "currentstatus, customervisibility, nextaction, sla) ";
-    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
-    $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
+    $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', '".UPDATE_TYPE_OPENING."', '{$updatetext}', '{$now}', '{$sit[2]}', ";
+    $sql .= "'1', '{$customervisibility}', '{$nextaction}', '".UPDATE_SLA_OPENED."')";
     $result = mysql_query($sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
