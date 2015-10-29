@@ -835,6 +835,7 @@ switch ($_REQUEST['action'])
                             // Product
                             $productvendor = cleanvar($_REQUEST['productvendor']);
                             $productname = cleanvar($_REQUEST['productname']);
+                            $productdescription = cleanvar($_REQUEST['productdescription']);
 
                             $skill = cleanvar($_REQUEST['skill']);
 
@@ -930,7 +931,7 @@ switch ($_REQUEST['action'])
                                 $username = $username . $newid;
                                 $sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$contactid}'";
 
-                                $sql = "INSERT INTO `{$dbProducts}` (vendorid, name) VALUES ({$productvendor},'{$productname}')";
+                                $sql = "INSERT INTO `{$dbProducts}` (vendorid, name, description) VALUES ({$productvendor}, '{$productname}', '{$productdescription}')";
                                 $result = mysql_query($sql);
                                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                                 $productid = mysql_insert_id();
@@ -1155,6 +1156,13 @@ switch ($_REQUEST['action'])
                             if ($_SESSION['formdata']['setupinitialdata']['productname'])
                             {
                                 echo "value='{$_SESSION['formdata']['setupinitialdata']['productname']}' ";
+                            }
+                            echo "/> <span class='required'>Required</span></td></tr>\n";
+                            
+                            echo "<tr><th>Product Description</th><td><input maxlength='50' name='productdescription' size='40' class='required'  ";
+                            if ($_SESSION['formdata']['setupinitialdata']['productdescription'])
+                            {
+                                echo "value='{$_SESSION['formdata']['setupinitialdata']['productdescription']}' ";
                             }
                             echo "/> <span class='required'>Required</span></td></tr>\n";
                             echo "</table>\n";
