@@ -1479,10 +1479,10 @@ CREATE TABLE IF NOT EXISTS `{$dbServiceLevels}` (
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes', 'true');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes', 'true');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes', 'true');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes', 'true');
 
 
 CREATE TABLE IF NOT EXISTS `{$dbSetTags}` (
