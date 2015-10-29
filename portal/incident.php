@@ -159,7 +159,6 @@ while ($update = mysql_fetch_object($result))
     $updatebody = trim($update->bodytext);
     $updatebody = preg_replace("/\[\[att=(.*?)\]\](.*?)\[\[\/att\]\]/s", "<a href='download.php?id=$1'>$2</a>\n", $updatebody);
 
-
     //remove empty updates
     if (!empty($updatebody) AND $updatebody != "<hr>")
     {
@@ -169,11 +168,6 @@ while ($update = mysql_fetch_object($result))
         // $updatebody = htmlspecialchars($updatebody);
         $updatebody = str_replace($temptag, $origtag, $updatebody);
 
-        // Put the header part (up to the <hr /> in a seperate DIV)
- /*       if (strpos($updatebody, '<hr>') !== FALSE)
-        {
-            $updatebody = "<div class='iheader'>".str_replace("<hr>", "", $updatebody)."</div>";
-        }*/
         $updatebody = str_replace("<hr>", "", $updatebody);
 
         // Style quoted text
@@ -210,8 +204,6 @@ while ($update = mysql_fetch_object($result))
 
         //$updatebody = emotion($updatebody);
 
-        //"!(http:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#]*)!e"
-        // [\n\t ]+
         $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen('\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
 
 
