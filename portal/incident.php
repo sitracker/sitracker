@@ -229,7 +229,10 @@ while ($update = mysql_fetch_object($result))
             {
                 echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
             }
-            echo icon($updatetypes[$update->type]['icon'], 16, $update->type);
+            else
+            {
+                echo icon($updatetypes[$update->type]['icon'], 16, $update->type);
+            }
         }
         else
         {
