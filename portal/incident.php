@@ -1,5 +1,5 @@
 <?php
-// portal/showincident.inc.php - Displays an incident in the portal included by ../portal.php
+// portal/incident.inc.php - Displays an incident in the portal included by ../portal.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2014 The Support Incident Tracker Project
@@ -61,7 +61,7 @@ if ($offset > 0)
 $result = mysql_query($sql);
 if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_WARNING);
 
-$keeptags = array('b','i','u','hr','&lt;', '&gt;');
+$keeptags = array('b', 'i', 'u', 'hr', '&lt;', '&gt;');
 foreach ($keeptags AS $keeptag)
 {
     if (mb_substr($keeptag,0,1) == '&')
@@ -119,7 +119,7 @@ $filesql = "SELECT *, f.id AS fileid, u.id AS updateid, f.userid AS userid
             ORDER BY f.filedate DESC";
 
 $fileresult = mysql_query($filesql);
-if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_WARNING);
+if (mysql_error()) trigger_error("MySQL Query Error {$sql}".mysql_error(), E_USER_WARNING);
 
 while ($filerow = mysql_fetch_object($fileresult))
 {
@@ -206,7 +206,6 @@ while ($update = mysql_fetch_object($result))
 
         $updatebody = preg_replace("!([\n\t ]+)(http[s]?:/{2}[\w\.]{2,}[/\w\-\.\?\&\=\#\$\%|;|\[|\]~:]*)!e", "'\\1<a href=\"\\2\" title=\"\\2\">'.(mb_strlen('\\2')>=70 ? mb_substr('\\2',0,70).'...':'\\2').'</a>'", $updatebody);
 
-
         // Lookup some extra data
         $updateuser = user_realname($update->userid, TRUE);
         $updatetime = readable_date($update->timestamp);
@@ -231,7 +230,7 @@ while ($update = mysql_fetch_object($result))
             echo icon($updatetypes['research']['icon'], 16, $strResearch);
             if ($update->sla != '')
             {
-                echo icon($slatypes[$update->sla]['icon'],16, $update->type);
+                echo icon($slatypes[$update->sla]['icon'], 16, $update->type);
             }
         }
         echo " {$updatetime}</div>";
