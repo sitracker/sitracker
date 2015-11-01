@@ -41,20 +41,10 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
     $end = $start + $perpage;
     $filter = array('start' => $start, 'view' => $view);
 
-    // $sql = "SELECT k.*, s.name FROM `{$dbKBArticles}` AS k,
-    //                                $dbKBSoftware,
-    //                                 `{$dbSoftware}` as s
-    //         WHERE ((k.docid = kbs.docid AND kbs.softwareid = s.id) OR 1=1) AND k.distribution = 'public' ";
-    // $sql = "
-    // SELECT k.*, s.name FROM `{$dbKBArticles}` AS k,
-    // LEFT OUTER JOIN `$dbKBSoftware`, `{$dbSoftware}`
-    // ON k.docid = kbs.docid AND kbs.softwareid = s.id ";
-
-
     $sql = "SELECT k.*, s.name FROM `{$dbKBArticles}` AS k, `{$dbSoftware}` as s ";
-    $sql .= "LEFT OUTER JOIN `{$dbKBSoftware}` as kbs ";
+    $sql .= "LEFT OUTER JOIN `{$dbKBSoftware}` AS kbs ";
     $sql .= "ON kbs.softwareid=s.id ";
-    $sql .= "WHERE (k.docid = kbs.docid OR 1=1) AND k.distribution='public' ";
+    $sql .= "WHERE k.docid = kbs.docid AND k.distribution='public' ";
     if ($CONFIG['portal_kb_enabled'] != 'Public')
     {
         if ($view != 'all')
@@ -149,11 +139,31 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
                     $url .= "&amp;p=1";
                 }
                 echo "<tr class='{$shade}'>";
-                echo "<td><a href=\"$url\">";
+                echo "<td><a href=\"{$url}\">";
                 echo icon('kb', 16, $strID);
                 echo " {$CONFIG['kb_id_prefix']}{$row->docid}</a></td>";
-                echo "<td>{$row->name}<br />";
-                echo "<a href=\"$url\">{$row->title}</a></td>";
+                echo "<td>";
+                $ssql = "SELECT * FROM `{$dbKBSoftware}` AS kbs, `{$dbSoftware}` AS s WHERE kbs.softwareid = s.id ";
+                $ssql .= "AND kbs.docid = '{$row->docid}' ORDER BY s.name";
+                $sresult = mysql_query($ssql);
+                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $rowcount = mysql_num_rows($sresult);
+                if ($rowcount >= 1 AND $rowcount < 3)
+                {
+                    $count = 1;
+                    while ($kbsoftware = mysql_fetch_object($sresult))
+                    {
+                        echo $kbsoftware->name;
+                        if ($count < $rowcount) echo ", ";
+                        $count++;
+                    }
+                }
+                elseif ($rowcount >= 4)
+                {
+                    echo "Various";
+                }
+                echo "<br />";
+                echo "<a href=\"{$url}\">{$row->title}</a></td>";
                 echo "<td>";
                 echo ldate($CONFIG['dateformat_date'], mysql2date($row->published));
                 echo "</td>";
