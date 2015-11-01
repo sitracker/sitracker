@@ -33,10 +33,10 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
 
     echo "<h2>".icon('kb', 32, $strKnowledgeBase)." {$strKnowledgeBase}</h2>";
     $perpage = 20;
-$order = clean_fixed_list($_GET['order'], array('', 'a', 'ASC', 'd', 'DESC'));
-$sort = clean_fixed_list($_GET['sort'], array('', 'id', 'title', 'date', 'author', 'keywords'));
+    $order = clean_fixed_list($_GET['order'], array('', 'a', 'ASC', 'd', 'DESC'));
+    $sort = clean_fixed_list($_GET['sort'], array('', 'id', 'title', 'date', 'author', 'keywords'));
 
-$start = clean_int($_GET['start']);
+    $start = clean_int($_GET['start']);
 
     $end = $start + $perpage;
     $filter = array('start' => $start, 'view' => $view);
