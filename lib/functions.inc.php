@@ -521,6 +521,9 @@ function createContactSession($userid)
     }
     
     $_SESSION['contracts'] = array_merge((array)$admincontracts, (array)$contactcontracts, (array)$allcontracts);
+    
+    load_entitlements($_SESSION['contactid'], $_SESSION['siteid']);
+    header("Location: portal/");
 }
 
 
