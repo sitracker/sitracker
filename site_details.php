@@ -283,8 +283,8 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
     if ($showinactivecontracts != 'yes' AND $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
     {
         $sqldisabled = $sql;
-        $sql .= "AND m.term != 'yes' AND (m.expirydate > NOW() OR m.expirydate = -1)";
-        $sqldisabled = "AND (m.term = 'yes' OR m.expirydate < NOW()) ORDER BY expirydate DESC";
+        $sql .= "AND m.term != 'yes' AND (m.expirydate > {$now} OR m.expirydate = -1) ";
+        $sqldisabled = "AND (m.term = 'yes' OR m.expirydate < {$now}) ORDER BY expirydate DESC ";
     }
     $sql .= "ORDER BY expirydate DESC";
 

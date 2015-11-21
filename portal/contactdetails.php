@@ -297,12 +297,12 @@ else
         echo "<h4>{$strAssociateContactWithContract}</h4>";
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
-        echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, FALSE, $sit[2])."<br />";
+        echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, TRUE, $sit[2])."<br />";
         echo "<input type='submit' name='add' value='{$strSave}' /></p></form>";
     }
-    
+
     clear_form_data('portalcontactdetails');
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 ?>
