@@ -40,7 +40,6 @@ if (isset($_POST['submit']))
     $owner = clean_int($_POST['owner']);
     $site = clean_int($_POST['site']);
     $tags = cleanvar($_POST['tags']);
-    $active = cleanvar($_POST['active']);
 
     // Edit site, update the database
     $errors = 0;
@@ -71,18 +70,9 @@ if (isset($_POST['submit']))
         }
         // update site
 
-        if ($active == 'true')
-        {
-            $activeStr = 'true';
-        }
-        else
-        {
-            $activeStr = 'false';
-        }
-
         $sql = "UPDATE `{$dbSites}` SET name='{$name}', department='{$department}', address1='{$address1}', address2='{$address2}', city='{$city}', ";
         $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
-        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
+        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', owner='{$owner}', freesupport='{$incident_quantity}' WHERE id='{$site}' LIMIT 1";
 
         // licenserx='$licenserx'
         $result = mysql_query($sql);
@@ -141,12 +131,12 @@ while ($obj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strWebsite}:</th><td>";
     echo "<input maxlength='255' name='websiteurl' size='40' value='{$obj->websiteurl}' /></td></tr>\n";
     plugin_do('portal_site_edit_form');
-    
+
     echo "</table>\n";
     echo "<input name='site' type='hidden' value='{$site}' />";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
-    
+
     echo "</form>";
 }
 
