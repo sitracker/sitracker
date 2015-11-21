@@ -72,7 +72,7 @@ if (cleanvar($_REQUEST['action']) == 'update')
     $newpass2 = cleanvar($_REQUEST['newpassword2']);
 
     $_SESSION['formdata']['portalcontactdetails'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
-    
+
     $errors = 0;
 
     // VALIDATION CHECKS */
@@ -154,7 +154,11 @@ if (cleanvar($_REQUEST['action']) == 'update')
     }
     else
     {
-        html_redirect($_SERVER['PHP_SELF'], FALSE);
+        if ($_SESSION['contactid'] != $id)
+        {
+            html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
+        }
+        else html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 }
 elseif (isset($_POST['add']))
