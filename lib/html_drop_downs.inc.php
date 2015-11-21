@@ -712,7 +712,7 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
 
     if ($showonlyactive)
     {
-        $sql .= "AND (m.expirydate > {$now} OR m.expirydate = -1) ";
+        $sql .= "AND m.term != 'yes' AND (m.expirydate > {$now} OR m.expirydate = -1) ";
     }
 
     if ($adminid != '')
