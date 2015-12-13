@@ -52,7 +52,7 @@ function generate_row($update)
     else if (!empty($update->fromaddr))
     {
         // Have a look if we've got a user with this email address
-        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update->fromaddr)."%'";
+        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysqli_real_escape_string($db, $update->fromaddr)."%'";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         list($contactmatches) = mysqli_fetch_row($result);
@@ -204,7 +204,7 @@ if ($spam_string == cleanvar($_REQUEST['delete_all_spam']))
         $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$ids[1]}' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='{$ids[0]}' LIMIT 1";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() == 1)
+        if (mysqli_affected_rows($db) == 1)
         {
             $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$ids[0]}'";
             mysqli_query($db, $sql);
@@ -248,7 +248,7 @@ $countresults = mysqli_num_rows($result);
 $spamcount = 0;
 if ($countresults > 0)
 {
-    if ($countresults) mysql_data_seek($result, 0);
+    if ($countresults) mysqli_data_seek($result, 0);
 
     while ($updates = mysqli_fetch_object($result))
     {
@@ -343,7 +343,7 @@ if ($spamcount > 0)
     echo "<p align='center'>{$strIncomingEmailSpam}</p>";
 
     // Reset back for 'nasty' emails
-    if ($countresults) mysql_data_seek($result, 0);
+    if ($countresults) mysqli_data_seek($result, 0);
 
     echo "<table align='center' style='width: 95%;'>";
     echo "<tr><th /><th>{$strDate}</th><th>{$strFrom}</th>";

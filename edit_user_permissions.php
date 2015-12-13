@@ -88,7 +88,7 @@ if (empty($action) OR $action == "showform")
         {
             echo "<tr class='{$class}' onclick='trow(event);'>";
             echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
-            mysql_data_seek($result, 0);
+            mysqli_data_seek($result, 0);
             while ($rolerow = mysqli_fetch_object($result))
             {
                 $rpsql = "SELECT * FROM `{$dbRolePermissions}` WHERE roleid='{$rolerow->id}' AND permissionid='{$perm->id}'";
@@ -249,7 +249,7 @@ elseif ($action == "update")
                     // flush();
                     $uresult = mysqli_query($db, $sql);
                     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                    if (mysql_affected_rows() < 1 || $uresult == FALSE)
+                    if (mysqli_affected_rows($db) < 1 || $uresult == FALSE)
                     {
                         // Update failed, this could be because of a missing userpemissions record so try and create one
                         // echo "Update of permission ".$x[1]."failed, no problem, will try insert instead.<br />";
@@ -257,7 +257,7 @@ elseif ($action == "update")
                         $isql .= "VALUES ('{$rolerow->id}', '".clean_int($x[1])."', 'true')";
                         $iresult = mysqli_query($db, $isql);
                         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                        if (mysql_affected_rows() < 1)
+                        if (mysqli_affected_rows($db) < 1)
                         {
                            $errors++;
                             $_SESSION['formerrors']['role_permissions']['failure'] = "{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}";
@@ -298,7 +298,7 @@ elseif ($action == "update")
                 # flush();
                 $result = mysqli_query($db, $sql);
                 if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                if (mysql_affected_rows() < 1 || $result == FALSE)
+                if (mysqli_affected_rows($db) < 1 || $result == FALSE)
                 {
                     // Update failed, this could be because of a missing userpemissions record so try and create one
                     // echo "Update of permission ".$x[1]."failed, no problem, will try insert instead.<br />";
@@ -306,7 +306,7 @@ elseif ($action == "update")
                     $isql .= "VALUES ('{$user}', '{$x[1]}', 'true')";
                     $iresult = mysqli_query($db, $isql);
                     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                    if (mysql_affected_rows() < 1)
+                    if (mysqli_affected_rows($db) < 1)
                     {
                         echo user_alert("{$strUpdateUserPermission} {$x[1]} {$strFailedOnPass2}", E_USER_WARNING);
                     }
