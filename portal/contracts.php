@@ -29,7 +29,7 @@ if ($id != 0 AND $contactid != 0 AND $action == 'remove')
                 WHERE maintenanceid='{$id}'
                 AND contactid='{$contactid}'
                 LIMIT 1";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
@@ -48,7 +48,7 @@ elseif ($id != 0 AND $action == 'add' AND intval($_POST['contactid'] != 0))
     $sql = "INSERT INTO `{$dbSupportContacts}`
             (maintenanceid, contactid)
             VALUES('{$id}', '{$contactid}')";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     else
     {
@@ -71,10 +71,10 @@ $sql .= "AND m.reseller = r.id ";
 $sql .= "AND (m.licence_type IS NULL OR m.licence_type = lt.id) ";
 $sql .= "AND m.site = '{$_SESSION['siteid']}'";
 
-$maintresult = mysql_query($sql);
+$maintresult = mysqli_query($db, $sql);
 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-$maint = mysql_fetch_object($maintresult);
+$maint = mysqli_fetch_object($maintresult);
 
 echo "<table class='maintable vertical'>";
 echo "<tr><th>{$strContract} {$strID}:</th>";
@@ -239,13 +239,13 @@ if (mysqli_num_rows($maintresult) > 0)
     // supported software
     $sql = "SELECT * FROM `{$GLOBALS[dbSoftwareProducts]}` AS sp, `{$GLOBALS[dbSoftware]}` AS s ";
     $sql .= "WHERE sp.softwareid = s.id AND productid='{$maint->product}' ";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
     if (mysqli_num_rows($result)>0)
     {
         echo"<table class='maintable'>";
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             $software->lifetime_end = mysql2date($software->lifetime_end);
             echo "<tr><td> ".icon('skill', 16)." ";
