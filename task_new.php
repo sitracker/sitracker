@@ -36,7 +36,7 @@ if ($incident)
     mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
-    $taskid = mysql_insert_id();
+    $taskid = mysqli_insert_id($db);
 
     $sql = "INSERT INTO `{$dbLinks}` VALUES(4, {$taskid}, {$incident}, 'left', {$sit[2]})";
     mysqli_query($db, $sql);
@@ -113,7 +113,7 @@ else
                 $sql .= "VALUES ('{$name}','{$description}','{$priority}','{$taskuser}','{$duedate}','{$startdate}','{$completion}','{$value}','{$distribution}','".date('Y-m-d H:i:s')."')";
                 mysqli_query($db, $sql);
                 if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Task insert failed", E_USER_ERROR);
+                if (mysqli_affected_rows($db) < 1) trigger_error("Task insert failed", E_USER_ERROR);
                 plugin_do('task_new_saved');
                 unset($_SESSION['formdata']['new_task']);
                 unset($_SESSION['formerrors']['new_task']);

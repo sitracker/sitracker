@@ -503,14 +503,15 @@ function protectform($formelement, $message = '')
  */
 function group_selector($selected, $urlargs='')
 {
+    global $db;
     $gsql = "SELECT * FROM `{$GLOBALS['dbGroups']}` ORDER BY name";
     $gresult = mysqli_query($db, $gsql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     while ($group = mysqli_fetch_object($gresult))
     {
         $grouparr[$group->id] = $group->name;
     }
-    $numgroups = mysql_num_rows($gresult);
+    $numgroups = mysqli_num_rows($gresult);
 
     if (!empty($urlargs)) $urlargs = "&amp;{$urlargs}";
     if ($numgroups >= 1)

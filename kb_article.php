@@ -54,7 +54,7 @@ if (isset($_POST['submit']))
             $sql .= "VALUES ('public', '" . clean_dbstring(clean_fspath($_FILES['attachment']['name'])). "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
             mysqli_query($db, $sql);
             if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
-            $fileid =  mysql_insert_id();
+            $fileid =  mysqli_insert_id($db);
 
             $kb_attachment_fspath = $CONFIG['attachment_fspath'] . DIRECTORY_SEPARATOR . "kb" . DIRECTORY_SEPARATOR . $kbid . DIRECTORY_SEPARATOR;
 
@@ -117,12 +117,12 @@ if (isset($_POST['submit']))
             // If the KB ID is blank, we assume we're creating a new article
             $author = user_realname($_SESSION['userid']);
             $pubdate = date('Y-m-d h:i:s');
-    
+
             $sqlinsert = "INSERT INTO `{$dbKBArticles}` (title, keywords, distribution, author, published) ";
             $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '{$pubdate}')";
             mysqli_query($db, $sqlinsert);
             if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db), E_USER_ERROR);
-            $kbid = mysql_insert_id();
+            $kbid = mysqli_insert_id($db);
         }
         else
         {
@@ -130,10 +130,9 @@ if (isset($_POST['submit']))
             // Remove associated software ready for re-assocation
             $sql[] = "DELETE FROM `{$dbKBSoftware}` WHERE docid='{$kbid}'";
         }
-    
+
         foreach ($sections AS $section)
         {
-    
             $sectionvar = strtolower($section);
             $sectionvar = str_replace(" ", "", $sectionvar);
             $sectionid = clean_int($_POST["{$sectionvar}id"]);
@@ -157,7 +156,7 @@ if (isset($_POST['submit']))
                 }
             }
         }
-    
+
         // Set software / expertise
         if (is_array($_POST['expertise']))
         {
@@ -168,7 +167,7 @@ if (isset($_POST['submit']))
                 $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
             }
         }
-    
+
         if (is_array($sql))
         {
             foreach ($sql AS $sqlquery)

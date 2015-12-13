@@ -45,13 +45,13 @@ switch ($mode)
             	// Double check the oldduration thats been passed is whats in the DB
                 $text = $obj->bodytext . "\n\n" . sprintf($SYSLANG['strBillingDurationAdjusted'], user_realname($sit[2]),
                                                         ldate($CONFIG['dateformat_datetime'], $now), ceil($obj->duration), $newduration, "\n\n----{$reason}----\n\n");
-                
-                $usql = "UPDATE `{$dbUpdates}` SET bodytext = '".mysql_real_escape_string($text)."', duration = '{$newduration}' WHERE id = '{$updateid}'";
+
+                $usql = "UPDATE `{$dbUpdates}` SET bodytext = '".mysqli_real_escape_string($db, $text)."', duration = '{$newduration}' WHERE id = '{$updateid}'";
                 mysqli_query($db, $usql);
-                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
                 // Some error checking
-                if (mysql_affected_rows() < 1)
+                if (mysqli_affected_rows($db) < 1)
                 {
                     html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strFailed);
                 }

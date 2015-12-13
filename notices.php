@@ -61,7 +61,7 @@ elseif ($action == 'post')
     }
     else
     {
-        $refid = mysql_insert_id();
+        $refid = mysqli_insert_id($db);
         $sql = "UPDATE `$dbNotices` SET referenceid='{$refid}' WHERE id='{$refid}'";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);

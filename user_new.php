@@ -187,7 +187,7 @@ else
                 1, '{$holiday_entitlement}', '{$startdate}', ".convert_string_null_safe($managerid).", NOW())";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-        $newuserid = mysql_insert_id();
+        $newuserid = mysqli_insert_id();
 
         // Default user settings
         $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";

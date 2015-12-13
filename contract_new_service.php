@@ -229,13 +229,13 @@ else
 
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() < 1)
+        if (mysqli_affected_rows($db) < 1)
         {
             trigger_error("Insert failed", E_USER_ERROR);
             $errors++;
         }
 
-        $serviceid = mysql_insert_id();
+        $serviceid = mysqli_insert_id($id);
 
         if ($amount != 0)
         {
@@ -256,7 +256,7 @@ else
                 $update .= "WHERE id = {$contractid}";
                 mysqli_query($db, $update);
                 if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed", E_USER_ERROR);
+                if (mysqli_affected_rows($db) < 1) trigger_error("Expiry of contract update failed", E_USER_ERROR);
             }
         }
 

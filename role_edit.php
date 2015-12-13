@@ -89,7 +89,7 @@ else
         $sql = "UPDATE `{$dbRoles}` SET rolename = '{$rolename}', description = '{$description}' WHERE id = {$roleid}";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() > 0) html_redirect("role.php?roleid={$roleid}", TRUE);
+        if (mysqli_affected_rows($db) > 0) html_redirect("role.php?roleid={$roleid}", TRUE);
         else html_redirect($_SESSION['PHP_SELF'], FALSE);
     }
     else

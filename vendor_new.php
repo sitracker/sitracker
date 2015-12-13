@@ -69,7 +69,7 @@ else
         }
         else
         {
-            $id = mysql_insert_id();
+            $id = mysqli_insert_id($db);
             journal(CFG_LOGGING_DEBUG, 'Vendor Added', "Vendor {$id} was added", CFG_JOURNAL_DEBUG, $id);
             html_redirect("vendors.php");
         }

@@ -270,7 +270,7 @@ switch ($action)
             {
                 $updatehtml .= "[b]";
                 $updatehtml .= readable_date(mysql2date($notesarray[$i]->timestamp), 'system');
-                $updatehtml .= "[/b]\n".mysql_real_escape_string($notesarray[$i]->bodytext)."\n\n";
+                $updatehtml .= "[/b]\n".mysqli_real_escape_string($db, $notesarray[$i]->bodytext)."\n\n";
             }
 
             $updatehtml .= sprintf($SYSLANG['strActivityCompleted'], $enddate, $duration);
@@ -294,7 +294,7 @@ switch ($action)
             $sql = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', status = 1 WHERE id = {$incident}";
             $result = mysqli_query($db, $sql);
             if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            if (mysqli_affected_rows($db) != 1)
             {
                 trigger_error("No rows affected while updating incident", E_USER_ERROR);
             }

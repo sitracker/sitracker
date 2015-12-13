@@ -24,7 +24,7 @@ $edituserpermission = user_permission($sit[2], 23); // edit user
 
 if (empty($_REQUEST['userid']) OR $_REQUEST['userid'] == 'current' OR $edituserpermission == FALSE)
 {
-    $edituserid = mysql_real_escape_string($sit[2]);
+    $edituserid = mysqli_real_escape_string($db, $sit[2]);
 }
 else
 {

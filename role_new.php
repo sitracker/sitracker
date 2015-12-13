@@ -79,7 +79,7 @@ else
         $sql = "INSERT INTO `{$dbRoles}` (rolename, description) VALUES ('{$rolename}', '{$description}')";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-        $roleid = mysql_insert_id();
+        $roleid = mysqli_insert_id($db);
 
         if ($roleid != 0)
         {

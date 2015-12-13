@@ -51,7 +51,7 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     $sql .= "'{$privacy}', '{$identifier}', '{$owner}')";
 
     mysqli_query($db, $sql);
-    $id = mysql_insert_id();
+    $id = mysqli_insert_id($db);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     else
     {

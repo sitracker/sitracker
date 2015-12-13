@@ -31,14 +31,14 @@ if ($type < HOL_PUBLIC)
     echo appointment_type_dropdown($type, 'year');
 
     $sql = "SELECT * FROM {$dbHolidays} WHERE userid='{$user}' AND approved=0 AND type='{$type}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result))
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result))
     {
         echo "<table class='maintable'>";
         echo "<tr class='shade2'><td><strong>{$strAwaitingApproval}</strong>:</td></tr>";
         echo "<tr class='shade1'><td>";
-        while ($dates = mysql_fetch_object($result))
+        while ($dates = mysqli_fetch_object($result))
         {
             echo date('l ', strtotime($dates->date));
             if ($dates->length == 'am') echo "{$strMorning} ";
@@ -50,7 +50,7 @@ if ($type < HOL_PUBLIC)
         echo "<tr class='shade1'><td><a href='holiday_request.php?type={$type}'>{$strSendRequest}</a></td></tr>";
         echo "</table>";
     }
-    mysql_free_result($result);
+    mysqli_free_result($result);
 }
 else
 {

@@ -305,7 +305,7 @@ elseif ($action == 'new')
 
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-        $maintid = mysql_insert_id();
+        $maintid = mysqli_insert_id($db);
 
         if (!$result)
         {
@@ -318,9 +318,9 @@ elseif ($action == 'new')
         $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$foc}')";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+        if (mysqli_affected_rows($db) < 1) trigger_error("Insert failed", E_USER_ERROR);
 
-        $serviceid = mysql_insert_id();
+        $serviceid = mysqli_insert_id($db);
         update_contract_balance($maintid, $strNewContract, $amount, $serviceid);
 
         if ($addition_errors == 1)

@@ -476,7 +476,7 @@ elseif ($action == "update")
                     $sql = "INSERT INTO `{$dbEmailTemplates}` (name, type) VALUES('{$name}', '{$templatetype}')";
                     mysqli_query($db, $sql);
                     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                    $id = mysql_insert_id();
+                    $id = mysqli_insert_id($id);
                 }
                 else
                 {
@@ -501,7 +501,7 @@ elseif ($action == "update")
                     $sql = "INSERT INTO `{$dbNoticeTemplates}`(name) VALUES('{$name}')";
                     mysqli_query($db, $sql);
                     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                    $id = mysql_insert_id();
+                    $id = mysqli_insert_id($id);
                 }
                 else
                 {
