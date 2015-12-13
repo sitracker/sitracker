@@ -358,15 +358,16 @@ function is_public_holiday($time, $publicholidays)
  */
 function get_public_holidays($startdate, $enddate)
 {
+    global $db;
     $sql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` ";
     $sql .= "WHERE type = ".HOL_PUBLIC." AND (`date` >= FROM_UNIXTIME({$startdate}) AND `date` <= FROM_UNIXTIME({$enddate}))";
 
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     $publicholidays = array();
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         // Assume public holidays are ALL day
         while ($obj = mysqli_fetch_object($result))
@@ -599,16 +600,16 @@ function ldate($format, $date = '', $utc = FALSE)
  */
 function is_day_bank_holiday($day, $month, $year)
 {
-    global $dbHolidays, $bankholidays;
+    global $dbHolidays, $bankholidays, $db;
 
     if (empty($bankholidays))
     {
         $sql = "SELECT date FROM `{$dbHolidays}` WHERE type = 10";
         
         $result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_ERROR);
+            trigger_error(mysqli_error($db), E_USER_ERROR);
         }
         
         while ($obj = mysqli_fetch_object($result))

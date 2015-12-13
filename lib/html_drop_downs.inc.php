@@ -469,7 +469,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    $numrows = mysql_num_rows($result);
+    $numrows = mysqli_num_rows($result);
     if ($numrows > 0)
     {
         $html = "<select name='{$name}' id='{$name}'";

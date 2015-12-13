@@ -27,15 +27,15 @@ require_once (APPLICATION_LIBPATH . 'base.inc.php');
  */
 function guess_contract_id($contactid)
 {
-    global $dbSupportContacts;
+    global $dbSupportContacts, $db;
 
     $contactid = intval($contactid);
     $sql = "SELECT * FROM `{$dbSupportContacts}` ";
     $sql .= "WHERE contactid = {$contactid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
-    $num_contracts = mysql_num_rows($result);
+    $num_contracts = mysqli_num_rows($result);
 
     if ($num_contracts == 0)
     {
@@ -69,6 +69,7 @@ function maintenance_siteid($id)
  */
 function contract_software()
 {
+    global $db;
     $contract = intval($contract);
     $sql = "SELECT s.id
             FROM `{$GLOBALS['dbMaintenance']}` AS m,
@@ -124,6 +125,7 @@ function contract_slatag($maintid)
  */
 function contract_product($maintid)
 {
+    global $db;
     $maintid = intval($maintid);
     $productid = db_read_column('product', $GLOBALS['dbMaintenance'], $maintid);
     $sql = "SELECT name FROM `{$GLOBALS['dbProducts']}` WHERE id='{$productid}'";
@@ -149,6 +151,7 @@ function contract_product($maintid)
  */
 function contract_site($maintid)
 {
+    global $db;
     $maintid = intval($maintid);
     $sql = "SELECT site FROM `{$GLOBALS['dbMaintenance']}` WHERE id='{$maintid}'";
     $result = mysqli_query($db, $sql);
@@ -174,13 +177,13 @@ function contract_site($maintid)
  */
 function supported_contacts($maintid)
 {
-    global $dbSupportContacts, $dbContacts;
+    global $dbSupportContacts, $dbContacts, $db;
     $sql  = "SELECT c.forenames, c.surname, sc.contactid AS contactid ";
     $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbContacts}` AS c ";
     $sql .= "WHERE sc.contactid=c.id AND sc.maintenanceid='{$maintid}' ";
     $sql .= "ORDER BY c.surname, c.forenames ";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     if (!empty($result))
     {
         while ($row = mysqli_fetch_object($result))
@@ -201,6 +204,7 @@ function supported_contacts($maintid)
  */
 function all_contact_contracts($contactid, $siteid)
 {
+    global $db;
     $sql = "SELECT DISTINCT m.id AS id
             FROM `{$GLOBALS['dbMaintenance']}` AS m
             WHERE m.site={$siteid}
@@ -226,12 +230,12 @@ function all_contact_contracts($contactid, $siteid)
  */
 function incident_slaid($incidentid)
 {
-    global $dbIncidents, $dbServiceLevels;
+    global $dbIncidents, $dbServiceLevels, $db;
     $incidentid = intval($incidentid);
     $slatag = db_read_column('servicelevel', $dbIncidents, $incidentid);
     $sql = "SELECT id FROM `{$dbServiceLevels}` WHERE tag = '{$slatag}' LIMIT 1";
     $result = mysqli_query($db, $sql);
-    list($id) = mysql_fetch_assoc($result);
+    list($id) = mysqli_fetch_assoc($result);
     return $id;
 }
 

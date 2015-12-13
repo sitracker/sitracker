@@ -23,7 +23,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 function saction_CloseIncidents($closure_delay)
 {
     $success = TRUE;
-    global $dbIncidents, $dbUpdates, $CONFIG, $now;
+    global $dbIncidents, $dbUpdates, $CONFIG, $now, $db;
 
     if ($closure_delay < 1) $closure_delay = 554400; // Default  six days and 10 hours
 
@@ -31,9 +31,9 @@ function saction_CloseIncidents($closure_delay)
     $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
     $sql .= "AND (timeofnextaction='0' OR timeofnextaction <= '{$now}')";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -65,9 +65,9 @@ function saction_CloseIncidents($closure_delay)
     $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
     $sql .= "AND (timeofnextaction='0' OR timeofnextaction <= '{$now}')";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -75,13 +75,13 @@ function saction_CloseIncidents($closure_delay)
     $sql .= "AND (({$now} - lastupdated) > '{$closure_delay}') ";
     $sql .= "AND (timeofnextaction='0' OR timeofnextaction<='{$now}') ";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $success = FALSE;
     }
 
-    //if ($CONFIG['debug']) debug_log("Found ".mysql_num_rows($result)." Incidents to close");
+    //if ($CONFIG['debug']) debug_log("Found ".mysqli_num_rows($result)." Incidents to close");
 
     while ($obj = mysqli_fetch_object($result))
     {
@@ -93,18 +93,18 @@ function saction_CloseIncidents($closure_delay)
             $sqlb .= "closed='{$now}', status='".STATUS_CLOSED."', closingstatus='4', ";
             $sqlb .= "timeofnextaction='0' WHERE id='{$obj->id}'";
             $resultb = mysqli_query($db, $sqlb);
-            if (mysql_error())
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                 $success = FALSE;
             }
 
             $sqlc = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, nextaction, customervisibility) ";
             $sqlc .= "VALUES ('{$obj->id}', '0', 'closing', '{$obj->owner}', '{$obj->status}', 'Incident Closed by {$CONFIG['application_shortname']}', '{$now}', '', 'show' ) ";
             $resultc = mysqli_query($db, $sqlc);
-            if (mysql_error())
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 $success = FALSE;
             }
         }
@@ -122,17 +122,17 @@ function saction_CloseIncidents($closure_delay)
  */
 function saction_PurgeJournal()
 {
-    global $dbJournal, $now, $CONFIG;
+    global $dbJournal, $now, $CONFIG, $db;
     $success = TRUE;
     $purgedate = date('YmdHis',($now - $CONFIG['journal_purge_after']));
     $sql = "DELETE FROM `{$dbJournal}` WHERE timestamp < $purgedate";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $success = FALSE;
     }
-    if ($CONFIG['debug']); //debug_log("Purged ".mysql_affected_rows()." journal entries");
+    if ($CONFIG['debug']);
 
     return $success;
 }
@@ -147,7 +147,7 @@ function saction_TimeCalc()
 {
     global $now;
     global $dbIncidents, $dbServiceLevels, $dbMaintenance, $dbUpdates;
-    global $GLOBALS, $CONFIG;
+    global $GLOBALS, $CONFIG, $dv;
 
     $success = TRUE;
 
@@ -165,9 +165,9 @@ function saction_TimeCalc()
     $sql = "SELECT id, title, maintenanceid, priority, slaemail, slanotice, servicelevel, status, owner ";
     $sql .= "FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED." AND status != ".STATUS_CLOSING;
     $incident_result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $success = FALSE;
     }
 
@@ -179,10 +179,10 @@ function saction_TimeCalc()
         {
             $sql = "SELECT servicelevel FROM  `{$dbMaintenance}` WHERE id = '{$incident->maintenanceid}'";
             $result = mysqli_query($db, $sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             $t = mysqli_fetch_row($sql);
             $tag = $t[0];
-            mysql_free_result($result);
+            mysqli_free_result($result);
         }
         else $tag = $incident->servicelevel;
 
@@ -192,13 +192,13 @@ function saction_TimeCalc()
         $sql = "SELECT id, type, sla, timestamp, currentstatus FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
         $sql .=" AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
         $update_result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             $success = FALSE;
         }
 
-        if (mysql_num_rows($update_result) != 1)
+        if (mysqli_num_rows($update_result) != 1)
         {
             //if ($CONFIG['debug']) //debug_log("Cannot find SLA information for incident ".$incident['id'].", skipping");
         }
@@ -211,18 +211,18 @@ function saction_TimeCalc()
                 //debug_log("   Last SLA record is ".$slaInfo['sla']." at ".date("jS F Y H:i",$slaInfo['timestamp'])." which is $newSlaTime working minutes ago");
             }
         }
-        mysql_free_result($update_result);
+        mysqli_free_result($update_result);
 
         $sql = "SELECT id, type, sla, timestamp, currentstatus, currentowner FROM `{$dbUpdates}` WHERE incidentid='{$incident->id}' ";
         $sql .= "AND type='reviewmet' ORDER BY id DESC LIMIT 1";
         $update_result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             $success = FALSE;
         }
 
-        if (mysql_num_rows($update_result) != 1)
+        if (mysqli_num_rows($update_result) != 1)
         {
             //if ($CONFIG['debug']) //debug_log("Cannot find review information for incident ".$incident['id'].", skipping");
         }
@@ -238,7 +238,7 @@ function saction_TimeCalc()
                                 array('incidentid' => $incident->id,
                                       'time' => $newReviewTime));
         }
-        mysql_free_result($update_result);
+        mysqli_free_result($update_result);
 
 
         if ($newSlaTime != -1)
@@ -277,13 +277,13 @@ function saction_TimeCalc()
             $sql = "SELECT ($slaRequest * $coefficient) as 'next_sla_time', review_days ";
             $sql .= "FROM `{$dbServiceLevels}` WHERE tag = '{$tag}' AND priority = '{$incident->priority}'";
             $result = mysqli_query($db, $sql);
-            if (mysql_error())
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 $success = FALSE;
             }
-            $times = mysql_fetch_assoc($result);
-            mysql_free_result($result);
+            $times = mysqli_fetch_assoc($result);
+            mysqli_free_result($result);
 
             if ($CONFIG['debug'])
             {
@@ -306,12 +306,12 @@ function saction_TimeCalc()
 
                     $sql = "UPDATE `{$dbIncidents}` SET slanotice='1' WHERE id='{$incident->id}'";
                     mysqli_query($db, $sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 }
             }
         }
     }
-    mysql_free_result($incident_result);
+    mysqli_free_result($incident_result);
 
     return $success;
 }
@@ -324,7 +324,7 @@ function saction_TimeCalc()
 */
 function saction_SetUserStatus()
 {
-    global $dbHolidays, $dbUsers, $CONFIG;
+    global $dbHolidays, $dbUsers, $CONFIG, $db;
     // Find users with holidays today who don't have correct status
     $success = TRUE;
     $startdate = mktime(0,0,0,date('m'),date('d'),date('Y'));
@@ -334,12 +334,12 @@ function saction_SetUserStatus()
     $sql .= "FROM_UNIXTIME($enddate) AND (type >='".HOL_HOLIDAY."' AND type <= ".HOL_FREE.") ";
     $sql .= "AND (approved=" . HOL_APPROVAL_GRANTED . " OR approved=" . HOL_APPROVAL_GRANTED_ARCHIVED . ")";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
         $success = FALSE;
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
     }
-    $numrows = mysql_num_rows($result);
+    $numrows = mysqli_num_rows($result);
     while ($huser = mysqli_fetch_object($result))
     {
         if ($huser->length == 'day'
@@ -396,7 +396,7 @@ function saction_SetUserStatus()
 function saction_ChaseCustomers()
 {
     global $CONFIG, $now, $sit;
-    global $dbIncidents, $dbUpdates;
+    global $dbIncidents, $dbUpdates, $db;
     $success = TRUE;
 
     /**
@@ -419,9 +419,9 @@ function saction_ChaseCustomers()
         $sql = "SELECT * FROM `{$dbIncidents}` AS i WHERE status = ".STATUS_CUSTOMER;
 
         $result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             $success = FALSE;
         }
 
@@ -432,9 +432,9 @@ function saction_ChaseCustomers()
                 // only annoy these people
                 $sql_update = "SELECT * FROM `{$dbUpdates}` WHERE incidentid = {$obj->id} ORDER BY timestamp DESC LIMIT 1";
                 $result_update = mysqli_query($db, $sql_update);
-                if (mysql_error())
+                if (mysqli_error($db))
                 {
-                    trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                    trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                     $success = FALSE;
                 }
 
@@ -449,17 +449,17 @@ function saction_ChaseCustomers()
                         send_email_template($CONFIG['chase_email_template'], $paramarray);
                         $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) VALUES ('{$obj_update->incidentid}','{$sit['2']}', 'auto_chase_email', '{$obj->owner}', '{$obj->status}', 'Sent auto chase email to customer','{$now}','show')";
                         mysqli_query($db, $sql_insert);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
 
                         $sql_update = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', nextactiontime = 0 WHERE id = {$obj->id}";
                         mysqli_query($db, $sql_update);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
                     }
@@ -472,18 +472,18 @@ function saction_ChaseCustomers()
                     {
                         $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) VALUES ('{$obj_update->incidentid}','{$sit['2']}','auto_chase_phone', '{$obj->owner}', '{$obj->status}', 'Status: Awaiting Customer Action -&gt; <b>Active</b><hr>Please phone the customer to get an update on this call as {$CONFIG['chase_phone_minutes']} have passed since the auto chase email was sent. Once you have done this please use the update type \"Chased customer - phone\"','{$now}','hide')";
                         mysqli_query($db, $sql_insert);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
 
                         $sql_update = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', ";
                         $sql_update .= "nextactiontime = 0, status = ".STATUS_ACTIVE." WHERE id = {$obj->id}";
                         mysqli_query($db, $sql_update);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
                     }
@@ -501,17 +501,17 @@ function saction_ChaseCustomers()
 
                         $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) VALUES ('{$obj_update->incidentid}','{$sit['2']}','auto_chase_manager', '{$obj->owner}', '{$obj->status}', $update,'{$now}','hide')";
                         mysqli_query($db, $sql_insert);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
 
                         $sql_update = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', nextactiontime = 0, status = ".STATUS_ACTIVE." WHERE id = {$obj->id}";
                         mysqli_query($db, $sql_update);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
                     }
@@ -524,17 +524,17 @@ function saction_ChaseCustomers()
                     {
                         $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) VALUES ('{$obj_update->incidentid}','{$sit['2']}','auto_chase_managers_manager','{$obj->owner}', '{$obj->status}', 'Status: Awaiting Customer Action -&gt; <b>Active</b><hr>Please phone the customers managers manager to get an update on this call as {$CONFIG['chase_manager_minutes']} have passed since the auto chase email was sent. Once you have done this please email the actions to the customer and manager and select the \"Was this a manager chase?\"','{$now}','hide')";
                         mysqli_query($db, $sql_insert);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
 
                         $sql_update = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', nextactiontime = 0, status = ".STATUS_ACTIVE." WHERE id = {$obj->id}";
                         mysqli_query($db, $sql_update);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                             $success = FALSE;
                         }
                     }
@@ -552,19 +552,19 @@ function saction_ChaseCustomers()
  */
 function saction_CheckWaitingEmail()
 {
-    global $dbTempIncoming, $dbUpdates, $dbScheduler, $now;
+    global $dbTempIncoming, $dbUpdates, $dbScheduler, $now, $db;
     $success = TRUE;
 
     $sql = "SELECT `timestamp`, UNIX_TIMESTAMP(NOW()) - `timestamp` AS minswaiting FROM `{$dbTempIncoming}` AS ti ";
     $sql .= "LEFT JOIN `{$dbUpdates}` AS u ON ti.updateid = u.id GROUP BY ti.id ";
     $sql .= "ORDER BY timestamp ASC LIMIT 1";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
+        trigger_error("MySQL Query Error".mysqli_error($db), E_USER_WARNING);
         $success = FALSE;
     }
-    elseif (mysql_num_rows($result) > 0)
+    elseif (mysqli_num_rows($result) > 0)
     {
         list($timestamp, $minswaiting) = mysqli_fetch_row($result);
         $sql = "SELECT `interval` FROM `{$dbScheduler}` ";
@@ -662,6 +662,7 @@ function saction_CheckIncomingMail()
 
 function saction_CheckTasksDue()
 {
+    global $db;
     $rtn = TRUE;
 
     $sql = "SELECT `interval` FROM {$GLOBALS['dbScheduler']} ";
@@ -698,7 +699,7 @@ function saction_CheckTasksDue()
 */
 function saction_ldapSync()
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $success = FALSE;
 
     if ($CONFIG['use_ldap'])
@@ -752,8 +753,8 @@ function saction_ldapSync()
             $sit_db_users = array();
             $sql = "SELECT id, username, status FROM `{$GLOBALS['dbUsers']}` WHERE user_source = 'ldap'";
             $result = mysqli_query($db, $sql);
-            if (mysql_error()) trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_error($db)) trigger_error("MySQL Query Error".mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) > 0)
             {
                 while ($obj = mysqli_fetch_object($result))
                 {
@@ -869,8 +870,8 @@ function saction_ldapSync()
                 $sit_db_contacts = array();
                 $sql = "SELECT id, username, active FROM `{$GLOBALS['dbContacts']}` WHERE contact_source = 'ldap'";
                 $result = mysqli_query($db, $sql);
-                if (mysql_error()) trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($result) > 0)
+                if (mysqli_error($db)) trigger_error("MySQL Query Error".mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($result) > 0)
                 {
                     while ($obj = mysqli_fetch_object($result))
                     {

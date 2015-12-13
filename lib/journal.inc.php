@@ -29,7 +29,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function journal($loglevel, $event, $bodytext, $journaltype, $refid)
 {
-    global $CONFIG, $sit, $dbJournal;
+    global $CONFIG, $sit, $dbJournal, $db;
     // Journal Types
     // 1 = Logon/Logoff
     // 2 = Support Incidents
@@ -46,14 +46,14 @@ function journal($loglevel, $event, $bodytext, $journaltype, $refid)
     // 3 = Full Logging
     // 4 = Max Debug Logging
 
-    $bodytext = mysql_real_escape_string($bodytext);
+    $bodytext = mysqli_real_escape_string($db, $bodytext);
     if ($loglevel <= $CONFIG['journal_loglevel'])
     {
         $sql  = "INSERT INTO `{$dbJournal}` ";
         $sql .= "(userid, event, bodytext, journaltype, refid) ";
         $sql .= "VALUES ('{$_SESSION['userid']}', '{$event}', '{$bodytext}', '{$journaltype}', '{$refid}') ";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         return TRUE;
     }
     else

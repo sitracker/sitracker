@@ -273,7 +273,7 @@ switch ($mode)
                         $errors++;
                     }
 
-                    if (mysql_affected_rows() < 1)
+                    if (mysqli_affected_rows($db) < 1)
                     {
                         trigger_error("Expiry of contract update failed", E_USER_ERROR);
                         $errors++;
@@ -318,7 +318,7 @@ switch ($mode)
             $result = mysqli_query($db, $sql);
             if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-            if (mysql_numrows($result) > 0)
+            if (mysqli_numrows($result) > 0)
             {
 
                 echo "<label><input type='radio' name='mode' id='transfer' value='transfer' onclick=\"$('transfersection').show(); $('transfersectionbtn').show(); $('editsection').hide(); \" /> {$strTransfer} </label>";

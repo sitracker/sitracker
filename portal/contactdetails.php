@@ -174,7 +174,7 @@ elseif (isset($_POST['add']))
     {
         $sql = "INSERT INTO `{$dbSupportContacts}`(`maintenanceid`, `contactid`) ";
         $sql .= "VALUES('{$maintid}', '{$contactid}') ";
-        mysql_query($sql);
+        mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}");
     }
@@ -185,7 +185,7 @@ else
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
     $sql .= "WHERE c.siteid = s.id ";
     $sql .= "AND c.id={$id}";
-    $query = mysql_query($sql);
+    $query = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $user = mysqlu_fetch_object($query);
 

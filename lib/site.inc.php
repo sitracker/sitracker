@@ -27,7 +27,7 @@ function site_count_inventory_items($id)
 
     $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE siteid='{$id}'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     else list($count) = mysqli_fetch_row($result);
     mysqli_free_result($result);
 
@@ -48,7 +48,7 @@ function site_feedback($id)
     global $dbSiteConfig, $db;
     $sql = "SELECT value FROM `{$dbSiteConfig}` WHERE siteid = {$id} AND config = 'feedback_enable' LIMIT 1";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     if (mysqli_num_rows($result) == 0)
     {
         // Site not opted out assumed yes
@@ -150,7 +150,7 @@ function does_site_have_certain_sla_contract($siteid, $slas)
         $ssql .= "({$qsql})";
 
         $sresult = mysqli_query($db, $ssql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         if (mysqli_num_rows($sresult) > 0)
         {
             $toReturn = true;

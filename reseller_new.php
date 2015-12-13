@@ -60,7 +60,7 @@ switch ($action)
             {
                 plugin_do('reseller_new_saved');
                 // show success message
-                $id = mysql_insert_id();
+                $id = mysqli_insert_id($db);
                 journal(CFG_LOGGING_NORMAL, 'Reseller Added', "Reseller $id Added", CFG_JOURNAL_MAINTENANCE, $id);
                 clear_form_errors('formerrors');
 

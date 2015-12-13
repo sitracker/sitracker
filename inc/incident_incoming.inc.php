@@ -26,17 +26,17 @@ if ($action == "updatereason")
     $updatetime = date('Y-m-d H:i:s',$now);
     $update = "UPDATE `{$dbTempIncoming}` SET reason='{$newreason}', ";
     $update .= "reason_user='{$sit['2']}', reason_time='{$updatetime}' WHERE id={$incomingid}";
-    $result = mysql_query($update);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    $result = mysqli_query($db, $update);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     unset($result);
 }
 
 $sql = "SELECT * FROM `{$dbTempIncoming}` WHERE id='{$incomingid}' LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-if (mysql_num_rows($result) > 0)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result) > 0)
 {
-    $incoming = @mysql_fetch_object($result);
+    $incoming = @mysqli_fetch_object($result);
 
     $lockedbyyou = false;
     
@@ -45,8 +45,8 @@ if (mysql_num_rows($result) > 0)
         //it's not locked, lock for this user
         $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
         $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' WHERE id='{$incomingid}' AND (locked = 0 OR locked IS NULL)";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         $lockedbyname = $strYou;
         $lockedbyyou = true;
     }
@@ -54,9 +54,9 @@ if (mysql_num_rows($result) > 0)
     {
         $lockedby = $incoming->locked;
         $lockedbysql = "SELECT realname FROM `{$dbUsers}` WHERE id={$lockedby}";
-        $lockedbyresult = mysql_query($lockedbysql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        while ($row = mysql_fetch_object($lockedbyresult))
+        $lockedbyresult = mysqli_query($db, $lockedbysql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        while ($row = mysqli_fetch_object($lockedbyresult))
         {
             $lockedbyname = $row->realname;
         }
@@ -86,8 +86,8 @@ if (mysql_num_rows($result) > 0)
     echo " ".sprintf($strLockedByX, $lockedbyname)."</div>";
 
     $usql = "SELECT * FROM `{$dbUpdates}` WHERE id='{$incoming->updateid}'";
-    $uresult = mysql_query($usql);
-    while ($update = mysql_fetch_object($uresult))
+    $uresult = mysqli_query($db, $usql);
+    while ($update = mysqli_fetch_object($uresult))
     {
         $updatetime = readable_date($update->timestamp);
         $updatebody = preg_replace("/\[\[att=(.*?)\]\](.*?)\[\[\/att\]\]/s", "<a href='download.php?id=$1'>$2</a>", $update->bodytext);

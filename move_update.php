@@ -152,7 +152,7 @@ else
                              "<b>$prettydate</b>")."\n";
             $body .= $SYSLANG['strStatus'] . " -&gt; <b>{$SYSLANG['strActive']}</b>\n";
             $bodytext = $body . $bodytext;
-            $bodytext = mysql_real_escape_string($bodytext);
+            $bodytext = mysqli_real_escape_string($db, $bodytext);
             // move the update.
             $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', bodytext='{$bodytext}', timestamp='{$now}' WHERE id='{$updateid}'";
             mysqli_query($db, $sql);

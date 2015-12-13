@@ -26,14 +26,14 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function incidentstatus_drop_down($name, $id, $disabled = FALSE)
 {
-    global $dbIncidentStatus;
+    global $dbIncidentStatus, $db;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbIncidentStatus}` WHERE id<>" . STATUS_CLOSED;
     $sql .= " AND id<>" . STATUS_CLOSING;
     $sql .= " AND id<>" . STATUS_UNASSIGNED . " ORDER BY name ASC";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) < 1)
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) < 1)
     {
         trigger_error("Zero rows returned", E_USER_WARNING);
     }
@@ -71,11 +71,11 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
  */
 function closingstatus_drop_down($name, $id, $required = FALSE)
 {
-    global $dbClosingStatus;
+    global $dbClosingStatus, $db;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbClosingStatus}` ORDER BY name ASC";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html = "<select name='{$name}'";
     if ($required)
     {
@@ -123,16 +123,16 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
  */
 function incident_drop_down($name, $id, $contactid = 0)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
 
     $html = '';
 
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED . " ";
     if ($contactid > 0) $sql .= "AND contact = {$contactid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $html = "<select id='{$name}' name='{$name}' {$select}>\n";
         while ($incident = mysqli_fetch_object($result))

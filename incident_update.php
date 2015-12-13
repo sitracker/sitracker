@@ -425,12 +425,12 @@ else
     $oldtimeofnextaction = incident_timeofnextaction($id);
     if ($newstatus != $oldstatus)
     {
-        $bodytext = "Status: ".mysql_real_escape_string(incidentstatus_name($oldstatus))." -&gt; <b>" . mysql_real_escape_string(incidentstatus_name($newstatus)) . "</b>\n\n" . $bodytext;
+        $bodytext = "Status: ".mysqli_real_escape_string($db, incidentstatus_name($oldstatus))." -&gt; <b>" . mysqli_real_escape_string($db, incidentstatus_name($newstatus)) . "</b>\n\n" . $bodytext;
     }
 
     if ($newpriority != incident_priority($id))
     {
-        $bodytext = "New Priority: <b>" . mysql_real_escape_string(priority_name($newpriority)) . "</b>\n\n" . $bodytext;
+        $bodytext = "New Priority: <b>" . mysqli_real_escape_string($db, priority_name($newpriority)) . "</b>\n\n" . $bodytext;
     }
 
     if ($timeofnextaction > ($oldtimeofnextaction + 60))
@@ -469,7 +469,7 @@ else
         }
         else
         {
-            $fileid = mysql_insert_id();
+            $fileid = mysqli_insert_id($db);
         }
     }
 
@@ -522,7 +522,7 @@ else
 
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-    $updateid = mysql_insert_id();
+    $updateid = mysqli_insert_id($db);
     $t = new TriggerEvent('TRIGGER_INCIDENT_UPDATED_INTERNAL', array('incidentid' => $id, 'userid' => $sit[2]));
 
     //upload file, here because we need updateid

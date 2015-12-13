@@ -65,13 +65,14 @@ class User extends Person{
 
     function retrieveDetails()
     {
+        global $db;
         $sql = "SELECT u.*, r.rolename ";
         $sql .= "FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRoles']}` AS r ";
         $sql .= "WHERE u.id = {$this->id} AND u.roleid = r.id";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_num_rows($result) == 1)
         {
             $obj = mysqli_fetch_object($result);
             $this->username = $obj->username;
@@ -101,7 +102,7 @@ class User extends Person{
 
             $sql_userconfig = "SELECT config, value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$this->id}";
             $result_userconfig = mysqli_query($db, $sql_userconfig);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
             while ($obj_userconfig = mysqli_fetch_object($result_userconfig))
             {
@@ -143,7 +144,7 @@ class User extends Person{
      */
     function add()
     {
-        global $CONFIG, $now;
+        global $CONFIG, $now, $db;
 
         $this->style = $CONFIG['default_interface_style'];
         $this->startdate = $now;
@@ -155,9 +156,9 @@ class User extends Person{
 
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username = '".cleanvar($this->username)."'";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) != 0)
+        if (mysqli_num_rows($result) != 0)
         {
             // Already exists
             trigger_error($GLOBALS['strUsernameNotUnique'] . " Username: '{$this->username}'", E_USER_ERROR);
@@ -174,25 +175,25 @@ class User extends Person{
             $sql .= "".cleanvar($this->status).", ";
             $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, ".convert_string_null_safe($this->managerd).", '".cleanvar($this->source)."')";
             $result = mysqli_query($db, $sql);
-            if (mysql_error())
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 $toReturn = false;
             }
-            $toReturn = mysql_insert_id();
+            $toReturn = mysqli_insert_id($db);
 
             if ($toReturn != FALSE)
             {
                 // Create permissions (set to none)
                 $sql = "SELECT * FROM `{$GLOBALS['dbPermissions']}`";
                 $result = mysqli_query($db, $sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                 while ($perm = mysqli_fetch_object($result))
                 {
                     $psql = "INSERT INTO `{$GLOBALS['dbUserPermissions']}` (userid, permissionid, granted) ";
                     $psql .= "VALUES ('{$toReturn}', '{$perm->id}', 'false')";
                     mysqli_query($db, $psql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 setup_user_triggers($toReturn);
@@ -211,16 +212,16 @@ class User extends Person{
      */
     function edit()
     {
-        global $now;
+        global $now, $db;
         $toReturn = false;
 
         if (!empty($this->id) AND is_numeric($this->id))
         {
             $sql = "SELECT username, status, accepting FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id}";
             $result = mysqli_query($db, $sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-            if (mysql_num_rows($result) == 1)
+            if (mysqli_num_rows($result) == 1)
             {
                 // Exists
                 $oldUser = mysqli_fetch_object($result);
@@ -240,7 +241,7 @@ class User extends Person{
                 {
                     $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE status > 0 AND email='{$this->email}' AND id != {$this->id}";
                     $result = mysqli_query($db, $sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
                     list($countexisting) = mysqli_fetch_row($result);
                     if ($countexisting > 1)
                     {
@@ -293,9 +294,9 @@ class User extends Person{
                 {
                     $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
                     $result = mysqli_query($db, $sql);
-                    if (mysql_error())
+                    if (mysqli_error($db))
                     {
-                        trigger_error(mysql_error(), E_USER_WARNING);
+                        trigger_error(mysqli_error($db), E_USER_WARNING);
                         $toReturn = FALSE;
                     }
                     else
@@ -307,9 +308,9 @@ class User extends Person{
                     {
                         $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$this->id}, '{$u['config']}', '{$u['value']}') ON DUPLICATE KEY UPDATE value = '{$u['value']}'";
                         $result = mysqli_query($db, $sql);
-                        if (mysql_error())
+                        if (mysqli_error($db))
                         {
-                            trigger_error(mysql_error(), E_USER_WARNING);
+                            trigger_error(mysqli_error($db), E_USER_WARNING);
                             $toReturn = FALSE;
                         }
                     }
@@ -338,17 +339,18 @@ class User extends Person{
      */
     function disable()
     {
+        global $db;
         $toReturn = true;
         if (!empty($this->id))
         {
             $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET status = 0 WHERE id = {$this->id}";
             $result = mysqli_query($db, $sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_affected_rows($db) != 1)
             {
                 $sql = "SELECT status FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id} AND status = 0 ";
                 $result = mysqli_query($db, $result);
-                if (mysql_num_rows($result) == 0)
+                if (mysqli_num_rows($result) == 0)
                 {
                     trigger_error("Failed to disable user {$this->username}", E_USER_WARNING);
                     $toReturn = FALSE;
@@ -371,7 +373,7 @@ class User extends Person{
             foreach ($tidyup AS $sql)
             {
                 $result = mysqli_query($db, $sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             }
         }
 

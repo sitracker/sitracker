@@ -172,17 +172,17 @@ if (!isset($refresh) AND $_SESSION['auth'] === TRUE)
 {
     //update last seen (only if this is a page that does not auto-refresh)
     $lastseensql = "UPDATE LOW_PRIORITY `{$GLOBALS['dbUsers']}` SET lastseen=NOW() WHERE id='{$_SESSION['userid']}' LIMIT 1";
-    mysql_query($lastseensql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    mysqli_query($db, $lastseensql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 }
 
 if ($sit[0] != '')
 {
     // Check this is current
     $sql = "SELECT version FROM `{$dbSystem}` WHERE id = 0";
-    $versionresult = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    list($dbversion) = mysql_fetch_row($versionresult);
+    $versionresult = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    list($dbversion) = mysqli_fetch_row($versionresult);
     if ($dbversion < $application_version)
     {
         $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
@@ -201,10 +201,10 @@ if ($sit[0] != '')
         $failure = 0;
 
         $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
-        $schedulerresult = mysql_query($schedulersql);
-        if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+        $schedulerresult = mysqli_query($db, $schedulersql);
+        if (mysqli_error($db)) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
 
-        while ($schedule = mysql_fetch_object($schedulerresult))
+        while ($schedule = mysqli_fetch_object($schedulerresult))
         {
             $sqlinterval = ("$schedule->interval");
             $sqllastran = mysql2date("$schedule->lastran");
@@ -214,7 +214,7 @@ if ($sit[0] != '')
                 $failure ++;
             }
         }
-        $num = mysql_num_rows($schedulerresult);
+        $num = mysqli_num_rows($schedulerresult);
         $num = $num / 2;
         if ($failure > $num)
         {
@@ -232,9 +232,9 @@ if ($sit[0] != '')
     $noticesql = "SELECT * FROM `{$GLOBALS['dbNotices']}` ";
     // Don't show more than 20 notices, saftey cap
     $noticesql .= "WHERE userid={$sit[2]} ORDER BY timestamp DESC LIMIT 20";
-    $noticeresult = mysql_query($noticesql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($noticeresult) > 0)
+    $noticeresult = mysqli_query($db, $noticesql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($noticeresult) > 0)
     {
         echo "<div id='noticearea'>\n";
         $keys = array_keys($_GET);
@@ -247,7 +247,7 @@ if ($sit[0] != '')
             }
         }
 
-        while ($notice = mysql_fetch_object($noticeresult))
+        while ($notice = mysqli_fetch_object($noticeresult))
         {
             $notice->text = bbcode($notice->text);
             //check for the notice types
@@ -317,7 +317,7 @@ if ($sit[0] != '')
             echo "</small></p></div>\n";
         }
 
-        if (mysql_num_rows($noticeresult) > 1)
+        if (mysqli_num_rows($noticeresult) > 1)
         {
             echo "\n<p id='dismissall'><a href='javascript:void(0);' onclick=\"dismissNotice('all', {$_SESSION['userid']})\">{$strDismissAll}</a></p>\n";
         }

@@ -25,7 +25,7 @@ $fail = clean_int($_POST['fail']);
 $sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = {$id} LIMIT 1";
 $result = mysqli_query($db, $sql);
 if (mysqli_error($db) ) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-list($incidentcontact) = mysql_fetch_row($result);
+list($incidentcontact) = mysqli_fetch_row($result);
 if ($incidentcontact == $_SESSION['contactid'])
 {
     $id = clean_int($_REQUEST['id']);
@@ -63,7 +63,7 @@ if ($incidentcontact == $_SESSION['contactid'])
 
         //set incident back to active
         $sql = "UPDATE `{$dbIncidents}` SET status=".STATUS_ACTIVE.", lastupdated={$now} WHERE id={$id}";
-        mysql_query($sql);
+        mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         html_redirect("index.php");

@@ -303,7 +303,6 @@ switch ($step)
         break;
     case 3:
         // show form 3 or send email and update incident
-        // Email addresses and bodytext is filtered with mysql_real_escape_string below before db use
         $bodytext = $_REQUEST['bodytext'];
         $tofield = clean_emailstring($_REQUEST['tofield']);
         $fromfield = clean_emailstring($_REQUEST['fromfield']);
@@ -438,7 +437,7 @@ switch ($step)
                     $sql .= "VALUES('" . clean_dbstring($name) . "', '{$size}', '{$sit[2]}', '1')";
                     mysqli_query($db, $sql);
                     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
-                    $fileid = mysql_insert_id();
+                    $fileid = mysqli_insert_id($db);
 
                     $filename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}-{$name}";
 
@@ -593,13 +592,13 @@ switch ($step)
                     $updatebody = $timetext . $updateheader . $bodytext;
                     // It's important to make updatebody safe for db use here because we include variables that have not already been made
                     // db-safe. We do this here rather than at the top of the script to avoid putting slashes into emails as sent.
-                    $updatebody = mysql_real_escape_string($updatebody);
+                    $updatebody = mysqli_real_escape_string($db, $updatebody);
 
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysqli_query($db, $sql);
                     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                    $updateid = mysql_insert_id();
+                    $updateid = mysqli_insert_id($db);
                 }
 
                 if ($storeinlog == 'No')
@@ -609,13 +608,13 @@ switch ($step)
                     $updatebody .= "[b] {$SYSLANG['strTemplate']}: [/b]".$templatename."\n";
                     $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                     $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
-                    $updatebody = mysql_real_escape_string($updatebody);
+                    $updatebody = mysqli_real_escape_string($db, $updatebody);
 
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
                     mysqli_query($db, $sql);
                     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                    $updateid = mysql_insert_id();
+                    $updateid = mysqli_insert_id($db);
                 }
 
                 foreach ($files AS $file)

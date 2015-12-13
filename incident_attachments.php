@@ -28,7 +28,7 @@ include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 // append incident number to attachment path to show this users attachments
 $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $id;
 
-if (empty($incidentid)) $incidentid = mysql_real_escape_string($_REQUEST['id']);
+if (empty($incidentid)) $incidentid = mysqli_real_escape_string($db, $_REQUEST['id']);
 
 /**
  * Convert a binary string into something viewable in a web browser
@@ -68,7 +68,7 @@ function encode_binary($string)
  */
 function draw_file_row($file, $incidentid, $path)
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $filepathparts = explode(DIRECTORY_SEPARATOR, $file);
     $parts = count($filepathparts);
     $filename = $filepathparts[$parts - 1];
@@ -160,7 +160,7 @@ if ($_FILES['attachment']['name'] != '')
         $sql .= "VALUES ('public', '" . clean_dbstring(clean_fspath($_FILES['attachment']['name'])) . "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-        $fileid =  mysql_insert_id();
+        $fileid =  mysqli_insert_id($db);
 
         //create update
         $updatetext = $SYSLANG['strFileUploaded'].": [[att={$fileid}]]" . cleanvar($_FILES['attachment']['name']) . "[[/att]]";
@@ -172,7 +172,7 @@ if ($_FILES['attachment']['name'] != '')
         $sql .= "'{$updatetext}', '$now')";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
-        $updateid = mysql_insert_id();
+        $updateid = mysqli_insert_id($db);
 
         $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
 
@@ -311,7 +311,7 @@ if (file_exists($incident_attachment_fspath))
                 $updateid = mb_substr($dirname, 1);
                 $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = {$updateid}";
                 $result = mysqli_query($db, $sql);
-                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 $update = mysqli_fetch_object($result);
                 $dirprettyname = ldate('l jS M Y @ g:ia',$update->timestamp) . " $strby ".user_realname($update->userid);
                 $updatetext = cleanvar($update->bodytext);

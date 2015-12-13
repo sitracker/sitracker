@@ -29,7 +29,7 @@ $server->register('login',
  */
 function login($username, $password, $applicationname='noname')
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $auth_result = authenticate($username, $password);
     $status = new SoapStatus();
     $sessionid = '';
@@ -48,8 +48,8 @@ function login($username, $password, $applicationname='noname')
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username='{$username}' AND password=MD5('{$password}') LIMIT 1";
 
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) < 1)
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) < 1)
         {
             $_SESSION['auth'] = FALSE;
             trigger_error("No such user", E_USER_ERROR);
@@ -72,8 +72,8 @@ function login($username, $password, $applicationname='noname')
 
         $sql_userconfig = "SELECT value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$user->id} AND config = 'language'";
         $result_userconfig = mysqli_query($db, $sql_userconfig);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) == 1)
         {
             $obj = mysqli_fetch_object($result_userconfig);
             $_SESSION['lang'] = $obj->value;
@@ -90,12 +90,12 @@ function login($username, $password, $applicationname='noname')
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRolePermissions']}` AS rp WHERE u.roleid = rp.roleid ";
         $sql .= "AND u.id = '{$_SESSION['userid']}' AND granted='true'";
         $result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
             $_SESSION['auth'] = FALSE;
-            trigger_error(mysql_error(), E_USER_ERROR);
+            trigger_error(mysqli_error($db), E_USER_ERROR);
         }
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
             while ($perm = mysqli_fetch_object($result))
             {
@@ -106,13 +106,13 @@ function login($username, $password, $applicationname='noname')
         // Next lookup the individual users permissions
         $sql = "SELECT * FROM `{$GLOBALS['dbUserPermissions']}` WHERE userid = '{$_SESSION['userid']}' AND granted='true' ";
         $result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
             $_SESSION['auth'] = FALSE;
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysqli_error($db),E_USER_ERROR);
         }
 
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
             while ($perm = mysqli_fetch_object($result))
             {

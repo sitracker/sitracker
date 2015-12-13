@@ -944,7 +944,7 @@ plugin_do('trigger_variables');
  */
 function email_templates($name, $triggertype = 'system', $selected = '')
 {
-    global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults;
+    global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults, $db;
     $html .= "<select id='{$name}' name='{$name}'>";
 
     foreach (array($triggertype, 'usertemplate') as $type)
@@ -957,8 +957,8 @@ function email_templates($name, $triggertype = 'system', $selected = '')
         $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
         $sql .= "WHERE type='{$type}' ORDER BY name";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
             while ($template = mysqli_fetch_object($result))
             {
@@ -990,11 +990,11 @@ function email_templates($name, $triggertype = 'system', $selected = '')
  */
 function notice_templates($name, $selected = '')
 {
-    global $dbNoticeTemplates, $strPersonalTemplates;
+    global $dbNoticeTemplates, $strPersonalTemplates, $db;
     $html .= "<select id='{$name}' name='{$name}'>";
     $sql = "SELECT id, name, description, type FROM `{$dbNoticeTemplates}` ORDER BY type,name ASC";
     $query = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     while ($template = mysqli_fetch_object($query))
     {
         $user_header = false;
@@ -1281,13 +1281,13 @@ function trigger_to_html($trigger_id, $user_id)
     $sql .= "WHERE userid = '{$user_id}' ";
     $sql .= "AND triggerid = '{$trigger_id}'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         trigger_error("Problem getting trigger details for {$trigger_id}");
         return FALSE;
     }
-    if (mysql_num_rows($result) >= 0)
+    if (mysqli_num_rows($result) >= 0)
     {
         while ($row = mysqli_fetch_object($result))
         {

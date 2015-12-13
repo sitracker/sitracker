@@ -116,7 +116,7 @@ function get_plugins_on_disk()
  */
 function sit_upgrade_plugin_check($doupgrade, $application_version)
 {
-    global $CONFIG; 
+    global $CONFIG, $db;
     $return = '';
     
     // (Re)load plugins from database
@@ -125,7 +125,7 @@ function sit_upgrade_plugin_check($doupgrade, $application_version)
     // Read config from database (this overrides any config in the config files
     $sql = "SELECT * FROM `{$GLOBALS['dbConfig']}` WHERE config = 'plugins'";
     $result = @mysqli_query($db, $sql);
-    if ($result AND mysql_num_rows($result) > 0)
+    if ($result AND mysqli_num_rows($result) > 0)
     {
         while ($conf = mysqli_fetch_object($result))
         {

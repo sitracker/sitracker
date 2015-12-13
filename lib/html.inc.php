@@ -731,8 +731,8 @@ function show_notes($linkid, $refid, $delete = TRUE)
     global $sit, $iconset, $dbNotes, $strDelete, $strAreYouSureDelete;
     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='{$linkid}' AND refid='{$refid}' ORDER BY timestamp DESC, id DESC";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $countnotes = mysql_num_rows($result);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $countnotes = mysqli_num_rows($result);
     if ($countnotes >= 1)
     {
         while ($note = mysqli_fetch_object($result))
@@ -952,7 +952,7 @@ function get_file_upload_error_message($errorcode, $name)
  */
 function group_user_selector($title, $level = 'engineer', $groupid = '', $type='radio')
 {
-    global $dbUsers, $dbGroups;
+    global $dbUsers, $dbGroups, $db;
 
     $str .= "<tr><th>{$title}</th>";
     $str .= "<td align='center'>";
@@ -960,9 +960,9 @@ function group_user_selector($title, $level = 'engineer', $groupid = '', $type='
     $sql = "SELECT DISTINCT(g.name), g.id FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
     $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY g.name";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         while ($row = mysqli_fetch_object($result))
         {
@@ -990,7 +990,7 @@ function group_user_selector($title, $level = 'engineer', $groupid = '', $type='
         $sql = "SELECT u.id, u.realname, g.name FROM `{$dbUsers}` AS u, `{$dbGroups}` AS g ";
         $sql .= "WHERE u.status > 0 AND u.groupid = g.id ORDER BY username";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if ($level == "management")
         {
@@ -1206,7 +1206,7 @@ function feedback_qtype_listbox($type)
  */
 function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction='lr')
 {
-    global $dbLinkTypes, $dbLinks;
+    global $dbLinkTypes, $dbLinks, $db;
     // Maximum recursion
     $maxrecursions = 15;
 
@@ -1215,7 +1215,7 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
         $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE origtab='$origtab' ";
         if (!empty($parentlinktype)) $sql .= "AND id='{$parentlinktype}'";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
         while ($linktype = mysqli_fetch_object($result))
         {
             // Look up links of this type
@@ -1223,10 +1223,10 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
             if ($direction == 'lr') $lsql .= "AND origcolref='{$colref}'";
             elseif ($direction == 'rl') $lsql .= "AND linkcolref='{$colref}'";
             $lresult = mysqli_query($db, $lsql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_num_rows($lresult) >= 1)
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+            if (mysqli_num_rows($lresult) >= 1)
             {
-                if (mysql_num_rows($lresult) >= 1)
+                if (mysqli_num_rows($lresult) >= 1)
                 {
                     $html .= "<ul>";
                     $html .= "<li>";
@@ -1236,7 +1236,7 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
                         if ($direction == 'lr') $recsql .= "{$linktype->linkcol}='{$link->linkcolref}' ";
                         elseif ($direction == 'rl') $recsql .= "{$linktype->origcol}='{$link->origcolref}' ";
                         $recresult = mysqli_query($db, $recsql);
-                        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
                         while ($record = mysqli_fetch_object($recresult))
                         {
                             if ($link->direction == 'bi')
@@ -1299,12 +1299,12 @@ function show_links($origtab, $colref, $level=0, $parentlinktype='', $direction=
  */
 function show_create_links($table, $ref)
 {
-    global $dbLinkTypes;
+    global $dbLinkTypes, $db;
     $html .= "<p align='center'>{$GLOBALS['strNewLink']}: ";
     $sql = "SELECT * FROM `{$dbLinkTypes}` WHERE origtab='{$table}' OR linktab='{$table}' ";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $numlinktypes = mysql_num_rows($result);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    $numlinktypes = mysqli_num_rows($result);
     $rowcount = 1;
     while ($linktype = mysqli_fetch_object($result))
     {
@@ -1339,7 +1339,7 @@ function show_create_links($table, $ref)
  */
 function format_external_id($externalid, $escalationpath='')
 {
-    global $CONFIG, $dbEscalationPaths;
+    global $CONFIG, $dbEscalationPaths, $db;
 
     if (!empty($escalationpath))
     {
@@ -1347,8 +1347,8 @@ function format_external_id($externalid, $escalationpath='')
         $epsql = "SELECT id, name, track_url, home_url, url_title FROM `{$dbEscalationPaths}` ";
         if (!empty($escalationpath)) $epsql .= "WHERE id='$escalationpath' ";
         $epresult = mysqli_query($db, $epsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($epresult) >= 1)
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($epresult) >= 1)
         {
             while ($escalationpath = mysqli_fetch_object($epresult))
             {
@@ -1387,7 +1387,7 @@ function format_external_id($externalid, $escalationpath='')
  */
 function contracts_for_contacts_table($userid, $mode = 'internal')
 {
-    global $now, $CONFIG, $sit;
+    global $now, $CONFIG, $sit, $db;
     if ((!empty($sit[2]) AND user_permission($sit[2], PERM_SUPPORTED_PRODUCT_VIEW)
         OR ($_SESSION['usertype'] == 'admin'))) // view supported products
     {
@@ -1414,8 +1414,8 @@ function contracts_for_contacts_table($userid, $mode = 'internal')
         $sql .= "AND m.product=p.id  ";
 
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
             $html .= "<table class='maintable'>";
             $html .= "<tr>";

@@ -51,6 +51,7 @@ function send_feedback($contractid)
  */
 function create_incident_feedback($formid, $incidentid)
 {
+    global $db;
     $contactid = incident_contact($incidentid);
     $email = contact_email($contactid);
 
@@ -58,21 +59,21 @@ function create_incident_feedback($formid, $incidentid)
     
     $sql = "SELECT * FROM `{$GLOBALS['dbFeedbackForms']}` WHERE id = {$formid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 0)
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 0)
     {
         debug_log("Attempted to create a feedback form for form ID {$$formid} though it does not exist");
     }
     else
     {
         $sql = "INSERT INTO `{$GLOBALS['dbFeedbackRespondents']}` (formid, contactid, email, incidentid) VALUES (";
-        $sql .= "'".mysql_real_escape_string($formid)."', ";
-        $sql .= "'".mysql_real_escape_string($contactid)."', ";
-        $sql .= "'".mysql_real_escape_string($email)."', ";
-        $sql .= "'".mysql_real_escape_string($incidentid)."') ";
+        $sql .= "'".mysqli_real_escape_string($db, $formid)."', ";
+        $sql .= "'".mysqli_real_escape_string($db, $contactid)."', ";
+        $sql .= "'".mysqli_real_escape_string($db, $email)."', ";
+        $sql .= "'".mysqli_real_escape_string($db, $incidentid)."') ";
         mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
-        $toReturn = mysql_insert_id();
+        if (mysqli_error($db)) trigger_error ("MySQL Error: ".mysqli_error($db), E_USER_ERROR);
+        $toReturn = mysqli_insert_id($db);
     }
     
     return $toReturn;
@@ -156,8 +157,6 @@ function feedback_html_rating($name, $required, $options, $answer='')
         {
             $html .= "<td width='{$colwidth}'";
         }
-        
-
 
         $html .= "/></td>";
     }

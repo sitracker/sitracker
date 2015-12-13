@@ -198,7 +198,7 @@ elseif ($action == "edit")
         $sql .= "'{$allow_reopen}')";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
+        if (mysqli_affected_rows($db) == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert medium
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
@@ -212,7 +212,7 @@ elseif ($action == "edit")
         $sql .= "'{$allow_reopen}')";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
+        if (mysqli_affected_rows($db) == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert high
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
@@ -226,7 +226,7 @@ elseif ($action == "edit")
         $sql .= "'{$allow_reopen}')";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
+        if (mysqli_affected_rows($db) == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert critical
         $sql = "INSERT INTO `{$dbServiceLevels}` (tag, priority, initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen) VALUES (";
@@ -240,7 +240,7 @@ elseif ($action == "edit")
         $sql .= "'{$allow_reopen}')";
         mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-        if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
+        if (mysqli_affected_rows($db) == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         clear_form_data("new_servicelevel");
         clear_form_errors("new_servicelevel");

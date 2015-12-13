@@ -31,7 +31,7 @@ define ("BILLING_TYPE_INCIDENT", 'incident');
  */
 function does_contact_have_billable_contract($contactid)
 {
-    global $now;
+    global $now, $db;
     $return = NO_BILLABLE_CONTRACT;
 
     $siteid = contact_siteid($contactid);
@@ -40,9 +40,9 @@ function does_contact_have_billable_contract($contactid)
     $sql .= "AND m.expirydate > {$now} AND m.term != 'yes'";
     $result = mysqli_query($db, $sql);
 
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         // We have some billable/timed contracts
         $return = SITE_HAS_BILLABLE_CONTRACT;
@@ -55,9 +55,9 @@ function does_contact_have_billable_contract($contactid)
             $sqlcontact .= "WHERE maintenanceid = {$obj->id} AND contactid = {$contactid}";
 
             $resultcontact = mysqli_query($db, $sqlcontact);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-            if (mysql_num_rows($resultcontact) > 0)
+            if (mysqli_num_rows($resultcontact) > 0)
             {
                 $return = CONTACT_HAS_BILLABLE_CONTRACT;
                 break;
@@ -77,7 +77,7 @@ function does_contact_have_billable_contract($contactid)
  */
 function get_billable_contract_id($contactid)
 {
-    global $now;
+    global $now, $db;
 
     $return = -1;
 
@@ -88,9 +88,9 @@ function get_billable_contract_id($contactid)
 
     $result = mysqli_query($db, $sql);
 
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $return = mysqli_fetch_object($result)->id;
     }
@@ -107,7 +107,7 @@ function get_billable_contract_id($contactid)
  */
 function get_site_billable_contract_id($siteid)
 {
-    global $now;
+    global $now, $db;
 
     $return = -1;
 
@@ -117,9 +117,9 @@ function get_site_billable_contract_id($siteid)
 
     $result = mysqli_query($db, $sql);
 
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $return = mysqli_fetch_object($result)->id;
     }
@@ -136,14 +136,14 @@ function get_site_billable_contract_id($siteid)
  */
 function get_service_percentage($maintid)
 {
-    global $dbService;
+    global $dbService, $db;
 
     $sql = "SELECT * FROM `{$dbService}` ";
     $sql .= "WHERE contractid = {$maintid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $total = 0;
         $num = 0;
@@ -176,12 +176,12 @@ function get_service_percentage($maintid)
  */
 function is_contract_timed($contractid)
 {
-    global $dbMaintenance, $dbServiceLevels;
+    global $dbMaintenance, $dbServiceLevels, $db;
     $timed = FALSE;
     $sql = "SELECT timed FROM `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl ";
     $sql .= "WHERE m.servicelevel = sl.tag AND m.id = {$contractid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
     list($timed) = mysqli_fetch_row($result);
     if ($timed == 'yes')
@@ -203,7 +203,7 @@ function is_contract_timed($contractid)
  */
 function update_last_billed_time($serviceid, $date)
 {
-    global $dbService;
+    global $dbService, $db;
 
     $rtnvalue = FALSE;
 
@@ -212,13 +212,13 @@ function update_last_billed_time($serviceid, $date)
         $rtnvalue = TRUE;
         $sql .= "UPDATE `{$dbService}` SET lastbilled = '{$date}' WHERE serviceid = {$serviceid}";
         mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_ERROR);
+            trigger_error(mysqli_error($db), E_USER_ERROR);
             $rtnvalue = FALSE;
         }
 
-        if (mysql_affected_rows() < 1)
+        if (mysqli_affected_rows($db) < 1)
         {
             trigger_error("Approval failed", E_USER_ERROR);
             $rtnvalue = FALSE;
@@ -261,17 +261,18 @@ function get_unit_rate($contractid, $date='')
  */
 function get_service_unitrate($serviceid)
 {
+    global $db;
     $rtnvalue = FALSE;
 	$sql = "SELECT rate FROM `{$GLOBALS['dbService']}` WHERE serviceid = {$serviceid}";
 
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         return FALSE;
     }
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         list($rtnvalue) = mysqli_fetch_row($result);
     }
@@ -288,7 +289,7 @@ function get_service_unitrate($serviceid)
  */
 function get_serviceid($contractid, $date = '')
 {
-    global $now, $CONFIG;
+    global $now, $CONFIG, $db;
     if (empty($date)) $date = $now;
 
     $sql = "SELECT serviceid FROM `{$GLOBALS['dbService']}` AS s ";
@@ -304,15 +305,15 @@ function get_serviceid($contractid, $date = '')
     $sql .= "ORDER BY priority DESC, enddate ASC, balance DESC LIMIT 1";
 
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(),E_USER_WARNING);
+        trigger_error(mysqli_error($db),E_USER_WARNING);
         return FALSE;
     }
 
     $serviceid = -1;
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         list($serviceid) = mysqli_fetch_row($result);
     }
@@ -335,7 +336,7 @@ function get_serviceid($contractid, $date = '')
  */
 function get_contract_balance($contractid, $includenonapproved = FALSE, $showonlycurrentlyvalid = TRUE, $includereserved = TRUE)
 {
-    global $dbService, $now;
+    global $dbService, $now, $db;
     $balance = 0.00;
 
     $sql = "SELECT SUM(balance) FROM `{$dbService}` ";
@@ -346,7 +347,7 @@ function get_contract_balance($contractid, $includenonapproved = FALSE, $showonl
         $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
     }
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     list($balance) = mysqli_fetch_row($result);
 
     if ($includenonapproved)
@@ -389,6 +390,7 @@ function update_reservation($transactionid, $amount, $description='')
  */
 function update_transaction($transactionid, $amount = 0.00, $description = '', $status = BILLING_AWAITINGAPPROVAL)
 {
+    global $db;
     if ($status == BILLING_APPROVED)
     {
         trigger_error("You cant change a approved transaction", E_USER_ERROR);
@@ -406,12 +408,12 @@ function update_transaction($transactionid, $amount = 0.00, $description = '', $
         }
         $sql .= "WHERE transactionid = {$transactionid} AND transactionstatus = {$status}";
         mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysqli_error($db),E_USER_ERROR);
             $rtnvalue = FALSE;
         }
-        if (mysql_affected_rows() > 0)
+        if (mysqli_affected_rows($db) > 0)
         {
             $rtnvalue = TRUE;
         }
@@ -450,17 +452,18 @@ function close_billable_incident($incidentid)
  */
 function get_billable_object_from_incident_id($incidentid)
 {
+    global $db;
     $toReturn = FALSE;
     
     $sql = "SELECT m.billingtype FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbIncidents']}` AS i WHERE i.maintenanceid = m.id AND i.id = {$incidentid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error("Error finding type of incident billing ".mysql_error(), E_USER_WARNING);
+        trigger_error("Error finding type of incident billing ".mysqli_error($db), E_USER_WARNING);
         $toReturn = FALSE;
     }
     
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         list($billingtype) = mysqli_fetch_row($result);
         $toReturn = get_billable_incident_object($billingtype);  
@@ -479,17 +482,18 @@ function get_billable_object_from_incident_id($incidentid)
  */
 function get_billable_object_from_contract_id($contractid)
 {
+    global $db;
     $toReturn = FALSE;
 
     $sql = "SELECT m.billingtype FROM `{$GLOBALS['dbMaintenance']}` AS m WHERE m.id = {$contractid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error("Error finding type of contract billing ".mysql_error(), E_USER_WARNING);
+        trigger_error("Error finding type of contract billing ".mysqli_error($db), E_USER_WARNING);
         $toReturn = FALSE;
     }
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         list($billingtype) = mysqli_fetch_row($result);
         $toReturn = get_billable_incident_object($billingtype);
@@ -508,6 +512,7 @@ function get_billable_object_from_contract_id($contractid)
  */
 function get_billable_incident_object($billingtype)
 {
+    global $db;
     $toReturn = FALSE;
 
     if (class_exists($billingtype) and is_subclass_of($billingtype, 'Billable'))
@@ -545,13 +550,14 @@ function get_billable_incident_object($billingtype)
  */
 function approve_incident_transaction($transactionid)
 {
+    global $db;
     $rtnvalue = FALSE;;
 
     $sql = "SELECT l.linkcolref FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
     $sql .= "WHERE t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND l.linktype = 6 AND t.transactionid = {$transactionid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("Error identify incident transaction. ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_error($db)) trigger_error("Error identify incident transaction. ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         list($incidentid) = mysqli_fetch_row($result);
         
@@ -580,7 +586,7 @@ function approve_incident_transaction($transactionid)
  */
 function update_contract_balance($contractid, $description, $amount, $serviceid='', $transactionid='', $totalunits=0, $totalbillableunits=0, $totalrefunds=0)
 {
-    global $now, $dbService, $dbTransactions;
+    global $now, $dbService, $dbTransactions, $db;
     $rtnvalue = TRUE;
 
     if (empty($totalunits)) $totalunits = -1;
@@ -600,13 +606,13 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
     // Update the balance
     $sql = "UPDATE `{$dbService}` SET balance = (balance + {$amount}) WHERE serviceid = '{$serviceid}' LIMIT 1";
     mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtnvalue = FALSE;
     }
 
-    if (mysql_affected_rows() < 1 AND $amount != 0)
+    if (mysqli_affected_rows($db) < 1 AND $amount != 0)
     {
         trigger_error("Contract balance update failed", E_USER_ERROR);
         $rtnvalue = FALSE;
@@ -621,7 +627,7 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
             $sql .= "VALUES ('{$serviceid}', '{$totalunits}', '{$totalbillableunits}', '{$totalrefunds}', '{$amount}', '{$description}', '{$_SESSION['userid']}', '{$date}', '".BILLING_APPROVED."')";
             $result = mysqli_query($db, $sql);
 
-            $rtnvalue = mysql_insert_id();
+            $rtnvalue = mysqli_insert_id($id);
         }
         else
         {
@@ -636,12 +642,12 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
             $rtnvalue = $transactionid;
         }
 
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_ERROR);
+            trigger_error(mysqli_error($db), E_USER_ERROR);
             $rtnvalue = FALSE;
         }
-        if (mysql_affected_rows() < 1)
+        if (mysqli_affected_rows($db) < 1)
         {
             trigger_error("Transaction insert failed", E_USER_ERROR);
             $rtnvalue = FALSE;
@@ -660,13 +666,14 @@ function update_contract_balance($contractid, $description, $amount, $serviceid=
  */
 function maintid_from_transaction($transactionid)
 {
+    global $db;
     $rtnvalue = -1;
     $sql = "SELECT i.maintenanceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbIncidents']}` AS i WHERE ";
     $sql .= "l.origcolref = {$transactionid} AND l.linkcolref = i.id AND l.linktype = 6";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("Error getting maintid for transaction. ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("Error getting maintid for transaction. ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
     	list($rtnvalue) = mysqli_fetch_row($result);
     }
@@ -684,13 +691,14 @@ function maintid_from_transaction($transactionid)
  */
 function contract_transaction_total($contractid, $status)
 {
+    global $db;
     $rtnvalue = FALSE;
 
     $sql = "SELECT SUM(t.amount) FROM `{$GLOBALS['dbTransactions']}` AS t, `{$GLOBALS['dbService']}` AS s ";
     $sql .= "WHERE s.serviceid = t.serviceid AND s.contractid = {$contractid} AND t.transactionstatus = '{$status}'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("Error getting total for type {$status}. ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_error($db)) trigger_error("Error getting total for type {$status}. ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         list($rtnvalue) = mysqli_fetch_row($result);
     }
@@ -708,12 +716,13 @@ function contract_transaction_total($contractid, $status)
  */
 function service_transaction_total($serviceid, $status)
 {
+    global $db;
     $rtnvalue = FALSE;
     $sql = "SELECT SUM(amount) FROM `{$GLOBALS['dbTransactions']}` ";
     $sql .= "WHERE serviceid = {$serviceid} AND transactionstatus = '{$status}'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("Error getting total for type {$status}. ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_error($db)) trigger_error("Error getting total for type {$status}. ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         list($rtnvalue) = mysqli_fetch_row($result);
     }
@@ -732,14 +741,14 @@ function service_transaction_total($serviceid, $status)
  */
 function get_service_balance($serviceid, $includeawaitingapproval = TRUE, $includereserved = TRUE)
 {
-    global $dbService;
+    global $dbService, $db;
 
     $balance = FALSE;
 
     $sql = "SELECT balance FROM `{$dbService}` WHERE serviceid = {$serviceid}";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 1)
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 1)
     {
         list($balance) = mysqli_fetch_row($result);
         if ($includeawaitingapproval)
@@ -763,6 +772,7 @@ function get_service_balance($serviceid, $includeawaitingapproval = TRUE, $inclu
  */
 function is_billable_incident_approved($incidentid)
 {
+    global $db;
     $sql = "SELECT DISTINCT origcolref, linkcolref ";
     $sql .= "FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
     $sql .= "WHERE l.linktype = 6 ";
@@ -771,9 +781,9 @@ function is_billable_incident_approved($incidentid)
     $sql .= "AND direction = 'left' ";
     $sql .= "AND t.transactionstatus = '".BILLING_APPROVED."'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0) return TRUE;
+    if (mysqli_num_rows($result) > 0) return TRUE;
     else return FALSE;
 }
 
@@ -786,6 +796,7 @@ function is_billable_incident_approved($incidentid)
  */
 function get_incident_transactionid($incidentid)
 {
+    global $db;
     $rtnvalue = FALSE;
     $sql = "SELECT origcolref ";
     $sql .= "FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
@@ -794,9 +805,9 @@ function get_incident_transactionid($incidentid)
     $sql .= "AND linkcolref = {$incidentid} ";
     $sql .= "AND direction = 'left' ";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
     	list($rtnvalue) = mysqli_fetch_row($result);
     }
@@ -814,12 +825,12 @@ function get_incident_transactionid($incidentid)
  */
 function contract_service_table($contractid, $billing)
 {
-    global $CONFIG, $dbService, $dbMaintenance, $now;
+    global $CONFIG, $dbService, $dbMaintenance, $now, $db;
 
     $sql = "SELECT * FROM `{$dbService}` WHERE contractid = {$contractid} ORDER BY enddate DESC";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         $billingObj = get_billable_object_from_contract_id($contractid);
 
@@ -901,7 +912,7 @@ function contract_service_table($contractid, $billing)
 
                 $sql1 = "SELECT billingmatrix FROM `{$dbMaintenance}` WHERE id = {$contractid}";
                 $result1 = mysqli_query($db, $sql1);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                 $maintenanceobj = mysqli_fetch_object($result1);
                 
                 if ($billingObj->uses_billing_matrix)
@@ -1002,6 +1013,7 @@ function contract_service_table($contractid, $billing)
  **/
 function amount_used_site($siteid, $startdate=0, $enddate=0)
 {
+    global $db;
     $sql = "SELECT i.id, m.billingtype FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbMaintenance']}` AS m ";
     $sql .= "WHERE m.id = i.maintenanceid AND m.site = {$siteid} ";
     if ($startdate != 0)
@@ -1015,15 +1027,15 @@ function amount_used_site($siteid, $startdate=0, $enddate=0)
     }
 
     $result = mysqli_query($db, $sql);
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         return FALSE;
     }
 
     $units = array();
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         while ($obj = mysqli_fetch_object($result))
         {
@@ -1073,7 +1085,7 @@ function contract_unit_balance($contractid, $includenonapproved = FALSE, $includ
  **/
 function contract_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
 {
-    global $now, $dbService;
+    global $now, $dbService, $db;
 
     $unitbalance = 0;
 
@@ -1087,9 +1099,9 @@ function contract_balance($contractid, $includenonapproved = FALSE, $includerese
     $sql .= "ORDER BY enddate DESC";
 
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         while ($service = mysqli_fetch_object($result))
         {
@@ -1129,7 +1141,7 @@ function contract_balance($contractid, $includenonapproved = FALSE, $includerese
  */
 function transactions_report($serviceid, $startdate, $enddate, $sites, $display, $sitebreakdown=TRUE, $showfoc=TRUE, $focaszero=FALSE, $includeawaitingapproval = TRUE, $includereserved = TRUE)
 {
-    global $CONFIG;
+    global $CONFIG, $db;
 
     $csv_currency = html_entity_decode($CONFIG['currency_symbol'], ENT_NOQUOTES);
 
@@ -1168,9 +1180,9 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
 
     $sql .= "ORDER BY t.dateupdated, s.name ";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $shade = 'shade1';
 
@@ -1419,14 +1431,15 @@ function transactions_report($serviceid, $startdate, $enddate, $sites, $display,
  */
 function get_contract_billing_matrix($contractid, $billingtype='')
 {
+    global $db;
     $toReturn = '';
     
     $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$contractid}";
     if (!empty($type)) $sql .= " AND billingtype = '{$billingtype}'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("Error getting services. ".mysqli_error($db), E_USER_WARNING);
     
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $obj = mysqli_fetch_object($result);
         $toReturn = $obj->billingmatrix;
@@ -1452,7 +1465,7 @@ function get_contract_billing_matrix($contractid, $billingtype='')
  */
 function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
 {
-    global $now, $sit;
+    global $now, $sit, $db;
     $rtnvalue = FALSE;
     $balance = get_service_balance($serviceid, TRUE, TRUE);
 
@@ -1463,25 +1476,25 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
         $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, amount, description, userid, dateupdated, transactionstatus) ";
         $sql .= "VALUES ('{$serviceid}', '{$amount}', '{$description}', '{$_SESSION['userid']}', '".date('Y-m-d H:i:s', $now)."', '".BILLING_RESERVED."')";
         $result = mysqli_query($db, $sql);
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
+            trigger_error("Error inserting transaction. ".mysqli_error($db), E_USER_WARNING);
             $rtnvalue = FALSE;
         }
 
-        $rtnvalue = mysql_insert_id();
+        $rtnvalue = mysqli_insert_id($id);
 
         if ($rtnvalue != FALSE)
         {
 
             $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES ({$linktype}, {$rtnvalue}, {$linkref}, 'left', '{$_SESSION['userid']}')";
             mysqli_query($db, $sql);
-            if (mysql_error())
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(),E_USER_ERROR);
+                trigger_error(mysqli_error($db),E_USER_ERROR);
                 $rtnvalue = FALSE;
             }
-            if (mysql_affected_rows() < 1)
+            if (mysqli_affected_rows($db) < 1)
             {
                 trigger_error("Link reservation failed",E_USER_ERROR);
                 $rtnvalue = FALSE;
@@ -1503,6 +1516,7 @@ function reserve_monies($serviceid, $linktype, $linkref, $amount, $description)
  */
 function transition_reserved_monites($transactionid, $amount, $description='')
 {
+    global $db;
     $rtnvalue = TRUE;
     $sql = "UPDATE `{$GLOBALS['dbTransactions']}` SET amount = {$amount}, transactionstatus = ".BILLING_AWAITINGAPPROVAL." ";
     if (!empty($description))
@@ -1512,12 +1526,12 @@ function transition_reserved_monites($transactionid, $amount, $description='')
     $sql .= "WHERE transactionid = {$transactionid} AND transactionstatus = ".BILLING_RESERVED;
     mysqli_query($db, $sql);
 
-    if (mysql_error())
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtnvalue = FALSE;
     }
-    if (mysql_affected_rows() < 1)
+    if (mysqli_affected_rows($db) < 1)
     {
         trigger_error("Transition reserved monies failed {$sql}", E_USER_ERROR);
         $rtnvalue = FALSE;

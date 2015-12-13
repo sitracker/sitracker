@@ -24,7 +24,7 @@ $id = clean_int($_REQUEST['id']);
 $sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = $id LIMIT 1";
 $result = mysqli_query($db, $sql);
 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-list($incidentcontact) = mysql_fetch_row($result);
+list($incidentcontact) = mysqli_fetch_row($result);
 if ($incidentcontact == $_SESSION['contactid'])
 {
     if (empty($_POST['update']) AND empty($_FILES))

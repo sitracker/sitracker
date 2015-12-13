@@ -21,20 +21,20 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function postpone_task($taskid)
 {
-    global $dbTasks;
+    global $dbTasks, $db;
     if (is_numeric($taskid))
     {
         $sql = "SELECT duedate FROM `{$dbTasks}` AS t ";
         $sql .= "WHERE id = '{$taskid}'";
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         $task = mysqli_fetch_object($result);
         if ($task->duedate != "0000-00-00 00:00:00")
         {
             $newtime = date("Y-m-d H:i:s", (mysql2date($task->duedate) + 60 * 60 * 24));
             $sql = "UPDATE `{$dbTasks}` SET duedate = '{$newtime}' WHERE id = '{$taskid}'";
             mysqli_query($db, $sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         }
     }
 }
@@ -42,7 +42,7 @@ function postpone_task($taskid)
 
 function mark_task_completed($taskid, $incident)
 {
-    global $dbNotes, $dbTasks;
+    global $dbNotes, $dbTasks, $db;
     if (!$incident)
     {
         // Insert note to say what happened
@@ -51,7 +51,7 @@ function mark_task_completed($taskid, $incident)
         $sql .= "(userid, bodytext, link, refid) ";
         $sql .= "VALUES ('0', '{$bodytext}', '10', '{$taskid}')";
         mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     }
 
     $enddate = date('Y-m-d H:i:s');
@@ -59,7 +59,7 @@ function mark_task_completed($taskid, $incident)
     $sql .= "SET completion='100', enddate='$enddate' ";
     $sql .= "WHERE id='$taskid' LIMIT 1";
     mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 }
 
 
@@ -71,7 +71,7 @@ function mark_task_completed($taskid, $incident)
  */
 function open_activities_for_incident($incientid)
 {
-    global $dbLinks, $dbLinkTypes, $dbTasks;
+    global $dbLinks, $dbLinkTypes, $dbTasks, $db;
     // Running Activities
 
     $sql = "SELECT DISTINCT origcolref, linkcolref ";
@@ -80,9 +80,9 @@ function open_activities_for_incident($incientid)
     $sql .= "AND linkcolref={$incientid} ";
     $sql .= "AND direction='left'";
     $result = mysqli_query($db, $sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         //get list of tasks
         $sql = "SELECT * FROM `{$dbTasks}` WHERE enddate IS NULL ";
@@ -99,7 +99,6 @@ function open_activities_for_incident($incientid)
         }
         $result = mysqli_query($db, $sql);
 
-        // $num = mysql_num_rows($result);
         while ($obj = mysqli_fetch_object($result))
         {
             $num[] = $obj->id;
@@ -122,7 +121,7 @@ function open_activities_for_incident($incientid)
  */
 function open_activities_for_site($siteid)
 {
-    global $dbIncidents, $dbContacts;
+    global $dbIncidents, $dbContacts, $db;
 
     $openactivites = 0;
 

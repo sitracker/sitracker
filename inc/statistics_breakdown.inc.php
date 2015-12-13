@@ -20,8 +20,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 
 $sql = get_sql_statement($startdate, $enddate, $query, FALSE);
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 $start_str = date("Y-m-d", $startdate);
 $end_str = date("Y-m-d", $enddate);
@@ -44,11 +44,11 @@ else echo "<h2>".sprintf($strIncidentsVerbBetweenDates, $type, $start_str, $end_
 
 echo "<table class='maintable'>";
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
     echo "<tr><th>{$strID}</th><th>{$strTitle}</th><th>{$strPriority}</th><th>{$strOpened}</th><th>{$strClosed}</th><th>{$strOwner}</th><th>{$strCustomer}</th><th>{$strSite}</th></tr>";
 
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         echo "<tr>";
         echo "<td>".html_incident_popup_link($obj->id, get_userfacing_incident_id($obj->id))."</td>";
@@ -70,9 +70,9 @@ if (mysql_num_rows($result) > 0)
         $sql = "SELECT c.forenames, c.surname, s.name ";
         $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
         $sql .= "WHERE s.id = c.siteid AND c.id = {$obj->contact}";
-        $contactResult = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $contact = mysql_fetch_object($contactResult);
+        $contactResult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $contact = mysqli_fetch_object($contactResult);
         echo "<td>{$contact->forenames} {$contact->surname}</td>";
         echo "<td>{$contact->name}</td>";
         echo "</tr>\n";

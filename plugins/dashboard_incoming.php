@@ -44,7 +44,7 @@ function dashboard_incoming_display($dashletid)
     {
         //echo "<div class='window'>";
 
-        if (mysql_num_rows($result) >=1 )
+        if (mysqli_num_rows($result) >=1 )
         {
             echo "<table align='center' width='100%'>";
             echo "<tr>";
@@ -54,7 +54,7 @@ function dashboard_incoming_display($dashletid)
             echo colheader('message', $GLOBALS['strMessage']);
             echo "</tr>\n";
             $shade = 'shade1';
-            while ($incoming = mysql_fetch_object($result))
+            while ($incoming = mysqli_fetch_object($result))
             {
                 $date = mysql2date($incoming->date);
                 echo "<tr class='$shade'>";

@@ -31,22 +31,22 @@ echo "<p align='center'>{$strCustomerFeedbackReportSiteMsg}:</p>";
 $usql = "SELECT * FROM `{$dbUsers}` WHERE status > 0 ";
 if ($userid > 0) $usql .= "AND id={$userid} ";
 else $usql .= "ORDER BY username";
-$uresult = mysql_query($usql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($uresult) >= 1)
+$uresult = mysqli_query($db, $usql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($uresult) >= 1)
 {
-    while ($user = mysql_fetch_object($uresult))
+    while ($user = mysqli_fetch_object($uresult))
     {
-        $totalresult=0;
-        $numquestions=0;
+        $totalresult = 0;
+        $numquestions = 0;
         $html = "<h2>".ucfirst($user->realname)."</h2>";
         $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-        $qresult = mysql_query($qsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $qresult = mysqli_query($db, $qsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($qresult) >= 1)
+        if (mysqli_num_rows($qresult) >= 1)
         {
-            while ($qrow = mysql_fetch_object($qresult))
+            while ($qrow = mysqli_fetch_object($qresult))
             {
                 $numquestions++;
                 $html .= "Q{$qrow->taborder}: {$qrow->question} &nbsp;";
@@ -85,15 +85,15 @@ if (mysql_num_rows($uresult) >= 1)
                 }
 
                 $sql .= "ORDER BY i.owner, i.id";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 $numresults = 0;
                 $cumul = 0;
                 $percent = 0;
                 $average = 0;
                 $calcnumber = (100 / ($CONFIG['feedback_max_score'] -1));
                 ## echo "=== $sql<br /> ";
-                while ($row = mysql_fetch_object($result))
+                while ($row = mysqli_fetch_object($result))
                 {
                     if (!empty($row->result))
                     {

@@ -598,8 +598,8 @@ function ldapImportCustomerFromEmail($email)
         $sql = "SELECT id, username, contact_source FROM `{$GLOBALS['dbContacts']}` WHERE email = '{$email}'";
         debug_log($sql, TRUE);
         $result = mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) == 1)
         {
             debug_log ("just one");
             // Can only deal with the case where one exists, if multiple contacts have the same email address its difficult to deal with
@@ -619,7 +619,7 @@ function ldapImportCustomerFromEmail($email)
                 $toReturn = true;
             }
         }
-        elseif (mysql_num_rows($result) > 1)
+        elseif (mysqli_num_rows($result) > 1)
         {
             debug_log ("More than one contact was found in LDAP with this address '{$email}', not importing", TRUE);
             // Contact does exists with these details, just theres more than one of them

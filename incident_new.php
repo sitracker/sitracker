@@ -565,12 +565,12 @@ elseif ($action == 'incidentform')
         $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id={$updateid}";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-        list($mailed_body_text) = mysql_fetch_assoc($result);
+        list($mailed_body_text) = mysqli_fetch_assoc($result);
 
         $sql = "SELECT subject FROM `{$dbTempIncoming}` WHERE updateid={$updateid}";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-        list($mailed_subject) = mysql_fetch_assoc($result);
+        list($mailed_subject) = mysqli_fetch_assoc($result);
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
@@ -784,7 +784,7 @@ elseif ($action == 'assign')
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-        $incidentid = mysql_insert_id();
+        $incidentid = mysqli_insert_id($db);
         $_SESSION['incidentid'] = intval($incidentid);
 
         // Save productinfo if there is some

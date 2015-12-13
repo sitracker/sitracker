@@ -285,7 +285,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
  */
 function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
 {
-    global $dbConfig, $dbUserConfig, $dbContactConfig, $dbSiteConfig;
+    global $dbConfig, $dbUserConfig, $dbContactConfig, $dbSiteConfig, $db;
 
     if ($namespace == NAMESPACE_USER)
     {
@@ -311,7 +311,7 @@ function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
                 $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
         }
         mysqli_query($db, $sql);
-        if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db). "  $sql", E_USER_WARNING);
     }
     return TRUE;
 }

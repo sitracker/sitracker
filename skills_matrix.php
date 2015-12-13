@@ -100,7 +100,7 @@ if ($countusers > 0)
             $countusers--;
         }
     }
-    mysql_data_seek($usersresult, 0);
+    mysqli_data_seek($usersresult, 0);
     $sql = "SELECT u.id, u.realname, s.name ";
     $sql .= "FROM `{$dbUserSoftware}` AS us RIGHT JOIN `{$dbSoftware}` AS s ON (us.softwareid = s.id) ";
     $sql .= "LEFT JOIN `{$dbUsers}` AS u ON us.userid = u.id ";
@@ -139,7 +139,7 @@ if ($countskills > 0 AND $countusers > 0)
             $skills[$row->name][$row->realname] = $row->realname;
         }
     }
-    mysql_data_seek($result, 0);
+    mysqli_data_seek($result, 0);
     echo "<table class='maintable vertical'>";
     $shade = 'shade1';
     echo "<thead><tr><td>{$strSkill}</td>";
@@ -182,7 +182,7 @@ if ($countskills > 0 AND $countusers > 0)
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        mysql_data_seek($usersresult, 0);
+        mysqli_data_seek($usersresult, 0);
         $previous = $row->name;
     }
     echo "<tr><th align='right'>{$strTotal}</th>";
