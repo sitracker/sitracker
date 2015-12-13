@@ -282,7 +282,7 @@ switch ($_REQUEST['action'])
         echo setup_configure();
         break;
     case 'checkdbstate':
-        $db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
+        $db = @mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
         if (@mysqli_error($db))
         {
             echo "<p class='error'>Setup could not connect to the database server '{$CONFIG['db_hostname']}'. MySQL Said: ".mysqli_error($db)."</p>";
@@ -445,7 +445,7 @@ switch ($_REQUEST['action'])
         break;
     default:
         require (APPLICATION_LIBPATH . 'tablenames.inc.php');
-        $db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
+        $db = @mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
         if (@mysqli_error($db))
         {
             echo setup_configure();
@@ -795,11 +795,11 @@ switch ($_REQUEST['action'])
 
                         if ($_REQUEST['action'] == 'createadminuser' AND setup_check_adminuser() == FALSE)
                         {
-                            $password = mysql_real_escape_string($_POST['newpassword']);
-                            $passwordagain = mysql_real_escape_string($_POST['passwordagain']);
+                            $password = mysqli_real_escape_string($db, $_POST['newpassword']);
+                            $passwordagain = mysqli_real_escape_string($db, $_POST['passwordagain']);
                             if ($password == $passwordagain)
                             {
-                                $email = mysql_real_escape_string($_POST['email']);
+                                $email = mysqli_real_escape_string($db, $_POST['email']);
                                 echo create_admin_user($password, $email);
                             }
                             else
@@ -920,31 +920,31 @@ switch ($_REQUEST['action'])
                                 {$sitecity}, {$sitecounty}, {$sitecountry}, {$sitepostcode}, 'Created during setup', 1, 0, 0, 0)";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                $siteid = mysql_insert_id();
+                                $siteid = mysqli_insert_id($db);
 
                                 $username = mb_strtolower(mb_substr($contactsurname, 0, strcspn($contactsurname, " "), 'UTF-8'));
                                 $sql =  "INSERT INTO `{$dbContacts}` (`username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `department`, `timestamp_added`, `timestamp_modified`) VALUES
                                 ('{$username}', MD5(RAND()), '{$contactforenames}', '{$contactsurname}', {$contactjobtitle}, {$courtesytitle}, {$siteid}, '{$contactemail}', {$contactphone}, {$contactmobile}, {$contactdepartment}, 1132930556, 1187360933)";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                $contactid = mysql_insert_id();
+                                $contactid = mysqli_insert_id($db);
                                 $username = $username . $newid;
                                 $sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$contactid}'";
 
                                 $sql = "INSERT INTO `{$dbProducts}` (vendorid, name, description) VALUES ({$productvendor}, '{$productname}', '{$productdescription}')";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                $productid = mysql_insert_id();
+                                $productid = mysqli_insert_id($db);
 
                                 $sql = "INSERT INTO `{$dbSoftware}` (`name`, `lifetime_start`, `lifetime_end`) VALUES ('{$skill}', NULL, NULL)";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                $skillid = mysql_insert_id();
+                                $skillid = mysqli_insert_id($db);
 
                                 $sql = "INSERT INTO `{$dbResellers}` (name) VALUES ('{$reseller_name}')";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                $resellerid = mysql_insert_id();
+                                $resellerid = mysqli_insert_id($db);
 
                                 $expirydate = strtotime("+1 year");
 
@@ -952,17 +952,17 @@ switch ($_REQUEST['action'])
                                 $sql .= "VALUES ({$siteid},{$productid},{$resellerid},{$expirydate},1,4,0,0,'Created during the installer',1,'no','standard',0)";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                $contractid = mysql_insert_id();
+                                $contractid = mysqli_insert_id($db);
 
                                 $sql = "INSERT INTO `{$dbSoftwareProducts}` VALUES ({$productid},{$skillid})";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                mysql_insert_id();
+                                mysqli_insert_id($db);
 
                                 $sql = "INSERT INTO `{$dbSupportContacts}` VALUES ({$contractid},{$contactid})";
                                 $result = mysqli_query($db, $sql);
                                 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-                                mysql_insert_id();
+                                mysqli_insert_id($db);
 
                                 $_SESSION['promptinitialdata'] = FALSE;
                                 clear_form_data('setupinitialdata');
