@@ -26,9 +26,9 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('escalation', 32, $strEscalationPaths)." {$title}</h2>";
 
 $sql = "SELECT * FROM `{$dbEscalationPaths}` ORDER BY name";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($result) >= 1)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result) >= 1)
 {
     echo "<table class='maintable'>";
     echo "<tr>";
@@ -40,7 +40,7 @@ if (mysql_num_rows($result) >= 1)
     echo colheader('edit', $strActions);
     echo "</tr>";
     $shade = 'shade1';
-    while ($path = mysql_fetch_object($result))
+    while ($path = mysqli_fetch_object($result))
     {
         $operations = array();
         $operations[$strEdit] = "escalation_path_edit.php?id={$path->id}";

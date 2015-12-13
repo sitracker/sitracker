@@ -310,7 +310,7 @@ function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
             default:
                 $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
         }
-        mysql_query($sql);
+        mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
     }
     return TRUE;

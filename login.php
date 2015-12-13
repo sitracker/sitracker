@@ -24,7 +24,7 @@ if (function_exists('session_regenerate_id'))
     else session_regenerate_id();
 }
 
-setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
+setcookie(session_name(), session_id(), ini_get("session.cookie_lifetime"), "/");
 
 if (!empty($_REQUEST['lang']))
 {

@@ -956,11 +956,11 @@ function email_templates($name, $triggertype = 'system', $selected = '')
 
         $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
         $sql .= "WHERE type='{$type}' ORDER BY name";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            while ($template = mysql_fetch_object($result))
+            while ($template = mysqli_fetch_object($result))
             {
                 //$name = strpos()
                 //$name = str_replace("_", " ", $name);
@@ -993,9 +993,9 @@ function notice_templates($name, $selected = '')
     global $dbNoticeTemplates, $strPersonalTemplates;
     $html .= "<select id='{$name}' name='{$name}'>";
     $sql = "SELECT id, name, description, type FROM `{$dbNoticeTemplates}` ORDER BY type,name ASC";
-    $query = mysql_query($sql);
+    $query = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($template = mysql_fetch_object($query))
+    while ($template = mysqli_fetch_object($query))
     {
         $user_header = false;
         if (!$user_header AND $template->type == USER_DEFINED_NOTICE_TYPE)
@@ -1280,7 +1280,7 @@ function trigger_to_html($trigger_id, $user_id)
     $sql = "SELECT id FROM `{$dbTriggers}` ";
     $sql .= "WHERE userid = '{$user_id}' ";
     $sql .= "AND triggerid = '{$trigger_id}'";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error())
     {
         trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
@@ -1289,7 +1289,7 @@ function trigger_to_html($trigger_id, $user_id)
     }
     if (mysql_num_rows($result) >= 0)
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $t = Trigger::fromID($row->id);
             $html .= trigger_action_to_html($t, $user_id);
@@ -1411,8 +1411,8 @@ function template_description($name, $type)
         $tbl = $dbEmailTemplates;
     }
     $sql = "SELECT description FROM `{$tbl}` WHERE name = '{$name}'";
-    $result = mysql_query($sql);
-    list($desc) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    list($desc) = mysqli_fetch_row($result);
     (substr_compare($desc, "str", 1, 3)) ? $desc = $GLOBALS[$desc] : $desc;
     if ($desc == '') $desc = FALSE;
     return $desc;

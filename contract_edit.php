@@ -47,16 +47,16 @@ if ($action == "edit")
     else
     {
         $sql = "SELECT * FROM `{$dbMaintenance}` WHERE id='{$maintid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Error", E_USER_WARNING);
-        $maint = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Error", E_USER_WARNING);
+        $maint = mysqli_fetch_object($result);
 
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
-        
+
         echo show_form_errors('maintform');
         clear_form_errors('maintform');
-        
+
         echo "<form id='maintform' name='maintform' action='{$_SERVER['PHP_SELF']}?action=update' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>\n";
         echo "<table class='maintable vertical'>\n";
         echo "<tbody>\n";
@@ -142,7 +142,7 @@ if ($action == "edit")
         echo "</form>\n";
 
         echo "<p class='return'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
-        mysql_free_result($result);
+        mysqli_free_result($result);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -167,7 +167,7 @@ else if ($action == "update")
     $allcontacts = 'No';
     if ($contacts == 'amount') $amount = clean_float($_REQUEST['amount']);
     elseif ($contacts == 'all') $allcontacts = 'Yes';
-    
+
     $errors = 0;
 
     if ($reseller == 0)
@@ -187,7 +187,7 @@ else if ($action == "update")
         $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
         $errors++;
     }
-    
+
     plugin_do('contract_edit_submitted');
 
     if ($errors == 0)
@@ -203,8 +203,8 @@ else if ($action == "update")
         $sql .= "supportedcontacts='{$amount}', allcontactssupported='{$allcontacts}'";
         if (!empty($product) AND user_permission($sit[2], PERM_ADMIN)) $sql .= ", product='{$product}'";
         $sql .= " WHERE id='{$maintid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         // show error message if addition failed
         if (!$result)

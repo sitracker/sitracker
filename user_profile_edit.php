@@ -140,9 +140,9 @@ if (empty($mode))
     if ($user->groupid >= 1)
     {
         $sql = "SELECT name FROM `{$dbGroups}` WHERE id='{$user->groupid}' ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        $group = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        $group = mysqli_fetch_object($result);
         echo $group->name;
     }
     else
@@ -171,10 +171,10 @@ if (empty($mode))
     {
         $sql = "SELECT us.name FROM `{$dbUserStatus}` AS us, `{$dbUsers}` AS u ";
         $sql .= "WHERE u.status = us.id AND u.id = '$sit[2]' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        list($userstatus) = mysql_fetch_row($result);
+        list($userstatus) = mysqli_fetch_row($result);
         $userstatus = $GLOBALS[$userstatus];
 
         $useraccepting = db_read_column('accepting', $dbUsers, $sit[2]);
@@ -403,8 +403,8 @@ elseif ($mode == 'savesessionlang')
 {
 
     $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$sit[2]}, 'language', '{$_SESSION['lang']}') ON DUPLICATE KEY UPDATE value = '{$_SESSION['lang']}'";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     $t = new Trigger('TRIGGER_LANGUAGE_DIFFERS', $sit[2], '', '');
     $t->revoke();

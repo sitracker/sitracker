@@ -31,7 +31,7 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
     $sql  = "SELECT id, name FROM `{$dbIncidentStatus}` WHERE id<>" . STATUS_CLOSED;
     $sql .= " AND id<>" . STATUS_CLOSING;
     $sql .= " AND id<>" . STATUS_UNASSIGNED . " ORDER BY name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) < 1)
     {
@@ -45,7 +45,7 @@ function incidentstatus_drop_down($name, $id, $disabled = FALSE)
     }
     $html .= ">";
 
-    while ($statuses = mysql_fetch_object($result))
+    while ($statuses = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         if ($statuses->id == $id)
@@ -74,7 +74,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
     global $dbClosingStatus;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbClosingStatus}` ORDER BY name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     $html = "<select name='{$name}'";
     if ($required)
@@ -87,7 +87,7 @@ function closingstatus_drop_down($name, $id, $required = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($statuses = mysql_fetch_object($result))
+    while ($statuses = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         if ($statuses->id == $id)
@@ -129,13 +129,13 @@ function incident_drop_down($name, $id, $contactid = 0)
 
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED . " ";
     if ($contactid > 0) $sql .= "AND contact = {$contactid}";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
         $html = "<select id='{$name}' name='{$name}' {$select}>\n";
-        while ($incident = mysql_fetch_object($result))
+        while ($incident = mysqli_fetch_object($result))
         {
             $html .= "<option value='{$incident->id}'>[{$incident->id}] - ";
             $html .= "{$incident->title}</option>";

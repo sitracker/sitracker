@@ -35,8 +35,8 @@ $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         AND l.linkcolref=f.id
         ORDER BY f.filedate DESC";
 
-$result = mysql_query($sql);
-$fileobj = mysql_fetch_object($result);
+$result = mysqli_query($db, $sql);
+$fileobj = mysqli_fetch_object($result);
 $incidentid = clean_int($fileobj->incidentid);
 $updateid = clean_int($fileobj->updateid);
 $filename = cleanvar($fileobj->filename);

@@ -35,16 +35,16 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
     echo "<p align='center'><a href='template_new.php'>{$strNewTemplate}</a></p>";
 
     $sql = "SELECT * FROM `{$dbEmailTemplates}` ORDER BY id";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($email = mysql_fetch_object($result))
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    while ($email = mysqli_fetch_object($result))
     {
         $templates[$email->id] = array('id' => $email->id, 'template' => 'email', 'name'=> $email->name,'type' => $email->type, 'desc' => $email->description);
     }
     $sql = "SELECT * FROM `{$dbNoticeTemplates}` ORDER BY id";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($notice = mysql_fetch_object($result))
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    while ($notice = mysqli_fetch_object($result))
     {
         $templates[$notice->name] = array('id' => $notice->id, 'template' => 'notice', 'name'=> $notice->name, 'type' => $notice->type, 'desc' => $notice->description);
     }
@@ -56,9 +56,9 @@ if (empty($action) OR $action == 'showform' OR $action == 'list')
     {
         $system = FALSE;
         $tsql = "SELECT COUNT(id) FROM `{$dbTriggers}` WHERE template='{$template['name']}'";
-        $tresult = mysql_query($tsql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list($numtriggers) = mysql_fetch_row($tresult);
+        $tresult = mysqli_query($db, $tsql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        list($numtriggers) = mysqli_fetch_row($tresult);
 
         $editurl = "{$_SERVER['PHP_SELF']}?id={$template['id']}&amp;action=edit&amp;template={$template['template']}";
         if ($numtriggers < 1 AND ($template['template'] == 'email' AND $template['type'] != 'incident')) $shade = 'expired';
@@ -137,14 +137,14 @@ elseif ($action == "edit" OR $action == "new")
     if ($action != "new")
     {
         // This is a edit template so exists in the DB
-        $result = mysql_query($sql);
-        $template = mysql_fetch_object($result);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        $template = mysqli_fetch_object($result);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     }
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-    if (mysql_num_rows($result) > 0 OR $action == "new")
+    if (mysqli_num_rows($result) > 0 OR $action == "new")
     {
         echo "<h2>{$title}</h2>";
         plugin_do('templates');
@@ -153,11 +153,11 @@ elseif ($action == "edit" OR $action == "new")
         echo "<table class='vertical' width='100%'>";
 
         $tsql = "SELECT * FROM `{$dbTriggers}` WHERE action = '{$templateaction}' AND template = '{$id}' LIMIT 1";
-        $tresult = mysql_query($tsql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($tresult) >= 1)
+        $tresult = mysqli_query($db, $tsql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($tresult) >= 1)
         {
-            $trigaction = mysql_fetch_object($tresult);
+            $trigaction = mysqli_fetch_object($tresult);
             echo "<tr><th>{$strTrigger}</th><td>".trigger_description($triggerarray[$trigaction->triggerid])."<br /><br />";
             echo triggeraction_description($trigaction)."</td></tr>";
         }
@@ -323,10 +323,10 @@ elseif ($action == "edit" OR $action == "new")
 
         // Don't allow deletion when template is being used
         $sql = "SELECT * FROM `{$dbTriggers}` WHERE template = '{$template->name}'";
-        $resultUsed = mysql_query($sql);
+        $resultUsed = mysqli_query($db, $sql);
 
         // TODO We should check whether a template is in use perhaps before allowing deletion? Mantis 1885
-        if ($template->type == 'user' AND mysql_num_rows($resultUsed) == 0)
+        if ($template->type == 'user' AND mysqli_num_rows($resultUsed) == 0)
         {
             echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?action=delete&amp;id={$id}'>{$strDelete}</a></p>";
         }
@@ -405,15 +405,15 @@ elseif ($action == "delete")
     
     // Don't allow deletion when template is being used
     $sql = "SELECT * FROM `{$dbTriggers}` AS t, `{$dbEmailTemplates}` AS et WHERE t.template = et.name AND et.id = {$id}";
-    $resultUsed = mysql_query($sql);
+    $resultUsed = mysqli_query($db, $sql);
     
-    if (mysql_num_rows($resultUsed) > 0)
+    if (mysqli_num_rows($resultUsed) > 0)
     {
         // Only try and delete if not used
         // We only allow user templates to be deleted
         $sql = "DELETE FROM `{$dbEmailTemplates}` WHERE id='{$id}' AND type='user' LIMIT 1";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     }
     header("Location: {$_SERVER['PHP_SELF']}?action=showform");
     exit;
@@ -469,13 +469,13 @@ elseif ($action == "update")
             {
                 // First check the template does not already exist
                 $sql = "SELECT id FROM `{$dbEmailTemplates}` WHERE name = '{$name}' LIMIT 1";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                if (mysql_num_rows($result) < 1)
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                if (mysqli_num_rows($result) < 1)
                 {
                     $sql = "INSERT INTO `{$dbEmailTemplates}` (name, type) VALUES('{$name}', '{$templatetype}')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                     $id = mysql_insert_id();
                 }
                 else
@@ -494,13 +494,13 @@ elseif ($action == "update")
             {
                 // First check the template does not already exist
                 $sql = "SELECT id FROM `{$dbNoticeTemplates}` WHERE name = '{$name}' LIMIT 1";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                if (mysql_num_rows($result) < 1)
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                if (mysqli_num_rows($result) < 1)
                 {
                     $sql = "INSERT INTO `{$dbNoticeTemplates}`(name) VALUES('{$name}')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                     $id = mysql_insert_id();
                 }
                 else
@@ -519,8 +519,8 @@ elseif ($action == "update")
             html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     if ($result)
     {
         plugin_do('templates_saved');

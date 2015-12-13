@@ -28,10 +28,10 @@ if (user_permission($sit[2], PERM_ADMIN))
     $failure = 0;
 
     $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
-    $schedulerresult = mysql_query($schedulersql);
-    if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+    $schedulerresult = mysqli_query($db, $schedulersql);
+    if (mysqli_error($db)) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
 
-    while ($schedule = mysql_fetch_object($schedulerresult))
+    while ($schedule = mysqli_fetch_object($schedulerresult))
     {
         $sqlinterval = ("$schedule->interval");
         $sqllastran = mysql2date("$schedule->lastran");
@@ -41,25 +41,25 @@ if (user_permission($sit[2], PERM_ADMIN))
             $failure ++;
         }
     }
-    $num = mysql_num_rows($schedulerresult);
+    $num = mysqli_num_rows($schedulerresult);
     $num = $num / 2;
     if ($failure > $num)
     {
         $noticecount = 0;
-        $text = mysql_real_escape_string("{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>", $db);
+        $text = mysqli_real_escape_string($db, "{$strSchedulerNotRunning} <a target='_blank' href='http://sitracker.org/wiki/Scheduler'> {$strTheDocumentation} </a>");
         $type = WARNING_NOTICE_TYPE;
         $durability = 'session';
         $sql = "SELECT COUNT(id) FROM `{$dbNotices}` WHERE userid={$sit[2]} AND type={$type} AND durability='{$durability}' AND text='{$text}'";
-        $noticeresult = mysql_query($sql);
-        list($noticecount) = mysql_fetch_array($noticeresult);
+        $noticeresult = mysqli_query($db, $sql);
+        list($noticecount) = mysqli_fetch_array($noticeresult);
         if ($noticecount < 1)
         {
             $sql = "INSERT INTO `{$dbNotices}` (userid, type, text, timestamp, durability) ";
             $sql .= "VALUES($sit[2], {$type}, '{$text}', NOW(), '{$durability}')";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(),E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
             }
         }
     }
@@ -70,9 +70,9 @@ if (user_permission($sit[2], PERM_ADMIN))
 // Dashboard widgets
 
 $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled='true' ORDER BY id";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($dashboard = mysql_fetch_object($result))
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+while ($dashboard = mysqli_fetch_object($result))
 {
    include (APPLICATION_PLUGINPATH . "dashboard_{$dashboard->name}.php");
    $DASHBOARDCOMP["dashboard_{$dashboard->name}"] = "dashboard_{$dashboard->name}";
@@ -82,13 +82,13 @@ while ($dashboard = mysql_fetch_object($result))
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '".$_SESSION['userid']."'";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
 $dashboardcomponents = array();
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
-    $obj = mysql_fetch_object($result);
+    $obj = mysqli_fetch_object($result);
     $dashboardcomponents = explode(",",$obj->dashboard);
 }
 
@@ -100,9 +100,9 @@ $cols0 = '';
 $cols1 = '';
 $cols2 = '';
 
-foreach ($dashboardcomponents AS $db)
+foreach ($dashboardcomponents AS $dbc)
 {
-    $c = explode("-",$db);
+    $c = explode("-",$dbc);
     switch ($c[0])
     {
         case 0:

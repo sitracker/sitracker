@@ -45,9 +45,9 @@ if (empty($_REQUEST['states']))
 
 // get the first date
 $sql = "SELECT opened FROM `{$dbIncidents}` ORDER BY id ASC LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-list($firstdate) = mysql_fetch_row($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+list($firstdate) = mysqli_fetch_row($result);
 
 $current_time = $firstdate;
 

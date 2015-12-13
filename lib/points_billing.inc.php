@@ -32,7 +32,7 @@ class PointsBillable extends Billable {
         $sql = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} and duration < 0) AS refunds, ";
         $sql .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$incidentid} and duration > 0) AS addititions";
         
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         
         $refunds = 0;
@@ -40,7 +40,7 @@ class PointsBillable extends Billable {
         
         if (mysql_num_rows($result) > 0)
         {
-            list($refunds, $additions) = mysql_fetch_row($result);
+            list($refunds, $additions) = mysqli_fetch_row($result);
         }
         
         $totalunits = $refunds + $additions;
@@ -80,12 +80,12 @@ class PointsBillable extends Billable {
         }
         $sql .= "ORDER BY enddate DESC";
         
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         
         if (mysql_num_rows($result) > 0)
         {
-            while ($service = mysql_fetch_object($result))
+            while ($service = mysqli_fetch_object($result))
             {
                 $unitbalance += $service->balance;
             }
@@ -118,16 +118,16 @@ class PointsBillable extends Billable {
         // Check transaction exists, and is awaiting approval and is an incident
         $sql = "SELECT l.linkcolref, t.serviceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
         $sql .= "WHERE t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND l.linktype = 6 AND t.transactionid = {$transactionid}";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("Error identify incident transaction. ".mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) > 0)
         {
-            list($incidentid, $serviceid) = mysql_fetch_row($result);
+            list($incidentid, $serviceid) = mysqli_fetch_row($result);
         
             $sqlUpdates = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} and duration < 0) AS refunds, ";
             $sqlUpdates .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$incidentid} and duration > 0) AS addititions";
         
-            $resultUpdates = mysql_query($sqlUpdates);
+            $resultUpdates = mysqli_query($db, $sqlUpdates);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         
             $refunds = 0;
@@ -135,7 +135,7 @@ class PointsBillable extends Billable {
         
             if (mysql_num_rows($resultUpdates) > 0)
             {
-                list($refunds, $additions) = mysql_fetch_row($resultUpdates);
+                list($refunds, $additions) = mysqli_fetch_row($resultUpdates);
             }
         
             $totalpoints = $refunds + $additions * -1;
@@ -164,11 +164,11 @@ class PointsBillable extends Billable {
         $toReturn = FALSE;
         
         $sql = "SELECT SUM(duration) AS points FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid}";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             $toReturn = $obj->points;
         }
         
@@ -211,7 +211,7 @@ class PointsBillable extends Billable {
             $sql .= "AND i.closed <= {$enddate} ";
         }
         $sql .= "ORDER BY i.closed";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error())
         {
             trigger_error(mysql_error(), E_USER_WARNING);
@@ -224,7 +224,7 @@ class PointsBillable extends Billable {
         {
             $shade = 'shade1';
         
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $used = TRUE;
                 $unitrate = get_unit_rate(incident_maintid($obj->id));
@@ -236,7 +236,7 @@ class PointsBillable extends Billable {
         
                 $sqlIncident = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$obj->id} and duration < 0) AS refunds, ";
                 $sqlIncident .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$obj->id} and duration > 0) AS addititions";
-                $resultIncident = mysql_query($sqlIncident);
+                $resultIncident = mysqli_query($db, $sqlIncident);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         
                 $refunds = 0;
@@ -244,7 +244,7 @@ class PointsBillable extends Billable {
         
                 if (mysql_num_rows($resultIncident) > 0)
                 {
-                    list($refunds, $additions) = mysql_fetch_row($resultIncident);
+                    list($refunds, $additions) = mysqli_fetch_row($resultIncident);
                 }
         
                 if (empty($refunds)) $refunds = 0;
@@ -339,12 +339,12 @@ class PointsBillable extends Billable {
     function billing_matrix_selector($id, $selected='')
     {
         $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixPoints']}`";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
         if (mysql_num_rows($result) >= 1)
         {
             $html = "<select name='{$id}' id='{$id}'>\n";
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $html .= "<option value='{$obj->tag}'";
                 if ($obj->tag == $selected) $html .= " selected='selected'";
@@ -365,15 +365,15 @@ class PointsBillable extends Billable {
     {
         $html = '';
         $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixPoints']}";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     
         if (mysql_num_rows($result) >= 1)
         {
-            while ($matrix = mysql_fetch_object($result))
+            while ($matrix = mysqli_fetch_object($result))
             {
                 $sql = "SELECT * FROM `{$GLOBALS['dbBillingMatrixPoints']}` WHERE tag = '{$matrix->tag}' ORDER BY points ASC";
-                $matrixresult = mysql_query($sql);
+                $matrixresult = mysqli_query($db, $sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     
                 $html .= "<table class='maintable'>";
@@ -381,7 +381,7 @@ class PointsBillable extends Billable {
                 
                 $html .= "<tr><th>{$GLOBALS['strName']}</th><th>{$GLOBALS['strPoints']}</th></tr>\n";
                 $shade = 'shade1';
-                while ($obj = mysql_fetch_object($matrixresult))
+                while ($obj = mysqli_fetch_object($matrixresult))
                 {
                     $html .= "<tr class='{$shade}'><td>{$obj->name}</td><td>{$obj->points}</td></tr>\n";
                     if ($shade == 'shade1') $shade = 'shade2';
@@ -503,7 +503,7 @@ function points_billing_incident_edited()
         $new_points = clean_float($_REQUEST['points_base']);
     
         $sql = "UPDATE `{$GLOBALS['dbUpdates']}` SET duration = {$new_points} WHERE incidentid = {$id} AND type = 'opening' ORDER by timestamp ASC LIMIT 1";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     }
 }
@@ -595,7 +595,7 @@ function points_incident_new_saved()
         $points = clean_float($_REQUEST['points_base']);
     
         $sql = "UPDATE `{$GLOBALS['dbUpdates']}` SET duration = {$points} WHERE incidentid = {$incidentid} AND type = 'opening' ORDER by timestamp ASC LIMIT 1";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     }
 }
@@ -636,12 +636,12 @@ plugin_register('incident_details_billing', 'points_incident_details_billing');
 function points_drop_down($id, $selected, $billingmatrix, $showpoints = TRUE)
 {
     $sql = "SELECT name, points FROM `{$GLOBALS['dbBillingMatrixPoints']}` WHERE tag = '{$billingmatrix}' ORDER BY points ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >= 1)
     {
         $html = "<select name='{$id}' id='{$id}'>\n";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $html .= "<option value='{$obj->points}'";
             if ($obj->points == $selected) $html .= " selected='selected'";
@@ -665,11 +665,11 @@ function points_incident_base_points($incidentid)
     $toReturn = 0;    
 
     $sql = "SELECT duration FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} AND type = 'opening' ORDER by timestamp ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >= 1)
     {
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
         $toReturn = $obj->duration;
     }
     
@@ -689,11 +689,11 @@ function points_name($billingmatrix, $points)
     $toReturn = '';
 
     $sql = "SELECT name FROM `{$GLOBALS['dbBillingMatrixPoints']}` WHERE tag = '{$billingmatrix}' AND points = {$points}";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) >= 1)
     {
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
         $toReturn = $obj->name;
     }
     

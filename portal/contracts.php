@@ -30,7 +30,7 @@ if ($id != 0 AND $contactid != 0 AND $action == 'remove')
                 AND contactid='{$contactid}'
                 LIMIT 1";
         $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
             html_redirect($_SERVER['PHP_SELF']."?id={$id}");
@@ -49,7 +49,7 @@ elseif ($id != 0 AND $action == 'add' AND intval($_POST['contactid'] != 0))
             (maintenanceid, contactid)
             VALUES('{$id}', '{$contactid}')";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     else
     {
         html_redirect($_SERVER['PHP_SELF']."?id={$id}");
@@ -72,7 +72,7 @@ $sql .= "AND (m.licence_type IS NULL OR m.licence_type = lt.id) ";
 $sql .= "AND m.site = '{$_SESSION['siteid']}'";
 
 $maintresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 $maint = mysql_fetch_object($maintresult);
 
@@ -167,7 +167,7 @@ echo "</table>";
 
 echo "<h3>{$strNamedContacts}</h3>";
 
-if (mysql_num_rows($maintresult) > 0)
+if (mysqli_num_rows($maintresult) > 0)
 {
     if ($maint->allcontactssupported == 'yes')
     {
@@ -240,9 +240,9 @@ if (mysql_num_rows($maintresult) > 0)
     $sql = "SELECT * FROM `{$GLOBALS[dbSoftwareProducts]}` AS sp, `{$GLOBALS[dbSoftware]}` AS s ";
     $sql .= "WHERE sp.softwareid = s.id AND productid='{$maint->product}' ";
     $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result)>0)
+    if (mysqli_num_rows($result)>0)
     {
         echo"<table class='maintable'>";
         while ($software = mysql_fetch_object($result))

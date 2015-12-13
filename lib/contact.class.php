@@ -138,7 +138,7 @@ class Contact extends Person {
             $sql .= "'".clean_int($this->siteid)."', '".clean_dbstring($this->address1)."', '".clean_dbstring($this->address2)."', '".clean_dbstring($this->city)."', '".clean_dbstring($this->county)."', '".clean_dbstring($this->country)."', '".clean_dbstring($this->postcode)."', '".clean_dbstring($this->email)."', ";
             $sql .= "'".clean_dbstring($this->phone)."', '".clean_dbstring($this->mobile)."', '".clean_dbstring($this->fax)."', '".clean_dbstring($this->department)."', '".clean_dbstring($this->notes)."', '".clean_dbstring($dp['email'])."', ";
             $sql .= "'".clean_dbstring($dp['phone'])."', '".clean_dbstring($dp['address'])."', '".clean_int($now)."', '".clean_int($now)."', NOW(), '".clean_int($_SESSION['userid'])."', NOW(), '".clean_int($_SESSION['userid'])."', '".clean_dbstring($this->source)."')";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             $newid = mysql_insert_id();
@@ -150,7 +150,7 @@ class Contact extends Person {
                 // concatenate username with insert id to make unique
                 $username = $username . $newid;
                 $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET username='{$username}' WHERE id='{$newid}'";
-                $result = mysql_query($sql);
+                $result = mysqli_query($db, $sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
             }
 
@@ -221,7 +221,7 @@ class Contact extends Person {
             }
 
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error())
             {
                 trigger_error(mysql_error(), E_USER_WARNING);
@@ -252,12 +252,12 @@ class Contact extends Person {
         {
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET active = 'false' WHERE id = {$this->id}";
 
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
             if (mysql_affected_rows() != 1)
             {
                 $sql = "SELECT active FROM `{$GLOBALS['dbContacts']}` WHERE id = {$this->id} AND active = 'false'";
-                $result = mysql_query($sql);
+                $result = mysqli_query($db, $sql);
                 if (mysql_num_rows($result) == 0)
                 {
                     trigger_error("Failed to disable contact {$this->username}", E_USER_WARNING);
@@ -287,7 +287,7 @@ class Contact extends Person {
     {
         // Check this is not a duplicate
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` WHERE email='{$this->email}' AND LCASE(surname)=LCASE('{$this->surname}') LIMIT 1";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_num_rows($result) >= 1) return true;
         else return false;
     }

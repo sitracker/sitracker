@@ -124,7 +124,7 @@ if ($CONFIG['db_username'] == '' OR $CONFIG['db_database'] == '')
 }
 
 // Connect to Database server
-$db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
+$dbOld = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
 if (mysql_error())
 {
     $msg = urlencode(base64_encode("Could not connect to database server '{$CONFIG['db_hostname']}'"));
@@ -132,10 +132,12 @@ if (mysql_error())
     exit;
 }
 
-// mysql_query("SET time_zone = {$CONFIG['timezone']}");
+
+
+// mysqli_query($db, "SET time_zone = {$CONFIG['timezone']}");
 
 // Select database
-mysql_select_db($CONFIG['db_database'], $db);
+mysql_select_db($CONFIG['db_database'], $dbOld);
 if (mysql_error())
 {
     // TODO add some detection for missing database
@@ -159,9 +161,27 @@ if (mysql_error())
 }
 
 // See Mantis 506 for sql_mode discussion
+// TODO remove when mysqli switch done
 @mysql_query("SET SESSION sql_mode = '';");
 mysql_query("SET NAMES 'utf8'");
 mysql_query("SET CHARACTER SET utf8");
+
+/*
+ * New DB
+ */
+$db = @mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password'], $CONFIG['db_database']);
+if (mysqli_error($db))
+{
+    $msg = urlencode(base64_encode("Could not connect to database server '{$CONFIG['db_hostname']}'"));
+    header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
+    exit;
+}
+
+
+// See Mantis 506 for sql_mode discussion
+@mysqli_query($db, "SET SESSION sql_mode = '';");
+mysqli_query($db, "SET NAMES 'utf8'");
+mysqli_query($db, "SET CHARACTER SET utf8");
 
 
 // Soft table names
@@ -170,10 +190,10 @@ require (APPLICATION_LIBPATH . 'tablenames.inc.php');
 // TODO this should really be a function as its used in sit_upgrade_plugin_check as its called from setup.php
 // Read config from database (this overrides any config in the config files
 $sql = "SELECT * FROM `{$dbConfig}`";
-$result = @mysql_query($sql);
-if ($result AND mysql_num_rows($result) > 0)
+$result = @mysqli_query($db, $sql);
+if ($result AND mysqli_num_rows($result) > 0)
 {
-    while ($conf = mysql_fetch_object($result))
+    while ($conf = mysqli_fetch_object($db, $result))
     {
         if ($conf->value === 'TRUE') $conf->value = TRUE;
         if ($conf->value === 'FALSE') $conf->value = FALSE;

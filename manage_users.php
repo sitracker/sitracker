@@ -37,8 +37,8 @@ else if ($sort == "fax") $sql .= " ORDER BY fax ASC";
 else if ($sort == "status")  $sql .= " ORDER BY status ASC";
 else if ($sort == "accepting") $sql .= " ORDER BY accepting ASC";
 
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
 echo "<h2>".icon('user', 32, $strManageUsers)." {$strManageUsers}</h2>";
 echo "<p class='contextmenu' align='center'>";
@@ -69,7 +69,7 @@ echo "</tr>\n";
 
 // show results
 $class = 'shade1';
-while ($users = mysql_fetch_object($result))
+while ($users = mysqli_fetch_object($result))
 {
     // define class for table row shading
     if ($users->status == 0) $class = 'expired';
@@ -141,7 +141,7 @@ while ($users = mysql_fetch_object($result))
 echo "</table>\n";
 
 // free result and disconnect
-mysql_free_result($result);
+mysqli_free_result($result);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

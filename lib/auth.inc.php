@@ -45,7 +45,7 @@ else
 {
     // Attempt to prevent session fixation attacks
     session_regenerate();
-    setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
+    setcookie(session_name(), session_id(), ini_get("session.cookie_lifetime"), "/");
 
     // Conversions for when register_globals=off
     // We've migrated away from using cookies and now use sessions

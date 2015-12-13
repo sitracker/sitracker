@@ -73,21 +73,21 @@ switch ($action)
     case 'save':
         $_SESSION['formdata']['new_trigger'] = cleanvar($_POST, TRUE, FALSE, FALSE,
                 array("@"), array("'" => '"'));
-        
+
         $errors = 0;
-        
+
         if (empty($_POST['triggertype']))
         {
             $errors++;
             $_SESSION['formerrors']['new_trigger']['triggertype'] = sprintf($strFieldMustNotBeBlank, $strAction);
         }
-        
+
         if (empty($_POST['new_action']))
         {
             $errors++;
             $_SESSION['formerrors']['new_trigger']['new_action'] = sprintf($strFieldMustNotBeBlank, $strNotificationMethod);
         }
-        
+
         for ($i = 0; $i < sizeof($_POST['param']); $i++)
         {
             if ($_POST['enabled'][$i] == 'on')
@@ -99,7 +99,7 @@ switch ($action)
                 }
             }
         }
-        
+
         if ($errors == 0)
         {
             $_POST = cleanvar($_POST);
@@ -118,7 +118,7 @@ switch ($action)
             $t = new Trigger($_POST['triggertype'], $user_id, $template, $_POST['new_action'], $checks, $parameters);
     
             $success = $t->add();
-            
+    
             clear_form_data('new_trigger');
             html_redirect($return, $success, $t->getError_text());
         }
@@ -133,17 +133,17 @@ switch ($action)
         $triggerid = clean_int($_REQUEST['id']);
 
         $sql =  "DELETE FROM `{$dbTriggers}` WHERE id = {$triggerid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         html_redirect($return, TRUE);
         break;
 
     default:
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        
+
         echo show_form_errors('new_trigger');
         clear_form_errors('new_trigger');
-        
+
         echo "<h2>{$strNewAction}</h2>";
         echo "<div id='container'>";
         echo "<form id='new_trigger' method='post' action='{$_SERVER['PHP_SELF']}'>";
@@ -214,7 +214,7 @@ switch ($action)
         //     }
         echo "<p class='return'><a href='notifications.php'>{$strReturnWithoutSaving}</a></p></div>";
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
-        
+
         clear_form_data('new_trigger');
 }
 

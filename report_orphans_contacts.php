@@ -21,12 +21,12 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 $title = $strShowOrphanedContacts;
 
 $sql = "SELECT * FROM `{$dbContacts}` WHERE siteid = 0";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
 echo "<h2>{$title}</h2>";
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
     echo "<p align='center'>{$strOrphanedSites}</p>";
 
@@ -35,7 +35,7 @@ if (mysql_num_rows($result) > 0)
 
     $shade = "shade1";
 
-    while ($contact = mysql_fetch_object($result))
+    while ($contact = mysqli_fetch_object($result))
     {
         echo "<tr class='{$shade}'><td>{$contact->forenames} {$contact->surname}</td></tr>";
 

@@ -68,12 +68,12 @@ class User extends Person{
         $sql = "SELECT u.*, r.rolename ";
         $sql .= "FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRoles']}` AS r ";
         $sql .= "WHERE u.id = {$this->id} AND u.roleid = r.id";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) == 1)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             $this->username = $obj->username;
             $this->realname = $obj->realname;
             $this->roleid = $obj->roleid;
@@ -100,10 +100,10 @@ class User extends Person{
             $this->managerid = $obj->managerid;
 
             $sql_userconfig = "SELECT config, value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$this->id}";
-            $result_userconfig = mysql_query($sql_userconfig);
+            $result_userconfig = mysqli_query($db, $sql_userconfig);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-            while ($obj_userconfig = mysql_fetch_object($result_userconfig))
+            while ($obj_userconfig = mysqli_fetch_object($result_userconfig))
             {
                 switch ($obj_userconfig->config)
                 {
@@ -154,7 +154,7 @@ class User extends Person{
         $toReturn = FALSE;
 
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username = '".cleanvar($this->username)."'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
         if (mysql_num_rows($result) != 0)
@@ -173,7 +173,7 @@ class User extends Person{
             $sql .= "'".cleanvar($this->group->id)."', '".cleanvar($this->jobtitle)."', '".cleanvar($this->email)."', '".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', ";
             $sql .= "".cleanvar($this->status).", ";
             $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, ".convert_string_null_safe($this->managerd).", '".cleanvar($this->source)."')";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error())
             {
                 trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
@@ -185,13 +185,13 @@ class User extends Person{
             {
                 // Create permissions (set to none)
                 $sql = "SELECT * FROM `{$GLOBALS['dbPermissions']}`";
-                $result = mysql_query($sql);
+                $result = mysqli_query($db, $sql);
                 if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                while ($perm = mysql_fetch_object($result))
+                while ($perm = mysqli_fetch_object($result))
                 {
                     $psql = "INSERT INTO `{$GLOBALS['dbUserPermissions']}` (userid, permissionid, granted) ";
                     $psql .= "VALUES ('{$toReturn}', '{$perm->id}', 'false')";
-                    mysql_query($psql);
+                    mysqli_query($db, $psql);
                     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
                 }
 
@@ -217,13 +217,13 @@ class User extends Person{
         if (!empty($this->id) AND is_numeric($this->id))
         {
             $sql = "SELECT username, status, accepting FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id}";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
             if (mysql_num_rows($result) == 1)
             {
                 // Exists
-                $oldUser = mysql_fetch_object($result);
+                $oldUser = mysqli_fetch_object($result);
                 $s = array();
 
                 $errors = 0;
@@ -239,9 +239,9 @@ class User extends Person{
                 if (!empty($this->email))
                 {
                     $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE status > 0 AND email='{$this->email}' AND id != {$this->id}";
-                    $result = mysql_query($sql);
+                    $result = mysqli_query($db, $sql);
                     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    list($countexisting) = mysql_fetch_row($result);
+                    list($countexisting) = mysqli_fetch_row($result);
                     if ($countexisting > 1)
                     {
                         $errors++;
@@ -292,7 +292,7 @@ class User extends Person{
                 if ($errors == 0)
                 {
                     $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
-                    $result = mysql_query($sql);
+                    $result = mysqli_query($db, $sql);
                     if (mysql_error())
                     {
                         trigger_error(mysql_error(), E_USER_WARNING);
@@ -306,7 +306,7 @@ class User extends Person{
                     foreach ($userconfig AS $u)
                     {
                         $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$this->id}, '{$u['config']}', '{$u['value']}') ON DUPLICATE KEY UPDATE value = '{$u['value']}'";
-                        $result = mysql_query($sql);
+                        $result = mysqli_query($db, $sql);
                         if (mysql_error())
                         {
                             trigger_error(mysql_error(), E_USER_WARNING);
@@ -342,12 +342,12 @@ class User extends Person{
         if (!empty($this->id))
         {
             $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET status = 0 WHERE id = {$this->id}";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             if (mysql_affected_rows() != 1)
             {
                 $sql = "SELECT status FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id} AND status = 0 ";
-                $result = mysql_query($result);
+                $result = mysqli_query($db, $result);
                 if (mysql_num_rows($result) == 0)
                 {
                     trigger_error("Failed to disable user {$this->username}", E_USER_WARNING);
@@ -370,7 +370,7 @@ class User extends Person{
             $tidyup[] = "DELETE FROM `{$GLOBALS['dbInventory']}` WHERE createdby = {$this->id} AND privacy = 'private'";
             foreach ($tidyup AS $sql)
             {
-                $result = mysql_query($sql);
+                $result = mysqli_query($db, $sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
             }
         }

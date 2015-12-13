@@ -31,9 +31,9 @@ if ($CONFIG['debug']) $dbg .= "Sess: ".print_r($_SESSION,true);
 function portal_incident_table($sql)
 {
     global $CONFIG, $showclosed, $sort, $order, $filter;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $numincidents = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $numincidents = mysqli_num_rows($result);
 
     if ($numincidents >= 1)
     {
@@ -53,7 +53,7 @@ function portal_incident_table($sql)
         }
 
         $html .=  "</tr>\n";
-        while ($incident = mysql_fetch_object($result))
+        while ($incident = mysqli_fetch_object($result))
         {
             $html .=  "<tr class='$shade'><td align='center'>";
             $html .=  "<a href='incident.php?id={$incident->id}'>{$incident->id}</a></td>";
@@ -206,8 +206,8 @@ if (!empty($contracts))
         $sql .= "OR i.maintenanceid = {$contract} ";
     }
     $sql .= ")";
-    $result = mysql_query($sql);
-    while($incidents = mysql_fetch_object($result))
+    $result = mysqli_query($db, $sql);
+    while($incidents = mysqli_fetch_object($result))
     {
         $otherincidents[] = $incidents->id;
     }

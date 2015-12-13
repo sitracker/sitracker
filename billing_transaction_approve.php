@@ -24,12 +24,12 @@ $title = $strBilling;
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 $sql = "SELECT * FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactiond}";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("Error getting transaction ".mysql_error());
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("Error getting transaction ".mysqli_error($db));
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
-    $obj = mysql_fetch_object($result);
+    $obj = mysqli_fetch_object($result);
     if ($obj->transactionstatus == BILLING_AWAITINGAPPROVAL)
     {
         // function update_contract_balance($contractid, $description, $amount, $serviceid='', $transactionid='', $totalunits=0, $totalbillableunits=0, $totalrefunds=0)

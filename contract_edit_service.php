@@ -40,18 +40,18 @@ switch ($mode)
         else
         {
             $sql = "SELECT * FROM `{$dbService}` WHERE serviceid = {$serviceid}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
             $title = ("$strContract - $strEditService");
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-            if (mysql_num_rows($result) != 1)
+            if (mysqli_num_rows($result) != 1)
             {
                 echo "<h2>".sprintf($strNoServiceWithIDXFound, $serviceid)."</h2>";
             }
             else
             {
-                $obj = mysql_fetch_object($result);
+                $obj = mysqli_fetch_object($result);
                 $timed = is_contract_timed($contractid);
 
                 echo show_form_errors('edit_service');
@@ -246,30 +246,30 @@ switch ($mode)
             $sql = "UPDATE `{$dbService}` SET startdate = '{$startdate}', enddate = '{$enddate}' {$updateBillingSQL}";
             $sql .= ", notes = '{$notes}', foc = '{$foc}' WHERE serviceid = {$serviceid}";
 
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_ERROR);
+                trigger_error(mysqli_error($db), E_USER_ERROR);
                 $errors++;
             }
 
             $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
 
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_num_rows($result) > 0)
             {
-                $obj = mysql_fetch_object($result);
+                $obj = mysqli_fetch_object($result);
                 if ($obj->expirydate < strtotime($enddate))
                 {
                     $update = "UPDATE `{$dbMaintenance}` ";
                     $update .= "SET expirydate = '".strtotime($enddate)."' ";
                     $update .= "WHERE id = {$contractid}";
-                    mysql_query($update);
-                    if (mysql_error())
+                    mysqli_query($db, $update);
+                    if (mysqli_error($db))
                     {
-                        trigger_error(mysql_error(), E_USER_ERROR);
+                        trigger_error(mysqli_error($db), E_USER_ERROR);
                         $errors++;
                     }
 
@@ -315,8 +315,8 @@ switch ($mode)
 
             // Only allow transfers on the same contractid
             $sql = "SELECT * FROM `{$dbService}` WHERE contractid = '{$contractid}' AND serviceid != {$sourceservice}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
             if (mysql_numrows($result) > 0)
             {
@@ -332,7 +332,7 @@ switch ($mode)
 
                 echo "<select name='destinationservice'>\n";
 
-                while ($obj = mysql_fetch_object($result))
+                while ($obj = mysqli_fetch_object($result))
                 {
                     echo "<option value='{$obj->serviceid}'>{$obj->serviceid} - {$obj->enddate} {$CONFIG['currency_symbol']}{$obj->balance}</option>\n";
                 }

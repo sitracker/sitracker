@@ -203,10 +203,10 @@ if ($emails > 0)
         }
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` ";
         $sql .= "WHERE email = '".mysql_real_escape_string($from_email)."'";
-        if ($result = mysql_query($sql))
+        if ($result = mysqli_query($db, $sql))
         {
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-            $row = mysql_fetch_object($result);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+            $row = mysqli_fetch_object($result);
             $contactid = $row->id;
         }
         debug_log($sql);
@@ -428,8 +428,8 @@ if ($emails > 0)
                 $sql .= "( `id` ,`category` ,`filename` ,`size` ,`userid` ,`usertype` ,`shortdescription` ,`longdescription` ,`webcategory` ,`path` ,`downloads` ,`filedate` ,`expiry` ,`fileversion` ,`published` ,`createdby` ,`modified` ,`modifiedby` ) ";
                 $sql .= "VALUES('', 'private', '{$filename}', $filesize, '0', '', '', '', '', '', '', NOW(), NULL, '', 'no', '0', '', NULL)";
                 debug_log ("inboundemail.php files: {$sql}");
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 $fileid = mysql_insert_id();
                 $attachments[] = array('filename' => $filename, 'fileid' => $fileid);
                 $filename = $fileid."-".$filename;
@@ -447,8 +447,8 @@ if ($emails > 0)
                 }
                 $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` (`linktype`, `origcolref`, `linkcolref`, `direction`, `userid`) ";
                 $sql .= "VALUES('5', '{$updateid}', '{$fileid}', 'left', '0') ";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             }
         }
 
@@ -512,8 +512,8 @@ if ($emails > 0)
             $owner = incident_owner($incidentid);
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
             $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             $updateid = mysql_insert_id();
 
             $incidentid = plugin_do('email_stored_action', array('updateid' => $updateid, 'subject' => $subject));
@@ -528,8 +528,8 @@ if ($emails > 0)
                 $sql .= "'".mysql_real_escape_string($from_name)."', ";
                 $sql .= "'".mysql_real_escape_string($subject)."', ";
                 $sql .= "'{$reason}', '{$contactid}' )";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 $holdingemailid = mysql_insert_id();
     
                 $t = new TriggerEvent('TRIGGER_NEW_HELD_EMAIL', array('holdingemailid' => $holdingemailid));
@@ -550,12 +550,12 @@ if ($emails > 0)
             $sql = "SELECT bodytext FROM `{$dbUpdates}` ";
             $sql .= "WHERE incidentid = '{$incidentid}' AND timestamp > '{$fifteenminsago}' ";
             $sql .= "ORDER BY id DESC LIMIT 1";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_num_rows($result) > 0)
             {
-                list($lastupdate) = mysql_fetch_row($result);
+                list($lastupdate) = mysqli_fetch_row($result);
 
                 $newtext = "{$headertext}<hr>{$message}";
                 if (strcmp(trim($lastupdate),trim($newtext)) == 0)
@@ -571,8 +571,8 @@ if ($emails > 0)
                 // Add entry to the incident update log
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
                 $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 $updateid = mysql_insert_id();
                 plugin_do('email_update_setvisibility_action', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
 
@@ -581,8 +581,8 @@ if ($emails > 0)
                     // Mark the incident as active
                     $sql = "UPDATE `{$GLOBALS['dbIncidents']}` SET status='1', lastupdated='".time()."', timeofnextaction='0' ";
                     $sql .= "WHERE id='{$incidentid}'";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 }
                 else
                 {
@@ -595,8 +595,8 @@ if ($emails > 0)
                         $sql .= "VALUES ('{$updateid}', '0', '".mysql_real_escape_string($from_email);
                         $sql .= "', '".mysql_real_escape_string($from_name);
                         $sql .= "', '".mysql_real_escape_string($subject)."', '{$reason}', ".REASON_INCIDENT_CLOSED.", '{$oldincidentid}', '$contactid' )";
-                        mysql_query($sql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                        mysqli_query($db, $sql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                     }
                     else
                     {
@@ -607,8 +607,8 @@ if ($emails > 0)
                         $sql .= "VALUES ('{$updateid}', '0', '".mysql_real_escape_string($from_email)."',";
                         $sql .= "'".mysql_real_escape_string($from_name)."', '".mysql_real_escape_string($subject);
                         $sql .= "', '{$reason}', '{$contactid}' )";
-                        mysql_query($sql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                        mysqli_query($db, $sql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                     }
                     $holdingemailid = mysql_insert_id();
                 }
@@ -626,8 +626,8 @@ if ($emails > 0)
                     $bodytext = "[i]Received duplicate email within 15 minutes. Message not stored. Possible mail loop.[/i]";
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, customervisibility, currentowner, currentstatus) ";
                     $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1)";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                 }
             }
         }
@@ -646,8 +646,8 @@ if ($emails > 0)
                 $sql = "UPDATE `{$GLOBALS['dbLinks']}` SET origcolref = '{$updateid}' ";
                 $sql .= "WHERE linkcolref = '{$att['fileid']}' ";
                 $sql .= "AND linktype = 5 ";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error() , E_USER_WARNING);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db) , E_USER_WARNING);
                 debug_log("Creating a link between $updateid and file {$att['fileid']}");
             }
         }

@@ -96,8 +96,8 @@ function draw_file_row($file, $incidentid, $path)
     $sql = "SELECT f.id FROM `{$GLOBALS['dbLinks']}`, `{$GLOBALS['dbFiles']}` AS f  ";
     $sql .= "WHERE linktype = '5' AND origcolref='{$updateid}' ";
     $sql .= "AND f.id = linkcolref ";
-    $result = mysql_query($sql);
-    $fileobj = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    $fileobj = mysqli_fetch_object($result);
     $fileid = $fileobj->id;
 
     //new-style, can assume the filename is fileid-filename.ext
@@ -109,8 +109,8 @@ function draw_file_row($file, $incidentid, $path)
         $sql .= "WHERE f.id = '{$filenameparts[0]}' ";
         $sql .= "AND l.origcolref = u.id ";
         $sql .= "AND l.linkcolref = f.id";
-        $result = mysql_query($sql);
-        $row = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        $row = mysqli_fetch_object($result);
         $url = "download.php?id={$row->fileid}";
         $filename = $row->filename;
     }
@@ -158,8 +158,8 @@ if ($_FILES['attachment']['name'] != '')
         // Create an entry in the files table
         $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
         $sql .= "VALUES ('public', '" . clean_dbstring(clean_fspath($_FILES['attachment']['name'])) . "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         $fileid =  mysql_insert_id();
 
         //create update
@@ -170,8 +170,8 @@ if ($_FILES['attachment']['name'] != '')
         $sql .= "bodytext, `timestamp`) ";
         $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', ";
         $sql .= "'{$updatetext}', '$now')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
         $updateid = mysql_insert_id();
 
         $incident_attachment_fspath = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
@@ -195,10 +195,10 @@ if ($_FILES['attachment']['name'] != '')
         //create link
         $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
         $sql .= "VALUES (5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
-        mysql_query($sql);
-        if (mysql_error())
+        mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         echo "<div class='detailinfo'>\n";
@@ -310,9 +310,9 @@ if (file_exists($incident_attachment_fspath))
             {
                 $updateid = mb_substr($dirname, 1);
                 $sql = "SELECT userid, timestamp, type, bodytext, type FROM `{$GLOBALS['dbUpdates']}` WHERE id = {$updateid}";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                $update = mysql_fetch_object($result);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                $update = mysqli_fetch_object($result);
                 $dirprettyname = ldate('l jS M Y @ g:ia',$update->timestamp) . " $strby ".user_realname($update->userid);
                 $updatetext = cleanvar($update->bodytext);
                 $updatetype = $update->type;

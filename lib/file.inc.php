@@ -238,7 +238,7 @@ function upload_file($file, $incidentid, $type='public')
                     (category, filename, size, userid, usertype, path, filedate, refid)
                     VALUES
                     ('{$type}', '{$file['name']}', '{$file['size']}', '{$userid}', '{$usertype}', '{$filepath}', '{$now}', '{$incidentid}')";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
             return $returnpath;

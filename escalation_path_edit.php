@@ -27,8 +27,8 @@ if (empty($mode))
     //show page
     $id = clean_int($_REQUEST['id']);
     $sql = "SELECT * FROM `{$dbEscalationPaths}` WHERE id = {$id}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo show_form_errors('edit_escalation_path');
@@ -36,9 +36,9 @@ if (empty($mode))
     echo "<h2>{$title}</h2>";
     plugin_do('escalation_path_edit');
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($details = mysql_fetch_object($result))
+        while ($details = mysqli_fetch_object($result))
         {
             echo "<form action='".$_SERVER['PHP_SELF']."' method='post' onsubmit=\"return confirm_action('{$strAreYouSureMakeTheseChanges}')\">";
             echo "<table class='vertical'>";
@@ -88,8 +88,8 @@ else
         $sql = "UPDATE `{$dbEscalationPaths}` SET name = '{$name}', track_url = '{$trackurl}', ";
         $sql .= " home_url = '{$homeurl}', url_title = '{$title}', email_domain = '{$emaildomain}' ";
         $sql .= " WHERE id = '{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {

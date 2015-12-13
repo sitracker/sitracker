@@ -57,7 +57,7 @@ function create_incident_feedback($formid, $incidentid)
     $toReturn = FALSE;
     
     $sql = "SELECT * FROM `{$GLOBALS['dbFeedbackForms']}` WHERE id = {$formid}";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) == 0)
     {
@@ -70,7 +70,7 @@ function create_incident_feedback($formid, $incidentid)
         $sql .= "'".mysql_real_escape_string($contactid)."', ";
         $sql .= "'".mysql_real_escape_string($email)."', ";
         $sql .= "'".mysql_real_escape_string($incidentid)."') ";
-        mysql_query($sql);
+        mysqli_query($db, $sql);
         if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
         $toReturn = mysql_insert_id();
     }

@@ -32,7 +32,7 @@ function guess_contract_id($contactid)
     $contactid = intval($contactid);
     $sql = "SELECT * FROM `{$dbSupportContacts}` ";
     $sql .= "WHERE contactid = {$contactid}";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
     $num_contracts = mysql_num_rows($result);
@@ -43,7 +43,7 @@ function guess_contract_id($contactid)
     }
     elseif ($num_contracts == 1)
     {
-        $row = mysql_fetch_object($result);
+        $row = mysqli_fetch_object($result);
         $contractid = $row->maintenanceid;
     }
     else
@@ -88,9 +88,9 @@ function contract_software()
     }
     $sql .= ")";
 
-    if ($result = mysql_query($sql))
+    if ($result = mysqli_query($db, $sql))
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $softwarearray[] = $row->id;
         }
@@ -127,8 +127,8 @@ function contract_product($maintid)
     $maintid = intval($maintid);
     $productid = db_read_column('product', $GLOBALS['dbMaintenance'], $maintid);
     $sql = "SELECT name FROM `{$GLOBALS['dbProducts']}` WHERE id='{$productid}'";
-    $result = mysql_query($sql);
-    $productobj = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    $productobj = mysqli_fetch_object($result);
     if (!empty($productobj->name))
     {
         return $productobj->name;
@@ -151,8 +151,8 @@ function contract_site($maintid)
 {
     $maintid = intval($maintid);
     $sql = "SELECT site FROM `{$GLOBALS['dbMaintenance']}` WHERE id='{$maintid}'";
-    $result = mysql_query($sql);
-    $maintobj = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    $maintobj = mysqli_fetch_object($result);
 
     $sitename = site_name($maintobj->site);
     if (!empty($sitename))
@@ -179,11 +179,11 @@ function supported_contacts($maintid)
     $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbContacts}` AS c ";
     $sql .= "WHERE sc.contactid=c.id AND sc.maintenanceid='{$maintid}' ";
     $sql .= "ORDER BY c.surname, c.forenames ";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
     if (!empty($result))
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $returnarray[] = $row->contactid;
         }
@@ -206,9 +206,9 @@ function all_contact_contracts($contactid, $siteid)
             WHERE m.site={$siteid}
             AND m.var_incident_visible_all = 'yes'";
 
-    if ($result = mysql_query($sql))
+    if ($result = mysqli_query($db, $sql))
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $contractsarray[] = $row->id;
         }
@@ -230,7 +230,7 @@ function incident_slaid($incidentid)
     $incidentid = intval($incidentid);
     $slatag = db_read_column('servicelevel', $dbIncidents, $incidentid);
     $sql = "SELECT id FROM `{$dbServiceLevels}` WHERE tag = '{$slatag}' LIMIT 1";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     list($id) = mysql_fetch_assoc($result);
     return $id;
 }

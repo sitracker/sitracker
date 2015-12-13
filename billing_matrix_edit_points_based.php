@@ -25,9 +25,9 @@ $title = $strEditBillingMatrix;
 if (!empty($tag) AND empty($action))
 {
     $sql = "SELECT * FROM `{$dbBillingMatrixPoints}` WHERE tag='{$tag}' ORDER BY points ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         $html = "<h2>".icon('billing', 32)." {$title}</h2>";
         plugin_do('billing_matrix_edit');
@@ -39,7 +39,7 @@ if (!empty($tag) AND empty($action))
         $html .= "<table class='maintable'>";
         $html .= "<tr><th>{$GLOBALS['strName']}</th><th>{$GLOBALS['strPoints']}</th></tr>\n";
 
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $html .= "<tr><td><input type='text' name='name[{$obj->id}]' id='name-{$obj->id}' value='{$obj->name}' /></td><td><input type='text' name='points[{$obj->id}]' id='points-{$obj->id}' value='{$obj->points}' /></td></tr>\n";
         }
@@ -68,7 +68,7 @@ else if(!empty($tag) AND $action == "edit")
     $tag = clean_dbstring($_REQUEST['tag']);
     $names = clean_dbstring($_REQUEST['name']);
     $points = clean_dbstring($_REQUEST['points']); // We don't use clean_float so we can notify if a non numeric value has been entered
-    
+
     $values = array();
 
     $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
@@ -80,11 +80,11 @@ else if(!empty($tag) AND $action == "edit")
     foreach ($names as $key => $value)
     {
         $sql = "UPDATE `{$dbBillingMatrixPoints}` SET name = '{$value}', points = {$points[$key]} WHERE id={$key} ";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             $errors++;
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             break; // Dont try and add any more
         }
     }

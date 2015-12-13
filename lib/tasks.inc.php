@@ -26,14 +26,14 @@ function postpone_task($taskid)
     {
         $sql = "SELECT duedate FROM `{$dbTasks}` AS t ";
         $sql .= "WHERE id = '{$taskid}'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $task = mysql_fetch_object($result);
+        $task = mysqli_fetch_object($result);
         if ($task->duedate != "0000-00-00 00:00:00")
         {
             $newtime = date("Y-m-d H:i:s", (mysql2date($task->duedate) + 60 * 60 * 24));
             $sql = "UPDATE `{$dbTasks}` SET duedate = '{$newtime}' WHERE id = '{$taskid}'";
-            mysql_query($sql);
+            mysqli_query($db, $sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
         }
     }
@@ -50,7 +50,7 @@ function mark_task_completed($taskid, $incident)
         $sql = "INSERT INTO `{$dbNotes}` ";
         $sql .= "(userid, bodytext, link, refid) ";
         $sql .= "VALUES ('0', '{$bodytext}', '10', '{$taskid}')";
-        mysql_query($sql);
+        mysqli_query($db, $sql);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
     }
 
@@ -58,7 +58,7 @@ function mark_task_completed($taskid, $incident)
     $sql = "UPDATE `{$dbTasks}` ";
     $sql .= "SET completion='100', enddate='$enddate' ";
     $sql .= "WHERE id='$taskid' LIMIT 1";
-    mysql_query($sql);
+    mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 }
 
@@ -79,14 +79,14 @@ function open_activities_for_incident($incientid)
     $sql .= "WHERE l.linktype=4 ";
     $sql .= "AND linkcolref={$incientid} ";
     $sql .= "AND direction='left'";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     if (mysql_num_rows($result) > 0)
     {
         //get list of tasks
         $sql = "SELECT * FROM `{$dbTasks}` WHERE enddate IS NULL ";
-        while ($tasks = mysql_fetch_object($result))
+        while ($tasks = mysqli_fetch_object($result))
         {
             if (empty($orSQL)) $orSQL = "(";
             else $orSQL .= " OR ";
@@ -97,10 +97,10 @@ function open_activities_for_incident($incientid)
         {
             $sql .= "AND {$orSQL})";
         }
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
 
         // $num = mysql_num_rows($result);
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $num[] = $obj->id;
         }
@@ -133,9 +133,9 @@ function open_activities_for_site($siteid)
         $sql .= "c.siteid = {$siteid} AND ";
         $sql .= "(i.status != " . STATUS_CLOSED . " AND i.status != " . STATUS_CLOSING . ")";
 
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
 
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $openactivites += count(open_activities_for_incident($obj->id));
         }

@@ -32,14 +32,14 @@ if (empty($mode))
     plugin_do('site_types');
 
     $sql = "SELECT * FROM `{$dbSiteTypes}` ORDER BY typename";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<table class='maintable'>";
         echo "<tr><th>{$strSiteType}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             echo "<tr class='{$shade}'><td>{$obj->typename}</td>";
             echo "<td><a href='{$_SERVER['PHP_SELF']}?mode=edit&amp;typeid={$obj->typeid}'>{$strEdit}</a></td></tr>";
@@ -83,11 +83,11 @@ elseif ($mode == 'edit')
 {
     $typeid = clean_int($_REQUEST['typeid']);
     $sql = "SELECT typename FROM `{$dbSiteTypes}` WHERE typeid = {$typeid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        list($typename) = mysql_fetch_row($result);
+        list($typename) = mysqli_fetch_row($result);
     }
     $form = new Form("sitetypes", $strSave, $dbSiteTypes, "update", $strEditSiteType);
     $form->setReturnURLFailure($_SERVER['PHP_SELF']);

@@ -23,7 +23,7 @@ $title = $strQueryByExample;
 $mode = clean_fixed_list($_REQUEST['mode'], array('', 'selectfields', 'report'));
 
 $result = mysql_list_tables($CONFIG['db_database']);
-while ($row = mysql_fetch_row($result))
+while ($row = mysqli_fetch_row($result))
 {
     $tables[] = $row[0];
 }
@@ -38,7 +38,7 @@ if (empty($mode))
     echo "<table class='maintable'>";
     echo "<tr><th>{$strTable}:</th>";
     echo "<td>";
-    $result = mysql_list_tables($CONFIG['db_database']);
+    $result = mysql_list_tables($CONFIG['db_database']); // TODO need to SQL show tables from http://php.net/manual/en/function.mysql-list-tables.php
     echo array_drop_down($tables, 'table1');
     echo "</td></tr>\n";
     /*
@@ -46,7 +46,7 @@ if (empty($mode))
     echo "<td width=400 class='shade2'>";
     $result = mysql_list_tables($db_database);
     echo "<select name='table1'>";
-    while ($row = mysql_fetch_row($result))
+    while ($row = mysqli_fetch_row($result))
     {
         echo "<option value='{$row[0]}'>{$row[0]}</option>\n";
     }
@@ -72,7 +72,7 @@ elseif ($mode == 'selectfields')
 
     echo "<tr><th valign='top'>{$strFields}:</th>";
     echo "<td width='400' class='shade2'>";
-    $result = mysql_list_fields($CONFIG['db_database'],$table1);
+    $result = mysql_list_fields($CONFIG['db_database'],$table1); // http://php.net/manual/en/function.mysql-list-fields.php
     $columns = mysql_num_fields($result);
     echo "<select name='fields[]' multiple='multiple' size='10'>";
     for ($i = 0; $i < $columns; $i++)
@@ -197,13 +197,13 @@ elseif ($mode == 'report')
     if ($sortorder != 'none') $sql .= "ORDER BY `{$sortby}` {$sortorder} ";
     if ($limit >= 1) $sql .= "LIMIT {$limit} ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $html .= "<p align='center'><code>$sql</code></p>\n";
     $html .= "<table width='100%'>";
     $html .= $htmlfieldheaders;
     $shade = 'shade1';
-    while ($row = mysql_fetch_row($result))
+    while ($row = mysqli_fetch_row($result))
     {
         $columns = count($row);
         $html .= "<tr class='$shade'>";

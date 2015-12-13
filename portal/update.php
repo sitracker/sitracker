@@ -22,8 +22,8 @@ $id = clean_int($_REQUEST['id']);
 
 // First check the portal user is allowed to access this incident
 $sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = $id LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 list($incidentcontact) = mysql_fetch_row($result);
 if ($incidentcontact == $_SESSION['contactid'])
 {
@@ -68,9 +68,9 @@ if ($incidentcontact == $_SESSION['contactid'])
     else
     {
         $usersql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='{$_SESSION['contactid']}'";
-        $result = mysql_query($usersql);
-        $user = mysql_fetch_object($result);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $usersql);
+        $user = mysqli_fetch_object($result);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         $forenames = cleanvar($user->forenames);
         $surname = cleanvar($user->surname); // If name has ' in it
@@ -94,15 +94,15 @@ if ($incidentcontact == $_SESSION['contactid'])
             $filename = cleanvar(clean_fspath($_FILES['attachment']['name']));
             $sql = "INSERT INTO `{$dbFiles}`(category, filename, size, userid, usertype, shortdescription, longdescription, filedate) ";
             $sql .= "VALUES ('public', '{$filename}', '{$_FILES['attachment']['size']}', '{$_SESSION['contactid']}', 'contact', '', '', NOW())";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
                 $errors++;
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
             else
             {
-                $fileid = mysql_insert_id();
+                $fileid = mysqli_insert_id($db);
                 $updatebody = "{$SYSLANG['strAttachment']}: [[att={$fileid}]]{$filename}[[/att]]".$updatebody;
             }
         }
@@ -121,18 +121,17 @@ if ($incidentcontact == $_SESSION['contactid'])
                 $timetext = "Next Action Time: ".date("D jS M Y @ g:i A", $timeofnextaction)."</b>\n\n";
                 $updatebody = $timetext.$updatebody;
             }
-            
         }
 
         $owner = incident_owner($id);
 
         $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility, nextaction) ";
         $sql .= "VALUES('{$id}', '0', 'webupdate', '{$owner}', '1', '{$updatebody}', '{$now}', 'show', {$timeofnextaction})";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
-            $updateid = mysql_insert_id();
+            $updateid = mysqli_insert_id($db);
         }
 
 
@@ -151,8 +150,8 @@ if ($incidentcontact == $_SESSION['contactid'])
                 {
                     $errors++;
                     $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     trigger_error("Failed creating incident attachment directory.", E_USER_WARNING);
                 }
             }
@@ -165,8 +164,8 @@ if ($incidentcontact == $_SESSION['contactid'])
             {
                 $errors++;
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
             }
 
@@ -176,8 +175,8 @@ if ($incidentcontact == $_SESSION['contactid'])
             {
                 $errors++;
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 trigger_error('User Error: Attachment too large or file upload error.', E_USER_WARNING);
                 // throwing an error isn't the nicest thing to do for the user but there seems to be no guaranteed
                 // way of checking file sizes at the client end before the attachment is uploaded. - INL
@@ -188,11 +187,11 @@ if ($incidentcontact == $_SESSION['contactid'])
         //create link
         $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
         $sql .= "VALUES(5, '{$updateid}', '{$fileid}', 'left', '0')";
-        mysql_query($sql);
-        if (mysql_error())
+        mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             $errors++;
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         // Set incident status, active if not put on hold until a future date
@@ -204,11 +203,11 @@ if ($incidentcontact == $_SESSION['contactid'])
         }
 
         $sql = "UPDATE `{$dbIncidents}` SET status={$status}, lastupdated='{$now}' WHERE id='{$id}'";
-        mysql_query($sql);
-        if (mysql_error())
+        mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             $errors++;
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         if ($errors > 0)

@@ -85,8 +85,8 @@ if (!empty($sort))
     else $sql .= "DESC";
 }
 else $sql .= "ORDER BY realname ASC ";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 echo "<table id='userslisttable' class='maintable'>";
 echo "<tr>";
@@ -110,7 +110,7 @@ echo "</tr>\n";
 
 // show results
 $shade = 'shade1';
-while ($users = mysql_fetch_object($result))
+while ($users = mysqli_fetch_object($result))
 {
     // print HTML for rows
     echo "<tr class='{$shade}'>";
@@ -226,9 +226,9 @@ while ($users = mysql_fetch_object($result))
     echo "<a href='tasks.php?user={$users->id}' title='{$strTasks}'>";
     echo icon('task', 16, $strTask)."</a> ";
     $sitesql = "SELECT COUNT(id) FROM `{$dbSites}` WHERE owner='{$users->id}'";
-    $siteresult = mysql_query($sitesql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($ownedsites) = mysql_fetch_row($siteresult);
+    $siteresult = mysqli_query($db, $sitesql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    list($ownedsites) = mysqli_fetch_row($siteresult);
     if ($ownedsites > 0)
     {
         echo "<a href='sites.php?owner={$users->id}'";
@@ -249,7 +249,7 @@ echo "<td>{$high}</td><td>{$med}</td><td>{$low}</td>";
 
 echo "</tr></table>\n";
 
-mysql_free_result($result);
+mysqli_free_result($result);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

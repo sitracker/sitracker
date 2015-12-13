@@ -196,8 +196,8 @@ elseif ($action == "edit")
         $sql .= "'{$low_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert medium
@@ -210,8 +210,8 @@ elseif ($action == "edit")
         $sql .= "'{$med_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert high
@@ -224,8 +224,8 @@ elseif ($action == "edit")
         $sql .= "'{$hi_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         // Insert critical
@@ -238,8 +238,8 @@ elseif ($action == "edit")
         $sql .= "'{$crit_review_days}', ";
         $sql .= "'{$timed}', ";
         $sql .= "'{$allow_reopen}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         if (mysql_affected_rows() == 0) trigger_error("INSERT affected zero rows", E_USER_WARNING);
 
         clear_form_data("new_servicelevel");
@@ -249,8 +249,8 @@ elseif ($action == "edit")
         {
             $sql = "INSERT INTO `{$dbBillingPeriods}` (priority, tag, customerperiod, engineerperiod) ";
             $sql .= "VALUES ('{$i}', '{$tag}', '{$customerPeriod}', '{$engineerPeriod}')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         }
 
         header("Location: service_levels.php");

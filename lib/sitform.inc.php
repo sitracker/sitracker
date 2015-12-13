@@ -182,7 +182,7 @@ class Form
             }
     
             if ($this->debug) echo $sql;
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
             if (mysql_affected_rows() <= 0)
             {

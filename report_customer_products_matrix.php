@@ -39,9 +39,9 @@ switch ($_POST['action'])
         $sql .= "WHERE p.id = m.product AND ";
         $sql .= "m.expirydate <= $max_expiry AND m.term != 'yes' AND ";
         $sql .= "p.vendorid = '{$vendor}' ORDER BY name";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        while ($prod = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        while ($prod = mysqli_fetch_object($result))
         {
             $product[$prod->id] = $prod->name;
         }
@@ -61,10 +61,10 @@ switch ($_POST['action'])
         $sql .= "AND reseller = r.id AND licence_type = l.id AND admincontact = c.id) AND ";
         $sql .= "expirydate <= $max_expiry AND expirydate >= $min_expiry AND m.term != 'yes' GROUP BY s.id ORDER BY expirydate ASC";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             $html = "<table><tr><th>Site</th>";
             $csv = "\"Site";
@@ -77,7 +77,7 @@ switch ($_POST['action'])
             $html .= "</tr>";
             $csv .= "\"\n";
 
-            while ($site = mysql_fetch_object($result))
+            while ($site = mysqli_fetch_object($result))
             {
                 $html .= "<tr><td>{$site->site}</td>";
                 $csv .= strip_comma($site->site);
@@ -91,13 +91,13 @@ switch ($_POST['action'])
                 $prodsql .= "AND m.term!='yes' ";
                 $prodsql .= "ORDER BY expirydate ASC";
 
-                $prodresult = mysql_query($prodsql);
-                if (mysql_error()) trigger_error('!Error: MySQL Query Error:',mysql_error(), E_USER_WARNING);
+                $prodresult = mysqli_query($db, $prodsql);
+                if (mysqli_error($db)) trigger_error('!Error: MySQL Query Error:',mysqli_error($db), E_USER_WARNING);
 
-                if (mysql_num_rows($prodresult)>0)
+                if (mysqli_num_rows($prodresult)>0)
                 {
-                    $numofproducts = mysql_num_rows($prodresult);
-                    while ($siteproducts = mysql_fetch_object($prodresult))
+                    $numofproducts = mysqli_num_rows($prodresult);
+                    while ($siteproducts = mysqli_fetch_object($prodresult))
                     {
                         $supportedproduct[$site->siteid][$siteproducts->productid] = $siteproducts->product;
                     }
@@ -120,7 +120,7 @@ switch ($_POST['action'])
                 $csv .= "\"\n";
             }
             $html .= "</table>";
-            mysql_free_result($result);
+            mysqli_free_result($result);
 
             // Print Headers
             if ($output == 'csv')

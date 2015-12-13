@@ -165,13 +165,13 @@ elseif ($action == "new")
         $sql  = "INSERT INTO `{$dbSites}` (name, department, address1, address2, city, county, country, postcode, telephone, fax, email, websiteurl, notes, typeid, owner) ";
         $sql .= "VALUES ('{$name}', {$department}, '{$address1}', {$address2}, {$city}, {$county}, {$country}, {$postcode}, ";
         $sql .= "{$telephone}, {$fax}, {$email}, {$websiteurl}, {$notes}, '{$typeid}', '{$owner}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $id = mysql_insert_id();
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $id = mysqli_insert_id($db);
 
         if (!$result)
         {
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             html_redirect(application_url() . 'site_new.php', FALSE, $strNewSiteFailed);
         }
         else

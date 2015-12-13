@@ -59,10 +59,10 @@ if (empty($mode))
     echo "<tr><th colspan='2'>{$strInclude}".help_link('CTRLAddRemove')."</th></tr>";
     echo "<tr><td align='center' colspan='2'>";
     $sql = "SELECT * FROM `{$dbUsers}` WHERE status > 0 ORDER BY username";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     echo "<select name='inc[]' multiple='multiple' size='20'>";
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         echo "<option value='{$row->id}'>{$row->realname}</option>\n";
     }
@@ -138,14 +138,14 @@ elseif ($_REQUEST['statistics'] == 'on')
 
     // echo $sql;
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $totalOpened = 0;
     if ($numrows > 0)
     {
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $data[$obj->id]['realname'] = $obj->realname;
             $data[$obj->id]['opened'] = $obj->numberOpened;
@@ -171,14 +171,14 @@ elseif ($_REQUEST['statistics'] == 'on')
 
     //echo $sql;
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $totalClosed = 0;
     if ($numrows > 0)
     {
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $data[$obj->id]['realname'] = $obj->realname;
             $data[$obj->id]['closed'] = $obj->numberClosed;
@@ -210,14 +210,14 @@ elseif ($_REQUEST['statistics'] == 'on')
 
     $sql .= " GROUP BY u.id ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $totalEscalated = 0;
     if ($numrows > 0)
     {
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $data[$obj->id]['realname'] = $obj->realname;
             $data[$obj->id]['escalated'] = $obj->numberEscalated;
@@ -379,9 +379,9 @@ elseif ($_REQUEST['mode'] == 'report')
 
     $sql .= " ORDER BY realname, i.id ASC ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error: $sql ".mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error: $sql ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     // MANTIS 811 this SQL use the incident body to determine whether it's been escalated
     $sql_esc = "SELECT distinct(incidentid) AS incid ";
@@ -408,13 +408,13 @@ elseif ($_REQUEST['mode'] == 'report')
 
     $sql_esc .= " GROUP BY incidentid";
 
-    $result_esc = mysql_query($sql_esc);
-    if (mysql_error()) trigger_error("!Error: MySQL Query Error in ($sql_esc)",mysql_error(), E_USER_WARNING);
-    $numrows_esc = mysql_num_rows($result_esc);
+    $result_esc = mysqli_query($db, $sql_esc);
+    if (mysqli_error($db)) trigger_error("!Error: MySQL Query Error in ($sql_esc)",mysqli_error($db), E_USER_WARNING);
+    $numrows_esc = mysqli_num_rows($result_esc);
 
     $escalated_array = array($numrows_esc);
     $count = 0;
-    while ($row = mysql_fetch_object($result_esc))
+    while ($row = mysqli_fetch_object($result_esc))
     {
         $escalated_array[$count] = $row->incid;
         $count++;
@@ -427,7 +427,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $html .= "<th>{$strTitle}</th><th>{$strEngineer}</th><th>{$strEscalated}</th></tr>";
     $csvfieldheaders .= "''{$strOpened}','{$strClosed}','{$strIncident}','{$strTitle}','{$strEngineer}','{$strEscalated}'\r\n";
     $rowcount = 0;
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $nicedate = ldate('d/m/Y', $row->opened);
         if ($row->closed > 0)

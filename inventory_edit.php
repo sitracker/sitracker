@@ -101,8 +101,8 @@ if (isset($_POST['submit']))
 
     $sql .= " WHERE id='{$id}'";
 
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     else
     {
         plugin_do('inventory_edit_saved');
@@ -112,9 +112,9 @@ if (isset($_POST['submit']))
 else
 {
     $sql = "SELECT * FROM `{$dbInventory}` WHERE id='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $row = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $row = mysqli_fetch_object($result);
 
     if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
             $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))

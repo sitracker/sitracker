@@ -230,7 +230,7 @@ function setup_exec_sql($sqlquerylist)
                 {
                     if (!empty($sql))
                     {
-                        mysql_query($sql);
+                        mysqli_query($db, $sql);
                         if (mysql_error())
                         {
                             $errno = mysql_errno();
@@ -312,11 +312,11 @@ function setup_createdb()
     if (!@mysql_error())
     {
         // See Mantis 506 for sql_mode discussion
-        @mysql_query("SET SESSION sql_mode = '';");
+        @mysqli_query($db, "SET SESSION sql_mode = '';");
 
         // Connected to database
         echo "<h2>Creating empty database...</h2>";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if ($result)
         {
             $res = TRUE;
@@ -355,7 +355,7 @@ function setup_check_adminuser()
 {
     global $dbUsers;
     $sql = "SELECT id FROM `{$dbUsers}` WHERE id=1 OR username='admin' OR roleid='1'";
-    $result = @mysql_query($sql);
+    $result = @mysqli_query($db, $sql);
     if (mysql_num_rows($result) >= 1) return TRUE;
     else FALSE;
 }
@@ -394,14 +394,14 @@ function install_dashboard_components()
 {
     global  $dbDashboard;
     $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled = 'true'";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     //echo "<h2>Dashboard</h2>";
     
     $errors = array();
     
-    while ($dashboardnames = mysql_fetch_object($result))
+    while ($dashboardnames = mysqli_fetch_object($result))
     {
         $version = 1;
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
@@ -425,12 +425,12 @@ function install_dashboard_components()
 function upgrade_dashlets()
 {
     $sql = "SELECT * FROM `{$GLOBALS['dbDashboard']}` WHERE enabled = 'true'";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
     $html = '';
 
-    while ($dashboardnames = mysql_fetch_object($result))
+    while ($dashboardnames = mysqli_fetch_object($result))
     {
         $version = 1;
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
@@ -456,7 +456,7 @@ function upgrade_dashlets()
                 }
 
                 $upgrade_sql = "UPDATE `{$GLOBALS['dbDashboard']}` SET version = '{$version}' WHERE id = {$dashboardnames->id}";
-                mysql_query($upgrade_sql);
+                mysqli_query($db, $upgrade_sql);
                 if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
 
                 $html .= "<p>{$dashboardnames->name} upgraded</p>";
@@ -525,7 +525,7 @@ function create_admin_user($password, $email)
     $password = md5($password);
     $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `lastseen`) ";
     $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', NOW());";
-    mysql_query($sql);
+    mysqli_query($db, $sql);
     if (mysql_error())
     {
        trigger_error(mysql_error(), E_USER_WARNING);
@@ -546,7 +546,7 @@ function update_sit_version_number($version)
 {
     $html = '';
     $sql = "REPLACE INTO `{$GLOBALS['dbSystem']}` ( `id`, `version`) VALUES (0, {$version})";
-    mysql_query($sql);
+    mysqli_query($db, $sql);
     if (mysql_error())
     {
         $html .= "<p class='error'>Could not store new schema version number '{$version}'. ".mysql_error()."</p>";
@@ -569,11 +569,11 @@ function current_schema_version()
 {
     $$installed_version = 0;
     $sql = "SELECT `version` FROM `{$GLOBALS['dbSystem']}` WHERE id = 0";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
     if (mysql_num_rows($result) > 0)
     {
-        list($installed_version) = mysql_fetch_row($result);
+        list($installed_version) = mysqli_fetch_row($result);
     }
 
     return $installed_version;
@@ -592,8 +592,8 @@ function current_schema_version()
 function setup_check_column_exists($table_name, $column_name)
 {
     $sql = "SHOW COLUMNS FROM {$table_name} ";
-    $result = mysql_query($sql);
-    while ($tb_result = mysql_fetch_row($result))
+    $result = mysqli_query($db, $sql);
+    while ($tb_result = mysqli_fetch_row($result))
     {
         $column_array[] = $tb_result[0];
     }
@@ -618,10 +618,10 @@ function check_mysql_privileges($privs)
 
     $sql = "SHOW GRANTS FOR CURRENT_USER()";
 
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 
-    while ($row = mysql_fetch_row($result))
+    while ($row = mysqli_fetch_row($result))
     {
         if (preg_match('/(GRANT )(.*) ON.*$/', $row[0], $m))
         {
@@ -714,7 +714,7 @@ function upgrade_390_migrate_user_config()
     $errors = 0;
 
     $sql_oldconfig = "SELECT id, var_emoticons, var_utc_offset, var_i18n, var_style, var_incident_refresh, var_update_order, var_num_updates_view FROM `{$GLOBALS['dbUsers']}`";
-    $result_oldconfig = mysql_query($sql_oldconfig);
+    $result_oldconfig = mysqli_query($db, $sql_oldconfig);
     if (mysql_error())
     {
         trigger_error(mysql_error(), E_USER_WARNING);
@@ -722,7 +722,7 @@ function upgrade_390_migrate_user_config()
         $errors++;
     }
 
-    while ($obj = mysql_fetch_object($result_oldconfig))
+    while ($obj = mysqli_fetch_object($result_oldconfig))
     {
         $s = array();
         if (!empty($obj->var_emoticons)) $s[] = "({$obj->id}, 'show_emoticons', '".strtoupper($obj->var_emoticons)."')";
@@ -733,9 +733,9 @@ function upgrade_390_migrate_user_config()
         if (!empty($obj->var_num_updates_view)) $s[] = "({$obj->id}, 'updates_per_page', '{$obj->var_num_updates_view}')";
 
         $sql_style = "SELECT iconset FROM `{$dbInterfaceStyles}` WHERE id = {$obj->var_style}";
-        $result_style = mysql_query($sql_style);
+        $result_style = mysqli_query($db, $sql_style);
         if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if ($obj_style = mysql_fetch_object($result_style))
+        if ($obj_style = mysqli_fetch_object($result_style))
         {
             $s[] = "({$obj->id}, 'iconset', '{$obj_style->iconset}')";
         }
@@ -743,7 +743,7 @@ function upgrade_390_migrate_user_config()
         if (!empty($s))
         {
             $sql_insert = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ".implode(", ", $s);
-            $result_insert = mysql_query($sql_insert);
+            $result_insert = mysqli_query($db, $sql_insert);
             if (mysql_error())
             {
                 trigger_error(mysql_error(), E_USER_WARNING);
@@ -757,13 +757,13 @@ function upgrade_390_migrate_user_config()
         $sql_alter = "ALTER TABLE `{$GLOBALS['dbUsers']}` DROP COLUMN var_incident_refresh, DROP COLUMN var_update_order, DROP COLUMN var_num_updates_view, ";
         $sql_alter .= "DROP COLUMN var_style, DROP COLUMN var_hideautoupdates, DROP COLUMN var_hideheader, DROP COLUMN var_monitor, ";
         $sql_alter .= "DROP COLUMN var_i18n, DROP COLUMN var_utc_offset, DROP COLUMN var_emoticons ";
-        $result_alter = mysql_query($sql_alter);
+        $result_alter = mysqli_query($db, $sql_alter);
         if (mysql_error())
         {
             trigger_error(mysql_error(), E_USER_WARNING);
         }
         $sql_drop = "DROP TABLE IF EXISTS `{$dbInterfaceStyles}`";
-        $result_drop = mysql_query($sql_drop);
+        $result_drop = mysqli_query($db, $sql_drop);
         if (mysql_error())
         {
             trigger_error(mysql_error(), E_USER_WARNING);
@@ -1006,7 +1006,7 @@ function update_390_country_list()
     foreach ($countryList AS $code => $oldName)
     {
         $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET country = '{$code}' WHERE country = '{$oldName}'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
         if (in_array($oldName, $countriesToAlert) AND mysql_affected_rows() > 0)
@@ -1014,9 +1014,9 @@ function update_390_country_list()
             // We need to alert
             $sql = "SELECT c.id, c.forenames, c.surname, s.name FROM `{$GLOBALS['dbContacts']}` AS c, `{$GLOBALS['dbSites']}` AS s ";
             $sql .= "WHERE c.siteid = s.id AND c.country = '{$code}'";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $a = array('code' => $code, 'contactid' => $obj->id, 'sitename' => $obj->name, 'firstname' => $obj->forenames, 'surname' => $obj->surname);
                 $alertContacts[] = $a;
@@ -1024,7 +1024,7 @@ function update_390_country_list()
         }
 
         $sql = "UPDATE `{$GLOBALS['dbSites']}` SET country = '{$code}' WHERE country = '{$oldName}'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
         if (in_array($oldName, $countriesToAlert) AND mysql_affected_rows() > 0)
@@ -1032,9 +1032,9 @@ function update_390_country_list()
             // We need to alert
             $sql = "SELECT s.id, s.name FROM `{$GLOBALS['dbSites']}` AS s ";
             $sql .= "WHERE s.country = '{$code}'";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $a = array('code' => $code, 'siteid' => $obj->id, 'sitename' => $obj->name);
                 $alertSites[] = $a;
@@ -1042,17 +1042,17 @@ function update_390_country_list()
         }
 
         $sql = "UPDATE `{$GLOBALS['dbConfig']}` SET value = '{$code}' WHERE value = '{$oldName}' AND config = 'home_country'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
     }
 
     // Change to a two character column now
     $sql = "ALTER TABLE `{$GLOBALS['dbContacts']}` CHANGE `country` `country` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
     $sql = "ALTER TABLE `{$GLOBALS['dbSites']}` CHANGE `country` `country` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
 
     $str = '';

@@ -361,7 +361,7 @@ function get_public_holidays($startdate, $enddate)
     $sql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` ";
     $sql .= "WHERE type = ".HOL_PUBLIC." AND (`date` >= FROM_UNIXTIME({$startdate}) AND `date` <= FROM_UNIXTIME({$enddate}))";
 
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
 
     $publicholidays = array();
@@ -369,7 +369,7 @@ function get_public_holidays($startdate, $enddate)
     if (mysql_num_rows($result) > 0)
     {
         // Assume public holidays are ALL day
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $holiday = new Holiday();
             $holiday->starttime = $obj->date;
@@ -605,13 +605,13 @@ function is_day_bank_holiday($day, $month, $year)
     {
         $sql = "SELECT date FROM `{$dbHolidays}` WHERE type = 10";
         
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if (mysql_error())
         {
             trigger_error(mysql_error(), E_USER_ERROR);
         }
         
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $bankholidays[$obj->date] = '1';
         }

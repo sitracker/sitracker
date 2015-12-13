@@ -88,8 +88,8 @@ else
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbProducts}` (name, vendorid, description) VALUES ('{$name}', '{$vendor}', '{$description}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result) echo "<p class='error'>".sprintf($strNewXfailed, $strProduct)."\n";
         else

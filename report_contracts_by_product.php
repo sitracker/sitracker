@@ -27,15 +27,15 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
 $sql = "SELECT * FROM `{$dbProducts}` ";
-$result = mysql_query($sql);
+$result = mysqli_query($db, $sql);
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
-    while ($product = mysql_fetch_object($result))
+    while ($product = mysqli_fetch_object($result))
     {
         $csql = "SELECT COUNT(id) AS count FROM `{$dbMaintenance}` WHERE product = {$product->id} AND NOT term = 'yes' AND expirydate > {$now}";
-        $cresult = mysql_query($csql);
-        list($contract_count) = mysql_fetch_row($cresult);
+        $cresult = mysqli_query($db, $csql);
+        list($contract_count) = mysqli_fetch_row($cresult);
         if ($contract_count > 0) $productlist[$product->id] = $contract_count;
     }
     arsort($productlist, SORT_NUMERIC);

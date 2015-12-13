@@ -53,9 +53,9 @@ if ($startdate != 'all')
     $sql.="AND `date` = '{$startdate}' AND type='{$type}' AND length='{$length}'";
 }
 
-$result = mysql_query($sql);
+$result = mysqli_query($db, $sql);
 
-if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
 // Don't send email when approving 'all' to avoid an error message
 // TODO this needs moving into a trigger - logged as Mantis 1567 PH
@@ -82,7 +82,7 @@ if ($user != 'all')
 
 plugin_do('holiday_acknowledge_action');
 
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 header("Location: holiday_request.php?user={$view}&mode=approval");
 exit;
 ?>

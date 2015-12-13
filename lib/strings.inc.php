@@ -46,8 +46,8 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     if ($CONFIG['enable_inbound_mail'] == TRUE)
     {
         $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
-        $result = mysql_query($sql);
-        list($inbox_count) = mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        list($inbox_count) = mysqli_fetch_row($result);
         if ($inbox_count > 0)
         {
             $inbox_count = " <strong>(".$inbox_count.")</strong>";

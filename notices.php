@@ -48,30 +48,30 @@ elseif ($action == 'post')
 
     //post new notice
     $sql = "SELECT id FROM `{$dbUsers}` WHERE status != 0";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
     //do this once so we can get a referenceID
-    $user = mysql_fetch_object($result);
+    $user = mysqli_fetch_object($result);
     $sql = "INSERT INTO `{$dbNotices}` (userid, type, text, timestamp, durability) ";
     $sql .= "VALUES({$user->id}, {$type}, '{$text}', NOW(), '{$durability}')";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
     }
     else
     {
         $refid = mysql_insert_id();
         $sql = "UPDATE `$dbNotices` SET referenceid='{$refid}' WHERE id='{$refid}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        while ($user = mysql_fetch_object($result))
+        while ($user = mysqli_fetch_object($result))
         {
             $sql = "INSERT INTO `{$dbNotices}` (userid, referenceid, type, text, timestamp, durability) ";
             $sql .= "VALUES({$user->id}, '{$refid}', {$type}, '{$text}', NOW(), '{$durability}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         }
         html_redirect('notices.php');
     }
@@ -81,14 +81,14 @@ elseif ($action == 'delete')
     $noticeid = clean_int($_REQUEST['id']);
 
     $sql = "SELECT referenceid, type FROM `{$dbNotices}` WHERE id='{$noticeid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $noticeobj = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $noticeobj = mysqli_fetch_object($result);
 
     $sql = "DELETE FROM `{$dbNotices}` WHERE referenceid='{$noticeobj->referenceid}' ";
     $sql .= "AND type='{$noticeobj->type}' ";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     html_redirect('notices.php');
 }
@@ -100,14 +100,14 @@ else
     //get all notices
     $sql = "SELECT * FROM `{$dbNotices}` WHERE type=".NORMAL_NOTICE_TYPE." OR type=".WARNING_NOTICE_TYPE." ";
     $sql .= "GROUP BY referenceid";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
     $shade = 'shade1';
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<table class='maintable'>";
         echo "<tr><th>{$strID}</th><th>{$strDate}</th><th>{$strNotice}</th><th>{$strActions}</th></tr>\n";
-        while ($notice = mysql_fetch_object($result))
+        while ($notice = mysqli_fetch_object($result))
         {
             echo "<tr class='$shade'><td>{$notice->id}</td>";
             echo "<td>".ldate($CONFIG['dateformat_datetime'], mysqlts2date($notice->timestamp))."</td>";

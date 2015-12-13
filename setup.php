@@ -283,9 +283,9 @@ switch ($_REQUEST['action'])
         break;
     case 'checkdbstate':
         $db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
-        if (@mysql_error())
+        if (@mysqli_error($db))
         {
-            echo "<p class='error'>Setup could not connect to the database server '{$CONFIG['db_hostname']}'. MySQL Said: ".mysql_error()."</p>";
+            echo "<p class='error'>Setup could not connect to the database server '{$CONFIG['db_hostname']}'. MySQL Said: ".mysqli_error($db)."</p>";
             echo setup_configure();
         }
         else
@@ -297,13 +297,13 @@ switch ($_REQUEST['action'])
             if ($status->get_status() != INSTALL_FATAL)
             {
                 mysql_select_db($CONFIG['db_database'], $db);
-                if (mysql_error())
+                if (mysqli_error($db))
                 {
                     if (!empty($CONFIG['db_username']))
                     {
                         if ($cfg_file_exists)
                         {
-                            echo "<p class='error'>".mysql_error()."<br />Could not select database";
+                            echo "<p class='error'>".mysqli_error($db)."<br />Could not select database";
                             if ($CONFIG['db_database']!='')
                             {
                                 echo " '{$CONFIG['db_database']}', check the database name you have configured matches the database in MySQL";
@@ -408,8 +408,8 @@ switch ($_REQUEST['action'])
         else
         {
             $sql = "SHOW TABLES LIKE '{$dbUsers}'";
-            $result = @mysql_query($sql);
-            if (mysql_error() OR mysql_num_rows($result) < 1)
+            $result = @mysqli_query($db, $sql);
+            if (mysqli_error($db) OR mysqli_num_rows($result) < 1)
             {
                 echo "<p>Next we will create a database schema</p>";
                 echo setup_button('', 'Next');
@@ -446,7 +446,7 @@ switch ($_REQUEST['action'])
     default:
         require (APPLICATION_LIBPATH . 'tablenames.inc.php');
         $db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
-        if (@mysql_error())
+        if (@mysqli_error($db))
         {
             echo setup_configure();
         }
@@ -459,11 +459,11 @@ switch ($_REQUEST['action'])
             if ($status->get_status() != INSTALL_FATAL)
             {
                 mysql_select_db($CONFIG['db_database'], $db);
-                if (mysql_error())
+                if (mysqli_error($db))
                 {
                     if (!empty($CONFIG['db_username']))
                     {
-                        echo "<p class='error'>".mysql_error()."<br />Could not select database";
+                        echo "<p class='error'>".mysqli_error($db)."<br />Could not select database";
                         if ($CONFIG['db_database'] != '')
                         {
                             echo " '{$CONFIG['db_database']}', check the database name you have configured matches the database in MySQL";
@@ -514,14 +514,14 @@ switch ($_REQUEST['action'])
                     echo "<p class='info'>Connected to database - ok</p>";
                     // Check to see if we're already installed
                     $sql = "SHOW TABLES LIKE '{$dbUsers}'";
-                    $result = mysql_query($sql);
-                    if (mysql_error())
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db))
                     {
-                        echo "<p class='error'>Could not find a users table, an error occurred ".mysql_error()."</p>";
+                        echo "<p class='error'>Could not find a users table, an error occurred ".mysqli_error($db)."</p>";
                         exit;
                     }
 
-                    if (mysql_num_rows($result) < 1)
+                    if (mysqli_num_rows($result) < 1)
                     {
                         echo "<h2>Creating new database schema...</h2>";
 
@@ -627,46 +627,46 @@ switch ($_REQUEST['action'])
                             $sqlup1 = "SELECT s.billingmatrix, s.contractid FROM `{$dbService}` AS s, `{$dbMaintenance}` AS m, `{$dbServiceLevels}` AS sl ";
                             $sqlup1 .= "WHERE s.contractid = m.id AND m.servicelevel = sl.tag AND sl.priority = 1 AND sl.timed = 'yes' ";
                             $sqlup1 .= "GROUP BY serviceid ORDER BY contractid";
-                            $resultup1 = mysql_query($sqlup1);
-                            if (mysql_error())
+                            $resultup1 = mysqli_query($db, $sqlup1);
+                            if (mysqli_error($db))
                             {
                                 $billingmatrixerror = TRUE;
-                                trigger_error(mysql_error(), E_USER_WARNING);
+                                trigger_error(mysqli_error($db), E_USER_WARNING);
                             }
 
-                            while ($obj = mysql_fetch_object($resultup1))
+                            while ($obj = mysqli_fetch_object($resultup1))
                             {
                                 if (empty($obj->billingmatrix) OR $obj->billingmatrix === 1)
                                 {
                                     $obj->billingmatrix = "Default";
                                 }
                                 $sqlup2 = "UPDATE `{$dbMaintenance}` SET billingmatrix = '{$obj->billingmatrix}' WHERE id = {$obj->contractid}";
-                                mysql_query($sqlup2);
-                                if (mysql_error())
+                                mysqli_query($db, $sqlup2);
+                                if (mysqli_error($db))
                                 {
                                     $billingmatrixerror = TRUE;
-                                    trigger_error(mysql_error(), E_USER_WARNING);
+                                    trigger_error(mysqli_error($db), E_USER_WARNING);
                                 }
                             }
 
                             if (!$billingmatrixerror)
                             {
                                 $sqlup3 = "ALTER TABLE `{$dbService}` DROP `billingmatrix`";
-                                mysql_query($sqlup2);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                                mysqli_query($db, $sqlup2);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                             }
                             // END Move billingmatrix to contract
 
 
                             $sqlup4 = "SELECT contractid, SUM(unitrate) AS unitrate, SUM(incidentrate) AS incidentrate FROM `{$dbService}` WHERE unitrate > 0 OR incidentrate > 0 GROUP BY contractid";
-                            $resultup4 = mysql_query($sqlup4);
-                            if (mysql_error())
+                            $resultup4 = mysqli_query($db, $sqlup4);
+                            if (mysqli_error($db))
                             {
                                 $serviceerror = TRUE;
-                                trigger_error(mysql_error(), E_USER_WARNING);
+                                trigger_error(mysqli_error($db), E_USER_WARNING);
                             }
 
-                            while ($obj = mysql_fetch_object($resultup4))
+                            while ($obj = mysqli_fetch_object($resultup4))
                             {
                                 if ($obj->unitrate > 0 AND $obj->incidentrate > 0)
                                 {
@@ -681,11 +681,11 @@ switch ($_REQUEST['action'])
                                     if ($obj->incidentrate > 0) $billingtype = "'IncidentBillable'";
 
                                     $sqlup4a = "UPDATE `{$dbMaintenance}` SET billingtype = {$billingtype} WHERE id = {$obj->contractid}";
-                                    $resultup4a = mysql_query($sqlup4a);
-                                    if (mysql_error())
+                                    $resultup4a = mysqli_query($db, $sqlup4a);
+                                    if (mysqli_error($db))
                                     {
                                         $serviceerror = TRUE;
-                                        trigger_error(mysql_error(), E_USER_WARNING);
+                                        trigger_error(mysqli_error($db), E_USER_WARNING);
                                     }
                                 } 
                             }
@@ -693,18 +693,18 @@ switch ($_REQUEST['action'])
                             if (!$serviceerror)
                             {
                                 $sqlup4b = "ALTER TABLE `{$dbService}` DROP COLUMN `unitrate`, DROP COLUMN `incidentrate`, DROP COLUMN `billingmatrix`";
-                                mysql_query($sqlup4b);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                                mysqli_query($db, $sqlup4b);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                             }
 
                             // We can't do this in SQL as MySQL will not let you delete from a table where the table is in the subquery
                             $sqlup5 = "SELECT ti.id FROM `{$dbTempIncoming}` AS ti, `{$dbUpdates}` AS u WHERE ti.updateid = u.id and u.incidentid <> 0";
-                            $resultup5 = mysql_query($sqlup5);
-                            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            $resultup5 = mysqli_query($db, $sqlup5);
+                            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
                             $tempIncomingsToRemove = array();
 
-                            while ($obj = mysql_fetch_object($resultup5))
+                            while ($obj = mysqli_fetch_object($resultup5))
                             {
                                 $tempIncomingsToRemove[] = $obj->id;
                             }
@@ -712,8 +712,8 @@ switch ($_REQUEST['action'])
                             if (!empty($tempIncomingsToRemove))
                             {
                                 $sqlup5a = "DELETE FROM `{$dbTempIncoming}` WHERE id IN (".implode(", ", $tempIncomingsToRemove).")";
-                                mysql_query($sqlup5a);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                                mysqli_query($db, $sqlup5a);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
                             }
 
 
@@ -918,50 +918,50 @@ switch ($_REQUEST['action'])
                                 `country`, `postcode`, `notes`, `typeid`, `freesupport`, `licenserx`,
                                  `owner`) VALUES ('{$sitename}', {$sitedepartment}, '{$siteaddress1}', {$siteaddress2},
                                 {$sitecity}, {$sitecounty}, {$sitecountry}, {$sitepostcode}, 'Created during setup', 1, 0, 0, 0)";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 $siteid = mysql_insert_id();
 
                                 $username = mb_strtolower(mb_substr($contactsurname, 0, strcspn($contactsurname, " "), 'UTF-8'));
                                 $sql =  "INSERT INTO `{$dbContacts}` (`username`, `password`, `forenames`, `surname`, `jobtitle`, `courtesytitle`, `siteid`, `email`, `phone`, `mobile`, `department`, `timestamp_added`, `timestamp_modified`) VALUES
                                 ('{$username}', MD5(RAND()), '{$contactforenames}', '{$contactsurname}', {$contactjobtitle}, {$courtesytitle}, {$siteid}, '{$contactemail}', {$contactphone}, {$contactmobile}, {$contactdepartment}, 1132930556, 1187360933)";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 $contactid = mysql_insert_id();
                                 $username = $username . $newid;
                                 $sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$contactid}'";
 
                                 $sql = "INSERT INTO `{$dbProducts}` (vendorid, name, description) VALUES ({$productvendor}, '{$productname}', '{$productdescription}')";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 $productid = mysql_insert_id();
 
                                 $sql = "INSERT INTO `{$dbSoftware}` (`name`, `lifetime_start`, `lifetime_end`) VALUES ('{$skill}', NULL, NULL)";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 $skillid = mysql_insert_id();
 
                                 $sql = "INSERT INTO `{$dbResellers}` (name) VALUES ('{$reseller_name}')";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 $resellerid = mysql_insert_id();
 
                                 $expirydate = strtotime("+1 year");
 
                                 $sql = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) ";
                                 $sql .= "VALUES ({$siteid},{$productid},{$resellerid},{$expirydate},1,4,0,0,'Created during the installer',1,'no','standard',0)";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 $contractid = mysql_insert_id();
 
                                 $sql = "INSERT INTO `{$dbSoftwareProducts}` VALUES ({$productid},{$skillid})";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 mysql_insert_id();
 
                                 $sql = "INSERT INTO `{$dbSupportContacts}` VALUES ({$contractid},{$contactid})";
-                                $result = mysql_query($sql);
-                                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                                $result = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                                 mysql_insert_id();
 
                                 $_SESSION['promptinitialdata'] = FALSE;

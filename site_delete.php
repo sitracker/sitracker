@@ -40,15 +40,15 @@ else
 {
     // Look for associated contacts
     $sql = "SELECT COUNT(id) FROM `{$dbContacts}` WHERE siteid='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($numcontacts) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($numcontacts) = mysqli_fetch_row($result);
     
     // Look for associated maintenance contracts
     $sql = "SELECT COUNT(id) FROM `{$dbMaintenance}` WHERE site='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($numcontracts) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($numcontracts) = mysqli_fetch_row($result);
     
     if (empty($destinationid) AND ($numcontacts > 0 OR $numcontracts > 0))
     {
@@ -56,9 +56,9 @@ else
         echo "<h2>{$strDeleteSite}</h2>";
         plugin_do('site_delete');
         $sql = "SELECT * FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
-        $siteresult = mysql_query($sql);
-        $site = mysql_fetch_object($siteresult);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $siteresult = mysqli_query($db, $sql);
+        $site = mysqli_fetch_object($siteresult);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         echo "<table class='maintable vertical'>";
         echo "<tr><th>{$strSite}:</th><td><h3>{$site->name}</h3></td></tr>";
         echo "<tr><th>{$strDepartment}:</th><td>{$site->department}</td></tr>";
@@ -92,8 +92,8 @@ else
     else if (empty($destinationid))
     {
         $sql = "DELETE FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         else
         {
             plugin_do('site_delete_saved');
@@ -105,17 +105,17 @@ else
         // Records need moving before we delete
         // Move contacts
         $sql = "UPDATE `{$dbContacts}` SET siteid='{$destinationid}' WHERE siteid='{$id}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         // Move contracts
         $sql = "UPDATE `{$dbMaintenance}` SET site='{$destinationid}' WHERE site='{$id}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbSites}` WHERE id='{$id}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         journal(CFG_LOGGING_NORMAL, 'Site Deleted', "Site {$id} was deleted", CFG_JOURNAL_SITES, $id);
 

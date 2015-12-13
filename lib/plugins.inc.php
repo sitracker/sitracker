@@ -124,10 +124,10 @@ function sit_upgrade_plugin_check($doupgrade, $application_version)
 
     // Read config from database (this overrides any config in the config files
     $sql = "SELECT * FROM `{$GLOBALS['dbConfig']}` WHERE config = 'plugins'";
-    $result = @mysql_query($sql);
+    $result = @mysqli_query($db, $sql);
     if ($result AND mysql_num_rows($result) > 0)
     {
-        while ($conf = mysql_fetch_object($result))
+        while ($conf = mysqli_fetch_object($result))
         {
             if ($conf->value === 'TRUE') $conf->value = TRUE;
             if ($conf->value === 'FALSE') $conf->value = FALSE;

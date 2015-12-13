@@ -138,11 +138,11 @@ if (cleanvar($_REQUEST['action']) == 'update')
 
         $updatesql .= "WHERE id='{$id}'";
 
-        mysql_query($updatesql);
+        mysqli_query($db, $updatesql);
 
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            trigger_error("MySQL Query Error " . mysql_error(), E_USER_ERROR);
+            trigger_error("MySQL Query Error " . mysqli_error($db), E_USER_ERROR);
         }
 
         clear_form_data('portalcontactdetails');
@@ -175,7 +175,7 @@ elseif (isset($_POST['add']))
         $sql = "INSERT INTO `{$dbSupportContacts}`(`maintenanceid`, `contactid`) ";
         $sql .= "VALUES('{$maintid}', '{$contactid}') ";
         mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}");
     }
 }
@@ -186,8 +186,8 @@ else
     $sql .= "WHERE c.siteid = s.id ";
     $sql .= "AND c.id={$id}";
     $query = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $user = mysql_fetch_object($query);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $user = mysqlu_fetch_object($query);
 
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
     if ($user->siteid != $_SESSION['siteid'])
