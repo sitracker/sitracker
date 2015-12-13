@@ -12,22 +12,22 @@ $dashboard_holidays_version = 1.01;
 
 function dashboard_holidays($dashletid)
 {
-    global $sit, $CONFIG, $iconset;
-    global $dbUsers;
+    global $sit, $CONFIG, $iconset, $db, $dbUsers;
+
     $user = $sit[2];
     echo "<div class='windowbox' style='width: 95%;' id='$dashletid'>";
     echo "<div class='windowtitle'>".icon('holiday', 16)." {$GLOBALS['strWhosAwayToday']}</div>";
     echo "<div class='window'>";
     $sql  = "SELECT * FROM `{$dbUsers}` WHERE status != ".USERSTATUS_ACCOUNT_DISABLED;
     $sql . " AND status != ".USERSTATUS_IN_OFFICE;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) >=1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) >=1)
     {
         echo "<table>";
         echo "<tr><th>{$GLOBALS['strName']}</th><th>{$GLOBALS['strStatus']}</th></tr>";
         $shade = 'shade1';
-        while ($users = mysql_fetch_object($result))
+        while ($users = mysqli_fetch_object($result))
         {
             echo "<tr class='{$shade}'>";
             echo "<td><strong>{$users->realname}</strong></td>";

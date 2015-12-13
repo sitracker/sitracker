@@ -33,11 +33,11 @@ if ($incidentcontact == $_SESSION['contactid'])
         echo "<h2>".icon('note', 32, $strUpdateIncident);
         echo " {$strUpdateIncident} {$id}</h2>";
         echo "<div id='update' align='center'><form action='{$_SERVER[PHP_SELF]}?id={$id}' method='post' id='updateform' name='updateform' enctype='multipart/form-data'>";
-        
+
         echo "<table class='vertical maintable' width='50%'>";
-        
+
         echo "<tr><th>{$strUpdate}:</th><td><textarea cols='60' rows='10' name='update'></textarea></td></tr>";
-        
+
         echo "<tr><th>";
         echo "{$strPutIncidentOnHoldUntil}</th><td><input name='timetonextaction_date' id='timetonextaction_date' size='10' /> ".date_picker("updateform.timetonextaction_date");
         echo "</td></tr>";
@@ -59,7 +59,7 @@ if ($incidentcontact == $_SESSION['contactid'])
         echo "(&lt;{$att_file_size}):</th><td>";
         echo "<input type='hidden' name='MAX_FILE_SIZE' value='{$CONFIG['upload_max_filesize']}' />";
         echo "<input type='file' name='attachment' size='20' /></td></tr>";
-        
+
         echo "</table>";
         echo "<p><input type='submit' value=\"{$strUpdate}\"/></p></form></div>";
 

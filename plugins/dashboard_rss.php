@@ -22,7 +22,7 @@ function dashboard_rss($dashletid)
 
 function dashboard_rss_install()
 {
-    global $CONFIG;
+    global $CONFIG, $db;
 
     $schema = "CREATE TABLE `{$CONFIG['db_tableprefix']}dashboard_rss` (
     `owner` smallint(6) NOT NULL,
@@ -32,9 +32,9 @@ function dashboard_rss_install()
     KEY `owner` (`owner`,`url`)
     ) ENGINE = MYISAM ;
     ";
-    $result = mysql_query($schema);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    if (mysql_error())
+    $result = mysqli_query($db, $schema);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    if (mysqli_error($db))
     {
         echo "<p>Dashboard RSS failed to install, please run the following SQL statement on the SiT database to create the required schema.</p>";
         echo "<pre>{$schema}</pre>";
@@ -43,8 +43,8 @@ function dashboard_rss_install()
     else $res = TRUE;
 
     $datasql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_rss` (`owner`, `url`, `items`, `enabled`) VALUES (1, 'http://sourceforge.net/export/rss2_projnews.php?group_id=160319', 3, 'true');";
-    $result = mysql_query($datasql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $datasql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     return $res;
 }
@@ -62,8 +62,8 @@ function dashboard_rss_display($dashletid)
     require_once(APPLICATION_LIBPATH . 'magpierss/rss_fetch.inc');
 
     $sql = "SELECT url, items FROM `{$CONFIG['db_tableprefix']}dashboard_rss` WHERE owner = {$sit[2]} AND enabled = 'true'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     define ('MAGPIE_CACHE_ON',TRUE);
     define ('MAGPIE_CACHE_DIR', $CONFIG['attachment_fspath'].'feeds');
@@ -71,9 +71,9 @@ function dashboard_rss_display($dashletid)
 
     $feedallowedtags = '<img><strong><em><br><p>';
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($row = mysql_fetch_row($result))
+        while ($row = mysqli_fetch_row($result))
         {
             $url = $row[0];
             if ($rss = fetch_rss( $url ))
@@ -180,8 +180,8 @@ function dashboard_rss_edit($dashletid)
             $enable = cleanvar($_REQUEST['enable']);
             $items = cleanvar($_REQUEST['items']);
             $sql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_rss` (owner, url, items, enabled) VALUES ({$sit[2]},'{$url}','{$items}','true')"; //SET enabled = '{$enable}' WHERE url = '{$url}' AND owner = {$sit[2]}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
             if (!$result)
             {
@@ -197,11 +197,11 @@ function dashboard_rss_edit($dashletid)
             $url = cleanvar(urldecode($_REQUEST['url']));
             $sql = "SELECT * FROM `{$CONFIG['db_tableprefix']}dashboard_rss` WHERE owner = {$sit[2]} AND url = '{$url}' LIMIT 1 ";
             if ($CONFIG['debug']) $dbg .= print_r($sql,true);
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_num_rows($result) > 0)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+            if (mysqli_num_rows($result) > 0)
             {
-                $feed = mysql_fetch_object($result);
+                $feed = mysqli_fetch_object($result);
                 if ($feed->items == '')
                 {
                     $feed->items = 0;
@@ -228,8 +228,8 @@ function dashboard_rss_edit($dashletid)
             $oldurl = cleanvar($_REQUEST['oldurl']);
             $items = cleanvar($_REQUEST['items']);
             $sql = "UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET url = '{$url}', items = '{$items}' WHERE url = '{$oldurl}' AND owner = {$sit[2]}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db) ,E_USER_ERROR);
 
             if (!$result)
             {
@@ -245,11 +245,11 @@ function dashboard_rss_edit($dashletid)
             $url = urldecode(cleanvar($_REQUEST['url']));
             $enable = cleanvar($_REQUEST['enable']);
             $sql = "UPDATE `{$CONFIG['db_tableprefix']}dashboard_rss` SET `enabled` = '{$enable}' WHERE `url` = '{$url}' AND `owner` = {$sit[2]}";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
-            if (mysql_affected_rows() < 1) html_redirect("edit_rss_feeds.php", FALSE, "Changed enabled state failed");
-            if (mysql_affected_rows() < 1)
+            if (mysqli_affected_rows($db) < 1) html_redirect("edit_rss_feeds.php", FALSE, "Changed enabled state failed");
+            if (mysqli_affected_rows($db) < 1)
             {
                 echo "<p class='error'>{$GLOBALS['strFailed']}</p>";
             }
@@ -263,8 +263,8 @@ function dashboard_rss_edit($dashletid)
             $url = urldecode(cleanvar($_REQUEST['url']));
             $enable = cleanvar($_REQUEST['enable']);
             $sql = "DELETE FROM `{$CONFIG['db_tableprefix']}dashboard_rss` WHERE url = '{$url}' AND owner = {$sit[2]}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
             if (!$result)
             {
@@ -280,15 +280,15 @@ function dashboard_rss_edit($dashletid)
             echo "<h2>".icon('feed-icon', 32)." {$GLOBALS['strEditRSSAtomFeed']}</h2>";
 
             $sql = "SELECT * FROM `{$CONFIG['db_tableprefix']}dashboard_rss` WHERE owner = {$sit[2]}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_num_rows($result) > 0)
             {
                 echo "<table class='maintable'>\n";
                 echo "<tr><th>URL</th><th>{$GLOBALS['strDisplay']}</th><th>{$GLOBALS['strEnabled']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
                 $shade = 'shade1';
-                while ($obj = mysql_fetch_object($result))
+                while ($obj = mysqli_fetch_object($result))
                 {
                     if ($obj->enabled == "true")
                     {

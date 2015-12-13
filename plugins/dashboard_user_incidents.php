@@ -26,7 +26,7 @@ function dashboard_user_incidents_display($dashletid)
     global $GLOBALS;
     global $CONFIG;
     global $iconset;
-    global $dbIncidents, $dbContacts, $dbPriority;
+    global $dbIncidents, $dbContacts, $dbPriority, $db;
     $user = "current";
 
     // Create SQL for chosen queue
@@ -36,9 +36,9 @@ function dashboard_user_incidents_display($dashletid)
     if (!is_numeric($user) AND $user != 'current' AND $user != 'all')
     {
         $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
-        $uresult = mysql_query($usql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
+        $uresult = mysqli_query($db, $usql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        if (mysqli_num_rows($uresult) >= 1) list($user) = mysqli_fetch_row($uresult);
         else $user = $sit[2]; // force to current user if username not found
     }
     $sql =  "WHERE i.contact = c.id AND i.priority = p.id ";
@@ -91,9 +91,9 @@ function dashboard_user_incidents_display($dashletid)
             break;
     }
     $sql = $selectsql.$sql;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $rowcount = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $rowcount = mysqli_num_rows($result);
     // Toggle Sorting Order
     if ($sortorder == 'ASC')
     {
@@ -114,14 +114,14 @@ function dashboard_user_incidents_display($dashletid)
     }
     $mode = "min";
     // Print message if no incidents were listed
-    if (mysql_num_rows($result) >= 1)
+    if (mysqli_num_rows($result) >= 1)
     {
         // Incidents Table
         $incidents_minimal = true;
         //include ('incidents_table.inc.php');
         $shade = 'shade1';
         echo "<table summary=\"{$strIncidents}\">";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($obj->id);
             $update_body = parse_updatebody($update_body);

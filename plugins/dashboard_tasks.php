@@ -13,7 +13,7 @@ $dashboard_tasks_version = 1;
 
 function dashboard_tasks($dashletid)
 {
-    global $sit, $CONFIG, $iconset, $dbTasks;
+    global $sit, $CONFIG, $iconset, $dbTasks, $db;
     $user = $sit[2];
 
     if ($CONFIG['tasks_enabled'] == TRUE)
@@ -40,10 +40,10 @@ function dashboard_tasks($dashletid)
             $sql .= "ORDER BY IF(duedate,duedate,99999999) ASC, duedate ASC, startdate DESC, priority DESC, completion ASC";
         }
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-        if (mysql_num_rows($result) >=1 )
+        if (mysqli_num_rows($result) >=1 )
         {
             $content .= "<table align='center' width='100%'>";
             $content .= "<tr>";
@@ -53,7 +53,7 @@ function dashboard_tasks($dashletid)
             $content .= colheader('completion', $GLOBALS['strCompletion']);
             $content .= "</tr>\n";
             $shade = 'shade1';
-            while ($task = mysql_fetch_object($result))
+            while ($task = mysqli_fetch_object($result))
             {
                 $duedate = mysql2date($task->duedate);
                 $startdate = mysql2date($task->startdate);

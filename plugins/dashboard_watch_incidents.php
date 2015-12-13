@@ -22,7 +22,7 @@ function dashboard_watch_incidents($dashletid)
 
 function dashboard_watch_incidents_install()
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $schema = "CREATE TABLE IF NOT EXISTS `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` (
         `userid` smallint(6) NOT NULL,
         `type` tinyint(4) NOT NULL,
@@ -30,8 +30,8 @@ function dashboard_watch_incidents_install()
         PRIMARY KEY  (`userid`,`type`,`id`)
         ) ENGINE=MyISAM ;";
 
-    $result = mysql_query($schema);
-    if (mysql_error())
+    $result = mysqli_query($db, $schema);
+    if (mysqli_error($db))
     {
         echo "<p>Dashboard watch incidents failed to install, please run the following SQL statement on the SiT database to create the required schema.</p>";
         echo "<pre>{$schema}</pre>";
@@ -45,20 +45,20 @@ function dashboard_watch_incidents_install()
 
 function dashboard_watch_incidents_display($dashletid)
 {
-    global $CONFIG, $sit;
+    global $CONFIG, $sit, $db;
 
     $html = "";
 
     $sql = "SELECT type, id FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE userid = {$sit[2]} ORDER BY type";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error().$sql,E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db).$sql,E_USER_WARNING);
 
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $header_printed = FALSE;
         $previous = 0;
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             if ($obj->type !=3 AND $previous == 3)
             {
@@ -83,9 +83,9 @@ function dashboard_watch_incidents_display($dashletid)
                     $sql .= "AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING." ";
 
                     $lsql = "SELECT name FROM `{$GLOBALS['dbSites']}` WHERE id = {$obj->id}";
-                    $lresult = mysql_query($lsql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    $lobj = mysql_fetch_object($lresult);
+                    $lresult = mysqli_query($db, $lsql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                    $lobj = mysqli_fetch_object($lresult);
                     $html .= "<tr><th colspan='3'>{$lobj->name} ({$GLOBALS['strSite']})</th></tr>";
                     break;
                 case '1': //contact
@@ -95,9 +95,9 @@ function dashboard_watch_incidents_display($dashletid)
                     $sql .= "AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING." ";
 
                     $lsql = "SELECT forenames, surname FROM `{$GLOBALS['dbContacts']}` WHERE id = {$obj->id} ";
-                    $lresult = mysql_query($lsql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    $lobj = mysql_fetch_object($lresult);
+                    $lresult = mysqli_query($db, $lsql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                    $lobj = mysqli_fetch_object($lresult);
                     $html .= "<tr><th colspan='3'>{$lobj->forenames} {$lobj->surname} ({$GLOBALS['strContact']})</th></tr>";
                     break;
                 case '2': //engineer
@@ -107,9 +107,9 @@ function dashboard_watch_incidents_display($dashletid)
                     $sql .= "AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING." ";
 
                     $lsql = "SELECT realname FROM `{$GLOBALS['dbUsers']}` WHERE id = {$obj->id}";
-                    $lresult = mysql_query($lsql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    $lobj = mysql_fetch_object($lresult);
+                    $lresult = mysqli_query($db, $lsql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                    $lobj = mysqli_fetch_object($lresult);
                     $html .= "<tr><th colspan='3'>";
                     $html .= sprintf($GLOBALS['strIncidentsForEngineer'], $lobj->realname);
                     $html .= "</th></tr>";
@@ -143,10 +143,10 @@ function dashboard_watch_incidents_display($dashletid)
                         break;
                 }
 
-                $iresult = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                $iresult = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-                if (mysql_num_rows($iresult) > 0)
+                if (mysqli_num_rows($iresult) > 0)
                 {
                     if ($obj->type == 3 AND !$header_printed)
                     {
@@ -170,7 +170,7 @@ function dashboard_watch_incidents_display($dashletid)
                     }
 
                     $shade = 'shade1';
-                    while ($incident = mysql_fetch_object($iresult))
+                    while ($incident = mysqli_fetch_object($iresult))
                     {
                         $html .= "<tr class='$shade'>";
                         $html .= "<td>{$incident->id}</td>";
@@ -223,7 +223,7 @@ function dashboard_watch_incidents_display($dashletid)
 
 function dashboard_watch_incidents_edit($dashletid)
 {
-    global $CONFIG, $sit;
+    global $CONFIG, $sit, $db;
     $editaction = clean_dbstring($_REQUEST['editaction']);
 
     switch ($editaction)
@@ -266,8 +266,8 @@ function dashboard_watch_incidents_edit($dashletid)
             $id = clean_int($_REQUEST['id']);
             $type = clean_int($_REQUEST['type']);
             $sql = "INSERT INTO `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` VALUES ({$sit[2]},'{$type}','{$id}')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
             if (!$result)
             {
@@ -283,8 +283,8 @@ function dashboard_watch_incidents_edit($dashletid)
             $id = clean_int($_REQUEST['id']);
             $type = clean_int($_REQUEST['type']);
             $sql = "DELETE FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE id = '{$id}' AND userid = {$sit[2]} AND type = '{$type}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
             if (!$result)
             {
@@ -304,8 +304,8 @@ function dashboard_watch_incidents_edit($dashletid)
             {
                 $sql = "SELECT * FROM `{$CONFIG['db_tableprefix']}dashboard_watch_incidents` WHERE userid = {$sit[2]} AND type = {$i}";
 
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
                 echo "<tr><td align='left'><strong>";
                 switch ($i)
@@ -334,40 +334,40 @@ function dashboard_watch_incidents_edit($dashletid)
                 echo dashlet_link('watch_incidents', $dashletid, $linktext, 'edit', array('editaction' => 'add', 'type' => $i));
                 echo "</td></tr>";
 
-                if (mysql_num_rows($result) > 0)
+                if (mysqli_num_rows($result) > 0)
                 {
                     $shade = 'shade1';
-                    while ($obj = mysql_fetch_object($result))
+                    while ($obj = mysqli_fetch_object($result))
                     {
                         $name = '';
                         switch ($obj->type)
                         {
                             case 0: //site
                                 $sql = "SELECT name FROM `{$GLOBALS['dbSites']}` WHERE id = {$obj->id}";
-                                $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                                $iobj = mysql_fetch_object($iresult);
+                                $iresult = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                                $iobj = mysqli_fetch_object($iresult);
                                 $name = $iobj->name;
                                 break;
                             case 1: //contact
                                 $sql = "SELECT forenames, surname FROM `{$GLOBALS['dbContacts']}` WHERE id = {$obj->id}";
-                                $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                                $iobj = mysql_fetch_object($iresult);
+                                $iresult = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                                $iobj = mysqli_fetch_object($iresult);
                                 $name = $iobj->forenames.' '.$iobj->surname;
                                 break;
                             case 2: //Engineer
                                 $sql = "SELECT realname FROM `{$GLOBALS['dbUsers']}` WHERE id = {$obj->id}";
-                                $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                                $iobj = mysql_fetch_object($iresult);
+                                $iresult = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                                $iobj = mysqli_fetch_object($iresult);
                                 $name = $iobj->realname;
                                 break;
                             case 3: //Incident
                                 $sql = "SELECT title FROM `{$GLOBALS['dbIncidents']}` WHERE id = {$obj->id}";
-                                $iresult = mysql_query($sql);
-                                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                                $iobj = mysql_fetch_object($iresult);
+                                $iresult = mysqli_query($db, $sql);
+                                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                                $iobj = mysqli_fetch_object($iresult);
                                 if ($_SESSION['userconfig']['incident_popup_onewindow'] == 'FALSE')
                                 {
                                     $windowname = "incident{$obj->id}";
