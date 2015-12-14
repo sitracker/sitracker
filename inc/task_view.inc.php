@@ -27,7 +27,7 @@ else
 if ($mode != 'incident') echo "<div style='width: 90%; margin-left: auto; margin-right: auto;'>";
 
 $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$taskid}'";
-$result = mysqli_query($db, a$sql);
+$result = mysqli_query($db, $sql);
 if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 if (mysqli_num_rows($result) >= 1)
 {
