@@ -296,7 +296,7 @@ switch ($_REQUEST['action'])
 
             if ($status->get_status() != INSTALL_FATAL)
             {
-                mysql_select_db($CONFIG['db_database'], $db);
+                mysqli_select_db($db, $CONFIG['db_database']);
                 if (mysqli_error($db))
                 {
                     if (!empty($CONFIG['db_username']))
@@ -458,7 +458,7 @@ switch ($_REQUEST['action'])
 
             if ($status->get_status() != INSTALL_FATAL)
             {
-                mysql_select_db($CONFIG['db_database'], $db);
+                mysqli_select_db($db, $CONFIG['db_database']);
                 if (mysqli_error($db))
                 {
                     if (!empty($CONFIG['db_username']))
