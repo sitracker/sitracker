@@ -193,7 +193,7 @@ $sql = "SELECT * FROM `{$dbConfig}`";
 $result = @mysqli_query($db, $sql);
 if ($result AND mysqli_num_rows($result) > 0)
 {
-    while ($conf = mysqli_fetch_object($db, $result))
+    while ($conf = mysqli_fetch_object($result))
     {
         if ($conf->value === 'TRUE') $conf->value = TRUE;
         if ($conf->value === 'FALSE') $conf->value = FALSE;
