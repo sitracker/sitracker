@@ -284,7 +284,7 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
     {
         $sqldisabled = $sql;
         $sql .= "AND m.term != 'yes' AND (m.expirydate > {$now} OR m.expirydate = -1) ";
-        $sqldisabled = "AND (m.term = 'yes' OR m.expirydate < {$now}) ORDER BY expirydate DESC ";
+        $sqldisabled .= "AND (m.term = 'yes' OR m.expirydate < {$now}) ORDER BY expirydate DESC ";
     }
     $sql .= "ORDER BY expirydate DESC";
 
