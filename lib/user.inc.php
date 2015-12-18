@@ -274,7 +274,7 @@ function user_activeincidents($userid)
     $sql .= ") AND timeofnextaction < $now ) ";
 
     $result = mysqli_query($db, $sql);
-    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     else list($count) = mysqli_fetch_row($result);
 
     return ($count);
