@@ -1239,7 +1239,7 @@ function trigger_to_array($trigger)
  */
 function triggers_to_html($user_id, $trigger_id = '')
 {
-    global $dbTriggers, $sit, $trigger_types, $strTrigger, $strActions;
+    global $sit, $trigger_types, $strTrigger, $strActions;
 
     $user_id = cleanvar($user_id);
     if ($user_id == '') $user_id = $sit[2];
@@ -1275,7 +1275,7 @@ function triggers_to_html($user_id, $trigger_id = '')
  */
 function trigger_to_html($trigger_id, $user_id)
 {
-    global $dbTriggers;
+    global $dbTriggers, $db;
     $html = '';
     $sql = "SELECT id FROM `{$dbTriggers}` ";
     $sql .= "WHERE userid = '{$user_id}' ";
@@ -1400,7 +1400,7 @@ function trigger_action_to_html($trigger, $user_id)
  */
 function template_description($name, $type)
 {
-    global $dbEmailTemplates, $dbNoticeTemplates;
+    global $dbEmailTemplates, $dbNoticeTemplates, $db;
     $name = cleanvar($name);
     if ($type == 'ACTION_NOTICE')
     {
