@@ -49,6 +49,7 @@ function get_sql_statement($startdate,$enddate,$statementnumber,$count=TRUE)
 */
 function count_incidents($startdate, $enddate)
 {
+    global $db;
     // Counts the number of incidents opened between a start date and an end date
     // Returns an associative array
     // 0
@@ -223,7 +224,7 @@ function stats_period_row($desc, $start, $end)
 */
 function give_overview()
 {
-    global $todayrecent, $mode, $CONFIG;
+    global $todayrecent, $mode, $CONFIG, $db;
 
     echo "<table class='maintable'>";
     echo "<tr><th>{$GLOBALS['strPeriod']}</th>";

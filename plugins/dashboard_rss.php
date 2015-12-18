@@ -52,7 +52,7 @@ function dashboard_rss_install()
 
 function dashboard_rss_display($dashletid)
 {
-    global $CONFIG, $dbDashboardRSS, $sit, $lib_path;
+    global $CONFIG, $dbDashboardRSS, $sit, $lib_path, $db;
 
     $iconset = $_SESSION['userconfig']['iconset'];
     /*

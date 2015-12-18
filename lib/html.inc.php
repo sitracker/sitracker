@@ -728,7 +728,7 @@ function new_note_form($linkid, $refid)
  */
 function show_notes($linkid, $refid, $delete = TRUE)
 {
-    global $sit, $iconset, $dbNotes, $strDelete, $strAreYouSureDelete;
+    global $sit, $iconset, $dbNotes, $strDelete, $strAreYouSureDelete, $db;
     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='{$linkid}' AND refid='{$refid}' ORDER BY timestamp DESC, id DESC";
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);

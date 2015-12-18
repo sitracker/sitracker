@@ -605,8 +605,7 @@ function permission_name($permissionid)
  */
 function software_name($softwareid)
 {
-    global $db;
-    global $now, $dbSoftware, $strEOL, $strEndOfLife;
+    global $now, $dbSoftware, $strEOL, $strEndOfLife, $db;
 
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE id = '{$softwareid}'";
     $result = mysqli_query($db, $sql);
@@ -1151,8 +1150,7 @@ function check_form_token($formtoken)
  */
 function schedule_actions_due()
 {
-    global $now, $db;
-    global $dbScheduler;
+    global $dbScheduler, $now, $db;
 
     $actions = FALSE;
     // Interval
@@ -1245,8 +1243,7 @@ function schedule_action_started($action)
  */
 function schedule_action_done($doneaction, $success = TRUE)
 {
-    global $now, $db;
-    global $dbScheduler;
+    global $dbScheduler, $now, $db;
 
     if ($success != TRUE)
     {

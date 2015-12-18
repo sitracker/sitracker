@@ -237,9 +237,9 @@ function kb_name($kbid)
  */
 function is_kb_article($id, $mode)
 {
-    global $db;
+    global $dbKBArticles, $db;
     $rtn = FALSE;
-    global $dbKBArticles;
+
     $id = cleanvar($id);
     if ($id > 0)
     {

@@ -146,8 +146,8 @@ function saction_PurgeJournal()
 function saction_TimeCalc()
 {
     global $now;
-    global $dbIncidents, $dbServiceLevels, $dbMaintenance, $dbUpdates;
-    global $GLOBALS, $CONFIG, $dv;
+    global $dbIncidents, $dbServiceLevels, $dbMaintenance, $dbUpdates, $db;
+    global $GLOBALS, $CONFIG;
 
     $success = TRUE;
 

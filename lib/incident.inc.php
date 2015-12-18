@@ -761,9 +761,9 @@ function average_incident_duration($start,$end,$states)
  */
 function sla_target_content($incidentid, $target)
 {
-    global $db;
+    global $db, $dbUpdates;
+
     $rtn = '';
-    global $dbUpdates;
     $incidentid = clean_int($incidentid);
     $target = clean_dbstring($target);
 
