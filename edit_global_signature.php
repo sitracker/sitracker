@@ -17,7 +17,7 @@
 
 function get_globalsignature($sig_id)
 {
-    global $dbEmailSig;
+    global $dbEmailSig, $db;
     $sql = "SELECT signature FROM `{$dbEmailSig}` WHERE id = {$sig_id}";
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
@@ -28,7 +28,7 @@ function get_globalsignature($sig_id)
 
 function delete_signature($sig_id)
 {
-    global $dbEmailSig;
+    global $dbEmailSig, $db;
     $sql = "DELETE FROM `{$dbEmailSig}` WHERE id = {$sig_id}";
     mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
