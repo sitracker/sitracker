@@ -282,7 +282,7 @@ function setup_exec_sql($sqlquerylist)
                                 $html .= "<strong>A MySQL error occurred:</strong>";
                                 $errors ++;
                             }
-                            $html .= " [".mysql_errno()."] ".mysqli_error($db)."<br />";
+                            $html .= " [".mysqli_errno($db)."] ".mysqli_error($db)."<br />";
                             if (!empty($errstr)) $html .= $errstr."<br />";
                             $html .= "Raw SQL: <code class='small'>".htmlspecialchars($sql)."</code>";
                         }
