@@ -123,52 +123,6 @@ if ($CONFIG['db_username'] == '' OR $CONFIG['db_database'] == '')
     exit;
 }
 
-// Connect to Database server
-$dbOld = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
-if (mysql_error())
-{
-    $msg = urlencode(base64_encode("Could not connect to database server '{$CONFIG['db_hostname']}'"));
-    header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
-    exit;
-}
-
-
-
-// mysqli_query($db, "SET time_zone = {$CONFIG['timezone']}");
-
-// Select database
-mysql_select_db($CONFIG['db_database'], $dbOld);
-if (mysql_error())
-{
-    // TODO add some detection for missing database
-    if (strpos(mysql_error(), 'Unknown database') !== FALSE)
-    {
-        $msg = urlencode(base64_encode("Unknown Database '{$CONFIG['db_database']}'"));
-        header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
-        exit;
-    }
-    // Attempt socket connection to database to check if server is alive
-    if (!fsockopen($CONFIG['db_hostname'], 3306, $errno, $errstr, 5))
-    {
-        trigger_error("!Error: No response from database server within 5 seconds, Database Server ({$CONFIG['db_hostname']}) is probably down - contact a Systems Administrator", E_USER_ERROR);
-    }
-    else
-    {
-        $msg = urlencode(base64_encode("Unknown Database '{$CONFIG['db_database']}' / Failed to connect"));
-        header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
-        exit;
-    }
-}
-
-// See Mantis 506 for sql_mode discussion
-// TODO remove when mysqli switch done
-@mysql_query("SET SESSION sql_mode = '';");
-mysql_query("SET NAMES 'utf8'");
-mysql_query("SET CHARACTER SET utf8");
-
-/*
- * New DB
- */
 $db = @mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password'], $CONFIG['db_database']);
 if (mysqli_error($db))
 {
