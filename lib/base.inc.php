@@ -83,7 +83,7 @@ mb_internal_encoding($i18ncharset);
  * @param mixed $var variable to replace
  * @param bool $striphtml whether to strip html
  * @param bool $transentities whether to translate all aplicable chars (true) or just special chars (false) into html entites
- * @param bool $mysqlescape whether to mysql_escape()
+ * @param bool $mysqlescape whether to mysqli_real_escape_string()
  * @param array $disallowedchars array of chars to remove
  * @param array $replacechars array of chars to replace as $orig => $replace
  * @param bool $intval whether to get the integer value of the variable
