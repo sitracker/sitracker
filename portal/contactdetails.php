@@ -187,7 +187,7 @@ else
     $sql .= "AND c.id={$id}";
     $query = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-    $user = mysqlu_fetch_object($query);
+    $user = mysqli_fetch_object($query);
 
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
     if ($user->siteid != $_SESSION['siteid'])
