@@ -30,7 +30,7 @@ if ($CONFIG['debug']) $dbg .= "Sess: ".print_r($_SESSION,true);
 
 function portal_incident_table($sql)
 {
-    global $CONFIG, $showclosed, $sort, $order, $filter;
+    global $CONFIG, $showclosed, $sort, $order, $filter, $db;
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $numincidents = mysqli_num_rows($result);
