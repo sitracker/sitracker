@@ -27,7 +27,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 }
 else
 {
-    global $CONFIG, $dbFiles, $dbUpdates, $dbTempIncoming, $dbIncidents, $now;
+    global $CONFIG, $dbFiles, $dbUpdates, $dbTempIncoming, $dbIncidents, $now, $db;
     global $subject, $decoded, $incidentid, $contactid;
 }
 
