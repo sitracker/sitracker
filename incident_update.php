@@ -40,7 +40,7 @@ function display_update_page($draftid=-1)
     global $CONFIG;
     global $iconset;
     global $now;
-    global $dbDrafts;
+    global $dbDrafts, $db;
     global $sit;
 
     if ($draftid != -1)
