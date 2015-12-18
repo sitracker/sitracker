@@ -1226,7 +1226,7 @@ function decrement_free_incidents($siteid)
     global $dbSites, $db;
     $sql = "UPDATE `{$dbSites}` SET freesupport = (freesupport - 1) WHERE id='{$siteid}'";
     mysqli_query($db, $sql);
-    if (mysqli_affected_rows() < 1)
+    if (mysqli_affected_rows($db) < 1)
     {
         trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
     }
@@ -1245,7 +1245,7 @@ function increment_incidents_used($maintid)
     global $dbMaintenance, $db;
     $sql = "UPDATE `{$dbMaintenance}` SET incidents_used = (incidents_used + 1) WHERE id='{$maintid}'";
     mysqli_query($db, $sql);
-    if (mysqli_affected_rows() < 1) trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
+    if (mysqli_affected_rows($db) < 1) trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     else return TRUE;
 }

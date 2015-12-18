@@ -472,6 +472,7 @@ else
      */
     function count_updates($incidentid)
     {
+        global $db;
         $count_updates = 0;
         $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}'";
         $result = mysqli_query($db, $sql);

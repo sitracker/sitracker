@@ -172,6 +172,7 @@ function authenticateContact($username, $password)
     if (!empty($username) AND !empty($password))
     {
         $sql = "SELECT id, password, contact_source, active, username FROM `{$GLOBALS['dbContacts']}` WHERE (username = '{$username}' OR email = '{$username}')";
+
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         if (mysqli_num_rows($result) == 1)
