@@ -70,7 +70,7 @@ if (empty($theme)) $theme = $CONFIG['default_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['default_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
-if (is_array($pagecss))
+if (isset($pagecss) && is_array($pagecss))
 {
     foreach ($pagecss AS $pcss)
     {
@@ -91,7 +91,7 @@ if ($_SESSION['auth'] == TRUE)
     echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
     echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
     // To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
-    if (is_array($pagescripts))
+    if (isset($pagescripts) && is_array($pagescripts))
     {
         foreach ($pagescripts AS $pscript)
         {
