@@ -36,7 +36,7 @@ if (user_permission($sit[2], PERM_ADMIN))
         $sqlinterval = ("$schedule->interval");
         $sqllastran = mysql2date("$schedule->lastran");
         $dateresult = $sqlinterval + $sqllastran + 60;
-        if ($dateresult < date(U))
+        if ($dateresult < date('U'))
         {
             $failure ++;
         }
