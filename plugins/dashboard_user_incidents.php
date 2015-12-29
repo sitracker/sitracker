@@ -64,15 +64,6 @@ function dashboard_user_incidents_display($dashletid)
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $rowcount = mysqli_num_rows($result);
-    // Toggle Sorting Order
-    if ($sortorder == 'ASC')
-    {
-        $newsortorder = 'DESC';
-    }
-    else
-    {
-        $newsortorder = 'ASC';
-    }
 
     // build querystring for hyperlinks
     $querystring = "?user={$user}&amp;queue={$queue}&amp;type={$type}&amp;";
