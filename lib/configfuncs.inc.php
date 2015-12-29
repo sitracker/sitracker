@@ -51,11 +51,11 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         global $availabletimezones;
     }
 
-    $html .= "<div class='configvar'>";
+    $html = "<div class='configvar'>";
     if ($CFGVAR[$setupvar]['title'] != '') $title = $CFGVAR[$setupvar]['title'];
     else $title = $setupvar;
     $html .= "<h4>{$title}</h4>";
-    if ($CFGVAR[$setupvar]['help']!='') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
+    if (array_key_exists('help', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['help'] != '') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
 
     $value = '';
     if (!$cfg_file_exists OR ($cfg_file_exists AND $cfg_file_writable))
@@ -261,7 +261,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         }
     }
 
-    if ($CFGVAR[$setupvar]['statusfield'] == 'TRUE')
+    if (array_key_exists('statusfield', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['statusfield'] == 'TRUE')
     {
         $html .= "<div id='status{$setupvar}'></div>";
     }
