@@ -268,7 +268,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 
     $html .= "</div>";
     $html .= "<br />\n";
-    if ($c == 1) $c == 2;
+    if ($c == 1) $c = 2;
     else $c = 1;
 
     return $html;
