@@ -113,7 +113,7 @@ echo "<body id='{$pagnename}_page'>\n";
 plugin_do('page_start');
 echo "<div id='masthead'>";
 echo "<div id='mastheadcontent'>";
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     echo "<div id='personaloptions'>";
     echo "<a href='user_profile_edit.php'>";
@@ -141,7 +141,7 @@ if ($sit[0] != '')
 }
 
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     echo "<div id='topsearch'>";
     echo "<form name='jumptoincident' action='{$CONFIG['application_webpath']}search.php' method='get'>";
@@ -156,7 +156,7 @@ if ($sit[0] != '')
 echo "</div></div>\n";
 
 // Show menu if logged in
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     // Build a heirarchical top menu
     $hmenu;
@@ -177,7 +177,7 @@ if (!isset($refresh) AND $_SESSION['auth'] === TRUE)
     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 }
 
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     // Check this is current
     $sql = "SELECT version FROM `{$dbSystem}` WHERE id = 0";
@@ -210,7 +210,7 @@ if ($sit[0] != '')
             $sqlinterval = ("$schedule->interval");
             $sqllastran = mysql2date("$schedule->lastran");
             $dateresult = $sqlinterval + $sqllastran + 60;
-            if ($dateresult < date(U))
+            if ($dateresult < date('U'))
             {
                 $failure ++;
             }
