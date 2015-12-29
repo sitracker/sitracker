@@ -552,7 +552,7 @@ function group_selector($selected, $urlargs='')
 function draw_tabs($tabsarray, $selected='', $divclass='tabcontainer')
 {
     if ($selected == '') $selected = key($tabsarray);
-    $html .= "<div class='{$divclass}'>";
+    $html = "<div class='{$divclass}'>";
     $html .= "<ul>";
     foreach ($tabsarray AS $tab => $url)
     {
