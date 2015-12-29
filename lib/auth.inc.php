@@ -69,7 +69,7 @@ if (!is_array($permission))
 }
 
 // Valid user, check permissions
-if (user_permission($userid, $permission) == FALSE)
+if (user_permission($_SESSION['userid'], $permission) == FALSE)
 {
     //No access permission
     $refused = implode(',',$permission);
