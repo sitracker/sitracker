@@ -106,7 +106,9 @@ if ($_SESSION['auth'] == TRUE)
 plugin_do('html_head');
 echo "</head>\n";
 
-$pagnename = substr(end(explode('/', $_SERVER['PHP_SELF'])), 0, -4);
+$phpSelfArray = explode('/', $_SERVER['PHP_SELF']);
+
+$pagnename = substr(end($phpSelfArray), 0, -4);
 
 echo "<body id='{$pagnename}_page'>\n";
 
