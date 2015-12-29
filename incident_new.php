@@ -91,20 +91,20 @@ function to_row($contact)
 }
 
 // External variables
-$action = clean_fixed_list($_REQUEST['action'], array('showform','findcontact','incidentform','assign','reassign'));
-$context = cleanvar($_REQUEST['context']);
-$updateid = clean_int($_REQUEST['updateid']);
-$incomingid = clean_int($_REQUEST['incomingid']);
-$query = cleanvar($_REQUEST['query']);
-$siteid = clean_int($_REQUEST['siteid']);
-$contactid = clean_int($_REQUEST['contactid']);
-$search_string = cleanvar($_REQUEST['search_string']);
-$from = cleanvar($_REQUEST['from']);
-$type = cleanvar($_REQUEST['type']);
-$maintid = clean_int($_REQUEST['maintid']);
-$productid = clean_int($_REQUEST['productid']);
-$producttext = cleanvar($_REQUEST['producttext']);
-$win = cleanvar($_REQUEST['win']);
+$action = clean_fixed_list(@$_REQUEST['action'], array('showform','findcontact','incidentform','assign','reassign'));
+$context = cleanvar(@$_REQUEST['context']);
+$updateid = clean_int(@$_REQUEST['updateid']);
+$incomingid = clean_int(@$_REQUEST['incomingid']);
+$query = cleanvar(@$_REQUEST['query']);
+$siteid = clean_int(@$_REQUEST['siteid']);
+$contactid = clean_int(@$_REQUEST['contactid']);
+$search_string = cleanvar(@$_REQUEST['search_string']);
+$from = cleanvar(@$_REQUEST['from']);
+$type = cleanvar(@$_REQUEST['type']);
+$maintid = clean_int(@$_REQUEST['maintid']);
+$productid = clean_int(@$_REQUEST['productid']);
+$producttext = cleanvar(@$_REQUEST['producttext']);
+$win = cleanvar(@$_REQUEST['win']);
 
 if (!empty($incomingid) AND empty($updateid))
 {
@@ -129,7 +129,7 @@ if (empty($action) OR $action == 'showform')
         echo "<div id='search_string_choices' class='autocomplete'></div>";
         echo autocomplete('search_string', 'autocomplete_sitecontact', 'search_string_choices');
         echo "<input type='hidden' name='win' value='{$win}' />";
-        
+
         echo "</td></tr>";
         echo "</table>";
         echo "<p align='center'><a href='contacts.php'>{$strBrowseContacts}</a>...</p>";
@@ -166,7 +166,7 @@ elseif ($action == 'findcontact')
         exit;
     }
     // Filter by contact
-    $contactsql .= "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
+    $contactsql = "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
     // Use SOUNDEX if the system is set to use English (See Mantis 879)
     if (strtolower(substr($CONFIG['default_i18n'], 0 ,2)) == 'en')
     {
