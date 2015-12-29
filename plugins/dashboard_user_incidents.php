@@ -59,37 +59,7 @@ function dashboard_user_incidents_display($dashletid)
     $selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
     $selectsql .= "($now - lastupdated) AS timesincelastupdate ";
     $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS p ";
-    // Create SQL for Sorting
-    switch ($sort)
-    {
-        case 'id':
-            $sql .= " ORDER BY id {$sortorder}";
-            break;
-        case 'title':
-            $sql .= " ORDER BY title {$sortorder}";
-            break;
-        case 'contact':
-            $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
-            break;
-        case 'priority':
-            $sql .=  " ORDER BY priority {$sortorder}, lastupdated ASC";
-            break;
-        case 'status':
-            $sql .= " ORDER BY status {$sortorder}";
-            break;
-        case 'lastupdated':
-            $sql .= " ORDER BY lastupdated {$sortorder}";
-            break;
-        case 'duration':
-            $sql .= " ORDER BY duration {$sortorder}";
-            break;
-        case 'nextaction':
-            $sql .= " ORDER BY timetonextaction {$sortorder}";
-            break;
-        default:
-            $sql .= " ORDER BY priority DESC, lastupdated ASC";
-            break;
-    }
+    $sql .= " ORDER BY priority DESC, lastupdated ASC";
     $sql = $selectsql.$sql;
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
