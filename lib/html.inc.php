@@ -1760,7 +1760,7 @@ function html_hmenu($hmenu)
                                              if ((!empty($subsubsubvalue['enablevar']) AND $CONFIG[$subsubsubvalue['enablevar']])
                                                 OR empty($subsubsubvalue['enablevar']))
                                             {
-                                                if ($subsubsubvalue['submenu'] > 0)
+                                                if (array_key_exists('submenu', $subsubsubvalue) && $subsubsubvalue['submenu'] > 0)
                                                 {
                                                     $html .= "<li class='submenu'>";
                                                 }
