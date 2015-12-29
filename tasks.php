@@ -37,12 +37,12 @@ else
 
 
 // External variables
-$user = cleanvar($_REQUEST['user']);
-$show = clean_fixed_list($_REQUEST['show'], array('','incidents', 'active', 'completed'));
-$sort = clean_fixed_list($_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
-$order = clean_fixed_list($_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
-$incident = clean_int($_REQUEST['incident']);
-$siteid = clean_int($_REQUEST['siteid']);
+$user = cleanvar(@$_REQUEST['user']);
+$show = clean_fixed_list(@$_REQUEST['show'], array('','incidents', 'active', 'completed'));
+$sort = clean_fixed_list(@$_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
+$order = clean_fixed_list(@$_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
+$incident = clean_int(@$_REQUEST['incident']);
+$siteid = clean_int(@$_REQUEST['siteid']);
 
 ?>
 <script type='text/javascript'>
@@ -659,7 +659,7 @@ else
     echo "<br />";
     echo user_alert($strNoRecords, E_USER_NOTICE);
 
-    if ($mode == 'incident')
+    if (isset($mode) && $mode == 'incident')
     {
         echo "<p align='center'>";
         echo "<a href='task_new.php?incident={$id}'>{$strStartNewActivity}";
