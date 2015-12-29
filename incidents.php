@@ -22,11 +22,11 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $type = cleanvar($_REQUEST['type']);
 if (cleanvar($_REQUEST['user']) == 'current' or empty($_REQUEST['user'])) $user = clean_int($sit[2]);
 else $user = cleanvar($_REQUEST['user']);
-$softwareid = clean_int($_REQUEST['softwareid']);
+$softwareid = clean_int(@$_REQUEST['softwareid']);
 $queue = clean_int($_REQUEST['queue']);
-$sort = clean_fixed_list($_REQUEST['sort'], array('','id','title','contact','priority','status','lastupdated','duration','nextaction'));
-$order = clean_fixed_list($_REQUEST['order'], array('','a','d','ASC','DESC'));
-$maintexclude = cleanvar($_REQUEST['maintexclude']);
+$sort = clean_fixed_list(@$_REQUEST['sort'], array('','id','title','contact','priority','status','lastupdated','duration','nextaction'));
+$order = clean_fixed_list(@$_REQUEST['order'], array('','a','d','ASC','DESC'));
+$maintexclude = cleanvar(@$_REQUEST['maintexclude']);
 $title = $strIncidentsList;
 
 // Defaults
