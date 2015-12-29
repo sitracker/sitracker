@@ -1749,7 +1749,7 @@ function plugin_do($context, $optparams = FALSE)
         }
     }
     $rtnvalue = '';
-    if (is_array($PLUGINACTIONS[$context]))
+    if (array_key_exists($context, $PLUGINACTIONS) && is_array($PLUGINACTIONS[$context]))
     {
         foreach ($PLUGINACTIONS[$context] AS $pluginaction)
         {

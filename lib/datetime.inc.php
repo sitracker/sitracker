@@ -489,7 +489,7 @@ function ldate($format, $date = '', $utc = FALSE)
 {
     global $now, $CONFIG;
     if ($date == '') $date = $GLOBALS['now'];
-    if ($_SESSION['userconfig']['utc_offset'] != '')
+    if (array_key_exists('utc_offset', $_SESSION['userconfig']) && $_SESSION['userconfig']['utc_offset'] != '')
     {
         if ($utc === FALSE)
         {

@@ -29,7 +29,7 @@ else
     require (APPLICATION_LIBPATH . 'auth.inc.php');
 }
 $action = cleanvar($_REQUEST['action']);
-$selected = cleanvar($_REQUEST['selected']);
+$selected = cleanvar(@$_REQUEST['selected']);
 
 switch ($action)
 {
@@ -417,10 +417,10 @@ switch ($action)
     case 'display_billingmatrix':
         $billingtype = cleanvar($_REQUEST['billingtype']);
         $selected = cleanvar($_REQUEST['selected']);
-        
+
         $bill = new $billingtype();
         $s = $bill->billing_matrix_selector('billing_matrix', $selected);
-        
+
         if (empty($s)) 
         {
             $s = $GLOBALS['strNotApplicableAbbrev'];
@@ -429,7 +429,7 @@ switch ($action)
         {
             $s = $s . "<span class='required'>{$GLOBALS['strRequired']}</span>"; 
         }
-        
+
         echo $s;
         break;
     default :

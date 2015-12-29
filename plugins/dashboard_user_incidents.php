@@ -66,7 +66,7 @@ function dashboard_user_incidents_display($dashletid)
     $rowcount = mysqli_num_rows($result);
 
     // build querystring for hyperlinks
-    $querystring = "?user={$user}&amp;queue={$queue}&amp;type={$type}&amp;";
+    $querystring = "?user={$user}&amp;queue={$queue}&amp;";
 
     if ($user == 'all')
     {
