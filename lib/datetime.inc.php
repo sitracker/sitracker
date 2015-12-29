@@ -156,13 +156,15 @@ function format_workday_minutes($minutes, $zero_str = '')
     $hours = floor($remainder / 60);
     $minutes = floor($remainder % 60);
 
+    $time = '';
+
     if ($days == 1)
     {
-        $time = sprintf($strXWorkingDay, $days);
+        $time .= sprintf($strXWorkingDay, $days);
     }
     elseif ($days > 1)
     {
-        $time = sprintf($strXWorkingDays, $days);
+        $time .= sprintf($strXWorkingDays, $days);
     }
 
     if ($days <= 3 AND $hours == 1)
