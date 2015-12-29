@@ -123,8 +123,8 @@ if ($CONFIG['db_username'] == '' OR $CONFIG['db_database'] == '')
     exit;
 }
 
-$db = @mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password'], $CONFIG['db_database']);
-if (mysqli_error($db))
+$db = mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password'], $CONFIG['db_database']);
+if (!($db instanceof mysqli) || mysqli_error($db))
 {
     $msg = urlencode(base64_encode("Could not connect to database server '{$CONFIG['db_hostname']}'"));
     header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
