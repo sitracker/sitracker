@@ -29,12 +29,12 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 
     if ($userid == 'current') $userid = $_SESSION['userid'];
 
-    if ($CFGVAR[$setupvar]['type'] == 'languageselect'
-        OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
+    if (array_key_exists('type', $CFGVAR[$setupvar]) && ($CFGVAR[$setupvar]['type'] == 'languageselect'
+        OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect'))
     {
         $available_languages = available_languages();
     }
-    elseif ($CFGVAR[$setupvar]['type'] == 'userlanguageselect')
+    elseif (array_key_exists('type', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['type'] == 'userlanguageselect')
     {
         if (!empty($CONFIG['available_i18n']))
         {
@@ -46,7 +46,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         }
         $available_languages = array_merge(array(''=>$GLOBALS['strDefault']),$available_languages);
     }
-    elseif ($CFGVAR[$setupvar]['type'] == 'timezoneselect')
+    elseif (array_key_exists('type', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['type'] == 'timezoneselect')
     {
         global $availabletimezones;
     }
