@@ -462,10 +462,10 @@ function date_picker($formelement)
 function autocomplete($formelement, $action = 'autocomplete_sitecontact', $autocompletediv)
 {
     global $CONFIG;
-    $html .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
+    $html = "<script type=\"text/javascript\">\n//<![CDATA[\n";
     $html .= "new Ajax.Autocompleter('{$formelement}', '{$autocompletediv}', '{$CONFIG['application_webpath']}ajaxdata.php?action={$action}', {minChars: 3, paramName: 's', delay: 0.25, parameters: 'htmllist=true'});\n";
     $html .= "\n//]]>\n</script>\n";
-    
+
     return $html;
 }
 
