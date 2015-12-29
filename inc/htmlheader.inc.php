@@ -241,6 +241,7 @@ if (isset($sit[0]) && $sit[0] != '')
     {
         echo "<div id='noticearea'>\n";
         $keys = array_keys($_GET);
+        $url = '';
 
         foreach ($keys AS $key)
         {
