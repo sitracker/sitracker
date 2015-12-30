@@ -50,9 +50,9 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     $sql .= "'{$sit[2]}', '1', '{$name}', '{$siteid}', ";
     $sql .= "'{$privacy}', '{$identifier}', '{$owner}')";
 
-    mysql_query($sql);
-    $id = mysql_insert_id();
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    mysqli_query($db, $sql);
+    $id = mysqli_insert_id($db);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     else
     {
         plugin_do('inventory_new_saved');

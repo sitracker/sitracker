@@ -65,15 +65,16 @@ class User extends Person{
 
     function retrieveDetails()
     {
+        global $db;
         $sql = "SELECT u.*, r.rolename ";
         $sql .= "FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRoles']}` AS r ";
         $sql .= "WHERE u.id = {$this->id} AND u.roleid = r.id";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_num_rows($result) == 1)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             $this->username = $obj->username;
             $this->realname = $obj->realname;
             $this->roleid = $obj->roleid;
@@ -100,10 +101,10 @@ class User extends Person{
             $this->managerid = $obj->managerid;
 
             $sql_userconfig = "SELECT config, value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$this->id}";
-            $result_userconfig = mysql_query($sql_userconfig);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result_userconfig = mysqli_query($db, $sql_userconfig);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-            while ($obj_userconfig = mysql_fetch_object($result_userconfig))
+            while ($obj_userconfig = mysqli_fetch_object($result_userconfig))
             {
                 switch ($obj_userconfig->config)
                 {
@@ -143,7 +144,7 @@ class User extends Person{
      */
     function add()
     {
-        global $CONFIG, $now;
+        global $CONFIG, $now, $db;
 
         $this->style = $CONFIG['default_interface_style'];
         $this->startdate = $now;
@@ -154,10 +155,10 @@ class User extends Person{
         $toReturn = FALSE;
 
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username = '".cleanvar($this->username)."'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) != 0)
+        if (mysqli_num_rows($result) != 0)
         {
             // Already exists
             trigger_error($GLOBALS['strUsernameNotUnique'] . " Username: '{$this->username}'", E_USER_ERROR);
@@ -173,26 +174,26 @@ class User extends Person{
             $sql .= "'".cleanvar($this->group->id)."', '".cleanvar($this->jobtitle)."', '".cleanvar($this->email)."', '".cleanvar($this->phone)."', '".cleanvar($this->mobile)."', '".cleanvar($this->fax)."', ";
             $sql .= "".cleanvar($this->status).", ";
             $sql .= "'".cleanvar($this->holiday_entitlement)."', '".cleanvar($this->startdate)."', 0, ".convert_string_null_safe($this->managerd).", '".cleanvar($this->source)."')";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 $toReturn = false;
             }
-            $toReturn = mysql_insert_id();
+            $toReturn = mysqli_insert_id($db);
 
             if ($toReturn != FALSE)
             {
                 // Create permissions (set to none)
                 $sql = "SELECT * FROM `{$GLOBALS['dbPermissions']}`";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                while ($perm = mysql_fetch_object($result))
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                while ($perm = mysqli_fetch_object($result))
                 {
                     $psql = "INSERT INTO `{$GLOBALS['dbUserPermissions']}` (userid, permissionid, granted) ";
                     $psql .= "VALUES ('{$toReturn}', '{$perm->id}', 'false')";
-                    mysql_query($psql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $psql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 setup_user_triggers($toReturn);
@@ -211,19 +212,19 @@ class User extends Person{
      */
     function edit()
     {
-        global $now;
+        global $now, $db;
         $toReturn = false;
 
         if (!empty($this->id) AND is_numeric($this->id))
         {
             $sql = "SELECT username, status, accepting FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-            if (mysql_num_rows($result) == 1)
+            if (mysqli_num_rows($result) == 1)
             {
                 // Exists
-                $oldUser = mysql_fetch_object($result);
+                $oldUser = mysqli_fetch_object($result);
                 $s = array();
 
                 $errors = 0;
@@ -239,9 +240,9 @@ class User extends Person{
                 if (!empty($this->email))
                 {
                     $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE status > 0 AND email='{$this->email}' AND id != {$this->id}";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    list($countexisting) = mysql_fetch_row($result);
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                    list($countexisting) = mysqli_fetch_row($result);
                     if ($countexisting > 1)
                     {
                         $errors++;
@@ -259,6 +260,8 @@ class User extends Person{
                         // reassign the users incidents if appropriate
                         if (empty($this->accepting)) $this->accepting = $oldUser->accepting; // Set accepting to the DB level if one isn't set'
                         incident_backup_switchover($this->id, $this->accepting);
+                        
+                        if ($this->status == USERSTATUS_ACCOUNT_DISABLED) $this->disable();
                     }
                     $s[] = "status = {$this->status}";
                 }
@@ -290,10 +293,10 @@ class User extends Person{
                 if ($errors == 0)
                 {
                     $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
-                    $result = mysql_query($sql);
-                    if (mysql_error())
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db))
                     {
-                        trigger_error(mysql_error(), E_USER_WARNING);
+                        trigger_error(mysqli_error($db), E_USER_WARNING);
                         $toReturn = FALSE;
                     }
                     else
@@ -304,10 +307,10 @@ class User extends Person{
                     foreach ($userconfig AS $u)
                     {
                         $sql = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ({$this->id}, '{$u['config']}', '{$u['value']}') ON DUPLICATE KEY UPDATE value = '{$u['value']}'";
-                        $result = mysql_query($sql);
-                        if (mysql_error())
+                        $result = mysqli_query($db, $sql);
+                        if (mysqli_error($db))
                         {
-                            trigger_error(mysql_error(), E_USER_WARNING);
+                            trigger_error(mysqli_error($db), E_USER_WARNING);
                             $toReturn = FALSE;
                         }
                     }
@@ -336,18 +339,18 @@ class User extends Person{
      */
     function disable()
     {
+        global $db;
         $toReturn = true;
-        if (!empty($this->id) AND $this->status != 0)
+        if (!empty($this->id))
         {
             $sql = "UPDATE `{$GLOBALS['dbUsers']}` SET status = 0 WHERE id = {$this->id}";
-
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_affected_rows($db) != 1)
             {
                 $sql = "SELECT status FROM `{$GLOBALS['dbUsers']}` WHERE id = {$this->id} AND status = 0 ";
-                $result = mysql_query($result);
-                if (mysql_num_rows($result) == 0)
+                $result = mysqli_query($db, $result);
+                if (mysqli_num_rows($result) == 0)
                 {
                     trigger_error("Failed to disable user {$this->username}", E_USER_WARNING);
                     $toReturn = FALSE;
@@ -361,6 +364,16 @@ class User extends Person{
             else
             {
                 $toReturn = TRUE;
+            }
+
+            // tidy user up
+            $tidyup[] = "DELETE FROM `{$GLOBALS['dbDrafts']}` WHERE userid = {$this->id}";
+            $tidyup[] = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE userid = {$this->id}";
+            $tidyup[] = "DELETE FROM `{$GLOBALS['dbInventory']}` WHERE createdby = {$this->id} AND privacy = 'private'";
+            foreach ($tidyup AS $sql)
+            {
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             }
         }
 

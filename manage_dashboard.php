@@ -34,13 +34,13 @@ function setup_exec_sql($sqlquerylist)
         array_pop($sqlqueries);
         foreach ($sqlqueries AS $sql)
         {
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
                 $str = "A MySQL error occurred, this could be because the MySQL user '{$CONFIG['db_username']}' does not have appropriate permission to modify the database schema. ";
                 $str .= "An error might also be caused by an attempt to upgrade a version that is not supported by this script.<br />";
                 $str .= "Alternatively, you may have found a bug, if you think this is the case please report it.</p>";
-                $str .= "The error was ".mysql_error()." and the SQL was ".htmlspecialchars($sql);
+                $str .= "The error was ".mysqli_error($db)." and the SQL was ".htmlspecialchars($sql);
                 trigger_error($str, E_USER_ERROR);
             }
             else $html .= "<p><strong>{$strOK}:</strong> ".htmlspecialchars($sql)."</p>";
@@ -55,13 +55,13 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
         $sql = "SELECT name FROM `{$dbDashboard}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
         echo "<h2>".icon('dashboard', 32)." ";
         echo $strInstallDashboardComponents."</h2>";
         echo "<p align='center'>".sprintf($strComponentMustBePlacedInDashboardDir, "<var>dashboard_NAME</var>")."</p>";
-        while ($dashboardnames = mysql_fetch_object($result))
+        while ($dashboardnames = mysqli_fetch_object($result))
         {
             $dashboard[$dashboardnames->name] = $dashboardnames->name;
         }
@@ -115,8 +115,8 @@ switch ($action)
             {
                 $sql .= "('{$dashboardcomponents[$i]}', 'true'), ";
             }
-            $result = mysql_query(mb_substr($sql, 0, mb_strlen($sql) - 2));
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, mb_substr($sql, 0, mb_strlen($sql) - 2));
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
             if (!$result)
             {
@@ -136,8 +136,8 @@ switch ($action)
                     {
                         // Dashboard component install failed, roll back
                         $dsql = "DELETE FROM `{$dbDashboard}` WHERE `name` = '{$comp}'";
-                        mysql_query($dsql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $dsql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                     }
                 }
                 html_redirect("manage_dashboard.php", $installed);
@@ -148,12 +148,12 @@ switch ($action)
     case 'upgradecomponent':
         $id = clean_int($_REQUEST['id']);
         $sql = "SELECT * FROM `{$dbDashboard}` WHERE id = {$id}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
 
             $version = 1;
             include (APPLICATION_PLUGINPATH . "dashboard_{$obj->name}.php");
@@ -178,8 +178,8 @@ switch ($action)
                     }
 
                     $sql = "UPDATE `{$dbDashboard}` SET version = '{$version}' WHERE id = {$obj->id}";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                     html_redirect($_SERVER['PHP_SELF']);
                 }
                 else
@@ -203,8 +203,8 @@ switch ($action)
         $id = clean_int($_REQUEST['id']);
         $enable = clean_fixed_list($_REQUEST['enable'], array('false', 'true'));
         $sql = "UPDATE `{$dbDashboard}` SET enabled = '{$enable}' WHERE id = '{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {
@@ -220,8 +220,8 @@ switch ($action)
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
         $sql = "SELECT * FROM `{$dbDashboard}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
         echo "<h2>".icon('dashboard', 32)." ";
         echo "{$strManageDashboardComponents}</h2>";
@@ -232,7 +232,7 @@ switch ($action)
         echo colheader('version', $strVersion);
         echo colheader('upgrade', $strUpgrade);
         echo "</tr>";
-        while ($dashboardnames = mysql_fetch_object($result))
+        while ($dashboardnames = mysqli_fetch_object($result))
         {
             if ($dashboardnames->enabled == "true")
             {

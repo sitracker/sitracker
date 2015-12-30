@@ -29,9 +29,9 @@ if (empty($submit))
 
     // extract incident details
     $sql  = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $incident = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $incident = mysqli_fetch_object($result);
 
     plugin_do('incident_edit');
 
@@ -171,8 +171,8 @@ else
         $sql .= "escalationpath='{$escalationpath}', externalengineer='{$externalengineer}', externalemail='{$externalemail}', title='{$title}', ";
         $sql .= "contact='{$contact}', softwareid='{$software}', productversion='{$productversion}', customerid='{$customerid}', ";
         $sql .= "productservicepacks='{$productservicepacks}', lastupdated='{$now}' WHERE id='{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         if (!$result)
         {
             $addition_errors = 1;
@@ -283,17 +283,17 @@ else
             if (!empty($header)) $header .= "<hr>";
             // get current incident status
             $sql = "SELECT status FROM `{$dbIncidents}` WHERE id={$id}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $status = mysql_fetch_object($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            $status = mysqli_fetch_object($result);
             $status = $status->status;
             $owner = incident_owner($id);
             $bodytext = $header . $bodytext;
-            $bodytext = mysql_real_escape_string($bodytext);
+            $bodytext = mysqli_real_escape_string($db, $bodytext);
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
             $sql .= "VALUES ('{$id}', '{$sit[2]}', 'editing', '{$owner}', '{$status}', '{$bodytext}', '{$now}')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             if (!$result)
             {

@@ -52,9 +52,9 @@ if (isset($_POST['submit']))
             // Create an entry in the files table
             $sql = "INSERT INTO `{$dbFiles}` (category, filename, size, userid, usertype, filedate) ";
             $sql .= "VALUES ('public', '" . clean_dbstring(clean_fspath($_FILES['attachment']['name'])). "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', NOW())";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            $fileid =  mysql_insert_id();
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
+            $fileid =  mysqli_insert_id($db);
 
             $kb_attachment_fspath = $CONFIG['attachment_fspath'] . DIRECTORY_SEPARATOR . "kb" . DIRECTORY_SEPARATOR . $kbid . DIRECTORY_SEPARATOR;
 
@@ -77,8 +77,8 @@ if (isset($_POST['submit']))
             //create link
             $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
             $sql .= "VALUES (7, '{$kbid}', '{$fileid}', 'left', '{$sit[2]}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
     }
 
@@ -117,12 +117,12 @@ if (isset($_POST['submit']))
             // If the KB ID is blank, we assume we're creating a new article
             $author = user_realname($_SESSION['userid']);
             $pubdate = date('Y-m-d h:i:s');
-    
+
             $sqlinsert = "INSERT INTO `{$dbKBArticles}` (title, keywords, distribution, author, published) ";
             $sqlinsert .= "VALUES ('{$kbtitle}', '{$keywords}', '{$distribution}', '{$author}', '{$pubdate}')";
-            mysql_query($sqlinsert);
-            if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_ERROR);
-            $kbid = mysql_insert_id();
+            mysqli_query($db, $sqlinsert);
+            if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db), E_USER_ERROR);
+            $kbid = mysqli_insert_id($db);
         }
         else
         {
@@ -130,10 +130,9 @@ if (isset($_POST['submit']))
             // Remove associated software ready for re-assocation
             $sql[] = "DELETE FROM `{$dbKBSoftware}` WHERE docid='{$kbid}'";
         }
-    
+
         foreach ($sections AS $section)
         {
-    
             $sectionvar = strtolower($section);
             $sectionvar = str_replace(" ", "", $sectionvar);
             $sectionid = clean_int($_POST["{$sectionvar}id"]);
@@ -157,7 +156,7 @@ if (isset($_POST['submit']))
                 }
             }
         }
-    
+
         // Set software / expertise
         if (is_array($_POST['expertise']))
         {
@@ -168,13 +167,13 @@ if (isset($_POST['submit']))
                 $sql[] = "INSERT INTO `{$dbKBSoftware}` (docid, softwareid) VALUES ('{$kbid}', '{$value}')";
             }
         }
-    
+
         if (is_array($sql))
         {
             foreach ($sql AS $sqlquery)
             {
-                mysql_query($sqlquery);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sqlquery);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
         }
         plugin_do('kb_article_saved');
@@ -195,18 +194,18 @@ else
     {
         echo "<h2>".icon('kb', 32, $strEditKBArticle)." {$strEditKBArticle}: {$kbid}</h2>";
         $sql = "SELECT * FROM `{$dbKBArticles}` WHERE docid='{$kbid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $kbobj = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $kbobj = mysqli_fetch_object($result);
 
         foreach ($sections AS $section)
         {
             $secsql = "SELECT * FROM `{$dbKBContent}` ";
             $secsql .= "WHERE docid='{$kbobj->docid}' ";
             $secsql .= "AND header='{$section}' LIMIT 1";
-            if ($secresult = mysql_query($secsql))
+            if ($secresult = mysqli_query($db, $secsql))
             {
-                $secobj = mysql_fetch_object($secresult);
+                $secobj = mysqli_fetch_object($secresult);
                 if (!empty($secobj->content))
                 {
                     $sections[$section] = $secobj->content;
@@ -233,23 +232,23 @@ else
     {
         $docsoftware = array();
         $swsql = "SELECT softwareid FROM  `{$dbKBSoftware}` WHERE docid = '{$kbobj->docid}'";
-        $swresult = mysql_query($swsql);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
-        if (mysql_num_rows($swresult) > 0)
+        $swresult = mysqli_query($db, $swsql);
+        if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db),E_USER_WARNING);
+        if (mysqli_num_rows($swresult) > 0)
         {
-            while ($sw = mysql_fetch_object($swresult))
+            while ($sw = mysqli_fetch_object($swresult))
             {
                 $docsoftware[] = $sw->softwareid;
             }
         }
     }
     $listsql = "SELECT * FROM `{$dbSoftware}` ORDER BY name";
-    $listresult = mysql_query($listsql);
-    if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
-    if (mysql_num_rows($listresult) > 0)
+    $listresult = mysqli_query($db, $listsql);
+    if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db),E_USER_WARNING);
+    if (mysqli_num_rows($listresult) > 0)
     {
         echo "<select name='expertise[]' multiple='multiple' size='5' style='width: 100%;'>";
-        while ($software = mysql_fetch_object($listresult))
+        while ($software = mysqli_fetch_object($listresult))
         {
             echo "<option value='{$software->id}'";
             if ($mode == 'edit' AND in_array($software->id, $docsoftware)) echo " selected='selected'";
@@ -417,12 +416,12 @@ else
                 ON l.linkcolref = f.id
                 WHERE l.linktype = 7
                 AND l.origcolref = '{$kbid}'";
-        $fileresult = mysql_query($sqlf);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($fileresult) > 0)
+        $fileresult = mysqli_query($db, $sqlf);
+        if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($fileresult) > 0)
         {
             echo "<br /><table><th>{$strFilename}</th><th>{$strDate}</th>";
-            while ($filename = mysql_fetch_object($fileresult))
+            while ($filename = mysqli_fetch_object($fileresult))
             {
                 echo "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$kbid}'>{$filename->filename}</a></td>";
                 echo "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";

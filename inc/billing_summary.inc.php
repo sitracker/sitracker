@@ -51,10 +51,10 @@ if (!empty($sites))
 
 $sql .= "ORDER BY site.name, s.enddate";
 
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
     if ($display == 'html')
     {
@@ -76,7 +76,7 @@ if (mysql_num_rows($result) > 0)
     $lastproduct = '';
 
     $shade = 'shade1';
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $billingObj = get_billable_incident_object($obj->billingtype);
         

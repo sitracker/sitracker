@@ -50,9 +50,9 @@ if (empty($action) || $action == "showform")
     {
         $sql = "SELECT s.name, p.name FROM `{$dbMaintenance}` m, `{$dbSites}` s, `{$dbProducts}` p WHERE m.site=s.id ";
         $sql .= "AND m.product=p.id AND m.id='{$maintid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list($sitename, $product)=mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        list($sitename, $product)=mysqli_fetch_row($result);
 
         echo "<tr><th>{$strContract} ".icon('contract', 16)."</th><td>{$maintid} - {$sitename}, {$product}</td></tr>";
         echo "<input name='maintid' type='hidden' value='{$maintid}' />";
@@ -97,10 +97,10 @@ else if ($action == "new")
     plugin_do('contract_new_contact_submitted');
 
     $sql = "SELECT * FROM `{$dbSupportContacts}` WHERE maintenanceid = '{$maintid}' AND contactid = '{$contactid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $errors++;
         $_SESSION['formerrors']['contract_new_contact']['contactid'] = $strADuplicateAlreadyExists;
@@ -110,8 +110,8 @@ else if ($action == "new")
     if ($errors == 0)
     {
         $sql  = "INSERT INTO `{$dbSupportContacts}` (maintenanceid, contactid) VALUES ({$maintid}, {$contactid})";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {

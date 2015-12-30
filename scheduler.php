@@ -30,11 +30,11 @@ switch ($mode)
 {
     case 'edit':
         $sql = "SELECT * FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            $saction = mysql_fetch_object($result);
+            $saction = mysqli_fetch_object($result);
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
             echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
             echo "<form name='scheduleform' action='{$_SERVER['PHP_SELF']}' method='post'>";
@@ -216,10 +216,10 @@ switch ($mode)
         }
         $sql .= " WHERE `id` = $id LIMIT 1";
 
-        mysql_query($sql);
-        if (mysql_error())
+        mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             html_redirect($_SERVER['PHP_SELF'], FALSE);
         }
         else
@@ -230,11 +230,11 @@ switch ($mode)
 
     case 'run':
         $sql = "SELECT action, params FROM `{$dbScheduler}` WHERE id = {$id} LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            $saction = mysql_fetch_object($result);
+            $saction = mysqli_fetch_object($result);
             if (($saction->action == '') or (empty($saction->action)))
             {
                 html_redirect($_SERVER['PHP_SELF'], FALSE);
@@ -269,15 +269,15 @@ switch ($mode)
         echo "<h2>".icon('activities', 32)." {$strScheduler}".help_link('Scheduler')."</h2>";
         echo "<h3>".ldate($CONFIG['dateformat_datetime'], $GLOBALS['now'], FALSE)." - <a href='{$_SERVER['PHP_SELF']}'>{$strRefresh}</a></h3>";
         $sql = "SELECT * FROM `{$dbScheduler}` ORDER BY action";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
             echo "<table class='maintable'>";
             echo "<tr><th>{$strActions}</th><th>{$strStartDate}</th><th>{$strInterval}</th>";
             echo "<th>{$strEndDate}</th><th>{$strLastRan}</th><th>{$strNextRun}</th><th>{$strAction}</th></tr>\n";
-            while ($schedule = mysql_fetch_object($result))
+            while ($schedule = mysqli_fetch_object($result))
             {
                 $shade = 'shade1';
                 $lastruntime = mysql2date($schedule->lastran);

@@ -71,9 +71,9 @@ elseif ($action == "new")
     plugin_do('billing_matrix_new_points_based_submitted');
 
     $sql = "SELECT tag FROM `{$dbBillingMatrixPoints}` WHERE tag='{$tag}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         $errors++;
         $_SESSION['formerrors']['billing_matrix_new_points_based']['tag1'] = sprintf($strADuplicateAlreadyExists, $strTag);
@@ -103,14 +103,13 @@ elseif ($action == "new")
         for ($i = 0; $i < sizeof($names); $i++)
         {
             $sql = "INSERT INTO `{$dbBillingMatrixPoints}` VALUES ('{$tag}', '{$names[$i]}', $points[$i])";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
                 $errors++;
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                 break; // Dont try and add any more
             }
-            
         }
 
         if ($errors >= 1)

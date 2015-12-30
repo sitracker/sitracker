@@ -26,7 +26,7 @@ function dashboard_user_incidents_display($dashletid)
     global $GLOBALS;
     global $CONFIG;
     global $iconset;
-    global $dbIncidents, $dbContacts, $dbPriority, $dbIncidentTypes;
+    global $dbIncidents, $dbContacts, $dbPriority, $dbIncidentTypes, $db;
     $user = "current";
 
     // Create SQL for chosen queue
@@ -36,9 +36,9 @@ function dashboard_user_incidents_display($dashletid)
     if (!is_numeric($user) AND $user != 'current' AND $user != 'all')
     {
         $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
-        $uresult = mysql_query($usql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
+        $uresult = mysqli_query($db, $usql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        if (mysqli_num_rows($uresult) >= 1) list($user) = mysqli_fetch_row($uresult);
         else $user = $sit[2]; // force to current user if username not found
     }
     $sql =  "WHERE i.contact = c.id AND i.priority = p.id AND i.typeid = it.id ";
@@ -59,53 +59,14 @@ function dashboard_user_incidents_display($dashletid)
     $selectsql .= "(timeofnextaction - {$now}) AS timetonextaction, opened, ({$now} - opened) AS duration, closed, (closed - opened) AS duration_closed, type, ";
     $selectsql .= "($now - lastupdated) AS timesincelastupdate ";
     $selectsql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbPriority}` AS p, `{$dbIncidentTypes}` AS it ";
-    // Create SQL for Sorting
-    switch ($sort)
-    {
-        case 'id':
-            $sql .= " ORDER BY id {$sortorder}";
-            break;
-        case 'title':
-            $sql .= " ORDER BY title {$sortorder}";
-            break;
-        case 'contact':
-            $sql .= " ORDER BY c.surname {$sortorder}, c.forenames {$sortorder}";
-            break;
-        case 'priority':
-            $sql .=  " ORDER BY priority {$sortorder}, lastupdated ASC";
-            break;
-        case 'status':
-            $sql .= " ORDER BY status {$sortorder}";
-            break;
-        case 'lastupdated':
-            $sql .= " ORDER BY lastupdated {$sortorder}";
-            break;
-        case 'duration':
-            $sql .= " ORDER BY duration {$sortorder}";
-            break;
-        case 'nextaction':
-            $sql .= " ORDER BY timetonextaction {$sortorder}";
-            break;
-        default:
-            $sql .= " ORDER BY priority DESC, lastupdated ASC";
-            break;
-    }
+    $sql .= " ORDER BY priority DESC, lastupdated ASC";
     $sql = $selectsql.$sql;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $rowcount = mysql_num_rows($result);
-    // Toggle Sorting Order
-    if ($sortorder == 'ASC')
-    {
-        $newsortorder = 'DESC';
-    }
-    else
-    {
-        $newsortorder = 'ASC';
-    }
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $rowcount = mysqli_num_rows($result);
 
     // build querystring for hyperlinks
-    $querystring = "?user={$user}&amp;queue={$queue}&amp;type={$type}&amp;";
+    $querystring = "?user={$user}&amp;queue={$queue}&amp;";
 
     if ($user == 'all')
     {
@@ -114,14 +75,14 @@ function dashboard_user_incidents_display($dashletid)
     }
     $mode = "min";
     // Print message if no incidents were listed
-    if (mysql_num_rows($result) >= 1)
+    if (mysqli_num_rows($result) >= 1)
     {
         // Incidents Table
         $incidents_minimal = true;
         //include ('incidents_table.inc.php');
         $shade = 'shade1';
         echo "<table summary=\"{$strIncidents}\">";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($obj->id);
             $update_body = parse_updatebody($update_body);

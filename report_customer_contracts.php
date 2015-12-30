@@ -40,13 +40,13 @@ else
 $sql = "SELECT *, s.name AS sitename FROM `{$dbSites}` AS s ";
 if (!empty($_REQUEST['siteid'])) $sql .= "WHERE id='{$siteid}'";
 else $sql .= "ORDER BY s.name";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 if ($mode == 'csv')
 {
     echo "{$strSite},{$strProduct},{$strLicense},{$strExpiryDate},{$strAllContacts},{$strEngineer} 1, {$strEngineer} 2, {$strEngineer} 3, {$strEngineer} 4\n";
 }
-while ($site = mysql_fetch_object($result))
+while ($site = mysqli_fetch_object($result))
 {
     $msql  = "SELECT m.id AS maintid, m.term AS term, p.name AS product, r.name AS reseller, ";
     $msql .= "licence_quantity, l.name AS licence_type, expirydate, admincontact, c.forenames AS admincontactsforenames, ";
@@ -58,12 +58,12 @@ while ($site = mysql_fetch_object($result))
     $msql .= "AND m.term!='yes' ";
     $msql .= "AND m.expirydate > '$now' ";     $msql .= "ORDER BY expirydate DESC";
 
-    $mresult = mysql_query($msql);
-    if (mysql_num_rows($mresult)>=1)
+    $mresult = mysqli_query($db, $msql);
+    if (mysqli_num_rows($mresult)>=1)
     {
         if ($mode == 'csv')
         {
-            while ($maint = mysql_fetch_object($mresult))
+            while ($maint = mysqli_fetch_object($mresult))
             {
                 if ($maint->expirydate > $now AND $maint->term != 'yes')
                 {
@@ -78,9 +78,9 @@ while ($site = mysql_fetch_object($result))
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
-                    $cresult = mysql_query($csql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    while ($contact = mysql_fetch_object($cresult))
+                    $cresult = mysqli_query($db, $csql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                    while ($contact = mysqli_fetch_object($cresult))
                     {
                         echo contact_realname($contact->contactid).",";
                     }
@@ -101,7 +101,7 @@ while ($site = mysql_fetch_object($result))
             echo "<th style='text-align: left;'>{$strContact} 2</th>";
             echo "<th style='text-align: left;'>{$strContact} 3</th>";
             echo "<th style='text-align: left;'>{$strContact} 4</th></tr>\n";
-            while ($maint = mysql_fetch_object($mresult))
+            while ($maint = mysqli_fetch_object($mresult))
             {
                 if ($maint->expirydate > $now AND $maint->term != 'yes')
                 {
@@ -118,9 +118,9 @@ while ($site = mysql_fetch_object($result))
                     $csql  = "SELECT * FROM `{$dbSupportContacts}` ";
                     $csql .= "WHERE maintenanceid='{$maint->maintid}' ";
                     $csql .= "ORDER BY contactid LIMIT 4";
-                    $cresult = mysql_query($csql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    while ($contact = mysql_fetch_object($cresult))
+                    $cresult = mysqli_query($db, $csql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                    while ($contact = mysqli_fetch_object($cresult))
                     {
                         echo "<td>".contact_realname($contact->contactid)."</td>";
                     }

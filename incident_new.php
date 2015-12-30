@@ -126,20 +126,20 @@ function to_row($contact)
 }
 
 // External variables
-$action = clean_fixed_list($_REQUEST['action'], array('showform','findcontact','incidentform','assign','reassign'));
-$context = cleanvar($_REQUEST['context']);
-$updateid = clean_int($_REQUEST['updateid']);
-$incomingid = clean_int($_REQUEST['incomingid']);
-$query = cleanvar($_REQUEST['query']);
-$siteid = clean_int($_REQUEST['siteid']);
-$contactid = clean_int($_REQUEST['contactid']);
-$search_string = cleanvar($_REQUEST['search_string']);
-$from = cleanvar($_REQUEST['from']);
-$type = cleanvar($_REQUEST['type']);
-$maintid = clean_int($_REQUEST['maintid']);
-$productid = clean_int($_REQUEST['productid']);
-$producttext = cleanvar($_REQUEST['producttext']);
-$win = cleanvar($_REQUEST['win']);
+$action = clean_fixed_list(@$_REQUEST['action'], array('showform','findcontact','incidentform','assign','reassign'));
+$context = cleanvar(@$_REQUEST['context']);
+$updateid = clean_int(@$_REQUEST['updateid']);
+$incomingid = clean_int(@$_REQUEST['incomingid']);
+$query = cleanvar(@$_REQUEST['query']);
+$siteid = clean_int(@$_REQUEST['siteid']);
+$contactid = clean_int(@$_REQUEST['contactid']);
+$search_string = cleanvar(@$_REQUEST['search_string']);
+$from = cleanvar(@$_REQUEST['from']);
+$type = cleanvar(@$_REQUEST['type']);
+$maintid = clean_int(@$_REQUEST['maintid']);
+$productid = clean_int(@$_REQUEST['productid']);
+$producttext = cleanvar(@$_REQUEST['producttext']);
+$win = cleanvar(@$_REQUEST['win']);
 
 if (!empty($incomingid) AND empty($updateid))
 {
@@ -201,7 +201,7 @@ elseif ($action == 'findcontact')
         exit;
     }
     // Filter by contact
-    $contactsql .= "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
+    $contactsql = "AND (c.surname LIKE '%{$search_string}%' OR c.forenames LIKE '%{$search_string}%' ";
     // Use SOUNDEX if the system is set to use English (See Mantis 879)
     if (strtolower(substr($CONFIG['default_i18n'], 0 ,2)) == 'en')
     {
@@ -226,6 +226,10 @@ elseif ($action == 'findcontact')
     {
         $sql .= "AND c.id = '{$contactid}' ";
     }
+    if (!empty($CONFIG['hide_contracts_older_than_when_opening_incident']) AND $CONFIG['hide_contracts_older_than_when_opening_incident'] != -1)
+    {
+        $sql .= "AND FROM_UNIXTIME(m.expirydate) >= DATE_SUB(CURDATE(), INTERVAL {$CONFIG['hide_contracts_older_than_when_opening_incident']} DAY) ";
+    }
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
@@ -243,9 +247,14 @@ elseif ($action == 'findcontact')
     {
         $sql .= "AND c.id = '{$contactid}' ";
     }
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    if (!empty($CONFIG['hide_contracts_older_than_when_opening_incident']) AND $CONFIG['hide_contracts_older_than_when_opening_incident'] != -1)
+    {
+        $sql .= "AND FROM_UNIXTIME(m.expirydate) >= DATE_SUB(CURDATE(), INTERVAL {$CONFIG['hide_contracts_older_than_when_opening_incident']} DAY) ";
+    }
+
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -260,7 +269,7 @@ elseif ($action == 'findcontact')
         $headers .= "<th>{$strContract}</th><th>{$strServiceLevel}</th>";
         $headers .= "<th>{$strExpiryDate}</th></tr>";
 
-        while ($contactobj = mysql_fetch_object($result))
+        while ($contactobj = mysqli_fetch_object($result))
         {
             if (empty($CONFIG['preferred_maintenance']) OR
                 (is_array($CONFIG['preferred_maintenance']) AND
@@ -312,10 +321,10 @@ elseif ($action == 'findcontact')
         else $sql .= "AND c.id = '{$contactid}' ";
 
         $sql .= "ORDER by c.surname, c.forenames ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             $html = "<h3>".icon('contact', 32, $strContact)." ";
             $html .= "{$strContacts}</h3>\n";
@@ -328,7 +337,7 @@ elseif ($action == 'findcontact')
             $html .=  "</tr>\n";
 
             $customermatches = 0;
-            while ($contactobj = mysql_fetch_object($result))
+            while ($contactobj = mysqli_fetch_object($result))
             {
                 $html .=  "<tr class='shade2'>";
                 $site_incident_pool = db_read_column('freesupport', $dbSites, $contactobj->siteid);
@@ -388,9 +397,9 @@ elseif ($action == 'findcontact')
         if (!empty($incomingid))
         {
             $tsql = "SELECT `from` FROM `{$dbTempIncoming}` WHERE id = {$incomingid}";
-            $tresult = mysql_query($tsql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            list($email) = mysql_fetch_row($tresult);
+            $tresult = mysqli_query($db, $tsql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            list($email) = mysqli_fetch_row($tresult);
         }
 
         // Select the contact from the list of contacts as well
@@ -402,10 +411,10 @@ elseif ($action == 'findcontact')
         }
         else $sql .= "AND c.id = '{$contactid}' ";
         $sql .= "ORDER by c.surname, c.forenames ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             $html = "<h3>{$strCustomers}</h3>\n";
             $html .= "<p align='center'>{$strThisListShowsCustomers}</p>";
@@ -417,7 +426,7 @@ elseif ($action == 'findcontact')
             $html .= "</tr>\n";
 
             $customermatches = 0;
-            while ($contactobj = mysql_fetch_object($result))
+            while ($contactobj = mysqli_fetch_object($result))
             {
                 $html .= "<tr class='shade2'>";
                 $site_incident_pool = db_read_column('freesupport', $dbSites, $contactobj->siteid);
@@ -535,9 +544,9 @@ elseif ($action == 'incidentform')
         $items_array[0] = '';
         $sql = "SELECT * FROM `{$dbInventory}` ";
         $sql .= "WHERE contactid='{$contactid}' ";
-        $result = mysql_query($sql);
-        $contact_inv_count = mysql_num_rows($result);
-        while ($items = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        $contact_inv_count = mysqli_num_rows($result);
+        while ($items = mysqli_fetch_object($result))
         {
             $var = $items->name;
             if (!empty($items->identifier))
@@ -561,11 +570,11 @@ elseif ($action == 'incidentform')
         // Insert pre-defined per-product questions from the database, these should be required fields
         // These 'productinfo' questions don't have a GUI as of 27Oct05
         $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $numquestions = mysql_num_rows($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $numquestions = mysqli_num_rows($result);
         $cellcount = 1;
-        while ($productinfoobj = mysql_fetch_object($result))
+        while ($productinfoobj = mysqli_fetch_object($result))
         {
             if ($cellcount & 1) echo "<tr>";
             echo "<td>";
@@ -599,14 +608,14 @@ elseif ($action == 'incidentform')
     else
     {
         $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id={$updateid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list($mailed_body_text) = mysql_fetch_assoc($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        list($mailed_body_text) = mysqli_fetch_assoc($result);
 
         $sql = "SELECT subject FROM `{$dbTempIncoming}` WHERE updateid={$updateid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list($mailed_subject) = mysql_fetch_assoc($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        list($mailed_subject) = mysqli_fetch_assoc($result);
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
@@ -793,9 +802,9 @@ elseif ($action == 'assign')
         {
             // Attempt to update contact
             $sql = "SELECT username, contact_source FROM `{$GLOBALS['dbContacts']}` WHERE id = {$contactid}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $obj = mysql_fetch_object($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            $obj = mysqli_fetch_object($result);
             if ($obj->contact_source == 'ldap')
             {
                 authenticateLDAP($obj->username, '', $contactid, false, true, false);
@@ -804,9 +813,9 @@ elseif ($action == 'assign')
 
         // Check the service level priorities, look for the highest possible and reduce the chosen priority if needed
         $sql = "SELECT priority FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' ORDER BY priority DESC LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        list($highestpriority) = mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        list($highestpriority) = mysqli_fetch_row($result);
         if ($priority > $highestpriority)
         {
             $prioritychangedmessage = " (".sprintf($strReducedPrioritySLA, priority_name($priority)).")";
@@ -817,27 +826,27 @@ elseif ($action == 'assign')
         $sql .= "product, softwareid, productversion, productservicepacks, opened, lastupdated, timeofnextaction, customerid) ";
         $sql .= "VALUES ('{$incidenttitle}', '{$sit[2]}', '{$contactid}', '{$priority}', '{$servicelevel}', '1', {$type}, '{$maintid}', ";
         $sql .= "'{$productid}', '{$software}', '{$productversion}', '{$productservicepacks}', '{$now}', '{$now}', '{$timeofnextaction}', '{$customerid}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-        $incidentid = mysql_insert_id();
+        $incidentid = mysqli_insert_id($db);
         $_SESSION['incidentid'] = intval($incidentid);
 
         // Save productinfo if there is some
         $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($productinforow = mysql_fetch_object($result))
+            while ($productinforow = mysqli_fetch_object($result))
             {
                 $var = "pinfo{$productinforow->id}";
                 $pinfo = cleanvar($_POST[$var]);
                 $pinfo = clean_dbstring($_POST[$var]);
                 $pisql = "INSERT INTO `{$dbIncidentProductInfo}` (incidentid, productinfoid, information) ";
                 $pisql .= "VALUES ('{$incidentid}', '{$productinforow->id}', '{$pinfo}')";
-                mysql_query($pisql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $pisql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
         }
 
@@ -857,8 +866,8 @@ elseif ($action == 'assign')
             // Assign existing update to new incident if we have one
             $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', sla='opened' WHERE id='{$updateid}'";
 
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             $old_path = $CONFIG['attachment_fspath']. 'updates' . DIRECTORY_SEPARATOR;
             $new_path = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
@@ -869,7 +878,7 @@ elseif ($action == 'assign')
             $sql .= "WHERE l.origcolref = '{$updateid}' ";
             $sql .= "AND l.linktype = 5 ";
             $sql .= "AND l.linkcolref = f.id";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             if ($result)
             {
                 if (!file_exists($new_path))
@@ -879,7 +888,7 @@ elseif ($action == 'assign')
                     umask($umask);
                 }
 
-                while ($row = mysql_fetch_object($result))
+                while ($row = mysqli_fetch_object($result))
                 {
                     $filename = $row->linkcolref . "-" . $row->filename;
                     $old_file = $old_path . $row->linkcolref;
@@ -896,8 +905,8 @@ elseif ($action == 'assign')
             }
             //remove from tempincoming to prevent build up
             $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
         else
         {
@@ -906,14 +915,14 @@ elseif ($action == 'assign')
             $sql .= "currentstatus, customervisibility, nextaction, sla) ";
             $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'opening', '{$updatetext}', '{$now}', '{$sit[2]}', ";
             $sql .= "'1', '{$customervisibility}', '{$nextaction}', 'opened')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $level = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $level = mysqli_fetch_object($result);
 
         $targetval = $level->initial_response_mins * 60;
         $initialresponse = $now + $targetval;
@@ -922,15 +931,15 @@ elseif ($action == 'assign')
         // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
         $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide', '')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!empty($inventory) AND $inventory != 0)
         {
             $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
             $sql .= "VALUES(7, '{$incidentid}', '{$inventory}', 'left', '{$sit[2]}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         plugin_do('incident_new_saved');
@@ -976,8 +985,8 @@ elseif ($action == 'assign')
         // We need a user type 'engineer' so we don't just list everybody
         // Status zero means account disabled
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status != " . USERSTATUS_ACCOUNT_DISABLED . " ORDER BY realname";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         echo "<h3>{$strUsers}</h3>
         <table class='maintable'>
         <tr>
@@ -1001,7 +1010,7 @@ elseif ($action == 'assign')
         echo "</tr>";
 
         $shade = 'shade2';
-        while ($userobj = mysql_fetch_object($result))
+        while ($userobj = mysqli_fetch_object($result))
         {
             if ($userobj->id == $suggested_user) $shade = 'idle';
             echo "<tr class='{$shade}'>";
@@ -1027,8 +1036,8 @@ elseif ($action == 'assign')
             // Have a look if this user has skills with this software
             $ssql = "SELECT softwareid FROM `{$dbUserSoftware}` ";
             $ssql .= "WHERE userid='{$userobj->id}' AND softwareid='{$software}' ";
-            $sresult = mysql_query($ssql);
-            if (mysql_num_rows($sresult) >= 1)
+            $sresult = mysqli_query($db, $ssql);
+            if (mysqli_num_rows($sresult) >= 1)
             {
                 echo "<strong>{$userobj->realname}</strong>";
             }
@@ -1096,16 +1105,16 @@ elseif ($action == 'reassign')
         echo "<p align='center'>{$strTelephone}: {$userphone}</p>";
     }
     $sql = "UPDATE `{$dbIncidents}` SET owner='{$uid}', lastupdated='{$now}' WHERE id='{$incidentid}'";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     $t = new TriggerEvent('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $uid, 'incidentid' => $incidentid));
 
     // add update
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
     $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reassigning', '{$now}', '{$uid}', '1', '{$nextaction}')";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     clear_form_data('newincident');
     

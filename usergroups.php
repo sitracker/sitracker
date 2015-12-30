@@ -26,13 +26,13 @@ switch ($action)
 {
     case 'savemembers':
         $sql = "SELECT * FROM `{$dbUsers}` ORDER BY realname";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($user = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($user = mysqli_fetch_object($result))
         {
             $usql = "UPDATE `{$dbUsers}` SET groupid = '".clean_int($_POST["group{$user->id}"])."' WHERE id='{$user->id}'";
-            mysql_query($usql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $usql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         }
         html_redirect("usergroups.php");
         break;
@@ -44,29 +44,29 @@ switch ($action)
             exit;
         }
         $dsql = "SELECT name from `{$dbGroups}` WHERE name = '{$group}'";
-        $dresult = mysql_query($dsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-        if (mysql_num_rows($dresult) > 0)
+        $dresult = mysqli_query($db, $dsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+        if (mysqli_num_rows($dresult) > 0)
         {
             html_redirect("usergroups.php", FALSE, sprintf($strDoubletNameFound, "'{$group}'"));
             exit;
         }
         $sql = "INSERT INTO `{$dbGroups}` (name) VALUES ('{$group}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         html_redirect("usergroups.php");
         break;
     case 'deletegroup':
         $groupid = clean_int($_REQUEST['groupid']);
         // Remove group membership for all users currently assigned to this group
         $sql = "UPDATE `{$dbUsers}` SET groupid = '' WHERE groupid = '{$groupid}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         // Remove the group
         $sql = "DELETE FROM `{$dbGroups}` WHERE id='{$groupid}' LIMIT 1";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         html_redirect("usergroups.php");
         break;
     default:
@@ -75,9 +75,9 @@ switch ($action)
         echo "<h2>" . icon('site', 32) . " {$strUserGroups}</h2>";
 
         $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
-        $gresult = mysql_query($gsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($group = mysql_fetch_object($gresult))
+        $gresult = mysqli_query($db, $gsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($group = mysqli_fetch_object($gresult))
         {
             $grouparr[$group->id] = $group->name;
         }
@@ -108,14 +108,14 @@ switch ($action)
             echo "<h3>{$strGroupMembership}</h3>";
 
             $sql = "SELECT * FROM `{$dbUsers}` WHERE status != ".USERSTATUS_ACCOUNT_DISABLED." ORDER BY realname";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table summary='{$strGroupMembership}' align='center'>";
             echo "<tr><th>{$strUser}</th><th>{$strGroup}</th></tr>";
             $shade = 'shade1';
-            while ($user = mysql_fetch_object($result))
+            while ($user = mysqli_fetch_object($result))
             {
                 echo "<tr class='{$shade}'><td>{$user->realname} ({$user->username})</td>";
                 echo "<td>".group_drop_down("group{$user->id}",$user->groupid)."</td></tr>\n";

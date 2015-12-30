@@ -22,11 +22,11 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 $type = cleanvar($_REQUEST['type']);
 if (cleanvar($_REQUEST['user']) == 'current' or empty($_REQUEST['user'])) $user = clean_int($sit[2]);
 else $user = cleanvar($_REQUEST['user']);
-$softwareid = clean_int($_REQUEST['softwareid']);
+$softwareid = clean_int(@$_REQUEST['softwareid']);
 $queue = clean_int($_REQUEST['queue']);
-$sort = clean_fixed_list($_REQUEST['sort'], array('','id','title','contact','priority','status','lastupdated','duration','nextaction'));
-$order = clean_fixed_list($_REQUEST['order'], array('','a','d','ASC','DESC'));
-$maintexclude = cleanvar($_REQUEST['maintexclude']);
+$sort = clean_fixed_list(@$_REQUEST['sort'], array('','id','title','contact','priority','status','lastupdated','duration','nextaction'));
+$order = clean_fixed_list(@$_REQUEST['order'], array('','a','d','ASC','DESC'));
+$maintexclude = cleanvar(@$_REQUEST['maintexclude']);
 $title = $strIncidentsList;
 
 // Defaults
@@ -45,11 +45,11 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // Extract escalation paths
 $epsql = "SELECT id, name, track_url, home_url, url_title FROM `{$dbEscalationPaths}`";
-$epresult = mysql_query($epsql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-if (mysql_num_rows($epresult) >= 1)
+$epresult = mysqli_query($db, $epsql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+if (mysqli_num_rows($epresult) >= 1)
 {
-    while ($escalationpath = mysql_fetch_object($epresult))
+    while ($escalationpath = mysqli_fetch_object($epresult))
     {
         $epath[$escalationpath->id]['name'] = $escalationpath->name;
         $epath[$escalationpath->id]['track_url'] = $escalationpath->track_url;
@@ -78,9 +78,9 @@ switch ($type)
         if (!is_numeric($user) AND $user != 'current' AND $user != 'all')
         {
             $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
-            $uresult = mysql_query($usql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($uresult) >= 1) list($user) = mysql_fetch_row($uresult);
+            $uresult = mysqli_query($db, $usql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($uresult) >= 1) list($user) = mysqli_fetch_row($uresult);
             else $user = $sit[2]; // force to current user if username not found
         }
 
@@ -174,9 +174,9 @@ switch ($type)
             }
         }
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $rowcount = mysql_num_rows($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $rowcount = mysqli_num_rows($result);
 
         // Toggle Sorting Order
         if ($sortorder == 'ASC')
@@ -229,7 +229,7 @@ switch ($type)
         else echo "<br />";
 
         // Print message if no incidents were listed
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
             // Incidents Table
             include (APPLICATION_INCPATH . 'incidents_table.inc.php');
@@ -324,9 +324,9 @@ switch ($type)
                     break;
             }
 
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $rowcount = mysql_num_rows($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            $rowcount = mysqli_num_rows($result);
 
             // expertise incident listing goes here
             // Print message if no incidents were listed

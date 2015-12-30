@@ -86,6 +86,7 @@ $CFGCAT['holidays'] = array('holidays_enabled',
 $CFGCAT['incidents'] = array('auto_assign_incidents',
                              'free_support_limit',
                              'hide_closed_incidents_older_than',
+                             'hide_contracts_older_than_when_opening_incident',
                              'incident_pools',
                              'preferred_maintenance',
                              'record_lock_delay',
@@ -142,7 +143,8 @@ $CFGCAT['ldap'] = array('use_ldap',
                         'ldap_default_customer_siteid',
                         'ldap_autocreate_customer',
                         'ldap_cache_passwords',
-                        'ldap_allow_cached_password');
+                        'ldap_allow_cached_password',
+                        'ldap_update_directory_passwords');
 
 // SOAP Feature is experimental at the moment (INL 2003-07-06) so the setting to enable it should not be shown (yet)
 // $CFGCAT['soap'] = array('soap_enabled',
@@ -171,7 +173,7 @@ $CFGCAT['other'] = array('debug', 'error_logfile',
                           'changelogfile','creditsfile',
                           'licensefile',
                           'session_name', 'map_url',
-                          'upload_max_filesize','trusted_server');
+                          'upload_max_filesize','trusted_server', 'trusted_server_username_header', 'trusted_server_client_id', 'trusted_server_client_secret');
 
 $CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
 
@@ -420,6 +422,11 @@ $CFGVAR['hide_closed_incidents_older_than']['title'] = 'Hide closed incidents ol
 $CFGVAR['hide_closed_incidents_older_than']['type'] = 'number';
 $CFGVAR['hide_closed_incidents_older_than']['unit'] = $strDays;
 
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['help'] = "Contracts that have finished more than this number of days ago aren't show when opening new incidents, -1 means disabled";
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['title'] = 'Hide contracts older than when opening';
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['type'] = 'number';
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['unit'] = $strDays;
+
 $CFGVAR['holidays_enabled']['title'] = "Enable Holidays";
 $CFGVAR['holidays_enabled']['type'] = 'checkbox';
 
@@ -535,6 +542,10 @@ $CFGVAR['ldap_security']['help'] = 'LDAP security method (Requires LDAP protocol
 $CFGVAR['ldap_security']['options'] = 'SSL|TLS|NONE';
 $CFGVAR['ldap_security']['type'] = 'select';
 
+$CFGVAR['ldap_update_directory_passwords']['title'] = 'Update Passwords';
+$CFGVAR['ldap_update_directory_passwords']['help'] = 'Attempt to update the LDAP password when changed';
+$CFGVAR['ldap_update_directory_passwords']['type'] = 'checkbox';
+
 $CFGVAR['licensefile']['title'] = 'Path to the License file';
 
 $CFGVAR['logout_url']['help'] = "The URL to redirect the user to after he/she logs out. When left blank this defaults to the SiT login page.";
@@ -592,7 +603,7 @@ $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
 $CFGVAR['portal_iconset']['title'] = 'Portal Icon set';
 $CFGVAR['portal_iconset']['help'] = 'The icon set used in the portal';
 $CFGVAR['portal_iconset']['type'] = 'select';
-$CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
+$CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana|flat';
 
 
 $CFGVAR['portal_kb_enabled']['help'] = "Public puts a link on the login page, Private makes it available on login for contacts";
@@ -685,6 +696,18 @@ $CFGVAR['timezone']['options'] = file_get_contents('lib/timezones.txt');
 $CFGVAR['trusted_server']['help'] = 'When enabled passwords will no longer be used or required, this assumes that you are using an external mechanism for authentication';
 $CFGVAR['trusted_server']['title'] = 'Enable trusted server mode';
 $CFGVAR['trusted_server']['type'] = 'checkbox';
+
+$CFGVAR['trusted_server_username_header']['help'] = 'The header variable which will contain the username, exlucing the leading HTTP_';
+$CFGVAR['trusted_server_username_header']['title'] = 'Header to receive username in';
+$CFGVAR['trusted_server_username_header']['type'] = 'text';
+
+$CFGVAR['trusted_server_client_id']['help'] = 'The username for the trused authentication source to authenticate with using basic authentication, if blank not used';
+$CFGVAR['trusted_server_client_id']['title'] = 'Username for trusted server to authenticate with';
+$CFGVAR['trusted_server_client_id']['type'] = 'text';
+
+$CFGVAR['trusted_server_client_secret']['help'] = 'The password or secret for the trusted authentication source to authenticate with using basic authentication';
+$CFGVAR['trusted_server_client_secret']['title'] = 'Secret for trusted server to authenticate with ';
+$CFGVAR['trusted_server_client_secret']['type'] = 'password';
 
 $CFGVAR['upload_max_filesize']['title'] = "The maximum file upload size (in bytes)";
 $CFGVAR['upload_max_filesize']['type'] = 'number';

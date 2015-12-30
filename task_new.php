@@ -33,31 +33,31 @@ if ($incident)
     $sql = "INSERT INTO `{$dbTasks}` (owner, name, priority, distribution, startdate, created, lastupdated) ";
     $sql .= "VALUES('$sit[2]', '".sprintf($strActivityForIncidentX, $incident)."', " . PRIORITY_LOW . ", 'incident', NOW(), NOW(), NOW())";
 
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
-    $taskid = mysql_insert_id();
+    $taskid = mysqli_insert_id($db);
 
     $sql = "INSERT INTO `{$dbLinks}` VALUES(4, {$taskid}, {$incident}, 'left', {$sit[2]})";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
     $sql = "SELECT status FROM `{$dbIncidents}` WHERE id = {$incident}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
-    if (($obj = mysql_fetch_object(($result))) AND $obj->status != STATUS_ACTIVE AND $obj->status != STATUS_RESEARCH)
+    if (($obj = mysqli_fetch_object(($result))) AND $obj->status != STATUS_ACTIVE AND $obj->status != STATUS_RESEARCH)
     {
     	$sql = "UPDATE `{$dbIncidents}` SET status = " . STATUS_ACTIVE. ", lastupdated = {$now} WHERE id = {$incident}";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         $bodytext = "Status: ".incidentstatus_name($obj->status)." -&gt; <b>" . incidentstatus_name(1) . "</b>\n\n" . $srtrTaskStarted;
 
         $sql = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) VALUES ";
         $sql .= "({$incident}, {$sit[2]}, 'research', {$sit[2]}, " . STATUS_ACTIVE. ", '{$bodytext}', $now)";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     }
 
     html_redirect("tasks.php?incident={$incident}", TRUE, $strActivityAdded);
@@ -111,9 +111,9 @@ else
                 $sql = "INSERT INTO `{$dbTasks}` ";
                 $sql .= "(name,description,priority,owner,duedate,startdate,completion,value,distribution,created) ";
                 $sql .= "VALUES ('{$name}','{$description}','{$priority}','{$taskuser}','{$duedate}','{$startdate}','{$completion}','{$value}','{$distribution}','".date('Y-m-d H:i:s')."')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Task insert failed", E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                if (mysqli_affected_rows($db) < 1) trigger_error("Task insert failed", E_USER_ERROR);
                 plugin_do('task_new_saved');
                 unset($_SESSION['formdata']['new_task']);
                 unset($_SESSION['formerrors']['new_task']);

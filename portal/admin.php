@@ -50,10 +50,10 @@ if ($_POST['submit'])
         $sql .= $visiblesql;
         $sql .= "WHERE id = {$id}";
 
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysqli_error($db) ,E_USER_ERROR);
             $errors++;
         }
     }
@@ -96,9 +96,9 @@ if ($CONFIG['portal_site_incidents'])
         $sql .= "AND (m.expirydate > UNIX_TIMESTAMP(NOW()) OR m.expirydate = -1) ";
         $sql .= "AND m.product=p.id ";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        if ($row = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        if ($row = mysqli_fetch_object($result))
         {
             if ($row->expirydate == -1)
             {
@@ -171,10 +171,10 @@ $sql = "SELECT * FROM `{$dbContacts}` ";
 $sql .= "WHERE siteid='{$_SESSION['siteid']}' ";
 $sql .= "AND active = TRUE";
 
-if ($result = mysql_query($sql))
+if ($result = mysqli_query($db, $sql))
 {
     $shade = 'shade1';
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         echo "<tr class='{$shade}'><td>{$row->forenames} {$row->surname}</td>";
         echo "<td><a href='contactdetails.php?id={$row->id}'>{$strView}/{$strEdit}</a> </td></tr>";

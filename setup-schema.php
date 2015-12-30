@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `department` varchar(255) DEFAULT NULL,
   `address1` varchar(255) DEFAULT NULL,
   `address2` varchar(255) DEFAULT NULL,
-  `city` char(2) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
   `county` varchar(255) DEFAULT NULL,
   `country` char(2) DEFAULT NULL,
   `postcode` varchar(255) DEFAULT NULL,
@@ -1493,14 +1493,15 @@ CREATE TABLE IF NOT EXISTS `{$dbServiceLevels}` (
   `review_days` int(11) NOT NULL default '365',
   `timed` enum('yes','no') NOT NULL default 'no',
   `allow_reopen` ENUM( 'yes', 'no' ) NOT NULL DEFAULT 'yes' COMMENT 'Allow incidents to be reopened?',
+  `active` enum('true','false') NOT NULL default 'true',
   PRIMARY KEY  (`tag`,`priority`),
   KEY `review_days` (`review_days`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8;
 
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes');
-INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 1, 320, 380, 960, 14.00, 28, 90, 'no', 'yes', 'true');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 2, 240, 320, 960, 10.00, 20, 90, 'no', 'yes', 'true');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 3, 120, 180, 480, 7.00, 14, 90, 'no', 'yes', 'true');
+INSERT INTO `{$dbServiceLevels}` VALUES ('standard', 4, 60, 120, 240, 3.00, 6, 90, 'no', 'yes', 'true');
 
 
 CREATE TABLE IF NOT EXISTS `{$dbSetTags}` (
@@ -2520,6 +2521,9 @@ UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_windo
 UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_ASSIGNED';
 UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_NEARING_SLA';
 UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_window(''{incidentidinternal}'')' WHERE  `name`='NOTICE_INCIDENT_REVIEW_DUE';
+
+-- PH 2015-05-09
+ALTER TABLE `{$dbServiceLevels}` ADD `active` ENUM('true','false') NOT NULL DEFAULT 'true' ;
 ";
 
 

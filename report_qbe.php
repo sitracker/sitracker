@@ -22,8 +22,10 @@ $title = $strQueryByExample;
 
 $mode = clean_fixed_list($_REQUEST['mode'], array('', 'selectfields', 'report'));
 
-$result = mysql_list_tables($CONFIG['db_database']);
-while ($row = mysql_fetch_row($result))
+$sql = "SHOW TABLES";
+$result = mysqli_query($db, $sql);
+
+while ($row = mysqli_fetch_row($result))
 {
     $tables[] = $row[0];
 }
@@ -38,21 +40,9 @@ if (empty($mode))
     echo "<table class='maintable'>";
     echo "<tr><th>{$strTable}:</th>";
     echo "<td>";
-    $result = mysql_list_tables($CONFIG['db_database']);
+    
     echo array_drop_down($tables, 'table1');
     echo "</td></tr>\n";
-    /*
-    echo "<tr><td align='right' width='200' class='shade1'><b>Table 2</b>:</td>";
-    echo "<td width=400 class='shade2'>";
-    $result = mysql_list_tables($db_database);
-    echo "<select name='table1'>";
-    while ($row = mysql_fetch_row($result))
-    {
-        echo "<option value='{$row[0]}'>{$row[0]}</option>\n";
-    }
-    echo "</select>";
-    echo "</td></tr>\n";
-    */
     echo "</table>";
     echo "<p class='formbuttons'>";
     echo "<input type='hidden' name='mode' value='selectfields' />";
@@ -72,29 +62,25 @@ elseif ($mode == 'selectfields')
 
     echo "<tr><th valign='top'>{$strFields}:</th>";
     echo "<td width='400' class='shade2'>";
-    $result = mysql_list_fields($CONFIG['db_database'],$table1);
-    $columns = mysql_num_fields($result);
+    $sql = "DESCRIBE {$table1}";
+    $result = mysqli_query($db, $sql);
     echo "<select name='fields[]' multiple='multiple' size='10'>";
-    for ($i = 0; $i < $columns; $i++)
+    $fields = array();
+    while ($row = mysqli_fetch_row($result))
     {
-        $fieldname = mysql_field_name($result, $i);
+        $fieldname = $row[0];
         // We explicity filter out password columns (see Mantis 1565)
         if ($fieldname != 'password')
         {
-            echo "<option value='$fieldname'>$fieldname</option>\n";
+            echo "<option value='{$fieldname}'>{$fieldname}</option>\n";
+            $fields[] = $fieldname;
         }
     }
     echo "</select>";
     echo "</td></tr>\n";
     echo "<tr><th>{$strSort}:</th>";
     echo "<td class='shade2'>";
-    echo "<select name='sortby'>";
-    for ($i = 0; $i < $columns; $i++)
-    {
-        $fieldname = mysql_field_name($result, $i);
-        echo "<option value='$fieldname'>$fieldname</option>\n";
-    }
-    echo "</select>";
+    echo array_drop_down($fields, "sortby");
     echo "<select name='sortorder'>";
     echo "<option value='none' selected='selected'>{$strNone}</option>";
     echo "<option value='ASC'>{$strSortAscending}</option>";
@@ -104,16 +90,7 @@ elseif ($mode == 'selectfields')
 
     echo "<tr><th>{$strCriteria}:</th>";
     echo "<td class='shade2'>";
-    echo "<select name='criteriafield'>";
-    for ($i = 0; $i < $columns; $i++)
-    {
-        $fieldname = mysql_field_name($result, $i);
-        if ($fieldname != 'password')
-        {
-            echo "<option value='$fieldname'>$fieldname</option>\n";
-        }
-    }
-    echo "</select>";
+    echo array_drop_down($fields, "criteriafield");
     echo "<select name='criteriaop'>";
     echo "<option value='eq' selected>=</option>";
     echo "<option value='lt'>&lt;</option>";
@@ -197,13 +174,13 @@ elseif ($mode == 'report')
     if ($sortorder != 'none') $sql .= "ORDER BY `{$sortby}` {$sortorder} ";
     if ($limit >= 1) $sql .= "LIMIT {$limit} ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $html .= "<p align='center'><code>$sql</code></p>\n";
     $html .= "<table width='100%'>";
     $html .= $htmlfieldheaders;
     $shade = 'shade1';
-    while ($row = mysql_fetch_row($result))
+    while ($row = mysqli_fetch_row($result))
     {
         $columns = count($row);
         $html .= "<tr class='$shade'>";

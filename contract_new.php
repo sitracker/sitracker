@@ -308,9 +308,9 @@ elseif ($action == 'new')
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
         $sql .= "'{$admincontact}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix}, {$billtype})";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $maintid = mysql_insert_id();
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $maintid = mysqli_insert_id($db);
 
         if (!$result)
         {
@@ -333,11 +333,11 @@ elseif ($action == 'new')
         // Add service
         $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, rate, foc) ";
         $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$foc}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-        if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+        if (mysqli_affected_rows($db) < 1) trigger_error("Insert failed", E_USER_ERROR);
 
-        $serviceid = mysql_insert_id();
+        $serviceid = mysqli_insert_id($db);
         update_contract_balance($maintid, $strNewContract, $amount, $serviceid);
 
         if ($addition_errors == 1)

@@ -55,13 +55,13 @@ if ($submit_value == 'go')
     $sql .= " ORDER BY surname ASC, forenames ASC";
 
     // execute query
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 1)
+    if (mysqli_num_rows($result) == 1)
     {
         //go straight to the contact
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
         $url = "contact_details.php?id={$obj->id}";
         header("Location: {$url}");
     }
@@ -149,9 +149,9 @@ else
                 $sql .= " AND c.active = 'true' AND s.active = 'true'";
             }
             $sql .= " ORDER BY surname ASC";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             debug_log($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         }
 
         if ($search_string == '*')
@@ -163,7 +163,7 @@ else
             $search_term = $search_string;
         }
 
-        if (mysql_num_rows($result) == 0)
+        if (mysqli_num_rows($result) == 0)
         {
             if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
             else user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_term}</em>"), E_USER_NOTICE);
@@ -171,7 +171,7 @@ else
         else
         {
 
-            echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysql_num_rows($result), "<em>{$search_term}</em>")."</p>";
+            echo "<p align='center'>".sprintf($strDisplayingXcontactMatchingY, mysqli_num_rows($result), "<em>{$search_term}</em>")."</p>";
 
             echo "<table class='maintable'>
             <tr>
@@ -183,7 +183,7 @@ else
             <th>{$strAction}</th>
             </tr>";
             $shade = 'shade1';
-            while ($results = mysql_fetch_object($result))
+            while ($results = mysqli_fetch_object($result))
             {
                 if ($results->active == 'false') $shade = 'expired';
 

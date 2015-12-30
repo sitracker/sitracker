@@ -43,9 +43,9 @@ elseif ($action == "edit" && isset($contact))
 {
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     $sql = "SELECT * FROM `{$dbContacts}` WHERE id='{$contact}' ";
-    $contactresult = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($contactobj = mysql_fetch_object($contactresult))
+    $contactresult = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    while ($contactobj = mysqli_fetch_object($contactresult))
     {
         echo show_form_errors('edit_contact');
         clear_form_errors('edit_contact');
@@ -235,8 +235,8 @@ else if ($action == "update")
         $sql .= "active = '{$activeStr}', ";
         $sql .= "timestamp_modified={$now} WHERE id='{$contact}'";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {

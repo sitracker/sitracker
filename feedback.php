@@ -60,10 +60,10 @@ if (!empty($oucode))
             $sql = "UPDATE `{$dbContactConfig}` SET value = 'no' ";
             $sql .= "WHERE contactid = '{$contactid}' ";
             $sql .= "AND config = 'feedback_enable' ";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             }
             else
             {
@@ -104,23 +104,23 @@ else
             // Have a look to see if this respondant has already responded to this form
             $sql = "SELECT id AS respondentid FROM `{$dbFeedbackRespondents}` ";
             $sql .= "WHERE contactid='$contactid' AND formid='{$formid}' AND incidentid='{$incidentid}' AND completed = 'no'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) < 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) < 1)
             {
                 echo "<p>{$strFeedbackFormAlreadyCompleted}</p>";
             }
             else
             {
-                list($respondentid) = mysql_fetch_row($result);
+                list($respondentid) = mysqli_fetch_row($result);
             }
             // Store this respondent and references
 
             // Loop through the questions in this form and store the results
             $sql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            while ($question = mysql_fetch_object($result))
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            while ($question = mysqli_fetch_object($result))
             {
                 $qid = $question->id;
 
@@ -198,8 +198,8 @@ else
             // Loop through array and execute the array to insert the form data
             foreach ($rsql AS $sql)
             {
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 $sqltext .= $sql."\n";
             }
 
@@ -226,10 +226,10 @@ else
             $csql = "SELECT id FROM `{$dbContacts}` ";
             $csql .= "WHERE id='{$contactid}' AND email='{$contactemail}'";
 
-            $cresult = mysql_query($csql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $cresult = mysqli_query($db, $csql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-            $contactexists = mysql_num_rows($cresult);
+            $contactexists = mysqli_num_rows($cresult);
 
             if ($contactexists > 0)
             {
@@ -238,11 +238,11 @@ else
                 $rsql .= "WHERE contactid='{$contactid}' AND incidentid='{$incidentid}' AND formid='{$formid}' AND completed = 'no'";
 
 
-                $rresult = mysql_query($rsql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                $rresult = mysqli_query($db, $rsql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-                $waitingforms = mysql_num_rows($rresult);
-                $waitingform = mysql_fetch_object($rresult);
+                $waitingforms = mysqli_num_rows($rresult);
+                $waitingform = mysqli_fetch_object($rresult);
 
                 if ($waitingforms < 1)
                 {
@@ -253,9 +253,9 @@ else
                 else
                 {
                     $sql = "SELECT * FROM `{$dbFeedbackForms}` WHERE id='{$formid}'";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    if (mysql_num_rows($result) < 1)
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                    if (mysqli_num_rows($result) < 1)
                     {
                         echo "<h2>{$strError}</h2>";
                         echo "<p>{$strNoFeedBackFormToCompleteHere}</p>";
@@ -264,7 +264,7 @@ else
                     else
                     {
                         $reqd = 0;
-                        while ($form = mysql_fetch_object($result))
+                        while ($form = mysqli_fetch_object($result))
                         {
                             echo "<form action='feedback.php' method='post'>\n";
                             echo "<h2>{$form->name}</h2>\n";
@@ -282,13 +282,13 @@ else
                             $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
                             $qsql .= "WHERE formid='{$form->id}' ";
                             $qsql .= "ORDER BY taborder ASC";
-                            $qresult = mysql_query($qsql);
-                            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                            $qresult = mysqli_query($db, $qsql);
+                            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
                             echo "<table class='maintable vertical'>";
 
                             $shade = 'shade1';
-                            while ($question = mysql_fetch_object($qresult))
+                            while ($question = mysqli_fetch_object($qresult))
                             {
                                 if (mb_strlen(trim($question->sectiontext)) > 3)
                                 {

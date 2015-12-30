@@ -69,7 +69,7 @@ $server->register('list_incidents',
  */
 function list_incidents($sessionid, $owner=0, $status=1)
 {
-    global $sit;
+    global $sit, $db;
     $status = new SoapStatus();
 
     $incidents = array();
@@ -98,11 +98,11 @@ function list_incidents($sessionid, $owner=0, $status=1)
                     break;
             }
             debug_log("SQL: {$sql}");
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_num_rows($result) > 0)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) > 0)
             {
-            	while ($obj = mysql_fetch_object($result))
+            	while ($obj = mysqli_fetch_object($result))
                 {
                 	$incident = new Incident();
                     $incident->incidentid = $obj->id;

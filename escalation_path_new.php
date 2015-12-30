@@ -109,8 +109,8 @@ else
     {
         $sql = "INSERT INTO `{$dbEscalationPaths}` (name,track_url,home_url,url_title,email_domain) VALUES ";
         $sql .= " ('{$name}','{$trackurl}','{$homeurl}','{$title}','{$emaildomain}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
         if (!$result)
         {

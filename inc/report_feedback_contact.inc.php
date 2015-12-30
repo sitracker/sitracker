@@ -30,9 +30,9 @@ echo feedback_between_dates();
 echo "<p>{$strCustomerFeedbackReportSiteMsg}:</p>";
 
 $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-$qresult = mysql_query($qsql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($qrow = mysql_fetch_object($qresult))
+$qresult = mysqli_query($db, $qsql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+while ($qrow = mysqli_fetch_object($qresult))
 {
     $q[$qrow->taborder] = $qrow;
 }
@@ -75,10 +75,10 @@ if (!empty($enddate))
 
 if (!empty($id)) $msql .= "AND i.contact='{$id}' \n";
 else $msql .= "ORDER BY c.surname ASC, c.forenames ASC, i.contact ASC , i.id ASC \n";
-$mresult = mysql_query($msql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$mresult = mysqli_query($db, $msql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($mresult) >= 1)
+if (mysqli_num_rows($mresult) >= 1)
 {
     $prevcontactid = 0;
     $countcontacts = 0;
@@ -92,7 +92,7 @@ if (mysql_num_rows($mresult) >= 1)
 
 
     $firstrun = 0;
-    while ($mrow = mysql_fetch_object($mresult))
+    while ($mrow = mysqli_fetch_object($mresult))
     {
         // Only print if we have a value ({$prevcontactid} / {$mrow->contactid})
         if ($prevcontactid != $mrow->contactid AND $firstrun != 0)
@@ -143,9 +143,9 @@ if (mysql_num_rows($mresult) >= 1)
         $surveys++;
         $html = "<h4 style='text-align: left;'><a href='../contact_details.php?id={$mrow->contactid}' title='Jump to Contact'>{$mrow->forenames} {$mrow->surname}</a>, <a href='../site_details.php?id={$mrow->siteid}&action=show' title='Jump to site'>{$mrow->sitename}</a></h4>";
         $csql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='text' ORDER BY id DESC";
-        $cresult = mysql_query($csql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        $crow = mysql_fetch_object($cresult);
+        $cresult = mysqli_query($db, $csql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        $crow = mysqli_fetch_object($cresult);
         $textquestion = $crow->id;
         $csql = "SELECT DISTINCT i.id as incidentid, result, i.title as title
                  FROM `{$dbFeedbackRespondents}` AS fr, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r
@@ -178,11 +178,11 @@ if (mysql_num_rows($mresult) >= 1)
             }
         }
         $csql .= "ORDER BY i.contact, i.id";
-        $cresult = mysql_query($csql);
+        $cresult = mysqli_query($db, $csql);
 
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        while ($crow = mysql_fetch_object($cresult))
+        while ($crow = mysqli_fetch_object($cresult))
         {
             if ($crow->result != '')
             {
@@ -191,9 +191,9 @@ if (mysql_num_rows($mresult) >= 1)
         }
 
         $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-        $qresult = mysql_query($qsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($qrow = mysql_fetch_object($qresult))
+        $qresult = mysqli_query($db, $qsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($qrow = mysqli_fetch_object($qresult))
         {
             $numquestions++;
             $sql = "SELECT * FROM `{$dbFeedbackRespondents}` AS fr, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
@@ -228,17 +228,17 @@ if (mysql_num_rows($mresult) >= 1)
             }
 
             $sql .= "ORDER BY i.contact, i.id";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             $numresults = 0;
             $cumul = 0;
             $percent = 0;
             $average = 0;
-            $answercount = mysql_num_rows($result);
+            $answercount = mysqli_num_rows($result);
 
             if ($answercount > 0)
             {
-                while ($row = mysql_fetch_object($result))
+                while ($row = mysqli_fetch_object($result))
                 {
                     // Loop through the results
                     if (!empty($row->result))

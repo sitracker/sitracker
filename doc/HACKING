@@ -212,7 +212,7 @@ Database Queries
 After a database query always check for errors, use trigger_error and throw
 E_USER_WARNING when reading data and E_USER_ERROR when writing data.
 
-When retrieving data from a database mysql_fetch_object should be used over any
+When retrieving data from a database mysqli_fetch_object should be used over any
 other method.
 
 

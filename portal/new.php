@@ -29,7 +29,7 @@ if (!$_REQUEST['action'])
 
     echo show_form_errors('portalnewincident');
     clear_form_errors('portalnewincident');
-    
+
     if ($CONFIG['portal_creates_incidents'])
     {
         //check we are allowed to log against this contract
@@ -47,21 +47,21 @@ if (!$_REQUEST['action'])
         $sql .= "AND m.allcontactssupported='yes' ";
         $sql .= "AND m.id='{$contractid}'";
 
-        $checkcontract = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $contract = mysql_fetch_object($checkcontract);
+        $checkcontract = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $contract = mysqli_fetch_object($checkcontract);
         $productid = $contract->productid;
 
-        if (mysql_num_rows($checkcontract) == 0)
+        if (mysqli_num_rows($checkcontract) == 0)
         {
             echo "<p class='error'>{$strPermissionDenied}</p>";
             include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
             exit;
         }
 
-        mysql_data_seek($checkcontract, 0);
+        mysqli_data_seek($checkcontract, 0);
         $availablecontract = 0;
-        while ($legalcontract = mysql_fetch_object($checkcontract))
+        while ($legalcontract = mysqli_fetch_object($checkcontract))
         {
             if (($legalcontract->term != 'yes') AND
                 (($legalcontract->expirydate >= $now OR $legalcontract->expirydate == -1) OR
@@ -91,11 +91,11 @@ if (!$_REQUEST['action'])
     echo " <span class='required'>{$strRequired}</span></td></tr>";
 
     $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result)  > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result)  > 0)
     {
-        while ($productinforow = mysql_fetch_object($result))
+        while ($productinforow = mysqli_fetch_object($result))
         {
             echo "<tr><th>{$productinforow->information}";
             echo "</th>";
@@ -167,8 +167,8 @@ else //submit
             $id = intval(str_replace("pinfo", "", $key));
             $sql = "SELECT information FROM `{$dbProductInfo}` ";
             $sql .= "WHERE id='{$id}' ";
-            $result = mysql_query($sql);
-            $fieldobj = mysql_fetch_object($result);
+            $result = mysqli_query($db, $sql);
+            $fieldobj = mysqli_fetch_object($result);
             $field = $fieldobj->information;
 
             $_SESSION['formerrors']['portalnewincident'][$field] = sprintf($strFieldMustNotBeBlank, $field); // i18n fieldname
@@ -188,7 +188,7 @@ else //submit
         if ($CONFIG['portal_creates_incidents'])
         {
             $incidentid = create_incident($incidenttitle, $contactid, $servicelevel,
-                                    $contractid, $productid, $software);
+                                    $contractid, $productid, $software, $updatetext, 'show');
             $_SESSION['incidentid'] = $incidentid;
 
             // Need to reload the entitlements data into the session
@@ -197,18 +197,18 @@ else //submit
 
             // Save productinfo if there is some
             $sql = "SELECT * FROM `{$dbProductInfo}` WHERE productid='{$productid}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) > 0)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) > 0)
             {
-                while ($productinforow = mysql_fetch_object($result))
+                while ($productinforow = mysqli_fetch_object($result))
                 {
                     $var = "pinfo{$productinforow->id}";
                     $pinfo = clean_dbstring($_POST[$var]);
                     $pisql = "INSERT INTO `{$dbIncidentProductInfo}` (incidentid, productinfoid, information) ";
                     $pisql .= "VALUES ('{$incidentid}', '{$productinforow->id}', '{$pinfo}')";
-                    mysql_query($pisql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $pisql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
             }
         }
@@ -217,25 +217,8 @@ else //submit
             $incidentid = 0;
         }
 
-        $update_id = new_update($incidentid, $updatetext, 'opening');
-
         if ($CONFIG['portal_creates_incidents'])
         {
-            $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel}' AND priority='{$priority}' ";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $level = mysql_fetch_object($result);
-
-            $targetval = $level->initial_response_mins * 60;
-            $initialresponse = $now + $targetval;
-
-            // Insert the first Review update, this indicates the review period of an incident has started
-            // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
-            $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, bodytext) ";
-            $sql .= "VALUES ('{$incidentid}', '0', 'reviewmet', '{$now}', '0', '1', 'hide', '')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
             $t = new TriggerEvent('TRIGGER_PORTAL_INCIDENT_CREATED', array('incidentid' => $incidentid));
 
             if ($CONFIG['auto_assign_incidents'])
@@ -252,6 +235,8 @@ else //submit
         }
         else
         {
+            $update_id = new_update($incidentid, $updatetext, UPDATE_TYPE_OPENING, UPDATE_SLA_OPENED);
+
             $contact_id = intval($_SESSION['contactid']);
             $contact_name = contact_realname($_SESSION['contactid']);
             $contact_email = contact_email($_SESSION['contactid']);

@@ -23,13 +23,13 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 echo "<h2>".icon('reports', 32)." {$title}</h2>";
 
 $sql = "SELECT * FROM `{$dbFeedbackForms}`";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
     echo "<div id='feedbackformtable'>";
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         echo "<dl>\n";
         echo "<dt>";

@@ -29,14 +29,14 @@ if (!empty($user) AND $user != 'all')
     $sql .= "AND u.id='{$user}' ";
 }
 $sql .= "ORDER BY date DESC";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($result))
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result))
 {
     echo "<table class='maintable'>";
     echo "<tr><th>{$GLOBALS['strType']}</th><th>{$GLOBALS['strUser']}</th><th>{$GLOBALS['strDate']}</th><th>{$GLOBALS['strStatus']}</th><th>{$GLOBALS['strActions']}</th></tr>\n";
     $shade = 'shade1';
-    while ($dates = mysql_fetch_object($result))
+    while ($dates = mysqli_fetch_object($result))
     {
         echo "<tr class='{$shade}'><td>".holiday_type($dates->type)."</td>";
         echo "<td>{$dates->realname}</td>";
@@ -72,6 +72,6 @@ else
     echo "<p class='info'>{$GLOBALS['strNoResults']}</p>";
 }
 
-mysql_free_result($result);
+mysqli_free_result($result);
 
 ?>

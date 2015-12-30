@@ -22,6 +22,8 @@ require_once (APPLICATION_LIBPATH . 'billing.inc.php');
 require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $id = clean_int($_REQUEST['id']);
+$showinactivecontacts = clean_fixed_list($_REQUEST['showinactivecontacts'], array("", "yes"), true);
+$showinactivecontracts = clean_fixed_list($_REQUEST['showinactivecontracts'], array("", "yes"), true);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -36,9 +38,9 @@ plugin_do('site_details');
 // Display site
 echo "<table class='maintable vertical'>";
 $sql="SELECT * FROM `{$dbSites}` WHERE id='{$id}' ";
-$siteresult = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($siteobj = mysql_fetch_object($siteresult))
+$siteresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+while ($siteobj = mysqli_fetch_object($siteresult))
 {
     echo "<tr><th>{$strSite}:</th><td>";
     echo "<h3>".icon('site', 32)." ".htmlentities($siteobj->name)."</h3>";
@@ -154,7 +156,7 @@ while ($siteobj = mysql_fetch_object($siteresult))
 }
 
 plugin_do('site_details_table');
-mysql_free_result($siteresult);
+mysqli_free_result($siteresult);
 
 echo "</table>\n";
 echo "<p align='center'><a href='site_edit.php?action=edit&amp;site={$id}'>{$strEdit}</a> | ";
@@ -166,18 +168,29 @@ echo "<h3>{$strContacts}</h3>";
 // List Contacts
 
 $sql = "SELECT * FROM `{$dbContacts}` WHERE siteid='{$id}' ";
-if ($_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+if ($showinactivecontacts != 'yes' AND $_SESSION['userconfig']['show_inactive_data'] != 'TRUE' )
 {
+    $sqldisabled = $sql . " AND active = 'false' ORDER BY active, surname, forenames";
     $sql .= "AND active = 'true' ";
 }
 $sql .= "ORDER BY active, surname, forenames";
-$contactresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$contactresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-$countcontacts = mysql_num_rows($contactresult);
-if ($countcontacts > 0)
+$countdisablecontacts = 0;
+if ($_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
-    echo "<p align='center'>".sprintf($strContactsMulti, $countcontacts)."</p>";
+    $contactresultdisabled = mysqli_query($db, $sqldisabled);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $countdisablecontacts = mysqli_num_rows($contactresultdisabled);
+}
+
+$countcontacts = mysqli_num_rows($contactresult);
+if ($countcontacts > 0 OR $countdisablecontacts > 0)
+{
+    echo "<p align='center'>".sprintf($strContactsMulti, $countcontacts);
+    if ($countdisablecontacts > 0) echo " (" . sprintf($strInactive, $countdisablecontacts) . " <a href='{$_SERVER['REQUEST_URI']}&amp;showinactivecontacts=yes'>{$strView}</a>)";
+    echo "</p>";
     echo "<table class='maintable'>";
     echo "<tr><th>{$strName}</th><th>{$strJobTitle}</th>";
     echo "<th>{$strDepartment}</th><th>{$strTelephone}</th>";
@@ -186,7 +199,7 @@ if ($countcontacts > 0)
 
     $shade = 'shade1';
 
-    while ($contactobj = mysql_fetch_object($contactresult))
+    while ($contactobj = mysqli_fetch_object($contactresult))
     {
         if ($contactobj->active == 'false') $shade='expired';
         echo "<tr class='{$shade}'>";
@@ -253,7 +266,6 @@ else
 }
 echo "<p align='center'><a href='contact_new.php?siteid={$id}'>{$strNewContact}</a></p>";
 
-
 // Valid user, check perms
 if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
 {
@@ -268,20 +280,33 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
     $sql .= "LEFT JOIN `{$dbResellers}` AS r ON r.id = m.reseller ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND admincontact = c.id AND m.site = '{$id}' ";
-    if ($activeonly == 'yes' OR$_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
+    if ($showinactivecontracts != 'yes' AND $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
     {
-        $sql .= "AND m.term != 'yes' ";
+        $sqldisabled = $sql;
+        $sql .= "AND m.term != 'yes' AND (m.expirydate > {$now} OR m.expirydate = -1) ";
+        $sqldisabled .= "AND (m.term = 'yes' OR m.expirydate < {$now}) ORDER BY expirydate DESC ";
     }
     $sql .= "ORDER BY expirydate DESC";
 
     // connect to database and execute query
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $countcontracts = mysql_num_rows($result);
-    if ($countcontracts > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $countcontracts = mysqli_num_rows($result);
+    
+    $disabledcountcontracts = 0;
+    if (!empty($sqldisabled))
+    {
+        $resultdisabled = mysqli_query($db, $sqldisabled);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $disabledcountcontracts = mysqli_num_rows($result);
+    }
+
+    if ($countcontracts > 0 OR $disabledcountcontracts > 0)
     {
         echo "<p align='center'>";
-        echo mysql_num_rows($result)." $strContracts</p>";
+        echo "{$countcontracts} {$strContracts}";
+        if ($disabledcountcontracts > 0) echo " (".sprintf($strInactive, $disabledcountcontracts)." <a href='{$_SERVER['REQUEST_URI']}&amp;showinactivecontracts=yes'>{$strView}</a>)";
+        echo "</p>";
         echo "<table class='maintable'>
         <tr>
             <th>{$strContractID}</th>
@@ -293,7 +318,7 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
             <th>{$strNotes}</th>
         </tr>";
         $shade = 'shade1';
-        while ($results = mysql_fetch_object($result))
+        while ($results = mysqli_fetch_object($result))
         {
             if ($results->term == 'yes' OR
                 ($results->expirydate < $now AND

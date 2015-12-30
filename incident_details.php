@@ -37,6 +37,7 @@ elseif ($win == 'jump')
     {
         echo "<html><head>";
         echo "<script src='{$CONFIG['application_webpath']}scripts/prototype/prototype.js' type='text/javascript'></script>\n";
+        echo "<script src='{$CONFIG['application_webpath']}scripts/sit.js.php' type='text/javascript'></script>\n";
         echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
         if (!empty($_GET['return']))
         {
@@ -92,9 +93,9 @@ else
 // Check for asked incident ID
 $sql = "SELECT id FROM `{$dbIncidents}` ";
 $sql .= "WHERE id = {$id} ";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($result) == 0)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result) == 0)
 {
     // Incident doesn't exist
     html_redirect("main.php", FALSE, $strInvalidIncidentID);
@@ -195,12 +196,12 @@ else
     $sql .= "WHERE linktype = 7 ";
     $sql .= "AND origcolref = {$incidentid} ";
     $sql .= "AND i.id = linkcolref ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $inventory = mysql_fetch_object($result);
+        $inventory = mysqli_fetch_object($result);
         echo "<div id='inventory'><a href='inventory_view.php?id={$inventory->id}'>";
         echo "$inventory->name";
         if (!empty($inventory->identifier))
@@ -322,13 +323,13 @@ else
         $pisql = "SELECT pi.information AS label, ipi.information AS information ";
         $pisql .= "FROM `{$dbIncidentProductInfo}` AS ipi, `{$dbProductInfo}` AS pi ";
         $pisql .= "WHERE pi.id = ipi.productinfoid AND ipi.incidentid = {$incidentid}";
-        $piresult = mysql_query($pisql);
+        $piresult = mysqli_query($db, $pisql);
 
-        if (mysql_num_rows($piresult) > 0)
+        if (mysqli_num_rows($piresult) > 0)
         {
             echo "<div id='productinfo'>\n";
 
-            while ($pi = mysql_fetch_object($piresult))
+            while ($pi = mysqli_fetch_object($piresult))
             {
                 echo "{$pi->label}: {$pi->information} <br />\n";
             }
@@ -346,10 +347,10 @@ else
     $upsql = "SELECT incidentid, duration ";
     $upsql .= "FROM `{$dbUpdates}`";
     $upsql .= "WHERE incidentid = {$incidentid}";
-    $upresult = mysql_query($upsql);
-    if (mysql_num_rows($upresult) > 0)
+    $upresult = mysqli_query($db, $upsql);
+    if (mysqli_num_rows($upresult) > 0)
     {
-        while ($du = mysql_fetch_object($upresult))
+        while ($du = mysqli_fetch_object($upresult))
         {
             $totalduration = $totalduration + $du->duration;
         }
@@ -403,9 +404,9 @@ else
                 case 1: //stop
                     echo "<a href='view_task.php?id={$num_open_activities[0]}&amp;mode=incident&amp;incident={$id}'>{$strViewActivity}</a> | ";
                     $sql = "SELECT * FROM `{$dbNotes}` WHERE link='10' AND refid='{$num_open_activities[0]}'";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-                    if (mysql_num_rows($result) >= 1)
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+                    if (mysqli_num_rows($result) >= 1)
                     {
                         echo "<a href='task_edit.php?id={$num_open_activities[0]}&amp;action=markcomplete&amp;incident={$id}'>{$strStopActivity}</a>";
                     }
@@ -427,13 +428,13 @@ else
 
     // Incident relationships
     $rsql = "SELECT * FROM `{$dbRelatedIncidents}` WHERE incidentid='{$id}' OR relatedid='{$id}'";
-    $rresult = mysql_query($rsql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($rresult) >= 1)
+    $rresult = mysqli_query($db, $rsql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($rresult) >= 1)
     {
         echo "<div id='relationshiprow'>\n";
         echo "<div id='relationshipleft'>\n{$strRelations}: ";
-        while ($related = mysql_fetch_object($rresult))
+        while ($related = mysqli_fetch_object($rresult))
         {
             if ($related->relatedid == $id)
             {
@@ -460,7 +461,6 @@ else
 
     echo "</div>\n";
 
-
     $offset = clean_int($_REQUEST['offset']);
 
     /**
@@ -472,11 +472,12 @@ else
      */
     function count_updates($incidentid)
     {
+        global $db;
         $count_updates = 0;
         $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list ($count_updates) = mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        list ($count_updates) = mysqli_fetch_row($result);
 
         return $count_updates;
     }
@@ -574,8 +575,8 @@ else
         $sql .= "LIMIT {$offset},{$records}";
     }
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error $sql".mysqli_error($db), E_USER_WARNING);
 
     $keeptags = array('b','i','u','hr','&lt;', '&gt;');
     foreach ($keeptags AS $keeptag)
@@ -647,7 +648,7 @@ else
     $quotereplace[8] = "<span class='quote2'>\\1</span>";
     $quotereplace[9] = "<span class='quote3'>\\1</span>";
 
-    while ($update = mysql_fetch_object($result))
+    while ($update = mysqli_fetch_object($result))
     {
         if (empty($firstid))
         {
@@ -884,7 +885,7 @@ else
                     echo icon($updatetypes['slamet']['icon'], 16, $showhide);
                 }
             }
-            echo "</a>" . sprintf($strUpdatedXbyX, "(".$update->type.")", $updateuser);
+            echo "</a>" . sprintf($strUpdatedXbyX, "({$update->type})", $updateuser);
         }
 
         plugin_do('incident_details_updatehead_content_row');
@@ -948,11 +949,6 @@ else
     {
         echo log_nav_bar();
     }
-
-//    if (!$_GET['win'])
-//    {
-//        echo "</div><!-- AA -->";
-//    }
 
     include (APPLICATION_INCPATH . 'incident_html_bottom.inc.php');
 }

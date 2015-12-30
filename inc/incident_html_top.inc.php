@@ -61,8 +61,8 @@ echo "<script src='{$CONFIG['application_webpath']}scripts/calendar.js' type='te
 
 //update last seen
 $lastseensql = "UPDATE LOW_PRIORITY `{$dbUsers}` SET lastseen=NOW() WHERE id='{$_SESSION['userid']}' LIMIT 1";
-mysql_query($lastseensql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+mysqli_query($db, $lastseensql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
 plugin_do('html_head');
 echo "</head>";
@@ -83,13 +83,14 @@ $sql .= "c.id AS contactid, c.notes AS contactnotes, servicelevel, it.name AS in
 $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c, `{$dbIncidentTypes}` AS it ";
 $sql .= "WHERE i.typeid = it.id AND ((i.id='{$incidentid}' AND i.contact = c.id) ";
 $sql .= " OR i.contact=NULL) ";
-$incidentresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-$incident = mysql_fetch_object($incidentresult);
+$incidentresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+$incident = mysqli_fetch_object($incidentresult);
+
 $sitesql = "SELECT name, notes FROM `{$dbSites}` WHERE id = '{$incident->siteid}'";
-$siteresult = mysql_query($sitesql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-$site = mysql_fetch_object($siteresult);
+$siteresult = mysqli_query($db, $sitesql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+$site = mysqli_fetch_object($siteresult);
 $site_name = $site->name;
 
 if (!empty($site->notes))
@@ -138,9 +139,9 @@ $priority = $incident->priority;
 
 // Lookup the service level times
 $slsql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$servicelevel_tag}' AND priority='{$incident->priority}' ";
-$slresult = mysql_query($slsql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-$servicelevel = mysql_fetch_object($slresult);
+$slresult = mysqli_query($db, $slsql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+$servicelevel = mysqli_fetch_object($slresult);
 
 // Get next target
 $target = incident_get_next_target($incidentid);
@@ -227,11 +228,11 @@ if ($menu != 'hide')
                 FROM `{$dbTempIncoming}` AS ti, `{$dbUpdates}` AS u
                 WHERE ti.id = '{$id}'
                 AND ti.updateid = u.id";
-        $insresult = mysql_query($insql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($insresult) > 0)
+        $insresult = mysqli_query($db, $insql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($insresult) > 0)
         {
-            $inupdate = mysql_fetch_object($insresult);
+            $inupdate = mysqli_fetch_object($insresult);
 
             if ($inupdate->locked == $sit[2] OR empty($inupdate->locked))
             {

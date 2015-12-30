@@ -70,7 +70,7 @@ if (empty($theme)) $theme = $CONFIG['default_interface_style'];
 if (empty($iconset)) $iconset = $CONFIG['default_iconset'];
 echo "<link rel='stylesheet' href='{$CONFIG['application_webpath']}styles/{$theme}/{$theme}.css' />\n";
 // To include a CSS file for a single page, add the filename to the $pagecss variable before including htmlheader.inc.php
-if (is_array($pagecss))
+if (isset($pagecss) && is_array($pagecss))
 {
     foreach ($pagecss AS $pcss)
     {
@@ -91,7 +91,7 @@ if ($_SESSION['auth'] == TRUE)
     echo "<script src='{$CONFIG['application_webpath']}scripts/webtrack.js' type='text/javascript'></script>\n";
     echo "<script src='{$CONFIG['application_webpath']}scripts/activity.js' type='text/javascript'></script>\n";
     // To include a script for a single page, add the filename to the $pagescripts variable before including htmlheader.inc.php
-    if (is_array($pagescripts))
+    if (isset($pagescripts) && is_array($pagescripts))
     {
         foreach ($pagescripts AS $pscript)
         {
@@ -106,14 +106,16 @@ if ($_SESSION['auth'] == TRUE)
 plugin_do('html_head');
 echo "</head>\n";
 
-$pagnename = substr(end(explode('/', $_SERVER['PHP_SELF'])), 0, -4);
+$phpSelfArray = explode('/', $_SERVER['PHP_SELF']);
+
+$pagnename = substr(end($phpSelfArray), 0, -4);
 
 echo "<body id='{$pagnename}_page'>\n";
 
 plugin_do('page_start');
 echo "<div id='masthead'>";
 echo "<div id='mastheadcontent'>";
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     echo "<div id='personaloptions'>";
     echo "<a href='user_profile_edit.php'>";
@@ -141,7 +143,7 @@ if ($sit[0] != '')
 }
 
 echo "<h1 id='apptitle'>{$CONFIG['application_name']}</h1>";
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     echo "<div id='topsearch'>";
     echo "<form name='jumptoincident' action='{$CONFIG['application_webpath']}search.php' method='get'>";
@@ -156,7 +158,7 @@ if ($sit[0] != '')
 echo "</div></div>\n";
 
 // Show menu if logged in
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     // Build a heirarchical top menu
     $hmenu;
@@ -170,19 +172,20 @@ if ($sit[0] != '')
 
 if (!isset($refresh) AND $_SESSION['auth'] === TRUE)
 {
+    global $db;
     //update last seen (only if this is a page that does not auto-refresh)
     $lastseensql = "UPDATE LOW_PRIORITY `{$GLOBALS['dbUsers']}` SET lastseen=NOW() WHERE id='{$_SESSION['userid']}' LIMIT 1";
-    mysql_query($lastseensql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    mysqli_query($db, $lastseensql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 }
 
-if ($sit[0] != '')
+if (isset($sit[0]) && $sit[0] != '')
 {
     // Check this is current
     $sql = "SELECT version FROM `{$dbSystem}` WHERE id = 0";
-    $versionresult = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    list($dbversion) = mysql_fetch_row($versionresult);
+    $versionresult = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    list($dbversion) = mysqli_fetch_row($versionresult);
     if ($dbversion < $application_version)
     {
         $msg = "<strong>IMPORTANT</strong> The SiT database schema needs to be updated";
@@ -201,20 +204,20 @@ if ($sit[0] != '')
         $failure = 0;
 
         $schedulersql = "SELECT `interval`, `lastran` FROM {$dbScheduler} WHERE status='enabled'";
-        $schedulerresult = mysql_query($schedulersql);
-        if (mysql_error()) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
+        $schedulerresult = mysqli_query($db, $schedulersql);
+        if (mysqli_error($db)) debug_log("scheduler_check: Failed to fetch data from the database", TRUE);
 
-        while ($schedule = mysql_fetch_object($schedulerresult))
+        while ($schedule = mysqli_fetch_object($schedulerresult))
         {
             $sqlinterval = ("$schedule->interval");
             $sqllastran = mysql2date("$schedule->lastran");
             $dateresult = $sqlinterval + $sqllastran + 60;
-            if ($dateresult < date(U))
+            if ($dateresult < date('U'))
             {
                 $failure ++;
             }
         }
-        $num = mysql_num_rows($schedulerresult);
+        $num = mysqli_num_rows($schedulerresult);
         $num = $num / 2;
         if ($failure > $num)
         {
@@ -232,12 +235,13 @@ if ($sit[0] != '')
     $noticesql = "SELECT * FROM `{$GLOBALS['dbNotices']}` ";
     // Don't show more than 20 notices, saftey cap
     $noticesql .= "WHERE userid={$sit[2]} ORDER BY timestamp DESC LIMIT 20";
-    $noticeresult = mysql_query($noticesql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($noticeresult) > 0)
+    $noticeresult = mysqli_query($db, $noticesql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($noticeresult) > 0)
     {
         echo "<div id='noticearea'>\n";
         $keys = array_keys($_GET);
+        $url = '';
 
         foreach ($keys AS $key)
         {
@@ -247,7 +251,7 @@ if ($sit[0] != '')
             }
         }
 
-        while ($notice = mysql_fetch_object($noticeresult))
+        while ($notice = mysqli_fetch_object($noticeresult))
         {
             $notice->text = bbcode($notice->text);
             //check for the notice types
@@ -317,7 +321,7 @@ if ($sit[0] != '')
             echo "</small></p></div>\n";
         }
 
-        if (mysql_num_rows($noticeresult) > 1)
+        if (mysqli_num_rows($noticeresult) > 1)
         {
             echo "\n<p id='dismissall'><a href='javascript:void(0);' onclick=\"dismissNotice('all', {$_SESSION['userid']})\">{$strDismissAll}</a></p>\n";
         }

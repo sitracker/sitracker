@@ -304,7 +304,7 @@ function appointment_popup($mode, $year, $month, $day, $time, $group, $user)
 */
 function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid = '')
 {
-    global $plugin_calendar, $sit, $holidaytype, $startofsession;
+    global $plugin_calendar, $sit, $holidaytype, $startofsession, $db;
     if (empty($day)) $day = date('d');
 
     if ($mode == 'month')
@@ -338,10 +338,10 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
 
     // Get list of user groups
     $gsql = "SELECT * FROM `{$GLOBALS['dbGroups']}` ORDER BY name";
-    $gresult = mysql_query($gsql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $gresult = mysqli_query($db, $gsql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $grouparr[0] = $GLOBALS['strNone'];
-    while ($group = mysql_fetch_object($gresult))
+    while ($group = mysqli_fetch_object($gresult))
     {
         $grouparr[$group->id] = $group->name;
     }
@@ -368,24 +368,24 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
     }
 
     $usql .= "ORDER BY groupid, realname";
-    $uresult = mysql_query($usql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $uresult = mysqli_query($db, $usql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    $numusers = mysql_num_rows($uresult);
+    $numusers = mysqli_num_rows($uresult);
     $prevgroupid = '-1';
     if ($numusers > 0)
     {
         $hdays = array();
-        while ($user = mysql_fetch_object($uresult))
+        while ($user = mysqli_fetch_object($uresult))
         {
             unset($hdays);
 
             $hsql = "SELECT *, UNIX_TIMESTAMP(date) AS startdate FROM `{$GLOBALS['dbHolidays']}` WHERE userid={$user->id} AND date BETWEEN '".date('Y-m-d', $startdate)."' AND '".date('Y-m-d', $enddate)."'";
             $hsql .= "AND type != ".HOL_PUBLIC;
 
-            $hresult = mysql_query($hsql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            while ($holiday = mysql_fetch_object($hresult))
+            $hresult = mysqli_query($db, $hsql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            while ($holiday = mysqli_fetch_object($hresult))
             {
                 $cday = date('j',mysql2date($holiday->date));
                 $hdays[$cday] = $holiday->length;
@@ -394,9 +394,9 @@ function draw_chart($mode, $year, $month = '', $day = '', $groupid = '', $userid
             }
             // Public holidays
             $phsql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` WHERE type=".HOL_PUBLIC." AND date BETWEEN '".date('Y-m-d', $startdate)."' AND '".date('Y-m-d', $enddate)."'";
-            $phresult = mysql_query($phsql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            while ($pubhol = mysql_fetch_object($phresult))
+            $phresult = mysqli_query($db, $phsql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            while ($pubhol = mysqli_fetch_object($phresult))
             {
                 $cday = date('j',mysql2date($pubhol->date));
                 $pubholdays[$cday] = $pubhol->length;
@@ -754,16 +754,16 @@ function appointment_type_dropdown($type, $display)
 
 function get_users_appointments($user, $start, $end)
 {
-    global $holidaytype, $CONFIG;
+    global $holidaytype, $CONFIG, $db;
     $items = array();
     $sql = "SELECT * FROM `{$GLOBALS['dbTasks']}` WHERE startdate >= '";
     $sql.= date("Y-m-d H:i:s", $start);
     $sql.= "' AND enddate < '";
     $sql.= date("Y-m-d H:i:s", $end);
     $sql.= "'AND (distribution = 'event' OR distribution = 'incident') AND owner = '{$user}'";
-    $res = mysql_query($sql);
-    echo mysql_error();
-    while($inf = mysql_fetch_object($res))
+    $res = mysqli_query($db, $sql);
+    echo mysqli_error($db);
+    while($inf = mysqli_fetch_object($res))
     {
         if ($inf->distribution == 'event')
         {
@@ -798,10 +798,10 @@ function get_users_appointments($user, $start, $end)
     }
 
     $sql = "SELECT UNIX_TIMESTAMP(date) type, userid FROM `{$GLOBALS['dbHolidays']}` WHERE UNIX_TIMESTAMP(date) >= '$start' AND UNIX_TIMESTAMP(date) < '{$end}' AND userid = '{$user}'";
-    $res = mysql_query($sql);
-    echo mysql_error();
+    $res = mysqli_query($db, $sql);
+    echo mysqli_error($db);
 
-    while($inf = mysql_fetch_object($res))
+    while($inf = mysqli_fetch_object($res))
     {
         switch ($inf->length)
         {
@@ -858,17 +858,17 @@ function get_users_appointments($user, $start, $end)
 
 function book_appointment($name, $description, $user, $start, $end)
 {
-    global $dbTasks;
+    global $dbTasks, $db;
     $sql = "INSERT INTO `{$dbTasks}` (name,description,owner,startdate,enddate,distribution,completion)
-            values('" . mysql_real_escape_string($name) . "','" .
-            mysql_real_escape_string($description) . "','" .
+            values('" . mysqli_real_escape_string($db, $name) . "','" .
+            mysqli_real_escape_string($db, $description) . "','" .
             $user . "','" .
             date("Y-m-d H:i:s",$start) . "','" .
             date("Y-m-d H:i:s",$end) . "',
             'event',
             '0')";
-    mysql_query($sql, $GLOBALS['db']);
-    return mysql_insert_id($GLOBALS['db']);
+    mysqli_query($db, $sql);
+    return mysqli_insert_id($db);
 }
 
 function book_days_when_free($name, $description, $user, $startdate, $days, $doit)

@@ -39,8 +39,8 @@ switch ($action)
         else
         {
             $sql = "INSERT INTO `{$dbResellers}` (name) VALUES ('$name')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             if (!$result)
             {
@@ -60,7 +60,7 @@ switch ($action)
             {
                 plugin_do('reseller_new_saved');
                 // show success message
-                $id = mysql_insert_id();
+                $id = mysqli_insert_id($db);
                 journal(CFG_LOGGING_NORMAL, 'Reseller Added', "Reseller $id Added", CFG_JOURNAL_MAINTENANCE, $id);
                 clear_form_errors('formerrors');
 

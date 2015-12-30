@@ -31,9 +31,9 @@ $sql .= "WHERE origcolref = '{$updateid}' ";
 $sql .= "AND linktype = 5 ";
 $sql .= "AND l.linkcolref = f.id ";
 
-if ($result = @mysql_query($sql))
+if ($result = @mysqli_query($db, $sql))
 {
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $file = $path.$row->linkcolref . "-" . $row->filename;
         if (file_exists($file))
@@ -52,12 +52,12 @@ if ($deleted_files)
 {
     // We delete using ID and timestamp to make sure we dont' delete the wrong update by accident
     $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}' AND timestamp='{$timestamp}'";  // We might in theory have more than one ...
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$tempid}'";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 }
 
 journal(CFG_LOGGING_NORMAL, 'Incident Log Entry Deleted', "Incident Log Entry {$updateid} was deleted from Incident {$incidentid}", CFG_JOURNAL_INCIDENTS, $incidentid);

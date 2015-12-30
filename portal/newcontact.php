@@ -24,7 +24,7 @@ if (isset($_POST['submit']))
 else 
 {
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
-    
+
     $returnpage = cleanvar($_REQUEST['return']);
     if (!empty($_REQUEST['name']))
     {
@@ -32,16 +32,16 @@ else
         $_SESSION['formdata']['new_contact']['forenames'] = ucfirst($name[0]);
         $_SESSION['formdata']['new_contact']['surname'] = ucfirst($name[1]);
     }
-    
+
     echo show_form_errors('new_contact');
     clear_form_errors('new_contact');
     echo "<h2>".icon('contact', 32)." {$strNewSiteContact}</h2>";
-    
+
     echo "<form name='contactform' action='{$_SERVER['PHP_SELF']}' ";
     echo "method='post' onsubmit=\"return confirm_action('{$strAreYouSureAdd}')\">";
     echo "<table class='maintable vertical'>";
     echo "<tr><th>{$strName}</th>\n";
-    
+
     echo "<td>";
     echo "\n<table><tr><td align='center'>{$strTitle}<br />";
     echo "<input maxlength='50' name='courtesytitle' title=\"";

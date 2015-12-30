@@ -33,28 +33,18 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
 
     echo "<h2>".icon('kb', 32, $strKnowledgeBase)." {$strKnowledgeBase}</h2>";
     $perpage = 20;
-$order = clean_fixed_list($_GET['order'], array('', 'a', 'ASC', 'd', 'DESC'));
-$sort = clean_fixed_list($_GET['sort'], array('', 'id', 'title', 'date', 'author', 'keywords'));
+    $order = clean_fixed_list($_GET['order'], array('', 'a', 'ASC', 'd', 'DESC'));
+    $sort = clean_fixed_list($_GET['sort'], array('', 'id', 'title', 'date', 'author', 'keywords'));
 
-$start = clean_int($_GET['start']);
+    $start = clean_int($_GET['start']);
 
     $end = $start + $perpage;
     $filter = array('start' => $start, 'view' => $view);
 
-    // $sql = "SELECT k.*, s.name FROM `{$dbKBArticles}` AS k,
-    //                                $dbKBSoftware,
-    //                                 `{$dbSoftware}` as s
-    //         WHERE ((k.docid = kbs.docid AND kbs.softwareid = s.id) OR 1=1) AND k.distribution = 'public' ";
-    // $sql = "
-    // SELECT k.*, s.name FROM `{$dbKBArticles}` AS k,
-    // LEFT OUTER JOIN `$dbKBSoftware`, `{$dbSoftware}`
-    // ON k.docid = kbs.docid AND kbs.softwareid = s.id ";
-
-
     $sql = "SELECT k.*, s.name FROM `{$dbKBArticles}` AS k, `{$dbSoftware}` as s ";
-    $sql .= "LEFT OUTER JOIN `{$dbKBSoftware}` as kbs ";
+    $sql .= "LEFT OUTER JOIN `{$dbKBSoftware}` AS kbs ";
     $sql .= "ON kbs.softwareid=s.id ";
-    $sql .= "WHERE (k.docid = kbs.docid OR 1=1) AND k.distribution='public' ";
+    $sql .= "WHERE k.docid = kbs.docid AND k.distribution='public' ";
     if ($CONFIG['portal_kb_enabled'] != 'Public')
     {
         if ($view != 'all')
@@ -97,9 +87,9 @@ $start = clean_int($_GET['start']);
     }
     $sql .= " LIMIT {$start}, {$perpage} ";
 
-    if ($result = mysql_query($sql))
+    if ($result = mysqli_query($db, $sql))
     {
-        $numtotal = mysql_num_rows($result);
+        $numtotal = mysqli_num_rows($result);
         if ($end > $numtotal)
         {
             $end = $numtotal;
@@ -140,7 +130,7 @@ $start = clean_int($_GET['start']);
             echo colheader('keywords', $strKeywords, $sort, $order, $filter, '', '15');
             echo "</tr>";
             $shade = 'shade1';
-            while($row = mysql_fetch_object($result))
+            while($row = mysqli_fetch_object($result))
             {
                 $url = "kbarticle.php?id={$row->docid}";
                 // Tell the article page that we're in the portal so it can show menu etc.
@@ -149,11 +139,31 @@ $start = clean_int($_GET['start']);
                     $url .= "&amp;p=1";
                 }
                 echo "<tr class='{$shade}'>";
-                echo "<td><a href=\"$url\">";
+                echo "<td><a href=\"{$url}\">";
                 echo icon('kb', 16, $strID);
                 echo " {$CONFIG['kb_id_prefix']}{$row->docid}</a></td>";
-                echo "<td>{$row->name}<br />";
-                echo "<a href=\"$url\">{$row->title}</a></td>";
+                echo "<td>";
+                $ssql = "SELECT * FROM `{$dbKBSoftware}` AS kbs, `{$dbSoftware}` AS s WHERE kbs.softwareid = s.id ";
+                $ssql .= "AND kbs.docid = '{$row->docid}' ORDER BY s.name";
+                $sresult = mysqli_query($db, $ssql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                $rowcount = mysqli_num_rows($sresult);
+                if ($rowcount >= 1 AND $rowcount < 3)
+                {
+                    $count = 1;
+                    while ($kbsoftware = mysqli_fetch_object($sresult))
+                    {
+                        echo $kbsoftware->name;
+                        if ($count < $rowcount) echo ", ";
+                        $count++;
+                    }
+                }
+                elseif ($rowcount >= 4)
+                {
+                    echo "Various";
+                }
+                echo "<br />";
+                echo "<a href=\"{$url}\">{$row->title}</a></td>";
                 echo "<td>";
                 echo ldate($CONFIG['dateformat_date'], mysql2date($row->published));
                 echo "</td>";

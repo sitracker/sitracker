@@ -120,11 +120,11 @@ if (!empty($action))
     {
         $selected = clean_int($selected);
         $tsql = "SELECT updateid, locked FROM `{$dbTempIncoming}` WHERE id={$selected}";
-        $tresult = mysql_query($tsql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if ($tresult AND mysql_num_rows($tresult) > 0)
+        $tresult = mysqli_query($db, $tsql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if ($tresult AND mysqli_num_rows($tresult) > 0)
         {
-            $temp = mysql_fetch_object($tresult);
+            $temp = mysqli_fetch_object($tresult);
 
             switch ($action)
             {
@@ -133,11 +133,11 @@ if (!empty($action))
                     {
                         // Only allow the person who has the update located delete it
                         $dsql = "DELETE FROM `{$dbUpdates}` WHERE id={$temp->updateid}";
-                        mysql_query($dsql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $dsql);
+                        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                         $dsql = "DELETE FROM `{$dbTempIncoming}` WHERE id={$selected}";
-                        mysql_query($dsql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $dsql);
+                        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     }
                     break;
 
@@ -145,15 +145,15 @@ if (!empty($action))
                     $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
                     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
                     $sql .= "WHERE id='{$selected}' AND (locked = 0 OR locked IS NULL)";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     break;
 
                 case 'unlock':
                     $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
                     $sql .= "WHERE id='{$selected}' AND locked = '{$sit[2]}'";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     $displayid = null;
                     break;
 
@@ -162,8 +162,8 @@ if (!empty($action))
                     $updatetime = date('Y-m-d H:i:s',$now);
                     $update = "UPDATE `{$dbTempIncoming}` SET reason='{$newreason}', ";
                     $update .= "reason_user='{$sit['2']}', reason_time='{$updatetime}' WHERE id={$selected}";
-                    mysql_query($update);
-                    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+                    mysqli_query($db, $update);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
                     break;
                     
                 default:
@@ -211,9 +211,9 @@ if (empty($displayid))
         }
 
     }
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $countresults = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $countresults = mysqli_num_rows($result);
 
     if ($countresults > 0)
     {
@@ -227,20 +227,20 @@ if (empty($displayid))
         echo colheader('date', $strDate, $sort, $order, $filter, '', '15%');
         echo colheader('size', $strSize);
         echo "</tr>";
-        while ($incoming = mysql_fetch_object($result))
+        while ($incoming = mysqli_fetch_object($result))
         {
             $num_attachments = 0;
             if (!empty($incoming->updateid))
             {
                 $usql = "SELECT * FROM `{$dbUpdates}` WHERE id = '{$incoming->updateid}' LIMIT 1";
-                $uresult = mysql_query($usql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                $update = mysql_fetch_object($uresult);
+                $uresult = mysqli_query($db, $usql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                $update = mysqli_fetch_object($uresult);
 
                 $asql = "SELECT COUNT(*) FROM `{$dbLinks}` WHERE linktype = 5 AND direction = 'left' AND origcolref = {$incoming->updateid}";
-                $aresult = mysql_query($asql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                list($num_attachments) = mysql_fetch_row($aresult);
+                $aresult = mysqli_query($db, $asql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                list($num_attachments) = mysqli_fetch_row($aresult);
             }
 
             echo "<tr class='{$shade}' onclick='trow(event);'>";
@@ -342,15 +342,15 @@ else
     // Display single message
 
     $sql = "SELECT * FROM `{$dbTempIncoming}` WHERE id = {$displayid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if ($result AND mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if ($result AND mysqli_num_rows($result) > 0)
     {
-        $incoming = mysql_fetch_object($result);
+        $incoming = mysqli_fetch_object($result);
         $usql = "SELECT * FROM `{$dbUpdates}` WHERE id = '{$incoming->updateid}' LIMIT 1";
-        $uresult = mysql_query($usql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $update = mysql_fetch_object($uresult);
+        $uresult = mysqli_query($db, $usql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $update = mysqli_fetch_object($uresult);
         echo "<div class='detailhead'>";
         echo "<div class='detaildate'>";
         if (!empty($update->timestamp)) echo date($CONFIG['dateformat_datetime'], $update->timestamp);
@@ -375,8 +375,8 @@ else
             //it's not locked, lock for this user
             $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
             $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' WHERE id='{$displayid}' AND (locked = 0 OR locked IS NULL)";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             $lockedbyname = $strYou;
             $lockedbyyou = true;
             $incoming->locked = true;
@@ -385,9 +385,9 @@ else
         {
             $lockedby = $incoming->locked;
             $lockedbysql = "SELECT realname FROM `{$dbUsers}` WHERE id={$lockedby}";
-            $lockedbyresult = mysql_query($lockedbysql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            while ($row = mysql_fetch_object($lockedbyresult))
+            $lockedbyresult = mysqli_query($db, $lockedbysql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            while ($row = mysqli_fetch_object($lockedbyresult))
             {
                 $lockedbyname = $row->realname;
             }

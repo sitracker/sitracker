@@ -23,7 +23,7 @@ require_once (APPLICATION_LIBPATH . 'triggers.inc.php');
 class TriggerEvent {
     function TriggerEvent($trigger_type, $param_array = '')
     {
-        global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types;
+        global $sit, $CONFIG, $dbg, $dbTriggers, $trigger_types, $db;
         $trigger_type = cleanvar($trigger_type);
         // Check that this is a defined trigger
         if (!array_key_exists($trigger_type, $trigger_types))
@@ -35,16 +35,16 @@ class TriggerEvent {
         //find relevant triggers
         $sql = "SELECT * FROM `{$dbTriggers}` ";
         $sql .= "WHERE triggerid='{$trigger_type}'";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             trigger_error("MySQL Query Error " .
-                          mysql_error(), E_USER_WARNING);
+                          mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
-        $mysqlcount = mysql_num_rows($result);
+        $mysqlcount = mysqli_num_rows($result);
 
-        while ($trigger = mysql_fetch_object($result))
+        while ($trigger = mysqli_fetch_object($result))
         {
             $trigger = new Trigger($trigger_type,
                                    $trigger->userid, $trigger->template,
@@ -65,7 +65,7 @@ class Trigger extends SitEntity {
 
     function add()
     {
-        global $dbTriggers;
+        global $dbTriggers, $db;
         $exists = $this->check_exists($this->trigger_type,
                                       $this->userid, $this->template,
                                       $this->action, $this->checks,
@@ -78,11 +78,11 @@ class Trigger extends SitEntity {
             $sql .= "VALUES ('{$this->trigger_type}', '{$this->user_id}', ";
             $sql .= "'{$this->action}', '{$this->template}', ";
             $sql .= "'{$this->parameters}', '{$this->checks}')";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                $this->error_text .= "MySQL Query Error ".mysql_error();
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                $this->error_text .= "MySQL Query Error ".mysqli_error($db);
                 return FALSE;
             }
             else return TRUE;
@@ -96,7 +96,7 @@ class Trigger extends SitEntity {
 
     function edit()
     {
-        global $dbTriggers;
+        global $dbTriggers, $db;
         if ($this->trigger_id !== -1)
         {
             $sql = "UPDATE `{$dbTriggers}` ";
@@ -107,11 +107,11 @@ class Trigger extends SitEntity {
             $sql .= "parameters = '{$this->parameters}' ";
             $sql .= "checks = '{$this->checks}' ";
             $sql .= "WHERE id = {$this->trigger_id}";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                $this->error_text .= "MySQL Query Error ".mysql_error();
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                $this->error_text .= "MySQL Query Error ".mysqli_error($db);
                 return FALSE;
             }
             else return TRUE;
@@ -232,21 +232,21 @@ class Trigger extends SitEntity {
      */
     public static function fromID($id)
     {
-        global $dbTriggers;
+        global $dbTriggers, $db;
 
         $id = intval($id);
         //find relevant triggers
         $sql = "SELECT * FROM `{$dbTriggers}` ";
         $sql .= "WHERE id='{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             trigger_error("MySQL Query Error " .
-                          mysql_error(), E_USER_WARNING);
+                          mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
 
-        $trigger = mysql_fetch_object($result);
+        $trigger = mysqli_fetch_object($result);
         $t = new Trigger($trigger->triggerid, $trigger->userid,
                          $trigger->template, $trigger->action, $trigger->checks,
                          $trigger->parameters, '', $id);
@@ -343,7 +343,7 @@ class Trigger extends SitEntity {
      */
     private function trigger_action($action, $template)
     {
-        global $CONFIG, $dbg, $dbTriggers;
+        global $CONFIG, $dbg, $dbTriggers, $db;
 
         if ($this->user_id > 0)
         {
@@ -458,7 +458,7 @@ class Trigger extends SitEntity {
      */
     private function send_trigger_email($template)
     {
-        global $CONFIG, $dbg, $dbEmailTemplates;
+        global $CONFIG, $dbg, $dbEmailTemplates, $db;
         if ($CONFIG['debug'])
         {
             $dbg .= "TRIGGER: send_trigger_email({$template})\n";
@@ -472,11 +472,11 @@ class Trigger extends SitEntity {
         }
 
         $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE name='{$template}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         if ($result)
         {
-            $template = mysql_fetch_object($result);
+            $template = mysqli_fetch_object($result);
         }
 
         //add this in manually, this is who we're sending the email to
@@ -488,7 +488,7 @@ class Trigger extends SitEntity {
         $ccemail = trigger_replace_specials($this->trigger_type, $template->ccfield, $this->param_array);
         $bccemail = trigger_replace_specials($this->trigger_type, $template->bccfield, $this->param_array);
         $subject = trigger_replace_specials($this->trigger_type, $template->subjectfield, $this->param_array);
-        $body .= trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
+        $body = trigger_replace_specials($this->trigger_type, $template->body, $this->param_array);
         if (!empty($from) AND !empty($toemail) AND !empty($subject) AND !empty($body))
         {
             debug_log("send_trigger_email {$toemail}, {$from}, {$subject}, {$body}, {$replytoemail}, {$ccemail}, {$bccemail}");
@@ -518,14 +518,14 @@ class Trigger extends SitEntity {
      */
     private function create_trigger_notice($template)
     {
-        global $CONFIG, $dbg, $dbNotices, $dbNoticeTemplates;
+        global $CONFIG, $dbg, $dbNotices, $dbNoticeTemplates, $db;
 
         $sql = "SELECT * FROM `{$dbNoticeTemplates}` WHERE name='{$template}'";
-        $query = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $query = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         if ($query)
         {
-            $notice = mysql_fetch_object($query);
+            $notice = mysqli_fetch_object($query);
 
             if (mb_substr($notice->text, 0, 3) == 'str')
             {
@@ -545,7 +545,7 @@ class Trigger extends SitEntity {
                 $noticelinktext = $notice->linktext;
             }
 
-            $notice_text = mysql_real_escape_string(trigger_replace_specials($this->trigger_type, $notice_text, $this->param_array));
+            $notice_text = mysqli_real_escape_string($db, trigger_replace_specials($this->trigger_type, $notice_text, $this->param_array));
             $noticelinktext = cleanvar(trigger_replace_specials($this->trigger_type, $noticelinktext, $this->param_array));
             $noticelink = cleanvar(trigger_replace_specials($this->trigger_type, $notice->link, $this->param_array));
             $refid = cleanvar(trigger_replace_specials($this->trigger_type, $notice->refid, $this->param_array));
@@ -563,8 +563,8 @@ class Trigger extends SitEntity {
             $sql .= "VALUES ('{$this->user_id}', '{$template}', '{$notice->type}', '{$notice_text}',";
             $sql .= " '{$noticelinktext}', '{$noticelink}', '{$durability}', ";
             $sql .= "'{$refid}', NOW())";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             $return = TRUE;
         }
         else
@@ -584,16 +584,16 @@ class Trigger extends SitEntity {
     //TODO should this be limited to one delete, is there ever more than one?
     function revoke($reference_id = 0)
     {
-        global $GLOBALS;
+        global $GLOBALS, $db;
         //find all triggers of this type and user
         $sql = "SELECT * FROM `{$GLOBALS['dbTriggers']}` ";
         $sql .= "WHERE triggerid = '{$this->trigger_type}' ";
         $sql .= "AND userid = {$this->user_id} ";
         $sql .= "AND action='ACTION_NOTICE'";
-        $result = mysql_query($sql);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($triggerobj = mysql_fetch_object($result))
+            while ($triggerobj = mysqli_fetch_object($result))
             {
                 $templatesql = "DELETE FROM {$GLOBALS['dbNotices']} ";
                 $templatesql .= "WHERE template = '{$triggerobj->template}' ";
@@ -603,8 +603,8 @@ class Trigger extends SitEntity {
                 {
                     $templatesql .= "AND referenceid = {$referenceid}";
                 }
-                $resultdel = mysql_query($templatesql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $resultdel = mysqli_query($db, $templatesql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             }
         }
     }
@@ -620,16 +620,16 @@ class Trigger extends SitEntity {
      */
     private function check_exists($action, $templateid, $rules, $parameters)
     {
-        global $dbTriggers;
+        global $dbTriggers, $db;
         $rtn = FALSE;
 
         $sql = "SELECT * FROM `{$dbTriggers}` ";
         $sql .= "WHERE triggerid = '{$this->trigger_type}' AND userid = '{$this->user_id}' AND action = '{$action}'";
         $sql .= "AND template = '{$templateid}' AND parameters = '{$parameters}' ";
         $sql .= "AND checks = '{$rules}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) != 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) != 0)
         {
             $rtn = TRUE;
         }

@@ -40,10 +40,10 @@ $sql .= "AND m.reseller = r.id ";
 $sql .= "AND m.product = p.id ";
 $sql .= "AND (m.licence_type IS NULL OR m.licence_type = lt.id) ";
 
-$maintresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$maintresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-$maint = mysql_fetch_object($maintresult);
+$maint = mysqli_fetch_object($maintresult);
 
 echo "<table class='maintable vertical'>";
 echo "<tr><th>{$strContract} {$strID}:</th>";
@@ -182,7 +182,7 @@ echo "<p align='center'>".html_action_links($operations)."</p>";
 
 echo "<h3>{$strNamedContacts}</h3>";
 
-if (mysql_num_rows($maintresult) > 0)
+if (mysqli_num_rows($maintresult) > 0)
 {
     if ($maint->allcontactssupported == 'yes')
     {
@@ -244,13 +244,13 @@ if (mysql_num_rows($maintresult) > 0)
     // supported software
     $sql = "SELECT * FROM `{$dbSoftwareProducts}` AS sp, `{$dbSoftware}` AS s ";
     $sql .= "WHERE sp.softwareid = s.id AND productid='{$maint->product}' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result)>0)
+    if (mysqli_num_rows($result)>0)
     {
         echo"<table class='maintable'>";
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             $software->lifetime_end = mysql2date($software->lifetime_end);
             echo "<tr><td> ".icon('skill', 16)." ";

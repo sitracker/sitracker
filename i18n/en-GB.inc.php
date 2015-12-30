@@ -1646,6 +1646,7 @@ $strSaturday = 'Saturday';
 # Two character (Maximum) abbreviation for 'Saturday'
 $strSaturdayAbbr = 'Sa';
 $strSave = 'Save';
+$strSaved = 'Saved';
 $strSaveAsCSV = 'Save as CSV';
 $strSaveDashbaordLayout = 'Save Dashboard Layout';
 $strSaveDraft = 'Save Draft';
@@ -2163,6 +2164,7 @@ $strWorkStatus = 'Work Status';
 $strWebsite = 'Website';
 $strWithheld = 'Withheld';
 $strXDays = '%s days';
+$strXInactive = '%s inactive';
 $strXIncidentsLoggedViaPortal = '%s Incidents Logged via the Portal';
 $strXIncidentsLeft = '%s Incidents Left';
 $strXIsNoAcceptingIncidentAgain = '%s is now accepting incidents again. Previous status %s and not accepting.';

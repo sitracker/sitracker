@@ -57,21 +57,21 @@ elseif ($mode == 'update')
 
     $sql = "SELECT closed, status, owner FROM `{$dbIncidents}` WHERE id = {$incidentid}";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
 
         $description = $billingObj->incident_update_amount_text($amount, $description);
 
         $sqlInsert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, duration) VALUES ";
         $sqlInsert .= "('{$incidentid}', '{$sit[2]}', 'editing', '{$obj->owner}', '{$obj->status}', '{$description}', '{$now}', '{$amount}')";
-        $resultInsert = mysql_query($sqlInsert);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $resultInsert = mysqli_query($db, $sqlInsert);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-        if (mysql_affected_rows() > 0) $success = TRUE;
+        if (mysqli_affected_rows($db) > 0) $success = TRUE;
         else $success = FALSE;
 
         if ($success)
