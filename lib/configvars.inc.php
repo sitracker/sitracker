@@ -446,6 +446,7 @@ $CFGVAR['incident_id_email_opening_tag']['title'] = 'When sending am email what 
 $CFGVAR['incident_reference_prefix']['title'] = 'The prefix for the incident ID';
 
 $CFGVAR['incident_id_include_type']['title'] = "Include incident type in incident id";
+$CFGVAR['incident_id_include_type']['help'] = 'Should the type of ticket be shown in the incident ID when displayed and emailed';
 $CFGVAR['incident_id_include_type']['type'] = 'checkbox';
 
 $CFGVAR['inventory_enabled']['title'] = 'Enable Inventory';
