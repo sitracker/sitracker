@@ -706,8 +706,8 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
     // TODO make maintenance_drop_down a hierarchical selection box sites/contracts
     // extract all maintenance contracts
     $sql  = "SELECT s.name AS sitename, p.name AS productname, m.id AS id ";
-    $sql .= "FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbSites']}` AS s, `{$GLOBALS['dbProducts']}` AS p ";
-    $sql .= "WHERE site = s.id AND product = p.id ";
+    $sql .= "FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbSites']}` AS s, `{$GLOBALS['dbProducts']}` AS p, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql .= "WHERE site = s.id AND product = p.id AND m.id = msl.maintenanceid ";
     if (!empty($siteid)) $sql .= "AND s.id = {$siteid} ";
 
     if ($showonlyactive)
@@ -722,11 +722,12 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
 
     if ($sla !== FALSE)
     {
-        $sql .= "AND servicelevel = '{$sla}' ";
+        $sql .= "AND msl.servicelevel = '{$sla}' ";
     }
 
-    $sql .= "ORDER BY s.name ASC";
+    $sql .= "GROUP BY m.id ORDER BY s.name ASC";
     $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $results = 0;
     // print HTML
     $html .= "<select name='{$name}'";
@@ -740,25 +741,28 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($maintenance = mysqli_fetch_object($result))
+    if (mysqli_num_rows($result) > 0)
     {
-        if (!is_array($excludes) OR (is_array($excludes) AND !in_array($maintenance->id, $excludes)))
+        while ($maintenance = mysqli_fetch_object($result))
         {
-            $html .= "<option ";
-            if ($maintenance->id == $id)
+            if (!is_array($excludes) OR (is_array($excludes) AND !in_array($maintenance->id, $excludes)))
             {
-                $html .= "selected='selected' ";
+                $html .= "<option ";
+                if ($maintenance->id == $id)
+                {
+                    $html .= "selected='selected' ";
+                }
+                if (!empty($siteid))
+                {
+                    $html .= "value='{$maintenance->id}'>{$maintenance->productname}</option>";
+                }
+                else
+                {
+                    $html .= "value='{$maintenance->id}'>{$maintenance->sitename} | {$maintenance->productname}</option>";
+                }
+                $html .= "\n";
+                $results++;
             }
-            if (!empty($siteid))
-            {
-                $html .= "value='{$maintenance->id}'>{$maintenance->productname}</option>";
-            }
-            else
-            {
-                $html .= "value='{$maintenance->id}'>{$maintenance->sitename} | {$maintenance->productname}</option>";
-            }
-            $html .= "\n";
-            $results++;
         }
     }
 
