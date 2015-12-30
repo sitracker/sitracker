@@ -1035,16 +1035,16 @@ function user_dropdown($name, $selected='', $self='')
  */
 function incident_types_dropdown($name, $selected=1)
 {
-    global $dbIncidentTypes;
+    global $dbIncidentTypes, $db;
     $sql = "SELECT * FROM `{$dbIncidentTypes}` AS it ";
     $sql .= " ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $count = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $count = mysqli_num_rows($result);
     if ($count >= 1)
     {
         $html = "<select name='{$name}' id='{$name}'>";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             if ($obj->id != $self)
             {

@@ -298,10 +298,10 @@ elseif ($action == 'new')
             $billingmatrix = '';
             $billtype = '';
         }
-        
+
         $billingmatrix = convert_string_null_safe($billingmatrix);
         $billtype = convert_string_null_safe($billtype);
-        
+
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
         $sql .= "admincontact, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix, billingtype) ";
@@ -325,9 +325,9 @@ elseif ($action == 'new')
             $type = clean_dbstring($_REQUEST['incident_type'][$i]);
             $sla = clean_dbstring($_REQUEST['servicelevel'][$i]);
             $sql = "INSERT INTO `{$dbMaintenanceServiceLevels}` VALUES ({$maintid}, {$type}, '{$sla}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-            if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+            if (mysqli_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
         }
 
         // Add service

@@ -130,10 +130,10 @@ echo "<tr><th>{$strServiceLevel}:</th><td>";
 $timed = false;
 
 $sql_slas = "SELECT msl.servicelevel, it.name FROM `{$dbMaintenanceServiceLevels}` AS msl, `{$dbIncidentTypes}` AS it WHERE msl.incidenttypeid = it.id AND msl.maintenanceid = {$id}";
-$result_slas = mysql_query($sql_slas);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result_slas = mysqli_query($db, $sql_slas);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 echo "<table><tr><th>{$strIncidentType}</th><th>{$strServiceLevel}</th></tr>";
-while ($obj = mysql_fetch_object($result_slas))
+while ($obj = mysqli_fetch_object($result_slas))
 {
     echo "<tr><td>{$obj->name}</td><td>".get_sla_name($obj->servicelevel)."</td></tr>";
     if (servicelevel_timed($obj->servicelevel)) $timed = true;

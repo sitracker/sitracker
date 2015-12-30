@@ -32,12 +32,12 @@ if (empty($action))
     echo "<h2>".icon('edit', 32)." {$title}</h2>";
 
     $sql = "SELECT name, prefix FROM `{$dbIncidentTypes}` WHERE id = {$id} AND type = 'user'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($db, $result) > 0)
     {
-        list($name, $prefix) = mysql_fetch_row($result);
+        list($name, $prefix) = mysqli_fetch_row($result);
         echo "<form action='{$_SERVER['PHP_SELF']}?action=edit&amp;id={$id}' method='post'>";
         echo "<table align='center'>";
         echo "<tr><th>{$strName}</th><td><input name='name' id='name' value='{$name}' /></td></tr>";
@@ -78,8 +78,8 @@ else
     if ($errors == 0)
     {
         $sql = "UPDATE `{$dbIncidentTypes}` SET name = '{$name}', prefix = '{$prefix}' WHERE id = {$id}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result) echo "<p class='error'>".sprintf($strEditXfailed, $strIncidentType)."\n";
         else

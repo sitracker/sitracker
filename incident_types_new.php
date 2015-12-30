@@ -63,13 +63,13 @@ else
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbIncidentTypes}` (name, type, prefix) VALUES ('{$name}', 'user', '{$prefix}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result) echo "<p class='error'>".sprintf($strNewXfailed, $strIncidentType)."\n";
         else
         {
-            $id = mysql_insert_id();
+            $id = mysqli_insert_id($db);
             journal(CFG_LOGGING_NORMAL, 'Incident Type Added', "Incident Type{$id} was added", CFG_JOURNAL_ADMIN, $id);
 
             html_redirect("incident_types.php");

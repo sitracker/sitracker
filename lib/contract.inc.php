@@ -110,11 +110,12 @@ function contract_software()
  */
 function contract_slatag($maintid, $incidenttype)
 {
+    global $db;
     $maintid = intval($maintid);
     $incidenttype = intval($incidenttype);
     $sql = "SELECT servicelevel FROM `{$GLOBALS['dbMaintenanceServiceLevels']}` WHERE maintenanceid = {$maintid} AND incidenttypeid = {$incidenttype}";
-    $result = mysql_query($sql);
-    $obj = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    $obj = mysqli_fetch_object($result);
     if (!empty($obj->servicelevel))
     {
         return $obj->servicelevel;

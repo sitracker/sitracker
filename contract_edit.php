@@ -106,9 +106,9 @@ if ($action == "edit")
         echo "<tr><th>{$strIncidentType}</th><th>{$strServiceLevel}</th></tr>";
 
         $sql_sla = "SELECT * FROM `{$dbMaintenanceServiceLevels}` AS msl WHERE maintenanceid = {$maintid}";
-        $result_sla = mysql_query($sql_sla);
-        if (mysql_error()) trigger_error("MySQL Error", E_USER_WARNING);
-        while ($obj_sla = mysql_fetch_object($result_sla))
+        $result_sla = mysqli_query($db, $sql_sla);
+        if (mysqli_error($db)) trigger_error("MySQL Error", E_USER_WARNING);
+        while ($obj_sla = mysqli_fetch_object($result_sla))
         {
             echo "<tr><td>".incident_types_dropdown('incident_type[]', $obj_sla->incidenttypeid)."</td><td>".servicelevel_drop_down('servicelevel[]', $obj_sla->servicelevel, TRUE);
             echo "</td></tr>";
@@ -237,9 +237,9 @@ else if ($action == "update")
                 $type = clean_dbstring($_REQUEST['incident_type'][$i]);
                 $sla = clean_dbstring($_REQUEST['servicelevel'][$i]);
                 $sql = "INSERT `{$dbMaintenanceServiceLevels}` VALUES ({$maintid}, {$type}, '{$sla}') ON DUPLICATE KEY UPDATE servicelevel = '{$sla}'";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                if (mysqli_affected_rows($db) < 1) trigger_error("Insert failed", E_USER_ERROR);
             }
 
             plugin_do('contract_edit_saved');

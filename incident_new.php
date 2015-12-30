@@ -23,7 +23,7 @@ $title = $strNewIncident;
 
 function to_row($contact)
 {
-    global $now, $updateid, $CONFIG, $dbg;
+    global $now, $updateid, $CONFIG, $dbg, $db;
 
     $str = '';
     if (($contact->expirydate < $now
@@ -44,11 +44,11 @@ function to_row($contact)
 
     $types = array();
 
-    $result_incidenttypes = mysql_query($sql_incidenttypes);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result_incidenttypes) > 0)
+    $result_incidenttypes = mysqli_query($db, $sql_incidenttypes);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result_incidenttypes) > 0)
     {
-        while ($obj = mysql_fetch_object($result_incidenttypes)) 
+        while ($obj = mysqli_fetch_object($result_incidenttypes)) 
         {
             $a = array();
             $a['type'] = $obj->name;
@@ -511,8 +511,8 @@ elseif ($action == 'incidentform')
     else
     {
         $incidenttype_sql = "SELECT it.id, it.name FROM `{$dbIncidentTypes}` AS it, `{$dbMaintenanceServiceLevels}` AS msl WHERE msl.incidenttypeid = it.id AND msl.maintenanceid = {$maintid}";
-        $incidenttype_result = mysql_query($incidenttype_sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $incidenttype_result = mysqli_query($db, $incidenttype_sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         echo "<td>{$strIncidentType}: <strong>".db_read_column('name', $dbIncidentTypes, $type)."</strong>";
         echo "<input type='hidden' name='type' id='type' value='{$type}' /></td>";
