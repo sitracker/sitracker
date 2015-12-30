@@ -821,7 +821,7 @@ CREATE TABLE IF NOT EXISTS `{$dbIncidentTypes}` (
   `name` varchar(32) NOT NULL,
   `type` ENUM('system','user') NOT NULL DEFAULT 'user',
   `prefix` varchar(16) DEFAULT NULL, 
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   UNIQUE KEY `prefix` (`prefix`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1890,7 +1890,9 @@ INSERT INTO `{$dbProducts}` VALUES (1,1,'Example Product','This is an example pr
 
 INSERT INTO `{$dbResellers}` VALUES (2,'Example Reseller');
 
-INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, servicelevel, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no','standard',0);
+INSERT INTO `{$dbMaintenance}` (id, site, product, reseller, expirydate, licence_quantity, licence_type, incident_quantity, incidents_used, notes, admincontact, term, incidentpoolid) VALUES (1,1,1,2,1428192000,1,4,0,0,'This is an example contract.',1,'no',0);
+
+INSERT INTO `{$dbMaintenanceServiceLevels}` (maintenanceid, incidenttypeid, servicelevel) VALUES (1, 1, 'standard');
 
 INSERT INTO `{$dbSoftware}` (`id`, `name`, `lifetime_start`, `lifetime_end`) VALUES (1, 'Example Software', NULL, NULL);
 INSERT INTO `{$dbSoftwareProducts}` VALUES (1,1);
