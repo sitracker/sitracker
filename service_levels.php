@@ -29,7 +29,7 @@ $operations[$strNewServiceLevel] = array('url' => 'service_level_new.php');
 echo "<p align='center'>" . html_action_links($operations) . "</p>";
 
 
-$tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag";
+$tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag ORDER BY active, tag";
 $tresult = mysql_query($tsql);
 if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
 if (mysql_num_rows($tresult) >= 1)
