@@ -1594,6 +1594,7 @@ $strResolutionReprioritisation = 'Resolution/Reprioritisation';
 $strResolutionReprioritisationSLA = 'Resolution/Reprioritisation SLA';
 $strResolvedby = 'Resolved by %s';
 $strReseller = 'Reseller';
+$strResellers = 'Resellers';
 $strResponsesToFeedbackForm = 'Responses to Feedback Form';
 $strResponsesToAllFeedbackForms = 'Responses to All Feedback Forms';
 $strRestricted = 'Restricted';
