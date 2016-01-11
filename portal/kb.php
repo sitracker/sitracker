@@ -87,9 +87,9 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
     }
     $sql .= " LIMIT {$start}, {$perpage} ";
 
-    if ($result = mysql_query($sql))
+    if ($result = mysqli_query($db, $sql))
     {
-        $numtotal = mysql_num_rows($result);
+        $numtotal = mysqli_num_rows($result);
         if ($end > $numtotal)
         {
             $end = $numtotal;
@@ -130,7 +130,7 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
             echo colheader('keywords', $strKeywords, $sort, $order, $filter, '', '15');
             echo "</tr>";
             $shade = 'shade1';
-            while($row = mysql_fetch_object($result))
+            while($row = mysqli_fetch_object($result))
             {
                 $url = "kbarticle.php?id={$row->docid}";
                 // Tell the article page that we're in the portal so it can show menu etc.
@@ -145,13 +145,13 @@ if ($CONFIG['kb_enabled'] AND $CONFIG['portal_kb_enabled'] !== 'Disabled')
                 echo "<td>";
                 $ssql = "SELECT * FROM `{$dbKBSoftware}` AS kbs, `{$dbSoftware}` AS s WHERE kbs.softwareid = s.id ";
                 $ssql .= "AND kbs.docid = '{$row->docid}' ORDER BY s.name";
-                $sresult = mysql_query($ssql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                $rowcount = mysql_num_rows($sresult);
+                $sresult = mysqli_query($db, $ssql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                $rowcount = mysqli_num_rows($sresult);
                 if ($rowcount >= 1 AND $rowcount < 3)
                 {
                     $count = 1;
-                    while ($kbsoftware = mysql_fetch_object($sresult))
+                    while ($kbsoftware = mysqli_fetch_object($sresult))
                     {
                         echo $kbsoftware->name;
                         if ($count < $rowcount) echo ", ";

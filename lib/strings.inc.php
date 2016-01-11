@@ -46,8 +46,8 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     if ($CONFIG['enable_inbound_mail'] == TRUE)
     {
         $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
-        $result = mysql_query($sql);
-        list($inbox_count) = mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        list($inbox_count) = mysqli_fetch_row($result);
         if ($inbox_count > 0)
         {
             $inbox_count = " <strong>(".$inbox_count.")</strong>";
@@ -59,7 +59,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Main Menu
     //
-    if (!is_array($hmenu[0])) $hmenu[0] = array();
+    if (!is_array(@$hmenu[0])) $hmenu[0] = array();
     $hmenu[0] = $hmenu[0] +
                     array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $CONFIG['application_shortname'], 'url' => "{$CONFIG['application_webpath']}main.php", 'submenu' => 10),
                            20 => array('perm' => PERM_SITE_VIEW, 'name' => $strCustomers, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 20),
@@ -70,7 +70,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strHelp, 'url' => "{$CONFIG['application_webpath']}help.php", 'submenu' => 70)
     );
     // Second Level: SiT! submenu
-    if (!is_array($hmenu[10])) $hmenu[10] = array();
+    if (!is_array(@$hmenu[10])) $hmenu[10] = array();
     $hmenu[10] = $hmenu[10] +
                     array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strDashboard, 'url' => "{$CONFIG['application_webpath']}main.php"),
                            20 => array('perm' => PERM_SEARCH, 'name' => $strSearch, 'url' => "{$CONFIG['application_webpath']}search.php"),
@@ -81,7 +81,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strLogout, 'url' => "{$CONFIG['application_webpath']}logout.php")
     );
     // Second Level: My Details submenu
-    if (!is_array($hmenu[1030])) $hmenu[1030] = array();
+    if (!is_array(@$hmenu[1030])) $hmenu[1030] = array();
     $hmenu[1030] = $hmenu[1030] +
                     array (10 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMyProfile, 'url' => "{$CONFIG['application_webpath']}user_profile_edit.php"),
                            20 => array('perm' => PERM_MYPROFILE_EDIT, 'name' => $strMySettings, 'url' => "{$CONFIG['application_webpath']}config.php?userid=current"),
@@ -92,7 +92,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            70 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strMyNotifications, 'url' => "{$CONFIG['application_webpath']}notifications.php")
     );
     // Second Level: Control Panel submenu
-    if (!is_array($hmenu[1040])) $hmenu[1040] = array();
+    if (!is_array(@$hmenu[1040])) $hmenu[1040] = array();
     $hmenu[1040] = $hmenu[1040] +
                     array (10 => array('perm' => PERM_ADMIN, 'name' => $strConfigure, 'url' => "{$CONFIG['application_webpath']}config.php"),
                            20 => array('perm' => PERM_ADMIN, 'name' => $strUsers, 'url' => "{$CONFIG['application_webpath']}manage_users.php", 'submenu' => 104020),
@@ -111,7 +111,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            160 => array('perm' => PERM_ADMIN, 'name' => $strJournal, 'url' => "{$CONFIG['application_webpath']}journal.php")
     );
     // Third Level: Control Panel/Manage Users submenu
-    if (!is_array($hmenu[104020])) $hmenu[104020] = array();
+    if (!is_array(@$hmenu[104020])) $hmenu[104020] = array();
     $hmenu[104020] = $hmenu[104020] +
                     array (10 => array('perm' => PERM_ADMIN, 'name' => $strManageUsers, 'url' => "{$CONFIG['application_webpath']}manage_users.php"),
                            20 => array('perm' => PERM_USER_ADD, 'name' => $strNewUser, 'url' => "{$CONFIG['application_webpath']}user_new.php?action=showform"),
@@ -120,14 +120,14 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            50 => array('perm' => PERM_ADMIN, 'name' => $strEditHolidayEntitlement, 'url' => "{$CONFIG['application_webpath']}edit_holidays.php", 'enablevar' => 'holidays_enabled')
     );
     // Second Level: SiT/Products & Skills Submenu
-    if (!is_array($hmenu[1050])) $hmenu[1050] = array();
+    if (!is_array(@$hmenu[1050])) $hmenu[1050] = array();
     $hmenu[1050] = $hmenu[1050] +
                     array (10 => array('perm' => PERM_PRODUCT_VIEW, 'name' => $strListProducts, 'url' => "{$CONFIG['application_webpath']}products.php"),
                            20 => array('perm' => PERM_PRODUCT_VIEW, 'name' => $strListSkills, 'url' => "{$CONFIG['application_webpath']}products.php?display=skills"),
                            30 => array('perm' => PERM_SKILL_ADD, 'name' => $strListVendors, 'url' => "{$CONFIG['application_webpath']}vendors.php")
     );
     // Second Level: SiT/Users Submenu
-    if (!is_array($hmenu[1060])) $hmenu[1060] = array();
+    if (!is_array(@$hmenu[1060])) $hmenu[1060] = array();
     $hmenu[1060] = $hmenu[1060] +
                     array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strViewUsers, 'url' => "{$CONFIG['application_webpath']}users.php"),
                            20 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strListUserSkills, 'url' => "{$CONFIG['application_webpath']}user_skills.php"),
@@ -140,7 +140,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Customers menu
     //
-    if (!is_array($hmenu[20])) $hmenu[20] = array();
+    if (!is_array(@$hmenu[20])) $hmenu[20] = array();
     $hmenu[20] = $hmenu[20] +
                     array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strSites, 'url' => "{$CONFIG['application_webpath']}sites.php", 'submenu' => 2010),
                            20 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strContacts, 'url' => "{$CONFIG['application_webpath']}contacts.php", 'submenu' => 2020),
@@ -149,19 +149,19 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            50 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strFeedback, 'url' => "{$CONFIG['application_webpath']}feedback_browse.php", 'submenu' => 2050 ,'enablevar' => 'feedback_enabled')
     );
     // Second Level: Customers/Sites submenu
-    if (!is_array($hmenu[2010])) $hmenu[2010] = array();
+    if (!is_array(@$hmenu[2010])) $hmenu[2010] = array();
     $hmenu[2010] = $hmenu[2010] +
                     array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowseSites, 'url' => "{$CONFIG['application_webpath']}sites.php"),
                            20 => array('perm' => PERM_SITE_ADD, 'name' => $strNewSite, 'url' => "{$CONFIG['application_webpath']}site_new.php?action=showform")
     );
     // Second Level: Customers/Contacts submenu
-    if (!is_array($hmenu[2020])) $hmenu[2020] = array();
+    if (!is_array(@$hmenu[2020])) $hmenu[2020] = array();
     $hmenu[2020] = $hmenu[2020] +
                     array (10 => array('perm' => PERM_SITE_VIEW, 'name' => $strBrowseContacts, 'url' => "{$CONFIG['application_webpath']}contacts.php"),
                            20 => array('perm' => PERM_CONTACT_ADD, 'name' => $strNewContact, 'url' => "{$CONFIG['application_webpath']}contact_new.php?action=showform")
     );
     // Second Level: Customers/Contracts submenu
-    if (!is_array($hmenu[2030])) $hmenu[2030] = array();
+    if (!is_array(@$hmenu[2030])) $hmenu[2030] = array();
     $hmenu[2030] = $hmenu[2030] +
                     array (10 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strBrowseContracts, 'url' => "{$CONFIG['application_webpath']}contracts.php"),
                            20 => array('perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
@@ -172,7 +172,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            80 => array('perm' => PERM_REPORT_RUN, 'name' => $strBilling, 'url' => "{$CONFIG['application_webpath']}billable_incidents.php")
     );
     // Second Level: Customers/Feedback  submenu
-    if (!is_array($hmenu[2050])) $hmenu[2050] = array();
+    if (!is_array(@$hmenu[2050])) $hmenu[2050] = array();
     $hmenu[2050] = $hmenu[2050] +
                     array (10 => array('perm' => PERM_NOT_REQUIRED, 'name' => $strBrowseFeedback, 'url' => "{$CONFIG['application_webpath']}feedback_browse.php", 'enablevar' => 'feedback_enabled'),
                            20 => array('perm' => PERM_FEEDBACK_FORM_EDIT, 'name' => $strFeedbackForms, 'url' => "{$CONFIG['application_webpath']}feedback_form_list.php", 'enablevar' => 'feedback_enabled'),
@@ -183,7 +183,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Support menu
     //
-    if (!is_array($hmenu[30])) $hmenu[30] = array();
+    if (!is_array(@$hmenu[30])) $hmenu[30] = array();
     $hmenu[30] = $hmenu[30] +
                     array (10 => array('perm' => PERM_UPDATE_DELETE, 'name' => $strInbox.$inbox_count, 'url' => "{$CONFIG['application_webpath']}inbox.php", 'enablevar' => 'enable_inbound_mail'),
                            20 => array('perm' => PERM_INCIDENT_ADD, 'name' => $strNewIncident, 'url' => "{$CONFIG['application_webpath']}incident_new.php"),
@@ -196,7 +196,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Tasks menu
     //
-    if (!is_array($hmenu[40])) $hmenu[40] = array();
+    if (!is_array(@$hmenu[40])) $hmenu[40] = array();
     $hmenu[40] = $hmenu[40] +
                 array (10 => array('perm' => PERM_TASK_EDIT, 'name' => $strNewTask, 'url' => "{$CONFIG['application_webpath']}task_new.php"),
                        20 => array('perm' => PERM_TASK_VIEW, 'name' => $strViewTasks, 'url' => "{$CONFIG['application_webpath']}tasks.php")
@@ -206,7 +206,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Knowledge Base menu
     //
-    if (!is_array($hmenu[50])) $hmenu[50] = array();
+    if (!is_array(@$hmenu[50])) $hmenu[50] = array();
     $hmenu[50] = $hmenu[50] +
                 array (10 => array('perm' => PERM_KB_VIEW, 'name' => $strNewKBArticle, 'url' => "{$CONFIG['application_webpath']}kb_article.php"),
                        20 => array('perm' => PERM_KB_VIEW, 'name' => $strBrowse, 'url' => "{$CONFIG['application_webpath']}kb.php")
@@ -216,7 +216,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Reports menu
     //
-    if (!is_array($hmenu[60])) $hmenu[60] = array();
+    if (!is_array(@$hmenu[60])) $hmenu[60] = array();
     $hmenu[60] = $hmenu[60] +
                 array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strMarketingMailshot}", 'url' => "{$CONFIG['application_webpath']}report_marketing.php", 'desc' => $strReportDescMarketting),
                        20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strCustomerExport}", 'url' => "{$CONFIG['application_webpath']}report_customers.php", 'desc' => $strReportDescCustomers),
@@ -231,7 +231,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                        110 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strEngineerMonthlyActivityTotals}",'url' => "{$CONFIG['application_webpath']}report_billable_engineer_utilisation.php", 'desc' => $strReportDescBillableEngineerUtilisation
     ));
     // Second Level: Reports/Incidents submenu
-    if (!is_array($hmenu[6040])) $hmenu[6040] = array();
+    if (!is_array(@$hmenu[6040])) $hmenu[6040] = array();
     $hmenu[6040] = $hmenu[6040] +
                 array (10 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsBySite}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_site.php", 'desc' => $strReportDescIncidentsBySite),
                        20 => array('perm' => PERM_REPORT_RUN, 'name' => "{$strIncidentsByEngineer}", 'url' => "{$CONFIG['application_webpath']}report_incidents_by_engineer.php", 'desc' => $strReportDescIncidentsByEngineer),
@@ -250,7 +250,7 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
     //
     // Top Level: Help menu
     //
-    if (!is_array($hmenu[70])) $hmenu[70] = array();
+    if (!is_array(@$hmenu[70])) $hmenu[70] = array();
     $hmenu[70] + $hmenu[70] =
                 array (10 => array('perm' => PERM_HELP_VIEW, 'name' => "{$strHelpContents}{$strEllipsis}", 'url' => "{$CONFIG['application_webpath']}help.php"),
                        20 => array('perm' => PERM_HELP_VIEW, 'name' => "{$strGetHelpOnline}", 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),
@@ -280,7 +280,7 @@ if (!empty($_SESSION) AND isset($_SESSION['portalauth']) AND $_SESSION['portalau
     //
     // Top Level Main Menu
     //
-    if (!is_array($hmenu[0])) $hmenu[0] = array();
+    if (!is_array(@$hmenu[0])) $hmenu[0] = array();
     $hmenu[0] = $hmenu[0] +
                 array (10 => array ('name' => $strPortal, 'url' => 'index.php', 'submenu' => 10),
                        20 => array ('name' => $strSupport, 'url' => 'index.php', 'submenu' => 20),
@@ -292,7 +292,7 @@ if (!empty($_SESSION) AND isset($_SESSION['portalauth']) AND $_SESSION['portalau
     //
     // Top Level: Portal menu
     //
-    if (!is_array($hmenu[10])) $hmenu[10] = array();
+    if (!is_array(@$hmenu[10])) $hmenu[10] = array();
     $hmenu[10] + $hmenu[10] =
                 array (10 => array ('name' => $strMyDetails, 'url' => 'contactdetails.php'),
                        20 => array ('name' => $strLogout, 'url' => '../logout.php'));
@@ -301,7 +301,7 @@ if (!empty($_SESSION) AND isset($_SESSION['portalauth']) AND $_SESSION['portalau
     //
     // Top Level: Incidents menu
     //
-    if (!is_array($hmenu[20])) $hmenu[20] = array();
+    if (!is_array(@$hmenu[20])) $hmenu[20] = array();
     $hmenu[20] + $hmenu[20] =
                 array (10 => array ('name' => $strEntitlement, 'url' => 'entitlement.php'),
                        20 => array ('name' => $strNewIncident, 'url' => 'entitlement.php'),
@@ -312,14 +312,14 @@ if (!empty($_SESSION) AND isset($_SESSION['portalauth']) AND $_SESSION['portalau
     //
     // Top Level: KB menu
     //
-    if (!is_array($hmenu[30])) $hmenu[30] = array();
+    if (!is_array(@$hmenu[30])) $hmenu[30] = array();
     $hmenu[30] + $hmenu[30] =
                 array (10 => array ('name' => $strViewKnowledgebaseArticles, 'url' => 'kb.php', 'enablevar' => 'kb_enabled'));
 
     //
     // Top Level: Admin
     //
-    if (!is_array($hmenu[40])) $hmenu[40] = array();
+    if (!is_array(@$hmenu[40])) $hmenu[40] = array();
     $hmenu[40] + $hmenu[40] =
                 array (10 => array ('name' => $strContractDetails, 'url' => 'admin.php'),
                        20 => array ('name' => $strSiteDetails, 'url' => 'sitedetails.php'),
@@ -328,7 +328,7 @@ if (!empty($_SESSION) AND isset($_SESSION['portalauth']) AND $_SESSION['portalau
     //
     // Top Level: Help
     //
-    if (!is_array($hmenu[50])) $hmenu[50] = array();
+    if (!is_array(@$hmenu[50])) $hmenu[50] = array();
     $hmenu[50] + $hmenu[50] =
                 array (10 => array ('name' => $strHelpContents.$strEllipsis, 'url' => 'help.php'),
                        20 => array ('name' => $strGetHelpOnline, 'url' => "http://sitracker.org/wiki/Documentation".mb_strtoupper(mb_substr($_SESSION['lang'], 0, 2))),

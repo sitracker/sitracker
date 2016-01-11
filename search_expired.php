@@ -92,13 +92,13 @@ else
         $sql .= "ORDER BY expirydate ASC";
 
         // connect to database
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         if ($show == "") $pagetitle = "<h2>".icon('contract', 32)." {$strNonTerminatedContractsExpiredXdaysAgo}</h2>\n";
         else if ($show == "terminated") $pagetitle = "<h2>".icon('contract', 32)." {$strTerminatedContractsExpiredXdaysAgo}</h2>\n";
 
-        if (mysql_num_rows($result) == 0)
+        if (mysqli_num_rows($result) == 0)
         {
             include (APPLICATION_INCPATH . 'htmlheader.inc.php');
             printf ($pagetitle, $expired);
@@ -113,8 +113,8 @@ else
 
                 printf ($pagetitle, $expired);
 
-                echo "<h3>{$strSearchYielded} ".mysql_num_rows($result);
-                if (mysql_num_rows($result) == 1)
+                echo "<h3>{$strSearchYielded} ".mysqli_num_rows($result);
+                if (mysqli_num_rows($result) == 1)
                 {
                     echo " {$strResult}</h3>";
                 }
@@ -138,7 +138,7 @@ else
                 </tr>\n";
 
                 $shade = 'shade1';
-                while ($results = mysql_fetch_object($result))
+                while ($results = mysqli_fetch_object($result))
                 {
                     echo "<tr>";
                     echo "<td align='center' class='{$shade}' width='50'><a href='contract_details.php?id={$results->maintid}'>{$results->maintid}</a></td>";
@@ -179,7 +179,7 @@ else
             else
             {
                 $csvfieldheaders = "{$strContract},{$strSite},{$strProduct},{$strReseller},{$strLicense},{$strExpiryDate},{$strAdminContact},{$strTelephone},{$strEmail},{$strNotes}\n";
-                while ($row = mysql_fetch_object($result))
+                while ($row = mysqli_fetch_object($result))
                 {
                     $csv .= "{$row->maintid},{$row->site},{$row->product},{$row->reseller},{$row->license_quantity} {$row->licence_type},";
                     $csv .= date($CONFIG['dateformat_date'], $row->expirydate);

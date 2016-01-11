@@ -52,10 +52,10 @@ function generate_row($update)
     else if (!empty($update->fromaddr))
     {
         // Have a look if we've got a user with this email address
-        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysql_real_escape_string($update->fromaddr)."%'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        list($contactmatches) = mysql_fetch_row($result);
+        $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbUsers']}` WHERE email LIKE '%".mysqli_real_escape_string($db, $update->fromaddr)."%'";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        list($contactmatches) = mysqli_fetch_row($result);
         if ($contactmatches > 0) $shade = 'notice';
     }
     $pluginshade = plugin_do('holdingqueue_rowshade', $update);
@@ -173,15 +173,15 @@ if ($lock = clean_int($_REQUEST['lock']))
     $lockeduntil = date('Y-m-d H:i:s', $now + $CONFIG['record_lock_delay']);
     $sql = "UPDATE `{$dbTempIncoming}` SET locked='{$sit[2]}', lockeduntil='{$lockeduntil}' ";
     $sql .= "WHERE id='{$lock}' AND (locked = 0 OR locked IS NULL)";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 }
 elseif ($unlock = clean_int($_REQUEST['unlock']))
 {
     $sql = "UPDATE `{$dbTempIncoming}` AS t SET locked=NULL, lockeduntil=NULL ";
     $sql .= "WHERE id='{$unlock}' AND locked = '{$sit[2]}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 }
 else
 {
@@ -189,8 +189,8 @@ else
     $nowdatel = date('Y-m-d H:i:s');
     $sql = "UPDATE `{$dbTempIncoming}` SET locked=NULL, lockeduntil=NULL ";
     $sql .= "WHERE UNIX_TIMESTAMP(lockeduntil) < '{$now}' ";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 }
 
 if ($spam_string == cleanvar($_REQUEST['delete_all_spam']))
@@ -202,13 +202,13 @@ if ($spam_string == cleanvar($_REQUEST['delete_all_spam']))
         $ids[0] = clean_int($ids[0]);
 
         $sql = "DELETE FROM `{$dbTempIncoming}` WHERE id='{$ids[1]}' AND SUBJECT LIKE '%SPAMASSASSIN%' AND updateid='{$ids[0]}' LIMIT 1";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        if (mysql_affected_rows() == 1)
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        if (mysqli_affected_rows($db) == 1)
         {
             $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$ids[0]}'";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             $path = "{$CONFIG['attachment_fspath']}updates/{$ids[0]}";
             if (file_exists($path)) deldir($path);
         }
@@ -222,12 +222,12 @@ if (!empty($selected))
     {
         $updateid = clean_int($updateid);
         $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         $path = $CONFIG['attachment_fspath'].'updates/'.$updateid;
 
         deldir($path);
@@ -241,16 +241,16 @@ $sql  = "SELECT u.id AS id, ti.id AS tempid, u.*, ti.* ";
 $sql .= "FROM `{$dbUpdates}` AS u, `{$dbTempIncoming}` AS ti ";
 $sql .= "WHERE u.incidentid = 0 AND ti.updateid = u.id ";
 $sql .= "ORDER BY timestamp ASC, ti.id ASC";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-$countresults = mysql_num_rows($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+$countresults = mysqli_num_rows($result);
 
 $spamcount = 0;
 if ($countresults > 0)
 {
-    if ($countresults) mysql_data_seek($result, 0);
+    if ($countresults) mysqli_data_seek($result, 0);
 
-    while ($updates = mysql_fetch_object($result))
+    while ($updates = mysqli_fetch_object($result))
     {
         if (!empty($CONFIG['spam_email_subject']))
         {
@@ -271,10 +271,10 @@ if ($countresults > 0)
 }
 
 $sql = "SELECT * FROM `{$dbIncidents}` WHERE owner='0' AND status!='2'";
-$resultnew = mysql_query($sql);
-if (mysql_num_rows($resultnew) >= 1)
+$resultnew = mysqli_query($db, $sql);
+if (mysqli_num_rows($resultnew) >= 1)
 {
-    while ($new = mysql_fetch_object($resultnew))
+    while ($new = mysqli_fetch_object($resultnew))
     {
         // Get Last Update
         list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($new->id);
@@ -343,14 +343,14 @@ if ($spamcount > 0)
     echo "<p align='center'>{$strIncomingEmailSpam}</p>";
 
     // Reset back for 'nasty' emails
-    if ($countresults) mysql_data_seek($result, 0);
+    if ($countresults) mysqli_data_seek($result, 0);
 
     echo "<table align='center' style='width: 95%;'>";
     echo "<tr><th /><th>{$strDate}</th><th>{$strFrom}</th>";
     echo "<th>{$strSubject}</th><th>{$strMessage}</th>";
     echo "<th>{$strActions}</th></tr>\n";
 
-    while ($updates = mysql_fetch_object($result))
+    while ($updates = mysqli_fetch_object($result))
     {
         if (stristr($updates->subject, $CONFIG['spam_email_subject']))
         {
@@ -373,17 +373,17 @@ $sql = "SELECT i.id, i.title, c.forenames, c.surname, s.name ";
 $sql .= "FROM `{$dbIncidents}` AS i,`{$dbContacts}` AS c, `{$dbSites}` AS s ";
 $sql .= "WHERE i.status = 8 AND i.contact = c.id AND c.siteid = s.id ";
 $sql .= "ORDER BY s.id, i.contact"; //awaiting customer action
-$resultchase = mysql_query($sql);
-if (mysql_num_rows($resultchase) >= 1)
+$resultchase = mysqli_query($db, $sql);
+if (mysqli_num_rows($resultchase) >= 1)
 {
     $shade = 'shade1';
-    while ($chase = mysql_fetch_object($resultchase))
+    while ($chase = mysqli_fetch_object($resultchase))
     {
         $sql_update = "SELECT * FROM `{$dbUpdates}` WHERE incidentid = {$chase->id} ORDER BY timestamp DESC LIMIT 1";
-        $result_update = mysql_query($sql_update);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result_update = mysqli_query($db, $sql_update);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        $obj_update = mysql_fetch_object($result_update);
+        $obj_update = mysqli_fetch_object($result_update);
 
         if ($obj_update->type == 'auto_chase_phone' OR $obj_update->type == 'auto_chase_manager')
         {
@@ -430,9 +430,9 @@ echo "<h3>".icon('reassign', 32, $strPendingReassignments);
 echo " {$strPendingReassignments}</h3>";
 $sql = "SELECT * FROM `{$dbTempAssigns}` AS t, `{$dbIncidents}` AS i ";
 $sql .= "WHERE t.incidentid = i.id AND assigned='no' ";
-$result = mysql_query($sql);
+$result = mysqli_query($db, $sql);
 
-if (mysql_num_rows($result) >= 1)
+if (mysqli_num_rows($result) >= 1)
 {
     $show = FALSE;
     $rhtml = "<br />\n";
@@ -443,7 +443,7 @@ if (mysql_num_rows($result) >= 1)
     $rhtml .= "<th title='{$strIncidentTitle}'>{$strSubject}</th><th>{$strMessage}</th>";
     $rhtml .= "<th>{$strActions}</th></tr>\n";
 
-    while ($assign = mysql_fetch_object($result))
+    while ($assign = mysqli_fetch_object($result))
     {
         // $originalownerstatus=user_status($assign->originalowner);
         $useraccepting = strtolower(user_accepting($assign->originalowner));

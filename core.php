@@ -123,45 +123,19 @@ if ($CONFIG['db_username'] == '' OR $CONFIG['db_database'] == '')
     exit;
 }
 
-// Connect to Database server
-$db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
-if (mysql_error())
+$db = mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password'], $CONFIG['db_database']);
+if (!($db instanceof mysqli) || mysqli_error($db))
 {
     $msg = urlencode(base64_encode("Could not connect to database server '{$CONFIG['db_hostname']}'"));
     header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
     exit;
 }
 
-// mysql_query("SET time_zone = {$CONFIG['timezone']}");
-
-// Select database
-mysql_select_db($CONFIG['db_database'], $db);
-if (mysql_error())
-{
-    // TODO add some detection for missing database
-    if (strpos(mysql_error(), 'Unknown database') !== FALSE)
-    {
-        $msg = urlencode(base64_encode("Unknown Database '{$CONFIG['db_database']}'"));
-        header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
-        exit;
-    }
-    // Attempt socket connection to database to check if server is alive
-    if (!fsockopen($CONFIG['db_hostname'], 3306, $errno, $errstr, 5))
-    {
-        trigger_error("!Error: No response from database server within 5 seconds, Database Server ({$CONFIG['db_hostname']}) is probably down - contact a Systems Administrator", E_USER_ERROR);
-    }
-    else
-    {
-        $msg = urlencode(base64_encode("Unknown Database '{$CONFIG['db_database']}' / Failed to connect"));
-        header("Location: {$CONFIG['application_webpath']}setup.php?msg={$msg}");
-        exit;
-    }
-}
 
 // See Mantis 506 for sql_mode discussion
-@mysql_query("SET SESSION sql_mode = '';");
-mysql_query("SET NAMES 'utf8'");
-mysql_query("SET CHARACTER SET utf8");
+@mysqli_query($db, "SET SESSION sql_mode = '';");
+mysqli_query($db, "SET NAMES 'utf8'");
+mysqli_query($db, "SET CHARACTER SET utf8");
 
 
 // Soft table names
@@ -170,10 +144,10 @@ require (APPLICATION_LIBPATH . 'tablenames.inc.php');
 // TODO this should really be a function as its used in sit_upgrade_plugin_check as its called from setup.php
 // Read config from database (this overrides any config in the config files
 $sql = "SELECT * FROM `{$dbConfig}`";
-$result = @mysql_query($sql);
-if ($result AND mysql_num_rows($result) > 0)
+$result = @mysqli_query($db, $sql);
+if ($result AND mysqli_num_rows($result) > 0)
 {
-    while ($conf = mysql_fetch_object($result))
+    while ($conf = mysqli_fetch_object($result))
     {
         if ($conf->value === 'TRUE') $conf->value = TRUE;
         if ($conf->value === 'FALSE') $conf->value = FALSE;

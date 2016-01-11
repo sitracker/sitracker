@@ -27,9 +27,9 @@ $title = $strClose;
 if (empty($process))
 {
     $sql = "SELECT owner FROM `{$dbIncidents}` WHERE id = '{$incidentid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($owner) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($owner) = mysqli_fetch_row($result);
 
     if ($owner == 0)
     {
@@ -123,9 +123,9 @@ if (empty($process))
 
     $bodytext = '';
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND type='probdef' ORDER BY timestamp ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($row = mysql_fetch_object($result))
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    while ($row = mysqli_fetch_object($result))
     {
         $bodytext = str_replace("<hr>", "", $row->bodytext);
         $bodytext .= "{$bodytext}\n\n";
@@ -193,9 +193,9 @@ if (empty($process))
     echo "<td><textarea class='required' id='solution' name='solution' cols='40' rows='8' >";
     $solution = '';
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid='{$id}' AND (type='solution' OR type='actionplan') ORDER BY timestamp DESC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($row = mysql_fetch_object($result))
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    while ($row = mysqli_fetch_object($result))
     {
         $bodytext = str_replace("<hr>", "", $row->bodytext);
         $solution .= trim($bodytext)."\n\n";
@@ -373,20 +373,20 @@ else
         {
             // mark incident as awaiting closure
             $sql = "SELECT params FROM `{$dbScheduler}` WHERE action = 'CloseIncidents' LIMIT 1";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                 $closure_delay = 554400;
             }
             else
             {
-                list($closure_delay) = mysql_fetch_row($result);
+                list($closure_delay) = mysqli_fetch_row($result);
             }
             $timeofnextaction = $now + $closure_delay;
             $sql = "UPDATE `{$dbIncidents}` SET status='7', lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id={$id}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
         else
         {
@@ -400,8 +400,8 @@ else
             {
                 // mark incident as closed
                 $sql = "UPDATE `{$dbIncidents}` SET status='2', closingstatus='{$closingstatus}', lastupdated='{$now}', closed='{$now}', timeofnextaction=0 WHERE id={$id}";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
         }
 
@@ -420,14 +420,14 @@ else
         {
             $sql = "SELECT owner, status ";
             $sql .= "FROM `{$dbIncidents}` WHERE id = {$id}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             $currentowner = $sit[2];
             $currentstatus = 1;
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_num_rows($result) > 0)
             {
-                list($currentowner, $currentstatus) = mysql_fetch_row($result);
+                list($currentowner, $currentstatus) = mysqli_fetch_row($result);
             }
 
             if (mb_strlen($_REQUEST['summary']) > 3)
@@ -435,8 +435,8 @@ else
                 // Problem Definition
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'probdef', '{$currentowner}', '{$currentstatus}', '{$summary}', '{$now}', 'hide')";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
 
             if (mb_strlen($_REQUEST['solution']) > 3)
@@ -444,8 +444,8 @@ else
                 // Final Solution
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'solution', '{$currentowner}', '{$currentstatus}', '{$solution}', '{$now}', 'hide')";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
 
             //
@@ -454,16 +454,16 @@ else
                 // Update - mark for closure
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strMarkedforclosure']) . "', '{$now}', 'solution')";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
             else
             {
                 // Update - close immediately
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, sla) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'closing', '{$currentowner}', '{$currentstatus}', '" . clean_lang_dbstring($_SESSION['syslang']['strIncidentClosed']) ."', '{$now}', 'solution')";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
 
             if (!$result)
@@ -475,22 +475,22 @@ else
             //notify related inicdents this has been closed
             $sql = "SELECT distinct (relatedid) AS relateid FROM `{$dbRelatedIncidents}` AS r, `{$dbIncidents}` AS i WHERE incidentid = {$id} ";
             $sql .= "AND i.id = r.relatedid AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING;
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
             $relatedincidents;
 
-            while ($a = mysql_fetch_object($result))
+            while ($a = mysqli_fetch_object($result))
             {
                 $relatedincidents[] = $a->relateid;
             }
 
             $sql = "SELECT distinct (incidentid) AS relateid FROM `{$dbRelatedIncidents}` AS r, `{$dbIncidents}` AS i WHERE relatedid = {$id} ";
             $sql .= "AND i.id = r.incidentid AND i.status != ".STATUS_CLOSED." AND i.status != ".STATUS_CLOSING;
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-            while ($a = mysql_fetch_object($result))
+            while ($a = mysqli_fetch_object($result))
             {
                 $relatedincidents[] = $a->relateid;
             }
@@ -506,20 +506,20 @@ else
                     {
                         $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp) ";
                         $sql .= "VALUES ('$relatedid', '{$sit[2]}', 'research', '{$currentowner}', '{$currentstatus}', 'New Status: [b]Active[/b]<hr>\nRelated incident [{$id}] has been closed', '{$now}')";
-                        $result = mysql_query($sql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        $result = mysqli_query($db, $sql);
+                        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
                         $sql = "UPDATE `{$dbIncidents}` SET status = ".STATUS_ACTIVE.", lastupdated = '{$now}', timeofnextaction = '0' ";
                         $sql .= "WHERE id = '{$relatedid}' ";
-                        $result = mysql_query($sql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        $result = mysqli_query($db, $sql);
+                        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     }
                 }
             }
             //tidy up temp reassigns
             $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid = '{$id}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         $bodytext = clean_lang_dbstring($SYSLANG['strClosingStatus']) . ": <b>" . closingstatus_name($closingstatus) . "</b>\n\n" . $bodytext;
@@ -566,8 +566,8 @@ else
 
             // Tidy up drafts i.e. delete
             $draft_sql = "DELETE FROM `{$dbDrafts}` WHERE incidentid = {$id}";
-            mysql_query($draft_sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $draft_sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             // Check for knowledge base stuff, prior to confirming:
             if ($_REQUEST['kbarticle'] == 'yes')
@@ -576,52 +576,52 @@ else
                 $sql .= "('1', ";
                 $sql .= "'{$kbtitle}', ";
                 $sql .= "'{$distribution}', ";
-                $sql .= "'".mysql_real_escape_string($sit[2])."', ";
+                $sql .= "'".mysqli_real_escape_string($db, $sit[2])."', ";
                 $sql .= "'".date('Y-m-d H:i:s', mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('Y')))."', ";
                 $sql .= "'[$id]') ";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                $docid = mysql_insert_id();
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+                $docid = mysqli_insert_id($db);
 
                 // Update the incident to say that a KB article was created, with the KB Article number
                 $update = "<b>" . clean_lang_dbstring($_SESSION['syslang']['strKnowledgeBaseArticleCreated']) . ": {$CONFIG['kb_id_prefix']}".leading_zero(4, $docid)."</b>";
                 $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp) ";
                 $sql .= "VALUES ('{$id}', '{$sit[2]}', 'default', '{$update}', '{$now}')";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
 
                 // Get softwareid from Incident record
                 $sql = "SELECT softwareid FROM `{$dbIncidents}` WHERE id='{$id}'";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                list($softwareid) = mysql_fetch_row($result);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+                list($softwareid) = mysqli_fetch_row($result);
 
-                if (!empty($_POST['summary'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSummary', '1', '{$summary}', 'public') ";
-                if (!empty($_POST['symptoms'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSymptoms', '1', '{$symptoms}', 'public') ";
-                if (!empty($_POST['cause'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strCause', '1', '{$cause}', 'public') ";
-                if (!empty($_POST['question'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strQuestion', '1', '{$question}', 'public') ";
-                if (!empty($_POST['answer'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strAnswer', '1', '{$answer}', 'public') ";
-                if (!empty($_POST['solution'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strSolution', '1', '{$solution}', 'public') ";
-                if (!empty($_POST['workaround'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strWorkaround', '1', '{$workaround}', 'public') ";
-                if (!empty($_POST['status'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strStatus', '1', '{$status}', 'public') ";
-                if (!empty($_POST['additional'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strAdditionalInfo', '1', '{$additional}', 'public') ";
-                if (!empty($_POST['references'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'strReferences', '1', '{$references}', 'public') ";
+                if (!empty($_POST['summary'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strSummary', '1', '{$summary}', 'public') ";
+                if (!empty($_POST['symptoms'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strSymptoms', '1', '{$symptoms}', 'public') ";
+                if (!empty($_POST['cause'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strCause', '1', '{$cause}', 'public') ";
+                if (!empty($_POST['question'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strQuestion', '1', '{$question}', 'public') ";
+                if (!empty($_POST['answer'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strAnswer', '1', '{$answer}', 'public') ";
+                if (!empty($_POST['solution'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strSolution', '1', '{$solution}', 'public') ";
+                if (!empty($_POST['workaround'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strWorkaround', '1', '{$workaround}', 'public') ";
+                if (!empty($_POST['status'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strStatus', '1', '{$status}', 'public') ";
+                if (!empty($_POST['additional'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strAdditionalInfo', '1', '{$additional}', 'public') ";
+                if (!empty($_POST['references'])) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'strReferences', '1', '{$references}', 'public') ";
 
-                if (count($query) < 1) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysql_real_escape_string($sit[2])."', 'h1', 'Summary', '1', 'Enter details here...', 'restricted') ";
+                if (count($query) < 1) $query[] = "INSERT INTO `{$dbKBContent}` (docid, ownerid, headerstyle, header, contenttype, content, distribution) VALUES ('{$docid}', '".mysqli_real_escape_string($db, $sit[2])."', 'h1', 'Summary', '1', 'Enter details here...', 'restricted') ";
 
                 foreach ($query AS $sql)
                 {
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 // Add Software Record
                 if ($softwareid > 0)
                 {
                     $sql = "INSERT INTO `{$dbKBSoftware}` (docid,softwareid) VALUES ('{$docid}', '{$softwareid}')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     journal(CFG_LOGGING_NORMAL, 'KB Article Added', "KB Article {$docid} was added", CFG_JOURNAL_KB, $docid);
                 }
 

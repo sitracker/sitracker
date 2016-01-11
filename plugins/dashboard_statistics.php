@@ -22,44 +22,44 @@ function dashboard_statistics($dashletid)
 
 function dashboard_statistics_display()
 {
-    global $todayrecent, $dbIncidents, $dbKBArticles, $iconset;
+    global $todayrecent, $dbIncidents, $dbKBArticles, $iconset, $db;
 
     // Count incidents logged today
     $sql = "SELECT id FROM `{$dbIncidents}` WHERE opened > '{$todayrecent}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $todaysincidents = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $todaysincidents = mysqli_num_rows($result);
+    mysqli_free_result($result);
 
     // Count incidents updated today
     $sql = "SELECT id FROM `{$dbIncidents}` WHERE lastupdated > '{$todayrecent}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $todaysupdated = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $todaysupdated = mysqli_num_rows($result);
+    mysqli_free_result($result);
 
     // Count incidents closed today
     $sql = "SELECT id FROM `{$dbIncidents}` WHERE closed > '{$todayrecent}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $todaysclosed = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $todaysclosed = mysqli_num_rows($result);
+    mysqli_free_result($result);
 
     // count total number of SUPPORT incidents that are open at this time (not closed)
     $sql = "SELECT id FROM `{$dbIncidents}` WHERE status != ".STATUS_CLOSED;
     $sql .= " AND status != ".STATUS_UNSUPPORTED." AND status != ";
     $sql .= STATUS_CLOSING." AND type='support'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $supportopen = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $supportopen = mysqli_num_rows($result);
+    mysqli_free_result($result);
 
     // Count kb articles published today
     $sql = "SELECT docid FROM `{$dbKBArticles}` WHERE published > '".date('Y-m-d')."'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $kbpublished = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $kbpublished = mysqli_num_rows($result);
+    mysqli_free_result($result);
     echo "<strong><a href='statistics.php'>{$GLOBALS['strIncidents']}</a></strong><br />";
     echo "{$todaysincidents} {$GLOBALS['strLogged']}</a><br />";
     echo "{$todaysupdated} {$GLOBALS['strUpdated']}<br />";

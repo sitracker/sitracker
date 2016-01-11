@@ -64,10 +64,10 @@ else
         $sql .= "WHERE (m.site = s.id AND product = p.id AND reseller = r.id AND if(licence_type = 0, 4, ifnull(licence_type, 4))=l.id  AND admincontact = c.id) AND ";
         $sql .= "expirydate <= {$max_expiry} AND expirydate >= {$now} ORDER BY expirydate ASC";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) == 0)
+        if (mysqli_num_rows($result) == 0)
         {
             printf("<h2>".icon('contract', 32)." {$strContractsExpiringWithinXdays}</h2>", $expire);
             echo "<h5 class='warning'>{$strSorryNoSearchResults}</h5>\n";
@@ -75,7 +75,7 @@ else
         else
         {
             printf("<h2>".icon('contract', 32)." {$strContractsExpiringWithinXdays}</h2>", $expire);
-            printf("<h5>{$strResultsNum}</h5>", mysql_num_rows($result));
+            printf("<h5>{$strResultsNum}</h5>", mysqli_num_rows($result));
             echo "
             <table class='maintable'>
             <tr>
@@ -89,7 +89,7 @@ else
             <th>{$strNotes}</th>
             </tr>";
             $shade = 'shade1';
-            while ($results = mysql_fetch_object($result))
+            while ($results = mysqli_fetch_object($result))
             {
                 echo "<tr class='{$shade}'>";
                 echo "<td align='center' width='50'><a href='contract_edit.php?action=edit&amp;maintid={$results->maintid}'>{$results->maintid}</a></td>";

@@ -30,14 +30,14 @@ echo "<p align='center'>" . html_action_links($operations) . "</p>";
 
 
 $tsql = "SELECT DISTINCT * FROM `{$dbServiceLevels}` GROUP BY tag ORDER BY active, tag";
-$tresult = mysql_query($tsql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($tresult) >= 1)
+$tresult = mysqli_query($db, $tsql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($tresult) >= 1)
 {
     $minsinday = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
 
     echo "<table class='maintable'>";
-    while ($tag = mysql_fetch_object($tresult))
+    while ($tag = mysqli_fetch_object($tresult))
     {
         $strActive = '';
         $class = '';
@@ -48,13 +48,13 @@ if (mysql_num_rows($tresult) >= 1)
         }
         echo "<thead><tr><th colspan='9' {$class}>{$tag->tag} {$strActive}</th></tr></thead>";
         $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag->tag}' ORDER BY priority";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
         echo "<tr><th colspan='2' {$class}>{$strPriority}</th><th {$class}>{$strInitialResponse}</th>";
         echo "<th {$class}>{$strProblemDefinition}</th><th {$class}>{$strActionPlan}</th><th {$class}>{$strResolutionReprioritisation}</th>";
         echo "<th {$class}>{$strReview}</th><th {$class}>{$strTimed}</th><th {$class}>{$strActions}</th></tr>";
-        while ($sla = mysql_fetch_object($result))
+        while ($sla = mysqli_fetch_object($result))
         {
             echo "<tr>";
             echo "<td align='right' {$class}>".priority_icon($sla->priority)."</td>";

@@ -97,7 +97,7 @@ class Form
 
     private function processForm()
     {
-        global $_REQUEST;
+        global $_REQUEST, $db;
         $toReturn = array();
         foreach ($this->row AS $r)
         {
@@ -182,9 +182,9 @@ class Form
             }
     
             if ($this->debug) echo $sql;
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            if (mysql_affected_rows() <= 0)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
+            if (mysqli_affected_rows() <= 0)
             {
                 html_redirect($this->returnURLFailure, FALSE);
                 exit;

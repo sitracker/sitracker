@@ -944,7 +944,7 @@ plugin_do('trigger_variables');
  */
 function email_templates($name, $triggertype = 'system', $selected = '')
 {
-    global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults;
+    global $dbEmailTemplates, $dbTriggers, $strPersonalTemplates, $strNoResults, $db;
     $html .= "<select id='{$name}' name='{$name}'>";
 
     foreach (array($triggertype, 'usertemplate') as $type)
@@ -956,11 +956,11 @@ function email_templates($name, $triggertype = 'system', $selected = '')
 
         $sql = "SELECT id, name, description FROM `{$dbEmailTemplates}` ";
         $sql .= "WHERE type='{$type}' ORDER BY name";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($template = mysql_fetch_object($result))
+            while ($template = mysqli_fetch_object($result))
             {
                 //$name = strpos()
                 //$name = str_replace("_", " ", $name);
@@ -990,12 +990,12 @@ function email_templates($name, $triggertype = 'system', $selected = '')
  */
 function notice_templates($name, $selected = '')
 {
-    global $dbNoticeTemplates, $strPersonalTemplates;
+    global $dbNoticeTemplates, $strPersonalTemplates, $db;
     $html .= "<select id='{$name}' name='{$name}'>";
     $sql = "SELECT id, name, description, type FROM `{$dbNoticeTemplates}` ORDER BY type,name ASC";
-    $query = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    while ($template = mysql_fetch_object($query))
+    $query = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    while ($template = mysqli_fetch_object($query))
     {
         $user_header = false;
         if (!$user_header AND $template->type == USER_DEFINED_NOTICE_TYPE)
@@ -1239,7 +1239,7 @@ function trigger_to_array($trigger)
  */
 function triggers_to_html($user_id, $trigger_id = '')
 {
-    global $dbTriggers, $sit, $trigger_types, $strTrigger, $strActions;
+    global $sit, $trigger_types, $strTrigger, $strActions;
 
     $user_id = cleanvar($user_id);
     if ($user_id == '') $user_id = $sit[2];
@@ -1275,21 +1275,21 @@ function triggers_to_html($user_id, $trigger_id = '')
  */
 function trigger_to_html($trigger_id, $user_id)
 {
-    global $dbTriggers;
+    global $dbTriggers, $db;
     $html = '';
     $sql = "SELECT id FROM `{$dbTriggers}` ";
     $sql .= "WHERE userid = '{$user_id}' ";
     $sql .= "AND triggerid = '{$trigger_id}'";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         trigger_error("Problem getting trigger details for {$trigger_id}");
         return FALSE;
     }
-    if (mysql_num_rows($result) >= 0)
+    if (mysqli_num_rows($result) >= 0)
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $t = Trigger::fromID($row->id);
             $html .= trigger_action_to_html($t, $user_id);
@@ -1400,7 +1400,7 @@ function trigger_action_to_html($trigger, $user_id)
  */
 function template_description($name, $type)
 {
-    global $dbEmailTemplates, $dbNoticeTemplates;
+    global $dbEmailTemplates, $dbNoticeTemplates, $db;
     $name = cleanvar($name);
     if ($type == 'ACTION_NOTICE')
     {
@@ -1411,8 +1411,8 @@ function template_description($name, $type)
         $tbl = $dbEmailTemplates;
     }
     $sql = "SELECT description FROM `{$tbl}` WHERE name = '{$name}'";
-    $result = mysql_query($sql);
-    list($desc) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    list($desc) = mysqli_fetch_row($result);
     (substr_compare($desc, "str", 1, 3)) ? $desc = $GLOBALS[$desc] : $desc;
     if ($desc == '') $desc = FALSE;
     return $desc;

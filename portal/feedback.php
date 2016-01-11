@@ -23,9 +23,9 @@ if (($CONFIG['portal_feedback_enabled'] == FALSE) OR ($CONFIG['feedback_enabled'
 $sql = "SELECT formid, incidentid, created, email FROM `{$dbFeedbackRespondents}` ";
 $sql .= "WHERE contactid = '{$_SESSION['contactid']}' ";
 $sql .= "AND completed = 'no'";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-if (mysql_num_rows($result) < 1)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result) < 1)
 {
     $html = user_alert($strNoFeedbackFormsAvailable, E_USER_INFO);
 }
@@ -40,7 +40,7 @@ else
     $html .= colheader('action', $strAction);
 
     $html .= "</tr>";
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $hashcode = feedback_hash($row->formid, $_SESSION['contactid'], $row->incidentid);
         $html .= "<tr class='{$shade}'>";

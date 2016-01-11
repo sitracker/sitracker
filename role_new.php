@@ -65,10 +65,10 @@ else
     }
 
     $sql = "SELECT * FROM `{$dbRoles}` WHERE rolename = '{$rolename}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $errors++;
         $_SESSION['formerrors']['role_new']['duplicaterole'] = "{$strADuplicateAlreadyExists}</p>\n";
@@ -77,9 +77,9 @@ else
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbRoles}` (rolename, description) VALUES ('{$rolename}', '{$description}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $roleid = mysql_insert_id();
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $roleid = mysqli_insert_id($db);
 
         if ($roleid != 0)
         {
@@ -90,8 +90,8 @@ else
             {
                 $sql = "INSERT INTO `{$dbRolePermissions}` (roleid, permissionid, granted)  ";
                 $sql .= "SELECT '{$roleid}', permissionid, granted FROM `{$dbRolePermissions}` WHERE roleid = {$copyfrom}";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
                 // Note we dont check for affected rows as you could be copying from a permissionless role
                 html_redirect('edit_user_permissions.php', TRUE);

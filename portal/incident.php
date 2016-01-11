@@ -20,9 +20,9 @@ include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 $incidentid = clean_int($_REQUEST['id']);
 $sql = "SELECT title, contact, status, opened, maintenanceid FROM `{$dbIncidents}` WHERE id={$incidentid}";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-$user = mysql_fetch_object($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+$user = mysqli_fetch_object($result);
 
 if ($user->contact != $_SESSION['contactid']
     AND !in_array($user->maintenanceid, $_SESSION['contracts']))
@@ -58,8 +58,8 @@ if ($offset > 0)
         $sql .= "LIMIT {$offset},{$records}";
     }
 }
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error $sql".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error {$sql}".mysqli_error($db), E_USER_WARNING);
 
 $keeptags = array('b', 'i', 'u', 'hr', '&lt;', '&gt;');
 foreach ($keeptags AS $keeptag)
@@ -118,10 +118,10 @@ $filesql = "SELECT *, f.id AS fileid, u.id AS updateid, f.userid AS userid
             AND u.incidentid='{$incidentid}'
             ORDER BY f.filedate DESC";
 
-$fileresult = mysql_query($filesql);
-if (mysql_error()) trigger_error("MySQL Query Error {$sql}".mysql_error(), E_USER_WARNING);
+$fileresult = mysqli_query($db, $filesql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error {$sql}".mysqli_error($db), E_USER_WARNING);
 
-while ($filerow = mysql_fetch_object($fileresult))
+while ($filerow = mysqli_fetch_object($fileresult))
 {
     $fileid = intval($filerow->fileid);
     $filename = cleanvar($filerow->filename);
@@ -148,7 +148,7 @@ while ($filerow = mysql_fetch_object($fileresult))
 echo "</div>";
 
 echo "<div id='portalright'>";
-while ($update = mysql_fetch_object($result))
+while ($update = mysqli_fetch_object($result))
 {
     if (empty($firstid))
     {

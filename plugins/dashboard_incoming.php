@@ -27,7 +27,7 @@ function dashboard_incoming($dashletid)
 
 function dashboard_incoming_display($dashletid)
 {
-    global $sit, $CONFIG, $iconset;
+    global $sit, $CONFIG, $iconset, $db;
     global $dbUpdates, $dbTempIncoming;
     // extract updates (query copied from review_incoming_email.php)
     $sql  = "SELECT u.id AS id, ti.id AS tiid, u.bodytext AS bodytext, ti.emailfrom AS emailfrom, ti.subject AS subject, ";
@@ -37,14 +37,14 @@ function dashboard_incoming_display($dashletid)
     $sql .= "WHERE u.incidentid = 0 AND ti.updateid = u.id ";
     $sql .= "ORDER BY timestamp ASC, id ASC";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     
     if (user_permission($sit[2], PERM_UPDATE_DELETE))
     {
         //echo "<div class='window'>";
 
-        if (mysql_num_rows($result) >=1 )
+        if (mysqli_num_rows($result) >=1 )
         {
             echo "<table align='center' width='100%'>";
             echo "<tr>";
@@ -54,7 +54,7 @@ function dashboard_incoming_display($dashletid)
             echo colheader('message', $GLOBALS['strMessage']);
             echo "</tr>\n";
             $shade = 'shade1';
-            while ($incoming = mysql_fetch_object($result))
+            while ($incoming = mysqli_fetch_object($result))
             {
                 $date = mysql2date($incoming->date);
                 echo "<tr class='$shade'>";

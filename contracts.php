@@ -128,17 +128,17 @@ if (!empty($sort))
     if ($order == 'a' OR $order == 'ASC' OR $order == '') $sql .= "ASC";
     else $sql .= "DESC";
 }
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($result) == 0)
+if (mysqli_num_rows($result) == 0)
 {
     if (empty($search_string)) echo user_alert($strNoRecords, E_USER_NOTICE);
     else echo user_alert(sprintf($strSorryNoRecordsMatchingX, "<em>{$search_string}</em>"), E_USER_NOTICE);
 }
 else
 {
-    echo "<p align='center'>".sprintf($strResultsNum, mysql_num_rows($result))."</p>\n";
+    echo "<p align='center'>".sprintf($strResultsNum, mysqli_num_rows($result))."</p>\n";
 
     echo "<table class='maintable' style='width: 95%;'>";
     echo "<tr>";
@@ -156,7 +156,7 @@ else
     echo "<th>{$strActions}</th>";
     echo "</tr>\n";
     $shade = 'shade1';
-    while ($results = mysql_fetch_object($result))
+    while ($results = mysqli_fetch_object($result))
     {
         // define class for table row shading
         if (($results->expirydate < $now AND $results->expirydate != '-1') || $results->term == 'yes')

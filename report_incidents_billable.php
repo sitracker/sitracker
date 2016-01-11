@@ -73,14 +73,14 @@ elseif ($mode == 'report')
 
     $sqlsite = "SELECT DISTINCT m.site FROM `{$dbMaintenance}` AS m ";
     if ($startdate > 0) $sqlsite .= "WHERE expirydate >= {$startdate}";
-    $resultsite = mysql_query($sqlsite);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $resultsite = mysqli_query($db, $sqlsite);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
     $datadisplayed = false;
 
-    if (mysql_num_rows($resultsite) > 0)
+    if (mysqli_num_rows($resultsite) > 0)
     {
-        while ($objsite = mysql_fetch_object($resultsite))
+        while ($objsite = mysqli_fetch_object($resultsite))
         {
             $used = false;
 
@@ -95,19 +95,19 @@ elseif ($mode == 'report')
                 $sql .= "AND closed <= {$enddate} ";
             }
 
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 return FALSE;
             }
             $units = 0;
 
             // TODO improve the print out for multiple billing types
             
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_num_rows($result) > 0)
             {
-                while ($obj = mysql_fetch_object($result))
+                while ($obj = mysqli_fetch_object($result))
                 {
                     $b = get_billable_object_from_incident_id($obj->id);
                     

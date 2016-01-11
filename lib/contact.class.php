@@ -112,7 +112,7 @@ class Contact extends Person {
      */
     function add()
     {
-        global $now, $sit;
+        global $now, $sit, $db;
         $toReturn = false;
         $generate_username = false;
 
@@ -138,10 +138,10 @@ class Contact extends Person {
             $sql .= "'".clean_int($this->siteid)."', '".clean_dbstring($this->address1)."', '".clean_dbstring($this->address2)."', '".clean_dbstring($this->city)."', '".clean_dbstring($this->county)."', '".clean_dbstring($this->country)."', '".clean_dbstring($this->postcode)."', '".clean_dbstring($this->email)."', ";
             $sql .= "'".clean_dbstring($this->phone)."', '".clean_dbstring($this->mobile)."', '".clean_dbstring($this->fax)."', '".clean_dbstring($this->department)."', '".clean_dbstring($this->notes)."', '".clean_dbstring($dp['email'])."', ";
             $sql .= "'".clean_dbstring($dp['phone'])."', '".clean_dbstring($dp['address'])."', '".clean_int($now)."', '".clean_int($now)."', NOW(), '".clean_int($_SESSION['userid'])."', NOW(), '".clean_int($_SESSION['userid'])."', '".clean_dbstring($this->source)."')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-            $newid = mysql_insert_id();
+            $newid = mysqli_insert_id($id);
 
             $toReturn = $newid;
 
@@ -150,8 +150,8 @@ class Contact extends Person {
                 // concatenate username with insert id to make unique
                 $username = $username . $newid;
                 $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET username='{$username}' WHERE id='{$newid}'";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
 
             if ($this->emailonadd) $emaildetails = 1;
@@ -175,7 +175,7 @@ class Contact extends Person {
      */
     function edit()
     {
-        global $now;
+        global $now, $db;
 
         $toReturn = false;
 
@@ -221,10 +221,10 @@ class Contact extends Person {
             }
 
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 $toReturn = false;
             }
             else
@@ -247,18 +247,19 @@ class Contact extends Person {
      */
     function disable()
     {
+        global $db;
         $toReturn = true;
         if (!empty($this->id))
         {
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET active = 'false' WHERE id = {$this->id}";
 
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+            if (mysqli_affected_rows($db) != 1)
             {
                 $sql = "SELECT active FROM `{$GLOBALS['dbContacts']}` WHERE id = {$this->id} AND active = 'false'";
-                $result = mysql_query($sql);
-                if (mysql_num_rows($result) == 0)
+                $result = mysqli_query($db, $sql);
+                if (mysqli_num_rows($result) == 0)
                 {
                     trigger_error("Failed to disable contact {$this->username}", E_USER_WARNING);
                     $toReturn = false;
@@ -285,10 +286,11 @@ class Contact extends Person {
      */
     function is_duplicate()
     {
+        global $db;
         // Check this is not a duplicate
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` WHERE email='{$this->email}' AND LCASE(surname)=LCASE('{$this->surname}') LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_num_rows($result) >= 1) return true;
+        $result = mysqli_query($db, $sql);
+        if (mysqli_num_rows($result) >= 1) return true;
         else return false;
     }
 

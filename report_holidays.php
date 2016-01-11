@@ -73,11 +73,11 @@ else
         $sql .= "AND ({$gsql}) ";
     }
     $sql .= "GROUP BY h.userid, h.type";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-    	while ($obj = mysql_fetch_object($result))
+    	while ($obj = mysqli_fetch_object($result))
         {
         	$holidays[$obj->realname]['name'] = $obj->realname;
             $holidays[$obj->realname]['entitlement'] = $obj->holiday_entitlement;

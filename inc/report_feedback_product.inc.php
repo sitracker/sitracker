@@ -20,9 +20,9 @@ echo "<p>{$strCustomerFeedbackReportSiteMsg}:</p>";
 
 
 $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-$qresult = mysql_query($qsql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($qrow = mysql_fetch_object($qresult))
+$qresult = mysqli_query($db, $qsql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+while ($qrow = mysqli_fetch_object($qresult))
 {
     $q[$qrow->taborder] = $qrow;
 }
@@ -65,30 +65,29 @@ if (!empty($enddate))
 
 $msql .= "ORDER BY p.name, i.id ASC \n";
 
-$mresult = mysql_query($msql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$mresult = mysqli_query($db, $msql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($mresult) >= 1)
+if (mysqli_num_rows($mresult) >= 1)
 {
+    $previd = 0;
+    $countcontacts = 0;
+    $zero = 0;
+    $ten = 0;
+    $twenty = 0;
+    $thirty = 0;
+    $forty = 0;
+    $fifty = 0;
+    $sixty = 0;
+    $seventy = 0;
+    $eighty = 0;
+    $ninety = 0;
+    $hundred = 0;
+    $surveys = 0;
+    if ($CONFIG['debug']) echo "<h4>{$msql}</h4>";
 
-    $previd=0;
-    $countcontacts=0;
-    $zero=0;
-    $ten=0;
-    $twenty=0;
-    $thirty=0;
-    $forty=0;
-    $fifty=0;
-    $sixty=0;
-    $seventy=0;
-    $eighty=0;
-    $ninety=0;
-    $hundred=0;
-    $surveys=0;
-    if ($CONFIG['debug']) echo "<h4>$msql</h4>";
-
-    $firstrun=0;
-    while ($mrow = mysql_fetch_object($mresult))
+    $firstrun = 0;
+    while ($mrow = mysqli_fetch_object($mresult))
     {
         // Only print if we have a value ({$previd} / {$mrow->contactid})
         if ($previd!=$mrow->productid AND $firstrun!=0)
@@ -158,11 +157,11 @@ if (mysql_num_rows($mresult) >= 1)
     //$html = "<h2>{$mrow->department}&nbsp; <a href='site_details.php?id={$mrow->siteid}' title='Jump to site'>{$mrow->sitename}</a></h2>";
     $html = "<h2><a href='#?id={$mrow->productid}' title='Jump to product'>{$mrow->productname}</a></h2>";
     $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-    $qresult = mysql_query($qsql);
+    $qresult = mysqli_query($db, $qsql);
     ## echo "$qsql";
 
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    while ($qrow = mysql_fetch_object($qresult))
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    while ($qrow = mysqli_fetch_object($qresult))
     {
         $numquestions++;
         // $html .= "Q{$qrow->taborder}: {$qrow->question} &nbsp;";
@@ -200,20 +199,20 @@ if (mysql_num_rows($mresult) >= 1)
         }
 
         $sql .= "ORDER BY i.contact, i.id";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
 
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        $numresults=0;
-        $cumul=0;
-        $percent=0;
-        $average=0;
-        $answercount=mysql_num_rows($result);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        $numresults = 0;
+        $cumul = 0;
+        $percent = 0;
+        $average = 0;
+        $answercount = mysqli_num_rows($result);
 
         if ($answercount>0)
         {
             ## echo "[{$mrow->reportid}] ";
             //echo "answercount = $answercount <br >";
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
             {
                 // Loop through the results
                 if (!empty($row->result))

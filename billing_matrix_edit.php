@@ -25,9 +25,9 @@ $title = $strEditBillingMatrix;
 if (!empty($tag) AND empty($action))
 {
     $sql = "SELECT * FROM `{$dbBillingMatrixUnit}` WHERE tag='{$tag}' ORDER BY hour";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h2>".icon('billing', 32)." {$title}</h2>";
@@ -45,7 +45,7 @@ if (!empty($tag) AND empty($action))
 
         $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
 
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             echo "<tr>";
             echo "<th>{$obj->hour}</th>";
@@ -101,11 +101,11 @@ else if(!empty($tag) AND $action == "edit")
 
         $sql = "UPDATE `{$dbBillingMatrixUnit}` SET mon = {$mon}, tue = {$tue}, wed = {$wed}, thu = {$thu}, ";
         $sql .= "fri = {$fri}, sat = {$sat}, sun = {$sun}, holiday = {$holiday} WHERE tag = '{$tag}' AND hour = {$hour}";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             $errors++;
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             break; // Dont try and add any more
         }
 

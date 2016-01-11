@@ -45,9 +45,9 @@ if (empty($process))
         echo "<h2>{$strDeleteContact}</h2>\n";
         plugin_do('contact_delete');
         $sql = "SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
-        $contactresult = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        while ($contactobj = mysql_fetch_object($contactresult))
+        $contactresult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        while ($contactobj = mysqli_fetch_object($contactresult))
         {
             echo "<table class='maintable vertical'>";
             echo "<tr><th>{$strName}:</th><td><h3>{$contactobj->forenames} {$contactobj->surname}</h3></td></tr>";
@@ -57,7 +57,7 @@ if (empty($process))
             echo "<tr><th>{$strTelephone}:</th><td>{$contactobj->phone}</td></tr>";
             echo "<tr><th>{$strNotes}:</th><td>{$contactobj->notes}</td></tr>";
         }
-        mysql_free_result($contactresult);
+        mysqli_free_result($contactresult);
         echo "</table>\n";
 
         plugin_do('contact_delete_submitted');
@@ -71,9 +71,9 @@ if (empty($process))
         $sql .= "m.expirydate, m.term ";
         $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p ";
         $sql .= "WHERE sc.maintenanceid = m.id AND m.product = p.id AND sc.contactid = '{$id}' ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $totalcontracts = mysql_num_rows($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $totalcontracts = mysqli_num_rows($result);
         if ($totalcontracts>0)
         {
             echo user_alert(sprintf($strThereAreXcontractsAssignedToThisPerson, $totalcontracts), E_USER_WARNING);
@@ -84,7 +84,7 @@ if (empty($process))
             echo "<form action='{$_SERVER['PHP_SELF']}' onsubmit=\"return confirm_action('{$strAreYouSureDelete}', true)\" method='post'>\n";
             echo "<p align='center'>{$strBeforeDeleteContact}</p>";
             $sql  = "SELECT id, forenames, surname, siteid FROM `{$dbContacts}` ORDER BY surname ASC";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             echo "<p align='center'>";
             echo "<select name='newcontact'>";
             if ($id == 0)
@@ -92,7 +92,7 @@ if (empty($process))
                 echo "<option selected='selected' value='0'>Select A Contact\n";
             }
 
-            while ($contacts = mysql_fetch_object($result))
+            while ($contacts = mysqli_fetch_object($result))
             {
                 $site = '';
                 if ($contacts->siteid != '' && $contacts->siteid != 0)
@@ -138,22 +138,22 @@ else
     if (!empty($newcontact))
     {
         $sql = "UPDATE `{$dbSupportContacts}` SET contactid='{$newcontact}' WHERE contactid='{$id}' ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         $sql = "UPDATE `{$dbIncidents}` SET contact='{$newcontact}' WHERE contact='{$id}' ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         $sql = "UPDATE `{$dbMaintenance}` SET admincontact='{$newcontact}' WHERE admincontact='{$id}' ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     }
 
     // do the delete
     $sql = "DELETE FROM `{$dbContacts}` WHERE id='{$id}' LIMIT 1";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     plugin_do('contact_delete_saved');
     journal(CFG_LOGGING_NORMAL, 'Contact Deleted', "Contact {$id} was deleted", CFG_JOURNAL_CONTACTS, $id);

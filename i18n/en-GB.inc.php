@@ -1640,6 +1640,7 @@ $strSaturday = 'Saturday';
 # Two character (Maximum) abbreviation for 'Saturday'
 $strSaturdayAbbr = 'Sa';
 $strSave = 'Save';
+$strSaved = 'Saved';
 $strSaveAsCSV = 'Save as CSV';
 $strSaveDashbaordLayout = 'Save Dashboard Layout';
 $strSaveDraft = 'Save Draft';

@@ -74,9 +74,8 @@ if (isset($_POST['submit']))
         $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
         $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', owner='{$owner}', freesupport='{$incident_quantity}' WHERE id='{$site}' LIMIT 1";
 
-        // licenserx='$licenserx'
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
             plugin_do('edit_site_save');
@@ -95,11 +94,11 @@ if (isset($_POST['submit']))
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='{$site}' ";
-$siteresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$siteresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 echo show_form_errors('site_edit');
 clear_form_errors('site_edit');
-while ($obj = mysql_fetch_object($siteresult))
+while ($obj = mysqli_fetch_object($siteresult))
 {
     echo "<h2>".icon('site', 32)." ".site_name($site)."</h2>";
     echo "<form name='edit_site' action='{$_SERVER['PHP_SELF']}";

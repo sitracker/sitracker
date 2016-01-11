@@ -28,10 +28,10 @@ switch ($action)
         $sql = "SELECT DISTINCT(externalemail), externalengineer ";
         $sql .= "FROM `{$dbIncidents}` WHERE closed = '0' AND externalemail!=''";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
             echo "<form action='{$_SERVER['PHP_SELF']}?action=change_external_esc' method='post'>";
 
@@ -39,7 +39,7 @@ switch ($action)
             echo "<table class='vertical'>";
             echo "<tr><th>{$strExternalEmail} {$strToChangeBrackets}:</th>";
             echo "<td><select name='oldexternalemail'>";
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 echo "<option value=\"{$obj->externalengineer},{$obj->externalemail}\">";
                 echo "{$obj->externalengineer} - {$obj->externalemail}</option>\n";
@@ -77,23 +77,23 @@ switch ($action)
         //list incidents with this old email address so we can update them
 
         $sql = "SELECT id FROM `{$dbIncidents}` WHERE closed = '0' AND externalemail = '{$old_email_address}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $bodytext = "{$strExternalEngineer}: ".$old_external_engineer." -&gt; [b]". $new_extenal_engineer."[/b]\n";
             $bodytext .= "{$strExternalEmail}: ".$old_email_address." -&gt; [b]".$new_external_email."[/b]\n<hr>";
             $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, bodytext, timestamp, currentowner, currentstatus) ";
             $sql .= "VALUES ('{$row->id}', '{$sit[2]}', 'editing', '{$bodytext}', '".time()."', {$row->owner}, {$row->status})";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         $sql = "UPDATE `{$dbIncidents}` SET externalengineer = '{$new_extenal_engineer}', externalemail = '{$new_external_email}' ";
         $sql .= " WHERE externalemail = '{$old_email_address}' AND closed = '0'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         html_redirect("main.php");
         break;
     default:

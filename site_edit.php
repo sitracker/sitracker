@@ -47,12 +47,12 @@ elseif ($action == "edit")
     else
     {
         $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='{$site}' ";
-        $siteresult = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $siteresult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         echo show_form_errors('site_edit');
         clear_form_errors('site_edit');
 
-        while ($obj = mysql_fetch_object($siteresult))
+        while ($obj = mysqli_fetch_object($siteresult))
         {
             echo "<h2>".icon('site', 32)." {$GLOBALS['strEditSite']}: {$site} - ";
             echo site_name($site)."</h2>";
@@ -185,8 +185,8 @@ elseif ($action == "update")
         $sql .= "county={$county}, postcode={$postcode}, country={$country}, telephone={$telephone}, fax={$fax}, email={$email}, ";
         $sql .= "websiteurl={$websiteurl}, notes={$notes}, typeid='{$typeid}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
             plugin_do('site_edit_saved');

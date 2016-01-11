@@ -85,13 +85,13 @@ if (empty($mode))
     echo "<tr><th>{$strExcludeSitesWith}".help_link('CTRLAddRemove')."</th><td>\n";
 
     $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<label>{$strServiceLevel}:<br />";
         echo "<select name='slas[]' multiple='multiple' size='5'>\n";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             echo "<option value='{$obj->tag}'>{$obj->tag}</option>\n";
         }
@@ -145,12 +145,12 @@ else
         WHERE s.id = m.site AND r.id = m.reseller AND m.term <> 'yes' AND s.owner = u.id AND m.expirydate > '1231609928' ORDER BY s.name
     */
     // echo $sql;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         $shade = 'shade1';
-        while ($site = mysql_fetch_object($result))
+        while ($site = mysqli_fetch_object($result))
         {
             if ($showproducts == 'on')
             {
@@ -162,9 +162,9 @@ else
                 $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND licence_type = lt.id AND admincontact = c.id ";
                 $psql .= "AND m.site = '{$site->id}' AND m.expirydate > '{$now}' AND term != 'yes' AND m.reseller = {$site->reseller} ";
                 $psql .= "ORDER BY p.name ASC";
-                $presult = mysql_query($psql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                while ($prod = mysql_fetch_object($presult))
+                $presult = mysqli_query($db, $psql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                while ($prod = mysqli_fetch_object($presult))
                 {
                     $product .= "{$prod->product}<br />";
                 }
@@ -179,9 +179,9 @@ else
                 $sql .= "AND m.id = i.maintenanceid AND m.reseller = '{$site->reseller}' ";
                 $sql.= "GROUP BY site";
                 // echo $sql;
-                $sresult = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                $details = mysql_fetch_object($sresult);
+                $sresult = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                $details = mysqli_fetch_object($sresult);
                 $count = $details->incidentz;
 
                 $colspan = 4;
@@ -262,10 +262,10 @@ else
                 $isql = "SELECT i.id, i.title, i.softwareid, i.status, i.owner, i.opened, i.closed, i.servicelevel, c.forenames, c.surname ";
                 $isql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s, `{$dbIncidents}` AS i ";
                 $isql.= "WHERE c.siteid = s.id AND s.id={$site->id} AND i.opened >".strtotime($startdate)." AND i.closed < ".strtotime($enddate)." AND i.contact = c.id ";
-                $iresult = mysql_query($isql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                $iresult = mysqli_query($db, $isql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-                if (mysql_num_rows($iresult) > 0)
+                if (mysqli_num_rows($iresult) > 0)
                 {
                     $csv .= "<tr><td colspan='{$colspan}'>";
                     $csv .= "<table width='100%'><th>{$strID}</th><th>{$strTitle}</th><th>{$strContact}</th><th>{$strSkill}</th><th>{$strStatus}</th>";
@@ -273,7 +273,7 @@ else
 
                     $shade1 = 'shade1';
 
-                    while ($obj = mysql_fetch_object($iresult))
+                    while ($obj = mysqli_fetch_object($iresult))
                     {
                         $csv .= "<tr class='{$shade1}'>";
                         $csv .= "<td>".html_incident_popup_link($obj->id, $obj->id)."</td><td>{$obj->title}</td>";

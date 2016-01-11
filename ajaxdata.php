@@ -29,7 +29,7 @@ else
     require (APPLICATION_LIBPATH . 'auth.inc.php');
 }
 $action = cleanvar($_REQUEST['action']);
-$selected = cleanvar($_REQUEST['selected']);
+$selected = cleanvar(@$_REQUEST['selected']);
 
 switch ($action)
 {
@@ -51,9 +51,9 @@ switch ($action)
             {
                 $sql = "UPDATE `{$dbDrafts}` SET content = '{$content}', meta = '{$meta}', lastupdate = '{$now}' WHERE id = {$draftid}";
             }
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-            echo mysql_insert_id();
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+            echo mysqli_insert_id($db);
         }
         break;
     case 'servicelevel_timed':
@@ -92,15 +92,15 @@ switch ($action)
         if (is_numeric($noticeid))
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE id='{$noticeid}' AND userid='{$sit[2]}'";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
         elseif ($noticeid == 'all')
         {
             $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE userid={$userid} LIMIT 20"; // only delete 20 max as we only show 20 max
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
             else echo "deleted {$noticeid}";
         }
         break;
@@ -133,12 +133,12 @@ switch ($action)
         $htmllist = clean_dbstring($_REQUEST['htmllist']);
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         if ($htmllist == 'true') $str = "<ul>";
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 if ($htmllist == 'true') $str .= "<li>{$obj->forenames} {$obj->surname}</li>";
                 else $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
@@ -146,11 +146,11 @@ switch ($action)
         }
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 if ($htmllist == 'true') $str .= "<li>{$obj->name}</li>";
                 else $str .= "[\"".$obj->name."\"],";
@@ -162,11 +162,11 @@ switch ($action)
         break;
     case 'tags':
         $sql = "SELECT DISTINCT t.name FROM `{$dbSetTags}` AS st, `{$dbTags}` AS t WHERE st.tagid = t.tagid GROUP BY t.name";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $str .= "[".$obj->name."],";
             }
@@ -178,12 +178,12 @@ switch ($action)
         $htmllist = clean_dbstring($_REQUEST['htmllist']);
         $sql = "SELECT DISTINCT forenames, surname FROM `{$dbContacts}` ";
         $sql .= "WHERE active='true' AND (forenames LIKE '{$s}%' OR surname LIKE '{$s}%')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         if ($htmllist == 'true') $str = "<ul>";
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 if ($htmllist == 'true') $str .= "<li>{$obj->forenames} {$obj->surname}</li>";
                 else $str .= "[\"".$obj->forenames." ".$obj->surname."\"],";
@@ -198,12 +198,12 @@ switch ($action)
         $htmllist = clean_dbstring($_REQUEST['htmllist']);
         $sql = "SELECT DISTINCT name FROM `{$dbSites}` ";
         $sql .= "WHERE active='true' AND name LIKE '{$s}%'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         if ($htmllist == 'true') $str = "<ul>";
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 if ($htmllist == 'true') $str .= "<li>{$obj->name}</li>";
                 else $str .= "[\"".$obj->name."\"],";
@@ -215,9 +215,9 @@ switch ($action)
         break;
     case 'slas':
         $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($obj = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($obj = mysqli_fetch_object($result))
         {
             $strIsSelected = '';
             if ($obj->tag == $selected)
@@ -229,9 +229,9 @@ switch ($action)
         break;
     case 'products':
         $sql = "SELECT id, name FROM `{$dbProducts}` ORDER BY name ASC";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($obj = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($obj = mysqli_fetch_object($result))
         {
             $strIsSelected = '';
             if ($obj->id == $selected)
@@ -243,9 +243,9 @@ switch ($action)
         break;
     case 'skills':
         $sql = "SELECT id, name FROM `{$dbSoftware}` ORDER BY name ASC";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($obj = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($obj = mysqli_fetch_object($result))
         {
             $strIsSelected = '';
             if ($obj->id == $selected)
@@ -263,8 +263,8 @@ switch ($action)
         {
             //check you're changing your own
             $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$val}' WHERE id = {$id}";
-            $contactresult = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $contactresult = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
         break;
     case 'checkldap':
@@ -386,11 +386,11 @@ switch ($action)
             $originalowner = clean_int($_REQUEST['originalowner']);
             $sql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' ";
             $sql .= "WHERE incidentid='{$incidentid}' AND originalowner='{$originalowner}' LIMIT 1";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
                 echo "FAILED";
-                trigger_error(mysql_error(), E_USER_ERROR);
+                trigger_error(mysqli_error($db), E_USER_ERROR);
             }
             else
             {
@@ -417,10 +417,10 @@ switch ($action)
     case 'display_billingmatrix':
         $billingtype = cleanvar($_REQUEST['billingtype']);
         $selected = cleanvar($_REQUEST['selected']);
-        
+
         $bill = new $billingtype();
         $s = $bill->billing_matrix_selector('billing_matrix', $selected);
-        
+
         if (empty($s)) 
         {
             $s = $GLOBALS['strNotApplicableAbbrev'];
@@ -429,7 +429,7 @@ switch ($action)
         {
             $s = $s . "<span class='required'>{$GLOBALS['strRequired']}</span>"; 
         }
-        
+
         echo $s;
         break;
     default :

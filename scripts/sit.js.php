@@ -45,6 +45,24 @@ $info_icon = icon('info', 16, $strDraftLastSaved);
 $icon_ldap_container = icon('ldap-directory', 16);
 $icon_ldap_group = icon('ldap-group', 16);
 
+if (isset($_SESSION['userconfig']['show_confirmation_caution']))
+{
+    $show_confirmation_caution = "'{$_SESSION['userconfig']['show_confirmation_caution']}'";
+}
+else
+{
+    $show_confirmation_caution = "'FALSE'";
+}
+
+if (isset($_SESSION['userconfig']['show_confirmation_delete']))
+{
+    $show_confirmation_delete = "'{$_SESSION['userconfig']['show_confirmation_delete']}'";
+}
+else
+{
+    $show_confirmation_delete = "'FALSE'";
+}
+
 echo "
 var application_webpath = '{$CONFIG['application_webpath']}';
 var strJanAbbr = '{$strJanAbbr}';
@@ -108,8 +126,8 @@ var LDAP_CORRECT = ".LDAP_CORRECT.";
 
 /* SESSIONS */
 
-var show_confirmation_caution = '{$_SESSION['userconfig']['show_confirmation_caution']}';
-var show_confirmation_delete = '{$_SESSION['userconfig']['show_confirmation_delete']}';
+var show_confirmation_caution = {$show_confirmation_caution};
+var show_confirmation_delete = {$show_confirmation_delete};
 
 /* ICONS */
 

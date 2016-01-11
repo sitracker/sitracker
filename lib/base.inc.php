@@ -83,7 +83,7 @@ mb_internal_encoding($i18ncharset);
  * @param mixed $var variable to replace
  * @param bool $striphtml whether to strip html
  * @param bool $transentities whether to translate all aplicable chars (true) or just special chars (false) into html entites
- * @param bool $mysqlescape whether to mysql_escape()
+ * @param bool $mysqlescape whether to mysqli_real_escape_string()
  * @param array $disallowedchars array of chars to remove
  * @param array $replacechars array of chars to replace as $orig => $replace
  * @param bool $intval whether to get the integer value of the variable
@@ -94,6 +94,7 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
                 $mysqlescape = TRUE, $disallowedchars = array(),
                 $replacechars = array(), $intval = FALSE)
 {
+    global $db;
     if (is_array($vars))
     {
         foreach ($vars as $key => $singlevar)
@@ -134,7 +135,7 @@ function cleanvar($vars, $striphtml = TRUE, $transentities = FALSE,
 
         if ($mysqlescape)
         {
-            $var = mysql_real_escape_string($var);
+            $var = mysqli_real_escape_string($db, $var);
         }
 
         if ($intval)
@@ -218,6 +219,7 @@ function clean_float($vars)
 */
 function clean_dbstring($vars)
 {
+    global $db;
     if (is_array($vars))
     {
         foreach ($vars as $key => $singlevar)
@@ -234,7 +236,7 @@ function clean_dbstring($vars)
             stripslashes($string);
         }
 
-        $string = mysql_real_escape_string($string);
+        $string = mysqli_real_escape_string($db, $string);
     }
     return $string;
 }
@@ -249,8 +251,9 @@ function clean_dbstring($vars)
 */
 function clean_lang_dbstring($string)
 {
+    global $db;
     stripslashes($string);
-    $string = mysql_real_escape_string($string);
+    $string = mysqli_real_escape_string($db, $string);
 
     return $string;
 }

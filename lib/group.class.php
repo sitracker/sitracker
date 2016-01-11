@@ -32,15 +32,16 @@ class Group extends SitEntity {
 
     function retrieveDetails()
     {
+        global $db;
         if ($this->id > 0)
         {
             $sql = "SELECT * FROM `{$GLOBALS['dbGroups']}` WHERE id = {$this->id}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-            if (mysql_num_rows($result) == 1)
+            if (mysqli_num_rows($result) == 1)
             {
-                $obj = mysql_fetch_object($result);
+                $obj = mysqli_fetch_object($result);
                 $this->name = $obj->name;
                 $this->imageurl = $obj->imageurl;
             }

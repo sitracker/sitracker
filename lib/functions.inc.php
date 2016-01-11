@@ -76,18 +76,18 @@ if (version_compare(PHP_VERSION, "5.1.0", ">="))
  */
 function authenticate($username, $password)
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $toReturn = false;
 
     if (!empty($username) AND !empty($password))
     {
         $sql = "SELECT id, password, status, user_source FROM `{$GLOBALS['dbUsers']}` WHERE username = '{$username}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) == 1)
         {
             // Exist in SiT DB
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object( $result);
             if ($obj->user_source == 'sit')
             {
                 if (md5($password) == $obj->password AND $obj->status != 0) $toReturn = true;
@@ -121,7 +121,7 @@ function authenticate($username, $password)
                 }
             }
         }
-        elseif (mysql_num_rows($result) > 1)
+        elseif (mysqli_num_rows($result) > 1)
         {
             // Multiple this should NEVER happen
             trigger_error("Username not unique", E_USER_ERROR);
@@ -166,20 +166,21 @@ function authenticate($username, $password)
 function authenticateContact($username, $password)
 {
     debug_log ("authenticateContact called");
-    global $CONFIG;
+    global $CONFIG, $db;
     $toReturn = false;
 
     if (!empty($username) AND !empty($password))
     {
         $sql = "SELECT id, password, contact_source, active, username FROM `{$GLOBALS['dbContacts']}` WHERE (username = '{$username}' OR email = '{$username}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
+
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) == 1)
         {
             debug_log ("Authenticate: Just one contact in db");
 
             // Exists in SiT DB
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object( $result);
             if ($obj->contact_source == 'sit')
             {
                 if ((md5($password) == $obj->password OR $password == $obj->password) AND $obj->active == 'true') $toReturn = $obj->id;
@@ -221,7 +222,7 @@ function authenticateContact($username, $password)
                 $toReturn = false;
             }
         }
-        elseif (mysql_num_rows($result) > 1)
+        elseif (mysqli_num_rows($result) > 1)
         {
             debug_log ("Multiple");
             // Multiple this should NEVER happen
@@ -256,10 +257,10 @@ function authenticateContact($username, $password)
  */
 function authenticateTrustedServerMode()
 {
-    global $CONFIG;
-    
+    global $CONFIG, $db;
+
     $toReturn = false;
-    
+
     if ($CONFIG['trusted_server'])
     {
         if (trustedServerValidateBasicAuth())
@@ -267,15 +268,15 @@ function authenticateTrustedServerMode()
             $username = $_SERVER["HTTP_".strtoupper($CONFIG['trusted_server_username_header'])];
             debug_log("Headers reeived ".print_r($_SERVER, true));
             $sql = "SELECT id, password, status, user_source, username FROM `{$GLOBALS['dbUsers']}` WHERE username = '{$username}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) == 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) == 1)
             {
                 // Exists in SiT DB
-                $obj = mysql_fetch_object($result);
+                $obj = mysqli_fetch_object( $result);
                 $toReturn = $obj->username;
             }
-            
+
             if ($toReturn)
             {
                 debug_log ("authenticateTrustedServerMode: Contact authenticated via trusted server", TRUE);
@@ -308,7 +309,7 @@ function authenticateTrustedServerMode()
  */
 function authenticateTrustedServerModeContact()
 {
-    global $CONFIG;
+    global $CONFIG, $db;
 
     $toReturn = false;
 
@@ -317,17 +318,17 @@ function authenticateTrustedServerModeContact()
         if (trustedServerValidateBasicAuth())
         {
             $username = $_SERVER["HTTP_".strtoupper($CONFIG['trusted_server_username_header'])];
-    
+
             $sql = "SELECT id, password, contact_source, active, username FROM `{$GLOBALS['dbContacts']}` WHERE (username = '{$username}' OR email = '{$username}')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) == 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) == 1)
             {
                 // Exists in SiT DB
-                $obj = mysql_fetch_object($result);
+                $obj = mysqli_fetch_object( $result);
                 $toReturn = $obj->id;
             }
-    
+
             if ($toReturn)
             {
                 journal(CFG_LOGGING_MAX,'Contact Authenticated',"{$username} authenticated from " . substr($_SERVER['REMOTE_ADDR']." via trusted server", 0, 15), CFG_JOURNAL_LOGIN, 0);
@@ -360,20 +361,20 @@ function authenticateTrustedServerModeContact()
  */
 function createUserSession($username)
 {
-    global $CONFIG;
+    global $CONFIG, $db;
 
     $_SESSION['auth'] = TRUE;
 
     // Retrieve users profile
     $sql = "SELECT id, username, realname, email, groupid, user_source FROM `{$GLOBALS['dbUsers']}` WHERE username='{$username}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) < 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) < 1)
     {
         $_SESSION['auth'] = FALSE;
         trigger_error("No such user", E_USER_ERROR);
     }
-    $user = mysql_fetch_object($result);
+    $user = mysqli_fetch_object( $result);
     // Profile
     $_SESSION['userid'] = $user->id;
     $_SESSION['username'] = $user->username;
@@ -383,10 +384,10 @@ function createUserSession($username)
     $_SESSION['portalauth'] = FALSE;
     $_SESSION['user_source'] = $user->user_source;
     if (!is_null($_SESSION['startdate'])) $_SESSION['startdate'] = $user->user_startdate;
-    
+
     // Read user config from database
     $_SESSION['userconfig'] = get_user_config_vars($user->id);
-    
+
     // Make sure utc_offset cannot be blank
     if ($_SESSION['userconfig']['utc_offset'] == '')
     {
@@ -401,12 +402,12 @@ function createUserSession($username)
     {
         $_SESSION['userconfig']['iconset'] = $CONFIG['default_iconset'];
     }
-    
+
     // Delete any old session user notices
     $sql = "DELETE FROM `{$GLOBALS['dbNotices']}` WHERE durability='session' AND userid = {$_SESSION['userid']}";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-    
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+
     //check if the session lang is different the their profiles
     if ($_SESSION['lang'] != '' AND !empty($_SESSION['userconfig']['language']) AND
     $_SESSION['lang'] != $_SESSION['userconfig']['language'])
@@ -414,50 +415,49 @@ function createUserSession($username)
         $t = new TriggerEvent('TRIGGER_LANGUAGE_DIFFERS', array('profilelang' => $_SESSION['userconfig']['language'],
                 'currentlang' => $_SESSION['lang'], 'user' => $_SESSION['userid']));
     }
-    
+
     if ($_SESSION['userconfig']['language'] != $CONFIG['default_i18n'] AND $_SESSION['lang'] == '')
     {
         $_SESSION['lang'] = is_null($_SESSION['userconfig']['language']) ? '' : $_SESSION['userconfig']['language'];
     }
-    
+
     // Make an array full of users permissions
     // The zero permission is added to all users, zero means everybody can access
     $userpermissions[] = 0;
     // First lookup the role permissions
     $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRolePermissions']}` AS rp WHERE u.roleid = rp.roleid ";
     $sql .= "AND u.id = '{$_SESSION['userid']}' AND granted='true'";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
         $_SESSION['auth'] = FALSE;
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
     }
-    if (mysql_num_rows($result) >= 1)
+    if (mysqli_num_rows($result) >= 1)
     {
-        while ($perm = mysql_fetch_object($result))
+        while ($perm = mysqli_fetch_object( $result))
         {
             $userpermissions[] = $perm->permissionid;
         }
     }
-    
+
     // Next lookup the individual users permissions
     $sql = "SELECT * FROM `{$GLOBALS['dbUserPermissions']}` WHERE userid = '{$_SESSION['userid']}' AND granted='true' ";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
         $_SESSION['auth'] = FALSE;
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
     }
-    
-    if (mysql_num_rows($result) >= 1)
+
+    if (mysqli_num_rows($result) >= 1)
     {
-        while ($perm = mysql_fetch_object($result))
+        while ($perm = mysqli_fetch_object( $result))
         {
             $userpermissions[] = $perm->permissionid;
         }
     }
-    
-    
+
     $_SESSION['permissions'] = array_unique($userpermissions);
 }
 
@@ -468,21 +468,21 @@ function createUserSession($username)
  */
 function createContactSession($userid)
 {
-    global $CONFIG;
-    
+    global $CONFIG, $db;
+
     debug_log("PORTAL AUTH SUCESSFUL");
     $_SESSION['portalauth'] = TRUE;
-    
+
     $sql = "SELECT * FROM `{$GLOBALS['dbContacts']}` WHERE id = '{$userid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) < 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) < 1)
     {
         $_SESSION['portalauth'] = FALSE;
         trigger_error("No such user", E_USER_ERROR);
     }
-    $contact = mysql_fetch_object($result);
-    
+    $contact = mysqli_fetch_object( $result);
+
     // Customer session
     // Valid user
     $_SESSION['contactid'] = $contact->id;
@@ -492,14 +492,14 @@ function createContactSession($userid)
     $_SESSION['contracts'] = array();
     $_SESSION['auth'] = FALSE;
     $_SESSION['contact_source'] = $contact->contact_source;
-    
+
     //get admin contracts
     if (admin_contact_contracts($_SESSION['contactid'], $_SESSION['siteid']) != NULL)
     {
         $admincontracts = admin_contact_contracts($_SESSION['contactid'], $_SESSION['siteid']);
         $_SESSION['usertype'] = 'admin';
     }
-    
+
     //get named contact contracts
     if (contact_contracts($_SESSION['contactid'], $_SESSION['siteid']) != NULL)
     {
@@ -509,7 +509,7 @@ function createContactSession($userid)
             $_SESSION['usertype'] = 'contact';
         }
     }
-    
+
     //get other contracts
     if (all_contact_contracts($_SESSION['contactid'], $_SESSION['siteid']) != NULL)
     {
@@ -519,9 +519,9 @@ function createContactSession($userid)
             $_SESSION['usertype'] = 'user';
         }
     }
-    
+
     $_SESSION['contracts'] = array_merge((array)$admincontracts, (array)$contactcontracts, (array)$allcontracts);
-    
+
     load_entitlements($_SESSION['contactid'], $_SESSION['siteid']);
     header("Location: portal/");
 }
@@ -566,16 +566,17 @@ function trustedServerValidateBasicAuth()
 */
 function db_read_column($column, $table, $id)
 {
+    global $db;
     $sql = "SELECT `{$column}` FROM `{$table}` WHERE id ='$id' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 0)
     {
         $column = FALSE;
     }
     else
     {
-        list($column) = mysql_fetch_row($result);
+        list($column) = mysqli_fetch_row($result);
     }
     return $column;
 }
@@ -604,13 +605,13 @@ function permission_name($permissionid)
  */
 function software_name($softwareid)
 {
-    global $now, $dbSoftware, $strEOL, $strEndOfLife;
+    global $now, $dbSoftware, $strEOL, $strEndOfLife, $db;
 
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE id = '{$softwareid}'";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1)
     {
-        $software = mysql_fetch_object($result);
+        $software = mysqli_fetch_object($result);
         $lifetime_end = mysql2date($software->lifetime_end);
         if ($lifetime_end > 0 AND $lifetime_end < $now)
         {
@@ -937,10 +938,11 @@ function send_email($to, $from, $subject, $body, $replyto='', $cc='', $bcc='')
 */
 function global_signature()
 {
+    global $db;
     $sql = "SELECT signature FROM `{$GLOBALS['dbEmailSig']}` ORDER BY RAND() LIMIT 1";
-    $result = mysql_query($sql);
-    list($signature) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($signature) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
     return $signature;
 }
 
@@ -973,14 +975,14 @@ function dashboard_do($context, $row=0, $dashboardid=0)
  */
 function show_dashboard_component($row, $dashboardid)
 {
-    global $dbDashboard;
+    global $dbDashboard, $db;
     $sql = "SELECT name FROM `{$dbDashboard}` WHERE enabled = 'true' AND id = '$dashboardid'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 1)
+    if (mysqli_num_rows($result) == 1)
     {
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
         dashboard_do("dashboard_".$obj->name, 'db_'.$row, $dashboardid);
     }
 }
@@ -995,10 +997,11 @@ function show_dashboard_component($row, $dashboardid)
  */
 function is_dashlet_installed($dashlet)
 {
+    global $db;
     $sql = "SELECT id FROM `{$GLOBALS['dbDashboard']}` WHERE name = '{$dashlet}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 1)
     {
         return TRUE;
     }
@@ -1147,8 +1150,7 @@ function check_form_token($formtoken)
  */
 function schedule_actions_due()
 {
-    global $now;
-    global $dbScheduler;
+    global $dbScheduler, $now, $db;
 
     $actions = FALSE;
     // Interval
@@ -1156,11 +1158,11 @@ function schedule_actions_due()
     $sql .= "AND UNIX_TIMESTAMP(start) <= {$now} AND (UNIX_TIMESTAMP(end) >= {$now} OR UNIX_TIMESTAMP(end) = 0 OR UNIX_TIMESTAMP(end) is NULL) ";
     $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($action = mysql_fetch_object($result))
+        while ($action = mysqli_fetch_object($result))
         {
             $actions[$action->action] = $actions->params;
         }
@@ -1173,11 +1175,11 @@ function schedule_actions_due()
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y-%m') != DATE_FORMAT(lastran, '%Y-%m') ) ) ";  // not run this month
     $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($action = mysql_fetch_object($result))
+        while ($action = mysqli_fetch_object($result))
         {
             $actions[$action->action] = $actions->params;
         }
@@ -1192,11 +1194,11 @@ function schedule_actions_due()
     $sql .= "AND DATE_FORMAT(CURDATE(), '%Y') != DATE_FORMAT(lastran, '%Y') ) ) ";  // not run this year
     $sql .= "AND IF(UNIX_TIMESTAMP(lastran) > 0, UNIX_TIMESTAMP(lastran) + `interval`, 0) <= {$now} ";
     $sql .= "AND IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(lastran), -1) <= IF(UNIX_TIMESTAMP(laststarted) > 0, UNIX_TIMESTAMP(laststarted), 0)";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($action = mysql_fetch_object($result))
+        while ($action = mysqli_fetch_object($result))
         {
             $actions[$action->action] = $actions->params;
         }
@@ -1216,19 +1218,19 @@ function schedule_actions_due()
  */
 function schedule_action_started($action)
 {
-    global $now;
+    global $now, $db;
 
     $nowdate = date('Y-m-d H:i:s', $now);
 
     $sql = "UPDATE `{$GLOBALS['dbScheduler']}` SET laststarted = '{$nowdate}' ";
     $sql .= "WHERE action = '{$action}'";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
-    if (mysql_affected_rows() > 0) return TRUE;
+    if (mysqli_affected_rows() > 0) return TRUE;
     else return FALSE;
 }
 
@@ -1241,8 +1243,7 @@ function schedule_action_started($action)
  */
 function schedule_action_done($doneaction, $success = TRUE)
 {
-    global $now;
-    global $dbScheduler;
+    global $dbScheduler, $now, $db;
 
     if ($success != TRUE)
     {
@@ -1254,13 +1255,13 @@ function schedule_action_done($doneaction, $success = TRUE)
     if ($success == FALSE) $sql .= ", success=0, status='disabled' ";
     else $sql .= ", success=1 ";
     $sql .= "WHERE action = '{$doneaction}'";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
-    if (mysql_affected_rows() > 0) return TRUE;
+    if (mysqli_affected_rows($db) > 0) return TRUE;
     else return FALSE;
 }
 
@@ -1321,6 +1322,7 @@ function application_url()
  */
 function setup_user_triggers($userid)
 {
+    global $db;
     $return = TRUE;
     $userid = intval($userid);
     if ($userid != 0)
@@ -1340,10 +1342,10 @@ function setup_user_triggers($userid)
 
         foreach ($sqls AS $sql)
         {
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 $return = FALSE;
             }
         }
@@ -1376,18 +1378,19 @@ function application_version_string()
  */
 function database_schema_version()
 {
+    global $db;
     $return = '';
     $sql = "SELECT `schemaversion` FROM `{$GLOBALS['dbSystem']}` WHERE id = 0";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         $return = FALSE;
     }
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        list($return) = mysql_fetch_row($result);
+        list($return) = mysqli_fetch_row($result);
     }
 
     return $return;
@@ -1615,18 +1618,19 @@ function escape_regex($string)
 */
 function user_notice($text, $type = NORMAL_NOTICE_TYPE, $durability = 'session')
 {
-    $text = mysql_real_escape_string($text);
+    global $db;
+    $text = mysqli_real_escape_string($db, $text);
     $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbNotices']}` WHERE userid={$GLOBALS['sit'][2]} AND type={$type} AND durability='{$durability}' AND text='{$text}'";
-    $noticeresult = mysql_query($sql);
+    $noticeresult = mysqli_query($db, $sql);
     if ($noticeresult)
     {
-        list($noticecount) = mysql_fetch_array($noticeresult);
+        list($noticecount) = mysqli_fetch_array($noticeresult);
         if ($noticecount < 1)
         {
             $sql = "INSERT INTO `{$GLOBALS['dbNotices']}` (userid, type, text, timestamp, durability) ";
             $sql .= "VALUES({$GLOBALS['sit'][2]}, {$type}, '{$text}', NOW(), '{$durability}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         }
     }
 }
@@ -1640,12 +1644,13 @@ function user_notice($text, $type = NORMAL_NOTICE_TYPE, $durability = 'session')
  */
 function get_country_name($isocode)
 {
+    global $db;
     $sql = "SELECT name FROM `{$GLOBALS['dbCountryList']}` WHERE isocode = '{$isocode}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
         return $obj->name;
     }
 }
@@ -1744,7 +1749,7 @@ function plugin_do($context, $optparams = FALSE)
         }
     }
     $rtnvalue = '';
-    if (is_array($PLUGINACTIONS[$context]))
+    if (array_key_exists($context, $PLUGINACTIONS) && is_array($PLUGINACTIONS[$context]))
     {
         foreach ($PLUGINACTIONS[$context] AS $pluginaction)
         {

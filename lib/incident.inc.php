@@ -29,13 +29,13 @@ require_once (APPLICATION_LIBPATH . 'contract.inc.php');
  */
 function incident($incident)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
 
     $incident = intval($incident);
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE id = '{$incident}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    $row = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+    $row = mysqli_fetch_object($result);
     return $row;
 }
 
@@ -65,7 +65,7 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
                          $productversion = '', $productservicepacks = '',
                          $opened = '', $lastupdated = '', $customerid = '')
 {
-    global $now, $dbIncidents, $dbUpdates, $sit;
+    global $now, $dbIncidents, $dbUpdates, $sit, $db;
 
     if (empty($opened))
     {
@@ -93,15 +93,15 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
     $sql .= "'{$servicelevel}', '{$status}', '{$contract}', ";
     $sql .= "'{$product}', '{$software}', '{$productversion}', ";
     $sql .= "'{$productservicepacks}', '{$opened}', '{$lastupdated}', $customerid)";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
     else
     {
-        $incidentid = mysql_insert_id();
+        $incidentid = mysqli_insert_id($db);
         increment_incidents_used($contract);
 
     }
@@ -111,15 +111,15 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
     $sql .= "currentstatus, customervisibility, nextaction, sla) ";
     $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', '".UPDATE_TYPE_OPENING."', '{$updatetext}', '{$now}', '{$sit[2]}', ";
     $sql .= "'1', '{$customervisibility}', '{$nextaction}', '".UPDATE_SLA_OPENED."')";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     // Insert the first Review update, this indicates the review period of an incident has started
     // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility) ";
     $sql .= "VALUES ('{$incidentid}', '{$sit[2]}', 'reviewmet', '{$now}', '{$sit[2]}', '1', 'hide')";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     return $incidentid;
 }
@@ -133,16 +133,16 @@ function create_incident($title, $contact, $servicelevel, $contract, $product,
  */
 function create_incident_from_incoming($incomingid)
 {
-    global $dbTempIncoming, $dbMaintenance, $dbServiceLevels, $dbSoftwareProducts, $CONFIG;
+    global $dbTempIncoming, $dbMaintenance, $dbServiceLevels, $dbSoftwareProducts, $CONFIG, $db;
     $rtn = TRUE;
 
     $incomingid = intval($incomingid);
     $sql = "SELECT * FROM `{$dbTempIncoming}` ";
     $sql .= "WHERE id = '{$incomingid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
-    $row = mysql_fetch_object($result);
+    $row = mysqli_fetch_object($result);
     $contact = $row->contactid;
     $contract = guess_contract_id($contact);
 
@@ -161,14 +161,14 @@ function create_incident_from_incoming($incomingid)
     $sql .= "AND m.servicelevel = s.tag ";
     $sql .= "AND m.product = sp.productid LIMIT 1";
 
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtn = FALSE;
     }
 
-    $row = mysql_fetch_object($result);
+    $row = mysqli_fetch_object($result);
     $sla = $row->tag;
     $product = $row->product;
     $software = $row->softwareid;
@@ -182,7 +182,7 @@ function create_incident_from_incoming($incomingid)
     else
     {
         $sql = "DELETE FROM `$dbTempIncoming` WHERE id = '{$incomingid}'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
     }
 
 
@@ -208,16 +208,16 @@ function create_incident_from_incoming($incomingid)
  */
 function move_update_to_incident($update, $incident)
 {
-    global $dbUpdates, $CONFIG, $fsdelim;
+    global $dbUpdates, $CONFIG, $fsdelim, $db;
     $update = intval($update);
     $incident = intval($incident);
 
     $sql = "UPDATE `{$dbUpdates}` SET incidentid = '{$incident}' ";
     $sql .= "WHERE id = '{$update}'";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
     else
@@ -231,7 +231,7 @@ function move_update_to_incident($update, $incident)
         $sql .= "WHERE l.origcolref = '{$update}' ";
         $sql .= "AND l.linktype = 5 ";
         $sql .= "AND l.linkcolref = f.id";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if ($result)
         {
             if (!file_exists($new_path))
@@ -241,7 +241,7 @@ function move_update_to_incident($update, $incident)
                 umask($umask);
             }
         
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
             {
                 $filename = $row->linkcolref . "-" . $row->filename;
                 $old_file = $old_path . $row->linkcolref;
@@ -273,13 +273,13 @@ function move_update_to_incident($update, $incident)
  */
 function update($update)
 {
-    global $dbUpdates;
+    global $dbUpdates, $db;
 
     $update = intval($update);
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE id = '{$update}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    $row = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+    $row = mysqli_fetch_object($result);
     return $row;
 }
 
@@ -297,12 +297,12 @@ function update($update)
  */
 function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 {
-    global $now, $dbUsers, $dbIncidents, $dbUserSoftware, $startofsession;
+    global $now, $dbUsers, $dbIncidents, $dbUserSoftware, $startofsession, $db;
     $ticket = array();
 
     $sql = "SELECT product, softwareid, priority, contact, owner FROM `{$dbIncidents}` WHERE id={$incidentid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     if (!$result)
     {
@@ -310,7 +310,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
     }
     else
     {
-        $incident = mysql_fetch_object($result);
+        $incident = mysqli_fetch_object($result);
         // If this is a critical incident the user we're assigning to must be online
         if ($incident->priority >= PRIORITY_CRITICAL)
         {
@@ -334,19 +334,19 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
             $sql = "SELECT id AS userid, status, lastseen FROM `{$dbUsers}` AS u WHERE status > 0 AND u.accepting='Yes' ";
             if ($exceptuserid > 0) $sql .= "AND id != '{$exceptuserid}' ";
         }
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
         // Fallback to all users if we have no results from above
-        if (mysql_num_rows($result) < 1)
+        if (mysqli_num_rows($result) < 1)
         {
             $sql = "SELECT id AS userid, status, lastseen FROM `{$dbUsers}` AS u WHERE status > 0 AND u.accepting='Yes' ";
             if ($exceptuserid > 0) $sql .= "AND id != '{$exceptuserid}' ";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         }
 
-        while ($user = mysql_fetch_object($result))
+        while ($user = mysqli_fetch_object($result))
         {
             // Get a ticket for being skilled
             // Or in the case we don't know the skill, just get a ticket for accepting
@@ -371,16 +371,16 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
 
             // Have a look at the users (all open) incident queue (owned)
             $qsql = "SELECT id, priority, lastupdated, status, softwareid FROM `{$dbIncidents}` WHERE owner={$user->userid} AND status != " . STATUS_CLOSED . " AND status != " . STATUS_CLOSING;
-            $qresult = mysql_query($qsql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $queue_size = mysql_num_rows($qresult);
+            $qresult = mysqli_query($db, $qsql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            $queue_size = mysqli_num_rows($qresult);
             if ($queue_size > 0)
             {
                 $queued_critical = 0;
                 $queued_high = 0;
                 $queue_lastupdated = 0;
                 $queue_samecontact = FALSE;
-                while ($queue = mysql_fetch_object($qresult))
+                while ($queue = mysqli_fetch_object($qresult))
                 {
                     if ($queue->priority == PRIORITY_HIGH) $queued_high++;
                     if ($queue->priority >= PRIORITY_CRITICAL) $queued_critical++;
@@ -444,7 +444,7 @@ function suggest_reassign_userid($incidentid, $exceptuserid = 0)
  */
 function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $type = 'full')
 {
-    global $dbIncidents, $dbUpdates, $now, $sit;
+    global $dbIncidents, $dbUpdates, $now, $sit, $db;
     $rtn = TRUE;
 
     if ($type == 'temp')
@@ -456,19 +456,19 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
         $sql = "UPDATE `{$dbIncidents}` SET owner = '{$user}' ";
     }
     $sql .= "WHERE id = '{$incident}'";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $rtn = FALSE;
     }
 
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, nextaction) ";
     $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'reassigning', '{$now}', '{$user}', '1', '{$nextaction}')";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
+        trigger_error(mysqli_error($db), E_USER_WARNING);
         $rtn = FALSE;
     }
 
@@ -486,14 +486,14 @@ function reassign_incident($incident, $user, $tuser = '', $nextaction = '', $typ
  */
 function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
 {
-    global $dbIncidents, $dbUpdates, $now, $sit, $bodytext;
+    global $dbIncidents, $dbUpdates, $now, $sit, $bodytext, $db;
     $rtn = TRUE;
 
     $time = time();
     $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', ";
     $sql .= "lastupdated='{$time}', closed='0', owner='0', towner='0' WHERE id='{$incident}' LIMIT 1";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
     $owner = incident_owner($incident);
     // add update
@@ -501,10 +501,10 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     $sql .= "bodytext, timestamp, currentowner, currentstatus) ";
     $sql .= "VALUES ({$incident}, '{$sit[2]}', 'reopening', '{$bodytext}', '{$time}', ";
     $sql .= "'{$owner}', '{$newstatus}')";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -517,10 +517,10 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     $sql .= "sla, bodytext) ";
     $sql .= "VALUES ('{$incident}', '{$sit[2]}', 'slamet', '{$now}', '{$owner}', ";
     $sql .= STATUS_ACTIVE.", 'show', 'opened', '{$GLOBALS['strIncidentIsOpen']}')";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -528,10 +528,10 @@ function reopen_incident($incident, $newstatus = STATUS_ACTIVE, $message = '')
     // This insert could possibly be merged with another of the 'updates' records, but for now we keep it seperate for clarity
     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, timestamp, currentowner, currentstatus, customervisibility, sla, bodytext) ";
     $sql .= "VALUES ('{$incident}', '0', 'reviewmet', '{$now}', '{$owner}', ".STATUS_ACTIVE.", 'hide', 'opened','')";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtn = FALSE;
     }
 
@@ -569,9 +569,9 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
 
     // Grab the template
     $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$templateid} LIMIT 1";
-    $tresult = mysql_query($tsql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
+    $tresult = mysqli_query($db, $tsql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($tresult) > 0) $template = mysqli_fetch_object($tresult);
     $paramarray = array('incidentid' => $paramarray['incidentid'], 'triggeruserid' => $sit[2]);
     if ($CONFIG['outbound_email_newline'] == 'CRLF')
     {
@@ -622,6 +622,7 @@ function send_email_template($templateid, $paramarray, $attach='', $attachtype='
  */
 function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
 {
+    global $db;
     $rtn = FALSE;
     $sql = "SELECT count(id) AS count FROM `{$GLOBALS['dbDrafts']}` WHERE incidentid = {$incidentid} ";
     if ($type == "update") $sql .= "AND type = 'update' ";
@@ -629,14 +630,14 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
 
     if (!empty($userid)) $sql .= "AND userid = {$userid} ";
 
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_ERROR);
+        trigger_error(mysqli_error($db), E_USER_ERROR);
         $rtn = FALSE;
     }
 
-    list($count) = mysql_fetch_row($result);
+    list($count) = mysqli_fetch_row($result);
     if ($count > 0) $rtn = TRUE;
 
     return $rtn;
@@ -652,7 +653,7 @@ function drafts_waiting_on_incident($incidentid, $type='all', $userid='')
  */
 function incident_id_from_subject($subject, $from)
 {
-	global $CONFIG;
+	global $CONFIG, $db;
     $incident_id = FALSE;
     $from_parts = explode($from, "@");
     $domain = $from_parts[2];
@@ -670,19 +671,19 @@ function incident_id_from_subject($subject, $from)
         preg_match('/\d{1,12}/', $subjectm, $external_id);
         $external_id = $external_id[0];
         $sql = "SELECT name, email_domain FROM `{$dbEscalationPaths}`";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if ($result)
         {
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 if ($obj->email_domain == $domain)
                 {
                     $sql_ext = "SELECT id FROM `{$dbIncidents}` ";
                     $sql_ext .= "WHERE externalid = '{$external_id}'";
-                    $result_ext = mysql_query($sql_ext);
-                    if (mysql_num_rows($result_ext) != 1)
+                    $result_ext = mysqli_query($db, $sql_ext);
+                    if (mysqli_num_rows($result_ext) != 1)
                     {
-                        $o = mysql_fetch_object($result_ext);
+                        $o = mysqli_fetch_object($result_ext);
                         $incident_id = $o->id;
                     }                    
                 }
@@ -699,11 +700,11 @@ function incident_id_from_subject($subject, $from)
  */
 function count_incident_stats($incidentid)
 {
-    global $dbUpdates;
+    global $dbUpdates, $db;
     $sql = "SELECT count(DISTINCT currentowner),count(id) FROM `{$dbUpdates}` WHERE incidentid='{$incidentid}' AND userid!=0 GROUP BY userid";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($unique_users,$num_updates) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($unique_users,$num_updates) = mysqli_fetch_row($result);
     return array($unique_users,$num_updates);;
 }
 
@@ -715,21 +716,21 @@ function count_incident_stats($incidentid)
  */
 function average_incident_duration($start,$end,$states)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $sql = "SELECT opened, closed, (closed - opened) AS duration_closed, i.id AS incidentid ";
     $sql .= "FROM `{$dbIncidents}` AS i ";
     $sql .= "WHERE status = '" . STATUS_CLOSED . "' ";
     if ($start > 0) $sql .= "AND opened >= {$start} ";
     if ($end > 0) $sql .= "AND opened <= {$end} ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $totalduration = 0;
     $totalworkingduration = 0;
     $countclosed = 0;
     $total_unique_owners= 0;
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $working_time = calculate_incident_working_time($row->incidentid, $row->opened, $row->closed, $states);
         if ($row->duration_closed > 0)
@@ -760,8 +761,9 @@ function average_incident_duration($start,$end,$states)
  */
 function sla_target_content($incidentid, $target)
 {
+    global $db, $dbUpdates;
+
     $rtn = '';
-    global $dbUpdates;
     $incidentid = clean_int($incidentid);
     $target = clean_dbstring($target);
 
@@ -769,9 +771,9 @@ function sla_target_content($incidentid, $target)
     $sql .= "WHERE incidentid = '{$incidentid}' ";
     $sql .= "AND sla = '{$target}' ";
     $sql .= "ORDER BY timestamp DESC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($bodytext) = mysql_fetch_assoc($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($bodytext) = mysqli_fetch_assoc($result);
     $bodytext = str_replace("<hr>", "", $bodytext);
     $rtn .= $bodytext;
     return $rtn;
@@ -787,16 +789,16 @@ function sla_target_content($incidentid, $target)
  */
 function incident_service_level($incidentid)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $servicelevel = '';
 
     $sql = "SELECT servicelevel FROM `{$dbIncidents}` WHERE id = {$incidentid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $servicelevel = mysql_fetch_object($result)->servicelevel;
+        $servicelevel = mysqli_fetch_object($result)->servicelevel;
     }
 
     return $servicelevel;
@@ -812,7 +814,7 @@ function incident_service_level($incidentid)
  */
 function load_entitlements($contactid, $siteid)
 {
-    global $dbSupportContacts, $dbMaintenance, $dbProducts;
+    global $dbSupportContacts, $dbMaintenance, $dbProducts, $db;
 
     //get entitlement
     $sql = "SELECT m.*, p.name, ";
@@ -831,10 +833,10 @@ function load_entitlements($contactid, $siteid)
     $sql .= "AND m.site = {$siteid} ";
     $sql .= "ORDER BY expirydate DESC ";
 
-    $contractresult = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $contractresult = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     unset($_SESSION['entitlement']);
-    while ($contract = mysql_fetch_object($contractresult))
+    while ($contract = mysqli_fetch_object($contractresult))
     {
         $_SESSION['entitlement'][] = serialize($contract);
     }
@@ -848,7 +850,7 @@ function load_entitlements($contactid, $siteid)
  */
 function readable_last_updates($incidentid, $num)
 {
-    global $dbUpdates;
+    global $dbUpdates, $db;
 
     $num = intval($num);
     ($num == 0) ? $num = 1 : $num;
@@ -857,9 +859,9 @@ function readable_last_updates($incidentid, $num)
     $sql .= "AND bodytext != '' ";
     $sql .= "ORDER BY timestamp DESC ";
     if ($num != -1 ) $sql .= "LIMIT {$num}";
-    $query = mysql_query($sql);
+    $query = mysqli_query($db, $sql);
     $text = "";
-    while ($result = mysql_fetch_object($query))
+    while ($result = mysqli_fetch_object($query))
     {
         $num--;
         $text .= strip_tags($result->bodytext);
@@ -1071,20 +1073,21 @@ function priority_name($id, $syslang = FALSE)
  */
 function incident_lastupdate($id)
 {
+    global $db;
     // Find the most recent update
     $sql = "SELECT userid, type, sla, currentowner, currentstatus, bodytext AS body, timestamp, nextaction, id ";
     $sql .= "FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND bodytext != '' ORDER BY timestamp DESC, id DESC LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 0)
+    if (mysqli_num_rows($result) == 0)
     {
         trigger_error("Zero records while retrieving incident last update for incident {$id}", E_USER_WARNING);
     }
     else
     {
-        $update = mysql_fetch_object($result);
-        mysql_free_result($result);
+        $update = mysqli_fetch_object($result);
+        mysqli_free_result($result);
 
         $offset = 500;
         
@@ -1114,14 +1117,15 @@ function incident_lastupdate($id)
  */
 function incident_firstupdate($id)
 {
+    global $db;
     $sql = "SELECT bodytext FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$id}' AND customervisibility='show' ";
     $sql .= "ORDER BY timestamp ASC, id ASC LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) >= 1)
+    if (mysqli_num_rows($result) >= 1)
     {
-        list($bodytext) = mysql_fetch_row($result);
+        list($bodytext) = mysqli_fetch_row($result);
         $bodytext = strip_tags($bodytext);
     }
     else
@@ -1144,7 +1148,7 @@ function incident_firstupdate($id)
  */
 function incidentstatus_name($id, $type='internal')
 {
-    global $dbIncidentStatus;
+    global $dbIncidentStatus, $db;
 
     if ($type == 'external')
     {
@@ -1156,16 +1160,16 @@ function incidentstatus_name($id, $type='internal')
     }
 
     $sql = "SELECT {$type} FROM `{$dbIncidentStatus}` WHERE id='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 0)
+    if (mysqli_num_rows($result) == 0)
     {
         $name = '';
     }
     else
     {
-        $incidentstatus = mysql_fetch_assoc($result);
+        $incidentstatus = mysqli_fetch_assoc($result);
         $name =  $GLOBALS[$incidentstatus[$type]];
     }
     return $name;
@@ -1219,15 +1223,15 @@ function incidents_remaining($id)
 */
 function decrement_free_incidents($siteid)
 {
-    global $dbSites;
+    global $dbSites, $db;
     $sql = "UPDATE `{$dbSites}` SET freesupport = (freesupport - 1) WHERE id='{$siteid}'";
-    mysql_query($sql);
-    if (mysql_affected_rows() < 1)
+    mysqli_query($db, $sql);
+    if (mysqli_affected_rows($db) < 1)
     {
         trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
     }
 
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     else return TRUE;
 }
 
@@ -1238,11 +1242,11 @@ function decrement_free_incidents($siteid)
 */
 function increment_incidents_used($maintid)
 {
-    global $dbMaintenance;
+    global $dbMaintenance, $db;
     $sql = "UPDATE `{$dbMaintenance}` SET incidents_used = (incidents_used + 1) WHERE id='{$maintid}'";
-    mysql_query($sql);
-    if (mysql_affected_rows() < 1) trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_affected_rows($db) < 1) trigger_error("No rows affected while updating freesupport", E_USER_ERROR);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     else return TRUE;
 }
 
@@ -1256,14 +1260,14 @@ function increment_incidents_used($maintid)
  */
 function countdayincidents($day, $month, $year)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
     $sql = "SELECT count(id) FROM `{$dbIncidents}` ";
     $sql .= "WHERE opened BETWEEN '{$unixstartdate}' AND '{$unixenddate}' ";
-    $result = mysql_query($sql);
-    list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
     return $count;
 }
 
@@ -1277,14 +1281,14 @@ function countdayincidents($day, $month, $year)
  */
 function countdayclosedincidents($day, $month, $year)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` ";
     $sql .= "WHERE closed BETWEEN '{$unixstartdate}' AND '{$unixenddate}' ";
-    $result = mysql_query($sql);
-    list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
     return $count;
 }
 
@@ -1298,14 +1302,14 @@ function countdayclosedincidents($day, $month, $year)
  */
 function countdaycurrentincidents($day, $month, $year)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $unixstartdate = mktime(0, 0, 0, $month, $day, $year);
     $unixenddate = mktime(23, 59, 59, $month, $day, $year);
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` ";
     $sql .= "WHERE opened <= '{$unixenddate}' AND closed >= '{$unixstartdate}' ";
-    $result = mysql_query($sql);
-    list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
     return $count;
 }
 
@@ -1318,10 +1322,11 @@ function countdaycurrentincidents($day, $month, $year)
  */
 function count_incoming_updates()
 {
+    global $db;
     $sql = "SELECT id FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid=0";
-    $result = mysql_query($sql);
-    $count = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    $count = mysqli_num_rows($result);
+    mysqli_free_result($result);
     return $count;
 }
 
@@ -1334,20 +1339,19 @@ function count_incoming_updates()
 */
 function incident_get_next_target($incidentid)
 {
-    global $now;
-
+    global $now, $db;
     
     // Find the most recent SLA target that was met
     $sql = "SELECT sla, timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' AND sla IS NOT Null ORDER BY id DESC LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $sla_targets = get_incident_sla_targets($incidentid);
 
     $target = new SLATarget();
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $upd = mysql_fetch_object($result);
+        $upd = mysqli_fetch_object($result);
         switch ($upd->sla)
         {
             case 'opened':
@@ -1441,16 +1445,16 @@ function target_type_name($targettype)
  */
 function incident_time_since_review($incidentid)
 {
-    global $now;
+    global $now, $db;
     $sql = "SELECT timestamp FROM `{$GLOBALS['dbUpdates']}` ";
     $sql .= "WHERE incidentid='{$incidentid}' AND type='reviewmet' ";
     $sql .= "ORDER BY id DESC LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $upd = mysql_fetch_object($result);
+        $upd = mysqli_fetch_object($result);
         $timesincereview = floor(($now - $upd->timestamp) / 60);
     }
     return $timesincereview;
@@ -1469,22 +1473,22 @@ function incident_time_since_review($incidentid)
  */
 function incident_backup_switchover($userid, $accepting)
 {
-    global $now, $dbIncidents, $dbUpdates, $dbTempAssigns, $dbUsers, $dbUserStatus;
+    global $now, $dbIncidents, $dbUpdates, $dbTempAssigns, $dbUsers, $dbUserStatus, $db;
 
     $usersql = "SELECT u.*, us.name AS statusname ";
     $usersql .= "FROM `{$dbUsers}` AS u, `{$dbUserStatus}` AS us ";
     $usersql .= "WHERE u.id = '{$userid}' AND u.status = us.id";
-    $userresult = mysql_query($usersql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $user = mysql_fetch_row($userresult);
+    $userresult = mysqli_query($db, $usersql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $user = mysqli_fetch_row($userresult);
 
     if (strtolower($accepting) == 'no')
     {
         // Look through the incidents that this user OWNS (and are not closed)
         $sql = "SELECT * FROM `{$dbIncidents}` WHERE (owner='{$userid}' OR towner='{$userid}') AND status!=2";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($incident = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($incident = mysqli_fetch_object($result))
         {
             // Try and find a backup/substitute engineer
             $backupid = software_backup_userid($userid, $incident->softwareid);
@@ -1494,16 +1498,16 @@ function incident_backup_switchover($userid, $accepting)
                 // no backup engineer found so add to the holding queue
                 // Look to see if this assignment is in the queue already
                 $fsql = "SELECT * FROM `{$dbTempAssigns}` WHERE incidentid='{$incident->id}' AND originalowner='{$userid}'";
-                $fresult = mysql_query($fsql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($fresult) < 1)
+                $fresult = mysqli_query($db, $fsql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($fresult) < 1)
                 {
                     // it's not in the queue, and the user isn't accepting so add it
                     //$userstatus=user_status($userid);
                     $userstatus = $user['status'];
                     $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus) VALUES ('{$incident->id}', '{$userid}', '{$userstatus}')";
-                    mysql_query($usql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $usql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 }
             }
             else
@@ -1512,8 +1516,8 @@ function incident_backup_switchover($userid, $accepting)
                 // update incident
                 $rusql = "UPDATE `{$dbIncidents}` SET ";
                 $rusql .= "towner='{$backupid}', lastupdated='{$now}' WHERE id='{$incident->id}' LIMIT 1";
-                mysql_query($rusql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $rusql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
                 // add update
                 $username = user_realname($userid);
@@ -1527,27 +1531,27 @@ function incident_backup_switchover($userid, $accepting)
                 $risql .= "VALUES ('{$incident->id}', '0', '{$bodytext}', '{$assigntype}', '{$now}', ";
                 $risql .= "'{$backupid}', ";
                 $risql .= "'{$incident->status}')";
-                mysql_query($risql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $risql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
                 // Look to see if this assignment is in the queue already
                 $fsql = "SELECT * FROM `{$dbTempAssigns}` WHERE incidentid='{$incident->id}' AND originalowner='{$userid}'";
-                $fresult = mysql_query($fsql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($fresult) < 1)
+                $fresult = mysqli_query($db, $fsql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($fresult) < 1)
                 {
                     //$userstatus=user_status($userid);
                     $userstatus = $user['status'];
                     $usql = "INSERT INTO `{$dbTempAssigns}` (incidentid,originalowner,userstatus,assigned) VALUES ('{$incident->id}', '{$userid}', '$userstatus','yes')";
-                    mysql_query($usql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $usql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 }
                 else
                 {
                     // mark the temp assigns table so it's not showing in the holding queue
                     $tasql = "UPDATE `{$dbTempAssigns}` SET assigned='yes' WHERE originalowner='{$userid}' AND incidentid='{$incident->id}' LIMIT 1";
-                    mysql_query($tasql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $tasql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 }
             }
         }
@@ -1560,41 +1564,41 @@ function incident_backup_switchover($userid, $accepting)
     {
         // The user is now ACCEPTING, so first have a look to see if there are any reassignments in the queue
         $sql = "SELECT * FROM `{$dbTempAssigns}` WHERE originalowner='{$userid}' ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($assign = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($assign = mysqli_fetch_object($result))
         {
             if ($assign->assigned == 'yes')
             {
                 // Incident has actually been reassigned, so have a look if we can grab it back.
                 $lsql = "SELECT id,status FROM `{$dbIncidents}` ";
                 $lsql .= "WHERE id='{$assign->incidentid}' AND owner='{$assign->originalowner}' AND towner!=''";
-                $lresult = mysql_query($lsql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                while ($incident = mysql_fetch_object($lresult))
+                $lresult = mysqli_query($db, $lsql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                while ($incident = mysqli_fetch_object($lresult))
                 {
                     // Find our tempassign
                     $usql = "SELECT id,currentowner FROM `{$dbUpdates}` ";
                     $usql .= "WHERE incidentid='{$incident->id}' AND userid='0' AND type='tempassigning' ";
                     $usql .= "ORDER BY id DESC LIMIT 1";
-                    $uresult = mysql_query($usql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    list($prevassignid,$tempowner) = mysql_fetch_row($uresult);
+                    $uresult = mysqli_query($db, $usql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                    list($prevassignid,$tempowner) = mysqli_fetch_row($uresult);
 
                     // Look to see if the temporary owner has updated the incident since we temp assigned it
                     // If he has, we leave it in his queue
                     $usql = "SELECT id FROM `{$dbUpdates}` ";
                     $usql .= "WHERE incidentid='{$incident->id}' AND id > '{$prevassignid}' AND userid='{$tempowner}' LIMIT 1 ";
-                    $uresult = mysql_query($usql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    if (mysql_num_rows($uresult) < 1)
+                    $uresult = mysqli_query($db, $usql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                    if (mysqli_num_rows($uresult) < 1)
                     {
                         // Incident appears not to have been updated by the temporary owner so automatically reassign back to orignal owner
                         // update incident
                         $rusql = "UPDATE `{$dbIncidents}` SET ";
                         $rusql .= "towner='', lastupdated='{$now}' WHERE id='{$incident->id}' LIMIT 1";
-                        mysql_query($rusql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $rusql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
                         // add update
                         $username = user_realname($userid);
@@ -1608,13 +1612,13 @@ function incident_backup_switchover($userid, $accepting)
                         $risql .= "VALUES ('{$incident->id}', '0', '{$bodytext}', '{$assigntype}', '{$now}', ";
                         $risql .= "'{$backupid}', ";
                         $risql .= "'{$incident->status}')";
-                        mysql_query($risql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $risql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
                         // remove from assign queue now, all done
                         $rsql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$assign->incidentid}' AND originalowner='{$assign->originalowner}'";
-                        mysql_query($rsql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $rsql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                     }
                 }
             }
@@ -1622,14 +1626,14 @@ function incident_backup_switchover($userid, $accepting)
             {
                 // now have a look to see if the reassign was completed
                 $ssql = "SELECT id FROM `{$dbIncidents}` WHERE id='{$assign->incidentid}' LIMIT 1";
-                $sresult = mysql_query($ssql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($sresult) >= 1)
+                $sresult = mysqli_query($db, $ssql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($sresult) >= 1)
                 {
                     // reassign wasn't completed, or it was already assigned back, simply remove from assign queue
                     $rsql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$assign->incidentid}' AND originalowner='{$assign->originalowner}'";
-                    mysql_query($rsql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $rsql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 }
             }
         }
@@ -1660,21 +1664,21 @@ function incident_backup_switchover($userid, $accepting)
 function new_update($incidentid, $text, $type = 'default', $sla = '', $userid = 0, $currentowner = '',
                     $currentstatus = 1, $visibility = 'show')
 {
-    global $now;
+    global $now, $db;
     $sql  = "INSERT INTO `{$GLOBALS['dbUpdates']}` (incidentid, userid, ";
     $sql .= "type, bodytext, timestamp, currentowner, currentstatus, ";
     $sql .= "customervisibility, sla) VALUES ('{$incidentid}', '{$userid}', ";
     $sql .= "'{$type}', '{$text}', '{$now}', '{$currentowner}', ";
     $sql .= "'{$currentstatus}', '{$visibility}', '{$sla}')";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
     else
     {
-        return mysql_insert_id();
+        return mysqli_insert_id($db);
     }
 }
 
@@ -1699,22 +1703,22 @@ function create_temp_incoming($updateid, $from, $subject, $emailfrom,
                               $lockeduntil = '', $reason = '',
                               $reason_user = '', $reason_time = '')
 {
-    global $dbTempIncoming;
+    global $dbTempIncoming, $db;
     $sql = "INSERT INTO `{$dbTempIncoming}`(updateid, `from`, subject, ";
     $sql .= "emailfrom, contactid, incidentid, locked, lockeduntil, ";
     $sql .= "reason, reason_user, reason_time) VALUES('{$updateid}', ";
     $sql .= "'{$from}', '{$subject}', '{$emailfrom}', '{$contactid}', ";
     $sql .= "'{$incidentid}', '{$locked}', '{$lockeduntil}', '{$reason}', ";
     $sql .= "'{$reason_user}', '{$reason_time}')";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
     else
     {
-        return mysql_insert_id();
+        return mysqli_insert_id($db);
     }
 }
 
@@ -1728,11 +1732,12 @@ function holding_email_update_id($holding_email)
 
 function delete_holding_queue_update($updateid)
 {
+    global $db;
     $sql = "DELETE FROM `{$GLOBALS['dbTempIncoming']}` WHERE updateid = '{$updateid}'";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(). "  {$sql}", E_USER_WARNING);
+        trigger_error(mysqli_error($db). "  {$sql}", E_USER_WARNING);
         return FALSE;
     }
     else
@@ -1744,11 +1749,11 @@ function delete_holding_queue_update($updateid)
 
 function num_unread_emails()
 {
-    global $dbTempIncoming;
+    global $dbTempIncoming, $db;
     $sql = "SELECT COUNT(*) AS count FROM `{$dbTempIncoming}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(). "  {$sql}", E_USER_WARNING);
-    list($count) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db). "  {$sql}", E_USER_WARNING);
+    list($count) = mysqli_fetch_row($result);
     return $count;
 }
 
@@ -1762,7 +1767,7 @@ function num_unread_emails()
  */
 function site_count_incidents($id, $open=FALSE)
 {
-    global $dbIncidents, $dbContacts;
+    global $dbIncidents, $dbContacts, $db;
     $id = intval($id);
     $count = 0;
 
@@ -1770,10 +1775,10 @@ function site_count_incidents($id, $open=FALSE)
     $sql .= "WHERE i.contact = c.id ";
     $sql .= "AND c.siteid='{$id}' ";
     if ($open) $sql .= "AND i.status != ".STATUS_CLOSED;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    else list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     return $count;
 }
@@ -1803,7 +1808,7 @@ function display_drafts($type, $result)
 
     $html = '';
 
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $html .= "<div class='detailhead'>";
         $html .= "<div class='detaildate'>".date($CONFIG['dateformat_datetime'], $obj->lastupdate);
@@ -1843,19 +1848,19 @@ function external_escalation($escalated, $incid)
  */
 function incident_sla($incident_id, $type)
 {
-    global $dbServiceLevels;
+    global $dbServiceLevels, $db;
     $incident = incident($incident_id);
     $sql = "SELECT * FROM `{$dbServiceLevels}` ";
     $sql .= "WHERE tag = '{$incident->servicelevel}' AND priority = '{$incident->priority}'";
-    $result = mysql_query($sql);
-    if (mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         return "Error getting SLA";
     }
     else
     {
-        $sla_obj = mysql_fetch_object($result);
+        $sla_obj = mysqli_fetch_object($result);
         switch ($type)
         {
             case 'prob_determ':
@@ -1918,14 +1923,15 @@ function get_userfacing_incident_id_email($id)
  */
 function get_incident_sla_targets($incidentid)
 {
+    global $db;
     $incidentsla = incident_service_level($incidentid);
     
     $sql_sla = "SELECT initial_response_mins, prob_determ_mins, action_plan_mins, resolution_days, review_days, timed, allow_reopen ";
     $sql_sla .= "FROM `{$GLOBALS['dbServiceLevels']}` WHERE tag = '{$incidentsla}' GROUP BY tag";
     
-    $result_sla = mysql_query($sql_sla);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    return mysql_fetch_object($result_sla);
+    $result_sla = mysqli_query($db, $sql_sla);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    return mysqli_fetch_object($result_sla);
 }
 
 
@@ -1938,10 +1944,11 @@ function get_incident_sla_targets($incidentid)
  */
 function incoming_email_update_id($holdingemailid)
 {
+    global $db;
     $sql = "SELECT updateid FROM `{$GLOBALS['dbTempIncoming']}` WHERE id = {$holdingemailid}";
-    $contractresult = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($updateid) = mysql_fetch_array($result);
+    $contractresult = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($updateid) = mysqli_fetch_array($result);
     
     return $updateid;
 }

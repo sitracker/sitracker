@@ -40,15 +40,15 @@ function display_update_page($draftid=-1)
     global $CONFIG;
     global $iconset;
     global $now;
-    global $dbDrafts;
+    global $dbDrafts, $db;
     global $sit;
 
     if ($draftid != -1)
     {
         $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
-        $draftresult = mysql_query($draftsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        $draftobj = mysql_fetch_object($draftresult);
+        $draftresult = mysqli_query($db, $draftsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        $draftobj = mysqli_fetch_object($draftresult);
 
         $metadata = explode("|",$draftobj->meta);
     }
@@ -311,12 +311,12 @@ function display_update_page($draftid=-1)
 if (empty($action))
 {
     $sql = "SELECT * FROM `{$dbDrafts}` WHERE type = 'update' AND userid = '{$sit[2]}' AND incidentid = '{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<h2>{$title}</h2>";
 
@@ -341,8 +341,8 @@ else if ($action == "deletedraft")
     if ($draftid != -1)
     {
         $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     }
     html_redirect("{$_SERVER['PHP_SELF']}?id={$id}");
 }
@@ -425,12 +425,12 @@ else
     $oldtimeofnextaction = incident_timeofnextaction($id);
     if ($newstatus != $oldstatus)
     {
-        $bodytext = "Status: ".mysql_real_escape_string(incidentstatus_name($oldstatus))." -&gt; <b>" . mysql_real_escape_string(incidentstatus_name($newstatus)) . "</b>\n\n" . $bodytext;
+        $bodytext = "Status: ".mysqli_real_escape_string($db, incidentstatus_name($oldstatus))." -&gt; <b>" . mysqli_real_escape_string($db, incidentstatus_name($newstatus)) . "</b>\n\n" . $bodytext;
     }
 
     if ($newpriority != incident_priority($id))
     {
-        $bodytext = "New Priority: <b>" . mysql_real_escape_string(priority_name($newpriority)) . "</b>\n\n" . $bodytext;
+        $bodytext = "New Priority: <b>" . mysqli_real_escape_string($db, priority_name($newpriority)) . "</b>\n\n" . $bodytext;
     }
 
     if ($timeofnextaction > ($oldtimeofnextaction + 60))
@@ -462,14 +462,14 @@ else
 
         $sql = "INSERT INTO `{$dbFiles}`(category, filename, size, userid, usertype, shortdescription, longdescription, filedate) ";
         $sql .= "VALUES ('{$category}', '" . clean_dbstring($filename) . "', '{$_FILES['attachment']['size']}', '{$sit[2]}', 'user', '', '', NOW())";
-        mysql_query($sql);
-        if (mysql_error())
+        mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
         else
         {
-            $fileid = mysql_insert_id();
+            $fileid = mysqli_insert_id($db);
         }
     }
 
@@ -520,9 +520,9 @@ else
         $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatetype}', '{$bodytext}', '{$now}', '{$owner}', '{$newstatus}', '{$nextaction}', {$sla})";
     }
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    $updateid = mysql_insert_id();
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+    $updateid = mysqli_insert_id($db);
     $t = new TriggerEvent('TRIGGER_INCIDENT_UPDATED_INTERNAL', array('incidentid' => $id, 'userid' => $sit[2]));
 
     //upload file, here because we need updateid
@@ -536,8 +536,8 @@ else
             if (!$mk)
             {
                 $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 trigger_error("Failed creating incident attachment directory." . DIRECTORY_SEPARATOR, E_USER_WARNING);
             }
         }
@@ -549,8 +549,8 @@ else
         if (!$mv)
         {
             $sql = "DELETE FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             trigger_error('!Error: Problem moving attachment from temp directory.', E_USER_WARNING);
         }
 
@@ -575,22 +575,22 @@ else
     //create link
     $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
     $sql .= "VALUES(5, '{$updateid}', '{$fileid}', 'left', '{$sit[2]}')";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     }
 
     $sql = "UPDATE `{$dbIncidents}` SET status='{$newstatus}', priority='{$newpriority}', lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     if ($target != 'none')
     {
         // Reset the slaemail sent column, so that email reminders can be sent if the new sla target goes out
         $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='{$id}' LIMIT 1";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     }
 
     plugin_do('incident_update_saved');
@@ -606,8 +606,8 @@ else
         if ($draftid != -1 AND !empty($draftid))
         {
             $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         }
         journal(CFG_LOGGING_MAX, 'Incident Updated', "Incident {$id} Updated", CFG_JOURNAL_SUPPORT, $id);
         html_redirect("incident_details.php?id={$id}");

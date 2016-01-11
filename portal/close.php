@@ -23,9 +23,9 @@ $fail = clean_int($_POST['fail']);
 
 // First check the portal user is allowed to access this incident
 $sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = {$id} LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-list($incidentcontact) = mysql_fetch_row($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db) ) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+list($incidentcontact) = mysqli_fetch_row($result);
 if ($incidentcontact == $_SESSION['contactid'])
 {
     $id = clean_int($_REQUEST['id']);
@@ -47,24 +47,24 @@ if ($incidentcontact == $_SESSION['contactid'])
         if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 
         $usersql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id={$_SESSION['contactid']}";
-        $result = mysql_query($usersql);
-        $user = mysql_fetch_object($result);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $usersql);
+        $user = mysqli_fetch_object($result);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         $reason = cleanvar("{$SYSLANG['strRequestClosureViaThePortalBy']} [b]{$user->forenames} {$user->surname}[/b]\n\n");
         $reason .= "<b>{$SYSLANG['strReason']}:</b> ".cleanvar($_REQUEST['reason']);
         $owner = incident_owner($id);
         $sql = "INSERT into `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
         $sql .= "VALUES({$id}, '0', 'customerclosurerequest',  '{$owner}', '1', '{$reason}', '{$now}', 'show')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         $t = new TriggerEvent('TRIGGER_PORTAL_INCIDENT_REQUESTCLOSURE', array('incidentid' => $id));
 
         //set incident back to active
         $sql = "UPDATE `{$dbIncidents}` SET status=".STATUS_ACTIVE.", lastupdated={$now} WHERE id={$id}";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         html_redirect("index.php");
     }

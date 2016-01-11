@@ -124,11 +124,11 @@ function array_drop_down($array, $name, $setting='', $attributes='', $usekey = N
  */
 function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
 {
-    global $dbUserStatus;
+    global $dbUserStatus, $db;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbUserStatus}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}'>\n";
     if ($userdisable)
@@ -136,7 +136,7 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
         $html .= "<option class='disable' selected='selected' value='0'>{$GLOBALS['strAccountDisabled']}</option>\n";
     }
 
-    while ($statuses = mysql_fetch_object($result))
+    while ($statuses = mysqli_fetch_object($result))
     {
         if ($statuses->id > 0)
         {
@@ -165,16 +165,16 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
  */
 function userstatus_bardrop_down($name, $id)
 {
-    global $dbUserStatus;
+    global $db, $dbUserStatus;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbUserStatus}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select id='userstatus_dropdown' name='{$name}' title='{$GLOBALS['strSetYourStatus']}' ";
     $html .= "onchange=\"set_user_status();\" onblur=\"hide_status_drop_down();\">";
     $html .= "\n";
-    while ($statuses = mysql_fetch_object($result))
+    while ($statuses = mysqli_fetch_object($result))
     {
         if ($statuses->id > 0)
         {
@@ -207,12 +207,12 @@ function userstatus_bardrop_down($name, $id)
  */
 function emailtemplate_drop_down($name, $id, $type)
 {
-    global $dbEmailTemplates;
+    global $db, $dbEmailTemplates;
     // INL 22Apr05 Added a filter to only show user templates
 
     $sql  = "SELECT id, name, description FROM `{$dbEmailTemplates}` WHERE type='{$type}' ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name=\"{$name}\">";
     if ($id == 0)
@@ -220,7 +220,7 @@ function emailtemplate_drop_down($name, $id, $type)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($template = mysql_fetch_object($result))
+    while ($template = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         if (!empty($template->description))
@@ -276,14 +276,14 @@ function accepting_drop_down($name, $userid)
  */
 function escalation_path_drop_down($name, $id)
 {
-    global $dbEscalationPaths;
+    global $dbEscalationPaths, $db;
     $sql  = "SELECT id, name FROM `{$dbEscalationPaths}` ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html = "<select name='{$name}' id='{$name}' >";
     $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
-    while ($path = mysql_fetch_object($result))
+    while ($path = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$path->id}'";
         if ($path->id ==$id)
@@ -368,13 +368,13 @@ function group_drop_down($name = '', $selected = '')
  */
 function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
-    global $dbProducts;
+    global $dbProducts, $db;
     // extract products
     $sql  = "SELECT id, name FROM `{$dbProducts}` ";
     if ($showinactive == FALSE) $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}'";
     if ($required)
@@ -389,7 +389,7 @@ function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($products = mysql_fetch_object($result))
+    while ($products = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$products->id}'";
         if ($products->id == $id)
@@ -414,12 +414,12 @@ function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
  */
 function skill_drop_down($name, $id)
 {
-    global $now, $dbSoftware, $strEOL;
+    global $now, $dbSoftware, $strEOL, $db;
 
     $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}' >";
 
@@ -428,7 +428,7 @@ function skill_drop_down($name, $id)
         $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
     }
 
-    while ($software = mysql_fetch_object($result))
+    while ($software = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$software->id}'";
         if ($software->id == $id)
@@ -460,16 +460,16 @@ function skill_drop_down($name, $id)
  */
 function softwareproduct_drop_down($name, $id, $productid, $visibility='internal')
 {
-    global $dbSoftware, $dbSoftwareProducts, $strRequired;
+    global $dbSoftware, $dbSoftwareProducts, $strRequired, $db;
     // extract software
     $sql  = "SELECT id, name FROM `{$dbSoftware}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp WHERE s.id = sp.softwareid ";
     $sql .= "AND productid = '{$productid}' ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    $numrows = mysql_num_rows($result);
+    $numrows = mysqli_num_rows($result);
     if ($numrows > 0)
     {
         $html = "<select name='{$name}' id='{$name}'";
@@ -491,7 +491,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
             }
         }
 
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             $html .= "<option";
             if ($software->id == $id OR $numrows == 1)
@@ -525,10 +525,10 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
  */
 function vendor_drop_down($name, $id, $required = FALSE)
 {
-    global $dbVendors;
+    global $dbVendors, $db;
     $sql = "SELECT id, name FROM `{$dbVendors}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html = "<select name='$name'";
     if ($required)
     {
@@ -540,7 +540,7 @@ function vendor_drop_down($name, $id, $required = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $html .= "<option";
         if ($row->id == $id)
@@ -566,10 +566,10 @@ function vendor_drop_down($name, $id, $required = FALSE)
  */
 function sitetype_drop_down($name, $id, $required = FALSE)
 {
-    global $dbSiteTypes;
+    global $dbSiteTypes, $db;
     $sql = "SELECT typeid, typename FROM `{$dbSiteTypes}` ORDER BY typename ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html .= "<select name='$name'";
     if ($required)
     {
@@ -581,7 +581,7 @@ function sitetype_drop_down($name, $id, $required = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         if ($obj->typeid == $id)
@@ -605,10 +605,10 @@ function sitetype_drop_down($name, $id, $required = FALSE)
  */
 function role_drop_down($name, $id)
 {
-    global $dbRoles;
+    global $dbRoles, $db;
     $sql  = "SELECT id, rolename FROM `{$dbRoles}` ORDER BY rolename ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}'>";
     if ($id == 0)
@@ -616,7 +616,7 @@ function role_drop_down($name, $id)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($role = mysql_fetch_object($result))
+    while ($role = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$role->id}'";
         if ($role->id == $id)
@@ -641,11 +641,11 @@ function role_drop_down($name, $id)
  */
 function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALSE)
 {
-    global $dbSites, $strEllipsis;
+    global $dbSites, $strEllipsis, $db;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
     if (!$showinactive)  $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
     $html = "<select name='{$name}'";
     if ($required)
@@ -658,7 +658,7 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
         $html .="<option selected='selected' value='0'></option>\n";
     }
 
-    while ($sites = mysql_fetch_object($result))
+    while ($sites = mysqli_fetch_object($result))
     {
         $text = $sites->name;
         if (!empty($sites->department))
@@ -702,7 +702,7 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
  */
 function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $required = FALSE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
 {
-    global $GLOBALS, $now;
+    global $GLOBALS, $now, $db;
     // TODO make maintenance_drop_down a hierarchical selection box sites/contracts
     // extract all maintenance contracts
     $sql  = "SELECT s.name AS sitename, p.name AS productname, m.id AS id ";
@@ -726,7 +726,7 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
     }
 
     $sql .= "ORDER BY s.name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     $results = 0;
     // print HTML
     $html .= "<select name='{$name}'";
@@ -740,7 +740,7 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($maintenance = mysql_fetch_object($result))
+    while ($maintenance = mysqli_fetch_object($result))
     {
         if (!is_array($excludes) OR (is_array($excludes) AND !in_array($maintenance->id, $excludes)))
         {
@@ -776,10 +776,10 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
 // selected.                                                  */
 function reseller_drop_down($name, $id)
 {
-    global $dbResellers;
+    global $db, $dbResellers;
     $sql  = "SELECT id, name FROM `{$dbResellers}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     // print HTML
     echo "<select name='{$name}'>";
@@ -793,7 +793,7 @@ function reseller_drop_down($name, $id)
         echo "<option value='0'></option>\n";
     }
 
-    while ($resellers = mysql_fetch_object($result))
+    while ($resellers = mysqli_fetch_object($result))
     {
         echo "<option ";
         if ($resellers->id == $id)
@@ -814,9 +814,9 @@ function reseller_drop_down($name, $id)
 // selected.
 function licence_type_drop_down($name, $id)
 {
-    global $dbLicenceTypes;
+    global $db, $dbLicenceTypes;
     $sql  = "SELECT id, name FROM `{$dbLicenceTypes}` ORDER BY name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
     // print HTML
     echo "<select name='{$name}'>";
@@ -826,7 +826,7 @@ function licence_type_drop_down($name, $id)
         echo "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($licencetypes = mysql_fetch_object($result))
+    while ($licencetypes = mysqli_fetch_object($result))
     {
         echo "<option ";
         if ($licencetypes->id == $id)
@@ -876,23 +876,23 @@ function holidaytype_drop_down($name, $id)
  */
 function software_backup_dropdown($name, $userid, $softwareid, $backupid)
 {
-    global $dbUsers, $dbUserSoftware, $dbSoftware;
+    global $db, $dbUsers, $dbUserSoftware, $dbSoftware;
     $sql = "SELECT *, u.id AS userid FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s, `{$dbUsers}` AS u ";
     $sql .= "WHERE us.softwareid = s.id ";
     $sql .= "AND s.id = '{$softwareid}' ";
     $sql .= "AND userid != '{$userid}' AND u.status > ".USERSTATUS_ACCOUNT_DISABLED;
     $sql .= " AND us.userid = u.id ";
     $sql .= " ORDER BY realname";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $countsw = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $countsw = mysqli_num_rows($result);
     if ($countsw >= 1)
     {
         $html = "<select name='{$name}'>\n";
         $html .= "<option value='0'";
         if ($user->userid == 0) $html .= " selected='selected'";
         $html .= ">{$GLOBALS['strNone']}</option>\n";
-        while ($user = mysql_fetch_object($result))
+        while ($user = mysqli_fetch_object($result))
         {
             $html .= "<option value='{$user->userid}'";
             if ($user->userid == $backupid) $html .= " selected='selected'";
@@ -919,15 +919,15 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
  */
 function country_drop_down($name, $country, $extraattributes='')
 {
-    global $CONFIG;
+    global $db, $CONFIG;
     if ($country == '') $country = $CONFIG['home_country'];
 
     $sql = "SELECT * FROM `{$GLOBALS['dbCountryList']}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select id=\"{$name}\" name=\"{$name}\" {$extraattributes}>";
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$obj->isocode}'";
         if ($obj->isocode == $country)
@@ -993,20 +993,20 @@ function chart_selector($selected)
 
 function user_dropdown($name, $selected='', $self='')
 {
-    global $dbUsers, $dbUserSoftware, $dbSoftware;
+    global $db, $dbUsers, $dbUserSoftware, $dbSoftware;
     $sql = "SELECT * FROM `{$dbUsers}` AS u ";
     $sql .= "WHERE  u.status > ".USERSTATUS_ACCOUNT_DISABLED;
     $sql .= " ORDER BY realname";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $count = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $count = mysqli_num_rows($result);
     if ($count >= 1)
     {
         $html = "<select name='{$name}' id='{$name}'>\n";
         $html .= "<option value='0'";
         if (empty($selected)) $html .= " selected='selected'";
         $html .= ">{$GLOBALS['strNone']}</option>\n";
-        while ($user = mysql_fetch_object($result))
+        while ($user = mysqli_fetch_object($result))
         {
             if ($user->id != $self)
             {

@@ -40,17 +40,17 @@ include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
 // Display contacts
 $sql = "SELECT * FROM `{$dbContacts}` WHERE id='{$id}' ";
-$contactresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-while ($contact = mysql_fetch_object($contactresult))
+$contactresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+while ($contact = mysqli_fetch_object($contactresult))
 {
     // Lookup the site address if this contact hasn't got a specific address set
     if ($contact->address1 == '')
     {
         $sitesql = "SELECT * FROM `{$dbSites}` WHERE id='{$contact->siteid}' LIMIT 1";
-        $siteresult = mysql_query($sitesql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $site = mysql_fetch_object($siteresult);
+        $siteresult = mysqli_query($db, $sitesql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $site = mysqli_fetch_object($siteresult);
         $address1 = $site->address1;
         $address2 = $site->address2;
         $city = $site->city;
@@ -236,7 +236,7 @@ while ($contact = mysql_fetch_object($contactresult))
 
     echo contracts_for_contacts_table($id);
 }
-mysql_free_result($contactresult);
+mysqli_free_result($contactresult);
 
 include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 ?>

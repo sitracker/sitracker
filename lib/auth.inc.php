@@ -45,7 +45,7 @@ else
 {
     // Attempt to prevent session fixation attacks
     session_regenerate();
-    setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
+    setcookie(session_name(), session_id(), ini_get("session.cookie_lifetime"), "/");
 
     // Conversions for when register_globals=off
     // We've migrated away from using cookies and now use sessions
@@ -69,7 +69,7 @@ if (!is_array($permission))
 }
 
 // Valid user, check permissions
-if (user_permission($userid, $permission) == FALSE)
+if (user_permission($_SESSION['userid'], $permission) == FALSE)
 {
     //No access permission
     $refused = implode(',',$permission);

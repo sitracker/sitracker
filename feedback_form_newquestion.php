@@ -49,8 +49,8 @@ switch ($_REQUEST['action'])
         $sql .= "'{$type}',";
         $sql .= "'{$required}',";
         $sql .= "'{$options}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error ("MySQL Error: ".mysqli_error($db), E_USER_ERROR);
         $newqid = $qid + 1;
         header("Location: feedback_form_newquestion.php?fid={$formid}&qid={$newqid}");
         exit;

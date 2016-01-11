@@ -49,65 +49,66 @@ function get_sql_statement($startdate,$enddate,$statementnumber,$count=TRUE)
 */
 function count_incidents($startdate, $enddate)
 {
+    global $db;
     // Counts the number of incidents opened between a start date and an end date
     // Returns an associative array
     // 0
     $sql = get_sql_statement($startdate, $enddate, 0);
-    $result = mysql_query($sql);
-    list($count['opened']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count['opened']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 1
     $sql = get_sql_statement($startdate, $enddate, 1);
-    $result = mysql_query($sql);
-    list($count['closed']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count['closed']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 2
     $sql = get_sql_statement($startdate, $enddate, 2);
-    $result = mysql_query($sql);
-    list($count['updated']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count['updated']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 3
     $sql = get_sql_statement($startdate, $enddate, 3);
-    $result = mysql_query($sql);
-    list($count['handled']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count['handled']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 4
     $sql = get_sql_statement($startdate, $enddate, 4);
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($count['updates'], $count['users']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    list($count['updates'], $count['users']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 5
     $sql = get_sql_statement($startdate, $enddate, 5);
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($count['skills'], $count['owners']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    list($count['skills'], $count['owners']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 6
     $sql = get_sql_statement($startdate, $enddate, 6);
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($count['emailtx']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    list($count['emailtx']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 7
     $sql = get_sql_statement($startdate, $enddate, 7);
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($count['emailrx']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    list($count['emailrx']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     // 8
     $sql = get_sql_statement($startdate, $enddate, 8);
-    $result = mysql_query($sql);
-    list($count['higherpriority']) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    list($count['higherpriority']) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     return $count;
 }
@@ -223,7 +224,7 @@ function stats_period_row($desc, $start, $end)
 */
 function give_overview()
 {
-    global $todayrecent, $mode, $CONFIG;
+    global $todayrecent, $mode, $CONFIG, $db;
 
     echo "<table class='maintable'>";
     echo "<tr><th>{$GLOBALS['strPeriod']}</th>";
@@ -271,14 +272,14 @@ function give_overview()
     $sql = "SELECT DISTINCT g.id AS groupid, g.name FROM `{$GLOBALS['dbGroups']}` AS g ";
     //$sql .= "WHERE (incidents.status != 2 AND incidents.status != 7) AND incidents.owner = users.id AND users.groupid = groups.id ORDER BY groups.id";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 1)
+    if (mysqli_num_rows($result) > 1)
     {
         echo "<h2>{$GLOBALS['strByGroup']}</h2>";
         echo "<table class='vertical maintable'><tr>";
-        while ($groups = mysql_fetch_object($result))
+        while ($groups = mysqli_fetch_object($result))
         {
             $sqlGroups = "SELECT COUNT(i.id) AS count, istatus.name ";
             $sqlGroups .= "FROM `{$GLOBALS['dbIncidents']}` AS i, ";
@@ -287,15 +288,15 @@ function give_overview()
             $sqlGroups .= "WHERE i.status = istatus.id AND closed = 0 AND i.owner = u.id ";
             $sqlGroups .= "AND u.groupid = g.id AND u.groupid = {$groups->groupid} ";
             $sqlGroups .= "GROUP BY i.status ";
-            $resultGroups = mysql_query($sqlGroups);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $resultGroups = mysqli_query($db, $sqlGroups);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-            if (mysql_num_rows($resultGroups) > 0)
+            if (mysqli_num_rows($resultGroups) > 0)
             {
                 $openCallsGroup = 0;
                 echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$groups->name}</strong>";
                 echo "<table class='vertical maintable'>";
-                while ($rowGroup = mysql_fetch_object($resultGroups))
+                while ($rowGroup = mysqli_fetch_object($resultGroups))
                 {
                     echo "<tr><th>{$GLOBALS[$rowGroup->name]}</th><td class='shade2' align='left'>";
                     echo "{$rowGroup->count}</td></tr>";
@@ -310,20 +311,20 @@ function give_overview()
     }
     plugin_do('statistics_content');
 
-    mysql_free_result($result);
+    mysqli_free_result($result);
 
     //count incidents by Vendor
     $sql = "SELECT DISTINCT s.vendorid, v.name FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbSoftware']}` AS s, `{$GLOBALS['dbVendors']}` AS v ";
     $sql .= "WHERE (status != 2 AND status != 7) AND i.softwareid = s.id AND v.id = s.vendorid ORDER BY vendorid";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 1)
+    if (mysqli_num_rows($result) > 1)
     {
         echo "<h2>{$GLOBALS['strByVendor']}</h2>";
         echo "<table class='vertical maintable'><tr>";
-        while ($vendors = mysql_fetch_object($result))
+        while ($vendors = mysqli_fetch_object($result))
         {
             // This should use the software and relate to the product and then to the vendor
             /*
@@ -338,15 +339,15 @@ function give_overview()
             $sqlVendor .= "AND s.vendorid = {$vendors->vendorid} ";
             $sqlVendor .= "GROUP BY i.status";
 
-            $resultVendor = mysql_query($sqlVendor);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $resultVendor = mysqli_query($db, $sqlVendor);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-            if (mysql_num_rows($resultVendor) > 0)
+            if (mysqli_num_rows($resultVendor) > 0)
             {
                 $openCallsVendor = 0;
                 echo "<td style='vertical-align:top' align='center' colspan='2'><strong>{$vendors->name}</strong>";
                 echo "<table class='vertical maintable'>";
-                while ($rowVendor = mysql_fetch_object($resultVendor))
+                while ($rowVendor = mysqli_fetch_object($resultVendor))
                 {
                     echo "<tr><th>{$GLOBALS[$rowVendor->name]}</th><td class='shade2' align='left'>";
                     echo "{$rowVendor->count}</td></tr>";
@@ -366,10 +367,10 @@ function give_overview()
 
     // Count incidents logged today
     $sql = "SELECT id FROM `{$GLOBALS['dbIncidents']}` WHERE opened > '{$todayrecent}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $todaysincidents = mysql_num_rows($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $todaysincidents = mysqli_num_rows($result);
+    mysqli_free_result($result);
 
     $string = "<h4>".sprintf($GLOBALS['strIncidentsLoggedToday'], $todaysincidents)."</h4>";
     if ($todaysincidents > 0)
@@ -377,9 +378,9 @@ function give_overview()
         $string .= "<table align='center' width='50%'><tr><td colspan='2'>{$GLOBALS['strAssignedAsFollows']}</td></tr>";
         $sql = "SELECT COUNT(i.id) AS count, realname, u.id AS owner FROM `{$GLOBALS['dbIncidents']}` AS i, `{$GLOBALS['dbUsers']}` AS u WHERE opened > '{$todayrecent}' AND i.owner = u.id GROUP BY owner DESC";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        while ($row = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        while ($row = mysqli_fetch_object($result))
         {
             $sql = "SELECT id, title FROM `{$GLOBALS['dbIncidents']}` WHERE opened > '{$todayrecent}' AND owner = '{$row->owner}'";
 
@@ -387,10 +388,10 @@ function give_overview()
             $string .= "<td class='shade2' align='left'>";
             $string .= "<a href='incidents.php?user={$row->owner}&amp;queue=1&amp;type=support'>{$row->realname}</a> ";
 
-            $iresult = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $iresult = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-            while ($irow = mysql_fetch_object($iresult))
+            while ($irow = mysqli_fetch_object($iresult))
             {
                 $string .= "<small>".html_incident_popup_link($irow->id, get_userfacing_incident_id_email($irow->id), $irow->title)."</small> ";
             }
@@ -403,9 +404,9 @@ function give_overview()
 
     // Count incidents closed today
     $sql = "SELECT COUNT(id) FROM `{$GLOBALS['dbIncidents']}` WHERE closed > '{$todayrecent}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-    list($todaysclosed) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+    list($todaysclosed) = mysqli_fetch_row($result);
 
     $string .= "<h4>".sprintf($GLOBALS['strIncidentsClosedToday'], $todaysclosed)."</h4>";
     if ($todaysclosed > 0)
@@ -413,14 +414,14 @@ function give_overview()
         $sql = "SELECT COUNT(i.id) AS count, realname, u.id AS owner FROM `{$GLOBALS['dbIncidents']}` AS i ";
         $sql .= "LEFT JOIN `{$GLOBALS['dbUsers']}` AS u ON i.owner = u.id WHERE closed > '{$todayrecent}' ";
         $sql .= "GROUP BY owner";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         $string .= "<table align='center' width='50%'>";
         $string .= "<tr><th>{$GLOBALS['strID']}</th><th>{$GLOBALS['strTitle']}</th>";
         $string .= "<th>{$GLOBALS['strOwner']}</th><th>{$GLOBALS['strClosingStatus']}</th></tr>\n";
 
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $string .= "<tr><th colspan='4' align='left'>{$row->count} {$GLOBALS['strClosedBy']} {$row->realname}</th></tr>\n";
 
@@ -430,9 +431,9 @@ function give_overview()
             $sql .= "AND i.owner = '{$row->owner}' ";
             $sql .= "ORDER BY closed";
 
-            $iresult = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            while ($irow = mysql_fetch_object($iresult))
+            $iresult = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            while ($irow = mysqli_fetch_object($iresult))
             {
                 $string .= "<tr><th>".html_incident_popup_link($irow->id, "[{$irow->id}]", $irow->title)."</th>";
                 $string .= "<td class='shade2' align='left'>{$irow->title}</td>";
@@ -443,19 +444,19 @@ function give_overview()
         $string .= "</table>\n\n";
     }
 
-    mysql_free_result($result);
+    mysqli_free_result($result);
 
     $totalresult = 0;
     $numquestions = 0;
     $qsql = "SELECT * FROM `{$GLOBALS['dbFeedbackQuestions']}` WHERE formid='1' AND type='rating' ORDER BY taborder";
-    $qresult = mysql_query($qsql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $qresult = mysqli_query($db, $qsql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($qresult) >= 1)
+    if (mysqli_num_rows($qresult) >= 1)
     {
         $string .= "<h2>{$GLOBALS['strCustomerFeedback']}</h2>";
         $string .= "<table class='maintable vertical'>";
-        while ($qrow = mysql_fetch_object($qresult))
+        while ($qrow = mysqli_fetch_object($qresult))
         {
             $numquestions++;
             $string .= "<tr><th>Q{$qrow->taborder}: {$qrow->question}</th>";
@@ -466,15 +467,15 @@ function give_overview()
             $sql .= "AND fres.questionid='{$qrow->id}' ";
             $sql .= "AND fr.completed = 'yes' \n";
             $sql .= "ORDER BY i.owner, i.id";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $numsurveys = mysql_num_rows($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            $numsurveys = mysqli_num_rows($result);
             $numresults = 0;
             $cumul = 0;
             $percent = 0;
             $average = 0;
 
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
             {
                 if (!empty($row->result))
                 {

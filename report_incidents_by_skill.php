@@ -68,15 +68,15 @@ else
     if (!empty($software)) $sql .= "AND s.id ='{$software}' ";
     $sql .= "GROUP BY s.id ORDER BY softwarecount DESC";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
     $countArray[0] = 0;
     $softwareNames[0] = 'Name';
     $softwareID[0] = 0;
     $c = 0;
     $count = 0;
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $countArray[$c] = $obj->softwarecount;
         $count += $countArray[$c];
@@ -89,11 +89,11 @@ else
 
     echo "<h2>".icon('reports', 32)." {$strIncidentsBySkill}</h2>";
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $sqlSLA = "SELECT DISTINCT(tag) FROM `{$dbServiceLevels}`";
-        $resultSLA = mysql_query($sqlSLA);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $resultSLA = mysqli_query($db, $sqlSLA);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         if ($startdate > 1)
         {
@@ -101,7 +101,7 @@ else
         }
         echo "<table class='vertical' align='center'>";
         echo "<tr><th>{$strNumOfCalls}</th><th>%</th><th>{$strSkill}</th>";
-        while ($sla = mysql_fetch_object($resultSLA))
+        while ($sla = mysqli_fetch_object($resultSLA))
         {
             echo "<th>".$sla->tag."</th>";
             $slas[$sla->tag]['name'] = $sla->tag;
@@ -129,9 +129,9 @@ else
             $sqlN = "SELECT id, servicelevel, opened FROM `{$dbIncidents}` WHERE softwareid = '{$softwareID[$i]}'";
             $sqlN .= " AND opened > '{$startdate}' ORDER BY opened";
 
-            $resultN = mysql_query($sqlN);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $numrows = mysql_num_rows($resultN);
+            $resultN = mysqli_query($db, $sqlN);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            $numrows = mysqli_num_rows($resultN);
 
             foreach ($slas AS $slaReset)
             $slas = $emptySLA;
@@ -139,16 +139,16 @@ else
             if ($numrows > 0)
             {
                 unset($monthbreakdown);
-                while ($obj = mysql_fetch_object($resultN))
+                while ($obj = mysqli_fetch_object($resultN))
                 {
                     $datestr = date("M y",$obj->opened);
 
                     // MANTIS 811 this sql uses the body to find out which incidents have been escalated
                     $sqlL = "SELECT count(id) FROM `{$dbUpdates}` AS u ";
                     $sqlL .= "WHERE u.bodytext LIKE \"External ID%\" AND incidentid = '{$obj->id}'";
-                    $resultL = mysql_query($sqlL);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                    list($numrowsL) = mysql_fetch_row($resultL);
+                    $resultL = mysqli_query($db, $sqlL);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                    list($numrowsL) = mysqli_fetch_row($resultL);
 
                     if ($numrowsL > 0) $slas[$obj->servicelevel]['escalated']++;
                     else $slas[$obj->servicelevel]['notEscalated']++;
