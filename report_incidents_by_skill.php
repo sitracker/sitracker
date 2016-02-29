@@ -25,7 +25,9 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strIncidentsBySkill;
 
-$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report'));
+$mode = clean_fixed_list($_REQUEST['mode'], array('', 'report', 'listincidents'));
+
+$software = clean_int($_REQUEST['software']);
 
 if (empty($mode))
 {
@@ -54,13 +56,55 @@ if (empty($mode))
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
+else if ($mode == "listincidents")
+{
+    $startdate = clean_int($_REQUEST['startdate']);
+    $enddate = clean_int($_REQUEST['enddate']);
+
+    include (APPLICATION_INCPATH . 'htmlheader.inc.php');
+    
+    echo "<h2>".icon('reports', 32)." {$strIncidentsBySkill}</h2>";
+    
+    // copied from below
+    $sqlN = "SELECT * FROM `{$dbIncidents}` WHERE softwareid = '{$software}'";
+    $sqlN .= " AND opened > '{$startdate}' ";
+    if (!empty($enddate)) $sqlN .= " AND closed < '{$enddate}' ";
+    $sqlN .= "ORDER BY opened";
+
+    $resultN = mysqli_query($db, $sqlN);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($resultN);
+
+    if ($numrows > 0)
+    {
+        echo "<table class='vertical' align='center'>";
+        echo "<tr><th>{$strID}</th><th>{$strTitle}</th></tr>";
+
+        $shade = 'shade1';
+
+        while ($obj = mysqli_fetch_object($resultN))
+        {
+            echo "<tr class='{$shade}'><td>{$obj->id}</td><td >";
+            echo " <a href=\"javascript:incident_details_window('1','sit_popup')\" class='info'>{$obj->title}</a>";
+            echo "</td></tr>";
+            if ($shade == 'shade1') $shade = 'shade2';
+            else $shade = "shade1";
+        }
+        
+        echo "</table>";
+    }
+    else
+    {
+        echo user_alert($strNoRecords, E_USER_NOTICE);
+    }
+    include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
+}
 else
 {
-    $monthbreakdownstatus = clean_fixed_list($_REQUEST['monthbreakdown'], array('','on'));
+    $monthbreakdownstatus = clean_fixed_list($_REQUEST['monthbreakdown'], array('', 'on'));
     $startdate = strtotime($_REQUEST['startdate']);
     $enddate = strtotime($_REQUEST['enddate']);
-    $software = clean_int($_REQUEST['software']);
-
+    
     $sql = "SELECT count(s.id) AS softwarecount, s.name, s.id ";
     $sql .= "FROM `{$dbSoftware}` AS s, `{$dbIncidents}` AS i ";
     $sql .= "WHERE s.id = i.softwareid AND i.opened > '{$startdate}' ";
@@ -93,7 +137,7 @@ else
     {
         $sqlSLA = "SELECT DISTINCT(tag) FROM `{$dbServiceLevels}`";
         $resultSLA = mysqli_query($db, $sqlSLA);
-        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error " . mysqli_error($db), E_USER_WARNING);
 
         if ($startdate > 1)
         {
@@ -103,7 +147,7 @@ else
         echo "<tr><th>{$strNumOfCalls}</th><th>%</th><th>{$strSkill}</th>";
         while ($sla = mysqli_fetch_object($resultSLA))
         {
-            echo "<th>".$sla->tag."</th>";
+            echo "<th>{$sla->tag}</th>";
             $slas[$sla->tag]['name'] = $sla->tag;
             $slas[$sla->tag]['notEscalated'] = 0;
             $slas[$sla->tag]['escalated'] = 0;
@@ -134,7 +178,9 @@ else
             $numrows = mysqli_num_rows($resultN);
 
             foreach ($slas AS $slaReset)
-            $slas = $emptySLA;
+            {
+                $slas = $emptySLA;
+            }
 
             if ($numrows > 0)
             {
@@ -157,9 +203,9 @@ else
                     $monthbreakdown[$datestr]['month']=$datestr;
                 }
             }
-            echo "<tr class='$shade'><td>{$countArray[$i]}</td>";
+            echo "<tr class='{$shade}'><td>{$countArray[$i]}</td>";
             echo "<td>{$percentage}%</td>";
-            echo "<td>{$softwareNames[$i]}</td>";
+            echo "<td><a href='{$_SERVER['PHP_SELF']}?mode=listincidents&amp;startdate={$startdate}&amp;enddate={$enddate}&amp;software={$softwareID[$i]}'>{$softwareNames[$i]}</a></td>";
 
             foreach ($slas AS $sla)
             {
