@@ -514,7 +514,7 @@ if ($emails > 0)
             $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
             mysqli_query($db, $sql);
             if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
-            $updateid = mysqli_insert_id($id);
+            $updateid = mysqli_insert_id($db);
 
             $incidentid = plugin_do('email_stored_action', array('updateid' => $updateid, 'subject' => $subject));
             

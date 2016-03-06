@@ -85,7 +85,7 @@ else if ($mode == "listincidents")
         while ($obj = mysqli_fetch_object($resultN))
         {
             echo "<tr class='{$shade}'><td>{$obj->id}</td><td >";
-            echo " <a href=\"javascript:incident_details_window('1','sit_popup')\" class='info'>{$obj->title}</a>";
+            echo " <a href=\"javascript:incident_details_window('{$obj->id}','sit_popup')\" class='info'>{$obj->title}</a>";
             echo "</td></tr>";
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = "shade1";
