@@ -328,6 +328,7 @@ $strContact = 'Contact';
 $strContactAddedSuccessfully = 'Contact Added Successfully';
 $strContactID = 'Contact\'s ID';
 $strContains = 'Contains';
+$strContainsAnySkills = 'Contains any skills';
 $strContinue = 'Continue';
 $strContactDetails = 'Contact Details';
 # Surname means Family Name
@@ -352,6 +353,7 @@ $strContractID = 'Contract ID';
 $strContractProduct = 'The product associated with a contract';
 $strContractNum = 'Contract %d';
 $strContracts = 'Contracts';
+$strContractsBySkill = 'Contracts by skill';
 $strContractsExpiredXdaysAgo = 'Contracts that expired up to %s days ago';
 $strContractsExpiringWithinXdays = 'Contracts expiring within %s days';
 $strContractsSLA = 'The service level of the contract';
