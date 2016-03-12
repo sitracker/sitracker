@@ -67,7 +67,7 @@ else
             echo "</p>";
             
             
-            $sql = "SELECT m.id AS mid, s.id AS sid, p.name AS productname, s.name AS sitename, m.expirydate ";
+            $sql = "SELECT m.id AS mid, s.id AS sid, p.name AS productname, s.name AS sitename, m.expirydate, m.notes ";
             $sql .= "FROM `{$dbSoftwareProducts}` AS sp,  `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
             $sql .= "WHERE sp.productid = m.product AND m.product = p.id AND sp.productid = p.id AND m.site = s.id ";
             $sql .= "AND sp.softwareid IN ({$skillsList}) ";
@@ -85,7 +85,7 @@ else
             if (mysqli_num_rows($result) > 0)
             {
                 echo "<table class='maintable'>";
-                echo "<tr><th>{$strSite}</th><th>{$strContract}</th><th>{$strExpiryDate}</th></tr>";
+                echo "<tr><th>{$strSite}</th><th>{$strContract}</th><th>{$strNotes}</th><th>{$strExpiryDate}</th></tr>";
                 
                 while ($obj = mysqli_fetch_object($result))
                 {
@@ -93,6 +93,7 @@ else
                     if ($obj->expirydate < $now) $class = "class='expired'";
                     echo "<tr {$class}>";
                     echo "<td><a href='site_details.php?id={$obj->sid}'>{$obj->sitename}</a></td><td><a href='contract_details.php?id={$obj->mid}'>{$obj->productname}</a></td>";
+                    echo "<td>{$obj->notes}</td>";
                     echo "<td>".ldate($CONFIG['dateformat_date'], $obj->expirydate)."</td>";
                     echo "</tr>";
                 }
