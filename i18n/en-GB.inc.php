@@ -1551,6 +1551,7 @@ $strReportListsIncidentsLoggedThatEachSiteLoggedOverPastXMonths = 'This report l
 $strReports = 'Reports';
 $strReportDescBillableEngineerUtilisation = 'Displays the total number of billable hours performed by an engineer in a given time period';
 $strReportDescContractsByProduct = 'Displays the number of contracts currently valid for each product available';
+$strReportDescContractsBySkill = 'Displays the list of contracts which contain a skill';
 $strReportDescCustomerContracts = 'Lists details of each valid contract per site and the names contacts for that contract';
 $strReportDescCustomerProduct = 'Report on the products each site has valid contracts for including addresses';
 $strReportDescCustomerProductsMatrix = 'Report on the products each site has valid contracts for in matrix format';
