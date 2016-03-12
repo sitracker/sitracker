@@ -75,7 +75,8 @@ else
             {
                 $sql .= "AND m.expirydate > '{$now}' ";
             }
-            $sql .= "ORDER BY m.expirydate DESC";
+            $sql .= "GROUP BY m.id ";
+            $sql .= "ORDER BY m.expirydate DESC ";
 
             
             $result = mysqli_query($db, $sql);
