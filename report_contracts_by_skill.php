@@ -73,8 +73,9 @@ else
             $sql .= "AND sp.softwareid IN ({$skillsList}) ";
             if ($showexpired != 'yes')
             {
-                $sql .= "AND m.expirydate > '{$now}'";
+                $sql .= "AND m.expirydate > '{$now}' ";
             }
+            $sql .= "ORDER BY m.expirydate DESC";
 
             
             $result = mysqli_query($db, $sql);
