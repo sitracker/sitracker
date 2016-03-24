@@ -222,6 +222,8 @@ else if ($action == "update")
         if ($active == 'true') $activeStr = 'true';
         else $activeStr = 'false';
 
+        $oldActiveStatus = db_read_column("active", $dbContacts, $contact);
+        
         /*
             TAGS
         */
@@ -246,6 +248,13 @@ else if ($action == "update")
         {
             plugin_do('contact_edit_saved');
 
+            if ($activeStr == 'false' AND $oldActiveStatus = 'true' AND $CONFIG['remove_from_contracts_on_disable'])
+            {
+                $sql = "DELETE FROM `{$dbSupportContacts}` WHERE contactid = {$contact}";
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+            }
+            
             journal(CFG_LOGGING_NORMAL, 'Contact Edited', "Contact {$contact} was edited", CFG_JOURNAL_CONTACTS, $contact);
             html_redirect("contact_details.php?id={$contact}");
             exit;
