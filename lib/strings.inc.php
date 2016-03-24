@@ -167,10 +167,11 @@ if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
                            20 => array('perm' => PERM_CONTRACT_ADD, 'name' => $strNewContract, 'url' => "{$CONFIG['application_webpath']}contract_new.php?action=showform"),
                            39 => array('perm' => PERM_RESELLER_ADD, 'name' => $strResellers, 'url' => "{$CONFIG['application_webpath']}reseller.php"),
                            40 => array('perm' => PERM_RESELLER_ADD, 'name' => $strNewReseller, 'url' => "{$CONFIG['application_webpath']}reseller_new.php"),
-                           50 => array('perm' => PERM_SKILL_ADD, 'name' => $strSiteTypes, 'url' => "{$CONFIG['application_webpath']}site_types.php"),
+                           50 => array('perm' => PERM_SITE_TYPES, 'name' => $strSiteTypes, 'url' => "{$CONFIG['application_webpath']}site_types.php"),
                            60 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strShowRenewals, 'url' => "{$CONFIG['application_webpath']}search_renewals.php?action=showform"),
                            70 => array('perm' => PERM_CONTRACT_VIEW, 'name' => $strShowExpiredContracts, 'url' => "{$CONFIG['application_webpath']}search_expired.php?action=showform"),
-                           80 => array('perm' => PERM_REPORT_RUN, 'name' => $strBilling, 'url' => "{$CONFIG['application_webpath']}billable_incidents.php")
+                           80 => array('perm' => PERM_REPORT_RUN, 'name' => $strBilling, 'url' => "{$CONFIG['application_webpath']}billable_incidents.php"),
+                           90 => array('perm' => PERM_SITE_TYPES, 'name' => $strLicenseTypes, 'url' => "{$CONFIG['application_webpath']}licence_types.php")
     );
     // Second Level: Customers/Feedback  submenu
     if (!is_array(@$hmenu[2050])) $hmenu[2050] = array();
