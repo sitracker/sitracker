@@ -48,6 +48,10 @@ function to_row($contact)
     {
         $str .=  "<td>{$GLOBALS['strTerminated']}</td>";
     }
+    elseif ($contact->contactactive == 'false')
+    {
+        $str .=  "<td>{$GLOBALS['strInactive']}</td>";
+    }
     elseif ($contact->incident_quantity >= 1 AND $contact->incidents_used >= $contact->incident_quantity)
     {
         $str .= "<td class='expired'>{$GLOBALS['strZeroRemaining']} ({$contact->incidents_used}/{$contact->incident_quantity} {$strUsed})</td>";
@@ -177,7 +181,7 @@ elseif ($action == 'findcontact')
 
     $sql  = "SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel, c.active AS contactactive ";
     $sql .= "FROM `{$dbSupportContacts}` AS sc, `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
@@ -198,7 +202,7 @@ elseif ($action == 'findcontact')
 
     $sql .= "UNION SELECT p.name AS productname, p.id AS productid, c.surname AS surname, ";
     $sql .= "m.id AS maintid, m.incident_quantity, m.incidents_used, m.expirydate, m.term, s.name AS name, ";
-    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel ";
+    $sql .= "c.id AS contactid, s.id AS siteid, c.forenames, m.servicelevel, c.active AS contactactive ";
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbMaintenance}` AS m, `{$dbProducts}` AS p, `{$dbSites}` AS s ";
     $sql .= "WHERE m.product = p.id ";
     $sql .= "AND m.site = s.id ";
