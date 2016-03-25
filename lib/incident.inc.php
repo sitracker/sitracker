@@ -1903,7 +1903,7 @@ function get_userfacing_incident_id($id)
 	
 	if (empty($prefix)) $prefix = $CONFIG['incident_reference_prefix'];
 	else if (!$CONFIG['incident_id_include_type']) $prefix = '';
-
+	
 	return "{$prefix}{$id}";
 }
 

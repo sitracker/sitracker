@@ -239,7 +239,8 @@ else if ($action == "update")
                 $sql = "INSERT `{$dbMaintenanceServiceLevels}` VALUES ({$maintid}, {$type}, '{$sla}') ON DUPLICATE KEY UPDATE servicelevel = '{$sla}'";
                 mysqli_query($db, $sql);
                 if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
-                if (mysqli_affected_rows($db) < 1) trigger_error("Insert failed", E_USER_ERROR);
+                $numrows = mysqli_affected_rows($db);
+                if ($numrows < 1) trigger_error("Insert failed '{$numrows}'", E_USER_ERROR);
             }
 
             plugin_do('contract_edit_saved');
