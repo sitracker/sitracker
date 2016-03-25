@@ -514,7 +514,7 @@ if ($emails > 0)
             $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
             mysqli_query($db, $sql);
             if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
-            $updateid = mysqli_insert_id($id);
+            $updateid = mysqli_insert_id($db);
 
             $incidentid = plugin_do('email_stored_action', array('updateid' => $updateid, 'subject' => $subject));
             
@@ -573,7 +573,7 @@ if ($emails > 0)
                 $sql .= "VALUES ('{$incidentid}', 0, 'emailin', '{$bodytext}', '{$now}', '{$customer_visible}', '{$owner}', 1 )";
                 mysqli_query($db, $sql);
                 if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
-                $updateid = mysqli_insert_id($id);
+                $updateid = mysqli_insert_id($db);
                 plugin_do('email_update_setvisibility_action', array('updateid' => $updateid, 'incidentid' => $incidentid, 'visible' => $customer_visible, 'contactid' => $contactid));
 
                 if ($incident_open) // Do not translate/i18n fixed string

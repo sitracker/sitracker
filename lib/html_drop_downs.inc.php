@@ -516,6 +516,38 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
 
 
 /**
+ * Producte a multi select HTMl element of skills
+ * @param string $name Name and ID of the select on the form
+ * @author Paul Heaney
+ */
+function skill_multi_select($name)
+{
+    global $now, $dbSoftware, $strEOL, $db;
+    
+    $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
+    $sql .= "ORDER BY name ASC";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    
+    $html = "<select name='{$name}[]' id='{$name}' multiple='multiple' size='20' style='min-width: 300px; min-height: 200px;'>";
+    
+    while ($software = mysqli_fetch_object($result))
+    {
+        $html .= "<option value='{$software->id}'>{$software->name}";
+        $lifetime_start = mysql2date($software->lifetime_start);
+        $lifetime_end = mysql2date($software->lifetime_end);
+        if ($lifetime_end > 0 AND $lifetime_end < $now)
+        {
+            $html .= " ({$strEOL})";
+        }
+        $html .= "</option>\n";
+    }
+    $html .= "</select>\n";
+    
+    return $html;
+}
+
+/**
  * A HTML Select listbox for vendors
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element

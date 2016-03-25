@@ -1230,7 +1230,7 @@ function schedule_action_started($action)
         trigger_error(mysqli_error($db), E_USER_ERROR);
         return FALSE;
     }
-    if (mysqli_affected_rows() > 0) return TRUE;
+    if (mysqli_affected_rows($db) > 0) return TRUE;
     else return FALSE;
 }
 

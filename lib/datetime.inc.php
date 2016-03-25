@@ -407,7 +407,7 @@ function readable_date($date, $lang = 'user')
             $datestring = "{$SYSLANG['strToday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
     }
-    elseif (ldate('dmy', $date) == ldate('dmy', (time()-86400)))
+    elseif (ldate('dmy', $date) == ldate('dmy', (time() - 86400)))
     {
         if ($lang == 'user')
         {
