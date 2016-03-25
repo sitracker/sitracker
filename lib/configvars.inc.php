@@ -152,7 +152,7 @@ $CFGCAT['ldap'] = array('use_ldap',
 
 $CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
-$CFGCAT['contacts'] = array('contact_config_defaults');
+$CFGCAT['contacts'] = array('contact_config_defaults', 'remove_from_contracts_on_disable');
 
 $CFGCAT['sites'] = array('site_config_defaults',
                          'address_components_to_map');
@@ -270,6 +270,9 @@ $CFGVAR['changelogfile']['help'] = 'The filesystem path and filename of the SiT!
 $CFGVAR['contact_config_defaults']['title'] = "Contact configuration defaults";
 $CFGVAR['contact_config_defaults']['help'] = "You can set configuration defaults here for contacts that have not personalised their settings. Enter config one per line, format: variable=>setting";
 $CFGVAR['contact_config_defaults']['type'] = '2darray';
+
+$CFGVAR['remove_from_contracts_on_disable']['title'] = "Remove from contracts on disable";
+$CFGVAR['remove_from_contracts_on_disable']['type'] = 'checkbox';
 
 $CFGVAR['creditsfile']['title'] = 'Path to the Credits file';
 $CFGVAR['creditsfile']['help'] = 'The filesystem path and filename of the SiT! CREDITS file, this can be specified relative to the SiT directory.';

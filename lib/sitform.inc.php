@@ -183,8 +183,8 @@ class Form
     
             if ($this->debug) echo $sql;
             $result = mysqli_query($db, $sql);
-            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
-            if (mysqli_affected_rows() <= 0)
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+            if (mysqli_affected_rows($db) <= 0)
             {
                 html_redirect($this->returnURLFailure, FALSE);
                 exit;

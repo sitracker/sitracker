@@ -112,11 +112,11 @@ elseif ($action == "edit")
 
     if (!empty($_POST['timed']))
     {
-        $timed = 1;
+        $timed = 'yes';
         // Force allow_reopen=no for timed incidents, since reopening will break billing
         $allow_reopen = 'no';
     }
-    else $timed = 0;
+    else $timed = 'no';
 
     $sql = "UPDATE `{$dbServiceLevels}` SET initial_response_mins='{$initial_response_mins}', ";
     $sql .= "prob_determ_mins='{$prob_determ_mins}', ";

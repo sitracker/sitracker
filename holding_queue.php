@@ -26,7 +26,7 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
  */
 function generate_row($update)
 {
-    global $CONFIG, $sit, $strEllipsis;
+    global $CONFIG, $sit, $strEllipsis, $db;
     if (empty($update->fromaddr) AND !empty($update->from)) $update->fromaddr = $update->from;
     $update->fromaddr = strtolower($update->fromaddr);
 
