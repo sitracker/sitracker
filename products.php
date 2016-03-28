@@ -23,10 +23,11 @@ $title = $strListProducts;
 // External Variables
 $productid = clean_int($_REQUEST['productid']);
 $display = clean_fixed_list($_REQUEST['display'], array('','skills','software'));
+$showinactive = clean_fixed_list($_REQUEST['showinactive'], array("", "yes"), true);
 
 include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
-if (empty($productid) AND $display!='skills')
+if (empty($productid) AND $display != 'skills')
 {
     $sql = "SELECT * FROM `{$dbVendors}` ORDER BY name";
     $result = mysqli_query($db, $sql);
@@ -34,16 +35,29 @@ if (empty($productid) AND $display!='skills')
 
     echo "<h2>".icon('product', 32, $strProducts)." {$strProducts}</h2>";
     plugin_do('products');
+    
+    if ($showinactive != 'yes' AND $_SESSION['userconfig']['show_inactive_data'] != 'TRUE' )
+    {
+        echo "<p align='center'><a href='{$_SERVER['PHP_SELF']}?showinactive=yes'>{$strShowInactive}</a></p>";
+    }
+    
     if (mysqli_num_rows($result) >= 1)
     {
         while ($vendor = mysqli_fetch_object($result))
         {
-            echo "<h3>{$strVendor}: {$vendor->name}</h3>";
-            $psql = "SELECT * FROM `{$dbProducts}` WHERE vendorid='{$vendor->id}' ORDER BY name";
+            $psql = "SELECT * FROM `{$dbProducts}` WHERE vendorid='{$vendor->id}' ";
+            if ($showinactive != 'yes' AND $_SESSION['userconfig']['show_inactive_data'] != 'TRUE' )
+            {
+                $sqldisabled = $sql . " AND active = 'false' ORDER BY active, surname, forenames";
+                $psql .= "AND active = 'true' ";
+            }
+            $psql .= "ORDER BY name";
             $presult = mysqli_query($db, $psql);
             if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             if (mysqli_num_rows($presult) >= 1)
             {
+                echo "<h3>{$strVendor}: {$vendor->name}</h3>"; // Don't show vendor if no products
+                
                 echo "<table summary='{$strListProducts}' align='center' width='95%'>";
                 echo "<tr><th width='20%'>{$strProduct}</th><th width='52%'>{$strDescription}</th><th width='10%'>{$strLinkedSkills}</th>";
                 echo "<th width='10%'>{$strActiveContracts}</th><th width='8%'>{$strActions}</th></tr>\n";
@@ -89,10 +103,6 @@ if (empty($productid) AND $display!='skills')
                     else $shade = 'shade1';
                 }
                 echo "</table>\n";
-            }
-            else
-            {
-                echo user_alert($strNoProductsForThisVendor, E_USER_NOTICE);
             }
         }
     }
