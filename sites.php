@@ -18,10 +18,10 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strBrowseSites;
 
-$search_string = cleanvar($_REQUEST['search_string']);
-$owner = clean_int($_REQUEST['owner']);
-$submit_value = cleanvar($_REQUEST['submit']);
-$displayinactive = clean_fixed_list($_REQUEST['displayinactive'], array('','false','true'));
+$search_string = cleanvar(@$_REQUEST['search_string']);
+$owner = clean_int(@$_REQUEST['owner']);
+$submit_value = cleanvar(@$_REQUEST['submit']);
+$displayinactive = clean_fixed_list(@$_REQUEST['displayinactive'], array('', 'false', 'true'));
 if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
     $displayinactive = "false";
@@ -153,7 +153,7 @@ if ($search_string == '')
 }
 
 // search for criteria
-if ($errors == 0)
+if (!isset($errors) || $errors == 0)
 {
     if ($submit_value != 'go')
     {
