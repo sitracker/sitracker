@@ -79,7 +79,7 @@ if (isset($_POST['submit']))
         else
         {
             plugin_do('edit_site_save');
-            journal(CFG_LOGGING_NORMAL, $strSiteEdited, sprintf($strSiteXEdited,$site) , CFG_JOURNAL_SITES, $site);
+            journal(CFG_LOGGING_NORMAL, $strSiteEdited, sprintf($strSiteXEdited, $site) , CFG_JOURNAL_SITES, $site);
             html_redirect($_SERVER['PHP_SELF']);
             exit;
         }

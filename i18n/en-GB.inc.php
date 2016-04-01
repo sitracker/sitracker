@@ -1746,6 +1746,7 @@ $strShowingOnlyRelevantArticles = 'Showing only relevant articles';
 $strShowFreeOfCharge = 'Show Free of Charge';
 $strShowFreeOfChargeAsZero = 'Show Free of Charge as Zero';
 $strShowGeneralConfirmationMessages = 'Show general confirmation ("Are you sure?") messages';
+$strShowInactive = 'Show Inactive';
 $strShowInactiveData = 'Show Inactive Data';
 $strShowIncidentDetails = 'Show Incident details';
 $strShowNextAction = 'Show next action';
