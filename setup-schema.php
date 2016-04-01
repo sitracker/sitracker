@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `{$dbContacts}` (
   `jobtitle` varchar(255) NULL,
   `courtesytitle` varchar(50) NULL,
   `siteid` int(11) NOT NULL DEFAULT '0',
-  `email` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `phone` varchar(50) DEFAULT NULL,
   `mobile` varchar(50) DEFAULT NULL,
   `fax` varchar(50) DEFAULT NULL,
@@ -1781,7 +1781,7 @@ CREATE TABLE IF NOT EXISTS `{$dbUsers}` (
   `groupid` int(5) default NULL,
   `title` varchar(50) default NULL,
   `signature` text,
-  `email` varchar(50) default NULL,
+  `email` varchar(255) default NULL,
   `icq` varchar(15) NOT NULL default '',
   `aim` varchar(25) NOT NULL default '',
   `msn` varchar(70) NOT NULL default '',
@@ -2470,6 +2470,10 @@ UPDATE  `{$dbNoticeTemplates}` SET  `link` =  'javascript:incident_details_windo
 
 -- PH 2015-05-09
 ALTER TABLE `{$dbServiceLevels}` ADD `active` ENUM('true','false') NOT NULL DEFAULT 'true' ;
+
+-- PH 2016-04-01
+ALTER TABLE `{$dbContacts}` CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `{$dbUsers}` CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 ";
 
 

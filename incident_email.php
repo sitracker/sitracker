@@ -246,7 +246,7 @@ switch ($step)
 
         echo show_form_errors('incidentemail');
         clear_form_errors('incidentemail');
-        
+
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' ";
         echo "enctype='multipart/form-data' onsubmit=\"return confirm_action('{$strAreYouSureSendEmail}');\" >";
         echo "<table align='center' class='vertical' width='95%'>";
@@ -326,9 +326,9 @@ switch ($step)
         $chase_manager = cleanvar($_REQUEST['chase_manager']);
 
         $_SESSION['formdata']['incidentemail'] = cleanvar($_POST, TRUE, FALSE, FALSE);
-        
+
         $files = array();
-        
+
         $size_of_files = 0;
 
         // Check file size is below limit
@@ -674,7 +674,7 @@ switch ($step)
                 if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully;
 
                 clear_form_data('incidentemail');
-                
+
                 html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);
             }
             else
