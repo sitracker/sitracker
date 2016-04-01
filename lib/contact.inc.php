@@ -19,28 +19,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 /**
- * See if a customer exists in the database
- * @author Lea Anthony
- * @param string $username. Username of customer
- * @retval bool TRUE exists in db
- * @retval bool FALSE does not exist in db
- * @deprecated DEPRECATED This unused function will be removed after 3.91 (inl) - see Mantis 1697
-*/
-function customerExistsInDB($username)
-{
-    global $dbContacts, $db;
-    $exists = 0;
-    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='{$username}' LIMIT 1";
-    $result = mysqli_query($db, $sql);
-    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
-
-    if (mysqli_num_rows($result) > 0) $exists = 1;
-
-    return $exists;
-}
-
-
-/**
  * Returns an array of all active contracts from contact id
  * @author Carsten Jensen
  * @param int $userid. Contact ID
