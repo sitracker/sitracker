@@ -169,19 +169,6 @@ function readable_bytes_size($size)
 
 
 /**
- * Function to produce a user readable file size i.e 2048 bytes 1KB etc
- * @author Paul Heaney
- * @param filesize - filesize in bytes
- * @return String filesize in readable format
- * @deprecated DEPRECATED Function renamed to readable_bytes_size() for v3.90, INL 21 June 2011
- */
-function readable_file_size($filesize)
-{
-    return readable_bytes_size($filesize);
-}
-
-
-/**
  * Uploads a file
  * @author Kieran Hogg
  * @param mixed $file file to upload
