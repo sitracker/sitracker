@@ -594,6 +594,18 @@ array('description' => $strSkillAssignedToIncident,
       'replacement' => 'software_name(db_read_column(\'softwareid\', $GLOBALS[\'dbIncidents\'], $param_array[\'incidentid\']));'
       );
 
+$ttvararray['{incidenttemporaryowner}'] =
+array('description' => $strIncidentTemporaryOwnersFullName,
+        'requires' => 'incidentid',
+        'replacement' => 'user_realname(incident_towner($param_array[incidentid]));'
+);
+
+$ttvararray['{incidenttemporaryowneremail}'] =
+array('description' => $strIncidentTemporaryOwnersEmail,
+        'requires' => 'incidentid',
+        'replacement' => 'user_email(incident_towner($param_array[incidentid]));'
+);
+
 $ttvararray['{incidenttitle}'] =
 array('description' => $strIncidentTitle,
       'requires' => 'incidentid',
