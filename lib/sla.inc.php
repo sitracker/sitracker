@@ -162,6 +162,8 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
         $sql .= " AND timed = (SELECT DISTINCT timed FROM `{$dbServiceLevels}` WHERE tag = '{$tag}')";
     }
     
+    $sql .= "ORDER BY tag";
+    
     $result = mysqli_query($db, $sql);
 
     $html = "<select id='{$name}' name='{$name}' {$select}>\n";
