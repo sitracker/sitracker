@@ -57,7 +57,7 @@ if ($action == "showform" OR $action == '')
     echo "<tr><th>{$strServiceLevel}</th><td>";
     echo servicelevel_drop_down('servicelevel', show_form_value('new_contract', 'servicelevel', $CONFIG['default_service_level']), TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
     // check the initially selected service level to decide whether to show the extra hiddentimed section
-    $timed = servicelevel_timed($sltag);
+    $timed = servicelevel_timed($_SESSION['formdata']['new_contract']['servicelevel']);
 
     echo "<tr><th colspan='2' style='text-align: left;'><br />{$strServicePeriod}</th></tr>\n";
     echo "<tr><th>{$strStartDate}</th>";
