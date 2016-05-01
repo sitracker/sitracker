@@ -38,7 +38,7 @@ if (!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE)
     $page = $_SERVER['PHP_SELF'];
     if (!empty($_SERVER['QUERY_STRING'])) $page .= '?'.$_SERVER['QUERY_STRING'];
     $page = urlencode($page);
-    header("Location: {$CONFIG['application_webpath']}index.php?id=2&page=$page");
+    header("Location: {$CONFIG['application_webpath']}index.php?id=2&page={$page}");
     exit;
 }
 else
@@ -76,6 +76,7 @@ if (user_permission($_SESSION['userid'], $permission) == FALSE)
     header("Location: {$CONFIG['application_webpath']}noaccess.php?id=$refused");
     exit;
 }
+
 require_once (APPLICATION_LIBPATH . 'trigger.class.php');
 
 ?>
