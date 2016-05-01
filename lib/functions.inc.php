@@ -348,17 +348,31 @@ function authenticateTrustedServerModeContact()
             {
                 // we can create
                 debug_log("Contact mapping headers are: " . print_r($CONFIG['contact_jit_mapping'], true));
+                $contracts = null;
                 $contact = new Contact();
                 foreach ($CONFIG['contact_jit_mapping'] AS $header => $field)
                 {
                     $value = $_SERVER["HTTP_".strtoupper($header)];
                     debug_log("Setting field '" . $field . "' to '" . $value . "'");
-                    $contact->$field = $value;
+                    if ($header == 'contractids') $contracts = $value;
+                    else $contact->$field = $value;
                 }
                 $contact->source = "jit";
                 // Don't need to ensure valid fields as contact class does that
                 debug_log("Adding contact");
                 $toReturn = $contact->add();
+                
+                if (!empty($contracts) AND !empty($toReturn))
+                {
+                    $contractids = explode(",", $contracts);
+                    foreach ($contractids AS $id)
+                    {
+                        $id = clean_int($id);
+                        $sql  = "INSERT INTO `{$GLOBALS['dbSupportContacts']}` (maintenanceid, contactid) VALUES ({$id}, {$toReturn})";
+                        $result = mysqli_query($db, $sql);
+                        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+                    }
+                }
             }
 
             if ($toReturn)
