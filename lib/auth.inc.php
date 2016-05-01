@@ -27,7 +27,7 @@ session_start();
 if ((!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE) AND $CONFIG['trusted_server'])
 {
     if (($username = authenticateTrustedServerMode())) createUserSession($username);
-    if (($username = authenticateTrustedServerModeContact())) createContactSession($username);
+    if (($contactid = authenticateTrustedServerModeContact())) createContactSession($contactid);
     populate_syslang();
 }
 

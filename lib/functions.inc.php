@@ -464,16 +464,16 @@ function createUserSession($username)
 
 /**
  * Creates valid contact session within SiT!
- * @param int $userid The ID of the contact
+ * @param int $contactid The ID of the contact
  */
-function createContactSession($userid)
+function createContactSession($contactid)
 {
     global $CONFIG, $db;
 
     debug_log("PORTAL AUTH SUCESSFUL");
     $_SESSION['portalauth'] = TRUE;
 
-    $sql = "SELECT * FROM `{$GLOBALS['dbContacts']}` WHERE id = '{$userid}'";
+    $sql = "SELECT * FROM `{$GLOBALS['dbContacts']}` WHERE id = '{$contactid}'";
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     if (mysqli_num_rows($result) < 1)
