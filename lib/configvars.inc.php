@@ -151,7 +151,7 @@ $CFGCAT['ldap'] = array('use_ldap',
 
 $CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
-$CFGCAT['contacts'] = array('contact_config_defaults', 'remove_from_contracts_on_disable');
+$CFGCAT['contacts'] = array('contact_config_defaults', 'remove_from_contracts_on_disable', 'contact_jit_provision', 'contact_jit_mapping');
 
 $CFGCAT['sites'] = array('site_config_defaults',
                          'address_components_to_map');
@@ -269,6 +269,14 @@ $CFGVAR['changelogfile']['help'] = 'The filesystem path and filename of the SiT!
 $CFGVAR['contact_config_defaults']['title'] = "Contact configuration defaults";
 $CFGVAR['contact_config_defaults']['help'] = "You can set configuration defaults here for contacts that have not personalised their settings. Enter config one per line, format: variable=>setting";
 $CFGVAR['contact_config_defaults']['type'] = '2darray';
+
+$CFGVAR['contact_jit_provision']['title'] = "Enable Just In Time provisioning of contacts";
+$CFGVAR['contact_jit_provision']['help'] = "When using trusted server mode can contacts be provsioned and updated just in time for server headers";
+$CFGVAR['contact_jit_provision']['type'] = 'checkbox';
+
+$CFGVAR['contact_jit_mapping']['title'] = "Contact Just In Time attribute map ";
+$CFGVAR['contact_jit_mapping']['help'] = "Map attributes from request headers onto contact fields, format: heading=>contact_field";
+$CFGVAR['contact_jit_mapping']['type'] = '2darray';
 
 $CFGVAR['remove_from_contracts_on_disable']['title'] = "Remove from contracts on disable";
 $CFGVAR['remove_from_contracts_on_disable']['type'] = 'checkbox';

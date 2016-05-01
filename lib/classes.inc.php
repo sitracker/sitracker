@@ -53,6 +53,12 @@ abstract class SitEntity {
      * Generates the Array that is required by SOAP
      */
     abstract public function getSOAPArray();
+    
+    public function getStringToInsert($fieldname)
+    {
+        if (empty($this->$fieldname)) return "NULL";
+        else return "'".clean_dbstring($this->$fieldname)."'";
+    }
 }
 
 

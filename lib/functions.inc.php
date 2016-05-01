@@ -266,7 +266,7 @@ function authenticateTrustedServerMode()
         if (trustedServerValidateBasicAuth())
         {
             $username = $_SERVER["HTTP_".strtoupper($CONFIG['trusted_server_username_header'])];
-            debug_log("Headers reeived ".print_r($_SERVER, true));
+            debug_log("Headers received ".print_r($_SERVER, true));
             $sql = "SELECT id, password, status, user_source, username FROM `{$GLOBALS['dbUsers']}` WHERE username = '{$username}'";
             $result = mysqli_query($db, $sql);
             if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
@@ -279,11 +279,11 @@ function authenticateTrustedServerMode()
 
             if ($toReturn)
             {
-                debug_log ("authenticateTrustedServerMode: Contact authenticated via trusted server", TRUE);
+                debug_log ("authenticateTrustedServerMode: User authenticated via trusted server", TRUE);
             }
             else
             {
-                debug_log ("authenticateTrustedServerMode: Contact NOT authenticated via trusted server", TRUE);
+                debug_log ("authenticateTrustedServerMode: User NOT authenticated via trusted server", TRUE);
             }
         }
         else
@@ -327,6 +327,38 @@ function authenticateTrustedServerModeContact()
                 // Exists in SiT DB
                 $obj = mysqli_fetch_object( $result);
                 $toReturn = $obj->id;
+
+                if ($CONFIG['contact_jit_provision'])
+                {
+                    // Then we need to update
+                    $contact = new Contact($toReturn);
+                    foreach ($CONFIG['contact_jit_mapping'] AS $header => $field)
+                    {
+                        $value = $_SERVER["HTTP_".strtoupper($header)];
+                        debug_log("Setting field '" . $field . "' to '" . $value . "'");
+                        $contact->$field = $value;
+                    }
+                    
+                    // Don't need to ensure valid fields as contact class does that
+                    debug_log("Updating contact '" . $toReturn . "'");
+                    $contact->edit();
+                }
+            }
+            else if (mysqli_num_rows($result) == 0 AND $CONFIG['contact_jit_provision'])
+            {
+                // we can create
+                debug_log("Contact mapping headers are: " . print_r($CONFIG['contact_jit_mapping'], true));
+                $contact = new Contact();
+                foreach ($CONFIG['contact_jit_mapping'] AS $header => $field)
+                {
+                    $value = $_SERVER["HTTP_".strtoupper($header)];
+                    debug_log("Setting field '" . $field . "' to '" . $value . "'");
+                    $contact->$field = $value;
+                }
+                $contact->source = "jit";
+                // Don't need to ensure valid fields as contact class does that
+                debug_log("Adding contact");
+                $toReturn = $contact->add();
             }
 
             if ($toReturn)
@@ -336,7 +368,7 @@ function authenticateTrustedServerModeContact()
             }
             else
             {
-                debug_log ("authenticateTrustedServerModeContact: User NOT authenticated via trusted server", TRUE);
+                debug_log ("authenticateTrustedServerModeContact: Contact NOT authenticated via trusted server", TRUE);
             }
         }
         else
