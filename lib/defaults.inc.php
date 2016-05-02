@@ -400,4 +400,7 @@ $CONFIG['incident_id_email_closing_tag'] = ']';
 
 // How many address components are required before the map link appears on site details 
 $CONFIG['address_components_to_map'] = 3;
+
+// Default mapping for jit provisioning
+$CONFIG['contact_jit_mapping'] = array('username'=>'username','firstname'=>'forenames','lastname'=>'surname','email'=>'email','phone'=>'phone','mobile'=>'mobile','siteid'=>'siteid','contractids'=>'contractids');
 ?>
