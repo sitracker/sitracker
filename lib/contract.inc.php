@@ -199,10 +199,10 @@ function supported_contacts($maintid)
 /**
  * Return an array of contracts which non-contract contacts can see incidents
  * @author Kieran Hogg
- * @param int $maintid - ID of the contract
+ * @param int $siteid - ID of the site
  * @return array of supported contracts, NULL if none
  */
-function all_contact_contracts($contactid, $siteid)
+function all_contact_contracts($siteid)
 {
     global $db;
     $sql = "SELECT DISTINCT m.id AS id
