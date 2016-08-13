@@ -408,9 +408,13 @@ else
             {
                 $search_string = urlencode("{$incoming->forenames} {$incoming->surname}");
             }
-            else
+            else if (!empty($incoming->emailfrom))
             {
                 $search_string = urlencode($incoming->emailfrom);
+            }
+            else
+            {
+                $search_string = urlencode($incoming->from);
             }
 
             echo "<a href='{$_SERVER['PHP_SELF']}?action=delete&amp;selected={$displayid}'>{$strDelete}</a>"; 
