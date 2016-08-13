@@ -78,7 +78,9 @@ $CFGCAT['portal'] = array('portal',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
                           'portal_interface_style',
-                          'portal_iconset');
+                          'portal_iconset',
+                          'portal_logout_url'
+                          );
 
 $CFGCAT['holidays'] = array('holidays_enabled',
                             'default_entitlement');
@@ -613,6 +615,8 @@ $CFGVAR['portal_iconset']['help'] = 'The icon set used in the portal';
 $CFGVAR['portal_iconset']['type'] = 'select';
 $CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
+$CFGVAR['portal_logout_url']['help'] = "The URL to redirect the user to after he/she logs out. When left blank this defaults to the SiT login page.";
+$CFGVAR['portal_logout_url']['title'] = "Portal Logout URL";
 
 $CFGVAR['portal_kb_enabled']['help'] = "Public puts a link on the login page, Private makes it available on login for contacts";
 $CFGVAR['portal_kb_enabled']['options'] = 'Public|Private|Disabled';

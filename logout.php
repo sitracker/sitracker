@@ -18,9 +18,12 @@ require (APPLICATION_LIBPATH . 'functions.inc.php');
 session_name($CONFIG['session_name']);
 session_start();
 
+$portal = false;
+
 if ($_SESSION['portalauth'])
 {
     journal(CFG_LOGGING_NORMAL, 'Logout', "Portal user ".contact_realname($_SESSION['contactid'])." logged out", CFG_JOURNAL_LOGIN, $_SESSION['contactid']);
+    $portal = true;
 }
 else
 {
@@ -40,7 +43,8 @@ if (isset($_COOKIE[session_name()]))
 }
 
 // redirect
-if (!empty($CONFIG['logout_url'])) $url = $CONFIG['logout_url'];
+if (!$portal AND !empty($CONFIG['logout_url'])) $url = $CONFIG['logout_url'];
+else if ($portal AND !empty($CONFIG['portal_logout_url'])) $url = $CONFIG['portal_logout_url'];
 else $url = $CONFIG['application_webpath']."index.php";
 header ("Location: {$url}");
 exit;
