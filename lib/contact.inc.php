@@ -746,7 +746,7 @@ function process_new_contact($mode = 'internal')
 /**
  * Return an array of contracts which the contact is an admin contact for
  * @author Kieran Hogg
- * @param int $maintid - ID of the contract
+ * @param int $contactid - ID of the contract
  * @param int $siteid - The ID of the site
  * @return array of contract ID's for which the given contactid is an admin contact, NULL if none
  */
@@ -775,7 +775,9 @@ function admin_contact_contracts($contactid, $siteid)
 /**
  * Return an array of contracts which the contact is an named contact for
  * @author Kieran Hogg
- * @param int $maintid - ID of the contract
+ * @param int $contactid - ID of the Contact
+ * @param int $siteid - ID of the site
+ * @param int $checkvisible - 
  * @return array of supported contracts, NULL if none
  */
 function contact_contracts($contactid, $siteid, $checkvisible = TRUE)
@@ -787,7 +789,8 @@ function contact_contracts($contactid, $siteid, $checkvisible = TRUE)
             `{$GLOBALS['dbSupportContacts']}` AS sc
             WHERE m.site={$siteid}
             AND sc.maintenanceid=m.id
-            AND sc.contactid=c.id ";
+            AND sc.contactid=c.id 
+            AND c.id = {$contactid} ";
     if ($checkvisible)
     {
         $sql .= "AND m.var_incident_visible_contacts = 'yes'";

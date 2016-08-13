@@ -547,9 +547,9 @@ function createContactSession($contactid)
     }
 
     //get named contact contracts
-    if (contact_contracts($_SESSION['contactid'], $_SESSION['siteid']) != NULL)
+    if (contact_contracts($_SESSION['contactid'], $_SESSION['siteid'], false) != NULL)
     {
-        $contactcontracts = contact_contracts($_SESSION['contactid'], $_SESSION['siteid']);
+        $contactcontracts = contact_contracts($_SESSION['contactid'], $_SESSION['siteid'], false);
         if (!isset($_SESSION['usertype']))
         {
             $_SESSION['usertype'] = 'contact';
