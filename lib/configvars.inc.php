@@ -611,7 +611,7 @@ $CFGVAR['portal_interface_style']['type'] = 'interfacestyleselect';
 $CFGVAR['portal_iconset']['title'] = 'Portal Icon set';
 $CFGVAR['portal_iconset']['help'] = 'The icon set used in the portal';
 $CFGVAR['portal_iconset']['type'] = 'select';
-$CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana|flat';
+$CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
 
 $CFGVAR['portal_kb_enabled']['help'] = "Public puts a link on the login page, Private makes it available on login for contacts";
