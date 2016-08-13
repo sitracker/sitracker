@@ -569,22 +569,22 @@ elseif ($action == 'incidentform')
         $sql = "SELECT bodytext FROM `{$dbUpdates}` WHERE id={$updateid}";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-        list($mailed_body_text) = mysqli_fetch_assoc($result);
+        $objUpdate = mysqli_fetch_object($result);
 
         $sql = "SELECT subject FROM `{$dbTempIncoming}` WHERE updateid={$updateid}";
         $result = mysqli_query($db, $sql);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-        list($mailed_subject) = mysqli_fetch_assoc($result);
+        $objSubject = mysqli_fetch_object($result);
 
         echo "<tr><td><label for='incidenttitle'>{$strIncidentTitle}</label><br />";
         echo "<input class='required' maxlength='200' id='incidenttitle' ";
-        echo "name='incidenttitle' size='50' type='text' value=\"".htmlspecialchars($mailed_subject, ENT_QUOTES)."\" />";
+        echo "name='incidenttitle' size='50' type='text' value=\"".htmlspecialchars($objSubject->subject, ENT_QUOTES)."\" />";
         echo " <span class='required'>{$strRequired}</span></td>\n";
         echo "<td>";
         if ($type == 'free')
         {
             echo "<strong>{$strSiteSupport}</strong>: <br />";
-            echo "{$strServiceLevel} ".serviceleveltag_drop_down('servicelevel',$CONFIG['default_service_level'], TRUE);
+            echo "{$strServiceLevel} ".serviceleveltag_drop_down('servicelevel', $CONFIG['default_service_level'], TRUE);
             echo " {$strSkill} ".skill_drop_down('software', 0);
         }
         else
@@ -595,7 +595,7 @@ elseif ($action == 'incidentform')
 
         echo "<tr><td colspan='2'>&nbsp;</td></tr>\n";
         echo "<tr><th>{$strProblemDescription}<br /><span style='font-weight: normal'>{$strReceivedByEmail}</span></th>";
-        echo "<td>".parse_updatebody($mailed_body_text)."</td></tr>\n";
+        echo "<td>".parse_updatebody($objUpdate->bodytext)."</td></tr>\n";
         echo "<tr><td class='shade1' colspan='2'>&nbsp;</td></tr>\n";
     }
 
