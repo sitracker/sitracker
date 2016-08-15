@@ -77,6 +77,7 @@ $CFGCAT['portal'] = array('portal',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
+                          'portal_update_site_incidents',
                           'portal_interface_style',
                           'portal_iconset',
                           'portal_logout_url'
@@ -602,6 +603,10 @@ $CFGVAR['outbound_email_send_xoriginatingip']['type'] = 'checkbox';
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
 $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
+
+$CFGVAR['portal_update_site_incidents']['title'] = "Allow others at the site to update incidents.";
+$CFGVAR['portal_update_site_incidents']['help'] = "This enables/disables the ability for other contacts at a site to update incidents";
+$CFGVAR['portal_update_site_incidents']['type'] = 'checkbox';
 
 $CFGVAR['portal_feedback_enabled']['title'] = "Enable Feedback in the portal";
 $CFGVAR['portal_feedback_enabled']['help'] = "This enables/disables feedback from the portal, if main feedback is disabled this has no effect";

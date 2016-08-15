@@ -21,11 +21,12 @@ include (APPLICATION_LIBPATH . 'portalauth.inc.php');
 $id = clean_int($_REQUEST['id']);
 
 // First check the portal user is allowed to access this incident
-$sql = "SELECT contact FROM `{$dbIncidents}` WHERE id = $id LIMIT 1";
+$sql = "SELECT contact, maintenanceid FROM `{$dbIncidents}` WHERE id = {$id} LIMIT 1";
 $result = mysqli_query($db, $sql);
 if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-list($incidentcontact) = mysqli_fetch_row($result);
-if ($incidentcontact == $_SESSION['contactid'])
+list($incidentcontact, $incidentmaintenanceid) = mysqli_fetch_row($result);
+
+if (($CONFIG['portal_update_site_incidents'] AND in_array($incidentmaintenanceid, $_SESSION['contracts'])) OR ($incidentcontact == $_SESSION['contactid']))
 {
     if (empty($_POST['update']) AND empty($_FILES))
     {
