@@ -40,7 +40,7 @@ if (isset($_SESSION['syslang'])) $SYSLANG = $_SESSION['syslang'];
 );
 */
 
-if (!empty($_SESSION) AND $_SESSION['auth'] == TRUE)
+if (!empty($_SESSION) AND isset($_SESSION['auth']) AND $_SESSION['auth'] == TRUE)
 {
     // //need to call directly as we don't have functions yet
     if ($CONFIG['enable_inbound_mail'] == TRUE)
