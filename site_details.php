@@ -298,15 +298,16 @@ if (user_permission($sit[2], PERM_CONTRACT_VIEW)) // View contracts
     {
         $resultdisabled = mysqli_query($db, $sqldisabled);
         if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
-        $disabledcountcontracts = mysqli_num_rows($result);
+        $disabledcountcontracts = mysqli_num_rows($resultdisabled);
     }
+
+    echo "<p align='center'>";
+    echo "{$countcontracts} {$strContracts}";
+    if ($disabledcountcontracts > 0) echo " (".sprintf($strInactive, $disabledcountcontracts)." <a href='{$_SERVER['REQUEST_URI']}&amp;showinactivecontracts=yes'>{$strView}</a>)";
+    echo "</p>";
 
     if ($countcontracts > 0 OR $disabledcountcontracts > 0)
     {
-        echo "<p align='center'>";
-        echo "{$countcontracts} {$strContracts}";
-        if ($disabledcountcontracts > 0) echo " (".sprintf($strInactive, $disabledcountcontracts)." <a href='{$_SERVER['REQUEST_URI']}&amp;showinactivecontracts=yes'>{$strView}</a>)";
-        echo "</p>";
         echo "<table class='maintable'>
         <tr>
             <th>{$strContractID}</th>
