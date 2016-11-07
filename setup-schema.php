@@ -2537,6 +2537,7 @@ ALTER TABLE `{$dbServiceLevels}` ADD `active` ENUM('true','false') NOT NULL DEFA
 // to existing databases in $upgrade_schema[] *AND* you must also change $schema[] for
 // new installations (above the line of stars).
 ?>
+<<<<<<< HEAD
 =======
 <?php
 // setup-schema.php - Defines database schema for use in setup.php
@@ -5025,3 +5026,5 @@ ALTER TABLE `{$dbUsers}` CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8 
 // to existing databases in $upgrade_schema[] *AND* you must also change $schema[] for
 // new installations (above the line of stars).
 ?>
+=======
+>>>>>>> f8440b2c0456fd15269e0e98a653186bf4d43f1d
