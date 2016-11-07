@@ -474,7 +474,7 @@ function get_billable_object_from_incident_id($incidentid)
 
 
 /**
- * Function to return a billable incident object based on contract  ID
+ * Function to return a billable incident object based on contract ID
  * @author Paul Heaney
  * @param int $incidentid The contract ID to get a object for
  * @return mixed Billable if incident is billable else FALSE
@@ -489,7 +489,7 @@ function get_billable_object_from_contract_id($contractid)
     $result = mysqli_query($db, $sql);
     if (mysqli_error($db))
     {
-        trigger_error("Error finding type of contract billing ".mysqli_error($db), E_USER_WARNING);
+        trigger_error("Error finding type of contract billing " . mysqli_error($db), E_USER_WARNING);
         $toReturn = FALSE;
     }
 
@@ -836,7 +836,10 @@ function contract_service_table($contractid, $billing)
 
         $billingTypeName = $GLOBALS['strNone'];
         
-        if ($billing AND ($billingObj instanceof Billable)) $billingTypeName = $billingObj->display_name();
+        if ($billing AND ($billingObj instanceof Billable))
+        {
+            $billingTypeName = $billingObj->display_name();
+        }
         
         $html = "<strong>{$GLOBALS['strBilling']}</strong>: {$billingTypeName}";
         
@@ -979,7 +982,7 @@ function contract_service_table($contractid, $billing)
             if ($billing)
             {
                 $html .= "<td>";
-                if (!$expired) $html .= $billingObj->format_amount($balance);
+                if (!$expired AND ($billingObj instanceof Billable) ) $html .= $billingObj->format_amount($balance);
                 else $html .= "0";
                 $html .= "</td>";
             }
