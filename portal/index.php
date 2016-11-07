@@ -132,6 +132,7 @@ else
     $sql .= "AND c.id = i.contact ";
     $sql .= "AND i.contact = '{$_SESSION['contactid']}' ";
 }
+
 if (!empty($sort))
     {
         if ($order == 'a' OR $order == 'ASC') $sortorder = "ASC";
