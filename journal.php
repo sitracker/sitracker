@@ -2,7 +2,7 @@
 // browse_journal.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -43,9 +43,9 @@ echo "<h2>".icon('contract', 32)." {$title}</h2>";
 
 // Count number of journal records
 $sql = "SELECT COUNT(id) FROM `{$dbJournal}`";
-$result = mysql_query($sql);
-list($totaljournals) = mysql_fetch_row($result);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+list($totaljournals) = mysqli_fetch_row($result);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 if ($offset == '' AND $page > 0) $offset = (($page -1) * $perpage);
 elseif ($offset == '' AND empty($page)) $offset=0;
@@ -78,8 +78,8 @@ else
     $sql .= " ORDER BY timestamp DESC";
 }
 $sql .= " LIMIT {$offset}, {$perpage} ";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 $journaltype[CFG_JOURNAL_DEBUG] = $strDebug;
 $journaltype[CFG_JOURNAL_LOGIN] = $strLoginLogoff;
@@ -96,7 +96,7 @@ $journaltype[CFG_JOURNAL_TRIGGERS] = $strTriggers;
 $journaltype[CFG_JOURNAL_KB] = $strKnowledgeBase;
 $journaltype[CFG_JOURNAL_TASKS] = $strTasks;
 
-$journal_count = mysql_num_rows($result);
+$journal_count = mysqli_num_rows($result);
 if ($journal_count >= 1)
 {
     echo "<table class='maintable'>";
@@ -109,7 +109,7 @@ if ($journal_count >= 1)
     echo colheader('type', $strType);
     echo "</tr>\n";
     $shade = 'shade1';
-    while ($journal = mysql_fetch_object($result))
+    while ($journal = mysqli_fetch_object($result))
     {
         echo "<tr class='{$shade}'>";
         echo "<td>".user_realname($journal->userid, TRUE)."</td>";

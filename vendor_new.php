@@ -2,7 +2,7 @@
 // vendor_new.php - Form for adding software vendors
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -59,8 +59,8 @@ else
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbVendors}` (name) VALUES ('{$name}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {
@@ -69,7 +69,7 @@ else
         }
         else
         {
-            $id = mysql_insert_id();
+            $id = mysqli_insert_id($db);
             journal(CFG_LOGGING_DEBUG, 'Vendor Added', "Vendor {$id} was added", CFG_JOURNAL_DEBUG, $id);
             html_redirect("vendors.php");
         }

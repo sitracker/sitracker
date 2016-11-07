@@ -2,7 +2,7 @@
 // about.php - Credit, Copyright and Licence page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -97,7 +97,7 @@ switch ($seltab)
 
             <p>pChart 2.1.0 from the <a href='http://www.pchart.net'>pChart project</a>.   Licensed under GPLv3</p>
 
-            <p>Prototype JavaScript framework 1.7 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
+            <p>Prototype JavaScript framework 1.7.3 by <a href='http://www.prototypejs.org/'>Sam Stephenson</a><br />
             Copyright &copy; 2005-2010 Sam Stephenson. Licensed under an MIT style license.</p>
 
             <p>script.aculo.us 1.9.0 by <a href='http://script.aculo.us'>Thomas Fuchs</a><br />
@@ -135,7 +135,7 @@ switch ($seltab)
         echo "</p>";
         debug_log("{$strVersion}: {$application_version} {$application_revision}", TRUE);
 
-        echo "<p>Copyright &copy; 2010-2013 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />";
+        echo "<p>Copyright &copy; 2010-2014 <a href='http://sitracker.org'>The Support Incident Tracker Project</a><br />";
         echo "Copyright &copy; 2000-2009 Salford Software Ltd. and Contributors<br />";
         echo "Licence: GNU General Public License Version 2.<br /></p>";
 

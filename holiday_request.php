@@ -2,7 +2,7 @@
 // holiday_request.php - Search contracts
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -44,7 +44,7 @@ function display_holiday_table($result)
     }
 
     echo "</tr>";
-    while ($holiday = mysql_fetch_object($result))
+    while ($holiday = mysqli_fetch_object($result))
     {
         echo "<tr class='shade2'>";
         if ($user == 'all' AND $approver == TRUE)
@@ -139,9 +139,9 @@ if ($sent != 'true')
     if ($mode != 'approval' || $user != 'all') $sql.="AND userid='$user' ";
     if ($approver == TRUE && $mode == 'approval') $sql .= "AND approvedby={$sit[2]} ";
     $sql .= "ORDER BY date, length";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
         display_holiday_table($result);
 
@@ -159,9 +159,9 @@ if ($sent != 'true')
             $sql .= "AND (up.permissionid = " . PERM_HOLIDAY_APPROVE . " AND up.granted = 'true' OR ";
             $sql .= "rp.permissionid = " . PERM_HOLIDAY_APPROVE . " AND rp.granted = 'true') ";
             $sql .= "AND u.id != {$sit[2]} AND u.status > " . USERSTATUS_ACCOUNT_DISABLED . " ORDER BY realname ASC";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            $numapprovers = mysql_num_rows($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+            $numapprovers = mysqli_num_rows($result);
             if ($numapprovers > 0)
             {
                 echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
@@ -169,7 +169,7 @@ if ($sent != 'true')
                 echo "{$strSendRequestsTo}: ";
                 echo "<select name='approvaluser'>";
                 echo "<option selected='selected' value='0'></option>\n";
-                while ($users = mysql_fetch_object($result))
+                while ($users = mysqli_fetch_object($result))
                 {
                     echo "<option";
                     if ($users->groupid == $groupid) echo " selected='selected'";
@@ -211,10 +211,10 @@ if ($sent != 'true')
         $sql .= "AND type != ".HOL_PUBLIC.' ';
         if ($mode == 'approval') $sql .= "AND approvedby = 0 ";
         $sql .= "ORDER BY date, length";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             echo "<h2>{$strDatesNotRequested}</h2>";
 
@@ -239,11 +239,11 @@ else
         if ($action != 'resend') $sql .= "AND approvedby=0 ";
         if ($user != 'all' || $approver == FALSE) $sql .= "AND userid='{$user}' ";
         $sql .= "ORDER BY date, length";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result)>0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result)>0)
         {
-            while ($holiday = mysql_fetch_object($result))
+            while ($holiday = mysqli_fetch_object($result))
             {
                 $holidaylist .= ldate('l j F Y', mysql2date($holiday->date, TRUE)).", ";
                 if ($holiday->length == 'am') $holidaylist .= $strMorning;
@@ -252,22 +252,16 @@ else
                 $holidaylist .= ", ";
                 $holidaylist .= holiday_type($holiday->type)."\n";
             }
-
-            if (mb_strlen($memo) > 3)
-            {
-                $holidaylist .= "\n{$SYSLANG['strCommentsSentWithRequest']}:\n\n";
-                $holidaylist .= "---\n{$memo}\n---\n\n";
-            }
         }
         // Mark the userid of the person who will approve the request so that they can see them
         $sql = "UPDATE `{$dbHolidays}` SET approvedby='{$approvaluser}' ";
         $sql .= "WHERE userid='{$user}' AND approved = ".HOL_APPROVAL_NONE;
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
-        
-        $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist));
+
+        $rtnvalue = new TriggerEvent('TRIGGER_HOLIDAY_REQUESTED', array('userid' => $user, 'approvaluseremail' => user_email($approvaluser), 'listofholidays' => $holidaylist, 'holidayrequestnote' => $memo));
        
         if ($rtnvalue)
         {

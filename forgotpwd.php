@@ -2,7 +2,7 @@
 // forgotpwd.php - Forgotten password page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -60,10 +60,10 @@ switch ($action)
         {
             $sql = "SELECT id, username, password FROM `{$dbUsers}` WHERE email = '{$email}' LIMIT 1";
         }
-        $userresult = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        $usercount = mysql_num_rows($userresult);
-        $userdetails = mysql_fetch_object($userresult);
+        $userresult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        $usercount = mysqli_num_rows($userresult);
+        $userdetails = mysqli_fetch_object($userresult);
         if ($usercount == 1)
         {
             $hash = md5($userdetails->username.'.'.$userdetails->password);
@@ -85,13 +85,13 @@ switch ($action)
             {
                 $sql = "SELECT id, username, password, email FROM `{$dbContacts}` WHERE email = '{$email}' LIMIT 1";
             }
-            $contactresult = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+            $contactresult = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-            $contactcount = mysql_num_rows($contactresult);
+            $contactcount = mysqli_num_rows($contactresult);
             if ($contactcount == 1)
             {
-                $row = mysql_fetch_object($contactresult);
+                $row = mysqli_fetch_object($contactresult);
                 $hash = md5($row->username.'.'.$row->password);
                 $reseturl = "{$CONFIG['application_uriprefix']}{$CONFIG['application_webpath']}forgotpwd.php?action=confirmreset&contactid={$row->id}&hash={$hash}";
                 $t = new TriggerEvent('TRIGGER_CONTACT_RESET_PASSWORD', array('contactid' => $row->id, 'passwordreseturl' => $reseturl));
@@ -129,12 +129,12 @@ switch ($action)
         {
             $sql = "SELECT id, username, password FROM `{$dbContacts}` WHERE id = '{$contactid}' LIMIT 1";
         }
-        $userresult = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        $usercount = mysql_num_rows($userresult);
+        $userresult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        $usercount = mysqli_num_rows($userresult);
         if ($usercount > 0)
         {
-            $userdetails = mysql_fetch_object($userresult);
+            $userdetails = mysqli_fetch_object($userresult);
             $hash = md5($userdetails->username.'.'.$userdetails->password);
 
             if ($hash == $userhash)
@@ -195,12 +195,12 @@ switch ($action)
             $sql = "SELECT id, username, password FROM `{$dbContacts}` WHERE id = '{$contactid}' LIMIT 1";
         }
 
-        $userresult = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        $usercount = mysql_num_rows($userresult);
+        $userresult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        $usercount = mysqli_num_rows($userresult);
         if ($usercount > 0)
         {
-            $userdetails = mysql_fetch_object($userresult);
+            $userdetails = mysqli_fetch_object($userresult);
             $hash = md5($userdetails->username.'.'.$userdetails->password);
             if ($hash == $userhash AND $username == $userdetails->username)
             {
@@ -259,13 +259,13 @@ switch ($action)
             $sql = "SELECT id, username, password FROM `{$dbContacts}` WHERE id = '{$contactid}' LIMIT 1";
         }
 
-        $userresult = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        $usercount = mysql_num_rows($userresult);
+        $userresult = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        $usercount = mysqli_num_rows($userresult);
         if ($usercount > 0)
         {
             plugin_do('forgotpwd_submitted');
-            $userdetails = mysql_fetch_object($userresult);
+            $userdetails = mysqli_fetch_object($userresult);
             $newhash = md5($userdetails->username.'.ok.'.$userdetails->password);
             if ($newhash == $userhash)
             {
@@ -279,7 +279,7 @@ switch ($action)
                     {
                         $usql = "UPDATE `{$dbContacts}` SET password=MD5('{$newpassword1}') WHERE id={$contactid} LIMIT 1";
                     }
-                    mysql_query($usql);
+                    mysqli_query($db, $usql);
                     echo "<h3>{$strPasswordReset}</h3>";
                     plugin_do('forgotpwd_saved');
                     echo "<p class='forgotpwd'>{$strPasswordHasBeenReset}</p>";

@@ -2,7 +2,7 @@
 // inventory_site.php - View site's inventory items
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -54,8 +54,8 @@ if (is_numeric($_GET['id']))
     $sql .= "ORDER BY i.active DESC, ";
     $sql .= "i.modified DESC";
     //$sql .= "GROUP BY type DESC ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 //     echo "<form action='{$_SERVER['PHP_SELF']}?site={$siteid}' method='post'>";
 //     echo "<p align='center'>".icon('filter', 16)." {$strFilter}: ";
@@ -74,13 +74,13 @@ if (is_numeric($_GET['id']))
 //     echo "{$strClearFilter}</a></p>";
 //     echo "</form>";
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<table class='maintable'>";
         echo "<tr><th>{$strInventoryItems}</th><th>{$strPrivacy}</th>";
         echo "<th>{$strCreatedBy}</th><th>{$strOwner}</th><th>{$strActions}</th></tr>";
         $shade = 'shade1';
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             echo "<tr class='{$shade}'><td>".icon('inventory', 16);
             echo " {$row->name}, {$CONFIG['inventory_types'][$row->type]}";

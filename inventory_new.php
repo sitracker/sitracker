@@ -2,7 +2,7 @@
 // inventory_new.php - Add inventory items
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -50,9 +50,9 @@ if (!empty($_POST['submit']) AND !empty($_POST['name']) AND $_POST['site'] != 0)
     $sql .= "'{$sit[2]}', '1', '{$name}', '{$siteid}', ";
     $sql .= "'{$privacy}', '{$identifier}', '{$owner}')";
 
-    mysql_query($sql);
-    $id = mysql_insert_id();
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    mysqli_query($db, $sql);
+    $id = mysqli_insert_id($db);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     else
     {
         plugin_do('inventory_new_saved');

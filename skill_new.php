@@ -2,7 +2,7 @@
 // skill_new.php - Form for adding skills (skills were called software in earlier versions of SiT)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -109,8 +109,8 @@ else
     }
     // Check this is not a duplicate
     $sql = "SELECT id FROM `{$dbSoftware}` WHERE LCASE(name)=LCASE('{$name}') LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1)
     {
         $errors++;
         $_SESSION['formerrors']['new_software']['duplicate'] .= $strARecordAlreadyExistsWithTheSameName;
@@ -120,8 +120,8 @@ else
     if ($errors == 0)
     {
         $sql = "INSERT INTO `{$dbSoftware}` (name, vendorid, lifetime_start, lifetime_end) VALUES ('{$name}','{$vendor}','{$lifetime_start}','{$lifetime_end}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {
@@ -129,7 +129,7 @@ else
         }
         else
         {
-            $id = mysql_insert_id();
+            $id = mysqli_insert_id($db);
             replace_tags(TAG_SKILL, $id, $tags);
 
             journal(CFG_LOGGING_DEBUG, 'Skill Added', "Skill {$id} was added", CFG_JOURNAL_DEBUG, $id);

@@ -2,7 +2,7 @@
 // portal/entitlement.inc.php - Lists contacts entitlments in the portal included by ../portal.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -43,7 +43,7 @@ if (sizeof($_SESSION['entitlement']) >= 1)
         {
             $shade = 'expired';
         }
-        echo "<tr class='$shade'>";
+        echo "<tr class='{$shade}'>";
         echo "<td>";
         // Only show link to contract details if the contract belongs to our site
         // Since we can be supported by contracts that aren't our site

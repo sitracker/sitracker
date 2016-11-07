@@ -2,7 +2,7 @@
 // edit_product.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -53,11 +53,11 @@ if ($action == 'save')
 
         if ($active == 'true') $activeStr = 'true';
         else $activeStr = 'false';
-        
+
         // update database
         $sql = "UPDATE `{$dbProducts}` SET vendorid='{$vendor}', name='{$name}', description='{$description}', active='{$activeStr}' WHERE id='{$productid}' LIMIT 1 ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {
@@ -84,10 +84,10 @@ else
     echo "<table class='maintable vertical'>";
 
     $sql = "SELECT * FROM `{$dbProducts}` WHERE id={$id} ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error: ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error: ".mysqli_error($db), E_USER_WARNING);
 
-    $row = mysql_fetch_object($result);
+    $row = mysqli_fetch_object($result);
 
     echo "<tr><th>{$strVendor}:</th>";
     echo "<td>";
@@ -114,7 +114,7 @@ else
     echo "</form>";
 
     echo "<p class='return'><a href='products.php'>{$strReturnWithoutSaving}</a></p>";
-    mysql_free_result($result);
+    mysqli_free_result($result);
 
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }

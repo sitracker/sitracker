@@ -2,7 +2,7 @@
 // ??
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -63,10 +63,10 @@ elseif ($mode == 'runreport')
     $calcote = clean_fixed_list($_REQUEST['calcote'], array('','no','yes'));
     $sql = "SELECT userid, duration, timestamp FROM `{$dbUpdates}` WHERE timestamp >= '{$startdate}' AND timestamp <= '{$enddate}' AND duration != 0 AND duration IS NOT NULL ORDER BY timestamp";
     // echo $sql;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $year = date('Y', $obj->timestamp);
         $month = date('F', $obj->timestamp);

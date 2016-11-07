@@ -2,7 +2,7 @@
 // average_incident_duration.php - Report showing average duration of incidents
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -45,9 +45,9 @@ if (empty($_REQUEST['states']))
 
 // get the first date
 $sql = "SELECT opened FROM `{$dbIncidents}` ORDER BY id ASC LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-list($firstdate) = mysql_fetch_row($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+list($firstdate) = mysqli_fetch_row($result);
 
 $current_time = $firstdate;
 

@@ -3,7 +3,7 @@
 //                        placed here to allow for easier refactoring
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,23 +24,24 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function unreserve_monies($transactionid, $linktype)
 {
+    global $db;
     $rtnvalue = FALSE;
     $sql = "DELETE FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstatus = ".BILLING_RESERVED;
-    mysql_query($sql);
+    mysqli_query($db, $sql);
 
-    if (mysql_error()) trigger_error("Error unreserving monies ".mysql_error(), E_USER_ERROR);
-    if (mysql_affected_rows() == 1) $rtnvalue = TRUE;
+    if (mysqli_error($db)) trigger_error("Error unreserving monies ".mysqli_error($db), E_USER_ERROR);
+    if (mysqli_affected_rows($db) == 1) $rtnvalue = TRUE;
 
     if ($rtnvalue != FALSE)
     {
         $sql = "DELETE FROM `{$GLOBALS['dbLinks']}` WHERE linktype =  {$linktype} AND origcolref = {$transactionid}";
-        mysql_query($sql);
-        if (mysql_error())
+        mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysqli_error($db),E_USER_ERROR);
             $rtnvalue = FALSE;
         }
-        if (mysql_affected_rows() < 1)
+        if (mysqli_affected_rows($db) < 1)
         {
             trigger_error("Link deletion failed",E_USER_ERROR);
             $rtnvalue = FALSE;
@@ -61,23 +62,23 @@ function unreserve_monies($transactionid, $linktype)
  */
 function service_dropdown_contract($contractid, $name, $selected=0)
 {
-    global $now, $CONFIG;
+    global $now, $CONFIG, $db;
     $date = ldate('Y-m-d', $now);
 
     $sql = "SELECT * FROM `{$GLOBALS['dbService']}` WHERE contractid = {$contractid} ";
     $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("Error getting services. ".mysqli_error($db), E_USER_WARNING);
 
     $html = FALSE;
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $html = "<select name='{$name}' id={$name}>\n";
         $html .= "<option value='0' ";
         if ($selected == 0) $html .= " selected='selected' ";
         $html .= "></option>";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $html .= "<option value='{$obj->serviceid}' ";
             if ($selected == $obj->serviceid) $html .= " selected='selected' ";
@@ -101,24 +102,24 @@ function service_dropdown_contract($contractid, $name, $selected=0)
  */
 function service_dropdown_site($siteid, $name, $selected=0)
 {
-    global $now, $CONFIG;
+    global $now, $CONFIG, $db;
     $date = ldate('Y-m-d', $now);
 
     $sql = "SELECT s.* FROM `{$GLOBALS['dbService']}` AS s, `{$GLOBALS['dbMaintenance']}` AS m ";
     $sql .= "WHERE s.contractid = m.id AND  m.site = {$siteid} ";
     $sql .= "AND '{$date}' BETWEEN startdate AND enddate ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("Error getting services. ".mysqli_error($db), E_USER_WARNING);
 
     $html = FALSE;
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $html = "<select name='{$name}' id={$name}>\n";
         $html .= "<option value='0' ";
         if ($selected == 0) $html .= " selected='selected' ";
         $html .= "></option>";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $html .= "<option value='{$obj->serviceid}' ";
             if ($selected == $obj->serviceid) $html .= " selected='selected' ";
@@ -144,10 +145,11 @@ function service_dropdown_site($siteid, $name, $selected=0)
  */
 function is_transaction_approved($transactionid)
 {
+    global $db;
     $sql = "SELECT transactionid FROM `{$GLOBALS['dbTransactions']}` WHERE transactionid = {$transactionid} AND transactionstaus = ".BILLING_APPROVED;
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("Error getting services. ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("Error getting services. ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0) return TRUE;
+    if (mysqli_num_rows($result) > 0) return TRUE;
     else return FALSE;
 }

@@ -2,7 +2,7 @@
 // incident_reopen.php - Form for re-opening a closed incident
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -32,23 +32,23 @@ else
     $returnurl = "incident_details.php?id={$id}";
 }
 $sql = "SELECT * FROM `{$dbIncidents}` WHERE id = '{$id}' LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-if (mysql_num_rows($result) > 0)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+if (mysqli_num_rows($result) > 0)
 {
-    $incident = mysql_fetch_object($result);
+    $incident = mysqli_fetch_object($result);
 }
 
 // Find out whether the service level in use allows reopening
 $slsql = "SELECT allow_reopen FROM `{$dbServiceLevels}` ";
 $slsql .= "WHERE tag = '{$incident->servicelevel}' ";
 $slsql .= "AND priority = '{$incident->priority}' LIMIT 1";
-$slresult = mysql_query($slsql);
+$slresult = mysqli_query($db, $slsql);
 
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-if (mysql_num_rows($slresult) > 0)
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+if (mysqli_num_rows($slresult) > 0)
 {
-    $allow_reopen_obj = mysql_fetch_object($slresult);
+    $allow_reopen_obj = mysqli_fetch_object($slresult);
 }
 $allow_reopen = $allow_reopen_obj->allow_reopen;
 
@@ -103,7 +103,7 @@ if ($allow_reopen == 'yes')
         }
         else
         {
-            html_redirect($returnurl);
+            html_redirect("incident_reassign.php?id={$id}");
         }
     }
 }

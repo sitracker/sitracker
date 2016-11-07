@@ -2,7 +2,7 @@
 // incident_showhide_update.php - Toggle visibility of an incident
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -40,8 +40,8 @@ switch ($mode)
     trigger_error("Error showing/hiding update {$updateid}: invalid mode", E_USER_WARNING);
 }
 
-$temp_result = mysql_query($vsql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+$temp_result = mysqli_query($db, $vsql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
 header("Location: incident_details.php?id={$incidentid}&expand={$expand}&view={$view}&offset={$offset}&records={$records}#$updateid");
 exit;

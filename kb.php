@@ -2,7 +2,7 @@
 // kb.php - Browse knowledge base articles
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -56,13 +56,13 @@ if (mb_strlen(utf8_decode($search_string)) > 4)
 {
     // Find Software
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE name LIKE '%{$search_string}%' LIMIT 20";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     echo "<p align='center'><strong>{$strSkills}</strong>: ";
-    $softcount = mysql_num_rows($result);
+    $softcount = mysqli_num_rows($result);
     $count = 1;
     $colcount = 1;
-    while ($software = mysql_fetch_object($result))
+    while ($software = mysqli_fetch_object($result))
     {
         echo "{$software->name}";
         if ($count<$softcount) echo ", ";
@@ -103,22 +103,22 @@ if (strtolower($mode) == 'recent') $sql .= "ORDER BY docid DESC LIMIT 20";
 
 if (strtolower($mode) == 'today') $sql .= " WHERE published > '".date('Y-m-d')."' ORDER BY published DESC";
 
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($result) >= 1)
+if (mysqli_num_rows($result) >= 1)
 {
     echo "<p align='center'><strong>{$strResults}</strong> :</p>";
     echo "<table align='center' width='98%'>";
     echo "<tr>";
-    echo colheader('id',$strID, FALSE);
+    echo colheader('id', $strID, FALSE);
     echo colheader('title', $strTitle, FALSE);
     echo colheader('date', $strDate, FALSE);
     echo colheader('author', $strAuthor, FALSE);
-    echo colheader('keywords',$strKeywords, FALSE);
+    echo colheader('keywords', $strKeywords, FALSE);
     echo "</tr>\n";
     $shade = 'shade1';
-    while ($kbarticle = mysql_fetch_object($result))
+    while ($kbarticle = mysqli_fetch_object($result))
     {
         if (empty($kbarticle->title)) $kbarticle->title = $strUntitled;
         else $kbarticle->title = $kbarticle->title;
@@ -137,13 +137,13 @@ if (mysql_num_rows($result) >= 1)
         // Lookup what software this applies to
         $ssql = "SELECT * FROM `{$dbKBSoftware}` AS kbs, `{$dbSoftware}` AS s WHERE kbs.softwareid = s.id ";
         $ssql .= "AND kbs.docid = '{$kbarticle->docid}' ORDER BY s.name";
-        $sresult = mysql_query($ssql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $rowcount = mysql_num_rows($sresult);
+        $sresult = mysqli_query($db, $ssql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $rowcount = mysqli_num_rows($sresult);
         if ($rowcount >= 1 AND $rowcount < 3)
         {
             $count = 1;
-            while ($kbsoftware = mysql_fetch_object($sresult))
+            while ($kbsoftware = mysqli_fetch_object($sresult))
             {
                 echo $kbsoftware->name;
                 if ($count < $rowcount) echo ", ";
@@ -156,9 +156,9 @@ if (mysql_num_rows($result) >= 1)
         }
         echo "<br /><a href='kb_view_article.php?id={$kbarticle->docid}' class='info'>{$kbarticle->title}";
         $asql = "SELECT LEFT(content,400) FROM `{$dbKBContent}` WHERE docid='{$kbarticle->docid}' ORDER BY id ASC LIMIT 1";
-        $aresult = mysql_query($asql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        list($content) = mysql_fetch_row($aresult);
+        $aresult = mysqli_query($db, $asql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        list($content) = mysqli_fetch_row($aresult);
         $content = strip_tags(remove_slashes($content));
         echo "<span>{$content}</span>";
         echo "</a>";

@@ -2,7 +2,7 @@
 // incidents_rss.php - Output an RSS representation of a users incident queue
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2006-2008 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,11 +22,11 @@ $c = clean_dbstring($_GET['c']);
 $salt = md5($CONFIG['db_password']);
 $usql = "SELECT id FROM `{$dbUsers}` WHERE MD5(CONCAT(`username`, '{$salt}')) = '$c' LIMIT 1";
 // $usql = "SELECT id FROM `{$dbUsers}` WHERE username = '$c' LIMIT 1";
-$uresult = mysql_query($usql);
+$uresult = mysqli_query($db, $usql);
 
 if ($uresult)
 {
-    list($userid) = mysql_fetch_row($uresult);
+    list($userid) = mysqli_fetch_row($uresult);
 }
 
 // $userid = clean_int($_REQUEST['user']);
@@ -40,8 +40,8 @@ if (!is_numeric($userid))
 
 $sql = "SELECT * FROM `{$dbIncidents}` WHERE (owner='$userid' OR towner='$userid') ";
 $sql .= "AND (status!='".STATUS_CLOSED."') ORDER BY lastupdated DESC LIMIT 5";  // not closed
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
 if (!empty($_SESSION['lang'])) $lang = $_SESSION['lang'];
 else $lang = $CONFIG['default_i18n'];
@@ -51,7 +51,7 @@ $pubdate = $now;
 
 $items = array();
 
-while ($incident = mysql_fetch_object($result))
+while ($incident = mysqli_fetch_object($result))
 {
     // Get Last Update
     list($update_userid, $update_type, $update_currentowner, 

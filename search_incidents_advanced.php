@@ -2,7 +2,7 @@
 // advanced_search_incidents.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -156,10 +156,10 @@ else
         if ($sort_results == 'SiteASC') $sql.="ORDER BY c.siteid ASC ";
 
         $sql .= "LIMIT {$maxresults}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        $countresults = mysql_num_rows($result);
+        $countresults = mysqli_num_rows($result);
         if ($countresults == 0)
         {
             echo "<h2>{$strNoResults}</h2>\n";
@@ -182,7 +182,7 @@ else
             <th>{$strStatus}</th>
             </tr>";
             $shade = 'shade1';
-            while ($results = mysql_fetch_object($result))
+            while ($results = mysqli_fetch_object($result))
             {
                 echo "<tr class='{$shade}'>";
                 echo "<td align='center'  width='100'>{$results->id} (";

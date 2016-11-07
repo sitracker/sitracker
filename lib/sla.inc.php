@@ -2,7 +2,7 @@
 // sla.inc.php - functions relating to SLA / Service Levels
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,28 +22,28 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function incident_sla_history($incidentid)
 {
-    global $CONFIG, $dbIncidents, $dbServiceLevels, $dbUpdates;
+    global $CONFIG, $dbIncidents, $dbServiceLevels, $dbUpdates, $db;
     $working_day_mins = ($CONFIG['end_working_day'] - $CONFIG['start_working_day']) / 60;
 
     // Not the most efficient but..
     $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$incidentid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $incident = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $incident = mysqli_fetch_object($result);
 
     // Get service levels
     $sql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$incident->servicelevel}' AND priority='{$incident->priority}' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $level = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $level = mysqli_fetch_object($result);
 
     // Loop through the updates in ascending order looking for service level events
     $sql = "SELECT * FROM `{$dbUpdates}` WHERE sla IS NOT Null AND incidentid='{$incidentid}' ORDER BY id ASC, timestamp ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $prevtime = 0;
     $idx = 0;
-    while ($history = mysql_fetch_object($result))
+    while ($history = mysqli_fetch_object($result))
     {
         $slahistory[$idx]['targetsla'] = $history->sla;
         switch ($history->sla)
@@ -75,10 +75,11 @@ function incident_sla_history($incidentid)
 
         $slahistory[$idx]['timestamp'] = $history->timestamp;
         $slahistory[$idx]['userid'] = $history->userid;
-        if ($slahistory[$idx]['targettime'] === 0)
+        if (intval($slahistory[$idx]['targettime']) === 0)
         {
             // If the target is disabled show it as met
             $slahistory[$idx]['targetmet'] = TRUE;
+            $slahistory[$idx]['targettime'] = $slahistory[$idx]['actualtime']+1; 
         }
         else if ($slahistory[$idx]['actualtime'] <= $slahistory[$idx]['targettime'])
         {
@@ -115,7 +116,7 @@ function incident_sla_history($incidentid)
                 $slahistory[$idx]['targettime'] = 0;
         }
         $slahistory[$idx]['actualtime'] = $target->since;
-        if ($slahistory[$idx]['targettime'] === 0)
+        if (intval($slahistory[$idx]['targettime']) === 0)
         {
             // If the target is disabled show it as met
             $slahistory[$idx]['targetmet'] = TRUE;
@@ -145,28 +146,30 @@ function incident_sla_history($incidentid)
  */
 function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = '', $allowtimestatuschange = TRUE)
 {
-    global $dbServiceLevels;
+    global $dbServiceLevels, $db;
 
     if ($collapse)
     {
-        $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
+        $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}` WHERE active = 'true' ";
     }
     else
     {
-        $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}`";
+        $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}` WHERE active = 'true' ";
     }
     
     if (!$allowtimestatuschange AND !empty($tag))
     {
-        $sql .= " WHERE timed = (SELECT DISTINCT timed FROM `{$dbServiceLevels}` WHERE tag = '{$tag}')";
+        $sql .= " AND timed = (SELECT DISTINCT timed FROM `{$dbServiceLevels}` WHERE tag = '{$tag}')";
     }
     
-    $result = mysql_query($sql);
+    $sql .= "ORDER BY tag";
+    
+    $result = mysqli_query($db, $sql);
 
-    $html = "<select id='{$name}' name='{$name}' {$select}>\n";
+    $html = "<select id='{$name}' name='{$name}' {$select}>";
     // INL 30Mar06 Removed this ability to select a null service level
     // if ($id == 0) $html .= "<option selected='selected' value='0'></option>\n";
-    while ($servicelevels = mysql_fetch_object($result))
+    while ($servicelevels = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         $html .= "value='{$servicelevels->tag}' ";
@@ -185,7 +188,7 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
             $html .= "{$servicelevels->tag} ".priority_name($servicelevels->priority);
         }
 
-        $html .= "</option>\n";
+        $html .= "</option>";
     }
     $html .= "</select>";
     return $html;
@@ -194,7 +197,7 @@ function servicelevel_drop_down($name, $tag = '', $collapse = TRUE, $select = ''
 
 function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
 {
-    global $dbServiceLevels;
+    global $dbServiceLevels, $db;
 
     if ($collapse)
     {
@@ -204,7 +207,7 @@ function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
     {
         $sql  = "SELECT tag, priority FROM `{$dbServiceLevels}`";
     }
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
 
     $html = "<select name='$name'>\n";
@@ -213,7 +216,7 @@ function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
         $html .= "<option selected='selected' value=''></option>\n";
     }
 
-    while ($servicelevels = mysql_fetch_object($result))
+    while ($servicelevels = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         $html .= "value='{$servicelevels->tag}' ";
@@ -247,7 +250,7 @@ function serviceleveltag_drop_down($name, $tag, $collapse = FALSE)
 function get_sla_name($tag)
 {
     global $CONFIG;
-    
+
     if ($tag == '') $tag = $CONFIG['default_service_level'];
 
     return $tag;
@@ -261,14 +264,14 @@ function get_sla_name($tag)
  */
 function servicelevel_timed($sltag)
 {
-    global $dbServiceLevels;
+    global $dbServiceLevels, $db;
     $timed = FALSE;
 
     $sql = "SELECT COUNT(tag) FROM `{$dbServiceLevels}` WHERE tag = '{$sltag}' AND timed = 'yes'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    list($count) = mysql_fetch_row($result);
+    list($count) = mysqli_fetch_row($result);
     if ($count > 0) $timed = TRUE;
 
     return $timed;
@@ -282,13 +285,13 @@ function servicelevel_timed($sltag)
  */
 function servicelevel_maxpriority($slatag)
 {
-    global $dbServiceLevels;
+    global $dbServiceLevels, $db;
     $priority = 0;
 
     $sql = "SELECT MAX(priority) FROM `{$dbServiceLevels}` WHERE tag = '{$slatag}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($priority) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($priority) = mysqli_fetch_row($result);
     return $priority;
 }
 
@@ -318,14 +321,14 @@ function calculate_time_of_next_action($days, $hours, $minutes)
  */
 function maintenance_servicelevel_tag($maintid, $typeid=1)
 {
-    global $CONFIG, $dbMaintenanceServiceLevels;
+    global $CONFIG, $dbMaintenanceServiceLevels, $db;
     $sql = "SELECT servicelevel FROM `{$dbMaintenanceServiceLevels}` WHERE maintenanceid='{$maintid}' ";
     $sql .= "AND incidenttypeid = {$typeid}";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) < 1)
+    if (mysqli_num_rows($result) < 1)
     {
         // in case there is no maintenance contract associated with the incident, use default service level
         // if there is a maintenance contract then we should throw an error because there should be
@@ -337,7 +340,7 @@ function maintenance_servicelevel_tag($maintid, $typeid=1)
     }
     else
     {
-        list($servicelevel) = mysql_fetch_row($result);
+        list($servicelevel) = mysqli_fetch_row($result);
     }
     return $servicelevel;
 }
@@ -588,6 +591,7 @@ function calculate_working_time($t1, $t2, $publicholidays)
  */
 function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(STATUS_CLOSED, STATUS_CLOSING, STATUS_CUSTOMER))
 {
+    global $db;
     if ( $t1 > $t2 )
     {
         $t3 = $t2;
@@ -601,13 +605,13 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(ST
     $publicholidays = get_public_holidays($startofday, $endofday);
 
     $sql = "SELECT id, currentstatus, timestamp FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid='{$incidentid}' ORDER BY id ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $time = 0;
     $timeptr = 0;
     $laststatus = STATUS_CLOSED; // closed
-    while ($update = mysql_fetch_object($result))
+    while ($update = mysqli_fetch_object($result))
     {
         //  if ($t1<=$update->timestamp'])
         if ($t1 <= $update->timestamp)
@@ -654,8 +658,8 @@ function calculate_incident_working_time($incidentid, $t1, $t2, $states=array(ST
         }
         $laststatus = $update->currentstatus;
     }
-    mysql_free_result($result);
-    
+    mysqli_free_result($result);
+
     // Calculate remainder
     if (is_active_status($laststatus, $states) AND ($t2 >= $update->timestamp))
     {
@@ -683,12 +687,12 @@ function is_active_status($status, $states)
  */
 function number_of_slas()
 {
-    global $dbServiceLevels;
+    global $dbServiceLevels, $db;
     $sql = "SELECT DISTINCT tag FROM `{$dbServiceLevels}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    
-    return mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+
+    return mysqli_num_rows($result);
 }
 
 ?>

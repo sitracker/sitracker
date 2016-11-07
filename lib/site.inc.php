@@ -2,7 +2,7 @@
 // site.inc.php - functions relating to sites
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,14 +22,14 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function site_count_inventory_items($id)
 {
-    global $dbInventory;
+    global $dbInventory, $db;
     $count = 0;
 
     $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE siteid='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    else list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     return $count;
 }
@@ -45,18 +45,18 @@ function site_count_inventory_items($id)
  */
 function site_feedback($id)
 {
-    global $dbSiteConfig;
+    global $dbSiteConfig, $db;
     $sql = "SELECT value FROM `{$dbSiteConfig}` WHERE siteid = {$id} AND config = 'feedback_enable' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 0)
     {
         // Site not opted out assumed yes
         $answer = "yes";
     }
     else
     {
-        list($answer) = mysql_fetch_row($result);
+        list($answer) = mysqli_fetch_row($result);
         $answer = strtolower($answer);
     }
     return $answer;
@@ -135,7 +135,7 @@ function site_salesperson($siteid)
 function does_site_have_certain_sla_contract($siteid, $slas)
 {
     $toReturn = false;
-    global $CONFIG, $dbMaintenance, $dbServiceLevels;
+    global $CONFIG, $dbMaintenance, $dbServiceLevels, $db;
 
     if (!empty($slas))
     {
@@ -149,9 +149,9 @@ function does_site_have_certain_sla_contract($siteid, $slas)
 
         $ssql .= "({$qsql})";
 
-        $sresult = mysql_query($ssql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($sresult) > 0)
+        $sresult = mysqli_query($db, $ssql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($sresult) > 0)
         {
             $toReturn = true;
         }

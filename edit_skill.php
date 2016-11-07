@@ -2,7 +2,7 @@
 // edit_skill.php - Form for editing skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -34,9 +34,9 @@ if (empty($action) OR $action == 'edit')
     clear_form_errors('edit_skill');
     
     $sql = "SELECT * FROM `{$dbSoftware}` WHERE id='{$id}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    while ($software = mysql_fetch_object($result))
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    while ($software = mysqli_fetch_object($result))
     {
         echo "<form name='editskill' action='{$_SERVER['PHP_SELF']}' method='post' onsubmit='return confirm_action(\"{$strAreYouSureMakeTheseChanges}\")'>";
         echo "<table class='vertical'>";
@@ -76,9 +76,9 @@ elseif ($action == 'delete')
     // Delete
     // First check there are no incidents using this software
     $sql = "SELECT count(id) FROM `{$dbIncidents}` WHERE softwareid={$id}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($countincidents) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($countincidents) = mysqli_fetch_row($result);
     if ($countincidents >=1)
     {
         html_redirect('products.php?display=skills', FALSE, $strCannotDeleteSkill);
@@ -86,16 +86,16 @@ elseif ($action == 'delete')
     else
     {
         $sql = "DELETE FROM `{$dbSoftware}` WHERE id='{$id}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbSoftwareProducts}` WHERE softwareid={$id}";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbUserSoftware}` WHERE softwareid={$id}";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         journal(CFG_LOGGING_DEBUG, 'Skill Deleted', "Skill {$id} was deleted", CFG_JOURNAL_DEBUG, $id);
         html_redirect("products.php?display=skills");
@@ -136,11 +136,11 @@ else
         $sql = "UPDATE `{$dbSoftware}` SET ";
         $sql .= "name='{$name}', vendorid='{$vendor}', lifetime_start='{$lifetime_start}', lifetime_end='{$lifetime_end}' ";
         $sql .= "WHERE id = '{$id}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
-            $id = mysql_insert_id();
+            $id = mysqli_insert_id($db);
             journal(CFG_LOGGING_DEBUG, 'Skill Edited', "Skill {$id} was edited", CFG_JOURNAL_DEBUG, $id);
             html_redirect("products.php?display=skills");
         }

@@ -2,7 +2,7 @@
 // delete_product_skill.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -29,8 +29,8 @@ $softwareid = clean_int($_REQUEST['softwareid']);
 if (!empty($productid) AND !empty($softwareid))
 {
     $sql = "DELETE FROM `{$dbSoftwareProducts}` WHERE productid='{$productid}' AND softwareid='{$softwareid}' LIMIT 1";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     journal(CFG_LOGGING_NORMAL, 'Skill Unlinked', "Skill $softwareid was unlinked from Product $productid", CFG_JOURNAL_PRODUCTS, $productid);
     html_redirect("products.php");
 }

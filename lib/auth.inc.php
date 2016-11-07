@@ -2,7 +2,7 @@
 // auth.inc.php - Checks whether the user is allowed to access the page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -24,6 +24,13 @@ session_name($CONFIG['session_name']);
 session_start();
 
 // Check session is authenticated, if not redirect to login page
+if ((!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE) AND $CONFIG['trusted_server'])
+{
+    if (($username = authenticateTrustedServerMode())) createUserSession($username);
+    if (($contactid = authenticateTrustedServerModeContact())) createContactSession($contactid);
+    populate_syslang();
+}
+
 if (!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE)
 {
     $_SESSION['auth'] = FALSE;
@@ -31,14 +38,14 @@ if (!isset($_SESSION['auth']) OR $_SESSION['auth'] == FALSE)
     $page = $_SERVER['PHP_SELF'];
     if (!empty($_SERVER['QUERY_STRING'])) $page .= '?'.$_SERVER['QUERY_STRING'];
     $page = urlencode($page);
-    header("Location: {$CONFIG['application_webpath']}index.php?id=2&page=$page");
+    header("Location: {$CONFIG['application_webpath']}index.php?id=2&page={$page}");
     exit;
 }
 else
 {
     // Attempt to prevent session fixation attacks
     session_regenerate();
-    setcookie(session_name(), session_id(),ini_get("session.cookie_lifetime"), "/");
+    setcookie(session_name(), session_id(), ini_get("session.cookie_lifetime"), "/");
 
     // Conversions for when register_globals=off
     // We've migrated away from using cookies and now use sessions
@@ -62,13 +69,14 @@ if (!is_array($permission))
 }
 
 // Valid user, check permissions
-if (user_permission($userid, $permission) == FALSE)
+if (user_permission($_SESSION['userid'], $permission) == FALSE)
 {
     //No access permission
     $refused = implode(',',$permission);
     header("Location: {$CONFIG['application_webpath']}noaccess.php?id=$refused");
     exit;
 }
+
 require_once (APPLICATION_LIBPATH . 'trigger.class.php');
 
 ?>

@@ -31,16 +31,20 @@ if (empty($action))
 
     echo "<h2>".icon('edit', 32)." {$title}</h2>";
 
-    $sql = "SELECT name FROM `{$dbIncidentTypes}` WHERE id = {$id} AND type = 'user'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $sql = "SELECT name, prefix FROM `{$dbIncidentTypes}` WHERE id = {$id} AND type = 'user'";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($db, $result) > 0)
     {
-        list($name) = mysql_fetch_row($result);
+        list($name, $prefix) = mysqli_fetch_row($result);
         echo "<form action='{$_SERVER['PHP_SELF']}?action=edit&amp;id={$id}' method='post'>";
-        echo "<p align='center'><label>{$strName}: <input name='name' id='name' value='{$name}' /></label>";
-        echo "<br /><br /><input type='submit' value='{$strEdit}' />";
+        echo "<table align='center'>";
+        echo "<tr><th>{$strName}</th><td><input name='name' id='name' value='{$name}' /></td></tr>";
+        echo "<tr><th>{$strPrefix}</th><td><input name='prefix' id='prefix' value='{$prefix}' /></td></tr>";
+        echo "</table>";
+        echo "<p class='formbuttons'>";
+        echo "<input type='submit' value='{$strEdit}' />";
         echo "</p>";
         echo "</form>";
     }
@@ -55,6 +59,7 @@ if (empty($action))
 else
 {
     $name = clean_dbstring($_REQUEST['name']);
+    $prefix = clean_dbstring($_REQUEST['prefix']);
 
     $errors = 0;
 
@@ -64,11 +69,17 @@ else
         $_SESSION['formerrors']['edit_incident_edit']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
 
+    if (preg_match('/\d/', $prefix))
+    {
+        $errors++;
+        $_SESSION['formerrors']['edit_incident_edit']['name'] = sprintf($strFieldMustNotConatainNumbers, $strName);
+    }
+
     if ($errors == 0)
     {
-        $sql = "UPDATE `{$dbIncidentTypes}` SET name = '{$name}' WHERE id = {$id}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $sql = "UPDATE `{$dbIncidentTypes}` SET name = '{$name}', prefix = '{$prefix}' WHERE id = {$id}";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result) echo "<p class='error'>".sprintf($strEditXfailed, $strIncidentType)."\n";
         else
@@ -78,6 +89,6 @@ else
     }
     else
     {
-        html_redirect($_SERVER['PHP_SELF'], FALSE);
+        html_redirect("{$_SERVER['PHP_SELF']}?id={$id}", FALSE);
     }
 }

@@ -2,7 +2,7 @@
 // billable_incidents.php - Report for billing incidents
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -106,14 +106,14 @@ if (empty($mode))
 
     $sitelistsql .= " ORDER BY s.name";
 
-    $result = mysql_query($sitelistsql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sitelistsql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<tr><th>{$strSite}:<br />{$strSelectNoneAssumesAll}</th><td>";
         echo "<select name='sites[]' id='sites' multiple='multiple'>\n";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             echo "<option id='site{$obj->site}' value='{$obj->site}'>{$obj->name}</option>\n";
         }
@@ -159,12 +159,12 @@ elseif ($mode == 'approvalpage')
         $sitelistsql .= "AND m.expirydate >= {$startdate} ";
     }
 
-    $resultsite = mysql_query($sitelistsql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $resultsite = mysqli_query($db, $sitelistsql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($resultsite) > 0)
+    if (mysqli_num_rows($resultsite) > 0)
     {
-        while ($objsite = mysql_fetch_object($resultsite))
+        while ($objsite = mysqli_fetch_object($resultsite))
         {
             $sitename = $objsite->name;
 
@@ -176,10 +176,10 @@ elseif ($mode == 'approvalpage')
             $str = '';
             
             $sqlbillabletypes = "SELECT billingtype AS billingtype, id FROM `{$dbMaintenance}` WHERE site = {$objsite->site} AND billingtype IS NOT NULL GROUP BY billingtype ORDER BY billingtype";
-            $resultbillabletypes = mysql_query($sqlbillabletypes);
-            if (mysql_num_rows($resultbillabletypes) > 0)
+            $resultbillabletypes = mysqli_query($db, $sqlbillabletypes);
+            if (mysqli_num_rows($resultbillabletypes) > 0)
             {
-                while ($objbillabletypes = mysql_fetch_object($resultbillabletypes))
+                while ($objbillabletypes = mysqli_fetch_object($resultbillabletypes))
                 {
                     $b = get_billable_object_from_contract_id($objbillabletypes->id);
                     $str .= $b->produce_site_approvals_table($objsite->site, $sitenamenospaces, $startdate, $enddate);

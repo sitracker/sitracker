@@ -2,7 +2,7 @@
 // user_skills.php - Display a list of users skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -29,8 +29,8 @@ $sql  = "SELECT * FROM `{$dbUsers}` WHERE status!=0";  // status=0 means account
 // sort users by realname by default
 if (empty($sort) OR $sort == "realname")  $sql .= " ORDER BY realname ASC";
 
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 echo "<h2>".icon('user', 32)." {$strListSkills} ";
 echo icon('skill', 32)."</h2>";
@@ -43,7 +43,7 @@ echo "</tr>";
 
 // show results
 $shade = 'shade1';
-while ($users = mysql_fetch_object($result))
+while ($users = mysqli_fetch_object($result))
 {
     echo "<tr class='{$shade}'>";
     echo "<td rowspan='2'><a href=\"mailto:{$users->email}\">{$users->realname}</a><br />";
@@ -55,14 +55,14 @@ while ($users = mysql_fetch_object($result))
     echo "<tr class='{$shade}'>";
     echo "<td>";
     $ssql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s WHERE us.softwareid = s.id AND us.userid='{$users->id}' ORDER BY s.name ";
-    $sresult = mysql_query($ssql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $countskills = mysql_num_rows($sresult);
+    $sresult = mysqli_query($db, $ssql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $countskills = mysqli_num_rows($sresult);
     $nobackup = 0;
     if ($countskills >= 1)
     {
         $c = 1;
-        while ($software = mysql_fetch_object($sresult))
+        while ($software = mysqli_fetch_object($sresult))
         {
             echo "{$software->name}";
             if ($software->backupid > 0) echo " <em style='color: #555;'>(".user_realname($software->backupid, TRUE). ")</em>";

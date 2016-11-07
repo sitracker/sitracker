@@ -2,7 +2,7 @@
 // browse_sites.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -18,10 +18,10 @@ require (APPLICATION_LIBPATH . 'auth.inc.php');
 
 $title = $strBrowseSites;
 
-$search_string = cleanvar($_REQUEST['search_string']);
-$owner = clean_int($_REQUEST['owner']);
-$submit_value = cleanvar($_REQUEST['submit']);
-$displayinactive = clean_fixed_list($_REQUEST['displayinactive'], array('','false','true'));
+$search_string = cleanvar(@$_REQUEST['search_string']);
+$owner = clean_int(@$_REQUEST['owner']);
+$submit_value = cleanvar(@$_REQUEST['submit']);
+$displayinactive = clean_fixed_list(@$_REQUEST['displayinactive'], array('', 'false', 'true'));
 if (empty($displayinactive) OR $_SESSION['userconfig']['show_inactive_data'] != 'TRUE')
 {
     $displayinactive = "false";
@@ -80,13 +80,13 @@ if ($submit_value == "go")
     $sql .= " ORDER BY name ASC";
 
     // execute query
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 1)
+    if (mysqli_num_rows($result) == 1)
     {
             //go straight to the site
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             $url = "site_details.php?id={$obj->id}";
             header("Location: {$url}");
     }
@@ -138,9 +138,9 @@ if (!empty($i18nAlphbet))
     echo "<a href='{$_SERVER['PHP_SELF']}?search_string=*&amp;{$inactivestring}'>{$strAll}</a>\n";
 }
 $sitesql = "SELECT COUNT(id) FROM `{$dbSites}` WHERE owner='{$sit[2]}'";
-$siteresult = mysql_query($sitesql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-list($ownedsites) = mysql_fetch_row($siteresult);
+$siteresult = mysqli_query($db, $sitesql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+list($ownedsites) = mysqli_fetch_row($siteresult);
 if ($ownedsites > 0) echo " | <a href='sites.php?owner={$sit[2]}' title='Sites'>{$strMine}</a> ";
 
 echo "</td></tr></table>";
@@ -153,7 +153,7 @@ if ($search_string == '')
 }
 
 // search for criteria
-if ($errors == 0)
+if (!isset($errors) || $errors == 0)
 {
     if ($submit_value != 'go')
     {
@@ -202,17 +202,17 @@ if ($errors == 0)
         }
         $sql .= " ORDER BY name ASC";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     }
 
-    if (mysql_num_rows($result) == 0)
+    if (mysqli_num_rows($result) == 0)
     {
         echo "<p align='center'>{$strSorryNoSearchResults}</p>";
     }
     else
     {
-        $countsites = mysql_num_rows($result);
+        $countsites = mysqli_num_rows($result);
 
         echo "<p align='center'>{$strDisplaying} {$countsites} ";
 
@@ -238,7 +238,7 @@ if ($errors == 0)
         echo "<th>{$strActions}</th>";
         echo "</tr>";
         $shade = 'shade1';
-        while ($results = mysql_fetch_object($result))
+        while ($results = mysqli_fetch_object($result))
         {
             if ($results->active == 'false') $shade = 'expired';
             echo "<tr class='{$shade}'>";

@@ -2,7 +2,7 @@
 // contract_new.php - Add a new maintenance contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -55,9 +55,14 @@ if ($action == "showform" OR $action == '')
     echo product_drop_down("product", show_form_value('new_contract', 'product', 0), TRUE)." <span class='required'>{$strRequired}</span></td></tr>\n";
 
     echo "<tr><th>{$strServiceLevel}</th><td>";
-    echo servicelevel_drop_down('servicelevel', show_form_value('new_contract', 'servicelevel', $CONFIG['default_service_level']), TRUE, "onchange=\"addcontract_sltimed(\$F('servicelevel'));\"")."</td></tr>\n";
+    echo "<table id='incident_types_table'>";
+    echo "<tr><th>{$strIncidentType}</th><th>{$strServiceLevel}</th></tr>";
+    echo incident_type_service_level_row();
+    echo "</table>";
+    echo "<a href=\"javascript:void(0);\" onclick=\"add_row_to_incident_sla_table('incident_types_table')\">{$strAdd}</a>\n";
+    echo "</td></tr>\n";
     // check the initially selected service level to decide whether to show the extra hiddentimed section
-    $timed = servicelevel_timed($sltag);
+    $timed = servicelevel_timed($_SESSION['formdata']['new_contract']['servicelevel']);
 
     echo "<tr><th colspan='2' style='text-align: left;'><br />{$strServicePeriod}</th></tr>\n";
     echo "<tr><th>{$strStartDate}</th>";
@@ -169,7 +174,6 @@ elseif ($action == 'new')
     $licence_type = clean_int($_REQUEST['licence_type']);
     $admincontact = clean_int($_REQUEST['admincontact']);
     $notes = clean_dbstring($_REQUEST['notes']);
-    $servicelevel = clean_dbstring($_REQUEST['servicelevel']);
     $incidentpoolid = clean_int($_REQUEST['incidentpoolid']);
     $term = clean_fixed_list($_REQUEST['term'], array('no','yes'));
     $contacts = cleanvar($_REQUEST['contacts']);
@@ -208,6 +212,7 @@ elseif ($action == 'new')
 
     $_SESSION['formdata']['new_contract'] = cleanvar($_POST, TRUE, FALSE, FALSE,
                                                      array("@"), array("'" => '"'));
+
 
     // Add maintenance to database
     $errors = 0;
@@ -293,19 +298,19 @@ elseif ($action == 'new')
             $billingmatrix = '';
             $billtype = '';
         }
-        
+
         $billingmatrix = convert_string_null_safe($billingmatrix);
         $billtype = convert_string_null_safe($billtype);
-        
+
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "INSERT INTO `{$dbMaintenance}` (site, product, reseller, expirydate, licence_quantity, licence_type, notes, ";
-        $sql .= "admincontact, servicelevel, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix, billingtype) ";
+        $sql .= "admincontact, incidentpoolid, incident_quantity, term, supportedcontacts, allcontactssupported, billingmatrix, billingtype) ";
         $sql .= "VALUES ('{$site}', '{$product}', {$reseller}, '{$expirydate}', '{$licence_quantity}', {$licence_type}, '{$notes}', ";
-        $sql .= "'{$admincontact}', '{$servicelevel}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix}, {$billtype})";
+        $sql .= "'{$admincontact}', '{$incidentpoolid}', '{$incident_quantity}', '{$term}', '{$numcontacts}', '{$allcontacts}', {$billingmatrix}, {$billtype})";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $maintid = mysql_insert_id();
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $maintid = mysqli_insert_id($db);
 
         if (!$result)
         {
@@ -313,14 +318,26 @@ elseif ($action == 'new')
             $addition_errors_string .= user_alert($strAdditionFail, E_USER_WARNING);
         }
 
+        $count = count($_REQUEST['incident_type']);
+
+        for ($i = 0; $i < $count; $i++)
+        {
+            $type = clean_dbstring($_REQUEST['incident_type'][$i]);
+            $sla = clean_dbstring($_REQUEST['servicelevel'][$i]);
+            $sql = "INSERT INTO `{$dbMaintenanceServiceLevels}` VALUES ({$maintid}, {$type}, '{$sla}')";
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+            if (mysqli_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+        }
+
         // Add service
         $sql = "INSERT INTO `{$dbService}` (contractid, startdate, enddate, creditamount, rate, foc) ";
         $sql .= "VALUES ('{$maintid}', '{$startdate}', '{$enddate}', '{$amount}', '{$unitrate}', '{$foc}')";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-        if (mysql_affected_rows() < 1) trigger_error("Insert failed", E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+        if (mysqli_affected_rows($db) < 1) trigger_error("Insert failed", E_USER_ERROR);
 
-        $serviceid = mysql_insert_id();
+        $serviceid = mysqli_insert_id($db);
         update_contract_balance($maintid, $strNewContract, $amount, $serviceid);
 
         if ($addition_errors == 1)

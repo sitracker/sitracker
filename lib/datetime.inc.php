@@ -2,7 +2,7 @@
 // datetime.inc.php - functions relating to date and time
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -156,13 +156,15 @@ function format_workday_minutes($minutes, $zero_str = '')
     $hours = floor($remainder / 60);
     $minutes = floor($remainder % 60);
 
+    $time = '';
+
     if ($days == 1)
     {
-        $time = sprintf($strXWorkingDay, $days);
+        $time .= sprintf($strXWorkingDay, $days);
     }
     elseif ($days > 1)
     {
-        $time = sprintf($strXWorkingDays, $days);
+        $time .= sprintf($strXWorkingDays, $days);
     }
 
     if ($days <= 3 AND $hours == 1)
@@ -358,18 +360,19 @@ function is_public_holiday($time, $publicholidays)
  */
 function get_public_holidays($startdate, $enddate)
 {
+    global $db;
     $sql = "SELECT * FROM `{$GLOBALS['dbHolidays']}` ";
     $sql .= "WHERE type = ".HOL_PUBLIC." AND (`date` >= FROM_UNIXTIME({$startdate}) AND `date` <= FROM_UNIXTIME({$enddate}))";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     $publicholidays = array();
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         // Assume public holidays are ALL day
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $holiday = new Holiday();
             $holiday->starttime = $obj->date;
@@ -404,7 +407,7 @@ function readable_date($date, $lang = 'user')
             $datestring = "{$SYSLANG['strToday']} @ ".ldate($CONFIG['dateformat_time'], $date);
         }
     }
-    elseif (ldate('dmy', $date) == ldate('dmy', (time()-86400)))
+    elseif (ldate('dmy', $date) == ldate('dmy', (time() - 86400)))
     {
         if ($lang == 'user')
         {
@@ -488,7 +491,7 @@ function ldate($format, $date = '', $utc = FALSE)
 {
     global $now, $CONFIG;
     if ($date == '') $date = $GLOBALS['now'];
-    if ($_SESSION['userconfig']['utc_offset'] != '')
+    if (array_key_exists('utc_offset', $_SESSION['userconfig']) && $_SESSION['userconfig']['utc_offset'] != '')
     {
         if ($utc === FALSE)
         {
@@ -599,19 +602,19 @@ function ldate($format, $date = '', $utc = FALSE)
  */
 function is_day_bank_holiday($day, $month, $year)
 {
-    global $dbHolidays, $bankholidays;
+    global $dbHolidays, $bankholidays, $db;
 
     if (empty($bankholidays))
     {
         $sql = "SELECT date FROM `{$dbHolidays}` WHERE type = 10";
         
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_ERROR);
+            trigger_error(mysqli_error($db), E_USER_ERROR);
         }
         
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             $bankholidays[$obj->date] = '1';
         }

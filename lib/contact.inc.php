@@ -5,7 +5,7 @@
 //       Moving this functions here as a short term measure (PH 2010-04-11)
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,28 +19,6 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 
 
 /**
- * See if a customer exists in the database
- * @author Lea Anthony
- * @param string $username. Username of customer
- * @retval bool TRUE exists in db
- * @retval bool FALSE does not exist in db
- * @deprecated DEPRECATED This unused function will be removed after 3.91 (inl) - see Mantis 1697
-*/
-function customerExistsInDB($username)
-{
-    global $dbContacts;
-    $exists = 0;
-    $sql  = "SELECT id FROM `{$dbContacts}` WHERE username='{$username}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-
-    if (mysql_num_rows($result) > 0) $exists = 1;
-
-    return $exists;
-}
-
-
-/**
  * Returns an array of all active contracts from contact id
  * @author Carsten Jensen
  * @param int $userid. Contact ID
@@ -48,6 +26,7 @@ function customerExistsInDB($username)
  */
 function contact_active_contracts($userid)
 {
+    global $db;
     $sql  = "SELECT sc.maintenanceid AS maintenanceid ";
     $sql .= "FROM `{$GLOBALS['dbContacts']}` AS c, ";
     $sql .= "`{$GLOBALS['dbSupportContacts']}` AS sc, ";
@@ -66,13 +45,13 @@ function contact_active_contracts($userid)
     $sql .= "AND m.term <> 'yes' ";
     $sql .= "AND (m.expirydate > '" . time() . "' OR m.expirydate = '-1') ";
 
-    $result = mysql_query($sql);
-    if (!mysql_error())
+    $result = mysqli_query($db, $sql);
+    if (!mysqli_error($db))
     {
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             $return = array();
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $return[] = $obj->maintenanceid;
             }
@@ -91,21 +70,21 @@ function contact_active_contracts($userid)
  */
 function contact_realname($id)
 {
-    global $dbContacts;
+    global $dbContacts, $db;
     $sql = "SELECT forenames, surname FROM `{$dbContacts}` WHERE id='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 0)
+    if (mysqli_num_rows($result) == 0)
     {
-        mysql_free_result($result);
+        mysqli_free_result($result);
         return ($GLOBALS['strUnknown']);
     }
     else
     {
-        $contact = mysql_fetch_object($result);
+        $contact = mysqli_fetch_object($result);
         $realname = "{$contact->forenames} {$contact->surname}";
-        mysql_free_result($result);
+        mysqli_free_result($result);
         return $realname;
     }
 }
@@ -120,21 +99,21 @@ function contact_realname($id)
  */
 function contact_site($id)
 {
-    global $dbContacts, $dbSites;
+    global $dbContacts, $dbSites, $db;
     //
     $sql = "SELECT s.name FROM `{$dbContacts}` AS c, `{$dbSites}` AS s WHERE c.siteid = s.id AND c.id = '{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) == 0)
+    if (mysqli_num_rows($result) == 0)
     {
-        mysql_free_result($result);
+        mysqli_free_result($result);
         return $GLOBALS['strUnknown'];
     }
     else
     {
-        list($contactsite) = mysql_fetch_row($result);
-        mysql_free_result($result);
+        list($contactsite) = mysqli_fetch_row($result);
+        mysqli_free_result($result);
         $contactsite = $contactsite;
         return $contactsite;
     }
@@ -199,18 +178,18 @@ function contact_fax($id)
  */
 function contact_feedback($id)
 {
-    global $dbContactConfig;
+    global $dbContactConfig, $db;
     $sql = "SELECT `value` FROM `{$dbContactConfig}` WHERE contactid = {$id} AND config = 'feedback_enable' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 0)
     {
         // Contact hasn't opted out so we assume yes
         $answer = "yes";
     }
     else
     {
-        list($answer) = mysql_fetch_row($result);
+        list($answer) = mysqli_fetch_row($result);
         $answer = strtolower($answer);
     }
     return $answer;
@@ -225,14 +204,14 @@ function contact_feedback($id)
  */
 function contact_count_incidents($id)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $count = 0;
 
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE contact='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    else list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     return $count;
 }
@@ -246,14 +225,14 @@ function contact_count_incidents($id)
  */
 function contact_count_inventory_items($id)
 {
-    global $dbInventory;
+    global $dbInventory, $db;
     $count = 0;
 
     $sql = "SELECT COUNT(id) FROM `{$dbInventory}` WHERE contactid='{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    else list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    else list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     return $count;
 }
@@ -267,13 +246,13 @@ function contact_count_inventory_items($id)
  */
 function contact_count_open_incidents($id)
 {
-    global $dbIncidents;
+    global $dbIncidents, $db;
     $sql = "SELECT COUNT(id) FROM `{$dbIncidents}` WHERE contact={$id} AND status<>2";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    list($count) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    list($count) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
 
     return $count;
 }
@@ -287,14 +266,14 @@ function contact_count_open_incidents($id)
  */
 function contact_vcard($id)
 {
-    global $dbContacts, $dbSites;
+    global $dbContacts, $dbSites, $db;
     $sql = "SELECT *, s.name AS sitename, s.address1 AS siteaddress1, s.address2 AS siteaddress2, ";
     $sql .= "s.city AS sitecity, s.county AS sitecounty, s.country AS sitecountry, s.postcode AS sitepostcode ";
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
     $sql .= "WHERE c.siteid = s.id AND c.id = '{$id}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $contact = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $contact = mysqli_fetch_object($result);
     $vcard = "BEGIN:VCARD\r\n";
     $vcard .= "N:{$contact->surname};{$contact->forenames};{$contact->courtesytitle}\r\n";
     $vcard .= "FN:{$contact->forenames} {$contact->surname}\r\n";
@@ -346,7 +325,7 @@ function contact_vcard($id)
  */
 function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE)
 {
-    global $dbContacts, $dbSites;
+    global $dbContacts, $dbSites, $db;
     if ($showsite)
     {
         $sql  = "SELECT c.id AS contactid, s.id AS siteid, surname, forenames, ";
@@ -362,8 +341,8 @@ function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE
         $sql .= "ORDER BY forenames ASC, surname ASC";
     }
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}'";
     if ($required)
@@ -377,7 +356,7 @@ function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE
     }
 
     $prevsite = 0;
-    while ($contacts = mysql_fetch_object($result))
+    while ($contacts = mysqli_fetch_object($result))
     {
         if ($showsite AND $prevsite != $contacts->siteid AND $prevsite != 0)
         {
@@ -425,7 +404,7 @@ function contact_drop_down($name, $id = '', $showsite = FALSE, $required = FALSE
  */
 function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=TRUE, $allownone=FALSE)
 {
-    global $dbContacts, $dbSites;
+    global $dbContacts, $dbSites, $db;
     $sql  = "SELECT c.id AS contactid, forenames, surname, siteid, s.name AS sitename ";
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
     $sql .= "WHERE c.siteid = s.id AND c.active = 'true' AND s.active = 'true' ";
@@ -445,15 +424,15 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
         }
     }
     $sql .= "ORDER BY surname ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='$name'>";
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         if ($allownone) $html .= "<option value='' selected='selected'>{$GLOBALS['strNone']}</option>";
-        while ($contacts = mysql_fetch_object($result))
+        while ($contacts = mysqli_fetch_object($result))
         {
             $html .= "<option ";
             if ($contacts->contactid == $id)
@@ -491,16 +470,16 @@ function contact_site_drop_down($name, $id, $siteid='', $exclude='', $showsite=T
  */
 function contact_notify_email($contactid)
 {
-    global $dbContacts;
+    global $dbContacts, $db;
     $sql = "SELECT notify_contactid FROM `{$dbContacts}` WHERE id='{$contactid}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($notify_contactid) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($notify_contactid) = mysqli_fetch_row($result);
 
     $sql = "SELECT email FROM `{$dbContacts}` WHERE id='{$notify_contactid}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    list($email) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    list($email) = mysqli_fetch_row($result);
 
     return $email;
 }
@@ -516,7 +495,7 @@ function contact_notify_email($contactid)
  */
 function contact_notify($contactid, $level=0)
 {
-    global $dbContacts;
+    global $dbContacts, $db;
     $notify_contactid = 0;
     if ($level == 0)
     {
@@ -525,9 +504,9 @@ function contact_notify($contactid, $level=0)
     else
     {
         $sql = "SELECT notify_contactid FROM `{$dbContacts}` WHERE id='{$contactid}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        list($notify_contactid) = mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        list($notify_contactid) = mysqli_fetch_row($result);
 
         if ($level > 0)
         {
@@ -562,14 +541,14 @@ function contact_username($userid)
  */
 function process_new_contact($mode = 'internal')
 {
-    global $now, $CONFIG, $dbContacts, $sit;
+    global $now, $CONFIG, $dbContacts, $sit, $db;
     // Add new contact
     // External variables
     $siteid = clean_int($_REQUEST['siteid']);
     $email = strtolower(clean_dbstring($_REQUEST['email']));
-    $dataprotection_email = mysql_real_escape_string($_REQUEST['dataprotection_email']);
-    $dataprotection_phone = mysql_real_escape_string($_REQUEST['dataprotection_phone']);
-    $dataprotection_address = mysql_real_escape_string($_REQUEST['dataprotection_address']);
+    $dataprotection_email = mysqli_real_escape_string($db, $_REQUEST['dataprotection_email']);
+    $dataprotection_phone = mysqli_real_escape_string($db, $_REQUEST['dataprotection_phone']);
+    $dataprotection_address = mysqli_real_escape_string($db, $_REQUEST['dataprotection_address']);
     $username = cleanvar($_REQUEST['username']);
     $courtesytitle = cleanvar($_REQUEST['courtesytitle']);
     $forenames = cleanvar($_REQUEST['forenames']);
@@ -627,8 +606,8 @@ function process_new_contact($mode = 'internal')
     }
     // Check this is not a duplicate
     $sql = "SELECT id FROM `{$dbContacts}` WHERE email='$email' AND LCASE(surname)=LCASE('$surname') LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1)
     {
         $errors++;
         $_SESSION['formerrors']['new_contact']['duplicate'] = $GLOBALS['strContactRecordExists'];
@@ -681,8 +660,8 @@ function process_new_contact($mode = 'internal')
         $sql .= "'{$siteid}', {$address1}, {$address2}, {$city}, {$county}, {$country}, {$postcode}, '{$email}', ";
         $sql .= "{$phone}, {$mobile}, {$fax}, {$department}, {$notes}, '{$dataprotection_email}', ";
         $sql .= "'{$dataprotection_phone}', '{$dataprotection_address}', '{$now}', '{$now}', now(), '{$sit[2]}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         if (!$result)
         {
             if ($mode == 'internal')
@@ -695,11 +674,11 @@ function process_new_contact($mode = 'internal')
             }
         }
         // concatenate username with insert id to make unique
-        $newid = mysql_insert_id();
+        $newid = mysqli_insert_id($db);
         $username = $username . $newid;
         $sql = "UPDATE `{$dbContacts}` SET username='{$username}' WHERE id='{$newid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result)
         {
@@ -718,8 +697,8 @@ function process_new_contact($mode = 'internal')
             clear_form_data('new_contact');
             clear_form_errors('new_contact');
             $sql = "SELECT username, password FROM `{$dbContacts}` WHERE id={$newid}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             else
             {
                 if ($CONFIG['portal'] AND $_POST['emaildetails'] == 'on')
@@ -767,22 +746,23 @@ function process_new_contact($mode = 'internal')
 /**
  * Return an array of contracts which the contact is an admin contact for
  * @author Kieran Hogg
- * @param int $maintid - ID of the contract
+ * @param int $contactid - ID of the contract
  * @param int $siteid - The ID of the site
  * @return array of contract ID's for which the given contactid is an admin contact, NULL if none
  */
 function admin_contact_contracts($contactid, $siteid)
 {
+    global $db;
     $sql = "SELECT DISTINCT m.id ";
     $sql .= "FROM `{$GLOBALS['dbMaintenance']}` AS m ";
     $sql .= "WHERE m.admincontact={$contactid} ";
     $sql .= "AND m.site={$siteid} ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     if ($result)
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $contractsarray[] = $row->id;
         }
@@ -795,26 +775,30 @@ function admin_contact_contracts($contactid, $siteid)
 /**
  * Return an array of contracts which the contact is an named contact for
  * @author Kieran Hogg
- * @param int $maintid - ID of the contract
+ * @param int $contactid - ID of the Contact
+ * @param int $siteid - ID of the site
+ * @param int $checkvisible - 
  * @return array of supported contracts, NULL if none
  */
 function contact_contracts($contactid, $siteid, $checkvisible = TRUE)
 {
+    global $db;
     $sql = "SELECT DISTINCT m.id AS id
             FROM `{$GLOBALS['dbMaintenance']}` AS m,
             `{$GLOBALS['dbContacts']}` AS c,
             `{$GLOBALS['dbSupportContacts']}` AS sc
             WHERE m.site={$siteid}
             AND sc.maintenanceid=m.id
-            AND sc.contactid=c.id ";
+            AND sc.contactid=c.id 
+            AND c.id = {$contactid} ";
     if ($checkvisible)
     {
         $sql .= "AND m.var_incident_visible_contacts = 'yes'";
     }
 
-    if ($result = mysql_query($sql))
+    if ($result = mysqli_query($db, $sql))
     {
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $contractsarray[] = $row->id;
         }

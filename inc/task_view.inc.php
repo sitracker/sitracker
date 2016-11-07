@@ -2,7 +2,7 @@
 // view_task.inc.php - Display existing task
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,11 +27,11 @@ else
 if ($mode != 'incident') echo "<div style='width: 90%; margin-left: auto; margin-right: auto;'>";
 
 $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$taskid}'";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($result) >= 1)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result) >= 1)
 {
-    $task = mysql_fetch_object($result);
+    $task = mysqli_fetch_object($result);
     if ($task->distribution == 'private' AND $task->owner != $sit[2])
     {
         echo user_alert($strTaskPrivateError, E_USER_ERROR);

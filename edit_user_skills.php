@@ -2,7 +2,7 @@
 // edit_user_skills.php - Form to set users skills
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -40,16 +40,16 @@ if (empty($submit))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     $sql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s ";
     $sql .= "WHERE us.softwareid = s.id AND userid = '{$user}' ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1)
     {
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             $expertise[] = $software->id;
         }
     }
     echo "<h2>".icon('skill', 32)." ";
-    echo sprintf($strSkillsFor, user_realname($user,TRUE))."</h2>";
+    echo sprintf($strSkillsFor, user_realname($user, TRUE))."</h2>";
     plugin_do('edit_user_skills');
     echo "<p align='center'>{$strSelectYourSkills}</p>";
     echo "<form name='softwareform' id='softwareform' action='{$_SERVER['PHP_SELF']}' method='post' ";
@@ -59,12 +59,12 @@ if (empty($submit))
     echo "<tr><td align='center' class='shade1'>";
     echo "\n<select name='noskills[]' multiple='multiple' size='20' style='width: 100%; min-width: 300px; min-height: 200px;'>";
     $sql = "SELECT * FROM `{$dbSoftware}` ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $count = 0;
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             if (is_array($expertise))
             {
@@ -97,11 +97,11 @@ if (empty($submit))
     echo "<select name='expertise[]' multiple='multiple' size='20' style='width: 100%;  min-width: 300px; min-height: 200px;'>";
     $sql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s ";
     $sql .= "WHERE us.softwareid = s.id AND userid = '{$user}' ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             echo "<option value='{$software->id}'>{$software->name}</option>\n";
         }
@@ -129,7 +129,10 @@ else
 {
     // Update user profile
     $selections = urldecode($_POST['choices']);
-    parse_str($selections);
+    $expertise = explode(';', $selections);
+
+    $ns = urldecode($_POST['ns']);
+    $noskills = explode(';', $ns);
 
     plugin_do('edit_user_skills_submitted');
 
@@ -146,15 +149,15 @@ else
             if (!empty($value))
             {
                 $checksql = "SELECT userid FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND softwareid='{$value}' LIMIT 1";
-                $checkresult = mysql_query($checksql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($checkresult)< 1)
+                $checkresult = mysqli_query($db, $checksql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($checkresult)< 1)
                 {
                     if ($value > 0)
                     {
                         $sql = "INSERT INTO `{$dbUserSoftware}` (userid, softwareid) VALUES ('{$user}', '{$value}')";
-                        mysql_query($sql);
-                        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                        mysqli_query($db, $sql);
+                        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     }
                 }
                 $softlist[] = $value;
@@ -171,13 +174,13 @@ else
             $value = clean_int($value);
             // Remove the software listed that we don't support
             $sql = "DELETE FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND softwareid='{$value}' LIMIT 1";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             // If we are providing backup for a skill we don't have - reset that back to nobody providing backup
             $sql = "UPDATE `{$dbUserSoftware}` SET backupid='0' WHERE backupid='{$user}' AND softwareid='{$value}' LIMIT 1";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
     }
 
@@ -186,9 +189,9 @@ else
 
     // Have a look to see if any of the software we support is lacking a backup/substitute engineer
     $sql = "SELECT userid FROM `{$dbUserSoftware}` WHERE userid='{$user}' AND backupid='0' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $lacking = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $lacking = mysqli_num_rows($result);
     if ($lacking >= 1)
     {
         html_redirect("edit_backup_users.php?user={$user}", TRUE, $strYouShouldNowDefineSubstituteEngineers);

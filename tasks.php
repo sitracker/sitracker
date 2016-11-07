@@ -2,7 +2,7 @@
 // tasks.php - List tasks
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -37,12 +37,12 @@ else
 
 
 // External variables
-$user = cleanvar($_REQUEST['user']);
-$show = clean_fixed_list($_REQUEST['show'], array('','incidents', 'active', 'completed'));
-$sort = clean_fixed_list($_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
-$order = clean_fixed_list($_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
-$incident = clean_int($_REQUEST['incident']);
-$siteid = clean_int($_REQUEST['siteid']);
+$user = cleanvar(@$_REQUEST['user']);
+$show = clean_fixed_list(@$_REQUEST['show'], array('','incidents', 'active', 'completed'));
+$sort = clean_fixed_list(@$_REQUEST['sort'], array('', 'id', 'name', 'priority', 'completion', 'startdate', 'duedate', 'enddate', 'distribution'));
+$order = clean_fixed_list(@$_REQUEST['order'], array('', 'a', 'ASC', 'd', 'DESC'));
+$incident = clean_int(@$_REQUEST['incident']);
+$siteid = clean_int(@$_REQUEST['siteid']);
 
 ?>
 <script type='text/javascript'>
@@ -86,17 +86,17 @@ if (!empty($incident))
     $sql .= "WHERE l.linktype = 4 ";
     $sql .= "AND linkcolref = {$incident} ";
     $sql .= "AND direction = 'left'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     //get list of tasks
     $sql = "SELECT * FROM `{$dbTasks}` WHERE 1=0 ";
-    while ($tasks = mysql_fetch_object($result))
+    while ($tasks = mysqli_fetch_object($result))
     {
         $sql .= "OR id={$tasks->origcolref} ";
     }
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     if ($mode == 'incident')
     {
@@ -112,15 +112,15 @@ elseif (!empty($siteid))
     $sql .= "WHERE i.contact = c.id AND ";
     $sql .= "c.siteid = {$siteid} ";
     //$sql .= "AND (i.status != 2 AND i.status != 7)";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
     //
     $sqlTask = "SELECT * FROM `{$dbTasks}` WHERE duedate IS NULL AND ";
     $taskIDs = array();
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             //get info for incident-->task linktype
             $sql = "SELECT DISTINCT origcolref, linkcolref ";
@@ -128,10 +128,10 @@ elseif (!empty($siteid))
             $sql .= "WHERE l.linktype=4 ";
             $sql .= "AND linkcolref={$obj->id} ";
             $sql .= "AND direction='left'";
-            $resultLinks = mysql_query($sql);
+            $resultLinks = mysqli_query($db, $sql);
 
             //get list of tasks
-            while ($tasks = mysql_fetch_object($resultLinks))
+            while ($tasks = mysqli_fetch_object($resultLinks))
             {
                 //$sqlTask .= "OR id={$tasks->origcolref} ";
                 //if (empty($orSQL)) $orSQL = "(";
@@ -145,7 +145,7 @@ elseif (!empty($siteid))
     if (!empty($taskIDs)) $sqlTask .= "id IN (".implode(',', $taskIDs).")";
     else $sqlTasks = "1=0";
 
-    $result = mysql_query($sqlTask);
+    $result = mysqli_query($db, $sqlTask);
 
     $show = 'incidents';
     //$show = 'incidents';
@@ -163,12 +163,12 @@ else
     if (!is_numeric($user) AND $user != 'current' AND $user != 'all')
     {
         $usql = "SELECT id FROM `{$dbUsers}` WHERE username='{$user}' LIMIT 1";
-        $uresult = mysql_query($usql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        $uresult = mysqli_query($db, $usql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
-        if (mysql_num_rows($uresult) >= 1)
+        if (mysqli_num_rows($uresult) >= 1)
         {
-            list($user) = mysql_fetch_row($uresult);
+            list($user) = mysqli_fetch_row($uresult);
         }
         else
         {
@@ -296,12 +296,12 @@ else
         $sql .= "startdate DESC, priority DESC, completion ASC";
     }
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 }
 
 //common code
-if (mysql_num_rows($result) >=1 )
+if (mysqli_num_rows($result) >=1 )
 {
     if ($show) $filter = array('show' => $show);
     echo "<form action='{$_SERVER['PHP_SELF']}' id='tasks' name='tasks'  method='post'>";
@@ -364,7 +364,7 @@ if (mysql_num_rows($result) >=1 )
     }
     echo "</tr>\n";
     $shade = 'shade1';
-    while ($task = mysql_fetch_object($result))
+    while ($task = mysqli_fetch_object($result))
     {
         $duedate = mysql2date($task->duedate);
         $startdate = mysql2date($task->startdate);
@@ -385,10 +385,10 @@ if (mysql_num_rows($result) >=1 )
             $sqlIncident .= "AND l.origcolref={$task->id} ";
             $sqlIncident .= "AND l.direction='left' ";
             $sqlIncident .= "AND i.id = l.linkcolref ";
-            $resultIncident = mysql_query($sqlIncident);
+            $resultIncident = mysqli_query($db, $sqlIncident);
 
             echo "<td>";
-            if ($obj = mysql_fetch_object($resultIncident))
+            if ($obj = mysqli_fetch_object($resultIncident))
             {
                 $incidentidL = $obj->linkcolref;
                 echo html_incident_popup_link($obj->linkcolref, $obj->linkcolref);
@@ -659,7 +659,7 @@ else
     echo "<br />";
     echo user_alert($strNoRecords, E_USER_NOTICE);
 
-    if ($mode == 'incident')
+    if (isset($mode) && $mode == 'incident')
     {
         echo "<p align='center'>";
         echo "<a href='task_new.php?incident={$id}'>{$strStartNewActivity}";

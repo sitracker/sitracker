@@ -2,7 +2,7 @@
 // inventory.php - Browse inventory items
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -31,14 +31,14 @@ plugin_do('inventory');
 $sql = "SELECT COUNT(*) AS count, s.* FROM `{$dbInventory}` AS i, `{$dbSites}` AS s ";
 $sql .= "WHERE siteid=s.id ";
 $sql .= "GROUP BY siteid ";
-$result = mysql_query($sql);
+$result = mysqli_query($db, $sql);
 
 echo "<table class='maintable'>";
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
     echo "<tr><th>{$strSite}</th><th>{$strCount}</th><th>{$strActions}</th></tr>";
     $shade = 'shade1';
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         echo "<tr class='{$shade}'><td>".icon('site', 16, $strSite);
         echo " {$row->name}</td>";

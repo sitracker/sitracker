@@ -2,7 +2,7 @@
 // escalation_path_new.php - Display a form for adding an escalation path
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -109,8 +109,8 @@ else
     {
         $sql = "INSERT INTO `{$dbEscalationPaths}` (name,track_url,home_url,url_title,email_domain) VALUES ";
         $sql .= " ('{$name}','{$trackurl}','{$homeurl}','{$title}','{$emaildomain}')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
         if (!$result)
         {

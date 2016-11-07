@@ -2,7 +2,7 @@
 // index.php - Welcome screen and login form
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -22,31 +22,39 @@ session_start();
 include (APPLICATION_LIBPATH . 'strings.inc.php');
 require (APPLICATION_LIBPATH . 'functions.inc.php');
 
+if ($_SESSION['auth'] != TRUE AND $CONFIG['trusted_server'])
+{
+    if (($username = authenticateTrustedServerMode())) createUserSession($username);
+    if (($username = authenticateTrustedServerModeContact())) createContactSession($username);
+    populate_syslang();
+}
+
 if ($_SESSION['auth'] != TRUE)
 {
     // External variables
-    $id = clean_int($_REQUEST['id']);
-    $page = htmlentities(clean_url(urldecode($_REQUEST['page'])), ENT_COMPAT, $GLOBALS['i18ncharset']);
-    
+    $id = clean_int(@$_REQUEST['id']);
+    $page = htmlentities(clean_url(urldecode(@$_REQUEST['page'])), ENT_COMPAT, $GLOBALS['i18ncharset']);
+
     // Invalid user, show log in form
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
     echo "<p class='error'>If you are not a developer, please under no circumstances run this version of SiT!, it is now destined for 4.0, at best it will be barely be useable, at worst it might injure you.</p>";
 
-    if ($id == 1)
+    if (isset($id))
     {
-        echo "<p class='error'>";
-        echo sprintf($strEnterCredentials, $CONFIG['application_shortname']);
-        echo "</p><br />";
-    }
-
-    if ($id == 2)
-    {
-        echo user_alert($strSessionExpired, E_USER_WARNING);
-    }
-
-    if ($id == 3)
-    {
-        echo user_alert($strInvalidCredentials, E_USER_ERROR);
+        switch ($id)
+        {
+            case 1:
+                echo "<p class='error'>";
+                echo sprintf($strEnterCredentials, $CONFIG['application_shortname']);
+                echo "</p><br />";
+                break;
+            case 2:
+                echo user_alert($strSessionExpired, E_USER_WARNING);
+                break;
+            case 3:
+                echo user_alert($strInvalidCredentials, E_USER_ERROR);
+                break;
+        }
     }
 
     // Language selector
@@ -105,6 +113,7 @@ if ($_SESSION['auth'] != TRUE)
     echo "name='password' size='28' type='password' /></label><br />";
     echo "<input type='hidden' name='page' value='$page' />";
     echo "<input type='submit' value='{$strLogIn}' /><br />";
+    plugin_do('index_form');
     echo "<br /><a href='forgotpwd.php'>{$strForgottenDetails}</a>";
     if ($CONFIG['kb_enabled'] AND $CONFIG['portal'] AND $CONFIG['portal_kb_enabled'] == 'Public')
     {

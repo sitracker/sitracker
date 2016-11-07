@@ -2,7 +2,7 @@
 // site_products.php - List products that sites have under contract
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -65,9 +65,9 @@ elseif ($mode == 'report')
     $type = clean_int($_REQUEST['type']);
     $sql = "SELECT * FROM `{$dbSites}` WHERE typeid='{$type}' ORDER BY name";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $html .= "<p align='center'>{$strCustomerProductsMaintDesc}.</p>";
     $html .= "<table width='99%' align='center'>";
@@ -77,7 +77,7 @@ elseif ($mode == 'report')
     $html .= "<th>{$strPostcode}</th><th>{$strProducts}</th></tr>";
     $csvfieldheaders .= "{$strSite},{$strAddress1},{$strAddress2},{$strCity},{$strCounty},{$strCountry},{$strPostcode},{$strProducts}\r\n";
     $rowcount = 0;
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $product = '';
         $nicedate = ldate('d/m/Y', $row->opened);
@@ -94,9 +94,9 @@ elseif ($mode == 'report')
         $psql .= "WHERE m.product = p.id AND m.reseller = r.id AND admincontact = c.id ";
         $psql .= "AND m.site = '{$row->id}' ";
         $psql .= "ORDER BY p.name ASC";
-        $presult = mysql_query($psql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        while ($prod = mysql_fetch_object($presult))
+        $presult = mysqli_query($db, $psql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        while ($prod = mysqli_fetch_object($presult))
         {
             $product .= "{$prod->product}";
             if ($prod->productactive == 'false') $product .= " ({$strProductNoLongerAvailable})";

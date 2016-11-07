@@ -2,7 +2,7 @@
 // setup.inc.php - functions used during seup of SiT
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -209,7 +209,7 @@ function setup_configure()
  */
 function setup_exec_sql($sqlquerylist)
 {
-    global $CONFIG, $dbSystem, $installed_schema, $application_version;
+    global $CONFIG, $dbSystem, $installed_schema, $application_version, $db;
     if (!empty($sqlquerylist))
     {
         if (!is_array($sqlquerylist)) $sqlquerylist = array($sqlquerylist);
@@ -230,10 +230,10 @@ function setup_exec_sql($sqlquerylist)
                 {
                     if (!empty($sql))
                     {
-                        mysql_query($sql);
-                        if (mysql_error())
+                        mysqli_query($db, $sql);
+                        if (mysqli_error($db))
                         {
-                            $errno = mysql_errno();
+                            $errno = mysqli_errno($db);
                             $errstr = '';
                             // See http://dev.mysql.com/doc/refman/5.0/en/error-messages-server.html
                             // For list of mysql error numbers
@@ -282,7 +282,7 @@ function setup_exec_sql($sqlquerylist)
                                 $html .= "<strong>A MySQL error occurred:</strong>";
                                 $errors ++;
                             }
-                            $html .= " [".mysql_errno()."] ".mysql_error()."<br />";
+                            $html .= " [".mysqli_errno($db)."] ".mysqli_error($db)."<br />";
                             if (!empty($errstr)) $html .= $errstr."<br />";
                             $html .= "Raw SQL: <code class='small'>".htmlspecialchars($sql)."</code>";
                         }
@@ -308,15 +308,15 @@ function setup_createdb()
 
     $res = FALSE;
     $sql = "CREATE DATABASE `{$CONFIG['db_database']}` DEFAULT CHARSET utf8";
-    $db = @mysql_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
-    if (!@mysql_error())
+    $db = @mysqli_connect($CONFIG['db_hostname'], $CONFIG['db_username'], $CONFIG['db_password']);
+    if (!@mysqli_error($db))
     {
         // See Mantis 506 for sql_mode discussion
-        @mysql_query("SET SESSION sql_mode = '';");
+        @mysqli_query($db, "SET SESSION sql_mode = '';");
 
         // Connected to database
         echo "<h2>Creating empty database...</h2>";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if ($result)
         {
             $res = TRUE;
@@ -333,9 +333,9 @@ function setup_createdb()
     if ($res == FALSE)
     {
         echo "<p class='error'>";
-        if (mysql_error())
+        if (mysqli_error($db))
         {
-            echo mysql_error()."<br />";
+            echo mysqli_error($db)."<br />";
         }
         echo "The database could not be created automatically, ";
         echo "you can create it manually by executing the SQL statement <br /><code>{$sql};</code></p>";
@@ -353,10 +353,10 @@ function setup_createdb()
  */
 function setup_check_adminuser()
 {
-    global $dbUsers;
+    global $dbUsers, $db;
     $sql = "SELECT id FROM `{$dbUsers}` WHERE id=1 OR username='admin' OR roleid='1'";
-    $result = @mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) return TRUE;
+    $result = @mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) return TRUE;
     else FALSE;
 }
 
@@ -392,16 +392,16 @@ function setup_button($action, $label, $extrahtml='')
  */
 function install_dashboard_components()
 {
-    global  $dbDashboard;
+    global $dbDashboard, $db;
     $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled = 'true'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
     //echo "<h2>Dashboard</h2>";
     
     $errors = array();
     
-    while ($dashboardnames = mysql_fetch_object($result))
+    while ($dashboardnames = mysqli_fetch_object($result))
     {
         $version = 1;
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
@@ -424,13 +424,14 @@ function install_dashboard_components()
  */
 function upgrade_dashlets()
 {
+    global $db;
     $sql = "SELECT * FROM `{$GLOBALS['dbDashboard']}` WHERE enabled = 'true'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = '';
-    
-    while ($dashboardnames = mysql_fetch_object($result))
+
+    while ($dashboardnames = mysqli_fetch_object($result))
     {
         $version = 1;
         include (APPLICATION_PLUGINPATH . "dashboard_{$dashboardnames->name}.php");
@@ -456,8 +457,8 @@ function upgrade_dashlets()
                 }
 
                 $upgrade_sql = "UPDATE `{$GLOBALS['dbDashboard']}` SET version = '{$version}' WHERE id = {$dashboardnames->id}";
-                mysql_query($upgrade_sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $upgrade_sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
                 $html .= "<p>{$dashboardnames->name} upgraded</p>";
             }
@@ -482,7 +483,7 @@ function upgrade_dashlets()
 function upgrade_schema($installed_version)
 {
     global $application_version, $upgrade_schema;
-    
+
     for ($v = (($installed_version * 100) + 1); $v <= ($application_version * 100); $v++)
     {
         $html = '';
@@ -490,7 +491,7 @@ function upgrade_schema($installed_version)
         {
             $newversion = number_format(($v / 100), 2);
             echo "<p>Updating schema from {$installed_version} to v{$newversion}&hellip;</p>";
-            
+
             $errors = setup_exec_sql($upgrade_schema[$v]);
 
             // Update the system version
@@ -507,7 +508,7 @@ function upgrade_schema($installed_version)
             echo $html;
         }
     }
-    
+
     return $installed_version;
 }
 
@@ -521,17 +522,18 @@ function upgrade_schema($installed_version)
  */
 function create_admin_user($password, $email)
 {
+    global $db;
     $html = '';
     $password = md5($password);
     $sql = "INSERT INTO `{$GLOBALS['dbUsers']}` (`id`, `username`, `password`, `realname`, `roleid`, `title`, `signature`, `email`, `status`, `lastseen`) ";
     $sql .= "VALUES (1, 'admin', '{$password}', 'Administrator', 1, 'Administrator', 'Regards,\r\n\r\nSiT Administrator', '{$email}', '1', NOW());";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-       trigger_error(mysql_error(), E_USER_WARNING);
+       trigger_error(mysqli_error($db), E_USER_WARNING);
        $html .= "<p><strong>FAILED:</strong> {$sql}</p>";
     }
-    
+
     return $html;
 }
 
@@ -544,18 +546,19 @@ function create_admin_user($password, $email)
  */
 function update_sit_version_number($version)
 {
+    global $db;
     $html = '';
     $sql = "REPLACE INTO `{$GLOBALS['dbSystem']}` ( `id`, `version`) VALUES (0, {$version})";
-    mysql_query($sql);
-    if (mysql_error())
+    mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        $html .= "<p class='error'>Could not store new schema version number '{$version}'. ".mysql_error()."</p>";
+        $html .= "<p class='error'>Could not store new schema version number '{$version}'. ".mysqli_error($db)."</p>";
     }
     else
     {
         $html .= "<p>Schema successfully updated to version {$version}.</p>";
     }
-    
+
     return $html;
 }
 
@@ -567,16 +570,16 @@ function update_sit_version_number($version)
  */
 function current_schema_version()
 {
+    global $db;
     $$installed_version = 0;
     $sql = "SELECT `version` FROM `{$GLOBALS['dbSystem']}` WHERE id = 0";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) > 0)
     {
-        list($installed_version) = mysql_fetch_row($result);
+        list($installed_version) = mysqli_fetch_row($result);
     }
-    
-    
+
     return $installed_version;
 }
 
@@ -592,9 +595,10 @@ function current_schema_version()
  */
 function setup_check_column_exists($table_name, $column_name)
 {
+    global $db;
     $sql = "SHOW COLUMNS FROM {$table_name} ";
-    $result = mysql_query($sql);
-    while ($tb_result = mysql_fetch_row($result))
+    $result = mysqli_query($db, $sql);
+    while ($tb_result = mysqli_fetch_row($result))
     {
         $column_array[] = $tb_result[0];
     }
@@ -613,16 +617,17 @@ function setup_check_column_exists($table_name, $column_name)
 */
 function check_mysql_privileges($privs)
 {
+    global $db;
     $rtn = array();
 
     $granted = array();
-   
+
     $sql = "SHOW GRANTS FOR CURRENT_USER()";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    while ($row = mysql_fetch_row($result))
+    while ($row = mysqli_fetch_row($result))
     {
         if (preg_match('/(GRANT )(.*) ON.*$/', $row[0], $m))
         {
@@ -666,24 +671,24 @@ function check_mysql_privileges($privs)
 function upgrade_required_perms($installed_version)
 {
     global $installed_schema, $upgrade_schema, $application_version;
-    
+
     $required = array();
-    
+
     for ($v = (($installed_version * 100) + 1); $v <= ($application_version * 100); $v++)
     {
         if (!empty($upgrade_schema[$v]))
         {
             $newversion = number_format(($v / 100), 2);
-        
+
             $sqlquerylist = $upgrade_schema[$v]; 
-            
+
             if (!is_array($sqlquerylist)) $sqlquerylist = array($sqlquerylist);
 
             // Loop around the queries
             foreach ($sqlquerylist AS $schemaversion => $queryelement)
             {
                 if ($schemaversion != '0') $schemaversion = mb_substr($schemaversion, 1);
-    
+
                 if ($schemaversion == 0 OR $installed_schema < $schemaversion)
                 {
                     $sqlqueries = explode( ';', $queryelement);
@@ -709,21 +714,21 @@ function upgrade_required_perms($installed_version)
 
 function upgrade_390_migrate_user_config()
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $dbInterfaceStyles = "{$CONFIG['db_tableprefix']}interfacestyles";
-    
+
     $errors = 0;
-    
+
     $sql_oldconfig = "SELECT id, var_emoticons, var_utc_offset, var_i18n, var_style, var_incident_refresh, var_update_order, var_num_updates_view FROM `{$GLOBALS['dbUsers']}`";
-    $result_oldconfig = mysql_query($sql_oldconfig);
-    if (mysql_error())
+    $result_oldconfig = mysqli_query($db, $sql_oldconfig);
+    if (mysqli_error($db))
     {
-        trigger_error(mysql_error(), E_USER_WARNING);
-        echo "error ".mysql_error()."\n\n";
+        trigger_error(mysqli_error($db), E_USER_WARNING);
+        echo "error ".mysqli_error($db)."\n\n";
         $errors++;
     }
-    
-    while ($obj = mysql_fetch_object($result_oldconfig))
+
+    while ($obj = mysqli_fetch_object($result_oldconfig))
     {
         $s = array();
         if (!empty($obj->var_emoticons)) $s[] = "({$obj->id}, 'show_emoticons', '".strtoupper($obj->var_emoticons)."')";
@@ -732,46 +737,362 @@ function upgrade_390_migrate_user_config()
         if (!empty($obj->var_incident_refresh)) $s[] = "({$obj->id}, 'incident_refresh', '{$obj->var_incident_refresh}')";
         if (!empty($obj->var_update_order)) $s[] = "({$obj->id}, 'incident_log_order', '{$obj->var_update_order}')";
         if (!empty($obj->var_num_updates_view)) $s[] = "({$obj->id}, 'updates_per_page', '{$obj->var_num_updates_view}')";
-        
+
         $sql_style = "SELECT iconset FROM `{$dbInterfaceStyles}` WHERE id = {$obj->var_style}";
-        $result_style = mysql_query($sql_style);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if ($obj_style = mysql_fetch_object($result_style))
+        $result_style = mysqli_query($db, $sql_style);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if ($obj_style = mysqli_fetch_object($result_style))
         {
             $s[] = "({$obj->id}, 'iconset', '{$obj_style->iconset}')";
         }
-        
+
         if (!empty($s))
         {
             $sql_insert = "INSERT INTO `{$GLOBALS['dbUserConfig']}` VALUES ".implode(", ", $s);
-            $result_insert = mysql_query($sql_insert);
-            if (mysql_error())
+            $result_insert = mysqli_query($db, $sql_insert);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 $errors++;
             }
         }
     }
-    
+
     if ($errors == 0)
     {
         $sql_alter = "ALTER TABLE `{$GLOBALS['dbUsers']}` DROP COLUMN var_incident_refresh, DROP COLUMN var_update_order, DROP COLUMN var_num_updates_view, ";
         $sql_alter .= "DROP COLUMN var_style, DROP COLUMN var_hideautoupdates, DROP COLUMN var_hideheader, DROP COLUMN var_monitor, ";
         $sql_alter .= "DROP COLUMN var_i18n, DROP COLUMN var_utc_offset, DROP COLUMN var_emoticons ";
-        $result_alter = mysql_query($sql_alter);
-        if (mysql_error())
+        $result_alter = mysqli_query($db, $sql_alter);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
         }
-        $sql_drop = "DROP DATABASE IF EXISTS `{$dbInterfaceStyles}`";
-        $result_drop = mysql_query($sql_drop);
-        if (mysql_error())
+        $sql_drop = "DROP TABLE IF EXISTS `{$dbInterfaceStyles}`";
+        $result_drop = mysqli_query($db, $sql_drop);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
         }
     }
     else
     {
         echo "Error migrating user config settings, old data retained";
     }
+}
+
+
+function update_390_country_list()
+{
+    global $db;
+    // array[iso_code] = old name
+    $countryList['AL'] = 'ALBANIA';
+    $countryList['DZ'] = 'ALGERIA';
+    $countryList['AS'] = 'AMERICAN SAMOA';
+    $countryList['AD'] = 'ANDORRA';
+    $countryList['AO'] = 'ANGOLA';
+    $countryList['AI'] = 'ANGUILLA';
+    $countryList['AG'] = 'ANTIGUA';
+    $countryList['AR'] = 'ARGENTINA';
+    $countryList['AM'] = 'ARMENIA';
+    $countryList['AW'] = 'ARUBA';
+    $countryList['AU'] = 'AUSTRALIA';
+    $countryList['AT'] = 'AUSTRIA';
+    $countryList['AZ'] = 'AZERBAIJAN';
+    $countryList['BS'] = 'BAHAMAS';
+    $countryList['BH'] = 'BAHRAIN';
+    $countryList['BD'] = 'BANGLADESH';
+    $countryList['BB'] = 'BARBADOS';
+    $countryList['BY'] = 'BELARUS';
+    $countryList['BE'] = 'BELGIUM';
+    $countryList['BZ'] = 'BELIZE';
+    $countryList['BJ'] = 'BENIN';
+    $countryList['BM'] = 'BERMUDA';
+    $countryList['BT'] = 'BHUTAN';
+    $countryList['BO'] = 'BOLIVIA';
+    $countryList['BQ'] = 'BONAIRE';
+    $countryList['BA'] = 'BOSNIA HERZEGOVINA';
+    $countryList['BW'] = 'BOTSWANA';
+    $countryList['BR'] = 'BRAZIL';
+    $countryList['BN'] = 'BRUNEI';
+    $countryList['BG'] = 'BULGARIA';
+    $countryList['BF'] = 'BURKINA FASO';
+    $countryList['BI'] = 'BURUNDI';
+    $countryList['KH'] = 'CAMBODIA';
+    $countryList['CM'] = 'CAMEROON';
+    $countryList['CA'] = 'CANADA';
+    $countryList['IC'] = 'CANARY ISLANDS'; // Only reserved (Exceptional Reservation)
+    $countryList['CV'] = 'CAPE VERDE ISLANDS';
+    $countryList['KY'] = 'CAYMAN ISLANDS';
+    $countryList['CF'] = 'CENTRAL AFRICAN REPUBLIC';
+    $countryList['TD'] = 'CHAD';
+    $countryList['JE'] = 'CHANNEL ISLANDS'; // Channel Islands = Jersey + Guernsey which both have ISO codes (JE and GG) have picked Jersey as its the island with greater population  
+    $countryList['CL'] = 'CHILE';
+    $countryList['TW'] = 'CHINA';
+    $countryList['CO'] = 'COLOMBIA';
+    $countryList['KM'] = 'COMOROS ISLANDS'; // ?
+    $countryList['CD'] = 'CONGO';
+    $countryList['CK'] = 'COOK ISLANDS';
+    $countryList['CR'] = 'COSTA RICA';
+    $countryList['HR'] = 'CROATIA';
+    $countryList['CU'] = 'CUBA';
+    $countryList['CW'] = 'CURACAO';
+    $countryList['CY'] = 'CYPRUS';
+    $countryList['CZ'] = 'CZECH REPUBLIC';
+    $countryList['DK'] = 'DENMARK';
+    $countryList['DJ'] = 'DJIBOUTI';
+    $countryList['DO'] = 'DOMINICA';
+    $countryList['DO'] = 'DOMINICAN REPUBLIC';
+    $countryList['EC'] = 'ECUADOR';
+    $countryList['EG'] = 'EGYPT';
+    $countryList['SV'] = 'EL SALVADOR';
+    $countryList['GQ'] = 'EQUATORIAL GUINEA';
+    $countryList['ER'] = 'ERITREA';
+    $countryList['EE'] = 'ESTONIA';
+    $countryList['ET'] = 'ETHIOPIA';
+    $countryList['FO'] = 'FAROE ISLANDS';
+    $countryList['FJ'] = 'FIJI ISLANDS';
+    $countryList['FI'] = 'FINLAND';
+    $countryList['FR'] = 'FRANCE';
+    $countryList['GN'] = 'FRENCH GUINEA'; // Now just Guinea
+    $countryList['GA'] = 'GABON';
+    $countryList['GM'] = 'GAMBIA';
+    $countryList['GS'] = 'GEORGIA';
+    $countryList['DE'] = 'GERMANY';
+    $countryList['GH'] = 'GHANA';
+    $countryList['GI'] = 'GIBRALTAR';
+    $countryList['GR'] = 'GREECE';
+    $countryList['GL'] = 'GREENLAND';
+    $countryList['GD'] = 'GRENADA';
+    $countryList['GP'] = 'GUADELOUPE';
+    $countryList['GU'] = 'GUAM';
+    $countryList['GT'] = 'GUATEMALA';
+    $countryList['GN'] = 'GUINEA REPUBLIC';
+    $countryList['GW'] = 'GUINEA-BISSAU';
+    $countryList['GY'] = 'GUYANA';
+    $countryList['HT'] = 'HAITI';
+    $countryList['HN'] = 'HONDURAS REPUBLIC';
+    $countryList['HK'] = 'HONG KONG';
+    $countryList['HU'] = 'HUNGARY';
+    $countryList['IS'] = 'ICELAND';
+    $countryList['IN'] = 'INDIA';
+    $countryList['ID'] = 'INDONESIA';
+    $countryList['IR'] = 'IRAN';
+    $countryList['IE'] = 'IRELAND, REPUBLIC';
+    $countryList['IL'] = 'ISRAEL';
+    $countryList['IT'] = 'ITALY';
+    $countryList['CI'] = 'IVORY COAST';
+    $countryList['JM'] = 'JAMAICA';
+    $countryList['JP'] = 'JAPAN';
+    $countryList['JO'] = 'JORDAN';
+    $countryList['KZ'] = 'KAZAKHSTAN';
+    $countryList['KE'] = 'KENYA';
+    $countryList['KI'] = 'KIRIBATI, REP OF';
+    $countryList['KR'] = 'KOREA, SOUTH';
+    $countryList['KW'] = 'KUWAIT';
+    $countryList['KG'] = 'KYRGYZSTAN';
+    $countryList['LA'] = 'LAOS'; // Lao Peoples Democratic Republic
+    $countryList['LV'] = 'LATVIA';
+    $countryList['LB'] = 'LEBANON';
+    $countryList['LS'] = 'LESOTHO';
+    $countryList['LR'] = 'LIBERIA';
+    $countryList['LY'] = 'LIBYA';
+    $countryList['LI'] = 'LIECHTENSTEIN';
+    $countryList['LT'] = 'LITHUANIA';
+    $countryList['LU'] = 'LUXEMBOURG';
+    $countryList['MO'] = 'MACAU'; // Now Macau
+    $countryList['MK'] = 'MACEDONIA';
+    $countryList['MG'] = 'MADAGASCAR';
+    $countryList['MW'] = 'MALAWI';
+    $countryList['MY'] = 'MALAYSIA';
+    $countryList['MV'] = 'MALDIVES';
+    $countryList['SO'] = 'MALI';
+    $countryList['MT'] = 'MALTA';
+    $countryList['MH'] = 'MARSHALL ISLANDS';
+    $countryList['MQ'] = 'MARTINIQUE';
+    $countryList['MR'] = 'MAURITANIA';
+    $countryList['MU'] = 'MAURITIUS';
+    $countryList['MX'] = 'MEXICO';
+    $countryList['MD'] = 'MOLDOVA, REP OF';
+    $countryList['MC'] = 'MONACO';
+    $countryList['MN'] = 'MONGOLIA';
+    $countryList['MS'] = 'MONTSERRAT';
+    $countryList['MA'] = 'MOROCCO';
+    $countryList['MZ'] = 'MOZAMBIQUE';
+    $countryList['MM'] = 'MYANMAR';
+    $countryList['NA'] = 'NAMIBIA';
+    $countryList['NR'] = 'NAURU, REP OF';
+    $countryList['NP'] = 'NEPAL';
+    $countryList['NL'] = 'NETHERLANDS';
+    $countryList['KN'] = 'NEVIS';
+    $countryList['NC'] = 'NEW CALEDONIA';
+    $countryList['NZ'] = 'NEW ZEALAND';
+    $countryList['NI'] = 'NICARAGUA';
+    $countryList['NG'] = 'NIGER';
+    $countryList['NG'] = 'NIGERIA';
+    $countryList['NU'] = 'NIUE';
+    $countryList['NO'] = 'NORWAY';
+    $countryList['RO'] = 'OMAN';
+    $countryList['PK'] = 'PAKISTAN';
+    $countryList['PA'] = 'PANAMA';
+    $countryList['PG'] = 'PAPUA NEW GUINEA';
+    $countryList['PY'] = 'PARAGUAY';
+    $countryList['PE'] = 'PERU';
+    $countryList['PH'] = 'PHILLIPINES';
+    $countryList['PL'] = 'POLAND';
+    $countryList['PT'] = 'PORTUGAL';
+    $countryList['PR'] = 'PUERTO RICO';
+    $countryList['QA'] = 'QATAR';
+    $countryList['RE'] = 'REUNION ISLAND';
+    $countryList['RO'] = 'ROMANIA';
+    $countryList['RU'] = 'RUSSIAN FEDERATION';
+    $countryList['RW'] = 'RWANDA';
+    $countryList['MP'] = 'SAIPAN'; // Northern Mariana Islands
+    $countryList['ST'] = 'SAO TOME & PRINCIPE';
+    $countryList['SA'] = 'SAUDI ARABIA';
+    $countryList['SN'] = 'SENEGAL';
+    $countryList['SC'] = 'SEYCHELLES';
+    $countryList['SL'] = 'SIERRA LEONE';
+    $countryList['SG'] = 'SINGAPORE';
+    $countryList['SK'] = 'SLOVAKIA';
+    $countryList['SI'] = 'SLOVENIA';
+    $countryList['SB'] = 'SOLOMON ISLANDS';
+    $countryList['ZA'] = 'SOUTH AFRICA';
+    $countryList['ES'] = 'SPAIN';
+    $countryList['LK'] = 'SRI LANKA';
+    $countryList['BL'] = 'ST BARTHELEMY';
+    $countryList['BQ'] = 'ST EUSTATIUS'; // Bonaire, Sint Eustatius and Saba
+    $countryList['KN'] = 'ST KITTS';
+    $countryList['LC'] = 'ST LUCIA';
+    $countryList['SX'] = 'ST MAARTEN'; // SX for dutch part, ML for French part
+    $countryList['VC'] = 'ST VINCENT';
+    $countryList['SD'] = 'SUDAN';
+    $countryList['SR'] = 'SURINAME';
+    $countryList['SZ'] = 'SWAZILAND';
+    $countryList['SE'] = 'SWEDEN';
+    $countryList['CH'] = 'SWITZERLAND';
+    $countryList['SY'] = 'SYRIA';
+    $countryList['PF'] = 'TAHITI'; // French polynesia
+    $countryList['TW'] = 'TAIWAN';
+    $countryList['TJ'] = 'TAJIKISTAN';
+    $countryList['TZ'] = 'TANZANIA';
+    $countryList['TH'] = 'THAILAND';
+    $countryList['TG'] = 'TOGO';
+    $countryList['TO'] = 'TONGA';
+    $countryList['TT'] = 'TRINIDAD & TOBAGO';
+    $countryList['TR'] = 'TURKEY';
+    $countryList['TM'] = 'TURKMENISTAN';
+    $countryList['TC'] = 'TURKS & CAICOS ISLANDS';
+    $countryList['TV'] = 'TUVALU';
+    $countryList['UG'] = 'UGANDA';
+    $countryList['UA'] = 'UKRAINE';
+    $countryList['GB'] = 'UNITED KINGDOM';
+    $countryList['UM'] = 'UNITED STATES';
+    $countryList['UY'] = 'URUGUAY';
+    $countryList['AE'] = 'UTD ARAB EMIRATES';
+    $countryList['UZ'] = 'UZBEKISTAN';
+    $countryList['VU'] = 'VANUATU';
+    $countryList['VE'] = 'VENEZUELA';
+    $countryList['VN'] = 'VIETNAM';
+    $countryList['VI'] = 'VIRGIN ISLANDS';
+    $countryList['VG'] = 'VIRGIN ISLANDS (UK)';
+    $countryList['EH'] = 'WESTERN SAMOA';
+    $countryList['YE'] = 'YEMAN, REP OF';
+    $countryList['RS'] = 'YUGOSLAVIA'; // Serbia picked, Bosnia and Herzegovina and Croatia where already on the list so Serbia was choosen based on size, anyone witha Yugoslavia address probably needs revisiting
+    $countryList['CD'] = 'ZAIRE';  // Now DR of the Congo
+    $countryList['ZM'] = 'ZAMBIA';
+    $countryList['ZW'] = 'ZIMBABWE';
+
+    // TODO flag if any countries listed as Channel Islands or Yugoslavia as the address will need revisiting
+
+    $countriesToAlert = array('YUGOSLAVIA', 'CHANNEL ISLANDS');
+
+    $alertContacts = array();
+    $alertSites = array();
+
+    foreach ($countryList AS $code => $oldName)
+    {
+        $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET country = '{$code}' WHERE country = '{$oldName}'";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+
+        if (in_array($oldName, $countriesToAlert) AND mysqli_affected_rows($db) > 0)
+        {
+            // We need to alert
+            $sql = "SELECT c.id, c.forenames, c.surname, s.name FROM `{$GLOBALS['dbContacts']}` AS c, `{$GLOBALS['dbSites']}` AS s ";
+            $sql .= "WHERE c.siteid = s.id AND c.country = '{$code}'";
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+            while ($obj = mysqli_fetch_object($result))
+            {
+                $a = array('code' => $code, 'contactid' => $obj->id, 'sitename' => $obj->name, 'firstname' => $obj->forenames, 'surname' => $obj->surname);
+                $alertContacts[] = $a;
+            }
+        }
+
+        $sql = "UPDATE `{$GLOBALS['dbSites']}` SET country = '{$code}' WHERE country = '{$oldName}'";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+
+        if (in_array($oldName, $countriesToAlert) AND mysqli_affected_rows($db) > 0)
+        {
+            // We need to alert
+            $sql = "SELECT s.id, s.name FROM `{$GLOBALS['dbSites']}` AS s ";
+            $sql .= "WHERE s.country = '{$code}'";
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+            while ($obj = mysqli_fetch_object($result))
+            {
+                $a = array('code' => $code, 'siteid' => $obj->id, 'sitename' => $obj->name);
+                $alertSites[] = $a;
+            }
+        }
+
+        $sql = "UPDATE `{$GLOBALS['dbConfig']}` SET value = '{$code}' WHERE value = '{$oldName}' AND config = 'home_country'";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+    }
+
+    // Change to a two character column now
+    $sql = "ALTER TABLE `{$GLOBALS['dbContacts']}` CHANGE `country` `country` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+
+    $sql = "ALTER TABLE `{$GLOBALS['dbSites']}` CHANGE `country` `country` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ;";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+
+    $str = '';
+
+    if (empty($alertContacts) AND empty($alertSites))
+    {
+        $str .= "<p>Country data transfered successfully</p>";
+    }
+    else 
+    {
+        $str .= "<p class='info'>Country data transfered, you had some data using one of the following countries Yugoslavia or Channel Islands these have been mapped to Jersey and Serbia, please update the following records if incorrect, the affected data is listed below:</p>";
+        if (!empty($alertContacts))
+        {
+            $str .= "<p>Contacts:<ul>";
+            foreach ($alertContacts AS $ac)
+            {
+                $str .= "<li>{$ac['firstname']} {$ac['lastname']} from {$ac['sitename']}</li>";
+            }
+            $str .= "</ul></p>";
+        }
+
+        if (!empty($alertSites))
+        {
+            $str .= "<p>Sites:<ul>";
+            foreach ($alertSites AS $as)
+            {
+                $str .= "<li>{$ac['sitename']}</li>";
+            }
+            $str .= "</ul></p>";
+        }
+    }
+
+    return $str;
+
+    // TODO reduce size of columns
 }

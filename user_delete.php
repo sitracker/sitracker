@@ -2,7 +2,7 @@
 // delete_user.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -28,43 +28,43 @@ if (!empty($userid))
     $errors = 0;
     // Check there are no files linked to this user
     $sql = "SELECT userid FROM `{$dbFiles}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
 
     // check there are no links linked to this product
     $sql = "SELECT userid FROM `{$dbLinks}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
 
     // check there are no notes linked to this product
     $sql = "SELECT userid FROM `{$dbNotes}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
 
     // Check there is no software linked to this user
     $sql = "SELECT softwareid FROM `{$dbUserSoftware}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
 
     // Check there are no incidents linked to this user
     $sql = "SELECT id FROM `{$dbIncidents}` WHERE owner={$userid} OR towner={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
 
     // Check there are no updates by this user
     $sql = "SELECT id FROM `{$dbUpdates}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
     
     // Check there are no journel entries by this user
     $sql = "SELECT id FROM `{$dbJournal}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
     
     // Check there are no transaction entries by this user
     $sql = "SELECT id FROM `{$dbTransactions}` WHERE userid={$userid} LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) >= 1) $errors++;
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) >= 1) $errors++;
 
     
     // We break data integrity if we delete the user and there are things
@@ -85,8 +85,8 @@ if (!empty($userid))
 
         foreach ($sql AS $query)
         {
-            $result = mysql_query($query);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $result = mysqli_query($db, $query);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
         }
 
         journal(CFG_LOGGING_NORMAL, 'User Removed', "User {$userid} was removed", CFG_JOURNAL_USERS, $userid);

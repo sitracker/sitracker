@@ -2,7 +2,7 @@
 // edit_feedback_question.php - Form for editing feedback questions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -44,8 +44,8 @@ switch ($action)
         $sql .= "required='{$required}', ";
         $sql .= "options='{$options}' ";
         $sql .= "WHERE id='{$qid}' LIMIT 1";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error ("MySQL Error: ".mysqli_error($db), E_USER_ERROR);
         header("Location: feedback_form_edit.php?formid={$fid}");
         exit;
         break;
@@ -55,10 +55,10 @@ switch ($action)
         echo "<h2 align='center'>{$title}</h2>\n";
 
         $sql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE id = '$qid'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error ("MySQL Error: ".mysqli_error($db), E_USER_WARNING);
 
-        while ($question = mysql_fetch_object($result))
+        while ($question = mysqli_fetch_object($result))
         {
             echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
             echo "<table summary='Form' class='maintable'>";

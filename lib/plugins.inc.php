@@ -2,7 +2,7 @@
 // plugins.inc.php - functions relating to plugins
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -116,7 +116,7 @@ function get_plugins_on_disk()
  */
 function sit_upgrade_plugin_check($doupgrade, $application_version)
 {
-    global $CONFIG; 
+    global $CONFIG, $db;
     $return = '';
     
     // (Re)load plugins from database
@@ -124,10 +124,10 @@ function sit_upgrade_plugin_check($doupgrade, $application_version)
 
     // Read config from database (this overrides any config in the config files
     $sql = "SELECT * FROM `{$GLOBALS['dbConfig']}` WHERE config = 'plugins'";
-    $result = @mysql_query($sql);
-    if ($result AND mysql_num_rows($result) > 0)
+    $result = @mysqli_query($db, $sql);
+    if ($result AND mysqli_num_rows($result) > 0)
     {
-        while ($conf = mysql_fetch_object($result))
+        while ($conf = mysqli_fetch_object($result))
         {
             if ($conf->value === 'TRUE') $conf->value = TRUE;
             if ($conf->value === 'FALSE') $conf->value = FALSE;

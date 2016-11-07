@@ -2,7 +2,7 @@
 // product_skill_new.php - Associates skill with a product
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -53,10 +53,10 @@ if (empty($action) OR $action == "showform")
     else
     {
         $sql = "SELECT name FROM `{$dbProducts}` WHERE id='{$productid}' ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-        list($product) = mysql_fetch_row($result);
+        list($product) = mysqli_fetch_row($result);
         echo "<h3>{$strProduct}: $product</h3>";
         echo "<input name='productid' type='hidden' value='{$productid}' />\n";
     }
@@ -96,9 +96,9 @@ elseif ($action == "new")
     {
         // First have a look if we already have this link
         $sql = "SELECT productid FROM `{$dbSoftwareProducts}` WHERE productid='{$productid}' AND softwareid='{$softwareid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) >= 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) >= 1)
         {
             html_redirect("product_skill_new.php?productid={$productid}&return={$return}", FALSE, $strAvoidDupes);
             // TODO $strAvoidDupes isn't the perfect string to use here, replace with something better when
@@ -107,8 +107,8 @@ elseif ($action == "new")
         }
 
         $sql  = "INSERT INTO `{$dbSoftwareProducts}` (productid, softwareid) VALUES ({$productid}, {$softwareid})";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         // show error message if addition failed
         if (!$result)

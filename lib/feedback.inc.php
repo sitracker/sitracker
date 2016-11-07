@@ -2,7 +2,7 @@
 // feedback.inc.php - functions relating to feedback
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -51,28 +51,29 @@ function send_feedback($contractid)
  */
 function create_incident_feedback($formid, $incidentid)
 {
+    global $db;
     $contactid = incident_contact($incidentid);
     $email = contact_email($contactid);
 
     $toReturn = FALSE;
     
     $sql = "SELECT * FROM `{$GLOBALS['dbFeedbackForms']}` WHERE id = {$formid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($result) == 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($result) == 0)
     {
         debug_log("Attempted to create a feedback form for form ID {$$formid} though it does not exist");
     }
     else
     {
         $sql = "INSERT INTO `{$GLOBALS['dbFeedbackRespondents']}` (formid, contactid, email, incidentid) VALUES (";
-        $sql .= "'".mysql_real_escape_string($formid)."', ";
-        $sql .= "'".mysql_real_escape_string($contactid)."', ";
-        $sql .= "'".mysql_real_escape_string($email)."', ";
-        $sql .= "'".mysql_real_escape_string($incidentid)."') ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_ERROR);
-        $toReturn = mysql_insert_id();
+        $sql .= "'".mysqli_real_escape_string($db, $formid)."', ";
+        $sql .= "'".mysqli_real_escape_string($db, $contactid)."', ";
+        $sql .= "'".mysqli_real_escape_string($db, $email)."', ";
+        $sql .= "'".mysqli_real_escape_string($db, $incidentid)."') ";
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error ("MySQL Error: ".mysqli_error($db), E_USER_ERROR);
+        $toReturn = mysqli_insert_id($db);
     }
     
     return $toReturn;
@@ -156,8 +157,6 @@ function feedback_html_rating($name, $required, $options, $answer='')
         {
             $html .= "<td width='{$colwidth}'";
         }
-        
-
 
         $html .= "/></td>";
     }

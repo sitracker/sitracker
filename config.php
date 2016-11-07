@@ -6,7 +6,7 @@
 //           everything is can be configured from the GUI now anyway
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -37,7 +37,7 @@ $edituserpermission = user_permission($sit[2], PERM_USER_EDIT); // edit user
 
 if ($userid == 'current' OR (empty($userid) != FALSE AND $edituserpermission == FALSE))
 {
-    $edituserid = mysql_real_escape_string($sit[2]);
+    $edituserid = mysqli_real_escape_string($db, $sit[2]);
 }
 
 // Check the users permission
@@ -139,7 +139,7 @@ if ($action == 'save' AND ($CONFIG['demo'] !== TRUE OR $_SESSION['userid'] == 1)
                     $value = intval($value);
                     break;
             }
-            $savevar[$catvar] = mysql_real_escape_string($value);
+            $savevar[$catvar] = mysqli_real_escape_string($db, $value);
             if (mb_substr($value, 0, 6) == 'array(')
             {
                 eval("\$val = $value;");

@@ -2,7 +2,7 @@
 // edit_global_signature.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -17,21 +17,21 @@
 
 function get_globalsignature($sig_id)
 {
-    global $dbEmailSig;
+    global $dbEmailSig, $db;
     $sql = "SELECT signature FROM `{$dbEmailSig}` WHERE id = {$sig_id}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    list($signature) = mysql_fetch_row($result);
-    mysql_free_result($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    list($signature) = mysqli_fetch_row($result);
+    mysqli_free_result($result);
     return $signature;
 }
 
 function delete_signature($sig_id)
 {
-    global $dbEmailSig;
+    global $dbEmailSig, $db;
     $sql = "DELETE FROM `{$dbEmailSig}` WHERE id = {$sig_id}";
-    mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
     journal(CFG_LOGGING_NORMAL, 'Global Signature deleted', "A global signature was deleted", CFG_JOURNAL_ADMIN, 0);
     html_redirect("edit_global_signature.php");
@@ -60,8 +60,8 @@ if (!empty($signature))
         case 'new':
             //then we're adding a new signature
             $sql = "INSERT INTO `{$dbEmailSig}` (signature) VALUES ('$signature') ";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             journal(CFG_LOGGING_NORMAL, 'Global Signature added', "A new global signature was added", CFG_JOURNAL_ADMIN, 0);
             html_redirect("edit_global_signature.php");
@@ -69,8 +69,8 @@ if (!empty($signature))
 
         case 'edit':
             $sql = "UPDATE `{$dbEmailSig}` SET signature = '$signature' WHERE id = {$sig_id}";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             journal(CFG_LOGGING_NORMAL, 'Global Signature updated', "A global signature was updated", CFG_JOURNAL_ADMIN, 0);
             html_redirect("edit_global_signature.php");
@@ -86,8 +86,8 @@ elseif (empty($action))
     echo "<h2>".icon('edit', 32)." {$title}</h2>";
 
     $sql = "SELECT id, signature FROM `{$dbEmailSig}` ORDER BY id ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     echo "<p align='center'>{$strOneOfTheSignaturesWillBeInserted}<br /><br />";
     echo "{$strGlobalSignatureRemember}</p>";
@@ -96,7 +96,7 @@ elseif (empty($action))
 
     echo "<table align='center' width='60%'>";
     echo "<tr><th>{$strGlobalSignature}</th><th>{$strActions}</th></tr>";
-    while ($signature = mysql_fetch_object($result))
+    while ($signature = mysqli_fetch_object($result))
     {
         $id = $signature->id;
         echo "<tr>";

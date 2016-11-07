@@ -2,7 +2,7 @@
 // incidents_table.inc.php - Prints out a table of incidents based on the query that was executed in the page that included this file
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -50,7 +50,7 @@ $shade = 0;
 
 $number_of_slas = number_of_slas();
 
-while ($incidents = mysql_fetch_object($result))
+while ($incidents = mysqli_fetch_object($result))
 {
     // calculate time to next action string
     if ($incidents->timeofnextaction == 0)
@@ -118,10 +118,10 @@ while ($incidents = mysql_fetch_object($result))
     if ($tag == '') $tag = maintenance_servicelevel_tag($incidents->maintenanceid);
 
     $slsql = "SELECT * FROM `{$dbServiceLevels}` WHERE tag='{$tag}' AND priority='{$incidents->priority}' ";
-    $slresult = mysql_query($slsql);
-    if (mysql_error()) trigger_error("mysql query error ".mysql_error(), E_USER_WARNING);
-    $servicelevel = mysql_fetch_object($slresult);
-    if (mysql_num_rows($slresult) < 1) trigger_error("could not retrieve service level ({$slsql})", E_USER_WARNING);
+    $slresult = mysqli_query($db, $slsql);
+    if (mysqli_error($db)) trigger_error("mysql query error ".mysqli_error($db), E_USER_WARNING);
+    $servicelevel = mysqli_fetch_object($slresult);
+    if (mysqli_num_rows($slresult) < 1) trigger_error("could not retrieve service level ({$slsql})", E_USER_WARNING);
 
     // Get Last Update
     list($update_userid, $update_type, $update_currentowner, $update_currentstatus, $update_body, $update_timestamp, $update_nextaction, $update_id) = incident_lastupdate($incidents->id);

@@ -1,6 +1,6 @@
 <?php
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -19,9 +19,9 @@ echo feedback_between_dates();
 echo "<p>{$strCustomerFeedbackReportSiteMsg}:</p>";
 
 $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-$qresult = mysql_query($qsql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-while ($qrow = mysql_fetch_object($qresult))
+$qresult = mysqli_query($db, $qsql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+while ($qrow = mysqli_fetch_object($qresult))
 {
     $q[$qrow->taborder]=$qrow;
 }
@@ -64,57 +64,57 @@ if (!empty($enddate))
 
 $msql .= "ORDER BY s.name, s.department, i.id ASC \n";
 
-$mresult = mysql_query($msql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$mresult = mysqli_query($db, $msql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($mresult) >=1)
+if (mysqli_num_rows($mresult) >=1)
 {
-    $previd=0;
-    $countcontacts=0;
-    $zero=0;
-    $ten=0;
-    $twenty=0;
-    $thirty=0;
-    $forty=0;
-    $fifty=0;
-    $sixty=0;
-    $seventy=0;
-    $eighty=0;
-    $ninety=0;
-    $hundred=0;
-    $surveys=0;
-    if ($CONFIG['debug']) echo "<h4>$msql</h4>";
+    $previd = 0;
+    $countcontacts = 0;
+    $zero = 0;
+    $ten = 0;
+    $twenty = 0;
+    $thirty = 0;
+    $forty = 0;
+    $fifty = 0;
+    $sixty = 0;
+    $seventy = 0;
+    $eighty = 0;
+    $ninety = 0;
+    $hundred = 0;
+    $surveys = 0;
+    if ($CONFIG['debug']) echo "<h4>{$msql}</h4>";
 
-    $firstrun=0;
-    while ($mrow = mysql_fetch_object($mresult))
+    $firstrun = 0;
+    while ($mrow = mysqli_fetch_object($mresult))
     {
         // Only print if we have a value ({$previd} / {$mrow->contactid})
-        if ($previd!=$mrow->siteid AND $firstrun!=0)
+        if ($previd != $mrow->siteid AND $firstrun != 0)
         {
-            $numones=count($storeone);
+            $numones = count($storeone);
             // if ($numones<10) $numones=10;
             ## echo "<h2><a href='/contact_details.php?id={$mrow->contactid}' title='Jump to Contact'>{$mrow->forenames} {$mrow->surname}</a>, {$mrow->department} &nbsp; <a href='#' title='Jump to site'>{$mrow->sitename}</a></h2>";
             ## $html .= "<h3>[[$mrow->contactid]]</h3>";
-            if ($numones>0)
+            if ($numones > 0)
             {
-            for($c=1;$c<=$numones;$c++)
-            {
-                if ($storeone[$c]>0) $qr=number_format($storeone[$c]/$storetwo[$c],2);
-                else $qr=0;
-                if ($storeone[$c]>0) $qp=number_format((($qr -1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
-                else $qp=0;
-                $html .= "Q$c: {$q[$c]->question} {$qr} <strong>({$qp}%)</strong><br />";
-                $gtotal+=$qr;
-            }
-            if ($c>0) $c--;
-            $total_average=number_format($gtotal/$c,2);
-            $total_percent=number_format((($total_average -1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
+                for($c = 1; $c <= $numones; $c++)
+                {
+                    if ($storeone[$c] > 0) $qr = number_format($storeone[$c]/$storetwo[$c],2);
+                    else $qr = 0;
+                    if ($storeone[$c] > 0) $qp = number_format((($qr -1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
+                    else $qp = 0;
+                    $html .= "Q$c: {$q[$c]->question} {$qr} <strong>({$qp}%)</strong><br />";
+                    $gtotal+=$qr;
+                }
+                if ($c>0) $c--;
+                $total_average = number_format($gtotal/$c,2);
+                $total_percent = number_format((($total_average -1) * (100 / ($CONFIG['feedback_max_score'] -1))), 0);
 
-            ## ($gtotal)($c)
-            $html .= "<p>{$strPositivity}: {$total_average} <strong>({$total_percent}%)</strong>, ".sprintf($strAfterXSurveys,$surveys)."</p>";
-            //print_r($storeone);
-            //print_r($storetwo);
-        }
+                ## ($gtotal)($c)
+                $html .= "<p>{$strPositivity}: {$total_average} <strong>({$total_percent}%)</strong>, ".sprintf($strAfterXSurveys,$surveys)."</p>";
+                //print_r($storeone);
+                //print_r($storetwo);
+            }
         else $html = ''; // don't print name where theres  no survey data
 
         if ($total_average>0)
@@ -157,11 +157,11 @@ if (mysql_num_rows($mresult) >=1)
     // $html = "<h2><a href='/contact_details.php?id={$mrow->contactid}' title='Jump to Contact'>{$mrow->forenames} {$mrow->surname}</a>, {$mrow->department} &nbsp; <a href='#' title='Jump to site'>{$mrow->sitename}</a></h2>";
     $html = "<h2>{$mrow->department}&nbsp; <a href='site_details.php?id={$mrow->siteid}' title='Jump to site'>{$mrow->sitename}</a></h2>";
     $qsql = "SELECT * FROM `{$dbFeedbackQuestions}` WHERE formid='{$formid}' AND type='rating' ORDER BY taborder";
-    $qresult = mysql_query($qsql);
+    $qresult = mysqli_query($db, $qsql);
     // echo "$qsql";
 
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    while ($qrow = mysql_fetch_object($qresult))
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    while ($qrow = mysqli_fetch_object($qresult))
     {
         $numquestions++;
         // $html .= "Q{$qrow->taborder}: {$qrow->question} &nbsp;";
@@ -199,21 +199,21 @@ if (mysql_num_rows($mresult) >=1)
         }
 
         $sql .= "ORDER BY i.contact, i.id";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
 
 
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        $numresults=0;
-        $cumul=0;
-        $percent=0;
-        $average=0;
-        $answercount=mysql_num_rows($result);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        $numresults = 0;
+        $cumul = 0;
+        $percent = 0;
+        $average = 0;
+        $answercount = mysqli_num_rows($result);
 
-        if ($answercount>0)
+        if ($answercount > 0)
         {
             ## echo "[{$mrow->reportid}] ";
             //echo "answercount = $answercount <br >";
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
             {
                 // Loop through the results
                 if (!empty($row->result))

@@ -2,7 +2,7 @@
 // portal/contact_details.php - Shows contact details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -72,7 +72,7 @@ if (cleanvar($_REQUEST['action']) == 'update')
     $newpass2 = cleanvar($_REQUEST['newpassword2']);
 
     $_SESSION['formdata']['portalcontactdetails'] = cleanvar($_REQUEST, TRUE, FALSE, FALSE);
-    
+
     $errors = 0;
 
     // VALIDATION CHECKS */
@@ -119,13 +119,32 @@ if (cleanvar($_REQUEST['action']) == 'update')
         $updatesql .= "department='{$department}', address1={$address1}, address2={$address2}, ";
         $updatesql .= "county={$county}, country={$country}, postcode={$postcode}, ";
         $updatesql .= "phone={$phone}, mobile={$mobile}, fax={$fax}, email='{$email}'";
+
         if ($newpass != '')
         {
-            $updatesql .= ", password=MD5('{$newpass}') ";
+            if ($_SESSION['contact_source'] == 'sit')
+            {
+                $updatesql .= ", password=MD5('{$newpass}') ";
+            }
+            else if ($_SESSION['contact_source'] == 'ldap' && !empty($_SESSION['ldap_user_dn']))
+            {
+                $ldaperror = ldapSetPassword($_SESSION['ldap_user_dn'], $newpass);
+                if (!empty($ldaperror))
+                {
+                    trigger_error("LDAP Error " . $ldaperror, E_USER_ERROR);
+                }
+            }
         }
+
         $updatesql .= "WHERE id='{$id}'";
-        mysql_query($updatesql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+
+        mysqli_query($db, $updatesql);
+
+        if (mysqli_error($db))
+        {
+            trigger_error("MySQL Query Error " . mysqli_error($db), E_USER_ERROR);
+        }
+
         clear_form_data('portalcontactdetails');
         if ($_SESSION['contactid'] != $id)
         {
@@ -135,7 +154,11 @@ if (cleanvar($_REQUEST['action']) == 'update')
     }
     else
     {
-        html_redirect($_SERVER['PHP_SELF'], FALSE);
+        if ($_SESSION['contactid'] != $id)
+        {
+            html_redirect($_SERVER['PHP_SELF']."?id={$id}", FALSE);
+        }
+        else html_redirect($_SERVER['PHP_SELF'], FALSE);
     }
 }
 elseif (isset($_POST['add']))
@@ -151,8 +174,8 @@ elseif (isset($_POST['add']))
     {
         $sql = "INSERT INTO `{$dbSupportContacts}`(`maintenanceid`, `contactid`) ";
         $sql .= "VALUES('{$maintid}', '{$contactid}') ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         html_redirect($_SERVER['PHP_SELF']."?id={$id}");
     }
 }
@@ -162,9 +185,9 @@ else
     $sql .= "FROM `{$dbContacts}` AS c, `{$dbSites}` AS s ";
     $sql .= "WHERE c.siteid = s.id ";
     $sql .= "AND c.id={$id}";
-    $query = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $user = mysql_fetch_object($query);
+    $query = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $user = mysqli_fetch_object($query);
 
     include (APPLICATION_INCPATH . 'portalheader.inc.php');
     if ($user->siteid != $_SESSION['siteid'])
@@ -173,8 +196,7 @@ else
         include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
         exit;
     }
-    echo "<h2>".icon('contact', 32, $strContact)." {$user->forenames} {$user->surname}";
-    echo ' '.gravatar($user->email, 32);
+    echo "<h2>" . gravatar($user->email, 32) . " {$user->forenames} {$user->surname}";
     echo "</h2>";
 
     echo show_form_errors('portalcontactdetails');
@@ -261,7 +283,7 @@ else
     }
     echo "</td></tr>\n";
 
-    if ( $_SESSION['contact_source'] == 'sit' )
+    if ($_SESSION['contact_source'] == 'sit' || ($_SESSION['contact_source'] == 'ldap') && $CONFIG['ldap_update_directory_passwords'])
     {
         echo "<tr><th>{$strNewPassword}</th><td><input name='newpassword' value='' type='password' /></td></tr>\n";
         echo "<tr><th>{$strConfirmNewPassword}</th><td><input name='newpassword2' value='' type='password' /></td></tr>\n";
@@ -279,12 +301,12 @@ else
         echo "<h4>{$strAssociateContactWithContract}</h4>";
         echo "<form method='post' action='{$_SERVER['PHP_SELF']}?id={$id}'>";
         $exclude = contact_contracts($id, $_SESSION['siteid'], FALSE);
-        echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, FALSE, $sit[2])."<br />";
+        echo "<p align='center'>".maintenance_drop_down('maintid', 0, $_SESSION['siteid'], $exclude, FALSE, TRUE, $sit[2])."<br />";
         echo "<input type='submit' name='add' value='{$strSave}' /></p></form>";
     }
-    
+
     clear_form_data('portalcontactdetails');
-    
+
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
 ?>

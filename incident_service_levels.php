@@ -2,7 +2,7 @@
 // incident_service_levels.php - Display sla status
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -31,9 +31,9 @@ $sql .= "c.id AS contactid ";
 $sql .= "FROM `{$dbIncidents}` AS i, `{$dbContacts}` AS c ";
 $sql .= "WHERE (i.id='{$incidentid}' AND i.contact = c.id) ";
 $sql .= " OR i.contact=NULL ";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-$incident = mysql_fetch_object($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+$incident = mysqli_fetch_object($result);
 
 $site_name = site_name($incident->siteid);
 $product_name = product_name($incident->product);
@@ -111,15 +111,15 @@ $sql .= " WHERE incidentid = '{$incidentid}' ";
 $sql .= " AND u.currentstatus = is.id ";
 $sql .= " ORDER BY timestamp ASC";
 
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
     $updatearray = array();
     $last = -1;
     $laststatus;
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $updatearray[$row->currentstatus]['name'] = $row->name;
         if ($last == -1)

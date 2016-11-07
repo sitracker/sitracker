@@ -2,7 +2,7 @@
 // edit_backup_users.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -60,8 +60,8 @@ if (empty($save))
 
     $sql = "SELECT * FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s ";
     $sql .= "WHERE us.softwareid = s.id AND userid='{$user}' ORDER BY name";
-    $result = mysql_query($sql);
-    $countsw = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    $countsw = mysqli_num_rows($result);
 
     if ($countsw >= 1)
     {
@@ -69,7 +69,7 @@ if (empty($save))
         echo "<table class='maintable'>\n";
         echo "<tr><th>{$strSkill}</th><th>{$strSubstitute}</th></tr>";
         $class = 'shade1';
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             echo "<tr class='$class'>";
             echo "<td><strong>{$software->id}</strong>: {$software->name}</td>";
@@ -118,8 +118,8 @@ else
     {
         $softlist[$key] = clean_int($softlist[$key]);
         $sql = "UPDATE `{$dbUserSoftware}` SET backupid='{$backupid}' WHERE userid='{$user}' AND softwareid='{$softlist[$key]}' LIMIT 1 ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     }
     plugin_do('edit_backup_users_saved');
     if ($user == $sit[2]) html_redirect("edit_user_skills.php", TRUE);

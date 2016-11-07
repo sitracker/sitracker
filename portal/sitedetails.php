@@ -2,7 +2,7 @@
 // portal/sitedetails.inc.php - Displays the site details to admins
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -40,7 +40,6 @@ if (isset($_POST['submit']))
     $owner = clean_int($_POST['owner']);
     $site = clean_int($_POST['site']);
     $tags = cleanvar($_POST['tags']);
-    $active = cleanvar($_POST['active']);
 
     // Edit site, update the database
     $errors = 0;
@@ -71,26 +70,16 @@ if (isset($_POST['submit']))
         }
         // update site
 
-        if ($active == 'true')
-        {
-            $activeStr = 'true';
-        }
-        else
-        {
-            $activeStr = 'false';
-        }
-
         $sql = "UPDATE `{$dbSites}` SET name='{$name}', department='{$department}', address1='{$address1}', address2='{$address2}', city='{$city}', ";
         $sql .= "county='{$county}', postcode='{$postcode}', country='{$country}', telephone='{$telephone}', fax='{$fax}', email='{$email}', ";
-        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', owner='{$owner}', freesupport='{$incident_quantity}', active='{$activeStr}' WHERE id='{$site}' LIMIT 1";
+        $sql .= "websiteurl='{$websiteurl}', notes='{$notes}', owner='{$owner}', freesupport='{$incident_quantity}' WHERE id='{$site}' LIMIT 1";
 
-        // licenserx='$licenserx'
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         else
         {
             plugin_do('edit_site_save');
-            journal(CFG_LOGGING_NORMAL, $strSiteEdited, sprintf($strSiteXEdited,$site) , CFG_JOURNAL_SITES, $site);
+            journal(CFG_LOGGING_NORMAL, $strSiteEdited, sprintf($strSiteXEdited, $site) , CFG_JOURNAL_SITES, $site);
             html_redirect($_SERVER['PHP_SELF']);
             exit;
         }
@@ -105,11 +94,11 @@ if (isset($_POST['submit']))
 include (APPLICATION_INCPATH . 'portalheader.inc.php');
 
 $sql = "SELECT * FROM `{$GLOBALS['dbSites']}` WHERE id='{$site}' ";
-$siteresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$siteresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 echo show_form_errors('site_edit');
 clear_form_errors('site_edit');
-while ($obj = mysql_fetch_object($siteresult))
+while ($obj = mysqli_fetch_object($siteresult))
 {
     echo "<h2>".icon('site', 32)." ".site_name($site)."</h2>";
     echo "<form name='edit_site' action='{$_SERVER['PHP_SELF']}";
@@ -141,12 +130,12 @@ while ($obj = mysql_fetch_object($siteresult))
     echo "<tr><th>{$strWebsite}:</th><td>";
     echo "<input maxlength='255' name='websiteurl' size='40' value='{$obj->websiteurl}' /></td></tr>\n";
     plugin_do('portal_site_edit_form');
-    
+
     echo "</table>\n";
     echo "<input name='site' type='hidden' value='{$site}' />";
     echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' /> ";
     echo "<input name='submit' type='submit' value='{$strSave}' /></p>";
-    
+
     echo "</form>";
 }
 

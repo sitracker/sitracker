@@ -2,7 +2,7 @@
 // search2.php - New search
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -99,8 +99,8 @@ if (is_numeric($q))
     {
         $js = '';
         $sql = "SELECT id FROM `{$dbIncidents}` WHERE id='{$q}'";
-        $result = mysql_query($sql);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_num_rows($result) > 0)
         {
             echo "<script type='text/javascript'>//<![CDATA[\n";
             if ($_SESSION['userconfig']['incident_popup_onewindow'])
@@ -149,10 +149,11 @@ if (!empty($q))
     }
     else
     {
+        // Its assumed all customerref or externalid's will be longer than three characters
         $incidentsql = "SELECT SQL_CALC_FOUND_ROWS *,incidentid AS id, i.title, ";
         $incidentsql .= "1 AS score ";
         $incidentsql .= "FROM `{$dbUpdates}` as u, `{$dbIncidents}` as i ";
-        $incidentsql .= "WHERE bodytext LIKE '% {$search} %' ";
+        $incidentsql .= "WHERE (bodytext LIKE '% {$search} %' OR i.customerid = '{$search}' OR i.externalid = '{$search}') ";
         $incidentsql .= "AND u.incidentid=i.id ";
         $incidentsql .= "GROUP BY u.incidentid ";
     }
@@ -194,9 +195,9 @@ if (!empty($q))
     {
         $incidentsql .= "LIMIT 0, {$resultsperpage} ";
     }
-    $incidentresult = mysql_query($incidentsql);
-    $resultq = mysql_query("SELECT FOUND_ROWS() AS rows");
-    $resulto = mysql_fetch_object($resultq);
+    $incidentresult = mysqli_query($db, $incidentsql);
+    $resultq = mysqli_query($db, "SELECT FOUND_ROWS() AS rows");
+    $resulto = mysqli_fetch_object($resultq);
     $results = $resulto->rows;
     if ($incidentresult AND $results > 0)
     {
@@ -256,7 +257,7 @@ if (!empty($q))
         echo colheader(date, $strDate, $sort, $order, $filter);
 
         $shade = 'shade1';
-        while($row = mysql_fetch_object($incidentresult))
+        while($row = mysqli_fetch_object($incidentresult))
         {
             echo "<tr class='{$shade}'>
                     <td><a href=\"incident_details.php?id={$row->id}\">{$row->id}</a></td>
@@ -299,13 +300,13 @@ if (!empty($q))
         $sitesql .= "LIMIT {$start}, {$resultsperpage} ";
     }
 
-    if ($siteresult = mysql_query($sitesql) AND mysql_num_rows($siteresult) > 0)
+    if ($siteresult = mysqli_query($db, $sitesql) AND mysqli_num_rows($siteresult) > 0)
     {
         echo "<h3>".icon('site', 32)." {$strSites}</h3>";
         $hits++;
-        $results = mysql_num_rows($siteresult);
-        $countresult = mysql_query($countsql);
-        $results = mysql_num_rows($countresult);
+        $results = mysqli_num_rows($siteresult);
+        $countresult = mysqli_query($db, $countsql);
+        $results = mysqli_num_rows($countresult);
 
         if ($domain == 'sites')
         {
@@ -356,7 +357,7 @@ if (!empty($q))
         echo colheader(dept, $strDepartment, $sort, $order, $filter);
 
         $shade = 'shade1';
-        while ($row = mysql_fetch_object($siteresult))
+        while ($row = mysqli_fetch_object($siteresult))
         {
             echo "<tr class='{$shade}'>
                     <td>{$row->id}</td>
@@ -400,13 +401,13 @@ if (!empty($q))
         $contactsql .= "LIMIT {$start}, {$resultsperpage} ";
     }
 
-    if ($contactresult = mysql_query($contactsql) AND mysql_num_rows($contactresult) > 0)
+    if ($contactresult = mysqli_query($db, $contactsql) AND mysqli_num_rows($contactresult) > 0)
     {
         echo "<h3>".icon('contact', 32)." {$strContacts}</h3>\n";
         $hits++;
-        $results = mysql_num_rows($contactresult);
-        $countresult = mysql_query($countsql);
-        $results = mysql_num_rows($countresult);
+        $results = mysqli_num_rows($contactresult);
+        $countresult = mysqli_query($db, $countsql);
+        $results = mysqli_num_rows($countresult);
         if ($domain == 'contacts')
         {
             $end = $start + $resultsperpage;
@@ -463,7 +464,7 @@ if (!empty($q))
         echo "</tr>";
 
         $shade = 'shade1';
-        while($row = mysql_fetch_object($contactresult))
+        while($row = mysqli_fetch_object($contactresult))
         {
             echo "<tr class='{$shade}'>
                     <td>
@@ -514,13 +515,13 @@ if (!empty($q))
         $usersql .= "LIMIT {$start}, {$resultsperpage} ";
     }
 
-    if ($userresult = mysql_query($usersql) AND mysql_num_rows($userresult) > 0)
+    if ($userresult = mysqli_query($db, $usersql) AND mysqli_num_rows($userresult) > 0)
     {
         echo "<h3>".icon('user', 32)." {$strUsers}</h3>\n";
         $hits++;
-        $results = mysql_num_rows($userresult);
-        $countresult = mysql_query($countsql);
-        $results = mysql_num_rows($countresult);
+        $results = mysqli_num_rows($userresult);
+        $countresult = mysqli_query($db, $countsql);
+        $results = mysqli_num_rows($countresult);
         if ($domain == 'users')
         {
             $end = $start + $resultsperpage;
@@ -538,8 +539,8 @@ if (!empty($q))
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
                                           "<strong>".($begin+1)."</strong>",
-                                          "<strong>".$end."</strong>",
-                                          "<strong>".$results."</strong>")."</p>\n";
+                                          "<strong>{$end}</strong>",
+                                          "<strong>{$results}</strong>")."</p>\n";
         echo "<p align='center'>";
         if (!empty($_GET['start']))
         {
@@ -571,7 +572,7 @@ if (!empty($q))
         echo "</tr>";
 
         $shade = 'shade1';
-        while($row = mysql_fetch_object($userresult))
+        while($row = mysqli_fetch_object($userresult))
         {
             echo "<tr class='{$shade}'>
                     <td>".user_online_icon($row->id)." {$row->realname}</td>
@@ -614,13 +615,13 @@ if (!empty($q))
         $kbsql .= "LIMIT {$start}, {$resultsperpage} ";
     }
 
-    if ($kbresult = mysql_query($kbsql) AND mysql_num_rows($kbresult) > 0)
+    if ($kbresult = mysqli_query($db, $kbsql) AND mysqli_num_rows($kbresult) > 0)
     {
         echo "<h3>".icon('kb', 32)." {$strKnowledgeBase}</h3>";
         $hits++;
-        $results = mysql_num_rows($kbresult);
-        $countresult = mysql_query($countsql);
-        $results = mysql_num_rows($countresult);
+        $results = mysqli_num_rows($kbresult);
+        $countresult = mysqli_query($db, $countsql);
+        $results = mysqli_num_rows($countresult);
         if ($domain == 'users')
         {
             $end = $start + $resultsperpage;
@@ -638,14 +639,15 @@ if (!empty($q))
         }
         echo "<p align='center'>".sprintf($strShowingXtoXofX,
                                           "<strong>".($begin+1)."</strong>",
-                                          "<strong>".$end."</strong>",
-                                          "<strong>".$results."</strong>")."</p>";
+                                          "<strong>{$end}</strong>",
+                                          "<strong>{$results}</strong>")."</p>";
         echo "<p align='center'>";
         if (!empty($_GET['start']) AND $domain == 'kb')
         {
             echo " <a href='{$_SERVER['PHP_SELF']}?domain=kb&q={$q}&start=";
             echo $begin-$resultsperpage."&amp;sort={$sort}&amp;order={$order}&amp;view={$view}'>";
-            echo icon('leftarrow', 16,  $strPrevious)." {$strPrevious}</a> ";        }
+            echo icon('leftarrow', 16,  $strPrevious)." {$strPrevious}</a> ";
+        }
         else
         {
             echo "{$strPrevious}";
@@ -671,7 +673,7 @@ if (!empty($q))
         echo colheader(keywords, $strKeywords, $sort, $order, $filter);
 
         $shade = 'shade1';
-        while($row = mysql_fetch_object($kbresult))
+        while($row = mysqli_fetch_object($kbresult))
         {
             echo "<tr class='{$shade}'>
                     <td><a href='kb_view_article.php?id={$row->docid}'>
@@ -691,19 +693,19 @@ if (!empty($q))
 
     $sql = "SELECT * FROM `{$dbTags}` WHERE name LIKE '%{$q}%'";
 
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<h3>{$strTags}</h3>";
         echo "<p align='center'>";
-        while ($row = mysql_fetch_object($result))
+        while ($row = mysqli_fetch_object($result))
         {
             $countsql = "SELECT COUNT(id) AS counted FROM `{$dbSetTags}` ";
             $countsql .= "WHERE tagid='{$row->tagid}' ";
             $countsql .= "GROUP BY tagid ";
             $countsql .= "ORDER BY counted ASC LIMIT 1";
-            $countresult = mysql_query($countsql);
-            $countrow = mysql_fetch_object($countresult);
+            $countresult = mysqli_query($db, $countsql);
+            $countrow = mysqli_fetch_object($countresult);
 
             echo "<a href='view_tags.php?tagid=$row->tagid' class='taglevel1' style='font-size: 400%; font-weight: normal;' title='{$countrow->counted}'>";
             if (array_key_exists($row->name, $CONFIG['tag_icons']))
@@ -723,7 +725,7 @@ if (!empty($q) AND mb_strlen($q) < 3)
 }
 elseif (!empty($q) AND $hits == 0)
 {
-    echo "<p align='center'>".sprintf($strNoResultsFor, "<strong>'".$q."'</strong>")."<br />";
+    echo "<p align='center'>".sprintf($strNoResultsFor, "<strong>'{$q}'</strong>")."<br />";
     echo "<a href='search.php'>{$strSearchAgain}</a></p>";
 }
 

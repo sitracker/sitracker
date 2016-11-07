@@ -2,7 +2,7 @@
 // skills_matrix.php - Skills matrix page
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -38,9 +38,9 @@ else echo "<a href='{$_SERVER['PHP_SELF']}?gid={$groupid}'>{$strActive}</a>";
 echo "</p>";
 
 $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
-$gresult = mysql_query($gsql);
-if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-while ($group = mysql_fetch_object($gresult))
+$gresult = mysqli_query($db, $gsql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+while ($group = mysqli_fetch_object($gresult))
 {
     $grouparr[$group->id] = $group->name;
 }
@@ -81,14 +81,14 @@ elseif ($numgroups < 1 OR $filtergroup == 'all') { $sql .= "AND 1=1 "; }
 else $sql .= "AND (u.groupid='{$filtergroup}' OR u.groupid IS NULL)";
 $sql .= " GROUP BY u.id ORDER BY u.realname";
 
-$usersresult = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$usersresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-$countusers = mysql_num_rows($usersresult);
+$countusers = mysqli_num_rows($usersresult);
 
 if ($countusers > 0)
 {
-    while ($row = mysql_fetch_object($usersresult))
+    while ($row = mysqli_fetch_object($usersresult))
     {
         if (($row->realname != NULL) AND ($row->realname != ''))
         {
@@ -100,7 +100,7 @@ if ($countusers > 0)
             $countusers--;
         }
     }
-    mysql_data_seek($usersresult, 0);
+    mysqli_data_seek($usersresult, 0);
     $sql = "SELECT u.id, u.realname, s.name ";
     $sql .= "FROM `{$dbUserSoftware}` AS us RIGHT JOIN `{$dbSoftware}` AS s ON (us.softwareid = s.id) ";
     $sql .= "LEFT JOIN `{$dbUsers}` AS u ON us.userid = u.id ";
@@ -123,23 +123,23 @@ if ($countusers > 0)
         $sql .= "AND (u.groupid='{$filtergroup}' OR u.groupid IS NULL)";
     }
     $sql .= " ORDER BY s.name, u.id";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    $countskills = mysql_num_rows($result);
+    $countskills = mysqli_num_rows($result);
 }
 
 if ($countskills > 0 AND $countusers > 0)
 {
     $previous = '';
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         if (($row->realname != NULL) AND ($row->realname != ''))
         {
             $skills[$row->name][$row->realname] = $row->realname;
         }
     }
-    mysql_data_seek($result, 0);
+    mysqli_data_seek($result, 0);
     echo "<table class='maintable vertical'>";
     $shade = 'shade1';
     echo "<thead><tr><td>{$strSkill}</td>";
@@ -150,13 +150,13 @@ if ($countskills > 0 AND $countusers > 0)
     echo "<th>{$strTotal}</th>";
     echo "</tr></thead>\n";
     $previous = '';
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         if ($previous != $row->name)
         {
             $count = 0;
             echo "<tr><th width='20%;'>{$row->name}</th>";
-            while ($user = mysql_fetch_object($usersresult))
+            while ($user = mysqli_fetch_object($usersresult))
             {
                 if (($user->realname != NULL) AND ($user->realname != ''))
                 {
@@ -182,7 +182,7 @@ if ($countskills > 0 AND $countusers > 0)
             if ($shade == 'shade1') $shade = 'shade2';
             else $shade = 'shade1';
         }
-        mysql_data_seek($usersresult, 0);
+        mysqli_data_seek($usersresult, 0);
         $previous = $row->name;
     }
     echo "<tr><th align='right'>{$strTotal}</th>";

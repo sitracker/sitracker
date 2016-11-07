@@ -2,7 +2,7 @@
 // soap_core.inc.php - Core SOAP functions
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -29,7 +29,7 @@ $server->register('login',
  */
 function login($username, $password, $applicationname='noname')
 {
-    global $CONFIG;
+    global $CONFIG, $db;
     $auth_result = authenticate($username, $password);
     $status = new SoapStatus();
     $sessionid = '';
@@ -47,15 +47,15 @@ function login($username, $password, $applicationname='noname')
         // Retrieve users profile
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` WHERE username='{$username}' AND password=MD5('{$password}') LIMIT 1";
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) < 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) < 1)
         {
             $_SESSION['auth'] = FALSE;
             trigger_error("No such user", E_USER_ERROR);
         }
 
-        $user = mysql_fetch_object($result);
+        $user = mysqli_fetch_object($result);
         // Profile
         $_SESSION['userid'] = $user->id;
         $_SESSION['username'] = $user->username;
@@ -71,11 +71,11 @@ function login($username, $password, $applicationname='noname')
         $_SESSION['applicationame'] = $applicationname;
 
         $sql_userconfig = "SELECT value FROM `{$GLOBALS['dbUserConfig']}` WHERE userid = {$user->id} AND config = 'language'";
-        $result_userconfig = mysql_query($sql_userconfig);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
+        $result_userconfig = mysqli_query($db, $sql_userconfig);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) == 1)
         {
-            $obj = mysql_fetch_object($result_userconfig);
+            $obj = mysqli_fetch_object($result_userconfig);
             $_SESSION['lang'] = $obj->value;
         }
         else
@@ -89,15 +89,15 @@ function login($username, $password, $applicationname='noname')
         // First lookup the role permissions
         $sql = "SELECT * FROM `{$GLOBALS['dbUsers']}` AS u, `{$GLOBALS['dbRolePermissions']}` AS rp WHERE u.roleid = rp.roleid ";
         $sql .= "AND u.id = '{$_SESSION['userid']}' AND granted='true'";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             $_SESSION['auth'] = FALSE;
-            trigger_error(mysql_error(), E_USER_ERROR);
+            trigger_error(mysqli_error($db), E_USER_ERROR);
         }
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
-            while ($perm = mysql_fetch_object($result))
+            while ($perm = mysqli_fetch_object($result))
             {
                 $userpermissions[] = $perm->permissionid;
             }
@@ -105,16 +105,16 @@ function login($username, $password, $applicationname='noname')
 
         // Next lookup the individual users permissions
         $sql = "SELECT * FROM `{$GLOBALS['dbUserPermissions']}` WHERE userid = '{$_SESSION['userid']}' AND granted='true' ";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
             $_SESSION['auth'] = FALSE;
-            trigger_error(mysql_error(),E_USER_ERROR);
+            trigger_error(mysqli_error($db),E_USER_ERROR);
         }
 
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
-            while ($perm = mysql_fetch_object($result))
+            while ($perm = mysqli_fetch_object($result))
             {
                 $userpermissions[] = $perm->permissionid;
             }

@@ -2,7 +2,7 @@
 // report_marketing.php - Print/Export a list of contacts by product
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -37,10 +37,10 @@ if (empty($mode))
     echo "<tr><th>{$strInclude}: {$strProducts}" . help_link('CTRLAddRemove') . "</th>";
     echo "<td>";
     $sql = "SELECT * FROM `{$dbProducts}` ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     echo "<select name='inc[]' multiple='multiple' size='6'>";
-    while ($product = mysql_fetch_object($result))
+    while ($product = mysqli_fetch_object($result))
     {
         echo "<option value='{$product->id}'>{$product->name}</option>\n";
     }
@@ -50,10 +50,10 @@ if (empty($mode))
     echo "<th>{$strExclude}: {$strProducts}".help_link('CTRLAddRemove')."</th>";
     echo "<td>";
     $sql = "SELECT * FROM `{$dbProducts}` ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     echo "<select name='exc[]' multiple='multiple' size='6'>";
-    while ($product = mysql_fetch_object($result))
+    while ($product = mysqli_fetch_object($result))
     {
         echo "<option value='{$product->id}'>$product->name</option>\n";
     }
@@ -61,13 +61,13 @@ if (empty($mode))
     echo "</td></tr>\n";
 
     $sql = "SELECT * FROM `{$dbSiteTypes}`";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-    if (mysql_num_rows($result) > 0)
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<tr><th>{$strSiteType}" . help_link('CTRLAddRemove') . "</th><td>";
         echo "<select name='sitetype[]' multiple='multiple' size='6'>";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             echo "<option value='{$obj->typeid}'>{$obj->typename}</option>\n";
         }
@@ -194,9 +194,9 @@ elseif ($mode == 'report')
 
     $sql .= " ORDER BY c.email ASC ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $html .= "<table class='maintable'>";
     $html .= "<tr><th>{$strForenames}</th><th>{$strSurname}</th><th>";
@@ -209,7 +209,7 @@ elseif ($mode == 'report')
     $csvfieldheaders .= "{$strPostcode}\",\"{$strCountry}\",\"{$strTelephone}\",\"";
     $csvfieldheaders .= "{$strProducts}\"\r\n";
     $rowcount = 0;
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $tags = list_tags($row->siteid, TAG_SITE, FALSE);
         $tags = explode(', ', $tags);
@@ -298,12 +298,12 @@ elseif ($mode == 'report')
                 $csv .= '","';
             }
 
-            $presult = mysql_query($psql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $numproducts=mysql_num_rows($presult);
+            $presult = mysqli_query($db, $psql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            $numproducts=mysqli_num_rows($presult);
             $productcount=1;
 
-            while ($product = mysql_fetch_object($presult))
+            while ($product = mysqli_fetch_object($presult))
             {
                 $html .= strip_comma($product->name);
                 $csv .=  strip_comma($product->name);

@@ -2,7 +2,7 @@
 // journal.inc.php - functions relating to the journal
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -29,7 +29,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function journal($loglevel, $event, $bodytext, $journaltype, $refid)
 {
-    global $CONFIG, $sit, $dbJournal;
+    global $CONFIG, $sit, $dbJournal, $db;
     // Journal Types
     // 1 = Logon/Logoff
     // 2 = Support Incidents
@@ -46,14 +46,14 @@ function journal($loglevel, $event, $bodytext, $journaltype, $refid)
     // 3 = Full Logging
     // 4 = Max Debug Logging
 
-    $bodytext = mysql_real_escape_string($bodytext);
+    $bodytext = mysqli_real_escape_string($db, $bodytext);
     if ($loglevel <= $CONFIG['journal_loglevel'])
     {
         $sql  = "INSERT INTO `{$dbJournal}` ";
         $sql .= "(userid, event, bodytext, journaltype, refid) ";
         $sql .= "VALUES ('{$_SESSION['userid']}', '{$event}', '{$bodytext}', '{$journaltype}', '{$refid}') ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         return TRUE;
     }
     else

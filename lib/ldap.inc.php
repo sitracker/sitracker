@@ -2,7 +2,7 @@
 // ldapv2.inc.php - LDAP function library and defines for SiT -Support Incident Tracker
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -442,7 +442,7 @@ function ldap_storeDetails($password, $id = 0, $user=TRUE, $populateOnly=FALSE, 
                 $contact->id = $id;
                 $status = $contact->edit();
             }
-            
+
             if ($status) $toReturn = true;
             else $toReturn = false;
         }
@@ -493,7 +493,7 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
     debug_log("LDAP Filter: {$filter}", TRUE);
     debug_log("LDAP Base: {$base}", TRUE);
     $sr = ldap_search($ldap_conn, $base, $filter, $attributes);
-    
+
     if (ldap_count_entries($ldap_conn, $sr) != 1)
     {
         // Multiple or zero
@@ -501,7 +501,7 @@ function ldap_getDetails($username, $searchOnEmail, &$ldap_conn)
         $toReturn = false;
     }
     else
-    {            
+    {
         // just one
         debug_log("LDAP got details for object: '$username'", TRUE);
         $toReturn  = ldap_first_entry($ldap_conn, $sr);
@@ -541,7 +541,7 @@ function authenticateLDAP($username, $password, $id = 0, $user=TRUE, $populateOn
         * Verify roles
         */
         $entry = ldap_getDetails($username, $searchOnEmail, $ldap_conn);
-        
+
         if (!$entry)
         {
             // Multiple or zero
@@ -597,13 +597,13 @@ function ldapImportCustomerFromEmail($email)
      {
         $sql = "SELECT id, username, contact_source FROM `{$GLOBALS['dbContacts']}` WHERE email = '{$email}'";
         debug_log($sql, TRUE);
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) == 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) == 1)
         {
             debug_log ("just one");
             // Can only deal with the case where one exists, if multiple contacts have the same email address its difficult to deal with
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
 
             if ($obj->contact_source == 'sit')
             {
@@ -619,7 +619,7 @@ function ldapImportCustomerFromEmail($email)
                 $toReturn = true;
             }
         }
-        elseif (mysql_num_rows($result) > 1)
+        elseif (mysqli_num_rows($result) > 1)
         {
             debug_log ("More than one contact was found in LDAP with this address '{$email}', not importing", TRUE);
             // Contact does exists with these details, just theres more than one of them
@@ -869,6 +869,33 @@ function ldap_is_account_disabled($attribute)
             return false;
         }
     }
+}
+
+/**
+ * Set an LDAP password
+ * @param type $dn User DN
+ * @param type $password New password to set
+ * @return true on success
+ * @author Tom Gerrard
+ */
+function ldapSetPassword($dn, $password)
+{
+    global $CONFIG;
+    $ldap_conn = ldapOpen(); // Need to get an admin thread
+    if (strtoupper($CONFIG['ldap_type']) == 'AD')
+    {
+        $newPassword = array('unicodePwd' => mb_convert_encoding("\"$password\"", 'UTF-16LE', 'UTF-8'));
+    }
+    else
+    {
+        $newPassword = array('userPassword' => $password);
+    }
+
+    if (!@ldap_mod_replace($ldap_conn, $dn, $newPassword))
+    {
+        return ldap_error($ldap_conn);
+    }
+    return '';
 }
 
 ?>

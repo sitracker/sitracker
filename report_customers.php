@@ -2,7 +2,7 @@
 // cust_export.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,10 +33,10 @@ if (empty($mode))
     // echo "<th align='center' width='300' class='shade1'>Exclude</th>";
     echo "<tr><td align='center' colspan='2'>";
     $sql = "SELECT * FROM `{$dbSites}` ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     echo "<select name='inc[]' multiple='multiple' size='20'>";
-    while ($site = mysql_fetch_object($result))
+    while ($site = mysqli_fetch_object($result))
     {
         echo "<option value='{$site->id}'>{$site->name}</option>\n";
     }
@@ -103,9 +103,9 @@ elseif ($mode == 'report')
 
     $sql .= " ORDER BY c.email ASC ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $html .= "<h2>".icon('reports', 32)." {$strCustomerExport}</h2>";
     $html .= "<p align='center'>".sprintf($strThisReportShowsContactForSelectedSites, $numrows)."</p>";
@@ -114,7 +114,7 @@ elseif ($mode == 'report')
     $html .= "<th>{$strAddress2}</th><th>{$strCity}</th><th>{$strCounty}</th><th>{$strPostcode}</th><th>{$strCountry}</th><th>{$strTelephone}</th><th>{$strSite}</th><th>{$strProducts}</th></tr>";
     $csvfieldheaders .= "\"{$strForenames}\",\"{$strSurname}\",\"{$strEmail}\",\"{$strAddress1}\",\"{$strAddress2}\",\"{$strCity}\",\"{$strCounty}\",\"{$strPostcode}\",\"{$strCountry}\",\"{$strTelephone}\",\"{$strSite}\",\"{$strProducts}\"\r\n";
     $rowcount = 0;
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $html .= "<tr class='shade2'><td>{$row->forenames}</td><td>{$row->surname}</td>";
         if ($row->dataprotection_email != 'Yes') $html .= "<td>{$row->cemail}</td>";
@@ -154,12 +154,12 @@ elseif ($mode == 'report')
 
         $csv .= strip_comma($row->site).'","';
 
-        $presult = mysql_query($psql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $numproducts = mysql_num_rows($presult);
+        $presult = mysqli_query($db, $psql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $numproducts = mysqli_num_rows($presult);
         $productcount = 1;
 
-        while ($product = mysql_fetch_object($presult))
+        while ($product = mysqli_fetch_object($presult))
         {
             $html .= strip_comma($product->name);
             $csv .=  strip_comma($product->name);

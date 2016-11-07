@@ -30,9 +30,12 @@ if (empty($action))
     echo "<h2>".icon('new', 32)." {$title}</h2>";
 
     echo "<form action='{$_SERVER['PHP_SELF']}?action=new' method='post'>";
-
-    echo "<p align='center'><label>{$strName}: <input name='name' id='name' /></label>";
-    echo "<br /><br /><input type='submit' value='{$strNew}' />";
+    echo "<table align='center'>";
+    echo "<tr><th>{$strName}</th><td><input name='name' id='name' /></td></tr>";
+    echo "<tr><th>{$strPrefix}</th><td><input name='prefix' id='prefix' /></td></tr>";
+    echo "</table>";
+    echo "<p class='formbuttons'>";
+    echo "<input type='submit' value='{$strNew}' />";
     echo "</p>";
     echo "</form>";
 
@@ -41,6 +44,7 @@ if (empty($action))
 else
 {
     $name = clean_dbstring($_REQUEST['name']);
+    $prefix = clean_dbstring($_REQUEST['prefix']);
 
     $errors = 0;
 
@@ -50,16 +54,22 @@ else
         $_SESSION['formerrors']['new_incident_type']['name'] = sprintf($strFieldMustNotBeBlank, $strName);
     }
 
+    if (preg_match('/\d/', $prefix))
+    {
+        $errors++;
+        $_SESSION['formerrors']['edit_incident_edit']['name'] = sprintf($strFieldMustNotConatainNumbers, $strName);
+    }
+
     if ($errors == 0)
     {
-        $sql = "INSERT INTO `{$dbIncidentTypes}` (name, type) VALUES ('{$name}', 'user')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $sql = "INSERT INTO `{$dbIncidentTypes}` (name, type, prefix) VALUES ('{$name}', 'user', '{$prefix}')";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         if (!$result) echo "<p class='error'>".sprintf($strNewXfailed, $strIncidentType)."\n";
         else
         {
-            $id = mysql_insert_id();
+            $id = mysqli_insert_id($db);
             journal(CFG_LOGGING_NORMAL, 'Incident Type Added', "Incident Type{$id} was added", CFG_JOURNAL_ADMIN, $id);
 
             html_redirect("incident_types.php");

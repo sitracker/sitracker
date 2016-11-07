@@ -2,7 +2,7 @@
 // configfuncs.inc.php - functions relating to confg center
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -29,12 +29,12 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
 
     if ($userid == 'current') $userid = $_SESSION['userid'];
 
-    if ($CFGVAR[$setupvar]['type'] == 'languageselect'
-        OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect')
+    if (array_key_exists('type', $CFGVAR[$setupvar]) && ($CFGVAR[$setupvar]['type'] == 'languageselect'
+        OR $CFGVAR[$setupvar]['type'] == 'languagemultiselect'))
     {
         $available_languages = available_languages();
     }
-    elseif ($CFGVAR[$setupvar]['type'] == 'userlanguageselect')
+    elseif (array_key_exists('type', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['type'] == 'userlanguageselect')
     {
         if (!empty($CONFIG['available_i18n']))
         {
@@ -46,16 +46,16 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         }
         $available_languages = array_merge(array(''=>$GLOBALS['strDefault']),$available_languages);
     }
-    elseif ($CFGVAR[$setupvar]['type'] == 'timezoneselect')
+    elseif (array_key_exists('type', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['type'] == 'timezoneselect')
     {
         global $availabletimezones;
     }
 
-    $html .= "<div class='configvar'>";
+    $html = "<div class='configvar'>";
     if ($CFGVAR[$setupvar]['title'] != '') $title = $CFGVAR[$setupvar]['title'];
     else $title = $setupvar;
     $html .= "<h4>{$title}</h4>";
-    if ($CFGVAR[$setupvar]['help']!='') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
+    if (array_key_exists('help', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['help'] != '') $html .= "<p class='helptip'>{$CFGVAR[$setupvar]['help']}</p>\n";
 
     $value = '';
     if (!$cfg_file_exists OR ($cfg_file_exists AND $cfg_file_writable))
@@ -261,15 +261,13 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
         }
     }
 
-    if ($CFGVAR[$setupvar]['statusfield'] == 'TRUE')
+    if (array_key_exists('statusfield', $CFGVAR[$setupvar]) && $CFGVAR[$setupvar]['statusfield'] == 'TRUE')
     {
         $html .= "<div id='status{$setupvar}'></div>";
     }
 
     $html .= "</div>";
     $html .= "<br />\n";
-    if ($c == 1) $c == 2;
-    else $c = 1;
 
     return $html;
 }
@@ -285,7 +283,7 @@ function cfgVarInput($setupvar, $userid = 0, $showvarnames = FALSE)
  */
 function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
 {
-    global $dbConfig, $dbUserConfig, $dbContactConfig, $dbSiteConfig;
+    global $dbConfig, $dbUserConfig, $dbContactConfig, $dbSiteConfig, $db;
 
     if ($namespace == NAMESPACE_USER)
     {
@@ -310,8 +308,8 @@ function cfgSave($setupvars, $namespace = NAMESPACE_SIT, $id = 0)
             default:
                 $sql = "REPLACE INTO `{$dbConfig}` (`config`, `value`) VALUES ('{$key}', '{$value}')";
         }
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(). "  $sql",E_USER_WARNING);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db). "  $sql", E_USER_WARNING);
     }
     return TRUE;
 }

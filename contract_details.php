@@ -2,7 +2,7 @@
 // maintenance_details.php - Show contract details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -40,10 +40,10 @@ $sql .= "AND m.reseller = r.id ";
 $sql .= "AND m.product = p.id ";
 $sql .= "AND (m.licence_type IS NULL OR m.licence_type = lt.id) ";
 
-$maintresult = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$maintresult = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-$maint = mysql_fetch_object($maintresult);
+$maint = mysqli_fetch_object($maintresult);
 
 echo "<table class='maintable vertical'>";
 echo "<tr><th>{$strContract} {$strID}:</th>";
@@ -130,10 +130,10 @@ echo "<tr><th>{$strServiceLevel}:</th><td>";
 $timed = false;
 
 $sql_slas = "SELECT msl.servicelevel, it.name FROM `{$dbMaintenanceServiceLevels}` AS msl, `{$dbIncidentTypes}` AS it WHERE msl.incidenttypeid = it.id AND msl.maintenanceid = {$id}";
-$result_slas = mysql_query($sql_slas);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result_slas = mysqli_query($db, $sql_slas);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 echo "<table><tr><th>{$strIncidentType}</th><th>{$strServiceLevel}</th></tr>";
-while ($obj = mysql_fetch_object($result_slas))
+while ($obj = mysqli_fetch_object($result_slas))
 {
     echo "<tr><td>{$obj->name}</td><td>".get_sla_name($obj->servicelevel)."</td></tr>";
     if (servicelevel_timed($obj->servicelevel)) $timed = true;
@@ -159,8 +159,16 @@ echo "</td></tr>\n";
 if ($timed)
 {
     $billingObj = get_billable_object_from_contract_id($id);
-    echo "<tr><th>{$strBalance}</th><td>".$billingObj->format_amount(get_contract_balance($id, TRUE, TRUE), 2);
-    echo " (&cong;".contract_unit_balance($id, TRUE, TRUE)." units)";
+    echo "<tr><th>{$strBalance}</th><td>";
+    if ($billingObj)
+    {
+        echo $billingObj->format_amount(get_contract_balance($id, TRUE, TRUE), 2);
+        echo " (&cong;".contract_unit_balance($id, TRUE, TRUE)." units)";
+    }
+    else
+    {
+        echo $strError;
+    }
     echo "</td></tr>";
 }
 
@@ -182,7 +190,7 @@ echo "<p align='center'>".html_action_links($operations)."</p>";
 
 echo "<h3>{$strNamedContacts}</h3>";
 
-if (mysql_num_rows($maintresult) > 0)
+if (mysqli_num_rows($maintresult) > 0)
 {
     if ($maint->allcontactssupported == 'yes')
     {
@@ -244,13 +252,13 @@ if (mysql_num_rows($maintresult) > 0)
     // supported software
     $sql = "SELECT * FROM `{$dbSoftwareProducts}` AS sp, `{$dbSoftware}` AS s ";
     $sql .= "WHERE sp.softwareid = s.id AND productid='{$maint->product}' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result)>0)
+    if (mysqli_num_rows($result)>0)
     {
         echo"<table class='maintable'>";
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             $software->lifetime_end = mysql2date($software->lifetime_end);
             echo "<tr><td> ".icon('skill', 16)." ";

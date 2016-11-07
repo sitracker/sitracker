@@ -2,7 +2,7 @@
 // contact.class.php - The contact class for SiT
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -42,16 +42,66 @@ class Contact extends Person {
     var $notes;
     var $active;
 
-    var $emailonadd; // Boolean - default sto false
-
-    function __construct()
+    var $emailonadd; // Boolean - defaults to false
+    
+    function Contact($id=0)
     {
-        $this->emailonadd = false;
+        global $CONFIG;
+        debug_log("Contact({$id})");
+        if ($id > 0)
+        {
+            $this->id = $id;
+            $this->retrieveDetails();
+        }
+        else
+        {
+            $this->emailonadd = false;
+        }
     }
 
     function retrieveDetails()
     {
-        trigger_error("Contact.retrieveDetails() not yet implemented");
+        global $CONFIG;
+        global $db;
+        $sql = "SELECT c.* ";
+        $sql .= "FROM `{$GLOBALS['dbContacts']}` AS c ";
+        $sql .= "WHERE c.id = {$this->id}";
+        debug_log("RetrieveDetails " . $sql);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+
+        if (mysqli_num_rows($result) == 1)
+        {
+            $obj = mysqli_fetch_object($result);
+            $this->username = $obj->username;
+            $this->notify_contact = $obj->notify_contact;
+            $this->forenames = $obj->forenames;
+            $this->surname = $obj->surname;
+            $this->courtesytitle = $obj->courtesytitle;
+            $this->siteid = $obj->siteid;
+            $this->department = $obj->department;
+            $this->address1 = $obj->address1;
+            $this->address2 = $obj->address2;
+            $this->city = $obj->city;
+            $this->county = $obj->county;
+            $this->country = $obj->country;
+            $this->postcode = $obj->postcode;
+            $dpEmail = false;
+            if ($obj->dataprotection_email == 'Yes') $dpEmail = true;
+            $dpPhone = false;
+            if ($obj->dataprotection_phone == 'Yes') $dpPhone = true;
+            $dpAddress = false;
+            if ($obj->dataprotection_address == 'Yes') $dpAddress = true;
+            $this->dataprotection_email = $dbEmail; ///< boolean
+            $this->dataprotection_phone = $dpPhone; ///< boolean
+            $this->dataprotection_address = $dpAddress; ///< boolean
+            $this->notes = $obj->notes;
+            $this->active = $obj->active;            
+        }
+        else
+        {
+        	$this->id = 0;
+        }
     }
 
     /**
@@ -108,11 +158,11 @@ class Contact extends Person {
     /**
      * Performs the addition of the contact to SiT! this performs validity checks before adding the contact
      * @author Paul Heaney
-     * @return mixed int for contactID if sucsesful, false otherwise
+     * @return mixed int for contactID if successful, false otherwise
      */
     function add()
     {
-        global $now, $sit;
+        global $now, $sit, $db;
         $toReturn = false;
         $generate_username = false;
 
@@ -134,14 +184,14 @@ class Contact extends Person {
             $sql .= "siteid, address1, address2, city, county, country, postcode, email, phone, mobile, fax, ";
             $sql .= "department, notes, dataprotection_email, dataprotection_phone, dataprotection_address, ";
             $sql .= "timestamp_added, timestamp_modified, created, createdby, modified, modifiedby, contact_source) ";
-            $sql .= "VALUES ('".clean_dbstring($this->username)."', MD5('".clean_dbstring($this->password)."'), '".clean_dbstring($this->courtesytitle)."', '".clean_dbstring($this->forenames)."', '".clean_dbstring($this->surname)."', '".clean_dbstring($this->jobtitle)."', ";
-            $sql .= "'".clean_int($this->siteid)."', '".clean_dbstring($this->address1)."', '".clean_dbstring($this->address2)."', '".clean_dbstring($this->city)."', '".clean_dbstring($this->county)."', '".clean_dbstring($this->country)."', '".clean_dbstring($this->postcode)."', '".clean_dbstring($this->email)."', ";
-            $sql .= "'".clean_dbstring($this->phone)."', '".clean_dbstring($this->mobile)."', '".clean_dbstring($this->fax)."', '".clean_dbstring($this->department)."', '".clean_dbstring($this->notes)."', '".clean_dbstring($dp['email'])."', ";
-            $sql .= "'".clean_dbstring($dp['phone'])."', '".clean_dbstring($dp['address'])."', '".clean_int($now)."', '".clean_int($now)."', NOW(), '".clean_int($_SESSION['userid'])."', NOW(), '".clean_int($_SESSION['userid'])."', '".clean_dbstring($this->source)."')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $sql .= "VALUES ('".clean_dbstring($this->username)."', MD5('".clean_dbstring($this->password)."'), ".$this->getStringToInsert('courtesytitle').", ".$this->getStringToInsert('forenames').", ".$this->getStringToInsert('surname').", ".$this->getStringToInsert('jobtitle').", ";
+            $sql .= "'".clean_int($this->siteid)."'," . $this->getStringToInsert('address1')."," . $this->getStringToInsert('address2')."," . $this->getStringToInsert('city')."," . $this->getStringToInsert('county')."," . $this->getStringToInsert('country')."," . $this->getStringToInsert('postcode')."," . $this->getStringToInsert('email').", ";
+            $sql .= clean_dbstring('phone')."," . $this->getStringToInsert('mobile')."," . $this->getStringToInsert('fax')."," . $this->getStringToInsert('department')."," . $this->getStringToInsert('notes').", '".clean_dbstring($dp['email'])."', ";
+            $sql .= "'".clean_dbstring($dp['phone'])."', '".clean_dbstring($dp['address'])."', '".clean_int($now)."', '".clean_int($now)."', NOW(), '".clean_int($_SESSION['userid'])."', NOW(), '".clean_int($_SESSION['userid'])."'," . $this->getStringToInsert('source').")";
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-            $newid = mysql_insert_id();
+            $newid = mysqli_insert_id($db);
 
             $toReturn = $newid;
 
@@ -150,18 +200,22 @@ class Contact extends Person {
                 // concatenate username with insert id to make unique
                 $username = $username . $newid;
                 $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET username='{$username}' WHERE id='{$newid}'";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
             }
 
             if ($this->emailonadd) $emaildetails = 1;
             else $emaildetails = 0;
 
-            $t = new TriggerEvent('TRIGGER_NEW_CONTACT', array('contactid' => $newid,
+            if (class_exists("TriggerEvent"))
+            {
+                // When doing JIT the class hasn't been included yet as you don't have a session, not sure if this is quite right
+                $t = new TriggerEvent('TRIGGER_NEW_CONTACT', array('contactid' => $newid,
                                      'prepassword' => $this->password,
                                      'userid' => $sit[2],
                                      'emaildetails' => $emaildetails
                                      ));
+            }
         }
 
         return $toReturn;
@@ -175,7 +229,7 @@ class Contact extends Person {
      */
     function edit()
     {
-        global $now;
+        global $now, $db;
 
         $toReturn = false;
 
@@ -185,7 +239,7 @@ class Contact extends Person {
 
             if (!empty($this->username)) $s[] = "username = '".clean_dbstring($this->username)."'";
             if (!empty($this->password)) $s[] = "password = MD5('".clean_dbstring($this->password)."')";
-            if (!empty($this->jobtitle)) $s[] = "jobtitle = '".clean_dbstring($this->jobtitle)."'";
+            /*if (!empty($this->jobtitle))*/ $s[] = "jobtitle = ". $this->getStringToInsert('jobtitle'); //'".clean_dbstring($this->jobtitle)."'";
             if (!empty($this->email)) $s[] = "email = '".clean_dbstring($this->email)."'";
             if (!empty($this->phone)) $s[] = "phone = '".clean_dbstring($this->phone)."'";
             if (!empty($this->mobile)) $s[] = "mobile = '".clean_dbstring($this->mobile)."'";
@@ -202,9 +256,9 @@ class Contact extends Person {
             if (!empty($this->county)) $s[] = "county = '".clean_dbstring($this->county)."'";
             if (!empty($this->country)) $s[] = "country = '".clean_dbstring($this->country)."'";
             if (!empty($this->postcode)) $s[] = "postcode = '".clean_dbstring($this->postcode)."'";
-            if (!empty($this->dataprotection_email)) $s[] = "dataprotection_email = '".clean_dbstring($db['email'])."'";
-            if (!empty($this->dataprotection_phone)) $s[] = "dataprotection_phone = '".clean_dbstring($db['phone'])."'";
-            if (!empty($this->dataprotection_address)) $s[] = "dataprotection_address = '".clean_dbstring($db['address'])."'";
+            if (!empty($this->dataprotection_email)) $s[] = "dataprotection_email = '".clean_dbstring($dp['email'])."'";
+            if (!empty($this->dataprotection_phone)) $s[] = "dataprotection_phone = '".clean_dbstring($dp['phone'])."'";
+            if (!empty($this->dataprotection_address)) $s[] = "dataprotection_address = '".clean_dbstring($dp['address'])."'";
             if (!empty($this->notes)) $s[] = "notes = '".clean_dbstring($this->notes)."'";
             if (!empty($this->source)) $s[] = "contact_source = '".clean_dbstring($this->source)."'";
             if (!empty($this->active))
@@ -221,10 +275,11 @@ class Contact extends Person {
             }
 
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET ".implode(", ", $s)." WHERE id = {$this->id}";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            debug_log("Updating contact with SQL " . $sql);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 $toReturn = false;
             }
             else
@@ -234,6 +289,7 @@ class Contact extends Person {
         }
         else
         {
+            debug_log("Can't update as no ID passed");
             $toReturn = false;
         }
 
@@ -247,18 +303,19 @@ class Contact extends Person {
      */
     function disable()
     {
+        global $db;
         $toReturn = true;
         if (!empty($this->id))
         {
             $sql = "UPDATE `{$GLOBALS['dbContacts']}` SET active = 'false' WHERE id = {$this->id}";
 
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+            if (mysqli_affected_rows($db) != 1)
             {
                 $sql = "SELECT active FROM `{$GLOBALS['dbContacts']}` WHERE id = {$this->id} AND active = 'false'";
-                $result = mysql_query($sql);
-                if (mysql_num_rows($result) == 0)
+                $result = mysqli_query($db, $sql);
+                if (mysqli_num_rows($result) == 0)
                 {
                     trigger_error("Failed to disable contact {$this->username}", E_USER_WARNING);
                     $toReturn = false;
@@ -285,10 +342,11 @@ class Contact extends Person {
      */
     function is_duplicate()
     {
+        global $db;
         // Check this is not a duplicate
         $sql = "SELECT id FROM `{$GLOBALS['dbContacts']}` WHERE email='{$this->email}' AND LCASE(surname)=LCASE('{$this->surname}') LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_num_rows($result) >= 1) return true;
+        $result = mysqli_query($db, $sql);
+        if (mysqli_num_rows($result) >= 1) return true;
         else return false;
     }
 

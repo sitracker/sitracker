@@ -2,7 +2,7 @@
 // holidays.php -
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -100,16 +100,16 @@ echo "<table align='center' width='450'>\n";
 echo "<tr><th colspan='4' class='subhead'>{$strHolidayList}</th></tr>\n";
 $sql = "SELECT * FROM `{$dbHolidays}` WHERE userid='{$user}' ";
 $sql .= "AND approved = ".HOL_APPROVAL_NONE." AND type < 10 ORDER BY date ASC";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-$numwaiting = mysql_num_rows($result);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+$numwaiting = mysqli_num_rows($result);
 if ($numwaiting > 0)
 {
     if ($user == $sit[2] OR $approver == TRUE)
     {
         // Show dates waiting approval, but only to owner
         echo "<tr class='shade2'><td colspan='4'><strong>{$strDatesNotYetApproved}</strong>:</td></tr>";
-        while ($dates = mysql_fetch_object($result))
+        while ($dates = mysqli_fetch_object($result))
         {
             $dates->date = mysql2date($dates->date, TRUE);
             echo "<tr class='shade1'><td>{$dates->name}</td>";
@@ -166,7 +166,7 @@ if ($numwaiting > 0)
         echo "<tr class='shade1'><td colspan='4'><a href='holiday_request.php?action=resend'>{$strSendReminderRequest}</a></td></tr>";
     }
 }
-mysql_free_result($result);
+mysqli_free_result($result);
 
 // Get list of holiday types
 $holidaytype[HOL_HOLIDAY] = $GLOBALS['strHoliday'];
@@ -182,14 +182,14 @@ foreach ($holidaytype AS $htypeid => $htype)
     $sql = "SELECT * FROM `{$dbHolidays}` ";
     $sql .= "WHERE userid='{$user}' AND type={$htypeid} ";
     $sql.= "AND (approved=".HOL_APPROVAL_GRANTED." OR (approved=".HOL_APPROVAL_GRANTED_ARCHIVED." AND date >= FROM_UNIXTIME($now))) ORDER BY date ASC ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $numtaken = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numtaken = mysqli_num_rows($result);
     $totaltaken += $numtaken;
     if ($numtaken > 0)
     {
         echo "<tr class='shade2'><td colspan='4'><strong>{$htype}</strong>:</td></tr>";
-        while ($dates = mysql_fetch_object($result))
+        while ($dates = mysqli_fetch_object($result))
         {
             $dates->date = mysql2date($dates->date, TRUE);
             echo "<tr class='shade1'>";
@@ -221,7 +221,7 @@ foreach ($holidaytype AS $htypeid => $htype)
             echo "</tr>\n";
         }
     }
-    mysql_free_result($result);
+    mysqli_free_result($result);
 }
 
 if ($totaltaken < 1 AND $numwaiting < 1)
@@ -239,13 +239,13 @@ if ($user == $sit[2])
     $sql  = "SELECT * FROM `{$dbUsers}` ";
     $sql .= "WHERE status!=".USERSTATUS_ACCOUNT_DISABLED;
     $sql .= " AND status!=".USERSTATUS_IN_OFFICE." ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     echo "<table align='center' width='450'>";
     echo "<tr><th class='subhead'>{$strWhosAwayToday}</th></tr>\n";
-    if (mysql_num_rows($result) >=1)
+    if (mysqli_num_rows($result) >=1)
     {
-        while ($users = mysql_fetch_object($result))
+        while ($users = mysqli_fetch_object($result))
         {
             echo "<tr><td class='shade2'>";
             $title = userstatus_name($users->status);

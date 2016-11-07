@@ -2,7 +2,7 @@
 // edit_user_permissions.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -39,10 +39,10 @@ if (empty($action) OR $action == "showform")
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     $sql = "SELECT * FROM `{$dbRoles}` ORDER BY id ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) >= 1)
+    if (mysqli_num_rows($result) >= 1)
     {
         echo "<h2>".icon('trigger', 32)." {$strRolePermissions}</h2>";
         echo show_form_errors('role_permissions');
@@ -53,12 +53,12 @@ if (empty($action) OR $action == "showform")
         echo "<div class='tabcontainer'>";
         echo "<ul>";
         $csql = "SELECT * FROM `{$dbPermissionCategories}` ORDER BY id ASC";
-        $cresult = mysql_query($csql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if ($cresult AND mysql_num_rows($cresult) > 0)
+        $cresult = mysqli_query($db, $csql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if ($cresult AND mysqli_num_rows($cresult) > 0)
         {
             if (empty($seltab)) $seltab = 1;
-            while ($pcat = mysql_fetch_object($cresult))
+            while ($pcat = mysqli_fetch_object($cresult))
             {
                 echo "<li";
                 if ($seltab == $pcat->id) echo " class='active'";
@@ -74,26 +74,26 @@ if (empty($action) OR $action == "showform")
         echo "<fieldset><legend>{$GLOBALS[$cat[$seltab]]}</legend>";
         echo "<table>";
         $psql = "SELECT * FROM `{$dbPermissions}` WHERE categoryid = {$seltab} ORDER BY id ASC";
-        $presult = mysql_query($psql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $presult = mysqli_query($db, $psql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         $class = 'shade1';
         echo "<tr>";
         echo "<th>{$GLOBALS[$pcat->category]} {$strPermissions}</th>";
-        while ($rolerow = mysql_fetch_object($result))
+        while ($rolerow = mysqli_fetch_object($result))
         {
             echo "<th style='min-width: 40px;'><a href='role.php?roleid={$rolerow->id}' title='{$strViewRole}'>{$rolerow->rolename}</a></th>";
         }
         echo "</tr>\n";
-        while ($perm = mysql_fetch_object($presult))
+        while ($perm = mysqli_fetch_object($presult))
         {
             echo "<tr class='{$class}' onclick='trow(event);'>";
             echo "<td><a href='{$PHP_SELF}?action=check&amp;permid={$perm->id}' title='{$strCheckWhoHasPermission}'>{$perm->id}</a> {$GLOBALS[$perm->name]}</td>";
-            mysql_data_seek($result, 0);
-            while ($rolerow = mysql_fetch_object($result))
+            mysqli_data_seek($result, 0);
+            while ($rolerow = mysqli_fetch_object($result))
             {
                 $rpsql = "SELECT * FROM `{$dbRolePermissions}` WHERE roleid='{$rolerow->id}' AND permissionid='{$perm->id}'";
-                $rpresult = mysql_query($rpsql);
-                $rp = mysql_fetch_object($rpresult);
+                $rpresult = mysqli_query($db, $rpsql);
+                $rp = mysqli_fetch_object($rpresult);
                 echo "<td style='text-align:center;'><input name='{$rolerow->id}perm[]' type='checkbox' value='{$perm->id}' ";
                 if ($rp->granted == 'true') echo " checked='checked'";
                 echo " /></td>";
@@ -103,7 +103,7 @@ if (empty($action) OR $action == "showform")
             else $class = "shade2";
         }
         echo "</table>";
-        if (mysql_num_rows($presult) < 1) echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
+        if (mysqli_num_rows($presult) < 1) echo user_alert($GLOBALS['strNothingToDisplay'], E_USER_NOTICE);
 
         echo "</fieldset>";
         echo "<p class='formbuttons'><input name='reset' type='reset' value='{$strReset}' />";
@@ -138,12 +138,12 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
 
     // Next lookup the permissions
     $sql = "SELECT * FROM `{$dbUsers}` AS u, `{$dbRolePermissions}` AS rp WHERE u.roleid = rp.roleid AND u.id = '{$user}' AND granted='true'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
     $userrolepermission = array();
-    if (mysql_num_rows($result) >= 1)
+    if (mysqli_num_rows($result) >= 1)
     {
-        while ($roleperm = mysql_fetch_object($result))
+        while ($roleperm = mysqli_fetch_object($result))
         {
            $userrolepermission[] = $roleperm->permissionid;
         }
@@ -167,18 +167,18 @@ elseif ($action == "edit" && (!empty($user) OR !empty($role)))
         $sql.= "WHERE p.id = rp.permissionid ";
         $sql.= "AND rp.roleid='{$role}' ";
     }
-    $permission_result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    while ($obj = mysql_fetch_object($permission_result))
+    $permission_result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    while ($obj = mysqli_fetch_object($permission_result))
     {
         $permission_array[$obj->id] = $row;
     }
 
     $sql = "SELECT * FROM `{$dbPermissions}`  ORDER BY id ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     $class = 'shade1';
 
-    while ($permissions = mysql_fetch_object($result))
+    while ($permissions = mysqli_fetch_object($result))
     {
         echo "<tr class='{$class}' onclick='trow(event);'>";
         echo "<td><a href='{$_SERVER['PHP_SELF']}?action=check&amp;permid={$permissions->id}'  title='{$strCheckWhoHasPermission}'>";
@@ -224,14 +224,14 @@ elseif ($action == "update")
     if (empty($role) AND empty($user))
     {
         $sql = "SELECT * FROM `{$dbRoles}` ORDER BY id ASC";
-        $result= mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($rolerow = mysql_fetch_object($result))
+        $result= mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($rolerow = mysqli_fetch_object($result))
         {
             // First pass, set all access to false
             $sql = "UPDATE `{$dbRolePermissions}`, `{$dbPermissions}` SET granted='false' WHERE `{$dbPermissions}`.`id` = `{$dbRolePermissions}`.`permissionid` AND `categoryid` = {$seltab} AND roleid={$rolerow->id}";
-            $aresult = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            $aresult = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
             if (!$aresult)
             {
@@ -247,17 +247,17 @@ elseif ($action == "update")
                 {
                     $sql = "UPDATE `{$dbRolePermissions}` SET granted='true' WHERE roleid='{$rolerow->id}' AND permissionid='".clean_int($x[1])."' ";
                     // flush();
-                    $uresult = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                    if (mysql_affected_rows() < 1 || $uresult == FALSE)
+                    $uresult = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                    if (mysqli_affected_rows($db) < 1 || $uresult == FALSE)
                     {
                         // Update failed, this could be because of a missing userpemissions record so try and create one
                         // echo "Update of permission ".$x[1]."failed, no problem, will try insert instead.<br />";
                         $isql = "REPLACE INTO `{$dbRolePermissions}` (roleid, permissionid, granted) ";
                         $isql .= "VALUES ('{$rolerow->id}', '".clean_int($x[1])."', 'true')";
-                        $iresult = mysql_query($isql);
-                        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                        if (mysql_affected_rows() < 1)
+                        $iresult = mysqli_query($db, $isql);
+                        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                        if (mysqli_affected_rows($db) < 1)
                         {
                            $errors++;
                             $_SESSION['formerrors']['role_permissions']['failure'] = "{$strUpdateUserPermission} ".clean_int($x[1])." {$strFailedOnPass2}";
@@ -284,8 +284,8 @@ elseif ($action == "update")
     {
         // First pass, set all access to false
         $sql = "UPDATE `{$dbUserPermissions}` SET granted='false' WHERE userid='{$user}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         // Second pass, loop through checkbox array setting access to true where boxes are checked
         if (is_array($permselection))
@@ -296,17 +296,17 @@ elseif ($action == "update")
                 $sql = "UPDATE `{$dbUserPermissions}` SET granted='true' WHERE userid='{$user}' AND permissionid='{$x[1]}' ";
                 # echo "Updating permission ".$x[1]."<br />";
                 # flush();
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                if (mysql_affected_rows() < 1 || $result == FALSE)
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                if (mysqli_affected_rows($db) < 1 || $result == FALSE)
                 {
                     // Update failed, this could be because of a missing userpemissions record so try and create one
                     // echo "Update of permission ".$x[1]."failed, no problem, will try insert instead.<br />";
                     $isql = "INSERT INTO `{$dbUserPermissions}` (userid, permissionid, granted) ";
                     $isql .= "VALUES ('{$user}', '{$x[1]}', 'true')";
-                    $iresult = mysql_query($isql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                    if (mysql_affected_rows() < 1)
+                    $iresult = mysqli_query($db, $isql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                    if (mysqli_affected_rows($db) < 1)
                     {
                         echo user_alert("{$strUpdateUserPermission} {$x[1]} {$strFailedOnPass2}", E_USER_WARNING);
                     }
@@ -322,9 +322,9 @@ elseif ($action == "update")
 
         // Get an array of roles
         $rsql = "SELECT id FROM `{$dbRoles}`";
-        $rresult = mysql_query($rsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while (list($roleid) = mysql_fetch_row($rresult))
+        $rresult = mysqli_query($db, $rsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while (list($roleid) = mysqli_fetch_row($rresult))
         {
             $roles[] = $roleid;
         }
@@ -335,17 +335,17 @@ elseif ($action == "update")
             // Get a a list of perms
             $psql = "SELECT permissionid FROM `{$dbRolePermissions}` AS rp, `{$dbPermissions}` AS p ";
             $psql .= "WHERE rp.permissionid = p.id AND rp.roleid={$roleid} AND p.categoryid = {$seltab}";
-            $presult = mysql_query($psql);
-            if ($presult AND mysql_num_rows($presult))
+            $presult = mysqli_query($db, $psql);
+            if ($presult AND mysqli_num_rows($presult))
             {
-                while (list($permid) = mysql_fetch_row($presult))
+                while (list($permid) = mysqli_fetch_row($presult))
                 {
                     $var = "{$roleid}perm";
                     if (in_array($permid, $_REQUEST[$var])) $granted = 'true';
                     else $granted = 'false';
                     $sql = "UPDATE `{$dbRolePermissions}` SET granted='{$granted}' WHERE roleid={$roleid} AND permissionid = {$permid}";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 }
             }
         }
@@ -367,14 +367,14 @@ elseif ($action == "check")
         $sql .= "AND r.id = u.roleid ";
         $sql .= "AND permissionid = '{$permid}' AND granted='true' ";
         $sql .= "AND u.status > 0";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) >= 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) >= 1)
         {
             echo "<table class='maintable'>";
             echo "<tr><th>{$strUser}</th><th>{$strRole}</th></tr>";
             $shade = 'shade1';
-            while ($user = mysql_fetch_object($result))
+            while ($user = mysqli_fetch_object($result))
             {
                 echo "<tr class='{$shade}'><td>&#10004; ";
                 echo "<a href='user_profile_edit.php?userid={$user->userid}'>";
@@ -398,14 +398,14 @@ elseif ($action == "check")
         $sql .= "FROM `{$dbUserPermissions}` AS up, `{$dbUsers}` AS u ";
         $sql .= "WHERE up.userid = u.id ";
         $sql .= "AND permissionid = '$permid' AND granted = 'true' AND u.status > 0";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) >= 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) >= 1)
         {
             echo "<table class='maintable'>";
             echo "<tr><th>{$strUser}</th></tr>";
             $shade = 'shade1';
-            while ($user = mysql_fetch_object($result))
+            while ($user = mysqli_fetch_object($result))
             {
                 echo "<tr class='{$shade}'><td>&#10004; <a href='{$_SERVER['PHP_SELF']}?action=edit&amp;userid={$user->userid}#perm{$perm}'>{$user->realname}</a> ({$user->username})</td></tr>\n";
                 if ($shade == 'shade1') $shade = 'shade2';

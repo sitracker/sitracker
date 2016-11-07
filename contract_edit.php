@@ -2,7 +2,7 @@
 // edit_contract.php - Form for editing maintenance contracts
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -47,9 +47,9 @@ if ($action == "edit")
     else
     {
         $sql = "SELECT * FROM `{$dbMaintenance}` WHERE id='{$maintid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Error", E_USER_WARNING);
-        $maint = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Error", E_USER_WARNING);
+        $maint = mysqli_fetch_object($result);
 
         echo "<h2>".icon('contract', 32)." ";
         echo "{$strEditContract}: {$maintid}</h2>";
@@ -101,7 +101,23 @@ if ($action == "edit")
         echo "</label>";
         echo " <span class='required'>{$strRequired}</span></td></tr>\n";
         echo "<tr><th>{$strServiceLevel}:</th><td>";
-        echo servicelevel_drop_down('servicelevel', $maint->servicelevel, TRUE, '', FALSE);
+
+        echo "<table id='incident_types_table'>";
+        echo "<tr><th>{$strIncidentType}</th><th>{$strServiceLevel}</th></tr>";
+
+        $sql_sla = "SELECT * FROM `{$dbMaintenanceServiceLevels}` AS msl WHERE maintenanceid = {$maintid}";
+        $result_sla = mysqli_query($db, $sql_sla);
+        if (mysqli_error($db)) trigger_error("MySQL Error", E_USER_WARNING);
+        while ($obj_sla = mysqli_fetch_object($result_sla))
+        {
+            echo "<tr><td>".incident_types_dropdown('incident_type[]', $obj_sla->incidenttypeid)."</td><td>".servicelevel_drop_down('servicelevel[]', $obj_sla->servicelevel, TRUE);
+            echo "</td></tr>";
+        }
+
+        echo "</table>";
+        echo "<a href=\"javascript:void(0);\" onclick=\"add_row_to_incident_sla_table('incident_types_table')\">{$strAdd}</a>\n";
+
+
         echo "</td></tr>\n";
         echo "<tr><th>{$strAdminContact}: </th><td>";
         echo contact_drop_down("admincontact", $maint->admincontact, TRUE, TRUE);
@@ -142,7 +158,7 @@ if ($action == "edit")
         echo "</form>\n";
 
         echo "<p class='return'><a href='contract_details.php?id={$maintid}'>{$strReturnWithoutSaving}</a></p>";
-        mysql_free_result($result);
+        mysqli_free_result($result);
     }
     include (APPLICATION_INCPATH . 'htmlfooter.inc.php');
 }
@@ -157,7 +173,6 @@ else if ($action == "update")
     $notes = cleanvar($_POST['notes']);
     $admincontact = clean_int($_POST['admincontact']);
     $terminated = cleanvar($_POST['terminated']);
-    $servicelevel = clean_dbstring($_POST['servicelevel']);
     $incidentpoolid = clean_int($_POST['incidentpoolid']);
     $product = clean_int($_POST['product']);
     $contacts = cleanvar($_REQUEST['contacts']);
@@ -182,7 +197,7 @@ else if ($action == "update")
         $errors++;
     }
 
-    if ($_REQUEST['expirydate'] == 0)
+    if ($_REQUEST['expirydate'] == 0 AND $expirydate != -1)
     {
         $_SESSION['formerrors']['maintform']['expirydate'] = sprintf($strFieldMustNotBeBlank, $strExpiryDate);
         $errors++;
@@ -197,14 +212,14 @@ else if ($action == "update")
 
         // NOTE above is so we can insert null so browse_contacts etc can see the contract rather than inserting 0
         $sql  = "UPDATE `{$dbMaintenance}` SET reseller={$reseller}, expirydate='{$expirydate}', licence_quantity='{$licence_quantity}', ";
-        $sql .= "licence_type={$licence_type}, notes='{$notes}', admincontact={$admincontact}, term='{$terminated}', servicelevel='{$servicelevel}', ";
+        $sql .= "licence_type={$licence_type}, notes='{$notes}', admincontact={$admincontact}, term='{$terminated}', ";
         $sql .= "incident_quantity='{$incident_quantity}', ";
         $sql .= "incidentpoolid='{$incidentpoolid}', ";
         $sql .= "supportedcontacts='{$amount}', allcontactssupported='{$allcontacts}'";
         if (!empty($product) AND user_permission($sit[2], PERM_ADMIN)) $sql .= ", product='{$product}'";
         $sql .= " WHERE id='{$maintid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         // show error message if addition failed
         if (!$result)
@@ -215,6 +230,19 @@ else if ($action == "update")
         }
         else
         {
+            $count = count($_REQUEST['incident_type']);
+
+            for ($i = 0; $i < $count; $i++)
+            {
+                $type = clean_dbstring($_REQUEST['incident_type'][$i]);
+                $sla = clean_dbstring($_REQUEST['servicelevel'][$i]);
+                $sql = "INSERT `{$dbMaintenanceServiceLevels}` VALUES ({$maintid}, {$type}, '{$sla}') ON DUPLICATE KEY UPDATE servicelevel = '{$sla}'";
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                $numrows = mysqli_affected_rows($db);
+                if ($numrows < 1) trigger_error("Insert failed '{$numrows}'", E_USER_ERROR);
+            }
+
             plugin_do('contract_edit_saved');
             // show success message
             journal(CFG_LOGGING_NORMAL, 'Contract Edited', "contract {$maintid} modified", CFG_JOURNAL_MAINTENANCE, $maintid);

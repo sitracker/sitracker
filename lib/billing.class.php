@@ -2,7 +2,7 @@
 // billing.class.php - Representation of billing types
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -167,7 +167,7 @@ abstract class Billable {
      */
     function create_transaction_awaiting_approval($incidentid, $contractid, $numberofunits, $unitrate, $totalunits, $totalbillableunits, $totalrefunds, $cost, $texttoappend)
     {
-        global $CONFIG, $now;
+        global $CONFIG, $now, $db;
 
         $rtnvalue = TRUE;
         
@@ -183,26 +183,26 @@ abstract class Billable {
         $sql = "INSERT INTO `{$GLOBALS['dbTransactions']}` (serviceid, totalunits, totalbillableunits, totalrefunds, amount, description, userid, dateupdated, transactionstatus) ";
         $sql .= "VALUES ('{$serviceid}', '{$totalunits}',  '{$totalbillableunits}', '{$totalrefunds}', '{$cost}', '{$desc}', '{$_SESSION['userid']}', '{$date}', '".BILLING_AWAITINGAPPROVAL."')";
         
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error("Error inserting transaction. ".mysql_error(), E_USER_WARNING);
+            trigger_error("Error inserting transaction. ".mysqli_error($db), E_USER_WARNING);
             $rtnvalue = FALSE;
         }
         
-        $transactionid = mysql_insert_id();
+        $transactionid = mysqli_insert_id($db);
         
         if ($transactionid != FALSE)
         {
         
             $sql = "INSERT INTO `{$GLOBALS['dbLinks']}` VALUES (6, {$transactionid}, {$incidentid}, 'left', {$_SESSION['userid']})";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_ERROR);
+                trigger_error(mysqli_error($db), E_USER_ERROR);
                 $rtnvalue = FALSE;
             }
-            if (mysql_affected_rows() < 1)
+            if (mysqli_affected_rows($db) < 1)
             {
                 trigger_error("Link transaction on closure failed", E_USER_ERROR);
                 $rtnvalue = FALSE;
@@ -231,20 +231,20 @@ class UnitBillable extends Billable {
      */
     function close_incident($incidentid)
     {
-        global $CONFIG, $now;
+        global $CONFIG, $now, $db;
 
         $rtnvalue = TRUE;
         
         $contractid = incident_maintid($incidentid);
         $duration = 0;
         $sql = "SELECT SUM(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid}";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error("Error getting duration for billable incident. ".mysql_error(), E_USER_WARNING);
+            trigger_error("Error getting duration for billable incident. ".mysqli_error($db), E_USER_WARNING);
             $rtnvalue = FALSE;
         }
-        list($duration) = mysql_fetch_row($result);
+        list($duration) = mysqli_fetch_row($result);
         if ($duration > 0)
         {
             // There where activities on this update so add to the transactions table
@@ -298,7 +298,7 @@ class UnitBillable extends Billable {
 
     function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
     {
-        global $now;
+        global $now, $db;
         
         $unitbalance = 0;
         
@@ -311,12 +311,12 @@ class UnitBillable extends Billable {
         }
         $sql .= "ORDER BY enddate DESC";
         
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($service = mysql_fetch_object($result))
+            while ($service = mysqli_fetch_object($result))
             {
                 $multiplier = $this->get_billable_multiplier(strtolower(date('D', $now)), date('G', $now));
                 $unitamount = $service->rate * $multiplier;
@@ -342,18 +342,18 @@ class UnitBillable extends Billable {
     
     function approve_incident_transaction($transactionid)
     {
-        global $CONFIG;
+        global $CONFIG, $db;
         
         $rtnvalue = TRUE;
         
         // Check transaction exists, and is awaiting approval and is an incident
         $sql = "SELECT l.linkcolref, t.serviceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
         $sql .= "WHERE t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND l.linktype = 6 AND t.transactionid = {$transactionid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("Error identify incident transaction. ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("Error identify incident transaction. ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            list($incidentid, $serviceid) = mysql_fetch_row($result);
+            list($incidentid, $serviceid) = mysqli_fetch_row($result);
 
             $bills = $this->get_incident_billable_breakdown_array($incidentid);
 
@@ -419,13 +419,14 @@ class UnitBillable extends Billable {
 
     function billing_matrix_selector($id, $selected='')
     {
+        global $db;
         $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixUnit']}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) >= 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) >= 1)
         {
             $html = "<select name='{$id}' id='{$id}'>\n";
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $html .= "<option value='{$obj->tag}'";
                 if ($obj->tag == $selected) $html .= " selected='selected'";
@@ -444,18 +445,19 @@ class UnitBillable extends Billable {
 
     function show_billing_matrix_details()
     {
+        global $db;
         $html = '';
         $sql = "SELECT DISTINCT tag FROM `{$GLOBALS['dbBillingMatrixUnit']}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         
-        if (mysql_num_rows($result) >= 1)
+        if (mysqli_num_rows($result) >= 1)
         {
-            while ($matrix = mysql_fetch_object($result))
+            while ($matrix = mysqli_fetch_object($result))
             {
                 $sql = "SELECT * FROM `{$GLOBALS['dbBillingMatrixUnit']}` WHERE tag = '{$matrix->tag}'";
-                $matrixresult = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+                $matrixresult = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
         
                 $html .= "<table class='maintable'>";
                 $html .= "<thead><tr><th colspan='9'>{$matrix->tag} <a href='{$this->edit_billing_matrix_page}?type=PointsBillable&amp;tag={$matrix->tag}'>{$GLOBALS['strEdit']}</a></th></tr></thead>\n";
@@ -463,7 +465,7 @@ class UnitBillable extends Billable {
                 $html .= "<th>{$GLOBALS['strWednesday']}</th><th>{$GLOBALS['strThursday']}</th><th>{$GLOBALS['strFriday']}</th>";
                 $html .= "<th>{$GLOBALS['strSaturday']}</th><th>{$GLOBALS['strSunday']}</th><th>{$GLOBALS['strPublicHoliday']}</th></tr>\n";
                 $shade = 'shade1';
-                while ($obj = mysql_fetch_object($matrixresult))
+                while ($obj = mysqli_fetch_object($matrixresult))
                 {
                     $html .= "<tr class='{$shade}'><td>{$obj->hour}</td><td>&#215;{$obj->mon}</td><td>&#215;{$obj->tue}</td>";
                     $html .= "<td>&#215;{$obj->wed}</td><td>&#215;{$obj->thu}</td><td>&#215;{$obj->fri}</td>";
@@ -491,7 +493,7 @@ class UnitBillable extends Billable {
     
     function produce_site_approvals_table($siteid, $sitenamenospaces, $startdate, $enddate)
     {
-        global $CONFIG;
+        global $CONFIG, $db;
         
         // TODO this code is abit messy and could do we a tidy up PH 2013-04-01
 
@@ -540,20 +542,20 @@ class UnitBillable extends Billable {
             $sql .= "AND i.closed <= {$enddate} ";
         }
         $sql .= "ORDER BY i.closed";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
         
         $units = 0;
         
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             $shade = 'shade1';
         
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $a = $this->make_incident_billing_array($obj->id);
                 $unapprovable = FALSE;
@@ -794,18 +796,18 @@ class UnitBillable extends Billable {
     {
         $sql = "SELECT `{$dayofweek}` AS rate FROM {$GLOBALS['dbBillingMatrixUnit']} WHERE hour = {$hour} AND tag = '{$billingmatrix}'";
     
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
     
         $rate = 1;
     
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             $rate = $obj->rate;
         }
     
@@ -897,7 +899,7 @@ class UnitBillable extends Billable {
      */
     function make_incident_billing_array($incidentid, $totals = TRUE)
     {
-    
+        global $db;
         $billing = $this->get_incident_billing_details($incidentid);
     
         // echo "<pre>";
@@ -905,14 +907,14 @@ class UnitBillable extends Billable {
         // echo "</pre><hr />";
     
         $sql = "SELECT servicelevel, priority FROM `{$GLOBALS['dbIncidents']}` WHERE id = {$incidentid}";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
     
-        $incident = mysql_fetch_object($result);
+        $incident = mysqli_fetch_object($result);
         $servicelevel_tag = $incident->servicelevel;
         $priority = $incident->priority;
     
@@ -932,10 +934,10 @@ class UnitBillable extends Billable {
     
             //echo $billingSQL;
     
-            $billingresult = mysql_query($billingSQL);
+            $billingresult = mysqli_query($db, $billingSQL);
             // echo $billingSQL;
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            $billingObj = mysql_fetch_object($billingresult);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            $billingObj = mysqli_fetch_object($billingresult);
     
             unset($billingresult);
     
@@ -1037,20 +1039,21 @@ class UnitBillable extends Billable {
      */
     function get_all_available_multipliers($matrixtag='Default')
     {
+        global $db;
         $days = array('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'holiday');
     
         foreach ($days AS $d)
         {
             $sql = "SELECT DISTINCT({$d}) AS day FROM `{$GLOBALS['dbBillingMatrixUnit']}` ";
             if (!empty($matrixtag)) $sql .= " WHERE tag = '{$matrixtag}'";
-            $result = mysql_query($sql);
-            if (mysql_error())
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_WARNING);
+                trigger_error(mysqli_error($db), E_USER_WARNING);
                 return FALSE;
             }
     
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $a[$obj->day] = $obj->day;
             }
@@ -1073,20 +1076,21 @@ class UnitBillable extends Billable {
      */
     function get_incident_billing_details($incidentid)
     {
+        global $db;
         /*
          $array[owner][] = array(owner, starttime, duration)
         */
         $sql = "SELECT * FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} AND duration IS NOT NULL";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
     
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            while($obj = mysql_fetch_object($result))
+            while($obj = mysqli_fetch_object($result))
             {
                 if ($obj->duration > 0)
                 {
@@ -1116,18 +1120,19 @@ class UnitBillable extends Billable {
      */
     function get_incident_billable_breakdown_array($incidentid)
     {
+        global $db;
         $billable = $this->make_incident_billing_array($incidentid, FALSE);
     
         $billingmatrix = '';
     
         $maintenanceid = incident_maintid($incidentid);
         $sql = "SELECT billingmatrix FROM `{$GLOBALS['dbMaintenance']}` WHERE id = {$maintenanceid}";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error("Unable to get billing matrix for service {$serviceid} ".mysql_error(), E_USER_WARNING);
+            trigger_error("Unable to get billing matrix for service {$serviceid} ".mysqli_error($db), E_USER_WARNING);
         }
-        list($billingmatrix) = mysql_fetch_row($result);
+        list($billingmatrix) = mysqli_fetch_row($result);
     
         //echo "<pre>";
         //print_r($billable);
@@ -1245,15 +1250,15 @@ class IncidentBillable extends Billable {
         $sql = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} and duration < 0) AS refunds, ";
         $sql .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$incidentid} and duration > 0) AS addititions";
         
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         
         $refunds = 0;
         $additions = 0;
         
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            list($refunds, $additions) = mysql_fetch_row($result);
+            list($refunds, $additions) = mysqli_fetch_row($result);
         }
         
         $totalunits = 1 + $refunds + $additions;
@@ -1276,7 +1281,7 @@ class IncidentBillable extends Billable {
     
     function contract_unit_balance($contractid, $includenonapproved = FALSE, $includereserved = TRUE, $showonlycurrentlyvalid = TRUE)
     {
-        global $now;
+        global $now, $db;
         
         $unitbalance = 0;
         
@@ -1289,12 +1294,12 @@ class IncidentBillable extends Billable {
         }
         $sql .= "ORDER BY enddate DESC";
         
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
         
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($service = mysql_fetch_object($result))
+            while ($service = mysqli_fetch_object($result))
             {
                 $rate = $service->rate;
                 $unitbalance += ( $service->balance / $rate );
@@ -1320,33 +1325,33 @@ class IncidentBillable extends Billable {
     
     function approve_incident_transaction($transactionid)
     {
-        global $CONFIG;
+        global $CONFIG, $db;
         
         $rtnvalue = TRUE;
         
         // Check transaction exists, and is awaiting approval and is an incident
         $sql = "SELECT l.linkcolref, t.serviceid FROM `{$GLOBALS['dbLinks']}` AS l, `{$GLOBALS['dbTransactions']}` AS t ";
         $sql .= "WHERE t.transactionid = l.origcolref AND t.transactionstatus = ".BILLING_AWAITINGAPPROVAL." AND l.linktype = 6 AND t.transactionid = {$transactionid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("Error identify incident transaction. ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("Error identify incident transaction. ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            list($incidentid, $serviceid) = mysql_fetch_row($result);
+            list($incidentid, $serviceid) = mysqli_fetch_row($result);
         
             $unitrate = get_service_unitrate($serviceid);
             
             $sqlUpdates = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$incidentid} and duration < 0) AS refunds, ";
             $sqlUpdates .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$incidentid} and duration > 0) AS addititions";
             
-            $resultUpdates = mysql_query($sqlUpdates);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $resultUpdates = mysqli_query($db, $sqlUpdates);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
             
             $refunds = 0;
             $additions = 0;
             
-            if (mysql_num_rows($resultUpdates) > 0)
+            if (mysqli_num_rows($resultUpdates) > 0)
             {
-                list($refunds, $additions) = mysql_fetch_row($resultUpdates);
+                list($refunds, $additions) = mysqli_fetch_row($resultUpdates);
             }
             
             $totalunits = 1 + $refunds + $additions;
@@ -1380,7 +1385,7 @@ class IncidentBillable extends Billable {
 
     function produce_site_approvals_table($siteid, $formname, $startdate, $enddate)
     {
-        global $CONFIG;
+        global $CONFIG, $db;
         
         $used = FALSE;
         
@@ -1413,20 +1418,20 @@ class IncidentBillable extends Billable {
             $sql .= "AND i.closed <= {$enddate} ";
         }
         $sql .= "ORDER BY i.closed";
-        $result = mysql_query($sql);
-        if (mysql_error())
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db))
         {
-            trigger_error(mysql_error(), E_USER_WARNING);
+            trigger_error(mysqli_error($db), E_USER_WARNING);
             return FALSE;
         }
         
         $units = 0;
         
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
             $shade = 'shade1';
         
-            while ($obj = mysql_fetch_object($result))
+            while ($obj = mysqli_fetch_object($result))
             {
                 $used = TRUE;
                 $unitrate = get_unit_rate(incident_maintid($obj->id));
@@ -1438,15 +1443,15 @@ class IncidentBillable extends Billable {
                 
                 $sqlIncident = "SELECT (SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid = {$obj->id} and duration < 0) AS refunds, ";
                 $sqlIncident .= "(SELECT sum(duration) FROM `{$GLOBALS['dbUpdates']}` WHERE incidentid= {$obj->id} and duration > 0) AS addititions";
-                $resultIncident = mysql_query($sqlIncident);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+                $resultIncident = mysqli_query($db, $sqlIncident);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
                 
                 $refunds = 0;
                 $additions = 0;
 
-                if (mysql_num_rows($resultIncident) > 0)
+                if (mysqli_num_rows($resultIncident) > 0)
                 {
-                    list($refunds, $additions) = mysql_fetch_row($resultIncident);
+                    list($refunds, $additions) = mysqli_fetch_row($resultIncident);
                 }
 
                 if (empty($refunds)) $refunds = 0;

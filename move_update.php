@@ -2,7 +2,7 @@
 // move_update.php - Moves an incident from the pending/holding queue
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -53,10 +53,10 @@ if ($incidentid == '')
     echo "</div>";
 
     $sql  = "SELECT * FROM `{$dbUpdates}` WHERE id='{$updateid}' ";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-    while ($updates = mysql_fetch_object($result))
+    while ($updates = mysqli_fetch_object($result))
     {
         $update_timestamp_string = ldate($CONFIG['dateformat_datetime'], $updates->timestamp);
         echo "<br />";
@@ -86,13 +86,16 @@ if ($incidentid == '')
 else
 {
     // check that the incident is still open.  i.e. status not = closed
-    if (incident_status($incidentid) != STATUS_CLOSED)
+
+    $incidentstatus = incident_status($incidentid);
+
+    if (!empty($incidentstatus) AND $incidentstatus != STATUS_CLOSED)
     {
         $moved_attachments = TRUE;
         // update the incident record, change the incident status to active
         $sql = "UPDATE `{$dbIncidents}` SET status='1', lastupdated='{$now}', timeofnextaction='0' WHERE id='{$incidentid}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         $old_path = $CONFIG['attachment_fspath']. 'updates' . DIRECTORY_SEPARATOR;
         $new_path = $CONFIG['attachment_fspath'] . $incidentid . DIRECTORY_SEPARATOR;
@@ -103,7 +106,7 @@ else
         $sql .= "WHERE l.origcolref = '{$updateid}' ";
         $sql .= "AND l.linktype = 5 ";
         $sql .= "AND l.linkcolref = f.id";
-        $result = mysql_query($sql);
+        $result = mysqli_query($db, $sql);
         if ($result)
         {
             if (!file_exists($new_path))
@@ -113,7 +116,7 @@ else
                 umask($umask);
             }
 
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
             {
                 $filename = $row->linkcolref ;
                 //. "-" . $row->filename;
@@ -134,9 +137,9 @@ else
         {
             // retrieve the update body so that we can insert time headers
             $sql = "SELECT incidentid, bodytext, timestamp FROM `{$dbUpdates}` WHERE id='{$updateid}'";
-            $uresult = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            list($oldincidentid, $bodytext, $timestamp) = mysql_fetch_row($uresult);
+            $uresult = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            list($oldincidentid, $bodytext, $timestamp) = mysqli_fetch_row($uresult);
 
             if ($oldincidentid == 0) $oldincidentid = 'Inbox';
 
@@ -149,18 +152,20 @@ else
                              "<b>$prettydate</b>")."\n";
             $body .= $SYSLANG['strStatus'] . " -&gt; <b>{$SYSLANG['strActive']}</b>\n";
             $bodytext = $body . $bodytext;
-            $bodytext = mysql_real_escape_string($bodytext);
+            $bodytext = mysqli_real_escape_string($db, $bodytext);
             // move the update.
             $sql = "UPDATE `{$dbUpdates}` SET incidentid='{$incidentid}', userid='{$sit[2]}', bodytext='{$bodytext}', timestamp='{$now}' WHERE id='{$updateid}'";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             //remove from tempincoming to prevent build up
             $sql = "DELETE FROM `{$dbTempIncoming}` WHERE updateid='{$updateid}'";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             journal(CFG_LOGGING_NORMAL, 'Incident Update Moved', "Incident update {$update} moved to incident {$incidentid}", CFG_JOURNAL_INCIDENTS, $incidentid);
+
+            $t = new TriggerEvent('TRIGGER_INCIDENT_UPDATED_EXTERNAL', array('incidentid' => $incidentid));
 
             html_redirect("inbox.php");
         }

@@ -2,7 +2,7 @@
 // download.php - Pass a file to the browser for download
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -43,16 +43,16 @@ $sqlapp = "SELECT f.id, f.filename, f.category
         AND l.origcolref='{$appid}'
         LIMIT 1";
 
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-$resultapp = mysql_query($sqlapp);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+$resultapp = mysqli_query($db, $sqlapp);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-if ((mysql_num_rows($result) > 0) OR (mysql_num_rows($resultapp) > 0))
+if ((mysqli_num_rows($result) > 0) OR (mysqli_num_rows($resultapp) > 0))
 {
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $fileobj = mysql_fetch_object($result);
+        $fileobj = mysqli_fetch_object($result);
         $incidentid = clean_int($fileobj->incidentid);
         $updateid = clean_int($fileobj->updateid);
         $filename = cleanvar($fileobj->filename);
@@ -61,7 +61,7 @@ if ((mysql_num_rows($result) > 0) OR (mysql_num_rows($resultapp) > 0))
     }
     else
     {
-        $fileobj = mysql_fetch_object($resultapp);
+        $fileobj = mysqli_fetch_object($resultapp);
         $filename = cleanvar($fileobj->filename);
         $visibility = cleanvar($fileobj->category);
         $fileid = clean_int($fileobj->id);
@@ -84,11 +84,11 @@ if ((mysql_num_rows($result) > 0) OR (mysql_num_rows($resultapp) > 0))
     if (!empty($app) AND (!empty($appid)))
     {
         $sql = "SELECT origtab FROM `$dbLinkTypes` WHERE id = '{$app}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db),E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
-            while ($apptype = mysql_fetch_object($result))
+            while ($apptype = mysqli_fetch_object($result))
             {
                 $appname = cleanvar($apptype->origtab);
                 $file_fspath2 = "{$CONFIG['attachment_fspath']}{$appname}" . DIRECTORY_SEPARATOR . $appid . DIRECTORY_SEPARATOR . "{$fileid}-{$filename}";

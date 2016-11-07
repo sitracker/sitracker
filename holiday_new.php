@@ -2,7 +2,7 @@
 // holiday_new.php - Adds a holiday to the database
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -59,9 +59,9 @@ if ($length == '0' AND (($approver == TRUE AND ($dapprovedby = $sit[2] OR $admin
     $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' ";
     $sql .= "AND type='{$type}' ";
     if (!$adminuser) $sql .= "AND (approvedby='{$sit[2]}' OR userid={$sit[2]}) ";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
     // echo $sql;
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
     $dlength = 0;
     $dapproved = 0;
 }
@@ -84,8 +84,8 @@ else
                     // there is an existing booking so alter it
                     $sql = "UPDATE `{$dbHolidays}` SET length='{$length}' ";
                     $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' AND length='{$dlength}'";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     
                     
                 }
@@ -93,8 +93,8 @@ else
                 {
                     $sql = "DELETE FROM `{$dbHolidays}` ";
                     $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' ";
-                    $result = mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    $result = mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
                 $dlength = 0;
                 $dapproved = 0;
@@ -111,8 +111,8 @@ else
                 // there is an existing booking so alter it
                 $sql = "UPDATE `{$dbHolidays}` SET length='{$length}' ";
                 $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}' AND type='{$type}' AND length='{$dlength}'";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 $dlength = $length;
             }
         }
@@ -121,7 +121,7 @@ else
             // If there is a holiday here, remove it on request
             $sql = "DELETE FROM `{$dbHolidays}` ";
             $sql .= "WHERE userid='{$user}' AND `date` = '{$year}-{$month}-{$day}'";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             $dlength = $length;
             $approved = 0;
         }
@@ -130,7 +130,7 @@ else
             // there is no holiday on this day, so make one
             $sql = "INSERT INTO `{$dbHolidays}` ";
             $sql .= "SET userid='{$user}', type='{$type}', `date` = '{$year}-{$month}-{$day}', length='{$length}' ";
-            $result = mysql_query($sql);
+            $result = mysqli_query($db, $sql);
             $dlength = $length;
             $approved = 0;
         }

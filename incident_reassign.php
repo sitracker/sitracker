@@ -2,7 +2,7 @@
 // reassign_incident.php - Form for re-assigning an incident to another user
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -48,9 +48,9 @@ switch ($action)
 
         // Retrieve current incident details
         $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $incident = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $incident = mysqli_fetch_object($result);
 
         if ($newstatus != $incident->status)
         {
@@ -98,8 +98,8 @@ switch ($action)
         }
 
         $sql .= "status='{$newstatus}', lastupdated='{$now}' WHERE id='{$id}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         if (isset($triggeruserid))
         {
             $t = new TriggerEvent('TRIGGER_INCIDENT_ASSIGNED', array('userid' => $triggeruserid, 'incidentid' => $incidentid));
@@ -145,13 +145,13 @@ switch ($action)
         }
 
         $sql .= "'$newstatus', '$customervisibility')";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         // Remove any tempassigns that are pending for this incident
         $sql = "DELETE FROM `{$dbTempAssigns}` WHERE incidentid='{$id}'";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
         plugin_do('incident_reassign');
         
@@ -165,9 +165,9 @@ switch ($action)
 
 
         $sql = "SELECT * FROM `{$dbIncidents}` WHERE id='{$id}' LIMIT 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $incident = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $incident = mysqli_fetch_object($result);
 
         if ($incident->towner == $sit[2]) $suggested = suggest_reassign_userid($id);
         else $suggested = suggest_reassign_userid($id, $incident->owner);
@@ -184,9 +184,9 @@ switch ($action)
         if ($suggested > 0) $sql .= "AND id != '$suggested' ";
         if (!$forcepermission) $sql .= "AND accepting = 'Yes' ";
         $sql .= "ORDER BY realname";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        $countusers = mysql_num_rows($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        $countusers = mysqli_num_rows($result);
 
         echo "<p style='font-size: 18px'>{$strOwner}: <strong>";
         if ($sit[2] == $incident->owner) echo "{$strYou} (".user_realname($incident->owner, TRUE).")";
@@ -229,16 +229,16 @@ switch ($action)
             {
                 // Suggested user is shown as the first row
                 $sugsql = "SELECT * FROM `{$dbUsers}` WHERE id='{$suggested}' LIMIT 1";
-                $sugresult = mysql_query($sugsql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                $suguser = mysql_fetch_object($sugresult);
+                $sugresult = mysqli_query($db, $sugsql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                $suguser = mysqli_fetch_object($sugresult);
                 echo "<tr class='idle'>";
                 echo "<td><label><input type='radio' name='userid' checked='checked' value='{$suguser->id}' /> ";
                 // Have a look if this user has skills with this software
                 $ssql = "SELECT softwareid FROM `{$dbUserSoftware}` WHERE userid={$suguser->id} AND softwareid={$incident->softwareid} ";
-                $sresult = mysql_query($ssql);
-                if (mysql_error()) trigger_error("MySQL Query Error".mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($sresult) >=1 )
+                $sresult = mysqli_query($db, $ssql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error".mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($sresult) >=1 )
                 {
                     echo "<strong>{$suguser->realname}</strong>";
                 }
@@ -279,15 +279,15 @@ switch ($action)
                 if ($suggested > 0) echo "</thead><tbody id='moreusers' style='display:none;'>";
                 $shade = 'shade1';
 
-                while ($users = mysql_fetch_object($result))
+                while ($users = mysqli_fetch_object($result))
                 {
                     echo "<tr class='$shade'>";
                     echo "<td><label><input type='radio' name='userid' value='{$users->id}' /> ";
                     // Have a look if this user has skills with this software
                     $ssql = "SELECT softwareid FROM `{$dbUserSoftware}` WHERE userid={$users->id} AND softwareid={$incident->softwareid} ";
-                    $sresult = mysql_query($ssql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                    if (mysql_num_rows($sresult) >=1 ) echo "<strong>{$users->realname}</strong>";
+                    $sresult = mysqli_query($db, $ssql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                    if (mysqli_num_rows($sresult) >=1 ) echo "<strong>{$users->realname}</strong>";
                     else echo $users->realname;
                     echo "</label></td>";
                     echo "<td>".user_online_icon($users->id).userstatus_name($users->status)."</td>";

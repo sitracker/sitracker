@@ -2,7 +2,7 @@
 // edit_feedback_form.php - Form for editing feedback forms
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -38,17 +38,17 @@ switch ($action)
             // need to insert
             $sql = "INSERT INTO `{$dbFeedbackForms}` (name,introduction,thanks,description) VALUES ";
             $sql .= "('{$name}','{$introduction}','{$thanks}','{$description}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-            $formid = mysql_insert_id();
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
+            $formid = mysqli_insert_id($db);
         }
         else
         {
             $sql = "UPDATE `{$dbFeedbackForms}` ";
             $sql .= "SET name='$name', description='$description', introduction='$introduction', thanks='$thanks' ";
             $sql .= "WHERE id='$formid' LIMIT 1";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
         }
 
         header("Location: feedback_form_edit.php?formid={$formid}");
@@ -107,19 +107,19 @@ switch ($action)
 
     default:
         $sql = "SELECT * FROM `{$dbFeedbackForms}` WHERE id='{$formid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
 
         $title = "{$strFeedbackForms} - {$strEdit}";
         include (APPLICATION_INCPATH . 'htmlheader.inc.php');
         echo "<h3>{$title}</h3>";
 
         $sql = "SELECT * FROM `{$dbFeedbackForms}` WHERE id = '$formid'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error ("MySQL Error: ".mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) >= 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error ("MySQL Error: ".mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) >= 1)
         {
-            while ($form = mysql_fetch_object($result))
+            while ($form = mysqli_fetch_object($result))
             {
                 echo "<form action='{$_SERVER['PHP_SELF']}' method='post'>";
                 echo "<table summary='Form' class='maintable'>";
@@ -155,11 +155,11 @@ switch ($action)
 
                 $qsql  = "SELECT * FROM `{$dbFeedbackQuestions}` ";
                 $qsql .= "WHERE formid='$formid' ORDER BY taborder";
-                $qresult = mysql_query($qsql);
-                if (mysql_num_rows($qresult) > 0)
+                $qresult = mysqli_query($db, $qsql);
+                if (mysqli_num_rows($qresult) > 0)
                 {
                     echo "<table width='100%'>";
-                    while ($question = mysql_fetch_object($qresult))
+                    while ($question = mysqli_fetch_object($qresult))
                     {
                         if (empty($question->question)) $question->question = $strUntitled;
                         echo "<tr>";

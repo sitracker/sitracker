@@ -2,7 +2,7 @@
 // services/add.php - Adds a new service record
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -34,12 +34,12 @@ if (empty($contractid))
 
 // Find the latest end date so we can suggest a start date
 $sql = "SELECT enddate FROM `{$dbService}` WHERE contractid = {$contractid} ORDER BY enddate DESC LIMIT 1";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
-    list($prev_enddate) = mysql_fetch_row($result);
+    list($prev_enddate) = mysqli_fetch_row($result);
     $suggested_startdate = mysql2date($prev_enddate) + 86400; // the next day
 }
 else
@@ -227,15 +227,15 @@ else
             $sql .= "VALUES ('{$contractid}', '{$startdate}', '{$enddate}', '{$title}', '{$notes}')";
         }
 
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-        if (mysql_affected_rows() < 1)
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+        if (mysqli_affected_rows($db) < 1)
         {
             trigger_error("Insert failed", E_USER_ERROR);
             $errors++;
         }
 
-        $serviceid = mysql_insert_id();
+        $serviceid = mysqli_insert_id($id);
 
         if ($amount != 0)
         {
@@ -243,20 +243,20 @@ else
         }
 
         $sql = "SELECT expirydate FROM `{$dbMaintenance}` WHERE id = {$contractid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) > 0)
+        if (mysqli_num_rows($result) > 0)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             if ($obj->expirydate < strtotime($enddate))
             {
                 $update = "UPDATE `{$dbMaintenance}` ";
                 $update .= "SET expirydate = '".strtotime($enddate)."' ";
                 $update .= "WHERE id = {$contractid}";
-                mysql_query($update);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-                if (mysql_affected_rows() < 1) trigger_error("Expiry of contract update failed", E_USER_ERROR);
+                mysqli_query($db, $update);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+                if (mysqli_affected_rows($db) < 1) trigger_error("Expiry of contract update failed", E_USER_ERROR);
             }
         }
 

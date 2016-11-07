@@ -2,7 +2,7 @@
 // file.inc.php - functions relating to files
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -169,19 +169,6 @@ function readable_bytes_size($size)
 
 
 /**
- * Function to produce a user readable file size i.e 2048 bytes 1KB etc
- * @author Paul Heaney
- * @param filesize - filesize in bytes
- * @return String filesize in readable format
- * @deprecated DEPRECATED Function renamed to readable_bytes_size() for v3.90, INL 21 June 2011
- */
-function readable_file_size($filesize)
-{
-    return readable_bytes_size($filesize);
-}
-
-
-/**
  * Uploads a file
  * @author Kieran Hogg
  * @param mixed $file file to upload
@@ -238,8 +225,8 @@ function upload_file($file, $incidentid, $type='public')
                     (category, filename, size, userid, usertype, path, filedate, refid)
                     VALUES
                     ('{$type}', '{$file['name']}', '{$file['size']}', '{$userid}', '{$usertype}', '{$filepath}', '{$now}', '{$incidentid}')";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
             return $returnpath;
         }

@@ -2,7 +2,7 @@
 // kb.inc.php - functions relating to knowledgebase
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,7 +25,7 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
  */
 function kb_article($id, $mode='internal')
 {
-    global $CONFIG, $iconset;
+    global $CONFIG, $iconset, $db;
     $id = intval($id);
     if (!is_numeric($id) OR $id == 0)
     {
@@ -35,9 +35,9 @@ function kb_article($id, $mode='internal')
     }
 
     $sql = "SELECT * FROM `{$GLOBALS['dbKBArticles']}` WHERE docid='{$id}' LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $kbarticle = mysql_fetch_object($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $kbarticle = mysqli_fetch_object($result);
 
     if (empty($kbarticle->title))
     {
@@ -58,14 +58,14 @@ function kb_article($id, $mode='internal')
     $ssql = "SELECT * FROM `{$GLOBALS['dbKBSoftware']}` AS kbs, `{$GLOBALS['dbSoftware']}` AS s ";
     $ssql .= "WHERE kbs.softwareid = s.id AND kbs.docid = '{$id}' ";
     $ssql .= "ORDER BY s.name";
-    $sresult = mysql_query($ssql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    if (mysql_num_rows($sresult) >= 1)
+    $sresult = mysqli_query($db, $ssql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    if (mysqli_num_rows($sresult) >= 1)
     {
         $html .= "<h3>{$GLOBALS['strEnvironment']}</h3>";
         $html .= "<p>{$GLOBALS['strTheInfoInThisArticle']}:</p>\n";
         $html .= "<ul>\n";
-        while ($kbsoftware = mysql_fetch_object($sresult))
+        while ($kbsoftware = mysqli_fetch_object($sresult))
         {
             $html .= "<li>{$kbsoftware->name}</li>\n";
         }
@@ -73,10 +73,10 @@ function kb_article($id, $mode='internal')
     }
 
     $csql = "SELECT * FROM `{$GLOBALS['dbKBContent']}` WHERE docid='{$id}' ";
-    $cresult = mysql_query($csql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $cresult = mysqli_query($db, $csql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     $restrictedcontent = 0;
-    while ($kbcontent = mysql_fetch_object($cresult))
+    while ($kbcontent = mysqli_fetch_object($cresult))
     {
         switch ($kbcontent->distribution)
         {
@@ -135,13 +135,13 @@ function kb_article($id, $mode='internal')
     $sqlf = "SELECT f.filename, f.id, f.filedate FROM `{$GLOBALS['dbFiles']}` ";
     $sqlf .= "AS f INNER JOIN `{$GLOBALS['dbLinks']}` as l ON l.linkcolref = f.id ";
     $sqlf .= "WHERE l.linktype = 7 AND l.origcolref = '{$id}'";
-    $fileresult = mysql_query($sqlf);
-    if (mysql_error()) trigger_error("MySQL Error: ".mysql_error(),E_USER_WARNING);
-    if (mysql_num_rows($fileresult) > 0)
+    $fileresult = mysqli_query($db, $sqlf);
+    if (mysqli_error($db)) trigger_error("MySQL Error: ".mysqli_error($db),E_USER_WARNING);
+    if (mysqli_num_rows($fileresult) > 0)
     {
         $html .= "<h3>{$GLOBALS['strFiles']}</h3>";
         $html .= "<table class='attachments'><th>{$GLOBALS['strFilename']}</th><th>{$GLOBALS['strDate']}</th>";
-        while ($filename = mysql_fetch_object($fileresult))
+        while ($filename = mysqli_fetch_object($fileresult))
         {
             $html .= "<tr><td><a href='download.php?id={$filename->id}&app=7&appid={$id}'>$filename->filename</a></td>";
             $html .= "<td>" . ldate($CONFIG['dateformat_filedatetime'],mysql2date($filename->filedate)) . "</td></tr>";
@@ -215,13 +215,14 @@ function kb_article($id, $mode='internal')
  */
 function kb_name($kbid)
 {
+    global $db;
     $kbid = intval($kbid);
     $sql = "SELECT title FROM `{$GLOBALS['dbKBArticles']}` WHERE docid='{$kbid}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     else
     {
-        $row = mysql_fetch_object($result);
+        $row = mysqli_fetch_object($result);
         return $row->title;
     }
 }
@@ -236,16 +237,17 @@ function kb_name($kbid)
  */
 function is_kb_article($id, $mode)
 {
+    global $dbKBArticles, $db;
     $rtn = FALSE;
-    global $dbKBArticles;
+
     $id = cleanvar($id);
     if ($id > 0)
     {
         $sql = "SELECT distribution FROM `{$dbKBArticles}` ";
         $sql .= "WHERE docid = '{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(). "  $sql", E_USER_WARNING);
-        list($visibility) = mysql_fetch_row($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db). "  $sql", E_USER_WARNING);
+        list($visibility) = mysqli_fetch_row($result);
         if ($visibility == 'public' AND $mode == 'public')
         {
             $rtn = TRUE;

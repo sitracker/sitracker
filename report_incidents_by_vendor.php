@@ -2,7 +2,7 @@
 // incidents_by_vendor.php - List the number of incidents for each vendor
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -64,8 +64,8 @@ else
     $sql .= "FROM `{$dbIncidents}` AS i, `{$dbProducts}` AS p, `{$dbVendors}` AS v WHERE i.product = p.id AND i.opened >= '{$startdate}' AND i.opened <= '{$enddate}' ";
     $sql .= "AND p.vendorid = v.id GROUP BY p.vendorid";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
@@ -73,12 +73,12 @@ else
 
     echo "<p align='center'>".sprintf($strForThePeriodXToY, ldate($CONFIG['dateformat_date'], $startdate), ldate($CONFIG['dateformat_date'], $enddate))."</p>";
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<p>";
         echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strVendor}</th><th>{$strIncidents}</th></tr>";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             echo "<tr><td class='shade1'>{$obj->name}</td><td class='shade1'>{$obj->volume}</td></tr>";
         }

@@ -2,7 +2,7 @@
 // note_new.php - Add a new note
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -51,13 +51,13 @@ switch ($action)
         {
             $sql = "INSERT INTO `{$dbNotes}` (userid, bodytext, link, refid) ";
             $sql .= "VALUES ('{$sit[2]}', '{$bodytext}', '{$link}', '{$refid}')";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
-            if (mysql_affected_rows() < 1) trigger_error("Note insert failed", E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
+            if (mysqli_affected_rows($db) < 1) trigger_error("Note insert failed", E_USER_ERROR);
 
             $sql = "UPDATE `{$dbTasks}` SET lastupdated=NOW() WHERE id={$refid}";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
             html_redirect($rpath);
         }

@@ -2,7 +2,7 @@
 // constants.inc.php - Constants
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 //
 // This software may be used and distributed according to the terms
 // of the GNU General Public License, incorporated herein by reference.
@@ -237,4 +237,9 @@ define ('PERM_NEW_SERVICE', 86); // edit Site Types
 define ('PERM_EDIT_INCIDENT_BALANCE', 87); // Update service balances
 define ('PERM_EDIT_USER_SETTINGS', 88); // Edit your own user settings
 // Any new permissions please use a number higher than 99, INL 2011-06-22
+
+
+define ('UPDATE_TYPE_OPENING', 'opening');
+
+define ('UPDATE_SLA_OPENED', 'opened');
 ?>

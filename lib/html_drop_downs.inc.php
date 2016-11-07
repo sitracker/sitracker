@@ -2,7 +2,7 @@
 // html_drop_downs.inc.php - functions that return generic HTML dropdowns
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -124,11 +124,11 @@ function array_drop_down($array, $name, $setting='', $attributes='', $usekey = N
  */
 function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
 {
-    global $dbUserStatus;
+    global $dbUserStatus, $db;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbUserStatus}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}'>\n";
     if ($userdisable)
@@ -136,7 +136,7 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
         $html .= "<option class='disable' selected='selected' value='0'>{$GLOBALS['strAccountDisabled']}</option>\n";
     }
 
-    while ($statuses = mysql_fetch_object($result))
+    while ($statuses = mysqli_fetch_object($result))
     {
         if ($statuses->id > 0)
         {
@@ -165,16 +165,16 @@ function userstatus_drop_down($name, $id = 0, $userdisable = FALSE)
  */
 function userstatus_bardrop_down($name, $id)
 {
-    global $dbUserStatus;
+    global $db, $dbUserStatus;
     // extract statuses
     $sql  = "SELECT id, name FROM `{$dbUserStatus}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select id='userstatus_dropdown' name='{$name}' title='{$GLOBALS['strSetYourStatus']}' ";
     $html .= "onchange=\"set_user_status();\" onblur=\"hide_status_drop_down();\">";
     $html .= "\n";
-    while ($statuses = mysql_fetch_object($result))
+    while ($statuses = mysqli_fetch_object($result))
     {
         if ($statuses->id > 0)
         {
@@ -207,12 +207,12 @@ function userstatus_bardrop_down($name, $id)
  */
 function emailtemplate_drop_down($name, $id, $type)
 {
-    global $dbEmailTemplates;
+    global $db, $dbEmailTemplates;
     // INL 22Apr05 Added a filter to only show user templates
 
     $sql  = "SELECT id, name, description FROM `{$dbEmailTemplates}` WHERE type='{$type}' ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name=\"{$name}\">";
     if ($id == 0)
@@ -220,7 +220,7 @@ function emailtemplate_drop_down($name, $id, $type)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($template = mysql_fetch_object($result))
+    while ($template = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         if (!empty($template->description))
@@ -276,14 +276,14 @@ function accepting_drop_down($name, $userid)
  */
 function escalation_path_drop_down($name, $id)
 {
-    global $dbEscalationPaths;
+    global $dbEscalationPaths, $db;
     $sql  = "SELECT id, name FROM `{$dbEscalationPaths}` ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html = "<select name='{$name}' id='{$name}' >";
     $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
-    while ($path = mysql_fetch_object($result))
+    while ($path = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$path->id}'";
         if ($path->id ==$id)
@@ -368,13 +368,13 @@ function group_drop_down($name = '', $selected = '')
  */
 function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
 {
-    global $dbProducts;
+    global $dbProducts, $db;
     // extract products
     $sql  = "SELECT id, name FROM `{$dbProducts}` ";
     if ($showinactive == FALSE) $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}'";
     if ($required)
@@ -389,7 +389,7 @@ function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($products = mysql_fetch_object($result))
+    while ($products = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$products->id}'";
         if ($products->id == $id)
@@ -414,12 +414,12 @@ function product_drop_down($name, $id, $required = FALSE, $showinactive = FALSE)
  */
 function skill_drop_down($name, $id)
 {
-    global $now, $dbSoftware, $strEOL;
+    global $now, $dbSoftware, $strEOL, $db;
 
     $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}' id='{$name}' >";
 
@@ -428,7 +428,7 @@ function skill_drop_down($name, $id)
         $html .= "<option selected='selected' value='0'>{$GLOBALS['strNone']}</option>\n";
     }
 
-    while ($software = mysql_fetch_object($result))
+    while ($software = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$software->id}'";
         if ($software->id == $id)
@@ -460,22 +460,22 @@ function skill_drop_down($name, $id)
  */
 function softwareproduct_drop_down($name, $id, $productid, $visibility='internal')
 {
-    global $dbSoftware, $dbSoftwareProducts, $strRequired;
+    global $dbSoftware, $dbSoftwareProducts, $strRequired, $db;
     // extract software
     $sql  = "SELECT id, name FROM `{$dbSoftware}` AS s, ";
     $sql .= "`{$dbSoftwareProducts}` AS sp WHERE s.id = sp.softwareid ";
     $sql .= "AND productid = '{$productid}' ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    $numrows = mysql_num_rows($result);
+    $numrows = mysqli_num_rows($result);
     if ($numrows > 0)
     {
         $html = "<select name='{$name}' id='{$name}'";
         if ($visibility == 'internal' AND $id == 0)
         {
-            $html .= " class='required'>";
+            $html .= " class='required'";
         }
         $html .= ">";
 
@@ -491,7 +491,7 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
             }
         }
 
-        while ($software = mysql_fetch_object($result))
+        while ($software = mysqli_fetch_object($result))
         {
             $html .= "<option";
             if ($software->id == $id OR $numrows == 1)
@@ -516,6 +516,38 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
 
 
 /**
+ * Producte a multi select HTMl element of skills
+ * @param string $name Name and ID of the select on the form
+ * @author Paul Heaney
+ */
+function skill_multi_select($name)
+{
+    global $now, $dbSoftware, $strEOL, $db;
+    
+    $sql  = "SELECT id, name, lifetime_end FROM `{$dbSoftware}` ";
+    $sql .= "ORDER BY name ASC";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    
+    $html = "<select name='{$name}[]' id='{$name}' multiple='multiple' size='20' style='min-width: 300px; min-height: 200px;'>";
+    
+    while ($software = mysqli_fetch_object($result))
+    {
+        $html .= "<option value='{$software->id}'>{$software->name}";
+        $lifetime_start = mysql2date($software->lifetime_start);
+        $lifetime_end = mysql2date($software->lifetime_end);
+        if ($lifetime_end > 0 AND $lifetime_end < $now)
+        {
+            $html .= " ({$strEOL})";
+        }
+        $html .= "</option>\n";
+    }
+    $html .= "</select>\n";
+    
+    return $html;
+}
+
+/**
  * A HTML Select listbox for vendors
  * @author Ivan Lucas
  * @param string $name. name/id to use for the select element
@@ -525,10 +557,10 @@ function softwareproduct_drop_down($name, $id, $productid, $visibility='internal
  */
 function vendor_drop_down($name, $id, $required = FALSE)
 {
-    global $dbVendors;
+    global $dbVendors, $db;
     $sql = "SELECT id, name FROM `{$dbVendors}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html = "<select name='$name'";
     if ($required)
     {
@@ -540,7 +572,7 @@ function vendor_drop_down($name, $id, $required = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $html .= "<option";
         if ($row->id == $id)
@@ -566,10 +598,10 @@ function vendor_drop_down($name, $id, $required = FALSE)
  */
 function sitetype_drop_down($name, $id, $required = FALSE)
 {
-    global $dbSiteTypes;
+    global $dbSiteTypes, $db;
     $sql = "SELECT typeid, typename FROM `{$dbSiteTypes}` ORDER BY typename ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $html .= "<select name='$name'";
     if ($required)
     {
@@ -581,7 +613,7 @@ function sitetype_drop_down($name, $id, $required = FALSE)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($obj = mysql_fetch_object($result))
+    while ($obj = mysqli_fetch_object($result))
     {
         $html .= "<option ";
         if ($obj->typeid == $id)
@@ -605,10 +637,10 @@ function sitetype_drop_down($name, $id, $required = FALSE)
  */
 function role_drop_down($name, $id)
 {
-    global $dbRoles;
+    global $dbRoles, $db;
     $sql  = "SELECT id, rolename FROM `{$dbRoles}` ORDER BY rolename ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     $html = "<select name='{$name}'>";
     if ($id == 0)
@@ -616,7 +648,7 @@ function role_drop_down($name, $id)
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($role = mysql_fetch_object($result))
+    while ($role = mysqli_fetch_object($result))
     {
         $html .= "<option value='{$role->id}'";
         if ($role->id == $id)
@@ -641,11 +673,11 @@ function role_drop_down($name, $id)
  */
 function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALSE)
 {
-    global $dbSites, $strEllipsis;
+    global $dbSites, $strEllipsis, $db;
     $sql  = "SELECT id, name, department FROM `{$dbSites}` ";
     if (!$showinactive)  $sql .= "WHERE active = 'true' ";
     $sql .= "ORDER BY name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
     $html = "<select name='{$name}'";
     if ($required)
@@ -658,7 +690,7 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
         $html .="<option selected='selected' value='0'></option>\n";
     }
 
-    while ($sites = mysql_fetch_object($result))
+    while ($sites = mysqli_fetch_object($result))
     {
         $text = $sites->name;
         if (!empty($sites->department))
@@ -702,17 +734,17 @@ function site_drop_down($name, $id = '', $required = FALSE, $showinactive = FALS
  */
 function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $required = FALSE, $showonlyactive = FALSE, $adminid = '', $sla = FALSE)
 {
-    global $GLOBALS, $now;
+    global $GLOBALS, $now, $db;
     // TODO make maintenance_drop_down a hierarchical selection box sites/contracts
     // extract all maintenance contracts
     $sql  = "SELECT s.name AS sitename, p.name AS productname, m.id AS id ";
-    $sql .= "FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbSites']}` AS s, `{$GLOBALS['dbProducts']}` AS p ";
-    $sql .= "WHERE site = s.id AND product = p.id ";
+    $sql .= "FROM `{$GLOBALS['dbMaintenance']}` AS m, `{$GLOBALS['dbSites']}` AS s, `{$GLOBALS['dbProducts']}` AS p, `{$GLOBALS['dbMaintenanceServiceLevels']}` AS msl ";
+    $sql .= "WHERE site = s.id AND product = p.id AND m.id = msl.maintenanceid ";
     if (!empty($siteid)) $sql .= "AND s.id = {$siteid} ";
 
     if ($showonlyactive)
     {
-        $sql .= "AND (m.expirydate > {$now} OR m.expirydate = -1) ";
+        $sql .= "AND m.term != 'yes' AND (m.expirydate > {$now} OR m.expirydate = -1) ";
     }
 
     if ($adminid != '')
@@ -722,11 +754,12 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
 
     if ($sla !== FALSE)
     {
-        $sql .= "AND servicelevel = '{$sla}' ";
+        $sql .= "AND msl.servicelevel = '{$sla}' ";
     }
 
-    $sql .= "ORDER BY s.name ASC";
-    $result = mysql_query($sql);
+    $sql .= "GROUP BY m.id ORDER BY s.name ASC";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
     $results = 0;
     // print HTML
     $html .= "<select name='{$name}'";
@@ -740,25 +773,28 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
         $html .= "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($maintenance = mysql_fetch_object($result))
+    if (mysqli_num_rows($result) > 0)
     {
-        if (!is_array($excludes) OR (is_array($excludes) AND !in_array($maintenance->id, $excludes)))
+        while ($maintenance = mysqli_fetch_object($result))
         {
-            $html .= "<option ";
-            if ($maintenance->id == $id)
+            if (!is_array($excludes) OR (is_array($excludes) AND !in_array($maintenance->id, $excludes)))
             {
-                $html .= "selected='selected' ";
+                $html .= "<option ";
+                if ($maintenance->id == $id)
+                {
+                    $html .= "selected='selected' ";
+                }
+                if (!empty($siteid))
+                {
+                    $html .= "value='{$maintenance->id}'>{$maintenance->productname}</option>";
+                }
+                else
+                {
+                    $html .= "value='{$maintenance->id}'>{$maintenance->sitename} | {$maintenance->productname}</option>";
+                }
+                $html .= "\n";
+                $results++;
             }
-            if (!empty($siteid))
-            {
-                $html .= "value='{$maintenance->id}'>{$maintenance->productname}</option>";
-            }
-            else
-            {
-                $html .= "value='{$maintenance->id}'>{$maintenance->sitename} | {$maintenance->productname}</option>";
-            }
-            $html .= "\n";
-            $results++;
         }
     }
 
@@ -776,10 +812,10 @@ function maintenance_drop_down($name, $id = '', $siteid = '', $excludes = '', $r
 // selected.                                                  */
 function reseller_drop_down($name, $id)
 {
-    global $dbResellers;
+    global $db, $dbResellers;
     $sql  = "SELECT id, name FROM `{$dbResellers}` ORDER BY name ASC";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     // print HTML
     echo "<select name='{$name}'>";
@@ -793,7 +829,7 @@ function reseller_drop_down($name, $id)
         echo "<option value='0'></option>\n";
     }
 
-    while ($resellers = mysql_fetch_object($result))
+    while ($resellers = mysqli_fetch_object($result))
     {
         echo "<option ";
         if ($resellers->id == $id)
@@ -814,9 +850,9 @@ function reseller_drop_down($name, $id)
 // selected.
 function licence_type_drop_down($name, $id)
 {
-    global $dbLicenceTypes;
+    global $db, $dbLicenceTypes;
     $sql  = "SELECT id, name FROM `{$dbLicenceTypes}` ORDER BY name ASC";
-    $result = mysql_query($sql);
+    $result = mysqli_query($db, $sql);
 
     // print HTML
     echo "<select name='{$name}'>";
@@ -826,7 +862,7 @@ function licence_type_drop_down($name, $id)
         echo "<option selected='selected' value='0'></option>\n";
     }
 
-    while ($licencetypes = mysql_fetch_object($result))
+    while ($licencetypes = mysqli_fetch_object($result))
     {
         echo "<option ";
         if ($licencetypes->id == $id)
@@ -876,23 +912,23 @@ function holidaytype_drop_down($name, $id)
  */
 function software_backup_dropdown($name, $userid, $softwareid, $backupid)
 {
-    global $dbUsers, $dbUserSoftware, $dbSoftware;
+    global $db, $dbUsers, $dbUserSoftware, $dbSoftware;
     $sql = "SELECT *, u.id AS userid FROM `{$dbUserSoftware}` AS us, `{$dbSoftware}` AS s, `{$dbUsers}` AS u ";
     $sql .= "WHERE us.softwareid = s.id ";
     $sql .= "AND s.id = '{$softwareid}' ";
     $sql .= "AND userid != '{$userid}' AND u.status > ".USERSTATUS_ACCOUNT_DISABLED;
-    $sql .= "AND us.userid = u.id ";
+    $sql .= " AND us.userid = u.id ";
     $sql .= " ORDER BY realname";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $countsw = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $countsw = mysqli_num_rows($result);
     if ($countsw >= 1)
     {
         $html = "<select name='{$name}'>\n";
         $html .= "<option value='0'";
         if ($user->userid == 0) $html .= " selected='selected'";
         $html .= ">{$GLOBALS['strNone']}</option>\n";
-        while ($user = mysql_fetch_object($result))
+        while ($user = mysqli_fetch_object($result))
         {
             $html .= "<option value='{$user->userid}'";
             if ($user->userid == $backupid) $html .= " selected='selected'";
@@ -910,259 +946,34 @@ function software_backup_dropdown($name, $userid, $softwareid, $backupid)
 
 /**
  * Print a listbox of countries
- * @author Ivan Lucas
+ * @author Paul Heaney
  * @param string $name - HTML select 'name' attribute
  * @param string $country - Country to pre-select (default to config file setting)
  * @param string $extraattributes - Extra attributes to put on the select tag
  * @return HTML
- * @note if the $country given is not in the list, an editable input box is given instead of a select box
- * @todo TODO i18n country list (How do we do this?)
+ * @todo TODO i18n country list (propose this is done using either a macro/placeholder in DB or just i18n based on iso code)
  */
 function country_drop_down($name, $country, $extraattributes='')
 {
-    global $CONFIG;
+    global $db, $CONFIG;
     if ($country == '') $country = $CONFIG['home_country'];
 
-    if ($country == 'UK') $country = 'UNITED KINGDOM';
-    $countrylist[] = 'ALBANIA';
-    $countrylist[] = 'ALGERIA';
-    $countrylist[] = 'AMERICAN SAMOA';
-    $countrylist[] = 'ANDORRA';
-    $countrylist[] = 'ANGOLA';
-    $countrylist[] = 'ANGUILLA';
-    $countrylist[] = 'ANTIGUA';
-    $countrylist[] = 'ARGENTINA';
-    $countrylist[] = 'ARMENIA';
-    $countrylist[] = 'ARUBA';
-    $countrylist[] = 'AUSTRALIA';
-    $countrylist[] = 'AUSTRIA';
-    $countrylist[] = 'AZERBAIJAN';
-    $countrylist[] = 'BAHAMAS';
-    $countrylist[] = 'BAHRAIN';
-    $countrylist[] = 'BANGLADESH';
-    $countrylist[] = 'BARBADOS';
-    $countrylist[] = 'BELARUS';
-    $countrylist[] = 'BELGIUM';
-    $countrylist[] = 'BELIZE';
-    $countrylist[] = 'BENIN';
-    $countrylist[] = 'BERMUDA';
-    $countrylist[] = 'BHUTAN';
-    $countrylist[] = 'BOLIVIA';
-    $countrylist[] = 'BONAIRE';
-    $countrylist[] = 'BOSNIA HERZEGOVINA';
-    $countrylist[] = 'BOTSWANA';
-    $countrylist[] = 'BRAZIL';
-    $countrylist[] = 'BRUNEI';
-    $countrylist[] = 'BULGARIA';
-    $countrylist[] = 'BURKINA FASO';
-    $countrylist[] = 'BURUNDI';
-    $countrylist[] = 'CAMBODIA';
-    $countrylist[] = 'CAMEROON';
-    $countrylist[] = 'CANADA';
-    $countrylist[] = 'CANARY ISLANDS';
-    $countrylist[] = 'CAPE VERDE ISLANDS';
-    $countrylist[] = 'CAYMAN ISLANDS';
-    $countrylist[] = 'CENTRAL AFRICAN REPUBLIC';
-    $countrylist[] = 'CHAD';
-    $countrylist[] = 'CHANNEL ISLANDS';
-    $countrylist[] = 'CHILE';
-    $countrylist[] = 'CHINA';
-    $countrylist[] = 'COLOMBIA';
-    $countrylist[] = 'COMOROS ISLANDS';
-    $countrylist[] = 'CONGO';
-    $countrylist[] = 'COOK ISLANDS';
-    $countrylist[] = 'COSTA RICA';
-    $countrylist[] = 'CROATIA';
-    $countrylist[] = 'CUBA';
-    $countrylist[] = 'CURACAO';
-    $countrylist[] = 'CYPRUS';
-    $countrylist[] = 'CZECH REPUBLIC';
-    $countrylist[] = 'DENMARK';
-    $countrylist[] = 'DJIBOUTI';
-    $countrylist[] = 'DOMINICA';
-    $countrylist[] = 'DOMINICAN REPUBLIC';
-    $countrylist[] = 'ECUADOR';
-    $countrylist[] = 'EGYPT';
-    $countrylist[] = 'EL SALVADOR';
-    $countrylist[] = 'EQUATORIAL GUINEA';
-    $countrylist[] = 'ERITREA';
-    $countrylist[] = 'ESTONIA';
-    $countrylist[] = 'ETHIOPIA';
-    $countrylist[] = 'FAROE ISLANDS';
-    $countrylist[] = 'FIJI ISLANDS';
-    $countrylist[] = 'FINLAND';
-    $countrylist[] = 'FRANCE';
-    $countrylist[] = 'FRENCH GUINEA';
-    $countrylist[] = 'GABON';
-    $countrylist[] = 'GAMBIA';
-    $countrylist[] = 'GEORGIA';
-    $countrylist[] = 'GERMANY';
-    $countrylist[] = 'GHANA';
-    $countrylist[] = 'GIBRALTAR';
-    $countrylist[] = 'GREECE';
-    $countrylist[] = 'GREENLAND';
-    $countrylist[] = 'GRENADA';
-    $countrylist[] = 'GUADELOUPE';
-    $countrylist[] = 'GUAM';
-    $countrylist[] = 'GUATEMALA';
-    $countrylist[] = 'GUINEA REPUBLIC';
-    $countrylist[] = 'GUINEA-BISSAU';
-    $countrylist[] = 'GUYANA';
-    $countrylist[] = 'HAITI';
-    $countrylist[] = 'HONDURAS REPUBLIC';
-    $countrylist[] = 'HONG KONG';
-    $countrylist[] = 'HUNGARY';
-    $countrylist[] = 'ICELAND';
-    $countrylist[] = 'INDIA';
-    $countrylist[] = 'INDONESIA';
-    $countrylist[] = 'IRAN';
-    $countrylist[] = 'IRELAND, REPUBLIC';
-    $countrylist[] = 'ISRAEL';
-    $countrylist[] = 'ITALY';
-    $countrylist[] = 'IVORY COAST';
-    $countrylist[] = 'JAMAICA';
-    $countrylist[] = 'JAPAN';
-    $countrylist[] = 'JORDAN';
-    $countrylist[] = 'KAZAKHSTAN';
-    $countrylist[] = 'KENYA';
-    $countrylist[] = 'KIRIBATI, REP OF';
-    $countrylist[] = 'KOREA, SOUTH';
-    $countrylist[] = 'KUWAIT';
-    $countrylist[] = 'KYRGYZSTAN';
-    $countrylist[] = 'LAOS';
-    $countrylist[] = 'LATVIA';
-    $countrylist[] = 'LEBANON';
-    $countrylist[] = 'LESOTHO';
-    $countrylist[] = 'LIBERIA';
-    $countrylist[] = 'LIBYA';
-    $countrylist[] = 'LIECHTENSTEIN';
-    $countrylist[] = 'LITHUANIA';
-    $countrylist[] = 'LUXEMBOURG';
-    $countrylist[] = 'MACAU';
-    $countrylist[] = 'MACEDONIA';
-    $countrylist[] = 'MADAGASCAR';
-    $countrylist[] = 'MALAWI';
-    $countrylist[] = 'MALAYSIA';
-    $countrylist[] = 'MALDIVES';
-    $countrylist[] = 'MALI';
-    $countrylist[] = 'MALTA';
-    $countrylist[] = 'MARSHALL ISLANDS';
-    $countrylist[] = 'MARTINIQUE';
-    $countrylist[] = 'MAURITANIA';
-    $countrylist[] = 'MAURITIUS';
-    $countrylist[] = 'MEXICO';
-    $countrylist[] = 'MOLDOVA, REP OF';
-    $countrylist[] = 'MONACO';
-    $countrylist[] = 'MONGOLIA';
-    $countrylist[] = 'MONTSERRAT';
-    $countrylist[] = 'MOROCCO';
-    $countrylist[] = 'MOZAMBIQUE';
-    $countrylist[] = 'MYANMAR';
-    $countrylist[] = 'NAMIBIA';
-    $countrylist[] = 'NAURU, REP OF';
-    $countrylist[] = 'NEPAL';
-    $countrylist[] = 'NETHERLANDS';
-    $countrylist[] = 'NEVIS';
-    $countrylist[] = 'NEW CALEDONIA';
-    $countrylist[] = 'NEW ZEALAND';
-    $countrylist[] = 'NICARAGUA';
-    $countrylist[] = 'NIGER';
-    $countrylist[] = 'NIGERIA';
-    $countrylist[] = 'NIUE';
-    $countrylist[] = 'NORWAY';
-    $countrylist[] = 'OMAN';
-    $countrylist[] = 'PAKISTAN';
-    $countrylist[] = 'PANAMA';
-    $countrylist[] = 'PAPUA NEW GUINEA';
-    $countrylist[] = 'PARAGUAY';
-    $countrylist[] = 'PERU';
-    $countrylist[] = 'PHILLIPINES';
-    $countrylist[] = 'POLAND';
-    $countrylist[] = 'PORTUGAL';
-    $countrylist[] = 'PUERTO RICO';
-    $countrylist[] = 'QATAR';
-    $countrylist[] = 'REUNION ISLAND';
-    $countrylist[] = 'ROMANIA';
-    $countrylist[] = 'RUSSIAN FEDERATION';
-    $countrylist[] = 'RWANDA';
-    $countrylist[] = 'SAIPAN';
-    $countrylist[] = 'SAO TOME & PRINCIPE';
-    $countrylist[] = 'SAUDI ARABIA';
-    $countrylist[] = 'SENEGAL';
-    $countrylist[] = 'SEYCHELLES';
-    $countrylist[] = 'SIERRA LEONE';
-    $countrylist[] = 'SINGAPORE';
-    $countrylist[] = 'SLOVAKIA';
-    $countrylist[] = 'SLOVENIA';
-    $countrylist[] = 'SOLOMON ISLANDS';
-    $countrylist[] = 'SOUTH AFRICA';
-    $countrylist[] = 'SPAIN';
-    $countrylist[] = 'SRI LANKA';
-    $countrylist[] = 'ST BARTHELEMY';
-    $countrylist[] = 'ST EUSTATIUS';
-    $countrylist[] = 'ST KITTS';
-    $countrylist[] = 'ST LUCIA';
-    $countrylist[] = 'ST MAARTEN';
-    $countrylist[] = 'ST VINCENT';
-    $countrylist[] = 'SUDAN';
-    $countrylist[] = 'SURINAME';
-    $countrylist[] = 'SWAZILAND';
-    $countrylist[] = 'SWEDEN';
-    $countrylist[] = 'SWITZERLAND';
-    $countrylist[] = 'SYRIA';
-    $countrylist[] = 'TAHITI';
-    $countrylist[] = 'TAIWAN';
-    $countrylist[] = 'TAJIKISTAN';
-    $countrylist[] = 'TANZANIA';
-    $countrylist[] = 'THAILAND';
-    $countrylist[] = 'TOGO';
-    $countrylist[] = 'TONGA';
-    $countrylist[] = 'TRINIDAD & TOBAGO';
-    $countrylist[] = 'TURKEY';
-    $countrylist[] = 'TURKMENISTAN';
-    $countrylist[] = 'TURKS & CAICOS ISLANDS';
-    $countrylist[] = 'TUVALU';
-    $countrylist[] = 'UGANDA';
-    // $countrylist[] = 'UK';
-    $countrylist[] = 'UKRAINE';
-    $countrylist[] = 'UNITED KINGDOM';
-    $countrylist[] = 'UNITED STATES';
-    $countrylist[] = 'URUGUAY';
-    $countrylist[] = 'UTD ARAB EMIRATES';
-    $countrylist[] = 'UZBEKISTAN';
-    $countrylist[] = 'VANUATU';
-    $countrylist[] = 'VENEZUELA';
-    $countrylist[] = 'VIETNAM';
-    $countrylist[] = 'VIRGIN ISLANDS';
-    $countrylist[] = 'VIRGIN ISLANDS (UK)';
-    $countrylist[] = 'WESTERN SAMOA';
-    $countrylist[] = 'YEMAN, REP OF';
-    $countrylist[] = 'YUGOSLAVIA';
-    $countrylist[] = 'ZAIRE';
-    $countrylist[] = 'ZAMBIA';
-    $countrylist[] = 'ZIMBABWE';
+    $sql = "SELECT * FROM `{$GLOBALS['dbCountryList']}`";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (in_array(strtoupper($country), $countrylist))
+    $html = "<select id=\"{$name}\" name=\"{$name}\" {$extraattributes}>";
+    while ($obj = mysqli_fetch_object($result))
     {
-        // make drop down
-        $html = "<select id=\"{$name}\" name=\"{$name}\" {$extraattributes}>";
-        foreach ($countrylist as $key => $value)
+        $html .= "<option value='{$obj->isocode}'";
+        if ($obj->isocode == $country)
         {
-            $value = htmlspecialchars($value);
-            $html .= "<option value='$value'";
-            if ($value == strtoupper($country))
-            {
-                $html .= " selected='selected'";
-            }
-            $html .= ">$value</option>\n";
+            $html .= " selected='selected'";
         }
-        $html .= "</select>";
+        $html .= ">{$obj->name}</option>\n";
     }
-    else
-    {
-        // make editable input box
-        $html = "<input maxlength='100' name='{$name}' size='40' value='{$country}' {$extraattributes} />";
-    }
+    $html .= "</select>";
+
     return $html;
 }
 
@@ -1218,20 +1029,20 @@ function chart_selector($selected)
 
 function user_dropdown($name, $selected='', $self='')
 {
-    global $dbUsers, $dbUserSoftware, $dbSoftware;
+    global $db, $dbUsers, $dbUserSoftware, $dbSoftware;
     $sql = "SELECT * FROM `{$dbUsers}` AS u ";
     $sql .= "WHERE  u.status > ".USERSTATUS_ACCOUNT_DISABLED;
     $sql .= " ORDER BY realname";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-    $count = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $count = mysqli_num_rows($result);
     if ($count >= 1)
     {
         $html = "<select name='{$name}' id='{$name}'>\n";
         $html .= "<option value='0'";
         if (empty($selected)) $html .= " selected='selected'";
         $html .= ">{$GLOBALS['strNone']}</option>\n";
-        while ($user = mysql_fetch_object($result))
+        while ($user = mysqli_fetch_object($result))
         {
             if ($user->id != $self)
             {
@@ -1248,4 +1059,43 @@ function user_dropdown($name, $selected='', $self='')
     }
     return $html;
 }
+
+
+/**
+ * Creates a dropdown of incident types
+ * 
+ * @param string $name The name of the field
+ * @param string $selected The ID of the selected value
+ * @return String HTML for the dropdown
+ * @author Paul Heaney
+ */
+function incident_types_dropdown($name, $selected=1)
+{
+    global $dbIncidentTypes, $db;
+    $sql = "SELECT * FROM `{$dbIncidentTypes}` AS it ";
+    $sql .= " ORDER BY name";
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+    $count = mysqli_num_rows($result);
+    if ($count >= 1)
+    {
+        $html = "<select name='{$name}' id='{$name}'>";
+        while ($obj = mysqli_fetch_object($result))
+        {
+            if ($obj->id != $self)
+            {
+                $html .= "<option value='{$obj->id}'";
+                if ($obj->id == $selected) $html .= " selected='selected'";
+                $html .= ">{$obj->name}</option>";
+            }
+        }
+        $html .= "</select>";
+    }
+    else
+    {
+        $html .= "<input type='hidden' name='{$name}' value='0' />{$GLOBALS['strNoneAvailable']}";
+    }
+    return $html;
+}
+
 ?>

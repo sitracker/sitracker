@@ -2,7 +2,7 @@
 // manage_user_dashboard.php - Page for users to add components to their dashboard
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -21,12 +21,12 @@ $dashboardid = clean_int($_REQUEST['id']);
 $title = $strManageYourDashboard;
 
 $sql = "SELECT dashboard FROM `{$dbUsers}` WHERE id = '{$_SESSION['userid']}'";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-if (mysql_num_rows($result) > 0)
+if (mysqli_num_rows($result) > 0)
 {
-    $obj = mysql_fetch_object($result);
+    $obj = mysqli_fetch_object($result);
     $dashboardstr = $obj->dashboard;
     $dashboardcomponents = explode(",", $obj->dashboard);
 }
@@ -42,17 +42,17 @@ if (empty($dashboardid))
     include (APPLICATION_INCPATH . 'htmlheader.inc.php');
 
     $sql = "SELECT * FROM `{$dbDashboard}` WHERE enabled = 'true'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
     echo "<h2>".icon('dashboard', 32)." {$strDashboard}: ";
     echo user_realname($sit[2])."</h2>\n";
     plugin_do('manage_user_dashboard');
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         echo "<table class='maintable'>\n";
-        while ($obj = mysql_fetch_object($result))
+        while ($obj = mysqli_fetch_object($result))
         {
             if (empty($ondashboard[$obj->id]))
             {
@@ -99,15 +99,15 @@ else
             $dashboardstr = $dashboardstr.",".$newposition."-".$dashboardid;
             break;
         case 'remove':
-            $regex = "/[012]-".$dashboardid."[,]?/";
+            $regex = "/[012]-".$dashboardid."[,|$]/";
             $dashboardstr = preg_replace($regex,"",$dashboardstr);
             break;
     }
     $sql = "UPDATE `{$dbUsers}` SET dashboard = '{$dashboardstr}' WHERE id = '{$_SESSION['userid']}'";
-    $contactresult = mysql_query($sql);
-    if (mysql_error())
+    $contactresult = mysqli_query($db, $sql);
+    if (mysqli_error($db))
     {
-        trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+        trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         html_redirect("manage_user_dashboard.php", FALSE);
     }
     else

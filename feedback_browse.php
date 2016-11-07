@@ -2,7 +2,7 @@
 // browse_feedback.php - View a list of feedback
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -33,9 +33,9 @@ switch ($mode)
     case 'viewresponse':
         echo "<h2>".icon('contract', 32)." {$strFeedback}</h2>";
         $sql = "SELECT contactid, completed, incidentid, formid, created FROM `{$dbFeedbackRespondents}` WHERE id='{$responseid}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        $response = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        $response = mysqli_fetch_object($result);
         if ($response->completed == 'yes')
         {
             $responsecompleted = $strYes;
@@ -57,10 +57,10 @@ switch ($mode)
 
         // Return Ratings
         $qsql = "SELECT id, taborder, question FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='rating' ORDER BY taborder";
-        $qresult = mysql_query($qsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $qresult = mysqli_query($db, $qsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($qresult) >= 1)
+        if (mysqli_num_rows($qresult) >= 1)
         {
             $html .= "<table class='maintable vertical'>";
 
@@ -70,7 +70,7 @@ switch ($mode)
             $average = 0;
             $statquestions = 0;
 
-            while ($qrow = mysql_fetch_object($qresult))
+            while ($qrow = mysqli_fetch_object($qresult))
             {
                 $html .= "<tr><th>Q{$qrow->taborder}: {$qrow->question}</th>";
                 $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
@@ -81,9 +81,9 @@ switch ($mode)
                 $sql .= "AND f.id='$responseid' ";
                 $sql .= "AND f.completed = 'yes' \n";
                 $sql .= "ORDER BY i.owner, i.id";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                while ($row = mysql_fetch_object($result))
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                while ($row = mysqli_fetch_object($result))
                 {
                     $numresults++;
                     if (!empty($row->result) OR ($row->result == 0))
@@ -118,12 +118,12 @@ switch ($mode)
 
         // Return text/options/multioptions fields
         $qsql = "SELECT id, taborder, question FROM `{$dbFeedbackQuestions}` WHERE formid='{$response->formid}' AND type='text' OR type='options' OR type='multioptions' ORDER BY taborder";
-        $qresult = mysql_query($qsql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $qresult = mysqli_query($db, $qsql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($qresult) >= 1)
+        if (mysqli_num_rows($qresult) >= 1)
         {
-            while ($qrow = mysql_fetch_object($qresult))
+            while ($qrow = mysqli_fetch_object($qresult))
             {
 
                 $sql = "SELECT r.result FROM `{$dbFeedbackRespondents}` AS f, `{$dbIncidents}` AS i, `{$dbUsers}` AS u, `{$dbFeedbackResults}` AS r ";
@@ -134,9 +134,9 @@ switch ($mode)
                 $sql .= "AND f.id = '{$responseid}' ";
                 $sql .= "AND f.completed = 'yes' \n";
                 $sql .= "ORDER BY i.owner, i.id";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                while ($row = mysql_fetch_object($result))
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                while ($row = mysqli_fetch_object($result))
                 {
                     $html .= "<p align='center'><strong>Q{$qrow->taborder}: {$qrow->question}</strong></p>";
                     if (!empty($row->result))
@@ -168,11 +168,11 @@ switch ($mode)
         break;
     default:
         $sql = "SELECT name FROM `{$dbFeedbackForms}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        $fresult = mysql_fetch_object($result);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        $fresult = mysqli_fetch_object($result);
 
-        if (mysql_num_rows($result) == 0)
+        if (mysqli_num_rows($result) == 0)
         {
             // no feedback forms
             echo "<h3>{$title}</h3>";
@@ -209,10 +209,10 @@ switch ($mode)
                     $sql .= " ORDER BY fr.created DESC";
                     break;
             }
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-            $countrows = mysql_num_rows($result);
+            $countrows = mysqli_num_rows($result);
 
             if (!empty($formid))
             {
@@ -236,7 +236,7 @@ switch ($mode)
                 echo "<th>{$strActions}</th>";
                 echo "</tr>\n";
                 $shade = 'shade1';
-                while ($resp = mysql_fetch_object($result))
+                while ($resp = mysqli_fetch_object($result))
                 {
                     $hashcode = feedback_hash($resp->formid, $resp->contactid, $resp->incidentid, contact_email($resp->contactid));
                     echo "<tr class='{$shade}'>";
@@ -280,8 +280,8 @@ switch ($mode)
             if ($completed == 'no')
             {
                 $sql = "SELECT COUNT(id) FROM `{$dbFeedbackRespondents}` WHERE formid='{$formid}' AND completed='yes'";
-                $result = mysql_query($sql);
-                list($completedforms) = mysql_fetch_row($result);
+                $result = mysqli_query($db, $sql);
+                list($completedforms) = mysqli_fetch_row($result);
                 if ($completedforms > 0)
                 {
                     echo "<p align='center'>".sprintf($strFeedbackFormsReturned, "<a href='{$_SERVER['PHP_SELF']}'>{$completedforms}</a>")."</p>";
@@ -290,8 +290,8 @@ switch ($mode)
             else
             {
                 $sql = "SELECT COUNT(id) FROM `{$dbFeedbackRespondents}` WHERE formid='{$formid}' AND completed='no'";
-                $result = mysql_query($sql);
-                list($waiting) = mysql_fetch_row($result);
+                $result = mysqli_query($db, $sql);
+                list($waiting) = mysqli_fetch_row($result);
                 if ($waiting > 0) echo "<p align='center'>".sprintf($strFeedbackFormsWaiting, "<a href='{$_SERVER['PHP_SELF']}?completed=no'>{$waiting}</a>")."</p>";
             }
         }

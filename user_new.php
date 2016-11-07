@@ -2,7 +2,7 @@
 // user_new.php - Form for adding users
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -27,9 +27,9 @@ if (empty($submit))
 {
     // Show add user form
     $gsql = "SELECT * FROM `{$dbGroups}` ORDER BY name";
-    $gresult = mysql_query($gsql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    while ($group = mysql_fetch_object($gresult))
+    $gresult = mysqli_query($db, $gsql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    while ($group = mysqli_fetch_object($gresult))
     {
         $grouparr[$group->id] = $group->name;
     }
@@ -155,9 +155,9 @@ else
     }
 
     $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE username='{$username}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
-    list($countexisting) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
+    list($countexisting) = mysqli_fetch_row($result);
     if ($countexisting >= 1)
     {
         $errors++;
@@ -165,9 +165,9 @@ else
     }
     // Check email address is unique (discount disabled accounts)
     $sql = "SELECT COUNT(id) FROM `{$dbUsers}` WHERE status > 0 AND email='{$email}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-    list($countexisting) = mysql_fetch_row($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+    list($countexisting) = mysqli_fetch_row($result);
     if ($countexisting >= 1)
     {
         $errors++;
@@ -185,31 +185,39 @@ else
         $sql .= "VALUES ('{$username}', '{$password}', '{$realname}', '{$roleid}',
                 '{$groupid}', '{$jobtitle}', '{$email}', '{$phone}', '{$mobile}', '{$fax}',
                 1, '{$holiday_entitlement}', '{$startdate}', ".convert_string_null_safe($managerid).", NOW())";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        $newuserid = mysql_insert_id();
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        $newuserid = mysqli_insert_id();
 
         // Default user settings
         $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
         $sql .= "VALUES ('{$newuserid}', 'theme', '{$CONFIG['default_interface_style']}') ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
         $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
         $sql .= "VALUES ('{$newuserid}', 'iconset', '{$CONFIG['default_iconset']}') ";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+
+        if (!empty($CONFIG['default_i18n']))
+        {
+            $sql = "INSERT INTO `{$dbUserConfig}` (`userid`, `config`, `value`) ";
+            $sql .= "VALUES ('{$newuserid}', 'language', '{$CONFIG['default_i18n']}') ";
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        }
 
         // Create permissions (set to none)
         $sql = "SELECT id FROM `{$dbPermissions}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-        while ($perm = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+        while ($perm = mysqli_fetch_object($result))
         {
             $psql = "INSERT INTO `{$dbUserPermissions}` (userid, permissionid, granted) ";
             $psql .= "VALUES ('{$newuserid}', '{$perm->id}', 'false')";
-            mysql_query($psql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $psql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
 
         if (!$result)

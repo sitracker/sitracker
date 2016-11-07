@@ -2,7 +2,7 @@
 // exit_task.php - Edit existing task
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -125,8 +125,8 @@ switch ($action)
             $sql .= "completion='{$completion}', enddate='{$enddate}', value='{$value}', ";
             $sql .= "owner={$owner}, distribution='{$distribution}' ";
             $sql .= "WHERE id='{$id}' LIMIT 1";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
 
             // Add a note to say what changed (if required)
             $bodytext = '';
@@ -190,8 +190,8 @@ switch ($action)
                 $sql = "INSERT INTO `{$dbNotes}` ";
                 $sql .= "(userid, bodytext, link, refid) ";
                 $sql .= "VALUES ('0', '{$bodytext}', '10', '{$id}')";
-                mysql_query($sql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
             }
             plugin_do('task_edit_saved');
             clear_form_data("edittask");
@@ -205,9 +205,9 @@ switch ($action)
         {
             //get current incident status
             $sql = "SELECT status FROM `{$dbIncidents}` WHERE id='{$incident}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $status = mysql_fetch_object($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            $status = mysqli_fetch_object($result);
             $status = $status->status;
 
             //if we don't get an update from the incident, create one
@@ -219,11 +219,11 @@ switch ($action)
 
             $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
 
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) >= 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) >= 1)
             {
-                $task = mysql_fetch_object($result);
+                $task = mysqli_fetch_object($result);
                 $startdate = mysql2date($task->startdate);
                 $duedate = mysql2date($task->duedate);
                 $enddate = mysql2date($task->enddate);
@@ -238,11 +238,11 @@ switch ($action)
             $notearray = array();
             $numnotes = 0;
             $sql = "SELECT * FROM `{$dbNotes}` WHERE link='10' AND refid='{$id}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) >= 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) >= 1)
             {
-                while ($notes = mysql_fetch_object($result))
+                while ($notes = mysqli_fetch_object($result))
                 {
                     $notesarray[$numnotes] = $notes;
                     $numnotes++;
@@ -255,8 +255,8 @@ switch ($action)
             }
             //delete all the notes
             $sql = "DELETE FROM `{$dbNotes}` WHERE refid='{$id}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
             $enddate = $now;
             $duration = ceil(($enddate - $startdate) / 60);
@@ -270,7 +270,7 @@ switch ($action)
             {
                 $updatehtml .= "[b]";
                 $updatehtml .= readable_date(mysql2date($notesarray[$i]->timestamp), 'system');
-                $updatehtml .= "[/b]\n".mysql_real_escape_string($notesarray[$i]->bodytext)."\n\n";
+                $updatehtml .= "[/b]\n".mysqli_real_escape_string($db, $notesarray[$i]->bodytext)."\n\n";
             }
 
             $updatehtml .= sprintf($SYSLANG['strActivityCompleted'], $enddate, $duration);
@@ -282,19 +282,19 @@ switch ($action)
             $sql .= "currentowner, currentstatus, bodytext, timestamp, duration) ";
             $sql .= "VALUES('{$incident}', '{$sit[2]}', 'fromtask', ";
             $sql .= "'{$owner}', '{$status}', '{$updatehtml}', '{$now}', '{$duration}')";
-            mysql_query($sql);
-            if (mysql_error())
+            mysqli_query($db, $sql);
+            if (mysqli_error($db))
             {
-                trigger_error(mysql_error(), E_USER_ERROR);
+                trigger_error(mysqli_error($db), E_USER_ERROR);
                 echo "<p class='error'>";
                 echo "Couldn't add update, update will need to be done manually: {$sql}'</p>";
                 die();
             }
 
             $sql = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}', status = 1 WHERE id = {$incident}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_affected_rows() != 1)
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_affected_rows($db) != 1)
             {
                 trigger_error("No rows affected while updating incident", E_USER_ERROR);
             }
@@ -317,13 +317,13 @@ switch ($action)
     case 'delete':
         $sql = "DELETE FROM `{$dbTasks}` ";
         $sql .= "WHERE id='{$id}' LIMIT 1";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         $sql = "DELETE FROM `{$dbNotes}` ";
         $sql .= "WHERE link=10 AND refid='{$id}' ";
-        mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+        mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
         html_redirect("tasks.php", TRUE);
         break;
@@ -338,11 +338,11 @@ switch ($action)
         clear_form_errors('edittask');
         
         $sql = "SELECT * FROM `{$dbTasks}` WHERE id='{$id}'";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        if (mysql_num_rows($result) >= 1)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        if (mysqli_num_rows($result) >= 1)
         {
-            while ($task = mysql_fetch_object($result))
+            while ($task = mysqli_fetch_object($result))
             {
                 $startdate = mysql2date(show_form_value('edittask', 'startdate', $task->startdate));
                 $duedate = mysql2date(show_form_value('edittask', 'duedate', $task->duedate));

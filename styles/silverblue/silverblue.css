@@ -1,38 +1,175 @@
-body        { background-color: #f0f0ff; font-family: Tahoma, Helvetica, sans serif; color: #000000;  background-image:url('/styles/images/coolblue.jpg'); }
-p           { font-size: 8pt; color: #000000; }
-table       { font-size: 8pt; color: #000000; }
-td        { font-size: 8pt; color: #000000; }
-a           { font-size: 8pt; color: #444444; font-weight: bold; text-decoration: none; }
-a:hover     { color: #c0c0c0; font-weight: bold; text-decoration: underline; }
-a:active    { color: #c0c0c0; font-weight: bold; text-decoration: underline; }
-a em { font-style: normal; text-decoration: underline; }
-center      { color: #000000; }
-
-.barlink    { font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: none; }
-.barlink:hover  { font-size: 8pt; color: #FFFFFF; font-weight: bold; text-decoration: underline; }
-.barlink:active { color: #FFFFFF; font-weight: bold; text-decoration: underline; }
-
-.error        { font-size: 8pt; color: #FF0000; font-weight: bold; text-align: center; }
-.red            { font-size: 8pt; color: #FF0000; }
-
-.mainshade  {
+body
+{
     background-color: #f0f0ff;
-    background-image:url('/styles/images/coolblue.jpg')
+    font-family: Tahoma, Helvetica, sans serif;
+    color: #000000;
+    background-image: url('../coolblue/coolblue.jpg');
+}
+
+p
+{
+    font-size: 8pt;
+    color: #000000;
+}
+
+table
+{
+    font-size: 8pt;
+    color: #000000;
+}
+
+td
+{
+    font-size: 8pt;
+    color: #000000;
+}
+
+a
+{
+    font-size: 8pt;
+    color: #444444;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #c0c0c0;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+a:active
+{
+    color: #c0c0c0;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+a em
+{
+    font-style: normal;
+    text-decoration: underline;
+}
+
+center
+{
+    color: #000000;
+}
+
+.barlink
+{
+    font-size: 8pt;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.barlink:hover
+{
+    font-size: 8pt;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.barlink:active
+{
+    color: #FFFFFF;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.error
+{
+    font-size: 8pt;
+    color: #FF0000;
+    font-weight: bold;
+    text-align: center;
+}
+
+.red
+{
+    font-size: 8pt;
+    color: #FF0000;
+}
+
+.mainshade
+{
+    background-color: #f0f0ff;
+    background-image:url('../coolblue/coolblue.jpg')
     background-repeat: repeat-x;
-    }
-.shade1     { background-color: #bbbbbb; }
-.shade2     { background-color: #cccccc; }
-.urgent     { background-color: #edd3d3; }
-.critical { background-color: #f08080 }
-.expired    { background-color: #DDDDDF; }
-.idle     { background-color: #abd6ab; } /* #90ee90; */
-.review { background-color: #7AC5CD; }
+}
 
+.shade1
+{
+    background-color: #bbbbbb;
+}
 
-#menu li li { background-color: #f0f0ff;}
-.navbarmenu { background-color: #009900; font-size: 8pt; font-weight: bold; color: #FFFFFF; width: 75px; height:20px; }
+.shade2
+{
+    background-color: #cccccc;
+}
 
-.tablelist TD {border-left: 1px solid #AEC1EB; border-top: 1px solid #AEC1EB;}
-table.tablelist {border: 1px solid #AEC1EB;}
-.tablelist TR {border: 1px solid #AEC1EB; border-right: 1px solid #AEC1EB ! important;}
-.tablelist TH {border-left: 1px solid #AEC1EB; border-top: 1px solid #AEC1EB}
+.urgent
+{
+    background-color: #edd3d3;
+}
+
+.critical
+{
+    background-color: #f08080;
+}
+
+.expired
+{
+    background-color: #DDDDDF;
+}
+
+.idle
+{
+    background-color: #abd6ab;
+}
+
+.review
+{
+    background-color: #7AC5CD;
+}
+
+#menu li li
+{
+    background-color: #f0f0ff;
+}
+
+.navbarmenu
+{
+    background-color: #009900;
+    font-size: 8pt;
+    font-weight: bold;
+    color: #FFFFFF;
+    width: 75px;
+    height:20px;
+}
+
+.tablelist td
+{
+    border-left: 1px solid #AEC1EB;
+    border-top: 1px solid #AEC1EB;
+}
+
+table.tablelist
+{
+    border: 1px solid #AEC1EB;
+}
+
+.tablelist tr
+{
+    border: 1px solid #AEC1EB;
+    border-right: 1px solid #AEC1EB ! important;
+}
+
+.tablelist th
+{
+    border-left: 1px solid #AEC1EB;
+    border-top: 1px solid #AEC1EB
+}

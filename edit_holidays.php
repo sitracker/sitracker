@@ -2,7 +2,7 @@
 // edit_holidays.php - Reset holiday entitlements
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -32,9 +32,9 @@ switch ($action)
         if ($archivedate < 1000) $archivedate = $now;
         $default_entitlement = clean_int($_REQUEST['default_entitlement']);
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status >= 1";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-        while ($users = mysql_fetch_object($result))
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+        while ($users = mysqli_fetch_object($result))
         {
             $fieldname = "user{$users->id}";
             if ($_REQUEST[$fieldname] == 'yes')
@@ -50,14 +50,14 @@ switch ($action)
                 $hsql = "UPDATE `{$dbHolidays}` SET approved = approved+10 ";
                 $hsql .= "WHERE approved < 10 AND userid={$users->id} ";
                 $hsql .= "AND date < FROM_UNIXTIME({$archivedate})";
-                mysql_query($hsql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $hsql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
 
                 // Update Holiday Entitlement
                 $usql = "UPDATE `{$dbUsers}` SET holiday_entitlement = ";
                 $usql .= "{$new_entitlement} WHERE id={$users->id} LIMIT 1";
-                mysql_query($usql);
-                if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                mysqli_query($db, $usql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
             }
         }
         header("Location: edit_holidays.php");
@@ -70,8 +70,8 @@ switch ($action)
         echo "<h2>".icon('holiday', 32)." {$title}</h2>";
 
         $sql = "SELECT * FROM `{$dbUsers}` WHERE status >= 1 ORDER BY realname ASC";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
         echo "<form name='editholidays' action='{$_SERVER['PHP_SELF']}?action=save' method='post'>";
         echo "<p>{$strResetHolidayEntitlementCarryOverNDaysOfUnusedHoliday}</p>";
@@ -93,7 +93,7 @@ switch ($action)
         //echo colheader('newentitlement', $strNewEntitlement, FALSE);
         echo "</tr>";
         $shade = 'shade1';
-        while ($users = mysql_fetch_object($result))
+        while ($users = mysqli_fetch_object($result))
         {
             echo "<tr class='{$shade}'>";
             echo "<td><input type='checkbox' name='user{$users->id}' value='yes' /></td>";

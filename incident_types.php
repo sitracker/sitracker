@@ -25,15 +25,15 @@ echo "<h2>{$title}</h2>";
 echo "<p align='center'><a href='incident_types_new.php'>{$strNewIncidentType}</a></p>";
 
 $sql = "SELECT * FROM `{$dbIncidentTypes}`";
-$result = mysql_query($sql);
-if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-if (mysql_num_rows($result) >= 1)
+$result = mysqli_query($db, $sql);
+if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+if (mysqli_num_rows($result) >= 1)
 {
     echo "<table align='center'>";
-    echo "<tr><th>{$strType}</th><th>{$strIncidentType}</th><th>{$strActions}</th></tr>";
-    while ($type = mysql_fetch_object($result))
+    echo "<tr><th>{$strType}</th><th>{$strIncidentType}</th><th>{$strPrefix}</th><th>{$strActions}</th></tr>";
+    while ($type = mysqli_fetch_object($result))
     {
-        echo "<tr><td>{$type->type}<td>{$type->name}</td><td>";
+        echo "<tr><td>{$type->type}<td>{$type->name}</td><td>{$type->prefix}</td><td>";
         if ($type->type == 'user') echo "<a href='incident_types_edit.php?id={$type->id}'>{$strEdit}</a>";
         echo "</td></tr>";
     }

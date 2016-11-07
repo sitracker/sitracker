@@ -2,7 +2,7 @@
 // inventory_view.php - View inventory items
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -37,13 +37,13 @@ if (is_numeric($_GET['id']))
     $sql .= "FROM `{$dbInventory}` AS i ";
     $sql .= "WHERE i.id='{$id}' ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $row = mysql_fetch_object($result);
+        $row = mysqli_fetch_object($result);
         if (($row->privacy == 'private' AND $sit[2] != $row->createdby) OR
              $row->privacy == 'adminonly' AND !user_permission($sit[2], PERM_ADMIN))
         {

@@ -3,7 +3,7 @@
 //                      and functions to manage them
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -77,8 +77,11 @@ $CFGCAT['portal'] = array('portal',
                           'portal_site_incidents',
                           'portal_usernames_can_be_changed',
                           'portal_creates_incidents',
+                          'portal_update_site_incidents',
                           'portal_interface_style',
-                          'portal_iconset');
+                          'portal_iconset',
+                          'portal_logout_url'
+                          );
 
 $CFGCAT['holidays'] = array('holidays_enabled',
                             'default_entitlement');
@@ -86,6 +89,7 @@ $CFGCAT['holidays'] = array('holidays_enabled',
 $CFGCAT['incidents'] = array('auto_assign_incidents',
                              'free_support_limit',
                              'hide_closed_incidents_older_than',
+                             'hide_contracts_older_than_when_opening_incident',
                              'incident_pools',
                              'preferred_maintenance',
                              'record_lock_delay',
@@ -106,7 +110,8 @@ $CFGCAT['inboundemail'] = array('enable_inbound_mail',
                                 'email_incoming_folder',
                                 'email_archive_folder',
                                 'max_incoming_email_perday',
-                                'spam_email_subject'
+                                'spam_email_subject',
+                                'inbound_emails_visible_in_portal'
                                 );
 
 $CFGCAT['outboundemail'] = array('enable_outbound_email',
@@ -141,7 +146,8 @@ $CFGCAT['ldap'] = array('use_ldap',
                         'ldap_default_customer_siteid',
                         'ldap_autocreate_customer',
                         'ldap_cache_passwords',
-                        'ldap_allow_cached_password');
+                        'ldap_allow_cached_password',
+                        'ldap_update_directory_passwords');
 
 // SOAP Feature is experimental at the moment (INL 2003-07-06) so the setting to enable it should not be shown (yet)
 // $CFGCAT['soap'] = array('soap_enabled',
@@ -149,7 +155,7 @@ $CFGCAT['ldap'] = array('use_ldap',
 
 $CFGCAT['users'] = array('user_config_defaults', 'default_roleid');
 
-$CFGCAT['contacts'] = array('contact_config_defaults');
+$CFGCAT['contacts'] = array('contact_config_defaults', 'remove_from_contracts_on_disable', 'contact_jit_provision', 'contact_jit_mapping');
 
 $CFGCAT['sites'] = array('site_config_defaults',
                          'address_components_to_map');
@@ -170,7 +176,7 @@ $CFGCAT['other'] = array('debug', 'error_logfile',
                           'changelogfile','creditsfile',
                           'licensefile',
                           'session_name', 'map_url',
-                          'upload_max_filesize','trusted_server');
+                          'upload_max_filesize','trusted_server', 'trusted_server_username_header', 'trusted_server_client_id', 'trusted_server_client_secret');
 
 $CFGCAT['otherfeatures'] = array('tasks_enabled', 'calendar_enabled');
 
@@ -267,6 +273,17 @@ $CFGVAR['changelogfile']['help'] = 'The filesystem path and filename of the SiT!
 $CFGVAR['contact_config_defaults']['title'] = "Contact configuration defaults";
 $CFGVAR['contact_config_defaults']['help'] = "You can set configuration defaults here for contacts that have not personalised their settings. Enter config one per line, format: variable=>setting";
 $CFGVAR['contact_config_defaults']['type'] = '2darray';
+
+$CFGVAR['contact_jit_provision']['title'] = "Enable Just In Time provisioning of contacts";
+$CFGVAR['contact_jit_provision']['help'] = "When using trusted server mode can contacts be provsioned and updated just in time for server headers";
+$CFGVAR['contact_jit_provision']['type'] = 'checkbox';
+
+$CFGVAR['contact_jit_mapping']['title'] = "Contact Just In Time attribute map ";
+$CFGVAR['contact_jit_mapping']['help'] = "Map attributes from request headers onto contact fields, format: heading=>contact_field";
+$CFGVAR['contact_jit_mapping']['type'] = '2darray';
+
+$CFGVAR['remove_from_contracts_on_disable']['title'] = "Remove from contracts on disable";
+$CFGVAR['remove_from_contracts_on_disable']['type'] = 'checkbox';
 
 $CFGVAR['creditsfile']['title'] = 'Path to the Credits file';
 $CFGVAR['creditsfile']['help'] = 'The filesystem path and filename of the SiT! CREDITS file, this can be specified relative to the SiT directory.';
@@ -419,10 +436,15 @@ $CFGVAR['hide_closed_incidents_older_than']['title'] = 'Hide closed incidents ol
 $CFGVAR['hide_closed_incidents_older_than']['type'] = 'number';
 $CFGVAR['hide_closed_incidents_older_than']['unit'] = $strDays;
 
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['help'] = "Contracts that have finished more than this number of days ago aren't show when opening new incidents, -1 means disabled";
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['title'] = 'Hide contracts older than when opening';
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['type'] = 'number';
+$CFGVAR['hide_contracts_older_than_when_opening_incident']['unit'] = $strDays;
+
 $CFGVAR['holidays_enabled']['title'] = "Enable Holidays";
 $CFGVAR['holidays_enabled']['type'] = 'checkbox';
 
-$CFGVAR['home_country']['title'] = "The default country in capitals. e.g. 'UNITED KINGDOM'";
+$CFGVAR['home_country']['title'] = "The default countrys ISO code in capitals. e.g. 'GB'";
 
 $CFGVAR['incident_pools']['title'] = 'Incident Pool options';
 $CFGVAR['incident_pools']['help'] = 'Comma seperated list specifying the numbers of incidents to assign to contracts';
@@ -438,6 +460,7 @@ $CFGVAR['incident_id_email_opening_tag']['title'] = 'When sending am email what 
 $CFGVAR['incident_reference_prefix']['title'] = 'The prefix for the incident ID';
 
 $CFGVAR['incident_id_include_type']['title'] = "Include incident type in incident id";
+$CFGVAR['incident_id_include_type']['help'] = 'Should the type of ticket be shown in the incident ID when displayed and emailed';
 $CFGVAR['incident_id_include_type']['type'] = 'checkbox';
 
 $CFGVAR['inventory_enabled']['title'] = 'Enable Inventory';
@@ -534,6 +557,10 @@ $CFGVAR['ldap_security']['help'] = 'LDAP security method (Requires LDAP protocol
 $CFGVAR['ldap_security']['options'] = 'SSL|TLS|NONE';
 $CFGVAR['ldap_security']['type'] = 'select';
 
+$CFGVAR['ldap_update_directory_passwords']['title'] = 'Update Passwords';
+$CFGVAR['ldap_update_directory_passwords']['help'] = 'Attempt to update the LDAP password when changed';
+$CFGVAR['ldap_update_directory_passwords']['type'] = 'checkbox';
+
 $CFGVAR['licensefile']['title'] = 'Path to the License file';
 
 $CFGVAR['logout_url']['help'] = "The URL to redirect the user to after he/she logs out. When left blank this defaults to the SiT login page.";
@@ -573,13 +600,17 @@ $CFGVAR['outbound_emailattachment_newline']['help'] = "Change the newline charac
 $CFGVAR['outbound_emailattachment_newline']['type'] = 'select';
 $CFGVAR['outbound_emailattachment_newline']['options'] = 'CRLF|LF';
 
-$CFGVAR['outbound_email_send_xoriginatingip']['title'] = 'Enable Outbound Email to have ';
+$CFGVAR['outbound_email_send_xoriginatingip']['title'] = 'Enable Outbound Email to have X-Originating-IP header';
 $CFGVAR['outbound_email_send_xoriginatingip']['help'] = "You can disable outbound email from having the X-Originating-IP which can cause spam assassin to make the email as spam if it includes an internal address";
 $CFGVAR['outbound_email_send_xoriginatingip']['type'] = 'checkbox';
 
 $CFGVAR['portal_creates_incidents']['title'] = "Portal users can create incidents directly";
 $CFGVAR['portal_creates_incidents']['help'] = "When enabled customers can create incidents from the portal, otherwise they can just create emails that arrive in the holding queue";
 $CFGVAR['portal_creates_incidents']['type'] = 'checkbox';
+
+$CFGVAR['portal_update_site_incidents']['title'] = "Allow others at the site to update incidents.";
+$CFGVAR['portal_update_site_incidents']['help'] = "This enables/disables the ability for other contacts at a site to update incidents";
+$CFGVAR['portal_update_site_incidents']['type'] = 'checkbox';
 
 $CFGVAR['portal_feedback_enabled']['title'] = "Enable Feedback in the portal";
 $CFGVAR['portal_feedback_enabled']['help'] = "This enables/disables feedback from the portal, if main feedback is disabled this has no effect";
@@ -593,6 +624,8 @@ $CFGVAR['portal_iconset']['help'] = 'The icon set used in the portal';
 $CFGVAR['portal_iconset']['type'] = 'select';
 $CFGVAR['portal_iconset']['options'] = 'sit|oxygen|crystalclear|kriplyana';
 
+$CFGVAR['portal_logout_url']['help'] = "The URL to redirect the user to after he/she logs out. When left blank this defaults to the SiT login page.";
+$CFGVAR['portal_logout_url']['title'] = "Portal Logout URL";
 
 $CFGVAR['portal_kb_enabled']['help'] = "Public puts a link on the login page, Private makes it available on login for contacts";
 $CFGVAR['portal_kb_enabled']['options'] = 'Public|Private|Disabled';
@@ -646,6 +679,10 @@ $CFGVAR['soap_portal_enabled']['type'] = 'checkbox';
 $CFGVAR['spam_email_subject']['title'] = 'Spam Subject';
 $CFGVAR['spam_email_subject']['help'] = 'String to look for in email message subject to determine a message is spam';
 
+$CFGVAR['inbound_emails_visible_in_portal']['title'] = 'Are inbound emails visible in the portal?';
+$CFGVAR['inbound_emails_visible_in_portal']['help'] = 'Should received emails be visible within the portal?';
+$CFGVAR['inbound_emails_visible_in_portal']['type'] = 'checkbox';
+
 $CFGVAR['start_working_day']['title'] = 'Start of the working day';
 $CFGVAR['start_working_day']['help'] = 'The time the working day starts (e.g. 9:00)';
 $CFGVAR['start_working_day']['type'] = 'timeselector';
@@ -680,6 +717,18 @@ $CFGVAR['timezone']['options'] = file_get_contents('lib/timezones.txt');
 $CFGVAR['trusted_server']['help'] = 'When enabled passwords will no longer be used or required, this assumes that you are using an external mechanism for authentication';
 $CFGVAR['trusted_server']['title'] = 'Enable trusted server mode';
 $CFGVAR['trusted_server']['type'] = 'checkbox';
+
+$CFGVAR['trusted_server_username_header']['help'] = 'The header variable which will contain the username, exlucing the leading HTTP_';
+$CFGVAR['trusted_server_username_header']['title'] = 'Header to receive username in';
+$CFGVAR['trusted_server_username_header']['type'] = 'text';
+
+$CFGVAR['trusted_server_client_id']['help'] = 'The username for the trused authentication source to authenticate with using basic authentication, if blank not used';
+$CFGVAR['trusted_server_client_id']['title'] = 'Username for trusted server to authenticate with';
+$CFGVAR['trusted_server_client_id']['type'] = 'text';
+
+$CFGVAR['trusted_server_client_secret']['help'] = 'The password or secret for the trusted authentication source to authenticate with using basic authentication';
+$CFGVAR['trusted_server_client_secret']['title'] = 'Secret for trusted server to authenticate with ';
+$CFGVAR['trusted_server_client_secret']['type'] = 'password';
 
 $CFGVAR['upload_max_filesize']['title'] = "The maximum file upload size (in bytes)";
 $CFGVAR['upload_max_filesize']['type'] = 'number';

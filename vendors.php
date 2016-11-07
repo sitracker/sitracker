@@ -2,7 +2,7 @@
 // vendors.php - Page to list vendors and edit vendor details
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -38,8 +38,8 @@ switch ($action)
         if ($errors == 0)
         {
             $sql = "UPDATE `{$dbVendors}` SET name = '{$vendorname}' WHERE id = '{$vendorid}'";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(),E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_ERROR);
             plugin_do('vendors_saved');
             html_redirect("vendors.php");
         }
@@ -74,14 +74,14 @@ switch ($action)
         echo "<h2>" . icon('vendor', 32, $strVendors) . " {$strVendors}</h2>";
         plugin_do('vendors');
         $sql = "SELECT * FROM `{$dbVendors}`";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
-        if (mysql_num_rows($result) > 0)
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db),E_USER_WARNING);
+        if (mysqli_num_rows($result) > 0)
         {
             echo "<table class='maintable'>";
             echo "<tr><th>{$strVendor}</th><th>{$strActions}</th></tr>";
             $shade='shade1';
-            while ($row = mysql_fetch_object($result))
+            while ($row = mysqli_fetch_object($result))
             {
                 echo "<tr class='{$shade}'><td>{$row->name}</td>";
                 echo "<td>";

@@ -3,7 +3,7 @@
 // Page to adjust the duration of a timed activity
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -34,24 +34,24 @@ switch ($mode)
         $reason = cleanvar($_REQUEST['reason']);
         $newduration = clean_int($_REQUEST['newduration']); // In minutes
 
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_num_rows($result) == 1)
         {
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
             if ($obj->duration == $oldduration)
             {
             	// Double check the oldduration thats been passed is whats in the DB
                 $text = $obj->bodytext . "\n\n" . sprintf($SYSLANG['strBillingDurationAdjusted'], user_realname($sit[2]),
                                                         ldate($CONFIG['dateformat_datetime'], $now), ceil($obj->duration), $newduration, "\n\n----{$reason}----\n\n");
-                
-                $usql = "UPDATE `{$dbUpdates}` SET bodytext = '".mysql_real_escape_string($text)."', duration = '{$newduration}' WHERE id = '{$updateid}'";
-                mysql_query($usql);
-                if (mysql_error()) trigger_error(mysql_error(),E_USER_WARNING);
+
+                $usql = "UPDATE `{$dbUpdates}` SET bodytext = '".mysqli_real_escape_string($db, $text)."', duration = '{$newduration}' WHERE id = '{$updateid}'";
+                mysqli_query($db, $usql);
+                if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
                 // Some error checking
-                if (mysql_affected_rows() < 1)
+                if (mysqli_affected_rows($db) < 1)
                 {
                     html_redirect("{$CONFIG['application_webpath']}incident_details.php?id={$incidentid}", FALSE, $strFailed);
                 }
@@ -76,13 +76,13 @@ switch ($mode)
     case 'showform':
     default:
         $sql = "SELECT duration FROM `{$dbUpdates}` WHERE id = {$updateid} AND duration IS NOT NULL AND duration != 0";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-        if (mysql_num_rows($result) == 1)
+        if (mysqli_num_rows($result) == 1)
         {
             include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
 
             echo "<h2>{$strAdjustActivityDuration}</h2>";
 

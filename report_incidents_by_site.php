@@ -2,7 +2,7 @@
 // yearly_customer_export.php - List the numbers and titles of incidents logged by each site in the past year.
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -34,10 +34,10 @@ if (empty($mode))
     echo "<tr><th colspan='2' align='center'>{$strInclude}".help_link('CTRLAddRemove')."</th></tr>";
     echo "<tr><td align='center' colspan='2'>";
     $sql = "SELECT * FROM `{$dbSites}` ORDER BY name";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
     echo "<select name='inc[]' multiple='multiple' size='20'>";
-    while ($site = mysql_fetch_object($result))
+    while ($site = mysqli_fetch_object($result))
     {
         echo "<option value='{$site->id}'>{$site->name}</option>\n";
     }
@@ -104,9 +104,9 @@ elseif ($_REQUEST['mode'] == 'report')
 
     $sql .= " ORDER BY site, incid ASC ";
 
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-    $numrows = mysql_num_rows($result);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+    $numrows = mysqli_num_rows($result);
 
     $html .= "<h2>".icon('reports', 32)." {$title}</h2>";
     $html .= "<p align='center'>".sprintf($strIncidentsBySiteReportDesc, $numrows)."</p>";
@@ -116,7 +116,7 @@ elseif ($_REQUEST['mode'] == 'report')
     $rowcount = 0;
     $externalincidents = 0;
     $shade = 'shade1';
-    while ($row = mysql_fetch_object($result))
+    while ($row = mysqli_fetch_object($result))
     {
         $nicedate = ldate('d/m/Y',$row->opened);
         $html .= "<tr class='{$shade}'><td>$nicedate</td><td>{$row->incid}</td><td>{$row->externalid}</td><td>{$row->title}</td><td>{$row->cname}</td><td>{$row->site}</td><td>{$row->typename}</td></tr>\n";

@@ -2,7 +2,7 @@
 // book_holidays.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -150,13 +150,13 @@ elseif ($step == 1)
         if (date('D', $day) != 'Sat' && date('D', $day) != 'Sun')
         {
             $sql = "SELECT * FROM `{$dbHolidays}` WHERE `date` = FROM_UNIXTIME($day, '%Y-%m-%d') AND userid={$user}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
             // need to do something different when there are more than one row
-            if (mysql_num_rows($result) > 0)
+            if (mysqli_num_rows($result) > 0)
             {
-                while ($existing_holiday = mysql_fetch_object($result))
+                while ($existing_holiday = mysqli_fetch_object($result))
                 {
                     $holiday_type = holiday_type($existing_holiday->type);
                     $holiday_legend = strtoupper(mb_substr($holiday_type, 0, 1));
@@ -230,9 +230,9 @@ elseif ($step == 1)
             else
             {
                 $sql = "SELECT * FROM `{$dbHolidays}` WHERE `date` = '".date('Y-m-d', $day)."' AND type='".HOL_PUBLIC."' ";
-                $result = mysql_query($sql);
-                if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-                if (mysql_num_rows($result) > 0)
+                $result = mysqli_query($db, $sql);
+                if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+                if (mysqli_num_rows($result) > 0)
                 {
                     echo "<tr><td class='shade1 holidaydate'>".ldate('l jS M y',$day)."</td>";
                     echo "<td colspan='4'>{$strPublicHoliday}";
@@ -318,8 +318,8 @@ else
             // and modify that where required.
             $sql = "REPLACE INTO `{$dbHolidays}` (userid, type, date, length, approved, approvedby) ";
             $sql .= "VALUES ('{$user}', '{$type}', FROM_UNIXTIME({$$d}, '%Y-%m-%d'), '{$$len}', '".HOL_APPROVAL_NONE."', '{$approvaluser}') ";
-            mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+            mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
         }
     }
     header("Location:holiday_request.php?user={$user}");

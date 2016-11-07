@@ -2,7 +2,7 @@
 // defaults.inc.php - Provide configuration defaults
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -49,7 +49,7 @@ $CONFIG['db_database'] = 'sit';
 // Prefix database tables with the a string (e.g. 'sit_', use this if the database you are using is shared with other applications
 $CONFIG['db_tableprefix'] = '';
 
-$CONFIG['home_country'] = 'UNITED KINGDOM';
+$CONFIG['home_country'] = 'GB';
 
 $CONFIG['support_email'] = 'support@localhost';
 // DEPRECATED support_manager_email is obsolete as of v3.45, use support_manager instead
@@ -138,6 +138,9 @@ $CONFIG['record_lock_delay'] = 1800;  // 30 minutes
 // maximum no. of incoming emails per incident before a mail-loop is detected
 $CONFIG['max_incoming_email_perday'] = 15;
 
+// Are inbound emails marked as visible
+$CONFIG['inbound_emails_visible_in_portal'] = FALSE;
+
 // String to look for in email message subject to determine a message is spam
 $CONFIG['spam_email_subject'] = 'SPAMASSASSIN';
 
@@ -214,6 +217,9 @@ $CONFIG['timezone'] = 'Europe/London';
 
 // Incidents closed more than this number of days ago aren't show in the incident queue, -1 means disabled
 $CONFIG['hide_closed_incidents_older_than'] = 90;
+
+// Contracts that have finished more than this number of days ago aren't show when opening new incidents, -1 means disabled
+$CONFIG['hide_contracts_older_than_when_opening_incident']= 365;
 
 // Following is still BETA
 $CONFIG['auto_chase'] = FALSE;
@@ -340,6 +346,9 @@ $CONFIG['ldap_cache_passwords'] = FALSE;
 // connect to LDAP server
 $CONFIG['ldap_allow_cached_password'] = FALSE;
 
+// Whether to attempt to update LDAP passwords
+$CONFIG['ldap_update_directory_passwords'] = FALSE;
+
 // If true, portal users create incidents, if FALSE, they just create emails
 $CONFIG['portal_creates_incidents'] = TRUE;
 
@@ -394,4 +403,7 @@ $CONFIG['incident_id_include_type'] = FALSE;
 
 // How many address components are required before the map link appears on site details 
 $CONFIG['address_components_to_map'] = 3;
+
+// Default mapping for jit provisioning
+$CONFIG['contact_jit_mapping'] = array('username'=>'username','firstname'=>'forenames','lastname'=>'surname','email'=>'email','phone'=>'phone','mobile'=>'mobile','siteid'=>'siteid','contractids'=>'contractids');
 ?>

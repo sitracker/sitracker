@@ -2,7 +2,7 @@
 // tablenames.inc.php - Defines soft database table names
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -25,6 +25,7 @@ $dbClosingStatus = "{$CONFIG['db_tableprefix']}closingstatus";
 $dbConfig = "{$CONFIG['db_tableprefix']}config";
 $dbContactConfig = "{$CONFIG['db_tableprefix']}contactconfig";
 $dbContacts = "{$CONFIG['db_tableprefix']}contacts";
+$dbCountryList = "{$CONFIG['db_tableprefix']}countrylist";
 $dbDashboard = "{$CONFIG['db_tableprefix']}dashboard";
 $dbDashboardRSS = "{$CONFIG['db_tableprefix']}dashboard_rss";
 $dbDashboardWatchIncidents = "{$CONFIG['db_tableprefix']}dashboard_watch_incidents";

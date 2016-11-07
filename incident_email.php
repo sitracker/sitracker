@@ -2,7 +2,7 @@
 // incident_email.php
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -39,18 +39,18 @@ if (empty($step))
         if ($draftid != -1)
         {
             $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
         }
         html_redirect("incident_email.php?id={$id}");
         exit;
     }
 
     $sql = "SELECT * FROM `{$dbDrafts}` WHERE type = 'email' AND userid = '{$sit[2]}' AND incidentid = '{$id}'";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         include (APPLICATION_INCPATH . 'incident_html_top.inc.php');
 
@@ -111,10 +111,10 @@ switch ($step)
         {
             $sql = "SELECT * FROM `{$dbUpdates}` WHERE incidentid = {$id} ";
             $sql .= "ORDER BY timestamp DESC LIMIT 1";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
-            $obj = mysql_fetch_object($result);
+            $obj = mysqli_fetch_object($result);
 
             if ($obj->type == 'auto_chase_phone')
             {
@@ -157,9 +157,9 @@ switch ($step)
         if ($draftid != -1)
         {
             $draftsql = "SELECT * FROM `{$dbDrafts}` WHERE id = {$draftid}";
-            $draftresult = mysql_query($draftsql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            $draftobj = mysql_fetch_object($draftresult);
+            $draftresult = mysqli_query($db, $draftsql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            $draftobj = mysqli_fetch_object($draftresult);
 
             $metadata = explode("|", $draftobj->meta);
         }
@@ -199,9 +199,9 @@ switch ($step)
             
             // Grab the template
             $tsql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id={$emailtype} LIMIT 1";
-            $tresult = mysql_query($tsql);
-            if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($tresult) > 0) $template = mysql_fetch_object($tresult);
+            $tresult = mysqli_query($db, $tsql);
+            if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($tresult) > 0) $template = mysqli_fetch_object($tresult);
             $paramarray = array('incidentid' => $id, 'triggeruserid' => $sit[2]);
             $from = replace_specials($template->fromfield, $paramarray);
             $replyto = replace_specials($template->replytofield, $paramarray);
@@ -246,7 +246,7 @@ switch ($step)
 
         echo show_form_errors('incidentemail');
         clear_form_errors('incidentemail');
-        
+
         echo "<form action='{$_SERVER['PHP_SELF']}?id={$id}' method='post' ";
         echo "enctype='multipart/form-data' onsubmit=\"return confirm_action('{$strAreYouSureSendEmail}');\" >";
         echo "<table align='center' class='vertical' width='95%'>";
@@ -303,7 +303,6 @@ switch ($step)
         break;
     case 3:
         // show form 3 or send email and update incident
-        // Email addresses and bodytext is filtered with mysql_real_escape_string below before db use
         $bodytext = $_REQUEST['bodytext'];
         $tofield = clean_emailstring($_REQUEST['tofield']);
         $fromfield = clean_emailstring($_REQUEST['fromfield']);
@@ -327,9 +326,9 @@ switch ($step)
         $chase_manager = cleanvar($_REQUEST['chase_manager']);
 
         $_SESSION['formdata']['incidentemail'] = cleanvar($_POST, TRUE, FALSE, FALSE);
-        
+
         $files = array();
-        
+
         $size_of_files = 0;
 
         // Check file size is below limit
@@ -436,14 +435,14 @@ switch ($step)
                     $size = filesize($file['tmp_name']);
                     $sql = "INSERT INTO `{$dbFiles}`(filename, size, userid, usertype) ";
                     $sql .= "VALUES('" . clean_dbstring($name) . "', '{$size}', '{$sit[2]}', '1')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_WARNING);
-                    $fileid = mysql_insert_id();
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_WARNING);
+                    $fileid = mysqli_insert_id($db);
 
                     $filename = "{$CONFIG['attachment_fspath']}{$id}" . DIRECTORY_SEPARATOR . "{$fileid}-{$name}";
 
                     $mv = rename($file['tmp_name'], $filename);
-                    if (!mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
+                    if (!$mv) trigger_error("Problem moving attachment from temp directory: {$filename}", E_USER_WARNING);
                     $attachmenttype = $file['type'];
 
                     $f = array();
@@ -458,7 +457,7 @@ switch ($step)
                     // Check file size before sending
                     if (filesize($filename) > $CONFIG['upload_max_filesize'] || filesize($filename) == FALSE)
                     {
-                        trigger_error("User Error: Attachment too large or file upload error, filename: {$filename},  perms: ".fileperms($filename).", size:", filesize($filename), E_USER_WARNING);
+                        trigger_error("User Error: Attachment too large or file upload error, filename: {$filename},  perms: ".fileperms($filename).", size:". filesize($filename), E_USER_WARNING);
                         // throwing an error isn't the nicest thing to do for the user but there seems to be no way of
                         // checking file sizes at the client end before the attachment is uploaded. - INL
                     }
@@ -473,10 +472,10 @@ switch ($step)
 
             // Lookup the email template (we need this to find out if the update should be visible or not)
             $sql = "SELECT * FROM `{$dbEmailTemplates}` WHERE id='{$emailtype}' ";
-            $result = mysql_query($sql);
-            if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
-            if (mysql_num_rows($result) < 1) trigger_error("Email template '{$emailtype}' not found", E_USER_WARNING);
-            $emailtype = mysql_fetch_object($result);
+            $result = mysqli_query($db, $sql);
+            if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
+            if (mysqli_num_rows($result) < 1) trigger_error("Email template '{$emailtype}' not found", E_USER_WARNING);
+            $emailtype = mysqli_fetch_object($result);
             $storeinlog = $emailtype->storeinlog;
             $templatename = $emailtype->name;
             $templatedescription = $emailtype->description;
@@ -520,14 +519,14 @@ switch ($step)
                 {
                     $sql = "UPDATE `{$dbIncidents}` SET status='{$newincidentstatus}', ";
                     $sql .= "lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                     $updateheader = "New Status: <b>" . incidentstatus_name($newincidentstatus) . "</b>\n\n";
                 }
                 else
                 {
-                    mysql_query("UPDATE `{$dbIncidents}` SET lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'");
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, "UPDATE `{$dbIncidents}` SET lastupdated='{$now}', timeofnextaction='{$timeofnextaction}' WHERE id='{$id}'");
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 $timetext = '';
@@ -562,12 +561,16 @@ switch ($step)
                 if ($storeinlog == 'Yes')
                 {
                     // add update
+                    $tofield = preg_replace("/[;,]/", "; ", $tofield);
+                    $ccfield = preg_replace("/[;,]/", "; ", $ccfield);
+                    $bccfield = preg_replace("/[;,]/", "; ", $bccfield);
+                    
                     $bodytext = htmlentities($bodytext, ENT_COMPAT, 'UTF-8');
                     $updateheader .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strFrom']}: [b]{$fromfield}[/b]\n";
                     $updateheader .= "{$SYSLANG['strReplyTo']}: [b]{$replytofield}[/b]\n";
-                    if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "CC: [b]{$ccfield}[/b]\n";
-                    if ($bccfield != '') $updateheader .= "BCC: [b]{$bccfield}[/b]\n";
+                    if ($ccfield != '' AND $ccfield != ",") $updateheader .=   "{$SYSLANG['strCC']}: [b]{$ccfield}[/b]\n";
+                    if ($bccfield != '') $updateheader .= "{$SYSLANG['strBCC']}: [b]{$bccfield}[/b]\n";
                     if (!empty($files))
                     {
                         if (count($files) > 1) $updateheader .= "{$SYSLANG['strAttachments']}: ";
@@ -589,13 +592,13 @@ switch ($step)
                     $updatebody = $timetext . $updateheader . $bodytext;
                     // It's important to make updatebody safe for db use here because we include variables that have not already been made
                     // db-safe. We do this here rather than at the top of the script to avoid putting slashes into emails as sent.
-                    $updatebody = mysql_real_escape_string($updatebody);
+                    $updatebody = mysqli_real_escape_string($db, $updatebody);
 
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    $updateid = mysql_insert_id();
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+                    $updateid = mysqli_insert_id($db);
                 }
 
                 if ($storeinlog == 'No')
@@ -605,21 +608,21 @@ switch ($step)
                     $updatebody .= "[b] {$SYSLANG['strTemplate']}: [/b]".$templatename."\n";
                     $updatebody .= "[b] {$SYSLANG['strDescription']}: [/b]".$templatedescription."\n";
                     $updatebody .= "{$SYSLANG['strTo']}: [b]{$tofield}[/b]\n";
-                    $updatebody = mysql_real_escape_string($updatebody);
+                    $updatebody = mysqli_real_escape_string($db, $updatebody);
 
                     $sql  = "INSERT INTO `{$dbUpdates}` (incidentid, userid, bodytext, type, timestamp, currentstatus, customervisibility, sla) ";
                     $sql .= "VALUES ({$id}, {$sit[2]}, '{$updatebody}', 'email', '{$now}', '{$newincidentstatus}', '{$emailtype->customervisibility}', {$sla})";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-                    $updateid = mysql_insert_id();
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+                    $updateid = mysqli_insert_id($db);
                 }
 
                 foreach ($files AS $file)
                 {
                     $sql = "INSERT INTO `{$dbLinks}`(linktype, origcolref, linkcolref, direction, userid) ";
                     $sql .= "VALUES (5, '{$updateid}', '{$file['fileid']}', 'left', '{$sit[2]}')";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 $owner = incident_owner($id);
@@ -628,39 +631,39 @@ switch ($step)
                 {
                     // Reset the slaemail sent column, so that email reminders can be sent if the new sla target goes out
                     $sql = "UPDATE `{$dbIncidents}` SET slaemail='0', slanotice='0' WHERE id='{$id}' LIMIT 1";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 if (!empty($chase_customer))
                 {
                     $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
                     $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_phone', '{$owner}', '{$newincidentstatus}', '{$SYSLANG['strCustomerRemindedByPhone']}','{$now}','hide')";
-                    mysql_query($sql_insert);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql_insert);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
                     $sql_update = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}' WHERE id = {$id}";
-                    mysql_query($sql_update);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql_update);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 if (!empty($chase_manager))
                 {
                     $sql_insert = "INSERT INTO `{$dbUpdates}` (incidentid, userid, type, currentowner, currentstatus, bodytext, timestamp, customervisibility) ";
                     $sql_insert .= "VALUES ('{$id}','{$sit['2']}','auto_chased_manager', '{$owner}', '{$newincidentstatus}', '{$SYSLANG['strManagerRemindedByPhone']}', '{$now}','hide')";
-                    mysql_query($sql_insert);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql_insert);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
                     $sql_update = "UPDATE `{$dbIncidents}` SET lastupdated = '{$now}' WHERE id = {$id}";
-                    mysql_query($sql_update);
-                    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql_update);
+                    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
                 }
 
                 if ($draftid != -1)
                 {
                     $sql = "DELETE FROM `{$dbDrafts}` WHERE id = {$draftid}";
-                    mysql_query($sql);
-                    if (mysql_error()) trigger_error(mysql_error(), E_USER_ERROR);
+                    mysqli_query($db, $sql);
+                    if (mysqli_error($db)) trigger_error(mysqli_error($db), E_USER_ERROR);
                 }
 
                 journal(CFG_LOGGING_FULL, $SYSLANG['strEmailSent'], "{$SYSLANG['strSubject']}: $subjectfield, {$SYSLANG['strIncident']}: $id", CFG_JOURNAL_INCIDENTS, $id);
@@ -671,7 +674,7 @@ switch ($step)
                 if ($_SESSION['userconfig']['show_confirmation_close_window'] == 'TRUE') $text = $strEmailSentSuccessfully;
 
                 clear_form_data('incidentemail');
-                
+
                 html_redirect("incident_details.php?id={$id}", TRUE, $text, TRUE);
             }
             else

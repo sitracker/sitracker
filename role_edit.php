@@ -2,7 +2,7 @@
 // role_new.php - Page to add role to SiT!
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -30,14 +30,14 @@ if (empty($submit))
     clear_form_errors('role_edit');
 
     $sql = "SELECT * FROM `{$dbRoles}` WHERE id = {$roleid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_WARNING);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_WARNING);
 
     echo "<h2>{$strEditRole}</h2>";
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
-        $obj = mysql_fetch_object($result);
+        $obj = mysqli_fetch_object($result);
         echo "<form action'{$_SERVER['PHP_SELF']}' name='role_edit' method='post' >";
         echo "<table class='vertical maintable'>";
         echo "<tr><th>{$strRole}</th><td>{$obj->id}</td></tr>";
@@ -72,10 +72,10 @@ else
     }
 
     $sql = "SELECT * FROM `{$dbRoles}` WHERE rolename = '{$rolename}' AND id != {$roleid}";
-    $result = mysql_query($sql);
-    if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
+    $result = mysqli_query($db, $sql);
+    if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
 
-    if (mysql_num_rows($result) > 0)
+    if (mysqli_num_rows($result) > 0)
     {
         $errors++;
         $_SESSION['formerrors']['role_edit']['duplicaterole']= "{$strADuplicateAlreadyExists}</p>\n";
@@ -87,9 +87,9 @@ else
         clear_form_errors('role_new');
 
         $sql = "UPDATE `{$dbRoles}` SET rolename = '{$rolename}', description = '{$description}' WHERE id = {$roleid}";
-        $result = mysql_query($sql);
-        if (mysql_error()) trigger_error("MySQL Query Error ".mysql_error(), E_USER_ERROR);
-        if (mysql_affected_rows() > 0) html_redirect("role.php?roleid={$roleid}", TRUE);
+        $result = mysqli_query($db, $sql);
+        if (mysqli_error($db)) trigger_error("MySQL Query Error ".mysqli_error($db), E_USER_ERROR);
+        if (mysqli_affected_rows($db) > 0) html_redirect("role.php?roleid={$roleid}", TRUE);
         else html_redirect($_SESSION['PHP_SELF'], FALSE);
     }
     else

@@ -2,7 +2,7 @@
 // download.php - Pass a file to the browser for download
 //
 // SiT (Support Incident Tracker) - Support call tracking system
-// Copyright (C) 2010-2013 The Support Incident Tracker Project
+// Copyright (C) 2010-2014 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
 //
 // This software may be used and distributed according to the terms
@@ -35,8 +35,8 @@ $sql = "SELECT *, u.id AS updateid, f.id AS fileid
         AND l.linkcolref=f.id
         ORDER BY f.filedate DESC";
 
-$result = mysql_query($sql);
-$fileobj = mysql_fetch_object($result);
+$result = mysqli_query($db, $sql);
+$fileobj = mysqli_fetch_object($result);
 $incidentid = clean_int($fileobj->incidentid);
 $updateid = clean_int($fileobj->updateid);
 $filename = cleanvar($fileobj->filename);
