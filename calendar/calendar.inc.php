@@ -63,7 +63,7 @@ function draw_calendar($nmonth, $nyear)
     }
     while ($monthTest != $monthOrig);
 
-    $monthName = ldate('F', mktime(0, 0, 0, $nmonth, 1, $nyear));
+    $monthName = ldate('F', mktime(12, 0, 0, $nmonth, 1, $nyear));
 
     if ($CONFIG['debug'])
     {
