@@ -130,9 +130,9 @@ if ($CONFIG['application_name'] == '' AND $CONFIG['application_shortname'] == ''
 }
 
 // Check we have the mysql extension
-if (!extension_loaded('mysql'))
+if (!extension_loaded('mysqli'))
 {
-    echo "<p class='error'>Error: Could not find the mysql extension, SiT! requires MySQL to be able to run, you should install and enable the MySQL PHP Extension then run setup again.</p>";
+    echo "<p class='error'>Error: Could not find the mysqli extension, SiT! requires MySQL to be able to run, you should install and enable the MySQL PHP Extension then run setup again.</p>";
 }
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, "<"))
