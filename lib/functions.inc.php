@@ -1604,7 +1604,7 @@ function check_install_status()
 {
     $s = new Status();
     $s->mysql_check();
-    $s->add_extension_check('mysql', 'PHP MySQL Driver', INSTALL_FATAL);
+    $s->add_extension_check('mysqli', 'PHP MySQL Driver', INSTALL_FATAL);
     $s->add_extension_check('mbstring', 'PHP Multibyte', INSTALL_FATAL);
     $s->add_extension_check('ldap', 'PHP LDAP', INSTALL_WARN);
     $s->add_extension_check('imap', 'PHP IMAP', INSTALL_WARN);
@@ -1834,7 +1834,7 @@ function plugin_do($context, $optparams = FALSE)
 // These are the modules that we are dependent on, without these something
 // or everything will fail, so let's throw an error here.
 // Check that the correct modules are loaded
-if (!extension_loaded('mysql')) trigger_error('SiT requires the php/mysql module', E_USER_ERROR);
+if (!extension_loaded('mysqli')) trigger_error('SiT requires the php/mysqli module', E_USER_ERROR);
 if (!extension_loaded('imap') AND $CONFIG['enable_inbound_mail'] == 'POP/IMAP')
 {
     trigger_error('SiT requires the php IMAP extension to recieve incoming mail (even for POP or MTA methods!).'
